@@ -1,72 +1,33 @@
-From: John Keeping <john@metanate.com>
-Subject: Disabling graph endpoints in device trees
-Date: Mon, 22 Feb 2016 14:14:38 +0000
-Message-ID: <20160222141438.79de430c.john@metanate.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/3] clk: mvebu: add AP806 core clock driver
+Date: Mon, 22 Feb 2016 15:16:17 +0100
+Message-ID: <20160222141617.GA14970@lunn.ch>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1455521698-7905-3-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160222025357.GE15973@rob-hp-laptop>
+ <20160222091423.4756a579@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160222091423.4756a579-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> Such information will come later, and we can rework the drivers and DT
+> bindings accordingly. Those DT bindings cannot be stable, as the
+> platform is under heavy development and we'll probably discover some
+> issues down the road.
 
-Is there a reason why endpoints in a device tree graph can't be
-disabled?
+Hi Thomas
 
-I would like to be able to force the use of a particular CRTC for
-certain outputs even though the hardware is capable of connecting any
-CRTC to any output.  In this case I need to be able to support a wide
-range of frequencies for external HDMI monitors so I will configure one
-of the CRTCs to be able to generate these while the other will be tied
-into a limited set of clock rates as a result of the overall system
-clock setup.
+Maybe add a big fat warning that the bindings are unstable, and the DT
+blob must be kept in sync with the kernel?
 
-Currently this can only be achieved by removing the endpoints from the
-base SoC .dtsi file but it feels like it should be possible to add
-'status = "disabled"' to the nodes in the board-specific .dts in order
-to disable undesirable configurations.
-
-I tested the change below and it behaves exactly as I want, but I don't
-claim to understand all of the users of these functions to know if it
-will break something else (hence this isn't a formal patch).
-
--- >8 --
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 017dd94..1e56b91 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2143,7 +2143,7 @@ struct device_node *of_graph_get_port_by_id(struct device_node *parent, u32 id)
- 	if (node)
- 		parent = node;
- 
--	for_each_child_of_node(parent, port) {
-+	for_each_available_child_of_node(parent, port) {
- 		u32 port_id = 0;
- 
- 		if (of_node_cmp(port->name, "port") != 0)
-@@ -2209,7 +2209,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 		 * getting the next child. If the previous endpoint is NULL this
- 		 * will return the first child.
- 		 */
--		endpoint = of_get_next_child(port, prev);
-+		endpoint = of_get_next_available_child(port, prev);
- 		if (endpoint) {
- 			of_node_put(port);
- 			return endpoint;
-@@ -2219,7 +2219,7 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
- 		prev = NULL;
- 
- 		do {
--			port = of_get_next_child(parent, port);
-+			port = of_get_next_available_child(parent, port);
- 			if (!port)
- 				return NULL;
- 		} while (of_node_cmp(port->name, "port"));
--- 8< --
-
-
-Thanks,
-John
+     Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
