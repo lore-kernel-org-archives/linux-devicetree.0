@@ -1,92 +1,102 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1] spi: master driver to enable RTC on ICPDAS LP-8841
-Date: Mon, 22 Feb 2016 20:08:16 +0900
-Message-ID: <20160222110816.GD18327@sirena.org.uk>
-References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
- <20160222031027.GP18327@sirena.org.uk>
- <1456133174.2386.33.camel@gmail.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add Rockchip display port phy driver support
+Date: Mon, 22 Feb 2016 16:45:10 +0530
+Message-ID: <56CAEDBE.2050808@ti.com>
+References: <1455534071-31230-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="P+5wBWHyMmVhWeqO"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456133174.2386.33.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1455534071-31230-1-git-send-email-ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---P+5wBWHyMmVhWeqO
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Monday 15 February 2016 04:31 PM, Yakir Yang wrote:
+> 
+> Hi Kison,
+> 
+> This series is splited from Analogix DP DRM thread [0], and Heiko suggest this
+> should be an independent thread which may be easy for you to apply.
 
-On Mon, Feb 22, 2016 at 12:26:14PM +0300, Sergei Ianovich wrote:
-> On Mon, 2016-02-22 at 12:10 +0900, Mark Brown wrote:
-> > On Mon, Feb 22, 2016 at 04:47:06AM +0300, Sergei Ianovich wrote:
+Indeed. Merged now thanks. (Changed the year to 2016 in the file header before
+merging)
 
-> > > +config SPI_LP8841_RTC
-> > > +	tristate "ICP DAS LP-8841 SPI Controller for RTC"
-> > > +	depends on OF && (MACH_PXA27X_DT || COMPILE_TEST)
+Thanks
+Kishon
 
-> > Does this need a strict DT dependency or can it build without DT?
-
-> The driver can only be useful on a single industrial PC. That PC
-> requires DT, so I made this a strict=A0dependency. The dependency can be
-> removed by using ifdefs, but I see no point why.
-
-It makes it easier for anyone doing generic work on the kernel to build
-test, one could make exactly the same argument about the dependency on
-the PXA27x machine.
-
-> > > +/*
-> > > + * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in
-> > > SPI
-> > > + * GPIO driver, this SPI driver can be replaced by a simple GPIO
-> > > driver
-> > > + * providing 3 GPIO pins.
-> > > + */
-
-> > What's the advantage of not doing that?=A0=A0Overall the driver looks
-> > fairly
-> > good but it does seem to just implement a straight bitbanging driver
-> > with less flexibility.
-
-> MicroWire (SPI_3WIRE) mode is slightly different from the modes
-> implemented in=A0spi-bitbang-txrx.h. I was getting junk from device in
-> both Mode0 and Mode2 until I changed the implementation. The change is
-> documented in the patch.
-
-> There will also need to be changes in bitbang.c. SPI_LSB_FIRST will
-> require a new flasg in txrx_word(). To keep overhead low will require
-> to grow txrx_word[] from 4 to 16 or even 32. CPOL, CPHA, LSB_FIRST,
-> 3_WIRE each requires an additional power of 2.
-
-> While this change could be benefitial to both spi-gpio and spi-bitbang,=
-=20
-> it is very big.
-
-OK, the number of users is probably small enough that it's not worth
-worryinng about duplication.
-
---P+5wBWHyMmVhWeqO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWyuweAAoJECTWi3JdVIfQn4MH/RccQbJgucUlUUndwy9SALGR
-YWFx0e/1/aY+dHSgfiHXi5nC7um8Nct9ojKBk74oUvCwwtjnmJGBpPUJUg5d9///
-CebiwC+qbe2BuMy9Uy2qoRKgkd8lMva2n6Amn2HDkwvcDgh0jFTKgKPV7QcSZ9qk
-uyYrV6AAqk82fhE8szxQDQuG7sefwuGfABC6fx+gYQhVjZZZj47AIYONmqKlnnmz
-neOWuUoq8rigCb0kUT75NEVWh97hzYu4x93Vo9JxI5LBymUPO/ir4Q9rYdLEjiwP
-NHwHbIx4brkAGRRRdz0+r+pE+OZ11/4lTdvR4Jt3rboIpFgyr0xYDDf8V0WmCQw=
-=dN5H
------END PGP SIGNATURE-----
-
---P+5wBWHyMmVhWeqO--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Best regards,
+> Yakir
+> 
+> [0]: https://patchwork.kernel.org/patch/8086571/
+> 
+> 
+> Changes in v12:
+> - Re-order the include headers file alphabetically in phy-rockchip-dp.c (Jingoo)
+> 
+> Changes in v11:
+> - Correct the title of this rockchip dp phy document(Rob)
+> - Add the ack from Rob Herring
+> 
+> Changes in v10:
+> - Fix the wrong macro value of GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK
+>     BIT(4) -> BIT(20)
+> 
+> Changes in v9:
+> - Removed the unused the variable "res" in probe function. (Heiko)
+> - Removed the unused head file.
+> 
+> Changes in v8:
+> - Fix the mixed spacers on macro definitions. (Heiko)
+> - Remove the unnecessary empty line after clk_prepare_enable. (Heiko)
+> - Remove the specific address in the example node name. (Heiko)
+> 
+> Changes in v7:
+> - Simply the commit message. (Kishon)
+> - Symmetrical enable/disbale the phy clock and power. (Kishon)
+> - Simplify the commit message. (Kishon)
+> 
+> Changes in v5:
+> - Remove "reg" DT property, cause driver could poweron/poweroff phy via
+>   the exist "grf" syscon already. And rename the example DT node from
+>   "edp_phy: phy@ff770274" to "edp_phy: edp-phy" directly. (Heiko)
+> - Add deivce_node at the front of driver, update phy_ops type from "static
+>   struct" to "static const struct". And correct the input paramters of
+>   devm_phy_create() interfaces. (Heiko)
+> - Split binding doc's from driver changes. (Rob)
+> - Update the rockchip,grf explain in document, and correct the clock required
+>   elemets in document. (Rob & Heiko)
+> 
+> Changes in v4:
+> - Add commit message, and remove the redundant rockchip_dp_phy_init()
+>   function, move those code to probe() method. And remove driver .owner
+>   number. (Kishon)
+> 
+> Changes in v3:
+> - Suggest, add rockchip dp phy driver, collect the phy clocks and
+>   power control. (Heiko)
+> 
+> Yakir Yang (2):
+>   phy: Add driver for rockchip Display Port PHY
+>   dt-bindings: add document for rockchip dp phy
+> 
+>  .../devicetree/bindings/phy/rockchip-dp-phy.txt    |  22 +++
+>  drivers/phy/Kconfig                                |   7 +
+>  drivers/phy/Makefile                               |   1 +
+>  drivers/phy/phy-rockchip-dp.c                      | 151 +++++++++++++++++++++
+>  4 files changed, 181 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
+>  create mode 100644 drivers/phy/phy-rockchip-dp.c
+> 
