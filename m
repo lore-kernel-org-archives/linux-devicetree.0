@@ -1,94 +1,75 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/8] arm64: dts: qcom: apq8016-sbc: add usb support
-Date: Mon, 22 Feb 2016 10:20:13 +0000
-Message-ID: <56CAE0DD.304@linaro.org>
-References: <1455104164-29356-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1455104202-10560-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160222055124.GG21240@tuxbot>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback
+ compatibility strings
+Date: Mon, 22 Feb 2016 10:40:37 +0100
+Message-ID: <56CAD795.1090509@pengutronix.de>
+References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
+ <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
+ <20160222033720.GA27711@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160222055124.GG21240@tuxbot>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20160222033720.GA27711@rob-hp-laptop>
+Sender: linux-can-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 22/02/16 05:51, Bjorn Andersson wrote:
-> On Wed 10 Feb 03:36 PST 2016, Srinivas Kandagatla wrote:
->
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi | 15 ++++++++++
->>   arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 35 ++++++++++++++++++++++
->>   2 files changed, 50 insertions(+)
+On 02/22/2016 04:37 AM, Rob Herring wrote:
+> On Mon, Feb 22, 2016 at 11:15:49AM +0900, Simon Horman wrote:
+>> Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
+>> This is in keeping with the fallback scheme being adopted wherever
+>> appropriate for drivers for Renesas SoCs.
 >>
->> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
->> index cbeee0b..4a79dd9 100644
->> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-soc-pins.dtsi
->> @@ -10,4 +10,19 @@
->>   			output-low;
->>   		};
->>   	};
->> +
->> +	usb_id_default: usb_id_default {
->
-> Labels are built with _, node names with -.
->
->> +		pinmux {
->> +			function = "gpio";
->> +			pins = "gpio121";
->> +		};
->
-> You don't need a separate node to specify function...
->
->> +
->> +		pinconf {
->> +			pins = "gpio121";
->> +			function = "gpio";
->
-> ...but if you really want it, then you shouldn't specify the function
-> here.
-Oops, Will remove this and resend the patch.
->
->> +			drive-strength = <8>;
->> +			input-enable;
->> +			bias-pull-up;
->> +		};
->> +	};
->>   };
->> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
-> [..]
->> +
->> +	usb_id: usb-id {
->> +		interrupt-parent = <&msmgpio>;
->
-> interrupt-parent is part of specifying an interrupt. You're not doing
-> that here, so no need to specify a parent.
-Yep, will clean this up in next version.
->
->> +		compatible = "linux,extcon-usb-gpio";
->> +		id-gpio = <&msmgpio 121 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&usb_id_default>;
->>   	};
->>   };
->
-> Apart from these two nits
->
-> Acked-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>> ---
+>>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
+>>  drivers/net/can/rcar_can.c                             | 2 ++
+>>  2 files changed, 5 insertions(+), 1 deletion(-)
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks,
-srini
->
-> Regards,
-> Bjorn
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not following the latest DT discussions, is there a (new) decision
+to add such "generic" compatibles? AFAIK you add the oldest device
+that's compatible with your driver to your SoC dtsi at rightmost
+compatible. You can add one that identifies your SoC's IP core in front
+of it. So there's no need to modify the driver until an IP core needs
+different handling.
+
+In your case you'd identify the oldest SoC that implements the Gen1 IP
+core and use this instead of "renesas,can-gen1. Same for Gen2 IP core.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJWyteWAAoJED07qiWsqSVqobgH/iTIGnWrCF1Bxcp9CJQ+/7NT
+u3E0NCDK+TcePKtUT1gknSRjGslaTmIuUqw/6zdLL76WkD8paM5p07vPIMCrkKSv
+QMprS6QHpgd18seJxqMl7/Zy66As+RtOw+sGnaeIS/TBHItok+D7MQ8ecPpRm+xL
+8yxZ8hBcnr/umGDXW+cpOTEBW7wYfabiGUA/a+/vOMbBaAHbFdf+8lvsvRwufkRJ
+hSUhCUrk8a7893z/KkjTgECVr37WUM5H1apEcibPcbpoTyN4K2iPhB4EVoTLej9c
+M/7YuBywOul0kC/Frd+M6j4+236bf82BO+OXLzw0ULVS5+Z+w6PMj3jEWuJhSrI=
+=crVv
+-----END PGP SIGNATURE-----
+
+--TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr--
