@@ -1,399 +1,679 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v3] spi: master driver to enable RTC on ICPDAS LP-8841
-Date: Mon, 22 Feb 2016 14:57:42 +0300
-Message-ID: <1456142265-12925-1-git-send-email-ynvich@gmail.com>
-References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [RESEND PATCH V7 4/6] i2c: qup: Add bam dma capabilities
+Date: Mon, 22 Feb 2016 17:38:15 +0530
+Message-ID: <1456142895-32646-1-git-send-email-sricharan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>
+To: wsa@the-dreams.de
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
-master which makes the RTC usable. The driver is not supposed to work
-with anything else.
+QUP cores can be attached to a BAM module, which acts as
+a dma engine for the QUP core. When DMA with BAM is enabled,
+the BAM consumer pipe transmitted data is written to the
+output FIFO and the BAM producer pipe received data is read
+from the input FIFO.
 
-The driver uses the standard MicroWire half-duplex transfer timing.
-Master output is set on low clock and sensed by the RTC on the rising
-edge. Master input is set by the RTC on the trailing edge and is sensed
-by the master on low clock.
+With BAM capabilities, qup-i2c core can transfer more than
+256 bytes, without a 'stop' which is not possible otherwise.
 
-Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-CC: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+Reviewed-by: Andy Gross <andy.gross@linaro.org>
+Tested-by: Archit Taneja <architt@codeaurora.org>
+Tested-by: Telkar Nagender <ntelkar@codeaurora.org>
 ---
-   v2..v3 to fix Mark Brown review comments
-   * drop dependencies in Kconfig
-   * use #ifdef CONFIG_OF to allow build without DT
-   * drop empty driver->remove
+ Fixed Sparse/Static warnings.
 
-   v1..v2 to fix Mark Brown review comments
-   * drop ifdef around MODULE_NAME
-   * use usleep_range directly
-   * drop empty master->cleanup
+ drivers/i2c/busses/i2c-qup.c | 473 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 459 insertions(+), 14 deletions(-)
 
- .../devicetree/bindings/spi/spi-lp8841-rtc.txt     |  55 +++++
- drivers/spi/Kconfig                                |   9 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-lp8841-rtc.c                       | 255 +++++++++++++++++++++
- 4 files changed, 320 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt
- create mode 100644 drivers/spi/spi-lp8841-rtc.c
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt b/Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt
-new file mode 100644
-index 0000000..f191aef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-lp8841-rtc.txt
-@@ -0,0 +1,55 @@
-+* ICP DAS LP-8841 SPI Controller for RTC
-+
-+ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
-+master which makes the RTC usable. The driver is not supposed to work
-+with anything else.
-+
-+The driver uses the standard MicroWire half-duplex transfer timing.
-+Master output is set on low clock and sensed by the RTC on the rising
-+edge. Master input is set by the RTC on the trailing edge and is sensed
-+by the master on low clock.
-+
-+Required properties:
-+
-+- #address-cells: should be 1
-+
-+- #size-cells: should be 0
-+
-+- compatible: should be "icpdas,spi-lp8841-rtc"
-+
-+- reg: should provide IO memory address
-+
-+Requirements to SPI slave nodes:
-+
-+- There can be only one slave device.
-+
-+- The spi slave node should claim the following flags which are
-+  required by the spi controller.
-+
-+  - spi-3wire: The master itself has only 3 wire. It cannor work in
-+    full duplex mode.
-+
-+  - spi-cs-high: DS-1302 has active high chip select line. The master
-+    doesn't support active low.
-+
-+  - spi-lsb-first: DS-1302 requires least significant bit first
-+    transfers. The master only support this type of bit ordering.
-+
-+
-+Example:
-+
-+spi0@901c {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	compatible = "icpdas,spi-lp8841-rtc";
-+	reg = <0x901c 0x1>;
-+
-+	rtc@0 {
-+		compatible = "maxim,rtc-ds1302";
-+		reg = <0>;
-+		spi-max-frequency = <500000>;
-+		spi-3wire;
-+		spi-lsb-first;
-+		spi-cs-high;
-+	};
-+};
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 7706416..6a6626a 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -271,6 +271,15 @@ config SPI_LM70_LLP
- 	  which interfaces to an LM70 temperature sensor using
- 	  a parallel port.
+diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
+index f9009d6..30f3a2b 100644
+--- a/drivers/i2c/busses/i2c-qup.c
++++ b/drivers/i2c/busses/i2c-qup.c
+@@ -14,8 +14,12 @@
+  *
+  */
  
-+config SPI_LP8841_RTC
-+	tristate "ICP DAS LP-8841 SPI Controller for RTC"
-+	help
-+	  This driver provides an SPI master device to drive Maxim
-+	  DS-1302 real time clock.
++#include <linux/atomic.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/dmaengine.h>
++#include <linux/dmapool.h>
++#include <linux/dma-mapping.h>
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+@@ -24,6 +28,7 @@
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/scatterlist.h>
+ 
+ /* QUP Registers */
+ #define QUP_CONFIG		0x000
+@@ -33,6 +38,7 @@
+ #define QUP_OPERATIONAL		0x018
+ #define QUP_ERROR_FLAGS		0x01c
+ #define QUP_ERROR_FLAGS_EN	0x020
++#define QUP_OPERATIONAL_MASK	0x028
+ #define QUP_HW_VERSION		0x030
+ #define QUP_MX_OUTPUT_CNT	0x100
+ #define QUP_OUT_FIFO_BASE	0x110
+@@ -52,6 +58,7 @@
+ 
+ #define QUP_STATE_VALID		BIT(2)
+ #define QUP_I2C_MAST_GEN	BIT(4)
++#define QUP_I2C_FLUSH		BIT(6)
+ 
+ #define QUP_OPERATIONAL_RESET	0x000ff0
+ #define QUP_I2C_STATUS_RESET	0xfffffc
+@@ -77,7 +84,10 @@
+ 
+ /* Packing/Unpacking words in FIFOs, and IO modes */
+ #define QUP_OUTPUT_BLK_MODE	(1 << 10)
++#define QUP_OUTPUT_BAM_MODE	(3 << 10)
+ #define QUP_INPUT_BLK_MODE	(1 << 12)
++#define QUP_INPUT_BAM_MODE	(3 << 12)
++#define QUP_BAM_MODE		(QUP_OUTPUT_BAM_MODE | QUP_INPUT_BAM_MODE)
+ #define QUP_UNPACK_EN		BIT(14)
+ #define QUP_PACK_EN		BIT(15)
+ 
+@@ -94,6 +104,8 @@
+ #define QUP_TAG_DATA		(2 << 8)
+ #define QUP_TAG_STOP		(3 << 8)
+ #define QUP_TAG_REC		(4 << 8)
++#define QUP_BAM_INPUT_EOT		0x93
++#define QUP_BAM_FLUSH_STOP		0x96
+ 
+ /* QUP v2 tags */
+ #define QUP_TAG_V2_START               0x81
+@@ -114,6 +126,12 @@
+ #define ONE_BYTE			0x1
+ #define QUP_I2C_MX_CONFIG_DURING_RUN   BIT(31)
+ 
++#define MX_TX_RX_LEN			SZ_64K
++#define MX_BLOCKS			(MX_TX_RX_LEN / QUP_READ_LIMIT)
 +
-+	  Say N here unless you plan to run the kernel on an ICP DAS
-+	  LP-8x4x industrial computer.
++/* Max timeout in ms for 32k bytes */
++#define TOUT_MAX			300
 +
- config SPI_MPC52xx
- 	tristate "Freescale MPC52xx SPI (non-PSC) controller support"
- 	depends on PPC_MPC52xx
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index 8991ffc..9d10ddc 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -46,6 +46,7 @@ obj-$(CONFIG_SPI_GPIO)			+= spi-gpio.o
- obj-$(CONFIG_SPI_IMG_SPFI)		+= spi-img-spfi.o
- obj-$(CONFIG_SPI_IMX)			+= spi-imx.o
- obj-$(CONFIG_SPI_LM70_LLP)		+= spi-lm70llp.o
-+obj-$(CONFIG_SPI_LP8841_RTC)		+= spi-lp8841-rtc.o
- obj-$(CONFIG_SPI_MESON_SPIFC)		+= spi-meson-spifc.o
- obj-$(CONFIG_SPI_MPC512x_PSC)		+= spi-mpc512x-psc.o
- obj-$(CONFIG_SPI_MPC52xx_PSC)		+= spi-mpc52xx-psc.o
-diff --git a/drivers/spi/spi-lp8841-rtc.c b/drivers/spi/spi-lp8841-rtc.c
-new file mode 100644
-index 0000000..ae177bc
---- /dev/null
-+++ b/drivers/spi/spi-lp8841-rtc.c
-@@ -0,0 +1,255 @@
-+/*
-+ * SPI master driver for ICP DAS LP-8841 RTC
-+ *
-+ * Copyright (C) 2016 Sergei Ianovich
-+ *
-+ * based on
-+ *
-+ * Dallas DS1302 RTC Support
-+ * Copyright (C) 2002 David McCullough
-+ * Copyright (C) 2003 - 2007 Paul Mundt
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/spi/spi.h>
-+
-+#define DRIVER_NAME	"spi_lp8841_rtc"
-+
-+#define SPI_LP8841_RTC_CE	0x01
-+#define SPI_LP8841_RTC_CLK	0x02
-+#define SPI_LP8841_RTC_nWE	0x04
-+#define SPI_LP8841_RTC_MOSI	0x08
-+#define SPI_LP8841_RTC_MISO	0x01
-+
-+/*
-+ * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in SPI
-+ * GPIO driver, this SPI driver can be replaced by a simple GPIO driver
-+ * providing 3 GPIO pins.
-+ */
-+
-+struct spi_lp8841_rtc {
-+	void		*iomem;
-+	unsigned long	state;
+ struct qup_i2c_block {
+ 	int	count;
+ 	int	pos;
+@@ -123,6 +141,17 @@ struct qup_i2c_block {
+ 	u8	tags[6];
+ };
+ 
++struct qup_i2c_tag {
++	u8 *start;
++	dma_addr_t addr;
 +};
 +
-+static inline void
-+setsck(struct spi_lp8841_rtc *data, int is_on)
++struct qup_i2c_bam {
++	struct	qup_i2c_tag tag;
++	struct	dma_chan *dma;
++	struct	scatterlist *sg;
++};
++
+ struct qup_i2c_dev {
+ 	struct device		*dev;
+ 	void __iomem		*base;
+@@ -154,6 +183,13 @@ struct qup_i2c_dev {
+ 	/* To configure when bus is in run state */
+ 	int			config_run;
+ 
++	/* dma parameters */
++	bool			is_dma;
++	struct			dma_pool *dpool;
++	struct			qup_i2c_tag start_tag;
++	struct			qup_i2c_bam brx;
++	struct			qup_i2c_bam btx;
++
+ 	struct completion	xfer;
+ };
+ 
+@@ -230,6 +266,14 @@ static int qup_i2c_poll_state(struct qup_i2c_dev *qup, u32 req_state)
+ 	return qup_i2c_poll_state_mask(qup, req_state, QUP_STATE_MASK);
+ }
+ 
++static void qup_i2c_flush(struct qup_i2c_dev *qup)
 +{
-+	if (is_on)
-+		data->state |= SPI_LP8841_RTC_CLK;
-+	else
-+		data->state &= ~SPI_LP8841_RTC_CLK;
-+	writeb(data->state, data->iomem);
++	u32 val = readl(qup->base + QUP_STATE);
++
++	val |= QUP_I2C_FLUSH;
++	writel(val, qup->base + QUP_STATE);
 +}
 +
-+static inline void
-+setmosi(struct spi_lp8841_rtc *data, int is_on)
-+{
-+	if (is_on)
-+		data->state |= SPI_LP8841_RTC_MOSI;
-+	else
-+		data->state &= ~SPI_LP8841_RTC_MOSI;
-+	writeb(data->state, data->iomem);
-+}
+ static int qup_i2c_poll_state_valid(struct qup_i2c_dev *qup)
+ {
+ 	return qup_i2c_poll_state_mask(qup, 0, 0);
+@@ -437,12 +481,14 @@ static int qup_i2c_get_data_len(struct qup_i2c_dev *qup)
+ }
+ 
+ static int qup_i2c_set_tags(u8 *tags, struct qup_i2c_dev *qup,
+-			    struct i2c_msg *msg)
++			    struct i2c_msg *msg,  int is_dma)
+ {
+ 	u16 addr = (msg->addr << 1) | ((msg->flags & I2C_M_RD) == I2C_M_RD);
+ 	int len = 0;
+ 	int data_len;
+ 
++	int last = (qup->blk.pos == (qup->blk.count - 1)) && (qup->is_last);
 +
-+static inline int
-+getmiso(struct spi_lp8841_rtc *data)
-+{
-+	return ioread8(data->iomem) & SPI_LP8841_RTC_MISO;
-+}
-+
-+static inline u32
-+bitbang_txrx_be_cpha0_lsb(struct spi_lp8841_rtc *data,
-+		unsigned usecs, unsigned cpol, unsigned flags,
-+		u32 word, u8 bits)
-+{
-+	/* if (cpol == 0) this is SPI_MODE_0; else this is SPI_MODE_2 */
-+
-+	u32 shift = 32 - bits;
-+	/* clock starts at inactive polarity */
-+	for (; likely(bits); bits--) {
-+
-+		/* setup LSB (to slave) on leading edge */
-+		if ((flags & SPI_MASTER_NO_TX) == 0)
-+			setmosi(data, (word & 1));
-+
-+		usleep_range(usecs, usecs + 1);	/* T(setup) */
-+
-+		/* sample LSB (from slave) on trailing edge */
-+		word >>= 1;
-+		if ((flags & SPI_MASTER_NO_RX) == 0)
-+			word |= (getmiso(data) << 31);
-+
-+		setsck(data, !cpol);
-+		usleep_range(usecs, usecs + 1);
-+
-+		setsck(data, cpol);
+ 	if (qup->blk.pos == 0) {
+ 		tags[len++] = QUP_TAG_V2_START;
+ 		tags[len++] = addr & 0xff;
+@@ -452,7 +498,7 @@ static int qup_i2c_set_tags(u8 *tags, struct qup_i2c_dev *qup,
+ 	}
+ 
+ 	/* Send _STOP commands for the last block */
+-	if ((qup->blk.pos == (qup->blk.count - 1)) && qup->is_last) {
++	if (last) {
+ 		if (msg->flags & I2C_M_RD)
+ 			tags[len++] = QUP_TAG_V2_DATARD_STOP;
+ 		else
+@@ -472,6 +518,11 @@ static int qup_i2c_set_tags(u8 *tags, struct qup_i2c_dev *qup,
+ 	else
+ 		tags[len++] = data_len;
+ 
++	if ((msg->flags & I2C_M_RD) && last && is_dma) {
++		tags[len++] = QUP_BAM_INPUT_EOT;
++		tags[len++] = QUP_BAM_FLUSH_STOP;
 +	}
 +
-+	word >>= shift;
-+	return word;
+ 	return len;
+ }
+ 
+@@ -480,7 +531,7 @@ static int qup_i2c_issue_xfer_v2(struct qup_i2c_dev *qup, struct i2c_msg *msg)
+ 	int data_len = 0, tag_len, index;
+ 	int ret;
+ 
+-	tag_len = qup_i2c_set_tags(qup->blk.tags, qup, msg);
++	tag_len = qup_i2c_set_tags(qup->blk.tags, qup, msg, 0);
+ 	index = msg->len - qup->blk.data_len;
+ 
+ 	/* only tags are written for read */
+@@ -494,6 +545,306 @@ static int qup_i2c_issue_xfer_v2(struct qup_i2c_dev *qup, struct i2c_msg *msg)
+ 	return ret;
+ }
+ 
++static void qup_i2c_bam_cb(void *data)
++{
++	struct qup_i2c_dev *qup = data;
++
++	complete(&qup->xfer);
 +}
 +
-+static int
-+spi_lp8841_rtc_transfer_one(struct spi_master *master,
-+			    struct spi_device *spi,
-+			    struct spi_transfer *t)
++static int qup_sg_set_buf(struct scatterlist *sg, void *buf,
++			  struct qup_i2c_tag *tg, unsigned int buflen,
++			  struct qup_i2c_dev *qup, int map, int dir)
 +{
-+	struct spi_lp8841_rtc	*data = spi_master_get_devdata(master);
-+	unsigned		count = t->len;
-+	const u8		*tx = t->tx_buf;
-+	u8			*rx = t->rx_buf;
-+	u8			word = 0;
-+	int			ret = 0;
++	int ret;
 +
-+	if (tx) {
-+		data->state &= ~SPI_LP8841_RTC_nWE;
-+		writeb(data->state, data->iomem);
-+		while (likely(count > 0)) {
-+			word = *tx++;
-+			bitbang_txrx_be_cpha0_lsb(data, 1, 0,
-+					SPI_MASTER_NO_RX, word, 8);
-+			count--;
-+		}
-+	} else if (rx) {
-+		data->state |= SPI_LP8841_RTC_nWE;
-+		writeb(data->state, data->iomem);
-+		while (likely(count > 0)) {
-+			word = bitbang_txrx_be_cpha0_lsb(data, 1, 0,
-+					SPI_MASTER_NO_TX, word, 8);
-+			*rx++ = word;
-+			count--;
-+		}
-+	} else {
-+		ret = -EINVAL;
-+	}
-+
-+	spi_finalize_current_transfer(master);
-+
-+	return ret;
-+}
-+
-+static void
-+spi_lp8841_rtc_set_cs(struct spi_device *spi, bool enable)
-+{
-+	struct spi_lp8841_rtc *data = spi_master_get_devdata(spi->master);
-+
-+	data->state = 0;
-+	writeb(data->state, data->iomem);
-+	if (enable) {
-+		usleep_range(4, 5);
-+		data->state |= SPI_LP8841_RTC_CE;
-+		writeb(data->state, data->iomem);
-+		usleep_range(4, 5);
-+	}
-+}
-+
-+static int
-+spi_lp8841_rtc_setup(struct spi_device *spi)
-+{
-+	if ((spi->mode & SPI_CS_HIGH) == 0) {
-+		dev_err(&spi->dev, "unsupported active low chip select\n");
++	sg_set_buf(sg, buf, buflen);
++	ret = dma_map_sg(qup->dev, sg, 1, dir);
++	if (!ret)
 +		return -EINVAL;
-+	}
 +
-+	if ((spi->mode & SPI_LSB_FIRST) == 0) {
-+		dev_err(&spi->dev, "unsupported MSB first mode\n");
-+		return -EINVAL;
-+	}
-+
-+	if ((spi->mode & SPI_3WIRE) == 0) {
-+		dev_err(&spi->dev, "unsupported wiring. 3 wires required\n");
-+		return -EINVAL;
-+	}
++	if (!map)
++		sg_dma_address(sg) = tg->addr + ((u8 *)buf - tg->start);
 +
 +	return 0;
 +}
 +
-+#ifdef CONFIG_OF
-+static const struct of_device_id spi_lp8841_rtc_dt_ids[] = {
-+	{ .compatible = "icpdas,spi-lp8841-rtc" },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, spi_lp8841_rtc_dt_ids);
-+#endif
-+
-+static int
-+spi_lp8841_rtc_probe(struct platform_device *pdev)
++static void qup_i2c_rel_dma(struct qup_i2c_dev *qup)
 +{
-+	int				ret;
-+	struct spi_master		*master;
-+	struct spi_lp8841_rtc		*data;
-+	void				*iomem;
++	if (qup->btx.dma)
++		dma_release_channel(qup->btx.dma);
++	if (qup->brx.dma)
++		dma_release_channel(qup->brx.dma);
++	qup->btx.dma = NULL;
++	qup->brx.dma = NULL;
++}
 +
-+	master = spi_alloc_master(&pdev->dev, sizeof(*data));
-+	if (!master)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, master);
++static int qup_i2c_req_dma(struct qup_i2c_dev *qup)
++{
++	int err;
 +
-+	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->mode_bits = SPI_CS_HIGH | SPI_3WIRE | SPI_LSB_FIRST;
-+
-+	master->bus_num = pdev->id;
-+	master->num_chipselect = 1;
-+	master->setup = spi_lp8841_rtc_setup;
-+	master->set_cs = spi_lp8841_rtc_set_cs;
-+	master->transfer_one = spi_lp8841_rtc_transfer_one;
-+	master->bits_per_word_mask = SPI_BPW_MASK(8);
-+#ifdef CONFIG_OF
-+	master->dev.of_node = pdev->dev.of_node;
-+#endif
-+
-+	data = spi_master_get_devdata(master);
-+
-+	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->iomem =  devm_ioremap_resource(&pdev->dev, iomem);
-+	if (IS_ERR(data->iomem)) {
-+		dev_err(&pdev->dev, "failed to get IO address\n");
-+		goto err_put_master;
++	if (!qup->btx.dma) {
++		qup->btx.dma = dma_request_slave_channel_reason(qup->dev, "tx");
++		if (IS_ERR(qup->btx.dma)) {
++			err = PTR_ERR(qup->btx.dma);
++			qup->btx.dma = NULL;
++			dev_err(qup->dev, "\n tx channel not available");
++			return err;
++		}
 +	}
 +
-+	/* register with the SPI framework */
-+	ret = devm_spi_register_master(&pdev->dev, master);
-+	if (ret) {
-+		dev_err(&pdev->dev, "cannot register spi master\n");
-+		goto err_put_master;
++	if (!qup->brx.dma) {
++		qup->brx.dma = dma_request_slave_channel_reason(qup->dev, "rx");
++		if (IS_ERR(qup->brx.dma)) {
++			dev_err(qup->dev, "\n rx channel not available");
++			err = PTR_ERR(qup->brx.dma);
++			qup->brx.dma = NULL;
++			qup_i2c_rel_dma(qup);
++			return err;
++		}
++	}
++	return 0;
++}
++
++static int qup_i2c_bam_do_xfer(struct qup_i2c_dev *qup, struct i2c_msg *msg,
++			       int num)
++{
++	struct dma_async_tx_descriptor *txd, *rxd = NULL;
++	int ret = 0, idx = 0, limit = QUP_READ_LIMIT;
++	dma_cookie_t cookie_rx, cookie_tx;
++	u32 rx_nents = 0, tx_nents = 0, len, blocks, rem;
++	u32 i, tlen, tx_len, tx_buf = 0, rx_buf = 0, off = 0;
++	u8 *tags;
++
++	while (idx < num) {
++		blocks = (msg->len + limit) / limit;
++		rem = msg->len % limit;
++		tx_len = 0, len = 0, i = 0;
++
++		qup->is_last = (idx == (num - 1));
++
++		qup_i2c_set_blk_data(qup, msg);
++
++		if (msg->flags & I2C_M_RD) {
++			rx_nents += (blocks * 2) + 1;
++			tx_nents += 1;
++
++			while (qup->blk.pos < blocks) {
++				/* length set to '0' implies 256 bytes */
++				tlen = (i == (blocks - 1)) ? rem : 0;
++				tags = &qup->start_tag.start[off + len];
++				len += qup_i2c_set_tags(tags, qup, msg, 1);
++
++				/* scratch buf to read the start and len tags */
++				ret = qup_sg_set_buf(&qup->brx.sg[rx_buf++],
++						     &qup->brx.tag.start[0],
++						     &qup->brx.tag,
++						     2, qup, 0, 0);
++
++				if (ret)
++					return ret;
++
++				ret = qup_sg_set_buf(&qup->brx.sg[rx_buf++],
++						     &msg->buf[limit * i],
++						     NULL, tlen, qup,
++						     1, DMA_FROM_DEVICE);
++				if (ret)
++					return ret;
++
++				i++;
++				qup->blk.pos = i;
++			}
++			ret = qup_sg_set_buf(&qup->btx.sg[tx_buf++],
++					     &qup->start_tag.start[off],
++					     &qup->start_tag, len, qup, 0, 0);
++			if (ret)
++				return ret;
++
++			off += len;
++			/* scratch buf to read the BAM EOT and FLUSH tags */
++			ret = qup_sg_set_buf(&qup->brx.sg[rx_buf++],
++					     &qup->brx.tag.start[0],
++					     &qup->brx.tag, 2,
++					     qup, 0, 0);
++			if (ret)
++				return ret;
++		} else {
++			tx_nents += (blocks * 2);
++
++			while (qup->blk.pos < blocks) {
++				tlen = (i == (blocks - 1)) ? rem : 0;
++				tags = &qup->start_tag.start[off + tx_len];
++				len = qup_i2c_set_tags(tags, qup, msg, 1);
++
++				ret = qup_sg_set_buf(&qup->btx.sg[tx_buf++],
++						     tags,
++						     &qup->start_tag, len,
++						     qup, 0, 0);
++				if (ret)
++					return ret;
++
++				tx_len += len;
++				ret = qup_sg_set_buf(&qup->btx.sg[tx_buf++],
++						     &msg->buf[limit * i],
++						     NULL, tlen, qup, 1,
++						     DMA_TO_DEVICE);
++				if (ret)
++					return ret;
++				i++;
++				qup->blk.pos = i;
++			}
++			off += tx_len;
++
++			if (idx == (num - 1)) {
++				len = 1;
++				if (rx_nents) {
++					qup->btx.tag.start[0] =
++							QUP_BAM_INPUT_EOT;
++					len++;
++				}
++				qup->btx.tag.start[len - 1] =
++							QUP_BAM_FLUSH_STOP;
++				ret = qup_sg_set_buf(&qup->btx.sg[tx_buf++],
++						     &qup->btx.tag.start[0],
++						     &qup->btx.tag, len,
++						     qup, 0, 0);
++				if (ret)
++					return ret;
++				tx_nents += 1;
++			}
++		}
++		idx++;
++		msg++;
 +	}
 +
-+	return ret;
++	txd = dmaengine_prep_slave_sg(qup->btx.dma, qup->btx.sg, tx_nents,
++				      DMA_MEM_TO_DEV,
++				      DMA_PREP_INTERRUPT | DMA_PREP_FENCE);
++	if (!txd) {
++		dev_err(qup->dev, "failed to get tx desc\n");
++		ret = -EINVAL;
++		goto desc_err;
++	}
 +
++	if (!rx_nents) {
++		txd->callback = qup_i2c_bam_cb;
++		txd->callback_param = qup;
++	}
 +
-+err_put_master:
-+	spi_master_put(master);
++	cookie_tx = dmaengine_submit(txd);
++	if (dma_submit_error(cookie_tx)) {
++		ret = -EINVAL;
++		goto desc_err;
++	}
 +
++	dma_async_issue_pending(qup->btx.dma);
++
++	if (rx_nents) {
++		rxd = dmaengine_prep_slave_sg(qup->brx.dma, qup->brx.sg,
++					      rx_nents, DMA_DEV_TO_MEM,
++					      DMA_PREP_INTERRUPT);
++		if (!rxd) {
++			dev_err(qup->dev, "failed to get rx desc\n");
++			ret = -EINVAL;
++
++			/* abort TX descriptors */
++			dmaengine_terminate_all(qup->btx.dma);
++			goto desc_err;
++		}
++
++		rxd->callback = qup_i2c_bam_cb;
++		rxd->callback_param = qup;
++		cookie_rx = dmaengine_submit(rxd);
++		if (dma_submit_error(cookie_rx)) {
++			ret = -EINVAL;
++			goto desc_err;
++		}
++
++		dma_async_issue_pending(qup->brx.dma);
++	}
++
++	if (!wait_for_completion_timeout(&qup->xfer, TOUT_MAX * HZ)) {
++		dev_err(qup->dev, "normal trans timed out\n");
++		ret = -ETIMEDOUT;
++	}
++
++	if (ret || qup->bus_err || qup->qup_err) {
++		if (qup->bus_err & QUP_I2C_NACK_FLAG) {
++			msg--;
++			dev_err(qup->dev, "NACK from %x\n", msg->addr);
++			ret = -EIO;
++
++			if (qup_i2c_change_state(qup, QUP_RUN_STATE)) {
++				dev_err(qup->dev, "change to run state timed out");
++				return ret;
++			}
++
++			if (rx_nents)
++				writel(QUP_BAM_INPUT_EOT,
++				       qup->base + QUP_OUT_FIFO_BASE);
++
++			writel(QUP_BAM_FLUSH_STOP,
++			       qup->base + QUP_OUT_FIFO_BASE);
++
++			qup_i2c_flush(qup);
++
++			/* wait for remaining interrupts to occur */
++			if (!wait_for_completion_timeout(&qup->xfer, HZ))
++				dev_err(qup->dev, "flush timed out\n");
++
++			qup_i2c_rel_dma(qup);
++		}
++	}
++
++	dma_unmap_sg(qup->dev, qup->btx.sg, tx_nents, DMA_TO_DEVICE);
++
++	if (rx_nents)
++		dma_unmap_sg(qup->dev, qup->brx.sg, rx_nents,
++			     DMA_FROM_DEVICE);
++desc_err:
 +	return ret;
 +}
 +
-+MODULE_ALIAS("platform:" DRIVER_NAME);
++static int qup_i2c_bam_xfer(struct i2c_adapter *adap, struct i2c_msg *msg,
++			    int num)
++{
++	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
++	int ret = 0;
 +
-+static struct platform_driver spi_lp8841_rtc_driver = {
-+	.driver = {
-+		.name	= DRIVER_NAME,
-+		.of_match_table = of_match_ptr(spi_lp8841_rtc_dt_ids),
-+	},
-+	.probe		= spi_lp8841_rtc_probe,
-+};
-+module_platform_driver(spi_lp8841_rtc_driver);
++	enable_irq(qup->irq);
++	ret = qup_i2c_req_dma(qup);
 +
-+MODULE_DESCRIPTION("SPI master driver for ICP DAS LP-8841 RTC");
-+MODULE_AUTHOR("Sergei Ianovich");
-+MODULE_LICENSE("GPL");
++	if (ret)
++		goto out;
++
++	qup->bus_err = 0;
++	qup->qup_err = 0;
++
++	writel(0, qup->base + QUP_MX_INPUT_CNT);
++	writel(0, qup->base + QUP_MX_OUTPUT_CNT);
++
++	/* set BAM mode */
++	writel(QUP_REPACK_EN | QUP_BAM_MODE, qup->base + QUP_IO_MODE);
++
++	/* mask fifo irqs */
++	writel((0x3 << 8), qup->base + QUP_OPERATIONAL_MASK);
++
++	/* set RUN STATE */
++	ret = qup_i2c_change_state(qup, QUP_RUN_STATE);
++	if (ret)
++		goto out;
++
++	writel(qup->clk_ctl, qup->base + QUP_I2C_CLK_CTL);
++
++	qup->msg = msg;
++	ret = qup_i2c_bam_do_xfer(qup, qup->msg, num);
++out:
++	disable_irq(qup->irq);
++
++	qup->msg = NULL;
++	return ret;
++}
++
+ static int qup_i2c_wait_for_complete(struct qup_i2c_dev *qup,
+ 				     struct i2c_msg *msg)
+ {
+@@ -850,7 +1201,7 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+ 			   int num)
+ {
+ 	struct qup_i2c_dev *qup = i2c_get_adapdata(adap);
+-	int ret, idx;
++	int ret, len, idx = 0, use_dma = 0;
+ 
+ 	ret = pm_runtime_get_sync(qup->dev);
+ 	if (ret < 0)
+@@ -865,7 +1216,27 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+ 	writel(I2C_MINI_CORE | I2C_N_VAL_V2, qup->base + QUP_CONFIG);
+ 	writel(QUP_V2_TAGS_EN, qup->base + QUP_I2C_MASTER_GEN);
+ 
+-	for (idx = 0; idx < num; idx++) {
++	if ((qup->is_dma)) {
++		/* All i2c_msgs should be transferred using either dma or cpu */
++		for (idx = 0; idx < num; idx++) {
++			if (msgs[idx].len == 0) {
++				ret = -EINVAL;
++				goto out;
++			}
++
++			len = (msgs[idx].len > qup->out_fifo_sz) ||
++			      (msgs[idx].len > qup->in_fifo_sz);
++
++			if ((!is_vmalloc_addr(msgs[idx].buf)) && len) {
++				use_dma = 1;
++			 } else {
++				use_dma = 0;
++				break;
++			}
++		}
++	}
++
++	do {
+ 		if (msgs[idx].len == 0) {
+ 			ret = -EINVAL;
+ 			goto out;
+@@ -884,14 +1255,15 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
+ 
+ 		reinit_completion(&qup->xfer);
+ 
+-		if (msgs[idx].flags & I2C_M_RD)
+-			ret = qup_i2c_read_one_v2(qup, &msgs[idx]);
+-		else
+-			ret = qup_i2c_write_one_v2(qup, &msgs[idx]);
+-
+-		if (ret)
+-			break;
+-	}
++		if (use_dma) {
++			ret = qup_i2c_bam_xfer(adap, &msgs[idx], num);
++		} else {
++			if (msgs[idx].flags & I2C_M_RD)
++				ret = qup_i2c_read_one_v2(qup, &msgs[idx]);
++			else
++				ret = qup_i2c_write_one_v2(qup, &msgs[idx]);
++		}
++	} while ((idx++ < (num - 1)) && !use_dma && !ret);
+ 
+ 	if (!ret)
+ 		ret = qup_i2c_change_state(qup, QUP_RESET_STATE);
+@@ -958,6 +1330,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 	int ret, fs_div, hs_div;
+ 	int src_clk_freq;
+ 	u32 clk_freq = 100000;
++	int blocks;
+ 
+ 	qup = devm_kzalloc(&pdev->dev, sizeof(*qup), GFP_KERNEL);
+ 	if (!qup)
+@@ -974,8 +1347,63 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 		qup->adap.quirks = &qup_i2c_quirks;
+ 	} else {
+ 		qup->adap.algo = &qup_i2c_algo_v2;
++		ret = qup_i2c_req_dma(qup);
++
++		if (ret == -EPROBE_DEFER)
++			goto fail_dma;
++		else if (ret != 0)
++			goto nodma;
++
++		blocks = (MX_BLOCKS << 1) + 1;
++		qup->btx.sg = devm_kzalloc(&pdev->dev,
++					   sizeof(*qup->btx.sg) * blocks,
++					   GFP_KERNEL);
++		if (!qup->btx.sg) {
++			ret = -ENOMEM;
++			goto fail_dma;
++		}
++		sg_init_table(qup->btx.sg, blocks);
++
++		qup->brx.sg = devm_kzalloc(&pdev->dev,
++					   sizeof(*qup->brx.sg) * blocks,
++					   GFP_KERNEL);
++		if (!qup->brx.sg) {
++			ret = -ENOMEM;
++			goto fail_dma;
++		}
++		sg_init_table(qup->brx.sg, blocks);
++
++		/* 2 tag bytes for each block + 5 for start, stop tags */
++		size = blocks * 2 + 5;
++		qup->dpool = dma_pool_create("qup_i2c-dma-pool", &pdev->dev,
++					     size, 4, 0);
++
++		qup->start_tag.start = dma_pool_alloc(qup->dpool, GFP_KERNEL,
++						      &qup->start_tag.addr);
++		if (!qup->start_tag.start) {
++			ret = -ENOMEM;
++			goto fail_dma;
++		}
++
++		qup->brx.tag.start = dma_pool_alloc(qup->dpool,
++						    GFP_KERNEL,
++						    &qup->brx.tag.addr);
++		if (!qup->brx.tag.start) {
++			ret = -ENOMEM;
++			goto fail_dma;
++		}
++
++		qup->btx.tag.start = dma_pool_alloc(qup->dpool,
++						    GFP_KERNEL,
++						    &qup->btx.tag.addr);
++		if (!qup->btx.tag.start) {
++			ret = -ENOMEM;
++			goto fail_dma;
++		}
++		qup->is_dma = true;
+ 	}
+ 
++nodma:
+ 	/* We support frequencies up to FAST Mode (400KHz) */
+ 	if (!clk_freq || clk_freq > 400000) {
+ 		dev_err(qup->dev, "clock frequency not supported %d\n",
+@@ -1073,7 +1501,7 @@ static int qup_i2c_probe(struct platform_device *pdev)
+ 	i2c_set_adapdata(&qup->adap, qup);
+ 	qup->adap.dev.parent = qup->dev;
+ 	qup->adap.dev.of_node = pdev->dev.of_node;
+-	qup->is_last = 1;
++	qup->is_last = true;
+ 
+ 	strlcpy(qup->adap.name, "QUP I2C adapter", sizeof(qup->adap.name));
+ 
+@@ -1093,6 +1521,11 @@ fail_runtime:
+ 	pm_runtime_set_suspended(qup->dev);
+ fail:
+ 	qup_i2c_disable_clocks(qup);
++fail_dma:
++	if (qup->btx.dma)
++		dma_release_channel(qup->btx.dma);
++	if (qup->brx.dma)
++		dma_release_channel(qup->brx.dma);
+ 	return ret;
+ }
+ 
+@@ -1100,6 +1533,18 @@ static int qup_i2c_remove(struct platform_device *pdev)
+ {
+ 	struct qup_i2c_dev *qup = platform_get_drvdata(pdev);
+ 
++	if (qup->is_dma) {
++		dma_pool_free(qup->dpool, qup->start_tag.start,
++			      qup->start_tag.addr);
++		dma_pool_free(qup->dpool, qup->brx.tag.start,
++			      qup->brx.tag.addr);
++		dma_pool_free(qup->dpool, qup->btx.tag.start,
++			      qup->btx.tag.addr);
++		dma_pool_destroy(qup->dpool);
++		dma_release_channel(qup->btx.dma);
++		dma_release_channel(qup->brx.dma);
++	}
++
+ 	disable_irq(qup->irq);
+ 	qup_i2c_disable_clocks(qup);
+ 	i2c_del_adapter(&qup->adap);
 -- 
-2.6.3
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
