@@ -1,57 +1,143 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH/RFC v2 0/9] Add support for USB2.0 host/peripheral on R-Car H3
-Date: Mon, 22 Feb 2016 18:57:59 +0900
-Message-ID: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC v2 1/9] phy: rcar-gen3-usb2: remove unnecesary struct rcar_gen3_data
+Date: Mon, 22 Feb 2016 18:58:00 +0900
+Message-ID: <1456135088-7976-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on the renesas-drivers.git /
-renesas-drivers-2016-02-16-v4.5-rc4 tag
-(commit id = a633abe6e6393c60417bd8cb0cf82f3297740198),
-and the following patches:
+Since this driver uses the struct rcar_gen3_data in struct rcar_gen3_chan
+only, we can remove the rcar_gen3_data.
 
-[ renesas_usbhs driver ]
-http://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=cff0fef33d77bd7e98463029e5d0a4191d9bbb95
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/phy/phy-rcar-gen3-usb2.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
-[ generic phy driver for R-Car H3 ]
-http://thread.gmane.org/gmane.linux.kernel/2120685
-
-This patch set contains patches that are related to generic phy driver.
-As I wrote a comment in patch 7, to handle VBUS on/off for USB2.0 host
-channel 0, I use a regulator driver instead of extcon/max3355 driver.
-This is a reason that I marked this patch set is a RFC because I'm not
-sure that this way is acceptable or not.
-
-Also patch 5 should resolve checkpatch.pl warnings, and patch 6 should
-have dmas property to use USB-DMAC later.
-
-Changes from v1:
- - Remove PFC for usb2.0 host patch because it contains the renesas-drivers.
- - Change the patch order of the phy driver. (clean up code is in first.)
- - Change the property of "phy-supply" to "vbus-supply".
-
-Yoshihiro Shimoda (9):
-  phy: rcar-gen3-usb2: remove unnecesary struct rcar_gen3_data
-  phy: rcar-gen3-usb2: Add vbus-supply to handle VBUS on/off
-  phy: rcar-gen3-usb2: add extcon support
-  arm64: dts: r8a7795: add usb2_phy device nodes
-  arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
-  arm64: dts: r8a7795: add HS-USB device node
-  arm64: dts: salvator-x: enable usb2_phy
-  arm64: dts: salvator-x: enable USB 2.0 Host channels
-  arm64: dts: salvator-x: enable HS-USB
-
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |   2 +
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts |  73 +++++++++++++-
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 107 +++++++++++++++++++++
- drivers/phy/Kconfig                                |   1 +
- drivers/phy/phy-rcar-gen3-usb2.c                   |  87 +++++++++++++----
- 5 files changed, 250 insertions(+), 20 deletions(-)
-
+diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
+index bc4f7dd..2da2148 100644
+--- a/drivers/phy/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/phy-rcar-gen3-usb2.c
+@@ -74,20 +74,15 @@
+ #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+ #define USB2_ADPCTRL_DRVVBUS		BIT(4)
+ 
+-struct rcar_gen3_data {
+-	void __iomem *base;
+-	struct clk *clk;
+-};
+-
+ struct rcar_gen3_chan {
+-	struct rcar_gen3_data usb2;
++	void __iomem *base;
+ 	struct phy *phy;
+ 	bool has_otg;
+ };
+ 
+ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_COMMCTRL);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, host);
+@@ -100,7 +95,7 @@ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ 
+ static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_LINECTRL1);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
+@@ -114,7 +109,7 @@ static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ 
+ static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_ADPCTRL);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, vbus);
+@@ -141,13 +136,13 @@ static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
+ 
+ static bool rcar_gen3_check_vbus(struct rcar_gen3_chan *ch)
+ {
+-	return !!(readl(ch->usb2.base + USB2_ADPCTRL) &
++	return !!(readl(ch->base + USB2_ADPCTRL) &
+ 		  USB2_ADPCTRL_OTGSESSVLD);
+ }
+ 
+ static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
+ {
+-	return !!(readl(ch->usb2.base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
++	return !!(readl(ch->base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
+ }
+ 
+ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+@@ -166,7 +161,7 @@ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+ 
+ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_VBCTRL);
+@@ -187,7 +182,7 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+-	void __iomem *usb2_base = channel->usb2.base;
++	void __iomem *usb2_base = channel->base;
+ 
+ 	/* Initialize USB2 part */
+ 	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
+@@ -205,7 +200,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+ 
+-	writel(0, channel->usb2.base + USB2_INT_ENABLE);
++	writel(0, channel->base + USB2_INT_ENABLE);
+ 
+ 	return 0;
+ }
+@@ -213,7 +208,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+-	void __iomem *usb2_base = channel->usb2.base;
++	void __iomem *usb2_base = channel->base;
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_USBCTR);
+@@ -235,7 +230,7 @@ static struct phy_ops rcar_gen3_phy_usb2_ops = {
+ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ {
+ 	struct rcar_gen3_chan *ch = _ch;
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 status = readl(usb2_base + USB2_OBINTSTA);
+ 	irqreturn_t ret = IRQ_NONE;
+ 
+@@ -273,9 +268,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	channel->usb2.base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(channel->usb2.base))
+-		return PTR_ERR(channel->usb2.base);
++	channel->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(channel->base))
++		return PTR_ERR(channel->base);
+ 
+ 	/* call request_irq for OTG */
+ 	irq = platform_get_irq(pdev, 0);
 -- 
 1.9.1
