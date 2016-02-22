@@ -1,38 +1,45 @@
-From: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt/bindings: Add 'nvidia,hd-no-invert' option
-Date: Mon, 22 Feb 2016 14:12:15 -0700
-Message-ID: <56CB79AF.9010905@gmail.com>
-References: <56C3977E.8050001@wwwdotorg.org>
- <1456122253-3039-1-git-send-email-sctincman@gmail.com>
- <1456122253-3039-2-git-send-email-sctincman@gmail.com>
- <56CB6624.6030600@wwwdotorg.org>
+From: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+Subject: [PATCH] firmware: fw_cfg register offsets on supported architectures
+ only
+Date: Mon, 22 Feb 2016 16:18:18 -0500
+Message-ID: <20160222211818.GJ16357@HEDWIG.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56CB6624.6030600-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Oh! I see now. That should actually work, will test quickly and see.
+Refrain from defining default fw_cfg register offsets on
+unsupported architectures -- throw an error instead. If
+QEMU were to add fw_cfg support on additional architectures,
+we should add them to the FW_CFG_SYSFS depends statement in
+drivers/firmware/Kconfig, and provide default values for
+register offsets in drivers/firmware/qemu_fw_cfg.c at that
+time.
 
-On 02/22/2016 12:48 PM, Stephen Warren wrote:
-> On 02/21/2016 11:24 PM, Jonathan Tinkham wrote:
->> Document an option to not invert the headphone detect GPIO signal
->>
->
->> diff --git 
->> a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt 
->> b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt 
->>
->
->>   Optional properties:
->>   - nvidia,hp-det-gpios : The GPIO that detect headphones are plugged in
->> +- nvidia,hd-no-invert : Do not invert headphone detect signal
->
-> We should use "hp" not "hd" to be consistent with other properties.
->
-> Why can't we use the GPIO specifier's ACTIVE_LOW/ACTIVE_HIGH flag to 
-> represent the polarity of this signal?
+Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+---
+ drivers/firmware/qemu_fw_cfg.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+index fedbff5..79f6b7b 100644
+--- a/drivers/firmware/qemu_fw_cfg.c
++++ b/drivers/firmware/qemu_fw_cfg.c
+@@ -109,9 +109,7 @@ static void fw_cfg_io_cleanup(void)
+ #  define FW_CFG_CTRL_OFF 0x00
+ #  define FW_CFG_DATA_OFF 0x01
+ # else
+-#  warning "QEMU FW_CFG may not be available on this architecture!"
+-#  define FW_CFG_CTRL_OFF 0x00
+-#  define FW_CFG_DATA_OFF 0x01
++#  error "QEMU FW_CFG not available on this architecture!"
+ # endif
+ #endif
+ 
+-- 
+2.4.3
