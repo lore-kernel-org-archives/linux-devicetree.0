@@ -1,59 +1,54 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 1/4] firmware: introduce sysfs driver for QEMU's
- fw_cfg device
-Date: Mon, 22 Feb 2016 22:14:50 +0200
-Message-ID: <20160222220756-mutt-send-email-mst@redhat.com>
-References: <1453990994-17801-1-git-send-email-somlo@cmu.edu>
- <1453990994-17801-2-git-send-email-somlo@cmu.edu>
- <20160221100557-mutt-send-email-mst@redhat.com>
- <20160221130614.GA4511@GLSMBP.INI.CMU.EDU>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 2/3] clk: mvebu: add AP806 core clock driver
+Date: Mon, 22 Feb 2016 12:23:20 -0800
+Message-ID: <20160222202320.2278.62793@quark.deferred.io>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1455521698-7905-3-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160222025357.GE15973@rob-hp-laptop>
+ <20160222091423.4756a579@free-electrons.com> <20160222141617.GA14970@lunn.ch>
+ <20160222183203.2278.60153@quark.deferred.io>
+ <CAL_Jsq+iiUBcTdnqzFWLJ+5jPvq0rmWgBboab4xyj1dQyDQE+Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160221130614.GA4511-VPZ87SnTp2qKUezXOiBB2eW1CriLhL8O@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+iiUBcTdnqzFWLJ+5jPvq0rmWgBboab4xyj1dQyDQE+Q@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 21, 2016 at 08:06:17AM -0500, Gabriel L. Somlo wrote:
-> > > +static void fw_cfg_io_cleanup(void)
-> > > +{
-> > > +	if (fw_cfg_is_mmio) {
-> > > +		iounmap(fw_cfg_dev_base);
-> > > +		release_mem_region(fw_cfg_p_base, fw_cfg_p_size);
-> > > +	} else {
-> > > +		ioport_unmap(fw_cfg_dev_base);
-> > > +		release_region(fw_cfg_p_base, fw_cfg_p_size);
-> > > +	}
-> > > +}
-> > > +
-> > > +/* arch-specific ctrl & data register offsets are not available in ACPI, DT */
-> > 
-> > So for all arches which support ACPI, I think this driver
-> > should just rely on ACPI.
+Quoting Rob Herring (2016-02-22 11:42:49)
+> On Mon, Feb 22, 2016 at 12:32 PM, Michael Turquette
+> <mturquette@baylibre.com> wrote:
+> > Quoting Andrew Lunn (2016-02-22 06:16:17)
+> >> > Such information will come later, and we can rework the drivers and DT
+> >> > bindings accordingly. Those DT bindings cannot be stable, as the
+> >> > platform is under heavy development and we'll probably discover some
+> >> > issues down the road.
+> >>
+> >> Hi Thomas
+> >>
+> >> Maybe add a big fat warning that the bindings are unstable, and the DT
+> >> blob must be kept in sync with the kernel?
+> >
+> > +1 and feel free to blame the lack of documentation.  No one can expect
+> > bindings to be finalized when the chip topology is not fully understood.
 > 
-> There was a discussion about that a few versions ago, and IIRC the
-> conclusion was not to expect the firmware to contend for fw_cfg access
-> after the guest kernel boots:
+> I can understand not understanding the full clock tree. I have "full"
+> documentation of a Marvell chip and don't understand the clock tree
+> fully. But I can't believe you don't have some sense of how many
+> clocks you have to deal with. 10? 100? 1000? What I see is 2 nodes of
+> a single register each for clocks at roughly the same address. That
+> tells me your binding is too fine grained. If you really don't know
+> what is right, then err on the side of a single clock provider node
+> and don't put the clock details in DT.
+
+I like the "err on the side of caution" part. I'll add that to
+clock-bindings.txt.
+
+Regards,
+Mike
+
 > 
-> https://lkml.org/lkml/2015/10/5/283
-> 
-
-So it looks like NVDIMM at least wants to pass label data to guest -
-for which fw cfg might be a reasonable choice.
-
-I suspect things changed - fw cfg used to be very slow but we now have
-DMA interface which makes it useful for a range of applications.
-
-> (I even had a prototype version doing what you suggested, but per the above
-> reference decided to drop it -- which IMHO is for the better, since otherwise
-> I'd have had to ifdef between ACPI and non-ACPI versions of the driver --
-> see https://lkml.org/lkml/2015/11/4/534 )
-
-I'm not sure why you have these ifdefs - they are on the host, are they
-not?
-
--- 
-MST
+> Rob
