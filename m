@@ -1,29 +1,38 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1] ARM: dts: nitrogen6x: add USB host 1 support
-Date: Mon, 22 Feb 2016 17:53:41 -0300
-Message-ID: <CAOMZO5BoPtUfL6PVzqLkZvwvn4=zNTTYgR1u4TOe4268cu+WLg@mail.gmail.com>
-References: <1456171421-10044-1-git-send-email-ps.report@gmx.net>
-	<56CB7438.5030102@boundarydevices.com>
+From: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt/bindings: Add 'nvidia,hd-no-invert' option
+Date: Mon, 22 Feb 2016 14:12:15 -0700
+Message-ID: <56CB79AF.9010905@gmail.com>
+References: <56C3977E.8050001@wwwdotorg.org>
+ <1456122253-3039-1-git-send-email-sctincman@gmail.com>
+ <1456122253-3039-2-git-send-email-sctincman@gmail.com>
+ <56CB6624.6030600@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56CB7438.5030102-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: Peter Seiderer <ps.report-hi6Y0CQ0nG0@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, peter.chen-3arQi8VN3Tc@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56CB6624.6030600-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 5:48 PM, Troy Kisky
-<troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+Oh! I see now. That should actually work, will test quickly and see.
 
-> I'm ok with this patch, but a more correct fix would be to add a
-> reset-gpios to usbh1 instead, as this is a reset pin for
-> a usb hub. So if nobody else has a problem,
-
-The problem is that such solution does not exist today.
-
-Peter Chen has been working on it lately.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 02/22/2016 12:48 PM, Stephen Warren wrote:
+> On 02/21/2016 11:24 PM, Jonathan Tinkham wrote:
+>> Document an option to not invert the headphone detect GPIO signal
+>>
+>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt 
+>> b/Documentation/devicetree/bindings/sound/nvidia,tegra-audio-max98090.txt 
+>>
+>
+>>   Optional properties:
+>>   - nvidia,hp-det-gpios : The GPIO that detect headphones are plugged in
+>> +- nvidia,hd-no-invert : Do not invert headphone detect signal
+>
+> We should use "hp" not "hd" to be consistent with other properties.
+>
+> Why can't we use the GPIO specifier's ACTIVE_LOW/ACTIVE_HIGH flag to 
+> represent the polarity of this signal?
