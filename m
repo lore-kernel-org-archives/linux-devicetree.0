@@ -1,30 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] ARM: dts: am43x-epos-evm: Add the am438 compatible
- string
-Date: Sun, 21 Feb 2016 20:54:54 -0600
-Message-ID: <20160222025454.GP15973@rob-hp-laptop>
-References: <1455773381-11839-1-git-send-email-j-keerthy@ti.com>
- <1455773381-11839-2-git-send-email-j-keerthy@ti.com>
+Subject: Re: [PATCH 2/3] thermal: exynos: Document number of supported
+ trip-points
+Date: Sun, 21 Feb 2016 20:55:04 -0600
+Message-ID: <20160222025504.GQ15973@rob-hp-laptop>
+References: <1455772460-20684-1-git-send-email-k.kozlowski@samsung.com>
+ <1455772460-20684-2-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455773381-11839-2-git-send-email-j-keerthy@ti.com>
+In-Reply-To: <1455772460-20684-2-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: tony@atomide.com, paul@pwsan.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <l.majewski@samsung.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 10:59:40AM +0530, Keerthy wrote:
-> The SoCs on am43x-epos-evm are named am438x.
-> Hence add the compatibility string and remove the am4372 string.
-
-Presumably nothing is using these strings ATM for matching.
-
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+On Thu, Feb 18, 2016 at 02:14:19PM +0900, Krzysztof Kozlowski wrote:
+> Document the number of configurable temperature thresholds (for
+> trip-points in interrupt-driven mode).
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 > ---
->  Documentation/devicetree/bindings/arm/omap/omap.txt | 2 +-
->  arch/arm/boot/dts/am43x-epos-evm.dts                | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
