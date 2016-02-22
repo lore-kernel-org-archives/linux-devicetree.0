@@ -1,75 +1,48 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback
- compatibility strings
-Date: Mon, 22 Feb 2016 10:40:37 +0100
-Message-ID: <56CAD795.1090509@pengutronix.de>
-References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
- <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
- <20160222033720.GA27711@rob-hp-laptop>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Mon, 22 Feb 2016 19:39:30 +0900
+Message-ID: <20160222103930.GA18327@sirena.org.uk>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+ <1456134057-9824-1-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20160222033720.GA27711@rob-hp-laptop>
-Sender: linux-can-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="UKdSZztwKekUWPpk"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456134057-9824-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-On 02/22/2016 04:37 AM, Rob Herring wrote:
-> On Mon, Feb 22, 2016 at 11:15:49AM +0900, Simon Horman wrote:
->> Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
->> This is in keeping with the fallback scheme being adopted wherever
->> appropriate for drivers for Renesas SoCs.
->>
->> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->> ---
->>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
->>  drivers/net/can/rcar_can.c                             | 2 ++
->>  2 files changed, 5 insertions(+), 1 deletion(-)
->=20
-> Acked-by: Rob Herring <robh@kernel.org>
+--UKdSZztwKekUWPpk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I'm not following the latest DT discussions, is there a (new) decision
-to add such "generic" compatibles? AFAIK you add the oldest device
-that's compatible with your driver to your SoC dtsi at rightmost
-compatible. You can add one that identifies your SoC's IP core in front
-of it. So there's no need to modify the driver until an IP core needs
-different handling.
+On Mon, Feb 22, 2016 at 12:40:54PM +0300, Sergei Ianovich wrote:
 
-In your case you'd identify the oldest SoC that implements the Gen1 IP
-core and use this instead of "renesas,can-gen1. Same for Gen2 IP core.
+>    * drop empty master->cleanup
 
-regards,
-Marc
+You still have an empty remove() function.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr
+--UKdSZztwKekUWPpk
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-iQEcBAEBCgAGBQJWyteWAAoJED07qiWsqSVqobgH/iTIGnWrCF1Bxcp9CJQ+/7NT
-u3E0NCDK+TcePKtUT1gknSRjGslaTmIuUqw/6zdLL76WkD8paM5p07vPIMCrkKSv
-QMprS6QHpgd18seJxqMl7/Zy66As+RtOw+sGnaeIS/TBHItok+D7MQ8ecPpRm+xL
-8yxZ8hBcnr/umGDXW+cpOTEBW7wYfabiGUA/a+/vOMbBaAHbFdf+8lvsvRwufkRJ
-hSUhCUrk8a7893z/KkjTgECVr37WUM5H1apEcibPcbpoTyN4K2iPhB4EVoTLej9c
-M/7YuBywOul0kC/Frd+M6j4+236bf82BO+OXLzw0ULVS5+Z+w6PMj3jEWuJhSrI=
-=crVv
+iQEcBAEBCAAGBQJWyuVhAAoJECTWi3JdVIfQGU0H/jlp6+nlCU3OgdlN9Q6nQ3sC
+jz5EtK1gW4idZwuHb+VLBVi+JB56FooE9iXpE/CdOpbJHjMZ+Q+zRic1N6lA1A7U
+zouY7mdXPgUguuY3Bxw01n6GaHjwSFbH5kp/0TU6kwGiFWmaA+ewnv8Y9LSHbnRx
+vua4xqvj4zlI3mELDkxDgaw8ZuVs0AjJYAwovZnto0n7e6fGSPqcfyXwm3U7mXIV
+O52PexHsjGU5DpyYocoLGT2jc18znHySSMoeWXvjrQt0eRYRgWuMeQTOPfKgiTmO
+Ee371hUFEakLHDnZe6oVSF6folDklfxeLanedVH1Jhq06Ecsk2G6mhdFRN44z0E=
+=TPiN
 -----END PGP SIGNATURE-----
 
---TFsQp3vfDkNDOVfnr997vimPE2SxC5Rmr--
+--UKdSZztwKekUWPpk--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
