@@ -1,49 +1,92 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v1] arm: pxa: fix DT node name for PXA27X usb
-Date: Mon, 22 Feb 2016 14:08:17 +0300
-Message-ID: <1456139297-5854-1-git-send-email-ynvich@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:PXA2xx/PXA3xx
-	SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Mon, 22 Feb 2016 20:08:16 +0900
+Message-ID: <20160222110816.GD18327@sirena.org.uk>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+ <20160222031027.GP18327@sirena.org.uk>
+ <1456133174.2386.33.camel@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="P+5wBWHyMmVhWeqO"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456133174.2386.33.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Without this patch I am getting an error:
----8<---
-[   15.709742] ohci-pxa27x: OHCI PXA27x/PXA3x driver
-[   15.737150] pxa27x-ohci: probe of 4c000000.ohci failed with error -2
----8<---
 
-The error is generated in drivers/usb/host/ohci-pxa27x.c at line 441:
----8<---
-441:	usb_clk = devm_clk_get(&pdev->dev, NULL);
-442:	if (IS_ERR(usb_clk))
-443:		return PTR_ERR(usb_clk);
----8<---
+--P+5wBWHyMmVhWeqO
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The error is caused by different names for the same DT node in pxa2xx.dtsi
-and pxa27x.dtsi.
+On Mon, Feb 22, 2016 at 12:26:14PM +0300, Sergei Ianovich wrote:
+> On Mon, 2016-02-22 at 12:10 +0900, Mark Brown wrote:
+> > On Mon, Feb 22, 2016 at 04:47:06AM +0300, Sergei Ianovich wrote:
 
-Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-CC: Robert Jarzmik <robert.jarzmik@free.fr>
----
- arch/arm/boot/dts/pxa27x.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > +config SPI_LP8841_RTC
+> > > +	tristate "ICP DAS LP-8841 SPI Controller for RTC"
+> > > +	depends on OF && (MACH_PXA27X_DT || COMPILE_TEST)
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 7f68a1e..3016a73 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -26,7 +26,7 @@
- 			clocks = <&clks CLK_NONE>;
- 		};
- 
--		pxa27x_ohci: usb@4c000000 {
-+		usb0: ohci@4c000000 {
- 			compatible = "marvell,pxa-ohci";
- 			reg = <0x4c000000 0x10000>;
- 			interrupts = <3>;
--- 
-2.6.3
+> > Does this need a strict DT dependency or can it build without DT?
+
+> The driver can only be useful on a single industrial PC. That PC
+> requires DT, so I made this a strict=A0dependency. The dependency can be
+> removed by using ifdefs, but I see no point why.
+
+It makes it easier for anyone doing generic work on the kernel to build
+test, one could make exactly the same argument about the dependency on
+the PXA27x machine.
+
+> > > +/*
+> > > + * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in
+> > > SPI
+> > > + * GPIO driver, this SPI driver can be replaced by a simple GPIO
+> > > driver
+> > > + * providing 3 GPIO pins.
+> > > + */
+
+> > What's the advantage of not doing that?=A0=A0Overall the driver looks
+> > fairly
+> > good but it does seem to just implement a straight bitbanging driver
+> > with less flexibility.
+
+> MicroWire (SPI_3WIRE) mode is slightly different from the modes
+> implemented in=A0spi-bitbang-txrx.h. I was getting junk from device in
+> both Mode0 and Mode2 until I changed the implementation. The change is
+> documented in the patch.
+
+> There will also need to be changes in bitbang.c. SPI_LSB_FIRST will
+> require a new flasg in txrx_word(). To keep overhead low will require
+> to grow txrx_word[] from 4 to 16 or even 32. CPOL, CPHA, LSB_FIRST,
+> 3_WIRE each requires an additional power of 2.
+
+> While this change could be benefitial to both spi-gpio and spi-bitbang,=
+=20
+> it is very big.
+
+OK, the number of users is probably small enough that it's not worth
+worryinng about duplication.
+
+--P+5wBWHyMmVhWeqO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJWyuweAAoJECTWi3JdVIfQn4MH/RccQbJgucUlUUndwy9SALGR
+YWFx0e/1/aY+dHSgfiHXi5nC7um8Nct9ojKBk74oUvCwwtjnmJGBpPUJUg5d9///
+CebiwC+qbe2BuMy9Uy2qoRKgkd8lMva2n6Amn2HDkwvcDgh0jFTKgKPV7QcSZ9qk
+uyYrV6AAqk82fhE8szxQDQuG7sefwuGfABC6fx+gYQhVjZZZj47AIYONmqKlnnmz
+neOWuUoq8rigCb0kUT75NEVWh97hzYu4x93Vo9JxI5LBymUPO/ir4Q9rYdLEjiwP
+NHwHbIx4brkAGRRRdz0+r+pE+OZ11/4lTdvR4Jt3rboIpFgyr0xYDDf8V0WmCQw=
+=dN5H
+-----END PGP SIGNATURE-----
+
+--P+5wBWHyMmVhWeqO--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
