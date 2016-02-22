@@ -1,40 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-tree
-Date: Mon, 22 Feb 2016 16:19:39 +0100
-Message-ID: <18251200.Xfr10N5eWq@wuerfel>
-References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com> <28916176.WDrPajhOPa@wuerfel> <3802E9A6666DF54886E2B9CBF743BA9825E00BD4@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH v1] arm: pxa: fix DT node name for PXA27X usb
+Date: Mon, 22 Feb 2016 16:35:17 +0100
+Message-ID: <87oab8wyfe.fsf@belgarion.home>
+References: <1456139297-5854-1-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <3802E9A6666DF54886E2B9CBF743BA9825E00BD4@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456139297-5854-1-git-send-email-ynvich@gmail.com> (Sergei
+	Ianovich's message of "Mon, 22 Feb 2016 14:08:17 +0300")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:PXA2xx/PXA3xx
+	SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 22 February 2016 10:53:11 Anurag Kumar Vulisha wrote:
-> > >
-> > 
-> > How would a hardware integrator know which value is right for a particular
-> > SoC?
-> > 
-> > Could it be keyed off the hardware ID? Could the bootloader perhaps set an
-> > appropriate value in the AHCI_VEND_PTC register at boot time and the driver
-> > read the initial value from it?
-> > 
-> > From the description, it sounds like this is a policy decision rather than
-> > hardware description, and shouldn't really be in here.
-> > 
-> 
-> Thanks for reviewing the patch. Can I use module_param() for this watermark instead of reading it from devicetree or
-> doing it in bootloader. In bootloader we are initializing serdes controller for high speed devices. As a part of this initialization
-> we will be reseting all the high speed pheripherals which are using serdes, so SATA will also get resetted. Because of this
-> reason, can I use module_param() for Rxwatermark value  instead?
-> 
+Sergei Ianovich <ynvich@gmail.com> writes:
 
-I don't know what is appropriate because I have no idea what Rxwatermark
-is good for. Can you try describing why we can't just set it to the
-correct value for everyone automatically?
+> Without this patch I am getting an error:
+> ---8<---
+> [   15.709742] ohci-pxa27x: OHCI PXA27x/PXA3x driver
+> [   15.737150] pxa27x-ohci: probe of 4c000000.ohci failed with error -2
+> ---8<---
+>
+> The error is generated in drivers/usb/host/ohci-pxa27x.c at line 441:
+> ---8<---
+> 441:	usb_clk = devm_clk_get(&pdev->dev, NULL);
+> 442:	if (IS_ERR(usb_clk))
+> 443:		return PTR_ERR(usb_clk);
+> ---8<---
+>
+> The error is caused by different names for the same DT node in pxa2xx.dtsi
+> and pxa27x.dtsi.
+>
+> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+> CC: Robert Jarzmik <robert.jarzmik@free.fr>
+Hi Sergei,
 
-	Arnd
+You're right, I haven't seen the pxa2xx.dtsi statement before.
+
+As such, could you amend a bit your patch please to :
+ - add:
+Fixes: 0ec1939668e5 ("ARM: dts: pxa: add the usb host controller")
+ - make the same change in pxa3xx.dtsi, as the same error is there
+ - and more globally align pxa2xx.dtsi, pxa27x.dtsi and pxa3xx.dtsi
+ - remove the compatible, reg, interrupts and status from both pxa27x.dtsi and
+   pxa3xx.dtsi as they are redundant with the included pxa2xxx.dsti one
+
+I'm even wondering if the proper change wouldn't be to scrap the ohci
+declarations from pxa27x.dtsi and pxa3xx.dtsi, and only add the "clocks"
+property to pxa2xx.dtsi ...
+
+Cheers.
