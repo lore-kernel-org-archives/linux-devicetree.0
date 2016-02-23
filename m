@@ -1,29 +1,87 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ASoC: rt5640: add master clock handling for rt5640
-Date: Tue, 23 Feb 2016 16:00:00 -0600
-Message-ID: <20160223220000.GA31506@rob-hp-laptop>
-References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc: broonie@kernel.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>, Oder Chiou <oder_chiou@realtek.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
+From: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
+Subject: [PATCH 1/2] pl2x0: Add OF control of cache power management
+Date: Tue, 23 Feb 2016 16:03:38 -0600
+Message-ID: <1456265019-23900-2-git-send-email-brad.mouring@ni.com>
+References: <1456265019-23900-1-git-send-email-brad.mouring@ni.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456265019-23900-1-git-send-email-brad.mouring-acOepvfBmUk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 09:26:22AM +0800, Sugar Zhang wrote:
-> enable/disable master clock when codec is active or not.
-> 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> ---
-> 
->  Documentation/devicetree/bindings/sound/rt5640.txt |  3 +++
+Add ability to override power management bits of 310 controllers
+through OF entries. As the saved register is only applied when
+working on a supported controller, it is safe to save the settings.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Additionally, to control the actual configuration of the power
+control register, remove the unconditional enabling of features in
+the l2c310_enable function.
 
->  sound/soc/codecs/rt5640.c                          | 31 ++++++++++++++++++++++
->  sound/soc/codecs/rt5640.h                          |  2 ++
->  3 files changed, 36 insertions(+)
-> 
+Signed-off-by: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
+Acked-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
+---
+ arch/arm/mm/cache-l2x0.c | 29 ++++++++++++++++++++++++-----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index d6e43d8..42f4ad1 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -639,11 +639,6 @@ static void __init l2c310_enable(void __iomem *base, u32 aux, unsigned num_lock)
+ 		aux &= ~(L310_AUX_CTRL_FULL_LINE_ZERO | L310_AUX_CTRL_EARLY_BRESP);
+ 	}
+ 
+-	/* r3p0 or later has power control register */
+-	if (rev >= L310_CACHE_ID_RTL_R3P0)
+-		l2x0_saved_regs.pwr_ctrl = L310_DYNAMIC_CLK_GATING_EN |
+-						L310_STNDBY_MODE_EN;
+-
+ 	/*
+ 	 * Always enable non-secure access to the lockdown registers -
+ 	 * we write to them as part of the L2C enable sequence so they
+@@ -1103,6 +1098,7 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 	u32 filter[2] = { 0, 0 };
+ 	u32 assoc;
+ 	u32 prefetch;
++	u32 power;
+ 	u32 val;
+ 	int ret;
+ 
+@@ -1220,6 +1216,29 @@ static void __init l2c310_of_parse(const struct device_node *np,
+ 	}
+ 
+ 	l2x0_saved_regs.prefetch_ctrl = prefetch;
++
++	power = l2x0_saved_regs.pwr_ctrl;
++
++	ret = of_property_read_u32(np, "arm,dynamic-clock-gating", &val);
++	if (ret == 0) {
++		if (val)
++			power |= L310_DYNAMIC_CLK_GATING_EN;
++		else
++			power &= ~L310_DYNAMIC_CLK_GATING_EN;
++	} else if (ret != -EINVAL) {
++		pr_err("L2C-310 OF dynamic-clock-gating property value is missing\n");
++	}
++	ret = of_property_read_u32(np, "arm,standby-mode", &val);
++	if (ret == 0) {
++		if (val)
++			power |= L310_STNDBY_MODE_EN;
++		else
++			power &= ~L310_STNDBY_MODE_EN;
++	} else if (ret != -EINVAL) {
++		pr_err("L2C-310 OF standby-mode property value is missing\n");
++	}
++
++	l2x0_saved_regs.pwr_ctrl = power;
+ }
+ 
+ static const struct l2c_init_data of_l2c310_data __initconst = {
+-- 
+2.7.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
