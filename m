@@ -1,35 +1,30 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 08/12] of: add notes of critical trips for soctherm
-Date: Tue, 23 Feb 2016 15:38:29 -0600
-Message-ID: <20160223213829.GA16577@rob-hp-laptop>
-References: <1456128650-29104-1-git-send-email-wni@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH/RFC v2 2/9] phy: rcar-gen3-usb2: Add vbus-supply to
+ handle VBUS on/off
+Date: Tue, 23 Feb 2016 15:39:24 -0600
+Message-ID: <20160223213924.GA20264@rob-hp-laptop>
+References: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1456135088-7976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456128650-29104-1-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1456135088-7976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: horms@verge.net.au, magnus.damm@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 04:10:50PM +0800, Wei Ni wrote:
-> The "ctirical" type trip in thermal zone can be
-
-typo
-
-> set to SOC_THERM hardware, it can trigger shut down
-> or reset event from hardware.
+On Mon, Feb 22, 2016 at 06:58:01PM +0900, Yoshihiro Shimoda wrote:
+> To handle the VBUS on/off by a regulator driver, this patch adds
+> regulator APIs calling in the driver and description about vbus-supply
+> in the rcar-gen3-phy-usb2.txt.
 > 
-> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  Documentation/devicetree/bindings/thermal/tegra-soctherm.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 ++
 
-Otherwise,
+Acked-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/phy/phy-rcar-gen3-usb2.c                   | 28 ++++++++++++++++++++++
+>  2 files changed, 30 insertions(+)
