@@ -1,75 +1,37 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH] ARM: at91: sama5/dts: move hsmc_clk out of nfc node
-Date: Tue, 23 Feb 2016 06:02:55 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D642838E@penmbx01>
-References: <1455687741-9625-1-git-send-email-wenyou.yang@atmel.com>
- <56CB05EF.9020105@atmel.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: at91: sama5/dts: move hsmc_clk out of nfc node
+Date: Tue, 23 Feb 2016 14:04:34 +0800
+Message-ID: <1456207477-7946-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56CB05EF.9020105-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Wu, Josh" <Josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogRmVycmUsIE5pY29sYXMN
-Cj4gU2VudDogMjAxNsTqMtTCMjLI1SAyMDo1OA0KPiBUbzogWWFuZywgV2VueW91IDxXZW55b3Uu
-WWFuZ0BhdG1lbC5jb20+OyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUGF3
-ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBCcm93bg0KPiA8YnJvb25pZUBrZXJu
-ZWwub3JnPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47IEt1
-bWFyDQo+IEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsgQWxleGFuZHJlIEJlbGxvbmkgPGFs
-ZXhhbmRyZS5iZWxsb25pQGZyZWUtDQo+IGVsZWN0cm9ucy5jb20+OyBKZWFuLUNocmlzdG9waGUg
-UGxhZ25pb2wtVmlsbGFyZCA8cGxhZ25pb2pAamNyb3NvZnQuY29tPjsNCj4gUnVzc2VsbCBLaW5n
-IDxsaW51eEBhcm0ubGludXgub3JnLnVrPg0KPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZzsgV3UsIEpvc2ggPEpvc2gud3VAYXRtZWwuY29tPjsgSm9zaCBXdQ0K
-PiA8cmFpbnlmZWVsaW5nQG91dGxvb2suY29tPjsgQWxleGFuZHJlIEJlbGxvbmkgPGFsZXhhbmRy
-ZS5iZWxsb25pQGZyZWUtDQo+IGVsZWN0cm9ucy5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hd
-IEFSTTogYXQ5MTogc2FtYTUvZHRzOiBtb3ZlIGhzbWNfY2xrIG91dCBvZiBuZmMgbm9kZQ0KPiAN
-Cj4gTGUgMTcvMDIvMjAxNiAwNjo0MiwgV2VueW91IFlhbmcgYSCopmNyaXQgOg0KPiA+IEZyb206
-IEpvc2ggV3UgPGpvc2gud3VAYXRtZWwuY29tPg0KPiA+DQo+ID4gSW4gc2FtYTVkMywgc2FtYTVk
-NCBjaGlwcywgcG1lY2Mgd2lsbCB1c2UgdGhlIGhzbWMgY2xvY2suIEFzIHBtZWNjIGlzDQo+ID4g
-cGFydCBvZiBIU01DLiBTbyBtb3ZlIG91dCBoc21jX2NsayBmcm9tIG5mYyBub2RlIHRvIG5hbmQg
-bm9kZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEpvc2ggV3UgPHJhaW55ZmVlbGluZ0BvdXRs
-b29rLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRt
-ZWwuY29tPg0KPiANCj4gSSdtIG5vdCBhZ2FpbnN0IHRoaXMgY2hhbmdlLCBidXQgYmV3YXJlLCBp
-dCBtdXN0IGJlIGFwcGxpZWQgaW4gc3luY2hyb25pemF0aW9uIHdpdGgNCj4gdGhlIHBhdGNoIGp1
-c3QgcG9zdGVkICJbUEFUQ0hdIG10ZDogYXRtZWxfbmFuZDoNCj4gbW92ZSB0aGUgaHNtY19jbGsg
-ZnJvbSBuZmMgbm9kZSB0byBuYW5kIG5vZGUiDQoNCk9rYXksIHJldmVydCB0aGUgbWFpbCBhZGRy
-ZXNzIHRvIHRoZSBvcmlnaW5hbCBvbmUsIGtlZXAgaXQgY29uc2lzdGVudC4NCg0KQW5kIGFkZCB0
-aGlzIGFkZHJlc3MgdG8gQ0MuIA0KDQo+IA0KPiBCeWUsDQo+IA0KPiANCj4gPiAtLS0NCj4gPg0K
-PiA+ICBhcmNoL2FybS9ib290L2R0cy9zYW1hNWQzLmR0c2kgfCAgICAyICstDQo+ID4gIGFyY2gv
-YXJtL2Jvb3QvZHRzL3NhbWE1ZDQuZHRzaSB8ICAgIDIgKy0NCj4gPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvc2FtYTVkMy5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9z
-YW1hNWQzLmR0c2kgaW5kZXggYTUzMjc5MS4uYTI0MmQyNyAxMDA2NDQNCj4gPiAtLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9zYW1hNWQzLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9z
-YW1hNWQzLmR0c2kNCj4gPiBAQCAtMTQ3NCw2ICsxNDc0LDcgQEANCj4gPiAgCQkJYXRtZWwsbmFu
-ZC1oYXMtZG1hOw0KPiA+ICAJCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOw0KPiA+ICAJCQlw
-aW5jdHJsLTAgPSA8JnBpbmN0cmxfbmFuZDBfYWxlX2NsZT47DQo+ID4gKwkJCWNsb2NrcyA9IDwm
-aHNtY19jbGs+Ow0KPiA+ICAJCQlhdG1lbCxwbWVjYy1sb29rdXAtdGFibGUtb2Zmc2V0ID0gPDB4
-MCAweDgwMDA+Ow0KPiA+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+DQo+ID4gQEAgLTE0
-ODYsNyArMTQ4Nyw2IEBADQo+ID4gIAkJCQkJMHhmZmZmYzAwMCAweDAwMDAwMDcwCS8qIE5GQyBI
-U01DDQo+IHJlZ3MgKi8NCj4gPiAgCQkJCQkweDAwMjAwMDAwIDB4MDAxMDAwMDAJLyogTkZDDQo+
-IFNSQU0gYmFua3MgKi8NCj4gPiAgCQkJCQk+Ow0KPiA+IC0JCQkJY2xvY2tzID0gPCZoc21jX2Ns
-az47DQo+ID4gIAkJCX07DQo+ID4gIAkJfTsNCj4gPiAgCX07DQo+ID4gZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDQuZHRzaQ0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvc2Ft
-YTVkNC5kdHNpIGluZGV4IGI4MDMyYmMuLjE0OTliMzMgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvc2FtYTVkNC5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc2Ft
-YTVkNC5kdHNpDQo+ID4gQEAgLTI5NSw2ICsyOTUsNyBAQA0KPiA+ICAJCQlhdG1lbCxuYW5kLWhh
-cy1kbWE7DQo+ID4gIAkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gIAkJCXBpbmN0
-cmwtMCA9IDwmcGluY3RybF9uYW5kPjsNCj4gPiArCQkJY2xvY2tzID0gPCZoc21jX2Nsaz47DQo+
-ID4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4NCj4gPiAgCQkJbmZjQDkwMDAwMDAwIHsN
-Cj4gPiBAQCAtMzA2LDcgKzMwNyw2IEBADQo+ID4gIAkJCQkJMHhmYzA1YzAwMCAweDAwMDAwMDcw
-CS8qIE5GQw0KPiBIU01DIHJlZ3MgKi8NCj4gPiAgCQkJCQkweDAwMTAwMDAwIDB4MDAxMDAwMDAJ
-LyogTkZDDQo+IFNSQU0gYmFua3MgKi8NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICA+Ow0KPiA+IC0JCQkJY2xvY2tzID0gPCZoc21jX2Nsaz47DQo+ID4gIAkJ
-CQlhdG1lbCx3cml0ZS1ieS1zcmFtOw0KPiA+ICAJCQl9Ow0KPiA+ICAJCX07DQo+ID4NCj4gDQo+
-IA0KPiAtLQ0KPiBOaWNvbGFzIEZlcnJlDQoNCg0KQmVzdCBSZWdhcmRzLA0KV2VueW91IFlhbmcN
-Cg==
+For SAMA5D3, SAMA5D4 SoC family, PMECC needs the HSMC clock,
+so move out hsmc_clk from the nfc node to the nand node.
+
+Also, change the SAMA5D3 nand node's compatible string to
+"atmel,sama5d3-nand".
+
+Changes in v2:
+ - add a patch to change SAMA5D3 nand node's compatible string
+   to "atmel,sama5d3-nand".
+ - revert the mail address of Josh's Signed-off to the original.
+
+Josh Wu (2):
+  ARM: at91: sama5d3/dts: add compatiable string for nand
+  ARM: at91: sama5/dts: move hsmc_clk out of nfc node
+
+ arch/arm/boot/dts/sama5d3.dtsi |    4 ++--
+ arch/arm/boot/dts/sama5d4.dtsi |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
