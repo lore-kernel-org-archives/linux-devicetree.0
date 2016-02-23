@@ -1,142 +1,106 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v2] drm: Clean up drm Makefile
-Date: Tue, 23 Feb 2016 11:11:19 +0800
-Message-ID: <CAGd==057Wsb1OX_JFKMfOajFUPFP1OBjb4fBRu8SME-wjPGYDA@mail.gmail.com>
-References: <1454641830-19307-1-git-send-email-xinliang.liu@linaro.org>
- <20160209095047.GK11240@phenom.ffwll.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20160209095047.GK11240@phenom.ffwll.local>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Jon Corbet <corbet@lwn.net>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] arm64: dts: uniphier: rename PH1-LD10 to PH1-LD20
+Date: Tue, 23 Feb 2016 13:40:21 +0900
+Message-ID: <1456202421-10857-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arm@kernel.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gOSBGZWJydWFyeSAyMDE2IGF0IDE3OjUwLCBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3bGwu
-Y2g+IHdyb3RlOgo+IE9uIEZyaSwgRmViIDA1LCAyMDE2IGF0IDExOjEwOjMwQU0gKzA4MDAsIFhp
-bmxpYW5nIExpdSB3cm90ZToKPj4gVGhpcyBwYXRjaCBjbGVhbnMgdXAgdGhlIE1ha2VmaWxlIG9m
-IGRybSByb290IGRpcmVjdG9yeS4KPj4gTWFrZSBjb3JlIGFuZCBkZXZpY2UgZHJpdmVycyBjb25m
-aWd1cmF0aW9uIGxpc3Qgc29ydGVkIEFscGhhYmV0aWNhbGx5Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
-OiBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPgo+PiBSZXZpZXdlZC1ieTog
-WGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBoaXNpbGljb24uY29tPgo+PiBSZXZpZXdlZC1i
-eTogWWlmYW4gTGl1IDxsaXVfZmFueWlAMTYzLmNvbT4KPj4gLS0tCj4+ICBkcml2ZXJzL2dwdS9k
-cm0vTWFrZWZpbGUgfCAxMDIgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCspLCA1MCBkZWxldGlv
-bnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSBiL2RyaXZl
-cnMvZ3B1L2RybS9NYWtlZmlsZQo+PiBpbmRleCA2MTc2NmRlYzZhOGQuLjIzZTU3OTQ4ZjY4ZiAx
-MDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlCj4+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9NYWtlZmlsZQo+PiBAQCAtMiw2ICsyLDkgQEAKPj4gICMgTWFrZWZpbGUgZm9yIHRo
-ZSBkcm0gZGV2aWNlIGRyaXZlci4gIFRoaXMgZHJpdmVyIHByb3ZpZGVzIHN1cHBvcnQgZm9yIHRo
-ZQo+PiAgIyBEaXJlY3QgUmVuZGVyaW5nIEluZnJhc3RydWN0dXJlIChEUkkpIGluIFhGcmVlODYg
-NC4xLjAgYW5kIGhpZ2hlci4KPj4KPj4gK0NGTEFHU19kcm1fdHJhY2VfcG9pbnRzLm8gOj0gLUkk
-KHNyYykKPj4gKwo+PiArIyBjb3JlLiBQbGVhc2Uga2VlcCB0aGlzIGxpc3Qgc29ydGVkIGFscGhh
-YmV0aWNhbGx5Cj4+ICBkcm0teSAgICAgICA6PSAgICAgICBkcm1fYXV0aC5vIGRybV9idWZzLm8g
-ZHJtX2NhY2hlLm8gXAo+PiAgICAgICAgICAgICAgIGRybV9jb250ZXh0Lm8gZHJtX2RtYS5vIFwK
-Pj4gICAgICAgICAgICAgICBkcm1fZm9wcy5vIGRybV9nZW0ubyBkcm1faW9jdGwubyBkcm1faXJx
-Lm8gXAo+PiBAQCAtMTMsNjQgKzE2LDYzIEBAIGRybS15ICAgICAgIDo9ICAgIGRybV9hdXRoLm8g
-ZHJtX2J1ZnMubyBkcm1fY2FjaGUubyBcCj4+ICAgICAgICAgICAgICAgZHJtX3RyYWNlX3BvaW50
-cy5vIGRybV9nbG9iYWwubyBkcm1fcHJpbWUubyBcCj4+ICAgICAgICAgICAgICAgZHJtX3JlY3Qu
-byBkcm1fdm1hX21hbmFnZXIubyBkcm1fZmxpcF93b3JrLm8gXAo+PiAgICAgICAgICAgICAgIGRy
-bV9tb2Rlc2V0X2xvY2subyBkcm1fYXRvbWljLm8gZHJtX2JyaWRnZS5vCj4+IC0KPj4gLWRybS0k
-KENPTkZJR19DT01QQVQpICs9IGRybV9pb2MzMi5vCj4+IC1kcm0tJChDT05GSUdfRFJNX0dFTV9D
-TUFfSEVMUEVSKSArPSBkcm1fZ2VtX2NtYV9oZWxwZXIubwo+PiAgZHJtLSQoQ09ORklHX1BDSSkg
-Kz0gYXRpX3BjaWdhcnQubwo+PiAtZHJtLSQoQ09ORklHX0RSTV9QQU5FTCkgKz0gZHJtX3BhbmVs
-Lm8KPj4gLWRybS0kKENPTkZJR19PRikgKz0gZHJtX29mLm8KPj4gIGRybS0kKENPTkZJR19BR1Ap
-ICs9IGRybV9hZ3BzdXBwb3J0Lm8KPj4gK2RybS0kKENPTkZJR19EUk1fR0VNX0NNQV9IRUxQRVIp
-ICs9IGRybV9nZW1fY21hX2hlbHBlci5vCj4+ICtkcm0tJChDT05GSUdfQ09NUEFUKSArPSBkcm1f
-aW9jMzIubwo+PiArZHJtLSQoQ09ORklHX09GKSArPSBkcm1fb2Yubwo+PiArZHJtLSQoQ09ORklH
-X0RSTV9QQU5FTCkgKz0gZHJtX3BhbmVsLm8KPj4gK29iai0kKENPTkZJR19EUk0pICAgICs9IGRy
-bS5vCj4+ICsKPj4gK29iai0kKENPTkZJR19EUk1fTUlQSV9EU0kpICs9IGRybV9taXBpX2RzaS5v
-Cj4+Cj4+ICBkcm1fa21zX2hlbHBlci15IDo9IGRybV9jcnRjX2hlbHBlci5vIGRybV9kcF9oZWxw
-ZXIubyBkcm1fcHJvYmVfaGVscGVyLm8gXAo+PiAgICAgICAgICAgICAgIGRybV9wbGFuZV9oZWxw
-ZXIubyBkcm1fZHBfbXN0X3RvcG9sb2d5Lm8gZHJtX2F0b21pY19oZWxwZXIubwo+PiAgZHJtX2tt
-c19oZWxwZXItJChDT05GSUdfRFJNX0xPQURfRURJRF9GSVJNV0FSRSkgKz0gZHJtX2VkaWRfbG9h
-ZC5vCj4+IC1kcm1fa21zX2hlbHBlci0kKENPTkZJR19EUk1fRkJERVZfRU1VTEFUSU9OKSArPSBk
-cm1fZmJfaGVscGVyLm8KPj4gIGRybV9rbXNfaGVscGVyLSQoQ09ORklHX0RSTV9LTVNfQ01BX0hF
-TFBFUikgKz0gZHJtX2ZiX2NtYV9oZWxwZXIubwo+PiAtCj4+ICtkcm1fa21zX2hlbHBlci0kKENP
-TkZJR19EUk1fRkJERVZfRU1VTEFUSU9OKSArPSBkcm1fZmJfaGVscGVyLm8KPj4gIG9iai0kKENP
-TkZJR19EUk1fS01TX0hFTFBFUikgKz0gZHJtX2ttc19oZWxwZXIubwo+Pgo+PiAtQ0ZMQUdTX2Ry
-bV90cmFjZV9wb2ludHMubyA6PSAtSSQoc3JjKQo+PiArb2JqLSQoQ09ORklHX0RSTV9UVE0pICs9
-IHR0bS8KPj4KPj4gLW9iai0kKENPTkZJR19EUk0pICAgICs9IGRybS5vCj4+IC1vYmotJChDT05G
-SUdfRFJNX01JUElfRFNJKSArPSBkcm1fbWlwaV9kc2kubwo+PiAtb2JqLSQoQ09ORklHX0RSTV9U
-VE0pICAgICAgICArPSB0dG0vCj4+IC1vYmotJChDT05GSUdfRFJNX1RERlgpICAgICAgICs9IHRk
-ZngvCj4+IC1vYmotJChDT05GSUdfRFJNX1IxMjgpICAgICAgICs9IHIxMjgvCj4+IC1vYmotJChD
-T05GSUdfSFNBX0FNRCkgKz0gYW1kL2FtZGtmZC8KPj4gLW9iai0kKENPTkZJR19EUk1fUkFERU9O
-KSs9IHJhZGVvbi8KPj4gLW9iai0kKENPTkZJR19EUk1fQU1ER1BVKSs9IGFtZC9hbWRncHUvCj4+
-IC1vYmotJChDT05GSUdfRFJNX01HQSkgICAgICAgICs9IG1nYS8KPj4gLW9iai0kKENPTkZJR19E
-Uk1fSTgxMCkgICAgICAgKz0gaTgxMC8KPj4gLW9iai0kKENPTkZJR19EUk1fSTkxNSkgICs9IGk5
-MTUvCj4+IC1vYmotJChDT05GSUdfRFJNX01HQUcyMDApICs9IG1nYWcyMDAvCj4+IC1vYmotJChD
-T05GSUdfRFJNX1ZDNCkgICs9IHZjNC8KPj4gLW9iai0kKENPTkZJR19EUk1fQ0lSUlVTX1FFTVUp
-ICs9IGNpcnJ1cy8KPj4gLW9iai0kKENPTkZJR19EUk1fU0lTKSAgICs9IHNpcy8KPj4gLW9iai0k
-KENPTkZJR19EUk1fU0FWQUdFKSs9IHNhdmFnZS8KPj4gLW9iai0kKENPTkZJR19EUk1fVk1XR0ZY
-KSs9IHZtd2dmeC8KPj4gLW9iai0kKENPTkZJR19EUk1fVklBKSAgICAgICAgKz12aWEvCj4+IC1v
-YmotJChDT05GSUdfRFJNX1ZHRU0pICAgICAgICs9IHZnZW0vCj4+IC1vYmotJChDT05GSUdfRFJN
-X05PVVZFQVUpICs9bm91dmVhdS8KPj4gLW9iai0kKENPTkZJR19EUk1fRVhZTk9TKSArPWV4eW5v
-cy8KPj4gLW9iai0kKENPTkZJR19EUk1fUk9DS0NISVApICs9cm9ja2NoaXAvCj4+IC1vYmotJChD
-T05GSUdfRFJNX0dNQTUwMCkgKz0gZ21hNTAwLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9VREwpICs9
-IHVkbC8KPj4gLW9iai0kKENPTkZJR19EUk1fQVNUKSArPSBhc3QvCj4+IC1vYmotJChDT05GSUdf
-RFJNX0FSTUFEQSkgKz0gYXJtYWRhLwo+PiArIyBkZXZpY2UgZHJpdmVycy4gUGxlYXNlIGtlZXAg
-dGhpcyBsaXN0IHNvcnRlZCBhbHBoYWJldGljYWxseQo+PiArb2JqLSQoQ09ORklHX0hTQV9BTUQp
-ICAgICAgICAgICAgICAgICs9IGFtZC9hbWRrZmQvCj4KPiBObyBtZW50aW9uIG9mIHRoaXMgZXhj
-ZXB0aW9uIChuZWVkcyBhIGNvbW1lbnQpLCBhbmQgbm8gbWVudGlvbiBvZiB3aGF0IHlvdQo+IGNo
-YW5nZWQgaW4gdjIgb2YgdGhlIHBhdGNoLiBQbGVhc2UgZml4IGFuZCByZXNlbmQuCgp3aWxsIGZp
-eCBhbmQgcmVzZW5kLgoKQmVzdCwKLXhpbmxpYW5nCgo+IC1EYW5pZWwKPgo+PiArb2JqLSQoQ09O
-RklHX0RSTV9BTURHUFUpICAgICArPSBhbWQvYW1kZ3B1Lwo+PiArb2JqLSQoQ09ORklHX0RSTV9B
-Uk1BREEpICAgICArPSBhcm1hZGEvCj4+ICtvYmotJChDT05GSUdfRFJNX0FTVCkgICAgICAgICAg
-ICAgICAgKz0gYXN0Lwo+PiAgb2JqLSQoQ09ORklHX0RSTV9BVE1FTF9ITENEQykgICAgICAgICs9
-IGF0bWVsLWhsY2RjLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9SQ0FSX0RVKSArPSByY2FyLWR1Lwo+
-PiAtb2JqLSQoQ09ORklHX0RSTV9TSE1PQklMRSkgKz1zaG1vYmlsZS8KPj4gLW9iai15ICAgICAg
-ICAgICAgICAgICAgICAgICAgKz0gb21hcGRybS8KPj4gLW9iai15ICAgICAgICAgICAgICAgICAg
-ICAgICAgKz0gdGlsY2RjLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9RWEwpICs9IHF4bC8KPj4gLW9i
-ai0kKENPTkZJR19EUk1fQk9DSFMpICs9IGJvY2hzLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9WSVJU
-SU9fR1BVKSArPSB2aXJ0aW8vCj4+IC1vYmotJChDT05GSUdfRFJNX01TTSkgKz0gbXNtLwo+PiAt
-b2JqLSQoQ09ORklHX0RSTV9URUdSQSkgKz0gdGVncmEvCj4+IC1vYmotJChDT05GSUdfRFJNX1NU
-SSkgKz0gc3RpLwo+PiAtb2JqLSQoQ09ORklHX0RSTV9JTVgpICs9IGlteC8KPj4gLW9iai15ICAg
-ICAgICAgICAgICAgICAgICAgICAgKz0gaTJjLwo+PiAtb2JqLXkgICAgICAgICAgICAgICAgICAg
-ICAgICArPSBwYW5lbC8KPj4gLW9iai15ICAgICAgICAgICAgICAgICAgICAgICAgKz0gYnJpZGdl
-Lwo+PiAtb2JqLSQoQ09ORklHX0RSTV9GU0xfRENVKSArPSBmc2wtZGN1Lwo+PiAtb2JqLSQoQ09O
-RklHX0RSTV9FVE5BVklWKSArPSBldG5hdml2Lwo+PiArb2JqLSQoQ09ORklHX0RSTV9CT0NIUykg
-ICAgICAgICAgICAgICs9IGJvY2hzLwo+PiArb2JqLXkgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICs9IGJyaWRnZS8KPj4gK29iai0kKENPTkZJR19EUk1fQ0lSUlVTX1FFTVUpICAgICAg
-ICArPSBjaXJydXMvCj4+ICtvYmotJChDT05GSUdfRFJNX0VUTkFWSVYpICAgICs9IGV0bmF2aXYv
-Cj4+ICtvYmotJChDT05GSUdfRFJNX0VYWU5PUykgICAgICs9IGV4eW5vcy8KPj4gK29iai0kKENP
-TkZJR19EUk1fRlNMX0RDVSkgICAgKz0gZnNsLWRjdS8KPj4gK29iai0kKENPTkZJR19EUk1fR01B
-NTAwKSAgICAgKz0gZ21hNTAwLwo+PiArb2JqLXkgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICs9IGkyYy8KPj4gK29iai0kKENPTkZJR19EUk1fSTgxMCkgICAgICAgICAgICAgICArPSBp
-ODEwLwo+PiArb2JqLSQoQ09ORklHX0RSTV9JOTE1KSAgICAgICAgICAgICAgICs9IGk5MTUvCj4+
-ICtvYmotJChDT05GSUdfRFJNX0lNWCkgICAgICAgICAgICAgICAgKz0gaW14Lwo+PiArb2JqLSQo
-Q09ORklHX0RSTV9NR0EpICAgICAgICAgICAgICAgICs9IG1nYS8KPj4gK29iai0kKENPTkZJR19E
-Uk1fTUdBRzIwMCkgICAgKz0gbWdhZzIwMC8KPj4gK29iai0kKENPTkZJR19EUk1fTVNNKSAgICAg
-ICAgICAgICAgICArPSBtc20vCj4+ICtvYmotJChDT05GSUdfRFJNX05PVVZFQVUpICAgICs9IG5v
-dXZlYXUvCj4+ICtvYmoteSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKz0gb21hcGRy
-bS8KPj4gK29iai15ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICArPSBwYW5lbC8KPj4g
-K29iai0kKENPTkZJR19EUk1fUVhMKSAgICAgICAgICAgICAgICArPSBxeGwvCj4+ICtvYmotJChD
-T05GSUdfRFJNX1IxMjgpICAgICAgICAgICAgICAgKz0gcjEyOC8KPj4gK29iai0kKENPTkZJR19E
-Uk1fUkFERU9OKSAgICAgKz0gcmFkZW9uLwo+PiArb2JqLSQoQ09ORklHX0RSTV9SQ0FSX0RVKSAg
-ICArPSByY2FyLWR1Lwo+PiArb2JqLSQoQ09ORklHX0RSTV9ST0NLQ0hJUCkgICArPSByb2NrY2hp
-cC8KPj4gK29iai0kKENPTkZJR19EUk1fU0FWQUdFKSAgICAgKz0gc2F2YWdlLwo+PiArb2JqLSQo
-Q09ORklHX0RSTV9TSE1PQklMRSkgICArPSBzaG1vYmlsZS8KPj4gK29iai0kKENPTkZJR19EUk1f
-U0lTKSAgICAgICAgICAgICAgICArPSBzaXMvCj4+ICtvYmotJChDT05GSUdfRFJNX1NUSSkgICAg
-ICAgICAgICAgICAgKz0gc3RpLwo+PiArb2JqLSQoQ09ORklHX0RSTV9UREZYKSAgICAgICAgICAg
-ICAgICs9IHRkZngvCj4+ICtvYmotJChDT05GSUdfRFJNX1RFR1JBKSAgICAgICAgICAgICAgKz0g
-dGVncmEvCj4+ICtvYmoteSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKz0gdGlsY2Rj
-Lwo+PiArb2JqLSQoQ09ORklHX0RSTV9VREwpICAgICAgICAgICAgICAgICs9IHVkbC8KPj4gK29i
-ai0kKENPTkZJR19EUk1fVkM0KSAgICAgICAgICAgICAgICArPSB2YzQvCj4+ICtvYmotJChDT05G
-SUdfRFJNX1ZHRU0pICAgICAgICAgICAgICAgKz0gdmdlbS8KPj4gK29iai0kKENPTkZJR19EUk1f
-VklBKSAgICAgICAgICAgICAgICArPSB2aWEvCj4+ICtvYmotJChDT05GSUdfRFJNX1ZJUlRJT19H
-UFUpICs9IHZpcnRpby8KPj4gK29iai0kKENPTkZJR19EUk1fVk1XR0ZYKSAgICAgKz0gdm13Z2Z4
-Lwo+PiAtLQo+PiAxLjkuMQo+Pgo+Cj4gLS0KPiBEYW5pZWwgVmV0dGVyCj4gU29mdHdhcmUgRW5n
-aW5lZXIsIEludGVsIENvcnBvcmF0aW9uCj4gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Due to the company's awful projecting, this chip has been renamed to
+PH1-LD20.  It has not been shipped yet, this change would not give
+much impact on our customers.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Olof, Arnd,
+
+Please apply this patch along with my series
+"[PATCH 0/9] ARM: uniphier: UniPhier updates for Linux 4.6-rc1".
+
+If it goes to a different branch, it will cause a big merge conflict later.
+
+
+ arch/arm64/boot/dts/socionext/Makefile                            | 2 +-
+ .../{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts}      | 8 ++++----
+ .../socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi}  | 6 +++---
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+ rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts} (92%)
+ rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi} (98%)
+
+diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
+index 8d72771..299b67e 100644
+--- a/arch/arm64/boot/dts/socionext/Makefile
++++ b/arch/arm64/boot/dts/socionext/Makefile
+@@ -1,4 +1,4 @@
+-dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld10-ref.dtb
++dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld20-ref.dtb
+ 
+ always		:= $(dtb-y)
+ clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+similarity index 92%
+rename from arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
+rename to arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+index e5c8a20..727ae5f 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Device Tree Source for UniPhier PH1-LD10 Reference Board
++ * Device Tree Source for UniPhier PH1-LD20 Reference Board
+  *
+  * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
+  *
+@@ -43,12 +43,12 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "uniphier-ph1-ld10.dtsi"
++/include/ "uniphier-ph1-ld20.dtsi"
+ /include/ "uniphier-support-card.dtsi"
+ 
+ / {
+-	model = "UniPhier PH1-LD10 Reference Board";
+-	compatible = "socionext,ph1-ld10-ref", "socionext,ph1-ld10";
++	model = "UniPhier PH1-LD20 Reference Board";
++	compatible = "socionext,ph1-ld20-ref", "socionext,ph1-ld20";
+ 
+ 	memory {
+ 		device_type = "memory";
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+similarity index 98%
+rename from arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
+rename to arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+index 84637eb..65e9651 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+@@ -1,5 +1,5 @@
+ /*
+- * Device Tree Source for UniPhier PH1-LD10 SoC
++ * Device Tree Source for UniPhier PH1-LD20 SoC
+  *
+  * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
+  *
+@@ -43,7 +43,7 @@
+  */
+ 
+ / {
+-	compatible = "socionext,ph1-ld10";
++	compatible = "socionext,ph1-ld20";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&gic>;
+@@ -268,7 +268,7 @@
+ 		};
+ 
+ 		pinctrl: pinctrl@5f801000 {
+-			compatible = "socionext,ph1-ld10-pinctrl", "syscon";
++			compatible = "socionext,ph1-ld20-pinctrl", "syscon";
+ 			reg = <0x5f801000 0xe00>;
+ 		};
+ 
+-- 
+1.9.1
