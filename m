@@ -1,1037 +1,959 @@
-From: "jeffrey.lin" <yajohn@gmail.com>
-Subject: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Tue, 23 Feb 2016 16:11:58 +0800
-Message-ID: <1456215118-14392-1-git-send-email-jeffrey.lin@rad-ic.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, robh+dt@kernel.org, jeesw@melfas.com, bleung@chromium.org, scott.liu@emc.com.tw
-Cc: jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 6/8] [media] vcodec: mediatek: Add Mediatek VP8 Video
+ Encoder Driver
+Date: Tue, 23 Feb 2016 16:11:19 +0800
+Message-ID: <1456215081-16858-7-git-send-email-tiffany.lin@mediatek.com>
+References: <1456215081-16858-1-git-send-email-tiffany.lin@mediatek.com>
+ <1456215081-16858-2-git-send-email-tiffany.lin@mediatek.com>
+ <1456215081-16858-3-git-send-email-tiffany.lin@mediatek.com>
+ <1456215081-16858-4-git-send-email-tiffany.lin@mediatek.com>
+ <1456215081-16858-5-git-send-email-tiffany.lin@mediatek.com>
+ <1456215081-16858-6-git-send-email-tiffany.lin@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1456215081-16858-6-git-send-email-tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch is porting Raydium I2C touch driver. Developer can enable raydium touch driver by modifying define "CONFIG_TOUCHSCREEN_RM_TS".
+From: PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: jeffrey.lin <jeffrey.lin@rad-ic.com>
+Add vp8 encoder driver for MT8173
+
+Signed-off-by: pochun.lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/input/touchscreen/Kconfig          |  12 +
- drivers/input/touchscreen/Makefile         |   1 +
- drivers/input/touchscreen/raydium_i2c_ts.c | 973 +++++++++++++++++++++++++++++
- 3 files changed, 986 insertions(+)
- create mode 100644 drivers/input/touchscreen/raydium_i2c_ts.c
+ drivers/media/platform/mtk-vcodec/Makefile         |    2 +
+ drivers/media/platform/mtk-vcodec/venc_drv_if.c    |    3 +
+ drivers/media/platform/mtk-vcodec/vp8_enc/Makefile |    6 +
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_if.c      |  419 ++++++++++++++++++++
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_if.h      |  152 +++++++
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c     |  240 +++++++++++
+ .../platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h     |   28 ++
+ 7 files changed, 850 insertions(+)
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/Makefile
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.h
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c
+ create mode 100644 drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h
 
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/Kconfig
-index 3f3f6ee..ab28721 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -915,6 +915,18 @@ config TOUCHSCREEN_PCAP
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called pcap_ts.
+diff --git a/drivers/media/platform/mtk-vcodec/Makefile b/drivers/media/platform/mtk-vcodec/Makefile
+index ce38689..f4ef502 100644
+--- a/drivers/media/platform/mtk-vcodec/Makefile
++++ b/drivers/media/platform/mtk-vcodec/Makefile
+@@ -5,4 +5,6 @@ obj-$(CONFIG_VIDEO_MEDIATEK_VCODEC) += mtk_vcodec_intr.o \
+ 				       mtk_vcodec_enc_pm.o \
+ 				       venc_drv_if.o
  
-+config TOUCHSCREEN_RM_TS
-+	tristate "Raydium I2C Touchscreen"
-+	depends on I2C
-+	help
-+	  Say Y here if you have Raydium series I2C touchscreen,
-+	  such as RM31100 , connected to your system.
++obj-$(CONFIG_VIDEO_MEDIATEK_VCODEC) += vp8_enc/
 +
-+	  If unsure, say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called raydium_i2c_ts.
-+
- config TOUCHSCREEN_ST1232
- 	tristate "Sitronix ST1232 touchscreen controllers"
- 	depends on I2C
-diff --git a/drivers/input/touchscreen/Makefile b/drivers/input/touchscreen/Makefile
-index 4941f2d..99e08cf 100644
---- a/drivers/input/touchscreen/Makefile
-+++ b/drivers/input/touchscreen/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_TOUCHSCREEN_USB_COMPOSITE)	+= usbtouchscreen.o
- obj-$(CONFIG_TOUCHSCREEN_PCAP)		+= pcap_ts.o
- obj-$(CONFIG_TOUCHSCREEN_PENMOUNT)	+= penmount.o
- obj-$(CONFIG_TOUCHSCREEN_PIXCIR)	+= pixcir_i2c_ts.o
-+obj-$(CONFIG_TOUCHSCREEN_RM_TS)		+= raydium_i2c_ts.o
- obj-$(CONFIG_TOUCHSCREEN_S3C2410)	+= s3c2410_ts.o
- obj-$(CONFIG_TOUCHSCREEN_ST1232)	+= st1232.o
- obj-$(CONFIG_TOUCHSCREEN_STMPE)		+= stmpe-ts.o
-diff --git a/drivers/input/touchscreen/raydium_i2c_ts.c b/drivers/input/touchscreen/raydium_i2c_ts.c
+ ccflags-y += -I$(srctree)/drivers/media/platform/mtk-vpu
+diff --git a/drivers/media/platform/mtk-vcodec/venc_drv_if.c b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+index 1675b9e..f631f5d 100644
+--- a/drivers/media/platform/mtk-vcodec/venc_drv_if.c
++++ b/drivers/media/platform/mtk-vcodec/venc_drv_if.c
+@@ -25,6 +25,7 @@
+ #include "mtk_vpu.h"
+ 
+ #include "venc_drv_base.h"
++#include "vp8_enc/venc_vp8_if.h"
+ 
+ int venc_if_create(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+ {
+@@ -35,6 +36,8 @@ int venc_if_create(struct mtk_vcodec_ctx *ctx, unsigned int fourcc)
+ 
+ 	switch (fourcc) {
+ 	case V4L2_PIX_FMT_VP8:
++		ctx->enc_if = get_vp8_enc_comm_if();
++		break;
+ 	case V4L2_PIX_FMT_H264:
+ 	default:
+ 		return -EINVAL;
+diff --git a/drivers/media/platform/mtk-vcodec/vp8_enc/Makefile b/drivers/media/platform/mtk-vcodec/vp8_enc/Makefile
 new file mode 100644
-index 0000000..738b2fd
+index 0000000..0f515c7
 --- /dev/null
-+++ b/drivers/input/touchscreen/raydium_i2c_ts.c
-@@ -0,0 +1,973 @@
++++ b/drivers/media/platform/mtk-vcodec/vp8_enc/Makefile
+@@ -0,0 +1,6 @@
++obj-$(CONFIG_VIDEO_MEDIATEK_VCODEC) += venc_vp8_if.o venc_vp8_vpu.o
++
++ccflags-y += \
++    -I$(srctree)/drivers/media/platform/mtk-vcodec/ \
++    -I$(srctree)/drivers/media/platform/mtk-vcodec/vp8_enc \
++    -I$(srctree)/drivers/media/platform/mtk-vpu
+diff --git a/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.c b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.c
+new file mode 100644
+index 0000000..b9dcf4d
+--- /dev/null
++++ b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.c
+@@ -0,0 +1,419 @@
 +/*
-+ * Raydium touchscreen I2C driver.
-+ *
-+ * Copyright (C) 2012-2014, Raydium Semiconductor Corporation.
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *         PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2, and only version 2, as published by the
-+ * Free Software Foundation.
++ * modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
 + * This program is distributed in the hope that it will be useful,
 + * but WITHOUT ANY WARRANTY; without even the implied warranty of
 + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
-+ *
-+ * Raydium reserves the right to make changes without further notice
-+ * to the materials described herein. Raydium does not assume any
-+ * liability arising out of the application described herein.
-+ *
-+ * Contact Raydium Semiconductor Corporation at www.rad-ic.com
 + */
 +
-+#include <linux/module.h>
-+#include <linux/input.h>
 +#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
-+#include <linux/uaccess.h>
-+#include <linux/buffer_head.h>
++#include <linux/kernel.h>
 +#include <linux/slab.h>
-+#include <linux/firmware.h>
-+#include <linux/input/mt.h>
-+#include <linux/acpi.h>
-+#include <linux/of.h>
-+#include <linux/gpio.h>
-+#include <linux/regulator/consumer.h>
-+#include <asm/unaligned.h>
-+#include <linux/gpio/consumer.h>
 +
-+/* Device, Driver information */
-+#define DEVICE_NAME	"raydium_i2c"
++#include "mtk_vcodec_drv.h"
++#include "mtk_vcodec_util.h"
++#include "mtk_vcodec_intr.h"
++#include "mtk_vcodec_enc.h"
++#include "mtk_vcodec_pm.h"
++#include "mtk_vpu.h"
 +
-+/* Slave I2C mode*/
-+#define RM_BOOT_BLDR	0x02
-+#define RM_BOOT_MAIN	0x03
++#include "venc_vp8_if.h"
++#include "venc_vp8_vpu.h"
 +
-+/*I2C command */
-+#define CMD_QUERY_BANK		0x2B
-+#define CMD_DATA_BANK		0x4D
-+#define CMD_ENTER_SLEEP		0x4E
-+#define CMD_BOOT_ACK		0x0A
-+#define CMD_BOOT_WRT		0x5B
-+#define CMD_BOOT_CHK		0x0C
-+#define CMD_BANK_SWITCH		0xAA
++#define VENC_PIC_BITSTREAM_BYTE_CNT 0x0098
++#define VENC_PIC_BITSTREAM_BYTE_CNT1 0x00e8
++#define VENC_IRQ_STATUS_ENC_FRM_INT 0x04
 +
-+/* Touch relative info */
-+#define MAX_RETRIES		3
-+#define MAX_FW_UPDATE_RETRIES	30
-+#define MAX_TOUCH_NUM		10
-+#define MAX_PACKET_SIZE		128
-+#define BOOT_DELAY_MS	100
++#define MAX_AC_TAG_SZ 10
 +
-+#define RAYDIUM_FW_PAGESIZE	128
-+#define RAYDIUM_POWERON_DELAY_USEC	500
-+#define RAYDIUM_RESET_DELAY_MSEC	50
-+
-+#define ADDR_INDEX		0x03
-+#define HEADER_SIZE		4
-+
-+enum raydium_boot_mode {
-+	RAYDIUM_TS_MAIN,
-+	RAYDIUM_TS_BLDR,
-+};
-+
-+struct raydium_info {
-+	u32 hw_ver;
-+	u8 main_ver;
-+	u8 sub_ver;
-+	u16 ft_ver;
-+	u8 x_num;
-+	u8 y_num;
-+	u16 x_max;
-+	u16 y_max;
-+	u8 x_res;		/* units/mm */
-+	u8 y_res;		/* units/mm */
-+};
-+
-+struct raydium_abs_info {
-+	u8 state;/*1:touch, 0:no touch*/
-+	u8 x_pos_lsb;
-+	u8 x_pos_msb;
-+	u8 y_pos_lsb;
-+	u8 y_pos_msb;
-+	u8 pressure;
-+	u8 x_width;
-+	u8 y_width;
-+};
-+
-+struct raydium_object {
-+	u32 data_bank_addr;
-+	u8 pkg_size;
-+};
-+
-+/* struct raydium_data - represents state of Raydium touchscreen device */
-+struct raydium_data {
-+	struct i2c_client *client;
-+	struct input_dev *input;
-+
-+	struct regulator *vcc33;
-+	struct regulator *vccio;
-+	struct gpio_desc *reset_gpio;
-+
-+	u32 query_bank_info;
-+
-+	struct raydium_info info;
-+	struct raydium_object obj;
-+	struct raydium_abs_info finger;
-+
-+	enum raydium_boot_mode boot_mode;
-+
-+	struct mutex sysfs_mutex;
-+
-+	u8 cmd_resp[HEADER_SIZE];
-+	struct completion cmd_done;
-+
-+	u8 buf[MAX_PACKET_SIZE];
-+
-+	bool wake_irq_enabled;
-+};
-+
-+static int raydium_i2c_send(struct i2c_client *client,
-+	u8 addr, u8 *data, size_t len)
++static inline void vp8_enc_write_reg(struct venc_vp8_inst *inst, u32 addr,
++				     u32 val)
 +{
-+	u8 buf[MAX_PACKET_SIZE + 1];
-+	int i, tries = 0;
-+
-+	if (len > MAX_PACKET_SIZE)
-+		return -EINVAL;
-+
-+	buf[0] = addr & 0xff;
-+	for (i = 0; i < len; i++)
-+		buf[i + 1] = *data++;
-+
-+	do {
-+		if (i2c_master_send(client, buf, len + 1) == (len + 1))
-+			return 0;
-+		msleep(20);
-+	} while (++tries < MAX_RETRIES);
-+
-+	dev_err(&client->dev, "%s: i2c send failed\n", __func__);
-+
-+	return -EIO;
++	writel(val, inst->hw_base + addr);
 +}
 +
-+static int raydium_i2c_read(struct i2c_client *client,
-+	u8 addr, size_t len, void *data)
++static inline u32 vp8_enc_read_reg(struct venc_vp8_inst *inst, u32 addr)
 +{
-+	struct i2c_msg xfer[2];
-+
-+	/* Write register */
-+	xfer[0].addr = client->addr;
-+	xfer[0].flags = 0;
-+	xfer[0].len = 1;
-+	xfer[0].buf = &addr;
-+
-+	/* Read data */
-+	xfer[1].addr = client->addr;
-+	xfer[1].flags = I2C_M_RD;
-+	xfer[1].len = len;
-+	xfer[1].buf = data;
-+
-+	if (i2c_transfer(client->adapter, xfer, 2) == 2)
-+		return 0;
-+
-+	dev_err(&client->dev, "%s: i2c transfer failed\n", __func__);
-+
-+	return -EIO;
++	return readl(inst->hw_base + addr);
 +}
 +
-+static int raydium_i2c_read_message(struct raydium_data *ts,
-+	u32 addr, size_t len, void *data)
++static void vp8_enc_free_work_buf(struct venc_vp8_inst *inst)
 +{
-+	int error;
-+	u8 buf[HEADER_SIZE], ii;
++	int i;
 +
-+	for (ii = 0; ii < HEADER_SIZE; ii++)
-+		buf[ii] = addr >> (3 - ii)*8;
++	mtk_vcodec_debug_enter(inst);
 +
-+	/*set data bank*/
-+	error = raydium_i2c_send(ts->client, CMD_BANK_SWITCH,
-+		(u8 *)buf, HEADER_SIZE);
-+	/*read potints data*/
-+	if (!error)
-+		error = raydium_i2c_read(ts->client,
-+			buf[ADDR_INDEX],
-+			len,
-+			(void *)data);
++	/* Buffers need to be freed by AP. */
++	for (i = 0; i < VENC_VP8_VPU_WORK_BUF_MAX; i++)
++		if (inst->work_bufs[i].va != NULL)
++			mtk_vcodec_mem_free(inst->ctx,
++					    &inst->work_bufs[i]);
 +
-+	return error;
++	mtk_vcodec_debug_leave(inst);
 +}
 +
-+static int raydium_i2c_send_message(struct i2c_client *client,
-+	size_t len, void *data)
++static int vp8_enc_alloc_work_buf(struct venc_vp8_inst *inst, void *param)
 +{
-+	int error;
-+	u8 buf[HEADER_SIZE], ii;
++	int i;
++	int ret = 0;
++	struct venc_vp8_vpu_buf *wb = inst->vpu_inst.drv->work_bufs;
++	struct venc_enc_prm *enc_param = param;
 +
-+	for (ii = 0; ii < HEADER_SIZE; ii++)
-+		buf[ii] = ((u8 *)data)[3 - ii];
-+	/*set data bank*/
-+	error = raydium_i2c_send(client, CMD_BANK_SWITCH,
-+		(u8 *)buf, HEADER_SIZE);
++	mtk_vcodec_debug_enter(inst);
 +
-+	/*send messange*/
-+	if (!error)
-+		error = raydium_i2c_send(client, buf[ADDR_INDEX], buf, len);
++	for (i = 0; i < VENC_VP8_VPU_WORK_BUF_MAX; i++) {
++		/*
++		 * Only temporal scalability mode will use RC_CODE2 & RC_CODE3
++		 * Each three temporal layer has its own rate control code.
++		 */
++		if ((i == VENC_VP8_VPU_WORK_BUF_RC_CODE2 ||
++		     i == VENC_VP8_VPU_WORK_BUF_RC_CODE3) && !inst->ts_mode)
++			continue;
 +
-+	return error;
-+}
-+
-+static int raydium_i2c_sw_reset(struct i2c_client *client)
-+{
-+	const u8 soft_rst_cmd[] = { 0x01, 0x04, 0x00, 0x00, 0x40};
-+	int error;
-+
-+	error = raydium_i2c_send_message(client,
-+			1, (void *)soft_rst_cmd);
-+	if (error) {
-+		dev_err(&client->dev, "software reset failed: %d\n", error);
-+		return error;
-+	}
-+
-+	msleep(RAYDIUM_RESET_DELAY_MSEC);
-+
-+	return 0;
-+}
-+
-+static int raydium_i2c_query_ts_info(struct raydium_data *ts)
-+{
-+	struct i2c_client *client = ts->client;
-+	int error, retry_cnt;
-+
-+	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-+		error = raydium_i2c_read(client, CMD_DATA_BANK,
-+			sizeof(ts->obj), (void *)&ts->obj);
-+		if (error)
-+			dev_err(&client->dev, "get data bank failed: %d\n",
-+			error);
-+		else {
-+			error = raydium_i2c_read(client, CMD_QUERY_BANK,
-+				sizeof(ts->query_bank_info),
-+				(void *)&ts->query_bank_info);
-+			if (!error) {
-+				error = raydium_i2c_read_message(ts,
-+					ts->query_bank_info,
-+					sizeof(ts->info),
-+					(void *)&ts->info);
++		/*
++		 * This 'wb' structure is set by VPU side and shared to AP for
++		 * buffer allocation and IO virtual addr mapping. For most of
++		 * the buffers, AP will allocate the buffer according to 'size'
++		 * field and store the IO virtual addr in 'iova' field. For the
++		 * RC_CODEx buffers, they are pre-allocated in the VPU side
++		 * because they are inside VPU SRAM, and save the VPU addr in
++		 * the 'vpua' field. The AP will translate the VPU addr to the
++		 * corresponding IO virtual addr and store in 'iova' field.
++		 */
++		inst->work_bufs[i].size = wb[i].size;
++		if (i < VENC_VP8_VPU_WORK_BUF_RC_CODE) {
++			ret = mtk_vcodec_mem_alloc(inst->ctx,
++						   &inst->work_bufs[i]);
++			if (ret) {
++				mtk_vcodec_err(inst,
++					       "cannot alloc work_bufs[%d]", i);
++				goto err_alloc;
 +			}
++		} else if (i == VENC_VP8_VPU_WORK_BUF_SRC_LUMA ||
++			   i == VENC_VP8_VPU_WORK_BUF_SRC_CHROMA ||
++			   i == VENC_VP8_VPU_WORK_BUF_SRC_CHROMA_CB ||
++			   i == VENC_VP8_VPU_WORK_BUF_SRC_CHROMA_CR) {
++			inst->work_bufs[i].dma_addr = 0;
++			inst->work_bufs[i].va = NULL;
++		} else {
++			void *tmp_va;
++
++			tmp_va = vpu_mapping_dm_addr(inst->dev, wb[i].vpua);
++			ret = mtk_vcodec_mem_alloc(inst->ctx,
++						   &inst->work_bufs[i]);
++			if (ret) {
++				mtk_vcodec_err(inst,
++					       "cannot alloc work_bufs[%d]", i);
++				goto err_alloc;
++			}
++			memcpy(inst->work_bufs[i].va, tmp_va, wb[i].size);
 +		}
-+		if (!error)
-+			return 0;
++		wb[i].iova = inst->work_bufs[i].dma_addr;
++
++		mtk_vcodec_debug(inst,
++				 "work_bufs[%d] va=0x%p,iova=0x%p,size=0x%lx",
++				 i, inst->work_bufs[i].va,
++				 (void *)inst->work_bufs[i].dma_addr,
++				 inst->work_bufs[i].size);
 +	}
 +
-+	return -EINVAL;
++	if (enc_param->input_fourcc == VENC_YUV_FORMAT_NV12 ||
++	    enc_param->input_fourcc == VENC_YUV_FORMAT_NV21) {
++		enc_param->sizeimage[0] =
++			inst->work_bufs[VENC_VP8_VPU_WORK_BUF_SRC_LUMA].size;
++		enc_param->sizeimage[1] =
++			inst->work_bufs[VENC_VP8_VPU_WORK_BUF_SRC_CHROMA].size;
++		enc_param->sizeimage[2] = 0;
++	} else {
++		enc_param->sizeimage[0] =
++			inst->work_bufs[VENC_VP8_VPU_WORK_BUF_SRC_LUMA].size;
++		enc_param->sizeimage[1] =
++			inst->work_bufs[VENC_VP8_VPU_WORK_BUF_SRC_CHROMA_CB].size;
++		enc_param->sizeimage[2] =
++			inst->work_bufs[VENC_VP8_VPU_WORK_BUF_SRC_CHROMA_CR].size;
++	}
++	mtk_vcodec_debug_leave(inst);
++
++	return ret;
++
++err_alloc:
++	vp8_enc_free_work_buf(inst);
++
++	return ret;
 +}
 +
-+static int raydium_i2c_fastboot(struct raydium_data *ts)
++static unsigned int vp8_enc_wait_venc_done(struct venc_vp8_inst *inst)
 +{
-+	const u8 boot_cmd[] = { 0x20, 0x06, 0x00, 0x50 };
-+	u8 buf[HEADER_SIZE];
-+	int error;
++	unsigned int irq_status = 0;
++	struct mtk_vcodec_ctx *ctx = (struct mtk_vcodec_ctx *)inst->ctx;
 +
-+	error = raydium_i2c_read_message(ts,
-+		get_unaligned_be32(boot_cmd),
-+		sizeof(boot_cmd),
-+		buf);
++	mtk_vcodec_wait_for_done_ctx(ctx, MTK_INST_IRQ_RECEIVED,
++				     WAIT_INTR_TIMEOUT, true);
++	irq_status = ctx->irq_status;
++	mtk_vcodec_debug(inst, "isr return %x", irq_status);
 +
-+	if (error) {
-+		dev_err(&ts->client->dev, "boot failed: %d\n", error);
-+		return error;
-+	} else if (buf[0] == RM_BOOT_BLDR) {
-+		dev_dbg(&ts->client->dev, "boot in fastboot mode\n");
++	return irq_status;
++}
++
++/*
++ * Compose ac_tag, bitstream header and bitstream payload into
++ * one bitstream buffer.
++ */
++static int vp8_enc_compose_one_frame(struct venc_vp8_inst *inst,
++				     struct mtk_vcodec_mem *bs_buf,
++				     unsigned int *bs_size)
++{
++	unsigned int is_key;
++	u32 bs_size_frm;
++	u32 bs_hdr_len;
++	unsigned int ac_tag_sz;
++	u8 ac_tag[MAX_AC_TAG_SZ];
++
++	bs_size_frm = vp8_enc_read_reg(inst,
++				       VENC_PIC_BITSTREAM_BYTE_CNT);
++	bs_hdr_len = vp8_enc_read_reg(inst,
++				      VENC_PIC_BITSTREAM_BYTE_CNT1);
++
++	/* if a frame is key frame, is_key is 0 */
++	is_key = !inst->is_key_frm;
++	*(u32 *)ac_tag = __cpu_to_le32((bs_hdr_len << 5) | 0x10 | is_key);
++	/* key frame */
++	if (is_key == 0) {
++		ac_tag[3] = 0x9d;
++		ac_tag[4] = 0x01;
++		ac_tag[5] = 0x2a;
++		ac_tag[6] = inst->vpu_inst.drv->config.pic_w;
++		ac_tag[7] = inst->vpu_inst.drv->config.pic_w >> 8;
++		ac_tag[8] = inst->vpu_inst.drv->config.pic_h;
++		ac_tag[9] = inst->vpu_inst.drv->config.pic_h >> 8;
++	}
++
++	if (is_key == 0)
++		ac_tag_sz = MAX_AC_TAG_SZ;
++	else
++		ac_tag_sz = 3;
++
++	if (bs_buf->size <= bs_hdr_len + bs_size_frm + ac_tag_sz) {
++		mtk_vcodec_err(inst, "bitstream buf size is too small(%ld)",
++			       bs_buf->size);
 +		return -EINVAL;
 +	}
-+
-+	dev_dbg(&ts->client->dev, "boot success -- 0x%x\n", ts->client->addr);
-+	return 0;
-+}
-+
-+static int raydium_i2c_initialize(struct raydium_data *ts)
-+{
-+	struct i2c_client *client = ts->client;
-+	int error, retry_cnt;
-+	const u8 recov_packet[] = { 0x04, 0x81 };
-+	u8 buf[HEADER_SIZE];
-+
-+	for (retry_cnt = 0; retry_cnt < MAX_RETRIES; retry_cnt++) {
-+		error = raydium_i2c_fastboot(ts);
-+		if (error) {
-+			/* Continue initializing if it's the last try */
-+			if (retry_cnt < MAX_RETRIES - 1)
-+				continue;
-+		}
-+		/* Wait for Hello packet */
-+		msleep(BOOT_DELAY_MS);
-+
-+		error = raydium_i2c_read(client, recov_packet[0],
-+			1, (void *)buf);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"failed to read 'hello' packet: %d\n", error);
-+		} else if (buf[0] == recov_packet[1]) {
-+			ts->boot_mode = RAYDIUM_TS_MAIN;
-+			break;
-+		}
-+	}
-+
-+	if (error)
-+		ts->boot_mode = RAYDIUM_TS_BLDR;
-+	else
-+		raydium_i2c_query_ts_info(ts);
-+
-+	return error;
-+}
-+
-+static int raydium_i2c_fw_write_page(struct i2c_client *client,
-+				    const void *page)
-+{
-+	const u8 ack_ok[] = { 0x55, 0xAA };
-+	u8 buf[2];
-+	int retry;
-+	int error;
-+
-+	for (retry = 0; retry < MAX_FW_UPDATE_RETRIES; retry++) {
-+		error = raydium_i2c_send(client, CMD_BOOT_WRT,
-+			(u8 *)page, RAYDIUM_FW_PAGESIZE);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"BLDR Write Page failed: %d\n", error);
-+			continue;
-+		}
-+
-+		error = raydium_i2c_read(client, CMD_BOOT_CHK,
-+			sizeof(ack_ok), (void *)buf);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"BLDR Ack read failed: %d\n", error);
-+			return error;
-+		}
-+
-+		if (!memcmp(buf, ack_ok, sizeof(ack_ok)))
-+			return 0;
-+
-+		error = -EIO;
-+		dev_err(&client->dev,
-+			"BLDR Get Ack Error [%02x:%02x]\n",
-+			buf[0], buf[1]);
-+	}
-+
-+	return error;
-+}
-+
-+static int raydium_i2c_do_update_firmware(struct i2c_client *client,
-+					 const struct firmware *fw,
-+					 bool force)
-+{
-+	const u8 boot_cmd[] = { RM_BOOT_BLDR, 0x20, 0x06, 0x00, 0x50 };
-+	const u8 main_cmd[] = { RM_BOOT_MAIN, 0x20, 0x06, 0x00, 0x50 };
-+	const u8 boot_ack[] = { 0x55, 0xAA, 0x00, 0xFF };
-+	u8 buf[HEADER_SIZE];
-+	int page, n_fw_pages;
-+	int error;
-+
-+	/* Recovery mode detection! */
-+	if (!force) {
-+		/* Start boot loader Procedure */
-+		dev_dbg(&client->dev, "Normal BLDR procedure\n");
-+		/* switch to mode */
-+		error = raydium_i2c_send_message(client, 1, (void *)boot_cmd);
-+		if (error)
-+			dev_err(&client->dev, "failed to send boot cmd: %d\n",
-+				error);
-+		msleep(60);
-+		raydium_i2c_sw_reset(client);
-+		msleep(RAYDIUM_RESET_DELAY_MSEC);
-+		error = raydium_i2c_send_message(client, 1, (void *)boot_cmd);
-+	}
-+
-+	if (error) {
-+		dev_err(&client->dev, "failed to enter fastboot mode: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	msleep(20);
-+
-+	/* check fastboot state */
-+	error = raydium_i2c_read(client, CMD_BOOT_ACK,
-+		sizeof(boot_ack), (void *)buf);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"failed to read boot ack: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	if (memcmp(buf, boot_ack, sizeof(boot_ack))) {
-+		dev_err(&client->dev,
-+			"failed to enter fastboot: %*ph (expected %*ph)\n",
-+			(int)sizeof(buf), buf, (int)sizeof(boot_ack), boot_ack);
-+		return -EIO;
-+	}
-+
-+	dev_info(&client->dev, "successfully entered fastboot mode");
-+
-+	n_fw_pages = fw->size / RAYDIUM_FW_PAGESIZE;
-+	dev_dbg(&client->dev, "BLDR Pages = %d\n", n_fw_pages);
-+
-+	for (page = 0; page < n_fw_pages; page++) {
-+		error = raydium_i2c_fw_write_page(client,
-+					fw->data + page * RAYDIUM_FW_PAGESIZE);
-+		if (error) {
-+			dev_err(&client->dev,
-+				"failed to write FW page %d: %d\n",
-+				page, error);
-+			return error;
-+		}
-+	}
-+	error = raydium_i2c_send_message(client, 1, (void *)main_cmd);
-+	msleep(20);
-+	raydium_i2c_sw_reset(client);
-+	dev_info(&client->dev, "firmware update completed\n");
-+
-+	return 0;
-+}
-+
-+static int raydium_i2c_fw_update(struct raydium_data *ts)
-+{
-+	struct i2c_client *client = ts->client;
-+	const struct firmware *fw;
-+	char *fw_name;
-+	int error;
-+
-+	fw_name = kasprintf(GFP_KERNEL, "raydium_i2c_%04x.bin",
-+		ts->info.hw_ver & 0xFFFF);
-+	if (!fw_name)
-+		return -ENOMEM;
-+
-+	dev_info(&client->dev, "requesting fw name = %s\n", fw_name);
-+	error = request_firmware(&fw, fw_name, &client->dev);
-+	kfree(fw_name);
-+	if (error) {
-+		dev_err(&client->dev, "failed to request firmware: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	if (fw->size % RAYDIUM_FW_PAGESIZE) {
-+		dev_err(&client->dev, "invalid firmware length: %zu\n",
-+			fw->size);
-+		error = -EINVAL;
-+		goto out;
-+	}
-+
-+	disable_irq(client->irq);
-+	error = raydium_i2c_do_update_firmware(client, fw,
-+					ts->boot_mode == RAYDIUM_TS_BLDR);
-+	if (error) {
-+		dev_err(&client->dev, "firmware update failed: %d\n", error);
-+		ts->boot_mode = RAYDIUM_TS_BLDR;
-+		goto out_enable_irq;
-+	}
-+	error = raydium_i2c_initialize(ts);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"failed to initialize device after firmware update: %d\n",
-+			error);
-+		ts->boot_mode = RAYDIUM_TS_BLDR;
-+		goto out_enable_irq;
-+	}
-+
-+	ts->boot_mode = RAYDIUM_TS_MAIN;
-+
-+out_enable_irq:
-+	enable_irq(client->irq);
-+	msleep(100);
-+out:
-+	release_firmware(fw);
-+	return error;
-+}
-+
-+static void raydium_mt_event(struct raydium_data *ts)
-+{
-+	struct raydium_abs_info *data;
-+	int error, i, x, y;
-+	u8 f_state;
-+	u8 touch_count;
-+	u8 tp_info_size;
-+
-+	error = raydium_i2c_read_message(ts, ts->obj.data_bank_addr,
-+		ts->obj.pkg_size, (void *)&ts->buf);
-+
-+	if (error < 0) {
-+		dev_err(&ts->client->dev, "%s: failed to read data: %d\n",
-+			__func__, error);
-+		return;
-+	}
-+
-+	touch_count = 0;
-+	tp_info_size = sizeof(ts->finger);
-+
-+	for (i = 0; i < MAX_TOUCH_NUM; i++) {
-+		data = (struct raydium_abs_info *)(ts->buf + i * tp_info_size);
-+
-+		f_state = data->state & 0x03;
-+
-+		input_mt_slot(ts->input, i);
-+		input_mt_report_slot_state(ts->input,
-+				MT_TOOL_FINGER, f_state != 0);
-+
-+		if (!f_state)
-+			continue;
-+
-+			x = (data->x_pos_msb << 8) | (data->x_pos_lsb);
-+			y = (data->y_pos_msb << 8) | (data->y_pos_lsb);
-+
-+			input_report_key(ts->input,
-+				BTN_TOUCH, 1);
-+			input_report_key(ts->input,
-+				BTN_TOOL_FINGER, 1);
-+			input_report_abs(ts->input,
-+				ABS_MT_POSITION_X, x);
-+			input_report_abs(ts->input,
-+				ABS_MT_POSITION_Y, y);
-+			input_report_abs(ts->input,
-+				ABS_MT_PRESSURE, data->pressure);
-+			input_report_abs(ts->input,
-+				ABS_MT_TOUCH_MAJOR,
-+				max(data->x_width, data->y_width));
-+			input_report_abs(ts->input,
-+				ABS_MT_TOUCH_MINOR,
-+				min(data->x_width, data->y_width));
-+			touch_count++;
-+	}
-+
-+	input_report_key(ts->input,
-+			BTN_TOUCH, touch_count > 0);
-+	input_report_key(ts->input,
-+			BTN_TOOL_FINGER, ts->input > 0);
-+	input_mt_report_pointer_emulation(ts->input, false);
-+	input_sync(ts->input);
-+}
-+
-+static irqreturn_t raydium_i2c_irq(int irq, void *_dev)
-+{
-+	struct raydium_data *ts = _dev;
-+
-+	if (ts->boot_mode != RAYDIUM_TS_BLDR)
-+		raydium_mt_event(ts);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static ssize_t write_update_fw(struct device *dev,
-+			       struct device_attribute *attr,
-+			       const char *buf, size_t count)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct raydium_data *ts = i2c_get_clientdata(client);
-+	int error;
-+
-+	error = mutex_lock_interruptible(&ts->sysfs_mutex);
-+	if (error)
-+		return error;
-+
-+	error = raydium_i2c_fw_update(ts);
-+	dev_dbg(dev, "firmware update result: %d\n", error);
-+
-+	mutex_unlock(&ts->sysfs_mutex);
-+	return error ?: count;
-+}
-+
-+static ssize_t show_boot_mode(struct device *dev,
-+			     struct device_attribute *attr, char *buf)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct raydium_data *ts = i2c_get_clientdata(client);
-+
-+	return sprintf(buf, "%s\n",
-+		       ts->boot_mode == RAYDIUM_TS_MAIN ?
-+				"Normal" : "Recovery");
-+}
-+
-+static ssize_t raydium_fw_ver_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct raydium_data *ts = i2c_get_clientdata(client);
-+
-+	return sprintf(buf, "Release Version %d.%d\n",
-+		ts->info.main_ver,
-+		ts->info.sub_ver);
-+}
-+
-+static ssize_t raydium_hw_ver_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct raydium_data *ts = i2c_get_clientdata(client);
-+
-+	return sprintf(buf, "Hardware version 0x%x\n",
-+		ts->info.hw_ver & 0xFFFF);
-+}
-+static DEVICE_ATTR(fw_version, S_IRUGO, raydium_fw_ver_show, NULL);
-+static DEVICE_ATTR(hw_version, S_IRUGO, raydium_hw_ver_show, NULL);
-+static DEVICE_ATTR(boot_mode, S_IRUGO, show_boot_mode, NULL);
-+static DEVICE_ATTR(update_fw, S_IWUSR, NULL, write_update_fw);
-+
-+static struct attribute *raydium_attributes[] = {
-+	&dev_attr_update_fw.attr,
-+	&dev_attr_boot_mode.attr,
-+	&dev_attr_fw_version.attr,
-+	&dev_attr_hw_version.attr,
-+	NULL
-+};
-+
-+static struct attribute_group raydium_attribute_group = {
-+	.attrs = raydium_attributes,
-+};
-+
-+static void raydium_i2c_remove_sysfs_group(void *_data)
-+{
-+	struct raydium_data *ts = _data;
-+
-+	sysfs_remove_group(&ts->client->dev.kobj, &raydium_attribute_group);
-+}
-+
-+static int raydium_i2c_power_on(struct raydium_data *ts)
-+{
-+	int error;
 +
 +	/*
-+	 * If we do not have reset gpio assume platform firmware
-+	 * controls regulators and does power them on for us.
-+	 */
-+	if (IS_ERR_OR_NULL(ts->reset_gpio))
-+		return 0;
-+
-+	gpiod_set_value_cansleep(ts->reset_gpio, 1);
-+
-+	error = regulator_enable(ts->vcc33);
-+	if (error) {
-+		dev_err(&ts->client->dev,
-+			"failed to enable vcc33 regulator: %d\n",
-+			error);
-+		goto release_reset_gpio;
-+	}
-+
-+	error = regulator_enable(ts->vccio);
-+	if (error) {
-+		dev_err(&ts->client->dev,
-+			"failed to enable vccio regulator: %d\n",
-+			error);
-+		regulator_disable(ts->vcc33);
-+		goto release_reset_gpio;
-+	}
-+
-+	udelay(RAYDIUM_POWERON_DELAY_USEC);
-+
-+release_reset_gpio:
-+	gpiod_set_value_cansleep(ts->reset_gpio, 0);
-+
-+	if (error)
-+		return error;
-+
-+	msleep(RAYDIUM_RESET_DELAY_MSEC);
++	* (1) The vp8 bitstream header and body are generated by the HW vp8
++	* encoder separately at the same time. We cannot know the bitstream
++	* header length in advance.
++	* (2) From the vp8 spec, there is no stuffing byte allowed between the
++	* ac tag, bitstream header and bitstream body.
++	*/
++	memmove(bs_buf->va + bs_hdr_len + ac_tag_sz,
++		bs_buf->va, bs_size_frm);
++	memcpy(bs_buf->va + ac_tag_sz,
++	       inst->work_bufs[VENC_VP8_VPU_WORK_BUF_BS_HD].va,
++	       bs_hdr_len);
++	memcpy(bs_buf->va, ac_tag, ac_tag_sz);
++	*bs_size = bs_size_frm + bs_hdr_len + ac_tag_sz;
 +
 +	return 0;
 +}
 +
-+static void raydium_i2c_power_off(void *_data)
++static int vp8_enc_encode_frame(struct venc_vp8_inst *inst,
++				struct venc_frm_buf *frm_buf,
++				struct mtk_vcodec_mem *bs_buf,
++				unsigned int *bs_size)
 +{
-+	struct raydium_data *ts = _data;
++	int ret = 0;
++	unsigned int irq_status;
 +
-+	if (!IS_ERR_OR_NULL(ts->reset_gpio)) {
-+		gpiod_set_value_cansleep(ts->reset_gpio, 1);
-+		regulator_disable(ts->vccio);
-+		regulator_disable(ts->vcc33);
++	mtk_vcodec_debug(inst, "->frm_cnt=%d", inst->frm_cnt);
++
++	ret = vp8_enc_vpu_encode(inst, frm_buf, bs_buf);
++	if (ret)
++		return ret;
++
++	irq_status = vp8_enc_wait_venc_done(inst);
++	if (irq_status != VENC_IRQ_STATUS_ENC_FRM_INT) {
++		mtk_vcodec_err(inst, "irq_status=%d failed", irq_status);
++		return -EINVAL;
 +	}
++
++	if (vp8_enc_compose_one_frame(inst, bs_buf, bs_size)) {
++		mtk_vcodec_err(inst, "vp8_enc_compose_one_frame failed");
++		return -EINVAL;
++	}
++
++	inst->frm_cnt++;
++	mtk_vcodec_debug(inst, "<-size=%d key_frm=%d", *bs_size,
++			 inst->is_key_frm);
++
++	return ret;
 +}
 +
-+static int raydium_i2c_probe(struct i2c_client *client,
-+			    const struct i2c_device_id *id)
++static int vp8_enc_init(struct mtk_vcodec_ctx *ctx, unsigned long *handle)
 +{
-+	union i2c_smbus_data dummy;
-+	struct raydium_data *ts;
-+	unsigned long irqflags;
-+	int error;
++	int ret = 0;
++	struct venc_vp8_inst *inst;
 +
-+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-+		dev_err(&client->dev,
-+			"%s: i2c check functionality error\n", DEVICE_NAME);
-+		return -ENXIO;
-+	}
-+
-+	ts = devm_kzalloc(&client->dev,
-+		sizeof(struct raydium_data), GFP_KERNEL);
-+	if (!ts)
++	inst = kzalloc(sizeof(*inst), GFP_KERNEL);
++	if (!inst)
 +		return -ENOMEM;
 +
-+	mutex_init(&ts->sysfs_mutex);
-+	init_completion(&ts->cmd_done);
++	inst->ctx = ctx;
++	inst->dev = mtk_vcodec_get_plat_dev(ctx);
++	inst->hw_base = mtk_vcodec_get_reg_addr(inst->ctx, VENC_LT_SYS);
 +
-+	ts->client = client;
-+	i2c_set_clientdata(client, ts);
++	mtk_vcodec_debug_enter(inst);
++	ret = vp8_enc_vpu_init(inst);
++	if (ret)
++		kfree(inst);
++	else
++		(*handle) = (unsigned long)inst;
 +
-+	ts->vcc33 = devm_regulator_get(&client->dev, "avdd");
-+	if (IS_ERR(ts->vcc33)) {
-+		error = PTR_ERR(ts->vcc33);
-+		if (error != -EPROBE_DEFER)
-+			dev_err(&client->dev,
-+				"Failed to get 'vcc33' regulator: %d\n",
-+				error);
-+		return error;
++	mtk_vcodec_debug_leave(inst);
++
++	return ret;
++}
++
++static int vp8_enc_encode(unsigned long handle,
++			  enum venc_start_opt opt,
++			  struct venc_frm_buf *frm_buf,
++			  struct mtk_vcodec_mem *bs_buf,
++			  struct venc_done_result *result)
++{
++	int ret = 0;
++	struct venc_vp8_inst *inst = (struct venc_vp8_inst *)handle;
++	struct mtk_vcodec_ctx *ctx = inst->ctx;
++
++	mtk_vcodec_debug_enter(inst);
++
++	enable_irq(ctx->dev->enc_lt_irq);
++
++	switch (opt) {
++	case VENC_START_OPT_ENCODE_FRAME:
++		ret = vp8_enc_encode_frame(inst, frm_buf, bs_buf,
++					   &result->bs_size);
++		if (ret)
++			goto encode_err;
++		result->is_key_frm = inst->is_key_frm;
++		break;
++
++	default:
++		mtk_vcodec_err(inst, "opt not support:%d", opt);
++		ret = -EINVAL;
++		break;
 +	}
 +
-+	ts->vccio = devm_regulator_get(&client->dev, "vdd");
-+	if (IS_ERR(ts->vccio)) {
-+		error = PTR_ERR(ts->vccio);
-+		if (error != -EPROBE_DEFER)
-+			dev_err(&client->dev,
-+				"Failed to get 'vccio' regulator: %d\n",
-+				error);
-+		return error;
-+	}
++encode_err:
++	if (ret)
++		result->msg = VENC_MESSAGE_ERR;
++	else
++		result->msg = VENC_MESSAGE_OK;
 +
++	disable_irq(ctx->dev->enc_lt_irq);
++	mtk_vcodec_debug_leave(inst);
 +
-+	ts->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
-+		GPIOD_OUT_LOW);
-+	if (IS_ERR(ts->reset_gpio)) {
-+		error = PTR_ERR(ts->reset_gpio);
-+		if (error != -EPROBE_DEFER) {
-+			dev_err(&client->dev,
-+				"failed to get reset gpio: %d\n",
-+				error);
-+			return error;
++	return ret;
++}
++
++static int vp8_enc_set_param(unsigned long handle,
++			     enum venc_set_param_type type, void *in)
++{
++	int ret = 0;
++	struct venc_vp8_inst *inst = (struct venc_vp8_inst *)handle;
++	struct venc_enc_prm *enc_prm;
++
++	mtk_vcodec_debug(inst, "->type=%d", type);
++
++	switch (type) {
++	case VENC_SET_PARAM_ENC:
++		enc_prm = in;
++		ret = vp8_enc_vpu_set_param(inst, type, enc_prm);
++		if (ret)
++			break;
++		if (inst->work_buf_allocated == 1) {
++			vp8_enc_free_work_buf(inst);
++			inst->work_buf_allocated = 0;
 +		}
++		if (inst->work_buf_allocated == 0) {
++			ret = vp8_enc_alloc_work_buf(inst, enc_prm);
++			if (ret)
++				break;
++			inst->work_buf_allocated = 1;
++		}
++		break;
++
++	case VENC_SET_PARAM_FORCE_INTRA:
++		ret = vp8_enc_vpu_set_param(inst, type, 0);
++		break;
++
++	case VENC_SET_PARAM_ADJUST_BITRATE:
++		enc_prm = in;
++		ret = vp8_enc_vpu_set_param(inst, type, &enc_prm->bitrate);
++		break;
++
++	case VENC_SET_PARAM_ADJUST_FRAMERATE:
++		enc_prm = in;
++		ret = vp8_enc_vpu_set_param(inst, type, &enc_prm->frm_rate);
++		break;
++
++	case VENC_SET_PARAM_I_FRAME_INTERVAL:
++		ret = vp8_enc_vpu_set_param(inst, type, in);
++		break;
++
++	/*
++	 * VENC_SET_PARAM_TS_MODE must be called before
++	 * VENC_SET_PARAM_ENC
++	 */
++	case VENC_SET_PARAM_TS_MODE:
++		inst->ts_mode = 1;
++		mtk_vcodec_debug(inst, "set ts_mode");
++		break;
++
++	default:
++		mtk_vcodec_err(inst, "type not support:%d", type);
++		ret = -EINVAL;
++		break;
 +	}
 +
-+	error = raydium_i2c_power_on(ts);
-+	if (error)
-+		return error;
++	mtk_vcodec_debug_leave(inst);
 +
-+	error = devm_add_action(&client->dev, raydium_i2c_power_off, ts);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"failed to install power off action: %d\n", error);
-+		raydium_i2c_power_off(ts);
-+		return error;
-+	}
-+
-+	/* Make sure there is something at this address */
-+	if (i2c_smbus_xfer(client->adapter, client->addr, 0,
-+			   I2C_SMBUS_READ, 0, I2C_SMBUS_BYTE, &dummy) < 0) {
-+		dev_err(&client->dev, "nothing at this address\n");
-+		return -ENXIO;
-+	}
-+
-+	error = raydium_i2c_initialize(ts);
-+	if (error) {
-+		dev_err(&client->dev, "failed to initialize: %d\n", error);
-+		return error;
-+	}
-+
-+	ts->input = devm_input_allocate_device(&client->dev);
-+	if (!ts->input) {
-+		dev_err(&client->dev, "Failed to allocate input device\n");
-+		return -ENOMEM;
-+	}
-+
-+	ts->input->name = "Raydium Touchscreen";
-+	ts->input->id.bustype = BUS_I2C;
-+
-+	__set_bit(BTN_TOUCH, ts->input->keybit);
-+	__set_bit(EV_ABS, ts->input->evbit);
-+	__set_bit(EV_KEY, ts->input->evbit);
-+
-+	/* Single touch input params setup */
-+	input_set_abs_params(ts->input, ABS_X, 0, ts->info.x_max, 0, 0);
-+	input_set_abs_params(ts->input, ABS_Y, 0, ts->info.y_max, 0, 0);
-+	input_set_abs_params(ts->input, ABS_PRESSURE, 0, 255, 0, 0);
-+	input_abs_set_res(ts->input, ABS_X, ts->info.x_res);
-+	input_abs_set_res(ts->input, ABS_Y, ts->info.y_res);
-+
-+	/* Multitouch input params setup */
-+	error = input_mt_init_slots(ts->input, MAX_TOUCH_NUM,
-+				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"failed to initialize MT slots: %d\n", error);
-+		return error;
-+	}
-+
-+	input_set_abs_params(ts->input, ABS_MT_POSITION_X, 0,
-+		ts->info.x_max, 0, 0);
-+	input_set_abs_params(ts->input, ABS_MT_POSITION_Y,
-+		0, ts->info.y_max, 0, 0);
-+	input_set_abs_params(ts->input, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
-+	input_set_abs_params(ts->input, ABS_MT_PRESSURE, 0, 255, 0, 0);
-+	input_abs_set_res(ts->input, ABS_MT_POSITION_X, ts->info.x_res);
-+	input_abs_set_res(ts->input, ABS_MT_POSITION_Y, ts->info.y_res);
-+
-+	input_mt_init_slots(ts->input, MAX_TOUCH_NUM, 0);
-+
-+	input_set_drvdata(ts->input, ts);
-+
-+	error = input_register_device(ts->input);
-+	if (error) {
-+		dev_err(&client->dev,
-+			"unable to register input device: %d\n", error);
-+		return error;
-+	}
-+		dev_err(&client->dev,
-+			"#Success to register input device: %d\n", error);
-+
-+	error = devm_request_threaded_irq(&client->dev, client->irq,
-+					  NULL, raydium_i2c_irq,
-+					  irqflags | IRQF_ONESHOT,
-+					  client->name, ts);
-+	if (error) {
-+		dev_err(&client->dev, "Failed to register interrupt\n");
-+		return error;
-+	}
-+
-+	if (!client->dev.of_node)
-+		device_init_wakeup(&client->dev, true);
-+
-+	error = sysfs_create_group(&client->dev.kobj, &raydium_attribute_group);
-+	if (error) {
-+		dev_err(&client->dev, "failed to create sysfs attributes: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	error = devm_add_action(&client->dev,
-+				raydium_i2c_remove_sysfs_group, ts);
-+	if (error) {
-+		raydium_i2c_remove_sysfs_group(ts);
-+		dev_err(&client->dev,
-+			"Failed to add sysfs cleanup action: %d\n",
-+			error);
-+		return error;
-+	}
-+
-+	return 0;
++	return ret;
 +}
 +
-+static int raydium_i2c_remove(struct i2c_client *client)
++static int vp8_enc_deinit(unsigned long handle)
 +{
-+	struct raydium_data *ts = i2c_get_clientdata(client);
++	int ret = 0;
++	struct venc_vp8_inst *inst = (struct venc_vp8_inst *)handle;
 +
-+	if (ts->input)
-+		input_unregister_device(ts->input);
++	mtk_vcodec_debug_enter(inst);
 +
-+	device_init_wakeup(&client->dev, false);
++	ret = vp8_enc_vpu_deinit(inst);
 +
-+	devm_free_irq(&client->dev, client->irq, ts);
++	if (inst->work_buf_allocated)
++		vp8_enc_free_work_buf(inst);
 +
-+	mutex_destroy(&ts->sysfs_mutex);
++	mtk_vcodec_debug_leave(inst);
++	kfree(inst);
 +
-+	devm_remove_action(&client->dev, raydium_i2c_remove_sysfs_group, ts);
-+
-+	devm_remove_action(&client->dev, raydium_i2c_power_off, ts);
-+
-+	return 0;
++	return ret;
 +}
 +
-+static void __maybe_unused raydium_enter_sleep(struct i2c_client *client)
-+{
-+	const u8 sleep_cmd[] = { 0x5A, 0xff, 0x00, 0x0f };
-+	int error;
-+
-+	error = raydium_i2c_send(client, CMD_ENTER_SLEEP,
-+			(u8 *)sleep_cmd, sizeof(sleep_cmd));
-+	if (error)
-+		dev_err(&client->dev,
-+			"Send sleep failed: %d\n", error);
-+}
-+
-+static int __maybe_unused raydium_i2c_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct raydium_data *ts = i2c_get_clientdata(client);
-+
-+	/* Command not support in BLDR recovery mode */
-+	if (ts->boot_mode != RAYDIUM_TS_MAIN)
-+		return -EBUSY;
-+
-+	disable_irq(client->irq);
-+
-+	if (device_may_wakeup(dev)) {
-+		raydium_enter_sleep(client);
-+
-+		ts->wake_irq_enabled = (enable_irq_wake(client->irq) == 0);
-+	} else {
-+		raydium_i2c_power_off(ts);
-+	}
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused raydium_i2c_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct raydium_data *ts = i2c_get_clientdata(client);
-+
-+	if (device_may_wakeup(dev)) {
-+		if (ts->wake_irq_enabled)
-+			disable_irq_wake(client->irq);
-+		raydium_i2c_sw_reset(client);
-+	} else {
-+		raydium_i2c_power_on(ts);
-+		raydium_i2c_initialize(ts);
-+	}
-+
-+	enable_irq(client->irq);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(raydium_i2c_pm_ops,
-+			 raydium_i2c_suspend, raydium_i2c_resume);
-+
-+static const struct i2c_device_id raydium_i2c_id[] = {
-+	{ DEVICE_NAME, 0 },
-+	{ }
++static struct venc_common_if venc_vp8_if = {
++	vp8_enc_init,
++	vp8_enc_encode,
++	vp8_enc_set_param,
++	vp8_enc_deinit,
 +};
-+MODULE_DEVICE_TABLE(i2c, raydium_i2c_id);
 +
-+#ifdef CONFIG_ACPI
-+static const struct acpi_device_id raydium_acpi_id[] = {
-+	{ "RMTS_0001", 0 },
-+	{ }
++struct venc_common_if *get_vp8_enc_comm_if(void)
++{
++	return &venc_vp8_if;
++}
+diff --git a/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.h b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.h
+new file mode 100644
+index 0000000..61e73f5
+--- /dev/null
++++ b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_if.h
+@@ -0,0 +1,152 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *         PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _VENC_VP8_IF_H_
++#define _VENC_VP8_IF_H_
++
++#include "venc_drv_base.h"
++
++/**
++ * enum venc_vp8_vpu_work_buf - vp8 encoder buffer index
++ */
++enum venc_vp8_vpu_work_buf {
++	VENC_VP8_VPU_WORK_BUF_LUMA,
++	VENC_VP8_VPU_WORK_BUF_LUMA2,
++	VENC_VP8_VPU_WORK_BUF_LUMA3,
++	VENC_VP8_VPU_WORK_BUF_CHROMA,
++	VENC_VP8_VPU_WORK_BUF_CHROMA2,
++	VENC_VP8_VPU_WORK_BUF_CHROMA3,
++	VENC_VP8_VPU_WORK_BUF_MV_INFO,
++	VENC_VP8_VPU_WORK_BUF_BS_HD,
++	VENC_VP8_VPU_WORK_BUF_PROB_BUF,
++	VENC_VP8_VPU_WORK_BUF_RC_INFO,
++	VENC_VP8_VPU_WORK_BUF_RC_CODE,
++	VENC_VP8_VPU_WORK_BUF_RC_CODE2,
++	VENC_VP8_VPU_WORK_BUF_RC_CODE3,
++	VENC_VP8_VPU_WORK_BUF_SRC_LUMA,
++	VENC_VP8_VPU_WORK_BUF_SRC_CHROMA,
++	VENC_VP8_VPU_WORK_BUF_SRC_CHROMA_CB,
++	VENC_VP8_VPU_WORK_BUF_SRC_CHROMA_CR,
++	VENC_VP8_VPU_WORK_BUF_MAX,
 +};
-+MODULE_DEVICE_TABLE(acpi, raydium_acpi_id);
++
++/*
++ * struct venc_vp8_vpu_config - Structure for vp8 encoder configuration
++ * @input_fourcc: input fourcc
++ * @bitrate: target bitrate (in bps)
++ * @pic_w: picture width. Picture size is visible stream resolution, in pixels,
++ *         to be used for display purposes; must be smaller or equal to buffer
++ *         size.
++ * @pic_h: picture height
++ * @buf_w: buffer width (with 16 alignment). Buffer size is stream resolution
++ *         in pixels aligned to hardware requirements.
++ * @buf_h: buffer height (with 16 alignment)
++ * @intra_period: intra frame period
++ * @framerate: frame rate
++ * @ts_mode: temporal scalability mode (0: disable, 1: enable)
++ *	     support three temporal layers - 0: 7.5fps 1: 7.5fps 2: 15fps.
++ */
++struct venc_vp8_vpu_config {
++	u32 input_fourcc;
++	u32 bitrate;
++	u32 pic_w;
++	u32 pic_h;
++	u32 buf_w;
++	u32 buf_h;
++	u32 intra_period;
++	u32 framerate;
++	u32 ts_mode;
++};
++
++/*
++ * struct venc_vp8_vpu_buf -Structure for buffer information
++ * @align: buffer alignment (in bytes)
++ * @iova: IO virtual address
++ * @vpua: VPU side memory addr which is used by RC_CODE
++ * @size: buffer size (in bytes)
++ */
++struct venc_vp8_vpu_buf {
++	u32 align;
++	u32 iova;
++	u32 vpua;
++	u32 size;
++};
++
++/*
++ * struct venc_vp8_vpu_drv - Structure for VPU driver control and info share
++ * This structure is allocated in VPU side and shared to AP side.
++ * @config: vp8 encoder configuration
++ * @work_bufs: working buffer information in VPU side
++ * The work_bufs here is for storing the 'size' info shared to AP side.
++ * The similar item in struct venc_vp8_inst is for memory allocation
++ * in AP side. The AP driver will copy the 'size' from here to the one in
++ * struct mtk_vcodec_mem, then invoke mtk_vcodec_mem_alloc to allocate
++ * the buffer. After that, bypass the 'dma_addr' to the 'iova' field here for
++ * register setting in VPU side.
++ */
++struct venc_vp8_vpu_drv {
++	struct venc_vp8_vpu_config config;
++	struct venc_vp8_vpu_buf work_bufs[VENC_VP8_VPU_WORK_BUF_MAX];
++};
++
++/*
++ * struct venc_vp8_vpu_inst - vp8 encoder VPU driver instance
++ * @wq_hd: wait queue used for vpu cmd trigger then wait vpu interrupt done
++ * @signaled: flag used for checking vpu interrupt done
++ * @failure: flag to show vpu cmd succeeds or not
++ * @state: enum venc_ipi_msg_enc_state
++ * @id: VPU instance id
++ * @drv: driver structure allocated by VPU side and shared to AP side for
++ *	 control and info share
++ */
++struct venc_vp8_vpu_inst {
++	wait_queue_head_t wq_hd;
++	int signaled;
++	int failure;
++	int state;
++	unsigned int id;
++	struct venc_vp8_vpu_drv *drv;
++};
++
++/*
++ * struct venc_vp8_inst - vp8 encoder AP driver instance
++ * @hw_base: vp8 encoder hardware register base
++ * @work_bufs: working buffer
++ * @work_buf_allocated: working buffer allocated flag
++ * @frm_cnt: encoded frame count, it's used for I-frame judgement and
++ *	     reset when force intra cmd received.
++ * @ts_mode: temporal scalability mode (0: disable, 1: enable)
++ *	     support three temporal layers - 0: 7.5fps 1: 7.5fps 2: 15fps.
++ * @is_key_frm: key frame flag
++ * @vpu_inst: VPU instance to exchange information between AP and VPU
++ * @ctx: context for v4l2 layer integration
++ * @dev: device for v4l2 layer integration
++ */
++struct venc_vp8_inst {
++	void __iomem *hw_base;
++	struct mtk_vcodec_mem work_bufs[VENC_VP8_VPU_WORK_BUF_MAX];
++	bool work_buf_allocated;
++	unsigned int frm_cnt;
++	unsigned int ts_mode;
++	unsigned int is_key_frm;
++	struct venc_vp8_vpu_inst vpu_inst;
++	void *ctx;
++	struct platform_device *dev;
++};
++
++struct venc_common_if *get_vp8_enc_comm_if(void);
++
 +#endif
+diff --git a/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c
+new file mode 100644
+index 0000000..5e987aa
+--- /dev/null
++++ b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.c
+@@ -0,0 +1,240 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *         PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+#ifdef CONFIG_OF
-+static const struct of_device_id raydium_of_match[] = {
-+	{ .compatible = "raydium,rm-ts",},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, raydium_of_match);
++#include "mtk_vpu.h"
++
++#include "venc_vp8_if.h"
++#include "venc_vp8_vpu.h"
++#include "venc_ipi_msg.h"
++
++static void handle_vp8_enc_init_msg(struct venc_vp8_inst *inst, void *data)
++{
++	struct venc_vpu_ipi_msg_init *msg = data;
++
++	inst->vpu_inst.id = msg->inst_id;
++	inst->vpu_inst.drv = (struct venc_vp8_vpu_drv *)
++		vpu_mapping_dm_addr(inst->dev, msg->inst_id);
++}
++
++static void handle_vp8_enc_encode_msg(struct venc_vp8_inst *inst, void *data)
++{
++	struct venc_vpu_ipi_msg_enc *msg = data;
++
++	inst->vpu_inst.state = msg->state;
++	inst->is_key_frm = msg->key_frame;
++}
++
++static void vp8_enc_vpu_ipi_handler(void *data, unsigned int len, void *priv)
++{
++	struct venc_vpu_ipi_msg_common *msg = data;
++	struct venc_vp8_inst *inst = (struct venc_vp8_inst *)msg->venc_inst;
++
++	mtk_vcodec_debug(inst, "->msg_id=%x inst=%p status=%d",
++			 msg->msg_id, inst, msg->status);
++
++	switch (msg->msg_id) {
++	case VPU_IPIMSG_VP8_ENC_INIT_DONE:
++		handle_vp8_enc_init_msg(inst, data);
++		break;
++	case VPU_IPIMSG_VP8_ENC_SET_PARAM_DONE:
++		break;
++	case VPU_IPIMSG_VP8_ENC_ENCODE_DONE:
++		handle_vp8_enc_encode_msg(inst, data);
++		break;
++	case VPU_IPIMSG_VP8_ENC_DEINIT_DONE:
++		break;
++	default:
++		mtk_vcodec_err(inst, "unknown msg id=%x", msg->msg_id);
++		break;
++	}
++
++	inst->vpu_inst.signaled = 1;
++	inst->vpu_inst.failure = (msg->status != VENC_IPI_MSG_STATUS_OK);
++
++	mtk_vcodec_debug_leave(inst);
++}
++
++static int vp8_enc_vpu_send_msg(struct venc_vp8_inst *inst, void *msg,
++				int len)
++{
++	int status;
++
++	mtk_vcodec_debug_enter(inst);
++	status = vpu_ipi_send(inst->dev, IPI_VENC_VP8, (void *)msg, len);
++	if (status) {
++		mtk_vcodec_err(inst,
++			       "vpu_ipi_send msg_id=%x len=%d failed status=%d",
++			       *(unsigned int *)msg, len, status);
++		return -EINVAL;
++	}
++	mtk_vcodec_debug_leave(inst);
++
++	return 0;
++}
++
++int vp8_enc_vpu_init(struct venc_vp8_inst *inst)
++{
++	int status;
++	struct venc_ap_ipi_msg_init out;
++
++	mtk_vcodec_debug_enter(inst);
++
++	init_waitqueue_head(&inst->vpu_inst.wq_hd);
++	inst->vpu_inst.signaled = 0;
++	inst->vpu_inst.failure = 0;
++
++	status = vpu_ipi_register(inst->dev, IPI_VENC_VP8,
++				  vp8_enc_vpu_ipi_handler,
++				  "vp8_enc", NULL);
++	if (status) {
++		mtk_vcodec_err(inst,
++			       "vpu_ipi_register failed status=%d", status);
++		return -EINVAL;
++	}
++
++	out.msg_id = AP_IPIMSG_VP8_ENC_INIT;
++	out.venc_inst = (unsigned long)inst;
++	if (vp8_enc_vpu_send_msg(inst, &out, sizeof(out)) ||
++	    inst->vpu_inst.failure) {
++		mtk_vcodec_err(inst, "AP_IPIMSG_VP8_ENC_INIT failed");
++		return -EINVAL;
++	}
++
++	mtk_vcodec_debug_leave(inst);
++
++	return 0;
++}
++
++int vp8_enc_vpu_set_param(struct venc_vp8_inst *inst, unsigned int id,
++			  void *param)
++{
++	struct venc_ap_ipi_msg_set_param out;
++
++	mtk_vcodec_debug_enter(inst);
++
++	out.msg_id = AP_IPIMSG_VP8_ENC_SET_PARAM;
++	out.inst_id = inst->vpu_inst.id;
++	out.param_id = id;
++	switch (id) {
++	case VENC_SET_PARAM_ENC: {
++		struct venc_enc_prm *enc_param = (struct venc_enc_prm *)param;
++
++		inst->vpu_inst.drv->config.input_fourcc =
++			enc_param->input_fourcc;
++		inst->vpu_inst.drv->config.bitrate = enc_param->bitrate;
++		inst->vpu_inst.drv->config.pic_w = enc_param->width;
++		inst->vpu_inst.drv->config.pic_h = enc_param->height;
++		inst->vpu_inst.drv->config.buf_w = enc_param->buf_width;
++		inst->vpu_inst.drv->config.buf_h = enc_param->buf_height;
++		inst->vpu_inst.drv->config.intra_period =
++			enc_param->intra_period;
++		inst->vpu_inst.drv->config.framerate = enc_param->frm_rate;
++		inst->vpu_inst.drv->config.ts_mode = inst->ts_mode;
++		out.data_item = 0;
++		break;
++	}
++	case VENC_SET_PARAM_FORCE_INTRA:
++		out.data_item = 0;
++		break;
++	case VENC_SET_PARAM_ADJUST_BITRATE:
++		out.data_item = 1;
++		out.data[0] = *(unsigned int *)param;
++		break;
++	case VENC_SET_PARAM_ADJUST_FRAMERATE:
++		out.data_item = 1;
++		out.data[0] = *(unsigned int *)param;
++		break;
++	case VENC_SET_PARAM_I_FRAME_INTERVAL:
++		out.data_item = 1;
++		out.data[0] = *(unsigned int *)param;
++		break;
++	}
++	if (vp8_enc_vpu_send_msg(inst, &out, sizeof(out)) ||
++	    inst->vpu_inst.failure) {
++		mtk_vcodec_err(inst, "AP_IPIMSG_VP8_ENC_SET_PARAM failed");
++		return -EINVAL;
++	}
++
++	mtk_vcodec_debug_leave(inst);
++
++	return 0;
++}
++
++int vp8_enc_vpu_encode(struct venc_vp8_inst *inst,
++		       struct venc_frm_buf *frm_buf,
++		       struct mtk_vcodec_mem *bs_buf)
++{
++	struct venc_ap_ipi_msg_enc out;
++
++	mtk_vcodec_debug_enter(inst);
++
++	out.msg_id = AP_IPIMSG_VP8_ENC_ENCODE;
++	out.inst_id = inst->vpu_inst.id;
++	if (frm_buf) {
++		if ((frm_buf->fb_addr.dma_addr % 16 == 0) &&
++		    (frm_buf->fb_addr1.dma_addr % 16 == 0) &&
++		    (frm_buf->fb_addr2.dma_addr % 16 == 0)) {
++			out.input_addr[0] = frm_buf->fb_addr.dma_addr;
++			out.input_addr[1] = frm_buf->fb_addr1.dma_addr;
++			out.input_addr[2] = frm_buf->fb_addr2.dma_addr;
++		} else {
++			mtk_vcodec_err(inst, "dma_addr not align to 16");
++			return -EINVAL;
++		}
++	} else {
++		out.input_addr[0] = 0;
++		out.input_addr[1] = 0;
++		out.input_addr[2] = 0;
++	}
++	if (bs_buf) {
++		out.bs_addr = bs_buf->dma_addr;
++		out.bs_size = bs_buf->size;
++	} else {
++		out.bs_addr = 0;
++		out.bs_size = 0;
++	}
++	if (vp8_enc_vpu_send_msg(inst, &out, sizeof(out)) ||
++	    inst->vpu_inst.failure) {
++		mtk_vcodec_err(inst, "AP_IPIMSG_VP8_ENC_ENCODE failed");
++		return -EINVAL;
++	}
++
++	mtk_vcodec_debug(inst, "state=%d key_frm=%d",
++			 inst->vpu_inst.state, inst->is_key_frm);
++
++	mtk_vcodec_debug_leave(inst);
++
++	return 0;
++}
++
++int vp8_enc_vpu_deinit(struct venc_vp8_inst *inst)
++{
++	struct venc_ap_ipi_msg_deinit out;
++
++	mtk_vcodec_debug_enter(inst);
++
++	out.msg_id = AP_IPIMSG_VP8_ENC_DEINIT;
++	out.inst_id = inst->vpu_inst.id;
++	if (vp8_enc_vpu_send_msg(inst, &out, sizeof(out)) ||
++	    inst->vpu_inst.failure) {
++		mtk_vcodec_err(inst, "AP_IPIMSG_VP8_ENC_DEINIT failed");
++		return -EINVAL;
++	}
++
++	mtk_vcodec_debug_leave(inst);
++
++	return 0;
++}
+diff --git a/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h
+new file mode 100644
+index 0000000..482823d
+--- /dev/null
++++ b/drivers/media/platform/mtk-vcodec/vp8_enc/venc_vp8_vpu.h
+@@ -0,0 +1,28 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: Daniel Hsiao <daniel.hsiao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *         PoChun Lin <pochun.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef _VENC_VP8_VPU_H_
++#define _VENC_VP8_VPU_H_
++
++int vp8_enc_vpu_init(struct venc_vp8_inst *inst);
++int vp8_enc_vpu_set_param(struct venc_vp8_inst *inst, unsigned int id,
++			  void *param);
++int vp8_enc_vpu_encode(struct venc_vp8_inst *inst,
++		       struct venc_frm_buf *frm_buf,
++		       struct mtk_vcodec_mem *bs_buf);
++int vp8_enc_vpu_deinit(struct venc_vp8_inst *inst);
++
 +#endif
-+
-+static struct i2c_driver raydium_i2c_driver = {
-+	.probe = raydium_i2c_probe,
-+	.remove = raydium_i2c_remove,
-+	.id_table = raydium_i2c_id,
-+	.driver = {
-+		.name = "raydium_ts",
-+		.pm = &raydium_i2c_pm_ops,
-+		.acpi_match_table = ACPI_PTR(raydium_acpi_id),
-+		.of_match_table = of_match_ptr(raydium_of_match),
-+	},
-+};
-+
-+module_i2c_driver(raydium_i2c_driver);
-+
-+MODULE_AUTHOR("Raydium");
-+MODULE_DESCRIPTION("Raydium I2c Touchscreen driver");
-+MODULE_LICENSE("GPL");
 -- 
-2.1.2
-
+1.7.9.5
