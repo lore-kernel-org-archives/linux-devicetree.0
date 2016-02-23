@@ -1,63 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7] rtc: rewrite DS1302 using SPI
-Date: Tue, 23 Feb 2016 17:29:18 -0600
-Message-ID: <20160223232918.GA16024@rob-hp-laptop>
-References: <1456105286-28598-1-git-send-email-ynvich@gmail.com>
- <1456224900-4877-1-git-send-email-ynvich@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] [media] tvp5150: remove signal generator as input from
+ the DT binding
+Date: Tue, 23 Feb 2016 17:35:47 -0600
+Message-ID: <20160223233547.GA16541@rob-hp-laptop>
+References: <1456243798-12453-1-git-send-email-javier@osg.samsung.com>
+ <63317542.65NzPYJCcU@avalon>
+ <56CCA3B4.7060700@osg.samsung.com>
+ <4247934.WAaViM8cSf@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456224900-4877-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <4247934.WAaViM8cSf@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 01:54:57PM +0300, Sergei Ianovich wrote:
-> DS1302 is half-duplex SPI device. The driver respects this fact now.
+On Tue, Feb 23, 2016 at 08:28:14PM +0200, Laurent Pinchart wrote:
+> Hi Javier,
 > 
-> Pin configurations should be implemented using SPI subsystem.
+> On Tuesday 23 February 2016 15:23:48 Javier Martinez Canillas wrote:
+> > On 02/23/2016 03:02 PM, Laurent Pinchart wrote:
+> > > On Tuesday 23 February 2016 13:27:51 Javier Martinez Canillas wrote:
+> > >> On 02/23/2016 01:16 PM, Laurent Pinchart wrote:
+> > >>> On Tuesday 23 February 2016 13:09:58 Javier Martinez Canillas wrote:
+> > >>>> The chip internal signal generator was modelled as an input connector
+> > >>>> and represented as a media entity but isn't really a connector so the
+> > >>>> driver was changed to use the V4L2_CID_TEST_PATTERN control instead.
+> > >>>> 
+> > >>>> Remove the signal generator input from the list of connectors in the
+> > >>>> tvp5150 DT binding document as well since isn't a connector anymore.
+> > >>>> 
+> > >>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> > >>>> 
+> > >>>> ---
+> > >>>> Hello,
+> > >>>> 
+> > >>>> I think is OK to change this DT binding because is only in the media
+> > >>>> tree for now and not in mainline yet and also is expected to change
+> > >>>> more since there are still discussions about how input connectors will
+> > >>>> be supported by the Media Controller framework in the media subsystem.
+> > >>> 
+> > >>> I think that's fine, yes
+> > >>> 
+> > >>> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > >> 
+> > >> Thanks.
+> > >> 
+> > >>> I haven't noticed the patch that introduced this early enough I'm
+> > >>> afraid, and I think we still have issues with those bindings.
+> > >> 
+> > >> Yes, I posted those patches and got merged before we had the discussion
+> > >> about input connectors over IRC so I didn't know what was the correct way
+> > >> to do it.
+> > >> 
+> > >>> The tvp5150 node should *not* contain connector subnodes, the connectors
+> > >>> nodes should use the bindings defined in
+> > >>> Documentation/devicetree/bindings/display/connector/ and be linked to
+> > >>> the tvp5150 node using the OF graph bindings (ports and endpoints).
+> > >> 
+> > >> Agreed.
+> > >> 
+> > >>> Do you think you could fix that ?
+> > >> 
+> > >> Yes I will, I'm waiting for the input connectors discussions to settle so
+> > >> I can post a final version of the DT bindings following what is agreed by
+> > >> all.
+> > >
+> > > Shouldn't we revert the patch that introduced connectors support in the DT
+> > > bindings in the meantime then, to avoid known to be broken bindings from
+> > > hitting mainline in case we can't fix them in time for v4.6 ?
+> > 
+> > Yes, that would be a good idea. I've seen recently though a DT binding doc
+> > that was marked as unstable / work in progress and I wonder if that's a new
+> > accepted convention for DT binding docs or is just something that slipped
+> > through review.
 > 
-> Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
->    v6..v7
->    * change binding and doc file names
-> 
->    v5..v6
->    * rewrite the driver as an SPI slave device
->    * use "maxim" for vendor name per Kconfig
->    * stop changing device RAM in device presence test
->    * only return time from device if valid
->    * use burst mode for reading/writing time
->    * dropped charging control. I cannot test it, and it looks broken
-> 
->    v4..v5
->    * drop THIS_MODULE from struct platform driver
->    * use "dallas" for vendor name per vendor-prefixes.txt
-> 
->    v3..v4
->    * move DTS bindings to a different patch
-> 
->    v2..v3
->    * use usleep_range instead of custom nsleep
->    * number change (07/16 -> 09/21)
-> 
->    v0..v2
->    * use device tree
->    * use devm helpers where possible
-> ---
->  .../devicetree/bindings/rtc/maxim-ds1302.txt       |  46 +++
+> I'm not sure if it's an established practice but I certainly like it. However, 
+> in this specific case, we know that the bindings are broken, so I think a 
+> revert would be better.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It is not normal practice, though there are some exceptions.
 
->  drivers/rtc/Kconfig                                |  15 +-
->  drivers/rtc/rtc-ds1302.c                           | 348 ++++++++++-----------
->  3 files changed, 212 insertions(+), 197 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > The commit I'm talking about is f07b4e49d27e ("Documentation: bindings:
+> > berlin: consider our dt bindings as unstable") but I don't see anything
+> > documented in Documentation/devicetree/bindings/ABI.txt.
+
+That one was simply not reviewed by anyone that would object. It's been 
+almost a year, so they should be stable now...
+
+Rob
