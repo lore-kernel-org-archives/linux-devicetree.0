@@ -1,173 +1,98 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to
- support generic Xilinx AXI PCIe Host Bridge IP driver
-Date: Tue, 23 Feb 2016 12:08:34 +0100
-Message-ID: <56CC3DB2.3080900@xilinx.com>
-References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
- <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 6/6] drm/msm/dsi: Parse DSI lanes via DT
+Date: Tue, 23 Feb 2016 13:11:24 +0200
+Message-ID: <56CC3E5C.3060101@ti.com>
+References: <1455541259-8967-1-git-send-email-architt@codeaurora.org>
+ <1455541259-8967-7-git-send-email-architt@codeaurora.org>
+ <20160222025345.GB15973@rob-hp-laptop> <56CAB678.3080505@codeaurora.org>
+ <CAL_JsqLVd3vLGO8SCQv=PFXb7yD42U_nKG=fxenc4Fy63yiezw@mail.gmail.com>
+ <56CC23CD.5010708@ti.com> <56CC37BB.3060305@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Bjorn Helgaas <bhelgaas@google.com>, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56CC37BB.3060305@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Archit Taneja <architt@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11.2.2016 17:28, Bharat Kumar Gogada wrote:
-> This patch does required modifications to microblaze PCI subsystem, to
-> work with generic driver (drivers/pci/host/pcie-xilinx.c) on Microblaze
-> and Zynq.
-> 
-> Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
-> Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
-> ---
-> Changes:
-> Removed pcibios_get_phb_of_node in pci-common.c, using generic version
-> instead.
-> Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
-> Modified pcibios_align_resource in pci-common.c, as per generic
-> architecuture, removed temporary variable.
-> Removed pci_domain_nr in pci-common.c, instead using generic code.
-> Added pcibios_add_device in pci-common.c, as per generic architecuture.
-> Adding Kernel configuration in arch/microblaze as required for generic PCI
-> domains.
-> Added kernel configuration for driver to support Microblaze.
-> ---
->  arch/microblaze/Kconfig          |  3 +++
->  arch/microblaze/pci/pci-common.c | 56 +++++++---------------------------------
->  drivers/pci/host/Kconfig         |  2 +-
->  3 files changed, 14 insertions(+), 47 deletions(-)
-> 
-> diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig
-> index 0bce820..c3702b9 100644
-> --- a/arch/microblaze/Kconfig
-> +++ b/arch/microblaze/Kconfig
-> @@ -271,6 +271,9 @@ config PCI
->  config PCI_DOMAINS
->  	def_bool PCI
->  
-> +config PCI_DOMAINS_GENERIC
-> +	def_bool PCI_DOMAINS
-> +
->  config PCI_SYSCALL
->  	def_bool PCI
->  
-> diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-> index ae838ed..35654be 100644
-> --- a/arch/microblaze/pci/pci-common.c
-> +++ b/arch/microblaze/pci/pci-common.c
-> @@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t address)
->  }
->  EXPORT_SYMBOL_GPL(pci_address_to_pio);
->  
-> -/*
-> - * Return the domain number for this bus.
-> - */
-> -int pci_domain_nr(struct pci_bus *bus)
-> -{
-> -	struct pci_controller *hose = pci_bus_to_host(bus);
-> -
-> -	return hose->global_number;
-> -}
-> -EXPORT_SYMBOL(pci_domain_nr);
-> -
->  /* This routine is meant to be used early during boot, when the
->   * PCI bus numbers have not yet been assigned, and you need to
->   * issue PCI config cycles to an OF device.
-> @@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus *bus)
->  
->  void pcibios_fixup_bus(struct pci_bus *bus)
->  {
-> -	/* When called from the generic PCI probe, read PCI<->PCI bridge
-> -	 * bases. This is -not- called when generating the PCI tree from
-> -	 * the OF device-tree.
-> -	 */
-> -	if (bus->self != NULL)
-> -		pci_read_bridge_bases(bus);
-> -
-> -	/* Now fixup the bus bus */
-> -	pcibios_setup_bus_self(bus);
-> -
-> -	/* Now fixup devices on that bus */
-> -	pcibios_setup_bus_devices(bus);
-> +	/* nothing to do */
->  }
->  EXPORT_SYMBOL(pcibios_fixup_bus);
->  
-> -static int skip_isa_ioresource_align(struct pci_dev *dev)
-> -{
-> -	return 0;
-> -}
-> -
->  /*
->   * We need to avoid collisions with `mirrored' VGA ports
->   * and other strange ISA hardware, so we always want the
-> @@ -899,20 +872,18 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
->  resource_size_t pcibios_align_resource(void *data, const struct resource *res,
->  				resource_size_t size, resource_size_t align)
->  {
-> -	struct pci_dev *dev = data;
-> -	resource_size_t start = res->start;
-> -
-> -	if (res->flags & IORESOURCE_IO) {
-> -		if (skip_isa_ioresource_align(dev))
-> -			return start;
-> -		if (start & 0x300)
-> -			start = (start + 0x3ff) & ~0x3ff;
-> -	}
-> -
-> -	return start;
-> +	return res->start;
->  }
->  EXPORT_SYMBOL(pcibios_align_resource);
->  
-> +int pcibios_add_device(struct pci_dev *dev)
-> +{
-> +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(pcibios_add_device);
-> +
->  /*
->   * Reparent resource children of pr that conflict with res
->   * under res, and make res replace those children.
-> @@ -1333,13 +1304,6 @@ static void pcibios_setup_phb_resources(struct pci_controller *hose,
->  		 (unsigned long)hose->io_base_virt - _IO_BASE);
->  }
->  
-> -struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus)
-> -{
-> -	struct pci_controller *hose = bus->sysdata;
-> -
-> -	return of_node_get(hose->dn);
-> -}
-> -
->  static void pcibios_scan_phb(struct pci_controller *hose)
->  {
->  	LIST_HEAD(resources);
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index d5e58ba..7c56c2e 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -79,7 +79,7 @@ config PCI_KEYSTONE
->  
->  config PCIE_XILINX
->  	bool "Xilinx AXI PCIe host bridge support"
-> -	depends on ARCH_ZYNQ
-> +	depends on ARCH_ZYNQ || MICROBLAZE
->  	help
->  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
->  	  Host Bridge driver.
-> 
+--0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Less code in arch is better.
 
-Acked-by: Michal Simek <michal.simek@xilinx.com>
 
-Bjorn: Please take this via your tree.
+On 23/02/16 12:43, Archit Taneja wrote:
+>=20
+>=20
+> On 02/23/2016 02:48 PM, Tomi Valkeinen wrote:
+>>
+>> On 22/02/16 22:10, Rob Herring wrote:
+>>
+>>>> If we want all DSI host controllers to use a common binding to descr=
+ibe
+>>>> lanes, we'd need to go with the most flexible one, and the driver
+>>>> restricts it to the subsets that we support.
+>>
+>> True, but I wonder if that's necessary. The lane property for the SoC
+>> should be read by the SoC specific driver, right? So the DT property c=
+an
+>> be anything. I'm not sure if there's ever a reason for a generic code =
+to
+>> observe the DSI lane setup.
+>=20
+> Yeah, it is very SoC specific.
+>=20
+> The only place where it might matter is if a panel/bridge ever needs to=
 
-Thanks,
-Michal
+> know what pins implement what lanes on the platform. A common binding
+> there might help us keep the panel driver generic. Although, this need
+> itself is a bit hypothetical.
+
+My opinion here is that if the panel/bridge needs to know something
+about the DSI lanes/pins, we should have that data in the
+panel's/bridge's endpoint data.
+
+So if both SoC and the DSI peripheral need complex DSI pin/lane setup,
+you might have very similar data on both sides. There's possibly some
+duplication there, but I think it keeps things much simpler.
+
+For example, if the SoC needs OMAP style DSI pin data, and the DSI
+peripheral needs to know the amount of DSI lanes used (but nothing
+else), you might think it's nice if the DSI peripheral would peek at the
+SoC side data, finding out about the DSI lanes.
+
+But I think in that case you should just add a "num-lanes" property to
+the DSI peripheral. The DT data for a device should be private to the
+driver handling the device, except for some special cases like following
+the graph.
+
+ Tomi
+
+
+--0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJWzD5cAAoJEPo9qoy8lh71qc0P/RGk80HOlthvE6JSbiO/gpKA
+fSNBhVdEFavqB0+FPcVN6FagLwkpWdqKIx/TcIjkekzxKXQz4hCN9niF/MpsoWwc
+Ptwh8uEyUlc1hHW17bKjJWwzLx8yG999eqpDUj02y95nT7fxUCTuz04v6RQRvXDz
+gNyZCO2OljkG4s7/lpg2DHp6yFEXacAGVW8OKTLMEU2ZgTwOi1W2G4ola0I7T1Wl
+2mqlOn3vgg4lNnAPvhZRAtHCgm08LKlbUTSV73L1Ctcz7yBYXLNNfI19N0cz8n2n
+cBb/OK+2dQ9KU3WxJcUtb2IUOAplKVO0hogPRG68RYXwvFRow+hxNj1UGT6RR2aK
+r2VO8wM0OKX9O38aJNGFT+vTa0FHnFC1kuJHy08NnsxkMDYJ3vpGoDlmm4vqa61f
+BvmP4kPqyqFJf5eqHAZcBt0yM8A61COWvCwg/tGR2fmdxkpREIoM3yqAGW+I+5t5
+wJ3QgAqnKTJRHTOsE+I6QMrT1H/DnRrsSqfERDn4Sm50g6EAIiUcE3tvBxtY2XsM
+ICpaEvKY+ghs9gkdcLEsSJ/o/saQwjjhaeuBbnOfVw2hyMWunJvtqglSKlDbJMmX
+yWATL0e6ST3KepNwjltwTk2GRcaquPnA1Fqd/+o75+Qs5mcSKEU+MBtgr1DJGuYY
+FpC/s+3sI9dz8PDzBraM
+=sZrz
+-----END PGP SIGNATURE-----
+
+--0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R--
