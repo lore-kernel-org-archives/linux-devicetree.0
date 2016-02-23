@@ -1,85 +1,21 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [RFC PATCH] drivers: ata: Read Rx water mark value from
- device-tree
-Date: Tue, 23 Feb 2016 15:29:55 +0000
-Message-ID: <3802E9A6666DF54886E2B9CBF743BA9825E0117F@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com>
- <18251200.Xfr10N5eWq@wuerfel>
- <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
- <8540232.vQE3WQTD95@wuerfel>
+From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 05/10] serial: mps2-uart: add support for early console
+Date: Tue, 23 Feb 2016 07:32:22 -0800
+Message-ID: <56CC7B86.5020307@hurleysoftware.com>
+References: <1456238068-25079-1-git-send-email-vladimir.murzin@arm.com>
+ <1456238068-25079-6-git-send-email-vladimir.murzin@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8540232.vQE3WQTD95@wuerfel>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456238068-25079-6-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+On 02/23/2016 06:34 AM, Vladimir Murzin wrote:
+> This adds support early console for MPS2 UART which can be enabled via
+> earlycon=mps2,0x40004000
 
-> -----Original Message-----
-> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
-> Sent: Tuesday, February 23, 2016 3:51 PM
-> To: Anurag Kumar Vulisha
-> Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; pawel.moll-5wv7dgnIgG8@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org;
-> ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org; galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org; tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
-> ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Anirudha Sarangi; Srikanth Vemula; Punnaiah Choudary
-> Kalluri
-> Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-
-> tree
-> 
-> On Tuesday 23 February 2016 05:58:32 Anurag Kumar Vulisha wrote:
-> > >
-> > > I don't know what is appropriate because I have no idea what
-> > > Rxwatermark is good for. Can you try describing why we can't just
-> > > set it to the correct value for everyone automatically?
-> > >
-> >
-> > This RX watermark level sets the minimum number of free locations
-> > within the RX FIFO .When the rx fifo level crosses the programmed
-> > watermark level ,sata controller  will transmit HOLDS to the device asking it
-> to wait. This happens when dma reads the rx fifo data slower than the device
-> is sending the data. Note that it can take some time for the HOLDs to get to
-> the other end and in the time there must be enough room in the FIFO to
-> absorb all data that could arrive from the device.
-> > Currently we are using 0x40 for this value, which works fine with all
-> > hardware designs  we are currently having. But hoping that this value
-> > may vary for future silicon versions, I wanted to make this as a configurable
-> value. So for this reason I thought of moving it either to device-tree or
-> making it as a module_param() property.
-> >
-> 
-> Ok, so if this depends on the silicon version, your initial approach would be
-> better than the module_param.
-> 
-> I would probably make this dependent on the compatible string instead, and
-> have a table in the device driver that uses a specific value for each variant of
-> the device, but either way should be fine.
-> 
-> Having a separate property is most appropriate if for each hardware revision
-> there is exactly one ideal value, while a table in the driver makes more sense
-> if this takes a bit of tuning and the driver might choose to optimize it
-> differently based on other constraints, such as its own interrupt handler
-> implementation.
-> 
-
-Since we are  currently having one value in common for all the hardware and also changing
-the rx water mark does not require any changes other than vendor specific PTC register update ,
-I think it would be better  to  use device tree property for that rx watermark value. Doing
-this makes the updating of rx watermark value easy, if any changes required.
-
-In future, if any silicon version rx water mark value doesn't work with the current versions,
-then  I will do as you said by maintaining the table in device driver. But at present  I feel
-that single rx watermark property in device tree would be enough, since it works with all the
-hardware versions we have.
-
-Thanks,
-Anurag Kumar V
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
