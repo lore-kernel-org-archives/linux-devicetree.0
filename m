@@ -1,65 +1,50 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v1] arm: pxa: fix DT node name for PXA27X usb
-Date: Tue, 23 Feb 2016 21:12:25 +0100
-Message-ID: <87y4abuqxi.fsf@belgarion.home>
-References: <1456139297-5854-1-git-send-email-ynvich@gmail.com>
-	<87oab8wyfe.fsf@belgarion.home> <1456228901.23036.9.camel@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree
+ bindings.
+Date: Tue, 23 Feb 2016 14:15:20 -0600
+Message-ID: <20160223201520.GA3354@rob-hp-laptop>
+References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456228901.23036.9.camel@gmail.com> (Sergei Ianovich's message
-	of "Tue, 23 Feb 2016 15:01:41 +0300")
+Content-Disposition: inline
+In-Reply-To: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "moderated list:PXA2xx/PXA3xx SUPPORT" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Zhao Qiang <qiang.zhao@nxp.com>
+Cc: oss@buserror.net, leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Sergei Ianovich <ynvich@gmail.com> writes:
+On Thu, Feb 18, 2016 at 09:06:06AM +0800, Zhao Qiang wrote:
+> Add IC, SI and SIRAM document of QE to
+> Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> 
+> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> ---
+> Changes for v2
+> 	- Add interrupt-controller in Required properties
+> 	- delete address-cells and size-cells for qe-si and qe-siram
+> 
+>  .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50 ++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> index 4f89302..84052a7 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> @@ -69,6 +69,56 @@ Example:
+>  	};
+>       };
+>  
+> +* Interrupt Controller (IC)
+> +
+> +Required properties:
+> +- compatible : should be "fsl,qe-ic".
 
-> Hi Robert,=C2=A0
->
-> On Mon, 2016-02-22 at 16:35 +0100, Robert Jarzmik wrote:
->> You're right, I haven't seen the pxa2xx.dtsi statement before.
->>=20
->> As such, could you amend a bit your patch please to :
->> =C2=A0- add:
->> Fixes: 0ec1939668e5 ("ARM: dts: pxa: add the usb host controller")
->> =C2=A0- make the same change in pxa3xx.dtsi, as the same error is th=
-ere
->> =C2=A0- and more globally align pxa2xx.dtsi, pxa27x.dtsi and pxa3xx.=
-dtsi
->> =C2=A0- remove the compatible, reg, interrupts and status from both =
-pxa27x.dtsi and
->> =C2=A0=C2=A0=C2=A0pxa3xx.dtsi as they are redundant with the include=
-d pxa2xxx.dsti one
->
-> No problem. Let's figure out the best approach.
->
->> I'm even wondering if the proper change wouldn't be to scrap the ohc=
-i
->> declarations from pxa27x.dtsi and pxa3xx.dtsi, and only add the "clo=
-cks"
->> property to pxa2xx.dtsi ...
->
-> Since clocks are declared in pxa27x.dtsi and=C2=A0pxa3xx.dtsi, there =
-is a
-> stronger ground to have node clocks properties set in pxa27x.dtsi
-> and=C2=A0pxa3xx.dtsi as well. However, there is already nodes with cl=
-ocks
-> properties in pxa2xx.dtsi.
->
-> I cannot choose, you should make a decision.
-I have checked my manuals, and pxa25x doesn't have an USB Host controll=
-er.
+> +- compatible : should be "fsl,qe-si".
 
-So I'd rather have :
- - remove the usb0: ohci@4c000000 node from pxa2xx.dtsi
- - add it completely to pxa27x.dtsi and pxa3xx.dtsi, with clocks and ev=
-erything,
-   in "disabled" status.
+> +- compatible : should be "fsl,qe-siram".
 
-Cheers.
+These compatible strings are all a bit generic and should have SoC 
+specific compatible strings.
 
---=20
-Robert
+Rob
