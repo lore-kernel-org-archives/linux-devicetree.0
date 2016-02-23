@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 06/12] ARM: dts: ifc6410: enable spi device on expansion
-Date: Tue, 23 Feb 2016 14:14:39 +0000
-Message-ID: <1456236879-2698-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 10/12] ARM: dts: ifc6410: enable cam i2c device
+Date: Tue, 23 Feb 2016 14:14:56 +0000
+Message-ID: <1456236896-2826-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1456236639-1379-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,34 +10,33 @@ To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-m
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables spi device on the 30 pin expansion connector.
+This patch enables i2c bus for camera via mipi-csi connector on ifc6410.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-index 0073294..8de774c 100644
+index 949aa04..6a43b0b 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
 +++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
-@@ -178,6 +178,16 @@
+@@ -162,6 +162,15 @@
  			};
  		};
  
-+		gsbi@1a200000 {
-+			qcom,mode = <GSBI_PROT_SPI>;
++		gsbi@16300000 {
 +			status = "okay";
-+			spi4: spi@1a280000 {
++			qcom,mode = <GSBI_PROT_I2C>;
++			/* CAM I2C MIPI-CSI connector */
++			i2c@16380000 {
 +				status = "okay";
-+				num-cs = <1>;
-+				cs-gpios = <&tlmm_pinmux 53 0>;
 +			};
 +		};
 +
- 		gsbi@16500000 {
- 			status = "ok";
- 			qcom,mode = <GSBI_PROT_UART_W_FC>;
+ 		gsbi@12440000 {
+ 			status = "okay";
+ 			qcom,mode = <GSBI_PROT_I2C>;
 -- 
 1.9.1
 
