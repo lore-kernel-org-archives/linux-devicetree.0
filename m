@@ -1,47 +1,91 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH] arm64: dts: msm8916: Move smem below hwlock
-Date: Tue, 23 Feb 2016 20:47:56 +0200
-Message-ID: <56CCA95C.9070207@linaro.org>
-References: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
- <56CC970B.4080602@linaro.org>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH v2 2/2] doc: dt: add documentation for lpc1850-creg-clk driver
+Date: Tue, 23 Feb 2016 19:53:17 +0100
+Message-ID: <CAGhQ9VxYsQSccS2dyWL_DPLTc80SJUkjFupbHAeXX3-WY-1Ofw@mail.gmail.com>
+References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
+	<1455994417-4471-3-git-send-email-manabian@gmail.com>
+	<20160223180844.GA11770@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56CC970B.4080602@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, andy.gross@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160223180844.GA11770@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23.02.16 =D0=B3. 19:29, Srinivas Kandagatla wrote:
->=20
->=20
-> On 23/02/16 17:21, Georgi Djakov wrote:
->> When the SMEM is probed it defers as it depends on the hardware lock=
-, which
->> is not available yet. But the SMD bus and RPM regulators and clocks =
-depend
->> on SMEM and they defer too. The problem with this is that the order =
-of
->> registering the devices is not optimal and also we may end with mess=
-ed
->> up serial console as the RPM clocks are not registered yet..
-> I noticed the same issue but was wondering why would we end up with m=
-essed up serial console?
->=20
-> Could you add more details on why serial console is messed up?
->=20
-> I thought, serial driver has nothing to do with the rpm clocks direct=
-ly!
->=20
+On 23 February 2016 at 19:08, Rob Herring <robh@kernel.org> wrote:
+> On Sat, Feb 20, 2016 at 07:53:37PM +0100, Joachim Eastwood wrote:
+>> Add DT binding documentation for lpc1850-creg-clk driver.
+>>
+>> Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+>> ---
+>>  .../devicetree/bindings/clock/lpc1850-creg-clk.txt | 52 ++++++++++++++++++++++
+>>  1 file changed, 52 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+>> new file mode 100644
+>> index 000000000000..0c83d373b766
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+>> @@ -0,0 +1,52 @@
+>> +* NXP LPC1850 CREG clocks
+>> +
+>> +The NXP LPC18xx/43xx CREG (Configuration Registers) block contains
+>> +control registers for two low speed clocks. One of the clocks is a
+>> +32 kHz oscillator driver with power up/down and clock gating. Next
+>> +is a fixed divider that creates a 1 kHz clock from the 32 kHz osc.
+>> +
+>> +These clocks are used by the RTC and the Event Router peripherials.
+>> +The 32 kHz can also be routed to other peripherials to enable low
+>> +power modes.
+>> +
+>> +This binding uses the common clock binding:
+>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +     Should be "nxp,lpc1850-creg-clk"
+>> +- #clock-cells:
+>> +     Shall have value <1>.
+>> +- clocks:
+>> +     Shall contain a phandle to the fix 32 kHz crystall.
+>> +
+>> +The creg-clk node must be a child of the creg syscon node.
+>> +
+>> +The following clocks are available from the clock node.
+>> +
+>> +Clock ID     Name
+>> +   0          1 kHz clock
+>> +   1         32 kHz Oscillator
+>> +
+>> +Example:
+>> +soc {
+>> +     creg: syscon@40043000 {
+>> +             compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
+>> +             reg = <0x40043000 0x1000>;
+>> +
+>> +             creg_clk: clock-controller@004 {
+>
+> What is 4? A unit address should have a corresponding reg prop. and no
+> leading zeros.
 
-If we don't have the rpm clocks registered, the uart clock is an orphan
-and when clk_get_rate() is called on orphan clocks it returns 0 as rate=
-=2E
-In our case the msm_serial driver calls clk_get_rate() and gets 0 rate
-as the parent rpm clock has not registered yet. The result is that the
-baudrate is set incorrectly.
+It is the fourth register in the creg syscon block.
 
-BR,
-Georgi
+Does this look better:
+creg_clk: clock-controller@4 {
+    compatible = "nxp,lpc1850-creg-clk";
+    reg = <0x4>;
+    clocks = <&xtal32>;
+    #clock-cells = <1>;
+};
+
+Note that the reg property isn't really useful in the driver, but I
+guess we should have it either way(?).
+
+Alternatively I could drop the unit address and reg property. What do you think?
+
+
+regards,
+Joachim Eastwood
