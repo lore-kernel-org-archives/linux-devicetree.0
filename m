@@ -1,53 +1,64 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: sun7i: Add dts file for the
- lamobo-r1 board
-Date: Tue, 23 Feb 2016 23:11:22 +0100
-Message-ID: <56CCD90A.5070908@redhat.com>
-References: <1456260090-23635-1-git-send-email-hdegoede@redhat.com>
- <20160223221041.GA2992@excalibur.cnev.de>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 1/5] efi: ARM/arm64: ignore DT memory nodes instead
+ of removing them
+Date: Tue, 23 Feb 2016 16:12:02 -0600
+Message-ID: <20160223221202.GA32031@rob-hp-laptop>
+References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
+ <1456192703-2274-2-git-send-email-ddaney.cavm@gmail.com>
+ <20160223115805.GB4989@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBE5SWO3AKGQEQIDXAQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160223221041.GA2992-Hlt6eto4P0pdWf7zwHaZWbNAH6kLmebB@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160223115805.GB4989@leverpostej>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Feb 23, 2016 at 11:58:05AM +0000, Mark Rutland wrote:
+> Hi,
+> 
+> On Mon, Feb 22, 2016 at 05:58:19PM -0800, David Daney wrote:
+> > From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > There are two problems with the UEFI stub DT memory node removal
+> > routine:
+> > - it deletes nodes as it traverses the tree, which happens to work
+> >   but is not supported, as deletion invalidates the node iterator;
+> > - deleting memory nodes entirely may discard annotations in the form
+> >   of additional properties on the nodes.
+> > 
+> > Since the discovery of DT memory nodes occurs strictly before the
+> > UEFI init sequence, we can simply clear the memblock memory table
+> > before parsing the UEFI memory map. This way, it is no longer
+> > necessary to remove the nodes, so we can remove that logic from the
+> > stub as well.
+> 
+> This is a little bit scary, but I guess this works.
 
-On 02/23/2016 11:10 PM, Karsten Merker wrote:
-> On Tue, Feb 23, 2016 at 09:41:30PM +0100, Hans de Goede wrote:
->> From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
->>
->> The lamobo-r1 board, sometimes called the BPI-R1 but not labelled as such
->> on the PCB, is meant as a A20 based router board. As such the board comes
->> with a built-in switch chip giving it 5 gigabit ethernet boards, and it
->
-> s/gigabit ethernet boards/gigabit ethernet ports/ ?
+The way it is worded/implemented is, I agree. But if we simply say both 
+can be present and the kernel will default to UEFI memory map, that 
+seems sufficient to me.
+ 
+> My only concern is that when we get kexec, a subsequent kernel must also
+> have EFI memory map support, or things go bad for the next EFI-aware
+> kernel after that (as things like the runtime services may have been
+> corrupted by the kernel in the middle). It's difficult to fix the
+> general case later.
+> 
+> A different option would be to support status="disabled" for the memory
+> nodes, and ignore these in early_init_dt_scan_memory. That way a kernel
+> cannot use memory without first having parsed the EFI memory map, and we
+> can still get NUMA info from the disabled nodes.
 
-Erm, yes.
+That would be a bit strange that the node is disabled, but still used. 
 
-Regards,
+What if DT and UEFI tables are out of sync somehow? RAM is multiple 
+mapped and different addresses were picked for example.
 
-hans
-
-
->
->> has a large empty area on the pcb with mounting holes which will fit a
->> 2.5 inch harddisk. To complete its networking features it has a
->> Realtek RTL8192CU for WiFi 802.11 b/g/n.
->>
->> Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->
-> Regards,
-> Karsten
->
+> You'd still need a new kernel to take into account status, but at least
+> we'd know all kernels would avoid using RAM that potentially needs to be
+> preserved.
+> 
+> Ard, Rob, thoughts?
