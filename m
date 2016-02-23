@@ -1,146 +1,108 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [alsa-devel] [PATCH] ASoC: rt5640: add master clock handling for rt5640
-Date: Wed, 24 Feb 2016 00:08:31 +0100
-Message-ID: <2199435.lA9iTvxnKV@phil>
-References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com> <56CC719C.1090901@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/4] gpio: dt-bindings: Declare gpio-hog optional for
+ GPIO subnodes
+Date: Tue, 23 Feb 2016 17:25:34 -0600
+Message-ID: <20160223232534.GA29637@rob-hp-laptop>
+References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de>
+ <1456214089-13954-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56CC719C.1090901@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Sugar Zhang <sugar.zhang@rock-chips.com>, broonie@kernel.org, Mark Rutland <mark.rutland@arm.com>, Oder Chiou <oder_chiou@realtek.com>, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456214089-13954-3-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 23. Februar 2016, 08:50:04 schrieb Pierre-Louis Bossart:
-> On 2/22/16 7:26 PM, Sugar Zhang wrote:
-> > enable/disable master clock when codec is active or not.
-> > 
-> > Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> > ---
-> > 
-> >   Documentation/devicetree/bindings/sound/rt5640.txt |  3 +++
-> >   sound/soc/codecs/rt5640.c                          | 31
-> >   ++++++++++++++++++++++ sound/soc/codecs/rt5640.h                     
-> >       |  2 ++
-> >   3 files changed, 36 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/sound/rt5640.txt
-> > b/Documentation/devicetree/bindings/sound/rt5640.txt index
-> > 9e62f6e..57fe646 100644
-> > --- a/Documentation/devicetree/bindings/sound/rt5640.txt
-> > +++ b/Documentation/devicetree/bindings/sound/rt5640.txt
-> > 
-> > @@ -12,6 +12,9 @@ Required properties:
-> >   Optional properties:
-> > +- clocks: The phandle of the master clock to the CODEC
-> > +- clock-names: Should be "mclk"
+On Tue, Feb 23, 2016 at 08:54:48AM +0100, Markus Pargmann wrote:
+> Reuse the GPIO hogging DT bindings for more generic specifications of
+> the GPIO. Therefore gpio-hog is declared optional.
+
+Before extending this binding further, we need to consider other cases 
+that have been discussed recently such as gpio switch binding and 
+whether it should fit in with this.
+
+My biggest issue with this binding is whether the DT changes because 
+today we don't have a driver for some GPIO line and tomorrow we do.
+
+That said, some specific comments below:
+
+> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 28 ++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
 > 
-> This patch assumes that the information on mclk comes from DeviceTree.
-> The mclk may also be enabled/disabled in the machine driver with an
-> explicit transition to use an internal clock when the codec is not used.
-> I hope this patch doesn't preclude such usages or there will be a
-> conflict with the patches we are about to upstream for Baytrail/cht
-> devices.
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 069cdf6f9dac..820898e0649c 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -155,13 +155,25 @@ gpio-controller@00000000 {
+>  	ngpios = <18>;
+>  }
+>  
+> -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+> -providing automatic GPIO request and configuration as part of the
+> -gpio-controller's driver probe function.
+> +The GPIO chip may contain subnodes describing specific GPIOs of this
+> +controller. These GPIO nodes can be used to define GPIO hogging or define GPIO
+> +names.
+> +GPIO hogging is a mechanism providing automatic GPIO request and configuration
+> +as part of the gpio-controller's driver probe function.
 
-As you can see, the clock property itself is optional and the clk_get below 
-acts accordingly of also continuing if the clock is not present.
-So it won't affect any users doing it otherwise.
+Linux driver details don't belong in binding descriptions.
 
+> -Each GPIO hog definition is represented as a child node of the GPIO controller.
+> +Each GPIO node consists of the following properties:
+>  Required properties:
+> +- gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+> +	      number of cells specified in its parent node (GPIO controller
+> +	      node).
+> +
+> +Optional properties:
+> +- line-name:  The GPIO name. If not present the node name is used.
 
-Heiko
+I'd like to deprecate line-name in favor of the standard property 
+for user visible names "label".
 
-> > +
-> > 
-> >   - realtek,in1-differential
-> >   - realtek,in2-differential
-> >   - realtek,in3-differential
-> > 
-> > diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
-> > index 11d032c..6cd84fb 100644
-> > --- a/sound/soc/codecs/rt5640.c
-> > +++ b/sound/soc/codecs/rt5640.c
-> > @@ -1949,7 +1949,33 @@ static int rt5640_set_dai_pll(struct snd_soc_dai
-> > *dai, int pll_id, int source,> 
-> >   static int rt5640_set_bias_level(struct snd_soc_codec *codec,
-> >   
-> >   			enum snd_soc_bias_level level)
-> >   
-> >   {
-> > 
-> > +	struct rt5640_priv *rt5640 = snd_soc_codec_get_drvdata(codec);
-> > +	int ret;
-> > +
-> > 
-> >   	switch (level) {
-> > 
-> > +	case SND_SOC_BIAS_ON:
-> > +		break;
-> > +
-> > +	case SND_SOC_BIAS_PREPARE:
-> > +		/*
-> > +		 * SND_SOC_BIAS_PREPARE is called while preparing for a
-> > +		 * transition to ON or away from ON. If current bias_level
-> > +		 * is SND_SOC_BIAS_ON, then it is preparing for a transition
-> > +		 * away from ON. Disable the clock in that case, otherwise
-> > +		 * enable it.
-> > +		 */
-> > +		if (IS_ERR(rt5640->mclk))
-> > +			break;
-> > +
-> > +		if (snd_soc_codec_get_bias_level(codec) == SND_SOC_BIAS_ON) {
-> > +			clk_disable_unprepare(rt5640->mclk);
-> > +		} else {
-> > +			ret = clk_prepare_enable(rt5640->mclk);
-> > +			if (ret)
-> > +				return ret;
-> > +		}
-> > +		break;
-> > +
-> > 
-> >   	case SND_SOC_BIAS_STANDBY:
-> >   		if (SND_SOC_BIAS_OFF == snd_soc_codec_get_bias_level(codec)) {
-> >   		
-> >   			snd_soc_update_bits(codec, RT5640_PWR_ANLG1,
-> > 
-> > @@ -2088,6 +2114,11 @@ static int rt5640_probe(struct snd_soc_codec
-> > *codec)> 
-> >   	struct snd_soc_dapm_context *dapm = snd_soc_codec_get_dapm(codec);
-> >   	struct rt5640_priv *rt5640 = snd_soc_codec_get_drvdata(codec);
-> > 
-> > +	/* Check if MCLK provided */
-> > +	rt5640->mclk = devm_clk_get(codec->dev, "mclk");
-> > +	if (PTR_ERR(rt5640->mclk) == -EPROBE_DEFER)
-> > +		return -EPROBE_DEFER;
-> > +
-> > 
-> >   	rt5640->codec = codec;
-> >   	
-> >   	snd_soc_codec_force_bias_level(codec, SND_SOC_BIAS_OFF);
-> > 
-> > diff --git a/sound/soc/codecs/rt5640.h b/sound/soc/codecs/rt5640.h
-> > index 83a7150..1761c3a9 100644
-> > --- a/sound/soc/codecs/rt5640.h
-> > +++ b/sound/soc/codecs/rt5640.h
-> > @@ -12,6 +12,7 @@
-> > 
-> >   #ifndef _RT5640_H
-> >   #define _RT5640_H
-> > 
-> > +#include <linux/clk.h>
-> > 
-> >   #include <sound/rt5640.h>
-> >   
-> >   /* Info */
-> > 
-> > @@ -2097,6 +2098,7 @@ struct rt5640_priv {
-> > 
-> >   	struct snd_soc_codec *codec;
-> >   	struct rt5640_platform_data pdata;
-> >   	struct regmap *regmap;
-> > 
-> > +	struct clk *mclk;
-> > 
-> >   	int sysclk;
-> >   	int sysclk_src;
+>  - gpio-hog:   A property specifying that this child node represent a GPIO hog.
+> +
+> +For GPIO hogging which is specified by the "gpio-hog" property the following
+> +additional properties are required.
+> +Required properties for GPIO hogging:
+>  - gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+
+This doesn't make sense. gpios is always required and already listed 
+above.
+
+>  	      number of cells specified in its parent node (GPIO controller
+>  	      node).
+> @@ -175,9 +187,6 @@ configuration.
+>  - output-high A property specifying to set the GPIO direction as output with
+>  	      the value high.
+>  
+> -Optional properties:
+> -- line-name:  The GPIO label name. If not present the node name is used.
+> -
+>  Example of two SOC GPIO banks defined as gpio-controller nodes:
+>  
+>  	qe_pio_a: gpio-controller@1400 {
+> @@ -192,6 +201,11 @@ Example of two SOC GPIO banks defined as gpio-controller nodes:
+>  			output-low;
+>  			line-name = "foo-bar-gpio";
+>  		};
+> +
+> +		line_c {
+> +			gpios = <7 0>;
+> +			line-name = "SCHEMATIC_LINE_NAME";
+> +		};
+>  	};
+>  
+>  	qe_pio_e: gpio-controller@1460 {
+> -- 
+> 2.7.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
