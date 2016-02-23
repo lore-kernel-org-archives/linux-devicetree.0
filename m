@@ -1,64 +1,120 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 2/3] clk: mvebu: add AP806 core clock driver
-Date: Tue, 23 Feb 2016 10:25:50 +0100
-Message-ID: <20160223102550.2e0cba04@free-electrons.com>
-References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1455521698-7905-3-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160222025357.GE15973@rob-hp-laptop>
-	<20160222091423.4756a579@free-electrons.com>
-	<20160222141617.GA14970@lunn.ch>
-	<20160222183203.2278.60153@quark.deferred.io>
-	<CAL_Jsq+iiUBcTdnqzFWLJ+5jPvq0rmWgBboab4xyj1dQyDQE+Q@mail.gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
+Date: Tue, 23 Feb 2016 15:06:47 +0530
+Message-ID: <56CC282F.8030700@codeaurora.org>
+References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
+ <1455519206-12939-14-git-send-email-architt@codeaurora.org>
+ <20160222025414.GG15973@rob-hp-laptop> <56CAEBE5.7050605@codeaurora.org>
+ <CAL_JsqLcJvBUUt0PRg=WwhUyAyfSuxqUf8NMj1s+s4rAS+S3nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+iiUBcTdnqzFWLJ+5jPvq0rmWgBboab4xyj1dQyDQE+Q@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Andrew Lunn <andrew@lunn.ch>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLcJvBUUt0PRg=WwhUyAyfSuxqUf8NMj1s+s4rAS+S3nA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Mon, 22 Feb 2016 13:42:49 -0600, Rob Herring wrote:
-
-> >> Maybe add a big fat warning that the bindings are unstable, and the DT
-> >> blob must be kept in sync with the kernel?
-> >
-> > +1 and feel free to blame the lack of documentation.  No one can expect
-> > bindings to be finalized when the chip topology is not fully understood.
-> 
-> I can understand not understanding the full clock tree. I have "full"
-> documentation of a Marvell chip and don't understand the clock tree
-> fully. But I can't believe you don't have some sense of how many
-> clocks you have to deal with. 10? 100? 1000? What I see is 2 nodes of
-> a single register each for clocks at roughly the same address. That
-> tells me your binding is too fine grained. If you really don't know
-> what is right, then err on the side of a single clock provider node
-> and don't put the clock details in DT.
-
-I don't quite understand the reasoning behind this conclusion. We know
-for sure that those two registers control only those core and ring
-clocks. Maybe there are other registers controlling other clocks,  that
-we don't know. But for sure, those two registers only give details
-about those core and ring clocks, so I don't see what would be the
-usefulness of merging that into a single DT node.
-
-We would lose the fact that the relationship between the ring clocks
-and one of the core clock is represented in the DT. Instead of having a
-clear <&coreclk X> or <&ringclk Y> reference, we would have a
-mysterious <&allclk XYZ> reference, which doesn't tell immediately
-whether it's a core clock or ring clock.
-
-So, while I definitely agree that a syscon is probably in order to
-cover all the system registers, I don't see the point of having a
-single node to cover all the clocks.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+CgpPbiAwMi8yMy8yMDE2IDEyOjU3IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBNb24sIEZl
+YiAyMiwgMjAxNiBhdCA1OjA3IEFNLCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEu
+b3JnPiB3cm90ZToKPj4KPj4KPj4gT24gMDIvMjIvMjAxNiAwODoyNCBBTSwgUm9iIEhlcnJpbmcg
+d3JvdGU6Cj4+Pgo+Pj4gT24gTW9uLCBGZWIgMTUsIDIwMTYgYXQgMTI6MjM6MjZQTSArMDUzMCwg
+QXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+Pgo+Pj4+IEFkZCBIRE1JIFBIWSBiaW5kaW5ncy4gVXBk
+YXRlIHRoZSBleGFtcGxlIHRvIHVzZSBIRE1JIFBIWS4KPj4+Pgo+Pj4+IEFkZCBhIG1pc3Npbmcg
+cG93ZXItZG9tYWlucyBwcm9wZXJ0eSBpbiB0aGUgSERNSSBjb3JlIGJpbmRpbmdzLgo+Pj4+Cj4+
+Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+Pj4gQ2M6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Cj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxh
+cmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+IC0tLQo+Pj4+ICAgIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0ICAgICAgIHwgMzkKPj4+PiArKysrKysrKysrKysr
+KysrKysrKystCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKyksIDEgZGVs
+ZXRpb24oLSkKPj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dAo+Pj4+IGluZGV4IDM3OWVlMmUuLjRk
+NzE5MTAgMTAwNjQ0Cj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+Pj4gQEAgLTExLDYgKzExLDcgQEAgUmVx
+dWlyZWQgcHJvcGVydGllczoKPj4+PiAgICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
+ZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMKPj4+PiAgICAtIHJlZy1uYW1l
+czogImNvcmVfcGh5c2ljYWwiCj4+Pj4gICAgLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNp
+Z25hbCBmcm9tIHRoZSBoZG1pIGJsb2NrLgo+Pj4+ICstIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBi
+ZSA8Jm1tY2MgTURTU19HRFNDPi4KPj4+PiAgICAtIGNsb2NrczogZGV2aWNlIGNsb2Nrcwo+Pj4+
+ICAgICAgU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+Pj4g
+ICAgLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgo+Pj4+IEBAIC0xOCw2
+ICsxOSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4gICAgLSBxY29tLGhkbWktdHgtaHBk
+LWdwaW86IGhwZCBwaW4KPj4+PiAgICAtIGNvcmUtdmRkYS1zdXBwbHk6IHBoYW5kbGUgdG8gc3Vw
+cGx5IHJlZ3VsYXRvcgo+Pj4+ICAgIC0gaGRtaS1tdXgtc3VwcGx5OiBwaGFuZGxlIHRvIG11eCBy
+ZWd1bGF0b3IKPj4+PiArLSBxY29tLGhkbWktcGh5OiBwaGFuZGxlIHRvIEhETUkgUEhZIGRldmlj
+ZSBub2RlCj4+Pgo+Pj4KPj4+IFdoeSBub3QgdXNlIHRoZSBnZW5lcmljIHBoeSBiaW5kaW5nPwo+
+Pgo+Pgo+PiBZb3UnZCBhc2tlZCBhYm91dCB0aGlzIGluIHRoZSBmaXJzdCB2ZXJzaW9uIG9mIHRo
+aXMgcGF0Y2guIFlvdQo+PiBwcm9iYWJseSBtaXNzZWQgcmVhZGluZyBteSByZXBseS4gUGFydGlh
+bGx5IG15IGZhdWx0IHNpbmNlIEkKPj4gbWlzc2VkIG91dCBwdXR0aW5nIHRoZSAiSW4tUmVwbHkt
+dG8iIHdoZW4gcG9zdGluZyB0aGlzIHNldC4gSSd2ZQo+PiBtZW50aW9uZWQgdGhlIHJlYXNvbiBh
+Z2FpbiBoZXJlOgo+Pgo+PiBUaGUgUEhZIGluIHRoZSBIRE1JIGFuZCBEU0kgYmxvY2tzIGNhbid0
+IGJlIGltcGxlbWVudGVkIHVzaW5nIHRoZQo+PiBjb21tb24gcGh5IGZyYW1ld29yay4gVGhlIFBI
+WSBibG9ja3MgaGF2ZSBhIFBMTCBzdWItYmxvY2sgd2l0aGluCj4+IHRoZW0gd2hpY2ggYWN0cyBh
+cyBhIHBpeGVsIGNsb2NrIHNvdXJjZSBmb3IgdGhlIGRpc3BsYXkgcHJvY2Vzc29yCj4+IGJsb2Nr
+Lgo+Cj4gVGhhdCBzb3VuZHMgbGlrZSBhIHByb2JsZW0gd2l0aCB0aGUgY29tbW9uIHBoeSBmcmFt
+ZXdvcmssIG5vdCB0aGUgRFQKPiBiaW5kaW5nLiBOb3RoaW5nIHNheXMgeW91IGhhdmUgdG8gdXNl
+IHRoZSBjb21tb24gcGh5IGYvdyBpZiB5b3UgdXNlCj4gdGhlIHBoeSBiaW5kaW5nLiBJIHNheSB0
+aGF0IGFzIHRoZSBiaW5kaW5nIG1haW50YWluZXIuIEFzIGEga2VybmVsCj4gZGV2ZWxvcGVyLCBJ
+IHdvdWxkIHNheSBmaXggdGhlIGNvbW1vbiBwaHkgZnJhbWV3b3JrIHRvIGhhbmRsZSB0aGlzCj4g
+Y2FzZS4gSG93ZXZlciwgSSBkb24ndCB0aGluayBhbnl0aGluZyBwcmV2ZW50cyB0aGUgcGh5IGRy
+aXZlciBmcm9tCj4gcmVnaXN0ZXJpbmcgYm90aCBhIHBoeSBhbmQgYSBjbG9jay4KCk9rYXkuIEZv
+ciBzb21lIHJlYXNvbiwgSSB0aG91Z2h0IGl0IHdvdWxkIGJlIHdyb25nIHRvIHVzZSB0aGUgc2Ft
+ZQpjb21tb24gcGh5IGJpbmRpbmdzIGJ1dCB1c2Ugb3VyIG93biBwaHkgZHJpdmVyLgoKSSB3aWxs
+IGNvbnZlcnQgdGhlIGJpbmRpbmdzIHRvIHRoZSBnZW5lcmljIHBoeSBiaW5kaW5nLgoKPgo+PiBU
+aGlzIGRlcGVuZGVuY3kgY2F1c2VzIHRoZSBuZWVkIHRvIHNwbGl0IHRoZSBwaHkgcG93ZXIgb24g
+c2VxdWVuY2UKPj4gaW50byAyIHBhcnRzIChvbmUgdG8gZW5hYmxlIHJlc291cmNlcyB0byBlbmFi
+bGUgdGhlIFBMTCwgYW5kIHRoZQo+PiBvdGhlciB0byBlbmFibGUgdGhlIHBoeSBpdHNlbGYpLCB3
+aGljaCB0aGUgcGh5IGZyYW1ld29yayBjYW4ndAo+PiBkby4gVGhhdCdzIHRoZSBtYWluIHJlYXNv
+biBub3QgdG8gdXNlIGl0LiBUaGVyZSBhcmUgc29tZSBtb3JlCj4+IGNvbXBsZXggdXNlIGNhc2Vz
+IGZvciBEU0kgUEhZIChkcml2ZSB0d28gUEhZcyB3aXRoIHRoZSBzYW1lCj4+IERTSSBQTEwpIHdo
+aWNoIHRoZSBwaHkgZnJhbWV3b3JrIGNhbid0IHN1cHBvcnQuCj4KPiBEb2Vzbid0IHRoZSBwaHkg
+ZnJhbWV3b3JrIGFscmVhZHkgc3VwcG9ydCB0aGUgZm9ybWVyPyBJdCBoYXMgcG93ZXIgb24KPiBh
+bmQgaW5pdCBjYWxscy4gUGVyc29uYWxseSwgSSBmaW5kIHRoZSBzcGxpdCB0aGVyZSBpbGwtZGVm
+aW5lZC4KCkkgYWx3YXlzIGFzc3VtZWQgdGhhdCB0aGUgaW5pdC9leGl0IG9wcyB3ZXJlIHNvbWV0
+aGluZyB0aGF0IHlvdSB3b3VsZApjYWxsIGp1c3Qgb25jZSAoZHVyaW5nIHByb2JlL3JlbW92ZSkg
+YW5kIHRoZW4gZm9yZ2V0IGFib3V0IGl0LiBJIG9ubHkKbm93IG5vdGljZWQgdGhhdCBpbml0IGFu
+ZCBwb3dlcl9vbiBhcmUgb2Z0ZW4gcGFpcmVkIHRvZ2V0aGVyIChhcyBhcmUKcG93ZXJfb2ZmIGFu
+ZCBleGl0KS4gSSB3ZW50IHRocm91Z2ggdGhlIGNvbW1vbiBwaHkgZnJhbWV3b3JrIGNvZGUgaW4K
+bW9yZSBkZXRhaWwsIGJ1dCBJIHJlYWxpemVkIEkgd291bGQgZmFjZSB0aGUgZm9sbG93aW5nIGlz
+c3VlOgoKSSB3YXMgbG9va2luZyBmb3IgdGhlIHNlcXVlbmNlOgoKMS4gZW5hYmxlIFBIWSByZXNv
+dXJjZXMgKGVuYWJsZXMgY2xvY2tzL3JlZ3VsYXRvcnMvcG1fcnVudGltZV9nZXRfc3luYykKCjIu
+IHNldF9yYXRlL2VuYWJsZSB0aGUgUExMIGNsb2NrIHByb3ZpZGVkIGJ5IFBIWQoKMy4gZW5hYmxl
+IFBIWSAoY29uZmlndXJlIHNvbWUgUEhZIHJlZ2lzdGVycykKCkkgY2FuIGFjaGlldmUgdGhpcyB1
+c2luZyB0aGUgY29tbW9uIHBoeSBmcmFtZXdvcmsgaWYgSSB0aWUgc3RlcCAxKQp0byBwaHlfcG93
+ZXJfb24oKSwgYW5kIHN0ZXAgMykgdG8gcGh5X2luaXQoKS4gVGhlIG90aGVyIHdheSByb3VuZCB3
+b24ndAp3b3JrIGJlY2F1c2UgcGh5X2luaXQoKSBzZWVtcyB0byBkaXNhYmxlIHJ1bnRpbWUgcG0g
+YXMgaXQgZXhpdHMuCgpJZiBJIHVzZSB0aGUgcGh5IGZyYW1ld29yayBpbiBpdHMgY3VycmVudCBz
+dGF0ZSwgSSdsbCBlbmQgdXAgc3R1ZmZpbmcKdGhlIHBoeSBvcHMgYW5kIHVzZSB0aGVtIGluIGEg
+d2VpcmQgd2F5IGp1c3QgdG8gbWFrZSBzdXJlIG15IFBIWQp3b3Jrcy4KCkNvcHlpbmcgS2lzaG9u
+IGlmIGhlIGhhcyBhbnkgb3BpbmlvbnMuCgoKPgo+Pj4+ICAgIE9wdGlvbmFsIHByb3BlcnRpZXM6
+Cj4+Pj4gICAgLSBxY29tLGhkbWktdHgtbXV4LWVuLWdwaW86IGhkbWkgbXV4IGVuYWJsZSBwaW4K
+Pj4+PiBAQCAtMjcsNiArMjksMjcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4+PiAgICAtIHBp
+bmN0cmwtMDogdGhlIGRlZmF1bHQgcGluY3RybCBzdGF0ZSAoYWN0aXZlKQo+Pj4+ICAgIC0gcGlu
+Y3RybC0xOiB0aGUgInNsZWVwIiBwaW5jdHJsIHN0YXRlCj4+Pj4KPj4+PiArSERNSSBQSFk6Cj4+
+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4gKy0gY29tcGF0aWJsZTogQ291bGQgYmUgdGhl
+IGZvbGxvd2luZwo+Pj4+ICsgICogInFjb20saGRtaS1waHktOHg2MCIKPj4+PiArICAqICJxY29t
+LGhkbWktcGh5LTg5NjAiCj4+Pj4gKyAgKiAicWNvbSxoZG1pLXBoeS04eDc0Igo+Pj4KPj4+Cj4+
+PiBObyB3aWxkY2FyZHMgcGxlYXNlLiBXaGVyZSdzIDg5OTQ/Cj4+Cj4+Cj4+IEknbGwgcmVtb3Zl
+IHRoZSB3aWxkY2FyZHMuIDg5OTQgUEhZIGlzbid0IHN1cHBvcnRlZCBieSB0aGUgZHJpdmVyIGF0
+Cj4+IHRoZSBtb21lbnQuIEkgY291bGQga2VlcCB0aGUgODk5NCBjb21wYXRpYmxlIHN0cmluZywg
+dGhlIGRyaXZlciB3aWxsCj4+IGJhaWwgb3V0IHdpdGggYW4gZXJyb3IuIEJ1dCB0aGF0J3Mgc29t
+ZXRoaW5nIHdlIGFscmVhZHkgZG8gZm9yIDh4NzQKPj4gc2luY2UgaXQgZG9lc24ndCBoYXZlIGZ1
+bGwgUEhZIHN1cHBvcnQgZWl0aGVyLgo+Cj4gWW91IGNhbiBkb2N1bWVudCBpdCBsYXRlciBpZiB5
+b3Ugd2FudC4gSSBqdXN0IGFza2VkICdjYXVzZSBJIGtuZXcgdGhlCj4gODk5NCBoYWQgb25lLgoK
+T2theS4KClRoYW5rcywKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBU
+aGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
