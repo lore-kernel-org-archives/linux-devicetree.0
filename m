@@ -1,74 +1,143 @@
 From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v5 09/11] drm/hisilicon: Add support for external bridge
-Date: Tue, 23 Feb 2016 11:00:29 +0800
-Message-ID: <1456196431-19923-10-git-send-email-xinliang.liu@linaro.org>
+Subject: [PATCH v5 11/11] arm64: dts: hisilicon: Add display subsystem DT nodes for hi6220
+Date: Tue, 23 Feb 2016 11:00:31 +0800
+Message-ID: <1456196431-19923-12-git-send-email-xinliang.liu@linaro.org>
 References: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com
-Cc: andy.green@linaro.org, xuyiping@hisilicon.com, guodong.xu@linaro.org, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHN1cHBvcnQgZm9yIGV4dGVybmFsIEhETUkgYnJpZGdlLgoKdjU6IE5vbmUuCnY0OiBOb25l
-Lgp2MzoKLSBGaXggYSB0eXBvOiBzL2V4dGVyYW5sL2V4dGVybmFsLgp2MjoKLSBSZW1vdmUgYWJ0
-cmFjdGlvbiBsYXllci4KClNpZ25lZC1vZmYtYnk6IFhpbmxpYW5nIExpdSA8eGlubGlhbmcubGl1
-QGxpbmFyby5vcmc+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1f
-ZHNpLmMgfCA1MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwg
-NTIgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
-a2lyaW4vZHdfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19k
-cm1fZHNpLmMKaW5kZXggMjgzN2FmMDFlOTM1Li4xMzQyZDg0ZDdjNjggMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2RzaS5jCisrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2RzaS5jCkBAIC03OSw2ICs3OSw3IEBAIHN0
-cnVjdCBkc2lfaHdfY3R4IHsKIAogc3RydWN0IGR3X2RzaSB7CiAJc3RydWN0IGRybV9lbmNvZGVy
-IGVuY29kZXI7CisJc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZTsKIAlzdHJ1Y3QgbWlwaV9kc2lf
-aG9zdCBob3N0OwogCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGN1cl9tb2RlOwogCXN0cnVjdCBk
-c2lfaHdfY3R4ICpjdHg7CkBAIC02ODgsNiArNjg5LDI1IEBAIHN0YXRpYyBpbnQgZHNpX2hvc3Rf
-aW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkd19kc2kgKmRzaSkKIAlyZXR1cm4gMDsK
-IH0KIAorc3RhdGljIGludCBkc2lfYnJpZGdlX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwg
-c3RydWN0IGR3X2RzaSAqZHNpKQoreworCXN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlciA9ICZk
-c2ktPmVuY29kZXI7CisJc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSA9IGRzaS0+YnJpZGdlOwor
-CWludCByZXQ7CisKKwkvKiBhc3NvY2lhdGUgdGhlIGJyaWRnZSB0byBkc2kgZW5jb2RlciAqLwor
-CWVuY29kZXItPmJyaWRnZSA9IGJyaWRnZTsKKwlicmlkZ2UtPmVuY29kZXIgPSBlbmNvZGVyOwor
-CisJcmV0ID0gZHJtX2JyaWRnZV9hdHRhY2goZGV2LCBicmlkZ2UpOworCWlmIChyZXQpIHsKKwkJ
-RFJNX0VSUk9SKCJmYWlsZWQgdG8gYXR0YWNoIGV4dGVybmFsIGJyaWRnZVxuIik7CisJCXJldHVy
-biByZXQ7CisJfQorCisJcmV0dXJuIDA7Cit9CisKIHN0YXRpYyBpbnQgZHNpX2JpbmQoc3RydWN0
-IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCiB7CiAJc3Ry
-dWN0IGRzaV9kYXRhICpkZGF0YSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwpAQCAtNzAzLDYgKzcy
-MywxMCBAQCBzdGF0aWMgaW50IGRzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
-dmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQogCWlmIChyZXQpCiAJCXJldHVybiByZXQ7CiAKKwly
-ZXQgPSBkc2lfYnJpZGdlX2luaXQoZHJtX2RldiwgZHNpKTsKKwlpZiAocmV0KQorCQlyZXR1cm4g
-cmV0OworCiAJcmV0dXJuIDA7CiB9CiAKQEAgLTcxOSw4ICs3NDMsMzYgQEAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBjb21wb25lbnRfb3BzIGRzaV9vcHMgPSB7CiBzdGF0aWMgaW50IGRzaV9wYXJzZV9k
-dChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LCBzdHJ1Y3QgZHdfZHNpICpkc2kpCiB7CiAJ
-c3RydWN0IGRzaV9od19jdHggKmN0eCA9IGRzaS0+Y3R4OworCXN0cnVjdCBkZXZpY2Vfbm9kZSAq
-bnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsKKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmVuZHBvaW50LCAq
-YnJpZGdlX25vZGU7CisJc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZTsKIAlzdHJ1Y3QgcmVzb3Vy
-Y2UgKnJlczsKIAorCS8qCisJICogR2V0IHRoZSBlbmRwb2ludCBub2RlLiBJbiBvdXIgY2FzZSwg
-ZHNpIGhhcyBvbmUgb3V0cHV0IHBvcnQxCisJICogdG8gd2hpY2ggdGhlIGV4dGVybmFsIEhETUkg
-YnJpZGdlIGlzIGNvbm5lY3RlZC4KKwkgKi8KKwllbmRwb2ludCA9IG9mX2dyYXBoX2dldF9lbmRw
-b2ludF9ieV9yZWdzKG5wLCAxLCAtMSk7CisJaWYgKCFlbmRwb2ludCkgeworCQlEUk1fRVJST1Io
-Im5vIHZhbGlkIGVuZHBvaW50IG5vZGVcbiIpOworCQlyZXR1cm4gLUVOT0RFVjsKKwl9CisJb2Zf
-bm9kZV9wdXQoZW5kcG9pbnQpOworCisJYnJpZGdlX25vZGUgPSBvZl9ncmFwaF9nZXRfcmVtb3Rl
-X3BvcnRfcGFyZW50KGVuZHBvaW50KTsKKwlpZiAoIWJyaWRnZV9ub2RlKSB7CisJCURSTV9FUlJP
-Uigibm8gdmFsaWQgYnJpZGdlIG5vZGVcbiIpOworCQlyZXR1cm4gLUVOT0RFVjsKKwl9CisJb2Zf
-bm9kZV9wdXQoYnJpZGdlX25vZGUpOworCisJYnJpZGdlID0gb2ZfZHJtX2ZpbmRfYnJpZGdlKGJy
-aWRnZV9ub2RlKTsKKwlpZiAoIWJyaWRnZSkgeworCQlEUk1fSU5GTygid2FpdCBmb3IgZXh0ZXJu
-YWwgSERNSSBicmlkZ2UgZHJpdmVyLlxuIik7CisJCXJldHVybiAtRVBST0JFX0RFRkVSOworCX0K
-Kwlkc2ktPmJyaWRnZSA9IGJyaWRnZTsKKwogCWN0eC0+ZHNpX2NmZ19jbGsgPSBkZXZtX2Nsa19n
-ZXQoJnBkZXYtPmRldiwgInBjbGtfZHNpIik7CiAJaWYgKElTX0VSUihjdHgtPmRzaV9jZmdfY2xr
-KSkgewogCQlEUk1fRVJST1IoImZhaWxlZCB0byBnZXQgZHNpIHBsY2sgY2xvY2tcbiIpOwotLSAK
-MS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Add ade, dsi and adv7533 DT nodes for hikey board.
+
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 40 +++++++++++++++++++
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi      | 55 ++++++++++++++++++++++++++
+ 2 files changed, 95 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+index 818525197508..40239fba0572 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+@@ -39,3 +39,43 @@
+ &uart3 {
+ 	label = "LS-UART1";
+ };
++
++&ade {
++	status = "okay";
++};
++
++&dsi {
++	status = "ok";
++
++	ports {
++		/* 1 for output port */
++		port@1 {
++			reg = <1>;
++
++			dsi_out0: endpoint@0 {
++				remote-endpoint = <&adv7533_in>;
++			};
++		};
++	};
++};
++
++&i2c2 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "ok";
++
++	adv7533: adv7533@39 {
++		compatible = "adi,adv7533";
++		reg = <0x39>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <1 2>;
++		pd-gpio = <&gpio0 4 0>;
++		adi,dsi-lanes = <4>;
++
++		port {
++			adv7533_in: endpoint {
++				remote-endpoint = <&dsi_out0>;
++			};
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index ad1f1ebcb05c..920ea68e791d 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -162,6 +162,11 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		medianoc_ade: medianoc_ade@f4520000 {
++			compatible = "syscon";
++			reg = <0x0 0xf4520000 0x0 0x4000>;
++		};
++
+ 		uart0: uart@f8015000 {	/* console */
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf8015000 0x0 0x1000>;
+@@ -209,5 +214,55 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
++
++		ade: ade@f4100000 {
++			compatible = "hisilicon,hi6220-ade";
++			reg = <0x0 0xf4100000 0x0 0x7800>;
++			reg-names = "ade_base";
++			hisilicon,noc-syscon = <&medianoc_ade>;
++			resets = <&media_ctrl MEDIA_ADE>;
++			interrupts = <0 115 4>; /* ldi interrupt */
++
++			clocks = <&media_ctrl HI6220_ADE_CORE>,
++				 <&media_ctrl HI6220_CODEC_JPEG>,
++				 <&media_ctrl HI6220_ADE_PIX_SRC>;
++			/*clock name*/
++			clock-names  = "clk_ade_core",
++				       "clk_codec_jpeg",
++				       "clk_ade_pix";
++
++			assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
++				<&media_ctrl HI6220_CODEC_JPEG>;
++			assigned-clock-rates = <360000000>, <288000000>;
++			dma-coherent;
++			status = "disabled";
++
++			port {
++				ade_out: endpoint {
++					remote-endpoint = <&dsi_in>;
++				};
++			};
++		};
++
++		dsi: dsi@f4107800 {
++			compatible = "hisilicon,hi6220-dsi";
++			reg = <0x0 0xf4107800 0x0 0x100>;
++			clocks = <&media_ctrl  HI6220_DSI_PCLK>;
++			clock-names = "pclk_dsi";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* 0 for input port */
++				port@0 {
++					reg = <0>;
++					dsi_in: endpoint {
++						remote-endpoint = <&ade_out>;
++					};
++				};
++			};
++		};
+ 	};
+ };
+-- 
+1.9.1
+
