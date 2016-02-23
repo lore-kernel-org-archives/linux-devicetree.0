@@ -1,71 +1,76 @@
 From: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/4] soc: rockchip: add bindings for Rockchip grf
-Date: Tue, 23 Feb 2016 15:01:01 +0800
-Message-ID: <1456210864-29037-2-git-send-email-jay.xu@rock-chips.com>
+Subject: [PATCH 2/4] dt-bindings: add bindings for rk3399 clock controller
+Date: Tue, 23 Feb 2016 15:01:02 +0800
+Message-ID: <1456210864-29037-3-git-send-email-jay.xu@rock-chips.com>
 References: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1456210864-29037-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Add devicetree bindings for Rockchip grf which found on
+Add devicetree bindings for Rockchip cru which found on
 Rockchip SoCs.
 
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
-changes in v2:
-- add grf.txt (Heiko)
+ .../bindings/clock/rockchip,rk3399-cru.txt         | 82 ++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
 
- .../devicetree/bindings/soc/rockchip/grf.txt       | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/rockchip/grf.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
 new file mode 100644
-index 0000000..7fb0410
+index 0000000..07bcc6e
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
-@@ -0,0 +1,35 @@
-+* Rockchip General Register Files (GRF)
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+@@ -0,0 +1,82 @@
++* Rockchip RK3399 Clock and Reset Unit
 +
-+The general register file will be used to do static set by software, which
-+is composed of many registers for system control.
-+
-+From RK3368 SoCs, the GRF is divided into two sections,
-+- GRF, used for general non-secure system,
-+- PMUGRF, used for always on sysyem
++The RK3399 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
 +
 +Required Properties:
 +
-+- compatible: GRF should be one of the followings
-+   - "rockchip,rk3066-grf", "syscon": for rk3066
-+   - "rockchip,rk3188-grf", "syscon": for rk3188
-+   - "rockchip,rk3228-grf", "syscon": for rk3228
-+   - "rockchip,rk3288-grf", "syscon": for rk3288
-+   - "rockchip,rk3368-grf", "syscon": for rk3368
-+   - "rockchip,rk3399-grf", "syscon": for rk3399
-+- compatible: PMUGRF should be one of the followings
-+   - "rockchip,rk3368-pmugrf", "syscon": for rk3368
-+   - "rockchip,rk3399-pmugrf", "syscon": for rk3399
++- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
++- compatible: CRU should be "rockchip,rk3399-cru"
 +- reg: physical base address of the controller and length of memory mapped
 +  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
 +
-+Example: GRF and PMUGRF of RK3399 SoCs
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing, pll rates are not changeable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
++used in device tree sources. Similar macros exist for the reset sources in
++these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "xin32k" - rtc clock - optional,
++ - "ext_i2s" - external I2S clock - optional,
++ - "ext_gmac" - external GMAC clock - optional
++ - "ext_hsadc" - external HSADC clock - optional,
++ - "ext_isp" - external ISP clock - optional,
++ - "ext_jtag" - external JTAG clock - optional
++ - "ext_vip" - external VIP clock - optional,
++ - "usbotg_out" - output clock of the pll in the otg phy
++
++Example: General Register Files
 +
 +	pmugrf: syscon@ff320000 {
 +		compatible = "rockchip,rk3399-pmugrf", "syscon";
@@ -76,5 +81,41 @@ index 0000000..7fb0410
 +		compatible = "rockchip,rk3399-grf", "syscon";
 +		reg = <0x0 0xff770000 0x0 0x10000>;
 +	};
++
++Example: Clock controller node:
++
++	pmucru: pmu-clock-controller@ff750000 {
++		compatible = "rockchip,rk3399-pmucru";
++		reg = <0x0 0xff750000 0x0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	cru: clock-controller@ff760000 {
++		compatible = "rockchip,rk3399-cru";
++		reg = <0x0 0xff760000 0x0 0x1000>;
++		rockchip,grf = <&grf>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@ff1a0000 {
++		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
++		reg = <0x0 0xff180000 0x0 0x100>;
++		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
++		clock-names = "baudclk", "apb_pclk";
++		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++	};
 -- 
 1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
