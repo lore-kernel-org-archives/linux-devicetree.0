@@ -1,80 +1,77 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: at91: sama5/dts: move hsmc_clk out of nfc node
-Date: Tue, 23 Feb 2016 14:04:36 +0800
-Message-ID: <1456207477-7946-3-git-send-email-wenyou.yang@atmel.com>
-References: <1456207477-7946-1-git-send-email-wenyou.yang@atmel.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: RE: [RFC PATCH] drivers: ata: Read Rx water mark value from
+ device-tree
+Date: Tue, 23 Feb 2016 05:58:32 +0000
+Message-ID: <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com>
+ <28916176.WDrPajhOPa@wuerfel>
+ <3802E9A6666DF54886E2B9CBF743BA9825E00BD4@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <18251200.Xfr10N5eWq@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456207477-7946-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <18251200.Xfr10N5eWq@wuerfel>
+Content-Language: en-US
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Hi Arnd,
 
-For SAMA5D3, SAMA5D4 SoC family, as PMECC is a part of HSMC, PMECC
-needs the HSMC clock, so move out hsmc_clk from the nfc node to
-the nand node.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd@arndb.de]
+> Sent: Monday, February 22, 2016 8:50 PM
+> To: Anurag Kumar Vulisha
+> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; tj@kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> ide@vger.kernel.org; Anirudha Sarangi; Srikanth Vemula; Punnaiah Choudary
+> Kalluri
+> Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-
+> tree
+>
+> On Monday 22 February 2016 10:53:11 Anurag Kumar Vulisha wrote:
+> > > >
+> > >
+> > > How would a hardware integrator know which value is right for a
+> > > particular SoC?
+> > >
+> > > Could it be keyed off the hardware ID? Could the bootloader perhaps
+> > > set an appropriate value in the AHCI_VEND_PTC register at boot time
+> > > and the driver read the initial value from it?
+> > >
+> > > From the description, it sounds like this is a policy decision
+> > > rather than hardware description, and shouldn't really be in here.
+> > >
+> >
+> > Thanks for reviewing the patch. Can I use module_param() for this
+> > watermark instead of reading it from devicetree or doing it in
+> > bootloader. In bootloader we are initializing serdes controller for
+> > high speed devices. As a part of this initialization we will be reseting all the
+> high speed pheripherals which are using serdes, so SATA will also get
+> resetted. Because of this reason, can I use module_param() for Rxwatermark
+> value  instead?
+> >
+>
+> I don't know what is appropriate because I have no idea what Rxwatermark is
+> good for. Can you try describing why we can't just set it to the correct value
+> for everyone automatically?
+>
 
-Signed-off-by: Josh Wu <josh.wu-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+This RX watermark level sets the minimum number of free locations within the RX FIFO .When the rx fifo level crosses the programmed watermark level ,sata controller  will transmit HOLDS to the device asking it to wait. This happens when dma
+reads the rx fifo data slower than the device is sending the data. Note that it can take some time for the HOLDs to get to
+the other end and in the time there must be enough room in the FIFO to absorb all data that could arrive from the device.
+Currently we are using 0x40 for this value, which works fine with all hardware designs  we are currently having. But hoping
+that this value may vary for future silicon versions, I wanted to make this as a configurable value. So for this reason I thought
+of moving it either to device-tree or making it as a module_param() property.
 
-Changes in v2:
- - add a patch to change SAMA5D3 nand node's compatible string
-   to "atmel,sama5d3-nand".
- - revert the mail address of Josh's Signed-off to the original.
+Thanks,
+Anurag Kumar V
 
- arch/arm/boot/dts/sama5d3.dtsi |    2 +-
- arch/arm/boot/dts/sama5d4.dtsi |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+>       Arnd
 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index ee1b1a8..d20a38b 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1474,6 +1474,7 @@
- 			atmel,nand-has-dma;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand0_ale_cle>;
-+			clocks = <&hsmc_clk>;
- 			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
- 			status = "disabled";
- 
-@@ -1486,7 +1487,6 @@
- 					0xffffc000 0x00000070	/* NFC HSMC regs */
- 					0x00200000 0x00100000	/* NFC SRAM banks */
- 					>;
--				clocks = <&hsmc_clk>;
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index b8032bc..1499b33 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -295,6 +295,7 @@
- 			atmel,nand-has-dma;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_nand>;
-+			clocks = <&hsmc_clk>;
- 			status = "disabled";
- 
- 			nfc@90000000 {
-@@ -306,7 +307,6 @@
- 					0xfc05c000 0x00000070	/* NFC HSMC regs */
- 					0x00100000 0x00100000	/* NFC SRAM banks */
-                                          >;
--				clocks = <&hsmc_clk>;
- 				atmel,write-by-sram;
- 			};
- 		};
--- 
-1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This email and any attachments are intended for the sole use of the named recipient(s) and contain(s) confidential information that may be proprietary, privileged or copyrighted under applicable law. If you are not the intended recipient, do not read, copy, or forward this email message or any attachments. Delete this email message and any attachments immediately.
+
