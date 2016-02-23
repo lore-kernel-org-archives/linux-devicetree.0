@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 05/12] ARM: dts: apq8064: add spi5 device node.
-Date: Tue, 23 Feb 2016 14:14:33 +0000
-Message-ID: <1456236873-2649-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 07/12] ARM: dts: apq8064: add missing i2c2 pinctrl info
+Date: Tue, 23 Feb 2016 14:14:45 +0000
+Message-ID: <1456236885-2741-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,95 +21,63 @@ To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds spi5 device node, spi5 is used on ifc6410 on the
-expansion connector.
+This patch adds missing i2c2 pinctrl information in i2c2 node.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-pins.dtsi | 38 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi      | 14 ++++++++++++
- 2 files changed, 52 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-pins.dtsi | 26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi      |  2 ++
+ 2 files changed, 28 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-index ce15c67..0b7b10e 100644
+index 0b7b10e..0a342d3 100644
 --- a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-@@ -64,6 +64,44 @@
+@@ -39,6 +39,32 @@
  		};
  	};
  
-+	spi5_default: spi5_default {
-+		pinmux {
-+			pins = "gpio51", "gpio52", "gpio54";
-+			function = "gsbi5";
-+		};
-+
-+		pinmux_cs {
-+			function = "gpio";
-+			pins = "gpio53";
++	i2c2_pins: i2c2 {
++		mux {
++			pins = "gpio24", "gpio25";
++			function = "gsbi2";
 +		};
 +
 +		pinconf {
-+			pins = "gpio51", "gpio52", "gpio54";
++			pins = "gpio24", "gpio25";
 +			drive-strength = <16>;
 +			bias-disable;
-+		};
-+
-+		pinconf_cs {
-+			pins = "gpio53";
-+			drive-strength = <16>;
-+			bias-disable;
-+			output-high;
 +		};
 +	};
 +
-+	spi5_sleep: spi5_sleep {
-+		pinmux {
++	i2c2_pins_sleep: i2c2_pins_sleep {
++		mux {
++			pins = "gpio24", "gpio25";
 +			function = "gpio";
-+			pins = "gpio51", "gpio52", "gpio53", "gpio54";
 +		};
 +
 +		pinconf {
-+			pins = "gpio51", "gpio52", "gpio53", "gpio54";
++			pins = "gpio24", "gpio25";
 +			drive-strength = <2>;
-+			bias-pull-down;
++			bias-disable = <0>;
 +		};
 +	};
 +
- 	gsbi6_uart_2pins: gsbi6_uart_2pins {
+ 	i2c3_pins: i2c3 {
  		mux {
- 			pins = "gpio14", "gpio15";
+ 			pins = "gpio8", "gpio9";
 diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 3fb66b9..3fefb2e 100644
+index 3fefb2e..2367adc 100644
 --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -236,6 +236,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 			};
-+
- 		};
- 
- 		gsbi2: gsbi@12480000 {
-@@ -304,6 +305,19 @@
- 				clock-names = "core", "iface";
- 				status = "disabled";
- 			};
-+
-+			gsbi5_spi: spi@1a280000 {
-+				compatible = "qcom,spi-qup-v1.1.1";
-+				reg = <0x1a280000 0x1000>;
-+				interrupts = <0 155 0>;
-+				pinctrl-0 = <&spi5_default &spi5_sleep>;
+@@ -255,6 +255,8 @@
+ 			gsbi2_i2c: i2c@124a0000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+ 				reg = <0x124a0000 0x1000>;
++				pinctrl-0 = <&i2c2_pins &i2c2_pins_sleep>;
 +				pinctrl-names = "default", "sleep";
-+				clocks = <&gcc GSBI5_QUP_CLK>, <&gcc GSBI5_H_CLK>;
-+				clock-names = "core", "iface";
-+				status = "disabled";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
- 		};
- 
- 		gsbi6: gsbi@16500000 {
+ 				interrupts = <0 196 IRQ_TYPE_NONE>;
+ 				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
+ 				clock-names = "core", "iface";
 -- 
 1.9.1
