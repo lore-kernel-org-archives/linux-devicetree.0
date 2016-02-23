@@ -1,100 +1,55 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: add support for gpio buttons for
- exynos5422-odroidxu3
-Date: Tue, 23 Feb 2016 17:21:14 +0900
-Message-ID: <56CC167A.8040303@samsung.com>
-References: <1456214467-3344-1-git-send-email-linux.amoon@gmail.com>
+From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] iio:iio-interrupt-trigger: device-tree support
+Date: Tue, 23 Feb 2016 09:24:37 +0100
+Message-ID: <56CC1745.5080505@parrot.com>
+References: <cover.1455908065.git.gregor.boirie@parrot.com> <d8f7902dbfe6e911e6ac0d1117502a02b1212022.1455908065.git.gregor.boirie@parrot.com> <56CA162C.5010406@kernel.org> <20160222190521.GA30054@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1456214467-3344-1-git-send-email-linux.amoon@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160222190521.GA30054@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23.02.2016 17:01, Anand Moon wrote:
-> Add support for gpio-based button on Odroid-XU3 boards
-> for reboot/poweroff feature.
-> 
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> changes rebase based on linux next-20160222.
-> 
-> Tested on Odroid-XU4
-> 
-> dmesg output.
-> [    3.286068] of_get_named_gpiod_flags: parsed 'gpios' property of node '/gpio_keys/power_key[0]' - status (0)
-> [    3.286206] gpio-11 (power key): gpiod_set_debounce: missing set() or set_debounce() operations
-> [    3.286600] input: gpio_keys as /devices/platform/gpio_keys/input/input0
-> ---
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> index 1bd507b..db9770b 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> @@ -11,6 +11,7 @@
->  */
->  
->  #include <dt-bindings/clock/samsung,s2mps11.h>
-> +#include <dt-bindings/input/input.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/sound/samsung-i2s.h>
-> @@ -54,6 +55,22 @@
->  		#cooling-cells = <2>;
->  		cooling-levels = <0 130 170 230>;
->  	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&gpio_power_key>;
-> +
-> +		power_key {
-> +			interrupt-parent = <&gpx0>;
-> +			interrupts = <3 IRQ_TYPE_NONE>;
+On 02/22/2016 08:05 PM, Rob Herring wrote:
+> On Sun, Feb 21, 2016 at 07:55:24PM +0000, Jonathan Cameron wrote:
+>> On 19/02/16 19:18, Gregor Boirie wrote:
+>>> From: Gr=E9gor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+>>>
+>>> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+>> Snag here is that iio_interrupt_trigger is a very linux specific
+>> name and device tree bindings should be just about the hardware.
+>>
+>> Not entirely sure how we avoid this though as the use is rather
+>> hard to describe generically.
+>>
+>> cc'd device tree list and bindings maintainers.
+>>
+>> As a brief summary - this IIO trigger driver takes a generic
+>> interrupt (from whatever) and uses it to drive sampling of IIO devic=
+es.
+>> The interrupt might be associated with particularly simple sensors d=
+irectly
+>> but is more commonly a gpio interrupt line used cause samples to be =
+captured
+>> from unrelated devices.  Sometimes the source of that interrupt can =
+be a convoluted
+>> external mux setup over which linux has no control for example.
+> If linux has no control of the setup, then do we care? It's just some
+> blackbox driving a signal.
+>
+>> Any suggestions on appropriate naming?
+> I would think of it outside of IIO perhaps. We already have gpio-keys
+> which is kind of similar. Maybe just "external interrupt"? Is it alwa=
+ys
+> a GPIO interrupt or could be polled GPIO or some other mechanism?
+Our setup uses an ARM software generated interrupt coming from an=20
+alternate core
+running a custom OS. Usage is however quite similar to GPIO irqs.
 
-Hmmm.... why you specify the interrupts?
+[snip]
 
-> +			gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_POWER>;
-> +			label = "power key";
-
-Just "power".
-
-> +			debounce-interval = <10>;
-> +			wakeup-source;
-> +		};
-> +	};
->  };
->  
->  &clock_audss {
-> @@ -362,6 +379,11 @@
->  };
->  
->  &pinctrl_0 {
-> +	gpio_power_key: power_key {
-
-The naming is mixed... Everything is GPIO here so don't add such prefix.
-Underscores only in label, not in name of node.
-
-	power_key_irq: power-key-irq {
-
-> +		samsung,pins = "gpx0-3";
-> +		samsung,pin-pud = <0>;
-
-Don't you want to set specific pin function? And what about drive strength?
-
-Best regards,
-Krzysztof
-
-> +	};
-> +
->  	hdmi_hpd_irq: hdmi-hpd-irq {
->  		samsung,pins = "gpx3-7";
->  		samsung,pin-function = <0>;
-> 
+Gr=E9gor.
