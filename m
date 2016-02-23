@@ -1,43 +1,97 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/5] Add USB2.0 host support for R-Car H3
-Date: Tue, 23 Feb 2016 21:28:31 +0900
-Message-ID: <1456230516-5112-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/5] arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
+Date: Tue, 23 Feb 2016 21:28:33 +0900
+Message-ID: <1456230516-5112-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1456230516-5112-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456230516-5112-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on renesas.git / renesas-devel-20160223-v4.5-rc5 tag.
-(commit id = d0475e2b81af0f6a4e7a9785662173b5a995a164)
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 66 ++++++++++++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-This patch set needs the following patches to use the usb 2.0 host:
-http://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=cff0fef33d77bd7e98463029e5d0a4191d9bbb95
-http://git.kernel.org/cgit/linux/kernel/git/kishon/linux-phy.git/commit/?h=next&id=c7af45e64087a4bebef955f0d005723c35f28176
-http://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/commit/?h=sh-pfc-for-v4.6&id=76250a6c89673f63e37c59772e97cc72f4c8097b
-
-Yesterday, I sent the following patch set as RFC.
-http://thread.gmane.org/gmane.linux.kernel.renesas-soc/1087
-
-Today's patch set is related to the yesterday's patches. But, today's
-patch set is:
- - not included about HSUSB node and USB 2.0 host channel 0 enabling because
-   these are under construction for now.
- - included about defconfig for phy-rcar-gen3-usb2 driver.
-
-Yoshihiro Shimoda (5):
-  arm64: dts: r8a7795: add usb2_phy device nodes
-  arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
-  arm64: dts: salvator-x: enable usb2_phy of channel 1 and 2
-  arm64: dts: salvator-x: enable USB 2.0 Host of channel 1 and 2
-  arm64: defconfig: Add Renesas R-Car Gen3 USB 2.0 phy driver support
-
- arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 40 +++++++++
- arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 94 ++++++++++++++++++++++
- arch/arm64/configs/defconfig                       |  1 +
- 3 files changed, 135 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index be64bb2..594cb72 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -1051,5 +1051,71 @@
+ 			#phy-cells = <0>;
+ 			status = "disabled";
+ 		};
++
++		ehci0: usb@ee080100 {
++			compatible = "generic-ehci";
++			reg = <0 0xee080100 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ehci1: usb@ee0a0100 {
++			compatible = "generic-ehci";
++			reg = <0 0xee0a0100 0 0x100>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 702>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ehci2: usb@ee0c0100 {
++			compatible = "generic-ehci";
++			reg = <0 0xee0c0100 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 701>;
++			phys = <&usb2_phy2>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ohci0: usb@ee080000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee080000 0 0x100>;
++			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 703>;
++			phys = <&usb2_phy0>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ohci1: usb@ee0a0000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee0a0000 0 0x100>;
++			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 702>;
++			phys = <&usb2_phy1>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
++
++		ohci2: usb@ee0c0000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee0c0000 0 0x100>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 701>;
++			phys = <&usb2_phy2>;
++			phy-names = "usb";
++			power-domains = <&cpg>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 1.9.1
