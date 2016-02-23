@@ -1,342 +1,82 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun7i: Add dts file for the lamobo-r1 board
-Date: Tue, 23 Feb 2016 21:41:30 +0100
-Message-ID: <1456260090-23635-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] clk: add device tree binding for Artpec-6 clock
+ controller
+Date: Tue, 23 Feb 2016 14:43:07 -0600
+Message-ID: <20160223204307.GA19883@rob-hp-laptop>
+References: <cover.1455891890.git.larper@axis.com>
+ <fd330ff1346758966260cb2bcddd8d3fbff49704.1455891890.git.larper@axis.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <fd330ff1346758966260cb2bcddd8d3fbff49704.1455891890.git.larper@axis.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+On Fri, Feb 19, 2016 at 03:30:14PM +0100, Lars Persson wrote:
+> Add device tree documentation for the main clock controller in the
+> Artpec-6 SoC.
+> 
+> Signed-off-by: Lars Persson <larper@axis.com>
+> ---
+>  .../devicetree/bindings/clock/artpec6.txt          | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/artpec6.txt b/Documentation/devicetree/bindings/clock/artpec6.txt
+> new file mode 100644
+> index 0000000..76e3e7f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/artpec6.txt
+> @@ -0,0 +1,41 @@
+> +* Clock bindings for Axis ARTPEC-6 chip
+> +
+> +The bindings are based on the clock provider binding in
+> +Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +External clocks:
+> +----------------
+> +
+> +There are two external inputs to the main clock controller which should be
+> +provided using the common clock bindings.
+> +- "sys_refclk": External 50 Mhz oscillator (required)
+> +- "i2s_refclk": Alternate audio reference clock (optional).
+> +
+> +Main clock controller
+> +---------------------
+> +
+> +Required properties:
+> +- #clock-cells: Should be <1>
+> +  See dt-bindings/clock/axis,artpec6-clkctrl.h for the list of valid identifiers.
 
-The lamobo-r1 board, sometimes called the BPI-R1 but not labelled as such
-on the PCB, is meant as a A20 based router board. As such the board comes
-with a built-in switch chip giving it 5 gigabit ethernet boards, and it
-has a large empty area on the pcb with mounting holes which will fit a
-2.5 inch harddisk. To complete its networking features it has a
-Realtek RTL8192CU for WiFi 802.11 b/g/n.
+This header should be part of this patch. Otherwise:
 
-Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
--Drop custom CPU operating points
----
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts | 287 ++++++++++++++++++++++++++++++
- 2 files changed, 288 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 04b90fc..ef39613 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -669,6 +669,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
- 	sun7i-a20-itead-ibox.dtb \
- 	sun7i-a20-i12-tvbox.dtb \
- 	sun7i-a20-icnova-swac.dtb \
-+	sun7i-a20-lamobo-r1.dtb \
- 	sun7i-a20-m3.dtb \
- 	sun7i-a20-mk808c.dtb \
- 	sun7i-a20-olimex-som-evb.dtb \
-diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-new file mode 100644
-index 0000000..5ee43d8
---- /dev/null
-+++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
-@@ -0,0 +1,287 @@
-+/*
-+ * Copyright 2015 Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun7i-a20.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Lamobo R1";
-+	compatible = "lamobo,lamobo-r1", "allwinner,sun7i-a20";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart3;
-+		serial2 = &uart7;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins_lamobo_r1>;
-+
-+		green {
-+			label = "lamobo_r1:green:usr";
-+			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gmac_power_pin_lamobo_r1>;
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
-+	};
-+};
-+
-+&ahci_pwr_pin_a {
-+	allwinner,pins = "PB3";
-+};
-+
-+&ahci {
-+	target-supply = <&reg_ahci_5v>;
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc2>;
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&gmac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&gmac_pins_rgmii_a>;
-+	phy = <&phy1>;
-+	phy-mode = "rgmii";
-+	phy-supply = <&reg_gmac_3v3>;
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "okay";
-+
-+	axp209: pmic@34 {
-+		reg = <0x34>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "okay";
-+};
-+
-+&ir0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&ir0_rx_pins_a>;
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_lamobo_r1>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&otg_sram {
-+	status = "okay";
-+};
-+
-+&pio {
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PH4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	mmc0_cd_pin_lamobo_r1: mmc0_cd_pin@0 {
-+		allwinner,pins = "PH10";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	gmac_power_pin_lamobo_r1: gmac_power_pin@0 {
-+		allwinner,pins = "PH23";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	led_pins_lamobo_r1: led_pins@0 {
-+		allwinner,pins = "PH24";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+#include "axp209.dtsi"
-+
-+&reg_ahci_5v {
-+	gpio = <&pio 1 3 0>; /* PB3 */
-+	status = "okay";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1000000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-int-dll";
-+};
-+
-+&reg_ldo1 {
-+	regulator-name = "vdd-rtc";
-+};
-+
-+&reg_ldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_usb0_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb1_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb2_vbus {
-+	status = "okay";
-+};
-+
-+&spi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi0_pins_a>,
-+		    <&spi0_cs0_pins_a>,
-+		    <&spi0_cs1_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart3_pins_b>;
-+	status = "okay";
-+};
-+
-+&uart7 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart7_pins_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>;
-+	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
-+	usb1_vbus-supply = <&reg_usb1_vbus>;
-+	usb2_vbus-supply = <&reg_usb2_vbus>;
-+	status = "okay";
-+};
--- 
-2.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- compatible: Should be "axis,artpec6-clkctrl"
+> +- reg: Must contain the base address and length of the system controller
+> +- clocks:  Must contain a phandle entry for each clock in clock-names
+> +- clock-names: Must include the external oscillator ("sys_refclk"). Optional
+> +  ones are the audio reference clock ("i2s_refclk") and the audio fractional
+> +  divider ("frac_clk").
+> +
+> +Examples:
+> +
+> +ext_clk: ext_clk {
+> +	#clock-cells = <0>;
+> +	compatible = "fixed-clock";
+> +	clock-frequency = <50000000>;
+> +};
+> +
+> +clkctrl: clkctrl {
+> +	#clock-cells = <1>;
+> +	compatible = "axis,artpec6-clkctrl";
+> +	reg = <0xf8000000 0x48>;
+> +	clocks = <&ext_clk>;
+> +	clock-names = "sys_refclk";
+> +};
+> -- 
+> 2.1.4
+> 
