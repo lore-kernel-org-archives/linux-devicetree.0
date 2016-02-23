@@ -1,137 +1,119 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [PATCH v4 07/10] ARM: configs: add MPS2 defconfig
-Date: Tue, 23 Feb 2016 14:34:25 +0000
-Message-ID: <1456238068-25079-8-git-send-email-vladimir.murzin@arm.com>
-References: <1456238068-25079-1-git-send-email-vladimir.murzin@arm.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH] ASoC: rt5640: add master clock handling for
+ rt5640
+Date: Tue, 23 Feb 2016 08:50:04 -0600
+Message-ID: <56CC719C.1090901@linux.intel.com>
+References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456238068-25079-1-git-send-email-vladimir.murzin@arm.com>
+In-Reply-To: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com
-Cc: mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, andy.shevchenko@gmail.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Sugar Zhang <sugar.zhang@rock-chips.com>, broonie@kernel.org, heiko@sntech.de
+Cc: Mark Rutland <mark.rutland@arm.com>, Oder Chiou <oder_chiou@realtek.com>, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new config for MPS2 platform.
+On 2/22/16 7:26 PM, Sugar Zhang wrote:
+> enable/disable master clock when codec is active or not.
+>
+> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+> ---
+>
+>   Documentation/devicetree/bindings/sound/rt5640.txt |  3 +++
+>   sound/soc/codecs/rt5640.c                          | 31 ++++++++++++++++++++++
+>   sound/soc/codecs/rt5640.h                          |  2 ++
+>   3 files changed, 36 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/sound/rt5640.txt b/Documentation/devicetree/bindings/sound/rt5640.txt
+> index 9e62f6e..57fe646 100644
+> --- a/Documentation/devicetree/bindings/sound/rt5640.txt
+> +++ b/Documentation/devicetree/bindings/sound/rt5640.txt
+> @@ -12,6 +12,9 @@ Required properties:
+>
+>   Optional properties:
+>
+> +- clocks: The phandle of the master clock to the CODEC
+> +- clock-names: Should be "mclk"
 
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
----
- arch/arm/configs/mps2_defconfig |  109 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 arch/arm/configs/mps2_defconfig
+This patch assumes that the information on mclk comes from DeviceTree. 
+The mclk may also be enabled/disabled in the machine driver with an 
+explicit transition to use an internal clock when the codec is not used.
+I hope this patch doesn't preclude such usages or there will be a 
+conflict with the patches we are about to upstream for Baytrail/cht devices.
 
-diff --git a/arch/arm/configs/mps2_defconfig b/arch/arm/configs/mps2_defconfig
-new file mode 100644
-index 0000000..19d119f
---- /dev/null
-+++ b/arch/arm/configs/mps2_defconfig
-@@ -0,0 +1,109 @@
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_LOG_BUF_SHIFT=16
-+CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-+CONFIG_EXPERT=y
-+# CONFIG_UID16 is not set
-+# CONFIG_BASE_FULL is not set
-+# CONFIG_FUTEX is not set
-+# CONFIG_EPOLL is not set
-+# CONFIG_SIGNALFD is not set
-+# CONFIG_EVENTFD is not set
-+# CONFIG_AIO is not set
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_SLUB_DEBUG is not set
-+# CONFIG_BLOCK is not set
-+# CONFIG_MMU is not set
-+CONFIG_ARCH_MPS2=y
-+CONFIG_SET_MEM_PARAM=y
-+CONFIG_DRAM_BASE=0x21000000
-+CONFIG_DRAM_SIZE=0x1000000
-+CONFIG_PREEMPT_VOLUNTARY=y
-+# CONFIG_ATAGS is not set
-+CONFIG_ZBOOT_ROM_TEXT=0x0
-+CONFIG_ZBOOT_ROM_BSS=0x0
-+CONFIG_BINFMT_FLAT=y
-+CONFIG_BINFMT_SHARED_FLAT=y
-+# CONFIG_COREDUMP is not set
-+# CONFIG_SUSPEND is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_IP_PNP=y
-+CONFIG_IP_PNP_DHCP=y
-+# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
-+# CONFIG_INET_XFRM_MODE_TUNNEL is not set
-+# CONFIG_INET_XFRM_MODE_BEET is not set
-+# CONFIG_INET_LRO is not set
-+# CONFIG_INET_DIAG is not set
-+# CONFIG_IPV6 is not set
-+# CONFIG_WIRELESS is not set
-+CONFIG_DEVTMPFS=y
-+CONFIG_DEVTMPFS_MOUNT=y
-+# CONFIG_FW_LOADER is not set
-+CONFIG_NETDEVICES=y
-+# CONFIG_NET_CORE is not set
-+# CONFIG_NET_VENDOR_ARC is not set
-+# CONFIG_NET_CADENCE is not set
-+# CONFIG_NET_VENDOR_BROADCOM is not set
-+# CONFIG_NET_VENDOR_CIRRUS is not set
-+# CONFIG_NET_VENDOR_EZCHIP is not set
-+# CONFIG_NET_VENDOR_FARADAY is not set
-+# CONFIG_NET_VENDOR_HISILICON is not set
-+# CONFIG_NET_VENDOR_INTEL is not set
-+# CONFIG_NET_VENDOR_MARVELL is not set
-+# CONFIG_NET_VENDOR_MICREL is not set
-+# CONFIG_NET_VENDOR_NATSEMI is not set
-+# CONFIG_NET_VENDOR_QUALCOMM is not set
-+# CONFIG_NET_VENDOR_RENESAS is not set
-+# CONFIG_NET_VENDOR_ROCKER is not set
-+# CONFIG_NET_VENDOR_SAMSUNG is not set
-+# CONFIG_NET_VENDOR_SEEQ is not set
-+CONFIG_SMSC911X=y
-+# CONFIG_NET_VENDOR_STMICRO is not set
-+# CONFIG_NET_VENDOR_VIA is not set
-+# CONFIG_NET_VENDOR_WIZNET is not set
-+# CONFIG_WLAN is not set
-+# CONFIG_INPUT is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_VT is not set
-+# CONFIG_LEGACY_PTYS is not set
-+CONFIG_SERIAL_NONSTANDARD=y
-+# CONFIG_DEVKMEM is not set
-+CONFIG_SERIAL_MPS2_UART_CONSOLE=y
-+CONFIG_SERIAL_MPS2_UART=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HWMON is not set
-+CONFIG_WATCHDOG=y
-+CONFIG_ARM_SP805_WATCHDOG=y
-+CONFIG_MFD_SYSCON=y
-+# CONFIG_USB_SUPPORT is not set
-+CONFIG_NEW_LEDS=y
-+CONFIG_LEDS_CLASS=y
-+CONFIG_LEDS_SYSCON=y
-+CONFIG_LEDS_TRIGGERS=y
-+CONFIG_LEDS_TRIGGER_TIMER=y
-+CONFIG_LEDS_TRIGGER_ONESHOT=y
-+CONFIG_LEDS_TRIGGER_HEARTBEAT=y
-+CONFIG_LEDS_TRIGGER_BACKLIGHT=y
-+CONFIG_LEDS_TRIGGER_CPU=y
-+CONFIG_LEDS_TRIGGER_DEFAULT_ON=y
-+CONFIG_ARM_TIMER_SP804=y
-+# CONFIG_DNOTIFY is not set
-+# CONFIG_INOTIFY_USER is not set
-+# CONFIG_MISC_FILESYSTEMS is not set
-+CONFIG_NFS_FS=y
-+CONFIG_NFS_V4=y
-+CONFIG_NFS_V4_1=y
-+CONFIG_NFS_V4_2=y
-+CONFIG_ROOT_NFS=y
-+CONFIG_NLS=y
-+CONFIG_PRINTK_TIME=y
-+CONFIG_DEBUG_INFO=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_DEBUG_FS=y
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_DEBUG_BUGVERBOSE is not set
-+CONFIG_MEMTEST=y
--- 
-1.7.9.5
+> +
+>   - realtek,in1-differential
+>   - realtek,in2-differential
+>   - realtek,in3-differential
+> diff --git a/sound/soc/codecs/rt5640.c b/sound/soc/codecs/rt5640.c
+> index 11d032c..6cd84fb 100644
+> --- a/sound/soc/codecs/rt5640.c
+> +++ b/sound/soc/codecs/rt5640.c
+> @@ -1949,7 +1949,33 @@ static int rt5640_set_dai_pll(struct snd_soc_dai *dai, int pll_id, int source,
+>   static int rt5640_set_bias_level(struct snd_soc_codec *codec,
+>   			enum snd_soc_bias_level level)
+>   {
+> +	struct rt5640_priv *rt5640 = snd_soc_codec_get_drvdata(codec);
+> +	int ret;
+> +
+>   	switch (level) {
+> +	case SND_SOC_BIAS_ON:
+> +		break;
+> +
+> +	case SND_SOC_BIAS_PREPARE:
+> +		/*
+> +		 * SND_SOC_BIAS_PREPARE is called while preparing for a
+> +		 * transition to ON or away from ON. If current bias_level
+> +		 * is SND_SOC_BIAS_ON, then it is preparing for a transition
+> +		 * away from ON. Disable the clock in that case, otherwise
+> +		 * enable it.
+> +		 */
+> +		if (IS_ERR(rt5640->mclk))
+> +			break;
+> +
+> +		if (snd_soc_codec_get_bias_level(codec) == SND_SOC_BIAS_ON) {
+> +			clk_disable_unprepare(rt5640->mclk);
+> +		} else {
+> +			ret = clk_prepare_enable(rt5640->mclk);
+> +			if (ret)
+> +				return ret;
+> +		}
+> +		break;
+> +
+>   	case SND_SOC_BIAS_STANDBY:
+>   		if (SND_SOC_BIAS_OFF == snd_soc_codec_get_bias_level(codec)) {
+>   			snd_soc_update_bits(codec, RT5640_PWR_ANLG1,
+> @@ -2088,6 +2114,11 @@ static int rt5640_probe(struct snd_soc_codec *codec)
+>   	struct snd_soc_dapm_context *dapm = snd_soc_codec_get_dapm(codec);
+>   	struct rt5640_priv *rt5640 = snd_soc_codec_get_drvdata(codec);
+>
+> +	/* Check if MCLK provided */
+> +	rt5640->mclk = devm_clk_get(codec->dev, "mclk");
+> +	if (PTR_ERR(rt5640->mclk) == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+> +
+>   	rt5640->codec = codec;
+>
+>   	snd_soc_codec_force_bias_level(codec, SND_SOC_BIAS_OFF);
+> diff --git a/sound/soc/codecs/rt5640.h b/sound/soc/codecs/rt5640.h
+> index 83a7150..1761c3a9 100644
+> --- a/sound/soc/codecs/rt5640.h
+> +++ b/sound/soc/codecs/rt5640.h
+> @@ -12,6 +12,7 @@
+>   #ifndef _RT5640_H
+>   #define _RT5640_H
+>
+> +#include <linux/clk.h>
+>   #include <sound/rt5640.h>
+>
+>   /* Info */
+> @@ -2097,6 +2098,7 @@ struct rt5640_priv {
+>   	struct snd_soc_codec *codec;
+>   	struct rt5640_platform_data pdata;
+>   	struct regmap *regmap;
+> +	struct clk *mclk;
+>
+>   	int sysclk;
+>   	int sysclk_src;
+>
