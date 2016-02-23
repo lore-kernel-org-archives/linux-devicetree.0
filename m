@@ -1,71 +1,77 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] [media] tvp5150: remove signal generator as input from the DT binding
-Date: Tue, 23 Feb 2016 20:02:14 +0200
-Message-ID: <63317542.65NzPYJCcU@avalon>
-References: <1456243798-12453-1-git-send-email-javier@osg.samsung.com> <3469550.VVKtG3tqH6@avalon> <56CC8887.803@osg.samsung.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] doc: dt: add documentation for lpc1850-creg-clk
+ driver
+Date: Tue, 23 Feb 2016 12:08:44 -0600
+Message-ID: <20160223180844.GA11770@rob-hp-laptop>
+References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
+ <1455994417-4471-3-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56CC8887.803@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455994417-4471-3-git-send-email-manabian@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+On Sat, Feb 20, 2016 at 07:53:37PM +0100, Joachim Eastwood wrote:
+> Add DT binding documentation for lpc1850-creg-clk driver.
+> 
+> Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+> ---
+>  .../devicetree/bindings/clock/lpc1850-creg-clk.txt | 52 ++++++++++++++++++++++
+>  1 file changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+> new file mode 100644
+> index 000000000000..0c83d373b766
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+> @@ -0,0 +1,52 @@
+> +* NXP LPC1850 CREG clocks
+> +
+> +The NXP LPC18xx/43xx CREG (Configuration Registers) block contains
+> +control registers for two low speed clocks. One of the clocks is a
+> +32 kHz oscillator driver with power up/down and clock gating. Next
+> +is a fixed divider that creates a 1 kHz clock from the 32 kHz osc.
+> +
+> +These clocks are used by the RTC and the Event Router peripherials.
+> +The 32 kHz can also be routed to other peripherials to enable low
+> +power modes.
+> +
+> +This binding uses the common clock binding:
+> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +
+> +Required properties:
+> +- compatible:
+> +	Should be "nxp,lpc1850-creg-clk"
+> +- #clock-cells:
+> +	Shall have value <1>.
+> +- clocks:
+> +	Shall contain a phandle to the fix 32 kHz crystall.
+> +
+> +The creg-clk node must be a child of the creg syscon node.
+> +
+> +The following clocks are available from the clock node.
+> +
+> +Clock ID	Name
+> +   0		 1 kHz clock
+> +   1		32 kHz Oscillator
+> +
+> +Example:
+> +soc {
+> +	creg: syscon@40043000 {
+> +		compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
+> +		reg = <0x40043000 0x1000>;
+> +
+> +		creg_clk: clock-controller@004 {
 
-On Tuesday 23 February 2016 13:27:51 Javier Martinez Canillas wrote:
-> On 02/23/2016 01:16 PM, Laurent Pinchart wrote:
-> > On Tuesday 23 February 2016 13:09:58 Javier Martinez Canillas wrote:
-> >> The chip internal signal generator was modelled as an input connector
-> >> and represented as a media entity but isn't really a connector so the
-> >> driver was changed to use the V4L2_CID_TEST_PATTERN control instead.
-> >> 
-> >> Remove the signal generator input from the list of connectors in the
-> >> tvp5150 DT binding document as well since isn't a connector anymore.
-> >> 
-> >> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> >> 
-> >> ---
-> >> Hello,
-> >> 
-> >> I think is OK to change this DT binding because is only in the media tree
-> >> for now and not in mainline yet and also is expected to change more since
-> >> there are still discussions about how input connectors will be supported
-> >> by the Media Controller framework in the media subsystem.
-> > 
-> > I think that's fine, yes
-> > 
-> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Thanks.
-> 
-> > I haven't noticed the patch that introduced this early enough I'm afraid,
-> > and I think we still have issues with those bindings.
-> 
-> Yes, I posted those patches and got merged before we had the discussion
-> about input connectors over IRC so I didn't know what was the correct way
-> to do it.
->
-> > The tvp5150 node should *not* contain connector subnodes, the connectors
-> > nodes should use the bindings defined in
-> > Documentation/devicetree/bindings/display/connector/ and be linked to the
-> > tvp5150 node using the OF graph bindings (ports and endpoints).
-> 
-> Agreed.
-> 
-> > Do you think you could fix that ?
-> 
-> Yes I will, I'm waiting for the input connectors discussions to settle so I
-> can post a final version of the DT bindings following what is agreed by all.
-> 
+What is 4? A unit address should have a corresponding reg prop. and no 
+leading zeros.
 
-Shouldn't we revert the patch that introduced connectors support in the DT 
-bindings in the meantime then, to avoid known to be broken bindings from 
-hitting mainline in case we can't fix them in time for v4.6 ?
-
--- 
-Regards,
-
-Laurent Pinchart
+> +			compatible = "nxp,lpc1850-creg-clk";
+> +			clocks = <&xtal32>;
+> +			#clock-cells = <1>;
+> +		};
