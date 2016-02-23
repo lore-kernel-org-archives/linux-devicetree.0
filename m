@@ -1,99 +1,113 @@
 From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v5 05/11] drm/hisilicon: Add vblank driver for ADE
-Date: Tue, 23 Feb 2016 11:00:25 +0800
-Message-ID: <1456196431-19923-6-git-send-email-xinliang.liu@linaro.org>
+Subject: [PATCH v5 06/11] drm/hisilicon: Add cma fbdev and hotplug
+Date: Tue, 23 Feb 2016 11:00:26 +0800
+Message-ID: <1456196431-19923-7-git-send-email-xinliang.liu@linaro.org>
 References: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com
-Cc: andy.green@linaro.org, xuyiping@hisilicon.com, guodong.xu@linaro.org, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHZibGFuayBpcnEgaGFuZGxlLgoKdjU6IE5vbmUuCnY0OiBOb25lLgp2MzoKLSBSZW1vdmUg
-aGlzaV9nZXRfY3J0Y19mcm9tX2luZGV4IGZ1bmMuCi0gQSBmZXcgY2xlYW51cC4KdjI6Ci0gUmVt
-b3ZlIGFidHJhY3Rpb24gbGF5ZXIuCgpTaWduZWQtb2ZmLWJ5OiBYaW5saWFuZyBMaXUgPHhpbmxp
-YW5nLmxpdUBsaW5hcm8ub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4v
-a2lyaW5fZHJtX2FkZS5jIHwgNjIgKysrKysrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9n
-cHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmMgfCAxNCArKysrKy0KIDIgZmls
-ZXMgY2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jIGIvZHJpdmVy
-cy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fYWRlLmMKaW5kZXggZmFlNWYwYWZh
-ZGI4Li45MTg4OTdmYTRlOWUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
-a2lyaW4va2lyaW5fZHJtX2FkZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2ly
-aW4va2lyaW5fZHJtX2FkZS5jCkBAIC0yOTIsNiArMjkyLDU5IEBAIHN0YXRpYyB2b2lkIGFkZV9z
-ZXRfbWVkaWFub2NfcW9zKHN0cnVjdCBhZGVfY3J0YyAqYWNydGMpCiAJCQkgICBTT0NLRVRfUU9T
-X0VOLCBTT0NLRVRfUU9TX0VOKTsKIH0KIAorc3RhdGljIGludCBhZGVfZW5hYmxlX3ZibGFuayhz
-dHJ1Y3QgZHJtX2RldmljZSAqZGV2LCB1bnNpZ25lZCBpbnQgcGlwZSkKK3sKKwlzdHJ1Y3Qga2ly
-aW5fZHJtX3ByaXZhdGUgKnByaXYgPSBkZXYtPmRldl9wcml2YXRlOworCXN0cnVjdCBhZGVfY3J0
-YyAqYWNydGMgPSB0b19hZGVfY3J0Yyhwcml2LT5jcnRjW3BpcGVdKTsKKwlzdHJ1Y3QgYWRlX2h3
-X2N0eCAqY3R4ID0gYWNydGMtPmN0eDsKKwl2b2lkIF9faW9tZW0gKmJhc2UgPSBjdHgtPmJhc2U7
-CisKKwlpZiAoIWN0eC0+cG93ZXJfb24pCisJCSh2b2lkKWFkZV9wb3dlcl91cChjdHgpOworCisJ
-YWRlX3VwZGF0ZV9iaXRzKGJhc2UgKyBMRElfSU5UX0VOLCBGUkFNRV9FTkRfSU5UX0VOX09GU1Qs
-CisJCQlNQVNLKDEpLCAxKTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgdm9pZCBhZGVfZGlz
-YWJsZV92Ymxhbmsoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHBpcGUpCit7
-CisJc3RydWN0IGtpcmluX2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKKwlz
-dHJ1Y3QgYWRlX2NydGMgKmFjcnRjID0gdG9fYWRlX2NydGMocHJpdi0+Y3J0Y1twaXBlXSk7CisJ
-c3RydWN0IGFkZV9od19jdHggKmN0eCA9IGFjcnRjLT5jdHg7CisJdm9pZCBfX2lvbWVtICpiYXNl
-ID0gY3R4LT5iYXNlOworCisJaWYgKCFjdHgtPnBvd2VyX29uKSB7CisJCURSTV9FUlJPUigicG93
-ZXIgaXMgZG93biEgdmJsYW5rIGRpc2FibGUgZmFpbFxuIik7CisJCXJldHVybjsKKwl9CisKKwlh
-ZGVfdXBkYXRlX2JpdHMoYmFzZSArIExESV9JTlRfRU4sIEZSQU1FX0VORF9JTlRfRU5fT0ZTVCwK
-KwkJCU1BU0soMSksIDApOworfQorCitzdGF0aWMgaXJxcmV0dXJuX3QgYWRlX2lycV9oYW5kbGVy
-KGludCBpcnEsIHZvaWQgKmRhdGEpCit7CisJc3RydWN0IGFkZV9jcnRjICphY3J0YyA9IGRhdGE7
-CisJc3RydWN0IGFkZV9od19jdHggKmN0eCA9IGFjcnRjLT5jdHg7CisJc3RydWN0IGRybV9jcnRj
-ICpjcnRjID0gJmFjcnRjLT5iYXNlOworCXZvaWQgX19pb21lbSAqYmFzZSA9IGN0eC0+YmFzZTsK
-Kwl1MzIgc3RhdHVzOworCisJc3RhdHVzID0gcmVhZGwoYmFzZSArIExESV9NU0tfSU5UKTsKKwlE
-Uk1fREVCVUdfVkJMKCJMREkgSVJROiBzdGF0dXM9MHglWFxuIiwgc3RhdHVzKTsKKworCS8qIHZi
-bGFuayBpcnEgKi8KKwlpZiAoc3RhdHVzICYgQklUKEZSQU1FX0VORF9JTlRfRU5fT0ZTVCkpIHsK
-KwkJYWRlX3VwZGF0ZV9iaXRzKGJhc2UgKyBMRElfSU5UX0NMUiwgRlJBTUVfRU5EX0lOVF9FTl9P
-RlNULAorCQkJCU1BU0soMSksIDEpOworCQlkcm1fY3J0Y19oYW5kbGVfdmJsYW5rKGNydGMpOwor
-CX0KKworCXJldHVybiBJUlFfSEFORExFRDsKK30KKwogc3RhdGljIHZvaWQgYWRlX2Rpc3BsYXlf
-ZW5hYmxlKHN0cnVjdCBhZGVfY3J0YyAqYWNydGMpCiB7CiAJc3RydWN0IGFkZV9od19jdHggKmN0
-eCA9IGFjcnRjLT5jdHg7CkBAIC05NjcsNiArMTAyMCwxNSBAQCBpbnQgYWRlX2RybV9pbml0KHN0
-cnVjdCBkcm1fZGV2aWNlICpkZXYpCiAJaWYgKHJldCkKIAkJcmV0dXJuIHJldDsKIAorCS8qIHZi
-bGFuayBpcnEgaW5pdCAqLworCXJldCA9IGRldm1fcmVxdWVzdF9pcnEoZGV2LT5kZXYsIGN0eC0+
-aXJxLCBhZGVfaXJxX2hhbmRsZXIsCisJCQkgICAgICAgRFJJVkVSX0lSUV9TSEFSRUQsIGRldi0+
-ZHJpdmVyLT5uYW1lLCBhY3J0Yyk7CisJaWYgKHJldCkKKwkJcmV0dXJuIHJldDsKKwlkZXYtPmRy
-aXZlci0+Z2V0X3ZibGFua19jb3VudGVyID0gZHJtX3ZibGFua19ub19od19jb3VudGVyOworCWRl
-di0+ZHJpdmVyLT5lbmFibGVfdmJsYW5rID0gYWRlX2VuYWJsZV92Ymxhbms7CisJZGV2LT5kcml2
-ZXItPmRpc2FibGVfdmJsYW5rID0gYWRlX2Rpc2FibGVfdmJsYW5rOworCiAJcmV0dXJuIDA7CiB9
-CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJt
-X2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmMK
-aW5kZXggMDU1NzI5YzE4ODljLi43MjM4ODhmZWI3NjAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Rydi5jCkBAIC0zMiw2ICszMiw3IEBAIHN0YXRp
-YyBpbnQga2lyaW5fZHJtX2ttc19jbGVhbnVwKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCiB7CiAJ
-c3RydWN0IGtpcmluX2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKIAorCWRy
-bV92YmxhbmtfY2xlYW51cChkZXYpOwogCWRjX29wcy0+Y2xlYW51cChkZXYpOwogCWRybV9tb2Rl
-X2NvbmZpZ19jbGVhbnVwKGRldik7CiAJZGV2bV9rZnJlZShkZXYtPmRldiwgcHJpdik7CkBAIC04
-NSwxMSArODYsMjIgQEAgc3RhdGljIGludCBraXJpbl9kcm1fa21zX2luaXQoc3RydWN0IGRybV9k
-ZXZpY2UgKmRldikKIAkJZ290byBlcnJfZGNfY2xlYW51cDsKIAl9CiAKKwkvKiB2YmxhbmsgaW5p
-dCAqLworCXJldCA9IGRybV92YmxhbmtfaW5pdChkZXYsIGRldi0+bW9kZV9jb25maWcubnVtX2Ny
-dGMpOworCWlmIChyZXQpIHsKKwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gaW5pdGlhbGl6ZSB2Ymxh
-bmsuXG4iKTsKKwkJZ290byBlcnJfdW5iaW5kX2FsbDsKKwl9CisJLyogd2l0aCBpcnFfZW5hYmxl
-ZCA9IHRydWUsIHdlIGNhbiB1c2UgdGhlIHZibGFuayBmZWF0dXJlLiAqLworCWRldi0+aXJxX2Vu
-YWJsZWQgPSB0cnVlOworCiAJLyogcmVzZXQgYWxsIHRoZSBzdGF0ZXMgb2YgY3J0Yy9wbGFuZS9l
-bmNvZGVyL2Nvbm5lY3RvciAqLwogCWRybV9tb2RlX2NvbmZpZ19yZXNldChkZXYpOwogCiAJcmV0
-dXJuIDA7CiAKK2Vycl91bmJpbmRfYWxsOgorCWNvbXBvbmVudF91bmJpbmRfYWxsKGRldi0+ZGV2
-LCBkZXYpOwogZXJyX2RjX2NsZWFudXA6CiAJZGNfb3BzLT5jbGVhbnVwKGRldik7CiBlcnJfbW9k
-ZV9jb25maWdfY2xlYW51cDoKQEAgLTEyMyw3ICsxMzUsNyBAQCBzdGF0aWMgaW50IGtpcmluX2dl
-bV9jbWFfZHVtYl9jcmVhdGUoc3RydWN0IGRybV9maWxlICpmaWxlLAogCiBzdGF0aWMgc3RydWN0
-IGRybV9kcml2ZXIga2lyaW5fZHJtX2RyaXZlciA9IHsKIAkuZHJpdmVyX2ZlYXR1cmVzCT0gRFJJ
-VkVSX0dFTSB8IERSSVZFUl9NT0RFU0VUIHwgRFJJVkVSX1BSSU1FIHwKLQkJCQkgIERSSVZFUl9B
-VE9NSUMsCisJCQkJICBEUklWRVJfQVRPTUlDIHwgRFJJVkVSX0hBVkVfSVJRLAogCS5mb3BzCQkJ
-PSAma2lyaW5fZHJtX2ZvcHMsCiAJLnNldF9idXNpZAkJPSBkcm1fcGxhdGZvcm1fc2V0X2J1c2lk
-LAogCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+Add cma Fbdev, Fbdev is legency and optional, you can enable/disable it by
+configuring DRM_FBDEV_EMULATION.
+Add hotplug.
+
+v5: None.
+v4: None.
+v3: None.
+v2:
+- Use CONFIG_DRM_FBDEV_EMULATION instead of CONFIG_DRM_HISI_FBDEV.
+
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+---
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 34 +++++++++++++++++++++++++
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |  3 +++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+index 723888feb760..d57b9fa0ce3e 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
+@@ -23,6 +23,7 @@
+ #include <drm/drm_gem_cma_helper.h>
+ #include <drm/drm_fb_cma_helper.h>
+ #include <drm/drm_atomic_helper.h>
++#include <drm/drm_crtc_helper.h>
+ 
+ #include "kirin_drm_drv.h"
+ 
+@@ -32,6 +33,13 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
+ {
+ 	struct kirin_drm_private *priv = dev->dev_private;
+ 
++#ifdef CONFIG_DRM_FBDEV_EMULATION
++	if (priv->fbdev) {
++		drm_fbdev_cma_fini(priv->fbdev);
++		priv->fbdev = NULL;
++	}
++#endif
++	drm_kms_helper_poll_fini(dev);
+ 	drm_vblank_cleanup(dev);
+ 	dc_ops->cleanup(dev);
+ 	drm_mode_config_cleanup(dev);
+@@ -41,8 +49,28 @@ static int kirin_drm_kms_cleanup(struct drm_device *dev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_DRM_FBDEV_EMULATION
++static void kirin_fbdev_output_poll_changed(struct drm_device *dev)
++{
++	struct kirin_drm_private *priv = dev->dev_private;
++
++	if (priv->fbdev) {
++		drm_fbdev_cma_hotplug_event(priv->fbdev);
++	} else {
++		priv->fbdev = drm_fbdev_cma_init(dev, 32,
++				dev->mode_config.num_crtc,
++				dev->mode_config.num_connector);
++		if (IS_ERR(priv->fbdev))
++			priv->fbdev = NULL;
++	}
++}
++#endif
++
+ static const struct drm_mode_config_funcs kirin_drm_mode_config_funcs = {
+ 	.fb_create = drm_fb_cma_create,
++#ifdef CONFIG_DRM_FBDEV_EMULATION
++	.output_poll_changed = kirin_fbdev_output_poll_changed,
++#endif
+ 	.atomic_check = drm_atomic_helper_check,
+ 	.atomic_commit = drm_atomic_helper_commit,
+ };
+@@ -98,6 +126,12 @@ static int kirin_drm_kms_init(struct drm_device *dev)
+ 	/* reset all the states of crtc/plane/encoder/connector */
+ 	drm_mode_config_reset(dev);
+ 
++	/* init kms poll for handling hpd */
++	drm_kms_helper_poll_init(dev);
++
++	/* force detection after connectors init */
++	(void)drm_helper_hpd_irq_event(dev);
++
+ 	return 0;
+ 
+ err_unbind_all:
+diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+index 5a05ad6a81db..1a07caf8e7f4 100644
+--- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
+@@ -21,6 +21,9 @@ struct kirin_dc_ops {
+ 
+ struct kirin_drm_private {
+ 	struct drm_crtc *crtc[MAX_CRTC];
++#ifdef CONFIG_DRM_FBDEV_EMULATION
++	struct drm_fbdev_cma *fbdev;
++#endif
+ };
+ 
+ extern const struct kirin_dc_ops ade_dc_ops;
+-- 
+1.9.1
+
