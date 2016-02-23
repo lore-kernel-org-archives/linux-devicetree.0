@@ -1,83 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 2/3] clk: mvebu: add AP806 core clock driver
-Date: Tue, 23 Feb 2016 16:56:03 +0100
-Message-ID: <20160223165603.74576dca@free-electrons.com>
-References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1455521698-7905-3-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160222025357.GE15973@rob-hp-laptop>
-	<20160222091423.4756a579@free-electrons.com>
-	<20160222141617.GA14970@lunn.ch>
-	<20160222183203.2278.60153@quark.deferred.io>
-	<CAL_Jsq+iiUBcTdnqzFWLJ+5jPvq0rmWgBboab4xyj1dQyDQE+Q@mail.gmail.com>
-	<20160223102550.2e0cba04@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160223102550.2e0cba04@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yehuda Yitschak <yehuday@marvell.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] [media] tvp5150: remove signal generator as input from the DT binding
+Date: Tue, 23 Feb 2016 13:09:58 -0300
+Message-ID: <1456243798-12453-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Rob, Michael, Stephen,
+The chip internal signal generator was modelled as an input connector
+and represented as a media entity but isn't really a connector so the
+driver was changed to use the V4L2_CID_TEST_PATTERN control instead.
 
-On Tue, 23 Feb 2016 10:25:50 +0100, Thomas Petazzoni wrote:
+Remove the signal generator input from the list of connectors in the
+tvp5150 DT binding document as well since isn't a connector anymore.
 
-> > >> Maybe add a big fat warning that the bindings are unstable, and the DT
-> > >> blob must be kept in sync with the kernel?
-> > >
-> > > +1 and feel free to blame the lack of documentation.  No one can expect
-> > > bindings to be finalized when the chip topology is not fully understood.
-> > 
-> > I can understand not understanding the full clock tree. I have "full"
-> > documentation of a Marvell chip and don't understand the clock tree
-> > fully. But I can't believe you don't have some sense of how many
-> > clocks you have to deal with. 10? 100? 1000? What I see is 2 nodes of
-> > a single register each for clocks at roughly the same address. That
-> > tells me your binding is too fine grained. If you really don't know
-> > what is right, then err on the side of a single clock provider node
-> > and don't put the clock details in DT.
-> 
-> I don't quite understand the reasoning behind this conclusion. We know
-> for sure that those two registers control only those core and ring
-> clocks. Maybe there are other registers controlling other clocks,  that
-> we don't know. But for sure, those two registers only give details
-> about those core and ring clocks, so I don't see what would be the
-> usefulness of merging that into a single DT node.
-> 
-> We would lose the fact that the relationship between the ring clocks
-> and one of the core clock is represented in the DT. Instead of having a
-> clear <&coreclk X> or <&ringclk Y> reference, we would have a
-> mysterious <&allclk XYZ> reference, which doesn't tell immediately
-> whether it's a core clock or ring clock.
-> 
-> So, while I definitely agree that a syscon is probably in order to
-> cover all the system registers, I don't see the point of having a
-> single node to cover all the clocks.
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-So, I had a discussion with Marvell engineers and a closer look at the
-matter. It turns out that those two clock registers are in the middle
-of an area called DFX (Design for Testability), which contain registers
-to fine tune the silicon and detect manufacturing issues. This area of
-registers is most likely never going to be publicly documented, and the
-fact that those two clock-related registers were placed there was more
-an oversight than a real architecture choice.
+---
+Hello,
 
-For this reason, there is in fact no real benefit in mapping the entire
-area using a syscon, and having the two DT nodes for the core clocks
-and ring clocks, mapping just their own registers is by far the
-simplest solution considering the register layout.
+I think is OK to change this DT binding because is only in the media tree
+for now and not in mainline yet and also is expected to change more since
+there are still discussions about how input connectors will be supported
+by the Media Controller framework in the media subsystem.
 
-We would prefer to keep things as proposed in terms of DT
-representation, with the understanding that the submission of the Linux
-support for this platform comes very early in the chip development
-cycle, and that as such, the DT bindings should be considered unstable.
+Best regards,
+Javier
 
-Thanks a lot,
+ Documentation/devicetree/bindings/media/i2c/tvp5150.txt | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Thomas
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index daa20e43a8e3..d13f8b8e235d 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -30,9 +30,6 @@ The possible values for the "input" property are:
+ 	1: Composite1
+ 	2: S-Video
+ 
+-and on a tvp5150am1 and tvp5151 there is another:
+-	4: Signal generator
+-
+ The list of valid input connectors are defined in dt-bindings/media/tvp5150.h
+ header file and can be included by device tree source files.
+ 
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.5.0
