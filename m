@@ -1,43 +1,58 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 8/8] arm64: dts: qcom: Fix MPP's function used for LED control
-Date: Tue, 23 Feb 2016 16:50:53 +0000
-Message-ID: <1456246253-18425-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1456246153-18087-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456246153-18087-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH] arm64: dts: msm8916: Move smem below hwlock
+Date: Tue, 23 Feb 2016 19:21:11 +0200
+Message-ID: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+When the SMEM is probed it defers as it depends on the hardware lock, which
+is not available yet. But the SMD bus and RPM regulators and clocks depend
+on SMEM and they defer too. The problem with this is that the order of
+registering the devices is not optimal and also we may end with messed
+up serial console as the RPM clocks are not registered yet..
 
-The qcom-spmi-mpp driver is now using string "digital" to denote
-old "normal" functionality. Update DTS file.
-Also update the powersource.
-
-Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-index e03c11d..f881437 100644
---- a/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8016-sbc-pmic-pins.dtsi
-@@ -33,7 +33,7 @@
- 	pm8916_mpps_leds: pm8916_mpps_leds {
- 		pinconf {
- 			pins = "mpp2", "mpp3";
--			function = PMIC_GPIO_FUNC_NORMAL;
-+			function = "digital";
- 			output-low;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 7705207872a5..c497c7b1ae70 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -113,15 +113,6 @@
  		};
  	};
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 
+-	smem {
+-		compatible = "qcom,smem";
+-
+-		memory-region = <&smem_mem>;
+-		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+-
+-		hwlocks = <&tcsr_mutex 3>;
+-	};
+-
+ 	soc: soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -512,6 +503,16 @@
+ 		};
+ 	};
+ 
++	smem {
++		compatible = "qcom,smem";
++
++		memory-region = <&smem_mem>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++
++		hwlocks = <&tcsr_mutex 3>;
++	};
++
++
+ 	smd {
+ 		compatible = "qcom,smd";
+ 
