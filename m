@@ -1,44 +1,73 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-tree
-Date: Tue, 23 Feb 2016 11:20:30 +0100
-Message-ID: <8540232.vQE3WQTD95@wuerfel>
-References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com> <18251200.Xfr10N5eWq@wuerfel> <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v12 4/5] arm64, numa: Add NUMA support for arm64
+ platforms.
+Date: Tue, 23 Feb 2016 10:26:11 +0000
+Message-ID: <20160223102610.GD3966@arm.com>
+References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
+ <1456192703-2274-5-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456192703-2274-5-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 23 February 2016 05:58:32 Anurag Kumar Vulisha wrote:
-> >
-> > I don't know what is appropriate because I have no idea what Rxwatermark is
-> > good for. Can you try describing why we can't just set it to the correct value
-> > for everyone automatically?
-> >
+On Mon, Feb 22, 2016 at 05:58:22PM -0800, David Daney wrote:
+> From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 > 
-> This RX watermark level sets the minimum number of free locations within the RX FIFO .When the rx fifo level crosses the programmed watermark level ,sata controller  will transmit HOLDS to the device asking it to wait. This happens when dma
-> reads the rx fifo data slower than the device is sending the data. Note that it can take some time for the HOLDs to get to
-> the other end and in the time there must be enough room in the FIFO to absorb all data that could arrive from the device.
-> Currently we are using 0x40 for this value, which works fine with all hardware designs  we are currently having. But hoping
-> that this value may vary for future silicon versions, I wanted to make this as a configurable value. So for this reason I thought
-> of moving it either to device-tree or making it as a module_param() property.
+> Attempt to get the memory and CPU NUMA node via of_numa.  If that
+> fails, default the dummy NUMA node and map all memory and CPUs to node
+> 0.
 > 
+> Tested-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig                |  26 +++
+>  arch/arm64/include/asm/mmzone.h   |  12 ++
+>  arch/arm64/include/asm/numa.h     |  45 +++++
+>  arch/arm64/include/asm/topology.h |  10 +
+>  arch/arm64/kernel/pci.c           |  10 +
+>  arch/arm64/kernel/setup.c         |   4 +
+>  arch/arm64/kernel/smp.c           |   4 +
+>  arch/arm64/mm/Makefile            |   1 +
+>  arch/arm64/mm/init.c              |  34 +++-
+>  arch/arm64/mm/mmu.c               |   1 +
+>  arch/arm64/mm/numa.c              | 403 ++++++++++++++++++++++++++++++++++++++
+>  11 files changed, 545 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm64/include/asm/mmzone.h
+>  create mode 100644 arch/arm64/include/asm/numa.h
+>  create mode 100644 arch/arm64/mm/numa.c
 
-Ok, so if this depends on the silicon version, your initial approach
-would be better than the module_param.
+[...]
 
-I would probably make this dependent on the compatible string instead,
-and have a table in the device driver that uses a specific value
-for each variant of the device, but either way should be fine.
+> diff --git a/arch/arm64/include/asm/mmzone.h b/arch/arm64/include/asm/mmzone.h
+> new file mode 100644
+> index 0000000..a0de9e6
+> --- /dev/null
+> +++ b/arch/arm64/include/asm/mmzone.h
+> @@ -0,0 +1,12 @@
+> +#ifndef __ASM_MMZONE_H
+> +#define __ASM_MMZONE_H
+> +
+> +#ifdef CONFIG_NUMA
+> +
+> +#include <asm/numa.h>
+> +
+> +extern struct pglist_data *node_data[];
+> +#define NODE_DATA(nid)		(node_data[(nid)])
+> +
+> +#endif /* CONFIG_NUMA */
+> +#endif /* __ASM_MMZONE_H */
 
-Having a separate property is most appropriate if for each hardware
-revision there is exactly one ideal value, while a table in the
-driver makes more sense if this takes a bit of tuning and the driver
-might choose to optimize it differently based on other constraints,
-such as its own interrupt handler implementation.
+What happened to the patch cleaning this up in generic code?
 
-	Arnd
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
