@@ -1,878 +1,346 @@
 From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: [PATCH v5 03/11] drm/hisilicon: Add crtc driver for ADE
-Date: Tue, 23 Feb 2016 11:00:23 +0800
-Message-ID: <1456196431-19923-4-git-send-email-xinliang.liu@linaro.org>
+Subject: [PATCH v5 04/11] drm/hisilicon: Add plane driver for ADE
+Date: Tue, 23 Feb 2016 11:00:24 +0800
+Message-ID: <1456196431-19923-5-git-send-email-xinliang.liu@linaro.org>
 References: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
+Cc: andy.green@linaro.org, xuyiping@hisilicon.com, guodong.xu@linaro.org, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add crtc funcs and helper funcs for ADE.
-
-v5:
-- Use syscon to access ADE media NOC QoS registers instread of directly
-  writing registers.
-- Use reset controller to reset ADE instead of directly writing registers.
-v4: None.
-v3:
-- Make ade as the master driver.
-- Use port to connect with encoder.
-- A few cleanup.
-v2:
-- Remove abtraction layer.
-
-Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
----
- drivers/gpu/drm/hisilicon/kirin/Makefile        |   3 +-
- drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h | 290 +++++++++++++++
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 452 ++++++++++++++++++++++++
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c |  15 +
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |   8 +
- 5 files changed, 767 insertions(+), 1 deletion(-)
- create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
- create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-
-diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile b/drivers/gpu/drm/hisilicon/kirin/Makefile
-index cb346de47d48..2a61ab006ddb 100644
---- a/drivers/gpu/drm/hisilicon/kirin/Makefile
-+++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
-@@ -1,3 +1,4 @@
--kirin-drm-y := kirin_drm_drv.o
-+kirin-drm-y := kirin_drm_drv.o \
-+	       kirin_drm_ade.o
- 
- obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-new file mode 100644
-index 000000000000..eb444b899c7b
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-@@ -0,0 +1,290 @@
-+/*
-+ * Copyright (c) 2016 Linaro Limited.
-+ * Copyright (c) 2014-2016 Hisilicon Limited.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#ifndef __KIRIN_ADE_REG_H__
-+#define __KIRIN_ADE_REG_H__
-+
-+/*
-+ * ADE Registers
-+ */
-+#define MASK(x)				(BIT(x) - 1)
-+
-+#define ADE_CTRL			0x0004
-+#define FRM_END_START_OFST		0
-+#define FRM_END_START_MASK		MASK(2)
-+#define ADE_CTRL1			0x008C
-+#define AUTO_CLK_GATE_EN_OFST		0
-+#define AUTO_CLK_GATE_EN		BIT(0)
-+#define ADE_ROT_SRC_CFG			0x0010
-+#define ADE_DISP_SRC_CFG		0x0018
-+#define ADE_WDMA2_SRC_CFG		0x001C
-+#define ADE_SEC_OVLY_SRC_CFG		0x0020
-+#define ADE_WDMA3_SRC_CFG		0x0024
-+#define ADE_OVLY1_TRANS_CFG		0x002C
-+#define ADE_EN				0x0100
-+#define ADE_DISABLE			0
-+#define ADE_ENABLE			1
-+#define INTR_MASK_CPU(x)		(0x0C10 + (x) * 0x4)
-+#define ADE_FRM_DISGARD_CTRL		0x00A4
-+/* reset and reload regs */
-+#define ADE_SOFT_RST_SEL(x)		(0x0078 + (x) * 0x4)
-+#define ADE_RELOAD_DIS(x)		(0x00AC + (x) * 0x4)
-+#define RDMA_OFST			0
-+#define CLIP_OFST			15
-+#define SCL_OFST			21
-+#define CTRAN_OFST			24
-+#define OVLY_OFST			37 /* 32+5 */
-+/* channel regs */
-+#define RD_CH_PE(x)			(0x1000 + (x) * 0x80)
-+#define RD_CH_CTRL(x)			(0x1004 + (x) * 0x80)
-+#define RD_CH_ADDR(x)			(0x1008 + (x) * 0x80)
-+#define RD_CH_SIZE(x)			(0x100C + (x) * 0x80)
-+#define RD_CH_STRIDE(x)			(0x1010 + (x) * 0x80)
-+#define RD_CH_SPACE(x)			(0x1014 + (x) * 0x80)
-+#define RD_CH_PARTIAL_SIZE(x)		(0x1018 + (x) * 0x80)
-+#define RD_CH_PARTIAL_SPACE(x)		(0x101C + (x) * 0x80)
-+#define RD_CH_EN(x)			(0x1020 + (x) * 0x80)
-+#define RD_CH_STATUS(x)			(0x1024 + (x) * 0x80)
-+#define RD_CH_DISP_CTRL			0x1404
-+#define RD_CH_DISP_ADDR			0x1408
-+#define RD_CH_DISP_SIZE			0x140C
-+#define RD_CH_DISP_STRIDE		0x1410
-+#define RD_CH_DISP_SPACE		0x1414
-+#define RD_CH_DISP_EN			0x142C
-+/* clip regs */
-+#define ADE_CLIP_DISABLE(x)		(0x6800 + (x) * 0x100)
-+#define ADE_CLIP_SIZE0(x)		(0x6804 + (x) * 0x100)
-+#define ADE_CLIP_SIZE1(x)		(0x6808 + (x) * 0x100)
-+#define ADE_CLIP_SIZE2(x)		(0x680C + (x) * 0x100)
-+#define ADE_CLIP_CFG_OK(x)		(0x6810 + (x) * 0x100)
-+/* scale regs */
-+#define ADE_SCL1_MUX_CFG		0x000C
-+#define ADE_SCL2_SRC_CFG		0x0014
-+#define ADE_SCL3_MUX_CFG		0x0008
-+#define ADE_SCL_CTRL(x)			(0x3000 + (x) * 0x800)
-+#define ADE_SCL_HSP(x)			(0x3004 + (x) * 0x800)
-+#define ADE_SCL_UV_HSP(x)		(0x3008 + (x) * 0x800)
-+#define ADE_SCL_VSP(x)			(0x300C + (x) * 0x800)
-+#define ADE_SCL_UV_VSP(x)		(0x3010 + (x) * 0x800)
-+#define ADE_SCL_ORES(x)			(0x3014 + (x) * 0x800)
-+#define ADE_SCL_IRES(x)			(0x3018 + (x) * 0x800)
-+#define ADE_SCL_START(x)		(0x301C + (x) * 0x800)
-+#define ADE_SCL_ERR(x)			(0x3020 + (x) * 0x800)
-+#define ADE_SCL_PIX_OFST(x)		(0x3024 + (x) * 0x800)
-+#define ADE_SCL_UV_PIX_OFST(x)		(0x3028 + (x) * 0x800)
-+#define ADE_SCL_COEF_CLR(x)		(0x3030 + (x) * 0x800)
-+#define ADE_SCL_HCOEF(x, m, n)		(0x3100 + (x) * 0x800 + \
-+					12 * (m) + 4 * (n))
-+#define ADE_SCL_VCOEF(x, i, j)		(0x340C + (x) * 0x800 + \
-+					12 * (i) + 4 * (j))
-+/* ctran regs */
-+#define ADE_CTRAN5_TRANS_CFG		0x0040
-+#define ADE_CTRAN_DIS(x)		(0x5004 + (x) * 0x100)
-+#define CTRAN_BYPASS_ON			1
-+#define CTRAN_BYPASS_OFF		0
-+#define ADE_CTRAN_MODE_CHOOSE(x)	(0x5008 + (x) * 0x100)
-+#define ADE_CTRAN_STAT(x)		(0x500C + (x) * 0x100)
-+#define ADE_CTRAN_CHDC0(x)		(0x5010 + (x) * 0x100)
-+#define ADE_CTRAN_CHDC1(x)		(0x5014 + (x) * 0x100)
-+#define ADE_CTRAN_CHDC2(x)		(0x5018 + (x) * 0x100)
-+#define ADE_CTRAN_CHDC3(x)		(0x501C + (x) * 0x100)
-+#define ADE_CTRAN_CHDC4(x)		(0x5020 + (x) * 0x100)
-+#define ADE_CTRAN_CHDC5(x)		(0x5024 + (x) * 0x100)
-+#define ADE_CTRAN_CSC0(x)		(0x5028 + (x) * 0x100)
-+#define ADE_CTRAN_CSC1(x)		(0x502C + (x) * 0x100)
-+#define ADE_CTRAN_CSC2(x)		(0x5030 + (x) * 0x100)
-+#define ADE_CTRAN_CSC3(x)		(0x5034 + (x) * 0x100)
-+#define ADE_CTRAN_CSC4(x)		(0x5038 + (x) * 0x100)
-+#define ADE_CTRAN_IMAGE_SIZE(x)		(0x503C + (x) * 0x100)
-+#define ADE_CTRAN_CFG_OK(x)		(0x5040 + (x) * 0x100)
-+/* overlay regs */
-+#define ADE_OVLY_ALPHA_ST		0x2000
-+#define ADE_OVLY_CH_XY0(x)		(0x2004 + (x) * 4)
-+#define ADE_OVLY_CH_XY1(x)		(0x2024 + (x) * 4)
-+#define ADE_OVLY_CH_CTL(x)		(0x204C + (x) * 4)
-+#define ADE_OVLY_OUTPUT_SIZE(x)		(0x2070 + (x) * 8)
-+#define OUTPUT_XSIZE_OFST		16
-+#define ADE_OVLY_BASE_COLOR(x)		(0x2074 + (x) * 8)
-+#define ADE_OVLYX_CTL(x)		(0x209C + (x) * 4)
-+#define ADE_OVLY_CTL			0x0098
-+#define CH_OVLY_SEL_OFST(x)		((x) * 4)
-+#define CH_OVLY_SEL_MASK		MASK(2)
-+#define CH_OVLY_SEL_VAL(x)		((x) + 1)
-+#define CH_ALP_MODE_OFST		0
-+#define CH_ALP_SEL_OFST			2
-+#define CH_UNDER_ALP_SEL_OFST		4
-+#define CH_EN_OFST			6
-+#define CH_ALP_GBL_OFST			15
-+#define CH_SEL_OFST			28
-+
-+/*
-+ * LDI Registers
-+ */
-+#define LDI_HRZ_CTRL0			0x7400
-+#define HBP_OFST			20
-+#define LDI_HRZ_CTRL1			0x7404
-+#define LDI_VRT_CTRL0			0x7408
-+#define VBP_OFST			20
-+#define LDI_VRT_CTRL1			0x740C
-+#define LDI_PLR_CTRL			0x7410
-+#define FLAG_NVSYNC			BIT(0)
-+#define FLAG_NHSYNC			BIT(1)
-+#define FLAG_NPIXCLK			BIT(2)
-+#define FLAG_NDE			BIT(3)
-+#define LDI_DSP_SIZE			0x7414
-+#define VSIZE_OFST			20
-+#define LDI_INT_EN			0x741C
-+#define FRAME_END_INT_EN_OFST		1
-+#define LDI_CTRL			0x7420
-+#define BPP_OFST			3
-+#define DATA_GATE_EN			BIT(2)
-+#define LDI_EN				BIT(0)
-+#define LDI_ORG_INT			0x7424
-+#define LDI_MSK_INT			0x7428
-+#define LDI_INT_CLR			0x742C
-+#define LDI_WORK_MODE			0x7430
-+#define LDI_DE_SPACE_LOW		0x7438
-+#define LDI_MCU_INTS			0x7450
-+#define LDI_MCU_INTE			0x7454
-+#define LDI_MCU_INTC			0x7458
-+#define LDI_HDMI_DSI_GT			0x7434
-+
-+/*
-+ * ADE media bus service regs
-+ */
-+#define ADE0_QOSGENERATOR_MODE		0x010C
-+#define QOSGENERATOR_MODE_MASK		MASK(2)
-+#define ADE0_QOSGENERATOR_EXTCONTROL	0x0118
-+#define SOCKET_QOS_EN			BIT(0)
-+#define ADE1_QOSGENERATOR_MODE		0x020C
-+#define ADE1_QOSGENERATOR_EXTCONTROL	0x0218
-+
-+/*
-+ * ADE regs relevant enums
-+ */
-+enum frame_end_start {
-+	/* regs take effective in every vsync */
-+	REG_EFFECTIVE_IN_VSYNC = 0,
-+	/* regs take effective in fist ade en and every frame end */
-+	REG_EFFECTIVE_IN_ADEEN_FRMEND,
-+	/* regs take effective in ade en immediately */
-+	REG_EFFECTIVE_IN_ADEEN,
-+	/* regs take effective in first vsync and every frame end */
-+	REG_EFFECTIVE_IN_VSYNC_FRMEND
-+};
-+
-+enum ade_fb_format {
-+	ADE_RGB_565 = 0,
-+	ADE_BGR_565,
-+	ADE_XRGB_8888,
-+	ADE_XBGR_8888,
-+	ADE_ARGB_8888,
-+	ADE_ABGR_8888,
-+	ADE_RGBA_8888,
-+	ADE_BGRA_8888,
-+	ADE_RGB_888,
-+	ADE_BGR_888 = 9,
-+	ADE_FORMAT_NOT_SUPPORT = 800
-+};
-+
-+enum ade_channel {
-+	ADE_CH1 = 0,	/* channel 1 for primary plane */
-+	ADE_CH_NUM
-+};
-+
-+enum ade_scale {
-+	ADE_SCL1 = 0,
-+	ADE_SCL2,
-+	ADE_SCL3,
-+	ADE_SCL_NUM
-+};
-+
-+enum ade_ctran {
-+	ADE_CTRAN1 = 0,
-+	ADE_CTRAN2,
-+	ADE_CTRAN3,
-+	ADE_CTRAN4,
-+	ADE_CTRAN5,
-+	ADE_CTRAN6,
-+	ADE_CTRAN_NUM
-+};
-+
-+enum ade_overlay {
-+	ADE_OVLY1 = 0,
-+	ADE_OVLY2,
-+	ADE_OVLY3,
-+	ADE_OVLY_NUM
-+};
-+
-+enum ade_alpha_mode {
-+	ADE_ALP_GLOBAL = 0,
-+	ADE_ALP_PIXEL,
-+	ADE_ALP_PIXEL_AND_GLB
-+};
-+
-+enum ade_alpha_blending_mode {
-+	ADE_ALP_MUL_COEFF_0 = 0,	/* alpha */
-+	ADE_ALP_MUL_COEFF_1,		/* 1-alpha */
-+	ADE_ALP_MUL_COEFF_2,		/* 0 */
-+	ADE_ALP_MUL_COEFF_3		/* 1 */
-+};
-+
-+/*
-+ * LDI regs relevant enums
-+ */
-+enum dsi_pclk_en {
-+	DSI_PCLK_ON = 0,
-+	DSI_PCLK_OFF
-+};
-+
-+enum ldi_output_format {
-+	LDI_OUT_RGB_565 = 0,
-+	LDI_OUT_RGB_666,
-+	LDI_OUT_RGB_888
-+};
-+
-+enum ldi_work_mode {
-+	TEST_MODE = 0,
-+	NORMAL_MODE
-+};
-+
-+enum ldi_input_source {
-+	DISP_SRC_NONE = 0,
-+	DISP_SRC_OVLY2,
-+	DISP_SRC_DISP,
-+	DISP_SRC_ROT,
-+	DISP_SRC_SCL2
-+};
-+
-+/*
-+ * ADE media bus service relevant enums
-+ */
-+enum qos_generator_mode {
-+	FIXED_MODE = 0,
-+	LIMITER_MODE,
-+	BYPASS_MODE,
-+	REGULATOR_MODE
-+};
-+
-+/*
-+ * Register Write/Read Helper functions
-+ */
-+static inline void ade_update_bits(void __iomem *addr, u32 bit_start,
-+				   u32 mask, u32 val)
-+{
-+	u32 tmp, orig;
-+
-+	orig = readl(addr);
-+	tmp = orig & ~(mask << bit_start);
-+	tmp |= (val & mask) << bit_start;
-+	writel(tmp, addr);
-+}
-+
-+#endif
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-new file mode 100644
-index 000000000000..dbdeb1fc33e3
---- /dev/null
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -0,0 +1,452 @@
-+/*
-+ * Hisilicon Hi6220 SoC ADE(Advanced Display Engine)'s crtc&plane driver
-+ *
-+ * Copyright (c) 2016 Linaro Limited.
-+ * Copyright (c) 2014-2016 Hisilicon Limited.
-+ *
-+ * Author:
-+ *	Xinliang Liu <z.liuxinliang@hisilicon.com>
-+ *	Xinliang Liu <xinliang.liu@linaro.org>
-+ *	Xinwei Kong <kong.kongxinwei@hisilicon.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/clk.h>
-+#include <video/display_timing.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#include <drm/drmP.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_crtc_helper.h>
-+#include <drm/drm_atomic.h>
-+#include <drm/drm_atomic_helper.h>
-+
-+#include "kirin_drm_drv.h"
-+#include "kirin_ade_reg.h"
-+
-+#define to_ade_crtc(crtc) \
-+	container_of(crtc, struct ade_crtc, base)
-+
-+struct ade_hw_ctx {
-+	void __iomem  *base;
-+	struct regmap *noc_regmap;
-+	struct clk *ade_core_clk;
-+	struct clk *media_noc_clk;
-+	struct clk *ade_pix_clk;
-+	struct reset_control *reset;
-+	bool power_on;
-+	int irq;
-+};
-+
-+struct ade_crtc {
-+	struct drm_crtc base;
-+	struct ade_hw_ctx *ctx;
-+	bool enable;
-+	u32 out_format;
-+};
-+
-+struct ade_data {
-+	struct ade_crtc acrtc;
-+	struct ade_hw_ctx ctx;
-+};
-+
-+static void ade_update_reload_bit(void __iomem *base, u32 bit_num, u32 val)
-+{
-+	u32 bit_ofst, reg_num;
-+
-+	bit_ofst = bit_num % 32;
-+	reg_num = bit_num / 32;
-+
-+	ade_update_bits(base + ADE_RELOAD_DIS(reg_num), bit_ofst,
-+			MASK(1), !!val);
-+}
-+
-+static u32 ade_read_reload_bit(void __iomem *base, u32 bit_num)
-+{
-+	u32 tmp, bit_ofst, reg_num;
-+
-+	bit_ofst = bit_num % 32;
-+	reg_num = bit_num / 32;
-+
-+	tmp = readl(base + ADE_RELOAD_DIS(reg_num));
-+	return !!(BIT(bit_ofst) & tmp);
-+}
-+
-+static void ade_init(struct ade_hw_ctx *ctx)
-+{
-+	void __iomem *base = ctx->base;
-+
-+	/* enable clk gate */
-+	ade_update_bits(base + ADE_CTRL1, AUTO_CLK_GATE_EN_OFST,
-+			AUTO_CLK_GATE_EN, ADE_ENABLE);
-+	/* clear overlay */
-+	writel(0, base + ADE_OVLY1_TRANS_CFG);
-+	writel(0, base + ADE_OVLY_CTL);
-+	writel(0, base + ADE_OVLYX_CTL(ADE_OVLY2));
-+	/* clear reset and reload regs */
-+	writel(MASK(32), base + ADE_SOFT_RST_SEL(0));
-+	writel(MASK(32), base + ADE_SOFT_RST_SEL(1));
-+	writel(MASK(32), base + ADE_RELOAD_DIS(0));
-+	writel(MASK(32), base + ADE_RELOAD_DIS(1));
-+	/* for video mode, that ade registers
-+	 * became effective at frame end
-+	 */
-+	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
-+			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-+}
-+
-+static void ade_ldi_set_mode(struct ade_crtc *acrtc,
-+			     struct drm_display_mode *mode,
-+			     struct drm_display_mode *adj_mode)
-+{
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+	void __iomem *base = ctx->base;
-+	u32 width = mode->hdisplay;
-+	u32 height = mode->vdisplay;
-+	u32 hfp, hbp, hsw, vfp, vbp, vsw;
-+	u32 plr_flags;
-+	int ret;
-+
-+	plr_flags = (mode->flags & DRM_MODE_FLAG_NVSYNC) ? FLAG_NVSYNC : 0;
-+	plr_flags |= (mode->flags & DRM_MODE_FLAG_NHSYNC) ? FLAG_NHSYNC : 0;
-+	hfp = mode->hsync_start - mode->hdisplay;
-+	hbp = mode->htotal - mode->hsync_end;
-+	hsw = mode->hsync_end - mode->hsync_start;
-+	vfp = mode->vsync_start - mode->vdisplay;
-+	vbp = mode->vtotal - mode->vsync_end;
-+	vsw = mode->vsync_end - mode->vsync_start;
-+	if (vsw > 15) {
-+		DRM_DEBUG_DRIVER("vsw exceeded 15\n");
-+		vsw = 15;
-+	}
-+
-+	writel((hbp << HBP_OFST) | hfp, base + LDI_HRZ_CTRL0);
-+	 /* the configured value is actual value - 1 */
-+	writel(hsw - 1, base + LDI_HRZ_CTRL1);
-+	writel((vbp << VBP_OFST) | vfp, base + LDI_VRT_CTRL0);
-+	 /* the configured value is actual value - 1 */
-+	writel(vsw - 1, base + LDI_VRT_CTRL1);
-+	 /* the configured value is actual value - 1 */
-+	writel(((height - 1) << VSIZE_OFST) | (width - 1),
-+	       base + LDI_DSP_SIZE);
-+	writel(plr_flags, base + LDI_PLR_CTRL);
-+
-+	/* Success should be guaranteed in mode_valid call back,
-+	 * so failer shouldn't happen here
-+	 */
-+	ret = clk_set_rate(ctx->ade_pix_clk, mode->clock * 1000);
-+	if (ret)
-+		DRM_ERROR("failed to set pixel clk %dHz (%d)\n",
-+			  mode->clock * 1000, ret);
-+	adj_mode->clock = clk_get_rate(ctx->ade_pix_clk) / 1000;
-+
-+	/* ctran6 setting */
-+	writel(CTRAN_BYPASS_ON, base + ADE_CTRAN_DIS(ADE_CTRAN6));
-+	 /* the configured value is actual value - 1 */
-+	writel(width * height - 1, base + ADE_CTRAN_IMAGE_SIZE(ADE_CTRAN6));
-+	ade_update_reload_bit(base, CTRAN_OFST + ADE_CTRAN6, 0);
-+
-+	DRM_DEBUG_DRIVER("set mode: %dx%d\n", width, height);
-+}
-+
-+static int ade_power_up(struct ade_hw_ctx *ctx)
-+{
-+	int ret;
-+
-+	ret = clk_prepare_enable(ctx->media_noc_clk);
-+	if (ret) {
-+		DRM_ERROR("failed to enable media_noc_clk (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(ctx->reset);
-+	if (ret) {
-+		DRM_ERROR("failed to deassert reset\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(ctx->ade_core_clk);
-+	if (ret) {
-+		DRM_ERROR("failed to enable ade_core_clk (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	ade_init(ctx);
-+	ctx->power_on = true;
-+	return 0;
-+}
-+
-+static void ade_power_down(struct ade_hw_ctx *ctx)
-+{
-+	void __iomem *base = ctx->base;
-+
-+	writel(ADE_DISABLE, base + LDI_CTRL);
-+	/* dsi pixel off */
-+	writel(DSI_PCLK_OFF, base + LDI_HDMI_DSI_GT);
-+
-+	clk_disable_unprepare(ctx->ade_core_clk);
-+	reset_control_assert(ctx->reset);
-+	clk_disable_unprepare(ctx->media_noc_clk);
-+	ctx->power_on = false;
-+}
-+
-+static void ade_set_medianoc_qos(struct ade_crtc *acrtc)
-+{
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+	struct regmap *map = ctx->noc_regmap;
-+
-+	regmap_update_bits(map, ADE0_QOSGENERATOR_MODE,
-+			   QOSGENERATOR_MODE_MASK, BYPASS_MODE);
-+	regmap_update_bits(map, ADE0_QOSGENERATOR_EXTCONTROL,
-+			   SOCKET_QOS_EN, SOCKET_QOS_EN);
-+
-+	regmap_update_bits(map, ADE1_QOSGENERATOR_MODE,
-+			   QOSGENERATOR_MODE_MASK, BYPASS_MODE);
-+	regmap_update_bits(map, ADE1_QOSGENERATOR_EXTCONTROL,
-+			   SOCKET_QOS_EN, SOCKET_QOS_EN);
-+}
-+
-+static void ade_display_enable(struct ade_crtc *acrtc)
-+{
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+	void __iomem *base = ctx->base;
-+	u32 out_fmt = acrtc->out_format;
-+
-+	/* display source setting */
-+	writel(DISP_SRC_OVLY2, base + ADE_DISP_SRC_CFG);
-+
-+	/* enable ade */
-+	writel(ADE_ENABLE, base + ADE_EN);
-+	/* enable ldi */
-+	writel(NORMAL_MODE, base + LDI_WORK_MODE);
-+	writel((out_fmt << BPP_OFST) | DATA_GATE_EN | LDI_EN,
-+	       base + LDI_CTRL);
-+	/* dsi pixel on */
-+	writel(DSI_PCLK_ON, base + LDI_HDMI_DSI_GT);
-+}
-+
-+static void ade_crtc_enable(struct drm_crtc *crtc)
-+{
-+	struct ade_crtc *acrtc = to_ade_crtc(crtc);
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+	int ret;
-+
-+	if (acrtc->enable)
-+		return;
-+
-+	if (!ctx->power_on) {
-+		ret = ade_power_up(ctx);
-+		if (ret)
-+			return;
-+	}
-+
-+	ade_set_medianoc_qos(acrtc);
-+	ade_display_enable(acrtc);
-+	acrtc->enable = true;
-+}
-+
-+static void ade_crtc_disable(struct drm_crtc *crtc)
-+{
-+	struct ade_crtc *acrtc = to_ade_crtc(crtc);
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+
-+	if (!acrtc->enable)
-+		return;
-+
-+	ade_power_down(ctx);
-+	acrtc->enable = false;
-+}
-+
-+static int ade_crtc_atomic_check(struct drm_crtc *crtc,
-+				 struct drm_crtc_state *state)
-+{
-+	/* do nothing */
-+	return 0;
-+}
-+
-+static void ade_crtc_mode_set_nofb(struct drm_crtc *crtc)
-+{
-+	struct ade_crtc *acrtc = to_ade_crtc(crtc);
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+	struct drm_display_mode *mode = &crtc->state->mode;
-+	struct drm_display_mode *adj_mode = &crtc->state->adjusted_mode;
-+
-+	if (!ctx->power_on)
-+		(void)ade_power_up(ctx);
-+	ade_ldi_set_mode(acrtc, mode, adj_mode);
-+}
-+
-+static void ade_crtc_atomic_begin(struct drm_crtc *crtc,
-+				  struct drm_crtc_state *old_state)
-+{
-+	struct ade_crtc *acrtc = to_ade_crtc(crtc);
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+
-+	if (!ctx->power_on)
-+		(void)ade_power_up(ctx);
-+}
-+
-+static void ade_crtc_atomic_flush(struct drm_crtc *crtc,
-+				  struct drm_crtc_state *old_state)
-+
-+{
-+	struct ade_crtc *acrtc = to_ade_crtc(crtc);
-+	struct ade_hw_ctx *ctx = acrtc->ctx;
-+	void __iomem *base = ctx->base;
-+
-+	/* only crtc is eanbled regs take effect */
-+	if (acrtc->enable) {
-+		/* flush ade regitsters */
-+		writel(ADE_ENABLE, base + ADE_EN);
-+	}
-+}
-+
-+static const struct drm_crtc_helper_funcs ade_crtc_helper_funcs = {
-+	.enable		= ade_crtc_enable,
-+	.disable	= ade_crtc_disable,
-+	.atomic_check	= ade_crtc_atomic_check,
-+	.mode_set_nofb	= ade_crtc_mode_set_nofb,
-+	.atomic_begin	= ade_crtc_atomic_begin,
-+	.atomic_flush	= ade_crtc_atomic_flush,
-+};
-+
-+static const struct drm_crtc_funcs ade_crtc_funcs = {
-+	.destroy	= drm_crtc_cleanup,
-+	.set_config	= drm_atomic_helper_set_config,
-+	.page_flip	= drm_atomic_helper_page_flip,
-+	.reset		= drm_atomic_helper_crtc_reset,
-+	.set_property = drm_atomic_helper_crtc_set_property,
-+	.atomic_duplicate_state	= drm_atomic_helper_crtc_duplicate_state,
-+	.atomic_destroy_state	= drm_atomic_helper_crtc_destroy_state,
-+};
-+
-+static int ade_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
-+			 struct drm_plane *plane)
-+{
-+	struct kirin_drm_private *priv = dev->dev_private;
-+	struct device_node *port;
-+	int ret;
-+
-+	/* set crtc port so that
-+	 * drm_of_find_possible_crtcs call works
-+	 */
-+	port = of_get_child_by_name(dev->dev->of_node, "port");
-+	if (!port) {
-+		DRM_ERROR("no port node found in %s\n",
-+			  dev->dev->of_node->full_name);
-+		return -EINVAL;
-+	}
-+	of_node_put(port);
-+	crtc->port = port;
-+
-+	ret = drm_crtc_init_with_planes(dev, crtc, plane, NULL,
-+					&ade_crtc_funcs, NULL);
-+	if (ret) {
-+		DRM_ERROR("failed to init crtc.\n");
-+		return ret;
-+	}
-+
-+	drm_crtc_helper_add(crtc, &ade_crtc_helper_funcs);
-+	priv->crtc[drm_crtc_index(crtc)] = crtc;
-+
-+	return 0;
-+}
-+
-+static int ade_dts_parse(struct platform_device *pdev, struct ade_hw_ctx *ctx)
-+{
-+	struct resource *res;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ade_base");
-+	ctx->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(ctx->base)) {
-+		DRM_ERROR("failed to remap ade io base\n");
-+		return  PTR_ERR(ctx->base);
-+	}
-+
-+	ctx->reset = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(ctx->reset))
-+		return PTR_ERR(ctx->reset);
-+
-+	ctx->noc_regmap =
-+		syscon_regmap_lookup_by_phandle(np, "hisilicon,noc-syscon");
-+	if (IS_ERR(ctx->noc_regmap)) {
-+		DRM_ERROR("failed to get noc regmap\n");
-+		return PTR_ERR(ctx->noc_regmap);
-+	}
-+
-+	ctx->irq = platform_get_irq(pdev, 0);
-+	if (ctx->irq < 0) {
-+		DRM_ERROR("failed to get irq\n");
-+		return -ENODEV;
-+	}
-+
-+	ctx->ade_core_clk = devm_clk_get(dev, "clk_ade_core");
-+	if (!ctx->ade_core_clk) {
-+		DRM_ERROR("failed to parse clk ADE_CORE\n");
-+		return -ENODEV;
-+	}
-+
-+	ctx->media_noc_clk = devm_clk_get(dev, "clk_codec_jpeg");
-+	if (!ctx->media_noc_clk) {
-+		DRM_ERROR("failed to parse clk CODEC_JPEG\n");
-+	    return -ENODEV;
-+	}
-+
-+	ctx->ade_pix_clk = devm_clk_get(dev, "clk_ade_pix");
-+	if (!ctx->ade_pix_clk) {
-+		DRM_ERROR("failed to parse clk ADE_PIX\n");
-+	    return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+int ade_drm_init(struct drm_device *dev)
-+{
-+	struct platform_device *pdev = dev->platformdev;
-+	struct ade_data *ade;
-+	struct ade_hw_ctx *ctx;
-+	struct ade_crtc *acrtc;
-+	int ret;
-+
-+	ade = devm_kzalloc(dev->dev, sizeof(*ade), GFP_KERNEL);
-+	if (!ade) {
-+		DRM_ERROR("failed to alloc ade_data\n");
-+		return -ENOMEM;
-+	}
-+	platform_set_drvdata(pdev, ade);
-+
-+	ctx = &ade->ctx;
-+	acrtc = &ade->acrtc;
-+	acrtc->ctx = ctx;
-+	acrtc->out_format = LDI_OUT_RGB_888;
-+
-+	ret = ade_dts_parse(pdev, ctx);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+void ade_drm_cleanup(struct drm_device *dev)
-+{
-+	struct platform_device *pdev = dev->platformdev;
-+	struct ade_data *ade = platform_get_drvdata(pdev);
-+	struct drm_crtc *crtc = &ade->acrtc.base;
-+
-+	drm_crtc_cleanup(crtc);
-+}
-+
-+const struct kirin_dc_ops ade_dc_ops = {
-+	.init = ade_drm_init,
-+	.cleanup = ade_drm_cleanup
-+};
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-index 789ebd1f5922..055729c1889c 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
-@@ -30,8 +30,12 @@ static struct kirin_dc_ops *dc_ops;
- 
- static int kirin_drm_kms_cleanup(struct drm_device *dev)
- {
-+	struct kirin_drm_private *priv = dev->dev_private;
-+
- 	dc_ops->cleanup(dev);
- 	drm_mode_config_cleanup(dev);
-+	devm_kfree(dev->dev, priv);
-+	dev->dev_private = NULL;
- 
- 	return 0;
- }
-@@ -55,8 +59,14 @@ static void kirin_drm_mode_config_init(struct drm_device *dev)
- 
- static int kirin_drm_kms_init(struct drm_device *dev)
- {
-+	struct kirin_drm_private *priv;
- 	int ret;
- 
-+	priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev->dev_private = priv;
- 	dev_set_drvdata(dev->dev, dev);
- 
- 	/* dev->mode_config initialization */
-@@ -84,6 +94,8 @@ err_dc_cleanup:
- 	dc_ops->cleanup(dev);
- err_mode_config_cleanup:
- 	drm_mode_config_cleanup(dev);
-+	devm_kfree(dev->dev, priv);
-+	dev->dev_private = NULL;
- 
- 	return ret;
- }
-@@ -221,6 +233,9 @@ static const struct component_master_ops kirin_drm_ops = {
- };
- 
- static const struct of_device_id kirin_drm_dt_ids[] = {
-+	{ .compatible = "hisilicon,hi6220-ade",
-+	  .data = &ade_dc_ops,
-+	},
- 	{ /* end node */ },
- };
- MODULE_DEVICE_TABLE(of, kirin_drm_dt_ids);
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-index 75e9d82356d4..5a05ad6a81db 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
-@@ -11,10 +11,18 @@
- #ifndef __KIRIN_DRM_DRV_H__
- #define __KIRIN_DRM_DRV_H__
- 
-+#define MAX_CRTC	2
-+
- /* display controller init/cleanup ops */
- struct kirin_dc_ops {
- 	int (*init)(struct drm_device *dev);
- 	void (*cleanup)(struct drm_device *dev);
- };
- 
-+struct kirin_drm_private {
-+	struct drm_crtc *crtc[MAX_CRTC];
-+};
-+
-+extern const struct kirin_dc_ops ade_dc_ops;
-+
- #endif /* __KIRIN_DRM_DRV_H__ */
--- 
-1.9.1
-
+QWRkIHBsYW5lIGZ1bmNzIGFuZCBoZWxwZXIgZnVuY3MgZm9yIEFERS4KCnY1OiBOb25lLgp2NDog
+Tm9uZS4KdjM6Ci0gQSBmZXcgY2xlYW51cC4KdjI6Ci0gUmVtb3ZlIGFidHJhY3Rpb24gbGF5ZXIu
+CgpTaWduZWQtb2ZmLWJ5OiBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPgot
+LS0KIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jIHwgNTM1
+ICsrKysrKysrKysrKysrKysrKysrKysrLQogMSBmaWxlIGNoYW5nZWQsIDUzNCBpbnNlcnRpb25z
+KCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
+bi9raXJpbi9raXJpbl9kcm1fYWRlLmMgYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmlu
+L2tpcmluX2RybV9hZGUuYwppbmRleCBkYmRlYjFmYzMzZTMuLmZhZTVmMGFmYWRiOCAxMDA2NDQK
+LS0tIGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fYWRlLmMKKysr
+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fYWRlLmMKQEAgLTI3
+LDEzICsyNywyMyBAQAogI2luY2x1ZGUgPGRybS9kcm1fY3J0Y19oZWxwZXIuaD4KICNpbmNsdWRl
+IDxkcm0vZHJtX2F0b21pYy5oPgogI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hlbHBlci5oPgor
+I2luY2x1ZGUgPGRybS9kcm1fcGxhbmVfaGVscGVyLmg+CisjaW5jbHVkZSA8ZHJtL2RybV9nZW1f
+Y21hX2hlbHBlci5oPgorI2luY2x1ZGUgPGRybS9kcm1fZmJfY21hX2hlbHBlci5oPgogCiAjaW5j
+bHVkZSAia2lyaW5fZHJtX2Rydi5oIgogI2luY2x1ZGUgImtpcmluX2FkZV9yZWcuaCIKIAorI2Rl
+ZmluZSBQUklNQVJZX0NICUFERV9DSDEgLyogcHJpbWFyeSBwbGFuZSAqLworI2RlZmluZSBPVVRf
+T1ZMWQlBREVfT1ZMWTIgLyogb3V0cHV0IG92ZXJsYXkgY29tcG9zaXRvciAqLworI2RlZmluZSBB
+REVfREVCVUcJMQorCiAjZGVmaW5lIHRvX2FkZV9jcnRjKGNydGMpIFwKIAljb250YWluZXJfb2Yo
+Y3J0Yywgc3RydWN0IGFkZV9jcnRjLCBiYXNlKQogCisjZGVmaW5lIHRvX2FkZV9wbGFuZShwbGFu
+ZSkgXAorCWNvbnRhaW5lcl9vZihwbGFuZSwgc3RydWN0IGFkZV9wbGFuZSwgYmFzZSkKKwogc3Ry
+dWN0IGFkZV9od19jdHggewogCXZvaWQgX19pb21lbSAgKmJhc2U7CiAJc3RydWN0IHJlZ21hcCAq
+bm9jX3JlZ21hcDsKQEAgLTUyLDExICs2Miw3NiBAQCBzdHJ1Y3QgYWRlX2NydGMgewogCXUzMiBv
+dXRfZm9ybWF0OwogfTsKIAorc3RydWN0IGFkZV9wbGFuZSB7CisJc3RydWN0IGRybV9wbGFuZSBi
+YXNlOworCXZvaWQgKmN0eDsKKwl1OCBjaDsgLyogY2hhbm5lbCAqLworfTsKKwogc3RydWN0IGFk
+ZV9kYXRhIHsKIAlzdHJ1Y3QgYWRlX2NydGMgYWNydGM7CisJc3RydWN0IGFkZV9wbGFuZSBhcGxh
+bmVbQURFX0NIX05VTV07CiAJc3RydWN0IGFkZV9od19jdHggY3R4OwogfTsKIAorLyogYWRlLWZv
+cm1hdCBpbmZvOiAqLworc3RydWN0IGFkZV9mb3JtYXQgeworCXUzMiBwaXhlbF9mb3JtYXQ7CisJ
+ZW51bSBhZGVfZmJfZm9ybWF0IGFkZV9mb3JtYXQ7Cit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0
+IGFkZV9mb3JtYXQgYWRlX2Zvcm1hdHNbXSA9IHsKKwkvKiAxNmJwcCBSR0I6ICovCisJeyBEUk1f
+Rk9STUFUX1JHQjU2NSwgQURFX1JHQl81NjUgfSwKKwl7IERSTV9GT1JNQVRfQkdSNTY1LCBBREVf
+QkdSXzU2NSB9LAorCS8qIDI0YnBwIFJHQjogKi8KKwl7IERSTV9GT1JNQVRfUkdCODg4LCBBREVf
+UkdCXzg4OCB9LAorCXsgRFJNX0ZPUk1BVF9CR1I4ODgsIEFERV9CR1JfODg4IH0sCisJLyogMzJi
+cHAgW0FdUkdCOiAqLworCXsgRFJNX0ZPUk1BVF9YUkdCODg4OCwgQURFX1hSR0JfODg4OCB9LAor
+CXsgRFJNX0ZPUk1BVF9YQkdSODg4OCwgQURFX1hCR1JfODg4OCB9LAorCXsgRFJNX0ZPUk1BVF9S
+R0JBODg4OCwgQURFX1JHQkFfODg4OCB9LAorCXsgRFJNX0ZPUk1BVF9CR1JBODg4OCwgQURFX0JH
+UkFfODg4OCB9LAorCXsgRFJNX0ZPUk1BVF9BUkdCODg4OCwgQURFX0FSR0JfODg4OCB9LAorCXsg
+RFJNX0ZPUk1BVF9BQkdSODg4OCwgQURFX0FCR1JfODg4OCB9LAorfTsKKworc3RhdGljIGNvbnN0
+IHUzMiBjaGFubmVsX2Zvcm1hdHMxW10gPSB7CisJLyogY2hhbm5lbCAxLDIsMyw0ICovCisJRFJN
+X0ZPUk1BVF9SR0I1NjUsIERSTV9GT1JNQVRfQkdSNTY1LCBEUk1fRk9STUFUX1JHQjg4OCwKKwlE
+Uk1fRk9STUFUX0JHUjg4OCwgRFJNX0ZPUk1BVF9YUkdCODg4OCwgRFJNX0ZPUk1BVF9YQkdSODg4
+OCwKKwlEUk1fRk9STUFUX1JHQkE4ODg4LCBEUk1fRk9STUFUX0JHUkE4ODg4LCBEUk1fRk9STUFU
+X0FSR0I4ODg4LAorCURSTV9GT1JNQVRfQUJHUjg4ODgKK307CisKK3UzMiBhZGVfZ2V0X2NoYW5u
+ZWxfZm9ybWF0cyh1OCBjaCwgY29uc3QgdTMyICoqZm9ybWF0cykKK3sKKwlzd2l0Y2ggKGNoKSB7
+CisJY2FzZSBBREVfQ0gxOgorCQkqZm9ybWF0cyA9IGNoYW5uZWxfZm9ybWF0czE7CisJCXJldHVy
+biBBUlJBWV9TSVpFKGNoYW5uZWxfZm9ybWF0czEpOworCWRlZmF1bHQ6CisJCURSTV9FUlJPUigi
+bm8gdGhpcyBjaGFubmVsICVkXG4iLCBjaCk7CisJCSpmb3JtYXRzID0gTlVMTDsKKwkJcmV0dXJu
+IDA7CisJfQorfQorCisvKiBjb252ZXJ0IGZyb20gZm91cmNjIGZvcm1hdCB0byBhZGUgZm9ybWF0
+ICovCitzdGF0aWMgdTMyIGFkZV9nZXRfZm9ybWF0KHUzMiBwaXhlbF9mb3JtYXQpCit7CisJaW50
+IGk7CisKKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShhZGVfZm9ybWF0cyk7IGkrKykKKwkJ
+aWYgKGFkZV9mb3JtYXRzW2ldLnBpeGVsX2Zvcm1hdCA9PSBwaXhlbF9mb3JtYXQpCisJCQlyZXR1
+cm4gYWRlX2Zvcm1hdHNbaV0uYWRlX2Zvcm1hdDsKKworCS8qIG5vdCBmb3VuZCAqLworCURSTV9F
+UlJPUigiTm90IGZvdW5kIHBpeGVsIGZvcm1hdCEhZm91cmNjX2Zvcm1hdD0gJWRcbiIsCisJCSAg
+cGl4ZWxfZm9ybWF0KTsKKwlyZXR1cm4gQURFX0ZPUk1BVF9OT1RfU1VQUE9SVDsKK30KKwogc3Rh
+dGljIHZvaWQgYWRlX3VwZGF0ZV9yZWxvYWRfYml0KHZvaWQgX19pb21lbSAqYmFzZSwgdTMyIGJp
+dF9udW0sIHUzMiB2YWwpCiB7CiAJdTMyIGJpdF9vZnN0LCByZWdfbnVtOwpAQCAtODksNyArMTY0
+LDcgQEAgc3RhdGljIHZvaWQgYWRlX2luaXQoc3RydWN0IGFkZV9od19jdHggKmN0eCkKIAkvKiBj
+bGVhciBvdmVybGF5ICovCiAJd3JpdGVsKDAsIGJhc2UgKyBBREVfT1ZMWTFfVFJBTlNfQ0ZHKTsK
+IAl3cml0ZWwoMCwgYmFzZSArIEFERV9PVkxZX0NUTCk7Ci0Jd3JpdGVsKDAsIGJhc2UgKyBBREVf
+T1ZMWVhfQ1RMKEFERV9PVkxZMikpOworCXdyaXRlbCgwLCBiYXNlICsgQURFX09WTFlYX0NUTChP
+VVRfT1ZMWSkpOwogCS8qIGNsZWFyIHJlc2V0IGFuZCByZWxvYWQgcmVncyAqLwogCXdyaXRlbChN
+QVNLKDMyKSwgYmFzZSArIEFERV9TT0ZUX1JTVF9TRUwoMCkpOwogCXdyaXRlbChNQVNLKDMyKSwg
+YmFzZSArIEFERV9TT0ZUX1JTVF9TRUwoMSkpOwpAQCAtMTQ3LDYgKzIyMiwxMCBAQCBzdGF0aWMg
+dm9pZCBhZGVfbGRpX3NldF9tb2RlKHN0cnVjdCBhZGVfY3J0YyAqYWNydGMsCiAJCQkgIG1vZGUt
+PmNsb2NrICogMTAwMCwgcmV0KTsKIAlhZGpfbW9kZS0+Y2xvY2sgPSBjbGtfZ2V0X3JhdGUoY3R4
+LT5hZGVfcGl4X2NsaykgLyAxMDAwOwogCisJLyogc2V0IG92ZXJsYXkgY29tcG9zaXRvciBvdXRw
+dXQgc2l6ZSAqLworCXdyaXRlbCgoKHdpZHRoIC0gMSkgPDwgT1VUUFVUX1hTSVpFX09GU1QpIHwg
+KGhlaWdodCAtIDEpLAorCSAgICAgICBiYXNlICsgQURFX09WTFlfT1VUUFVUX1NJWkUoT1VUX09W
+TFkpKTsKKwogCS8qIGN0cmFuNiBzZXR0aW5nICovCiAJd3JpdGVsKENUUkFOX0JZUEFTU19PTiwg
+YmFzZSArIEFERV9DVFJBTl9ESVMoQURFX0NUUkFONikpOwogCSAvKiB0aGUgY29uZmlndXJlZCB2
+YWx1ZSBpcyBhY3R1YWwgdmFsdWUgLSAxICovCkBAIC0yMTksNiArMjk4LDEwIEBAIHN0YXRpYyB2
+b2lkIGFkZV9kaXNwbGF5X2VuYWJsZShzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjKQogCXZvaWQgX19p
+b21lbSAqYmFzZSA9IGN0eC0+YmFzZTsKIAl1MzIgb3V0X2ZtdCA9IGFjcnRjLT5vdXRfZm9ybWF0
+OwogCisJLyogZW5hYmxlIG91dHB1dCBvdmVybGF5IGNvbXBvc2l0b3IgKi8KKwl3cml0ZWwoQURF
+X0VOQUJMRSwgYmFzZSArIEFERV9PVkxZWF9DVEwoT1VUX09WTFkpKTsKKwlhZGVfdXBkYXRlX3Jl
+bG9hZF9iaXQoYmFzZSwgT1ZMWV9PRlNUICsgT1VUX09WTFksIDApOworCiAJLyogZGlzcGxheSBz
+b3VyY2Ugc2V0dGluZyAqLwogCXdyaXRlbChESVNQX1NSQ19PVkxZMiwgYmFzZSArIEFERV9ESVNQ
+X1NSQ19DRkcpOwogCkBAIC0yMzIsNiArMzE1LDk3IEBAIHN0YXRpYyB2b2lkIGFkZV9kaXNwbGF5
+X2VuYWJsZShzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjKQogCXdyaXRlbChEU0lfUENMS19PTiwgYmFz
+ZSArIExESV9IRE1JX0RTSV9HVCk7CiB9CiAKKyNpZiBBREVfREVCVUcKK3N0YXRpYyB2b2lkIGFk
+ZV9yZG1hX2R1bXBfcmVncyh2b2lkIF9faW9tZW0gKmJhc2UsIHUzMiBjaCkKK3sKKwl1MzIgcmVn
+X2N0cmwsIHJlZ19hZGRyLCByZWdfc2l6ZSwgcmVnX3N0cmlkZSwgcmVnX3NwYWNlLCByZWdfZW47
+CisJdTMyIHZhbDsKKworCXJlZ19jdHJsID0gUkRfQ0hfQ1RSTChjaCk7CisJcmVnX2FkZHIgPSBS
+RF9DSF9BRERSKGNoKTsKKwlyZWdfc2l6ZSA9IFJEX0NIX1NJWkUoY2gpOworCXJlZ19zdHJpZGUg
+PSBSRF9DSF9TVFJJREUoY2gpOworCXJlZ19zcGFjZSA9IFJEX0NIX1NQQUNFKGNoKTsKKwlyZWdf
+ZW4gPSBSRF9DSF9FTihjaCk7CisKKwl2YWwgPSBhZGVfcmVhZF9yZWxvYWRfYml0KGJhc2UsIFJE
+TUFfT0ZTVCArIGNoKTsKKwlEUk1fREVCVUdfRFJJVkVSKCJbcmRtYSVkXTogcmVsb2FkKCVkKVxu
+IiwgY2ggKyAxLCB2YWwpOworCXZhbCA9IHJlYWRsKGJhc2UgKyByZWdfY3RybCk7CisJRFJNX0RF
+QlVHX0RSSVZFUigiW3JkbWElZF06IHJlZ19jdHJsKDB4JTA4eClcbiIsIGNoICsgMSwgdmFsKTsK
+Kwl2YWwgPSByZWFkbChiYXNlICsgcmVnX2FkZHIpOworCURSTV9ERUJVR19EUklWRVIoIltyZG1h
+JWRdOiByZWdfYWRkcigweCUwOHgpXG4iLCBjaCArIDEsIHZhbCk7CisJdmFsID0gcmVhZGwoYmFz
+ZSArIHJlZ19zaXplKTsKKwlEUk1fREVCVUdfRFJJVkVSKCJbcmRtYSVkXTogcmVnX3NpemUoMHgl
+MDh4KVxuIiwgY2ggKyAxLCB2YWwpOworCXZhbCA9IHJlYWRsKGJhc2UgKyByZWdfc3RyaWRlKTsK
+KwlEUk1fREVCVUdfRFJJVkVSKCJbcmRtYSVkXTogcmVnX3N0cmlkZSgweCUwOHgpXG4iLCBjaCAr
+IDEsIHZhbCk7CisJdmFsID0gcmVhZGwoYmFzZSArIHJlZ19zcGFjZSk7CisJRFJNX0RFQlVHX0RS
+SVZFUigiW3JkbWElZF06IHJlZ19zcGFjZSgweCUwOHgpXG4iLCBjaCArIDEsIHZhbCk7CisJdmFs
+ID0gcmVhZGwoYmFzZSArIHJlZ19lbik7CisJRFJNX0RFQlVHX0RSSVZFUigiW3JkbWElZF06IHJl
+Z19lbigweCUwOHgpXG4iLCBjaCArIDEsIHZhbCk7Cit9CisKK3N0YXRpYyB2b2lkIGFkZV9jbGlw
+X2R1bXBfcmVncyh2b2lkIF9faW9tZW0gKmJhc2UsIHUzMiBjaCkKK3sKKwl1MzIgdmFsOworCisJ
+dmFsID0gYWRlX3JlYWRfcmVsb2FkX2JpdChiYXNlLCBDTElQX09GU1QgKyBjaCk7CisJRFJNX0RF
+QlVHX0RSSVZFUigiW2NsaXAlZF06IHJlbG9hZCglZClcbiIsIGNoICsgMSwgdmFsKTsKKwl2YWwg
+PSByZWFkbChiYXNlICsgQURFX0NMSVBfRElTQUJMRShjaCkpOworCURSTV9ERUJVR19EUklWRVIo
+IltjbGlwJWRdOiByZWdfY2xpcF9kaXNhYmxlKDB4JTA4eClcbiIsIGNoICsgMSwgdmFsKTsKKwl2
+YWwgPSByZWFkbChiYXNlICsgQURFX0NMSVBfU0laRTAoY2gpKTsKKwlEUk1fREVCVUdfRFJJVkVS
+KCJbY2xpcCVkXTogcmVnX2NsaXBfc2l6ZTAoMHglMDh4KVxuIiwgY2ggKyAxLCB2YWwpOworCXZh
+bCA9IHJlYWRsKGJhc2UgKyBBREVfQ0xJUF9TSVpFMShjaCkpOworCURSTV9ERUJVR19EUklWRVIo
+IltjbGlwJWRdOiByZWdfY2xpcF9zaXplMSgweCUwOHgpXG4iLCBjaCArIDEsIHZhbCk7Cit9CisK
+K3N0YXRpYyB2b2lkIGFkZV9jb21wb3NpdG9yX3JvdXRpbmdfZHVtcF9yZWdzKHZvaWQgX19pb21l
+bSAqYmFzZSwgdTMyIGNoKQoreworCXU4IG92bHlfY2ggPSAwOyAvKiBUT0RPOiBPbmx5IHByaW1h
+cnkgcGxhbmUgbm93ICovCisJdTMyIHZhbDsKKworCXZhbCA9IHJlYWRsKGJhc2UgKyBBREVfT1ZM
+WV9DSF9YWTAob3ZseV9jaCkpOworCURSTV9ERUJVR19EUklWRVIoIltvdmVybGF5IGNoJWRdOiBy
+ZWdfY2hfeHkwKDB4JTA4eClcbiIsIG92bHlfY2gsIHZhbCk7CisJdmFsID0gcmVhZGwoYmFzZSAr
+IEFERV9PVkxZX0NIX1hZMShvdmx5X2NoKSk7CisJRFJNX0RFQlVHX0RSSVZFUigiW292ZXJsYXkg
+Y2glZF06IHJlZ19jaF94eTEoMHglMDh4KVxuIiwgb3ZseV9jaCwgdmFsKTsKKwl2YWwgPSByZWFk
+bChiYXNlICsgQURFX09WTFlfQ0hfQ1RMKG92bHlfY2gpKTsKKwlEUk1fREVCVUdfRFJJVkVSKCJb
+b3ZlcmxheSBjaCVkXTogcmVnX2NoX2N0bCgweCUwOHgpXG4iLCBvdmx5X2NoLCB2YWwpOworfQor
+CitzdGF0aWMgdm9pZCBhZGVfZHVtcF9vdmVybGF5X2NvbXBvc2l0b3JfcmVncyh2b2lkIF9faW9t
+ZW0gKmJhc2UsIHUzMiBjb21wKQoreworCXUzMiB2YWw7CisKKwl2YWwgPSBhZGVfcmVhZF9yZWxv
+YWRfYml0KGJhc2UsIE9WTFlfT0ZTVCArIGNvbXApOworCURSTV9ERUJVR19EUklWRVIoIltvdmVy
+bGF5JWRdOiByZWxvYWQoJWQpXG4iLCBjb21wICsgMSwgdmFsKTsKKwl3cml0ZWwoQURFX0VOQUJM
+RSwgYmFzZSArIEFERV9PVkxZWF9DVEwoY29tcCkpOworCURSTV9ERUJVR19EUklWRVIoIltvdmVy
+bGF5JWRdOiByZWdfY3RsKDB4JTA4eClcbiIsIGNvbXAgKyAxLCB2YWwpOworCXZhbCA9IHJlYWRs
+KGJhc2UgKyBBREVfT1ZMWV9DVEwpOworCURSTV9ERUJVR19EUklWRVIoIm92bHlfY3RsKDB4JTA4
+eClcbiIsIHZhbCk7Cit9CisKK3N0YXRpYyB2b2lkIGFkZV9kdW1wX3JlZ3Modm9pZCBfX2lvbWVt
+ICpiYXNlKQoreworCXUzMiBpOworCisJLyogZHVtcCBjaGFubmVsIHJlZ3MgKi8KKwlmb3IgKGkg
+PSAwOyBpIDwgQURFX0NIX05VTTsgaSsrKSB7CisJCS8qIGR1bXAgcmRtYSByZWdzICovCisJCWFk
+ZV9yZG1hX2R1bXBfcmVncyhiYXNlLCBpKTsKKworCQkvKiBkdW1wIGNsaXAgcmVncyAqLworCQlh
+ZGVfY2xpcF9kdW1wX3JlZ3MoYmFzZSwgaSk7CisKKwkJLyogZHVtcCBjb21wb3NpdG9yIHJvdXRp
+bmcgcmVncyAqLworCQlhZGVfY29tcG9zaXRvcl9yb3V0aW5nX2R1bXBfcmVncyhiYXNlLCBpKTsK
+Kwl9CisKKwkvKiBkdW1wIG92ZXJsYXkgY29tcG9zaXRvciByZWdzICovCisJYWRlX2R1bXBfb3Zl
+cmxheV9jb21wb3NpdG9yX3JlZ3MoYmFzZSwgT1VUX09WTFkpOworfQorI2Vsc2UKK3N0YXRpYyB2
+b2lkIGFkZV9kdW1wX3JlZ3Modm9pZCBfX2lvbWVtICpiYXNlKSB7IH0KKyNlbmRpZgorCiBzdGF0
+aWMgdm9pZCBhZGVfY3J0Y19lbmFibGUoc3RydWN0IGRybV9jcnRjICpjcnRjKQogewogCXN0cnVj
+dCBhZGVfY3J0YyAqYWNydGMgPSB0b19hZGVfY3J0YyhjcnRjKTsKQEAgLTI0OSw2ICs0MjMsNyBA
+QCBzdGF0aWMgdm9pZCBhZGVfY3J0Y19lbmFibGUoc3RydWN0IGRybV9jcnRjICpjcnRjKQogCiAJ
+YWRlX3NldF9tZWRpYW5vY19xb3MoYWNydGMpOwogCWFkZV9kaXNwbGF5X2VuYWJsZShhY3J0Yyk7
+CisJYWRlX2R1bXBfcmVncyhjdHgtPmJhc2UpOwogCWFjcnRjLT5lbmFibGUgPSB0cnVlOwogfQog
+CkBAIC0zMDMsNiArNDc4LDcgQEAgc3RhdGljIHZvaWQgYWRlX2NydGNfYXRvbWljX2ZsdXNoKHN0
+cnVjdCBkcm1fY3J0YyAqY3J0YywKIAogCS8qIG9ubHkgY3J0YyBpcyBlYW5ibGVkIHJlZ3MgdGFr
+ZSBlZmZlY3QgKi8KIAlpZiAoYWNydGMtPmVuYWJsZSkgeworCQlhZGVfZHVtcF9yZWdzKGJhc2Up
+OwogCQkvKiBmbHVzaCBhZGUgcmVnaXRzdGVycyAqLwogCQl3cml0ZWwoQURFX0VOQUJMRSwgYmFz
+ZSArIEFERV9FTik7CiAJfQpAQCAtMzU5LDYgKzUzNSwzMzggQEAgc3RhdGljIGludCBhZGVfY3J0
+Y19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHN0cnVjdCBkcm1fY3J0YyAqY3J0YywKIAly
+ZXR1cm4gMDsKIH0KIAorc3RhdGljIHZvaWQgYWRlX3JkbWFfc2V0KHZvaWQgX19pb21lbSAqYmFz
+ZSwgc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCisJCQkgdTMyIGNoLCB1MzIgeSwgdTMyIGlu
+X2gsIHUzMiBmbXQpCit7CisJc3RydWN0IGRybV9nZW1fY21hX29iamVjdCAqb2JqID0gZHJtX2Zi
+X2NtYV9nZXRfZ2VtX29iaihmYiwgMCk7CisJdTMyIHJlZ19jdHJsLCByZWdfYWRkciwgcmVnX3Np
+emUsIHJlZ19zdHJpZGUsIHJlZ19zcGFjZSwgcmVnX2VuOworCXUzMiBzdHJpZGUgPSBmYi0+cGl0
+Y2hlc1swXTsKKwl1MzIgYWRkciA9ICh1MzIpb2JqLT5wYWRkciArIHkgKiBzdHJpZGU7CisKKwlE
+Uk1fREVCVUdfRFJJVkVSKCJyZG1hJWQ6ICh5PSVkLCBoZWlnaHQ9JWQpLCBzdHJpZGU9JWQsIHBh
+ZGRyPTB4JXhcbiIsCisJCQkgY2ggKyAxLCB5LCBpbl9oLCBzdHJpZGUsICh1MzIpb2JqLT5wYWRk
+cik7CisJRFJNX0RFQlVHX0RSSVZFUigiYWRkcj0weCV4LCBmYjolZHglZCwgcGl4ZWxfZm9ybWF0
+PSVkKCVzKVxuIiwKKwkJCSBhZGRyLCBmYi0+d2lkdGgsIGZiLT5oZWlnaHQsIGZtdCwKKwkJCSBk
+cm1fZ2V0X2Zvcm1hdF9uYW1lKGZiLT5waXhlbF9mb3JtYXQpKTsKKworCS8qIGdldCByZWcgb2Zm
+c2V0ICovCisJcmVnX2N0cmwgPSBSRF9DSF9DVFJMKGNoKTsKKwlyZWdfYWRkciA9IFJEX0NIX0FE
+RFIoY2gpOworCXJlZ19zaXplID0gUkRfQ0hfU0laRShjaCk7CisJcmVnX3N0cmlkZSA9IFJEX0NI
+X1NUUklERShjaCk7CisJcmVnX3NwYWNlID0gUkRfQ0hfU1BBQ0UoY2gpOworCXJlZ19lbiA9IFJE
+X0NIX0VOKGNoKTsKKworCS8qCisJICogVE9ETzogc2V0IHJvdGF0aW9uCisJICovCisJd3JpdGVs
+KChmbXQgPDwgMTYpICYgMHgxZjAwMDAsIGJhc2UgKyByZWdfY3RybCk7CisJd3JpdGVsKGFkZHIs
+IGJhc2UgKyByZWdfYWRkcik7CisJd3JpdGVsKChpbl9oIDw8IDE2KSB8IHN0cmlkZSwgYmFzZSAr
+IHJlZ19zaXplKTsKKwl3cml0ZWwoc3RyaWRlLCBiYXNlICsgcmVnX3N0cmlkZSk7CisJd3JpdGVs
+KGluX2ggKiBzdHJpZGUsIGJhc2UgKyByZWdfc3BhY2UpOworCXdyaXRlbChBREVfRU5BQkxFLCBi
+YXNlICsgcmVnX2VuKTsKKwlhZGVfdXBkYXRlX3JlbG9hZF9iaXQoYmFzZSwgUkRNQV9PRlNUICsg
+Y2gsIDApOworfQorCitzdGF0aWMgdm9pZCBhZGVfcmRtYV9kaXNhYmxlKHZvaWQgX19pb21lbSAq
+YmFzZSwgdTMyIGNoKQoreworCXUzMiByZWdfZW47CisKKwkvKiBnZXQgcmVnIG9mZnNldCAqLwor
+CXJlZ19lbiA9IFJEX0NIX0VOKGNoKTsKKwl3cml0ZWwoMCwgYmFzZSArIHJlZ19lbik7CisJYWRl
+X3VwZGF0ZV9yZWxvYWRfYml0KGJhc2UsIFJETUFfT0ZTVCArIGNoLCAxKTsKK30KKworc3RhdGlj
+IHZvaWQgYWRlX2NsaXBfc2V0KHZvaWQgX19pb21lbSAqYmFzZSwgdTMyIGNoLCB1MzIgZmJfdywg
+dTMyIHgsCisJCQkgdTMyIGluX3csIHUzMiBpbl9oKQoreworCXUzMiBkaXNhYmxlX3ZhbDsKKwl1
+MzIgY2xpcF9sZWZ0OworCXUzMiBjbGlwX3JpZ2h0OworCisJLyoKKwkgKiBjbGlwIHdpZHRoLCBu
+byBuZWVkIHRvIGNsaXAgaGVpZ2h0CisJICovCisJaWYgKGZiX3cgPT0gaW5fdykgeyAvKiBieXBh
+c3MgKi8KKwkJZGlzYWJsZV92YWwgPSAxOworCQljbGlwX2xlZnQgPSAwOworCQljbGlwX3JpZ2h0
+ID0gMDsKKwl9IGVsc2UgeworCQlkaXNhYmxlX3ZhbCA9IDA7CisJCWNsaXBfbGVmdCA9IHg7CisJ
+CWNsaXBfcmlnaHQgPSBmYl93IC0gKHggKyBpbl93KSAtIDE7CisJfQorCisJRFJNX0RFQlVHX0RS
+SVZFUigiY2xpcCVkOiBjbGlwX2xlZnQ9JWQsIGNsaXBfcmlnaHQ9JWRcbiIsCisJCQkgY2ggKyAx
+LCBjbGlwX2xlZnQsIGNsaXBfcmlnaHQpOworCisJd3JpdGVsKGRpc2FibGVfdmFsLCBiYXNlICsg
+QURFX0NMSVBfRElTQUJMRShjaCkpOworCXdyaXRlbCgoZmJfdyAtIDEpIDw8IDE2IHwgKGluX2gg
+LSAxKSwgYmFzZSArIEFERV9DTElQX1NJWkUwKGNoKSk7CisJd3JpdGVsKGNsaXBfbGVmdCA8PCAx
+NiB8IGNsaXBfcmlnaHQsIGJhc2UgKyBBREVfQ0xJUF9TSVpFMShjaCkpOworCWFkZV91cGRhdGVf
+cmVsb2FkX2JpdChiYXNlLCBDTElQX09GU1QgKyBjaCwgMCk7Cit9CisKK3N0YXRpYyB2b2lkIGFk
+ZV9jbGlwX2Rpc2FibGUodm9pZCBfX2lvbWVtICpiYXNlLCB1MzIgY2gpCit7CisJd3JpdGVsKDEs
+IGJhc2UgKyBBREVfQ0xJUF9ESVNBQkxFKGNoKSk7CisJYWRlX3VwZGF0ZV9yZWxvYWRfYml0KGJh
+c2UsIENMSVBfT0ZTVCArIGNoLCAxKTsKK30KKworc3RhdGljIGJvb2wgaGFzX0FscGhhX2NoYW5u
+ZWwoaW50IGZvcm1hdCkKK3sKKwlzd2l0Y2ggKGZvcm1hdCkgeworCWNhc2UgQURFX0FSR0JfODg4
+ODoKKwljYXNlIEFERV9BQkdSXzg4ODg6CisJY2FzZSBBREVfUkdCQV84ODg4OgorCWNhc2UgQURF
+X0JHUkFfODg4ODoKKwkJcmV0dXJuIHRydWU7CisJZGVmYXVsdDoKKwkJcmV0dXJuIGZhbHNlOwor
+CX0KK30KKworc3RhdGljIHZvaWQgYWRlX2dldF9ibGVuZGluZ19wYXJhbXModTMyIGZtdCwgdTgg
+Z2xiX2FscGhhLCB1OCAqYWxwX21vZGUsCisJCQkJICAgIHU4ICphbHBfc2VsLCB1OCAqdW5kZXJf
+YWxwX3NlbCkKK3sKKwlib29sIGhhc19hbHBoYSA9IGhhc19BbHBoYV9jaGFubmVsKGZtdCk7CisK
+KwkvKgorCSAqIGdldCBhbHBfbW9kZQorCSAqLworCWlmIChoYXNfYWxwaGEgJiYgZ2xiX2FscGhh
+IDwgMjU1KQorCQkqYWxwX21vZGUgPSBBREVfQUxQX1BJWEVMX0FORF9HTEI7CisJZWxzZSBpZiAo
+aGFzX2FscGhhKQorCQkqYWxwX21vZGUgPSBBREVfQUxQX1BJWEVMOworCWVsc2UKKwkJKmFscF9t
+b2RlID0gQURFX0FMUF9HTE9CQUw7CisKKwkvKgorCSAqIGdldCBhbHAgc2VsCisJICovCisJKmFs
+cF9zZWwgPSBBREVfQUxQX01VTF9DT0VGRl8zOyAvKiAxICovCisJKnVuZGVyX2FscF9zZWwgPSBB
+REVfQUxQX01VTF9DT0VGRl8yOyAvKiAwICovCit9CisKK3N0YXRpYyB2b2lkIGFkZV9jb21wb3Np
+dG9yX3JvdXRpbmdfc2V0KHZvaWQgX19pb21lbSAqYmFzZSwgdTggY2gsCisJCQkJICAgICAgIHUz
+MiB4MCwgdTMyIHkwLAorCQkJCSAgICAgICB1MzIgaW5fdywgdTMyIGluX2gsIHUzMiBmbXQpCit7
+CisJdTggb3ZseV9jaCA9IDA7IC8qIFRPRE86IFRoaXMgaXMgdGhlIHpwb3MsIG9ubHkgb25lIHBs
+YW5lIG5vdyAqLworCXU4IGdsYl9hbHBoYSA9IDI1NTsKKwl1MzIgeDEgPSB4MCArIGluX3cgLSAx
+OworCXUzMiB5MSA9IHkwICsgaW5faCAtIDE7CisJdTMyIHZhbDsKKwl1OCBhbHBfc2VsOworCXU4
+IHVuZGVyX2FscF9zZWw7CisJdTggYWxwX21vZGU7CisKKwlhZGVfZ2V0X2JsZW5kaW5nX3BhcmFt
+cyhmbXQsIGdsYl9hbHBoYSwgJmFscF9tb2RlLCAmYWxwX3NlbCwKKwkJCQkmdW5kZXJfYWxwX3Nl
+bCk7CisKKwkvKiBvdmVybGF5IHJvdXRpbmcgc2V0dGluZworCSAqLworCXdyaXRlbCh4MCA8PCAx
+NiB8IHkwLCBiYXNlICsgQURFX09WTFlfQ0hfWFkwKG92bHlfY2gpKTsKKwl3cml0ZWwoeDEgPDwg
+MTYgfCB5MSwgYmFzZSArIEFERV9PVkxZX0NIX1hZMShvdmx5X2NoKSk7CisJdmFsID0gKGNoICsg
+MSkgPDwgQ0hfU0VMX09GU1QgfCBCSVQoQ0hfRU5fT0ZTVCkgfAorCQlhbHBfc2VsIDw8IENIX0FM
+UF9TRUxfT0ZTVCB8CisJCXVuZGVyX2FscF9zZWwgPDwgQ0hfVU5ERVJfQUxQX1NFTF9PRlNUIHwK
+KwkJZ2xiX2FscGhhIDw8IENIX0FMUF9HQkxfT0ZTVCB8CisJCWFscF9tb2RlIDw8IENIX0FMUF9N
+T0RFX09GU1Q7CisJd3JpdGVsKHZhbCwgYmFzZSArIEFERV9PVkxZX0NIX0NUTChvdmx5X2NoKSk7
+CisJLyogY29ubmVjdCB0aGlzIHBsYW5lL2NoYW5uZWwgdG8gb3ZlcmxheTIgY29tcG9zaXRvciAq
+LworCWFkZV91cGRhdGVfYml0cyhiYXNlICsgQURFX09WTFlfQ1RMLCBDSF9PVkxZX1NFTF9PRlNU
+KG92bHlfY2gpLAorCQkJQ0hfT1ZMWV9TRUxfTUFTSywgQ0hfT1ZMWV9TRUxfVkFMKE9VVF9PVkxZ
+KSk7Cit9CisKK3N0YXRpYyB2b2lkIGFkZV9jb21wb3NpdG9yX3JvdXRpbmdfZGlzYWJsZSh2b2lk
+IF9faW9tZW0gKmJhc2UsIHUzMiBjaCkKK3sKKwl1OCBvdmx5X2NoID0gMDsgLyogVE9ETzogT25s
+eSBwcmltYXJ5IHBsYW5lIG5vdyAqLworCisJLyogZGlzYWJsZSB0aGlzIHBsYW5lL2NoYW5uZWwg
+Ki8KKwlhZGVfdXBkYXRlX2JpdHMoYmFzZSArIEFERV9PVkxZX0NIX0NUTChvdmx5X2NoKSwgQ0hf
+RU5fT0ZTVCwKKwkJCU1BU0soMSksIDApOworCS8qIGRpcy1jb25uZWN0IHRoaXMgcGxhbmUvY2hh
+bm5lbCBvZiBvdmVybGF5MiBjb21wb3NpdG9yICovCisJYWRlX3VwZGF0ZV9iaXRzKGJhc2UgKyBB
+REVfT1ZMWV9DVEwsIENIX09WTFlfU0VMX09GU1Qob3ZseV9jaCksCisJCQlDSF9PVkxZX1NFTF9N
+QVNLLCAwKTsKK30KKworLyoKKyAqIFR5cGljYWx5LCBhIGNoYW5uZWwgbG9va3MgbGlrZTogRE1B
+LS0+Y2xpcC0tPnNjYWxlLS0+Y3RyYW5zLS0+Y29tcG9zaXRvcgorICovCitzdGF0aWMgdm9pZCBh
+ZGVfdXBkYXRlX2NoYW5uZWwoc3RydWN0IGFkZV9wbGFuZSAqYXBsYW5lLAorCQkJICAgICAgIHN0
+cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLCBpbnQgY3J0Y194LAorCQkJICAgICAgIGludCBjcnRj
+X3ksIHVuc2lnbmVkIGludCBjcnRjX3csCisJCQkgICAgICAgdW5zaWduZWQgaW50IGNydGNfaCwg
+dTMyIHNyY194LAorCQkJICAgICAgIHUzMiBzcmNfeSwgdTMyIHNyY193LCB1MzIgc3JjX2gpCit7
+CisJc3RydWN0IGFkZV9od19jdHggKmN0eCA9IGFwbGFuZS0+Y3R4OworCXZvaWQgX19pb21lbSAq
+YmFzZSA9IGN0eC0+YmFzZTsKKwl1MzIgZm10ID0gYWRlX2dldF9mb3JtYXQoZmItPnBpeGVsX2Zv
+cm1hdCk7CisJdTMyIGNoID0gYXBsYW5lLT5jaDsKKwl1MzIgaW5fdzsKKwl1MzIgaW5faDsKKwor
+CURSTV9ERUJVR19EUklWRVIoImNoYW5uZWwlZDogc3JjOiglZCwgJWQpLSVkeCVkLCBjcnRjOigl
+ZCwgJWQpLSVkeCVkIiwKKwkJCSBjaCArIDEsIHNyY194LCBzcmNfeSwgc3JjX3csIHNyY19oLAor
+CQkJIGNydGNfeCwgY3J0Y195LCBjcnRjX3csIGNydGNfaCk7CisKKwkvKiAxKSBETUEgc2V0dGlu
+ZyAqLworCWluX3cgPSBzcmNfdzsKKwlpbl9oID0gc3JjX2g7CisJYWRlX3JkbWFfc2V0KGJhc2Us
+IGZiLCBjaCwgc3JjX3ksIGluX2gsIGZtdCk7CisKKwkvKiAyKSBjbGlwIHNldHRpbmcgKi8KKwlh
+ZGVfY2xpcF9zZXQoYmFzZSwgY2gsIGZiLT53aWR0aCwgc3JjX3gsIGluX3csIGluX2gpOworCisJ
+LyogMykgVE9ETzogc2NhbGUgc2V0dGluZyBmb3Igb3ZlcmxheSBwbGFuZXMgKi8KKworCS8qIDQp
+IFRPRE86IGN0cmFuL2NzYyBzZXR0aW5nIGZvciBvdmVybGF5IHBsYW5lcyAqLworCisJLyogNSkg
+Y29tcG9zaXRvciByb3V0aW5nIHNldHRpbmcgKi8KKwlhZGVfY29tcG9zaXRvcl9yb3V0aW5nX3Nl
+dChiYXNlLCBjaCwgY3J0Y194LCBjcnRjX3ksIGluX3csIGluX2gsIGZtdCk7Cit9CisKK3N0YXRp
+YyB2b2lkIGFkZV9kaXNhYmxlX2NoYW5uZWwoc3RydWN0IGFkZV9wbGFuZSAqYXBsYW5lKQorewor
+CXN0cnVjdCBhZGVfaHdfY3R4ICpjdHggPSBhcGxhbmUtPmN0eDsKKwl2b2lkIF9faW9tZW0gKmJh
+c2UgPSBjdHgtPmJhc2U7CisJdTMyIGNoID0gYXBsYW5lLT5jaDsKKworCURSTV9ERUJVR19EUklW
+RVIoImRpc2FibGUgY2hhbm5lbCVkXG4iLCBjaCArIDEpOworCisJLyogZGlzYWJsZSByZWFkIERN
+QSAqLworCWFkZV9yZG1hX2Rpc2FibGUoYmFzZSwgY2gpOworCisJLyogZGlzYWJsZSBjbGlwICov
+CisJYWRlX2NsaXBfZGlzYWJsZShiYXNlLCBjaCk7CisKKwkvKiBkaXNhYmxlIGNvbXBvc2l0b3Ig
+cm91dGluZyAqLworCWFkZV9jb21wb3NpdG9yX3JvdXRpbmdfZGlzYWJsZShiYXNlLCBjaCk7Cit9
+CisKK3N0YXRpYyBpbnQgYWRlX3BsYW5lX3ByZXBhcmVfZmIoc3RydWN0IGRybV9wbGFuZSAqcGxh
+bmUsCisJCQkJY29uc3Qgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqbmV3X3N0YXRlKQoreworCS8q
+IGRvIG5vdGhpbmcgKi8KKwlyZXR1cm4gMDsKK30KKworc3RhdGljIHZvaWQgYWRlX3BsYW5lX2Ns
+ZWFudXBfZmIoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsCisJCQkJIGNvbnN0IHN0cnVjdCBkcm1f
+cGxhbmVfc3RhdGUgKm9sZF9zdGF0ZSkKK3sKKwkvKiBkbyBub3RoaW5nICovCit9CisKK3N0YXRp
+YyBpbnQgYWRlX3BsYW5lX2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwKKwkJ
+CQkgIHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKnN0YXRlKQoreworCXN0cnVjdCBkcm1fZnJhbWVi
+dWZmZXIgKmZiID0gc3RhdGUtPmZiOworCXN0cnVjdCBkcm1fY3J0YyAqY3J0YyA9IHN0YXRlLT5j
+cnRjOworCXN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqY3J0Y19zdGF0ZTsKKwl1MzIgc3JjX3ggPSBz
+dGF0ZS0+c3JjX3ggPj4gMTY7CisJdTMyIHNyY195ID0gc3RhdGUtPnNyY195ID4+IDE2OworCXUz
+MiBzcmNfdyA9IHN0YXRlLT5zcmNfdyA+PiAxNjsKKwl1MzIgc3JjX2ggPSBzdGF0ZS0+c3JjX2gg
+Pj4gMTY7CisJaW50IGNydGNfeCA9IHN0YXRlLT5jcnRjX3g7CisJaW50IGNydGNfeSA9IHN0YXRl
+LT5jcnRjX3k7CisJdTMyIGNydGNfdyA9IHN0YXRlLT5jcnRjX3c7CisJdTMyIGNydGNfaCA9IHN0
+YXRlLT5jcnRjX2g7CisJdTMyIGZtdDsKKworCWlmICghY3J0YyB8fCAhZmIpCisJCXJldHVybiAw
+OworCisJZm10ID0gYWRlX2dldF9mb3JtYXQoZmItPnBpeGVsX2Zvcm1hdCk7CisJaWYgKGZtdCA9
+PSBBREVfRk9STUFUX05PVF9TVVBQT1JUKQorCQlyZXR1cm4gLUVJTlZBTDsKKworCWNydGNfc3Rh
+dGUgPSBkcm1fYXRvbWljX2dldF9jcnRjX3N0YXRlKHN0YXRlLT5zdGF0ZSwgY3J0Yyk7CisJaWYg
+KElTX0VSUihjcnRjX3N0YXRlKSkKKwkJcmV0dXJuIFBUUl9FUlIoY3J0Y19zdGF0ZSk7CisKKwlp
+ZiAoc3JjX3cgIT0gY3J0Y193IHx8IHNyY19oICE9IGNydGNfaCkgeworCQlEUk1fRVJST1IoIlNj
+YWxlIG5vdCBzdXBwb3J0ISEhXG4iKTsKKwkJcmV0dXJuIC1FSU5WQUw7CisJfQorCisJaWYgKHNy
+Y194ICsgc3JjX3cgPiBmYi0+d2lkdGggfHwKKwkgICAgc3JjX3kgKyBzcmNfaCA+IGZiLT5oZWln
+aHQpCisJCXJldHVybiAtRUlOVkFMOworCisJaWYgKGNydGNfeCA8IDAgfHwgY3J0Y195IDwgMCkK
+KwkJcmV0dXJuIC1FSU5WQUw7CisKKwlpZiAoY3J0Y194ICsgY3J0Y193ID4gY3J0Y19zdGF0ZS0+
+YWRqdXN0ZWRfbW9kZS5oZGlzcGxheSB8fAorCSAgICBjcnRjX3kgKyBjcnRjX2ggPiBjcnRjX3N0
+YXRlLT5hZGp1c3RlZF9tb2RlLnZkaXNwbGF5KQorCQlyZXR1cm4gLUVJTlZBTDsKKworCXJldHVy
+biAwOworfQorCitzdGF0aWMgdm9pZCBhZGVfcGxhbmVfYXRvbWljX3VwZGF0ZShzdHJ1Y3QgZHJt
+X3BsYW5lICpwbGFuZSwKKwkJCQkgICAgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqb2xkX3N0YXRl
+KQoreworCXN0cnVjdCBkcm1fcGxhbmVfc3RhdGUJKnN0YXRlCT0gcGxhbmUtPnN0YXRlOworCXN0
+cnVjdCBhZGVfcGxhbmUgKmFwbGFuZSA9IHRvX2FkZV9wbGFuZShwbGFuZSk7CisKKwlhZGVfdXBk
+YXRlX2NoYW5uZWwoYXBsYW5lLCBzdGF0ZS0+ZmIsIHN0YXRlLT5jcnRjX3gsIHN0YXRlLT5jcnRj
+X3ksCisJCQkgICBzdGF0ZS0+Y3J0Y193LCBzdGF0ZS0+Y3J0Y19oLAorCQkJICAgc3RhdGUtPnNy
+Y194ID4+IDE2LCBzdGF0ZS0+c3JjX3kgPj4gMTYsCisJCQkgICBzdGF0ZS0+c3JjX3cgPj4gMTYs
+IHN0YXRlLT5zcmNfaCA+PiAxNik7Cit9CisKK3N0YXRpYyB2b2lkIGFkZV9wbGFuZV9hdG9taWNf
+ZGlzYWJsZShzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwKKwkJCQkgICAgIHN0cnVjdCBkcm1fcGxh
+bmVfc3RhdGUgKm9sZF9zdGF0ZSkKK3sKKwlzdHJ1Y3QgYWRlX3BsYW5lICphcGxhbmUgPSB0b19h
+ZGVfcGxhbmUocGxhbmUpOworCisJYWRlX2Rpc2FibGVfY2hhbm5lbChhcGxhbmUpOworfQorCitz
+dGF0aWMgY29uc3Qgc3RydWN0IGRybV9wbGFuZV9oZWxwZXJfZnVuY3MgYWRlX3BsYW5lX2hlbHBl
+cl9mdW5jcyA9IHsKKwkucHJlcGFyZV9mYiA9IGFkZV9wbGFuZV9wcmVwYXJlX2ZiLAorCS5jbGVh
+bnVwX2ZiID0gYWRlX3BsYW5lX2NsZWFudXBfZmIsCisJLmF0b21pY19jaGVjayA9IGFkZV9wbGFu
+ZV9hdG9taWNfY2hlY2ssCisJLmF0b21pY191cGRhdGUgPSBhZGVfcGxhbmVfYXRvbWljX3VwZGF0
+ZSwKKwkuYXRvbWljX2Rpc2FibGUgPSBhZGVfcGxhbmVfYXRvbWljX2Rpc2FibGUsCit9OworCitz
+dGF0aWMgc3RydWN0IGRybV9wbGFuZV9mdW5jcyBhZGVfcGxhbmVfZnVuY3MgPSB7CisJLnVwZGF0
+ZV9wbGFuZQk9IGRybV9hdG9taWNfaGVscGVyX3VwZGF0ZV9wbGFuZSwKKwkuZGlzYWJsZV9wbGFu
+ZQk9IGRybV9hdG9taWNfaGVscGVyX2Rpc2FibGVfcGxhbmUsCisJLnNldF9wcm9wZXJ0eSA9IGRy
+bV9hdG9taWNfaGVscGVyX3BsYW5lX3NldF9wcm9wZXJ0eSwKKwkuZGVzdHJveSA9IGRybV9wbGFu
+ZV9jbGVhbnVwLAorCS5yZXNldCA9IGRybV9hdG9taWNfaGVscGVyX3BsYW5lX3Jlc2V0LAorCS5h
+dG9taWNfZHVwbGljYXRlX3N0YXRlID0gZHJtX2F0b21pY19oZWxwZXJfcGxhbmVfZHVwbGljYXRl
+X3N0YXRlLAorCS5hdG9taWNfZGVzdHJveV9zdGF0ZSA9IGRybV9hdG9taWNfaGVscGVyX3BsYW5l
+X2Rlc3Ryb3lfc3RhdGUsCit9OworCitzdGF0aWMgaW50IGFkZV9wbGFuZV9pbml0KHN0cnVjdCBk
+cm1fZGV2aWNlICpkZXYsIHN0cnVjdCBhZGVfcGxhbmUgKmFwbGFuZSwKKwkJCSAgZW51bSBkcm1f
+cGxhbmVfdHlwZSB0eXBlKQoreworCWNvbnN0IHUzMiAqZm10czsKKwl1MzIgZm10c19jbnQ7CisJ
+aW50IHJldCA9IDA7CisKKwkvKiBnZXQgIHByb3BlcnRpZXMgKi8KKwlmbXRzX2NudCA9IGFkZV9n
+ZXRfY2hhbm5lbF9mb3JtYXRzKGFwbGFuZS0+Y2gsICZmbXRzKTsKKwlpZiAocmV0KQorCQlyZXR1
+cm4gcmV0OworCisJcmV0ID0gZHJtX3VuaXZlcnNhbF9wbGFuZV9pbml0KGRldiwgJmFwbGFuZS0+
+YmFzZSwgMSwgJmFkZV9wbGFuZV9mdW5jcywKKwkJCQkgICAgICAgZm10cywgZm10c19jbnQsIHR5
+cGUsIE5VTEwpOworCWlmIChyZXQpIHsKKwkJRFJNX0VSUk9SKCJmYWlsIHRvIGluaXQgcGxhbmUs
+IGNoPSVkXG4iLCBhcGxhbmUtPmNoKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwlkcm1fcGxhbmVf
+aGVscGVyX2FkZCgmYXBsYW5lLT5iYXNlLCAmYWRlX3BsYW5lX2hlbHBlcl9mdW5jcyk7CisKKwly
+ZXR1cm4gMDsKK30KKwogc3RhdGljIGludCBhZGVfZHRzX3BhcnNlKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYsIHN0cnVjdCBhZGVfaHdfY3R4ICpjdHgpCiB7CiAJc3RydWN0IHJlc291cmNl
+ICpyZXM7CkBAIC00MTYsNyArOTI0LDEwIEBAIGludCBhZGVfZHJtX2luaXQoc3RydWN0IGRybV9k
+ZXZpY2UgKmRldikKIAlzdHJ1Y3QgYWRlX2RhdGEgKmFkZTsKIAlzdHJ1Y3QgYWRlX2h3X2N0eCAq
+Y3R4OwogCXN0cnVjdCBhZGVfY3J0YyAqYWNydGM7CisJc3RydWN0IGFkZV9wbGFuZSAqYXBsYW5l
+OworCWVudW0gZHJtX3BsYW5lX3R5cGUgdHlwZTsKIAlpbnQgcmV0OworCWludCBpOwogCiAJYWRl
+ID0gZGV2bV9remFsbG9jKGRldi0+ZGV2LCBzaXplb2YoKmFkZSksIEdGUF9LRVJORUwpOwogCWlm
+ICghYWRlKSB7CkBAIC00MzQsNiArOTQ1LDI4IEBAIGludCBhZGVfZHJtX2luaXQoc3RydWN0IGRy
+bV9kZXZpY2UgKmRldikKIAlpZiAocmV0KQogCQlyZXR1cm4gcmV0OwogCisJLyoKKwkgKiBwbGFu
+ZSBpbml0CisJICogVE9ETzogTm93IG9ubHkgc3VwcG9ydCBwcmltYXJ5IHBsYW5lLCBvdmVybGF5
+IHBsYW5lcworCSAqIG5lZWQgdG8gZG8uCisJICovCisJZm9yIChpID0gMDsgaSA8IEFERV9DSF9O
+VU07IGkrKykgeworCQlhcGxhbmUgPSAmYWRlLT5hcGxhbmVbaV07CisJCWFwbGFuZS0+Y2ggPSBp
+OworCQlhcGxhbmUtPmN0eCA9IGN0eDsKKwkJdHlwZSA9IGkgPT0gUFJJTUFSWV9DSCA/IERSTV9Q
+TEFORV9UWVBFX1BSSU1BUlkgOgorCQkJRFJNX1BMQU5FX1RZUEVfT1ZFUkxBWTsKKworCQlyZXQg
+PSBhZGVfcGxhbmVfaW5pdChkZXYsIGFwbGFuZSwgdHlwZSk7CisJCWlmIChyZXQpCisJCQlyZXR1
+cm4gcmV0OworCX0KKworCS8qIGNydGMgaW5pdCAqLworCXJldCA9IGFkZV9jcnRjX2luaXQoZGV2
+LCAmYWNydGMtPmJhc2UsICZhZGUtPmFwbGFuZVtQUklNQVJZX0NIXS5iYXNlKTsKKwlpZiAocmV0
+KQorCQlyZXR1cm4gcmV0OworCiAJcmV0dXJuIDA7CiB9CiAKLS0gCjEuOS4xCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
