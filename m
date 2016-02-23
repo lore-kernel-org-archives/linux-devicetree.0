@@ -1,29 +1,71 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH v2 2/4] dmaengine: mmp-pdma: add number of requestors
-Date: Tue, 23 Feb 2016 18:45:09 +0100
-Message-ID: <8737sjwcbe.fsf@belgarion.home>
-References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
-	<1455569868-25017-2-git-send-email-robert.jarzmik@free.fr>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] [media] tvp5150: remove signal generator as input from the DT binding
+Date: Tue, 23 Feb 2016 20:02:14 +0200
+Message-ID: <63317542.65NzPYJCcU@avalon>
+References: <1456243798-12453-1-git-send-email-javier@osg.samsung.com> <3469550.VVKtG3tqH6@avalon> <56CC8887.803@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1455569868-25017-2-git-send-email-robert.jarzmik@free.fr>
-	(Robert Jarzmik's message of "Mon, 15 Feb 2016 21:57:46 +0100")
+In-Reply-To: <56CC8887.803@osg.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Daniel Mack <daniel@zonque.org>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dmaengine@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Robert Jarzmik <robert.jarzmik@free.fr> writes:
+Hi Javier,
 
-> The DMA chip has a fixed number of requestor lines used for flow
-> control. This number is platform dependent. The pxa_dma dma driver will
-> use this value to activate or not the flow control.
+On Tuesday 23 February 2016 13:27:51 Javier Martinez Canillas wrote:
+> On 02/23/2016 01:16 PM, Laurent Pinchart wrote:
+> > On Tuesday 23 February 2016 13:09:58 Javier Martinez Canillas wrote:
+> >> The chip internal signal generator was modelled as an input connector
+> >> and represented as a media entity but isn't really a connector so the
+> >> driver was changed to use the V4L2_CID_TEST_PATTERN control instead.
+> >> 
+> >> Remove the signal generator input from the list of connectors in the
+> >> tvp5150 DT binding document as well since isn't a connector anymore.
+> >> 
+> >> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> >> 
+> >> ---
+> >> Hello,
+> >> 
+> >> I think is OK to change this DT binding because is only in the media tree
+> >> for now and not in mainline yet and also is expected to change more since
+> >> there are still discussions about how input connectors will be supported
+> >> by the Media Controller framework in the media subsystem.
+> > 
+> > I think that's fine, yes
+> > 
+> > Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> Thanks.
+> 
+> > I haven't noticed the patch that introduced this early enough I'm afraid,
+> > and I think we still have issues with those bindings.
+> 
+> Yes, I posted those patches and got merged before we had the discussion
+> about input connectors over IRC so I didn't know what was the correct way
+> to do it.
 >
-> There won't be any impact on mmp_pdma driver.
-Haojian,
+> > The tvp5150 node should *not* contain connector subnodes, the connectors
+> > nodes should use the bindings defined in
+> > Documentation/devicetree/bindings/display/connector/ and be linked to the
+> > tvp5150 node using the OF graph bindings (ports and endpoints).
+> 
+> Agreed.
+> 
+> > Do you think you could fix that ?
+> 
+> Yes I will, I'm waiting for the input connectors discussions to settle so I
+> can post a final version of the DT bindings following what is agreed by all.
+> 
 
-Even if mmp_pdma will not be impacted, it would be good to have have your ack on
-this trivial patch.
+Shouldn't we revert the patch that introduced connectors support in the DT 
+bindings in the meantime then, to avoid known to be broken bindings from 
+hitting mainline in case we can't fix them in time for v4.6 ?
 
-Cheers.
+-- 
+Regards,
+
+Laurent Pinchart
