@@ -1,106 +1,80 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] arm64: dts: uniphier: rename PH1-LD10 to PH1-LD20
-Date: Tue, 23 Feb 2016 13:40:21 +0900
-Message-ID: <1456202421-10857-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v8 1/4] firmware: introduce sysfs driver for QEMU's
+ fw_cfg device
+Date: Tue, 23 Feb 2016 07:07:36 +0200
+Message-ID: <20160223070541-mutt-send-email-mst@redhat.com>
+References: <1453990994-17801-1-git-send-email-somlo@cmu.edu>
+ <1453990994-17801-2-git-send-email-somlo@cmu.edu>
+ <20160221100557-mutt-send-email-mst@redhat.com>
+ <20160221130614.GA4511@GLSMBP.INI.CMU.EDU>
+ <20160222220756-mutt-send-email-mst@redhat.com>
+ <20160222202623.GI16357@HEDWIG.INI.CMU.EDU>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160222202623.GI16357-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to the company's awful projecting, this chip has been renamed to
-PH1-LD20.  It has not been shipped yet, this change would not give
-much impact on our customers.
+On Mon, Feb 22, 2016 at 03:26:23PM -0500, Gabriel L. Somlo wrote:
+> On Mon, Feb 22, 2016 at 10:14:50PM +0200, Michael S. Tsirkin wrote:
+> > On Sun, Feb 21, 2016 at 08:06:17AM -0500, Gabriel L. Somlo wrote:
+> > > > > +static void fw_cfg_io_cleanup(void)
+> > > > > +{
+> > > > > +	if (fw_cfg_is_mmio) {
+> > > > > +		iounmap(fw_cfg_dev_base);
+> > > > > +		release_mem_region(fw_cfg_p_base, fw_cfg_p_size);
+> > > > > +	} else {
+> > > > > +		ioport_unmap(fw_cfg_dev_base);
+> > > > > +		release_region(fw_cfg_p_base, fw_cfg_p_size);
+> > > > > +	}
+> > > > > +}
+> > > > > +
+> > > > > +/* arch-specific ctrl & data register offsets are not available in ACPI, DT */
+> > > > 
+> > > > So for all arches which support ACPI, I think this driver
+> > > > should just rely on ACPI.
+> > > 
+> > > There was a discussion about that a few versions ago, and IIRC the
+> > > conclusion was not to expect the firmware to contend for fw_cfg access
+> > > after the guest kernel boots:
+> > > 
+> > > https://lkml.org/lkml/2015/10/5/283
+> > > 
+> > 
+> > So it looks like NVDIMM at least wants to pass label data to guest -
+> > for which fw cfg might be a reasonable choice.
+> > 
+> > I suspect things changed - fw cfg used to be very slow but we now have
+> > DMA interface which makes it useful for a range of applications.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Comment on this? I'm really worried we'll release linux
+without a way to access fw cfg from aml.
+How about taking acpi lock around all accesses?
 
-Olof, Arnd,
+> > > (I even had a prototype version doing what you suggested, but per the above
+> > > reference decided to drop it -- which IMHO is for the better, since otherwise
+> > > I'd have had to ifdef between ACPI and non-ACPI versions of the driver --
+> > > see https://lkml.org/lkml/2015/11/4/534 )
+> > 
+> > I'm not sure why you have these ifdefs - they are on the host, are they
+> > not?
+> 
+> Think of those as "pseudocode" ifdefs, they're there to distinguish
+> between AML that would be generated on MMIO vs. IOPORT systems
+> (specifically, arm vs. x86, respectively)
+> 
+> Some of the AML is the same, but obviously the _CRS, and
+> OperationRegion + Field are different, and I wanted to point that out
+> somehow :)
+> 
+> Cheers,
+> --Gabriel
 
-Please apply this patch along with my series
-"[PATCH 0/9] ARM: uniphier: UniPhier updates for Linux 4.6-rc1".
+You can do ifs as well.
 
-If it goes to a different branch, it will cause a big merge conflict later.
-
-
- arch/arm64/boot/dts/socionext/Makefile                            | 2 +-
- .../{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts}      | 8 ++++----
- .../socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi}  | 6 +++---
- 3 files changed, 8 insertions(+), 8 deletions(-)
- rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts} (92%)
- rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi} (98%)
-
-diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
-index 8d72771..299b67e 100644
---- a/arch/arm64/boot/dts/socionext/Makefile
-+++ b/arch/arm64/boot/dts/socionext/Makefile
-@@ -1,4 +1,4 @@
--dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld10-ref.dtb
-+dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld20-ref.dtb
- 
- always		:= $(dtb-y)
- clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
-similarity index 92%
-rename from arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
-rename to arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
-index e5c8a20..727ae5f 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
-@@ -1,5 +1,5 @@
- /*
-- * Device Tree Source for UniPhier PH1-LD10 Reference Board
-+ * Device Tree Source for UniPhier PH1-LD20 Reference Board
-  *
-  * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-  *
-@@ -43,12 +43,12 @@
-  */
- 
- /dts-v1/;
--/include/ "uniphier-ph1-ld10.dtsi"
-+/include/ "uniphier-ph1-ld20.dtsi"
- /include/ "uniphier-support-card.dtsi"
- 
- / {
--	model = "UniPhier PH1-LD10 Reference Board";
--	compatible = "socionext,ph1-ld10-ref", "socionext,ph1-ld10";
-+	model = "UniPhier PH1-LD20 Reference Board";
-+	compatible = "socionext,ph1-ld20-ref", "socionext,ph1-ld20";
- 
- 	memory {
- 		device_type = "memory";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
-similarity index 98%
-rename from arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
-rename to arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
-index 84637eb..65e9651 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
-@@ -1,5 +1,5 @@
- /*
-- * Device Tree Source for UniPhier PH1-LD10 SoC
-+ * Device Tree Source for UniPhier PH1-LD20 SoC
-  *
-  * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro@socionext.com>
-  *
-@@ -43,7 +43,7 @@
-  */
- 
- / {
--	compatible = "socionext,ph1-ld10";
-+	compatible = "socionext,ph1-ld20";
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 	interrupt-parent = <&gic>;
-@@ -268,7 +268,7 @@
- 		};
- 
- 		pinctrl: pinctrl@5f801000 {
--			compatible = "socionext,ph1-ld10-pinctrl", "syscon";
-+			compatible = "socionext,ph1-ld20-pinctrl", "syscon";
- 			reg = <0x5f801000 0xe00>;
- 		};
- 
 -- 
-1.9.1
+MST
