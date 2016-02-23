@@ -1,49 +1,36 @@
-From: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: rockchip: fix audio interrupts on rk3288
-Date: Tue, 23 Feb 2016 13:41:00 +0000
-Message-ID: <1456234860-18832-3-git-send-email-john@metanate.com>
+From: John Keeping <john@metanate.com>
+Subject: [PATCH 1/2] ARM: dts: rockchip: fix MIPI interrupt on rk3288
+Date: Tue, 23 Feb 2016 13:40:59 +0000
+Message-ID: <1456234860-18832-2-git-send-email-john@metanate.com>
 References: <1456234860-18832-1-git-send-email-john@metanate.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456234860-18832-1-git-send-email-john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456234860-18832-1-git-send-email-john@metanate.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, John Keeping <john@metanate.com>
 List-Id: devicetree@vger.kernel.org
 
-These must be translated from the values in the TRM by subtracting 32,
-which has not been done.  The SPDIF interrupt is also off-by-one.
+This isn't currently used by the driver but the correct value is 19
+since DSIHOST0 is 51 in the TRM and the GIC offset requires 32 to be
+subtracted.
 
-Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+Signed-off-by: John Keeping <john@metanate.com>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/rk3288.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 5597105..a82d4b1 100644
+index c75914b..5597105 100644
 --- a/arch/arm/boot/dts/rk3288.dtsi
 +++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -758,7 +758,7 @@
- 		clocks = <&cru HCLK_SPDIF8CH>, <&cru SCLK_SPDIF8CH>;
- 		dmas = <&dmac_bus_s 3>;
- 		dma-names = "tx";
--		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&spdif_tx>;
+@@ -857,7 +857,7 @@
+ 	mipi_dsi: mipi@ff960000 {
+ 		compatible = "rockchip,rk3288-mipi-dsi", "snps,dw-mipi-dsi";
+ 		reg = <0xff960000 0x4000>;
+-		interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_DSI0>;
+ 		clock-names = "ref", "pclk";
  		rockchip,grf = <&grf>;
-@@ -768,7 +768,7 @@
- 	i2s: i2s@ff890000 {
- 		compatible = "rockchip,rk3288-i2s", "rockchip,rk3066-i2s";
- 		reg = <0xff890000 0x10000>;
--		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		dmas = <&dmac_bus_s 0>, <&dmac_bus_s 1>;
 -- 
 2.7.0.226.gfe986fe
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
