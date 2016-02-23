@@ -1,98 +1,121 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 6/6] drm/msm/dsi: Parse DSI lanes via DT
-Date: Tue, 23 Feb 2016 13:11:24 +0200
-Message-ID: <56CC3E5C.3060101@ti.com>
-References: <1455541259-8967-1-git-send-email-architt@codeaurora.org>
- <1455541259-8967-7-git-send-email-architt@codeaurora.org>
- <20160222025345.GB15973@rob-hp-laptop> <56CAB678.3080505@codeaurora.org>
- <CAL_JsqLVd3vLGO8SCQv=PFXb7yD42U_nKG=fxenc4Fy63yiezw@mail.gmail.com>
- <56CC23CD.5010708@ti.com> <56CC37BB.3060305@codeaurora.org>
+From: Shannon Zhao <zhaoshenglong@huawei.com>
+Subject: Re: [PATCH v4 16/17] FDT: Add a helper to get specified name subnode
+Date: Tue, 23 Feb 2016 19:13:29 +0800
+Message-ID: <56CC3ED9.5000101@huawei.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com> <1454641552-12576-17-git-send-email-zhaoshenglong@huawei.com> <CAL_JsqK8F6PQX2kC_+CtDk1-ykKRB3YB54o4FaypsRY_tNzK5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature";
-	boundary="0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56CC37BB.3060305@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqK8F6PQX2kC_+CtDk1-ykKRB3YB54o4FaypsRY_tNzK5w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Stefano Stabellini <stefano.stabellini@citrix.com>, david.vrabel@citrix.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, julien.grall@citrix.com, "xen-devel@lists.xen.org" <xen-devel@lists.xen.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ian Campbell <ian.campbell@citrix.com>, shannon.zhao@linaro.org, peter.huangpeng@huawei.com
 List-Id: devicetree@vger.kernel.org
 
---0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
 
-
-On 23/02/16 12:43, Archit Taneja wrote:
->=20
->=20
-> On 02/23/2016 02:48 PM, Tomi Valkeinen wrote:
+On 2016/2/9 13:04, Rob Herring wrote:
+> On Thu, Feb 4, 2016 at 9:05 PM, Shannon Zhao <zhaoshenglong@huawei.co=
+m> wrote:
+>> From: Shannon Zhao <shannon.zhao@linaro.org>
 >>
->> On 22/02/16 22:10, Rob Herring wrote:
->>
->>>> If we want all DSI host controllers to use a common binding to descr=
-ibe
->>>> lanes, we'd need to go with the most flexible one, and the driver
->>>> restricts it to the subsets that we support.
->>
->> True, but I wonder if that's necessary. The lane property for the SoC
->> should be read by the SoC specific driver, right? So the DT property c=
-an
->> be anything. I'm not sure if there's ever a reason for a generic code =
-to
->> observe the DSI lane setup.
+>> Sometimes it needs to check if there is a node in FDT by full path.
 >=20
-> Yeah, it is very SoC specific.
+> I'm confused. Are you searching by full path or...
 >=20
-> The only place where it might matter is if a panel/bridge ever needs to=
+>> Introduce this helper to get the specified name subnode if it exists=
+=2E
+>=20
+> name of sub node?
+>=20
+get the offset of sub node by specified name.
 
-> know what pins implement what lanes on the platform. A common binding
-> there might help us keep the panel driver generic. Although, this need
-> itself is a bit hypothetical.
+> Either way, fdt_subnode_offset or fdt_path_offset doesn't work?
+>=20
+Ah=EF=BC=8Cright=EF=BC=8Cboth of them should work. Does it need to add =
+a wrapper in
+drivers/of/fdt.c for them or directly use them with the parameter
+initial_boot_params?
 
-My opinion here is that if the panel/bridge needs to know something
-about the DSI lanes/pins, we should have that data in the
-panel's/bridge's endpoint data.
+Thanks,
+>>
+>> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+>> ---
+>> CC: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/of/fdt.c       | 25 +++++++++++++++++++++++++
+>>  include/linux/of_fdt.h |  2 ++
+>>  2 files changed, 27 insertions(+)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 655f79d..eacb188 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -645,6 +645,31 @@ int __init of_scan_flat_dt(int (*it)(unsigned l=
+ong node,
+>>  }
+>>
+>>  /**
+>> + * of_get_flat_dt_subnode_by_name - get subnode of specified node b=
+y name
+>> + *
+>> + * @node: the parent node
+>> + * @uname: the name of subnode
+>> + * @return offset of the subnode, or -FDT_ERR_NOTFOUND if there is =
+none
+>> + */
+>> +
+>> +int of_get_flat_dt_subnode_by_name(unsigned long node, const char *=
+uname)
+>> +{
+>> +       const void *blob =3D initial_boot_params;
+>> +       int offset;
+>> +       const char *pathp;
+>> +
+>> +       for (offset =3D fdt_first_subnode(blob, node);
+>> +            offset >=3D 0;
+>> +            offset =3D fdt_next_subnode(blob, offset)) {
+>> +               pathp =3D fdt_get_name(blob, offset, NULL);
+>> +               if (strcmp(pathp, uname) =3D=3D 0)
+>> +                       return offset;
+>> +       }
+>> +
+>> +       return -FDT_ERR_NOTFOUND;
+>> +}
+>> +
+>> +/**
+>>   * of_get_flat_dt_root - find the root node in the flat blob
+>>   */
+>>  unsigned long __init of_get_flat_dt_root(void)
+>> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+>> index df9ef38..fc28162 100644
+>> --- a/include/linux/of_fdt.h
+>> +++ b/include/linux/of_fdt.h
+>> @@ -52,6 +52,8 @@ extern char __dtb_end[];
+>>  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char=
+ *uname,
+>>                                      int depth, void *data),
+>>                            void *data);
+>> +extern int of_get_flat_dt_subnode_by_name(unsigned long node,
+>> +                                         const char *uname);
+>>  extern const void *of_get_flat_dt_prop(unsigned long node, const ch=
+ar *name,
+>>                                        int *size);
+>>  extern int of_flat_dt_is_compatible(unsigned long node, const char =
+*name);
+>> --
+>> 2.0.4
+>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree=
+" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> .
+>=20
 
-So if both SoC and the DSI peripheral need complex DSI pin/lane setup,
-you might have very similar data on both sides. There's possibly some
-duplication there, but I think it keeps things much simpler.
-
-For example, if the SoC needs OMAP style DSI pin data, and the DSI
-peripheral needs to know the amount of DSI lanes used (but nothing
-else), you might think it's nice if the DSI peripheral would peek at the
-SoC side data, finding out about the DSI lanes.
-
-But I think in that case you should just add a "num-lanes" property to
-the DSI peripheral. The DT data for a device should be private to the
-driver handling the device, except for some special cases like following
-the graph.
-
- Tomi
-
-
---0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJWzD5cAAoJEPo9qoy8lh71qc0P/RGk80HOlthvE6JSbiO/gpKA
-fSNBhVdEFavqB0+FPcVN6FagLwkpWdqKIx/TcIjkekzxKXQz4hCN9niF/MpsoWwc
-Ptwh8uEyUlc1hHW17bKjJWwzLx8yG999eqpDUj02y95nT7fxUCTuz04v6RQRvXDz
-gNyZCO2OljkG4s7/lpg2DHp6yFEXacAGVW8OKTLMEU2ZgTwOi1W2G4ola0I7T1Wl
-2mqlOn3vgg4lNnAPvhZRAtHCgm08LKlbUTSV73L1Ctcz7yBYXLNNfI19N0cz8n2n
-cBb/OK+2dQ9KU3WxJcUtb2IUOAplKVO0hogPRG68RYXwvFRow+hxNj1UGT6RR2aK
-r2VO8wM0OKX9O38aJNGFT+vTa0FHnFC1kuJHy08NnsxkMDYJ3vpGoDlmm4vqa61f
-BvmP4kPqyqFJf5eqHAZcBt0yM8A61COWvCwg/tGR2fmdxkpREIoM3yqAGW+I+5t5
-wJ3QgAqnKTJRHTOsE+I6QMrT1H/DnRrsSqfERDn4Sm50g6EAIiUcE3tvBxtY2XsM
-ICpaEvKY+ghs9gkdcLEsSJ/o/saQwjjhaeuBbnOfVw2hyMWunJvtqglSKlDbJMmX
-yWATL0e6ST3KepNwjltwTk2GRcaquPnA1Fqd/+o75+Qs5mcSKEU+MBtgr1DJGuYY
-FpC/s+3sI9dz8PDzBraM
-=sZrz
------END PGP SIGNATURE-----
-
---0pgpiVW26VaSMi6w86cDHnxUB1vF4VG7R--
+--=20
+Shannon
