@@ -1,37 +1,47 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: RE: [PATCH] phy: rcar-gen3-usb2: remove HSUSB registers handling
-Date: Tue, 23 Feb 2016 07:11:12 +0000
-Message-ID: <SG2PR06MB0919CD0B9DB0CDEADE5977E6D8A40@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1452158204-5236-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20160109223307.GA14530@rob-hp-laptop>
- <SG2PR06MB0919A522615A7F9A90382CF2D8A40@SG2PR06MB0919.apcprd06.prod.outlook.com>
- <56CBFE23.8050501@ti.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] dmaengine: pxa_dma: fix the maximum requestor line
+Date: Tue, 23 Feb 2016 08:13:57 +0100
+Message-ID: <877fhvx5je.fsf@belgarion.home>
+References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
+	<1455569868-25017-4-git-send-email-robert.jarzmik@free.fr>
+	<20160223031335.GJ17690@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56CBFE23.8050501@ti.com>
-Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Rob Herring <robh@kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160223031335.GJ17690@localhost> (Vinod Koul's message of "Tue,
+	23 Feb 2016 08:43:36 +0530")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> writes:
 
-> Hi,
-> 
-> On Tuesday 23 February 2016 11:54 AM, Yoshihiro Shimoda wrote:
-> > Hi Kishon,
-> >
-> > Would you review this patch?
-> 
-> merged it now. Thanks for reminding.
+> On Mon, Feb 15, 2016 at 09:57:48PM +0100, Robert Jarzmik wrote:
+>> The current number of requestor lines is limited to 31. This was an
+>> error of a previous commit, as this number is platform dependent, and is
+>> actually :
+>>  - for pxa25x: 40 requestor lines
+>>  - for pxa27x: 75 requestor lines
+>>  - for pxa3xx: 100 requestor lines
+>> 
+>> The previous testing did not reveal the faulty constant as on pxa[23]xx
+>> platforms, only camera, MSL and USB are above requestor 32, and in these
+>> only the camera has a driver using dma.
+>> 
+>> Fixes: e87ffbdf0697 ("dmaengine: pxa_dma: fix the no-requestor case")
+>> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+>
+> Acked-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>
+> Which tree is this targetted thru?
+PXA for-next tree, my tree, once I gather the acks.
 
-Thank you!
+Cheers.
 
-Best regards,
-Yoshihiro Shimoda
-
-> -Kishon
-> 
+-- 
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
