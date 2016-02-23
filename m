@@ -1,101 +1,37 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH 0/2] Add Rockchip display port phy driver support
-Date: Tue, 23 Feb 2016 08:48:01 +0800
-Message-ID: <56CBAC41.9000400@rock-chips.com>
-References: <1455534071-31230-1-git-send-email-ykk@rock-chips.com>
- <56CAEDBE.2050808@ti.com>
+From: sugar <sugar.zhang@rock-chips.com>
+Subject: Re: [PATCH v1 0/2] patches to add support for rockchip
+	rt5640 card
+Date: Tue, 23 Feb 2016 08:57:04 +0800
+Message-ID: <56CBAE60.6000806@rock-chips.com>
+References: <1456127815-68575-1-git-send-email-sugar.zhang@rock-chips.com>
+ <20160222110416.GC18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56CAEDBE.2050808@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160222110416.GC18327@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Oder Chiou <oder_chiou@realtek.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Kishon,
-
-On 02/22/2016 07:15 PM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Monday 15 February 2016 04:31 PM, Yakir Yang wrote:
->> Hi Kison,
->>
->> This series is splited from Analogix DP DRM thread [0], and Heiko suggest this
->> should be an independent thread which may be easy for you to apply.
-> Indeed. Merged now thanks. (Changed the year to 2016 in the file header before
-> merging)
-
-Thanks a lot  ;)
-
-Yakir
->
-> Thanks
-> Kishon
->
->> Best regards,
->> Yakir
->>
->> [0]: https://patchwork.kernel.org/patch/8086571/
->>
->>
->> Changes in v12:
->> - Re-order the include headers file alphabetically in phy-rockchip-dp.c (Jingoo)
->>
->> Changes in v11:
->> - Correct the title of this rockchip dp phy document(Rob)
->> - Add the ack from Rob Herring
->>
->> Changes in v10:
->> - Fix the wrong macro value of GRF_EDP_REF_CLK_SEL_INTER_HIWORD_MASK
->>      BIT(4) -> BIT(20)
->>
->> Changes in v9:
->> - Removed the unused the variable "res" in probe function. (Heiko)
->> - Removed the unused head file.
->>
->> Changes in v8:
->> - Fix the mixed spacers on macro definitions. (Heiko)
->> - Remove the unnecessary empty line after clk_prepare_enable. (Heiko)
->> - Remove the specific address in the example node name. (Heiko)
->>
->> Changes in v7:
->> - Simply the commit message. (Kishon)
->> - Symmetrical enable/disbale the phy clock and power. (Kishon)
->> - Simplify the commit message. (Kishon)
->>
->> Changes in v5:
->> - Remove "reg" DT property, cause driver could poweron/poweroff phy via
->>    the exist "grf" syscon already. And rename the example DT node from
->>    "edp_phy: phy@ff770274" to "edp_phy: edp-phy" directly. (Heiko)
->> - Add deivce_node at the front of driver, update phy_ops type from "static
->>    struct" to "static const struct". And correct the input paramters of
->>    devm_phy_create() interfaces. (Heiko)
->> - Split binding doc's from driver changes. (Rob)
->> - Update the rockchip,grf explain in document, and correct the clock required
->>    elemets in document. (Rob & Heiko)
->>
->> Changes in v4:
->> - Add commit message, and remove the redundant rockchip_dp_phy_init()
->>    function, move those code to probe() method. And remove driver .owner
->>    number. (Kishon)
->>
->> Changes in v3:
->> - Suggest, add rockchip dp phy driver, collect the phy clocks and
->>    power control. (Heiko)
->>
->> Yakir Yang (2):
->>    phy: Add driver for rockchip Display Port PHY
->>    dt-bindings: add document for rockchip dp phy
->>
->>   .../devicetree/bindings/phy/rockchip-dp-phy.txt    |  22 +++
->>   drivers/phy/Kconfig                                |   7 +
->>   drivers/phy/Makefile                               |   1 +
->>   drivers/phy/phy-rockchip-dp.c                      | 151 +++++++++++++++++++++
->>   4 files changed, 181 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
->>   create mode 100644 drivers/phy/phy-rockchip-dp.c
->>
->
->
+CgrlnKggMi8yMi8yMDE2IDE5OjA0LCBNYXJrIEJyb3duIOWGmemBkzoKPiBPbiBNb24sIEZlYiAy
+MiwgMjAxNiBhdCAwMzo1Njo1M1BNICswODAwLCBTdWdhciBaaGFuZyB3cm90ZToKPgo+PiBTdWdh
+ciBaaGFuZyAoMik6Cj4+ICAgIEFTb0M6IHJvY2tjaGlwOiBpMnM6IGFkZCBkZWZhdWx0IHZhbHVl
+cyBmb3IgcmVnaXN0ZXJzCj4+ICAgIEFTb0M6IHJ0NTY0MDogYWRkIG1hc3RlciBjbG9jayBoYW5k
+bGluZyBmb3IgcnQ1NjQwCj4KPiBUaGVzZSBhcHBlYXIgdG8gYmUgY29tbXBsZXRseSB1bnJlbGF0
+ZWQgcGF0Y2hlcyBzbyBzaG91bGQgZWFjaCBiZSBzZW50Cj4gaW5kaXZpZHVhbGx5IHJhdGhlciB0
+aGFuIGFzIGEgc2VyaWVzIC0gdGhhdCB3YXkgdGhlcmUgaXMgbm8gY29uZnVzaW9uCj4gYWJvdXQg
+dGhlbSBwb3NzaWJseSBkZXBlbmRpbmcgb24gZWFjaCBvdGhlciBhbmQgdGhleSBhcmUgZWFzaWVy
+IHRvCj4gcmV2aWV3IGFuZCBhcHBseS4KPgoKR290IGl0LCB0aGFua3MuCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlz
+dApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
