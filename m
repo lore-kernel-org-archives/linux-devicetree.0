@@ -1,103 +1,110 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 09/12] ARM: dts: apq8064: add gsbi4 with i2c node.
-Date: Tue, 23 Feb 2016 14:14:50 +0000
-Message-ID: <1456236890-2783-1-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Vladimir Murzin <vladimir.murzin@arm.com>
+Subject: [PATCH v4 00/10] Support for Cortex-M Prototyping System
+Date: Tue, 23 Feb 2016 14:34:18 +0000
+Message-ID: <1456238068-25079-1-git-send-email-vladimir.murzin@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com
+Cc: mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, andy.shevchenko@gmail.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds gsbi4 and i2c node.
+Hi,
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm/boot/dts/qcom-apq8064-pins.dtsi | 25 +++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi      | 23 +++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+This patch series provide the basic support for running ucLinux on V2M-MPS2
+platform.
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-index 0a342d3..0cb22cf 100644
---- a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-@@ -90,6 +90,31 @@
- 		};
- 	};
- 
-+	i2c4_pins: i2c4 {
-+		mux {
-+			pins = "gpio12", "gpio13";
-+			function = "gsbi4";
-+		};
-+
-+		pinconf {
-+			pins = "gpio12", "gpio13";
-+			drive-strength = <16>;
-+			bias-disable;
-+		};
-+	};
-+
-+	i2c4_pins_sleep: i2c4_pins_sleep {
-+		mux {
-+			pins = "gpio12", "gpio13";
-+			function = "gpio";
-+		};
-+		pinconf {
-+			pins = "gpio12", "gpio13";
-+			drive-strength = <2>;
-+			bias-disable = <0>;
-+		};
-+	};
-+
- 	spi5_default: spi5_default {
- 		pinmux {
- 			pins = "gpio51", "gpio52", "gpio54";
-diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 2367adc..445297c 100644
---- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -287,6 +287,29 @@
- 			};
- 		};
- 
-+		gsbi4: gsbi@16300000 {
-+			status = "disabled";
-+			compatible = "qcom,gsbi-v1.0.0";
-+			cell-index = <4>;
-+			reg = <0x16300000 0x03>;
-+			clocks = <&gcc GSBI4_H_CLK>;
-+			clock-names = "iface";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			gsbi4_i2c: i2c@16380000 {
-+				compatible = "qcom,i2c-qup-v1.1.1";
-+				pinctrl-0 = <&i2c4_pins &i2c4_pins_sleep>;
-+				pinctrl-names = "default", "sleep";
-+				reg = <0x16380000 0x1000>;
-+				interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
-+				clocks = <&gcc GSBI4_QUP_CLK>,
-+					 <&gcc GSBI4_H_CLK>;
-+				clock-names = "core", "iface";
-+			};
-+		};
-+
- 		gsbi5: gsbi@1a200000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
+With these patches applied ucLinux can be run on both HW and FVP models
+with Cortex-M3/M4/M7 configurations.
+
+Board description:
+
+http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
+
+Application notes (cover Cortex-M3/M4/M7):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
+
+Cortex-M System Design Kit (referenced as CMDK from documents above):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
+
+I'd be happy to hear any feedback/comments on this series!
+
+Changelog:
+
+  v3  -> v4:
+      - rebased on 4.5-rc5
+      - updated mps2-uart per Andy, Alan and Peter
+      - dropped "zombie" EMBEDDED from defconfg per Arnd
+      - moved mps2 under vexpress umbrella per Arnd
+      - updated device-tree sources per Arnd
+      - dropped low-level debug support, seems earlycon works well for that
+
+  v2  -> v3:
+      - rebased on 4.5-rc4
+      - fixes for mps2-timer per Thomas
+      - swicthed back to ttyMPS naming per Greg
+
+  v1  -> v2:
+      - rebased on 4.5-rc2
+      - fixes for mps2-timer per Daniel and Rob (added Ack from Daniel)
+      - fixes for mps2-uart per Greg and Andy
+
+  RFC -> v1:
+      - dropped RFC tag
+      - rebased on 4.4-rc3
+      - added Acks from Rob
+      - updated mps2-timer per Daniel
+      - fixed build failures reported by 0-DAY kernel test infrastructure
+
+Thanks!
+
+Vladimir Murzin (10):
+  dt-bindings: document the MPS2 timer bindings
+  clockevents/drivers: add MPS2 Timer driver
+  dt-bindings: document the MPS2 UART bindings
+  serial: mps2-uart: add MPS2 UART driver
+  serial: mps2-uart: add support for early console
+  ARM: vexpress/mps2: introduce MPS2 platform
+  ARM: configs: add MPS2 defconfig
+  ARM: dts: introduce MPS2 AN385/AN386
+  ARM: dts: introduce MPS2 AN399/AN400
+  MAINTAINERS: Update ARM Versatile Express platform entry
+
+ .../devicetree/bindings/serial/arm,mps2-uart.txt   |   19 +
+ .../devicetree/bindings/timer/arm,mps2-timer.txt   |   28 +
+ MAINTAINERS                                        |    1 +
+ arch/arm/Kconfig                                   |    8 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/mps2-an385.dts                   |   92 +++
+ arch/arm/boot/dts/mps2-an399.dts                   |   92 +++
+ arch/arm/boot/dts/mps2.dtsi                        |  242 ++++++++
+ arch/arm/configs/mps2_defconfig                    |  109 ++++
+ arch/arm/mach-vexpress/Makefile                    |    4 +-
+ arch/arm/mach-vexpress/Makefile.boot               |    3 +
+ arch/arm/mach-vexpress/v2m-mps2.c                  |   21 +
+ drivers/clocksource/Kconfig                        |    6 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/mps2-timer.c                   |  275 +++++++++
+ drivers/tty/serial/Kconfig                         |   13 +
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/mps2-uart.c                     |  614 ++++++++++++++++++++
+ include/uapi/linux/serial_core.h                   |    3 +
+ 20 files changed, 1535 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
+ create mode 100644 arch/arm/boot/dts/mps2-an385.dts
+ create mode 100644 arch/arm/boot/dts/mps2-an399.dts
+ create mode 100644 arch/arm/boot/dts/mps2.dtsi
+ create mode 100644 arch/arm/configs/mps2_defconfig
+ create mode 100644 arch/arm/mach-vexpress/Makefile.boot
+ create mode 100644 arch/arm/mach-vexpress/v2m-mps2.c
+ create mode 100644 drivers/clocksource/mps2-timer.c
+ create mode 100644 drivers/tty/serial/mps2-uart.c
+
 -- 
-1.9.1
+1.7.9.5
