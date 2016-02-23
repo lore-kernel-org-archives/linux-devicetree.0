@@ -1,74 +1,40 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v2] ARM: dts: Move syscon reboot/poweroff to common dtsi
- for Exynos
-Date: Tue, 23 Feb 2016 09:18:25 +0900
-Message-ID: <56CBA551.4030205@samsung.com>
-References: <1455636348-14277-1-git-send-email-javier@osg.samsung.com>
- <56C3D745.7050904@samsung.com> <56C3D99C.3090403@osg.samsung.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: Mediatek: mt8173-evb: fix access MMC fail issue
+Date: Mon, 22 Feb 2016 16:32:54 -0800
+Message-ID: <7h37skw9jd.fsf@baylibre.com>
+References: <1455861643-24307-1-git-send-email-eddie.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56C3D99C.3090403@osg.samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455861643-24307-1-git-send-email-eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+	(Eddie Huang's message of "Fri, 19 Feb 2016 14:00:43 +0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 17.02.2016 11:23, Javier Martinez Canillas wrote:
-> Hello Krzysztof,
-> 
-> On 02/16/2016 11:13 PM, Krzysztof Kozlowski wrote:
-> 
-> [snip]
-> 
->>> diff --git a/arch/arm/boot/dts/exynos-syscon-restart.dtsi
->>> b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
->>> new file mode 100644
->>> index 000000000000..09a2040054ed
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/exynos-syscon-restart.dtsi
->>> @@ -0,0 +1,27 @@
->>> +/*
->>> + * Samsung's Exynos SoC syscon reboot/poweroff nodes common definition.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + */
->>> +
->>> +/ {
->>> +    soc {
->>> +        compatible = "simple-bus";
->>
->> The exynos4 does not have soc node. I wonder whether we should provide
->> here also address and size:
->>                  #address-cells = <1>;
->>                  #size-cells = <1>;
->>         ranges;
->>
->> Without this it works fine but that does not look correct enough.
->>
->> A minor effect of this patch on Exynos4 is that syscon-poweroff/reboot
->> are now the only children of "soc" simple-bus (rest of platform devices
->> is not)... but this is not a problem.
->>
->> Works fine so only the question about cells/ranges remains. Any comments?
->>
-> 
-> I in fact had the #address-cells and #size-cells at the beginning but then
-> realized that both the syscon-poweroff and syscon-reboot nodes didn't have
-> a reg property so it felt strange to me to have those.
-> 
-> Also, I thought that maybe a SoC dtsi may need a different #address-cells
-> and #size-cells for the other child nodes so having those in this dtsi
-> could override the values in the SoC dtsi depending where is included.
-> 
-> So I thought it could do more harm than good but I've no strong opinion
-> and can add those if you prefer.
+Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
 
-No comments from other people so I guess there are no objections.
-Applied for late v4.6.
+> MT8173 E1 chip has one bug that if turn off USB power domain, vcore
+> power will also be off, thus cause modules using vcore power domain
+> fail, like MMC. The E1 chip only found on MT8173-evb board and this
+> board only has E1 chip, so implement this as a board specific
+> workaround.
+>
+> Pwrapper use vcore power, so add pwrapper using USB power domain to
+> keep USB power domain not to zero and disabled.
+>
+> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Best regards,
-Krzysztof
+Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+I verified that this gets my mt8173-evb booting again when I enable MMC
+support.
+
+Thanks,
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
