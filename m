@@ -1,91 +1,49 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] [media] tvp5150: remove signal generator as input from the DT binding
-Date: Tue, 23 Feb 2016 20:28:14 +0200
-Message-ID: <4247934.WAaViM8cSf@avalon>
-References: <1456243798-12453-1-git-send-email-javier@osg.samsung.com> <63317542.65NzPYJCcU@avalon> <56CCA3B4.7060700@osg.samsung.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: Mediatek: mt8173-evb: fix access MMC fail issue
+Date: Tue, 23 Feb 2016 10:32:04 -0800
+Message-ID: <7hlh6bth0b.fsf@baylibre.com>
+References: <1455861643-24307-1-git-send-email-eddie.huang@mediatek.com>
+	<7h37skw9jd.fsf@baylibre.com> <56CC1E0E.4050400@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56CCA3B4.7060700@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56CC1E0E.4050400-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Matthias Brugger's message of "Tue,
+	23 Feb 2016 09:53:34 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Henry Chen <henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-On Tuesday 23 February 2016 15:23:48 Javier Martinez Canillas wrote:
-> On 02/23/2016 03:02 PM, Laurent Pinchart wrote:
-> > On Tuesday 23 February 2016 13:27:51 Javier Martinez Canillas wrote:
-> >> On 02/23/2016 01:16 PM, Laurent Pinchart wrote:
-> >>> On Tuesday 23 February 2016 13:09:58 Javier Martinez Canillas wrote:
-> >>>> The chip internal signal generator was modelled as an input connector
-> >>>> and represented as a media entity but isn't really a connector so the
-> >>>> driver was changed to use the V4L2_CID_TEST_PATTERN control instead.
-> >>>> 
-> >>>> Remove the signal generator input from the list of connectors in the
-> >>>> tvp5150 DT binding document as well since isn't a connector anymore.
-> >>>> 
-> >>>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> >>>> 
-> >>>> ---
-> >>>> Hello,
-> >>>> 
-> >>>> I think is OK to change this DT binding because is only in the media
-> >>>> tree for now and not in mainline yet and also is expected to change
-> >>>> more since there are still discussions about how input connectors will
-> >>>> be supported by the Media Controller framework in the media subsystem.
-> >>> 
-> >>> I think that's fine, yes
-> >>> 
-> >>> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >> 
-> >> Thanks.
-> >> 
-> >>> I haven't noticed the patch that introduced this early enough I'm
-> >>> afraid, and I think we still have issues with those bindings.
-> >> 
-> >> Yes, I posted those patches and got merged before we had the discussion
-> >> about input connectors over IRC so I didn't know what was the correct way
-> >> to do it.
-> >> 
-> >>> The tvp5150 node should *not* contain connector subnodes, the connectors
-> >>> nodes should use the bindings defined in
-> >>> Documentation/devicetree/bindings/display/connector/ and be linked to
-> >>> the tvp5150 node using the OF graph bindings (ports and endpoints).
-> >> 
-> >> Agreed.
-> >> 
-> >>> Do you think you could fix that ?
-> >> 
-> >> Yes I will, I'm waiting for the input connectors discussions to settle so
-> >> I can post a final version of the DT bindings following what is agreed by
-> >> all.
-> >
-> > Shouldn't we revert the patch that introduced connectors support in the DT
-> > bindings in the meantime then, to avoid known to be broken bindings from
-> > hitting mainline in case we can't fix them in time for v4.6 ?
-> 
-> Yes, that would be a good idea. I've seen recently though a DT binding doc
-> that was marked as unstable / work in progress and I wonder if that's a new
-> accepted convention for DT binding docs or is just something that slipped
-> through review.
+> On 23/02/16 01:32, Kevin Hilman wrote:
+>> Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> writes:
+>>
+>>> MT8173 E1 chip has one bug that if turn off USB power domain, vcore
+>>> power will also be off, thus cause modules using vcore power domain
+>>> fail, like MMC. The E1 chip only found on MT8173-evb board and this
+>>> board only has E1 chip, so implement this as a board specific
+>>> workaround.
+>>>
+>>> Pwrapper use vcore power, so add pwrapper using USB power domain to
+>>> keep USB power domain not to zero and disabled.
+>>>
+>>> Signed-off-by: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>> Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>
+>
+> I send the patch in a pull request yesterday, so I won't be able to
+> add your tag.
 
-I'm not sure if it's an established practice but I certainly like it. However, 
-in this specific case, we know that the bindings are broken, so I think a 
-revert would be better.
+No worries.  Was on vacation, so couldn't test sooner.
 
-> The commit I'm talking about is f07b4e49d27e ("Documentation: bindings:
-> berlin: consider our dt bindings as unstable") but I don't see anything
-> documented in Documentation/devicetree/bindings/ABI.txt.
-> 
-> In any case, I'm fine with either marking the DT binding doc as unstable or
-> to revert the patch that added the connectors portion to the tvp5150 DT
-> binding.
+> Thanks for testing and reporting this issue!
 
+You're welcome,
 
--- 
-Regards,
-
-Laurent Pinchart
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
