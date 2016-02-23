@@ -1,86 +1,96 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] Documentation: Bindings: Add STM32 DWMAC glue
-Date: Tue, 23 Feb 2016 23:37:55 +0100
-Message-ID: <CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw@mail.gmail.com>
-References: <1456240244-10275-1-git-send-email-alexandre.torgue@gmail.com>
-	<1456240244-10275-3-git-send-email-alexandre.torgue@gmail.com>
+From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Subject: Re: [PATCH RFC 3/3] leds: Add driver for the ISSI IS31FL32xx family
+ of LED drivers
+Date: Tue, 23 Feb 2016 17:38:41 -0500
+Message-ID: <20160223173841.2f741421.drivshin.allworx@gmail.com>
+References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
+	<1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
+	<20160223184517.GB10246@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456240244-10275-3-git-send-email-alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20160223184517.GB10246@leverpostej>
+Sender: linux-leds-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On Tue, 23 Feb 2016 18:45:17 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-You should copy 'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org' on bindings doc. Adding cc here.
+> On Tue, Feb 23, 2016 at 01:17:25PM -0500, David Rivshin (Allworx) wrote:
+> > From: David Rivshin <drivshin@allworx.com>
+> > +static int is31fl32xx_parse_child_dt(const struct device *dev,
+> > +				     const struct device_node *child,
+> > +				     struct is31fl32xx_led_data *led_data)
+> > +{
+> > +	struct led_classdev *cdev = &led_data->cdev;
+> > +	int ret = 0;
+> > +	u32 reg;
+> > +
+> > +	cdev->name = of_get_property(child, "label", NULL) ? : child->name;  
+> 
+> We really shouldn't be spreading of_get_property into more drivers. It's
+> generally not what you want, and doesn't do appropriate sanity checking.
 
-On 23 February 2016 at 16:10, Alexandre TORGUE
-<alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> new file mode 100644
-> index 0000000..18734b3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> @@ -0,0 +1,41 @@
-> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> +
-> +This file documents platform glue layer for stmmac.
-> +Please see stmmac.txt for the other unchanged properties.
-> +
-> +The device node has following properties.
-> +
-> +Required properties:
-> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
-> +              "snps,dwmac-3.50a" to select IP vesrion.
-> +- clocks: Should contain the GMAC main clock, and tx clock
-> +- compatible:  Should be "st,stm32-dwmac" to select glue and
-> +              "snps,dwmac-3.50a" to select IP version.
-> +- clocks: Should contain the MAC main clock
-> +- clock-names: Should contain the clock names "stmmaceth".
-> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-> +             encompases the glue register, and the offset of the control register.
-> +
-> +Optional properties:
-> +- clocks: Could contain:
-> +       - the tx clock,
-> +       - the rx clock
-> +- clock-names: Could contain the clock names "tx-clk", "rx-clk"
-> +
-> +Example:
-> +
-> +               ethernet0: dwmac@40028000 {
-> +                       device_type = "network";
+Sorry, I copied the basic DT parsing from some other led driver (leds-pwm, 
+I think), and did not check if there was a better way.
 
-What is this 'device_type = "network"' for?
-It seems to used in a lot of powerpc DTs, but only a couple of arm DTs.
+> Use of_property_read_string, though you may need to copy the result.
 
-Maybe Rob could enlighten us?
+Will do. 
 
-> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> +                       status = "disabled";
-> +                       reg = <0x40028000 0x8000>;
-> +                       reg-names = "stmmaceth";
-> +                       interrupts = <0 61 0>, <0 62 0>;
-> +                       interrupt-names = "macirq", "eth_wake_irq";
-> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
-> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> +                       st,syscon = <&syscfg 0x4>;
-> +                       snps,pbl = <32>;
+As far as copying the result, this is an area I'm fuzzy on. If I 
+understand correctly the device_nodes are reference counted, and 
+of_property_read_string() returns a pointer to the data inside the
+device_node. So it seems I'd either need to hold onto a reference, 
+or make a copy of the string.
 
-Regarding snps,pbl; using 32 here might not give you what you would except.
-See comment in dwmac1000_dma_init().
+devm_kstrdup() seems like it would be an easy way to go, although
+maybe not the most efficient.
 
-The driver is hard coded to use PBL4X/PBL8X mode. Just a heads up.
+Using of_node_get() would seem to be more efficient, but then what 
+would be the right way to release that reference on remove()? 
+ - Does that already happen in some infrastructure when using DT 
+   probing? 
+ - Is there a devm_*() helper function that should be used? 
+ - Or would it be best to just keep a pointer to the device_node so
+   that of_node_put() can be called on remove()?
 
+Also, I have yet to find an example of a driver which either copies 
+the string or does an of_node_get() on the node. In fact just by a 
+count of files, it seems very few have any hope of doing either:
 
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+$ find drivers/ -name '*.c' -exec grep of_property_read_string -l {} + \
+| wc -l
+197
+$ find drivers/ -name '*.c' -exec grep of_property_read_string -l {} + \
+| xargs grep -l of_node_get | wc -l
+15
+$ find drivers/ -name '*.c' -exec grep of_property_read_string -l {} + \
+| xargs grep -l strdup | wc -l
+11
+
+So I'm very much hoping that there's some infrastructure automatically 
+handling the appropriate reference counting, so that the nodes stay
+around (at least) as long as the driver is instantiated...
+
+> > +
+> > +	ret = of_property_read_u32(child, "reg", &reg);
+> > +	if (ret || reg < 1 || reg > led_data->priv->cdef->channels) {
+> > +		dev_err(dev,
+> > +			"Child node %s does not have a valid reg property\n",
+> > +			child->name);
+> > +		return -EINVAL;
+> > +	}
+> > +	led_data->channel = reg;
+> > +
+> > +	cdev->default_trigger = of_get_property(child, "linux,default-trigger",
+> > +						NULL);  
+> 
+> Likewise.
+
+Will take care of this same as above.
+
+Thanks!
