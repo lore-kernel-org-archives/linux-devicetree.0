@@ -1,135 +1,35 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 5/6] dt-bindings: add documentation of rk3399 clock
- controller
-Date: Tue, 23 Feb 2016 14:27:59 -0600
-Message-ID: <20160223202759.GA11885@rob-hp-laptop>
-References: <1455846978-4272-1-git-send-email-jay.xu@rock-chips.com>
- <1455847186-4423-1-git-send-email-jay.xu@rock-chips.com>
+Subject: Re: [RESEND PATCH v5 1/2] Documentation: bindings: add description
+ of phy for sdhci-of-arasan
+Date: Tue, 23 Feb 2016 14:29:12 -0600
+Message-ID: <20160223202912.GA12557@rob-hp-laptop>
+References: <1455848322-2210-1-git-send-email-shawn.lin@rock-chips.com>
+ <1455848387-2251-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1455847186-4423-1-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1455848387-2251-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 09:59:46AM +0800, jianqun.xu wrote:
-> From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Fri, Feb 19, 2016 at 10:19:47AM +0800, Shawn Lin wrote:
+> This patch adds phys and phy-names for sdhci-of-arasan as required
+> properties for arasan,sdhci-5.1, and details the example as well.
 > 
-> Add the devicetree binding for the cru on the rk3399 which quite
-> similar structured as previous clock controllers.
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
-> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
-> changes in v4:
-> - none
-> changes in v3:
-> - none
-> changes in v2:
-> - none
 > 
->  .../bindings/clock/rockchip,rk3399-cru.txt         | 82 ++++++++++++++++++++++
->  1 file changed, 82 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+> Changes in v2:
+> - Keep phy as a mandatory requirement for arasan,sdhci-5.1
+> 
+>  .../devicetree/bindings/mmc/arasan,sdhci.txt         | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-> new file mode 100644
-> index 0000000..07bcc6e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-> @@ -0,0 +1,82 @@
-> +* Rockchip RK3399 Clock and Reset Unit
-> +
-> +The RK3399 clock controller generates and supplies clock to various
-> +controllers within the SoC and also implements a reset controller for SoC
-> +peripherals.
-> +
-> +Required Properties:
-> +
-> +- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
-> +- compatible: CRU should be "rockchip,rk3399-cru"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- #clock-cells: should be 1.
-> +- #reset-cells: should be 1.
-> +
-> +Optional Properties:
-> +
-> +- rockchip,grf: phandle to the syscon managing the "general register files"
-> +  If missing, pll rates are not changeable, due to the missing pll lock status.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. All available clocks are defined as
-> +preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
-> +used in device tree sources. Similar macros exist for the reset sources in
-> +these files.
-> +
-> +External clocks:
-> +
-> +There are several clocks that are generated outside the SoC. It is expected
-> +that they are defined using standard clock bindings with following
-> +clock-output-names:
-> + - "xin24m" - crystal input - required,
-> + - "xin32k" - rtc clock - optional,
-> + - "ext_i2s" - external I2S clock - optional,
-> + - "ext_gmac" - external GMAC clock - optional
-> + - "ext_hsadc" - external HSADC clock - optional,
-> + - "ext_isp" - external ISP clock - optional,
-> + - "ext_jtag" - external JTAG clock - optional
-> + - "ext_vip" - external VIP clock - optional,
-> + - "usbotg_out" - output clock of the pll in the otg phy
-> +
-> +Example: General Register Files
-> +
-> +	pmugrf: syscon@ff320000 {
-> +		compatible = "rockchip,rk3399-pmugrf", "syscon";
-> +		reg = <0x0 0xff320000 0x0 0x1000>;
-> +	};
-> +
-> +	grf: syscon@ff770000 {
-> +		compatible = "rockchip,rk3399-grf", "syscon";
-> +		reg = <0x0 0xff770000 0x0 0x10000>;
-> +	};
-> +
-> +Example: Clock controller node:
-> +
-> +	pmucru: pmu-clock-controller@ff750000 {
-> +		compatible = "rockchip,rk3399-pmucru";
-> +		reg = <0x0 0xff750000 0x0 0x1000>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +	cru: clock-controller@ff760000 {
-> +		compatible = "rockchip,rk3399-cru";
-> +		reg = <0x0 0xff760000 0x0 0x1000>;
-> +		rockchip,grf = <&grf>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +Example: UART controller node that consumes the clock generated by the clock
-> +  controller:
-> +
-> +	uart0: serial@ff1a0000 {
-> +		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
-> +		reg = <0x0 0xff180000 0x0 0x100>;
-> +		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-> +		clock-names = "baudclk", "apb_pclk";
-> +		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg-shift = <2>;
-> +		reg-io-width = <4>;
-> +	};
-> -- 
-> 1.9.1
-> 
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
