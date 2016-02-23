@@ -1,33 +1,36 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 5/5] arm64: defconfig: Add Renesas R-Car Gen3 USB 2.0 phy driver support
-Date: Tue, 23 Feb 2016 21:28:36 +0900
-Message-ID: <1456230516-5112-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1456230516-5112-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1456230516-5112-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: rockchip: add mipi_dsi to VIO power domain on rk3288
+Date: Tue, 23 Feb 2016 12:39:41 +0000
+Message-ID: <1456231181-13989-1-git-send-email-john@metanate.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+The MIPI controllers are part of the VIO power domain so add the
+necessary property to indicate this for the controller we support.
+
+Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/configs/defconfig | 1 +
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 86581f7..eaf738a 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -213,6 +213,7 @@ CONFIG_QCOM_SMD_RPM=y
- CONFIG_ARCH_TEGRA_132_SOC=y
- CONFIG_ARCH_TEGRA_210_SOC=y
- CONFIG_HISILICON_IRQ_MBIGEN=y
-+CONFIG_PHY_RCAR_GEN3_USB2=y
- CONFIG_PHY_XGENE=y
- CONFIG_EXT2_FS=y
- CONFIG_EXT3_FS=y
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index d879a89..a92a3b5 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -890,6 +890,7 @@
+ 		clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_DSI0>;
+ 		clock-names = "ref", "pclk";
+ 		rockchip,grf = <&grf>;
++		power-domains = <&power RK3288_PD_VIO>;
+ 		status = "disabled";
+ 
+ 		ports {
 -- 
-1.9.1
+2.7.0.226.gfe986fe
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
