@@ -1,74 +1,47 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 03/12] ARM: dts: apq8064: add pci support in CM QS600
-Date: Tue, 23 Feb 2016 14:14:14 +0000
-Message-ID: <1456236854-2511-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 06/12] ARM: dts: ifc6410: enable spi device on expansion
+Date: Tue, 23 Feb 2016 14:14:39 +0000
+Message-ID: <1456236879-2698-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456236639-1379-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds PCIE support to APQ8064, tested with Ethernet on
-Compulab QS600 board.
+This patch enables spi device on the 30 pin expansion connector.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-index 21095da..35f1d46 100644
---- a/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-+++ b/arch/arm/boot/dts/qcom-apq8064-cm-qs600.dts
-@@ -37,6 +37,18 @@
- 					bias-disable;
- 				};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+index 0073294..8de774c 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -178,6 +178,16 @@
  			};
-+
-+			pcie_pins: pcie_pinmux {
-+				mux {
-+					pins = "gpio27";
-+					function = "gpio";
-+				};
-+				conf {
-+					pins = "gpio27";
-+					drive-strength = <12>;
-+					bias-disable;
-+				};
+ 		};
+ 
++		gsbi@1a200000 {
++			qcom,mode = <GSBI_PROT_SPI>;
++			status = "okay";
++			spi4: spi@1a280000 {
++				status = "okay";
++				num-cs = <1>;
++				cs-gpios = <&tlmm_pinmux 53 0>;
 +			};
- 		};
- 
- 		rpm@108000 {
-@@ -103,6 +115,11 @@
- 					regulator-max-microvolt = <1900000>;
- 					bias-pull-down;
- 				};
-+
-+				pm8921_lvs6: lvs6 {
-+					bias-pull-down;
-+				};
-+
- 			};
- 		};
- 
-@@ -195,6 +212,16 @@
- 			};
- 		};
- 
-+		pci@1b500000 {
-+			status = "ok";
-+			vdda-supply = <&pm8921_s3>;
-+			vdda_phy-supply = <&pm8921_lvs6>;
-+			vdda_refclk-supply = <&v3p3_fixed>;
-+			pinctrl-0 = <&pcie_pins>;
-+			pinctrl-names = "default";
-+			perst-gpio = <&tlmm_pinmux 27 GPIO_ACTIVE_LOW>;
 +		};
 +
- 		amba {
- 			/* eMMC */
- 			sdcc1: sdcc@12400000 {
+ 		gsbi@16500000 {
+ 			status = "ok";
+ 			qcom,mode = <GSBI_PROT_UART_W_FC>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
