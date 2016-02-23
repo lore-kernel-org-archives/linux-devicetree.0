@@ -1,112 +1,344 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH v2 2/2] doc: dt: add documentation for lpc1850-creg-clk driver
-Date: Tue, 23 Feb 2016 23:12:44 +0100
-Message-ID: <CAGhQ9Vw6AG=MCPXOXR3tm0mTNiDz4ULBjQgwDSL0iV+B6uRKDw@mail.gmail.com>
-References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
-	<1455994417-4471-3-git-send-email-manabian@gmail.com>
-	<20160223180844.GA11770@rob-hp-laptop>
-	<CAGhQ9VxYsQSccS2dyWL_DPLTc80SJUkjFupbHAeXX3-WY-1Ofw@mail.gmail.com>
-	<CAL_JsqJkxm+CfTNLQ+pPSrfNkokb3ooL0UXr9jjY6H88_jb_5A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJkxm+CfTNLQ+pPSrfNkokb3ooL0UXr9jjY6H88_jb_5A@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: sun7i: Add dts file for the lamobo-r1 board
+Date: Tue, 23 Feb 2016 23:12:43 +0100
+Message-ID: <1456265563-2940-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 February 2016 at 22:58, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Feb 23, 2016 at 12:53 PM, Joachim  Eastwood <manabian@gmail.com> wrote:
->> On 23 February 2016 at 19:08, Rob Herring <robh@kernel.org> wrote:
->>> On Sat, Feb 20, 2016 at 07:53:37PM +0100, Joachim Eastwood wrote:
->>>> Add DT binding documentation for lpc1850-creg-clk driver.
->>>>
->>>> Signed-off-by: Joachim Eastwood <manabian@gmail.com>
->>>> ---
->>>>  .../devicetree/bindings/clock/lpc1850-creg-clk.txt | 52 ++++++++++++++++++++++
->>>>  1 file changed, 52 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
->>>> new file mode 100644
->>>> index 000000000000..0c83d373b766
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
->>>> @@ -0,0 +1,52 @@
->>>> +* NXP LPC1850 CREG clocks
->>>> +
->>>> +The NXP LPC18xx/43xx CREG (Configuration Registers) block contains
->>>> +control registers for two low speed clocks. One of the clocks is a
->>>> +32 kHz oscillator driver with power up/down and clock gating. Next
->>>> +is a fixed divider that creates a 1 kHz clock from the 32 kHz osc.
->>>> +
->>>> +These clocks are used by the RTC and the Event Router peripherials.
->>>> +The 32 kHz can also be routed to other peripherials to enable low
->>>> +power modes.
->>>> +
->>>> +This binding uses the common clock binding:
->>>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
->>>> +
->>>> +Required properties:
->>>> +- compatible:
->>>> +     Should be "nxp,lpc1850-creg-clk"
->>>> +- #clock-cells:
->>>> +     Shall have value <1>.
->>>> +- clocks:
->>>> +     Shall contain a phandle to the fix 32 kHz crystall.
->>>> +
->>>> +The creg-clk node must be a child of the creg syscon node.
->>>> +
->>>> +The following clocks are available from the clock node.
->>>> +
->>>> +Clock ID     Name
->>>> +   0          1 kHz clock
->>>> +   1         32 kHz Oscillator
->>>> +
->>>> +Example:
->>>> +soc {
->>>> +     creg: syscon@40043000 {
->>>> +             compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
->>>> +             reg = <0x40043000 0x1000>;
->>>> +
->>>> +             creg_clk: clock-controller@004 {
->>>
->>> What is 4? A unit address should have a corresponding reg prop. and no
->>> leading zeros.
->>
->> It is the fourth register in the creg syscon block.
->
-> Probably should be the offset rather than register count.
->
->> Does this look better:
->> creg_clk: clock-controller@4 {
->>     compatible = "nxp,lpc1850-creg-clk";
->>     reg = <0x4>;
->>     clocks = <&xtal32>;
->>     #clock-cells = <1>;
->> };
->>
->> Note that the reg property isn't really useful in the driver, but I
->> guess we should have it either way(?).
->>
->> Alternatively I could drop the unit address and reg property. What do you think?
->
-> Either way is fine. Though I would expect something needs to know the offset.
+From: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
 
-I have the offset in the driver itself. I don't except the driver to
-reusable since the CREG block is highly SoC specific. If a new user
-came along we could also place the register offset in the driver's
-of_match_data.
+The lamobo-r1 board, sometimes called the BPI-R1 but not labelled as such
+on the PCB, is meant as a A20 based router board. As such the board comes
+with a built-in switch chip giving it 5 gigabit ethernet ports, and it
+has a large empty area on the pcb with mounting holes which will fit a
+2.5 inch harddisk. To complete its networking features it has a
+Realtek RTL8192CU for WiFi 802.11 b/g/n.
 
-I'll remove the unit address in the next version.
+Signed-off-by: Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Drop custom CPU operating points
+Changes in v3:
+-Fix type in commit msg
+---
+ arch/arm/boot/dts/Makefile                |   1 +
+ arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts | 287 ++++++++++++++++++++++++++++++
+ 2 files changed, 288 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
 
-I have a couple of other device under the CREG that has unit address
-already. I'll get them cleaned up as well.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 04b90fc..ef39613 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -669,6 +669,7 @@ dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-itead-ibox.dtb \
+ 	sun7i-a20-i12-tvbox.dtb \
+ 	sun7i-a20-icnova-swac.dtb \
++	sun7i-a20-lamobo-r1.dtb \
+ 	sun7i-a20-m3.dtb \
+ 	sun7i-a20-mk808c.dtb \
+ 	sun7i-a20-olimex-som-evb.dtb \
+diff --git a/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+new file mode 100644
+index 0000000..5ee43d8
+--- /dev/null
++++ b/arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts
+@@ -0,0 +1,287 @@
++/*
++ * Copyright 2015 Jelle de Jong <jelledejong-OIcJOM8/mISwoUgIn9SVlA@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun7i-a20.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Lamobo R1";
++	compatible = "lamobo,lamobo-r1", "allwinner,sun7i-a20";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart3;
++		serial2 = &uart7;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_lamobo_r1>;
++
++		green {
++			label = "lamobo_r1:green:usr";
++			gpios = <&pio 7 24 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gmac_power_pin_lamobo_r1>;
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 7 23 GPIO_ACTIVE_HIGH>; /* PH23 */
++	};
++};
++
++&ahci_pwr_pin_a {
++	allwinner,pins = "PB3";
++};
++
++&ahci {
++	target-supply = <&reg_ahci_5v>;
++	status = "okay";
++};
++
++&cpu0 {
++	cpu-supply = <&reg_dcdc2>;
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&gmac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&gmac_pins_rgmii_a>;
++	phy = <&phy1>;
++	phy-mode = "rgmii";
++	phy-supply = <&reg_gmac_3v3>;
++	status = "okay";
++
++	phy1: ethernet-phy@1 {
++		reg = <1>;
++	};
++};
++
++&i2c0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c0_pins_a>;
++	status = "okay";
++
++	axp209: pmic@34 {
++		reg = <0x34>;
++		interrupt-parent = <&nmi_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins_a>;
++	status = "okay";
++};
++
++&ir0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir0_rx_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_lamobo_r1>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 7 10 GPIO_ACTIVE_HIGH>; /* PH10 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&otg_sram {
++	status = "okay";
++};
++
++&pio {
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PH4";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	mmc0_cd_pin_lamobo_r1: mmc0_cd_pin@0 {
++		allwinner,pins = "PH10";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	gmac_power_pin_lamobo_r1: gmac_power_pin@0 {
++		allwinner,pins = "PH23";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	led_pins_lamobo_r1: led_pins@0 {
++		allwinner,pins = "PH24";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++#include "axp209.dtsi"
++
++&reg_ahci_5v {
++	gpio = <&pio 1 3 0>; /* PB3 */
++	status = "okay";
++};
++
++&reg_dcdc2 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-cpu";
++};
++
++&reg_dcdc3 {
++	regulator-always-on;
++	regulator-min-microvolt = <1000000>;
++	regulator-max-microvolt = <1400000>;
++	regulator-name = "vdd-int-dll";
++};
++
++&reg_ldo1 {
++	regulator-name = "vdd-rtc";
++};
++
++&reg_ldo2 {
++	regulator-always-on;
++	regulator-min-microvolt = <3000000>;
++	regulator-max-microvolt = <3000000>;
++	regulator-name = "avcc";
++};
++
++&reg_usb0_vbus {
++	status = "okay";
++};
++
++&reg_usb1_vbus {
++	status = "okay";
++};
++
++&reg_usb2_vbus {
++	status = "okay";
++};
++
++&spi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi0_pins_a>,
++		    <&spi0_cs0_pins_a>,
++		    <&spi0_cs1_pins_a>;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart3_pins_b>;
++	status = "okay";
++};
++
++&uart7 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart7_pins_a>;
++	status = "okay";
++};
++
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usb_power_supply {
++	status = "okay";
++};
++
++&usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>;
++	usb0_id_det-gpio = <&pio 7 4 GPIO_ACTIVE_HIGH>; /* PH4 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
++	usb0_vbus-supply = <&reg_usb0_vbus>;
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb2_vbus-supply = <&reg_usb2_vbus>;
++	status = "okay";
++};
+-- 
+2.7.1
 
-
-Thanks for looking through the binding, Rob!
-
-
-regards,
-Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
