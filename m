@@ -1,109 +1,70 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] Revert "[media] tvp5150: document input connectors DT bindings"
-Date: Tue, 23 Feb 2016 21:11:33 +0200
-Message-ID: <4415195.KUYSOd2PzY@avalon>
-References: <1456253288-397-1-git-send-email-javier@osg.samsung.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] ASoC: pxa: add binding for pxa2xx-ac97 audio complex
+Date: Tue, 23 Feb 2016 13:19:34 -0600
+Message-ID: <20160223191934.GA29262@rob-hp-laptop>
+References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
+ <1455979079-9030-3-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456253288-397-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1455979079-9030-3-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
-
-Thank you for the patch.
-
-On Tuesday 23 February 2016 15:48:08 Javier Martinez Canillas wrote:
-> This reverts commit 82c2ffeb217a ("[media] tvp5150: document input
-> connectors DT bindings") since the DT binding is too device driver
-> specific and should instead be more generic and use the bindings
-> in Documentation/devicetree/bindings/display/connector/ and linked
-> to the tvp5150 using the OF graph port and endpoints.
+On Sat, Feb 20, 2016 at 03:37:58PM +0100, Robert Jarzmik wrote:
+> This adds a binding for the Marvell PXA audio complex, available in
+> pxa2xx and pxa3xx variants.
 > 
-> There are still ongoing discussions about how the input connectors
-> will be supported by the Media Controller framework so until that
-> is settled, it is better to revert the connectors portion of the
-> bindings to avoid known to be broken bindings docs to hit mainline.
-> 
-> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 > ---
+>  .../bindings/sound/marvell,pxa2xx-ac97.txt         | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt
 > 
->  .../devicetree/bindings/media/i2c/tvp5150.txt      | 43 ------------------
->  1 file changed, 43 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt index
-> daa20e43a8e3..8c0fc1a26bf0 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-> @@ -12,32 +12,6 @@ Optional Properties:
->  - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
->  - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
-> 
-> -Optional nodes:
-> -- connectors: The input connectors of tvp5150 have to be defined under
-> -  a subnode name "connectors" using the following format:
-> -
-> -	input-connector-name {
-> -		input connector properties
-> -	};
-> -
-> -Each input connector must contain the following properties:
-> -
-> -	- label: a name for the connector.
-> -	- input: the input connector.
-> -
-> -The possible values for the "input" property are:
-> -	0: Composite0
-> -	1: Composite1
-> -	2: S-Video
-> -
-> -and on a tvp5150am1 and tvp5151 there is another:
-> -	4: Signal generator
-> -
-> -The list of valid input connectors are defined in
-> dt-bindings/media/tvp5150.h -header file and can be included by device tree
-> source files.
-> -
-> -Each input connector can be defined only once.
-> -
->  The device node must contain one 'port' child node for its digital output
->  video port, in accordance with the video interface bindings defined in
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> @@ -62,23 +36,6 @@ Example:
->  		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
->  		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
-> 
-> -		connectors {
-> -			composite0 {
-> -				label = "Composite0";
-> -				input = <TVP5150_COMPOSITE0>;
-> -			};
-> -
-> -			composite1 {
-> -				label = "Composite1";
-> -				input = <TVP5150_COMPOSITE1>;
-> -			};
-> -
-> -			s-video {
-> -				label = "S-Video";
-> -				input = <TVP5150_SVIDEO>;
-> -			};
-> -		};
-> -
->  		port {
->  			tvp5150_1: endpoint {
->  				remote-endpoint = <&ccdc_ep>;
+> diff --git a/Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt b/Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt
+> new file mode 100644
+> index 000000000000..b3f2882d9c7d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/marvell,pxa2xx-ac97.txt
+> @@ -0,0 +1,25 @@
+> +Marvell PXA2xx audio complex
+> +
+> +This descriptions matches the AC97 controller found in pxa2xx and pxa3xx series.
+> +
+> +Required properties:
+> +  - compatible: "marvell,pxa2xx-ac97"
+> +  - reg: device MMIO address space
+> +  - interrupts: single interrupt generated by AC97 IP
+> +  - clocks: input clock of the AC97 IP, refer to clock-bindings.txt
+> +
+> +Optional properties:
+> +  - pinctrl-names, pinctrl-0: refer to pinctrl-bindings.txt
+> +  - reset-gpio: gpio used for AC97 reset, refer to gpio.txt
 
--- 
-Regards,
+reset-gpios
 
-Laurent Pinchart
+> +
+> +Example:
+> +	ac97: sound@40500000 {
+> +	      	compatible = "marvell,pxa2xx-ac97";
+> +		reg = < 0x40500000 0x1000 >;
+> +		interrupts = <14>;
+> +		reset-gpio = <&gpio 113 GPIO_ACTIVE_HIGH>;
+> +		#sound-dai-cells = <1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = < &pmux_ac97_default >;
+> +		status = "okay";
+
+No clocks prop, yet required.
+
+> +	};
+> -- 
+> 2.1.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
