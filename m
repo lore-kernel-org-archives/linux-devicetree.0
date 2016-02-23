@@ -1,120 +1,44 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 13/13] dt-bindings: msm/hdmi: Add HDMI PHY bindings
-Date: Tue, 23 Feb 2016 15:06:47 +0530
-Message-ID: <56CC282F.8030700@codeaurora.org>
-References: <1455519206-12939-1-git-send-email-architt@codeaurora.org>
- <1455519206-12939-14-git-send-email-architt@codeaurora.org>
- <20160222025414.GG15973@rob-hp-laptop> <56CAEBE5.7050605@codeaurora.org>
- <CAL_JsqLcJvBUUt0PRg=WwhUyAyfSuxqUf8NMj1s+s4rAS+S3nA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-tree
+Date: Tue, 23 Feb 2016 11:20:30 +0100
+Message-ID: <8540232.vQE3WQTD95@wuerfel>
+References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com> <18251200.Xfr10N5eWq@wuerfel> <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLcJvBUUt0PRg=WwhUyAyfSuxqUf8NMj1s+s4rAS+S3nA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8yMy8yMDE2IDEyOjU3IEFNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBNb24sIEZl
-YiAyMiwgMjAxNiBhdCA1OjA3IEFNLCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEu
-b3JnPiB3cm90ZToKPj4KPj4KPj4gT24gMDIvMjIvMjAxNiAwODoyNCBBTSwgUm9iIEhlcnJpbmcg
-d3JvdGU6Cj4+Pgo+Pj4gT24gTW9uLCBGZWIgMTUsIDIwMTYgYXQgMTI6MjM6MjZQTSArMDUzMCwg
-QXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+Pgo+Pj4+IEFkZCBIRE1JIFBIWSBiaW5kaW5ncy4gVXBk
-YXRlIHRoZSBleGFtcGxlIHRvIHVzZSBIRE1JIFBIWS4KPj4+Pgo+Pj4+IEFkZCBhIG1pc3Npbmcg
-cG93ZXItZG9tYWlucyBwcm9wZXJ0eSBpbiB0aGUgSERNSSBjb3JlIGJpbmRpbmdzLgo+Pj4+Cj4+
-Pj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4+Pj4gQ2M6IFJvYiBIZXJyaW5nIDxy
-b2JoQGtlcm5lbC5vcmc+Cj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWphIDxh
-cmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+Pj4+IC0tLQo+Pj4+ICAgIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0ICAgICAgIHwgMzkKPj4+PiArKysrKysrKysrKysr
-KysrKysrKystCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKyksIDEgZGVs
-ZXRpb24oLSkKPj4+Pgo+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9tc20vaGRtaS50eHQKPj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9oZG1pLnR4dAo+Pj4+IGluZGV4IDM3OWVlMmUuLjRk
-NzE5MTAgMTAwNjQ0Cj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2hkbWkudHh0Cj4+Pj4gQEAgLTExLDYgKzExLDcgQEAgUmVx
-dWlyZWQgcHJvcGVydGllczoKPj4+PiAgICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
-ZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMKPj4+PiAgICAtIHJlZy1uYW1l
-czogImNvcmVfcGh5c2ljYWwiCj4+Pj4gICAgLSBpbnRlcnJ1cHRzOiBUaGUgaW50ZXJydXB0IHNp
-Z25hbCBmcm9tIHRoZSBoZG1pIGJsb2NrLgo+Pj4+ICstIHBvd2VyLWRvbWFpbnM6IFNob3VsZCBi
-ZSA8Jm1tY2MgTURTU19HRFNDPi4KPj4+PiAgICAtIGNsb2NrczogZGV2aWNlIGNsb2Nrcwo+Pj4+
-ICAgICAgU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuCj4+Pj4g
-ICAgLSBxY29tLGhkbWktdHgtZGRjLWNsay1ncGlvOiBkZGMgY2xrIHBpbgo+Pj4+IEBAIC0xOCw2
-ICsxOSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4gICAgLSBxY29tLGhkbWktdHgtaHBk
-LWdwaW86IGhwZCBwaW4KPj4+PiAgICAtIGNvcmUtdmRkYS1zdXBwbHk6IHBoYW5kbGUgdG8gc3Vw
-cGx5IHJlZ3VsYXRvcgo+Pj4+ICAgIC0gaGRtaS1tdXgtc3VwcGx5OiBwaGFuZGxlIHRvIG11eCBy
-ZWd1bGF0b3IKPj4+PiArLSBxY29tLGhkbWktcGh5OiBwaGFuZGxlIHRvIEhETUkgUEhZIGRldmlj
-ZSBub2RlCj4+Pgo+Pj4KPj4+IFdoeSBub3QgdXNlIHRoZSBnZW5lcmljIHBoeSBiaW5kaW5nPwo+
-Pgo+Pgo+PiBZb3UnZCBhc2tlZCBhYm91dCB0aGlzIGluIHRoZSBmaXJzdCB2ZXJzaW9uIG9mIHRo
-aXMgcGF0Y2guIFlvdQo+PiBwcm9iYWJseSBtaXNzZWQgcmVhZGluZyBteSByZXBseS4gUGFydGlh
-bGx5IG15IGZhdWx0IHNpbmNlIEkKPj4gbWlzc2VkIG91dCBwdXR0aW5nIHRoZSAiSW4tUmVwbHkt
-dG8iIHdoZW4gcG9zdGluZyB0aGlzIHNldC4gSSd2ZQo+PiBtZW50aW9uZWQgdGhlIHJlYXNvbiBh
-Z2FpbiBoZXJlOgo+Pgo+PiBUaGUgUEhZIGluIHRoZSBIRE1JIGFuZCBEU0kgYmxvY2tzIGNhbid0
-IGJlIGltcGxlbWVudGVkIHVzaW5nIHRoZQo+PiBjb21tb24gcGh5IGZyYW1ld29yay4gVGhlIFBI
-WSBibG9ja3MgaGF2ZSBhIFBMTCBzdWItYmxvY2sgd2l0aGluCj4+IHRoZW0gd2hpY2ggYWN0cyBh
-cyBhIHBpeGVsIGNsb2NrIHNvdXJjZSBmb3IgdGhlIGRpc3BsYXkgcHJvY2Vzc29yCj4+IGJsb2Nr
-Lgo+Cj4gVGhhdCBzb3VuZHMgbGlrZSBhIHByb2JsZW0gd2l0aCB0aGUgY29tbW9uIHBoeSBmcmFt
-ZXdvcmssIG5vdCB0aGUgRFQKPiBiaW5kaW5nLiBOb3RoaW5nIHNheXMgeW91IGhhdmUgdG8gdXNl
-IHRoZSBjb21tb24gcGh5IGYvdyBpZiB5b3UgdXNlCj4gdGhlIHBoeSBiaW5kaW5nLiBJIHNheSB0
-aGF0IGFzIHRoZSBiaW5kaW5nIG1haW50YWluZXIuIEFzIGEga2VybmVsCj4gZGV2ZWxvcGVyLCBJ
-IHdvdWxkIHNheSBmaXggdGhlIGNvbW1vbiBwaHkgZnJhbWV3b3JrIHRvIGhhbmRsZSB0aGlzCj4g
-Y2FzZS4gSG93ZXZlciwgSSBkb24ndCB0aGluayBhbnl0aGluZyBwcmV2ZW50cyB0aGUgcGh5IGRy
-aXZlciBmcm9tCj4gcmVnaXN0ZXJpbmcgYm90aCBhIHBoeSBhbmQgYSBjbG9jay4KCk9rYXkuIEZv
-ciBzb21lIHJlYXNvbiwgSSB0aG91Z2h0IGl0IHdvdWxkIGJlIHdyb25nIHRvIHVzZSB0aGUgc2Ft
-ZQpjb21tb24gcGh5IGJpbmRpbmdzIGJ1dCB1c2Ugb3VyIG93biBwaHkgZHJpdmVyLgoKSSB3aWxs
-IGNvbnZlcnQgdGhlIGJpbmRpbmdzIHRvIHRoZSBnZW5lcmljIHBoeSBiaW5kaW5nLgoKPgo+PiBU
-aGlzIGRlcGVuZGVuY3kgY2F1c2VzIHRoZSBuZWVkIHRvIHNwbGl0IHRoZSBwaHkgcG93ZXIgb24g
-c2VxdWVuY2UKPj4gaW50byAyIHBhcnRzIChvbmUgdG8gZW5hYmxlIHJlc291cmNlcyB0byBlbmFi
-bGUgdGhlIFBMTCwgYW5kIHRoZQo+PiBvdGhlciB0byBlbmFibGUgdGhlIHBoeSBpdHNlbGYpLCB3
-aGljaCB0aGUgcGh5IGZyYW1ld29yayBjYW4ndAo+PiBkby4gVGhhdCdzIHRoZSBtYWluIHJlYXNv
-biBub3QgdG8gdXNlIGl0LiBUaGVyZSBhcmUgc29tZSBtb3JlCj4+IGNvbXBsZXggdXNlIGNhc2Vz
-IGZvciBEU0kgUEhZIChkcml2ZSB0d28gUEhZcyB3aXRoIHRoZSBzYW1lCj4+IERTSSBQTEwpIHdo
-aWNoIHRoZSBwaHkgZnJhbWV3b3JrIGNhbid0IHN1cHBvcnQuCj4KPiBEb2Vzbid0IHRoZSBwaHkg
-ZnJhbWV3b3JrIGFscmVhZHkgc3VwcG9ydCB0aGUgZm9ybWVyPyBJdCBoYXMgcG93ZXIgb24KPiBh
-bmQgaW5pdCBjYWxscy4gUGVyc29uYWxseSwgSSBmaW5kIHRoZSBzcGxpdCB0aGVyZSBpbGwtZGVm
-aW5lZC4KCkkgYWx3YXlzIGFzc3VtZWQgdGhhdCB0aGUgaW5pdC9leGl0IG9wcyB3ZXJlIHNvbWV0
-aGluZyB0aGF0IHlvdSB3b3VsZApjYWxsIGp1c3Qgb25jZSAoZHVyaW5nIHByb2JlL3JlbW92ZSkg
-YW5kIHRoZW4gZm9yZ2V0IGFib3V0IGl0LiBJIG9ubHkKbm93IG5vdGljZWQgdGhhdCBpbml0IGFu
-ZCBwb3dlcl9vbiBhcmUgb2Z0ZW4gcGFpcmVkIHRvZ2V0aGVyIChhcyBhcmUKcG93ZXJfb2ZmIGFu
-ZCBleGl0KS4gSSB3ZW50IHRocm91Z2ggdGhlIGNvbW1vbiBwaHkgZnJhbWV3b3JrIGNvZGUgaW4K
-bW9yZSBkZXRhaWwsIGJ1dCBJIHJlYWxpemVkIEkgd291bGQgZmFjZSB0aGUgZm9sbG93aW5nIGlz
-c3VlOgoKSSB3YXMgbG9va2luZyBmb3IgdGhlIHNlcXVlbmNlOgoKMS4gZW5hYmxlIFBIWSByZXNv
-dXJjZXMgKGVuYWJsZXMgY2xvY2tzL3JlZ3VsYXRvcnMvcG1fcnVudGltZV9nZXRfc3luYykKCjIu
-IHNldF9yYXRlL2VuYWJsZSB0aGUgUExMIGNsb2NrIHByb3ZpZGVkIGJ5IFBIWQoKMy4gZW5hYmxl
-IFBIWSAoY29uZmlndXJlIHNvbWUgUEhZIHJlZ2lzdGVycykKCkkgY2FuIGFjaGlldmUgdGhpcyB1
-c2luZyB0aGUgY29tbW9uIHBoeSBmcmFtZXdvcmsgaWYgSSB0aWUgc3RlcCAxKQp0byBwaHlfcG93
-ZXJfb24oKSwgYW5kIHN0ZXAgMykgdG8gcGh5X2luaXQoKS4gVGhlIG90aGVyIHdheSByb3VuZCB3
-b24ndAp3b3JrIGJlY2F1c2UgcGh5X2luaXQoKSBzZWVtcyB0byBkaXNhYmxlIHJ1bnRpbWUgcG0g
-YXMgaXQgZXhpdHMuCgpJZiBJIHVzZSB0aGUgcGh5IGZyYW1ld29yayBpbiBpdHMgY3VycmVudCBz
-dGF0ZSwgSSdsbCBlbmQgdXAgc3R1ZmZpbmcKdGhlIHBoeSBvcHMgYW5kIHVzZSB0aGVtIGluIGEg
-d2VpcmQgd2F5IGp1c3QgdG8gbWFrZSBzdXJlIG15IFBIWQp3b3Jrcy4KCkNvcHlpbmcgS2lzaG9u
-IGlmIGhlIGhhcyBhbnkgb3BpbmlvbnMuCgoKPgo+Pj4+ICAgIE9wdGlvbmFsIHByb3BlcnRpZXM6
-Cj4+Pj4gICAgLSBxY29tLGhkbWktdHgtbXV4LWVuLWdwaW86IGhkbWkgbXV4IGVuYWJsZSBwaW4K
-Pj4+PiBAQCAtMjcsNiArMjksMjcgQEAgT3B0aW9uYWwgcHJvcGVydGllczoKPj4+PiAgICAtIHBp
-bmN0cmwtMDogdGhlIGRlZmF1bHQgcGluY3RybCBzdGF0ZSAoYWN0aXZlKQo+Pj4+ICAgIC0gcGlu
-Y3RybC0xOiB0aGUgInNsZWVwIiBwaW5jdHJsIHN0YXRlCj4+Pj4KPj4+PiArSERNSSBQSFk6Cj4+
-Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+Pj4gKy0gY29tcGF0aWJsZTogQ291bGQgYmUgdGhl
-IGZvbGxvd2luZwo+Pj4+ICsgICogInFjb20saGRtaS1waHktOHg2MCIKPj4+PiArICAqICJxY29t
-LGhkbWktcGh5LTg5NjAiCj4+Pj4gKyAgKiAicWNvbSxoZG1pLXBoeS04eDc0Igo+Pj4KPj4+Cj4+
-PiBObyB3aWxkY2FyZHMgcGxlYXNlLiBXaGVyZSdzIDg5OTQ/Cj4+Cj4+Cj4+IEknbGwgcmVtb3Zl
-IHRoZSB3aWxkY2FyZHMuIDg5OTQgUEhZIGlzbid0IHN1cHBvcnRlZCBieSB0aGUgZHJpdmVyIGF0
-Cj4+IHRoZSBtb21lbnQuIEkgY291bGQga2VlcCB0aGUgODk5NCBjb21wYXRpYmxlIHN0cmluZywg
-dGhlIGRyaXZlciB3aWxsCj4+IGJhaWwgb3V0IHdpdGggYW4gZXJyb3IuIEJ1dCB0aGF0J3Mgc29t
-ZXRoaW5nIHdlIGFscmVhZHkgZG8gZm9yIDh4NzQKPj4gc2luY2UgaXQgZG9lc24ndCBoYXZlIGZ1
-bGwgUEhZIHN1cHBvcnQgZWl0aGVyLgo+Cj4gWW91IGNhbiBkb2N1bWVudCBpdCBsYXRlciBpZiB5
-b3Ugd2FudC4gSSBqdXN0IGFza2VkICdjYXVzZSBJIGtuZXcgdGhlCj4gODk5NCBoYWQgb25lLgoK
-T2theS4KClRoYW5rcywKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
-LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBU
-aGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Tuesday 23 February 2016 05:58:32 Anurag Kumar Vulisha wrote:
+> >
+> > I don't know what is appropriate because I have no idea what Rxwatermark is
+> > good for. Can you try describing why we can't just set it to the correct value
+> > for everyone automatically?
+> >
+> 
+> This RX watermark level sets the minimum number of free locations within the RX FIFO .When the rx fifo level crosses the programmed watermark level ,sata controller  will transmit HOLDS to the device asking it to wait. This happens when dma
+> reads the rx fifo data slower than the device is sending the data. Note that it can take some time for the HOLDs to get to
+> the other end and in the time there must be enough room in the FIFO to absorb all data that could arrive from the device.
+> Currently we are using 0x40 for this value, which works fine with all hardware designs  we are currently having. But hoping
+> that this value may vary for future silicon versions, I wanted to make this as a configurable value. So for this reason I thought
+> of moving it either to device-tree or making it as a module_param() property.
+> 
+
+Ok, so if this depends on the silicon version, your initial approach
+would be better than the module_param.
+
+I would probably make this dependent on the compatible string instead,
+and have a table in the device driver that uses a specific value
+for each variant of the device, but either way should be fine.
+
+Having a separate property is most appropriate if for each hardware
+revision there is exactly one ideal value, while a table in the
+driver makes more sense if this takes a bit of tuning and the driver
+might choose to optimize it differently based on other constraints,
+such as its own interrupt handler implementation.
+
+	Arnd
