@@ -1,49 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH can-next 1/2] CAN: rcar: add gen[12] fallback
- compatibility strings
-Date: Tue, 23 Feb 2016 09:08:22 +0900
-Message-ID: <20160223000822.GF1853@verge.net.au>
-References: <1456107350-12100-1-git-send-email-horms+renesas@verge.net.au>
- <1456107350-12100-2-git-send-email-horms+renesas@verge.net.au>
- <20160222033720.GA27711@rob-hp-laptop>
- <56CAD795.1090509@pengutronix.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v5 2/3] clk: samsung: Don't build ARMv8 clock drivers on
+ ARMv7
+Date: Tue, 23 Feb 2016 09:14:22 +0900
+Message-ID: <56CBA45E.9070105@samsung.com>
+References: <1455603632-11158-1-git-send-email-k.kozlowski@samsung.com>
+ <1455603632-11158-3-git-send-email-k.kozlowski@samsung.com>
+ <56C44578.5010009@samsung.com> <20160222182656.2278.68402@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56CAD795.1090509@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Rob Herring <robh@kernel.org>, Wolfgang Grandegger <wg@grandegger.com>, Magnus Damm <magnus.damm@gmail.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20160222182656.2278.68402@quark.deferred.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-clk@vger.kernel.org
+Cc: Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Kevin Hilman <khilman@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 10:40:37AM +0100, Marc Kleine-Budde wrote:
-> On 02/22/2016 04:37 AM, Rob Herring wrote:
-> > On Mon, Feb 22, 2016 at 11:15:49AM +0900, Simon Horman wrote:
-> >> Add fallback compatibility string for R-Car Gen 1 and Gen2 families.
-> >> This is in keeping with the fallback scheme being adopted wherever
-> >> appropriate for drivers for Renesas SoCs.
-> >>
-> >> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> >> ---
-> >>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 4 +++-
-> >>  drivers/net/can/rcar_can.c                             | 2 ++
-> >>  2 files changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > Acked-by: Rob Herring <robh@kernel.org>
+On 23.02.2016 03:26, Michael Turquette wrote:
+> Quoting Sylwester Nawrocki (2016-02-17 02:03:36)
+>> On 16/02/16 07:20, Krzysztof Kozlowski wrote:
+>>> Currently the Exynos5433 (ARMv8 SoC) clock driver depends on ARCH_EXYNOS
+>>> so it is built also on ARMv7. This does not bring any kind of benefit.
+>>> There won't be a single kernel image for ARMv7 and ARMv8 SoCs (like
+>>> multi_v7 for ARMv7).
+>>>
+>>> Instead build clock drivers only for respective SoC's architecture.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>
+>> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>>
 > 
-> I'm not following the latest DT discussions, is there a (new) decision
-> to add such "generic" compatibles? AFAIK you add the oldest device
-> that's compatible with your driver to your SoC dtsi at rightmost
-> compatible. You can add one that identifies your SoC's IP core in front
-> of it. So there's no need to modify the driver until an IP core needs
-> different handling.
+> Thanks for the Ack.
 > 
-> In your case you'd identify the oldest SoC that implements the Gen1 IP
-> core and use this instead of "renesas,can-gen1. Same for Gen2 IP core.
+> I've rebased patches #1 and #2 against James's b9e65ebc654d and pushed
+> the clk-samsung branch to the clk tree. I have deleted the
+> clk-samsung-kconfig branch that was blowing up the kbuild robot.
+> clk-samsung will not be rebased and can be used as a dependency for
+> arm-soc. It has been merged into clk-next.
 
-In the case of Renesas R-Car hardware we know that there are generations of
-SoCs, e.g. Gen 1 and Gen 2, but beyond that its not clear what the
-relationship between IP blocks might be. For example, I believe that
-r8a7779 is older than r8a7778 but that doesn't imply that the
-latter is a descendant of the former or vice versa.
+Thanks, pulled!
+
+Best regards,
+Krzysztof
