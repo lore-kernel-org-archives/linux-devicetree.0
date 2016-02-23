@@ -1,86 +1,42 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH] phy: rcar-gen3-usb2: remove HSUSB registers handling
-Date: Tue, 23 Feb 2016 12:07:23 +0530
-Message-ID: <56CBFE23.8050501@ti.com>
-References: <1452158204-5236-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20160109223307.GA14530@rob-hp-laptop>
- <SG2PR06MB0919A522615A7F9A90382CF2D8A40@SG2PR06MB0919.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB0919A522615A7F9A90382CF2D8A40@SG2PR06MB0919.apcprd06.prod.outlook.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Rob Herring <robh@kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+From: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/4] Rockchip: rk3399: Add core dtsi for rk3399
+Date: Tue, 23 Feb 2016 15:01:00 +0800
+Message-ID: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-On Tuesday 23 February 2016 11:54 AM, Yoshihiro Shimoda wrote:
-> Hi Kishon,
-> 
-> Would you review this patch?
+There is the new SoCs from Rockchip which named rk3399, the
+patches are added to support them.
 
-merged it now. Thanks for reminding.
+Jianqun Xu (2):
+  soc: rockchip: add bindings for Rockchip grf
+  ARM64: dts: rockchip: add core dtsi file for rk3399
 
--Kishon
+Xing Zheng (2):
+  dt-bindings: add bindings for rk3399 clock controller
+  clk: rockchip: add dt-binding header for rk3399
 
-> 
-> I checked the latest linux-phy.git / next branch today,
-> this patch can be applied on the top of branch.
-> 
-> commit 6b825eb7323a634cdd1014a4aa9a8ff07cf8040c
-> Author: Heiko Stuebner <heiko@sntech.de>
-> Date:   Mon Feb 22 12:55:01 2016 +0100
-> 
->     phy: rockchip-usb: add handler for usb-uart functionality
-> 
-> Best regards,
-> Yoshihiro Shimoda
-> 
->> -----Original Message-----
->> From: Yoshihiro Shimoda
->> Sent: Tuesday, February 02, 2016 5:29 PM
->> To: kishon@ti.com
->> Cc: pawel.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; galak@codeaurora.org;
->> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-sh@vger.kernel.org; 'Rob Herring' <robh@kernel.org>;
->> linux-renesas-soc@vger.kernel.org
->> Subject: RE: [PATCH] phy: rcar-gen3-usb2: remove HSUSB registers handling
->>
->> Hi Kishon,
->>
->> Would you review this patch?
->> I checked the latest linux-phy.git / next branch today, and it is the same as the following.
->>
->>>>  This patch is based on the linux-phy / next branch.
->>>>  (commit id = 9955a7835bf376e12482583958b2661f501b868b)
->>
->> Best regards,
->> Yoshihiro Shimoda
->>
->>> From: Rob Herring [mailto:robh@kernel.org]
->>> Sent: Sunday, January 10, 2016 7:33 AM
->>> To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>> Cc: kishon@ti.com; pawel.moll@arm.com; mark.rutland@arm.com; ijc+devicetree@hellion.org.uk; galak@codeaurora.org;
->>> linux-kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-sh@vger.kernel.org
->>> Subject: Re: [PATCH] phy: rcar-gen3-usb2: remove HSUSB registers handling
->>>
->>> On Thu, Jan 07, 2016 at 06:16:44PM +0900, Yoshihiro Shimoda wrote:
->>>> Since the related driver (CPG/MSSR driver) only manages the first module
->>>> clock, this driver should not handle the HSUSB registers. So, this patch
->>>> removes the HSUSB registers handling.
->>>>
->>>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>>> ---
->>>>  This patch is based on the linux-phy / next branch.
->>>>  (commit id = 9955a7835bf376e12482583958b2661f501b868b)
->>>>
->>>>  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 15 ++--
->>>
->>> Acked-by: Rob Herring <robh@kernel.org>
->>>
->>>>  drivers/phy/phy-rcar-gen3-usb2.c                   | 83 +++-------------------
->>>>  2 files changed, 15 insertions(+), 83 deletions(-)
->>>
-> 
+ .../bindings/clock/rockchip,rk3399-cru.txt         |  82 ++
+ .../devicetree/bindings/soc/rockchip/grf.txt       |  35 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 949 +++++++++++++++++++++
+ include/dt-bindings/clock/rk3399-cru.h             | 714 ++++++++++++++++
+ 4 files changed, 1780 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 Documentation/devicetree/bindings/soc/rockchip/grf.txt
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
