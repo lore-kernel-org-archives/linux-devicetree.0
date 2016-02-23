@@ -1,1112 +1,1137 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v3 2/2] power: ucs1002: Add support for Programmable USB Port Power Controller
-Date: Tue, 23 Feb 2016 08:27:05 +0100
-Message-ID: <1456212425-5937-3-git-send-email-enric.balletbo@collabora.com>
-References: <1456212425-5937-1-git-send-email-enric.balletbo@collabora.com>
+From: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v11 2/2] drm/bridge: Add I2C based driver for ps8640 bridge
+Date: Tue, 23 Feb 2016 15:35:37 +0800
+Message-ID: <1456212937-7635-2-git-send-email-jitao.shi@mediatek.com>
+References: <1456212937-7635-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456212425-5937-1-git-send-email-enric.balletbo@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456212937-7635-1-git-send-email-jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa.c
 List-Id: devicetree@vger.kernel.org
 
-The UCS1002-2 provides a USB port power switch for precise control of u=
-p
-to 2.5 amperes continuous current with over-current limit (OCL), dynami=
-c
-thermal management, latch or auto-recovery (low test current) fault
-handling, selectable active low or high enable, under- and over-voltage
-lockout, back-drive protection, and back-voltage protection.
+This patch adds drm_bridge driver for parade DSI to eDP bridge chip.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
-Changes since v2:
- - Rename microchip,current-limit to microchip,limit-microamps (Rob Her=
-ring)
-Changes since v1:
- - Fix ERROR: info -> pdata is NULL but dereferenced (kbuild)
- - Change CONFIG_POWER_UCS1002 to CONFIG_UCS1002_POWER, seems more stan=
-dard
-   (Enric Balletbo)
+ Changes since v10:
+ - Tuning PS8640 reset sleep pins squence
+ 
+The following patches are needed to support dsi host through none dsi bus:
 
- drivers/power/Kconfig         |    7 +
- drivers/power/Makefile        |    1 +
- drivers/power/ucs1002_power.c | 1004 +++++++++++++++++++++++++++++++++=
-++++++++
- 3 files changed, 1012 insertions(+)
- create mode 100644 drivers/power/ucs1002_power.c
+https://patchwork.kernel.org/patch/8289181/ ("drm/dsi: check for CONFIG_OF when defining")
+https://patchwork.kernel.org/patch/8289051/ ("drm/dsi: Use mipi_dsi_device_register_full for DSI device")
+https://patchwork.kernel.org/patch/8289081/ ("drm/dsi: Try to match non-DT DSI devices")
+https://patchwork.kernel.org/patch/8289121/ ("drm/dsi: Add routine to unregister a DSI device")
+https://patchwork.kernel.org/patch/8289091/ ("drm/dsi: Get DSI host by DT device node")
+---
+ drivers/gpu/drm/bridge/Kconfig         |   11 +
+ drivers/gpu/drm/bridge/Makefile        |    1 +
+ drivers/gpu/drm/bridge/parade-ps8640.c | 1060 ++++++++++++++++++++++++++++++++
+ 3 files changed, 1072 insertions(+)
+ create mode 100644 drivers/gpu/drm/bridge/parade-ps8640.c
 
-diff --git a/drivers/power/Kconfig b/drivers/power/Kconfig
-index 1ddd13c..534e9db 100644
---- a/drivers/power/Kconfig
-+++ b/drivers/power/Kconfig
-@@ -502,6 +502,13 @@ config AXP20X_POWER
- 	  This driver provides support for the power supply features of
- 	  AXP20x PMIC.
-=20
-+config UCS1002_POWER
-+	tristate "UCS1002-2 power supply driver"
-+	select REGMAP_I2C
-+	help
-+	  This driver provices support for UCS1002-2 Programmable USB Port
-+	  Power Controller.
+diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+index 27e2022..b4edd8c 100644
+--- a/drivers/gpu/drm/bridge/Kconfig
++++ b/drivers/gpu/drm/bridge/Kconfig
+@@ -40,4 +40,15 @@ config DRM_PARADE_PS8622
+ 	---help---
+ 	  Parade eDP-LVDS bridge chip driver.
+ 
++config DRM_PARADE_PS8640
++	tristate "Parade PS8640 MIPI DSI to eDP Converter"
++	depends on OF && I2C
++	select DRM_KMS_HELPER
++	select DRM_MIPI_DSI
++	select DRM_PANEL
++	---help---
++	  Choose this option if you have PS8640 for display
++	  The PS8640 is a high-performance and low-power
++	  MIPI DSI to eDP converter
 +
- endif # POWER_SUPPLY
-=20
- source "drivers/power/reset/Kconfig"
-diff --git a/drivers/power/Makefile b/drivers/power/Makefile
-index 0e4eab5..936d2e1 100644
---- a/drivers/power/Makefile
-+++ b/drivers/power/Makefile
-@@ -73,3 +73,4 @@ obj-$(CONFIG_CHARGER_TPS65217)	+=3D tps65217_charger.=
-o
- obj-$(CONFIG_POWER_RESET)	+=3D reset/
- obj-$(CONFIG_AXP288_FUEL_GAUGE) +=3D axp288_fuel_gauge.o
- obj-$(CONFIG_AXP288_CHARGER)	+=3D axp288_charger.o
-+obj-$(CONFIG_UCS1002_POWER)	+=3D ucs1002_power.o
-diff --git a/drivers/power/ucs1002_power.c b/drivers/power/ucs1002_powe=
-r.c
+ endmenu
+diff --git a/drivers/gpu/drm/bridge/Makefile b/drivers/gpu/drm/bridge/Makefile
+index f13c33d..fbe38dc 100644
+--- a/drivers/gpu/drm/bridge/Makefile
++++ b/drivers/gpu/drm/bridge/Makefile
+@@ -4,3 +4,4 @@ obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
+ obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
+ obj-$(CONFIG_DRM_NXP_PTN3460) += nxp-ptn3460.o
+ obj-$(CONFIG_DRM_PARADE_PS8622) += parade-ps8622.o
++obj-$(CONFIG_DRM_PARADE_PS8640) += parade-ps8640.o
+diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c b/drivers/gpu/drm/bridge/parade-ps8640.c
 new file mode 100644
-index 0000000..4f0e4ff
+index 0000000..d7410df
 --- /dev/null
-+++ b/drivers/power/ucs1002_power.c
-@@ -0,0 +1,1004 @@
++++ b/drivers/gpu/drm/bridge/parade-ps8640.c
+@@ -0,0 +1,1060 @@
 +/*
-+ * Driver for UCS1002 Programmable USB Port Power Controller
++ * Copyright (c) 2014 MediaTek Inc.
 + *
-+ * Copyright (C) 2016 Zodiac Inflight Innovations
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * This program is free software; you can redistribute it and/or modif=
-y it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITH=
-OUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY =
-or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licen=
-se for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/=
->.
-+ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
-+#include <linux/freezer.h>
++
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/firmware.h>
++#include <linux/gpio.h>
 +#include <linux/gpio/consumer.h>
 +#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/kthread.h>
-+#include <linux/device.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/power_supply.h>
-+#include <linux/regmap.h>
++#include <linux/of_gpio.h>
++#include <linux/of_graph.h>
++#include <linux/regulator/consumer.h>
++#include <asm/unaligned.h>
++#include <drm/drm_panel.h>
 +
-+#define POLL_INTERVAL		(HZ * 2)
++#include <drmP.h>
++#include <drm_atomic_helper.h>
++#include <drm_crtc_helper.h>
++#include <drm_crtc.h>
++#include <drm_edid.h>
++#include <drm_mipi_dsi.h>
 +
-+/* UCS1002 Registers */
-+#define UCS1002_REG_CURRENT_MEASUREMENT	0x00
++#define PAGE2_SPI_CFG3		0x82
++#define I2C_TO_SPI_RESET	0x20
++#define PAGE2_ROMADD_BYTE1	0x8e
++#define PAGE2_ROMADD_BYTE2	0x8f
++#define PAGE2_SWSPI_WDATA	0x90
++#define PAGE2_SWSPI_RDATA	0x91
++#define PAGE2_SWSPI_LEN		0x92
++#define PAGE2_SWSPI_CTL		0x93
++#define TRIGGER_NO_READBACK	0x05
++#define TRIGGER_READBACK	0x01
++#define PAGE2_SPI_STATUS	0x9e
++#define PAGE2_GPIO_L		0xa6
++#define PAGE2_GPIO_H		0xa7
++#define PS_GPIO9		BIT(1)
++#define PAGE2_IROM_CTRL		0xb0
++#define IROM_ENABLE		0xc0
++#define IROM_DISABLE		0x80
++#define PAGE2_SW_REST		0xbc
++#define SPI_SW_RESET		BIT(7)
++#define MPU_SW_RESET		BIT(6)
++#define PAGE2_ENCTLSPI_WR	0xda
++#define PAGE2_I2C_BYPASS	0xea
++#define I2C_BYPASS_EN		0xd0
++#define PAGE3_SET_ADD		0xfe
++#define PAGE3_SET_VAL		0xff
++#define VDO_CTL_ADD		0x13
++#define VDO_DIS			0x18
++#define VDO_EN			0x1c
++#define PAGE4_REV_L		0xf0
++#define PAGE4_REV_H		0xf1
++#define PAGE4_CHIP_L		0xf2
++#define PAGE4_CHIP_H		0xf3
 +
-+/*
-+ * The Total Accumulated Charge registers store the total accumulated =
-charge
-+ * delivered from the VS source to a portable device. The total value =
-is
-+ * calculated using four registers, from 01h to 04h. The bit weighting=
- of
-+ * the registers is given in mA/hrs.
-+ */
-+#define UCS1002_REG_TOTAL_ACC_CHARGE	0x01
++/* Firmware */
++#define SPI_MAX_RETRY_CNT	8
++#define PS_FW_NAME		"ps864x_fw.bin"
 +
-+/* Other Status Register */
-+#define UCS1020_REG_OTHER_STATUS	0x0f
-+#  define F_ALERT_PIN			BIT(5)
-+#  define F_ADET_PIN			BIT(4)
-+#  define F_CHG_ACT			BIT(3)
-+#  define F_EM_ACT			BIT(2)
-+#  define F_EM_STEP_MASK		0x03
++#define FW_CHIP_ID_OFFSET	0
++#define FW_VERSION_OFFSET	2
++#define EDID_I2C_ADDR		0x50
 +
-+/* Interrupt Status */
-+#define UCS1002_REG_INTERRUPT_STATUS	0x10
-+#  define F_DISCHARGE_ERR		BIT(6)
-+#  define F_RESET			BIT(5)
-+#  define F_MIN_KEEP_OUT		BIT(4)
-+#  define F_TSD				BIT(3)
-+#  define F_OVER_VOLT			BIT(2)
-+#  define F_BACK_VOLT			BIT(1)
-+#  define F_OVER_ILIM			BIT(0)
++#define WRITE_STATUS_REG_CMD	0x01
++#define READ_STATUS_REG_CMD	0x05
++#define CLEAR_ALL_PROTECT	0x00
++#define BLK_PROTECT_BITS	0x0c
++#define STATUS_REG_PROTECT	BIT(7)
++#define WRITE_ENABLE_CMD	0x06
++#define CHIP_ERASE_CMD		0xc7
 +
-+/* Pin Status Register */
-+#define UCS1002_REG_PIN_STATUS		0x14
-+#  define UCS1002_PWR_STATE_MASK	0x03
-+#  define F_PWR_EN_PIN			BIT(6)
-+#  define F_M2_PIN			BIT(5)
-+#  define F_M1_PIN			BIT(4)
-+#  define F_EM_EN_PIN			BIT(3)
-+#  define F_SEL_PIN			BIT(2)
-+#  define F_ACTIVE_MODE_MASK		0x38
-+#  define F_ACTIVE_MODE_SHIFT		3
++#define bridge_to_ps8640(e)	container_of(e, struct ps8640, bridge)
++#define connector_to_ps8640(e)	container_of(e, struct ps8640, connector)
 +
-+/* General Configuration Register */
-+#define UCS1002_REG_GENERAL_CFG	0x15
-+#  define F_ALERT_MASK			BIT(6)
-+#  define F_ALERT_LINK			BIT(5)
-+#  define F_DISCHARGE			BIT(4)
-+#  define F_RATION_EN			BIT(3)
-+#  define F_RATION_RST			BIT(2)
-+#  define F_RATION_BEH_MASK		0x03
-+#  define F_RATION_BEH_REPORT		0x00
-+#  define F_RATION_BEH_REPORT_DISCON	0x01
-+#  define F_RATION_BEH_DISCON_SLEEP	0x02
-+#  define F_RATION_BEH_IGNORE		0x03
-+
-+/* Emulation Configuration Register */
-+#define UCS1002_REG_EMU_CFG		0x16
-+
-+/* Switch Configuration Register */
-+#define UCS1002_REG_SWITCH_CFG		0x17
-+#  define F_PIN_IGNORE			BIT(7)
-+#  define F_EM_EN_SET			BIT(5)
-+#  define F_M2_SET			BIT(4)
-+#  define F_M1_SET			BIT(3)
-+#  define F_S0_SET			BIT(2)
-+#  define F_PWR_EN_SET			BIT(1)
-+#  define F_LATCH_SET			BIT(0)
-+#  define V_SET_ACTIVE_MODE_MASK	0x38
-+#  define V_SET_ACTIVE_MODE_PASSTHROUGH	F_M2_SET
-+#  define V_SET_ACTIVE_MODE_DEDICATED	F_EM_EN_SET
-+#  define V_SET_ACTIVE_MODE_BC12_DCP	(F_M2_SET | F_EM_EN_SET)
-+#  define V_SET_ACTIVE_MODE_BC12_SDP	F_M1_SET
-+#  define V_SET_ACTIVE_MODE_BC12_CDP	(F_M1_SET | F_M2_SET | F_EM_EN_SE=
-T)
-+
-+/* Current Limit Register */
-+#define UCS1002_REG_ILIMIT		0x19
-+#  define UCS1002_ILIM_SW_MASK		0x07
-+
-+/* High-speed Switch Configuration Register */
-+#define UCS1002_REG_HS_SWITCH_CFG	0x25
-+
-+/* Custom Emulation Configuration Register */
-+#define UCS1002_REG_CUSTOM_EMU_CFG_BASE	0x40
-+#define V_CUSTOM_EMU_CFG_NREGS		12
-+
-+/* Custom Current Limiting Behavior Config */
-+#define UCS1002_REG_CUSTOM_ILIMIT_CFG	0x51
-+
-+/* Product ID */
-+#define UCS1002_REG_PRODUCT_ID		0xfd
-+#  define UCS1002_PRODUCT_ID		0x4e
-+
-+/* Manufacture name */
-+#define UCS1002_MANUFACTURER		"SMSC"
-+
-+/* Number of registers to set a custom profile */
-+#define UCS1002_PROFILE_NREGS		17
-+
-+struct ucs1002_platform_data {
-+	struct gpio_desc *gpiod_em;
-+	struct gpio_desc *gpiod_m1;
-+	struct gpio_desc *gpiod_m2;
-+	struct gpio_desc *gpiod_pwr;
++struct ps8640_info {
++	u8 family_id;
++	u8 variant_id;
++	u16 version;
 +};
 +
-+struct ucs1002_info {
-+	struct power_supply *charger;
-+	struct i2c_client *client;
-+	struct regmap *regmap;
-+	struct ucs1002_platform_data *pdata;
-+	struct task_struct *poll_task;
-+
-+	bool curr_alarm;
++struct ps8640 {
++	struct drm_connector connector;
++	struct drm_bridge bridge;
++	struct edid *edid;
++	struct mipi_dsi_device dsi;
++	struct i2c_client *page[8];
++	struct i2c_client *ddc_i2c;
++	struct regulator_bulk_data supplies[2];
++	struct drm_panel *panel;
++	struct gpio_desc *gpio_rst_n;
++	struct gpio_desc *gpio_slp_n;
++	struct gpio_desc *gpio_mode_sel_n;
 +	bool enabled;
-+	bool present;
-+	/* Interrupts */
-+	int irq_a_det;
-+	int irq_alert;
++
++	/* firmware file info */
++	bool in_fw_update;
++	struct ps8640_info info;
 +};
 +
-+static const struct regmap_config ucs1002_regmap_config =3D {
-+	.reg_bits =3D 8,
-+	.val_bits =3D 8,
-+};
++static const u8 enc_ctrl_code[6] = {0xaa, 0x55, 0x50, 0x41, 0x52, 0x44};
 +
-+static enum power_supply_property ucs1002_props[] =3D {
-+	POWER_SUPPLY_PROP_ONLINE,
-+	POWER_SUPPLY_PROP_CHARGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_PRESENT, /* the presence of PED */
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+};
-+
-+/*
-+ * Iterate through each element of the 'map' array until an element wh=
-ose value
-+ * is equal to 'value' is found. Return the index of the respective el=
-ement or
-+ * -EINVAL if no such element is found.
-+ */
-+static int ucs1002_find_idx(int value, const int *map, int map_size)
++static int ps8640_read(struct i2c_client *client, u8 reg, u8 *data,
++		       u16 data_len)
 +{
-+	int idx;
-+
-+	for (idx =3D 0; idx < map_size; idx++)
-+		if (value =3D=3D map[idx])
-+			return idx;
-+
-+	return -EINVAL;
-+}
-+
-+static int ucs1002_power_enable(struct ucs1002_info *info, bool enable=
-)
-+{
-+	int ret, regval;
-+	unsigned int val;
-+
-+	/* Read the polarity setting determined by the SEL pin */
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (regval & F_SEL_PIN)
-+		val =3D enable ? F_PWR_EN_SET : 0;
-+	else
-+		val =3D enable ? 0 : F_PWR_EN_SET;
-+
-+	if (info->pdata) {
-+		gpiod_set_value_cansleep(info->pdata->gpiod_pwr, val ? 0 : 1);
-+	} else {
-+		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
-+					 F_PWR_EN_SET, val);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	info->enabled =3D enable;
-+
-+	return 0;
-+}
-+
-+static int ucs1002_get_online(struct ucs1002_info *info,
-+			      union power_supply_propval *val)
-+{
-+	int ret, regval;
-+
-+	ret =3D regmap_read(info->regmap, UCS1020_REG_OTHER_STATUS, &regval);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	val->intval =3D (regval & F_CHG_ACT) ? 1 : 0;
-+
-+	return 0;
-+}
-+
-+/*
-+ * To fit within 32 bits some values are rounded (uA/h)
-+ *
-+ * For Total Accumulated Charge Middle Low Byte register, addr 03h, by=
-te 2
-+ *
-+ *   B0: 0.01084 mA/h rounded to 11 uA/h
-+ *   B1: 0.02169 mA/h rounded to 22 uA/h
-+ *   B2: 0.04340 mA/h rounded to 43 uA/h
-+ *   B3: 0.08676 mA/h rounded to 87 uA/h
-+ *   B4: 0.17350 mA/h rounded to 173 u=C3=81/h
-+ *
-+ * For Total Accumulated Charge Low Byte register, addr 04h, byte 3
-+ *
-+ *   B6: 0.00271 mA/h rounded to 3 uA/h
-+ *   B7: 0.005422 mA/h rounded to 5 uA/h
-+ */
-+static const u32 ucs1002_charge_byte_values[4][8] =3D {
-+	[0] =3D {
-+		710700, 1421000, 2843000, 5685000, 11371000, 22742000,
-+		45484000, 90968000
-+	      },
-+	[1] =3D {
-+		2776, 5552, 11105, 22210, 44420, 88840, 177700, 355400
-+	      },
-+	[2] =3D {
-+		11, 22, 43, 87, 173, 347, 694, 1388
-+	      },
-+	[3] =3D {
-+		0, 0, 0, 0, 0, 0, 3, 5
-+	      }
-+};
-+
-+static int ucs1002_get_charge(struct ucs1002_info *info,
-+			      union power_supply_propval *val)
-+{
-+	int i, j, ret, regval;
-+	unsigned int total =3D 0;
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_GENERAL_CFG, &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i =3D 0; i < 4; i++) {
-+		ret =3D regmap_read(info->regmap,
-+				  UCS1002_REG_TOTAL_ACC_CHARGE + i,
-+				  &regval);
-+		if (ret < 0)
-+			return -EINVAL;
-+
-+		for (j =3D 0; j < 8; j++)
-+			if (regval & BIT(j))
-+				total +=3D ucs1002_charge_byte_values[i][j];
-+	}
-+
-+	val->intval =3D total;
-+
-+	return 0;
-+}
-+
-+/*
-+ * The Current Measurement register stores the measured current value
-+ * delivered to the portable device. The range is from 9.76 mA to 2.5 =
-A.
-+ * Following values are in uA.
-+ */
-+static const u32 ucs1002_current_measurement_values[] =3D {
-+	9760, 19500, 39000, 78100, 156200, 312300, 624600,
-+	1249300
-+};
-+
-+static int ucs1002_get_current(struct ucs1002_info *info,
-+			       union power_supply_propval *val)
-+{
-+	int n, ret, regval;
-+	unsigned int total =3D 0;
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_CURRENT_MEASUREMENT,
-+			  &regval);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	for (n =3D 0; n < ARRAY_SIZE(ucs1002_current_measurement_values); n++=
-)
-+		if (regval & BIT(n))
-+			total +=3D ucs1002_current_measurement_values[n];
-+
-+	val->intval =3D total;
-+
-+	return 0;
-+}
-+
-+/*
-+ * The Current Limit register stores the maximum current used by the p=
-ort
-+ * switch. The range is from 500mA to 2.5 A. Following values are in u=
-A.
-+ */
-+static const u32 ucs1002_current_limit_values[] =3D {
-+	500000, 900000, 1000000, 1200000, 1500000, 1800000, 2000000, 2500000
-+};
-+
-+static int ucs1002_get_max_current(struct ucs1002_info *info,
-+				   union power_supply_propval *val)
-+{
-+	int ret, regval;
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_ILIMIT, &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	regval &=3D UCS1002_ILIM_SW_MASK;
-+	val->intval =3D ucs1002_current_limit_values[regval];
-+
-+	return 0;
-+}
-+
-+static int ucs1002_set_max_current(struct ucs1002_info *info, u32 val)
-+{
-+	int ret, idx;
-+
-+	idx =3D ucs1002_find_idx(val, ucs1002_current_limit_values,
-+			       ARRAY_SIZE(ucs1002_current_limit_values));
-+	if (idx < 0) {
-+		dev_err(&info->client->dev,
-+			"%d is an invalid max current value\n", val);
-+		return -EINVAL;
-+	}
-+
-+	ret =3D regmap_write(info->regmap, UCS1002_REG_ILIMIT, idx);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int ucs1002_get_property(struct power_supply *psy,
-+				enum power_supply_property psp,
-+				union power_supply_propval *val)
-+{
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_ONLINE:
-+		return ucs1002_get_online(info, val);
-+	case POWER_SUPPLY_PROP_CHARGE_NOW:
-+		return ucs1002_get_charge(info, val);
-+	case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		return ucs1002_get_current(info, val);
-+	case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		return ucs1002_get_max_current(info, val);
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval =3D info->present ? 1 : 0;
-+		return 0;
-+	case POWER_SUPPLY_PROP_MANUFACTURER:
-+		val->strval =3D UCS1002_MANUFACTURER;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ucs1002_set_property(struct power_supply *psy,
-+				enum power_supply_property psp,
-+				const union power_supply_propval *val)
-+{
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		return ucs1002_set_max_current(info, val->intval);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ucs1002_property_is_writeable(struct power_supply *psy,
-+					 enum power_supply_property psp)
-+{
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
-+static const struct power_supply_desc ucs1002_charger_desc =3D {
-+	.name			=3D "ucs1002",
-+	.type			=3D POWER_SUPPLY_TYPE_MAINS,
-+	.get_property		=3D ucs1002_get_property,
-+	.set_property		=3D ucs1002_set_property,
-+	.property_is_writeable	=3D ucs1002_property_is_writeable,
-+	.properties		=3D ucs1002_props,
-+	.num_properties		=3D ARRAY_SIZE(ucs1002_props),
-+};
-+
-+static ssize_t ucs1002_sysfs_show_curr_alarm(struct device *dev,
-+					     struct device_attribute *attr,
-+					     char *buf)
-+{
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", info->curr_alarm);
-+}
-+
-+static ssize_t ucs1002_sysfs_show_active_mode(struct device *dev,
-+					      struct device_attribute *attr,
-+					      char *buf)
-+{
-+	int ret, regval;
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	regval &=3D F_ACTIVE_MODE_MASK;
-+	regval =3D regval >> F_ACTIVE_MODE_SHIFT;
-+
-+	switch (regval) {
-+	/* Dedicated Charger Emulation Cycle */
-+	case 1:
-+	case 3:
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", "dedicated");
-+	/* Data Pass-through */
-+	case 4:
-+	case 6:
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", "pass-through");
-+	/* BC1.2 SDP */
-+	case 2:
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", "BC1.2-SDP");
-+	/* BC1.2 DCP */
-+	case 5:
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", "BC1.2-DCP");
-+	/* BC1.2 CDP */
-+	case 7:
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", "BC1.2-CDP");
-+	default:
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", "unknown");
++	int ret;
++	struct i2c_msg msgs[] = {
++		{
++		 .addr = client->addr,
++		 .flags = 0,
++		 .len = 1,
++		 .buf = &reg,
++		 },
++		{
++		 .addr = client->addr,
++		 .flags = I2C_M_RD,
++		 .len = data_len,
++		 .buf = data,
++		 }
 +	};
++
++	ret = i2c_transfer(client->adapter, msgs, 2);
++
++	if (ret == 2)
++		return 0;
++	if (ret < 0)
++		return ret;
++	else
++		return -EIO;
 +}
 +
-+static ssize_t ucs1002_sysfs_set_active_mode(struct device *dev,
-+					     struct device_attribute *attr,
-+					     const char *buf, size_t count)
++static int ps8640_write_bytes(struct i2c_client *client, u8 *data,
++			      u16 data_len)
 +{
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+	int mode, ret =3D 0;
++	int ret;
++	struct i2c_msg msg;
 +
-+	if (strncmp(buf, "dedicated", 9) =3D=3D 0)
-+		mode =3D V_SET_ACTIVE_MODE_DEDICATED;
-+	else if (strncmp(buf, "pass-through", 12) =3D=3D 0)
-+		mode =3D V_SET_ACTIVE_MODE_PASSTHROUGH;
-+	else if (strncmp(buf, "BC1.2-DCP", 9) =3D=3D 0)
-+		mode =3D V_SET_ACTIVE_MODE_BC12_DCP;
-+	else if (strncmp(buf, "BC1.2-SDP", 9) =3D=3D 0)
-+		mode =3D V_SET_ACTIVE_MODE_BC12_SDP;
-+	else if (strncmp(buf, "BC1.2-CDP", 9) =3D=3D 0)
-+		mode =3D V_SET_ACTIVE_MODE_BC12_CDP;
++	msg.addr = client->addr;
++	msg.flags = 0;
++	msg.len = data_len;
++	msg.buf = data;
++
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret == 1)
++		return 0;
++	if (ret < 0)
++		return ret;
 +	else
-+		return -EINVAL;
++		return -EIO;
++}
 +
-+	if (info->pdata) {
-+		gpiod_set_value_cansleep(info->pdata->gpiod_em,
-+					 (mode & F_EM_EN_SET) ? 1 : 0);
-+		gpiod_set_value_cansleep(info->pdata->gpiod_m1,
-+					 (mode & F_M1_SET) ? 1 : 0);
-+		gpiod_set_value_cansleep(info->pdata->gpiod_m2,
-+					 (mode & F_M2_SET) ? 1 : 0);
-+	} else {
-+		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
-+					 V_SET_ACTIVE_MODE_MASK, mode);
-+		if (ret < 0)
-+			return ret;
++static int ps8640_write_byte(struct i2c_client *client, u8 reg,  u8 data)
++{
++	int ret;
++	struct i2c_msg msg;
++	u8 buf[] = {reg, data};
++
++	msg.addr = client->addr;
++	msg.flags = 0;
++	msg.len = sizeof(buf);
++	msg.buf = buf;
++
++	ret = i2c_transfer(client->adapter, &msg, 1);
++	if (ret == 1)
++		return 0;
++	if (ret < 0)
++		return ret;
++	else
++		return -EIO;
++}
++
++static void ps8640_get_mcu_fw_version(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[5];
++	u8 fw_ver[2];
++
++	ps8640_read(client, 0x4, fw_ver, 2);
++	ps_bridge->info.version = (fw_ver[0] << 8) | fw_ver[1];
++
++	DRM_INFO_ONCE("ps8640 rom fw version %d.%d\n", fw_ver[0], fw_ver[1]);
++}
++
++static int ps8640_bridge_enable(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[3];
++	u8 vdo_ctrl_buf[3] = {PAGE3_SET_ADD, VDO_CTL_ADD, VDO_EN};
++
++	return ps8640_write_bytes(client, vdo_ctrl_buf, 3);
++}
++
++static int ps8640_bridge_disable(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[3];
++	u8 vdo_ctrl_buf[3] = {PAGE3_SET_ADD, VDO_CTL_ADD, VDO_DIS};
++
++	return ps8640_write_bytes(client, vdo_ctrl_buf, 3);
++}
++
++static void ps8640_pre_enable(struct drm_bridge *bridge)
++{
++	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
++	struct i2c_client *client = ps_bridge->page[2];
++	int err, retry_cnt = 0;
++	u8 set_vdo_done;
++
++	if (ps_bridge->in_fw_update)
++		return;
++
++	if (ps_bridge->enabled)
++		return;
++
++	err = drm_panel_prepare(ps_bridge->panel);
++	if (err < 0) {
++		DRM_ERROR("failed to prepare panel: %d\n", err);
++		return;
 +	}
 +
-+	return count;
++	err = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
++				    ps_bridge->supplies);
++	if (err < 0) {
++		DRM_ERROR("cannot enable regulators %d\n", err);
++		goto err_panel_unprepare;
++	}
++
++	gpiod_set_value(ps_bridge->gpio_slp_n, 1);
++	gpiod_set_value(ps_bridge->gpio_rst_n, 0);
++	usleep_range(2000, 2500);
++	gpiod_set_value(ps_bridge->gpio_rst_n, 1);
++
++	/*
++	 * Wait for the ps8640 embed mcu ready
++	 * First wait 200ms and then check the mcu ready flag every 20ms
++	 */
++	msleep(200);
++	do {
++		err = ps8640_read(client, PAGE2_GPIO_H, &set_vdo_done, 1);
++		if (err < 0) {
++			DRM_ERROR("failed read PAGE2_GPIO_H: %d\n", err);
++			goto err_regulators_disable;
++		}
++		msleep(20);
++	} while ((retry_cnt++ < 10) && ((set_vdo_done & PS_GPIO9) != PS_GPIO9));
++
++	if (ps_bridge->info.version == 0)
++		ps8640_get_mcu_fw_version(ps_bridge);
++	/* Switch access edp panel's edid through i2c */
++	ps8640_write_byte(client, PAGE2_I2C_BYPASS, I2C_BYPASS_EN);
++	ps_bridge->enabled = true;
++
++	return;
++
++err_regulators_disable:
++	regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
++			       ps_bridge->supplies);
++err_panel_unprepare:
++	drm_panel_unprepare(ps_bridge->panel);
 +}
 +
-+static ssize_t ucs1002_sysfs_show_enabled(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
++static void ps8640_enable(struct drm_bridge *bridge)
 +{
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
++	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
++	int err;
 +
-+	return scnprintf(buf, PAGE_SIZE, "%d\n", info->enabled);
++	err = ps8640_bridge_enable(ps_bridge);
++	if (err)
++		DRM_ERROR("failed to enable unmutevideo: %d\n", err);
++
++	err = drm_panel_enable(ps_bridge->panel);
++	if (err < 0)
++		DRM_ERROR("failed to enable panel: %d\n", err);
 +}
 +
-+static ssize_t ucs1002_sysfs_set_enabled(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t count)
++static void ps8640_disable(struct drm_bridge *bridge)
 +{
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+	long val;
++	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
++	int err;
++
++	err = drm_panel_disable(ps_bridge->panel);
++	if (err < 0)
++		DRM_ERROR("failed to disable panel: %d\n", err);
++
++	err = ps8640_bridge_disable(ps_bridge);
++	if (err < 0)
++		DRM_ERROR("failed to disable bridge: %d\n", err);
++}
++
++static void ps8640_post_disable(struct drm_bridge *bridge)
++{
++	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
++	int err;
++
++	if (ps_bridge->in_fw_update)
++		return;
++
++	if (!ps_bridge->enabled)
++		return;
++
++	ps_bridge->enabled = false;
++
++	gpiod_set_value(ps_bridge->gpio_rst_n, 0);
++	gpiod_set_value(ps_bridge->gpio_slp_n, 0);
++	err = regulator_bulk_disable(ARRAY_SIZE(ps_bridge->supplies),
++				     ps_bridge->supplies);
++	if (err < 0)
++		DRM_ERROR("cannot disable regulators %d\n", err);
++
++	err = drm_panel_unprepare(ps_bridge->panel);
++	if (err)
++		DRM_ERROR("failed to unprepare panel: %d\n", err);
++}
++
++static int ps8640_get_modes(struct drm_connector *connector)
++{
++	struct ps8640 *ps_bridge = connector_to_ps8640(connector);
++	struct device *dev = &ps_bridge->page[0]->dev;
++	u8 *edid;
++	int ret, num_modes = 0;
++	bool power_off;
++
++	if (ps_bridge->edid)
++		return drm_add_edid_modes(connector, ps_bridge->edid);
++
++	power_off = !ps_bridge->enabled;
++	ps8640_pre_enable(&ps_bridge->bridge);
++
++	edid = devm_kmalloc(dev, EDID_LENGTH, GFP_KERNEL);
++	if (!edid) {
++		DRM_ERROR("Failed to allocate EDID\n");
++		return 0;
++	}
++
++	ret = ps8640_read(ps_bridge->ddc_i2c, 0, edid, EDID_LENGTH);
++	if (ret)
++		goto out;
++
++	ps_bridge->edid = (struct edid *)edid;
++	drm_mode_connector_update_edid_property(connector, ps_bridge->edid);
++
++	num_modes = drm_add_edid_modes(connector, ps_bridge->edid);
++
++out:
++	if (power_off)
++		ps8640_post_disable(&ps_bridge->bridge);
++
++	return num_modes;
++}
++
++static struct drm_encoder *ps8640_best_encoder(struct drm_connector *connector)
++{
++	struct ps8640 *ps_bridge;
++
++	ps_bridge = connector_to_ps8640(connector);
++	return ps_bridge->bridge.encoder;
++}
++
++static const struct drm_connector_helper_funcs ps8640_connector_helper_funcs = {
++	.get_modes = ps8640_get_modes,
++	.best_encoder = ps8640_best_encoder,
++};
++
++static enum drm_connector_status ps8640_detect(struct drm_connector *connector,
++					       bool force)
++{
++	return connector_status_connected;
++}
++
++static void ps8640_connector_destroy(struct drm_connector *connector)
++{
++	drm_connector_unregister(connector);
++	drm_connector_cleanup(connector);
++}
++
++static const struct drm_connector_funcs ps8640_connector_funcs = {
++	.dpms = drm_atomic_helper_connector_dpms,
++	.fill_modes = drm_helper_probe_single_connector_modes,
++	.detect = ps8640_detect,
++	.destroy = ps8640_connector_destroy,
++	.reset = drm_atomic_helper_connector_reset,
++	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
++	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++};
++
++int ps8640_bridge_attach(struct drm_bridge *bridge)
++{
++	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
++	struct device *dev = &ps_bridge->page[0]->dev;
++	struct device_node *np = dev->of_node;
++	struct device_node *port, *in_ep;
++	struct device_node *dsi_node = NULL;
++	struct mipi_dsi_host *host = ps_bridge->dsi.host;
 +	int ret;
 +
-+	if (kstrtol(buf, 10, &val) < 0)
-+		return -EINVAL;
++	ret = drm_connector_init(bridge->dev, &ps_bridge->connector,
++				 &ps8640_connector_funcs,
++				 DRM_MODE_CONNECTOR_eDP);
 +
-+	ret =3D ucs1002_power_enable(info, val ? true : false);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static ssize_t ucs1002_sysfs_show_profile(struct device *dev,
-+					  struct device_attribute *attr,
-+					  char *buf)
-+{
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+	int idx, regval, ret, len =3D 0;
-+
-+	/*
-+	 * Read Custom Emulation Profile
-+	 */
-+
-+	/* read registers 40h-4Ch (Custom Emulation Configuration) */
-+	for (idx =3D 0; idx < V_CUSTOM_EMU_CFG_NREGS; idx++) {
-+		ret =3D regmap_read(info->regmap,
-+				  UCS1002_REG_CUSTOM_EMU_CFG_BASE + idx,
-+				  &regval);
-+		if (ret < 0)
-+			return ret;
-+
-+		len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
-+	}
-+
-+	/* read register 16h (Emulation Configuration) */
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_EMU_CFG, &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
-+
-+	/* read register 19h (Current Limit) */
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_ILIMIT, &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
-+
-+	/* read register 25h (High-speed Switch Configuration) */
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_HS_SWITCH_CFG, &regval)=
-;
-+	if (ret < 0)
-+		return ret;
-+
-+	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x ", regval);
-+
-+	/* read register 51h (Custom Current Limiting Behavior Config) */
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_CUSTOM_ILIMIT_CFG,
-+			  &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	len +=3D scnprintf(&buf[len], PAGE_SIZE, "%02x\n", regval);
-+
-+	return len;
-+}
-+
-+static ssize_t ucs1002_sysfs_set_profile(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t count)
-+{
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+	const char *delim =3D " ";
-+	char profile_data[256];
-+	char *token, *str_ptr;
-+	int regval[UCS1002_PROFILE_NREGS];
-+	int idx =3D 0, ret;
-+
-+	strncpy(profile_data, buf, 256);
-+	str_ptr =3D &profile_data[0];
-+
-+	while (str_ptr && (idx < UCS1002_PROFILE_NREGS)) {
-+		token =3D strsep(&str_ptr, delim);
-+		if (kstrtoint(token, 0, &regval[idx])) {
-+			dev_dbg(dev, "failed to convert %s to integer\n",
-+				token);
-+			return -EINVAL;
-+		}
-+		idx++;
-+	}
-+
-+	if (idx !=3D UCS1002_PROFILE_NREGS) {
-+		dev_dbg(dev, "failed to set emulation profile (%d)\n", idx);
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Write Custom Emulation Profile
-+	 */
-+
-+	/* write registers 40h-4Ch (Custom Emulation Configuration) */
-+	for (idx =3D 0; idx < V_CUSTOM_EMU_CFG_NREGS; idx++) {
-+		ret =3D regmap_write(info->regmap,
-+				   UCS1002_REG_CUSTOM_EMU_CFG_BASE + idx,
-+				   regval[idx]);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* write register 16h (Emulation Configuration) */
-+	ret =3D regmap_write(info->regmap, UCS1002_REG_EMU_CFG,
-+			   regval[idx++]);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* write register 19h (Current Limit) */
-+	ret =3D regmap_write(info->regmap, UCS1002_REG_ILIMIT, regval[idx++])=
-;
-+	if (ret < 0)
-+		return ret;
-+
-+	/* write register 25h (High-speed Switch Configuration) */
-+	ret =3D regmap_write(info->regmap, UCS1002_REG_HS_SWITCH_CFG,
-+			   regval[idx++]);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* write register 51h (Custom Current Limiting Behavior Config) */
-+	ret =3D regmap_write(info->regmap, UCS1002_REG_CUSTOM_ILIMIT_CFG,
-+			   regval[idx]);
-+	if (ret < 0)
-+		return ret;
-+
-+	return count;
-+}
-+
-+const char * const ucs1002_pwr_state_values[] =3D {
-+	"sleep", "detect", "active", "error"
-+};
-+
-+static ssize_t ucs1002_sysfs_show_state(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	int ret, regval;
-+	struct power_supply *psy =3D dev_get_drvdata(dev);
-+	struct ucs1002_info *info =3D power_supply_get_drvdata(psy);
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS, &regval);
-+	if (ret < 0)
-+		return -EINVAL;
-+
-+	regval &=3D UCS1002_PWR_STATE_MASK;
-+
-+	return scnprintf(buf, PAGE_SIZE, "%s\n",
-+			 ucs1002_pwr_state_values[regval]);
-+}
-+
-+static DEVICE_ATTR(curr_alarm, S_IRUGO, ucs1002_sysfs_show_curr_alarm,=
- NULL);
-+static DEVICE_ATTR(enabled, S_IWUSR | S_IRUGO, ucs1002_sysfs_show_enab=
-led,
-+		   ucs1002_sysfs_set_enabled);
-+static DEVICE_ATTR(mode, S_IWUSR | S_IRUGO, ucs1002_sysfs_show_active_=
-mode,
-+		   ucs1002_sysfs_set_active_mode);
-+static DEVICE_ATTR(profile, S_IWUSR | S_IRUGO, ucs1002_sysfs_show_prof=
-ile,
-+		   ucs1002_sysfs_set_profile);
-+static DEVICE_ATTR(state, S_IRUGO, ucs1002_sysfs_show_state, NULL);
-+
-+static struct attribute *ucs1002_specific_attr[] =3D {
-+	&dev_attr_curr_alarm.attr,
-+	&dev_attr_enabled.attr,
-+	&dev_attr_mode.attr,
-+	&dev_attr_profile.attr,
-+	&dev_attr_state.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group ucs1002_attr_group =3D {
-+	.attrs =3D ucs1002_specific_attr,
-+};
-+
-+static irqreturn_t ucs1002_charger_irq(int irq, void *data)
-+{
-+	int ret, regval;
-+	bool present;
-+	struct ucs1002_info *info =3D data;
-+
-+	present =3D info->present;
-+
-+	ret =3D regmap_read(info->regmap, UCS1020_REG_OTHER_STATUS, &regval);
-+	if (ret < 0)
-+		return IRQ_HANDLED;
-+
-+	/* update attached status */
-+	info->present =3D (regval & F_ADET_PIN) ? true : false;
-+
-+	/* notify the change */
-+	if (present !=3D info->present)
-+		power_supply_changed(info->charger);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t ucs1002_alert_irq(int irq, void *data)
-+{
-+	int ret, regval;
-+	struct ucs1002_info *info =3D data;
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_INTERRUPT_STATUS, &regv=
-al);
-+	if (ret < 0)
-+		return IRQ_HANDLED;
-+
-+	/* update current alarm status */
-+	info->curr_alarm =3D (regval & F_OVER_ILIM) ? true : false;
-+
-+	/* over current alarm */
-+	if (regval & F_OVER_ILIM)
-+		power_supply_changed(info->charger);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ucs1002_poll_task(void *data)
-+{
-+	set_freezable();
-+
-+	while (!kthread_should_stop()) {
-+		schedule_timeout_interruptible(POLL_INTERVAL);
-+		try_to_freeze();
-+		ucs1002_charger_irq(-1, data);
-+		ucs1002_alert_irq(-1, data);
-+	}
-+	return 0;
-+}
-+
-+static int ucs1002_get_control_gpios(struct ucs1002_info *info)
-+{
-+	int ret, regval;
-+	struct device *dev =3D &info->client->dev;
-+
-+	info->pdata =3D devm_kzalloc(dev, sizeof(struct ucs1002_platform_data=
-),
-+				   GFP_KERNEL);
-+	if (!info->pdata)
-+		return -ENOMEM;
-+
-+	/* gpio for chip EM_EN pin */
-+	info->pdata->gpiod_em =3D devm_gpiod_get_index(dev, "control", 0,
-+						     GPIOD_OUT_HIGH);
-+	if (IS_ERR(info->pdata->gpiod_em)) {
-+		dev_err(dev, "unable to claim EM_EN gpio\n");
-+		return PTR_ERR(info->pdata->gpiod_em);
-+	}
-+
-+	/* gpio for chip M1 pin */
-+	info->pdata->gpiod_m1 =3D devm_gpiod_get_index(dev, "control", 1,
-+						     GPIOD_OUT_LOW);
-+	if (IS_ERR(info->pdata->gpiod_m1)) {
-+		dev_err(dev, "unable to claim M1 gpio\n");
-+		return PTR_ERR(info->pdata->gpiod_m1);
-+	}
-+
-+	/* gpio for chip M2 pin */
-+	info->pdata->gpiod_m2 =3D devm_gpiod_get_index(dev, "control", 2,
-+						     GPIOD_OUT_LOW);
-+	if (IS_ERR(info->pdata->gpiod_m2)) {
-+		dev_err(dev, "unable to claim EM_EN gpio\n");
-+		return PTR_ERR(info->pdata->gpiod_m2);
-+	}
-+
-+	/* Read the polarity setting determined by the SEL pin */
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_PIN_STATUS,
-+			  &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* gpio for chip PWR_EN pin - power off */
-+	info->pdata->gpiod_pwr =3D devm_gpiod_get_index(dev, "control", 3,
-+						      (regval & F_SEL_PIN) ?
-+						      GPIOD_OUT_LOW :
-+						      GPIOD_OUT_HIGH);
-+	if (IS_ERR(info->pdata->gpiod_pwr)) {
-+		dev_err(dev, "unable to claim PWR_EN gpio\n");
-+		return PTR_ERR(info->pdata->gpiod_pwr);
-+	}
-+
-+	return 0;
-+}
-+
-+static int ucs1002_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *dev_id)
-+{
-+	int ret, regval;
-+	u32 property;
-+	struct ucs1002_info *info;
-+	struct device *dev =3D &client->dev;
-+	struct power_supply_config ucs1002_charger_config =3D {};
-+
-+	info =3D devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	info->regmap =3D devm_regmap_init_i2c(client, &ucs1002_regmap_config)=
-;
-+	if (IS_ERR(info->regmap)) {
-+		ret =3D PTR_ERR(info->regmap);
-+		dev_err(dev, "regmap initialization failed: %d\n", ret);
++	if (ret) {
++		DRM_ERROR("Failed to initialize connector with drm: %d\n", ret);
 +		return ret;
 +	}
 +
-+	info->client =3D client;
-+	info->curr_alarm =3D false;
-+	info->enabled =3D false;
-+	info->present =3D false;
++	drm_connector_helper_add(&ps_bridge->connector,
++				 &ps8640_connector_helper_funcs);
++	drm_connector_register(&ps_bridge->connector);
 +
-+	info->irq_a_det =3D irq_of_parse_and_map(dev->of_node, 0);
-+	info->irq_alert =3D irq_of_parse_and_map(dev->of_node, 1);
++	ps_bridge->connector.dpms = DRM_MODE_DPMS_ON;
++	drm_mode_connector_attach_encoder(&ps_bridge->connector,
++					  bridge->encoder);
 +
-+	i2c_set_clientdata(client, info);
++	if (ps_bridge->panel)
++		drm_panel_attach(ps_bridge->panel, &ps_bridge->connector);
 +
-+	ucs1002_charger_config.of_node =3D dev->of_node;
-+	ucs1002_charger_config.drv_data =3D info;
-+
-+	ret =3D regmap_read(info->regmap, UCS1002_REG_PRODUCT_ID, &regval);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (regval !=3D UCS1002_PRODUCT_ID) {
-+		dev_err(dev,
-+			"Product ID does not match (0x%02x !=3D 0x%02x)\n",
-+			regval, UCS1002_PRODUCT_ID);
-+		return -ENODEV;
-+	}
-+
-+	dev_info(dev, "registered with product id 0x%02x\n",
-+		 UCS1002_PRODUCT_ID);
-+
-+	/* Enable charge rationing by default */
-+	ret =3D regmap_update_bits(info->regmap, UCS1002_REG_GENERAL_CFG,
-+				 F_RATION_EN, F_RATION_EN);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!device_property_present(dev, "control-gpios")) {
-+		dev_dbg(dev, "set active mode selection through i2c\n");
-+		/*
-+		 * Ignore the M1, M2, PWR_EN, and EM_EN pin states. Set active
-+		 * mode selection to Dedicated Charger Emulation Cycle.
-+		 *
-+		 * #M1    #M2    EM_EN
-+		 *  0      0       1   - Dedicated Charger Emulation Cycle
-+		 *
-+		 */
-+		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
-+					 F_PIN_IGNORE | F_EM_EN_SET | F_M2_SET |
-+					 F_M1_SET, F_PIN_IGNORE | F_EM_EN_SET);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		dev_dbg(dev, "set active mode selection through pins\n");
-+
-+		/*
-+		 * The Active mode selection and power state will be set by the
-+		 * OR'd combination of the M1, M2, PWR_EN, and EM_EN pin states
-+		 * and the corresponding bit states.
-+		 */
-+		ret =3D regmap_update_bits(info->regmap, UCS1002_REG_SWITCH_CFG,
-+					 F_PIN_IGNORE | F_EM_EN_SET | F_M2_SET |
-+					 F_M1_SET | F_PWR_EN_SET, 0);
-+		if (ret < 0)
-+			return ret;
-+
-+		/*
-+		 * PIN_IGNORE mode not set, so EM, M1 and M2 pins must be
-+		 * defined.
-+		 */
-+		ret =3D ucs1002_get_control_gpios(info);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/*
-+	 * The current limit is based on the resistor on the COMM_SEL / ILIM
-+	 * pin and this value cannot be changed to be higher than hardware
-+	 * set value. If the property is not set, the value set by hardware i=
-s
-+	 * the default.
-+	 */
-+	ret =3D device_property_read_u32(dev, "microchip,limit-microamps",
-+				       &property);
-+	if (ret =3D=3D 0)
-+		ucs1002_set_max_current(info, property);
-+
-+	info->charger =3D devm_power_supply_register(dev, &ucs1002_charger_de=
-sc,
-+						   &ucs1002_charger_config);
-+	if (IS_ERR(info->charger)) {
-+		dev_err(dev, "failed to register power supply\n");
-+		return PTR_ERR(info->charger);
-+	}
-+
-+	ret =3D sysfs_create_group(&info->charger->dev.kobj, &ucs1002_attr_gr=
-oup);
-+	if (ret < 0) {
-+		dev_err(dev, "can't create sysfs entries\n");
-+		return ret;
-+	}
-+
-+	/* Turn on the port power switch */
-+	ucs1002_power_enable(info, true);
-+
-+	if (info->irq_a_det && info->irq_alert) {
-+		ret =3D devm_request_threaded_irq(dev, info->irq_a_det, NULL,
-+						ucs1002_charger_irq,
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_TRIGGER_RISING |
-+						IRQF_ONESHOT,
-+						"ucs1002-a_det", info);
-+		if (ret) {
-+			dev_err(dev, "failed to request A_DET threaded irq\n");
-+			goto fail_remove_group;
-+		}
-+
-+		ret =3D devm_request_threaded_irq(dev, info->irq_alert, NULL,
-+						ucs1002_alert_irq,
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_TRIGGER_RISING |
-+						IRQF_ONESHOT,
-+						"ucs1002-alert", info);
-+		if (ret) {
-+			dev_err(dev, "failed to request ALERT threaded irq\n");
-+			goto fail_remove_group;
-+		}
-+	} else {
-+		dev_warn(dev, "no IRQ support, using polling mode\n");
-+		info->poll_task =3D kthread_run(ucs1002_poll_task, info,
-+					      "kucs1002");
-+		if (IS_ERR(info->poll_task)) {
-+			ret =3D PTR_ERR(info->poll_task);
-+			dev_err(dev, "unable to run kthread err (%d)\n", ret);
-+			goto fail_remove_group;
++	/* port@0 is ps8640 dsi input port */
++	port = of_graph_get_port_by_id(np, 0);
++	if (port) {
++		in_ep = of_get_child_by_name(port, "endpoint");
++		of_node_put(port);
++		if (in_ep) {
++			dsi_node = of_graph_get_remote_port_parent(in_ep);
++			of_node_put(in_ep);
 +		}
 +	}
++	if (dsi_node) {
++		host = of_find_mipi_dsi_host_by_node(dsi_node);
++		of_node_put(dsi_node);
++		if (!host)
++			return -ENODEV;
++	}
 +
-+	return 0;
++	ps_bridge->dsi.host = host;
++	ps_bridge->dsi.mode_flags = MIPI_DSI_MODE_VIDEO |
++				     MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
++	ps_bridge->dsi.format = MIPI_DSI_FMT_RGB888;
++	ps_bridge->dsi.lanes = 4;
++	ret = mipi_dsi_attach(&ps_bridge->dsi);
++	if (ret) {
++		drm_panel_detach(ps_bridge->panel);
++		return ret;
++	}
 +
-+fail_remove_group:
-+	sysfs_remove_group(&info->charger->dev.kobj, &ucs1002_attr_group);
 +	return ret;
 +}
 +
-+static int ucs1002_remove(struct i2c_client *client)
++static const struct drm_bridge_funcs ps8640_bridge_funcs = {
++	.attach = ps8640_bridge_attach,
++	.disable = ps8640_disable,
++	.post_disable = ps8640_post_disable,
++	.pre_enable = ps8640_pre_enable,
++	.enable = ps8640_enable,
++};
++
++/* Firmware Version is returned as Major.Minor.Build */
++static ssize_t ps8640_fw_version_show(struct device *dev,
++				      struct device_attribute *attr, char *buf)
 +{
-+	struct ucs1002_info *info =3D i2c_get_clientdata(client);
++	struct ps8640 *ps_bridge = dev_get_drvdata(dev);
++	struct ps8640_info *info = &ps_bridge->info;
 +
-+	if (info->poll_task)
-+		kthread_stop(info->poll_task);
++	return scnprintf(buf, PAGE_SIZE, "%u.%u\n", info->version >> 8,
++			 info->version & 0xff);
++}
 +
-+	sysfs_remove_group(&info->charger->dev.kobj, &ucs1002_attr_group);
++/* Hardware Version is returned as FamilyID.VariantID */
++static ssize_t ps8640_hw_version_show(struct device *dev,
++				      struct device_attribute *attr, char *buf)
++{
++	struct ps8640 *ps_bridge = dev_get_drvdata(dev);
++	struct ps8640_info *info = &ps_bridge->info;
++
++	return scnprintf(buf, PAGE_SIZE, "ps%u.%u\n", info->family_id,
++			 info->variant_id);
++}
++
++static int ps8640_spi_send_cmd(struct ps8640 *ps_bridge, u8 *cmd, u8 cmd_len)
++{
++	struct i2c_client *client = ps_bridge->page[2];
++	u8 i, buf[3];
++	int ret;
++
++	ret = ps8640_write_byte(client, PAGE2_IROM_CTRL, IROM_ENABLE);
++	if (ret)
++		goto err;
++
++	/* write command in write port */
++	for (i = 0; i < cmd_len; i++) {
++		ret = ps8640_write_byte(client, PAGE2_SWSPI_WDATA, cmd[i]);
++		if (ret)
++			goto err;
++	}
++
++	buf[0] = PAGE2_SWSPI_LEN;
++	buf[1] = cmd_len - 1;
++	buf[2] = TRIGGER_NO_READBACK;
++	ret = ps8640_write_bytes(client, buf, 3);
++	if (ret)
++		goto err;
++
++	ret = ps8640_write_byte(client, PAGE2_IROM_CTRL, IROM_DISABLE);
++	if (ret)
++		goto err;
++
++	return 0;
++
++err:
++	dev_err(&client->dev, "send command err: %d\n", ret);
++	return ret;
++}
++
++static int ps8640_wait_spi_ready(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[2];
++	u8 spi_rdy_st, retry_cnt = 0;
++
++	do {
++		ps8640_read(client, PAGE2_SPI_STATUS, &spi_rdy_st, 1);
++		msleep(20);
++		if ((retry_cnt == SPI_MAX_RETRY_CNT) &&
++		    ((spi_rdy_st & 0x0c) != 0x0c)) {
++			dev_err(&client->dev, "wait spi ready timeout\n");
++			return -EBUSY;
++		}
++	} while ((retry_cnt++ < SPI_MAX_RETRY_CNT) &&
++		 (spi_rdy_st & 0x0c) == 0x0c);
 +
 +	return 0;
 +}
 +
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id ucs1002_of_match[] =3D {
-+	{ .compatible =3D "microchip,ucs1002", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, ucs1002_of_match);
-+#endif
++static int ps8640_wait_spi_nobusy(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[2];
++	u8 spi_status, buf[3], retry_cnt = 0;
++	int ret;
 +
-+static const struct i2c_device_id ucs1002_ids[] =3D {
-+	{"ucs1002", 0},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(i2c, ucs1002_ids);
++	do {
++		/* 0x05 RDSR; Read-Status-Register */
++		ret = ps8640_write_byte(client, PAGE2_SWSPI_WDATA,
++					READ_STATUS_REG_CMD);
++		if (ret)
++			goto err_send_cmd_exit;
 +
-+static struct i2c_driver ucs1002_driver =3D {
-+	.driver =3D {
-+		   .name =3D "ucs1002",
-+		   .of_match_table =3D of_match_ptr(ucs1002_of_match),
++		buf[0] = PAGE2_SWSPI_LEN;
++		buf[1] = 0;
++		buf[2] = TRIGGER_READBACK;
++		ret = ps8640_write_bytes(client, buf, 3);
++		if (ret)
++			goto err_send_cmd_exit;
++
++		/* delay for cmd send */
++		usleep_range(100, 300);
++		/* wait for SPI ROM until not busy */
++		ret = ps8640_read(client, PAGE2_SWSPI_RDATA, &spi_status, 1);
++		if (ret)
++			goto err_send_cmd_exit;
++	} while ((retry_cnt++ < SPI_MAX_RETRY_CNT) &&
++		 (spi_status & BLK_PROTECT_BITS) == BLK_PROTECT_BITS);
++
++	if ((retry_cnt > SPI_MAX_RETRY_CNT) &&
++	    (spi_status & BLK_PROTECT_BITS) != BLK_PROTECT_BITS) {
++		ret = -EBUSY;
++		dev_err(&client->dev, "wait spi no busy timeout: %d\n", ret);
++		goto err_timeout;
++	}
++
++	return 0;
++
++err_send_cmd_exit:
++	dev_err(&client->dev, "send command err: %d\n", ret);
++
++err_timeout:
++	return ret;
++}
++
++static int ps8640_wait_rom_idle(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[0];
++	int ret;
++
++	ret = ps8640_write_byte(client, PAGE2_IROM_CTRL, IROM_ENABLE);
++	if (ret)
++		goto exit;
++
++	ret = ps8640_wait_spi_ready(ps_bridge);
++	if (ret)
++		goto exit;
++
++	ret = ps8640_wait_spi_nobusy(ps_bridge);
++	if (ret)
++		goto exit;
++
++	ret = ps8640_write_byte(client, PAGE2_IROM_CTRL, IROM_DISABLE);
++	if (ret)
++		goto exit;
++
++exit:
++	if (ret)
++		dev_err(&client->dev, "wait ps8640 rom idle fail: %d\n", ret);
++
++	return ret;
++}
++
++static int ps8640_spi_dl_mode(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[2];
++	int ret;
++
++	/* switch ps8640 mode to spi dl mode */
++	gpiod_set_value(ps_bridge->gpio_mode_sel_n, 0);
++
++	/* reset spi interface */
++	ret = ps8640_write_byte(client, PAGE2_SW_REST,
++				SPI_SW_RESET | MPU_SW_RESET);
++	if (ret)
++		goto exit;
++
++	ret = ps8640_write_byte(client, PAGE2_SW_REST, MPU_SW_RESET);
++	if (ret)
++		goto exit;
++
++exit:
++	if (ret)
++		dev_err(&client->dev, "fail reset spi interface: %d\n", ret);
++
++	return ret;
++}
++
++static int ps8640_rom_prepare(struct ps8640 *ps_bridge)
++{
++	struct i2c_client *client = ps_bridge->page[2];
++	struct device *dev = &client->dev;
++	u8 i, cmd[2];
++	int ret;
++
++	cmd[0] = WRITE_ENABLE_CMD;
++	ret = ps8640_spi_send_cmd(ps_bridge, cmd, 1);
++	if (ret) {
++		dev_err(dev, "failed enable-write-status-register: %d\n", ret);
++		return ret;
++	}
++
++	cmd[0] = WRITE_STATUS_REG_CMD;
++	cmd[1] = CLEAR_ALL_PROTECT;
++	ret = ps8640_spi_send_cmd(ps_bridge, cmd, 2);
++	if (ret) {
++		dev_err(dev, "fail disable all protection: %d\n", ret);
++		return ret;
++	}
++
++	/* wait for SPI module ready */
++	ret = ps8640_wait_rom_idle(ps_bridge);
++	if (ret) {
++		dev_err(dev, "fail wait rom idle: %d\n", ret);
++		return ret;
++	}
++
++	ps8640_write_byte(client, PAGE2_IROM_CTRL, IROM_ENABLE);
++	for (i = 0; i < 6; i++)
++		ps8640_write_byte(client, PAGE2_ENCTLSPI_WR, enc_ctrl_code[i]);
++	ps8640_write_byte(client, PAGE2_IROM_CTRL, IROM_DISABLE);
++
++	/* Enable-Write-Status-Register */
++	cmd[0] = WRITE_ENABLE_CMD;
++	ret = ps8640_spi_send_cmd(ps_bridge, cmd, 1);
++	if (ret) {
++		dev_err(dev, "fail enable-write-status-register: %d\n", ret);
++		return ret;
++	}
++
++	/* chip erase command */
++	cmd[0] = CHIP_ERASE_CMD;
++	ret = ps8640_spi_send_cmd(ps_bridge, cmd, 1);
++	if (ret) {
++		dev_err(dev, "fail disable all protection: %d\n", ret);
++		return ret;
++	}
++
++	ret = ps8640_wait_rom_idle(ps_bridge);
++	if (ret) {
++		dev_err(dev, "fail wait rom idle: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int ps8640_validate_firmware(struct ps8640 *ps_bridge,
++				    const struct firmware *fw)
++{
++	struct i2c_client *client = ps_bridge->page[0];
++	struct ps8640_info *info = &ps_bridge->info;
++	u16 fw_chip_id, fw_version_id;
++
++	/*
++	 * Get the chip_id from the firmware. Make sure that it is the
++	 * right controller to do the firmware and config update.
++	 */
++	fw_chip_id = get_unaligned_le16(fw->data + FW_CHIP_ID_OFFSET);
++
++	if (fw_chip_id != 0x8640) {
++		dev_err(&client->dev,
++			"chip id mismatch: fw 0x%x vs. chip 0x8640\n",
++			fw_chip_id);
++		return -ENODEV;
++	}
++
++	fw_version_id = get_unaligned_le16(fw->data + FW_VERSION_OFFSET);
++
++	if (fw_version_id == info->version) {
++		dev_err(&client->dev,
++			"no need update fw version same: fw %d.%d vs. chip %d.%d\n",
++			fw_version_id >> 8, fw_version_id & 0xff,
++			info->version >> 8, info->version & 0xff);
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
++static int ps8640_write_rom(struct ps8640 *ps_bridge, const struct firmware *fw)
++{
++	struct i2c_client *client = ps_bridge->page[0];
++	struct device *dev = &client->dev;
++	struct i2c_client *client2 = ps_bridge->page[2];
++	struct i2c_client *client7 = ps_bridge->page[7];
++	unsigned int pos = 0;
++	u8 buf[257], rom_page_id_buf[3];
++	int ret;
++	u16 cpy_len;
++
++	ps8640_write_byte(client2, PAGE2_SPI_CFG3, I2C_TO_SPI_RESET);
++	msleep(100);
++	ps8640_write_byte(client2, PAGE2_SPI_CFG3, 0x00);
++
++	while (pos < fw->size) {
++		rom_page_id_buf[0] = PAGE2_ROMADD_BYTE1;
++		rom_page_id_buf[1] = (pos >> 8) & 0xff;
++		rom_page_id_buf[2] = (pos >> 16) & 0xff;
++		ret = ps8640_write_bytes(client2, rom_page_id_buf, 3);
++		if (ret)
++			goto error;
++		cpy_len = fw->size >= 256 + pos ? 256 : fw->size - pos;
++		buf[0] = 0;
++		memcpy(buf + 1, fw->data + pos, cpy_len);
++		ret = ps8640_write_bytes(client7, buf, cpy_len + 1);
++		if (ret)
++			goto error;
++
++		pos += cpy_len;
++
++		dev_dbg(dev, "fw update completed %u / %zu bytes\n", pos,
++			fw->size);
++	}
++	return 0;
++
++error:
++	dev_err(dev, "failed write extenal flash, %d\n", ret);
++	return ret;
++}
++
++static int ps8640_spi_normal_mode(struct ps8640 *ps_bridge)
++{
++	u8 cmd[2];
++	struct i2c_client *client = ps_bridge->page[2];
++
++	/* Enable-Write-Status-Register */
++	cmd[0] = WRITE_ENABLE_CMD;
++	ps8640_spi_send_cmd(ps_bridge, cmd, 1);
++
++	/* protect BPL/BP0/BP1 */
++	cmd[0] = WRITE_STATUS_REG_CMD;
++	cmd[1] = BLK_PROTECT_BITS | STATUS_REG_PROTECT;
++	ps8640_spi_send_cmd(ps_bridge, cmd, 2);
++
++	/* wait for SPI rom ready */
++	ps8640_wait_rom_idle(ps_bridge);
++
++	/* disable PS8640 mapping function */
++	ps8640_write_byte(client, PAGE2_ENCTLSPI_WR, 0x00);
++
++	gpiod_set_value(ps_bridge->gpio_mode_sel_n, 1);
++	return 0;
++}
++
++static int ps8640_enter_bl(struct ps8640 *ps_bridge)
++{
++	ps_bridge->in_fw_update = true;
++	return ps8640_spi_dl_mode(ps_bridge);
++}
++
++static void ps8640_exit_bl(struct ps8640 *ps_bridge, const struct firmware *fw)
++{
++	ps8640_spi_normal_mode(ps_bridge);
++	ps_bridge->in_fw_update = false;
++}
++
++static int ps8640_load_fw(struct ps8640 *ps_bridge, const struct firmware *fw)
++{
++	struct i2c_client *client = ps_bridge->page[0];
++	struct device *dev = &client->dev;
++	int ret;
++	bool ps8640_status_backup = ps_bridge->enabled;
++
++	if (!ps_bridge->in_fw_update) {
++		if (!ps8640_status_backup)
++			ps8640_pre_enable(&ps_bridge->bridge);
++
++		ret = ps8640_enter_bl(ps_bridge);
++		if (ret)
++			goto exit;
++	}
++
++	ret = ps8640_validate_firmware(ps_bridge, fw);
++	if (ret)
++		goto exit;
++
++	ret = ps8640_rom_prepare(ps_bridge);
++	if (ret)
++		goto exit;
++
++	ret = ps8640_write_rom(ps_bridge, fw);
++
++exit:
++	if (ret)
++		dev_err(dev, "Failed to load firmware, %d\n", ret);
++
++	ps8640_exit_bl(ps_bridge, fw);
++	if (!ps8640_status_backup)
++		ps8640_post_disable(&ps_bridge->bridge);
++	return ret;
++}
++
++static ssize_t ps8640_update_fw_store(struct device *dev,
++				      struct device_attribute *attr,
++				      const char *buf, size_t count)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct ps8640 *ps_bridge = i2c_get_clientdata(client);
++	const struct firmware *fw;
++	int error;
++
++	error = request_firmware(&fw, PS_FW_NAME, dev);
++	if (error) {
++		dev_err(dev, "Unable to open firmware %s: %d\n",
++			PS_FW_NAME, error);
++		return error;
++	}
++
++	error = ps8640_load_fw(ps_bridge, fw);
++	if (error)
++		dev_err(dev, "The firmware update failed(%d)\n", error);
++	else
++		dev_info(dev, "The firmware update succeeded\n");
++
++	release_firmware(fw);
++	return error ? error : count;
++}
++
++static DEVICE_ATTR(fw_version, S_IRUGO, ps8640_fw_version_show, NULL);
++static DEVICE_ATTR(hw_version, S_IRUGO, ps8640_hw_version_show, NULL);
++static DEVICE_ATTR(update_fw, S_IWUSR, NULL, ps8640_update_fw_store);
++
++static struct attribute *ps8640_attrs[] = {
++	&dev_attr_fw_version.attr,
++	&dev_attr_hw_version.attr,
++	&dev_attr_update_fw.attr,
++	NULL
++};
++
++static const struct attribute_group ps8640_attr_group = {
++	.attrs = ps8640_attrs,
++};
++
++static void ps8640_remove_sysfs_group(void *data)
++{
++	struct ps8640 *ps_bridge = data;
++
++	sysfs_remove_group(&ps_bridge->page[0]->dev.kobj, &ps8640_attr_group);
++}
++
++static int ps8640_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct device *dev = &client->dev;
++	struct ps8640 *ps_bridge;
++	struct device_node *np = dev->of_node;
++	struct device_node *port, *out_ep;
++	struct device_node *panel_node = NULL;
++	int i, ret;
++
++	ps_bridge = devm_kzalloc(dev, sizeof(*ps_bridge), GFP_KERNEL);
++	if (!ps_bridge)
++		return -ENOMEM;
++
++	/* port@1 is ps8640 output port */
++	port = of_graph_get_port_by_id(np, 1);
++	if (port) {
++		out_ep = of_get_child_by_name(port, "endpoint");
++		of_node_put(port);
++		if (out_ep) {
++			panel_node = of_graph_get_remote_port_parent(out_ep);
++			of_node_put(out_ep);
++		}
++	}
++	if (panel_node) {
++		ps_bridge->panel = of_drm_find_panel(panel_node);
++		of_node_put(panel_node);
++		if (!ps_bridge->panel)
++			return -EPROBE_DEFER;
++	}
++
++	ps_bridge->supplies[0].supply = "vdd33";
++	ps_bridge->supplies[1].supply = "vdd12";
++	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(ps_bridge->supplies),
++				      ps_bridge->supplies);
++	if (ret) {
++		dev_info(dev, "failed to get regulators: %d\n", ret);
++		return -EPROBE_DEFER;
++	}
++
++	ps_bridge->gpio_mode_sel_n = devm_gpiod_get(&client->dev, "mode-sel",
++						    GPIOD_OUT_HIGH);
++	if (IS_ERR(ps_bridge->gpio_mode_sel_n)) {
++		ret = PTR_ERR(ps_bridge->gpio_mode_sel_n);
++		dev_err(dev, "cannot get mode-sel %d\n", ret);
++		return ret;
++	}
++
++	ps_bridge->gpio_slp_n = devm_gpiod_get(&client->dev, "sleep",
++					       GPIOD_OUT_LOW);
++	if (IS_ERR(ps_bridge->gpio_slp_n)) {
++		ret = PTR_ERR(ps_bridge->gpio_slp_n);
++		dev_err(dev, "cannot get sleep: %d\n", ret);
++		return ret;
++	}
++
++	/*
++	 * Request the reset pin low to avoid the bridge being
++	 * initialized prematurely
++	 */
++	ps_bridge->gpio_rst_n = devm_gpiod_get(&client->dev, "reset",
++					       GPIOD_OUT_LOW);
++	if (IS_ERR(ps_bridge->gpio_rst_n)) {
++		ret = PTR_ERR(ps_bridge->gpio_rst_n);
++		dev_err(dev, "cannot get reset: %d\n", ret);
++		return ret;
++	}
++
++	ps_bridge->bridge.funcs = &ps8640_bridge_funcs;
++	ps_bridge->bridge.of_node = dev->of_node;
++	ret = drm_bridge_add(&ps_bridge->bridge);
++	if (ret) {
++		dev_err(dev, "Failed to add bridge: %d\n", ret);
++		return ret;
++	}
++
++	ps_bridge->page[0] = client;
++	ps_bridge->ddc_i2c = i2c_new_dummy(client->adapter, EDID_I2C_ADDR);
++	if (!ps_bridge->ddc_i2c) {
++		dev_err(dev, "failed ddc_i2c dummy device, address%02x\n",
++			EDID_I2C_ADDR);
++		ret = -EBUSY;
++		goto exit_ddc_i2c_dummy;
++	}
++	/*
++	 * ps8640 uses multiple addresses, use dummy devices for them
++	 * page[0]: for DP control
++	 * page[1]: for VIDEO Bridge
++	 * page[2]: for control top
++	 * page[3]: for DSI Link Control1
++	 * page[4]: for MIPI Phy
++	 * page[5]: for VPLL
++	 * page[6]: for DSI Link Control2
++	 * page[7]: for spi rom mapping
++	 */
++	for (i = 1; i < 8; i++) {
++		ps_bridge->page[i] = i2c_new_dummy(client->adapter,
++						   client->addr + i);
++		if (!ps_bridge->page[i]) {
++			dev_err(dev, "failed i2c dummy device, address%02x\n",
++				client->addr + i);
++			ret = -EBUSY;
++			goto exit_dummy;
++		}
++	}
++	i2c_set_clientdata(client, ps_bridge);
++
++	ret = sysfs_create_group(&client->dev.kobj, &ps8640_attr_group);
++	if (ret) {
++		dev_err(dev, "failed to create sysfs entries: %d\n", ret);
++		goto exit_dummy;
++	}
++
++	ret = devm_add_action(dev, ps8640_remove_sysfs_group, ps_bridge);
++	if (ret) {
++		dev_err(dev, "failed to add sysfs cleanup action: %d\n", ret);
++		goto exit_remove_sysfs;
++	}
++	return 0;
++
++exit_remove_sysfs:
++	sysfs_remove_group(&ps_bridge->page[0]->dev.kobj, &ps8640_attr_group);
++exit_dummy:
++	for (i = 1; i < 8; i++)
++		if (ps_bridge->page[i])
++			i2c_unregister_device(ps_bridge->page[i]);
++exit_ddc_i2c_dummy:
++	drm_bridge_remove(&ps_bridge->bridge);
++	return ret;
++}
++
++static int ps8640_remove(struct i2c_client *client)
++{
++	struct ps8640 *ps_bridge = i2c_get_clientdata(client);
++	int i;
++
++	for (i = 1; i < 8; i++)
++		i2c_unregister_device(ps_bridge->page[i]);
++
++	drm_bridge_remove(&ps_bridge->bridge);
++
++	return 0;
++}
++
++static const struct i2c_device_id ps8640_i2c_table[] = {
++	{"parade,ps8640", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, ps8640_i2c_table);
++
++static const struct of_device_id ps8640_match[] = {
++	{ .compatible = "parade,ps8640" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ps8640_match);
++
++static struct i2c_driver ps8640_driver = {
++	.id_table = ps8640_i2c_table,
++	.probe = ps8640_probe,
++	.remove = ps8640_remove,
++	.driver = {
++		.name = "parade,ps8640",
++		.of_match_table = ps8640_match,
 +	},
-+	.probe =3D ucs1002_probe,
-+	.remove =3D ucs1002_remove,
-+	.id_table =3D ucs1002_ids,
 +};
-+module_i2c_driver(ucs1002_driver);
++module_i2c_driver(ps8640_driver);
 +
-+MODULE_DESCRIPTION("Microchip UCS1002 Programmable USB Port Power Cont=
-roller");
-+MODULE_AUTHOR("Enric Balletbo Serra <enric.balletbo@collabora.com>");
++MODULE_AUTHOR("Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
++MODULE_AUTHOR("CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
++MODULE_DESCRIPTION("PARADE ps8640 DSI-eDP converter driver");
 +MODULE_LICENSE("GPL v2");
---=20
-2.1.0
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
