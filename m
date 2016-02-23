@@ -1,113 +1,414 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 6/6] drm/msm/dsi: Parse DSI lanes via DT
-Date: Tue, 23 Feb 2016 16:13:07 +0530
-Message-ID: <56CC37BB.3060305@codeaurora.org>
-References: <1455541259-8967-1-git-send-email-architt@codeaurora.org>
- <1455541259-8967-7-git-send-email-architt@codeaurora.org>
- <20160222025345.GB15973@rob-hp-laptop> <56CAB678.3080505@codeaurora.org>
- <CAL_JsqLVd3vLGO8SCQv=PFXb7yD42U_nKG=fxenc4Fy63yiezw@mail.gmail.com>
- <56CC23CD.5010708@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56CC23CD.5010708@ti.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh@kernel.org>
-Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4] spi: master driver to enable RTC on ICPDAS LP-8841
+Date: Tue, 23 Feb 2016 13:44:28 +0300
+Message-ID: <1456224272-4391-1-git-send-email-ynvich@gmail.com>
+References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456105630-28914-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
+master which makes the RTC usable. The driver is not supposed to work
+with anything else.
 
+The driver uses the standard MicroWire half-duplex transfer timing.
+Master output is set on low clock and sensed by the RTC on the rising
+edge. Master input is set by the RTC on the trailing edge and is sensed
+by the master on low clock.
 
-On 02/23/2016 02:48 PM, Tomi Valkeinen wrote:
->
-> On 22/02/16 22:10, Rob Herring wrote:
->
->>> If we want all DSI host controllers to use a common binding to describe
->>> lanes, we'd need to go with the most flexible one, and the driver
->>> restricts it to the subsets that we support.
->
-> True, but I wonder if that's necessary. The lane property for the SoC
-> should be read by the SoC specific driver, right? So the DT property can
-> be anything. I'm not sure if there's ever a reason for a generic code to
-> observe the DSI lane setup.
+Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+CC: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yeah, it is very SoC specific.
+   v3..v4
+   fix Mark Brown review comments
+   * fix dependencies in Kconfig
 
-The only place where it might matter is if a panel/bridge ever needs to
-know what pins implement what lanes on the platform. A common binding
-there might help us keep the panel driver generic. Although, this need
-itself is a bit hypothetical.
+   fix Rob Herring review comments
+   * rewrite binding description
+   * change binding and doc file names
+   * fix typo
 
->
-> That said, if we do have a common binding, it's perhaps easier for
-> people to understand the setups for different SoCs.
->
->>>>> +    a limited number of physical to logical mappings possible:
->>>>> +
->>>>> +     "0123": Logic 0->Phys 0; Logic 1->Phys 1; Logic 2->Phys 2; Logic
->>>>> 3->Phys 3;
->>>>> +     "3012": Logic 3->Phys 0; Logic 0->Phys 1; Logic 1->Phys 2; Logic
->>>>> 2->Phys 3;
->>>>> +     "2301": Logic 2->Phys 0; Logic 3->Phys 1; Logic 0->Phys 2; Logic
->>>>> 1->Phys 3;
->>>>> +     "1230": Logic 1->Phys 0; Logic 2->Phys 1; Logic 3->Phys 2; Logic
->>>>> 0->Phys 3;
->>>>> +     "0321": Logic 0->Phys 0; Logic 3->Phys 1; Logic 2->Phys 2; Logic
->>>>> 1->Phys 3;
->>>>> +     "1032": Logic 1->Phys 0; Logic 0->Phys 1; Logic 3->Phys 2; Logic
->>>>> 2->Phys 3;
->>>>> +     "2103": Logic 2->Phys 0; Logic 1->Phys 1; Logic 0->Phys 2; Logic
->>>>> 3->Phys 3;
->>>>> +     "3210": Logic 3->Phys 0; Logic 2->Phys 1; Logic 1->Phys 2; Logic
->>>>> 0->Phys 3;
->>>>> +
->>>>> +     Here, a "3012" mapping will be represented by:
->>>>> +     lanes = <0 1 8 9 2 3 4 5 6 7>;
->>>>
->>>>
->>>> I'm lost here. What does 8 mean for example. The index represents?
->>>
->>>
->>> The numbers here describe the logical lanes. I.e, the way in which the
->>> DSI controller pushes out data to the PHY. The ordering is as follows:
->
-> If I read you right, I think that's vice versa. At least the OMAP
-> version. The OMAP doc says:
->
-> "- lanes: list of pin numbers for the DSI lanes: CLK+, CLK-, DATA0+,
-> DATA0-, DATA1+, DATA1-, ..."
->
-> This means that the first value in the array is the pin number for CLK+.
-> In other words, CLK+ wire going to the panel/encoder is connected to pin
-> number X.
->
-> What the pin number means is SoC specific. CLK+ could be connected to,
-> say, SoC pin number 123, and then you'd enter 123 as the first value. On
-> OMAP we use DSI block specific pin numbers, so they start at 0.
+   v2..v3 to fix Mark Brown review comments
+   * drop dependencies in Kconfig
+   * use #ifdef CONFIG_OF to allow build without DT
+   * drop empty driver->remove
 
-You're right. I have it the other way round. Yours describes the
-hardware better. I'll change to yours if we decide to have a common
-binding.
+   v1..v2 to fix Mark Brown review comments
+   * drop ifdef around MODULE_NAME
+   * use usleep_range directly
+   * drop empty master->cleanup
+---
+ .../bindings/spi/icpdas-lp8841-spi-rtc.txt         |  54 +++++
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-lp8841-rtc.c                       | 255 +++++++++++++++++++++
+ 4 files changed, 320 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/icpdas-lp8841-spi-rtc.txt
+ create mode 100644 drivers/spi/spi-lp8841-rtc.c
 
->
->> Okay, so the confusing part is the description is all about lanes
->> (0-3) but the binding (index and value) is all about pin/signal
->> numbers. Either simplify the binding to be lanes or describe the
->> binding in terms of pins.
->
-> Perhaps "lane-pins" or something would be more descriptive. If we want
-> to make the description common, I could change the OMAP implementation
-> to accept the new property name too.
->
-> But, I'm not sure if a common description helps much. Any thoughts?
-
-If having a common binding doesn't bring any benefit, then a common
-description doesn't help much. I could then move to a simpler binding
-too.
-
-Archit
-
+diff --git a/Documentation/devicetree/bindings/spi/icpdas-lp8841-spi-rtc.txt b/Documentation/devicetree/bindings/spi/icpdas-lp8841-spi-rtc.txt
+new file mode 100644
+index 0000000..852b651
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/icpdas-lp8841-spi-rtc.txt
+@@ -0,0 +1,54 @@
++* ICP DAS LP-8841 SPI Controller for RTC
++
++ICP DAS LP-8841 contains a DS-1302 RTC. RTC is connected to an IO
++memory register, which acts as an SPI master device.
++
++The device uses the standard MicroWire half-duplex transfer timing.
++Master output is set on low clock and sensed by the RTC on the rising
++edge. Master input is set by the RTC on the trailing edge and is sensed
++by the master on low clock.
++
++Required properties:
++
++- #address-cells: should be 1
++
++- #size-cells: should be 0
++
++- compatible: should be "icpdas,lp8841-spi-rtc"
++
++- reg: should provide IO memory address
++
++Requirements to SPI slave nodes:
++
++- There can be only one slave device.
++
++- The spi slave node should claim the following flags which are
++  required by the spi controller.
++
++  - spi-3wire: The master itself has only 3 wire. It cannor work in
++    full duplex mode.
++
++  - spi-cs-high: DS-1302 has active high chip select line. The master
++    doesn't support active low.
++
++  - spi-lsb-first: DS-1302 requires least significant bit first
++    transfers. The master only support this type of bit ordering.
++
++
++Example:
++
++spi@901c {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	compatible = "icpdas,lp8841-spi-rtc";
++	reg = <0x901c 0x1>;
++
++	rtc@0 {
++		compatible = "maxim,ds1302";
++		reg = <0>;
++		spi-max-frequency = <500000>;
++		spi-3wire;
++		spi-lsb-first;
++		spi-cs-high;
++	};
++};
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index 7706416..1206a66 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -271,6 +271,16 @@ config SPI_LM70_LLP
+ 	  which interfaces to an LM70 temperature sensor using
+ 	  a parallel port.
+ 
++config SPI_LP8841_RTC
++	tristate "ICP DAS LP-8841 SPI Controller for RTC"
++	depends on MACH_PXA27X_DT || COMPILE_TEST
++	help
++	  This driver provides an SPI master device to drive Maxim
++	  DS-1302 real time clock.
++
++	  Say N here unless you plan to run the kernel on an ICP DAS
++	  LP-8x4x industrial computer.
++
+ config SPI_MPC52xx
+ 	tristate "Freescale MPC52xx SPI (non-PSC) controller support"
+ 	depends on PPC_MPC52xx
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 8991ffc..9d10ddc 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_SPI_GPIO)			+= spi-gpio.o
+ obj-$(CONFIG_SPI_IMG_SPFI)		+= spi-img-spfi.o
+ obj-$(CONFIG_SPI_IMX)			+= spi-imx.o
+ obj-$(CONFIG_SPI_LM70_LLP)		+= spi-lm70llp.o
++obj-$(CONFIG_SPI_LP8841_RTC)		+= spi-lp8841-rtc.o
+ obj-$(CONFIG_SPI_MESON_SPIFC)		+= spi-meson-spifc.o
+ obj-$(CONFIG_SPI_MPC512x_PSC)		+= spi-mpc512x-psc.o
+ obj-$(CONFIG_SPI_MPC52xx_PSC)		+= spi-mpc52xx-psc.o
+diff --git a/drivers/spi/spi-lp8841-rtc.c b/drivers/spi/spi-lp8841-rtc.c
+new file mode 100644
+index 0000000..44bb69c
+--- /dev/null
++++ b/drivers/spi/spi-lp8841-rtc.c
+@@ -0,0 +1,255 @@
++/*
++ * SPI master driver for ICP DAS LP-8841 RTC
++ *
++ * Copyright (C) 2016 Sergei Ianovich
++ *
++ * based on
++ *
++ * Dallas DS1302 RTC Support
++ * Copyright (C) 2002 David McCullough
++ * Copyright (C) 2003 - 2007 Paul Mundt
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/delay.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/spi/spi.h>
++
++#define DRIVER_NAME	"spi_lp8841_rtc"
++
++#define SPI_LP8841_RTC_CE	0x01
++#define SPI_LP8841_RTC_CLK	0x02
++#define SPI_LP8841_RTC_nWE	0x04
++#define SPI_LP8841_RTC_MOSI	0x08
++#define SPI_LP8841_RTC_MISO	0x01
++
++/*
++ * REVISIT If there is support for SPI_3WIRE and SPI_LSB_FIRST in SPI
++ * GPIO driver, this SPI driver can be replaced by a simple GPIO driver
++ * providing 3 GPIO pins.
++ */
++
++struct spi_lp8841_rtc {
++	void		*iomem;
++	unsigned long	state;
++};
++
++static inline void
++setsck(struct spi_lp8841_rtc *data, int is_on)
++{
++	if (is_on)
++		data->state |= SPI_LP8841_RTC_CLK;
++	else
++		data->state &= ~SPI_LP8841_RTC_CLK;
++	writeb(data->state, data->iomem);
++}
++
++static inline void
++setmosi(struct spi_lp8841_rtc *data, int is_on)
++{
++	if (is_on)
++		data->state |= SPI_LP8841_RTC_MOSI;
++	else
++		data->state &= ~SPI_LP8841_RTC_MOSI;
++	writeb(data->state, data->iomem);
++}
++
++static inline int
++getmiso(struct spi_lp8841_rtc *data)
++{
++	return ioread8(data->iomem) & SPI_LP8841_RTC_MISO;
++}
++
++static inline u32
++bitbang_txrx_be_cpha0_lsb(struct spi_lp8841_rtc *data,
++		unsigned usecs, unsigned cpol, unsigned flags,
++		u32 word, u8 bits)
++{
++	/* if (cpol == 0) this is SPI_MODE_0; else this is SPI_MODE_2 */
++
++	u32 shift = 32 - bits;
++	/* clock starts at inactive polarity */
++	for (; likely(bits); bits--) {
++
++		/* setup LSB (to slave) on leading edge */
++		if ((flags & SPI_MASTER_NO_TX) == 0)
++			setmosi(data, (word & 1));
++
++		usleep_range(usecs, usecs + 1);	/* T(setup) */
++
++		/* sample LSB (from slave) on trailing edge */
++		word >>= 1;
++		if ((flags & SPI_MASTER_NO_RX) == 0)
++			word |= (getmiso(data) << 31);
++
++		setsck(data, !cpol);
++		usleep_range(usecs, usecs + 1);
++
++		setsck(data, cpol);
++	}
++
++	word >>= shift;
++	return word;
++}
++
++static int
++spi_lp8841_rtc_transfer_one(struct spi_master *master,
++			    struct spi_device *spi,
++			    struct spi_transfer *t)
++{
++	struct spi_lp8841_rtc	*data = spi_master_get_devdata(master);
++	unsigned		count = t->len;
++	const u8		*tx = t->tx_buf;
++	u8			*rx = t->rx_buf;
++	u8			word = 0;
++	int			ret = 0;
++
++	if (tx) {
++		data->state &= ~SPI_LP8841_RTC_nWE;
++		writeb(data->state, data->iomem);
++		while (likely(count > 0)) {
++			word = *tx++;
++			bitbang_txrx_be_cpha0_lsb(data, 1, 0,
++					SPI_MASTER_NO_RX, word, 8);
++			count--;
++		}
++	} else if (rx) {
++		data->state |= SPI_LP8841_RTC_nWE;
++		writeb(data->state, data->iomem);
++		while (likely(count > 0)) {
++			word = bitbang_txrx_be_cpha0_lsb(data, 1, 0,
++					SPI_MASTER_NO_TX, word, 8);
++			*rx++ = word;
++			count--;
++		}
++	} else {
++		ret = -EINVAL;
++	}
++
++	spi_finalize_current_transfer(master);
++
++	return ret;
++}
++
++static void
++spi_lp8841_rtc_set_cs(struct spi_device *spi, bool enable)
++{
++	struct spi_lp8841_rtc *data = spi_master_get_devdata(spi->master);
++
++	data->state = 0;
++	writeb(data->state, data->iomem);
++	if (enable) {
++		usleep_range(4, 5);
++		data->state |= SPI_LP8841_RTC_CE;
++		writeb(data->state, data->iomem);
++		usleep_range(4, 5);
++	}
++}
++
++static int
++spi_lp8841_rtc_setup(struct spi_device *spi)
++{
++	if ((spi->mode & SPI_CS_HIGH) == 0) {
++		dev_err(&spi->dev, "unsupported active low chip select\n");
++		return -EINVAL;
++	}
++
++	if ((spi->mode & SPI_LSB_FIRST) == 0) {
++		dev_err(&spi->dev, "unsupported MSB first mode\n");
++		return -EINVAL;
++	}
++
++	if ((spi->mode & SPI_3WIRE) == 0) {
++		dev_err(&spi->dev, "unsupported wiring. 3 wires required\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id spi_lp8841_rtc_dt_ids[] = {
++	{ .compatible = "icpdas,lp8841-spi-rtc" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, spi_lp8841_rtc_dt_ids);
++#endif
++
++static int
++spi_lp8841_rtc_probe(struct platform_device *pdev)
++{
++	int				ret;
++	struct spi_master		*master;
++	struct spi_lp8841_rtc		*data;
++	void				*iomem;
++
++	master = spi_alloc_master(&pdev->dev, sizeof(*data));
++	if (!master)
++		return -ENOMEM;
++	platform_set_drvdata(pdev, master);
++
++	master->flags = SPI_MASTER_HALF_DUPLEX;
++	master->mode_bits = SPI_CS_HIGH | SPI_3WIRE | SPI_LSB_FIRST;
++
++	master->bus_num = pdev->id;
++	master->num_chipselect = 1;
++	master->setup = spi_lp8841_rtc_setup;
++	master->set_cs = spi_lp8841_rtc_set_cs;
++	master->transfer_one = spi_lp8841_rtc_transfer_one;
++	master->bits_per_word_mask = SPI_BPW_MASK(8);
++#ifdef CONFIG_OF
++	master->dev.of_node = pdev->dev.of_node;
++#endif
++
++	data = spi_master_get_devdata(master);
++
++	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->iomem =  devm_ioremap_resource(&pdev->dev, iomem);
++	if (IS_ERR(data->iomem)) {
++		dev_err(&pdev->dev, "failed to get IO address\n");
++		goto err_put_master;
++	}
++
++	/* register with the SPI framework */
++	ret = devm_spi_register_master(&pdev->dev, master);
++	if (ret) {
++		dev_err(&pdev->dev, "cannot register spi master\n");
++		goto err_put_master;
++	}
++
++	return ret;
++
++
++err_put_master:
++	spi_master_put(master);
++
++	return ret;
++}
++
++MODULE_ALIAS("platform:" DRIVER_NAME);
++
++static struct platform_driver spi_lp8841_rtc_driver = {
++	.driver = {
++		.name	= DRIVER_NAME,
++		.of_match_table = of_match_ptr(spi_lp8841_rtc_dt_ids),
++	},
++	.probe		= spi_lp8841_rtc_probe,
++};
++module_platform_driver(spi_lp8841_rtc_driver);
++
++MODULE_DESCRIPTION("SPI master driver for ICP DAS LP-8841 RTC");
++MODULE_AUTHOR("Sergei Ianovich");
++MODULE_LICENSE("GPL");
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, hosted by The Linux Foundation
+2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
