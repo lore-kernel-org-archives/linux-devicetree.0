@@ -1,56 +1,63 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] spi: master driver to enable RTC on ICPDAS LP-8841
-Date: Tue, 23 Feb 2016 17:28:21 -0600
-Message-ID: <20160223232821.GA14960@rob-hp-laptop>
-References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
- <1456224272-4391-1-git-send-email-ynvich@gmail.com>
+Subject: Re: [PATCH v7] rtc: rewrite DS1302 using SPI
+Date: Tue, 23 Feb 2016 17:29:18 -0600
+Message-ID: <20160223232918.GA16024@rob-hp-laptop>
+References: <1456105286-28598-1-git-send-email-ynvich@gmail.com>
+ <1456224900-4877-1-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456224272-4391-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1456224900-4877-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SPI SUBSYSTEM" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 01:44:28PM +0300, Sergei Ianovich wrote:
-> ICP DAS LP-8841 contains a DS-1302 RTC. This driver provides an SPI
-> master which makes the RTC usable. The driver is not supposed to work
-> with anything else.
+On Tue, Feb 23, 2016 at 01:54:57PM +0300, Sergei Ianovich wrote:
+> DS1302 is half-duplex SPI device. The driver respects this fact now.
 > 
-> The driver uses the standard MicroWire half-duplex transfer timing.
-> Master output is set on low clock and sensed by the RTC on the rising
-> edge. Master input is set by the RTC on the trailing edge and is sensed
-> by the master on low clock.
+> Pin configurations should be implemented using SPI subsystem.
 > 
 > Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> CC: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
->    v3..v4
->    fix Mark Brown review comments
->    * fix dependencies in Kconfig
-> 
->    fix Rob Herring review comments
->    * rewrite binding description
+>    v6..v7
 >    * change binding and doc file names
->    * fix typo
 > 
->    v2..v3 to fix Mark Brown review comments
->    * drop dependencies in Kconfig
->    * use #ifdef CONFIG_OF to allow build without DT
->    * drop empty driver->remove
+>    v5..v6
+>    * rewrite the driver as an SPI slave device
+>    * use "maxim" for vendor name per Kconfig
+>    * stop changing device RAM in device presence test
+>    * only return time from device if valid
+>    * use burst mode for reading/writing time
+>    * dropped charging control. I cannot test it, and it looks broken
 > 
->    v1..v2 to fix Mark Brown review comments
->    * drop ifdef around MODULE_NAME
->    * use usleep_range directly
->    * drop empty master->cleanup
+>    v4..v5
+>    * drop THIS_MODULE from struct platform driver
+>    * use "dallas" for vendor name per vendor-prefixes.txt
+> 
+>    v3..v4
+>    * move DTS bindings to a different patch
+> 
+>    v2..v3
+>    * use usleep_range instead of custom nsleep
+>    * number change (07/16 -> 09/21)
+> 
+>    v0..v2
+>    * use device tree
+>    * use devm helpers where possible
 > ---
->  .../bindings/spi/icpdas-lp8841-spi-rtc.txt         |  54 +++++
+>  .../devicetree/bindings/rtc/maxim-ds1302.txt       |  46 +++
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  drivers/rtc/Kconfig                                |  15 +-
+>  drivers/rtc/rtc-ds1302.c                           | 348 ++++++++++-----------
+>  3 files changed, 212 insertions(+), 197 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/maxim-ds1302.txt
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
