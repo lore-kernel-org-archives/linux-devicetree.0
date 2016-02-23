@@ -1,27 +1,87 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 08/10] dt, numa: Add NUMA dt binding implementation.
-Date: Tue, 23 Feb 2016 13:36:51 -0600
-Message-ID: <20160223193651.GA8491@rob-hp-laptop>
-References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com>
- <1455930799-5371-9-git-send-email-ddaney.cavm@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 10/26] mtd: nand: omap: Update DT binding documentation
+Date: Tue, 23 Feb 2016 13:41:29 -0600
+Message-ID: <20160223194129.GA12616@rob-hp-laptop>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+ <1455916548-3441-11-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1455930799-5371-9-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1455916548-3441-11-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, computersforpeace@gmail.com, dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 05:13:17PM -0800, David Daney wrote:
-> From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+On Fri, Feb 19, 2016 at 11:15:32PM +0200, Roger Quadros wrote:
+> Add compatible id and interrupts. The NAND interrupts are
+> provided by the GPMC controller node.
+
+This doesn't look like a backwards compatible change.
+
+
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
 > 
-> ADD device tree node parsing for NUMA topology using device
-> "numa-node-id" property distance-map.
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> index fb733c4..810b87b 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> @@ -13,7 +13,11 @@ Documentation/devicetree/bindings/mtd/nand.txt
+>  
+>  Required properties:
+>  
+> - - reg:		The CS line the peripheral is connected to
+> + - compatible:	"ti,omap2-nand"
+> + - reg:		range id (CS number), base offset and length of the
+> +		NAND I/O space
+> + - interrupt-parent: must point to gpmc node
+> + - interrupts:	Two interrupt specifiers, one for fifoevent, one for termcount.
+>  
+>  Optional properties:
+>  
+> @@ -55,20 +59,25 @@ Example for an AM33xx board:
+>  	gpmc: gpmc@50000000 {
+>  		compatible = "ti,am3352-gpmc";
+>  		ti,hwmods = "gpmc";
+> -		reg = <0x50000000 0x1000000>;
+> +		reg = <0x50000000 0x36c>;
+>  		interrupts = <100>;
+>  		gpmc,num-cs = <8>;
+>  		gpmc,num-waitpins = <2>;
+>  		#address-cells = <2>;
+>  		#size-cells = <1>;
+> -		ranges = <0 0 0x08000000 0x2000>;	/* CS0: NAND */
+> +		ranges = <0 0 0x08000000 0x1000000>;	/* CS0 space, 16MB */
+>  		elm_id = <&elm>;
+>  
+>  		nand@0,0 {
+> -			reg = <0 0 0>; /* CS0, offset 0 */
+> +			compatible = "ti,omap2-nand";
+> +			reg = <0 0 4>;		/* CS0, offset 0, NAND I/O window 4 */
+> +			interrupt-parent = <&gpmc>;
 
-I still want an adequate explanation why NUMA setup cannot be done with 
-an unflattened tree. PowerPC manages to do that and should have a 
-similar init flow being memblock based, so I would expect arm64 can too.
+gpmc also needs an interrupt-controller property.
 
-Rob
+> +			interrupts = <0 IRQ_TYPE_NONE>, <1 IRQ_TYPE NONE>;
+>  			nand-bus-width = <16>;
+>  			ti,nand-ecc-opt = "bch8";
+>  			ti,nand-xfer-type = "polled";
+> +			interrupt-parent = <&gpmc>;
+> +			interrupts = <0>, <1>;
+
+Twice?
+
+>  
+>  			gpmc,sync-clk-ps = <0>;
+>  			gpmc,cs-on-ns = <0>;
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
