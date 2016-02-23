@@ -1,64 +1,112 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 1/5] efi: ARM/arm64: ignore DT memory nodes instead
- of removing them
-Date: Tue, 23 Feb 2016 16:12:02 -0600
-Message-ID: <20160223221202.GA32031@rob-hp-laptop>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
- <1456192703-2274-2-git-send-email-ddaney.cavm@gmail.com>
- <20160223115805.GB4989@leverpostej>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH v2 2/2] doc: dt: add documentation for lpc1850-creg-clk driver
+Date: Tue, 23 Feb 2016 23:12:44 +0100
+Message-ID: <CAGhQ9Vw6AG=MCPXOXR3tm0mTNiDz4ULBjQgwDSL0iV+B6uRKDw@mail.gmail.com>
+References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
+	<1455994417-4471-3-git-send-email-manabian@gmail.com>
+	<20160223180844.GA11770@rob-hp-laptop>
+	<CAGhQ9VxYsQSccS2dyWL_DPLTc80SJUkjFupbHAeXX3-WY-1Ofw@mail.gmail.com>
+	<CAL_JsqJkxm+CfTNLQ+pPSrfNkokb3ooL0UXr9jjY6H88_jb_5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160223115805.GB4989@leverpostej>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJkxm+CfTNLQ+pPSrfNkokb3ooL0UXr9jjY6H88_jb_5A@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 11:58:05AM +0000, Mark Rutland wrote:
-> Hi,
-> 
-> On Mon, Feb 22, 2016 at 05:58:19PM -0800, David Daney wrote:
-> > From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> > There are two problems with the UEFI stub DT memory node removal
-> > routine:
-> > - it deletes nodes as it traverses the tree, which happens to work
-> >   but is not supported, as deletion invalidates the node iterator;
-> > - deleting memory nodes entirely may discard annotations in the form
-> >   of additional properties on the nodes.
-> > 
-> > Since the discovery of DT memory nodes occurs strictly before the
-> > UEFI init sequence, we can simply clear the memblock memory table
-> > before parsing the UEFI memory map. This way, it is no longer
-> > necessary to remove the nodes, so we can remove that logic from the
-> > stub as well.
-> 
-> This is a little bit scary, but I guess this works.
+On 23 February 2016 at 22:58, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Feb 23, 2016 at 12:53 PM, Joachim  Eastwood <manabian@gmail.com> wrote:
+>> On 23 February 2016 at 19:08, Rob Herring <robh@kernel.org> wrote:
+>>> On Sat, Feb 20, 2016 at 07:53:37PM +0100, Joachim Eastwood wrote:
+>>>> Add DT binding documentation for lpc1850-creg-clk driver.
+>>>>
+>>>> Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+>>>> ---
+>>>>  .../devicetree/bindings/clock/lpc1850-creg-clk.txt | 52 ++++++++++++++++++++++
+>>>>  1 file changed, 52 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+>>>> new file mode 100644
+>>>> index 000000000000..0c83d373b766
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+>>>> @@ -0,0 +1,52 @@
+>>>> +* NXP LPC1850 CREG clocks
+>>>> +
+>>>> +The NXP LPC18xx/43xx CREG (Configuration Registers) block contains
+>>>> +control registers for two low speed clocks. One of the clocks is a
+>>>> +32 kHz oscillator driver with power up/down and clock gating. Next
+>>>> +is a fixed divider that creates a 1 kHz clock from the 32 kHz osc.
+>>>> +
+>>>> +These clocks are used by the RTC and the Event Router peripherials.
+>>>> +The 32 kHz can also be routed to other peripherials to enable low
+>>>> +power modes.
+>>>> +
+>>>> +This binding uses the common clock binding:
+>>>> +    Documentation/devicetree/bindings/clock/clock-bindings.txt
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:
+>>>> +     Should be "nxp,lpc1850-creg-clk"
+>>>> +- #clock-cells:
+>>>> +     Shall have value <1>.
+>>>> +- clocks:
+>>>> +     Shall contain a phandle to the fix 32 kHz crystall.
+>>>> +
+>>>> +The creg-clk node must be a child of the creg syscon node.
+>>>> +
+>>>> +The following clocks are available from the clock node.
+>>>> +
+>>>> +Clock ID     Name
+>>>> +   0          1 kHz clock
+>>>> +   1         32 kHz Oscillator
+>>>> +
+>>>> +Example:
+>>>> +soc {
+>>>> +     creg: syscon@40043000 {
+>>>> +             compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
+>>>> +             reg = <0x40043000 0x1000>;
+>>>> +
+>>>> +             creg_clk: clock-controller@004 {
+>>>
+>>> What is 4? A unit address should have a corresponding reg prop. and no
+>>> leading zeros.
+>>
+>> It is the fourth register in the creg syscon block.
+>
+> Probably should be the offset rather than register count.
+>
+>> Does this look better:
+>> creg_clk: clock-controller@4 {
+>>     compatible = "nxp,lpc1850-creg-clk";
+>>     reg = <0x4>;
+>>     clocks = <&xtal32>;
+>>     #clock-cells = <1>;
+>> };
+>>
+>> Note that the reg property isn't really useful in the driver, but I
+>> guess we should have it either way(?).
+>>
+>> Alternatively I could drop the unit address and reg property. What do you think?
+>
+> Either way is fine. Though I would expect something needs to know the offset.
 
-The way it is worded/implemented is, I agree. But if we simply say both 
-can be present and the kernel will default to UEFI memory map, that 
-seems sufficient to me.
- 
-> My only concern is that when we get kexec, a subsequent kernel must also
-> have EFI memory map support, or things go bad for the next EFI-aware
-> kernel after that (as things like the runtime services may have been
-> corrupted by the kernel in the middle). It's difficult to fix the
-> general case later.
-> 
-> A different option would be to support status="disabled" for the memory
-> nodes, and ignore these in early_init_dt_scan_memory. That way a kernel
-> cannot use memory without first having parsed the EFI memory map, and we
-> can still get NUMA info from the disabled nodes.
+I have the offset in the driver itself. I don't except the driver to
+reusable since the CREG block is highly SoC specific. If a new user
+came along we could also place the register offset in the driver's
+of_match_data.
 
-That would be a bit strange that the node is disabled, but still used. 
+I'll remove the unit address in the next version.
 
-What if DT and UEFI tables are out of sync somehow? RAM is multiple 
-mapped and different addresses were picked for example.
+I have a couple of other device under the CREG that has unit address
+already. I'll get them cleaned up as well.
 
-> You'd still need a new kernel to take into account status, but at least
-> we'd know all kernels would avoid using RAM that potentially needs to be
-> preserved.
-> 
-> Ard, Rob, thoughts?
+
+Thanks for looking through the binding, Rob!
+
+
+regards,
+Joachim Eastwood
