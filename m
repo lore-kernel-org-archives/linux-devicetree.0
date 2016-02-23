@@ -1,30 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH/RFC v2 2/9] phy: rcar-gen3-usb2: Add vbus-supply to
- handle VBUS on/off
-Date: Tue, 23 Feb 2016 15:39:24 -0600
-Message-ID: <20160223213924.GA20264@rob-hp-laptop>
-References: <1456135088-7976-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1456135088-7976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v2] clk: add userspace clock consumer
+Date: Tue, 23 Feb 2016 15:49:44 -0600
+Message-ID: <20160223214944.GA20852@rob-hp-laptop>
+References: <1456141719-2543-1-git-send-email-akinobu.mita@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456135088-7976-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: horms@verge.net.au, magnus.damm@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1456141719-2543-1-git-send-email-akinobu.mita@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Akinobu Mita <akinobu.mita@gmail.com>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 06:58:01PM +0900, Yoshihiro Shimoda wrote:
-> To handle the VBUS on/off by a regulator driver, this patch adds
-> regulator APIs calling in the driver and description about vbus-supply
-> in the rcar-gen3-phy-usb2.txt.
+On Mon, Feb 22, 2016 at 08:48:39PM +0900, Akinobu Mita wrote:
+> This adds userspace consumer for common clock.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> This driver is inspired from Userspace regulator consumer
+> (REGULATOR_USERSPACE_CONSUMER) and it is useful for test purposes and
+> some classes of devices that are controlled entirely from user space.
+
+Whether the kernel handles a clock or userspace does should have nothing 
+to do with DT. Plus DT does not expose many of the clocks, so any 
+debug feature needs to expose all clocks and be independent of DT.
+
+Beyond debug, I don't think we should be exposing clock control to 
+userspace.
+
+> 
+> Example binding and usages:
+> 
+> clksqw_userspace_consumer {
+> 	compatible = "linux,clock-userspace-consumer";
+> 	clocks = <&clksqw>;
+> };
+> 
+> 	# cd /sys/devices/platform/clksqw_userspace_consumer
+> 	# echo 8192 > rate
+> 	# echo 1 > enable
+> 
+> This also create new COMMON_CLK_DEBUG option and this userspace clock
+> consumer depends on it.
+> 
+> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
 > ---
->  .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 ++
+> * v2
+> - change compatible property to "linux,clock-userspace-consumer"
+> - rename sysfs file from 'state' to 'enable'
 
-Acked-by: Rob Herring <robh@kernel.org>
+While it is good this is under a debug option, it also needs to be under 
+debugfs, not sysfs.
 
->  drivers/phy/phy-rcar-gen3-usb2.c                   | 28 ++++++++++++++++++++++
->  2 files changed, 30 insertions(+)
+> - create new COMMON_CLK_DEBUG option
+> 
+>  .../bindings/clock/clk-userspace-consumer.txt      |  17 +++
+>  drivers/clk/Kconfig                                |   9 ++
+>  drivers/clk/Kconfig.debug                          |   9 ++
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/clk-userspace-consumer.c               | 169 +++++++++++++++++++++
+>  5 files changed, 205 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clk-userspace-consumer.txt
+>  create mode 100644 drivers/clk/Kconfig.debug
+>  create mode 100644 drivers/clk/clk-userspace-consumer.c
+
