@@ -1,77 +1,79 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH] [media] tvp5150: remove signal generator as input from
- the DT binding
-Date: Tue, 23 Feb 2016 13:27:51 -0300
-Message-ID: <56CC8887.803@osg.samsung.com>
-References: <1456243798-12453-1-git-send-email-javier@osg.samsung.com>
- <3469550.VVKtG3tqH6@avalon>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v7 0/9] ARM: dts: omap2+: GPMC NAND node fixes
+Date: Tue, 23 Feb 2016 18:37:16 +0200
+Message-ID: <1456245445-31824-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3469550.VVKtG3tqH6@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: computersforpeace@gmail.com, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Laurent,
+Hi Tony,
 
-On 02/23/2016 01:16 PM, Laurent Pinchart wrote:
-> Hi Javier,
->
-> On Tuesday 23 February 2016 13:09:58 Javier Martinez Canillas wrote:
->> The chip internal signal generator was modelled as an input connector
->> and represented as a media entity but isn't really a connector so the
->> driver was changed to use the V4L2_CID_TEST_PATTERN control instead.
->>
->> Remove the signal generator input from the list of connectors in the
->> tvp5150 DT binding document as well since isn't a connector anymore.
->>
->> Signed-off-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
->>
->> ---
->> Hello,
->>
->> I think is OK to change this DT binding because is only in the media tree
->> for now and not in mainline yet and also is expected to change more since
->> there are still discussions about how input connectors will be supported
->> by the Media Controller framework in the media subsystem.
->
-> I think that's fine, yes
->
-> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->
+These patches are a preparatory step towards the NAND DT cleanup
+done in [1].
 
-Thanks.
-  
-> I haven't noticed the patch that introduced this early enough I'm afraid, and
-> I think we still have issues with those bindings.
->
+They mostly deal with adding the missing compatible property and
+interrupt resources and fixing up register resources for the
+NAND nodes.
 
-Yes, I posted those patches and got merged before we had the discussion about
-input connectors over IRC so I didn't know what was the correct way to do it.
+Patches based on v4.5-rc1.
 
-> The tvp5150 node should *not* contain connector subnodes, the connectors nodes
-> should use the bindings defined in
-> Documentation/devicetree/bindings/display/connector/ and be linked to the
-> tvp5150 node using the OF graph bindings (ports and endpoints).
->
+Tested on dra7-evm, am437x-gp-evm and omap3-beagle.
 
-Agreed.
+cheers,
+-roger
 
-> Do you think you could fix that ?
->
+[1] - http://article.gmane.org/gmane.linux.kernel/2156857
 
-Yes I will, I'm waiting for the input connectors discussions to settle so I
-can post a final version of the DT bindings following what is agreed by all.
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Roger Quadros (9):
+  ARM: dts: dra7: Fix NAND device nodes.
+  ARM: dts: dra7: Remove redundant nand property
+  ARM: dts: am437x: Fix NAND device nodes
+  ARM: dts: am437x: Disable wait pin monitoring for NAND
+  ARM: dts: am335x: Fix NAND device nodes
+  ARM: dts: am335x: Disable wait pin monitoring for NAND
+  ARM: dts: dm816x: Fix NAND device nodes
+  ARM: dts: dm8168-evm: ARM: dts: Disable wait pin monitoring for NAND
+  ARM: dts: omap3: Fix NAND device nodess
+
+ arch/arm/boot/dts/am335x-baltos-ir5221.dts        |  9 +++++----
+ arch/arm/boot/dts/am335x-chilisom.dtsi            |  8 +++++---
+ arch/arm/boot/dts/am335x-cm-t335.dts              | 10 ++++++----
+ arch/arm/boot/dts/am335x-evm.dts                  |  7 ++++---
+ arch/arm/boot/dts/am335x-igep0033.dtsi            |  8 +++++---
+ arch/arm/boot/dts/am335x-phycore-som.dtsi         |  8 +++++---
+ arch/arm/boot/dts/am33xx.dtsi                     |  2 ++
+ arch/arm/boot/dts/am4372.dtsi                     |  2 ++
+ arch/arm/boot/dts/am437x-cm-t43.dts               | 11 +++++------
+ arch/arm/boot/dts/am437x-gp-evm.dts               |  8 +++++---
+ arch/arm/boot/dts/am43x-epos-evm.dts              |  8 +++++---
+ arch/arm/boot/dts/dm8168-evm.dts                  |  8 +++++---
+ arch/arm/boot/dts/dm816x.dtsi                     |  2 ++
+ arch/arm/boot/dts/dra7-evm.dts                    |  7 +++++--
+ arch/arm/boot/dts/dra7.dtsi                       |  2 ++
+ arch/arm/boot/dts/dra72-evm.dts                   |  7 +++++--
+ arch/arm/boot/dts/logicpd-torpedo-37xx-devkit.dts |  3 ++-
+ arch/arm/boot/dts/logicpd-torpedo-som.dtsi        |  8 ++++++--
+ arch/arm/boot/dts/omap3-beagle.dts                |  5 ++++-
+ arch/arm/boot/dts/omap3-cm-t3x.dtsi               |  6 +++++-
+ arch/arm/boot/dts/omap3-devkit8000-common.dtsi    |  4 ++++
+ arch/arm/boot/dts/omap3-evm-37xx.dts              |  8 ++++++--
+ arch/arm/boot/dts/omap3-gta04.dtsi                |  4 ++++
+ arch/arm/boot/dts/omap3-igep.dtsi                 |  6 +++++-
+ arch/arm/boot/dts/omap3-igep0020-common.dtsi      |  4 ++--
+ arch/arm/boot/dts/omap3-igep0030-common.dtsi      |  4 ++++
+ arch/arm/boot/dts/omap3-ldp.dts                   | 10 +++++++---
+ arch/arm/boot/dts/omap3-lilly-a83x.dtsi           |  6 +++++-
+ arch/arm/boot/dts/omap3-overo-base.dtsi           |  6 +++++-
+ arch/arm/boot/dts/omap3-pandora-common.dtsi       |  4 ++++
+ arch/arm/boot/dts/omap3-tao3530.dtsi              |  6 +++++-
+ arch/arm/boot/dts/omap3.dtsi                      |  2 ++
+ arch/arm/boot/dts/omap3430-sdp.dts                |  6 +++++-
+ 33 files changed, 143 insertions(+), 56 deletions(-)
+
+-- 
+2.5.0
