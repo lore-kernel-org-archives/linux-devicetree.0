@@ -1,7 +1,7 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 02/12] ARM: dts: apq8064: move pinctrls to dedicated dtsi
-Date: Tue, 23 Feb 2016 14:14:07 +0000
-Message-ID: <1456236847-2445-1-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: [PATCH 04/12] ARM: dts: apq8064: add i2c sleep pinctrl states.
+Date: Tue, 23 Feb 2016 14:14:26 +0000
+Message-ID: <1456236866-2588-1-git-send-email-srinivas.kandagatla@linaro.org>
 References: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1456236639-1379-1-git-send-email-srinivas.kandagatla@linaro.org>
@@ -10,151 +10,95 @@ To: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
 Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-As there are more pinctrls to come, moving these to dedicated dtsi makes
-more sense.
+This patch adds missing i2c pinctrl sleep states.
+Also add 16mA drive strength to the pins so that we can detect wide
+range of i2c devices on the other side of level shifters.
 
 Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- arch/arm/boot/dts/qcom-apq8064-pins.dtsi | 58 ++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/qcom-apq8064.dtsi      | 57 +------------------------------
- 2 files changed, 59 insertions(+), 56 deletions(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8064-pins.dtsi
+ arch/arm/boot/dts/qcom-apq8064-pins.dtsi | 36 ++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi      |  8 +++----
+ 2 files changed, 40 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-new file mode 100644
-index 0000000..c711aca
---- /dev/null
+index c711aca..ce15c67 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064-pins.dtsi
-@@ -0,0 +1,58 @@
+@@ -19,6 +19,24 @@
+ 			pins = "gpio20", "gpio21";
+ 			function = "gsbi1";
+ 		};
 +
-+&tlmm_pinmux {
-+	sdc4_gpios: sdc4-gpios {
-+		pios {
-+			pins = "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
-+			function = "sdc4";
++		pinconf {
++			pins = "gpio20", "gpio21";
++			drive-strength = <16>;
++			bias-disable;
 +		};
 +	};
 +
-+	ps_hold: ps_hold {
-+		mux {
-+			pins = "gpio78";
-+			function = "ps_hold";
-+		};
-+	};
-+
-+	i2c1_pins: i2c1 {
++	i2c1_pins_sleep: i2c1_pins_sleep {
 +		mux {
 +			pins = "gpio20", "gpio21";
-+			function = "gsbi1";
++			function = "gpio";
++		};
++		pinconf {
++			pins = "gpio20", "gpio21";
++			drive-strength = <2>;
++			bias-disable = <0>;
++		};
+ 	};
+ 
+ 	i2c3_pins: i2c3 {
+@@ -26,6 +44,24 @@
+ 			pins = "gpio8", "gpio9";
+ 			function = "gsbi3";
+ 		};
++
++		pinconf {
++			pins = "gpio8", "gpio9";
++			drive-strength = <16>;
++			bias-disable;
 +		};
 +	};
 +
-+	i2c3_pins: i2c3 {
++	i2c3_pins_sleep: i2c3_pins_sleep {
 +		mux {
 +			pins = "gpio8", "gpio9";
-+			function = "gsbi3";
++			function = "gpio";
 +		};
-+	};
-+
-+	gsbi6_uart_2pins: gsbi6_uart_2pins {
-+		mux {
-+			pins = "gpio14", "gpio15";
-+			function = "gsbi6";
++		pinconf {
++			pins = "gpio8", "gpio9";
++			drive-strength = <2>;
++			bias-disable = <0>;
 +		};
-+	};
-+
-+	gsbi6_uart_4pins: gsbi6_uart_4pins {
-+		mux {
-+			pins = "gpio14", "gpio15", "gpio16", "gpio17";
-+			function = "gsbi6";
-+		};
-+	};
-+
-+	gsbi7_uart_2pins: gsbi7_uart_2pins {
-+		mux {
-+			pins = "gpio82", "gpio83";
-+			function = "gsbi7";
-+		};
-+	};
-+
-+	gsbi7_uart_4pins: gsbi7_uart_4pins {
-+		mux {
-+			pins = "gpio82", "gpio83", "gpio84", "gpio85";
-+			function = "gsbi7";
-+		};
-+	};
-+};
+ 	};
+ 
+ 	gsbi6_uart_2pins: gsbi6_uart_2pins {
 diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index a7af35d..3d95534b 100644
+index 3d95534b..3fb66b9 100644
 --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -142,62 +142,6 @@
+@@ -227,8 +227,8 @@
  
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&ps_hold>;
--
--			sdc4_gpios: sdc4-gpios {
--				pios {
--					pins = "gpio63", "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
--					function = "sdc4";
--				};
--			};
--
--			ps_hold: ps_hold {
--				mux {
--					pins = "gpio78";
--					function = "ps_hold";
--				};
--			};
--
--			i2c1_pins: i2c1 {
--				mux {
--					pins = "gpio20", "gpio21";
--					function = "gsbi1";
--				};
--			};
--
--			i2c3_pins: i2c3 {
--				mux {
--					pins = "gpio8", "gpio9";
--					function = "gsbi3";
--				};
--			};
--
--			gsbi6_uart_2pins: gsbi6_uart_2pins {
--				mux {
--					pins = "gpio14", "gpio15";
--					function = "gsbi6";
--				};
--			};
--
--			gsbi6_uart_4pins: gsbi6_uart_4pins {
--				mux {
--					pins = "gpio14", "gpio15", "gpio16", "gpio17";
--					function = "gsbi6";
--				};
--			};
--
--			gsbi7_uart_2pins: gsbi7_uart_2pins {
--				mux {
--					pins = "gpio82", "gpio83";
--					function = "gsbi7";
--				};
--			};
--
--			gsbi7_uart_4pins: gsbi7_uart_4pins {
--				mux {
--					pins = "gpio82", "gpio83", "gpio84", "gpio85";
--					function = "gsbi7";
--				};
--			};
- 		};
- 
- 		sfpb_wrapper_mutex: syscon@1200000 {
-@@ -828,3 +772,4 @@
- 		};
- 	};
- };
-+#include "qcom-apq8064-pins.dtsi"
+ 			gsbi1_i2c: i2c@12460000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c1_pins>;
+-				pinctrl-names = "default";
++				pinctrl-0 = <&i2c1_pins &i2c1_pins_sleep>;
++				pinctrl-names = "default", "sleep";
+ 				reg = <0x12460000 0x1000>;
+ 				interrupts = <0 194 IRQ_TYPE_NONE>;
+ 				clocks = <&gcc GSBI1_QUP_CLK>, <&gcc GSBI1_H_CLK>;
+@@ -274,8 +274,8 @@
+ 			ranges;
+ 			gsbi3_i2c: i2c@16280000 {
+ 				compatible = "qcom,i2c-qup-v1.1.1";
+-				pinctrl-0 = <&i2c3_pins>;
+-				pinctrl-names = "default";
++				pinctrl-0 = <&i2c3_pins &i2c3_pins_sleep>;
++				pinctrl-names = "default", "sleep";
+ 				reg = <0x16280000 0x1000>;
+ 				interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
+ 				clocks = <&gcc GSBI3_QUP_CLK>,
 -- 
 1.9.1
