@@ -1,190 +1,694 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/2] drm/panel: Support for LG lp120up1 panel with eDP
- input
-Date: Tue, 23 Feb 2016 16:12:41 +0100
-Message-ID: <20160223151241.GC27656@ulmo>
-References: <1456138904-15258-1-git-send-email-jitao.shi@mediatek.com>
- <1456138904-15258-2-git-send-email-jitao.shi@mediatek.com>
- <CAGUYZuSsrneg8zQ0Ro8z5C469A2D-TOKpONECxWdoM6T+xNAeg@mail.gmail.com>
- <20160222114308.GA22505@ulmo>
- <CAGUYZuSVghfC75eWihA82WxC8pF67mWKQMJ-95F2ezqMssyxfQ@mail.gmail.com>
+From: Peter Hurley <peter@hurleysoftware.com>
+Subject: Re: [PATCH v4 04/10] serial: mps2-uart: add MPS2 UART driver
+Date: Tue, 23 Feb 2016 07:28:23 -0800
+Message-ID: <56CC7A97.6020801@hurleysoftware.com>
+References: <1456238068-25079-1-git-send-email-vladimir.murzin@arm.com>
+ <1456238068-25079-5-git-send-email-vladimir.murzin@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGUYZuSVghfC75eWihA82WxC8pF67mWKQMJ-95F2ezqMssyxfQ@mail.gmail.com>
+In-Reply-To: <1456238068-25079-5-git-send-email-vladimir.murzin@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sanjeev sharma <sanjeevsharmaengg@gmail.com>
-Cc: Jitao Shi <jitao.shi@mediatek.com>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, stonea168@163.com, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, bibby.hsieh@mediatek.com, CK HU <ck.hu@mediatek.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, "linux-arm-kernel@lists.infradead.org" <linux-arm>
+To: Vladimir Murzin <vladimir.murzin@arm.com>
+Cc: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, u.kleine-koenig@pengutronix.de, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jslaby@suse.cz, robh+dt@kernel.org, andy.shevchenko@gmail.com, gnomes@lxorguk.ukuu.org.uk, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, linux-api@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
---hOcCNbCCxyk/YU74
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 02/23/2016 06:34 AM, Vladimir Murzin wrote:
+> This driver adds support to the UART controller found on ARM MPS2
+> platform.
 
-On Tue, Feb 23, 2016 at 10:45:01AM +0530, sanjeev sharma wrote:
-> Hello Thierry,
->=20
-> I am not agree here and how it would be redundant ?
+Comments below.
 
-The panel being a separate device means that it needs a compatible
-value and the compatible value implies a specific video timing. It
-would be redundant, therefore, to repeat the video timing in the
-panel's device tree node that already has the compatible string.
+> Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
+> ---
+>  drivers/tty/serial/Kconfig       |   12 +
+>  drivers/tty/serial/Makefile      |    1 +
+>  drivers/tty/serial/mps2-uart.c   |  586 ++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/serial_core.h |    3 +
+>  4 files changed, 602 insertions(+)
+>  create mode 100644 drivers/tty/serial/mps2-uart.c
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 39721ec..3a248be 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -1450,6 +1450,18 @@ config SERIAL_EFM32_UART
+>  	  This driver support the USART and UART ports on
+>  	  Energy Micro's efm32 SoCs.
+>  
+> +config SERIAL_MPS2_UART_CONSOLE
+> +	bool "MPS2 UART console support"
+> +	depends on SERIAL_MPS2_UART
+> +	select SERIAL_CORE_CONSOLE
+> +
+> +config SERIAL_MPS2_UART
+> +	bool "MPS2 UART port"
+> +	depends on ARM || COMPILE_TEST
+> +	select SERIAL_CORE
+> +	help
+> +	  This driver support the UART ports on ARM MPS2.
+> +
+>  config SERIAL_EFM32_UART_CONSOLE
+>  	bool "EFM32 UART/USART console support"
+>  	depends on SERIAL_EFM32_UART=y
+> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+> index b391c9b..1062503 100644
+> --- a/drivers/tty/serial/Makefile
+> +++ b/drivers/tty/serial/Makefile
+> @@ -91,6 +91,7 @@ obj-$(CONFIG_SERIAL_CONEXANT_DIGICOLOR)	+= digicolor-usart.o
+>  obj-$(CONFIG_SERIAL_MEN_Z135)	+= men_z135_uart.o
+>  obj-$(CONFIG_SERIAL_SPRD) += sprd_serial.o
+>  obj-$(CONFIG_SERIAL_STM32)	+= stm32-usart.o
+> +obj-$(CONFIG_SERIAL_MPS2_UART)	+= mps2-uart.o
+>  
+>  # GPIOLIB helpers for modem control lines
+>  obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+= serial_mctrl_gpio.o
+> diff --git a/drivers/tty/serial/mps2-uart.c b/drivers/tty/serial/mps2-uart.c
+> new file mode 100644
+> index 0000000..5a4e167
+> --- /dev/null
+> +++ b/drivers/tty/serial/mps2-uart.c
+> @@ -0,0 +1,586 @@
+> +/*
+> + * Copyright (C) 2015 ARM Limited
+> + *
+> + * Author: Vladimir Murzin <vladimir.murzin@arm.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * TODO: support for SysRq
+> + */
+> +
+> +#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/clk.h>
+> +#include <linux/console.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/serial_core.h>
+> +#include <linux/tty_flip.h>
+> +#include <linux/types.h>
+> +
+> +#define SERIAL_NAME	"ttyMPS"
+> +#define DRIVER_NAME	"mps2-uart"
+> +#define MAKE_NAME(x)	(DRIVER_NAME # x)
+> +
+> +#define UARTn_DATA				0x00
+> +
+> +#define UARTn_STATE				0x04
+> +#define UARTn_STATE_TX_FULL			BIT(0)
+> +#define UARTn_STATE_RX_FULL			BIT(1)
+> +#define UARTn_STATE_TX_OVERRUN			BIT(2)
+> +#define UARTn_STATE_RX_OVERRUN			BIT(3)
+> +
+> +#define UARTn_CTRL				0x08
+> +#define UARTn_CTRL_TX_ENABLE			BIT(0)
+> +#define UARTn_CTRL_RX_ENABLE			BIT(1)
+> +#define UARTn_CTRL_TX_INT_ENABLE		BIT(2)
+> +#define UARTn_CTRL_RX_INT_ENABLE		BIT(3)
+> +#define UARTn_CTRL_TX_OVERRUN_INT_ENABLE	BIT(4)
+> +#define UARTn_CTRL_RX_OVERRUN_INT_ENABLE	BIT(5)
+> +
+> +#define UARTn_INT				0x0c
+> +#define UARTn_INT_TX				BIT(0)
+> +#define UARTn_INT_RX				BIT(1)
+> +#define UARTn_INT_TX_OVERRUN			BIT(2)
+> +#define UARTn_INT_RX_OVERRUN			BIT(3)
+> +
+> +#define UARTn_BAUDDIV				0x10
+> +#define UARTn_BAUDDIV_MASK			GENMASK(20, 0)
+> +
+> +/*
+> + * Helpers to make typical enable/disable operations more readable.
+> + */
+> +#define UARTn_CTRL_TX_GRP 			(UARTn_CTRL_TX_ENABLE		 |\
+> +						 UARTn_CTRL_TX_INT_ENABLE	 |\
+> +						 UARTn_CTRL_TX_OVERRUN_INT_ENABLE)
+> +
+> +#define UARTn_CTRL_RX_GRP 			(UARTn_CTRL_RX_ENABLE		 |\
+> +						 UARTn_CTRL_RX_INT_ENABLE	 |\
+> +						 UARTn_CTRL_RX_OVERRUN_INT_ENABLE)
+> +
+> +#define MPS2_MAX_PORTS				3
+> +
+> +struct mps2_uart_port {
+> +	struct uart_port port;
+> +	struct clk *clk;
+> +	unsigned int tx_irq;
+> +	unsigned int rx_irq;
+> +};
+> +
+> +static inline struct mps2_uart_port *to_mps2_port(struct uart_port *port)
+> +{
+> +	return container_of(port, struct mps2_uart_port, port);
+> +}
+> +
+> +static void mps2_uart_write8(struct uart_port *port, u8 val, unsigned off)
+> +{
+> +	struct mps2_uart_port *mps_port = to_mps2_port(port);
+> +
+> +	writeb(val, mps_port->port.membase + off);
+> +}
+> +
+> +static u8 mps2_uart_read8(struct uart_port *port, unsigned off)
+> +{
+> +	struct mps2_uart_port *mps_port = to_mps2_port(port);
+> +
+> +	return readb(mps_port->port.membase + off);
+> +}
+> +
+> +static void mps2_uart_write32(struct uart_port *port, u32 val, unsigned off)
+> +{
+> +	struct mps2_uart_port *mps_port = to_mps2_port(port);
+> +
+> +	writel_relaxed(val, mps_port->port.membase + off);
+> +}
+> +
+> +static unsigned int mps2_uart_tx_empty(struct uart_port *port)
+> +{
+> +	u8 status = mps2_uart_read8(port, UARTn_STATE);
+> +
+> +	return (status & UARTn_STATE_TX_FULL) ? 0 : TIOCSER_TEMT;
+> +}
+> +
+> +static void mps2_uart_set_mctrl(struct uart_port *port, unsigned int mctrl)
+> +{
+> +}
+> +
+> +static unsigned int mps2_uart_get_mctrl(struct uart_port *port)
+> +{
+> +	return TIOCM_CAR | TIOCM_CTS | TIOCM_DSR;
+> +}
+> +
+> +static void mps2_uart_stop_tx(struct uart_port *port)
+> +{
+> +	u8 control = mps2_uart_read8(port, UARTn_CTRL);
+> +
+> +	control &= ~UARTn_CTRL_TX_GRP;
+> +
+> +	mps2_uart_write8(port, control, UARTn_CTRL);
+> +}
+> +
+> +static void mps2_uart_tx_chars(struct uart_port *port)
+> +{
+> +	struct circ_buf *xmit = &port->state->xmit;
+> +
+> +	while (!(mps2_uart_read8(port, UARTn_STATE) & UARTn_STATE_TX_FULL)) {
+> +		if (port->x_char) {
+> +			mps2_uart_write8(port, port->x_char, UARTn_DATA);
+> +			port->x_char = 0;
+> +			port->icount.tx++;
+> +			continue;
+> +		}
+> +
+> +		if (uart_circ_empty(xmit) || uart_tx_stopped(port))
+> +			break;
+> +
+> +		mps2_uart_write8(port, xmit->buf[xmit->tail], UARTn_DATA);
+> +		xmit->tail = (xmit->tail + 1) % UART_XMIT_SIZE;
+> +		port->icount.tx++;
+> +	}
+> +
+> +	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+> +		uart_write_wakeup(port);
+> +
+> +	if (uart_circ_empty(xmit))
+> +		mps2_uart_stop_tx(port);
+> +}
+> +
+> +static void mps2_uart_start_tx(struct uart_port *port)
+> +{
 
-> please see lvds interface, where panel timing parameter is defined in the
-> Device Tree. If there are multiple display panel then we can create a
-> separate dtsi file and include in main Board dts file. I believe that, It
-> is simpler way to support multiple panel.
+Your start_tx() method should just enable tx interrupt (if not already
+enabled), and not actually perform the transfer synchronously.
 
-Two things: you can define a separate .dtsi file with the panel
-definition with the current approach, too. But it would be a waste to do
-so because really the only thing you need to change is the compatible
-string.
 
-The approach chosen in the DTS that you link to below might seem like a
-simpler way, but it completely ignores aspects other than timings. What
-if the panel requires a GPIO and or regulator to turn on. How are you
-going to represent the power up sequence for that in DT? This was
-attempted a long time ago and deemed too complicated to do in DT, hence
-why we ended up with what we have now.
+> +	u8 control = mps2_uart_read8(port, UARTn_CTRL);
+> +
+> +	control |= UARTn_CTRL_TX_GRP;
+> +
+> +	mps2_uart_write8(port, control, UARTn_CTRL);
+> +	mps2_uart_tx_chars(port);
+> +}
+> +
+> +static void mps2_uart_stop_rx(struct uart_port *port)
+> +{
+> +	u8 control = mps2_uart_read8(port, UARTn_CTRL);
+> +
+> +	control &= ~UARTn_CTRL_RX_GRP;
+> +
+> +	mps2_uart_write8(port, control, UARTn_CTRL);
+> +}
+> +
+> +static void mps2_uart_break_ctl(struct uart_port *port, int ctl)
+> +{
+> +}
+> +
+> +static void mps2_uart_rx_chars(struct uart_port *port)
+> +{
+> +	struct tty_port *tport = &port->state->port;
+> +
+> +	while (mps2_uart_read8(port, UARTn_STATE) & UARTn_STATE_RX_FULL) {
+> +		u8 rxdata = mps2_uart_read8(port, UARTn_DATA);
+> +
+> +		port->icount.rx++;
+> +		tty_insert_flip_char(&port->state->port, rxdata, TTY_NORMAL);
+> +	}
+> +
+> +	spin_unlock(&port->lock);
+> +	tty_flip_buffer_push(tport);
+> +	spin_lock(&port->lock);
 
-There are also panels on more complicated busses, such as DSI. These
-panels often require additional register programming, so in addition to
-the above you'd need some sort of register programming table in DT for
-these to work.
+Not necessary to drop the port lock across push.
 
-> http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/arch/arm=
-/boot/dts/imx6q-sabrelite.dts?h=3Dimx_3.14.38_6qp_beta#n225
 
-That's not an upstream tree, so it isn't relevant to this discussion.
-The decision to make the panel a separate device and put the video
-timings into the driver was made a couple of years ago and we're not
-going to change that. It's fine if you want to disagree, but I'm afraid
-it won't change things.
+> +}
+> +
+> +static irqreturn_t mps2_uart_rxirq(int irq, void *data)
+> +{
+> +
+> +	struct uart_port *port = data;
+> +	u8 irqflag = mps2_uart_read8(port, UARTn_INT);
+> +
+> +	if (unlikely(!(irqflag & UARTn_INT_RX)))
+> +		return IRQ_NONE;
+> +
+> +	spin_lock(&port->lock);
+> +
+> +	mps2_uart_write8(port, UARTn_INT_RX, UARTn_INT);
+> +	mps2_uart_rx_chars(port);
+> +
+> +	spin_unlock(&port->lock);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t mps2_uart_txirq(int irq, void *data)
+> +{
+> +	struct uart_port *port = data;
+> +	u8 irqflag = mps2_uart_read8(port, UARTn_INT);
+> +
+> +	if (unlikely(!(irqflag & UARTn_INT_TX)))
+> +		return IRQ_NONE;
+> +
+> +	mps2_uart_write8(port, UARTn_INT_TX, UARTn_INT);
+> +	mps2_uart_tx_chars(port);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t mps2_uart_oerrirq(int irq, void *data)
+> +{
+> +	irqreturn_t handled = IRQ_NONE;
+> +	struct uart_port *port = data;
+> +	u8 irqflag = mps2_uart_read8(port, UARTn_INT);
+> +
+> +	spin_lock(&port->lock);
+> +
+> +	if (irqflag & UARTn_INT_RX_OVERRUN) {
+> +		struct tty_port *tport = &port->state->port;
+> +
+> +		mps2_uart_write8(port, UARTn_INT_RX_OVERRUN, UARTn_INT);
+> +		tty_insert_flip_char(tport, 0, TTY_OVERRUN);
+> +		port->icount.overrun++;
+> +		handled = IRQ_HANDLED;
+> +	}
+> +
+> +	/*
+> +	 * It's never been seen in practice and it never *should* happen since
+> +	 * we check if there is enough room in TX buffer before sending data.
+> +	 * So we keep this check in case something suspicious has happened.
+> +	 */
+> +	if (irqflag & UARTn_INT_TX_OVERRUN) {
+> +		mps2_uart_write8(port, UARTn_INT_TX_OVERRUN, UARTn_INT);
+> +		handled = IRQ_HANDLED;
+> +	}
+> +
+> +	spin_unlock(&port->lock);
 
-Thierry
+No buffer push for the overrun char?
 
-> On Mon, Feb 22, 2016 at 5:13 PM, Thierry Reding <thierry.reding@gmail.com>
-> wrote:
->=20
-> > On Mon, Feb 22, 2016 at 04:42:54PM +0530, sanjeev sharma wrote:
-> > > Hello Jitao,
-> > >
-> > > Can't we add this panel information in device tree file instead inside
-> > the
-> > > device driver ?
-> >
-> > We could, but that would be redundant. Panels need to be represented by
-> > a specific compatible string anyway, and that compatible string implies
-> > the video timings, bits-per-color, width and height.
-> >
-> > Also there's more to panels than just the timings or dimensions. Power
-> > up and power down sequences are also implied by the compatible stirng.
-> > Describing all of that in the device tree was at some point attempted,
-> > but in the end it turned out too complicated and we ended up with what
-> > we have now.
-> >
-> > Thierry
-> >
-> > > On Mon, Feb 22, 2016 at 4:31 PM, Jitao Shi <jitao.shi@mediatek.com>
-> > wrote:
-> > >
-> > > > The LG lp120up1 TFT LCD panel with eDP interface is a 12.0" 1920x12=
-80
-> > > > panel, which can be supported by the simple panel driver
-> > > >
-> > > > Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
-> > > > ---
-> > > > Changes since v1:
-> > > >  - Add eDP panel type in comment msg
-> > > >  - Fixed comment msg with 72 characters width
-> > > > ---
-> > > >  drivers/gpu/drm/panel/panel-simple.c |   26 ++++++++++++++++++++++=
-++++
-> > > >  1 file changed, 26 insertions(+)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/panel/panel-simple.c
-> > > > b/drivers/gpu/drm/panel/panel-simple.c
-> > > > index f88a631..2030c37 100644
-> > > > --- a/drivers/gpu/drm/panel/panel-simple.c
-> > > > +++ b/drivers/gpu/drm/panel/panel-simple.c
-> > > > @@ -982,6 +982,29 @@ static const struct panel_desc lg_lb070wv8 =3D=
- {
-> > > >         .bus_format =3D MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> > > >  };
-> > > >
-> > > > +static const struct drm_display_mode lg_lp120up1_mode =3D {
-> > > > +       .clock =3D 162300,
-> > > > +       .hdisplay =3D 1920,
-> > > > +       .hsync_start =3D 1920 + 40,
-> > > > +       .hsync_end =3D 1920 + 40 + 40,
-> > > > +       .htotal =3D 1920 + 40 + 40+ 80,
-> > > > +       .vdisplay =3D 1280,
-> > > > +       .vsync_start =3D 1280 + 4,
-> > > > +       .vsync_end =3D 1280 + 4 + 4,
-> > > > +       .vtotal =3D 1280 + 4 + 4 + 12,
-> > > > +       .vrefresh =3D 60,
-> > > > +};
-> > > > +
-> > > > +static const struct panel_desc lg_lp120up1 =3D {
-> > > > +       .modes =3D &lg_lp120up1_mode,
-> > > > +       .num_modes =3D 1,
-> > > > +       .bpc =3D 8,
-> > > > +       .size =3D {
-> > > > +               .width =3D 267,
-> > > > +               .height =3D 183,
-> > > > +       },
-> > > > +};
-> > > > +
-> > > >  static const struct drm_display_mode lg_lp129qe_mode =3D {
-> > > >         .clock =3D 285250,
-> > > >         .hdisplay =3D 2560,
-> > > > @@ -1256,6 +1279,9 @@ static const struct of_device_id
-> > platform_of_match[]
-> > > > =3D {
-> > > >                 .compatible =3D "lg,lb070wv8",
-> > > >                 .data =3D &lg_lb070wv8,
-> > > >         }, {
-> > > > +               .compatible =3D "lg,lp120up1",
-> > > > +               .data =3D &lg_lp120up1,
-> > > > +       }, {
-> > > >                 .compatible =3D "lg,lp129qe",
-> > > >                 .data =3D &lg_lp129qe,
-> > > >         }, {
-> > > > --
-> > > > 1.7.9.5
-> > > >
-> > > >
-> > > > _______________________________________________
-> > > > linux-arm-kernel mailing list
-> > > > linux-arm-kernel@lists.infradead.org
-> > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > > >
-> >
+> +
+> +	return handled;
+> +}
+> +
+> +static int mps2_uart_startup(struct uart_port *port)
+> +{
+> +	struct mps2_uart_port *mps_port = to_mps2_port(port);
+> +	u8 control = mps2_uart_read8(port, UARTn_CTRL);
+> +	int ret;
+> +
+> +	control &= ~(UARTn_CTRL_RX_GRP | UARTn_CTRL_TX_GRP);
+> +
+> +	mps2_uart_write8(port, control, UARTn_CTRL);
+> +
+> +	ret = request_irq(mps_port->rx_irq, mps2_uart_rxirq, 0,
+> +			  MAKE_NAME(-rx), mps_port);
+> +	if (ret) {
+> +		dev_err(port->dev, "failed to register rxirq (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = request_irq(mps_port->tx_irq, mps2_uart_txirq, 0,
+> +			  MAKE_NAME(-tx), mps_port);
+> +	if (ret) {
+> +		dev_err(port->dev, "failed to register txirq (%d)\n", ret);
+> +		goto err_free_rxirq;
+> +	}
+> +
+> +	ret = request_irq(port->irq, mps2_uart_oerrirq, IRQF_SHARED,
+> +			  MAKE_NAME(-overrun), mps_port);
+> +
+> +	if (ret) {
+> +		dev_err(port->dev, "failed to register oerrirq (%d)\n", ret);
+> +		goto err_free_txirq;
+> +	}
+> +
+> +	control |= UARTn_CTRL_RX_GRP | UARTn_CTRL_TX_GRP;
+> +
+> +	mps2_uart_write8(port, control, UARTn_CTRL);
+> +
+> +	return 0;
+> +
+> +err_free_txirq:
+> +	free_irq(mps_port->tx_irq, mps_port);
+> +err_free_rxirq:
+> +	free_irq(mps_port->rx_irq, mps_port);
+> +
+> +	return ret;
+> +}
+> +
+> +static void mps2_uart_shutdown(struct uart_port *port)
+> +{
+> +	struct mps2_uart_port *mps_port = to_mps2_port(port);
+> +	u8 control = mps2_uart_read8(port, UARTn_CTRL);
+> +
+> +	control &= ~(UARTn_CTRL_RX_GRP | UARTn_CTRL_TX_GRP);
+> +
+> +	mps2_uart_write8(port, control, UARTn_CTRL);
+> +
+> +	free_irq(mps_port->rx_irq, mps_port);
+> +	free_irq(mps_port->tx_irq, mps_port);
+> +	free_irq(port->irq, mps_port);
+> +}
+> +
+> +static void mps2_uart_set_termios(struct uart_port *port,
+> +	struct ktermios *termios, struct ktermios *old)
+> +{
+> +	unsigned long flags;
+> +	unsigned int baud, bauddiv;
+> +
+> +	termios->c_cflag &= ~(CRTSCTS | CMSPAR);
+> +	termios->c_cflag &= ~CSIZE;
+> +	termios->c_cflag |= CS8;
+> +	termios->c_cflag &= ~PARENB;
+> +	termios->c_cflag &= ~CSTOPB;
+> +
+> +	baud = uart_get_baud_rate(port, termios, old,
+> +			DIV_ROUND_CLOSEST(port->uartclk, UARTn_BAUDDIV_MASK),
+> +			DIV_ROUND_CLOSEST(port->uartclk, 16));
+> +
+> +	bauddiv = DIV_ROUND_CLOSEST(port->uartclk, baud);
+> +
+> +	spin_lock_irqsave(&port->lock, flags);
+> +
+> +	uart_update_timeout(port, termios->c_cflag, baud);
+> +	mps2_uart_write32(port, bauddiv, UARTn_BAUDDIV);
 
---hOcCNbCCxyk/YU74
-Content-Type: application/pgp-signature; name="signature.asc"
+termios structure itself is already protected from concurrent access
+by the tty core so the port lock should only be used for
+driver structures and the actual hardware i/o.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+IOW, the lock can be dropped before encoding new line rate, like so:
 
-iQIcBAABCAAGBQJWzHbnAAoJEN0jrNd/PrOhF28P/0MWYL3p7D+aWcXAyuvdDlJF
-elOhngwyjHUi8ZYrUT9hPjUTZS3tx8ZSwL0VbmrsDWFi5wyk/OwYJDx1Y/xs3WqE
-NGaRC1ZCoh+xKhs66YtKOnfqp6nBbaam1sv9eJfelryHjjUS5bsYX4bhNIYYPISz
-6NJ2gl5Quw2j1934hcnV2VymJFOkio5NckeAyV/TPOZuFIOynZHRc+GeokhejYee
-XRsMcVZQ0CTTKOupQFzpQweSRL93xuCVhZpTiaOW7jdIk2oSdQVB/oEC61ivHS2l
-5ZhQi2JDuuUaGAXU35UYootEt0qivpC/YMLC2zDPIfdflJFMzuWM4yN77ClJnKby
-Mbi3HSDtAC3XdKD3XU1OWWRJI7BXShUo1M8R1iaaRmvDriL6kSTLNwctbV5+JmOK
-vI8FIF9tWCnp3qY5dHzOGc/VLAxX6CELyDntkUjk10zpw8Cz2B1KQ3vbx5ASjDyI
-pJi5WA1M+7DYilBiX8UTN8x/4jkHiCWKcEAQC7wFrqyFNkVwOB3tFsgQjWazWW99
-Zdzk6S9H8up2puMPbshazztzXYE1elSGB87Bx70LgeT+Ygym1lFQaTRJ5x2uhl3R
-b81t5IeIkjtLcsmblNj94phiNJqOlkhAx0bDX7o1m/HxOsta+dPoZ8zVvOqsqrSm
-c9hUr4mrgX7vWbYDQyaJ
-=tTh+
------END PGP SIGNATURE-----
+> +	spin_unlock_irqrestore(&port->lock, flags);
+> +
 
---hOcCNbCCxyk/YU74--
+> +	if (tty_termios_baud_rate(termios))
+> +		tty_termios_encode_baud_rate(termios, baud, baud);
+> +}
+
+
+> +
+> +static const char *mps2_uart_type(struct uart_port *port)
+> +{
+> +	return (port->type == PORT_MPS2UART) ? DRIVER_NAME : NULL;
+> +}
+> +
+> +static void mps2_uart_release_port(struct uart_port *port)
+> +{
+> +}
+> +
+> +static int mps2_uart_request_port(struct uart_port *port)
+> +{
+> +	return 0;
+> +}
+> +
+> +static void mps2_uart_config_port(struct uart_port *port, int type)
+> +{
+> +	if (type & UART_CONFIG_TYPE && !mps2_uart_request_port(port))
+> +		port->type = PORT_MPS2UART;
+> +}
+> +
+> +static int mps2_uart_verify_port(struct uart_port *port, struct serial_struct *serinfo)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct uart_ops mps2_uart_pops = {
+> +	.tx_empty = mps2_uart_tx_empty,
+> +	.set_mctrl = mps2_uart_set_mctrl,
+> +	.get_mctrl = mps2_uart_get_mctrl,
+> +	.stop_tx = mps2_uart_stop_tx,
+> +	.start_tx = mps2_uart_start_tx,
+> +	.stop_rx = mps2_uart_stop_rx,
+> +	.break_ctl = mps2_uart_break_ctl,
+> +	.startup = mps2_uart_startup,
+> +	.shutdown = mps2_uart_shutdown,
+> +	.set_termios = mps2_uart_set_termios,
+> +	.type = mps2_uart_type,
+> +	.release_port = mps2_uart_release_port,
+> +	.request_port = mps2_uart_request_port,
+> +	.config_port = mps2_uart_config_port,
+> +	.verify_port = mps2_uart_verify_port,
+> +};
+> +
+> +static struct mps2_uart_port mps2_uart_ports[MPS2_MAX_PORTS];
+> +
+> +#ifdef CONFIG_SERIAL_MPS2_UART_CONSOLE
+> +static void mps2_uart_console_putchar(struct uart_port *port, int ch)
+> +{
+> +	while (mps2_uart_read8(port, UARTn_STATE) & UARTn_STATE_TX_FULL)
+> +		cpu_relax();
+> +
+> +	mps2_uart_write8(port, ch, UARTn_DATA);
+> +}
+> +
+> +static void mps2_uart_console_write(struct console *co, const char *s, unsigned int cnt)
+> +{
+> +	struct uart_port *port = &mps2_uart_ports[co->index].port;
+> +
+> +	uart_console_write(port, s, cnt, mps2_uart_console_putchar);
+> +}
+> +
+> +static int mps2_uart_console_setup(struct console *co, char *options)
+> +{
+> +	struct mps2_uart_port *mps_port;
+> +	int baud = 9600;
+> +	int bits = 8;
+> +	int parity = 'n';
+> +	int flow = 'n';
+> +
+> +	if (co->index < 0 || co->index >= MPS2_MAX_PORTS)
+> +		return -ENODEV;
+> +
+> +	mps_port = &mps2_uart_ports[co->index];
+> +
+> +	if (options)
+> +		uart_parse_options(options, &baud, &parity, &bits, &flow);
+> +
+> +	return uart_set_options(&mps_port->port, co, baud, parity, bits, flow);
+> +}
+> +
+> +static struct uart_driver mps2_uart_driver;
+> +
+> +static struct console mps2_uart_console = {
+> +	.name = SERIAL_NAME,
+> +	.device = uart_console_device,
+> +	.write = mps2_uart_console_write,
+> +	.setup = mps2_uart_console_setup,
+> +	.flags = CON_PRINTBUFFER,
+> +	.index = -1,
+> +	.data = &mps2_uart_driver,
+> +};
+> +
+> +#define MPS2_SERIAL_CONSOLE (&mps2_uart_console)
+> +
+> +#else
+> +#define MPS2_SERIAL_CONSOLE NULL
+> +#endif
+> +
+> +static struct uart_driver mps2_uart_driver = {
+> +	.driver_name = DRIVER_NAME,
+> +	.dev_name = SERIAL_NAME,
+> +	.nr = MPS2_MAX_PORTS,
+> +	.cons = MPS2_SERIAL_CONSOLE,
+> +};
+> +
+> +static struct mps2_uart_port *mps2_of_get_port(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	int id;
+> +
+> +	if (!np)
+> +		return NULL;
+> +
+> +	id = of_alias_get_id(np, "serial");
+> +	if (id < 0)
+> +		id = 0;
+> +
+> +	if (WARN_ON(id >= MPS2_MAX_PORTS))
+> +		return NULL;
+> +
+> +	mps2_uart_ports[id].port.line = id;
+> +	return &mps2_uart_ports[id];
+> +}
+> +
+> +static int mps2_init_port(struct mps2_uart_port *mps_port,
+> +			struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	mps_port->port.membase = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(mps_port->port.membase))
+> +		return PTR_ERR(mps_port->port.membase);
+> +
+> +	mps_port->port.mapbase = res->start;
+> +	mps_port->port.mapsize = resource_size(res);
+> +
+> +	mps_port->rx_irq = platform_get_irq(pdev, 0);
+> +	mps_port->tx_irq = platform_get_irq(pdev, 1);
+> +	mps_port->port.irq = platform_get_irq(pdev, 2);
+> +
+> +	mps_port->port.iotype = UPIO_MEM;
+> +	mps_port->port.flags = UPF_BOOT_AUTOCONF;
+> +	mps_port->port.fifosize = 1;
+> +	mps_port->port.ops = &mps2_uart_pops;
+> +	mps_port->port.dev = &pdev->dev;
+> +
+> +	mps_port->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(mps_port->clk))
+> +		return PTR_ERR(mps_port->clk);
+> +
+> +	ret = clk_prepare_enable(mps_port->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mps_port->port.uartclk = clk_get_rate(mps_port->clk);
+> +
+> +	clk_disable_unprepare(mps_port->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int mps2_serial_probe(struct platform_device *pdev)
+> +{
+> +	struct mps2_uart_port *mps_port;
+> +	int ret;
+> +
+> +	mps_port = mps2_of_get_port(pdev);
+> +	if (!mps_port)
+> +		return -ENODEV;
+> +
+> +	ret = mps2_init_port(mps_port, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = uart_add_one_port(&mps2_uart_driver, &mps_port->port);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, mps_port);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mps2_serial_remove(struct platform_device *pdev)
+> +{
+> +	struct mps2_uart_port *mps_port = platform_get_drvdata(pdev);
+> +
+> +	uart_remove_one_port(&mps2_uart_driver, &mps_port->port);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id mps2_match[] = {
+> +	{ .compatible = "arm,mps2-uart", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, mps2_match);
+> +#endif
+> +
+> +static struct platform_driver mps2_serial_driver = {
+> +	.probe = mps2_serial_probe,
+> +	.remove = mps2_serial_remove,
+> +
+> +	.driver = {
+> +		.name = DRIVER_NAME,
+> +		.of_match_table = of_match_ptr(mps2_match),
+> +	},
+> +};
+> +
+> +static int __init mps2_uart_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = uart_register_driver(&mps2_uart_driver);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = platform_driver_register(&mps2_serial_driver);
+> +	if (ret)
+> +		uart_unregister_driver(&mps2_uart_driver);
+> +
+> +	return ret;
+> +}
+> +module_init(mps2_uart_init);
+> +
+> +static void __exit mps2_uart_exit(void)
+> +{
+> +	platform_driver_unregister(&mps2_serial_driver);
+> +	uart_unregister_driver(&mps2_uart_driver);
+> +}
+> +module_exit(mps2_uart_exit);
+> +
+> +MODULE_AUTHOR("Vladimir Murzin <vladimir.murzin@arm.com>");
+> +MODULE_DESCRIPTION("MPS2 UART driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:" DRIVER_NAME);
+> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/serial_core.h
+> index 3e5d757..1fa57bb 100644
+> --- a/include/uapi/linux/serial_core.h
+> +++ b/include/uapi/linux/serial_core.h
+> @@ -261,4 +261,7 @@
+>  /* STM32 USART */
+>  #define PORT_STM32	113
+>  
+> +/* MPS2 UART */
+> +#define PORT_MPS2UART	114
+> +
+>  #endif /* _UAPILINUX_SERIAL_CORE_H */
+> 
