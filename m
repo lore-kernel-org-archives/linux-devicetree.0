@@ -1,51 +1,92 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC 3/3] leds: Add driver for the ISSI IS31FL32xx family
- of LED drivers
-Date: Tue, 23 Feb 2016 18:45:17 +0000
-Message-ID: <20160223184517.GB10246@leverpostej>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
- <1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] Revert "[media] tvp5150: document input connectors DT bindings"
+Date: Tue, 23 Feb 2016 15:48:08 -0300
+Message-ID: <1456253288-397-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 01:17:25PM -0500, David Rivshin (Allworx) wrote:
-> From: David Rivshin <drivshin@allworx.com>
-> +static int is31fl32xx_parse_child_dt(const struct device *dev,
-> +				     const struct device_node *child,
-> +				     struct is31fl32xx_led_data *led_data)
-> +{
-> +	struct led_classdev *cdev = &led_data->cdev;
-> +	int ret = 0;
-> +	u32 reg;
-> +
-> +	cdev->name = of_get_property(child, "label", NULL) ? : child->name;
+This reverts commit 82c2ffeb217a ("[media] tvp5150: document input
+connectors DT bindings") since the DT binding is too device driver
+specific and should instead be more generic and use the bindings
+in Documentation/devicetree/bindings/display/connector/ and linked
+to the tvp5150 using the OF graph port and endpoints.
 
-We really shouldn't be spreading of_get_property into more drivers. It's
-generally not what you want, and doesn't do appropriate sanity checking.
+There are still ongoing discussions about how the input connectors
+will be supported by the Media Controller framework so until that
+is settled, it is better to revert the connectors portion of the
+bindings to avoid known to be broken bindings docs to hit mainline.
 
-Use of_property_read_string, though you may need to copy the result.
+Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-> +
-> +	ret = of_property_read_u32(child, "reg", &reg);
-> +	if (ret || reg < 1 || reg > led_data->priv->cdef->channels) {
-> +		dev_err(dev,
-> +			"Child node %s does not have a valid reg property\n",
-> +			child->name);
-> +		return -EINVAL;
-> +	}
-> +	led_data->channel = reg;
-> +
-> +	cdev->default_trigger = of_get_property(child, "linux,default-trigger",
-> +						NULL);
+---
 
-Likewise.
+ .../devicetree/bindings/media/i2c/tvp5150.txt      | 43 ----------------------
+ 1 file changed, 43 deletions(-)
 
-Thanks,
-Mark. 
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+index daa20e43a8e3..8c0fc1a26bf0 100644
+--- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
++++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+@@ -12,32 +12,6 @@ Optional Properties:
+ - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
+ - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+ 
+-Optional nodes:
+-- connectors: The input connectors of tvp5150 have to be defined under
+-  a subnode name "connectors" using the following format:
+-
+-	input-connector-name {
+-		input connector properties
+-	};
+-
+-Each input connector must contain the following properties:
+-
+-	- label: a name for the connector.
+-	- input: the input connector.
+-
+-The possible values for the "input" property are:
+-	0: Composite0
+-	1: Composite1
+-	2: S-Video
+-
+-and on a tvp5150am1 and tvp5151 there is another:
+-	4: Signal generator
+-
+-The list of valid input connectors are defined in dt-bindings/media/tvp5150.h
+-header file and can be included by device tree source files.
+-
+-Each input connector can be defined only once.
+-
+ The device node must contain one 'port' child node for its digital output
+ video port, in accordance with the video interface bindings defined in
+ Documentation/devicetree/bindings/media/video-interfaces.txt.
+@@ -62,23 +36,6 @@ Example:
+ 		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
+ 		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+ 
+-		connectors {
+-			composite0 {
+-				label = "Composite0";
+-				input = <TVP5150_COMPOSITE0>;
+-			};
+-
+-			composite1 {
+-				label = "Composite1";
+-				input = <TVP5150_COMPOSITE1>;
+-			};
+-
+-			s-video {
+-				label = "S-Video";
+-				input = <TVP5150_SVIDEO>;
+-			};
+-		};
+-
+ 		port {
+ 			tvp5150_1: endpoint {
+ 				remote-endpoint = <&ccdc_ep>;
+-- 
+2.5.0
