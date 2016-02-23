@@ -1,51 +1,76 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] sound/soc/tegra: tegra_max98090: Invert headphone by GPIO
- flag
-Date: Tue, 23 Feb 2016 10:35:28 -0700
-Message-ID: <56CC9860.2060003@wwwdotorg.org>
-References: <56CB6624.6030600@wwwdotorg.org>
- <1456247985-5563-1-git-send-email-sctincman@gmail.com>
- <1456247985-5563-2-git-send-email-sctincman@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] arm64: dts: msm8916: Move smem below hwlock
+Date: Tue, 23 Feb 2016 17:39:45 +0000
+Message-ID: <20160223173944.GA10088@leverpostej>
+References: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456247985-5563-2-git-send-email-sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2016 10:19 AM, Jonathan Tinkham wrote:
+On Tue, Feb 23, 2016 at 07:21:11PM +0200, Georgi Djakov wrote:
+> When the SMEM is probed it defers as it depends on the hardware lock, which
+> is not available yet. But the SMD bus and RPM regulators and clocks depend
+> on SMEM and they defer too. The problem with this is that the order of
+> registering the devices is not optimal and also we may end with messed
+> up serial console as the RPM clocks are not registered yet..
 
- > Subject: sound/soc/tegra: tegra_max98090: Invert headphone by GPIO
- > flag
+Re-ordering the DT is fragile at best, and not a real solution to this
+class of problem.
 
-Mark has mentioned quite a few times that this patch subject is 
-incorrect. ASoC patch subjects should start with "ASoC: ". You can see 
-this by running:
+Why can the drivers not defer probing in this case?
 
-git log -- sound/soc/tegra/
+Mark.
 
-I'd suggest the following:
-
-AsoC: tegra_max98090: honor headphone detect GPIO polarity
-
-> Set the invert property for the headphone jack depending on the GPIO flag in the
-> device-tree. This is similar to what is done for tegra_rt5640.
->
-
-> diff --git a/sound/soc/tegra/tegra_max98090.c b/sound/soc/tegra/tegra_max98090.c
-
-> @@ -155,6 +156,7 @@ static int tegra_max98090_asoc_init(struct snd_soc_pcm_runtime *rtd)
->   				      ARRAY_SIZE(tegra_max98090_hp_jack_pins));
->
->   		tegra_max98090_hp_jack_gpio.gpio = machine->gpio_hp_det;
-> +		tegra_max98090_hp_jack_gpio.invert = (machine->gpio_hp_det_flags & OF_GPIO_ACTIVE_LOW);
-
-Did you run checkpatch? It should complain about > 80 columns, and I 
-suspect about the unnecessary brackets around that expression. In fact, 
-checkpatch indicates quite a few other warnings and errors.
-
-The logic in this patch looks OK. Do the relevant DT files all have the 
-correct GPIO flags already? That'd be nice!
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi |   19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 7705207872a5..c497c7b1ae70 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -113,15 +113,6 @@
+>  		};
+>  	};
+>  
+> -	smem {
+> -		compatible = "qcom,smem";
+> -
+> -		memory-region = <&smem_mem>;
+> -		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> -
+> -		hwlocks = <&tcsr_mutex 3>;
+> -	};
+> -
+>  	soc: soc {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> @@ -512,6 +503,16 @@
+>  		};
+>  	};
+>  
+> +	smem {
+> +		compatible = "qcom,smem";
+> +
+> +		memory-region = <&smem_mem>;
+> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> +
+> +		hwlocks = <&tcsr_mutex 3>;
+> +	};
+> +
+> +
+>  	smd {
+>  		compatible = "qcom,smd";
+>  
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
