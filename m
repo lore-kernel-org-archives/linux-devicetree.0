@@ -1,33 +1,42 @@
 From: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
-Subject: [PATCH 0/2] Control PL310 pwr_ctrl register through DT
-Date: Tue, 23 Feb 2016 16:03:37 -0600
-Message-ID: <1456265019-23900-1-git-send-email-brad.mouring@ni.com>
+Subject: [PATCH 2/2] Documentation: devicetree: Add PL310 PM bindings
+Date: Tue, 23 Feb 2016 16:03:39 -0600
+Message-ID: <1456265019-23900-3-git-send-email-brad.mouring@ni.com>
+References: <1456265019-23900-1-git-send-email-brad.mouring@ni.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456265019-23900-1-git-send-email-brad.mouring-acOepvfBmUk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Document the DT bindings for controlling ARM PL310 Power Control
+settings.
 
-During some performance-oriented benchmarking on a Cortex A9
-platform, a slight performance degradation was noted on datasets
-that spanned into the L2 cache (<10%). This performance hit was
-minor, but it prompted investigation into the cause.
+Signed-off-by: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
+Acked-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/l2c2x0.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-One difference in the actual PL310 configuration that was concerning
-was the enabling of two PM-related changes: Dynamic Clock Gating
-and Standby Mode Enabling. As the kernel being tested was patched
-and configured to use the PREEMPT_RT patchset, it was desired to
-disable these settings for our use-case since anything PM can
-(and usually does) impact determinism.
+diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+index 2251dcc..4c2d764 100644
+--- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
++++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+@@ -72,6 +72,10 @@ Optional properties:
+ - prefetch-instr : Instruction prefetch. Value: <0> (forcibly disable),
+   <1> (forcibly enable), property absent (retain settings set by
+   firmware)
++- arm,dynamic-clock-gating : L2 dynamic clock gating. Value: <0> (forcibly
++  disable), <1> (forcibly enable), property absent (retain firmware settings)
++- arm,standby-mode: L2 standby mode enable. Value <0> (forcibly disable),
++  <1> (forcibly enable), property absent (retain firmware settings)
+ 
+ Example:
+ 
+-- 
+2.7.1
 
-Making these changes resulted in a modest performance improvement
-and those wonderful warm-n-fuzzies regarding determinism and enabling
-system control without needing to change the kernel.
-
-In the following set, there's the actual change to control these
-features given DT presence of a couple of new bindings and the
-documenation to accompany those changes. Thanks!
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
