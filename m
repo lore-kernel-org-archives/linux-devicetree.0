@@ -1,76 +1,66 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH] ARM: dts: add support for gpio buttons for exynos5422-odroidxu3
-Date: Tue, 23 Feb 2016 08:01:07 +0000
-Message-ID: <1456214467-3344-1-git-send-email-linux.amoon@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Anand Moon <linux.amoon@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiffany Lin <tiffany.lin@mediatek.com>
+Subject: [PATCH v5 1/8] dt-bindings: Add a binding for Mediatek Video Processor
+Date: Tue, 23 Feb 2016 16:11:14 +0800
+Message-ID: <1456215081-16858-2-git-send-email-tiffany.lin@mediatek.com>
+References: <1456215081-16858-1-git-send-email-tiffany.lin@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456215081-16858-1-git-send-email-tiffany.lin@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>
+Cc: Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com, Tiffany.lin@mediatek.com, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Tiffany Lin <tiffany.lin@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for gpio-based button on Odroid-XU3 boards
-for reboot/poweroff feature.
+From: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Add a DT binding documentation of Video Processor Unit for the
+MT8173 SoC from Mediatek.
+
+Signed-off-by: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
+Signed-off-by: Tiffany Lin <tiffany.lin@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
-changes rebase based on linux next-20160222.
+ .../devicetree/bindings/media/mediatek-vpu.txt     |   31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/mediatek-vpu.txt
 
-Tested on Odroid-XU4
-
-dmesg output.
-[    3.286068] of_get_named_gpiod_flags: parsed 'gpios' property of node '/gpio_keys/power_key[0]' - status (0)
-[    3.286206] gpio-11 (power key): gpiod_set_debounce: missing set() or set_debounce() operations
-[    3.286600] input: gpio_keys as /devices/platform/gpio_keys/input/input0
----
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 1bd507b..db9770b 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -11,6 +11,7 @@
- */
- 
- #include <dt-bindings/clock/samsung,s2mps11.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/sound/samsung-i2s.h>
-@@ -54,6 +55,22 @@
- 		#cooling-cells = <2>;
- 		cooling-levels = <0 130 170 230>;
- 	};
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vpu.txt b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
+new file mode 100644
+index 0000000..2a5bac3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/mediatek-vpu.txt
+@@ -0,0 +1,31 @@
++* Mediatek Video Processor Unit
 +
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&gpio_power_key>;
++Video Processor Unit is a HW video controller. It controls HW Codec including
++H.264/VP8/VP9 Decode, H.264/VP8 Encode and Image Processor (scale/rotate/color convert).
 +
-+		power_key {
-+			interrupt-parent = <&gpx0>;
-+			interrupts = <3 IRQ_TYPE_NONE>;
-+			gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			label = "power key";
-+			debounce-interval = <10>;
-+			wakeup-source;
-+		};
++Required properties:
++  - compatible: "mediatek,mt8173-vpu"
++  - reg: Must contain an entry for each entry in reg-names.
++  - reg-names: Must include the following entries:
++    "tcm": tcm base
++    "cfg_reg": Main configuration registers base
++  - interrupts: interrupt number to the cpu.
++  - clocks : clock name from clock manager
++  - clock-names: must be main. It is the main clock of VPU
++
++Optional properties:
++  - memory-region: phandle to a node describing memory (see
++    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
++    to be used for VPU extended memory; if not present, VPU may be located
++    anywhere in the memory
++
++Example:
++	vpu: vpu@10020000 {
++		compatible = "mediatek,mt8173-vpu";
++		reg = <0 0x10020000 0 0x30000>,
++		      <0 0x10050000 0 0x100>;
++		reg-names = "tcm", "cfg_reg";
++		interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&topckgen TOP_SCP_SEL>;
++		clock-names = "main";
 +	};
- };
- 
- &clock_audss {
-@@ -362,6 +379,11 @@
- };
- 
- &pinctrl_0 {
-+	gpio_power_key: power_key {
-+		samsung,pins = "gpx0-3";
-+		samsung,pin-pud = <0>;
-+	};
-+
- 	hdmi_hpd_irq: hdmi-hpd-irq {
- 		samsung,pins = "gpx3-7";
- 		samsung,pin-function = <0>;
 -- 
-2.1.4
+1.7.9.5
