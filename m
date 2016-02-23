@@ -1,68 +1,55 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: add support for gpio buttons for exynos5422-odroidxu3
-Date: Tue, 23 Feb 2016 21:02:16 +0900
-Message-ID: <CAJKOXPftm7P44Zxn9rHt1THJOX3Oxu-mg5GD7=T3se4iRe1DkA@mail.gmail.com>
-References: <1456214467-3344-1-git-send-email-linux.amoon@gmail.com>
-	<56CC167A.8040303@samsung.com>
-	<56CC194F.6080905@samsung.com>
-	<CANAwSgTRu6pb9cdA50AzBSNLS+Y+sssyc_CX7FKuV=FDYWaOsA@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v12 1/5] efi: ARM/arm64: ignore DT memory nodes instead
+ of removing them
+Date: Tue, 23 Feb 2016 12:16:49 +0000
+Message-ID: <20160223121648.GI3966@arm.com>
+References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
+ <1456192703-2274-2-git-send-email-ddaney.cavm@gmail.com>
+ <20160223115805.GB4989@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANAwSgTRu6pb9cdA50AzBSNLS+Y+sssyc_CX7FKuV=FDYWaOsA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160223115805.GB4989@leverpostej>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2016-02-23 18:17 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
-> Hi Krzysztof,
->
-> On 23 February 2016 at 14:03, Krzysztof Kozlowski
->>>>      };
->>>> +
->>>> +    gpio_keys {
->>>> +            compatible = "gpio-keys";
->>>> +            pinctrl-names = "default";
->>>> +            pinctrl-0 = <&gpio_power_key>;
->>>> +
->>>> +            power_key {
->>>> +                    interrupt-parent = <&gpx0>;
->>>> +                    interrupts = <3 IRQ_TYPE_NONE>;
->>>
->>> Hmmm.... why you specify the interrupts?
->>>
->>>> +                    gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
->>
->> Please, explain it to me. The SW2 key is connected to PWRON of PMIC.
->> However you are adding a GPIO key for external interrupt source 3
->> (XE.INT3)... which comes from PMIC's ONOB.
->>
->> It's interesting.... how does it work? The PMIC will generate ONOB
->> interrupt on PWRON low->high change (when PWRHOLD is high)?
->>
->> Best regards,
->> Krzysztof
->>
->
-> I have re-base my changes on HK dts.
-> I could not find much details for the schematic diagram.
-> I don't know much low level detains on this.
+On Tue, Feb 23, 2016 at 11:58:05AM +0000, Mark Rutland wrote:
+> On Mon, Feb 22, 2016 at 05:58:19PM -0800, David Daney wrote:
+> > From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > There are two problems with the UEFI stub DT memory node removal
+> > routine:
+> > - it deletes nodes as it traverses the tree, which happens to work
+> >   but is not supported, as deletion invalidates the node iterator;
+> > - deleting memory nodes entirely may discard annotations in the form
+> >   of additional properties on the nodes.
+> > 
+> > Since the discovery of DT memory nodes occurs strictly before the
+> > UEFI init sequence, we can simply clear the memblock memory table
+> > before parsing the UEFI memory map. This way, it is no longer
+> > necessary to remove the nodes, so we can remove that logic from the
+> > stub as well.
+> 
+> This is a little bit scary, but I guess this works.
+> 
+> My only concern is that when we get kexec, a subsequent kernel must also
+> have EFI memory map support, or things go bad for the next EFI-aware
+> kernel after that (as things like the runtime services may have been
+> corrupted by the kernel in the middle). It's difficult to fix the
+> general case later.
+> 
+> A different option would be to support status="disabled" for the memory
+> nodes, and ignore these in early_init_dt_scan_memory. That way a kernel
+> cannot use memory without first having parsed the EFI memory map, and we
+> can still get NUMA info from the disabled nodes.
 
-If I understand this correctly: you just took some vendor code,
-similar to existing code of Odroid U3, and without full understanding
-of the code nor checking with public schematics, you sent it.
+So in that case, the middle, non-EFI kernel would fail to boot?
+Realistically, once you've kexec'd a non-EFI payload, I don't think you
+can rely on the EFI state remaining intact for future EFI applications.
 
-Taking vendor stuff is okay but you need to think about it, use it as
-an example and deliver proper solution based on that. Not copy-paste.
+Is this really something we should be trying to police in the kernel?
 
-> How dose this works: This changes will initial the shudown/reboot on Ubuntu.
-> I have also tested this similar feature on Odroid U3.
-
-Great :), yes it works because ONOB interrupt from PMIC is generated
-on key press. However this is not a strictly speaking key... I don't
-really know what to do with this commit and your explanation
-(Hardkernel has such code) is not sufficient to convince me.
-
-Best regards,
-Krzysztof
+Will
