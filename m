@@ -1,21 +1,83 @@
-From: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 05/10] serial: mps2-uart: add support for early console
-Date: Tue, 23 Feb 2016 07:32:22 -0800
-Message-ID: <56CC7B86.5020307@hurleysoftware.com>
-References: <1456238068-25079-1-git-send-email-vladimir.murzin@arm.com>
- <1456238068-25079-6-git-send-email-vladimir.murzin@arm.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 2/3] clk: mvebu: add AP806 core clock driver
+Date: Tue, 23 Feb 2016 16:56:03 +0100
+Message-ID: <20160223165603.74576dca@free-electrons.com>
+References: <1455521698-7905-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1455521698-7905-3-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160222025357.GE15973@rob-hp-laptop>
+	<20160222091423.4756a579@free-electrons.com>
+	<20160222141617.GA14970@lunn.ch>
+	<20160222183203.2278.60153@quark.deferred.io>
+	<CAL_Jsq+iiUBcTdnqzFWLJ+5jPvq0rmWgBboab4xyj1dQyDQE+Q@mail.gmail.com>
+	<20160223102550.2e0cba04@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456238068-25079-6-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160223102550.2e0cba04@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yehuda Yitschak <yehuday@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2016 06:34 AM, Vladimir Murzin wrote:
-> This adds support early console for MPS2 UART which can be enabled via
-> earlycon=mps2,0x40004000
+Rob, Michael, Stephen,
 
-Reviewed-by: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+On Tue, 23 Feb 2016 10:25:50 +0100, Thomas Petazzoni wrote:
+
+> > >> Maybe add a big fat warning that the bindings are unstable, and the DT
+> > >> blob must be kept in sync with the kernel?
+> > >
+> > > +1 and feel free to blame the lack of documentation.  No one can expect
+> > > bindings to be finalized when the chip topology is not fully understood.
+> > 
+> > I can understand not understanding the full clock tree. I have "full"
+> > documentation of a Marvell chip and don't understand the clock tree
+> > fully. But I can't believe you don't have some sense of how many
+> > clocks you have to deal with. 10? 100? 1000? What I see is 2 nodes of
+> > a single register each for clocks at roughly the same address. That
+> > tells me your binding is too fine grained. If you really don't know
+> > what is right, then err on the side of a single clock provider node
+> > and don't put the clock details in DT.
+> 
+> I don't quite understand the reasoning behind this conclusion. We know
+> for sure that those two registers control only those core and ring
+> clocks. Maybe there are other registers controlling other clocks,  that
+> we don't know. But for sure, those two registers only give details
+> about those core and ring clocks, so I don't see what would be the
+> usefulness of merging that into a single DT node.
+> 
+> We would lose the fact that the relationship between the ring clocks
+> and one of the core clock is represented in the DT. Instead of having a
+> clear <&coreclk X> or <&ringclk Y> reference, we would have a
+> mysterious <&allclk XYZ> reference, which doesn't tell immediately
+> whether it's a core clock or ring clock.
+> 
+> So, while I definitely agree that a syscon is probably in order to
+> cover all the system registers, I don't see the point of having a
+> single node to cover all the clocks.
+
+So, I had a discussion with Marvell engineers and a closer look at the
+matter. It turns out that those two clock registers are in the middle
+of an area called DFX (Design for Testability), which contain registers
+to fine tune the silicon and detect manufacturing issues. This area of
+registers is most likely never going to be publicly documented, and the
+fact that those two clock-related registers were placed there was more
+an oversight than a real architecture choice.
+
+For this reason, there is in fact no real benefit in mapping the entire
+area using a syscon, and having the two DT nodes for the core clocks
+and ring clocks, mapping just their own registers is by far the
+simplest solution considering the register layout.
+
+We would prefer to keep things as proposed in terms of DT
+representation, with the understanding that the submission of the Linux
+support for this platform comes very early in the chip development
+cycle, and that as such, the DT bindings should be considered unstable.
+
+Thanks a lot,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
