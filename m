@@ -1,86 +1,33 @@
 From: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
-Subject: [PATCH 1/2] pl2x0: Add OF control of cache power management
-Date: Tue, 23 Feb 2016 16:03:38 -0600
-Message-ID: <1456265019-23900-2-git-send-email-brad.mouring@ni.com>
-References: <1456265019-23900-1-git-send-email-brad.mouring@ni.com>
+Subject: [PATCH 0/2] Control PL310 pwr_ctrl register through DT
+Date: Tue, 23 Feb 2016 16:03:37 -0600
+Message-ID: <1456265019-23900-1-git-send-email-brad.mouring@ni.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456265019-23900-1-git-send-email-brad.mouring-acOepvfBmUk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add ability to override power management bits of 310 controllers
-through OF entries. As the saved register is only applied when
-working on a supported controller, it is safe to save the settings.
 
-Additionally, to control the actual configuration of the power
-control register, remove the unconditional enabling of features in
-the l2c310_enable function.
+During some performance-oriented benchmarking on a Cortex A9
+platform, a slight performance degradation was noted on datasets
+that spanned into the L2 cache (<10%). This performance hit was
+minor, but it prompted investigation into the cause.
 
-Signed-off-by: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
-Acked-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
----
- arch/arm/mm/cache-l2x0.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+One difference in the actual PL310 configuration that was concerning
+was the enabling of two PM-related changes: Dynamic Clock Gating
+and Standby Mode Enabling. As the kernel being tested was patched
+and configured to use the PREEMPT_RT patchset, it was desired to
+disable these settings for our use-case since anything PM can
+(and usually does) impact determinism.
 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index d6e43d8..42f4ad1 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -639,11 +639,6 @@ static void __init l2c310_enable(void __iomem *base, u32 aux, unsigned num_lock)
- 		aux &= ~(L310_AUX_CTRL_FULL_LINE_ZERO | L310_AUX_CTRL_EARLY_BRESP);
- 	}
- 
--	/* r3p0 or later has power control register */
--	if (rev >= L310_CACHE_ID_RTL_R3P0)
--		l2x0_saved_regs.pwr_ctrl = L310_DYNAMIC_CLK_GATING_EN |
--						L310_STNDBY_MODE_EN;
--
- 	/*
- 	 * Always enable non-secure access to the lockdown registers -
- 	 * we write to them as part of the L2C enable sequence so they
-@@ -1103,6 +1098,7 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 	u32 filter[2] = { 0, 0 };
- 	u32 assoc;
- 	u32 prefetch;
-+	u32 power;
- 	u32 val;
- 	int ret;
- 
-@@ -1220,6 +1216,29 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 	}
- 
- 	l2x0_saved_regs.prefetch_ctrl = prefetch;
-+
-+	power = l2x0_saved_regs.pwr_ctrl;
-+
-+	ret = of_property_read_u32(np, "arm,dynamic-clock-gating", &val);
-+	if (ret == 0) {
-+		if (val)
-+			power |= L310_DYNAMIC_CLK_GATING_EN;
-+		else
-+			power &= ~L310_DYNAMIC_CLK_GATING_EN;
-+	} else if (ret != -EINVAL) {
-+		pr_err("L2C-310 OF dynamic-clock-gating property value is missing\n");
-+	}
-+	ret = of_property_read_u32(np, "arm,standby-mode", &val);
-+	if (ret == 0) {
-+		if (val)
-+			power |= L310_STNDBY_MODE_EN;
-+		else
-+			power &= ~L310_STNDBY_MODE_EN;
-+	} else if (ret != -EINVAL) {
-+		pr_err("L2C-310 OF standby-mode property value is missing\n");
-+	}
-+
-+	l2x0_saved_regs.pwr_ctrl = power;
- }
- 
- static const struct l2c_init_data of_l2c310_data __initconst = {
--- 
-2.7.1
+Making these changes resulted in a modest performance improvement
+and those wonderful warm-n-fuzzies regarding determinism and enabling
+system control without needing to change the kernel.
 
+In the following set, there's the actual change to control these
+features given DT presence of a couple of new bindings and the
+documenation to accompany those changes. Thanks!
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
