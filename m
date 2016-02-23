@@ -1,46 +1,92 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] dmaengine: pxa_dma: fix the maximum requestor line
-Date: Tue, 23 Feb 2016 08:13:57 +0100
-Message-ID: <877fhvx5je.fsf@belgarion.home>
-References: <1455569868-25017-1-git-send-email-robert.jarzmik@free.fr>
-	<1455569868-25017-4-git-send-email-robert.jarzmik@free.fr>
-	<20160223031335.GJ17690@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v3 1/2] devicetree: Add UCS1002 USB Port Power Controller binding
+Date: Tue, 23 Feb 2016 08:27:04 +0100
+Message-ID: <1456212425-5937-2-git-send-email-enric.balletbo@collabora.com>
+References: <1456212425-5937-1-git-send-email-enric.balletbo@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160223031335.GJ17690@localhost> (Vinod Koul's message of "Tue,
-	23 Feb 2016 08:43:36 +0530")
+In-Reply-To: <1456212425-5937-1-git-send-email-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Martyn Welch <martyn.welch-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> writes:
+The UCS1002-2 provides a USB port power switch for precise control of up
+to 2.5 amperes continuous current.
 
-> On Mon, Feb 15, 2016 at 09:57:48PM +0100, Robert Jarzmik wrote:
->> The current number of requestor lines is limited to 31. This was an
->> error of a previous commit, as this number is platform dependent, and is
->> actually :
->>  - for pxa25x: 40 requestor lines
->>  - for pxa27x: 75 requestor lines
->>  - for pxa3xx: 100 requestor lines
->> 
->> The previous testing did not reveal the faulty constant as on pxa[23]xx
->> platforms, only camera, MSL and USB are above requestor 32, and in these
->> only the camera has a driver using dma.
->> 
->> Fixes: e87ffbdf0697 ("dmaengine: pxa_dma: fix the no-requestor case")
->> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
->
-> Acked-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
->
-> Which tree is this targetted thru?
-PXA for-next tree, my tree, once I gather the acks.
+You can add support to your board with current binding.
 
-Cheers.
+Example:
 
+    ucs1002: ucs1002@57 {
+             compatible = "microchip,ucs1002";
+             reg = <0x57>;
+    };
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+Changes since v2:
+ - Rename microchip,current-limit to microchip,limit-microamps (Rob Herring)
+Changes since v1:
+ - Fix units, are microamps (Rob Herring)
+ - Remove microchip,pin-ignore as is implied by absence of gpio properties (Rob
+   Herring)
+ - Group control gpios instead of use separate gpios. All control gpios must be
+   set together (Enric Balletbo)
+
+ .../devicetree/bindings/power/ucs1002.txt          | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
+
+diff --git a/Documentation/devicetree/bindings/power/ucs1002.txt b/Documentation/devicetree/bindings/power/ucs1002.txt
+new file mode 100644
+index 0000000..31f6e49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/ucs1002.txt
+@@ -0,0 +1,41 @@
++UCS1002-2 Programmable USB Port Power Controller with Charger Emulation bindings
++
++Required properties:
++- compatible: "microchip,ucs1002"
++- reg: integer, the I2C address of the device.
++
++Optional properties:
++- interrupt-parent: the phandle of the interrupt controller that services
++    interrupts for this device.
++- interrupts: interrupt specifiers for two interrupt sources.
++    - First interrupt specifier is for A_DET interrupt.
++    - Second interrupt specifier is for ALERT interrupt.
++- microchip,limit-microamps: integer, maximum current in microamps. Note that the
++    default value is based on the resistor on the COMM_SEL/ILIM pin and this
++    value cannot be changed to be higher than hardware set value. Accepted
++    values are: 500000, 900000, 1000000, 1200000, 1500000, 1800000, 2000000 and
++    2500000 (microamps).
++- control-gpios = list of gpios used as pin states when determining the active mode
++    selection and power state. Must provide EM_EN, M1, M2 and PWR_EN gpio mapping.
++    If this property is not set it uses I2C for configuration.
++
++Example (polling):
++
++	ucs1002: ucs1002@57 {
++		compatible = "microchip,ucs1002";
++		reg = <0x57>;
++		microchip,limit-microamps = <2000000>;
++	};
++
++Example (interrupts + control gpios):
++
++	ucs1002: ucs1002@57 {
++		compatible = "microchip,ucs1002";
++		reg = <0x57>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <30 0>, <31 0>;
++		control-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>,	/* EM_EN */
++				<&gpio0 3 GPIO_ACTIVE_HIGH>,	/* M1 */
++				<&gpio1 17 GPIO_ACTIVE_HIGH>,	/* M2 */
++				<&gpio1 19 0>;			/* PWR_EN */
++	};
 -- 
-Robert
+2.1.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
