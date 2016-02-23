@@ -1,69 +1,109 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: msm8916: Move smem below hwlock
-Date: Tue, 23 Feb 2016 13:03:56 -0600
-Message-ID: <20160223190356.GA17346@hector.attlocal.net>
-References: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
- <56CC970B.4080602@linaro.org>
- <56CCA95C.9070207@linaro.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] Revert "[media] tvp5150: document input connectors DT bindings"
+Date: Tue, 23 Feb 2016 21:11:33 +0200
+Message-ID: <4415195.KUYSOd2PzY@avalon>
+References: <1456253288-397-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56CCA95C.9070207-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456253288-397-1-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 08:47:56PM +0200, Georgi Djakov wrote:
-> On 23.02.16 =D0=B3. 19:29, Srinivas Kandagatla wrote:
-> >=20
-> >=20
-> > On 23/02/16 17:21, Georgi Djakov wrote:
-> >> When the SMEM is probed it defers as it depends on the hardware lo=
-ck, which
-> >> is not available yet. But the SMD bus and RPM regulators and clock=
-s depend
-> >> on SMEM and they defer too. The problem with this is that the orde=
-r of
-> >> registering the devices is not optimal and also we may end with me=
-ssed
-> >> up serial console as the RPM clocks are not registered yet..
-> > I noticed the same issue but was wondering why would we end up with=
- messed up serial console?
-> >=20
-> > Could you add more details on why serial console is messed up?
-> >=20
-> > I thought, serial driver has nothing to do with the rpm clocks dire=
-ctly!
-> >=20
->=20
-> If we don't have the rpm clocks registered, the uart clock is an orph=
-an
-> and when clk_get_rate() is called on orphan clocks it returns 0 as ra=
-te.
-> In our case the msm_serial driver calls clk_get_rate() and gets 0 rat=
-e
-> as the parent rpm clock has not registered yet. The result is that th=
-e
-> baudrate is set incorrectly.
+Hi Javier,
 
-This isn't a probe defer issue w/ the SMEM and hwspinlock.  That works =
-properly.
-This is an issue with the msm_serial either not probe deferring to wait=
- for the
-rpm clocks or not handling the case of the clk framework giving us a 'b=
-ogus'
-clock.  Can we queue off the clk_get_rate being 0 to probe defer for th=
-e rpm
-clocks? (although that is hacky).
+Thank you for the patch.
 
+On Tuesday 23 February 2016 15:48:08 Javier Martinez Canillas wrote:
+> This reverts commit 82c2ffeb217a ("[media] tvp5150: document input
+> connectors DT bindings") since the DT binding is too device driver
+> specific and should instead be more generic and use the bindings
+> in Documentation/devicetree/bindings/display/connector/ and linked
+> to the tvp5150 using the OF graph port and endpoints.
+> 
+> There are still ongoing discussions about how the input connectors
+> will be supported by the Media Controller framework so until that
+> is settled, it is better to revert the connectors portion of the
+> bindings to avoid known to be broken bindings docs to hit mainline.
+> 
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> ---
+> 
+>  .../devicetree/bindings/media/i2c/tvp5150.txt      | 43 ------------------
+>  1 file changed, 43 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt index
+> daa20e43a8e3..8c0fc1a26bf0 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
+> @@ -12,32 +12,6 @@ Optional Properties:
+>  - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
+>  - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
+> 
+> -Optional nodes:
+> -- connectors: The input connectors of tvp5150 have to be defined under
+> -  a subnode name "connectors" using the following format:
+> -
+> -	input-connector-name {
+> -		input connector properties
+> -	};
+> -
+> -Each input connector must contain the following properties:
+> -
+> -	- label: a name for the connector.
+> -	- input: the input connector.
+> -
+> -The possible values for the "input" property are:
+> -	0: Composite0
+> -	1: Composite1
+> -	2: S-Video
+> -
+> -and on a tvp5150am1 and tvp5151 there is another:
+> -	4: Signal generator
+> -
+> -The list of valid input connectors are defined in
+> dt-bindings/media/tvp5150.h -header file and can be included by device tree
+> source files.
+> -
+> -Each input connector can be defined only once.
+> -
+>  The device node must contain one 'port' child node for its digital output
+>  video port, in accordance with the video interface bindings defined in
+>  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> @@ -62,23 +36,6 @@ Example:
+>  		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
+>  		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
+> 
+> -		connectors {
+> -			composite0 {
+> -				label = "Composite0";
+> -				input = <TVP5150_COMPOSITE0>;
+> -			};
+> -
+> -			composite1 {
+> -				label = "Composite1";
+> -				input = <TVP5150_COMPOSITE1>;
+> -			};
+> -
+> -			s-video {
+> -				label = "S-Video";
+> -				input = <TVP5150_SVIDEO>;
+> -			};
+> -		};
+> -
+>  		port {
+>  			tvp5150_1: endpoint {
+>  				remote-endpoint = <&ccdc_ep>;
+
+-- 
 Regards,
 
-Andy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
