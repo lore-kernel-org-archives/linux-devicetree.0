@@ -1,29 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] thermal: exynos: List vtmu-supply as optional
- property in DT binding
-Date: Tue, 23 Feb 2016 14:26:12 -0600
-Message-ID: <20160223202612.GA10733@rob-hp-laptop>
-References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
- <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v2 3/7] QE: Add uqe_serial document to bindings
+Date: Tue, 23 Feb 2016 14:27:13 -0600
+Message-ID: <1456259233.5360.25.camel@buserror.net>
+References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
+	 <1455757572-44955-3-git-send-email-qiang.zhao@nxp.com>
+	 <20160223202342.GA9008@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160223202342.GA9008@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Zhao Qiang <qiang.zhao@nxp.com>
+Cc: leoyang.li@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 03:19:09PM -0300, Javier Martinez Canillas wrote:
-> The Exynos Thermal Management Unit binding says that the vtmu-supply
-> is optional but is listed in the required properties section. Add an
-> optional properties section and move the regulator property there.
+On Tue, 2016-02-23 at 14:23 -0600, Rob Herring wrote:
+> On Thu, Feb 18, 2016 at 09:06:08AM +0800, Zhao Qiang wrote:
+> > Add uqe_serial document to
+> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > 
+> > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> > ---
+> > Changes for v2
+> > 	- modify tx/rx-clock-name specification
+> > 
+> >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt        | 19
+> > +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > new file mode 100644
+> > index 0000000..436c71c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > @@ -0,0 +1,19 @@
+> > +* Serial
+> > +
+> > +Currently defined compatibles:
+> > +- ucc_uart
+> > +
+> > +Properties for ucc_uart:
+> > +port-number : port number of UCC-UART
 > 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> ---
+> How is this used?
 > 
->  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
+> > +tx/rx-clock-name : should be "brg1"-"brg16" for internal clock source,
+> > +		   should be "clk1"-"clk28" for external clock source.
+> 
+> Perhaps you should be using the clock binding here and in other 
+> bindings?
 
-Acked-by: Rob Herring <robh@kernel.org>
+These properties are required by the underlying UCC binding
+(Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/ucc.txt) and predate
+the clock binding.
+
+-Scott
