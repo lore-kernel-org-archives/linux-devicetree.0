@@ -1,59 +1,43 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 1/5] efi: ARM/arm64: ignore DT memory nodes instead of
- removing them
-Date: Tue, 23 Feb 2016 13:20:10 +0100
-Message-ID: <CAKv+Gu8fOKqLrnbre7sHko+hPd3wq_O6U5Ev27tN3zEc7W8Mww@mail.gmail.com>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
-	<1456192703-2274-2-git-send-email-ddaney.cavm@gmail.com>
-	<20160223115805.GB4989@leverpostej>
-	<20160223121648.GI3966@arm.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/5] Add USB2.0 host support for R-Car H3
+Date: Tue, 23 Feb 2016 21:28:31 +0900
+Message-ID: <1456230516-5112-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160223121648.GI3966-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 23 February 2016 at 13:16, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Feb 23, 2016 at 11:58:05AM +0000, Mark Rutland wrote:
->> On Mon, Feb 22, 2016 at 05:58:19PM -0800, David Daney wrote:
->> > From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >
->> > There are two problems with the UEFI stub DT memory node removal
->> > routine:
->> > - it deletes nodes as it traverses the tree, which happens to work
->> >   but is not supported, as deletion invalidates the node iterator;
->> > - deleting memory nodes entirely may discard annotations in the form
->> >   of additional properties on the nodes.
->> >
->> > Since the discovery of DT memory nodes occurs strictly before the
->> > UEFI init sequence, we can simply clear the memblock memory table
->> > before parsing the UEFI memory map. This way, it is no longer
->> > necessary to remove the nodes, so we can remove that logic from the
->> > stub as well.
->>
->> This is a little bit scary, but I guess this works.
->>
->> My only concern is that when we get kexec, a subsequent kernel must also
->> have EFI memory map support, or things go bad for the next EFI-aware
->> kernel after that (as things like the runtime services may have been
->> corrupted by the kernel in the middle). It's difficult to fix the
->> general case later.
->>
->> A different option would be to support status="disabled" for the memory
->> nodes, and ignore these in early_init_dt_scan_memory. That way a kernel
->> cannot use memory without first having parsed the EFI memory map, and we
->> can still get NUMA info from the disabled nodes.
->
-> So in that case, the middle, non-EFI kernel would fail to boot?
-> Realistically, once you've kexec'd a non-EFI payload, I don't think you
-> can rely on the EFI state remaining intact for future EFI applications.
->
-> Is this really something we should be trying to police in the kernel?
->
+This patch set is based on renesas.git / renesas-devel-20160223-v4.5-rc5 tag.
+(commit id = d0475e2b81af0f6a4e7a9785662173b5a995a164)
 
-Well, we could add entries to /reserved-memory in the stub for all the
-regions UEFI cares about, that would probably be sufficient to fix
-this case.
+This patch set needs the following patches to use the usb 2.0 host:
+http://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/commit/?h=testing/next&id=cff0fef33d77bd7e98463029e5d0a4191d9bbb95
+http://git.kernel.org/cgit/linux/kernel/git/kishon/linux-phy.git/commit/?h=next&id=c7af45e64087a4bebef955f0d005723c35f28176
+http://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git/commit/?h=sh-pfc-for-v4.6&id=76250a6c89673f63e37c59772e97cc72f4c8097b
+
+Yesterday, I sent the following patch set as RFC.
+http://thread.gmane.org/gmane.linux.kernel.renesas-soc/1087
+
+Today's patch set is related to the yesterday's patches. But, today's
+patch set is:
+ - not included about HSUSB node and USB 2.0 host channel 0 enabling because
+   these are under construction for now.
+ - included about defconfig for phy-rcar-gen3-usb2 driver.
+
+Yoshihiro Shimoda (5):
+  arm64: dts: r8a7795: add usb2_phy device nodes
+  arm64: dts: r8a7795: add USB2.0 Host (EHCI/OHCI) device nodes
+  arm64: dts: salvator-x: enable usb2_phy of channel 1 and 2
+  arm64: dts: salvator-x: enable USB 2.0 Host of channel 1 and 2
+  arm64: defconfig: Add Renesas R-Car Gen3 USB 2.0 phy driver support
+
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dts | 40 +++++++++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 94 ++++++++++++++++++++++
+ arch/arm64/configs/defconfig                       |  1 +
+ 3 files changed, 135 insertions(+)
+
+-- 
+1.9.1
