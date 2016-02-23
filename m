@@ -1,145 +1,88 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v9 2/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Tue, 23 Feb 2016 10:14:38 +0100
-Message-ID: <1456218878.3387.9.camel@pengutronix.de>
-References: <1456127280-23275-1-git-send-email-xuejiancheng@huawei.com>
-	 <1456127280-23275-3-git-send-email-xuejiancheng@huawei.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH] ARM: dts: add support for gpio buttons for exynos5422-odroidxu3
+Date: Tue, 23 Feb 2016 14:47:18 +0530
+Message-ID: <CANAwSgTRu6pb9cdA50AzBSNLS+Y+sssyc_CX7FKuV=FDYWaOsA@mail.gmail.com>
+References: <1456214467-3344-1-git-send-email-linux.amoon@gmail.com>
+ <56CC167A.8040303@samsung.com> <56CC194F.6080905@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456127280-23275-3-git-send-email-xuejiancheng@huawei.com>
+In-Reply-To: <56CC194F.6080905@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@huawei.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Krzysztof,
 
-Am Montag, den 22.02.2016, 15:47 +0800 schrieb Jiancheng Xue:
-> The CRG(Clock and Reset Generator) block provides clock
-> and reset signals for other modules in hi3519 soc.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-[...]
-> diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
-> new file mode 100644
-> index 0000000..50e00e7
-> --- /dev/null
-> +++ b/drivers/clk/hisilicon/reset.c
-> @@ -0,0 +1,124 @@
-> +/*
-> + * Hisilicon Reset Controller Driver
-> + *
-> + * Copyright (c) 2015-2016 HiSilicon Technologies Co., Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/slab.h>
-> +#include <linux/spinlock.h>
-> +
-> +#define	HISI_RESET_BIT_MASK	0x1f
-> +#define	HISI_RESET_OFFSET_SHIFT	8
-> +#define	HISI_RESET_OFFSET_MASK	0xffff00
-> +
-> +struct hisi_reset_controller {
-> +	spinlock_t	lock;
-> +	void __iomem	*membase;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +
-> +#define to_hisi_reset_controller(rcdev)  \
-> +	container_of(rcdev, struct hisi_reset_controller, rcdev)
-> +
-> +static int hisi_reset_of_xlate(struct reset_controller_dev *rcdev,
-> +			const struct of_phandle_args *reset_spec)
-> +{
-> +	u32 offset;
-> +	u8 bit;
-> +
-> +	if (WARN_ON(reset_spec->args_count != rcdev->of_reset_n_cells))
-> +		return -EINVAL;
+On 23 February 2016 at 14:03, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On 23.02.2016 17:21, Krzysztof Kozlowski wrote:
+>> On 23.02.2016 17:01, Anand Moon wrote:
+>>> Add support for gpio-based button on Odroid-XU3 boards
+>>> for reboot/poweroff feature.
+>>>
+>>> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+>>> ---
+>>> changes rebase based on linux next-20160222.
+>>>
+>>> Tested on Odroid-XU4
+>>>
+>>> dmesg output.
+>>> [    3.286068] of_get_named_gpiod_flags: parsed 'gpios' property of node '/gpio_keys/power_key[0]' - status (0)
+>>> [    3.286206] gpio-11 (power key): gpiod_set_debounce: missing set() or set_debounce() operations
+>>> [    3.286600] input: gpio_keys as /devices/platform/gpio_keys/input/input0
+>>> ---
+>>>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 22 ++++++++++++++++++++++
+>>>  1 file changed, 22 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>> index 1bd507b..db9770b 100644
+>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+>>> @@ -11,6 +11,7 @@
+>>>  */
+>>>
+>>>  #include <dt-bindings/clock/samsung,s2mps11.h>
+>>> +#include <dt-bindings/input/input.h>
+>>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>>  #include <dt-bindings/gpio/gpio.h>
+>>>  #include <dt-bindings/sound/samsung-i2s.h>
+>>> @@ -54,6 +55,22 @@
+>>>              #cooling-cells = <2>;
+>>>              cooling-levels = <0 130 170 230>;
+>>>      };
+>>> +
+>>> +    gpio_keys {
+>>> +            compatible = "gpio-keys";
+>>> +            pinctrl-names = "default";
+>>> +            pinctrl-0 = <&gpio_power_key>;
+>>> +
+>>> +            power_key {
+>>> +                    interrupt-parent = <&gpx0>;
+>>> +                    interrupts = <3 IRQ_TYPE_NONE>;
+>>
+>> Hmmm.... why you specify the interrupts?
+>>
+>>> +                    gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
+>
+> Please, explain it to me. The SW2 key is connected to PWRON of PMIC.
+> However you are adding a GPIO key for external interrupt source 3
+> (XE.INT3)... which comes from PMIC's ONOB.
+>
+> It's interesting.... how does it work? The PMIC will generate ONOB
+> interrupt on PWRON low->high change (when PWRHOLD is high)?
+>
+> Best regards,
+> Krzysztof
+>
 
-This check now has been moved to the core in e677774f5026 ("reset: Move
-DT cell size check to the core"). It is not necessary anymore to check
-this in the .of_xlate callback.
+I have re-base my changes on HK dts.
+I could not find much details for the schematic diagram.
+I don't know much low level detains on this.
 
-> +	offset = (reset_spec->args[0] << HISI_RESET_OFFSET_SHIFT)
-> +		& HISI_RESET_OFFSET_MASK;
-> +	bit = reset_spec->args[1] & HISI_RESET_BIT_MASK;
-> +	return (offset | bit);
-> +}
-> +
-> +static int hisi_reset_assert(struct reset_controller_dev *rcdev,
-> +			      unsigned long id)
-> +{
-> +	struct hisi_reset_controller *rstc = to_hisi_reset_controller(rcdev);
-> +	unsigned long flags;
-> +	u32 offset, reg;
-> +	u8 bit;
-> +
-> +	offset = (id & HISI_RESET_OFFSET_MASK) >> HISI_RESET_OFFSET_SHIFT;
-> +	bit = id & HISI_RESET_BIT_MASK;
-> +
-> +	spin_lock_irqsave(&rstc->lock, flags);
-> +
-> +	reg = readl(rstc->membase + offset);
-> +	writel(reg | BIT(bit), rstc->membase + offset);
-> +
-> +	spin_unlock_irqrestore(&rstc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int hisi_reset_deassert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	struct hisi_reset_controller *rstc = to_hisi_reset_controller(rcdev);
-> +	unsigned long flags;
-> +	u32 offset, reg;
-> +	u8 bit;
-> +
-> +	offset = (id & HISI_RESET_OFFSET_MASK) >> HISI_RESET_OFFSET_SHIFT;
-> +	bit = id & HISI_RESET_BIT_MASK;
-> +
-> +	spin_lock_irqsave(&rstc->lock, flags);
-> +
-> +	reg = readl(rstc->membase + offset);
-> +	writel(reg & ~BIT(bit), rstc->membase + offset);
-> +
-> +	spin_unlock_irqrestore(&rstc->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops hisi_reset_ops = {
-> +	.assert		= hisi_reset_assert,
-> +	.deassert	= hisi_reset_deassert,
-> +};
+How dose this works: This changes will initial the shudown/reboot on Ubuntu.
+I have also tested this similar feature on Odroid U3.
 
-These can be made const after commit 203d4f347d86 ("reset: Make
-reset_control_ops const") is merged. Since this is to be merged through
-the clock tree, both change could be made later.
-
-For the reset driver part,
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-regards
-Philipp
+Best Regards.
+-Anand Moon
