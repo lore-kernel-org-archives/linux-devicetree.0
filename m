@@ -1,132 +1,46 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ehci-platform: Add support for
- controllers with multiple reset lines
-Date: Wed, 24 Feb 2016 14:22:05 +0100
-Message-ID: <56CDAE7D.6000204@redhat.com>
-References: <1456312517-24211-1-git-send-email-hdegoede@redhat.com>
- <1456312517-24211-2-git-send-email-hdegoede@redhat.com>
- <56CD960D.3000900@ti.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Subject: Re: [linux-sunxi] [PATCH 2/2] ARM: dts: sun8i: Enable ir receiver on
+ orangepi pc
+Date: Wed, 24 Feb 2016 14:26:37 +0100
+Message-ID: <56CDAF8D.70501@redhat.com>
+References: <1456268597-13692-1-git-send-email-hdegoede@redhat.com>
+ <1456268597-13692-3-git-send-email-hdegoede@redhat.com>
+ <20160224121640.GA25658@box2.japko.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCG5W23AKGQE2A2B4GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <56CD960D.3000900-l0cyMroinI0@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160224121640.GA25658-xLeyfSbClftGit24Ens98Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Adamski <k@japko.eu>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 24-02-16 12:37, Roger Quadros wrote:
-> Hi,
->
-> On 24/02/16 13:15, Hans de Goede wrote:
->> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+On 24-02-16 13:16, Krzysztof Adamski wrote:
+> On Wed, Feb 24, 2016 at 12:03:17AM +0100, Hans de Goede wrote:
+>> Enable the ir receiver found on the orangepi pc board.
 >>
->> At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
->> reset lines, the controller will not initialize while the reset for
->> its companion is still asserted, which means we need to de-assert
->> 2 resets for the controller to work.
->>
->> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 >> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 >> ---
->> Changes in v2:
->> -Use the new reset_control_[de]assert_shared reset-controller functions
->> Changes in v3:
->> -Adjust for changes to shared-reset reset-controller functions
->> ---
->>   Documentation/devicetree/bindings/usb/usb-ehci.txt |  2 +-
->>   drivers/usb/host/ehci-platform.c                   | 41 ++++++++++++----------
->>   2 files changed, 24 insertions(+), 19 deletions(-)
+>> arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 6 ++++++
+>> 1 file changed, 6 insertions(+)
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> index a12d601..0701812 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
->> @@ -18,7 +18,7 @@ Optional properties:
->>    - clocks : a list of phandle + clock specifier pairs
->>    - phys : phandle + phy specifier pair
->>    - phy-names : "usb"
->> - - resets : phandle + reset specifier pair
->> + - resets : a list of phandle + reset specifier pairs
->>
->>   Example (Sequoia 440EPx):
->>       ehci@e0000300 {
->> diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
->> index bd7082f2..3f195ba 100644
->> --- a/drivers/usb/host/ehci-platform.c
->> +++ b/drivers/usb/host/ehci-platform.c
->> @@ -39,11 +39,12 @@
->>
->>   #define DRIVER_DESC "EHCI generic platform driver"
->>   #define EHCI_MAX_CLKS 3
->> +#define EHCI_MAX_RESETS 2
->>   #define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
->>
->>   struct ehci_platform_priv {
->>   	struct clk *clks[EHCI_MAX_CLKS];
->> -	struct reset_control *rst;
->> +	struct reset_control *resets[EHCI_MAX_RESETS];
->>   	struct phy **phys;
->>   	int num_phys;
->>   	bool reset_on_resume;
->> @@ -149,7 +150,7 @@ static int ehci_platform_probe(struct platform_device *dev)
->>   	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
->>   	struct ehci_platform_priv *priv;
->>   	struct ehci_hcd *ehci;
->> -	int err, irq, phy_num, clk = 0;
->> +	int err, irq, phy_num, clk = 0, rst = 0;
->>
->>   	if (usb_disabled())
->>   		return -ENODEV;
->> @@ -232,18 +233,22 @@ static int ehci_platform_probe(struct platform_device *dev)
->>   				break;
->>   			}
->>   		}
->> -	}
->>
->> -	priv->rst = devm_reset_control_get_optional(&dev->dev, NULL);
->> -	if (IS_ERR(priv->rst)) {
->> -		err = PTR_ERR(priv->rst);
->> -		if (err == -EPROBE_DEFER)
->> -			goto err_put_clks;
->> -		priv->rst = NULL;
->> -	} else {
->> -		err = reset_control_deassert(priv->rst);
->> -		if (err)
->> -			goto err_put_clks;
->> +		for (rst = 0; rst < EHCI_MAX_RESETS; rst++) {
->> +			priv->resets[rst] =
->> +				devm_reset_control_get_shared_by_index(
->> +								&dev->dev, rst);
->> +			if (IS_ERR(priv->resets[rst])) {
->> +				err = PTR_ERR(priv->resets[rst]);
->> +				if (err == -EPROBE_DEFER)
->> +					goto err_reset;
->> +				priv->resets[rst] = NULL;
->> +				break;
->> +			}
->> +			err = reset_control_deassert(priv->resets[rst]);
->> +			if (err)
->> +				goto err_reset;
->> +		}
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
 >
-> Why is this code within "if (dev->of.node)" ?
-> Previous code looked like it worked for non-DT boots as well.
+> I don't think this file is avaiable in mainline. Wouldn't it be better to use patch against existing orangepi-plus dts file?
+>
+> Otherwise I tested this patch and it works fine on my Orangepi PC (some data is splitted out when reading /dev/input/event0).
 
-Because devm_reset_control_get_shared_by_index() only works for DT platforms
-(it is safe to call on non DT platforms, it will just always return -EINVAL
-there) and the old reset paths were ever only used / only ever worked with
-DT too.
+Ah yes, that is my bad, I've been waiting with upstreaming an orangepi-pc dts until all the
+usb bits are upstream as my dts has usb host support enabled, I should probably split
+out the usb-host support and upstream the rest already.
 
 Regards,
 
 Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
