@@ -1,131 +1,144 @@
 From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH 3/4] gpio: dt-bindings: Declare gpio-hog optional for GPIO subnodes
-Date: Wed, 24 Feb 2016 08:01:47 +0100
-Message-ID: <1813679.JaFRxta3v8@adelgunde>
-References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de> <1456214089-13954-3-git-send-email-mpa@pengutronix.de> <20160223232534.GA29637@rob-hp-laptop>
+Subject: Re: [PATCH 4/4] gpio: Add parsing of DT GPIO line-names
+Date: Wed, 24 Feb 2016 08:03:09 +0100
+Message-ID: <4005432.tnZmp1QKdV@adelgunde>
+References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de> <1456214089-13954-4-git-send-email-mpa@pengutronix.de> <CACRpkdb3gEZt5-25mi5pPvDePzLzNHfFRpjKMOW_-WfcBBLtUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1730085.g3PcDT12sk"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; boundary="nextPart3344746.XlzoLCETQz"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160223232534.GA29637@rob-hp-laptop>
+In-Reply-To: <CACRpkdb3gEZt5-25mi5pPvDePzLzNHfFRpjKMOW_-WfcBBLtUQ@mail.gmail.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---nextPart1730085.g3PcDT12sk
+--nextPart3344746.XlzoLCETQz
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="us-ascii"
 
-Hi,
-
-On Tuesday, February 23, 2016 05:25:34 PM Rob Herring wrote:
-> On Tue, Feb 23, 2016 at 08:54:48AM +0100, Markus Pargmann wrote:
-> > Reuse the GPIO hogging DT bindings for more generic specifications =
-of
-> > the GPIO. Therefore gpio-hog is declared optional.
+On Tuesday, February 23, 2016 02:36:42 PM Linus Walleij wrote:
+> On Tue, Feb 23, 2016 at 8:54 AM, Markus Pargmann <mpa@pengutronix.de>=
+ wrote:
 >=20
-> Before extending this binding further, we need to consider other case=
-s=20
-> that have been discussed recently such as gpio switch binding and=20
-> whether it should fit in with this.
+> > This patch reuses the DT bindings that are already in place for the=
 
-I tried to discuss my ideas and issues with the gpio-switch bindings
-already some time ago, unfortunately the discussion didn't proceed:
-=09http://thread.gmane.org/gmane.linux.kernel/2100574
-
->=20
-> My biggest issue with this binding is whether the DT changes because=20=
-
-> today we don't have a driver for some GPIO line and tomorrow we do.
-
-This patch is just about defining that we can give GPIO lines names. In=
-
-the best case this name refers to the line name on the schematic. In th=
-e
-worst case it is some arbitrary name. In both cases it should not
-influence any driver that is trying to use this GPIO.
-
-gpio-hogging indeed could cause problems for future drivers as these
-GPIOs are not available for any drivers. But gpio-hogging is already
-defined for quite some time in the DT bindings.
-Also I would assume that for most new drivers new DT bindings are
-created so that it already requires a DT update together with a kernel
-update.
-
->=20
-> That said, some specific comments below:
->=20
+> > gpio-hogging mechanism. These bindings define line-name properties =
+for
+> > GPIOs inside the gpio-chip device node.
+> >
+> > of_parse_own_gpio() now sets the gpio descriptor name using the new=
+ly
+> > introduced gpiod_set_name(). It checks for name collisions within a=
+ GPIO
+> > chip to avoid GPIOs with the same name that are exported over the s=
+ame
+> > GPIO character device.
+> >
+> > The GPIO flags that describe the GPIO state are not required anymor=
+e in
+> > general but are checked if the gpio-hog property was found.
+> >
+> > This can be used to use the line names from the schematic. Example =
+of lsgpio on
+> > a modified i.MX6s Riotboard:
+> >
+> >         GPIO chip: gpiochip0, "209c000.gpio", 32 GPIO lines
+> >                 line 0: unnamed unlabeled
+> >                 line 1: unnamed unlabeled
+> >                 line 2: SD2_WP "wp" [kernel output open-drain]
+> >                 line 3: GPIO_3_CLK unlabeled
+> >                 line 4: SD2_CD "cd" [kernel output open-drain]
+> >                 ...
+> >
+> > The modified DT:
+> >          &gpio1 {
+> >                 sd2_wp {
+> >                         gpios =3D <2 0>;
+> >                         line-name =3D "SD2_WP";
+> >                 };
+> >
+> >                 gpio_3_clk {
+> >                         gpios =3D <3 0>;
+> >                         line-name =3D "GPIO_3_CLK";
+> >                 };
+> >
+> >                 sd2_cd {
+> >                         gpios =3D <4 0>;
+> >                         line-name =3D "SD2_CD";
+> >                 };
+> >         };
+> >
 > > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> > ---
-> >  Documentation/devicetree/bindings/gpio/gpio.txt | 28 +++++++++++++=
-+++++-------
-> >  1 file changed, 21 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Docu=
-mentation/devicetree/bindings/gpio/gpio.txt
-> > index 069cdf6f9dac..820898e0649c 100644
-> > --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> > +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> > @@ -155,13 +155,25 @@ gpio-controller@00000000 {
-> >  =09ngpios =3D <18>;
-> >  }
-> > =20
-> > -The GPIO chip may contain GPIO hog definitions. GPIO hogging is a =
-mechanism
-> > -providing automatic GPIO request and configuration as part of the
-> > -gpio-controller's driver probe function.
-> > +The GPIO chip may contain subnodes describing specific GPIOs of th=
-is
-> > +controller. These GPIO nodes can be used to define GPIO hogging or=
- define GPIO
-> > +names.
-> > +GPIO hogging is a mechanism providing automatic GPIO request and c=
-onfiguration
-> > +as part of the gpio-controller's driver probe function.
 >=20
-> Linux driver details don't belong in binding descriptions.
-
-This last sentence was only moved a bit. So perhaps this should be
-changed in a separate patch.
-
+> NICE! And this is what I want too.
 >=20
-> > -Each GPIO hog definition is represented as a child node of the GPI=
-O controller.
-> > +Each GPIO node consists of the following properties:
-> >  Required properties:
-> > +- gpios:      Store the GPIO information (id, flags, ...). Shall c=
-ontain the
-> > +=09      number of cells specified in its parent node (GPIO contro=
-ller
-> > +=09      node).
+> We need to remove some rough edges:
+>=20
+> > +static struct gpio_desc *gpiodev_find_gpiod_by_name(struct gpio_de=
+vice *gdev,
+> > +                                                   const char *nam=
+e)
+> > +{
+> > +       int i;
 > > +
-> > +Optional properties:
-> > +- line-name:  The GPIO name. If not present the node name is used.=
-
->=20
-> I'd like to deprecate line-name in favor of the standard property=20
-> for user visible names "label".
->=20
-> >  - gpio-hog:   A property specifying that this child node represent=
- a GPIO hog.
+> > +       for (i =3D 0; i !=3D gdev->ngpio; ++i) {
+> > +               struct gpio_desc *desc =3D &gdev->descs[i];
 > > +
-> > +For GPIO hogging which is specified by the "gpio-hog" property the=
- following
-> > +additional properties are required.
-> > +Required properties for GPIO hogging:
-> >  - gpios:      Store the GPIO information (id, flags, ...). Shall c=
-ontain the
+> > +               if (desc->name && !strcmp(desc->name, name))
+> > +                       return desc;
+> > +       }
+> > +
+> > +       return NULL;
+> > +}
 >=20
-> This doesn't make sense. gpios is always required and already listed=20=
+> We already have gpio_name_to_desc() which does something
+> similar but across all chips.
+>=20
+> Can we break out one gpiodev_name_to_desc() like
+> yours, and refactor gpio_name_to_desc() to just call
+> that for each chip?
 
-> above.
+Yes, that sounds good.
 
-Thanks, will remove it.
+Thanks,
 
-Best Regards,
+Markus
 
-Markus Pargmann
+>=20
+> > +/**
+> > + * gpid_set_name() - sets the name of a gpio descriptor
+>=20
+> Missing "o" in gpid_
+>=20
+> > + * @desc: the gpio descriptor
+> > + * @name: the name pointer that is assigned. It is internally not =
+copied.
+> > + *
+> > + * This function sets a new name for the GPIO. It checks for colli=
+sions with
+> > + * other GPIOs with the same name within the gpio chip. It returns=
+ 0 on success
+> > + * or -EEXIST if the name is already used within the GPIO chip.
+> > + */
+> > +int gpiod_set_name(struct gpio_desc *desc, const char *name)
+> > +{
+> > +       struct gpio_desc *coll =3D gpiodev_find_gpiod_by_name(desc-=
+>gdev, name);
+> > +
+> > +       if (coll)
+> > +               return -EEXIST;
+> > +
+> > +       desc->name =3D name;
+> > +
+> > +       return 0;
+> > +}
+>=20
+> Otherwise I'm OK with this.
+>=20
+> Yours,
+> Linus Walleij
+>=20
 
 =2D-=20
 Pengutronix e.K.                           |                           =
@@ -137,7 +150,7 @@ Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
 Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
 5 |
 
---nextPart1730085.g3PcDT12sk
+--nextPart3344746.XlzoLCETQz
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: This is a digitally signed message part.
 Content-Transfer-Encoding: 7Bit
@@ -145,20 +158,20 @@ Content-Transfer-Encoding: 7Bit
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJWzVVbAAoJEEpcgKtcEGQQDlkP/0DoRR+sC7zv14LiKBH0bDoE
-H6lyBXur31dv6L0B6Vah33nRBee5LwTC5dHkeYl69z+6+HwkW+iJbQeouMjGFehf
-e4s7x0nvcNoqMkGGaBPwtP3Xji1OHiMWhmn7t7nnddOvlxWuiJPSUTBD2OuVsW80
-Z5B5LfhSiH0dEf63HogXfr5EWmDs0DPTUg4egvjkHz9tdOI8pSQAJ8uTeLyCImSq
-keOE+4JIU42AUHuXxcaBbtaV24iAXUDYFuBBfarnZpT1p71xkXDiy2hQu58mQw65
-8alfXLlqUOOi7oDmCgcU1RUAa1PZAxGjnZyqnCUYlQoPjHsAB98kQags2arfNFHn
-FS32xSRu2hd7na9hNo36kOr+ZMAjq37t/Epgx+/pduR1yX1+PG6ZAfunaCodbxKB
-geD0ap04j8yAzjdjvqK1dn7ooYljOA35DrtKyM78S9vX1tvdKGok7rGt+6z0Hjso
-9Xi68Vo1X65YlspSq8QgpIDiGlIaepDTU5bJs8bVFKSvrXRwVaWiy6OWqUuSOktE
-TXsBbFxYR5rMyLNCMvmzVyHRxLKC1qQnUGJKqd/9j7F4hCZZZclDsdxdb3FubDyH
-HKE4FtIaTteyJrh6yQlfR0WxCWs+zT5vq6RbzW3d3HmmG36fJDdf72AqEBoU8Fs9
-j3rs/Hw738L6xEF2atpu
-=dzRU
+iQIcBAABCAAGBQJWzVWtAAoJEEpcgKtcEGQQSWYQAJCPpqYvsJJmMuxv9oBqEiAL
+z74Q4e0EzJjmVXZkQ9S+pcypbNOSfftmlKbYwRd2E3GLMzIRdIZ9JulYDLdJOExK
+R5e/iV1/jdRlzsAuafFRPyrJ3f4dVhVXxUvccIUKaILkPP6SQehDEQ1FMJSJFt3Q
+9d3KznxMU1RDt6jpG+JzTr9cLLMz0S5M6eiXGaPZu9AaXyXjVPdPoFglJi3HTFO0
+KHAKduuDTfEmJjlqFwBDMNYKRLpG43WxnFLI5KSNg0ThtaE49bMAqtqpxoavM7zD
+rpVQX8YoDiYk9xDlofuqBrABJdjyq5HiLF04YxcUkl/80RiWKgQrHcbRNbcZ3mAz
+12uns6ASS2+QkLKaOY9qzA6AMsCkPpdthiOL15dlwXcPhIv3Qb8XKSHYweA+7niC
+TJZAYoTxsuvYXqDb+ihrCCzhuVro1wx3g0bg7/JaYN7HEkAaLC/djErrWZ+BsGif
+0EqQc3/vueyIlksZN9jI+eGMks/BW0InAbgccYgtF+5bY54hnSlA6ZMdrzsyH/eU
+BkYiajPl5WaaO6NfUVZLIsBkuQPkjLg8uxT0rtJsCREHxxZZGOcy1N/WEaB8/eLG
+dVaxY9CymcfGpglr9IGYakM0JBgve1yTzulhF5JlBHUwGpFwcmaXq46aNgHKBNiA
+0EXGgOm9gYZoK7Zw6TV7
+=o0pX
 -----END PGP SIGNATURE-----
 
---nextPart1730085.g3PcDT12sk--
+--nextPart3344746.XlzoLCETQz--
 
