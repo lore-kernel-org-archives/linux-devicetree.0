@@ -1,42 +1,49 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
-Date: Wed, 24 Feb 2016 21:42:03 +0100
-Message-ID: <CAOQ7t2YXRwxvOpYBPYh7as94ZJSM3z44M2RR3vzG=mJY7ktZAg@mail.gmail.com>
-References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
-	<CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com>
-	<CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ@mail.gmail.com>
-	<3072897.5MMsyiojns@wuerfel>
-	<CAL9uMOG2gnGnxv9RmmKuHjc72xyyyEu3AW6pTyM2oA=aM171eQ@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] iio: dac: vf610_dac: Add IIO DAC driver for Vybrid
+ SoC
+Date: Wed, 24 Feb 2016 20:55:08 +0000
+Message-ID: <56CE18AC.6020603@kernel.org>
+References: <cover.1456121233.git.maitysanchayan@gmail.com>
+ <1a70acdd3ffae273bbfe2f80c5e3952d152921df.1456121233.git.maitysanchayan@gmail.com>
+ <20160223205437.GA27366@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL9uMOG2gnGnxv9RmmKuHjc72xyyyEu3AW6pTyM2oA=aM171eQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160223205437.GA27366@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 2:25 PM, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org> wrote:
+On 23/02/16 20:54, Rob Herring wrote:
+> On Mon, Feb 22, 2016 at 11:48:37AM +0530, Sanchayan Maity wrote:
+>> Add driver support for DAC peripheral on Vybrid SoC.
+>>
+>> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-iio-vf610      |   9 +
+>>  .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
+> 
+> For the binding:
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied to the togreg branch of iio.git - initially pushed out as testing
+for the autobuilders to play with it.
 
->> Maybe the best way is to make it compatible with both syscon and
->> simple-bus and put the other nodes underneath. That is still rather
->> ugly, but at least it works and can be extended.
->
-> This is a good idea actually. I'll prepare a patch.
-> Thank you for having spent time on this.
+Note the dts change probably wants to go via the relevant arch trees.
+I can take it with an appropriate ack if not.
 
-Apparently I talked too soon. The problem is the pinctrl driver where
-one of the bank (ao-bank) is mapped into the aobus not cbus
-http://lxr.free-electrons.com/source/arch/arm/boot/dts/meson8b.dtsi#L169
-If you don't have a better idea probably I should try to decouple the
-two banks so that we have two different pinctrl devices for each bus
-(aobus and cbus).
-
-Cheers,
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> 
+>>  drivers/iio/dac/Kconfig                            |  10 +
+>>  drivers/iio/dac/Makefile                           |   1 +
+>>  drivers/iio/dac/vf610_dac.c                        | 298 +++++++++++++++++++++
+>>  5 files changed, 338 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/dac/vf610-dac.txt
+>>  create mode 100644 drivers/iio/dac/vf610_dac.c
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
