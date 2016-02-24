@@ -1,55 +1,65 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] ehci-platform: Add support for controllers with
- multiple reset lines
-Date: Wed, 24 Feb 2016 13:47:44 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1602241345350.3812-100000@iolanthe.rowland.org>
-References: <56CD960D.3000900@ti.com>
+From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
+ family of LED drivers
+Date: Wed, 24 Feb 2016 13:57:13 -0500
+Message-ID: <20160224135713.1eb1e234.drivshin.allworx@gmail.com>
+References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
+	<1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
+	<20160224011508.GA20343@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56CD960D.3000900-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20160224011508.GA20343@rob-hp-laptop>
+Sender: linux-leds-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Feb 2016, Roger Quadros wrote:
+On Tue, 23 Feb 2016 19:15:08 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-> Hi,
+> On Tue, Feb 23, 2016 at 01:17:24PM -0500, David Rivshin (Allworx) wrote:
+> > From: David Rivshin <drivshin@allworx.com>
+> > 
+> > This adds a binding description for the is31fl3236/35/18/16 I2C LED
+> > drivers.
+> > 
+> > Signed-off-by: David Rivshin <drivshin@allworx.com>
+> > ---
+> >  .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt  
 > 
-> On 24/02/16 13:15, Hans de Goede wrote:
-> > From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> > 
-> > At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
-> > reset lines, the controller will not initialize while the reset for
-> > its companion is still asserted, which means we need to de-assert
-> > 2 resets for the controller to work.
-> > 
-> > Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-> > -	} else {
-> > -		err = reset_control_deassert(priv->rst);
-> > -		if (err)
-> > -			goto err_put_clks;
-> > +		for (rst = 0; rst < EHCI_MAX_RESETS; rst++) {
-> > +			priv->resets[rst] =
-> > +				devm_reset_control_get_shared_by_index(
-> > +								&dev->dev, rst);
+Thanks, Rob. I just want to double check whether you noticed some
+binding-related questions I had in the coverletter [1]. In hindsight
+I should probably have included them in the patch comments as well so 
+they'd show up in patchwork. For convenience, I'll repeat them here:
 
-Ugly continuation line.  The convention in these files is to indent 
-continuation lines by two tab stops beyond the original source line.
-Same comment applies to the 2/2 patch.
+I choose to have 'reg' be 1-based in order to follow the hardware 
+documentation. It seems 0-based is the normal choice, although HW
+docs also usually use the 0-based numbering. Perhaps being consistent 
+with other bindings is more important than being consistent with the 
+datasheet's numbering?
 
-Once that is changed, you can add:
+I used the 'reg' property for the LED channel, as it seemed ePAPR 
+required that name. I also considered naming the property 'chan', 
+and not pretending that it represented a bus address at all (and
+then removing the @n from the subnode names). That would solve the
+'reg' question above as a side-effect, but would be inconstant with
+other LED bindings (tca6507, pca963x, tlc59108, etc).
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Note that the recently-added (and only in for-next) SN3218 driver 
+uses a 0-based 'reg' property, and the SN3218 has the same HW doc
+numbering as the IS31FL32xx family (indeed the IS31FL3218 appears 
+to be a rebranded SN3218). So perhaps that sets the precedent if 
+there was not one before?
 
-to both.
+Any guidance you could offer would be appreciated (especially since
+this is my first from-scratch binding, and I'd rather not form any
+bad habits).
 
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] http://www.spinics.net/lists/linux-leds/msg05564.html
+    http://thread.gmane.org/gmane.linux.leds/4530
