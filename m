@@ -1,54 +1,36 @@
-From: atull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH 1/1] of/overlay: of overlay callbacks
-Date: Wed, 24 Feb 2016 16:36:28 -0600
-Message-ID: <alpine.DEB.2.02.1602241632040.13189@linuxheads99>
-References: <1455730885-1514-1-git-send-email-atull@opensource.altera.com> <1455730885-1514-2-git-send-email-atull@opensource.altera.com> <20160222025517.GS15973@rob-hp-laptop>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 6/8] arm64: dts: qcom: fix usb digital voltage levels
+Date: Wed, 24 Feb 2016 15:06:40 -0800
+Message-ID: <56CE3780.5060408@codeaurora.org>
+References: <1456246153-18087-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1456246236-18341-1-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160222025517.GS15973@rob-hp-laptop>
+In-Reply-To: <1456246236-18341-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 22 Feb 2016, Rob Herring wrote:
+On 02/23/2016 08:50 AM, Srinivas Kandagatla wrote:
+> This patch updates the digital voltage levels from corner values to
+> microvolts as we are going to use s1 regulator directly for vddcx
+> instead of s1_corner.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
 
-> On Wed, Feb 17, 2016 at 11:41:25AM -0600, Alan Tull wrote:
-> > Add overlay callback functionality.
-> > 
-> > When DT overlays are being added, some drivers/subsystems
-> > will want to know about the changes before they go into the
-> > live tree.  Similarly there is a need for post-remove
-> > callbacks.
-> > 
-> > Each handler is registered with a of_device_id.  When
-> > an overlay target matches a handler's id, the handler
-> > gets called.
-> > 
-> > The following 4 cases are handled: pre-apply, post-apply,
-> > pre-remove, and post-remove.
-> 
-> So I know I suggested maybe not using notifiers, but this ends up just 
-> looking like notifiers, so we might as well use them unless we somehow 
-> change the flow. You would just need to add pre-apply and pre-remove 
-> in of_attach_node and of_detach_node, right?
+What's the plan for corners? Maybe we should remove the voltage setting
+from the usb driver or drop the usb node entirely on msm8916 until we
+resolve how we're going to handle corners. I'd like to avoid getting
+stuck into some DT binding ABI mess here.
 
-Just sent out a patch.  Nobody calls of_attach_node or
-of_detach_node so I had to add the notifiers elsewhere.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-For overlays, I wanted to add a pointer to the overlay
-fragment since pre-apply notifiers won't otherwise have that
-information (unlike post-apply or pre-remove notifiers where
-the overlay has already made it into the live tree).
-That complicated the implementation a bit further.
-
-Alan
-
-
-> 
-> Rob
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
