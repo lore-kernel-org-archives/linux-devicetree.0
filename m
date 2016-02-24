@@ -1,36 +1,65 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: msm8916: Move smem below hwlock
-Date: Tue, 23 Feb 2016 22:00:48 -0800
-Message-ID: <20160224060048.GJ21240@tuxbot>
-References: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/5] Modularize PCI_DW related drivers.
+Date: Wed, 24 Feb 2016 11:39:26 +0530
+Message-ID: <56CD4916.3050904@ti.com>
+References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
+In-Reply-To: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: andy.gross@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 23 Feb 09:21 PST 2016, Georgi Djakov wrote:
+Hi,
 
-> When the SMEM is probed it defers as it depends on the hardware lock, which
-> is not available yet. But the SMD bus and RPM regulators and clocks depend
-> on SMEM and they defer too. The problem with this is that the order of
-> registering the devices is not optimal and also we may end with messed
-> up serial console as the RPM clocks are not registered yet..
+On Monday 08 February 2016 05:30 AM, Paul Gortmaker wrote:
+> In a recent patch series that aimed to remove code related to module
+> unload for PCI support that was simply non modular, the discussion
+> led to people wanting to keep the code and push towards taking the
+> steps needed to support moving it towards tristate instead[1].
 > 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Here, we take step one, which is simply making the Kconfig change
+> and then dealing with any build fallout or modpost fallout.  What
+> amounts to essentially a sanity build test.  To be clear, these
+> have not been runtime validated; that will need to be done by those
+> with access to real hardware.  However, the changes are not anything
+> that should disrupt any existing built-in validation, so real world
+> users should not be impacted by this change.
+> 
+> We start with a smaller family of drivers; those that actively select
+> PCI_DW, as a nice self contained group to test the waters and see if
+> everyone is still good with this approach before investing more time
+> on a wider scale to other pci/host/ code blocks.
+> 
+> As such the drivers here share a dependency on having the same group
+> of functions exported in order to successfully complete modpost.
+> 
+> In addition, we have to stray outside drivers/pci to add exports
+> in two places; once for an ARM fault handler, and once for an OF
+> variable.
+> 
+> The pci-keystone-dw.c instance was handled separately because it
+> consists of two source files that need their own group of driver
+> specific exports above and beyond the "shared" ones.
+> 
+> Then we convert the Kconfig for all remaining at once; we could have
+> done it on a per driver basis for ease of revert if anyone really
+> objects, but since it would be a one line change, that seemed like
+> not a real concern.
+> 
+> Build testing was done on the linux-next tree for arm allmodconfig.
 
-Not only do you need the probe order to be "correct", you also need some
-luck to have the smd code execute its two workers to initialise the
-rpmcc driver before your serial driver is probed. So I don't think we
-should merge this upstream.
+I took these patches and gave a test with DRA7xx board. As expected there was
+no issues when the driver was built-in. However when I tried to rmmod/modprobe
+I got this error [2].
 
+Thanks
+Kishon
 
-I tried this on my linux-next tree on db410c and it doesn't hide the
-problem for me.
-
-Regards,
-Bjorn
+[2] -> http://pastebin.ubuntu.com/15185894/
+> 
+> [1] https://lkml.kernel.org/r/20160108203102.GH5354@localhost
+> 
