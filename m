@@ -1,65 +1,230 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH] arm64: dts: msm8916: Move smem below hwlock
-Date: Wed, 24 Feb 2016 12:31:48 +0200
-Message-ID: <56CD8694.1070009@linaro.org>
-References: <1456248071-30547-1-git-send-email-georgi.djakov@linaro.org>
- <56CC970B.4080602@linaro.org> <56CCA95C.9070207@linaro.org>
- <20160223190356.GA17346@hector.attlocal.net>
+From: tiffany lin <tiffany.lin@mediatek.com>
+Subject: Re: [PATCH v5 0/8] Add MT8173 Video Encoder Driver and VPU Driver
+Date: Wed, 24 Feb 2016 18:53:15 +0800
+Message-ID: <1456311195.15077.17.camel@mtksdaap41>
+References: <1456215081-16858-1-git-send-email-tiffany.lin@mediatek.com>
+	 <56CC1CAB.1060409@xs4all.nl> <1456302223.15077.8.camel@mtksdaap41>
+	 <56CD6A37.2040700@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160223190356.GA17346@hector.attlocal.net>
+In-Reply-To: <56CD6A37.2040700@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2016 09:03 PM, Andy Gross wrote:
-> On Tue, Feb 23, 2016 at 08:47:56PM +0200, Georgi Djakov wrote:
->> On 23.02.16 =D0=B3. 19:29, Srinivas Kandagatla wrote:
->>>
->>>
->>> On 23/02/16 17:21, Georgi Djakov wrote:
->>>> When the SMEM is probed it defers as it depends on the hardware lo=
-ck, which
->>>> is not available yet. But the SMD bus and RPM regulators and clock=
-s depend
->>>> on SMEM and they defer too. The problem with this is that the orde=
-r of
->>>> registering the devices is not optimal and also we may end with me=
-ssed
->>>> up serial console as the RPM clocks are not registered yet..
->>> I noticed the same issue but was wondering why would we end up with=
- messed up serial console?
->>>
->>> Could you add more details on why serial console is messed up?
->>>
->>> I thought, serial driver has nothing to do with the rpm clocks dire=
-ctly!
->>>
->>
->> If we don't have the rpm clocks registered, the uart clock is an orp=
-han
->> and when clk_get_rate() is called on orphan clocks it returns 0 as r=
-ate.
->> In our case the msm_serial driver calls clk_get_rate() and gets 0 ra=
-te
->> as the parent rpm clock has not registered yet. The result is that t=
-he
->> baudrate is set incorrectly.
->=20
-> This isn't a probe defer issue w/ the SMEM and hwspinlock.  That work=
-s properly.
+On Wed, 2016-02-24 at 09:30 +0100, Hans Verkuil wrote:
+> Hi Tiffany,
+> 
+> On 02/24/16 09:23, tiffany lin wrote:
+> > Hi Hans,
+> > 
+> > On Tue, 2016-02-23 at 09:47 +0100, Hans Verkuil wrote:
+> >> On 02/23/16 09:11, Tiffany Lin wrote:
+> >>> ==============
+> >>>  Introduction
+> >>> ==============
+> >>>
+> >>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
+> >>> Mediatek Video Codec is able to handle video encoding of in a range of formats.
+> >>>
+> >>> This patch series also include VPU driver. Mediatek Video Codec driver rely on VPU driver to load,
+> >>> communicate with VPU.
+> >>>
+> >>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI.
+> >>> MTK IOMMU[1] and MTK SMI[2] have not yet been merged, but we wanted to start discussion about the driver
+> >>> earlier so it could be merged sooner.
+> >>>
+> >>> [1]https://patchwork.kernel.org/patch/8335461/
+> >>> [2]https://patchwork.kernel.org/patch/7596181/
+> >>
+> >> <snip>
+> >>
+> >>> v4l2-compliance test output:
+> >>> localhost ~ # /usr/bin/v4l2-compliance -d /dev/video1
+> >>> Driver Info:
+> >>>         Driver name   : mtk-vcodec-enc
+> >>>         Card type     : platform:mt8173
+> >>>         Bus info      : platform:mt8173
+> >>>         Driver version: 4.4.0
+> >>>         Capabilities  : 0x84204000
+> >>>                 Video Memory-to-Memory Multiplanar
+> >>>                 Streaming
+> >>>                 Extended Pix Format
+> >>>                 Device Capabilities
+> >>>         Device Caps   : 0x04204000
+> >>>                 Video Memory-to-Memory Multiplanar
+> >>>                 Streaming
+> >>>                 Extended Pix Format
+> >>>
+> >>> Compliance test for device /dev/video1 (not using libv4l2):
+> >>>
+> >>> Required ioctls:
+> >>>         test VIDIOC_QUERYCAP: OK
+> >>>
+> >>> Allow for multiple opens:
+> >>>         test second video open: OK
+> >>>         test VIDIOC_QUERYCAP: OK
+> >>>         test VIDIOC_G/S_PRIORITY: OK
+> >>>
+> >>> Debug ioctls:
+> >>>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> >>>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+> >>>
+> >>> Input ioctls:
+> >>>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> >>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> >>>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> >>>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> >>>         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> >>>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> >>>         Inputs: 0 Audio Inputs: 0 Tuners: 0
+> >>>
+> >>> Output ioctls:
+> >>>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> >>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> >>>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> >>>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> >>>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> >>>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+> >>>
+> >>> Input/Output configuration ioctls:
+> >>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> >>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> >>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> >>>         test VIDIOC_G/S_EDID: OK (Not Supported)
+> >>>
+> >>>         Control ioctls:
+> >>>                 test VIDIOC_QUERYCTRL/MENU: OK
+> >>>                 test VIDIOC_G/S_CTRL: OK
+> >>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+> >>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+> >>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> >>>                 Standard Controls: 12 Private Controls: 0
+> >>>
+> >>>         Format ioctls:
+> >>>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> >>>                 test VIDIOC_G/S_PARM: OK
+> >>>                 test VIDIOC_G_FBUF: OK (Not Supported)
+> >>>                 test VIDIOC_G_FMT: OK
+> >>>                 test VIDIOC_TRY_FMT: OK
+> >>>                 test VIDIOC_S_FMT: OK
+> >>>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> >>>
+> >>>         Codec ioctls:
+> >>>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+> >>>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> >>>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+> >>>
+> >>>         Buffer ioctls:
+> >>>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> >>>                 test VIDIOC_EXPBUF: OK
+> >>>
+> >>> Total: 38, Succeeded: 38, Failed: 0, Warnings: 0
+> >>
+> >> Nice!
+> >>
+> >> Can you try 'v4l2-compliance -s'? Note that this may not work since I know
+> >> that v4l2-compliance doesn't work all that well with codecs, but I am
+> >> curious what the output is when you try streaming.
+> >>
+> >> Don't bother trying to chase down reported failures, those are likely from
+> >> v4l2-compliance itself. It is something I would like to improve, but -ENOTIME.
+> >>
+> > 
+> > When I try to run 'v4l2-compliance -d /dev/video1 -s, I got follow
+> > output.
+> > I use v4.4-rc5 kernel and v4l-utils 1.6 version.
+> 
+> Can you compile v4l2-compliance straight from the v4l-utils.git master branch?
+> Version 1.6 is too old, and for proper compliance testing you should always use
+> the master branch. It probably won't matter for this -s test, but for the
+> regular test (without -s) it does make a difference.
+> 
+> If nothing else, using the master branch will make it easier for me to match up
+> the line numbers that v4l2-compliance reports to the actual source.
+> 
 
-Ok, agree.
+Sorry, our development branch default get
+"http://linuxtv.org/downloads/v4l-utils/v4l-utils-1.6.0.tar.bz2"
+I try to change to use master branch.
+I got following output:
 
-> This is an issue with the msm_serial either not probe deferring to wa=
-it for the
-> rpm clocks or not handling the case of the clk framework giving us a =
-'bogus'
-> clock.  Can we queue off the clk_get_rate being 0 to probe defer for =
-the rpm
-> clocks? (although that is hacky).
 
-The proper solution would be to handle this in the clock framework.
+Streaming ioctls:
+        test read/write: OK (Not Supported)
+                fail: v4l2-test-buffers.cpp(970): ret != EINVAL
+        test MMAP: FAIL
+                warn: v4l2-test-buffers.cpp(278): buf.length=1,
+vp->length=1024, ff9a42a8/ff9a4270, ff9a4284/ff9a429c/ff9a42a4
+fail: v4l2-test-buffers.cpp(1032): ret && ret != ENOTTY
+                fail: v4l2-test-buffers.cpp(1098): setupUserPtr(node, q)
+        test USERPTR: FAIL
+        test DMABUF: Cannot test, specify --expbuf-device
+
+
+After change to use master branch, VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF:
+test FAIL.
+
+I got this error output, do I need to fix this issue. I need to figure
+out this.
+
+                warn: v4l2-test-buffers.cpp(467): mmap_valid 1
+warn: v4l2-test-buffers.cpp(278): buf.length=1, vp->length=1024,
+ff9a40b8/ff9a4080, ff9a4094/ff9a40ac/ff9a40b4          warn:
+v4l2-test-buffers.cpp(475): mmap_valid 2          warn:
+v4l2-test-buffers.cpp(480): userptr_valid 1          warn:
+v4l2-test-buffers.cpp(278): buf.length=1, vp->length=1024,
+ff9a40b8/ff9a4080, ff9a4094/ff9a40ac/ff9a40b4          warn:
+v4l2-test-buffers.cpp(488): userptr_valid 2               warn:
+v4l2-test-buffers.cpp(493): dmabuf_valid  1          warn:
+v4l2-test-buffers.cpp(278): buf.length=1, vp->length=1024,
+ff9a40b8/ff9a4080, ff9a4094/ff9a40ac/ff9a40b4          warn:
+v4l2-test-buffers.cpp(501): dmabuf_valid  2               warn:
+v4l2-test-buffers.cpp(278): buf.length=1, vp->length=1024,
+ff9a40b8/ff9a4080, ff9a4094/ff9a40ac/ff9a40b4             warn:
+v4l2-test-buffers.cpp(278): buf.length=1, vp->length=1024,
+ff9a40b8/ff9a4080, ff9a4094/ff9a40ac/ff9a40b4          warn:
+v4l2-test-buffers.cpp(278): buf.length=1, vp->length=1024,
+ff9a40b8/ff9a4080, ff9a4094/ff9a40ac/ff9a40b4             fail:
+v4l2-test-buffers.cpp(564): check_0(crbufs.reserved,
+sizeof(crbufs.reserved))
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: FAIL
+                warn: v4l2-test-buffers.cpp(597): ....2         warn:
+v4l2-test-buffers.cpp(597): ....2         test VIDIOC_EXPBUF: OK
+
+
+best regards,
+Tiffany
+
+
+> Thanks!
+> 
+> 	Hans
+> 
+> > 
+> > Streaming ioctls:
+> >         test read/write: OK (Not Supported)
+> > fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(332): buf.querybuf(node, i) fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(868): testQueryBuf(node, cur_fmt.type, q.g_buffers())
+> >         test MMAP: FAIL
+> > fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(923): ret && ret != ENOTTY
+> > 
+> > fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(988): setupUserPtr(node, q)
+> >         test USERPTR: FAIL
+> >         test DMABUF: Cannot test, specify --expbuf-device
+> > 
+> > best regards,
+> > Tiffany
+> > 
+> >> Regards,
+> >>
+> >> 	Hans
+> > 
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > 
