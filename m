@@ -1,96 +1,65 @@
-From: Alexandre Torgue <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] Documentation: Bindings: Add STM32 DWMAC glue
-Date: Wed, 24 Feb 2016 09:40:55 +0100
-Message-ID: <CAJgp7zzrJWuJBQyjRdyU5qg=emCjqWfSPVRhT-D6G6Ho=hJzVA@mail.gmail.com>
-References: <1456240244-10275-1-git-send-email-alexandre.torgue@gmail.com>
-	<1456240244-10275-3-git-send-email-alexandre.torgue@gmail.com>
-	<CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw@mail.gmail.com>
+From: Henry Paulissen <draakje197-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Add triggers for cubietruck leds
+Date: Wed, 24 Feb 2016 09:57:25 +0100
+Message-ID: <1456304247-2481-1-git-send-email-henry@nitronetworks.nl>
+Reply-To: henry-oxlTVf6CAJF4HdFT58BDcQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-sunxi+bncBDJ57UPZYEDRB7XAWW3AKGQE3C5XECQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2016-02-23 23:37 GMT+01:00 Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi Alexandre,
->
-> You should copy 'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org' on bindings doc. Adding cc here.
->
-> On 23 February 2016 at 16:10, Alexandre TORGUE
-> <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
->> new file mode 100644
->> index 0000000..18734b3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
->> @@ -0,0 +1,41 @@
->> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
->> +
->> +This file documents platform glue layer for stmmac.
->> +Please see stmmac.txt for the other unchanged properties.
->> +
->> +The device node has following properties.
->> +
->> +Required properties:
->> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
->> +              "snps,dwmac-3.50a" to select IP vesrion.
->> +- clocks: Should contain the GMAC main clock, and tx clock
->> +- compatible:  Should be "st,stm32-dwmac" to select glue and
->> +              "snps,dwmac-3.50a" to select IP version.
->> +- clocks: Should contain the MAC main clock
->> +- clock-names: Should contain the clock names "stmmaceth".
->> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
->> +             encompases the glue register, and the offset of the control register.
->> +
->> +Optional properties:
->> +- clocks: Could contain:
->> +       - the tx clock,
->> +       - the rx clock
->> +- clock-names: Could contain the clock names "tx-clk", "rx-clk"
->> +
->> +Example:
->> +
->> +               ethernet0: dwmac@40028000 {
->> +                       device_type = "network";
->
-> What is this 'device_type = "network"' for?
-> It seems to used in a lot of powerpc DTs, but only a couple of arm DTs.
->
-> Maybe Rob could enlighten us?
->
->> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
->> +                       status = "disabled";
->> +                       reg = <0x40028000 0x8000>;
->> +                       reg-names = "stmmaceth";
->> +                       interrupts = <0 61 0>, <0 62 0>;
->> +                       interrupt-names = "macirq", "eth_wake_irq";
->> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
->> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
->> +                       st,syscon = <&syscfg 0x4>;
->> +                       snps,pbl = <32>;
->
-> Regarding snps,pbl; using 32 here might not give you what you would except.
-> See comment in dwmac1000_dma_init().
->
-> The driver is hard coded to use PBL4X/PBL8X mode. Just a heads up.
->
-Hi Joachim,
+This (small) patch gives the same led trigger functionality
+as the 3.4 sunxi kernel and although mainline doesn't has
+to be the same, it helps in identifying and builds upon the
+user expectations about what those leds mean.
 
-My fault, It is not working with 32. I will modify it (should be 8 for example)
+Signed-off-by: Henry Paulissen <henry-oxlTVf6CAJF4HdFT58BDcQ@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Regards
-
-Alexandre
-
->
-> regards,
-> Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index 8da939a..bea6b0f 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -70,21 +70,29 @@
+ 		blue {
+ 			label = "cubietruck:blue:usr";
+ 			gpios = <&pio 7 21 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++			default-state = "off";
+ 		};
+ 
+ 		orange {
+ 			label = "cubietruck:orange:usr";
+ 			gpios = <&pio 7 20 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "cpu0";
++			default-state = "off";
+ 		};
+ 
+ 		white {
+ 			label = "cubietruck:white:usr";
+ 			gpios = <&pio 7 11 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "cpu1";
++			default-state = "off";
+ 		};
+ 
+ 		green {
+ 			label = "cubietruck:green:usr";
+ 			gpios = <&pio 7 7 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "mmc1";
++			default-state = "off";
+ 		};
+ 	};
+ 
+-- 
+2.5.0
