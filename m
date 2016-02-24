@@ -1,123 +1,60 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Wed, 24 Feb 2016 17:07:43 +0300
-Message-ID: <56CDB92F.1080507@cogentembedded.com>
-References: <1455188466-10879-1-git-send-email-petr@barix.com>
- <20160212162110.GA21833@rob-hp-laptop> <56BE1531.8060800@barix.com>
- <CAL_Jsq+uBoSc_LutGrLswYYPGa5gZL3UqLxQxMi=KcxaDpAu8w@mail.gmail.com>
- <56C4B870.2070707@cogentembedded.com>
- <CAL_JsqK4gmzBTxFNs93aT3XUqMp-6eyyL-GEUtrGm-snSeTQ7w@mail.gmail.com>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/4 RESEND] ARC: axs10x: Update defconfigs so that audio
+ is enabled
+Date: Wed, 24 Feb 2016 14:12:00 +0000
+Message-ID: <1456323120.3392.31.camel@synopsys.com>
+References: <cover.1456234503.git.joabreu@synopsys.com>
+	 <174bd675951f46071d0db8ea1f67abb083053332.1456234503.git.joabreu@synopsys.com>
+	 <C2D7FE5348E1B147BCA15975FBA23075F4E8BD53@us01wembx1.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqK4gmzBTxFNs93aT3XUqMp-6eyyL-GEUtrGm-snSeTQ7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA23075F4E8BD53-cALIpNOex2c3t6iM5Z/N3fufCSb+aD3WLzEdoUbNIic@public.gmane.org>
+Content-Language: en-US
+Content-ID: <18363468EE3BC94E9F05F105EB9E577D-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Vineet,
 
-    Sorry about late reply, I kept forgetting about this mail.
+On Wed, 2016-02-24 at 04:36 +-0000, Vineet Gupta wrote:
++AD4- On Tuesday 23 February 2016 07:22 PM, Jose Abreu wrote:
++AD4- +AD4- The defconfigs for the AXS boards were updated so that
++AD4- +AD4- ALSA SoC is enabled and also the audio for the ADV7511
++AD4- +AD4- HDMI transmitter.
++AD4- +AD4- 
++AD4- +AD4- Signed-off-by: Jose Abreu +ADw-joabreu+AEA-synopsys.com+AD4-
++AD4- +AD4- ---
++AD4- +AD4- +AKA-arch/arc/configs/axs101+AF8-defconfig+AKAAoACgAKAAoAB8- 3 +-+-+-
++AD4- +AD4- +AKA-arch/arc/configs/axs103+AF8-defconfig+AKAAoACgAKAAoAB8- 5 +-+-+-+-+-
++AD4- +AD4- +AKA-arch/arc/configs/axs103+AF8-smp+AF8-defconfig +AHw- 5 +-+-+-+-+-
++AD4- 
++AD4- +AEA-Alexey, has this been tested on AXS103. Do we have the right PLL / clocks to get
++AD4- the audio rates - given the lower master clk.
 
-On 02/17/2016 09:51 PM, Rob Herring wrote:
+I think I tried first version of these patches on axs103 as well.
+But may assume Jose have no access to axs103 and so this particular
+implementation may lack tests on axs103 platform. Still this is easy to
+fix - I'll try it myself now.
 
->>>>>> + - mentor,power : Specifies the maximum current in milliamperes the
->>>>>> controller can
->>>>>> +     supply in host mode.
->>>>>
->>>>>
->>>>> Still a no for me. Looks like this just sets hcd->power_budget. This
->>>>> property may not be a regulator, but ultimately the value depends on
->>>>> some regulator supplying Vbus. Also, given this has nothing to do with
->>>>> MUSB h/w, however this is described should be generic.
->>>>
->>>>
->>>>
->>>> I understand your point that the description should be generic.
->>>> However the USB 2.0 specification does not define any relation between
->>>> the
->>>> bMaxPower provided by the device and the actual power control.
->>>> As far as I understand the value just serves the purpose to raise a flag
->>>> to
->>>> the user if the attached device would draw too much power, and not to
->>>> enable
->>>> it at all.
->>>
->>>
->>> That won't really work given devices lie. My bus powered USB disk
->>> enclosure reports something like 10mA. That's pretty good considering
->>> I have a 5W drive in it.
->>
->>
->>>> Further, the value used by the protocol is not necessarily related to the
->>>> real current that can be supported. The maximum current supported by the
->>>> protocol is 510mA.
->>>>
->>>> For instance on my development board the real maximum current is limited
->>>> only by the mains power-supply used.
->>>> So it cannot even be modelled in the DT as a regulator because the
->>>> power-supply is not part of the HW and
->>>> everybody can take a different one.
->>>
->>> Not part of which h/w? Different for everyone is exactly why Vbus
->>> supply should be described in DT.
->>
->>     I'm afraid you're misunderstanding the nature of VBUS regulator still.
->> It's a voltage regulator with some maximum value of the current that can be
->> sourced from it when it's powered (+5 V). The power chip can typically
->> detect and report the over-current condition inj which case VBUS will be
->> turned off).
->
-> Yes, I understand that exactly. I've seen and reviewed a USB circuit
-> or two.  You're describing a regulator, I'm saying describe the
-> regulator in DT and Petr is saying that's too complex.
++AD4- Further per out off-list discussion - let us have a seperate config for ARC HS SDP
++AD4- which supports the shipping single hardware configuration and add these fancy
++AD4- things there as well as bumping the clk rate to 100 MHz . Current axs103+ACo- configs
++AD4- are more of developer configs and I don't want to bloat their code with things we
++AD4- don't build / download 10 times a day +ACE-
 
-    The why ask about the Vbus current regulation if you know it's a voltage 
-regulator? :-)
+Agree but first we need to introduce those additional configs.
+Let me draft those.
 
->>>> So defining a regulator just to store this arbitrary USB 2.0 value is a
->>>> bit
->>>> overkill for me.
->>>
->>> If it is just arbitrary, then put it into the driver. I would do 500mA
->>
->>     You clearly misunderstand things. The regulator used depends on the board
->> design, the driver (or glue in this case) doesn't, it's just SoC specific.
->> That's why this power budget thing ended up in the platform data in the
->> first place...
->
-> The driver needs to be able to query the supply and get the current
-> limit. We have the technology.
+In the meantime it would be helpful if you take a look at existing axs10x+AF8-defconfigs
+and check which option you do want to keep and what are those extra once that should
+go to new configs with all bells and whistles.
 
-    Looking at the docs, I guess you mean the 
-"regulator-input-current-limit-microamp" prop...
 
->>> and be done with it. I'd guess there is nothing real behind the
->>> current default of 250mA.
->>
->>
->>     500 mA actually, it's multiplied by 2.
->
-> Ok. For 2 ports?
-
-   No, MUSB has only a single port, the unit was 2 mA.
-
-> In any case, if there is effectively no limit (Vbus comes from the
-> wall), then yes a regulator is probably an overkill. So make the case
-> with no Vbus regulator (or regulator with no limit set) in DT be the
-> max current. However, if the controller has a signal to turn on/off
-> Vbus, then that should be modeled as a regulator.
-
-    Well, actually DRVVBUS controls the VBUS charge-pump in the TI MUSB 
-implementations, it's not something described by the Mentor's docs...
-
-> Rob
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+-Alexey--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
