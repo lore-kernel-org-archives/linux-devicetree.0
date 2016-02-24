@@ -1,50 +1,98 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH] dts: add specific compatible type for Terasic DE0-NANO-SoC
- Board
-Date: Wed, 24 Feb 2016 10:50:15 -0600
-Message-ID: <alpine.DEB.2.02.1602241048100.3815@linux-builds1>
-References: <8416439.76b9YNhpgR@dabox>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+From: Aleksey Makarov <aleksey.makarov@linaro.org>
+Subject: [PATCH v2 2/8] of/serial: move earlycon early_param handling to serial
+Date: Wed, 24 Feb 2016 20:10:11 +0300
+Message-ID: <1456333819-13482-3-git-send-email-aleksey.makarov@linaro.org>
+References: <1456333819-13482-1-git-send-email-aleksey.makarov@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8416439.76b9YNhpgR@dabox>
+In-Reply-To: <1456333819-13482-1-git-send-email-aleksey.makarov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Sander <tim@krieglstein.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-acpi@vger.kernel.org
+Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aleksey Makarov <aleksey.makarov@linaro.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tim,
+From: Leif Lindholm <leif.lindholm@linaro.org>
 
-On Fri, 12 Feb 2016, Tim Sander wrote:
+We have multiple "earlycon" early_param handlers - merge the DT one into
+the main earlycon one. This means the earlycon early_param handler does
+not just return success if no options are specified.
 
-> From: Tim Sander <tim@krieglstein.org>
-> 
-> Add a more specific compatible string:"terasic,de0-nano-soc" for respective board.
-> Background: when checking for bootspec entries, some board specific fixups
->                          are not apropriate for board of the same platform ("altr,socfpga-cyclone5").
->                         The same aproach is taken with the EBV-Socrates board.
->
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
+---
+ drivers/of/fdt.c              | 11 +----------
+ drivers/tty/serial/earlycon.c |  3 ++-
+ include/linux/of_fdt.h        |  2 ++
+ 3 files changed, 5 insertions(+), 11 deletions(-)
 
-Please fix up the spacing in the commit message.
-
-> Signed-off-by: Tim Sander <tim@krieglstein.org>
-> ---
->  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-> index 555e9caf21e1..3a427423168e 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
-> @@ -18,7 +18,7 @@
->  
->  / {
->         model = "Terasic DE-0(Atlas)";
-> -       compatible = "altr,socfpga-cyclone5", "altr,socfpga";
-> +       compatible = "terasic,de0-nano-soc"," altr,socfpga-cyclone5", "altr,socfpga";
-> 
-
-"terasic" is not listed in Documentation/devicetree/bindings/vendor-prefixes.txt.
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3349d2a..0547256 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -805,7 +805,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
  
-BR,
-Dinh
+ #ifdef CONFIG_SERIAL_EARLYCON
+ 
+-static int __init early_init_dt_scan_chosen_serial(void)
++int __init early_init_dt_scan_chosen_serial(void)
+ {
+ 	int offset;
+ 	const char *p, *q, *options = NULL;
+@@ -849,15 +849,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
+ 	}
+ 	return -ENODEV;
+ }
+-
+-static int __init setup_of_earlycon(char *buf)
+-{
+-	if (buf)
+-		return 0;
+-
+-	return early_init_dt_scan_chosen_serial();
+-}
+-early_param("earlycon", setup_of_earlycon);
+ #endif
+ 
+ /**
+diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
+index 067783f..d217366 100644
+--- a/drivers/tty/serial/earlycon.c
++++ b/drivers/tty/serial/earlycon.c
+@@ -17,6 +17,7 @@
+ #include <linux/kernel.h>
+ #include <linux/init.h>
+ #include <linux/io.h>
++#include <linux/of_fdt.h>
+ #include <linux/serial_core.h>
+ #include <linux/sizes.h>
+ #include <linux/of.h>
+@@ -209,7 +210,7 @@ static int __init param_setup_earlycon(char *buf)
+ 	 * don't generate a warning from parse_early_params() in that case
+ 	 */
+ 	if (!buf || !buf[0])
+-		return 0;
++		return early_init_dt_scan_chosen_serial();
+ 
+ 	err = setup_earlycon(buf);
+ 	if (err == -ENOENT || err == -EALREADY)
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 2fbe868..56b2a43 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -63,6 +63,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
+ extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data);
++extern int early_init_dt_scan_chosen_serial(void);
+ extern void early_init_fdt_scan_reserved_mem(void);
+ extern void early_init_fdt_reserve_self(void);
+ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
+@@ -91,6 +92,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
+ extern u64 of_flat_dt_translate_address(unsigned long node);
+ extern void of_fdt_limit_memory(int limit);
+ #else /* CONFIG_OF_FLATTREE */
++static inline int early_init_dt_scan_chosen_serial(void) { return -ENODEV; }
+ static inline void early_init_fdt_scan_reserved_mem(void) {}
+ static inline void early_init_fdt_reserve_self(void) {}
+ static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
+-- 
+2.7.1
