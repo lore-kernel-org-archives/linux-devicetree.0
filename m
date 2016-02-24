@@ -1,42 +1,61 @@
-From: Krzysztof Adamski <k@japko.eu>
-Subject: Re: [PATCH 2/2] ARM: dts: sun8i: Enable ir receiver on
- orangepi pc
-Date: Wed, 24 Feb 2016 13:16:41 +0100
-Message-ID: <20160224121640.GA25658@box2.japko.eu>
-References: <1456268597-13692-1-git-send-email-hdegoede@redhat.com>
- <1456268597-13692-3-git-send-email-hdegoede@redhat.com>
-Reply-To: k@japko.eu
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v5 3/5] mtd: devices: m25p80: add support for mmap read
+ request
+Date: Wed, 24 Feb 2016 17:51:08 +0530
+Message-ID: <56CDA034.7050607@ti.com>
+References: <1449807000-6457-1-git-send-email-vigneshr@ti.com>
+ <1449807000-6457-4-git-send-email-vigneshr@ti.com>
+ <20160209193616.GN13270@sirena.org.uk> <56BC1D3E.5020203@ti.com>
+ <20160212223711.GD18988@sirena.org.uk> <56C2D731.6050306@ti.com>
+ <20160216123854.GJ18327@sirena.org.uk> <56C49B9E.8060506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDIL57GUWIARB7V6W23AKGQEK4GAIVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456268597-13692-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56C49B9E.8060506@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, "hramrach@gmail.com" <hramrach@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 24, 2016 at 12:03:17AM +0100, Hans de Goede wrote:
->Enable the ir receiver found on the orangepi pc board.
->
->Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->---
-> arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 6 ++++++
-> 1 file changed, 6 insertions(+)
->
->diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
 
-I don't think this file is avaiable in mainline. Wouldn't it be better 
-to use patch against existing orangepi-plus dts file?
 
-Otherwise I tested this patch and it works fine on my Orangepi PC (some 
-data is splitted out when reading /dev/input/event0).
+On 02/17/2016 09:41 PM, R, Vignesh wrote:
+> 
+> 
+> On 02/16/2016 06:08 PM, Mark Brown wrote:
+>> On Tue, Feb 16, 2016 at 01:30:49PM +0530, Vignesh R wrote:
+>>> On 02/13/2016 04:07 AM, Mark Brown wrote:
+>>>> On Thu, Feb 11, 2016 at 11:03:50AM +0530, Vignesh R wrote:
+>>>>> On 02/10/2016 01:06 AM, Mark Brown wrote:
+>>
+>>>>>> Looking at this I can't help but think that spi_flash_read() ought to
+>>>>>> have the stub in rather than the caller.  But given that we're pretty
+>>>>>> much only ever expecting one user I'm not 100% sure it actually matters.
+>>
+>>>>> Well, my initial patch set passed long list of arguments to
+>>>>> spi_flash_read(), but Brian suggested to use struct[1] in order to avoid
+>>>>> unnecessary churn when things need changed in the API.
+>>
+>>>> I don't see what that has to do with my point?
+>>
+>>> AFAIU, your previous comment was to move initialization of
+>>> spi_flash_read_message struct to spi_flash_read(). This would mean
+>>
+>> No, not at all.  I'm talking about how we handle the case where we don't
+>> have hardware support for this and need to implement it in software -
+>> currently that's in a separate place to the place where we call the
+>> driver.
+>>
+> 
+> Yeah, but AFAIK, hardware accelerated read support is applicable for
+> m25p80 flashes only, I doubt whether spi_flash_read() will be used by
+> other types. I felt keeping the software implementation in m25p80_read()
+> will be consistent with m25p80_write().
 
-Best regards,
-Krzysztof Adamski
+Is there any further work required on the patch? If not, what's the plan
+to merge this patch?
+
+-- 
+Regards
+Vignesh
