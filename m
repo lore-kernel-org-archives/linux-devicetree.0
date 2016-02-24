@@ -1,138 +1,44 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: DRA7: change address-cells and size-cells
-Date: Wed, 24 Feb 2016 15:41:04 +0530
-Message-ID: <1456308664-28308-1-git-send-email-lokeshvutla@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [PATCH v1 3/4] clk: rockchip: add the new clock ids for RK3228 HDMI
+Date: Wed, 24 Feb 2016 18:14:25 +0800
+Message-ID: <1456308865-30876-1-git-send-email-ykk@rock-chips.com>
+References: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-DRA7 SoC has the capability to support DDR memory upto 4GB. In order to
-represent this in memory dt node, the address-cells and size cells
-should be 2. So, changing the address-cells and size-cells to 2 and
-updating the memory nodes accordingly.
-
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 ---
- arch/arm/boot/dts/am57xx-beagle-x15.dts   |  2 +-
- arch/arm/boot/dts/am57xx-cl-som-am57x.dts |  2 +-
- arch/arm/boot/dts/dra7-evm.dts            |  2 +-
- arch/arm/boot/dts/dra7.dtsi               | 20 ++++++++++----------
- arch/arm/boot/dts/dra72-evm.dts           |  2 +-
- 5 files changed, 14 insertions(+), 14 deletions(-)
+ include/dt-bindings/clock/rk3228-cru.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15.dts b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-index 50312f8..9b664c5 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15.dts
-@@ -24,7 +24,7 @@
+diff --git a/include/dt-bindings/clock/rk3228-cru.h b/include/dt-bindings/clock/rk3228-cru.h
+index 5656bf6..fda9308 100644
+--- a/include/dt-bindings/clock/rk3228-cru.h
++++ b/include/dt-bindings/clock/rk3228-cru.h
+@@ -50,9 +50,11 @@
+ #define SCLK_SDIO_SAMPLE	119
+ #define SCLK_EMMC_SAMPLE	121
+ #define SCLK_VOP		122
++#define SCLK_HDMI_HDCP		123
  
- 	memory {
- 		device_type = "memory";
--		reg = <0x80000000 0x80000000>;
-+		reg = <0x0 0x80000000 0x0 0x80000000>;
- 	};
+ /* dclk gates */
+ #define DCLK_VOP		190
++#define DCLK_HDMI_PHY		191
  
- 	vdd_3v3: fixedregulator-vdd_3v3 {
-diff --git a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-index c538826..e6c40db 100644
---- a/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-+++ b/arch/arm/boot/dts/am57xx-cl-som-am57x.dts
-@@ -21,7 +21,7 @@
+ /* aclk gates */
+ #define ACLK_DMAC		194
+@@ -76,6 +78,8 @@
+ #define PCLK_PWM		350
+ #define PCLK_TIMER		353
+ #define PCLK_PERI		363
++#define PCLK_HDMI_CTRL		364
++#define PCLK_HDMI_PHY		365
  
- 	memory {
- 		device_type = "memory";
--		reg = <0x80000000 0x20000000>; /* 512 MB - minimal configuration */
-+		reg = <0x0 0x80000000 0x0 0x20000000>; /* 512 MB - minimal configuration */
- 	};
- 
- 	leds {
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index cfc24e5..2d1d3dd 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -18,7 +18,7 @@
- 
- 	memory {
- 		device_type = "memory";
--		reg = <0x80000000 0x60000000>; /* 1536 MB */
-+		reg = <0x0 0x80000000 0x0 0x60000000>; /* 1536 MB */
- 	};
- 
- 	evm_3v3_sd: fixedregulator-sd {
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 8ea153a..5460a2a 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -15,8 +15,8 @@
- #define MAX_SOURCES 400
- 
- / {
--	#address-cells = <1>;
--	#size-cells = <1>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
- 
- 	compatible = "ti,dra7xx";
- 	interrupt-parent = <&crossbar_mpu>;
-@@ -57,10 +57,10 @@
- 		compatible = "arm,cortex-a15-gic";
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
--		reg = <0x48211000 0x1000>,
--		      <0x48212000 0x1000>,
--		      <0x48214000 0x2000>,
--		      <0x48216000 0x2000>;
-+		reg = <0x0 0x48211000 0x0 0x1000>,
-+		      <0x0 0x48212000 0x0 0x1000>,
-+		      <0x0 0x48214000 0x0 0x2000>,
-+		      <0x0 0x48216000 0x0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
- 		interrupt-parent = <&gic>;
- 	};
-@@ -69,7 +69,7 @@
- 		compatible = "ti,omap5-wugen-mpu", "ti,omap4-wugen-mpu";
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
--		reg = <0x48281000 0x1000>;
-+		reg = <0x0 0x48281000 0x0 0x1000>;
- 		interrupt-parent = <&gic>;
- 	};
- 
-@@ -96,10 +96,10 @@
- 		compatible = "ti,dra7-l3-noc", "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		ranges;
-+		ranges = <0x0 0x0 0x0 0xc0000000>;
- 		ti,hwmods = "l3_main_1", "l3_main_2";
--		reg = <0x44000000 0x1000000>,
--		      <0x45000000 0x1000>;
-+		reg = <0x0 0x44000000 0x0 0x1000000>,
-+		      <0x0 0x45000000 0x0 0x1000>;
- 		interrupts-extended = <&crossbar_mpu GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
- 				      <&wakeupgen GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 
-diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
-index 00b1200..6a5b0c8 100644
---- a/arch/arm/boot/dts/dra72-evm.dts
-+++ b/arch/arm/boot/dts/dra72-evm.dts
-@@ -17,7 +17,7 @@
- 
- 	memory {
- 		device_type = "memory";
--		reg = <0x80000000 0x40000000>; /* 1024 MB */
-+		reg = <0x0 0x80000000 0x0 0x40000000>; /* 1024 MB */
- 	};
- 
- 	aliases {
+ /* hclk gates */
+ #define HCLK_VOP		452
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
