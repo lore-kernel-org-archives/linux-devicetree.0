@@ -1,56 +1,67 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 6/6] drm/msm/dsi: Parse DSI lanes via DT
-Date: Wed, 24 Feb 2016 10:32:22 +0530
-Message-ID: <56CD395E.9050504@codeaurora.org>
-References: <1455541259-8967-1-git-send-email-architt@codeaurora.org>
- <1455541259-8967-7-git-send-email-architt@codeaurora.org>
- <20160222025345.GB15973@rob-hp-laptop> <56CAB678.3080505@codeaurora.org>
- <CAL_JsqLVd3vLGO8SCQv=PFXb7yD42U_nKG=fxenc4Fy63yiezw@mail.gmail.com>
- <56CC23CD.5010708@ti.com> <56CC37BB.3060305@codeaurora.org>
- <56CC3E5C.3060101@ti.com> <20160223200446.GA28828@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1
+ bindings
+Date: Wed, 24 Feb 2016 14:10:38 +0900
+Message-ID: <20160224051038.GB5435@verge.net.au>
+References: <20160216071722.25461.61862.sendpatchset@little-apple>
+ <20160216071741.25461.54191.sendpatchset@little-apple>
+ <CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg@mail.gmail.com>
+ <CANqRtoQg--gnv+ZkopO3PR3Pt7i5quiKvaPDyeJVOnahJGgdmg@mail.gmail.com>
+ <20160217062805.GH11534@verge.net.au>
+ <CANqRtoRORF0MBs9GZPeppT0p28=s98Kw_foP7W8eyUCeOyuBJQ@mail.gmail.com>
+ <20160217120829.GA346@verge.net.au>
+ <CANqRtoTC=UshKih94JrsNMkxwj+1dqzkRaQHKP0ajLA3qRHG9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160223200446.GA28828@rob-hp-laptop>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Rob Clark <robdclark@gmail.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANqRtoTC=UshKih94JrsNMkxwj+1dqzkRaQHKP0ajLA3qRHG9A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-renesas-soc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 24, 2016 at 01:19:25PM +0900, Magnus Damm wrote:
+> Hi Simon,
+> 
+> On Wed, Feb 17, 2016 at 9:08 PM, Simon Horman <horms@verge.net.au> wrote:
+> > On Wed, Feb 17, 2016 at 03:45:19PM +0900, Magnus Damm wrote:
+> >> $ grep "renesas," Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+> >> - compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
+> >>         - "renesas,dmac-r8a7790" (R-Car H2)
+> >>         - "renesas,dmac-r8a7791" (R-Car M2-W)
+> >>         - "renesas,dmac-r8a7792" (R-Car V2H)
+> >>         - "renesas,dmac-r8a7793" (R-Car M2-N)
+> >>         - "renesas,dmac-r8a7794" (R-Car E2)
+> >>         - "renesas,dmac-r8a7795" (R-Car H3)
+> >>         compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
+> >>         compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
+> >> $
+> >
+> > It looks like I have been making the mess worse :(
+> >
+> > Possibly I prepared the patch in question, though recently,
+> > before I was properly aware of the preferred order.
+> 
+> No worries! The code above is at least consistent and matches the
+> common current case.
+> 
+> >> No need to rework existing stuff IMO. However once we rework DT
+> >> bindings (CMT) or add new ones (SYS-DMAC) then we have a good
+> >> opportunity to clean things up.
+> >
+> > Understood. From my point of view that seems like an opportunity worth taking.
+> 
+> So shall we leave the SYS-DMAC as-is or change things around? I
+> personally don't see the point in redoing things just to change order,
+> so keep as-is sounds good to me.
+> 
+> For the "fallback" CMT DT compat strings I think we should follow the
+> proposal from Geert and go with "renesas,rcar-gen2-cmt0". Regarding
+> the per-soc CMT DT compat strings my feeling is that we should follow
+> the same order as SYS-DMAC to keep things consistent.
 
+I would lean towards changing the order of the per-soc CMT DT compat
+strings but I do not feel strongly about it.
 
-On 02/24/2016 01:34 AM, Rob Herring wrote:
-> On Tue, Feb 23, 2016 at 01:11:24PM +0200, Tomi Valkeinen wrote:
->>
->>
->> On 23/02/16 12:43, Archit Taneja wrote:
->>>
->>>
->>> On 02/23/2016 02:48 PM, Tomi Valkeinen wrote:
->>>>
->>>> On 22/02/16 22:10, Rob Herring wrote:
->>>>
->>>>>> If we want all DSI host controllers to use a common binding to describe
->>>>>> lanes, we'd need to go with the most flexible one, and the driver
->>>>>> restricts it to the subsets that we support.
->>>>
->>>> True, but I wonder if that's necessary. The lane property for the SoC
->>>> should be read by the SoC specific driver, right? So the DT property can
->>>> be anything. I'm not sure if there's ever a reason for a generic code to
->>>> observe the DSI lane setup.
->>>
->>> Yeah, it is very SoC specific.
->
-> Agreed.
-
-Okay. We probably don't need to go with a generic binding, then. I'll
-simplify the msm/dsi lane bindings (i.e, drop the clock lanes, and
-represent things in lanes instead of pins).
-
-Thanks,
-Archit
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, hosted by The Linux Foundation
+As for the rest of your proposal above: I agree without reservation.
