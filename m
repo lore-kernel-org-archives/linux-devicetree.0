@@ -1,53 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4] spi: master driver to enable RTC on ICPDAS LP-8841
-Date: Wed, 24 Feb 2016 13:09:43 +0900
-Message-ID: <20160224040943.GR18327@sirena.org.uk>
-References: <1456105630-28914-1-git-send-email-ynvich@gmail.com>
- <1456224272-4391-1-git-send-email-ynvich@gmail.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
+Date: Wed, 24 Feb 2016 13:19:25 +0900
+Message-ID: <CANqRtoTC=UshKih94JrsNMkxwj+1dqzkRaQHKP0ajLA3qRHG9A@mail.gmail.com>
+References: <20160216071722.25461.61862.sendpatchset@little-apple>
+	<20160216071741.25461.54191.sendpatchset@little-apple>
+	<CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg@mail.gmail.com>
+	<CANqRtoQg--gnv+ZkopO3PR3Pt7i5quiKvaPDyeJVOnahJGgdmg@mail.gmail.com>
+	<20160217062805.GH11534@verge.net.au>
+	<CANqRtoRORF0MBs9GZPeppT0p28=s98Kw_foP7W8eyUCeOyuBJQ@mail.gmail.com>
+	<20160217120829.GA346@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Wjspmq6N72sNzV6w"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456224272-4391-1-git-send-email-ynvich@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:SPI SUBSYSTEM" <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160217120829.GA346-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
---Wjspmq6N72sNzV6w
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Feb 17, 2016 at 9:08 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> On Wed, Feb 17, 2016 at 03:45:19PM +0900, Magnus Damm wrote:
+>> $ grep "renesas," Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
+>> - compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
+>>         - "renesas,dmac-r8a7790" (R-Car H2)
+>>         - "renesas,dmac-r8a7791" (R-Car M2-W)
+>>         - "renesas,dmac-r8a7792" (R-Car V2H)
+>>         - "renesas,dmac-r8a7793" (R-Car M2-N)
+>>         - "renesas,dmac-r8a7794" (R-Car E2)
+>>         - "renesas,dmac-r8a7795" (R-Car H3)
+>>         compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
+>>         compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
+>> $
+>
+> It looks like I have been making the mess worse :(
+>
+> Possibly I prepared the patch in question, though recently,
+> before I was properly aware of the preferred order.
 
-On Tue, Feb 23, 2016 at 01:44:28PM +0300, Sergei Ianovich wrote:
+No worries! The code above is at least consistent and matches the
+common current case.
 
-> CC: Mark Brown <broonie@kernel.org>
-> CC: Rob Herring <robh@kernel.org>
->=20
->    v3..v4
->    fix Mark Brown review comments
->    * fix dependencies in Kconfig
+>> No need to rework existing stuff IMO. However once we rework DT
+>> bindings (CMT) or add new ones (SYS-DMAC) then we have a good
+>> opportunity to clean things up.
+>
+> Understood. From my point of view that seems like an opportunity worth taking.
 
-> ---
+So shall we leave the SYS-DMAC as-is or change things around? I
+personally don't see the point in redoing things just to change order,
+so keep as-is sounds good to me.
 
-As covered in SubmittingPatches please put inter-version changelogs
-after the --- so they get stripped out when applied.
+For the "fallback" CMT DT compat strings I think we should follow the
+proposal from Geert and go with "renesas,rcar-gen2-cmt0". Regarding
+the per-soc CMT DT compat strings my feeling is that we should follow
+the same order as SYS-DMAC to keep things consistent.
 
---Wjspmq6N72sNzV6w
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJWzS0FAAoJECTWi3JdVIfQ3o8H/Rhz43rCTypjPW0AQ2f2juX6
-SPuyjtAqscRQuas9pMG/nzIy2IXluHuGX5DSdJyzW/R4J3Io/huBdV3akItj7BaS
-Nd5QAmPle248rf6GJoLtKjZzF7v6KWAs1va+lP7ghSjufHlN8uM93wx53MNKg7LC
-GLzqMD9QCsxoh+iia1o9EIZH8XAO9HCvyqY7QkmQa3QI9yxrJnXdwcb4d8HLat2F
-7ixATCJwJ1vJtlGsDS6nniZKoQaQBwJOcSJfVvd2rU3ucE9OwEhz5lYURn6YJ0av
-6lu6HjIq9EfLfD1sncdIyT/sNWb0Cs28ZtmfVMs1cVNS3rk35P0hZHCvPEIjvnE=
-=W20x
------END PGP SIGNATURE-----
-
---Wjspmq6N72sNzV6w--
+/ magnus
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
