@@ -1,88 +1,103 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5 v7] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Wed, 24 Feb 2016 20:29:39 +0300
-Message-ID: <56CDE883.4040205@cogentembedded.com>
-References: <1456327573-16421-1-git-send-email-petr@barix.com>
+From: Javi Merino <javi.merino@arm.com>
+Subject: Re: [PATCH 3/3] arm64: dts: register Hi6220's thermal zone for power
+ allocator
+Date: Wed, 24 Feb 2016 18:28:57 +0000
+Message-ID: <20160224182856.GD3006@e104805>
+References: <1455983529-9559-1-git-send-email-leo.yan@linaro.org>
+ <1455983529-9559-4-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456327573-16421-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455983529-9559-4-git-send-email-leo.yan@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/24/2016 06:26 PM, Petr Kulhavy wrote:
-
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
->
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+On Sat, Feb 20, 2016 at 11:52:09PM +0800, Leo Yan wrote:
+> With profiling Hi6220's power modeling so get dynamic coefficient and
+> sustainable power. So pass these parameters from DT.
+> 
+> Now enable power allocator wit only one actor for CPU part, so directly
+> use cluster0's thermal sensor for monitoring temperature.
+> 
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > ---
-> v1: <initial>
->
-> v2:
->   - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
->   - using "ti," prefix instead of "da8xx," for specific property names
->   - no wildcards in compatibility string
->
-> v3:
->   - added "reg", "interrupts" and "interrupt-names" properties
->   - wildcards in compatibility string
->
-> v4:
->   - compatibility string set to "ti,da830-musb"
->   - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
->   - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
->   - removed "ti,hwmods"
->
-> v5:
->   - "ti,phy20-refclock-frequency" property made mandatory
->
-> v6:
->   - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
->
-> v7:
->   - removed the "mentor,power" property; hard coded to 500mA in the code
->
->   .../devicetree/bindings/usb/da8xx-usb.txt          | 43 ++++++++++++++++++++++
->   1 file changed, 43 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
->
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> new file mode 100644
-> index 0000000..e281829
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -0,0 +1,43 @@
-> +TI DA8xx MUSB
-> +~~~~~~~~~~~~~
-> +For DA8xx/OMAP-L1x/AM17xx/AM18xx platforms.
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 36 +++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 50ba1b0..3608a3e 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -6,6 +6,7 @@
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/hi6220-clock.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	compatible = "hisilicon,hi6220";
+> @@ -87,6 +88,7 @@
+>  			cooling-max-level = <0>;
+>  			#cooling-cells = <2>; /* min followed by max */
+>  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+> +			dynamic-power-coefficient = <311>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -322,5 +324,39 @@
+>  			clock-names = "thermal_clk";
+>  			#thermal-sensor-cells = <1>;
+>  		};
 > +
-> +Required properties:
-> +~~~~~~~~~~~~~~~~~~~~
-> + - compatible : Should be set to "ti,da830-musb".
+> +		thermal-zones {
 > +
-> + - reg: Offset and length of the USB controller register set.
+> +			cls0: cls0 {
+> +				polling-delay = <1000>;
+> +				polling-delay-passive = <100>;
+> +				sustainable-power = <3326>;
 > +
-> + - interrupts: The USB interrupt number.
+> +				/* sensor ID */
+> +				thermal-sensors = <&tsensor 2>;
 > +
-> + - interrupt-names: Should be set to "mc".
-> +
-> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
-> +
-> + - ti,usb2-phy-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
-> +     frequency in Hz in case the clock is generated by the internal PLL.
+> +				trips {
+> +					threshold: trip-point@0 {
+> +						temperature = <65000>;
+> +						hysteresis = <1000>;
 
-    Didn't you say it's needed in the case of external clock anyway?
+As far as I know, hysteresis is ignored in the thermal subsystem right
+now, so you could remove it from both trip points.
 
-> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
+> +						type = "passive";
+> +					};
+> +
+> +					target: trip-point@1 {
+> +						temperature = <75000>;
+> +						hysteresis = <1000>;
+> +						type = "passive";
+> +					};
+> +				};
+> +
+> +				cooling-maps {
+> +					map0 {
+> +						trip = <&target>;
+> +						contribution = <1024>;
 
-[...]
+As Hikey has only one voltage domain, you only have one cpu cooling
+device.  "contribution" is only useful when you have more than one
+cooling device, as it's relative to the other cooling device's
+contribution.  You can remove contribution from here.
 
-MBR, Sergei
+Other than this minor stuff, it looks good to me. FWIW,
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Javi Merino <javi.merino@arm.com>
+
+> +						cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +					};
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
