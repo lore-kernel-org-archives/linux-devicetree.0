@@ -1,83 +1,77 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v12 1/5] efi: ARM/arm64: ignore DT memory nodes instead
- of removing them
-Date: Wed, 24 Feb 2016 19:38:07 +0000
-Message-ID: <20160224193807.GC9003@leverpostej>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
- <1456192703-2274-2-git-send-email-ddaney.cavm@gmail.com>
- <20160223115805.GB4989@leverpostej>
- <20160223221202.GA32031@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
+ family of LED drivers
+Date: Wed, 24 Feb 2016 13:45:14 -0600
+Message-ID: <CAL_JsqKf8b-bE+WUkAkQ5pMz6FptppJ4eWY0bUi-euGM38gxrg@mail.gmail.com>
+References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
+ <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
+ <20160224011508.GA20343@rob-hp-laptop> <20160224135713.1eb1e234.drivshin.allworx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160223221202.GA32031@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20160224135713.1eb1e234.drivshin.allworx@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Cc: Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 04:12:02PM -0600, Rob Herring wrote:
-> On Tue, Feb 23, 2016 at 11:58:05AM +0000, Mark Rutland wrote:
-> > Hi,
-> > 
-> > On Mon, Feb 22, 2016 at 05:58:19PM -0800, David Daney wrote:
-> > > From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > 
-> > > There are two problems with the UEFI stub DT memory node removal
-> > > routine:
-> > > - it deletes nodes as it traverses the tree, which happens to work
-> > >   but is not supported, as deletion invalidates the node iterator;
-> > > - deleting memory nodes entirely may discard annotations in the form
-> > >   of additional properties on the nodes.
-> > > 
-> > > Since the discovery of DT memory nodes occurs strictly before the
-> > > UEFI init sequence, we can simply clear the memblock memory table
-> > > before parsing the UEFI memory map. This way, it is no longer
-> > > necessary to remove the nodes, so we can remove that logic from the
-> > > stub as well.
-> > 
-> > This is a little bit scary, but I guess this works.
-> 
-> The way it is worded/implemented is, I agree. But if we simply say both 
-> can be present and the kernel will default to UEFI memory map, that 
-> seems sufficient to me.
->  
-> > My only concern is that when we get kexec, a subsequent kernel must also
-> > have EFI memory map support, or things go bad for the next EFI-aware
-> > kernel after that (as things like the runtime services may have been
-> > corrupted by the kernel in the middle). It's difficult to fix the
-> > general case later.
-> > 
-> > A different option would be to support status="disabled" for the memory
-> > nodes, and ignore these in early_init_dt_scan_memory. That way a kernel
-> > cannot use memory without first having parsed the EFI memory map, and we
-> > can still get NUMA info from the disabled nodes.
-> 
-> That would be a bit strange that the node is disabled, but still used. 
+On Wed, Feb 24, 2016 at 12:57 PM, David Rivshin (Allworx)
+<drivshin.allworx@gmail.com> wrote:
+> On Tue, 23 Feb 2016 19:15:08 -0600
+> Rob Herring <robh@kernel.org> wrote:
+>
+>> On Tue, Feb 23, 2016 at 01:17:24PM -0500, David Rivshin (Allworx) wrote:
+>> > From: David Rivshin <drivshin@allworx.com>
+>> >
+>> > This adds a binding description for the is31fl3236/35/18/16 I2C LED
+>> > drivers.
+>> >
+>> > Signed-off-by: David Rivshin <drivshin@allworx.com>
+>> > ---
+>> >  .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
+>> >  1 file changed, 51 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
+>>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> Thanks, Rob. I just want to double check whether you noticed some
+> binding-related questions I had in the coverletter [1]. In hindsight
+> I should probably have included them in the patch comments as well so
+> they'd show up in patchwork. For convenience, I'll repeat them here:
 
-I agree this would be strange, and not necessarily a precedent we'd want
-to see copied elsewhere.
+I had not.
 
-Per ePAPR, a "disabled" node can be enabled in a binding-specific
-manner, so having the presence of a UEFI memory map "enable" the NUMA
-information would appear to be permitted.
+> I choose to have 'reg' be 1-based in order to follow the hardware
+> documentation. It seems 0-based is the normal choice, although HW
+> docs also usually use the 0-based numbering. Perhaps being consistent
+> with other bindings is more important than being consistent with the
+> datasheet's numbering?
 
-> What if DT and UEFI tables are out of sync somehow? RAM is multiple 
-> mapped and different addresses were picked for example.
+Usually reg is some type of address, so you should follow whatever is
+more natural for accessing the h/w.
 
-That applies regardless of the status of the memory nodes.
+Ideally, it is not just an index for s/w convenience.
 
-My suggestion was only that we acquired the NUMA node information, and
-added this node information (and not any additional extent of memory) to
-the UEFI memory map.
+> I used the 'reg' property for the LED channel, as it seemed ePAPR
+> required that name. I also considered naming the property 'chan',
+> and not pretending that it represented a bus address at all (and
+> then removing the @n from the subnode names). That would solve the
+> 'reg' question above as a side-effect, but would be inconstant with
+> other LED bindings (tca6507, pca963x, tlc59108, etc).
 
-This is precisely what we do with Ard's code, with the exception that in
-the absence of a UEFI memory map the kernel would know it was not
-permitted to access memory.
+I would expect the reg value is either the register (base) address for
+each channel or a bit offset in a register if they are all in the same
+register. Or it could be how the pins are labeled on the package if
+neither of those work.
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Note that the recently-added (and only in for-next) SN3218 driver
+> uses a 0-based 'reg' property, and the SN3218 has the same HW doc
+> numbering as the IS31FL32xx family (indeed the IS31FL3218 appears
+> to be a rebranded SN3218). So perhaps that sets the precedent if
+> there was not one before?
+
+If they are the same, then you should use the SN3218 binding. If it
+has problems, then it is not too late to fix it. You may want to add
+another compatible string if they are not truly the exact same die.
+
+Rob
