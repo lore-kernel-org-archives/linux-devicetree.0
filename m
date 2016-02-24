@@ -1,174 +1,45 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v5 0/8] Add MT8173 Video Encoder Driver and VPU Driver
-Date: Wed, 24 Feb 2016 09:30:47 +0100
-Message-ID: <56CD6A37.2040700@xs4all.nl>
-References: <1456215081-16858-1-git-send-email-tiffany.lin@mediatek.com>
- <56CC1CAB.1060409@xs4all.nl> <1456302223.15077.8.camel@mtksdaap41>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456302223.15077.8.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tiffany lin <tiffany.lin@mediatek.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org, PoChun.Lin@mediatek.com
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH v3 0/2] clk: Add Artpec-6 SoC support
+Date: Wed, 24 Feb 2016 09:38:57 +0100
+Message-ID: <cover.1456302520.git.larper@axis.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tiffany,
+Add clock support for the Artpec-6 SoC port. The ARM parts are in the series
+"arm: Add Artpec-6 SoC" and it goes through the arm-soc tree.
 
-On 02/24/16 09:23, tiffany lin wrote:
-> Hi Hans,
-> 
-> On Tue, 2016-02-23 at 09:47 +0100, Hans Verkuil wrote:
->> On 02/23/16 09:11, Tiffany Lin wrote:
->>> ==============
->>>  Introduction
->>> ==============
->>>
->>> The purpose of this series is to add the driver for video codec hw embedded in the Mediatek's MT8173 SoCs.
->>> Mediatek Video Codec is able to handle video encoding of in a range of formats.
->>>
->>> This patch series also include VPU driver. Mediatek Video Codec driver rely on VPU driver to load,
->>> communicate with VPU.
->>>
->>> Internally the driver uses videobuf2 framework and MTK IOMMU and MTK SMI.
->>> MTK IOMMU[1] and MTK SMI[2] have not yet been merged, but we wanted to start discussion about the driver
->>> earlier so it could be merged sooner.
->>>
->>> [1]https://patchwork.kernel.org/patch/8335461/
->>> [2]https://patchwork.kernel.org/patch/7596181/
->>
->> <snip>
->>
->>> v4l2-compliance test output:
->>> localhost ~ # /usr/bin/v4l2-compliance -d /dev/video1
->>> Driver Info:
->>>         Driver name   : mtk-vcodec-enc
->>>         Card type     : platform:mt8173
->>>         Bus info      : platform:mt8173
->>>         Driver version: 4.4.0
->>>         Capabilities  : 0x84204000
->>>                 Video Memory-to-Memory Multiplanar
->>>                 Streaming
->>>                 Extended Pix Format
->>>                 Device Capabilities
->>>         Device Caps   : 0x04204000
->>>                 Video Memory-to-Memory Multiplanar
->>>                 Streaming
->>>                 Extended Pix Format
->>>
->>> Compliance test for device /dev/video1 (not using libv4l2):
->>>
->>> Required ioctls:
->>>         test VIDIOC_QUERYCAP: OK
->>>
->>> Allow for multiple opens:
->>>         test second video open: OK
->>>         test VIDIOC_QUERYCAP: OK
->>>         test VIDIOC_G/S_PRIORITY: OK
->>>
->>> Debug ioctls:
->>>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->>>         test VIDIOC_LOG_STATUS: OK (Not Supported)
->>>
->>> Input ioctls:
->>>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->>>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->>>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->>>         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->>>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->>>         Inputs: 0 Audio Inputs: 0 Tuners: 0
->>>
->>> Output ioctls:
->>>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->>>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->>>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->>>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->>>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->>>         Outputs: 0 Audio Outputs: 0 Modulators: 0
->>>
->>> Input/Output configuration ioctls:
->>>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->>>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->>>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->>>         test VIDIOC_G/S_EDID: OK (Not Supported)
->>>
->>>         Control ioctls:
->>>                 test VIDIOC_QUERYCTRL/MENU: OK
->>>                 test VIDIOC_G/S_CTRL: OK
->>>                 test VIDIOC_G/S/TRY_EXT_CTRLS: OK
->>>                 test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
->>>                 test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->>>                 Standard Controls: 12 Private Controls: 0
->>>
->>>         Format ioctls:
->>>                 test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->>>                 test VIDIOC_G/S_PARM: OK
->>>                 test VIDIOC_G_FBUF: OK (Not Supported)
->>>                 test VIDIOC_G_FMT: OK
->>>                 test VIDIOC_TRY_FMT: OK
->>>                 test VIDIOC_S_FMT: OK
->>>                 test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->>>
->>>         Codec ioctls:
->>>                 test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->>>                 test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->>>                 test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->>>
->>>         Buffer ioctls:
->>>                 test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->>>                 test VIDIOC_EXPBUF: OK
->>>
->>> Total: 38, Succeeded: 38, Failed: 0, Warnings: 0
->>
->> Nice!
->>
->> Can you try 'v4l2-compliance -s'? Note that this may not work since I know
->> that v4l2-compliance doesn't work all that well with codecs, but I am
->> curious what the output is when you try streaming.
->>
->> Don't bother trying to chase down reported failures, those are likely from
->> v4l2-compliance itself. It is something I would like to improve, but -ENOTIME.
->>
-> 
-> When I try to run 'v4l2-compliance -d /dev/video1 -s, I got follow
-> output.
-> I use v4.4-rc5 kernel and v4l-utils 1.6 version.
+Changes since v2:
+- Moved axis,artpec6-clkctrl.h to the first patch with the DT bindings.
 
-Can you compile v4l2-compliance straight from the v4l-utils.git master branch?
-Version 1.6 is too old, and for proper compliance testing you should always use
-the master branch. It probably won't matter for this -s test, but for the
-regular test (without -s) it does make a difference.
+Changes since v1:
 
-If nothing else, using the master branch will make it easier for me to match up
-the line numbers that v4l2-compliance reports to the actual source.
+- The driver now provides all clocks from the main clock controller block
+  through one DT node.
+- Added a header file for the clock indexes.
+- Refer to clock-bindings.txt in the bindings document.
 
-Thanks!
+A platform driver was not possible because the clocks are needed earlier in the
+kernel startup.
 
-	Hans
 
-> 
-> Streaming ioctls:
->         test read/write: OK (Not Supported)
-> fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(332): buf.querybuf(node, i) fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(868): testQueryBuf(node, cur_fmt.type, q.g_buffers())
->         test MMAP: FAIL
-> fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(923): ret && ret != ENOTTY
-> 
-> fail: ../../../v4l-utils-1.6.0/utils/v4l2-compliance/v4l2-test-buffers.cpp(988): setupUserPtr(node, q)
->         test USERPTR: FAIL
->         test DMABUF: Cannot test, specify --expbuf-device
-> 
-> best regards,
-> Tiffany
-> 
->> Regards,
->>
->> 	Hans
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Lars Persson (2):
+  clk: add device tree binding for Artpec-6 clock controller
+  clk: add artpec-6 clock controller
+
+ .../devicetree/bindings/clock/artpec6.txt          |  41 +++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/axis/Makefile                          |   1 +
+ drivers/clk/axis/clk-artpec6.c                     | 177 +++++++++++++++++++++
+ include/dt-bindings/clock/axis,artpec6-clkctrl.h   |  38 +++++
+ 5 files changed, 258 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
+ create mode 100644 drivers/clk/axis/Makefile
+ create mode 100644 drivers/clk/axis/clk-artpec6.c
+ create mode 100644 include/dt-bindings/clock/axis,artpec6-clkctrl.h
+
+-- 
+2.1.4
+
