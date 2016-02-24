@@ -1,81 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: rt5640: add master clock handling
- for rt5640
-Date: Wed, 24 Feb 2016 12:32:59 +0900
-Message-ID: <20160224033259.GL18327@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: rt5640: add master clock handling for rt5640
+Date: Wed, 24 Feb 2016 12:37:50 +0900
+Message-ID: <20160224033750.GN18327@sirena.org.uk>
 References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
- <56CC719C.1090901@linux.intel.com> <2199435.lA9iTvxnKV@phil>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5994723335747866069=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <2199435.lA9iTvxnKV@phil>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Oder Chiou <oder_chiou@realtek.com>, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>, linux-kernel@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CbS85NFTG8TaslL2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456190782-18865-1-git-send-email-sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============5994723335747866069==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sUeeoP6xcRoKhsB+"
-Content-Disposition: inline
-
-
---sUeeoP6xcRoKhsB+
+--CbS85NFTG8TaslL2
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 24, 2016 at 12:08:31AM +0100, Heiko Stuebner wrote:
-> Am Dienstag, 23. Februar 2016, 08:50:04 schrieb Pierre-Louis Bossart:
+On Tue, Feb 23, 2016 at 09:26:22AM +0800, Sugar Zhang wrote:
+> enable/disable master clock when codec is active or not.
 
-> > This patch assumes that the information on mclk comes from DeviceTree.
-> > The mclk may also be enabled/disabled in the machine driver with an
-> > explicit transition to use an internal clock when the codec is not used.
-> > I hope this patch doesn't preclude such usages or there will be a
-> > conflict with the patches we are about to upstream for Baytrail/cht
-> > devices.
+This patch has already been applied, please send incremental patches if
+any changes are required.
 
-> As you can see, the clock property itself is optional and the clk_get bel=
-ow=20
-> acts accordingly of also continuing if the clock is not present.
-> So it won't affect any users doing it otherwise.
-
-That said we really do need x86 to transition to use the clock API in
-order to integrate with external devices, where the machine driver does
-manage clocks we want that to move to being done using the clock API
-rather than custom APIs.
-
---sUeeoP6xcRoKhsB+
+--CbS85NFTG8TaslL2
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJWzSRrAAoJECTWi3JdVIfQbv8H/3oqQbWebeAQzP6byQrUktJ+
-c4ET+PMv/zGNQB56z59nPVoCq8f3f2pNwpjVZisyfx9b5X3nS0pAGklD0bMoVQ6w
-zioasc1imvrIhsOpgdUGN7pITmvrXDVpCClofdYLV2XPHL9Oyile9fVvGLESI7hm
-KT8b5AtgiatEO/QuzyE/rHCHfs+VW/gPiurV0rMviQSi8vaUm/iA9DDqI2CsXHZG
-WbWymCyLEdbm9ms4+3J+5aoHK3/nbKCcowF/JvCTKOz4uuzeJfJKQX7k5lq0CrRL
-zy6lzI62g9/BEYVz6P6U0VrPIIP+/YQH1jCK5zmYOpJdhpexJ6NkGCoEsgjUsEo=
-=SGcL
+iQEcBAEBCAAGBQJWzSWOAAoJECTWi3JdVIfQ1tIH/1oUfOcJaGkwlNprnmeQsPfb
+8dJX5S1twsczb/cYkrILppolVvymvRDf9tx1Kra64g53lr025ifUWjdEp6MZR+WH
+P+7o83PIxXbWlD/C1VhDV4PvhQtukfOxYuze1XXYG57xufenh12hK0TkUF87X3lm
+NwADiGbSS9S/78lDOIf/14N3n61Ko69DelHwrW5/1vkWoZvP8zrB6RJJNcVtaiAc
+DOVCK+k110Lyr+bYKoG3RCxhIMg64Iu5ffRQJQtwfD0vZk6im+kMBUUwKCFrgBb0
+VeSiadzLVngyip3u/RcaytRe74eE6HbcjIOFRuBAiuTQFHmWA7RdsDNmWMkPIRA=
+=vD85
 -----END PGP SIGNATURE-----
 
---sUeeoP6xcRoKhsB+--
-
---===============5994723335747866069==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5994723335747866069==--
+--CbS85NFTG8TaslL2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
