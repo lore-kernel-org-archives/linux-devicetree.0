@@ -1,109 +1,55 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RFC 3/3] leds: Add driver for the ISSI IS31FL32xx family of
- LED drivers
-Date: Wed, 24 Feb 2016 17:08:53 +0100
-Message-ID: <56CDD595.3010203@samsung.com>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
- <1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
- <20160223184517.GB10246@leverpostej>
- <20160223173841.2f741421.drivshin.allworx@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: rt5640: add master clock handling for
+ rt5640
+Date: Wed, 24 Feb 2016 10:10:05 -0600
+Message-ID: <56CDD5DD.6040006@linux.intel.com>
+References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
+ <56CC719C.1090901@linux.intel.com> <2199435.lA9iTvxnKV@phil>
+ <20160224033259.GL18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20160223173841.2f741421.drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160224033259.GL18327-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Oder Chiou <oder_chiou-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bard Liao <bardliao-Rasf1IRRPZFBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2016 11:38 PM, David Rivshin (Allworx) wrote:
-> On Tue, 23 Feb 2016 18:45:17 +0000
-> Mark Rutland <mark.rutland@arm.com> wrote:
+On 2/23/16 9:32 PM, Mark Brown wrote:
+> On Wed, Feb 24, 2016 at 12:08:31AM +0100, Heiko Stuebner wrote:
+>> Am Dienstag, 23. Februar 2016, 08:50:04 schrieb Pierre-Louis
+>> Bossart:
 >
->> On Tue, Feb 23, 2016 at 01:17:25PM -0500, David Rivshin (Allworx) wrote:
->>> From: David Rivshin <drivshin@allworx.com>
->>> +static int is31fl32xx_parse_child_dt(const struct device *dev,
->>> +				     const struct device_node *child,
->>> +				     struct is31fl32xx_led_data *led_data)
->>> +{
->>> +	struct led_classdev *cdev = &led_data->cdev;
->>> +	int ret = 0;
->>> +	u32 reg;
->>> +
->>> +	cdev->name = of_get_property(child, "label", NULL) ? : child->name;
->>
->> We really shouldn't be spreading of_get_property into more drivers. It's
->> generally not what you want, and doesn't do appropriate sanity checking.
+>>> This patch assumes that the information on mclk comes from
+>>> DeviceTree. The mclk may also be enabled/disabled in the machine
+>>> driver with an explicit transition to use an internal clock when
+>>> the codec is not used. I hope this patch doesn't preclude such
+>>> usages or there will be a conflict with the patches we are about
+>>> to upstream for Baytrail/cht devices.
 >
-> Sorry, I copied the basic DT parsing from some other led driver (leds-pwm,
-> I think), and did not check if there was a better way.
+>> As you can see, the clock property itself is optional and the
+>> clk_get below acts accordingly of also continuing if the clock is
+>> not present. So it won't affect any users doing it otherwise.
 >
->> Use of_property_read_string, though you may need to copy the result.
->
-> Will do.
->
-> As far as copying the result, this is an area I'm fuzzy on. If I
-> understand correctly the device_nodes are reference counted, and
-> of_property_read_string() returns a pointer to the data inside the
-> device_node. So it seems I'd either need to hold onto a reference,
-> or make a copy of the string.
->
-> devm_kstrdup() seems like it would be an easy way to go, although
-> maybe not the most efficient.
->
-> Using of_node_get() would seem to be more efficient, but then what
-> would be the right way to release that reference on remove()?
->   - Does that already happen in some infrastructure when using DT
->     probing?
->   - Is there a devm_*() helper function that should be used?
->   - Or would it be best to just keep a pointer to the device_node so
->     that of_node_put() can be called on remove()?
->
-> Also, I have yet to find an example of a driver which either copies
-> the string or does an of_node_get() on the node. In fact just by a
-> count of files, it seems very few have any hope of doing either:
->
-> $ find drivers/ -name '*.c' -exec grep of_property_read_string -l {} + \
-> | wc -l
-> 197
-> $ find drivers/ -name '*.c' -exec grep of_property_read_string -l {} + \
-> | xargs grep -l of_node_get | wc -l
-> 15
-> $ find drivers/ -name '*.c' -exec grep of_property_read_string -l {} + \
-> | xargs grep -l strdup | wc -l
-> 11
->
-> So I'm very much hoping that there's some infrastructure automatically
-> handling the appropriate reference counting, so that the nodes stay
-> around (at least) as long as the driver is instantiated...
->
->>> +
->>> +	ret = of_property_read_u32(child, "reg", &reg);
->>> +	if (ret || reg < 1 || reg > led_data->priv->cdef->channels) {
->>> +		dev_err(dev,
->>> +			"Child node %s does not have a valid reg property\n",
->>> +			child->name);
->>> +		return -EINVAL;
->>> +	}
->>> +	led_data->channel = reg;
->>> +
->>> +	cdev->default_trigger = of_get_property(child, "linux,default-trigger",
->>> +						NULL);
->>
->> Likewise.
->
-> Will take care of this same as above.
+> That said we really do need x86 to transition to use the clock API
+> in order to integrate with external devices, where the machine driver
+> does manage clocks we want that to move to being done using the clock
+> API rather than custom APIs.
 
-DT nodes refcounting is enabled only when CONFIG_OF_DYNAMIC is defined,
-and does matter in case Device Tree overlays are used. DT people -
-please correct me if I'm wrong.
+For Baytrail audio we have a single platform clock that can be turned
+on/off and set to 19.2 MHz or 25 MHz. No other controls are available,
+no multipliers or complicated dependencies on other clocks, parents or 
+children and no other users for this clock but the audio subsystem.
+I looked at the clock framework and couldn't figure out how it would 
+simply map the hardware so for now the use of the MCLK is only enabled 
+with an on/off or set-rate(19.2|25) custom API. I am not an expert here 
+so if this clock framework becomes a requirement to upstream code I 
+would appreciate any pointers to do the right thing. I really couldn't 
+find a simple example with 'Put your code here' comments to use this 
+framework.
 
-If this use case is not valid for this driver, then we can rely
-on the pointer obtained with of_property_read_string,
-I've been doing empirical tests and child node refcount is greater
-than 0 throughout whole driver lifespan.
-
--- 
-Best regards,
-Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
