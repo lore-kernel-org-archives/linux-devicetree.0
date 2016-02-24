@@ -1,28 +1,77 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 0/2] ARM: dts: rockchip: fix some interrupts on rk3288
-Date: Wed, 24 Feb 2016 14:37:05 +0100
-Message-ID: <2022698.P5dgKXtQhu@phil>
-References: <1456234860-18832-1-git-send-email-john@metanate.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
+Date: Wed, 24 Feb 2016 14:46:52 +0100
+Message-ID: <20160224144652.14068468@bbrezillon>
+References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456234860-18832-1-git-send-email-john@metanate.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Keeping <john@metanate.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455300685-27009-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 23. Februar 2016, 13:40:58 schrieb John Keeping:
-> None of these are used by drivers so these don't fix any bugs but maybe
-> they'll save someone debugging time in the future.
-> 
-> John Keeping (2):
->   ARM: dts: rockchip: fix MIPI interrupt on rk3288
->   ARM: dts: rockchip: fix audio interrupts on rk3288
+Hi Rafal,
 
-applied both to my dts32 branch for 4.6 after verifying against the TRM as 
-well.
+On Fri, 12 Feb 2016 19:11:23 +0100
+Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Thanks for catching these
-Heiko
+> This allows specifying algorithm used for NAND ECC. There are two
+> available values: "bch" and "hamming". It's important as having just
+> ECC parameters (step, strength) isn't enough to determine algorithm,
+> e.g. you can't distinct BCH-1 and Hamming.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/nand.txt |  3 +++
+>  drivers/of/of_mtd.c                            | 33 ++++++++++++++++=
+++++++++++
+>  include/linux/mtd/nand.h                       |  5 ++++
+>  include/linux/of_mtd.h                         |  6 +++++
+>  4 files changed, 47 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documen=
+tation/devicetree/bindings/mtd/nand.txt
+> index b53f92e..a2c2df5 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+> @@ -3,6 +3,9 @@
+>  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+>    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob=
+_first",
+>    "soft_bch".
+> +- nand-ecc-algo : string, algorithm of NAND ecc.
+> +		  Supported values are: "bch", "hamming". The default one is
+> +		  "bch".
+
+I like the idea of specifying which ECC algorithm should be used, and
+this is IMO clearer than putting the information directly in
+nand-ecc-mode (as is already done for the "soft" and "soft_bch" modes,
+which are respectively encoding software hamming and software bch
+implementations).
+
+But shouldn't we take this even further and add new DT properties
+to encode the ECC layout (syndrome, oob_first), and another one to
+specify the implementation type (software or hardware)?
+
+nand-ecc-layout =3D "nornal", "syndrome" or "oob_first"
+nand-ecc-engine =3D "none", "soft" or "hw" ("on-die" ?)
+
+Note that it's not something I ask you to do right now, I just want to
+bring the topic on the table.
+
+Best Regards,
+
+Boris
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
