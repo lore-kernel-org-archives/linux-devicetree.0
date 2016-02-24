@@ -1,39 +1,33 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: MediaTek: Add binding document for the
- AUXADC
-Date: Wed, 24 Feb 2016 15:36:46 +0100
-Message-ID: <56CDBFFE.9050406@gmail.com>
-References: <1455866326-15095-1-git-send-email-s.hauer@pengutronix.de>
- <20160223203254.GA14660@rob-hp-laptop>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: realview: add EB syscon variants to bindings
+Date: Wed, 24 Feb 2016 15:51:10 +0100
+Message-ID: <3716654.ki0irAFpjQ@wuerfel>
+References: <1456218606-3749-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160223203254.GA14660@rob-hp-laptop>
+In-Reply-To: <1456218606-3749-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 23 February 2016 10:10:06 Linus Walleij wrote:
+> There are two distinct RealView EB system controller that we need
+> to detect and handle because their register layout differ
+> slightly.
+> 
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
 
+Looks ok.
 
-On 23/02/16 21:32, Rob Herring wrote:
-> On Fri, Feb 19, 2016 at 08:18:46AM +0100, Sascha Hauer wrote:
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>
->> This is a supplement to the MTK Thermal series which was lacking the
->> description for the AUXADC.
->
-> So it will be applied with that I presume.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Well the basic problem that I see is, that the auxadc has some more 
-registers (at least in mt6589) for the touch screen registers.
-So this makes it a candidate for syscon and regmap.
-But this needs a patch in the thermal driver first...
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
