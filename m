@@ -1,65 +1,30 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
- family of LED drivers
-Date: Wed, 24 Feb 2016 13:57:13 -0500
-Message-ID: <20160224135713.1eb1e234.drivshin.allworx@gmail.com>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
-	<1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
-	<20160224011508.GA20343@rob-hp-laptop>
+From: "Thomas" <topmag1-9Onoh4P/yGk@public.gmane.org>
+Subject: RE:Sintered NdFeB and SmC'supplier/manufacturer
+Date: Thu, 25 Feb 2016 02:52:23 +0800
+Message-ID: <201602250252235741345@a.mudiai.net>
+Reply-To: topmag1-9Onoh4P/yGk@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20160224011508.GA20343@rob-hp-laptop>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain;
+	charset="GB2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 23 Feb 2016 19:15:08 -0600
-Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, Feb 23, 2016 at 01:17:24PM -0500, David Rivshin (Allworx) wrote:
-> > From: David Rivshin <drivshin@allworx.com>
-> > 
-> > This adds a binding description for the is31fl3236/35/18/16 I2C LED
-> > drivers.
-> > 
-> > Signed-off-by: David Rivshin <drivshin@allworx.com>
-> > ---
-> >  .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
-> >  1 file changed, 51 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt  
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Thanks, Rob. I just want to double check whether you noticed some
-binding-related questions I had in the coverletter [1]. In hindsight
-I should probably have included them in the patch comments as well so 
-they'd show up in patchwork. For convenience, I'll repeat them here:
-
-I choose to have 'reg' be 1-based in order to follow the hardware 
-documentation. It seems 0-based is the normal choice, although HW
-docs also usually use the 0-based numbering. Perhaps being consistent 
-with other bindings is more important than being consistent with the 
-datasheet's numbering?
-
-I used the 'reg' property for the LED channel, as it seemed ePAPR 
-required that name. I also considered naming the property 'chan', 
-and not pretending that it represented a bus address at all (and
-then removing the @n from the subnode names). That would solve the
-'reg' question above as a side-effect, but would be inconstant with
-other LED bindings (tca6507, pca963x, tlc59108, etc).
-
-Note that the recently-added (and only in for-next) SN3218 driver 
-uses a 0-based 'reg' property, and the SN3218 has the same HW doc
-numbering as the IS31FL32xx family (indeed the IS31FL3218 appears 
-to be a rebranded SN3218). So perhaps that sets the precedent if 
-there was not one before?
-
-Any guidance you could offer would be appreciated (especially since
-this is my first from-scratch binding, and I'd rather not form any
-bad habits).
-
-[1] http://www.spinics.net/lists/linux-leds/msg05564.html
-    http://thread.gmane.org/gmane.linux.leds/4530
+RGVhciBTaXIvTWFkYW0sDQoNClRoaXMgaXMgVGhvbWFzIGZyb20gdG9wbWFnLFNoZW56aGVuLENo
+aW5hLg0KDQpGcm9tIHlvdXIgd2Vic2l0ZSwgd2Uga25vdyB0aGF0IG91ciBtYWduZXQgcHJvZHVj
+dHMgbWF5IGJlIHVzZWQgZm9yIHlvdXIgcHJvZHVjdHMuDQoNCk91ciBicmFuY2ggY29tcGFueSBh
+bHNvIG1hbnVmYWN0dXJlIGFuZCBzdXBwbHkgcmF3IG1hdGVyaWFscyBvZiBoaWdoIGNhbHNzIHBy
+YXNlb2R5bWl1bS1uZW9keW1pdW0taXJvbiBhbGxveSwgZHlzcHJvc2l1bSwgY2hyb21pdW0gbWV0
+YWwgZXRjLiBXZSBhcmUgc3BlY2lhbGl6ZWQgaW4gc2ludGVyZWQgJiBib25kZWQgTmRGZUIgbWFn
+bmV0cywgU21DbyBtYWduZXRzLCBBbG5pY28gbWFnbmV0cywgZmVycml0ZSBtYWduZXRzIGFuZCB2
+YXJpb3VzIGtpbmRzIG9mIG1hZ25ldGljIGFzc2VtYmxpZXMuDQoNCkxvb2tpbmcgZm93YXJkIHRv
+IGhlYXJpbmcgZnJvbSB5b3UuDQoNClRob21hcyAtLS0gU2FsZXMgRW5naW5lZXIgIA0KTW9iaWxl
+OiAwMDg2LTE1ODg5NzA2ODM3DQpBZGRyZXNzOiBEYWxhbmcgc3RyZWV0LExvbmdodWEgZGlzdHJp
+Y3QsIFNoZW56aGVuLFBSQyANClRlbDo4Ni03NTUtMjkwMTk4NzEgDQpFLW1haWw6IHRvcG1hZzFA
+MTYzLmNvbQ==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
