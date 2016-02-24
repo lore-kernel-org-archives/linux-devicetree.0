@@ -1,230 +1,96 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v3 2/2] clk: add artpec-6 clock controller
-Date: Wed, 24 Feb 2016 09:38:59 +0100
-Message-ID: <6d86926e14a598fdd5bd6ee12e67e3b1c96af7ef.1456302520.git.larper@axis.com>
-References: <cover.1456302520.git.larper@axis.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <cover.1456302520.git.larper@axis.com>
-In-Reply-To: <cover.1456302520.git.larper@axis.com>
-References: <cover.1456302520.git.larper@axis.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
+From: Alexandre Torgue <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Wed, 24 Feb 2016 09:40:55 +0100
+Message-ID: <CAJgp7zzrJWuJBQyjRdyU5qg=emCjqWfSPVRhT-D6G6Ho=hJzVA@mail.gmail.com>
+References: <1456240244-10275-1-git-send-email-alexandre.torgue@gmail.com>
+	<1456240244-10275-3-git-send-email-alexandre.torgue@gmail.com>
+	<CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a driver for the main clock controller of the Artpec-6 Soc.
+2016-02-23 23:37 GMT+01:00 Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> Hi Alexandre,
+>
+> You should copy 'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org' on bindings doc. Adding cc here.
+>
+> On 23 February 2016 at 16:10, Alexandre TORGUE
+> <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>> new file mode 100644
+>> index 0000000..18734b3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>> @@ -0,0 +1,41 @@
+>> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+>> +
+>> +This file documents platform glue layer for stmmac.
+>> +Please see stmmac.txt for the other unchanged properties.
+>> +
+>> +The device node has following properties.
+>> +
+>> +Required properties:
+>> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+>> +              "snps,dwmac-3.50a" to select IP vesrion.
+>> +- clocks: Should contain the GMAC main clock, and tx clock
+>> +- compatible:  Should be "st,stm32-dwmac" to select glue and
+>> +              "snps,dwmac-3.50a" to select IP version.
+>> +- clocks: Should contain the MAC main clock
+>> +- clock-names: Should contain the clock names "stmmaceth".
+>> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+>> +             encompases the glue register, and the offset of the control register.
+>> +
+>> +Optional properties:
+>> +- clocks: Could contain:
+>> +       - the tx clock,
+>> +       - the rx clock
+>> +- clock-names: Could contain the clock names "tx-clk", "rx-clk"
+>> +
+>> +Example:
+>> +
+>> +               ethernet0: dwmac@40028000 {
+>> +                       device_type = "network";
+>
+> What is this 'device_type = "network"' for?
+> It seems to used in a lot of powerpc DTs, but only a couple of arm DTs.
+>
+> Maybe Rob could enlighten us?
+>
+>> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+>> +                       status = "disabled";
+>> +                       reg = <0x40028000 0x8000>;
+>> +                       reg-names = "stmmaceth";
+>> +                       interrupts = <0 61 0>, <0 62 0>;
+>> +                       interrupt-names = "macirq", "eth_wake_irq";
+>> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+>> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+>> +                       st,syscon = <&syscfg 0x4>;
+>> +                       snps,pbl = <32>;
+>
+> Regarding snps,pbl; using 32 here might not give you what you would except.
+> See comment in dwmac1000_dma_init().
+>
+> The driver is hard coded to use PBL4X/PBL8X mode. Just a heads up.
+>
+Hi Joachim,
 
-Signed-off-by: Lars Persson <larper@axis.com>
----
- drivers/clk/Makefile           |   1 +
- drivers/clk/axis/Makefile      |   1 +
- drivers/clk/axis/clk-artpec6.c | 177 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 179 insertions(+)
- create mode 100644 drivers/clk/axis/Makefile
- create mode 100644 drivers/clk/axis/clk-artpec6.c
+My fault, It is not working with 32. I will modify it (should be 8 for example)
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index b038e36..8cd72e7 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_COMMON_CLK_WM831X)		+= clk-wm831x.o
- obj-$(CONFIG_COMMON_CLK_XGENE)		+= clk-xgene.o
- obj-$(CONFIG_COMMON_CLK_PWM)		+= clk-pwm.o
- obj-$(CONFIG_COMMON_CLK_AT91)		+= at91/
-+obj-$(CONFIG_ARCH_ARTPEC)		+= axis/
- obj-y					+= bcm/
- obj-$(CONFIG_ARCH_BERLIN)		+= berlin/
- obj-$(CONFIG_ARCH_HISI)			+= hisilicon/
-diff --git a/drivers/clk/axis/Makefile b/drivers/clk/axis/Makefile
-new file mode 100644
-index 0000000..628c9d3
---- /dev/null
-+++ b/drivers/clk/axis/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_MACH_ARTPEC6)	+= clk-artpec6.o
-diff --git a/drivers/clk/axis/clk-artpec6.c b/drivers/clk/axis/clk-artpec6.c
-new file mode 100644
-index 0000000..c1e3048
---- /dev/null
-+++ b/drivers/clk/axis/clk-artpec6.c
-@@ -0,0 +1,177 @@
-+/*
-+ * ARTPEC-6 clock initialization
-+ *
-+ * Copyright 2015-2016 Axis Comunications AB.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/clkdev.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <dt-bindings/clock/axis,artpec6-clkctrl.h>
-+
-+struct artpec6_clkctrl_drvdata {
-+	struct clk *clk_table[ARTPEC6_CLK_NUMCLOCKS];
-+	void __iomem *syscon_base;
-+	struct clk_onecell_data clk_data;
-+	spinlock_t i2scfg_lock;
-+};
-+
-+static struct artpec6_clkctrl_drvdata *clkdata;
-+
-+static void of_artpec6_clkctrl_setup(struct device_node *np)
-+{
-+	int propidx;
-+	const char *i2s_refclk_name = NULL;
-+	const char *frac_clk_name = NULL;
-+	struct clk *sys_refclk;
-+	const char *sys_refclk_name;
-+	const char *i2s_mux_parents[2] = { NULL, NULL };
-+	u32 pll_mode, pll_m, pll_n;
-+
-+	/* Mandatory parent clock. */
-+	sys_refclk = of_clk_get_by_name(np, "sys_refclk");
-+	if (IS_ERR(sys_refclk))
-+		return;
-+
-+	sys_refclk_name = __clk_get_name(sys_refclk);
-+	if (!sys_refclk_name)
-+		return;
-+
-+	clkdata = kzalloc(sizeof(*clkdata), GFP_KERNEL);
-+	if (!clkdata)
-+		return;
-+
-+	/* Find clock names of optional parent clocks. */
-+	propidx = of_property_match_string(np, "clock-names", "i2s_refclk");
-+	if (propidx >= 0)
-+		i2s_refclk_name = of_clk_get_parent_name(np, propidx);
-+
-+	propidx = of_property_match_string(np, "clock-names", "frac_clk");
-+	if (propidx >= 0)
-+		frac_clk_name = of_clk_get_parent_name(np, propidx);
-+
-+	spin_lock_init(&clkdata->i2scfg_lock);
-+
-+	clkdata->syscon_base = of_iomap(np, 0);
-+
-+	/* Read PLL1 factors configured by boot strap pins. */
-+	pll_mode = (readl(clkdata->syscon_base) >> 6) & 3;
-+	switch (pll_mode) {
-+	case 0:		/* DDR3-2133 mode */
-+		pll_m = 4;
-+		pll_n = 85;
-+		break;
-+	case 1:		/* DDR3-1866 mode */
-+		pll_m = 6;
-+		pll_n = 112;
-+		break;
-+	case 2:		/* DDR3-1600 mode */
-+		pll_m = 4;
-+		pll_n = 64;
-+		break;
-+	case 3:		/* DDR3-1333 mode */
-+		pll_m = 8;
-+		pll_n = 106;
-+		break;
-+	}
-+
-+	clkdata->clk_table[ARTPEC6_CLK_CPU] =
-+	    clk_register_fixed_factor(NULL, "cpu", sys_refclk_name, 0, pll_n,
-+				      pll_m);
-+	clkdata->clk_table[ARTPEC6_CLK_CPU_PERIPH] =
-+	    clk_register_fixed_factor(NULL, "cpu_periph", "cpu", 0, 1, 2);
-+	clkdata->clk_table[ARTPEC6_CLK_NAND_CLKA] =
-+	    clk_register_fixed_factor(NULL, "nand_clka", "cpu", 0, 1, 8);
-+	clkdata->clk_table[ARTPEC6_CLK_NAND_CLKB] =
-+	    clk_register_fixed_rate(NULL, "nand_clkb", sys_refclk_name, 0,
-+				    100000000);
-+	clkdata->clk_table[ARTPEC6_CLK_ETH_ACLK] =
-+	    clk_register_fixed_factor(NULL, "eth_aclk", "cpu", 0, 1, 4);
-+	clkdata->clk_table[ARTPEC6_CLK_DMA_ACLK] =
-+	    clk_register_fixed_factor(NULL, "dma_aclk", "cpu", 0, 1, 4);
-+	clkdata->clk_table[ARTPEC6_CLK_PTP_REF] =
-+	    clk_register_fixed_rate(NULL, "ptp_ref", sys_refclk_name, 0,
-+				    100000000);
-+	clkdata->clk_table[ARTPEC6_CLK_SD_PCLK] =
-+	    clk_register_fixed_rate(NULL, "sd_pclk", sys_refclk_name, 0,
-+				    100000000);
-+	clkdata->clk_table[ARTPEC6_CLK_SD_IMCLK] =
-+	    clk_register_fixed_rate(NULL, "sd_imclk", sys_refclk_name, 0,
-+				    100000000);
-+	clkdata->clk_table[ARTPEC6_CLK_I2S_HST] =
-+	    clk_register_fixed_factor(NULL, "i2s_hst", "cpu", 0, 1, 8);
-+
-+	if (i2s_refclk_name && frac_clk_name) {
-+		i2s_mux_parents[0] = frac_clk_name;
-+		i2s_mux_parents[1] = i2s_refclk_name;
-+
-+		clkdata->clk_table[ARTPEC6_CLK_I2S0_CLK] =
-+		    clk_register_mux(NULL, "i2s0", i2s_mux_parents, 2,
-+				     CLK_SET_RATE_NO_REPARENT |
-+				     CLK_SET_RATE_PARENT,
-+				     clkdata->syscon_base + 0x14, 0, 1, 0,
-+				     &clkdata->i2scfg_lock);
-+
-+		clkdata->clk_table[ARTPEC6_CLK_I2S1_CLK] =
-+		    clk_register_mux(NULL, "i2s1", i2s_mux_parents, 2,
-+				     CLK_SET_RATE_NO_REPARENT |
-+				     CLK_SET_RATE_PARENT,
-+				     clkdata->syscon_base + 0x14, 1, 1, 0,
-+				     &clkdata->i2scfg_lock);
-+	} else if (frac_clk_name) {
-+		/* Lock the mux for internal clock reference. */
-+		writel(0x0, clkdata->syscon_base + 0x14);
-+		clkdata->clk_table[ARTPEC6_CLK_I2S0_CLK] =
-+			clk_register_fixed_factor(NULL, "i2s0", frac_clk_name,
-+						  0, 1, 1);
-+		clkdata->clk_table[ARTPEC6_CLK_I2S1_CLK] =
-+			clk_register_fixed_factor(NULL, "i2s1", frac_clk_name,
-+						  0, 1, 1);
-+	} else if (i2s_refclk_name) {
-+		/* Lock the mux for external clock reference. */
-+		writel(0x3, clkdata->syscon_base + 0x14);
-+		clkdata->clk_table[ARTPEC6_CLK_I2S0_CLK] =
-+			clk_register_fixed_factor(NULL, "i2s0", i2s_refclk_name,
-+						  0, 1, 1);
-+		clkdata->clk_table[ARTPEC6_CLK_I2S1_CLK] =
-+			clk_register_fixed_factor(NULL, "i2s1", i2s_refclk_name,
-+						  0, 1, 1);
-+	}
-+
-+	clkdata->clk_table[ARTPEC6_CLK_UART_PCLK] =
-+	    clk_register_fixed_factor(NULL, "uart_pclk", "cpu", 0, 1, 8);
-+	clkdata->clk_table[ARTPEC6_CLK_UART_REFCLK] =
-+	    clk_register_fixed_rate(NULL, "uart_ref", sys_refclk_name, 0,
-+				    50000000);
-+	clkdata->clk_table[ARTPEC6_CLK_I2C] =
-+	    clk_register_fixed_rate(NULL, "i2c", sys_refclk_name, 0, 100000000);
-+	clkdata->clk_table[ARTPEC6_CLK_SPI_PCLK] =
-+	    clk_register_fixed_factor(NULL, "spi_pclk", "cpu", 0, 1, 8);
-+	clkdata->clk_table[ARTPEC6_CLK_SPI_SSPCLK] =
-+	    clk_register_fixed_rate(NULL, "spi_sspclk", sys_refclk_name, 0,
-+				    50000000);
-+	clkdata->clk_table[ARTPEC6_CLK_SYS_TIMER] =
-+	    clk_register_fixed_rate(NULL, "timer", sys_refclk_name, 0,
-+				    100000000);
-+	clkdata->clk_table[ARTPEC6_CLK_FRACDIV_IN] =
-+	    clk_register_fixed_rate(NULL, "fracdiv_in", sys_refclk_name, 0,
-+				    600000000);
-+	clkdata->clk_table[ARTPEC6_CLK_DBG_PCLK] =
-+	    clk_register_fixed_factor(NULL, "dbg_pclk", "cpu", 0, 1, 8);
-+
-+	clkdata->clk_data.clks = clkdata->clk_table;
-+	clkdata->clk_data.clk_num = ARTPEC6_CLK_NUMCLOCKS;
-+
-+	of_clk_add_provider(np, of_clk_src_onecell_get,
-+			    &clkdata->clk_data);
-+}
-+
-+CLK_OF_DECLARE(artpec6_clkctrl, "axis,artpec6-clkctrl",
-+	       of_artpec6_clkctrl_setup);
--- 
-2.1.4
+Regards
 
+Alexandre
+
+>
+> regards,
+> Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
