@@ -1,103 +1,86 @@
-From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 1/4] soc: rockchip: add bindings for Rockchip grf
-Date: Wed, 24 Feb 2016 08:18:16 +0800
-Message-ID: <56CCF6C8.6010602@rock-chips.com>
-References: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com>
- <1456210864-29037-2-git-send-email-jay.xu@rock-chips.com>
- <20160223221555.GA7531@rob-hp-laptop>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v6 0/3] Add host controller drivers for Cavium ThunderX
+ PCI
+Date: Tue, 23 Feb 2016 16:38:22 -0800
+Message-ID: <56CCFB7E.6030307@caviumnetworks.com>
+References: <1454975731-13618-1-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160223221555.GA7531@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1454975731-13618-1-git-send-email-ddaney.cavm@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Daney, David" <David.Daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
+Bjorn,
 
-=D4=DA 24/02/2016 06:15, Rob Herring =D0=B4=B5=C0:
-> On Tue, Feb 23, 2016 at 03:01:01PM +0800, jianqun.xu wrote:
->> From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Add devicetree bindings for Rockchip grf which found on
->> Rockchip SoCs.
->>
->> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->> changes in v2:
->> - add grf.txt (Heiko)
->>
->>   .../devicetree/bindings/soc/rockchip/grf.txt       | 35 ++++++++++=
-++++++++++++
->>   1 file changed, 35 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/soc/rockchip/=
-grf.txt
->>
->> diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt =
-b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
->> new file mode 100644
->> index 0000000..7fb0410
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
->> @@ -0,0 +1,35 @@
->> +* Rockchip General Register Files (GRF)
->> +
->> +The general register file will be used to do static set by software=
-, which
->> +is composed of many registers for system control.
->> +
->> +From RK3368 SoCs, the GRF is divided into two sections,
->> +- GRF, used for general non-secure system,
->> +- PMUGRF, used for always on sysyem
->
-> s/sysyem/system/
->
-> Otherwise:
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-ok, thanks
->> +
->> +Required Properties:
->> +
->> +- compatible: GRF should be one of the followings
->> +   - "rockchip,rk3066-grf", "syscon": for rk3066
->> +   - "rockchip,rk3188-grf", "syscon": for rk3188
->> +   - "rockchip,rk3228-grf", "syscon": for rk3228
->> +   - "rockchip,rk3288-grf", "syscon": for rk3288
->> +   - "rockchip,rk3368-grf", "syscon": for rk3368
->> +   - "rockchip,rk3399-grf", "syscon": for rk3399
->> +- compatible: PMUGRF should be one of the followings
->> +   - "rockchip,rk3368-pmugrf", "syscon": for rk3368
->> +   - "rockchip,rk3399-pmugrf", "syscon": for rk3399
->> +- reg: physical base address of the controller and length of memory=
- mapped
->> +  region.
->> +
->> +Example: GRF and PMUGRF of RK3399 SoCs
->> +
->> +	pmugrf: syscon@ff320000 {
->> +		compatible =3D "rockchip,rk3399-pmugrf", "syscon";
->> +		reg =3D <0x0 0xff320000 0x0 0x1000>;
->> +	};
->> +
->> +	grf: syscon@ff770000 {
->> +		compatible =3D "rockchip,rk3399-grf", "syscon";
->> +		reg =3D <0x0 0xff770000 0x0 0x10000>;
->> +	};
->> --
->> 1.9.1
->>
->>
->
->
->
+I haven't seen any feedback on this revision of the patch set.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Are there any remaining issues that you are aware of that are blocking 
+these?
+
+Thanks in advance,
+David Daney
+
+
+On 02/08/2016 03:55 PM, David Daney wrote:
+> From: David Daney <david.daney@cavium.com>
+>
+> Some Cavium ThunderX processors require quirky access methods for the
+> config space of the PCIe bridge.
+>
+> There are now three patches:
+>
+> 1) Refactor code in pci-host-generic so that it can more easily be
+>     used by other drivers.  This splits the driver for CAM and ECAM
+>     access methods to a separate file from the common host driver code.
+>
+> 2) Add the ThunderX PCIe driver to external PCIe buses, which
+>     leverages the code in pci-host-generic
+>
+> 3) Add ThunderX PCI driver for internel SoC buses used on early
+>     ThunderX chip revisions.
+>
+> Changes from v5: Added Acked-by Rob Herring for the device tree
+> binding in 3/3.  Fixed typo and split large functions as suggested by
+> Bjorn Helgaas.
+>
+> Changes from v4: Added patch 3/3.  Stylistic changes to 2/3 suggested
+> by Bjorn Helgaas.  When expanding config write width to 32-bits, mask
+> out unintened writes to W1C bits, also suggested by Bjorn Helgaas.
+>
+> Changes from v3: Add some Acked-by, rebased to v4.5.0-rc1
+>
+> Changes from v2: Improve device tree binding example as noted by Rob
+> Herring.  Rename pcie-thunder-pem.* to pci-thunder-pem.* for better
+> consistency.  Update MAINTAINERS to reflect the changes.
+>
+> Changes from v1: Split CAM and ECAM code from common driver code as
+> suggested by Arnd Bergmann.  Fix spelling errors in
+> pcie-thunder-pem.txt
+>
+> David Daney (3):
+>    PCI: generic: Refactor code to enable reuse by other drivers.
+>    pci, pci-thunder-pem: Add PCIe host driver for ThunderX processors.
+>    pci, pci-thunder-ecam: Add driver for ThunderX-pass1 on-chip devices
+>
+>   .../devicetree/bindings/pci/pci-thunder-ecam.txt   |  30 ++
+>   .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 +++
+>   MAINTAINERS                                        |   9 +
+>   drivers/pci/host/Kconfig                           |  18 ++
+>   drivers/pci/host/Makefile                          |   3 +
+>   drivers/pci/host/pci-host-common.c                 | 194 +++++++++++
+>   drivers/pci/host/pci-host-common.h                 |  47 +++
+>   drivers/pci/host/pci-host-generic.c                | 181 +----------
+>   drivers/pci/host/pci-thunder-ecam.c                | 358 +++++++++++++++++++++
+>   drivers/pci/host/pci-thunder-pem.c                 | 347 ++++++++++++++++++++
+>   10 files changed, 1053 insertions(+), 177 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
+>   create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
+>   create mode 100644 drivers/pci/host/pci-host-common.c
+>   create mode 100644 drivers/pci/host/pci-host-common.h
+>   create mode 100644 drivers/pci/host/pci-thunder-ecam.c
+>   create mode 100644 drivers/pci/host/pci-thunder-pem.c
+>
