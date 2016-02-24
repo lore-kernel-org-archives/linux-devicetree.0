@@ -1,102 +1,98 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm/marvell: ABI unstability warning
- about Marvell 7K/8K
-Date: Wed, 24 Feb 2016 21:10:45 +0100
-Message-ID: <20160224211045.379352d3@free-electrons.com>
-References: <1456327007-31008-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1456327007-31008-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160224172545.GC9137@leverpostej>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2] PCI: imx6: add dt prop for link gen, default to gen1
+Date: Wed, 24 Feb 2016 14:35:07 -0600
+Message-ID: <CAL_Jsq+O1vr6sVZeJ10GXLpEuhb5-kJVYrQe2EY7XB814FuF0Q@mail.gmail.com>
+References: <1446735481-27326-1-git-send-email-tharvey@gateworks.com>
+ <1447942365-11662-1-git-send-email-tharvey@gateworks.com> <20151125231435.GI8869@localhost>
+ <CAJ+vNU0ar_d=2n4Yz3QX4qidSkH6PBLyfB8-w-ErLOYzwqj7rw@mail.gmail.com> <20160224200357.GB31108@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160224172545.GC9137@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160224200357.GB31108@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Tim Harvey <tharvey@gateworks.com>, Lucas Stach <l.stach@pengutronix.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Wed, Feb 24, 2016 at 2:03 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> [+cc Rob, devicetree list]
+>
+> On Wed, Dec 02, 2015 at 08:35:06AM -0800, Tim Harvey wrote:
+>> On Wed, Nov 25, 2015 at 3:14 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> > On Thu, Nov 19, 2015 at 06:12:45AM -0800, Tim Harvey wrote:
+>> >> Freescale has stated [1] that the LVDS clock source of the IMX6 does not pass
+>> >> the PCI Gen2 clock jitter test, therefore unless an external Gen2 compliant
+>> >> external clock source is present and supplied back to the IMX6 PCIe core
+>> >> via LVDS CLK1/CLK2 you can not claim Gen2 compliance.
+>> >>
+>> >> Add a dt property to specify gen1 vs gen2 and check this before allowing
+>> >> a Gen2 link.
+>> >>
+>> >> We default to Gen1 if the property is not present because at this time there
+>> >> are no IMX6 boards in mainline that 'input' a clock on LVDS CLK1/CLK2.
+>> >>
+>> >> In order to be Gen2 compliant on IMX6 you need to:
+>> >>  - have a Gen2 compliant external clock generator and route that clock back
+>> >>    to either LVDS CLK1 or LVDS CLK2 as an input.
+>> >>    (see IMX6SX-SabreSD reference design)
+>> >>  - specify this clock in the pcie node in the dt
+>> >>    (ie IMX6QDL_CLK_LVDS1_IN or IMX6QDL_CLK_LVDS2_IN instead of
+>> >>     IMX6QDL_CLK_LVDS1_GATE which configures it as a CLK output)
+>> >>
+>> >> [1] https://community.freescale.com/message/453209
+>> >>
+>> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+>> >> ---
+>> >> v2:
+>> >>  - moved dt property to designware core
+>> >>
+>> >>  .../devicetree/bindings/pci/designware-pcie.txt          |  1 +
+>> >>  drivers/pci/host/pci-imx6.c                              | 16 ++++++++++------
+>> >>  drivers/pci/host/pcie-designware.c                       |  4 ++++
+>> >>  drivers/pci/host/pcie-designware.h                       |  1 +
+>> >>  4 files changed, 16 insertions(+), 6 deletions(-)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> >> index 9f4faa8..a9a94b9 100644
+>> >> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> >> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> >> @@ -26,3 +26,4 @@ Optional properties:
+>> >>  - bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
+>> >>    specify this property, to keep backwards compatibility a range of 0x00-0xff
+>> >>    is assumed if not present)
+>> >> +- max-link-speed: Specify PCI gen for link capability (ie 2 for gen2)
+>> >
+>> > Is there some sort of DT or OF spec that lists "max-link-speed" as a
+>> > generic property?  I see Lucas' desire to have this be common across
+>> > DesignWare PCIe cores.  Should it be moved up a level even from there,
+>> > i.e., to bindings/pci/pci.txt?
+>>
+>> I don't know what the general consensus is here. As your the PCI
+>> maintainer I would leave that up to you. Are there other platforms
+>> that need to link at a lesser capability than the host controller is
+>> capable of? I am only aware of the IMX6 and SPEAr13XX [1]
+>
+> This is really a devicetree question, not a PCI one, so I added Rob
+> and the devicetree list in case they have any comments on this.
 
-On Wed, 24 Feb 2016 17:25:46 +0000, Mark Rutland wrote:
+Seems generally useful to me. You could want to limit the speed for a
+variety of reasons. There's no standard property that I'm aware of.
 
-> On Wed, Feb 24, 2016 at 04:16:45PM +0100, Thomas Petazzoni wrote:
-> > Since we are still very early in the support of Marvell Armada 7/8K
-> > chips and those chips are significantly different from earlier 32 bits
-> > Armada SOCs, it is difficult to commit to Device Tree ABI stability at
-> > this point.
-> 
-> I don't see why difference to an existing SoC means that we cannot
-> guarantee support for this DT. Why does that contribute to instability?
-> 
-> If there's something we're unsure about, we should be seeding the DT
-> with sufficient information to do the right thing(TM) in future. What
-> areas in particular do you think are likely to be problematic? Is there
-> anything in particular that you think that approach doesn't work for?
+Shouldn't this be a property of the phy though?
 
-At this point, we have incomplete information about the HW capabilities
-and register layout. Our past experience has shown that when we start
-supporting SoC that early, 
+>> > It might be worth mentioning in pci/fsl,imx6q-pcie.txt that we limit
+>> > the link to gen1 unless max-link-speed is present and has the value
+>> > "2".
+>
+> This default seems backwards.  It seems like we'd want to configure
+> the link to go as fast as possible unless we have a quirk, e.g.,
+> "max-link-speed", that imposes a device-specific link.  In other
+> words, why don't we penalize the broken board instead of penalizing
+> all the working ones?
 
-> From my PoV, if we're so uncertain about a DT binding that it cannot be
-> kept supported, it is a prototype not yet fit for mainline.
+I agree. It could be argued that this way doesn't require a DT update
+to fix broken boards. However, this problem should really be found
+before production and DT updates are normal for enabling new features
+(such as compliant PCIe).
 
-Are you really serious when you say that ?
-
-The Linux kernel community has been encouraging hardware vendor for
-*years* to get their code merged as early as possible. And now that
-they are doing it, you are telling them that they shouldn't submit
-their code to mainline ?
-
-If that's what you want, then sorry, but I don't buy this argument, and
-I will continue to encourage HW vendors to submit their code early,
-even if it means that indeed in the early stages, things remain a bit
-in-flux and need to be refined progressively.
-
-You seem to really be in your ivory tower and not seeing the reality of
-an SoC development and how to push the support for it in mainline as
-early as possible, so that the BSPs shipped to actual customers are as
-close to mainline as possible. Together with the Marvell engineers, we
-are doing a huge amount of work to ensure that this vendor BSP is as
-close as mainline as possible. And you're basically telling us we
-should this effort ?
-
-Come on, be serious.
-
-> > Therefore, this commit adds a warning to the Marvell 7K/8K DT binding
-> > documentation to indicate that the bindings are for the moment
-> > unstable.
-> 
-> As with the other thread, I'm strongly opposed to this mentality.
-
-Many other platforms have made this choice: Atmel, Marvell Berlin, and
-probably others.
-
-I think it should be up to each platform vendor to decide whether they
-care about DT stability or not, and at which point in time in the life
-cycle of their platform they want to claim the DT bindings as stable.
-You might believe that DT bindings are stable, but they are not. They
-change constantly, in very subtle way, and nobody ever tests DT from
-kernel version N-x with kernel version N. On any real-life platform, it
-simply doesn't work, unless that platform is 5+ years old.
-
-I made a talk at ELC about DT stability being a fairy tale, and I
-remember very well Rob Herring coming to me during the social event
-afterwards, telling me that it has never been said that all platforms
-should conform strictly to this DT stability requirement.
-
-So please get to an agreement between DT binding maintainers. And stop
-saying this ridiculous statement that HW vendors should stop submitting
-their code to the mainline.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
