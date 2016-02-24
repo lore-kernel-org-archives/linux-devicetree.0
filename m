@@ -1,86 +1,30 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v6 0/3] Add host controller drivers for Cavium ThunderX
- PCI
-Date: Tue, 23 Feb 2016 16:38:22 -0800
-Message-ID: <56CCFB7E.6030307@caviumnetworks.com>
-References: <1454975731-13618-1-git-send-email-ddaney.cavm@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
+ family of LED drivers
+Date: Tue, 23 Feb 2016 19:15:08 -0600
+Message-ID: <20160224011508.GA20343@rob-hp-laptop>
+References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
+ <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1454975731-13618-1-git-send-email-ddaney.cavm@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-pci@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Daney, David" <David.Daney@cavium.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-Bjorn,
+On Tue, Feb 23, 2016 at 01:17:24PM -0500, David Rivshin (Allworx) wrote:
+> From: David Rivshin <drivshin@allworx.com>
+> 
+> This adds a binding description for the is31fl3236/35/18/16 I2C LED
+> drivers.
+> 
+> Signed-off-by: David Rivshin <drivshin@allworx.com>
+> ---
+>  .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
 
-I haven't seen any feedback on this revision of the patch set.
-
-Are there any remaining issues that you are aware of that are blocking 
-these?
-
-Thanks in advance,
-David Daney
-
-
-On 02/08/2016 03:55 PM, David Daney wrote:
-> From: David Daney <david.daney@cavium.com>
->
-> Some Cavium ThunderX processors require quirky access methods for the
-> config space of the PCIe bridge.
->
-> There are now three patches:
->
-> 1) Refactor code in pci-host-generic so that it can more easily be
->     used by other drivers.  This splits the driver for CAM and ECAM
->     access methods to a separate file from the common host driver code.
->
-> 2) Add the ThunderX PCIe driver to external PCIe buses, which
->     leverages the code in pci-host-generic
->
-> 3) Add ThunderX PCI driver for internel SoC buses used on early
->     ThunderX chip revisions.
->
-> Changes from v5: Added Acked-by Rob Herring for the device tree
-> binding in 3/3.  Fixed typo and split large functions as suggested by
-> Bjorn Helgaas.
->
-> Changes from v4: Added patch 3/3.  Stylistic changes to 2/3 suggested
-> by Bjorn Helgaas.  When expanding config write width to 32-bits, mask
-> out unintened writes to W1C bits, also suggested by Bjorn Helgaas.
->
-> Changes from v3: Add some Acked-by, rebased to v4.5.0-rc1
->
-> Changes from v2: Improve device tree binding example as noted by Rob
-> Herring.  Rename pcie-thunder-pem.* to pci-thunder-pem.* for better
-> consistency.  Update MAINTAINERS to reflect the changes.
->
-> Changes from v1: Split CAM and ECAM code from common driver code as
-> suggested by Arnd Bergmann.  Fix spelling errors in
-> pcie-thunder-pem.txt
->
-> David Daney (3):
->    PCI: generic: Refactor code to enable reuse by other drivers.
->    pci, pci-thunder-pem: Add PCIe host driver for ThunderX processors.
->    pci, pci-thunder-ecam: Add driver for ThunderX-pass1 on-chip devices
->
->   .../devicetree/bindings/pci/pci-thunder-ecam.txt   |  30 ++
->   .../devicetree/bindings/pci/pci-thunder-pem.txt    |  43 +++
->   MAINTAINERS                                        |   9 +
->   drivers/pci/host/Kconfig                           |  18 ++
->   drivers/pci/host/Makefile                          |   3 +
->   drivers/pci/host/pci-host-common.c                 | 194 +++++++++++
->   drivers/pci/host/pci-host-common.h                 |  47 +++
->   drivers/pci/host/pci-host-generic.c                | 181 +----------
->   drivers/pci/host/pci-thunder-ecam.c                | 358 +++++++++++++++++++++
->   drivers/pci/host/pci-thunder-pem.c                 | 347 ++++++++++++++++++++
->   10 files changed, 1053 insertions(+), 177 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-ecam.txt
->   create mode 100644 Documentation/devicetree/bindings/pci/pci-thunder-pem.txt
->   create mode 100644 drivers/pci/host/pci-host-common.c
->   create mode 100644 drivers/pci/host/pci-host-common.h
->   create mode 100644 drivers/pci/host/pci-thunder-ecam.c
->   create mode 100644 drivers/pci/host/pci-thunder-pem.c
->
+Acked-by: Rob Herring <robh@kernel.org>
