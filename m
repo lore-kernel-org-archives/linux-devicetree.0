@@ -1,125 +1,103 @@
-From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
-Subject: Re: [PATCH v8 1/4] firmware: introduce sysfs driver for QEMU's
- fw_cfg device
-Date: Tue, 23 Feb 2016 19:03:13 -0500
-Message-ID: <20160224000313.GO16357@HEDWIG.INI.CMU.EDU>
-References: <1453990994-17801-1-git-send-email-somlo@cmu.edu>
- <1453990994-17801-2-git-send-email-somlo@cmu.edu>
- <20160221100557-mutt-send-email-mst@redhat.com>
- <20160221130614.GA4511@GLSMBP.INI.CMU.EDU>
- <20160222220756-mutt-send-email-mst@redhat.com>
- <20160222202623.GI16357@HEDWIG.INI.CMU.EDU>
- <20160223070541-mutt-send-email-mst@redhat.com>
- <20160223134700.GL16357@HEDWIG.INI.CMU.EDU>
- <20160223160555-mutt-send-email-mst@redhat.com>
+From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/4] soc: rockchip: add bindings for Rockchip grf
+Date: Wed, 24 Feb 2016 08:18:16 +0800
+Message-ID: <56CCF6C8.6010602@rock-chips.com>
+References: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com>
+ <1456210864-29037-2-git-send-email-jay.xu@rock-chips.com>
+ <20160223221555.GA7531@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160223160555-mutt-send-email-mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=gbk;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160223221555.GA7531@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 04:14:46PM +0200, Michael S. Tsirkin wrote:
-> On Tue, Feb 23, 2016 at 08:47:00AM -0500, Gabriel L. Somlo wrote:
-> > On Tue, Feb 23, 2016 at 07:07:36AM +0200, Michael S. Tsirkin wrote:
-> > > On Mon, Feb 22, 2016 at 03:26:23PM -0500, Gabriel L. Somlo wrote:
-> > > > On Mon, Feb 22, 2016 at 10:14:50PM +0200, Michael S. Tsirkin wrote:
-> > > > > On Sun, Feb 21, 2016 at 08:06:17AM -0500, Gabriel L. Somlo wrote:
-> > > > > > > > +static void fw_cfg_io_cleanup(void)
-> > > > > > > > +{
-> > > > > > > > +	if (fw_cfg_is_mmio) {
-> > > > > > > > +		iounmap(fw_cfg_dev_base);
-> > > > > > > > +		release_mem_region(fw_cfg_p_base, fw_cfg_p_size);
-> > > > > > > > +	} else {
-> > > > > > > > +		ioport_unmap(fw_cfg_dev_base);
-> > > > > > > > +		release_region(fw_cfg_p_base, fw_cfg_p_size);
-> > > > > > > > +	}
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > > +/* arch-specific ctrl & data register offsets are not available in ACPI, DT */
-> > > > > > > 
-> > > > > > > So for all arches which support ACPI, I think this driver
-> > > > > > > should just rely on ACPI.
-> > > > > > 
-> > > > > > There was a discussion about that a few versions ago, and IIRC the
-> > > > > > conclusion was not to expect the firmware to contend for fw_cfg access
-> > > > > > after the guest kernel boots:
-> > > > > > 
-> > > > > > https://lkml.org/lkml/2015/10/5/283
-> > > > > > 
-> > > > > 
-> > > > > So it looks like NVDIMM at least wants to pass label data to guest -
-> > > > > for which fw cfg might be a reasonable choice.
-> > > > > 
-> > > > > I suspect things changed - fw cfg used to be very slow but we now have
-> > > > > DMA interface which makes it useful for a range of applications.
-> > > 
-> > > Comment on this? I'm really worried we'll release linux
-> > > without a way to access fw cfg from aml.
-> > > How about taking acpi lock around all accesses?
-> > 
-> > You mean something like this (haven't tried compiling it yet, so it
-> > might be a bit more complicated, but just for the purpose of this
-> > conversation):
-> > 
-> > diff --git a/drivers/firmware/qemu_fw_cfg.c
-> > b/drivers/firmware/qemu_fw_cfg.c
-> > index fedbff5..3462a2c 100644
-> > --- a/drivers/firmware/qemu_fw_cfg.c
-> > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > @@ -77,12 +77,18 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> >  static inline void fw_cfg_read_blob(u16 key,
-> >                                     void *buf, loff_t pos, size_t
-> > count)
-> >  {
-> > +#ifdef CONFIG_ACPI
-> > +       acpi_os_acquire_mutex(acpi_gbl_osi_mutex, ACPI_WAIT_FOREVER);
-> > +#endif
-> >         mutex_lock(&fw_cfg_dev_lock);
-> >         iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-> >         while (pos-- > 0)
-> >                 ioread8(fw_cfg_reg_data);
-> >         ioread8_rep(fw_cfg_reg_data, buf, count);
-> >         mutex_unlock(&fw_cfg_dev_lock);
-> > +#ifdef CONFIG_ACPI
-> > +       acpi_os_release_mutex(acpi_gbl_osi_mutex);
-> > +#endif
-> >  }
-> >  
-> >  /* clean up fw_cfg device i/o */
-> 
-> Fundamentally yes.
-> 
-> > I wouldn't particularly *mind* doing that, but I'd still like to hear
-> > from other QEMU devs on whether it's really necessary.
-> 
-> It seems like a prudent thing to do IMHO, before this
-> goes out to users.
-> 
-> [...]
-> 
-> On balance, I think locking ACPI solves most problems so
-> if we just do that, I think what you did here is fine.
+Hi Rob
 
-Only trouble is, acpi_gbl_osi_mutex seems to be "private" to the acpi
-subsystem, and I'm not sure how well a patch to allow some random
-module to lock/unlock ACPI at its convenience would be received...
+=D4=DA 24/02/2016 06:15, Rob Herring =D0=B4=B5=C0:
+> On Tue, Feb 23, 2016 at 03:01:01PM +0800, jianqun.xu wrote:
+>> From: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>
+>> Add devicetree bindings for Rockchip grf which found on
+>> Rockchip SoCs.
+>>
+>> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>> changes in v2:
+>> - add grf.txt (Heiko)
+>>
+>>   .../devicetree/bindings/soc/rockchip/grf.txt       | 35 ++++++++++=
+++++++++++++
+>>   1 file changed, 35 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/soc/rockchip/=
+grf.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/soc/rockchip/grf.txt =
+b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+>> new file mode 100644
+>> index 0000000..7fb0410
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/rockchip/grf.txt
+>> @@ -0,0 +1,35 @@
+>> +* Rockchip General Register Files (GRF)
+>> +
+>> +The general register file will be used to do static set by software=
+, which
+>> +is composed of many registers for system control.
+>> +
+>> +From RK3368 SoCs, the GRF is divided into two sections,
+>> +- GRF, used for general non-secure system,
+>> +- PMUGRF, used for always on sysyem
+>
+> s/sysyem/system/
+>
+> Otherwise:
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+ok, thanks
+>> +
+>> +Required Properties:
+>> +
+>> +- compatible: GRF should be one of the followings
+>> +   - "rockchip,rk3066-grf", "syscon": for rk3066
+>> +   - "rockchip,rk3188-grf", "syscon": for rk3188
+>> +   - "rockchip,rk3228-grf", "syscon": for rk3228
+>> +   - "rockchip,rk3288-grf", "syscon": for rk3288
+>> +   - "rockchip,rk3368-grf", "syscon": for rk3368
+>> +   - "rockchip,rk3399-grf", "syscon": for rk3399
+>> +- compatible: PMUGRF should be one of the followings
+>> +   - "rockchip,rk3368-pmugrf", "syscon": for rk3368
+>> +   - "rockchip,rk3399-pmugrf", "syscon": for rk3399
+>> +- reg: physical base address of the controller and length of memory=
+ mapped
+>> +  region.
+>> +
+>> +Example: GRF and PMUGRF of RK3399 SoCs
+>> +
+>> +	pmugrf: syscon@ff320000 {
+>> +		compatible =3D "rockchip,rk3399-pmugrf", "syscon";
+>> +		reg =3D <0x0 0xff320000 0x0 0x1000>;
+>> +	};
+>> +
+>> +	grf: syscon@ff770000 {
+>> +		compatible =3D "rockchip,rk3399-grf", "syscon";
+>> +		reg =3D <0x0 0xff770000 0x0 0x10000>;
+>> +	};
+>> --
+>> 1.9.1
+>>
+>>
+>
+>
+>
 
-So unless I'm missing something obvious (wouldn't be the first time),
-I think we're back to where *if* we *have* to do this [*], providing an
-AML blob-reader method in ACPI and punting to it from the guest-side
-kernel module (via #ifdef CONFIG_ACPI) would be the less painful
-alternative.
-
-[*] that is, mutual exclusion between kernel and firmware regarding
-    fw_cfg is (back) on the table, for real this time...
-
-It would be good to know that it's the new consensus among QEMU
-folks, since I have a strong feeling I'd no longer be "Keeping It Simple"
-by moving in this direction.
-
-Thanks,
---Gabriel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
