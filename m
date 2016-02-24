@@ -1,105 +1,51 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
- family of LED drivers
-Date: Wed, 24 Feb 2016 17:04:49 +0100
-Message-ID: <56CDD4A1.5030802@samsung.com>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
- <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
+From: Joshua Henderson <joshua.henderson@microchip.com>
+Subject: [PATCH v8 0/3] PIC32MZDA Clock Driver
+Date: Wed, 24 Feb 2016 09:07:14 -0700
+Message-ID: <1456330090-27226-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Joshua Henderson <joshua.henderson@microchip.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, Purna Chandra Mandal <purna.mandal@microchip.com>, Rob Herring <robh@kernel.org>, Sandeep Sheriker <sandeepsheriker.mallikarjun@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Clock bindings got acked and then essentially unacked, while the clock
+driver never made it upstream. In the meantime, the initial DTS file
+made it upstream. This latest patch series includes a patch to go back
+and correct the DTS files to reflect the new clock bindings in this
+patch series.
 
-Thanks for the patch.
+This series still uses the CLK_OF_DECLARE approach despite not being
+regarded as the best approach. On MIPS/PIC32 the first call of clk_get()
+happens from "start_kernel -> time_init() -> plat_time_init()" which is
+very early in boot sequence even before execution of early_initcall().
+In short, by platform_driver way I was not able to register clock(s)
+before the first clock user becomes ready. With CLK_OF_DECLARE() I can
+explicitly call of_clk_init() in plat_time_init() just before calling
+clk_get().
 
-On 02/23/2016 07:17 PM, David Rivshin (Allworx) wrote:
-> From: David Rivshin <drivshin@allworx.com>
->
-> This adds a binding description for the is31fl3236/35/18/16 I2C LED
-> drivers.
->
-> Signed-off-by: David Rivshin <drivshin@allworx.com>
-> ---
->   .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
->   1 file changed, 51 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->
-> diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-> new file mode 100644
-> index 0000000..0a05a1d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-> @@ -0,0 +1,51 @@
-> +Binding for ISSI IS31FL32xx LED Drivers
-> +
-> +The IS31FL32xx family of LED drivers are I2C devices with multiple
-> +constant-current channels, each with independent 256-level PWM control.
-> +Each LED is represented as a sub-node of the device.
-> +
-> +Required properties:
-> +- compatible: one of
-> +	issi,is31fl3236
-> +	issi,is31fl3235
-> +	issi,is31fl3218
-> +	issi,is31fl3216
-> +- reg: I2C slave address
-> +- address-cells : must be 1
-> +- size-cells : must be 0
-> +
-> +LED sub-node properties:
-> +- reg : LED channel number (1..N)
-> +- max-brightness : (optional) Maximum brightness possible for the LED.
+Purna Chandra Mandal (3):
+  dt/bindings: Add PIC32 clock binding documentation
+  clk: clk-pic32: Add PIC32 clock driver
+  MIPS: dts: pic32: Update dts to reflect new PIC32MZDA clk binding
 
-Please use led-max-microamp instead. You can refer to
-Documentation/devicetree/bindings/leds/common.txt for detailed
-description.
-
-> +  Default is 255.
-> +- label :  (optional)
-> +  see Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger :  (optional)
-> +  see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +
-> +Example:
-> +
-> +leds: is31fl3236@3c {
-> +	compatible = "issi,is31fl3236";
-> +	reg = <0x3c>;
-
-You're missing address-cells and size-cells in this example.
-
-> +
-> +	led@1 {
-> +		reg = <1>;
-> +		label = "EB:blue:usr0";
-> +		max-brightness = <128>;
-> +	};
-> +	led@2 {
-> +		reg = <2>;
-> +		label = "EB:blue:usr1";
-> +	};
-> +	...
-> +	led@36 {
-> +		reg = <36>;
-> +		label = "EB:blue:usr35";
-> +		max-brightness = <255>;
-> +	};
-> +};
-> +
-> +For more product information please see the link below:
-> +http://www.issi.com/US/product-analog-fxled-driver.shtml
-> \ No newline at end of file
->
-
-
--- 
-Best regards,
-Jacek Anaszewski
+ .../devicetree/bindings/clock/microchip,pic32.txt  |   39 +
+ arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi        |  236 -----
+ arch/mips/boot/dts/pic32/pic32mzda.dtsi            |   63 +-
+ arch/mips/boot/dts/pic32/pic32mzda_sk.dts          |    5 +-
+ drivers/clk/Kconfig                                |    3 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/microchip/Makefile                     |    2 +
+ drivers/clk/microchip/clk-core.c                   |  954 ++++++++++++++++++++
+ drivers/clk/microchip/clk-core.h                   |   78 ++
+ drivers/clk/microchip/clk-pic32mzda.c              |  214 +++++
+ include/dt-bindings/clock/microchip,pic32-clock.h  |   42 +
+ 11 files changed, 1378 insertions(+), 259 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
+ delete mode 100644 arch/mips/boot/dts/pic32/pic32mzda-clk.dtsi
+ create mode 100644 drivers/clk/microchip/Makefile
+ create mode 100644 drivers/clk/microchip/clk-core.c
+ create mode 100644 drivers/clk/microchip/clk-core.h
+ create mode 100644 drivers/clk/microchip/clk-pic32mzda.c
+ create mode 100644 include/dt-bindings/clock/microchip,pic32-clock.h
