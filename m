@@ -1,50 +1,147 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v1 2/4] clk: rockchip: set the clock ids for RK3228 VOP
-Date: Wed, 24 Feb 2016 18:54:18 +0800
-Message-ID: <1456311258-4311-1-git-send-email-ykk@rock-chips.com>
-References: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/2] ehci-platform: Add support for
+ controllers with multiple reset lines
+Date: Wed, 24 Feb 2016 12:15:16 +0100
+Message-ID: <1456312517-24211-2-git-send-email-hdegoede@redhat.com>
+References: <1456312517-24211-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBV5BW23AKGQEFHBGCWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1456312517-24211-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
- drivers/clk/rockchip/clk-rk3228.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index 981a502..8747b25 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -368,7 +368,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 			RK2928_CLKSEL_CON(29), 0, 3, DFLAGS),
- 	DIV(0, "sclk_vop_pre", "sclk_vop_src", 0,
- 			RK2928_CLKSEL_CON(27), 8, 8, DFLAGS),
--	MUX(0, "dclk_vop", mux_dclk_vop_p, 0,
-+	MUX(DCLK_VOP, "dclk_vop", mux_dclk_vop_p, 0,
- 			RK2928_CLKSEL_CON(27), 1, 1, MFLAGS),
+At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
+reset lines, the controller will not initialize while the reset for
+its companion is still asserted, which means we need to de-assert
+2 resets for the controller to work.
+
+Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+-Use the new reset_control_[de]assert_shared reset-controller functions
+Changes in v3:
+-Adjust for changes to shared-reset reset-controller functions
+---
+ Documentation/devicetree/bindings/usb/usb-ehci.txt |  2 +-
+ drivers/usb/host/ehci-platform.c                   | 41 ++++++++++++----------
+ 2 files changed, 24 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/usb-ehci.txt b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+index a12d601..0701812 100644
+--- a/Documentation/devicetree/bindings/usb/usb-ehci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-ehci.txt
+@@ -18,7 +18,7 @@ Optional properties:
+  - clocks : a list of phandle + clock specifier pairs
+  - phys : phandle + phy specifier pair
+  - phy-names : "usb"
+- - resets : phandle + reset specifier pair
++ - resets : a list of phandle + reset specifier pairs
  
- 	COMPOSITE(0, "i2s0_src", mux_pll_src_2plls_p, 0,
-@@ -503,7 +503,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(0, "aclk_iep", "aclk_iep_pre", 0, RK2928_CLKGATE_CON(13), 2, GFLAGS),
- 	GATE(0, "aclk_iep_noc", "aclk_iep_pre", 0, RK2928_CLKGATE_CON(13), 9, GFLAGS),
+ Example (Sequoia 440EPx):
+     ehci@e0000300 {
+diff --git a/drivers/usb/host/ehci-platform.c b/drivers/usb/host/ehci-platform.c
+index bd7082f2..3f195ba 100644
+--- a/drivers/usb/host/ehci-platform.c
++++ b/drivers/usb/host/ehci-platform.c
+@@ -39,11 +39,12 @@
  
--	GATE(0, "aclk_vop", "aclk_vop_pre", 0, RK2928_CLKGATE_CON(13), 5, GFLAGS),
-+	GATE(ACLK_VOP, "aclk_vop", "aclk_vop_pre", 0, RK2928_CLKGATE_CON(13), 5, GFLAGS),
- 	GATE(0, "aclk_vop_noc", "aclk_vop_pre", 0, RK2928_CLKGATE_CON(13), 12, GFLAGS),
+ #define DRIVER_DESC "EHCI generic platform driver"
+ #define EHCI_MAX_CLKS 3
++#define EHCI_MAX_RESETS 2
+ #define hcd_to_ehci_priv(h) ((struct ehci_platform_priv *)hcd_to_ehci(h)->priv)
  
- 	GATE(0, "aclk_hdcp", "aclk_hdcp_pre", 0, RK2928_CLKGATE_CON(14), 10, GFLAGS),
-@@ -511,7 +511,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
+ struct ehci_platform_priv {
+ 	struct clk *clks[EHCI_MAX_CLKS];
+-	struct reset_control *rst;
++	struct reset_control *resets[EHCI_MAX_RESETS];
+ 	struct phy **phys;
+ 	int num_phys;
+ 	bool reset_on_resume;
+@@ -149,7 +150,7 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
+ 	struct ehci_platform_priv *priv;
+ 	struct ehci_hcd *ehci;
+-	int err, irq, phy_num, clk = 0;
++	int err, irq, phy_num, clk = 0, rst = 0;
  
- 	GATE(0, "hclk_rga", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 1, GFLAGS),
- 	GATE(0, "hclk_iep", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 3, GFLAGS),
--	GATE(0, "hclk_vop", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 6, GFLAGS),
-+	GATE(HCLK_VOP, "hclk_vop", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 6, GFLAGS),
- 	GATE(0, "hclk_vio_ahb_arbi", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 7, GFLAGS),
- 	GATE(0, "hclk_vio_noc", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 8, GFLAGS),
- 	GATE(0, "hclk_vop_noc", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 13, GFLAGS),
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -232,18 +233,22 @@ static int ehci_platform_probe(struct platform_device *dev)
+ 				break;
+ 			}
+ 		}
+-	}
+ 
+-	priv->rst = devm_reset_control_get_optional(&dev->dev, NULL);
+-	if (IS_ERR(priv->rst)) {
+-		err = PTR_ERR(priv->rst);
+-		if (err == -EPROBE_DEFER)
+-			goto err_put_clks;
+-		priv->rst = NULL;
+-	} else {
+-		err = reset_control_deassert(priv->rst);
+-		if (err)
+-			goto err_put_clks;
++		for (rst = 0; rst < EHCI_MAX_RESETS; rst++) {
++			priv->resets[rst] =
++				devm_reset_control_get_shared_by_index(
++								&dev->dev, rst);
++			if (IS_ERR(priv->resets[rst])) {
++				err = PTR_ERR(priv->resets[rst]);
++				if (err == -EPROBE_DEFER)
++					goto err_reset;
++				priv->resets[rst] = NULL;
++				break;
++			}
++			err = reset_control_deassert(priv->resets[rst]);
++			if (err)
++				goto err_reset;
++		}
+ 	}
+ 
+ 	if (pdata->big_endian_desc)
+@@ -300,8 +305,8 @@ err_power:
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ err_reset:
+-	if (priv->rst)
+-		reset_control_assert(priv->rst);
++	while (--rst >= 0)
++		reset_control_assert(priv->resets[rst]);
+ err_put_clks:
+ 	while (--clk >= 0)
+ 		clk_put(priv->clks[clk]);
+@@ -319,15 +324,15 @@ static int ehci_platform_remove(struct platform_device *dev)
+ 	struct usb_hcd *hcd = platform_get_drvdata(dev);
+ 	struct usb_ehci_pdata *pdata = dev_get_platdata(&dev->dev);
+ 	struct ehci_platform_priv *priv = hcd_to_ehci_priv(hcd);
+-	int clk;
++	int clk, rst;
+ 
+ 	usb_remove_hcd(hcd);
+ 
+ 	if (pdata->power_off)
+ 		pdata->power_off(dev);
+ 
+-	if (priv->rst)
+-		reset_control_assert(priv->rst);
++	for (rst = 0; rst < EHCI_MAX_RESETS && priv->resets[rst]; rst++)
++		reset_control_assert(priv->resets[rst]);
+ 
+ 	for (clk = 0; clk < EHCI_MAX_CLKS && priv->clks[clk]; clk++)
+ 		clk_put(priv->clks[clk]);
 -- 
-1.9.1
+2.7.1
