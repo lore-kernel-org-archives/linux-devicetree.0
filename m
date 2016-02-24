@@ -1,62 +1,42 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RESEND PATCH V7 4/6] i2c: qup: Add bam dma capabilities
-Date: Wed, 24 Feb 2016 11:19:49 +0100
-Message-ID: <20160224101949.GB1391@katana>
-References: <1456142895-32646-1-git-send-email-sricharan@codeaurora.org>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [PATCH v6 08/12] of: add notes of critical trips for soctherm
+Date: Wed, 24 Feb 2016 18:21:56 +0800
+Message-ID: <56CD8444.3010001@nvidia.com>
+References: <1456128650-29104-1-git-send-email-wni@nvidia.com> <20160223213829.GA16577@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456142895-32646-1-git-send-email-sricharan@codeaurora.org>
+In-Reply-To: <20160223213829.GA16577@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, architt@codeaurora.org
+To: Rob Herring <robh@kernel.org>
+Cc: thierry.reding@gmail.com, rui.zhang@intel.com, MLongnecker@nvidia.com, swarren@wwwdotorg.org, mikko.perttunen@kapsi.fi, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 22, 2016 at 05:38:15PM +0530, Sricharan R wrote:
-> QUP cores can be attached to a BAM module, which acts as
-> a dma engine for the QUP core. When DMA with BAM is enabled,
-> the BAM consumer pipe transmitted data is written to the
-> output FIFO and the BAM producer pipe received data is read
-> from the input FIFO.
+On 2016=E5=B9=B402=E6=9C=8824=E6=97=A5 05:38, Rob Herring wrote:
+> On Mon, Feb 22, 2016 at 04:10:50PM +0800, Wei Ni wrote:
+>> The "ctirical" type trip in thermal zone can be
 >=20
-> With BAM capabilities, qup-i2c core can transfer more than
-> 256 bytes, without a 'stop' which is not possible otherwise.
+> typo
+
+Hmm, will fix it.
+
 >=20
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Reviewed-by: Andy Gross <andy.gross@linaro.org>
-> Tested-by: Archit Taneja <architt@codeaurora.org>
-> Tested-by: Telkar Nagender <ntelkar@codeaurora.org>
+>> set to SOC_THERM hardware, it can trigger shut down
+>> or reset event from hardware.
+>>
+>> Signed-off-by: Wei Ni <wni@nvidia.com>
+>> ---
+>>  Documentation/devicetree/bindings/thermal/tegra-soctherm.txt | 12 +=
++++++++++++
+>>  1 file changed, 12 insertions(+)
+>=20
+> Otherwise,
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Applied to for-next, thanks!
+Sure, will do it.
 
-
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJWzYPFAAoJEBQN5MwUoCm2n/oP/2CyTwrIUXLmQdG6+EVCGIrf
-fJ4Ta2a7NCksPjzcopHsYEEpvpUll78A9dKIkZmTwMCZ9lr1Ic44fqDtMvC7nnm/
-7rp1T1EO9wx3cCg+6wMav/rNEjSdjajRZnDhOOjQTTJ7FE2zJsKcZSQz8d6Yd0QN
-M+nAQGmXbsganXqpooDMqTloSpOglYzZxqupqMXG+kYqicds7yt4Oa4GKNtrt3JU
-O5dgtr8ZHjZUNVP+004sptMLpdWBfvR1CrIw+vkNjD/0OadqiMg4d7nMzvHH4MzZ
-4Tf87n/x4V1rcslOk8scpdt9kw7jA5dkjcTOc1q/r4EtABfXRuWG+EiqePWj4hg/
-CjkRWAJKNysMXnN67iAqmJ/yxcyIrhmD72qcDQLEgrCA0ZiN4SGwCJEjBdcnJf1N
-JBqrkK7dcXDMW1eEAmCmJMOSXVhQsVBEoX91O9APN6R7P0vCcdKY6PMaN62VAB3r
-H61IwEe0LImMFlJp5qGGIsAd0wh5gS351VKT+l7SeAXud7VFPoewPVNAaYv+jcjD
-mGyqUa4qCc6KEdMf0GVyR16FpU/pYS+Fzy2QFZkwbd9ZV/GnzTkX7Wz1yxf52xsd
-q4Yrs8SplSm0kb/bpaBH3CCk5kUlx3N/eyk+IkgfIMRdccr9+M7ktgFhCpH9IPST
-QNJ+weWr+iH0h3Cc/HpH
-=hfPU
------END PGP SIGNATURE-----
-
---KFztAG8eRSV9hGtP--
+>=20
