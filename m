@@ -1,177 +1,117 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: Re: [PATCH 4/4] gpio: Add parsing of DT GPIO line-names
-Date: Wed, 24 Feb 2016 08:03:09 +0100
-Message-ID: <4005432.tnZmp1QKdV@adelgunde>
-References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de> <1456214089-13954-4-git-send-email-mpa@pengutronix.de> <CACRpkdb3gEZt5-25mi5pPvDePzLzNHfFRpjKMOW_-WfcBBLtUQ@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: add support for gpio buttons for
+ exynos5422-odroidxu3
+Date: Wed, 24 Feb 2016 16:27:54 +0900
+Message-ID: <56CD5B7A.10908@samsung.com>
+References: <1456214467-3344-1-git-send-email-linux.amoon@gmail.com>
+ <56CC167A.8040303@samsung.com> <56CC194F.6080905@samsung.com>
+ <CANAwSgTRu6pb9cdA50AzBSNLS+Y+sssyc_CX7FKuV=FDYWaOsA@mail.gmail.com>
+ <CAJKOXPftm7P44Zxn9rHt1THJOX3Oxu-mg5GD7=T3se4iRe1DkA@mail.gmail.com>
+ <CANAwSgR17csDub4fszP5+=M5qrG5FbHu=rmfny6-5e8x6bWBFg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3344746.XlzoLCETQz"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdb3gEZt5-25mi5pPvDePzLzNHfFRpjKMOW_-WfcBBLtUQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CANAwSgR17csDub4fszP5+=M5qrG5FbHu=rmfny6-5e8x6bWBFg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 23.02.2016 23:16, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> On 23 February 2016 at 17:32, Krzysztof Kozlowski
+> <k.kozlowski@samsung.com> wrote:
+>> 2016-02-23 18:17 GMT+09:00 Anand Moon <linux.amoon@gmail.com>:
+>>> Hi Krzysztof,
+>>>
+>>> On 23 February 2016 at 14:03, Krzysztof Kozlowski
+>>>>>>      };
+>>>>>> +
+>>>>>> +    gpio_keys {
+>>>>>> +            compatible = "gpio-keys";
+>>>>>> +            pinctrl-names = "default";
+>>>>>> +            pinctrl-0 = <&gpio_power_key>;
+>>>>>> +
+>>>>>> +            power_key {
+>>>>>> +                    interrupt-parent = <&gpx0>;
+>>>>>> +                    interrupts = <3 IRQ_TYPE_NONE>;
+>>>>>
+>>>>> Hmmm.... why you specify the interrupts?
+>>>>>
+>>>>>> +                    gpios = <&gpx0 3 GPIO_ACTIVE_LOW>;
+>>>>
+>>>> Please, explain it to me. The SW2 key is connected to PWRON of PMIC.
+>>>> However you are adding a GPIO key for external interrupt source 3
+>>>> (XE.INT3)... which comes from PMIC's ONOB.
+>>>>
+>>>> It's interesting.... how does it work? The PMIC will generate ONOB
+>>>> interrupt on PWRON low->high change (when PWRHOLD is high)?
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>>
+>>>
+>>> I have re-base my changes on HK dts.
+>>> I could not find much details for the schematic diagram.
+>>> I don't know much low level detains on this.
+>>
+>> If I understand this correctly: you just took some vendor code,
+>> similar to existing code of Odroid U3, and without full understanding
+>> of the code nor checking with public schematics, you sent it.
+>>
+>> Taking vendor stuff is okay but you need to think about it, use it as
+>> an example and deliver proper solution based on that. Not copy-paste.
+>>
+>>> How dose this works: This changes will initial the shudown/reboot on Ubuntu.
+>>> I have also tested this similar feature on Odroid U3.
+>>
+>> Great :), yes it works because ONOB interrupt from PMIC is generated
+>> on key press. However this is not a strictly speaking key... I don't
+>> really know what to do with this commit and your explanation
+>> (Hardkernel has such code) is not sufficient to convince me.
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Nothing come easy to me, I had to do bit of work on this.
+> Internally I might not know the detail of the board and features of
+> the registers of the PMIC.
+> I have to improvise some time for changes. I don't know who is the
+> original author of the code.
+> 
+> It's relay hard to convince you on the changes, as I continue to
+> repeat the mistake.
+> I will try to improve my commits a be specific to the changes in the future.
 
---nextPart3344746.XlzoLCETQz
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+No worries. :)
 
-On Tuesday, February 23, 2016 02:36:42 PM Linus Walleij wrote:
-> On Tue, Feb 23, 2016 at 8:54 AM, Markus Pargmann <mpa@pengutronix.de>=
- wrote:
->=20
-> > This patch reuses the DT bindings that are already in place for the=
+Anand,
 
-> > gpio-hogging mechanism. These bindings define line-name properties =
-for
-> > GPIOs inside the gpio-chip device node.
-> >
-> > of_parse_own_gpio() now sets the gpio descriptor name using the new=
-ly
-> > introduced gpiod_set_name(). It checks for name collisions within a=
- GPIO
-> > chip to avoid GPIOs with the same name that are exported over the s=
-ame
-> > GPIO character device.
-> >
-> > The GPIO flags that describe the GPIO state are not required anymor=
-e in
-> > general but are checked if the gpio-hog property was found.
-> >
-> > This can be used to use the line names from the schematic. Example =
-of lsgpio on
-> > a modified i.MX6s Riotboard:
-> >
-> >         GPIO chip: gpiochip0, "209c000.gpio", 32 GPIO lines
-> >                 line 0: unnamed unlabeled
-> >                 line 1: unnamed unlabeled
-> >                 line 2: SD2_WP "wp" [kernel output open-drain]
-> >                 line 3: GPIO_3_CLK unlabeled
-> >                 line 4: SD2_CD "cd" [kernel output open-drain]
-> >                 ...
-> >
-> > The modified DT:
-> >          &gpio1 {
-> >                 sd2_wp {
-> >                         gpios =3D <2 0>;
-> >                         line-name =3D "SD2_WP";
-> >                 };
-> >
-> >                 gpio_3_clk {
-> >                         gpios =3D <3 0>;
-> >                         line-name =3D "GPIO_3_CLK";
-> >                 };
-> >
-> >                 sd2_cd {
-> >                         gpios =3D <4 0>;
-> >                         line-name =3D "SD2_CD";
-> >                 };
-> >         };
-> >
-> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
->=20
-> NICE! And this is what I want too.
->=20
-> We need to remove some rough edges:
->=20
-> > +static struct gpio_desc *gpiodev_find_gpiod_by_name(struct gpio_de=
-vice *gdev,
-> > +                                                   const char *nam=
-e)
-> > +{
-> > +       int i;
-> > +
-> > +       for (i =3D 0; i !=3D gdev->ngpio; ++i) {
-> > +               struct gpio_desc *desc =3D &gdev->descs[i];
-> > +
-> > +               if (desc->name && !strcmp(desc->name, name))
-> > +                       return desc;
-> > +       }
-> > +
-> > +       return NULL;
-> > +}
->=20
-> We already have gpio_name_to_desc() which does something
-> similar but across all chips.
->=20
-> Can we break out one gpiodev_name_to_desc() like
-> yours, and refactor gpio_name_to_desc() to just call
-> that for each chip?
+Anyway I was thinking about this and discussed it even offline. This is
+a little bit funny design choice because:
+1. The generated interrupt (on line ONOB) is not coming from the
+physical key. It is coming from the PMIC, after receiving the change of
+PWRON level (which comes from the key).
 
-Yes, that sounds good.
+2. The behaviour and correlation between PWRON and ONOB is poorly
+described in datasheet. Only one place mentions it.
 
-Thanks,
+3. The other funny idea we had, was to add a input driver for PMIC...
+but that IMHO won't solve anything. It won't even make this logically
+correct.
 
-Markus
+4. What I don't like personally, that I had to discover all of it,
+instead of reading this in commit message coming from you. I would like
+to see the explanation of this design (ONOB, PWRON etc) in comment in
+DTS. Written with your own words, not mine (which would be a
+confirmation that you understood the code you wrote and sent).
+Why? Because you are adding a gpio-key for something which is not a key.
+Funny, isn't it? :)
 
->=20
-> > +/**
-> > + * gpid_set_name() - sets the name of a gpio descriptor
->=20
-> Missing "o" in gpid_
->=20
-> > + * @desc: the gpio descriptor
-> > + * @name: the name pointer that is assigned. It is internally not =
-copied.
-> > + *
-> > + * This function sets a new name for the GPIO. It checks for colli=
-sions with
-> > + * other GPIOs with the same name within the gpio chip. It returns=
- 0 on success
-> > + * or -EEXIST if the name is already used within the GPIO chip.
-> > + */
-> > +int gpiod_set_name(struct gpio_desc *desc, const char *name)
-> > +{
-> > +       struct gpio_desc *coll =3D gpiodev_find_gpiod_by_name(desc-=
->gdev, name);
-> > +
-> > +       if (coll)
-> > +               return -EEXIST;
-> > +
-> > +       desc->name =3D name;
-> > +
-> > +       return 0;
-> > +}
->=20
-> Otherwise I'm OK with this.
->=20
-> Yours,
-> Linus Walleij
->=20
+5. If anyone else has some ideas how to solve this (a key-PMIC mixture),
+please share!
 
-=2D-=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---nextPart3344746.XlzoLCETQz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJWzVWtAAoJEEpcgKtcEGQQSWYQAJCPpqYvsJJmMuxv9oBqEiAL
-z74Q4e0EzJjmVXZkQ9S+pcypbNOSfftmlKbYwRd2E3GLMzIRdIZ9JulYDLdJOExK
-R5e/iV1/jdRlzsAuafFRPyrJ3f4dVhVXxUvccIUKaILkPP6SQehDEQ1FMJSJFt3Q
-9d3KznxMU1RDt6jpG+JzTr9cLLMz0S5M6eiXGaPZu9AaXyXjVPdPoFglJi3HTFO0
-KHAKduuDTfEmJjlqFwBDMNYKRLpG43WxnFLI5KSNg0ThtaE49bMAqtqpxoavM7zD
-rpVQX8YoDiYk9xDlofuqBrABJdjyq5HiLF04YxcUkl/80RiWKgQrHcbRNbcZ3mAz
-12uns6ASS2+QkLKaOY9qzA6AMsCkPpdthiOL15dlwXcPhIv3Qb8XKSHYweA+7niC
-TJZAYoTxsuvYXqDb+ihrCCzhuVro1wx3g0bg7/JaYN7HEkAaLC/djErrWZ+BsGif
-0EqQc3/vueyIlksZN9jI+eGMks/BW0InAbgccYgtF+5bY54hnSlA6ZMdrzsyH/eU
-BkYiajPl5WaaO6NfUVZLIsBkuQPkjLg8uxT0rtJsCREHxxZZGOcy1N/WEaB8/eLG
-dVaxY9CymcfGpglr9IGYakM0JBgve1yTzulhF5JlBHUwGpFwcmaXq46aNgHKBNiA
-0EXGgOm9gYZoK7Zw6TV7
-=o0pX
------END PGP SIGNATURE-----
-
---nextPart3344746.XlzoLCETQz--
-
+Best regards,
+Krzysztof
