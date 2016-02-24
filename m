@@ -1,91 +1,89 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
- family of LED drivers
-Date: Wed, 24 Feb 2016 13:49:46 -0600
-Message-ID: <CAL_JsqJzcgSBW+fQ2dAV5M9O=pi_xc+KPymOhCyO4oifHo7y3Q@mail.gmail.com>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
- <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
- <56CDD4A1.5030802@samsung.com> <20160224143440.374651b1.drivshin.allworx@gmail.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2] PCI: imx6: add dt prop for link gen, default to gen1
+Date: Wed, 24 Feb 2016 14:03:57 -0600
+Message-ID: <20160224200357.GB31108@localhost>
+References: <1446735481-27326-1-git-send-email-tharvey@gateworks.com>
+ <1447942365-11662-1-git-send-email-tharvey@gateworks.com>
+ <20151125231435.GI8869@localhost>
+ <CAJ+vNU0ar_d=2n4Yz3QX4qidSkH6PBLyfB8-w-ErLOYzwqj7rw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20160224143440.374651b1.drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJ+vNU0ar_d=2n4Yz3QX4qidSkH6PBLyfB8-w-ErLOYzwqj7rw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 24, 2016 at 1:34 PM, David Rivshin (Allworx)
-<drivshin.allworx@gmail.com> wrote:
-> On Wed, 24 Feb 2016 17:04:49 +0100
-> Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
->
->> Hi David,
->>
->> Thanks for the patch.
->>
->> On 02/23/2016 07:17 PM, David Rivshin (Allworx) wrote:
->> > From: David Rivshin <drivshin@allworx.com>
->> >
->> > This adds a binding description for the is31fl3236/35/18/16 I2C LED
->> > drivers.
->> >
->> > Signed-off-by: David Rivshin <drivshin@allworx.com>
->> > ---
->> >   .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
->> >   1 file changed, 51 insertions(+)
->> >   create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->> >
->> > diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->> > new file mode 100644
->> > index 0000000..0a05a1d
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->> > @@ -0,0 +1,51 @@
->> > +Binding for ISSI IS31FL32xx LED Drivers
->> > +
->> > +The IS31FL32xx family of LED drivers are I2C devices with multiple
->> > +constant-current channels, each with independent 256-level PWM control.
->> > +Each LED is represented as a sub-node of the device.
->> > +
->> > +Required properties:
->> > +- compatible: one of
->> > +   issi,is31fl3236
->> > +   issi,is31fl3235
->> > +   issi,is31fl3218
->> > +   issi,is31fl3216
->> > +- reg: I2C slave address
->> > +- address-cells : must be 1
->> > +- size-cells : must be 0
->> > +
->> > +LED sub-node properties:
->> > +- reg : LED channel number (1..N)
->> > +- max-brightness : (optional) Maximum brightness possible for the LED.
->>
->> Please use led-max-microamp instead. You can refer to
->> Documentation/devicetree/bindings/leds/common.txt for detailed
->> description.
->
-> FYI, I think I got that property from leds-pwm, since these use PWMs
-> internally, although I don't actually use it myself.
->
-> I can see how led-max-microamp could be a useful property, however
-> I'm uncertain about computing cdev->max_brightness from it as these
-> devices look to control their max current via an external resistor.
-> I suppose either the resistor value, or the resultant max-current
-> would need to be given in the devicetree, and then that used along
-> with led-max-microamp to compute cdev->max_brightness. Although I'd
-> want it to be optional as I suspect most users don't need any
-> restriction. Also, I don't think I can properly test the result,
-> which always makes me nervous.
->
-> Would it be acceptable to simply remove the max-brightness property
-> without adding led-max-microamp? It can always be added if a user
-> turns out to need it in the future. Or do you feel strongly that
-> led-max-microamp should be in the binding from the start?
+[+cc Rob, devicetree list]
 
-You should put in DT whatever makes sense for the controls the h/w
-has. If you only have a PWM, then only max-brightness makes sense and
-led-max-microamp does not.
+On Wed, Dec 02, 2015 at 08:35:06AM -0800, Tim Harvey wrote:
+> On Wed, Nov 25, 2015 at 3:14 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Thu, Nov 19, 2015 at 06:12:45AM -0800, Tim Harvey wrote:
+> >> Freescale has stated [1] that the LVDS clock source of the IMX6 does not pass
+> >> the PCI Gen2 clock jitter test, therefore unless an external Gen2 compliant
+> >> external clock source is present and supplied back to the IMX6 PCIe core
+> >> via LVDS CLK1/CLK2 you can not claim Gen2 compliance.
+> >>
+> >> Add a dt property to specify gen1 vs gen2 and check this before allowing
+> >> a Gen2 link.
+> >>
+> >> We default to Gen1 if the property is not present because at this time there
+> >> are no IMX6 boards in mainline that 'input' a clock on LVDS CLK1/CLK2.
+> >>
+> >> In order to be Gen2 compliant on IMX6 you need to:
+> >>  - have a Gen2 compliant external clock generator and route that clock back
+> >>    to either LVDS CLK1 or LVDS CLK2 as an input.
+> >>    (see IMX6SX-SabreSD reference design)
+> >>  - specify this clock in the pcie node in the dt
+> >>    (ie IMX6QDL_CLK_LVDS1_IN or IMX6QDL_CLK_LVDS2_IN instead of
+> >>     IMX6QDL_CLK_LVDS1_GATE which configures it as a CLK output)
+> >>
+> >> [1] https://community.freescale.com/message/453209
+> >>
+> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+> >> ---
+> >> v2:
+> >>  - moved dt property to designware core
+> >>
+> >>  .../devicetree/bindings/pci/designware-pcie.txt          |  1 +
+> >>  drivers/pci/host/pci-imx6.c                              | 16 ++++++++++------
+> >>  drivers/pci/host/pcie-designware.c                       |  4 ++++
+> >>  drivers/pci/host/pcie-designware.h                       |  1 +
+> >>  4 files changed, 16 insertions(+), 6 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> >> index 9f4faa8..a9a94b9 100644
+> >> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> >> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> >> @@ -26,3 +26,4 @@ Optional properties:
+> >>  - bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
+> >>    specify this property, to keep backwards compatibility a range of 0x00-0xff
+> >>    is assumed if not present)
+> >> +- max-link-speed: Specify PCI gen for link capability (ie 2 for gen2)
+> >
+> > Is there some sort of DT or OF spec that lists "max-link-speed" as a
+> > generic property?  I see Lucas' desire to have this be common across
+> > DesignWare PCIe cores.  Should it be moved up a level even from there,
+> > i.e., to bindings/pci/pci.txt?
+> 
+> I don't know what the general consensus is here. As your the PCI
+> maintainer I would leave that up to you. Are there other platforms
+> that need to link at a lesser capability than the host controller is
+> capable of? I am only aware of the IMX6 and SPEAr13XX [1]
 
-Rob
+This is really a devicetree question, not a PCI one, so I added Rob
+and the devicetree list in case they have any comments on this.
+
+> > It might be worth mentioning in pci/fsl,imx6q-pcie.txt that we limit
+> > the link to gen1 unless max-link-speed is present and has the value
+> > "2".
+
+This default seems backwards.  It seems like we'd want to configure
+the link to go as fast as possible unless we have a quirk, e.g.,
+"max-link-speed", that imposes a device-specific link.  In other
+words, why don't we penalize the broken board instead of penalizing
+all the working ones?
+
+> [1] http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt#n14
