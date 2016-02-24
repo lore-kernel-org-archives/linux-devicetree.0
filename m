@@ -1,98 +1,93 @@
-From: Aleksey Makarov <aleksey.makarov@linaro.org>
-Subject: [PATCH v2 2/8] of/serial: move earlycon early_param handling to serial
-Date: Wed, 24 Feb 2016 20:10:11 +0300
-Message-ID: <1456333819-13482-3-git-send-email-aleksey.makarov@linaro.org>
-References: <1456333819-13482-1-git-send-email-aleksey.makarov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456333819-13482-1-git-send-email-aleksey.makarov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org
-Cc: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Aleksey Makarov <aleksey.makarov@linaro.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm/marvell: ABI unstability warning
+ about Marvell 7K/8K
+Date: Wed, 24 Feb 2016 17:25:46 +0000
+Message-ID: <20160224172545.GC9137@leverpostej>
+References: <1456327007-31008-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1456327007-31008-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456327007-31008-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Leif Lindholm <leif.lindholm@linaro.org>
+Hi,
 
-We have multiple "earlycon" early_param handlers - merge the DT one into
-the main earlycon one. This means the earlycon early_param handler does
-not just return success if no options are specified.
+[adding the device tree list to Cc]
 
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
----
- drivers/of/fdt.c              | 11 +----------
- drivers/tty/serial/earlycon.c |  3 ++-
- include/linux/of_fdt.h        |  2 ++
- 3 files changed, 5 insertions(+), 11 deletions(-)
+On Wed, Feb 24, 2016 at 04:16:45PM +0100, Thomas Petazzoni wrote:
+> Since we are still very early in the support of Marvell Armada 7/8K
+> chips and those chips are significantly different from earlier 32 bits
+> Armada SOCs, it is difficult to commit to Device Tree ABI stability at
+> this point.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3349d2a..0547256 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -805,7 +805,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
- 
- #ifdef CONFIG_SERIAL_EARLYCON
- 
--static int __init early_init_dt_scan_chosen_serial(void)
-+int __init early_init_dt_scan_chosen_serial(void)
- {
- 	int offset;
- 	const char *p, *q, *options = NULL;
-@@ -849,15 +849,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
- 	}
- 	return -ENODEV;
- }
--
--static int __init setup_of_earlycon(char *buf)
--{
--	if (buf)
--		return 0;
--
--	return early_init_dt_scan_chosen_serial();
--}
--early_param("earlycon", setup_of_earlycon);
- #endif
- 
- /**
-diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-index 067783f..d217366 100644
---- a/drivers/tty/serial/earlycon.c
-+++ b/drivers/tty/serial/earlycon.c
-@@ -17,6 +17,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/of_fdt.h>
- #include <linux/serial_core.h>
- #include <linux/sizes.h>
- #include <linux/of.h>
-@@ -209,7 +210,7 @@ static int __init param_setup_earlycon(char *buf)
- 	 * don't generate a warning from parse_early_params() in that case
- 	 */
- 	if (!buf || !buf[0])
--		return 0;
-+		return early_init_dt_scan_chosen_serial();
- 
- 	err = setup_earlycon(buf);
- 	if (err == -ENOENT || err == -EALREADY)
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 2fbe868..56b2a43 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -63,6 +63,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data);
- extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data);
-+extern int early_init_dt_scan_chosen_serial(void);
- extern void early_init_fdt_scan_reserved_mem(void);
- extern void early_init_fdt_reserve_self(void);
- extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-@@ -91,6 +92,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
- extern u64 of_flat_dt_translate_address(unsigned long node);
- extern void of_fdt_limit_memory(int limit);
- #else /* CONFIG_OF_FLATTREE */
-+static inline int early_init_dt_scan_chosen_serial(void) { return -ENODEV; }
- static inline void early_init_fdt_scan_reserved_mem(void) {}
- static inline void early_init_fdt_reserve_self(void) {}
- static inline const char *of_flat_dt_get_machine_name(void) { return NULL; }
--- 
-2.7.1
+I don't see why difference to an existing SoC means that we cannot
+guarantee support for this DT. Why does that contribute to instability?
+
+If there's something we're unsure about, we should be seeding the DT
+with sufficient information to do the right thing(TM) in future. What
+areas in particular do you think are likely to be problematic? Is there
+anything in particular that you think that approach doesn't work for?
+
+>From my PoV, if we're so uncertain about a DT binding that it cannot be
+kept supported, it is a prototype not yet fit for mainline.
+
+> Therefore, this commit adds a warning to the Marvell 7K/8K DT binding
+> documentation to indicate that the bindings are for the moment
+> unstable.
+
+As with the other thread, I'm strongly opposed to this mentality.
+
+This is really the last thing we want to see for new platforms which are
+DT from day one. The messy problems with platform data => DT don't
+apply, and I really can't see a compelling reason to not put the effort
+in here to do things "properly".
+
+Thanks.
+Mark.
+
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/marvell/armada-7k-8k.txt         | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.txt b/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.txt
+> index df98a9c..758b3ae 100644
+> --- a/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.txt
+> +++ b/Documentation/devicetree/bindings/arm/marvell/armada-7k-8k.txt
+> @@ -1,6 +1,18 @@
+>  Marvell Armada 7K/8K Platforms Device Tree Bindings
+>  ---------------------------------------------------
+>  
+> +Work in progress statement:
+> +
+> +Device tree files and bindings applying to Marvell Armada 7K and 8K
+> +SoCs and boards are considered "unstable". Any Marvell Armada 7K/8K
+> +device tree binding may change at any time. Be sure to use a device
+> +tree binary and a kernel image generated from the same source tree.
+> +
+> +Please refer to Documentation/devicetree/bindings/ABI.txt for a
+> +definition of a stable binding/ABI.
+> +
+> +---------------------------------------------------------------
+> +
+>  Boards using a SoC of the Marvell Armada 7K or 8K families must carry
+>  the following root node property:
+>  
+> -- 
+> 2.6.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
