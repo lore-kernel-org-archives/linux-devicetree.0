@@ -1,47 +1,28 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: add mipi_dsi to VIO power domain on rk3288
-Date: Wed, 24 Feb 2016 15:21:20 +0100
-Message-ID: <1682563.dHMl0I8iqX@phil>
-References: <1456231181-13989-1-git-send-email-john@metanate.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/4] soc: rockchip: add bindings for Rockchip grf
+Date: Wed, 24 Feb 2016 15:35:31 +0100
+Message-ID: <1832389.c46G87NAnj@phil>
+References: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com> <1456210864-29037-2-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456231181-13989-1-git-send-email-john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456210864-29037-2-git-send-email-jay.xu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "jianqun.xu" <jay.xu@rock-chips.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk, jwerner@chromium.org, huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dianders@chromium.org, davidriley@chromium.org, smbarber@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 23. Februar 2016, 12:39:41 schrieb John Keeping:
-> The MIPI controllers are part of the VIO power domain so add the
-> necessary property to indicate this for the controller we support.
+Am Dienstag, 23. Februar 2016, 15:01:01 schrieb jianqun.xu:
+> From: Jianqun Xu <jay.xu@rock-chips.com>
 > 
-> Signed-off-by: John Keeping <john-HooS5bfzL4hWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3288.dtsi | 1 +
->  1 file changed, 1 insertion(+)
+> Add devicetree bindings for Rockchip grf which found on
+> Rockchip SoCs.
 > 
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index d879a89..a92a3b5 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -890,6 +890,7 @@
->  		clocks = <&cru SCLK_MIPIDSI_24M>, <&cru PCLK_MIPI_DSI0>;
->  		clock-names = "ref", "pclk";
->  		rockchip,grf = <&grf>;
-> +		power-domains = <&power RK3288_PD_VIO>;
->  		status = "disabled";
+> Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
 
-applied to my dts32 branch after moving power-domains above rockchip,grf and 
-adapting to the "#address-cells" and "#size-cells" present in the dtsi.
+applied to my dts32 branch for 4.6 with Rob's Ack.
 
 
 Thanks
 Heiko
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
