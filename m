@@ -1,65 +1,105 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-Date: Wed, 24 Feb 2016 13:19:25 +0900
-Message-ID: <CANqRtoTC=UshKih94JrsNMkxwj+1dqzkRaQHKP0ajLA3qRHG9A@mail.gmail.com>
-References: <20160216071722.25461.61862.sendpatchset@little-apple>
-	<20160216071741.25461.54191.sendpatchset@little-apple>
-	<CAMuHMdVEPeEd3cTWWd-a_6k7MgtcGiiHdyMLZ1yXoWQpsH_URg@mail.gmail.com>
-	<CANqRtoQg--gnv+ZkopO3PR3Pt7i5quiKvaPDyeJVOnahJGgdmg@mail.gmail.com>
-	<20160217062805.GH11534@verge.net.au>
-	<CANqRtoRORF0MBs9GZPeppT0p28=s98Kw_foP7W8eyUCeOyuBJQ@mail.gmail.com>
-	<20160217120829.GA346@verge.net.au>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/4 RESEND] ARC: axs10x: Update defconfigs so that audio
+ is enabled
+Date: Wed, 24 Feb 2016 04:36:31 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F4E8BD53@us01wembx1.internal.synopsys.com>
+References: <cover.1456234503.git.joabreu@synopsys.com>
+ <174bd675951f46071d0db8ea1f67abb083053332.1456234503.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160217120829.GA346-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: "airlied-cv59FeDIM0c@public.gmane.org" <airlied-cv59FeDIM0c@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "tiwai-IBi9RG/b67k@public.gmane.org" <tiwai-IBi9RG/b67k@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-On Wed, Feb 17, 2016 at 9:08 PM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> On Wed, Feb 17, 2016 at 03:45:19PM +0900, Magnus Damm wrote:
->> $ grep "renesas," Documentation/devicetree/bindings/dma/renesas,rcar-dmac.txt
->> - compatible: "renesas,dmac-<soctype>", "renesas,rcar-dmac" as fallback.
->>         - "renesas,dmac-r8a7790" (R-Car H2)
->>         - "renesas,dmac-r8a7791" (R-Car M2-W)
->>         - "renesas,dmac-r8a7792" (R-Car V2H)
->>         - "renesas,dmac-r8a7793" (R-Car M2-N)
->>         - "renesas,dmac-r8a7794" (R-Car E2)
->>         - "renesas,dmac-r8a7795" (R-Car H3)
->>         compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
->>         compatible = "renesas,dmac-r8a7790", "renesas,rcar-dmac";
->> $
+On Tuesday 23 February 2016 07:22 PM, Jose Abreu wrote:
+> The defconfigs for the AXS boards were updated so that
+> ALSA SoC is enabled and also the audio for the ADV7511
+> HDMI transmitter.
 >
-> It looks like I have been making the mess worse :(
+> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arc/configs/axs101_defconfig     | 3 +++
+>  arch/arc/configs/axs103_defconfig     | 5 +++++
+>  arch/arc/configs/axs103_smp_defconfig | 5 +++++
+
+@Alexey, has this been tested on AXS103. Do we have the right PLL / clocks to get
+the audio rates - given the lower master clk.
+Further per out off-list discussion - let us have a seperate config for ARC HS SDP
+which supports the shipping single hardware configuration and add these fancy
+things there as well as bumping the clk rate to 100 MHz . Current axs103* configs
+are more of developer configs and I don't want to bloat their code with things we
+don't build / download 10 times a day !
+
+>  3 files changed, 13 insertions(+)
 >
-> Possibly I prepared the patch in question, though recently,
-> before I was properly aware of the preferred order.
+> diff --git a/arch/arc/configs/axs101_defconfig b/arch/arc/configs/axs101_defconfig
+> index e359099..7c22163 100644
+> --- a/arch/arc/configs/axs101_defconfig
+> +++ b/arch/arc/configs/axs101_defconfig
+> @@ -113,3 +113,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
+>  # CONFIG_SCHED_DEBUG is not set
+>  # CONFIG_DEBUG_PREEMPT is not set
+>  # CONFIG_FTRACE is not set
+> +CONFIG_SOUND=y
+> +CONFIG_SND=y
+> +CONFIG_SND_SOC=y
+> diff --git a/arch/arc/configs/axs103_defconfig b/arch/arc/configs/axs103_defconfig
+> index 323486d..d63aef0 100644
+> --- a/arch/arc/configs/axs103_defconfig
+> +++ b/arch/arc/configs/axs103_defconfig
+> @@ -76,12 +76,14 @@ CONFIG_SERIAL_OF_PLATFORM=y
+>  CONFIG_I2C=y
+>  CONFIG_I2C_CHARDEV=y
+>  CONFIG_I2C_DESIGNWARE_PLATFORM=y
+> +CONFIG_DRM=y
+>  # CONFIG_HWMON is not set
+>  CONFIG_FB=y
+>  # CONFIG_VGA_CONSOLE is not set
+>  CONFIG_FRAMEBUFFER_CONSOLE=y
+>  CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
+>  CONFIG_LOGO=y
+> +CONFIG_DRM_I2C_ADV7511=y
+>  # CONFIG_LOGO_LINUX_MONO is not set
+>  # CONFIG_LOGO_LINUX_VGA16 is not set
+>  # CONFIG_LOGO_LINUX_CLUT224 is not set
+> @@ -114,3 +116,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
+>  # CONFIG_SCHED_DEBUG is not set
+>  # CONFIG_DEBUG_PREEMPT is not set
+>  # CONFIG_FTRACE is not set
+> +CONFIG_SOUND=y
+> +CONFIG_SND=y
+> +CONFIG_SND_SOC=y
+> diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
+> index 66191cd..f4b51ce 100644
+> --- a/arch/arc/configs/axs103_smp_defconfig
+> +++ b/arch/arc/configs/axs103_smp_defconfig
+> @@ -77,12 +77,14 @@ CONFIG_SERIAL_OF_PLATFORM=y
+>  CONFIG_I2C=y
+>  CONFIG_I2C_CHARDEV=y
+>  CONFIG_I2C_DESIGNWARE_PLATFORM=y
+> +CONFIG_DRM=y
+>  # CONFIG_HWMON is not set
+>  CONFIG_FB=y
+>  # CONFIG_VGA_CONSOLE is not set
+>  CONFIG_FRAMEBUFFER_CONSOLE=y
+>  CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
+>  CONFIG_LOGO=y
+> +CONFIG_DRM_I2C_ADV7511=y
+>  # CONFIG_LOGO_LINUX_MONO is not set
+>  # CONFIG_LOGO_LINUX_VGA16 is not set
+>  # CONFIG_LOGO_LINUX_CLUT224 is not set
+> @@ -115,3 +117,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
+>  # CONFIG_SCHED_DEBUG is not set
+>  # CONFIG_DEBUG_PREEMPT is not set
+>  # CONFIG_FTRACE is not set
+> +CONFIG_SOUND=y
+> +CONFIG_SND=y
+> +CONFIG_SND_SOC=y
 
-No worries! The code above is at least consistent and matches the
-common current case.
-
->> No need to rework existing stuff IMO. However once we rework DT
->> bindings (CMT) or add new ones (SYS-DMAC) then we have a good
->> opportunity to clean things up.
->
-> Understood. From my point of view that seems like an opportunity worth taking.
-
-So shall we leave the SYS-DMAC as-is or change things around? I
-personally don't see the point in redoing things just to change order,
-so keep as-is sounds good to me.
-
-For the "fallback" CMT DT compat strings I think we should follow the
-proposal from Geert and go with "renesas,rcar-gen2-cmt0". Regarding
-the per-soc CMT DT compat strings my feeling is that we should follow
-the same order as SYS-DMAC to keep things consistent.
-
-Thanks,
-
-/ magnus
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
