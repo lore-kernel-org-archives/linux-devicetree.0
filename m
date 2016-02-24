@@ -1,59 +1,62 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: [PATCH v1 4/4] clk: rockchip: set the clock ids for RK3228 HDMI
-Date: Wed, 24 Feb 2016 18:16:28 +0800
-Message-ID: <1456308988-30974-1-git-send-email-ykk@rock-chips.com>
-References: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RESEND PATCH V7 4/6] i2c: qup: Add bam dma capabilities
+Date: Wed, 24 Feb 2016 11:19:49 +0100
+Message-ID: <20160224101949.GB1391@katana>
+References: <1456142895-32646-1-git-send-email-sricharan@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <1456142895-32646-1-git-send-email-sricharan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Yakir Yang <ykk@rock-chips.com>
+To: Sricharan R <sricharan@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, agross@codeaurora.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, galak@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.gross@linaro.org, ntelkar@codeaurora.org, architt@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
----
- drivers/clk/rockchip/clk-rk3228.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3228.c b/drivers/clk/rockchip/clk-rk3228.c
-index 8747b25..a8a6be2 100644
---- a/drivers/clk/rockchip/clk-rk3228.c
-+++ b/drivers/clk/rockchip/clk-rk3228.c
-@@ -285,7 +285,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 			RK2928_CLKSEL_CON(23), 14, 2, MFLAGS, 8, 6, DFLAGS,
- 			RK2928_CLKGATE_CON(3), 5, GFLAGS),
- 
--	GATE(0, "sclk_hdmi_hdcp", "xin24m", 0,
-+	GATE(SCLK_HDMI_HDCP, "sclk_hdmi_hdcp", "xin24m", 0,
- 			RK2928_CLKGATE_CON(3), 7, GFLAGS),
- 
- 	COMPOSITE(0, "sclk_hdmi_cec", mux_sclk_hdmi_cec_p, 0,
-@@ -364,7 +364,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 			RK2928_CLKGATE_CON(3), 1, GFLAGS),
- 	MUX(0, "sclk_vop_src", mux_sclk_vop_src_p, 0,
- 			RK2928_CLKSEL_CON(27), 0, 1, MFLAGS),
--	DIV(0, "dclk_hdmiphy", "sclk_vop_src", 0,
-+	DIV(DCLK_HDMI_PHY, "dclk_hdmiphy", "sclk_vop_src", 0,
- 			RK2928_CLKSEL_CON(29), 0, 3, DFLAGS),
- 	DIV(0, "sclk_vop_pre", "sclk_vop_src", 0,
- 			RK2928_CLKSEL_CON(27), 8, 8, DFLAGS),
-@@ -517,7 +517,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 	GATE(0, "hclk_vop_noc", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(13), 13, GFLAGS),
- 	GATE(0, "hclk_vio_h2p", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 7, GFLAGS),
- 	GATE(0, "hclk_hdcp_mmu", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 12, GFLAGS),
--	GATE(0, "pclk_hdmi_ctrl", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 6, GFLAGS),
-+	GATE(PCLK_HDMI_CTRL, "pclk_hdmi_ctrl", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 6, GFLAGS),
- 	GATE(0, "pclk_vio_h2p", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 8, GFLAGS),
- 	GATE(0, "pclk_hdcp", "hclk_vio_pre", 0, RK2928_CLKGATE_CON(14), 11, GFLAGS),
- 
-@@ -590,7 +590,7 @@ static struct rockchip_clk_branch rk3228_clk_branches[] __initdata = {
- 
- 	GATE(0, "pclk_ddrphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 3, GFLAGS),
- 	GATE(0, "pclk_acodecphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 5, GFLAGS),
--	GATE(0, "pclk_hdmiphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 7, GFLAGS),
-+	GATE(PCLK_HDMI_PHY, "pclk_hdmiphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 7, GFLAGS),
- 	GATE(0, "pclk_vdacphy", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 8, GFLAGS),
- 	GATE(0, "pclk_phy_noc", "pclk_phy_pre", 0, RK2928_CLKGATE_CON(10), 9, GFLAGS),
- 
--- 
-1.9.1
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 22, 2016 at 05:38:15PM +0530, Sricharan R wrote:
+> QUP cores can be attached to a BAM module, which acts as
+> a dma engine for the QUP core. When DMA with BAM is enabled,
+> the BAM consumer pipe transmitted data is written to the
+> output FIFO and the BAM producer pipe received data is read
+> from the input FIFO.
+>=20
+> With BAM capabilities, qup-i2c core can transfer more than
+> 256 bytes, without a 'stop' which is not possible otherwise.
+>=20
+> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+> Reviewed-by: Andy Gross <andy.gross@linaro.org>
+> Tested-by: Archit Taneja <architt@codeaurora.org>
+> Tested-by: Telkar Nagender <ntelkar@codeaurora.org>
+
+Applied to for-next, thanks!
+
+
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJWzYPFAAoJEBQN5MwUoCm2n/oP/2CyTwrIUXLmQdG6+EVCGIrf
+fJ4Ta2a7NCksPjzcopHsYEEpvpUll78A9dKIkZmTwMCZ9lr1Ic44fqDtMvC7nnm/
+7rp1T1EO9wx3cCg+6wMav/rNEjSdjajRZnDhOOjQTTJ7FE2zJsKcZSQz8d6Yd0QN
+M+nAQGmXbsganXqpooDMqTloSpOglYzZxqupqMXG+kYqicds7yt4Oa4GKNtrt3JU
+O5dgtr8ZHjZUNVP+004sptMLpdWBfvR1CrIw+vkNjD/0OadqiMg4d7nMzvHH4MzZ
+4Tf87n/x4V1rcslOk8scpdt9kw7jA5dkjcTOc1q/r4EtABfXRuWG+EiqePWj4hg/
+CjkRWAJKNysMXnN67iAqmJ/yxcyIrhmD72qcDQLEgrCA0ZiN4SGwCJEjBdcnJf1N
+JBqrkK7dcXDMW1eEAmCmJMOSXVhQsVBEoX91O9APN6R7P0vCcdKY6PMaN62VAB3r
+H61IwEe0LImMFlJp5qGGIsAd0wh5gS351VKT+l7SeAXud7VFPoewPVNAaYv+jcjD
+mGyqUa4qCc6KEdMf0GVyR16FpU/pYS+Fzy2QFZkwbd9ZV/GnzTkX7Wz1yxf52xsd
+q4Yrs8SplSm0kb/bpaBH3CCk5kUlx3N/eyk+IkgfIMRdccr9+M7ktgFhCpH9IPST
+QNJ+weWr+iH0h3Cc/HpH
+=hfPU
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
