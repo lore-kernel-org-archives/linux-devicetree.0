@@ -1,65 +1,85 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/5] Modularize PCI_DW related drivers.
-Date: Wed, 24 Feb 2016 11:39:26 +0530
-Message-ID: <56CD4916.3050904@ti.com>
-References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH 2/4] tools: gpio: Add necessary include paths
+Date: Wed, 24 Feb 2016 07:39:33 +0100
+Message-ID: <1663266.QvtJ23oI59@adelgunde>
+References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de> <1456214089-13954-2-git-send-email-mpa@pengutronix.de> <CACRpkdYxDeKDLN8bsA0q3F_q-WiSDd1JTEsw8YYwUXSecMmsoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: multipart/signed; boundary="nextPart2251985.t5KeR8lPiv"; micalg="pgp-sha256"; protocol="application/pgp-signature"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYxDeKDLN8bsA0q3F_q-WiSDd1JTEsw8YYwUXSecMmsoA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Monday 08 February 2016 05:30 AM, Paul Gortmaker wrote:
-> In a recent patch series that aimed to remove code related to module
-> unload for PCI support that was simply non modular, the discussion
-> led to people wanting to keep the code and push towards taking the
-> steps needed to support moving it towards tristate instead[1].
-> 
-> Here, we take step one, which is simply making the Kconfig change
-> and then dealing with any build fallout or modpost fallout.  What
-> amounts to essentially a sanity build test.  To be clear, these
-> have not been runtime validated; that will need to be done by those
-> with access to real hardware.  However, the changes are not anything
-> that should disrupt any existing built-in validation, so real world
-> users should not be impacted by this change.
-> 
-> We start with a smaller family of drivers; those that actively select
-> PCI_DW, as a nice self contained group to test the waters and see if
-> everyone is still good with this approach before investing more time
-> on a wider scale to other pci/host/ code blocks.
-> 
-> As such the drivers here share a dependency on having the same group
-> of functions exported in order to successfully complete modpost.
-> 
-> In addition, we have to stray outside drivers/pci to add exports
-> in two places; once for an ARM fault handler, and once for an OF
-> variable.
-> 
-> The pci-keystone-dw.c instance was handled separately because it
-> consists of two source files that need their own group of driver
-> specific exports above and beyond the "shared" ones.
-> 
-> Then we convert the Kconfig for all remaining at once; we could have
-> done it on a per driver basis for ease of revert if anyone really
-> objects, but since it would be a one line change, that seemed like
-> not a real concern.
-> 
-> Build testing was done on the linux-next tree for arm allmodconfig.
+--nextPart2251985.t5KeR8lPiv
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-I took these patches and gave a test with DRA7xx board. As expected there was
-no issues when the driver was built-in. However when I tried to rmmod/modprobe
-I got this error [2].
+On Tuesday, February 23, 2016 02:26:09 PM Linus Walleij wrote:
+> On Tue, Feb 23, 2016 at 8:54 AM, Markus Pargmann <mpa@pengutronix.de>=
+ wrote:
+>=20
+> > Add include paths to the Makefile so that linux/gpio.h can be found=
+ even
+> > on systems without this header.
+> >
+> > Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+> (...)
+> > -CFLAGS +=3D -Wall -g -D_GNU_SOURCE
+> > +CFLAGS +=3D -Wall -g -D_GNU_SOURCE -I ../include -I ../../include/=
+uapi
+>=20
+> This is probably not how userspace compilation is supposed
+> to work. The way I understand it, userspace programs from tools/*
+> should be compiled like this:
+>=20
+> make headers_install ARCH=3Dfoo INSTALL_HDR_PATH=3D<bar>
+> cd tools/gpio
+> make CFLAGS=3D"$CFLAGS -I<bar>"
+>=20
+> The reason being that UAPI files can differ after install depending
+> on arch.
 
-Thanks
-Kishon
+I see, thanks for explaining.
 
-[2] -> http://pastebin.ubuntu.com/15185894/
-> 
-> [1] https://lkml.kernel.org/r/20160108203102.GH5354@localhost
-> 
+Best Regards,
+
+Markus
+
+=2D-=20
+Pengutronix e.K.                           |                           =
+  |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
+  |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
+5 |
+
+--nextPart2251985.t5KeR8lPiv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWzVAqAAoJEEpcgKtcEGQQdK4P/RiFS6ojxUHZG6LEQDCWmqNB
+FeNEzKHzfj5Z/qF4hh0CF4d5t68bhyqaStMDdSpFdMJSBdHawjQq0hlXH9R47bgJ
+6mqyUmeCFATYieHCXsxiqZgttRMZu/GfJLyP3N8El/H82HDcbUtSiaDSKNYWEZoU
+PSwWAV/rhojbTaRdXKX28emAYSo3yBUg4VSaOl/mU3YYJHERb9W3zKuv8R51iPhD
+hFsanxXd4cMulz1nlH2z6EhnFzQnV9EJb+DCYkmImFRrPYSL2FJ9mXx+w9BORlzb
+fZSIxHZrfCea5CYIrP0UY61VR9PBn9C3PL1Q2A/cmcWAfv9IdBMJfxbsoB1Wxz0q
+cHVqFNUJBOS3oDNxr3XN5NXxLHRQmB6wNvs0QbKNfMVhX5wcbRiuHl1SgnQCH1bU
+A2lpf7aPFudcXtPj8LZylfcEJ5gMkUW6yOLXEp8Plte+/QnEaYqJQvBEQYU6liwz
+pgb411+/gO7O7wfmu9BnJs9NwVRMaxLXMGLZOd+Bq4UVtEXI/3YLEO5WG6lQSyZh
+c3+5Bj6b4tDmrbKqKEMrA53y2n24LTWW8YgrZxcueqxDOMrgLNQb3SZsYeQqGT5X
+FvsW5+EyIS7/oBzZO9ZMKwe5RoDMWS4uv/amstj5C3/N2JBiqG7DixwkJruO8dzy
+rXTgFC+iUhRmDuyv4Zi6
+=XR+i
+-----END PGP SIGNATURE-----
+
+--nextPart2251985.t5KeR8lPiv--
+
