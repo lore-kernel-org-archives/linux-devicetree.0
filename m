@@ -1,72 +1,50 @@
-From: Jonathan Tinkham <sctincman-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] sound/soc/tegra: tegra_max98090: Invert headphone by GPIO
- flag
-Date: Wed, 24 Feb 2016 09:51:38 -0700
-Message-ID: <56CDDF9A.3020709@gmail.com>
-References: <56CB6624.6030600@wwwdotorg.org>
- <1456247985-5563-1-git-send-email-sctincman@gmail.com>
- <1456247985-5563-2-git-send-email-sctincman@gmail.com>
- <56CC9860.2060003@wwwdotorg.org> <56CDDD82.7040402@gmail.com>
- <56CDDE35.1010408@wwwdotorg.org>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH] dts: add specific compatible type for Terasic DE0-NANO-SoC
+ Board
+Date: Wed, 24 Feb 2016 10:50:15 -0600
+Message-ID: <alpine.DEB.2.02.1602241048100.3815@linux-builds1>
+References: <8416439.76b9YNhpgR@dabox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56CDDE35.1010408-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8416439.76b9YNhpgR@dabox>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tim Sander <tim@krieglstein.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Tim,
 
+On Fri, 12 Feb 2016, Tim Sander wrote:
 
-On 02/24/2016 09:45 AM, Stephen Warren wrote:
-> On 02/24/2016 09:42 AM, Jonathan Tinkham wrote:
->> On 02/23/2016 10:35 AM, Stephen Warren wrote:
->>> On 02/23/2016 10:19 AM, Jonathan Tinkham wrote:
->>>
->>> > Subject: sound/soc/tegra: tegra_max98090: Invert headphone by GPIO
->>> > flag
->>>
->>> Mark has mentioned quite a few times that this patch subject is
->>> incorrect. ASoC patch subjects should start with "ASoC: ". You can see
->>> this by running:
->>>
->>> git log -- sound/soc/tegra/
->>>
->>> I'd suggest the following:
->>>
->>> AsoC: tegra_max98090: honor headphone detect GPIO polarity
->>>
->> My apologies, I finally grok what he was saying. Thank you.
->>>> Set the invert property for the headphone jack depending on the GPIO
->>>> flag in the
->>>> device-tree. This is similar to what is done for tegra_rt5640.
->>>>
->>>
->>>> diff --git a/sound/soc/tegra/tegra_max98090.c
->>>> b/sound/soc/tegra/tegra_max98090.c
->>>
->>>> @@ -155,6 +156,7 @@ static int tegra_max98090_asoc_init(struct
->>>> snd_soc_pcm_runtime *rtd)
->>>> ARRAY_SIZE(tegra_max98090_hp_jack_pins));
->>>>
->>>>           tegra_max98090_hp_jack_gpio.gpio = machine->gpio_hp_det;
->>>> +        tegra_max98090_hp_jack_gpio.invert =
->>>> (machine->gpio_hp_det_flags & OF_GPIO_ACTIVE_LOW);
->>>
->>> Did you run checkpatch? It should complain about > 80 columns, and I
->>> suspect about the unnecessary brackets around that expression. In
->>> fact, checkpatch indicates quite a few other warnings and errors.
->>>
->>> The logic in this patch looks OK. Do the relevant DT files all have
->>> the correct GPIO flags already? That'd be nice!
->>
->> The only board is the venice2, which doesn't have a 'nvidia,hp-det-gpio'
->> entry at all (how did this even work before?)
+> From: Tim Sander <tim@krieglstein.org>
+> 
+> Add a more specific compatible string:"terasic,de0-nano-soc" for respective board.
+> Background: when checking for bootspec entries, some board specific fixups
+>                          are not apropriate for board of the same platform ("altr,socfpga-cyclone5").
+>                         The same aproach is taken with the EBV-Socrates board.
 >
-> I mean: Is ACTIVE_LOW/ACTIVE_HIGH flag in the existing 
-> nvidia,hp-det-gpios already correctly set?
 
-Yes. I also have cleaned up the warnings/errors from checkpatch, and can 
-resubmit if acceptable.
+Please fix up the spacing in the commit message.
+
+> Signed-off-by: Tim Sander <tim@krieglstein.org>
+> ---
+>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> index 555e9caf21e1..3a427423168e 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> @@ -18,7 +18,7 @@
+>  
+>  / {
+>         model = "Terasic DE-0(Atlas)";
+> -       compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +       compatible = "terasic,de0-nano-soc"," altr,socfpga-cyclone5", "altr,socfpga";
+> 
+
+"terasic" is not listed in Documentation/devicetree/bindings/vendor-prefixes.txt.
+ 
+BR,
+Dinh
