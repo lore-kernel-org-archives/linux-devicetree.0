@@ -1,31 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] Documentation: devicetree: Add PL310 PM bindings
-Date: Tue, 23 Feb 2016 19:33:43 -0600
-Message-ID: <20160224013343.GA9705@rob-hp-laptop>
-References: <1456265019-23900-1-git-send-email-brad.mouring@ni.com>
- <1456265019-23900-3-git-send-email-brad.mouring@ni.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] kbuild: Allow using host dtc instead of kernel's copy
+Date: Tue, 23 Feb 2016 19:36:24 -0600
+Message-ID: <CAL_JsqJC1PAyaX-BSe+iMnaSpEcpGKbROqm2kQ+=_dbfSn9V9g@mail.gmail.com>
+References: <1455230079-26931-1-git-send-email-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456265019-23900-3-git-send-email-brad.mouring-acOepvfBmUk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1455230079-26931-1-git-send-email-robh@kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Michal Marek <mmarek@suse.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 04:03:39PM -0600, Brad Mouring wrote:
-> Document the DT bindings for controlling ARM PL310 Power Control
-> settings.
-> 
-> Signed-off-by: Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>
-> Acked-by: Josh Cartwright <joshc-acOepvfBmUk@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/l2c2x0.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+On Thu, Feb 11, 2016 at 4:34 PM, Rob Herring <robh@kernel.org> wrote:
+> Development of dtc happens in its own upstream repository, but testing
+> dtc changes against the kernel tree is useful. Change dtc to a variable
+> that users can override.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Michal Marek <mmarek@suse.com>
+> Cc: linux-kbuild@vger.kernel.org
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied to DT tree.
+
+> ---
+>  scripts/Makefile.lib | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 79e8661..ceceb53 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -262,6 +262,7 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
+>
+>  # DTC
+>  # ---------------------------------------------------------------------------
+> +DTC ?= $(objtree)/scripts/dtc/dtc
+>
+>  # Generate an assembly file to wrap the output of the device tree compiler
+>  quiet_cmd_dt_S_dtb= DTB     $@
+> @@ -284,7 +285,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+>  quiet_cmd_dtc = DTC     $@
+>  cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+>         $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+> -       $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
+> +       $(DTC) -O dtb -o $@ -b 0 \
+>                 -i $(dir $<) $(DTC_FLAGS) \
+>                 -d $(depfile).dtc.tmp $(dtc-tmp) ; \
+>         cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+> --
+> 2.5.0
+>
