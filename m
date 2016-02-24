@@ -1,155 +1,38 @@
 From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH v8 1/3] dt/bindings: Add PIC32 clock binding documentation
-Date: Wed, 24 Feb 2016 12:57:58 -0800
-Message-ID: <20160224205758.2278.85870@quark.deferred.io>
-References: <1456330090-27226-1-git-send-email-joshua.henderson@microchip.com>
- <1456330090-27226-2-git-send-email-joshua.henderson@microchip.com>
+Subject: Re: [PATCH v2 1/2] clk: add lpc18xx creg clk driver
+Date: Wed, 24 Feb 2016 13:05:53 -0800
+Message-ID: <20160224210553.2278.56679@quark.deferred.io>
+References: <1455994417-4471-1-git-send-email-manabian@gmail.com>
+ <1455994417-4471-2-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1456330090-27226-2-git-send-email-joshua.henderson@microchip.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-kernel@vger.kernel.org
-Cc: linux-mips@linux-mips.org, ralf@linux-mips.org, Purna Chandra Mandal <purna.mandal@microchip.com>, Joshua Henderson <joshua.henderson@microchip.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1455994417-4471-2-git-send-email-manabian@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org
+Cc: Joachim Eastwood <manabian@gmail.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Joshua Henderson (2016-02-24 08:07:15)
-> From: Purna Chandra Mandal <purna.mandal@microchip.com>
-> 
-> Document the devicetree bindings for the clock driver found on Microchip
-> PIC32 class devices.
-> 
-> Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
-> Signed-off-by: Joshua Henderson <joshua.henderson@microchip.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+Quoting Joachim Eastwood (2016-02-20 10:53:36)
+> +static const struct clk_ops clk_creg_32k = {
+> +       .enable         = clk_creg_enable,
+> +       .disable        = clk_creg_disable,
 
-Acked-by: Michael Turquette <mturquette@baylibre.com>
+There should be a .is_enabled here.
 
-> ---
-> Note: Please pull this complete series through the MIPS tree.
-> 
-> Changes since v7: None
-> Changes since v6:
->         - Update Microchip PIC32 clock binding document based on review
->         - Add header defining clocks
-> Changes since v5: None
-> Changes since v4: None
-> Changes since v3: None
-> Changes since v2:
->         - Force lowercase in PIC32 clock binding documentation
-> Changes since v1: None
-> ---
->  .../devicetree/bindings/clock/microchip,pic32.txt  |   39 ++++++++++++++++++
->  include/dt-bindings/clock/microchip,pic32-clock.h  |   42 ++++++++++++++++++++
->  2 files changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/microchip,pic32.txt
->  create mode 100644 include/dt-bindings/clock/microchip,pic32-clock.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/microchip,pic32.txt b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
-> new file mode 100644
-> index 0000000..5352718
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/microchip,pic32.txt
-> @@ -0,0 +1,39 @@
-> +Microchip PIC32 Clock Controller Binding
-> +----------------------------------------
-> +Microchip clock controller is consists of few oscillators, PLL, multiplexer
-> +and few divider modules.
-> +
-> +This binding uses common clock bindings.
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +
-> +Required properties:
-> +- compatible: shall be "microchip,pic32mzda-clk".
-> +- reg: shall contain base address and length of clock registers.
-> +- #clock-cells: shall be 1.
-> +
-> +Optional properties:
-> +- microchip,pic32mzda-sosc: shall be added only if platform has
-> +  secondary oscillator connected.
-> +
-> +Example:
-> +       rootclk: clock-controller@1f801200 {
-> +               compatible = "microchip,pic32mzda-clk";
-> +               reg = <0x1f801200 0x200>;
-> +               #clock-cells = <1>;
-> +               /* optional */
-> +               microchip,pic32mzda-sosc;
-> +       };
-> +
-> +
-> +The clock consumer shall specify the desired clock-output of the clock
-> +controller (as defined in [2]) by specifying output-id in its "clock"
-> +phandle cell.
-> +[2] include/dt-bindings/clock/microchip,pic32-clock.h
-> +
-> +For example for UART2:
-> +uart2: serial@2 {
-> +       compatible = "microchip,pic32mzda-uart";
-> +        reg = <>;
-> +       interrupts = <>;
-> +       clocks = <&rootclk PB2CLK>;
+> +       .prepare        = clk_creg_32k_prepare,
+> +       .unprepare      = clk_creg_32k_unprepare,
+> +       .is_prepared    = clk_creg_32k_is_prepared,
 > +};
-> diff --git a/include/dt-bindings/clock/microchip,pic32-clock.h b/include/dt-bindings/clock/microchip,pic32-clock.h
-> new file mode 100644
-> index 0000000..184647a6
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/microchip,pic32-clock.h
-> @@ -0,0 +1,42 @@
-> +/*
-> + * Purna Chandra Mandal,<purna.mandal@microchip.com>
-> + * Copyright (C) 2015 Microchip Technology Inc.  All rights reserved.
-> + *
-> + * This program is free software; you can distribute it and/or modify it
-> + * under the terms of the GNU General Public License (Version 2) as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-> + * for more details.
-> + */
 > +
-> +#ifndef _DT_BINDINGS_CLK_MICROCHIP_PIC32_H_
-> +#define _DT_BINDINGS_CLK_MICROCHIP_PIC32_H_
-> +
-> +/* clock output indices */
-> +#define POSCCLK                0
-> +#define FRCCLK         1
-> +#define BFRCCLK                2
-> +#define LPRCCLK                3
-> +#define SOSCCLK                4
-> +#define FRCDIVCLK      5
-> +#define PLLCLK         6
-> +#define SCLK           7
-> +#define PB1CLK         8
-> +#define PB2CLK         9
-> +#define PB3CLK         10
-> +#define PB4CLK         11
-> +#define PB5CLK         12
-> +#define PB6CLK         13
-> +#define PB7CLK         14
-> +#define REF1CLK                15
-> +#define REF2CLK                16
-> +#define REF3CLK                17
-> +#define REF4CLK                18
-> +#define REF5CLK                19
-> +#define UPLLCLK                20
-> +#define MAXCLKS                21
-> +
-> +#endif /* _DT_BINDINGS_CLK_MICROCHIP_PIC32_H_ */
-> -- 
-> 1.7.9.5
-> 
+> +static const struct clk_ops clk_creg_1k = {
+> +       .enable         = clk_creg_enable,
+> +       .disable        = clk_creg_disable,
+
+Ditto.
+
+Otherwise patch looks good to me. Thanks a lot for all of the rework.
+
+Regards,
+Mike
