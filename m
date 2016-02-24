@@ -1,45 +1,36 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH 2/2] ARM: dts: sun8i: Enable ir receiver on
- orangepi pc
-Date: Wed, 24 Feb 2016 14:26:37 +0100
-Message-ID: <56CDAF8D.70501@redhat.com>
-References: <1456268597-13692-1-git-send-email-hdegoede@redhat.com>
- <1456268597-13692-3-git-send-email-hdegoede@redhat.com>
- <20160224121640.GA25658@box2.japko.eu>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] clk: rockchip: add dt-binding header for rk3399
+Date: Wed, 24 Feb 2016 14:27:43 +0100
+Message-ID: <4483822.0pRK7cKepF@phil>
+References: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com> <1456210864-29037-4-git-send-email-jay.xu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160224121640.GA25658-xLeyfSbClftGit24Ens98Q@public.gmane.org>
+In-Reply-To: <1456210864-29037-4-git-send-email-jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Adamski <k@japko.eu>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: "jianqun.xu" <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Jianqun,
 
-On 24-02-16 13:16, Krzysztof Adamski wrote:
-> On Wed, Feb 24, 2016 at 12:03:17AM +0100, Hans de Goede wrote:
->> Enable the ir receiver found on the orangepi pc board.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->> arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 6 ++++++
->> 1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->
-> I don't think this file is avaiable in mainline. Wouldn't it be better to use patch against existing orangepi-plus dts file?
->
-> Otherwise I tested this patch and it works fine on my Orangepi PC (some data is splitted out when reading /dev/input/event0).
+Am Dienstag, 23. Februar 2016, 15:01:03 schrieb jianqun.xu:
+> From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> Add the dt-bindings header for the rk3399, that gets shared between
+> the clock controller and the clock references in the dts.
+> 
+> Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Ah yes, that is my bad, I've been waiting with upstreaming an orangepi-pc dts until all the
-usb bits are upstream as my dts has usb host support enabled, I should probably split
-out the usb-host support and upstream the rest already.
+looks ok so far, do you have an estimate when the revised clk driver will be 
+sent? Before committing to support this binding header forever I'd like to 
+take a look over the clock-tree itself, just to be sure ;-)
 
-Regards,
 
-Hans
+Thanks
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
