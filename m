@@ -1,75 +1,114 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH V8 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
-Date: Thu, 25 Feb 2016 17:15:11 +0100
-Message-ID: <20160225161510.GB1903@ulmo.nvidia.com>
-References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
- <20160216160029.GC11400@ulmo.nvidia.com>
- <56C7EE58.8000905@nvidia.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm/marvell: ABI unstability warning
+ about Marvell 7K/8K
+Date: Thu, 25 Feb 2016 16:16:47 +0000
+Message-ID: <20160225161642.GC10593@leverpostej>
+References: <1456327007-31008-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1456327007-31008-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160224172545.GC9137@leverpostej>
+ <20160224211045.379352d3@free-electrons.com>
+ <CAL_JsqLevrujSeYNBvSJA-5T0Ho8y7c0fKid7QvVm8LLvYLotw@mail.gmail.com>
+ <20160225090927.13492cfb@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56C7EE58.8000905@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-gpio-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, k.kozlowski@samsung.com
+In-Reply-To: <20160225090927.13492cfb-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---jq0ap7NbKX2Kqbes
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Feb 25, 2016 at 09:09:27AM +0100, Thomas Petazzoni wrote:
+> Hello Rob,
+> 
+> On Wed, 24 Feb 2016 16:07:04 -0600, Rob Herring wrote:
+> 
+> > You should fix the incomplete information problem. I pushed back on
+> > this, you got more information and already the binding is closer to
+> > reality.
+> 
+> "You should fix the incomplete information problem". You seem to think
+> that it is a simple thing that can be fixed with a magic wand. But it's
+> not.
+> 
+> Either because the internal processes are complicated, or simply
+> because the Linux kernel support is done without cooperation from the
+> HW vendor (it's not the case of this Marvell platform, but it's the
+> case of many other platforms).
 
-On Sat, Feb 20, 2016 at 10:10:56AM +0530, Laxman Dewangan wrote:
->=20
-> On Tuesday 16 February 2016 09:30 PM, Thierry Reding wrote:
-> >On Thu, Feb 11, 2016 at 05:26:26PM +0530, Laxman Dewangan wrote:
-> >>Add SW support for MAXIM Semiconductor's Power Management
-> >>IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
-> >>RTC, watchdog, clocks etc.
-> >Hi Laxman,
-> >
-> >This series is starting to look pretty good. Do you have patches in the
-> >works to add the corresponding DT content for the various boards that we
-> >support? I think the Jetson TX1 patch would be most interesting since
-> >that's what people can get their hands on.
-> >
->=20
-> Yes, I am just waiting for this series to be concluded and applied. Once =
-it
-> is done, I will immediately post the patches to enable this driver in con=
-fig
-> and dt entry for the Jetson-TX1.
+Yes, this is a problem in some cases, and that should be considered in
+those cases. There are always shades of grey.
 
-Why hold back on the patches? I'm currently having trouble testing
-your stash here on Jetson TX1 and I suspect that I'm using the wrong
-device tree content (it was derived from downstream many moons ago).
-There's nothing wrong with posting patches that depend on patches on
-the list. Typically you'd note the dependency in the cover letter to
-make it easier for people to find what belongs together.
+Per the above, that isn't relevant in this case. This is a pretty
+black-and-white stand against the usual rules.
 
-Thierry
+> > Mark didn't say don't submit. First, there is value in submitting even
+> > if not accepted immediately and you have to carry some patches for
+> > some time. It was also suggested that you err on the side of less
+> > information in DT if things are uncertain and you have not done that.
+> 
+> Submitting without merging is useless. The point of submitting is to
+> get the code merged, to reduce the amount of out-of-tree patches we
+> have to carry, and to allow users of the platform to simply run
+> mainline on their platform.
 
---jq0ap7NbKX2Kqbes
-Content-Type: application/pgp-signature; name="signature.asc"
+Submitting prototypes and RFCs is the usual way we get things reviewed
+early, and to allow maintainers and others to get a feel for things
+earlier. Submitting patches _for merging_ when you're not sure about
+things and don't want to agree to support them is what's being pushed
+back on.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> So this proposal really doesn't make any sense. Just like Mark initial
+> statement of not submitting code so early.
 
-iQIcBAABCAAGBQJWzyiOAAoJEN0jrNd/PrOhx6wP/j3nl4wG3BodnmqWDktA7uJK
-KmhX4+Xd/vdP31e9Hp1EEauCNG9dxz7rAKeWNxsI+leY2IXJplSbgLW6lRjJNMs2
-27W4EPUrqmzFqwEofVAVu9hZF4aTkXF9QWjgI1OEAad2W9w22ahzZ9WKWwERjKLE
-ROHQtZ9fL3BBfdpGyz8Ama8q1jdueE3A3/e92AgsCl8GV5ut3QQpVTDbrt6jrkDC
-c6FhzT3w+ftDlY+RHdK7RHIL8XlJgwthMpXdnzEhANkK8+GusAua/eZ97t7FeG2j
-2GV2bPXfWFJXRxdRQ/2ujxZ12xUahHHddpYz2NgvH4IVZ3Gd1IYdvwjkNYuFnnVV
-OqeeuxaWf/jsVrjuGgIT0o0gdEQJQx+6wVyQGHRUyhX+BbXHX3VffxIlwxudK/qE
-Np0u3+tKAEvzn71EfWaVKsr1EIdih+zWYsBrno3zik/iv0XwqsDSr6ueaidaPp2j
-9WrzYACNbXSoYuCeN+hfA74FG7iOPycY7bYujl6aXchcG4FhJIcT4WFURytqghsu
-KgrXJmOVgKszr5Q7bsYuGsVAVERDSJEHpF3IVD2av9OqKqkZqzPtMaPPa6okVef7
-Q/sxRk13Sa+Oww1NMhm6UCy1pQIaoLNepq0FIF2EY1L7e1OHs4QRnWUveYhm/hmb
-KCZ9etWc/J9GD+KkHk+2
-=4kMH
------END PGP SIGNATURE-----
+As what I said was evidently ambiguous, I'm on about code being _merged_
+prior to being ready. Code and bindings should certainly be posted for
+review as soon as possible. However, it should be recognised when things
+aren't quite ready for mainline.
 
---jq0ap7NbKX2Kqbes--
+Even if something's unclear about a device, you can highlight more
+general issues (e.g. problematic edge cases in common subsystem code),
+and that's possible to have merged even if the binding isn't ready.
+
+If you're unsure about something, but still want it merged, then you
+have to commit to maintaining that as far as reasonably possible, even
+if it turns out to not be quite right.
+
+> > > So please get to an agreement between DT binding maintainers. And stop
+> > > saying this ridiculous statement that HW vendors should stop submitting
+> > > their code to the mainline.
+> > 
+> > You want us to agree, then you won't like the answer. Bindings must be
+> > stable. I'll allow exceptions to that, but not without push back.
+> > 
+> > In general, if there is disagreement about whether stability is
+> > required, then it is required. See the recent sunxi discussion. That's
+> > more between users and platform maintainers though.
+> 
+> Do you realize that this all DT binding stuff is today the *biggest* to
+> getting HW support in the Linux kernel? It has become more complicated
+> to merge a 4 properties DT binding than to merge multiple thousands of
+> lines of driver code. 
+
+As times have changed, pain points have moved around.
+
+To some extent that is unavoidable; more up-front effort is required
+where crutches we previously relied on are not applicable.
+
+Elsewhere we can certainly do better.
+
+Throwing your hands up and stating "this is unstable, it might change"
+is a crutch. It prevents any real solution to the pain points you
+encounter, and creates pain points for others. It only provides the
+_illusion_ of support.
+
+Deliberately violating the rules and then complaining that the rules
+don't work because you don't care for them is a terrible argument.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
