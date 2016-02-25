@@ -1,58 +1,178 @@
-From: Qiang Zhao <qiang.zhao@nxp.com>
-Subject: RE: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree
- bindings.
-Date: Thu, 25 Feb 2016 03:10:26 +0000
-Message-ID: <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
-References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
-	 <20160223201520.GA3354@rob-hp-laptop>
- <1456258812.5360.22.camel@buserror.net>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add tmu node for exynos7
+Date: Thu, 25 Feb 2016 13:06:04 +0900
+Message-ID: <56CE7DAC.4000803@samsung.com>
+References: <1456370865-10086-1-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456258812.5360.22.camel@buserror.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, Rob Herring <robh@kernel.org>
-Cc: Yang-Leo Li <leoyang.li@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1456370865-10086-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE2LTAyLTI0IGF0IDA0OjIwICBBTSwgU2NvdHQgV29vZCB3cm90ZToNCj4gLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFpbHRvOm9zc0Bi
-dXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgRmVicnVhcnkgMjQsIDIwMTYgNDoyMCBB
-TQ0KPiBUbzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47IFFpYW5nIFpoYW8gPHFpYW5n
-LnpoYW9AbnhwLmNvbT4NCj4gQ2M6IFlhbmctTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
-MiAxLzddIFFFOiBBZGQgSUMsIFNJIGFuZCBTSVJBTSBkb2N1bWVudCB0byBkZXZpY2UgdHJlZQ0K
-PiBiaW5kaW5ncy4NCj4gDQo+IE9uIFR1ZSwgMjAxNi0wMi0yMyBhdCAxNDoxNSAtMDYwMCwgUm9i
-IEhlcnJpbmcgd3JvdGU6DQo+ID4gT24gVGh1LCBGZWIgMTgsIDIwMTYgYXQgMDk6MDY6MDZBTSAr
-MDgwMCwgWmhhbyBRaWFuZyB3cm90ZToNCj4gPiA+IEFkZCBJQywgU0kgYW5kIFNJUkFNIGRvY3Vt
-ZW50IG9mIFFFIHRvDQo+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
-ZXJwYy9mc2wvY3BtX3FlL3FlLnR4dA0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW8g
-UWlhbmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gQ2hhbmdlcyBmb3Ig
-djINCj4gPiA+IAktIEFkZCBpbnRlcnJ1cHQtY29udHJvbGxlciBpbiBSZXF1aXJlZCBwcm9wZXJ0
-aWVzDQo+ID4gPiAJLSBkZWxldGUgYWRkcmVzcy1jZWxscyBhbmQgc2l6ZS1jZWxscyBmb3IgcWUt
-c2kgYW5kIHFlLXNpcmFtDQo+ID4gPg0KPiA+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
-d2VycGMvZnNsL2NwbV9xZS9xZS50eHQgIHwgNTANCj4gPiA+ICsrKysrKysrKysrKysrKysrKysr
-KysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQ0KPiA+ID4NCj4gPiA+
-IGRpZmYgLS1naXQNCj4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
-d2VycGMvZnNsL2NwbV9xZS9xZS50eHQNCj4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9xZS50eHQNCj4gPiA+IGluZGV4IDRmODkzMDIu
-Ljg0MDUyYTcgMTAwNjQ0DQo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3FlLnR4dA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9xZS50eHQNCj4gPiA+IEBA
-IC02OSw2ICs2OSw1NiBAQCBFeGFtcGxlOg0KPiA+ID4gIAl9Ow0KPiA+ID4gICAgICAgfTsNCj4g
-PiA+DQo+ID4gPiArKiBJbnRlcnJ1cHQgQ29udHJvbGxlciAoSUMpDQo+ID4gPiArDQo+ID4gPiAr
-UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZz
-bCxxZS1pYyIuDQo+ID4NCj4gPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZzbCxxZS1z
-aSIuDQo+ID4NCj4gPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZzbCxxZS1zaXJhbSIu
-DQo+ID4NCj4gPiBUaGVzZSBjb21wYXRpYmxlIHN0cmluZ3MgYXJlIGFsbCBhIGJpdCBnZW5lcmlj
-IGFuZCBzaG91bGQgaGF2ZSBTb0MNCj4gPiBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZ3MuDQo+
-IA0KPiBJIGRvbid0IGtub3cgYWJvdXQgc2kvc2lyYW0sIGJ1dCAiZnNsLHFlLWljIiBoYXMgYmVl
-biBhcm91bmQgc2luY2UgMjAwOCwgc28gaXQNCj4gc2hvdWxkIGJlIGRvY3VtZW50ZWQgZXZlbiBp
-ZiBhIG1vcmUgc3BlY2lmaWMgY29tcGF0aWJsZSBpcyBhbHNvIGFkZGVkLg0KDQpBZ3JlZSwgYW5k
-IHNpL3NpcmFtIGFyZSBhbHNvIGhhcyBiZWVuIGFyb3VuZCBzaW5jZSAyMDA4Lg0KSW4gYWRkaXRp
-b24sIEkgZG9u4oCZdCB0aGluayBpdCBpcyBuZWVkZWQgdG8gYWRkIHNwZWNpZmljIGNvbXBhdGli
-bGUsIGJlY2F1c2UgdGhleSBhcmUNCnRoZSBzYW1lIGluIHFlLXN1cHBvcnRlZCBzb2MuDQoNCkJS
-DQotWmhhbw0K
+On 25.02.2016 12:27, Pankaj Dubey wrote:
+> From: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> This patch adds tmu node, related temprature sensor and triping
+> point data for Atlas cpu core found on exynos7 SoC.
+> 
+> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+Yours Sob is missing.
+
+Cc-ed Lukasz Majewski.
+
+Lukasz,
+Your review or ack would be appreciated.
+
+
+> ---
+>  .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi   |   25 +++++++++
+>  .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   55 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi            |   20 +++++++
+>  3 files changed, 100 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+> new file mode 100644
+> index 0000000..1d6dcf2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+> @@ -0,0 +1,25 @@
+> +/*
+> + * Device tree sources for Exynos7 TMU sensor configuration
+> + *
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <dt-bindings/thermal/thermal_exynos.h>
+> +
+> +#thermal-sensor-cells = <0>;
+> +samsung,tmu_gain = <9>;
+> +samsung,tmu_reference_voltage = <17>;
+> +samsung,tmu_noise_cancel_mode = <4>;
+> +samsung,tmu_efuse_value = <75>;
+> +samsung,tmu_min_efuse_value = <15>;
+> +samsung,tmu_max_efuse_value = <100>;
+> +samsung,tmu_first_point_trim = <25>;
+> +samsung,tmu_second_point_trim = <85>;
+> +samsung,tmu_default_temp_offset = <50>;
+> +samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+> new file mode 100644
+> index 0000000..3970545
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+> @@ -0,0 +1,55 @@
+> +/*
+> + * Device tree sources for default Exynos7 thermal zone definition
+> + *
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +trips {
+> +	cpu-alert-0 {
+> +		temperature = <75000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-1 {
+> +		temperature = <80000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-2 {
+> +		temperature = <85000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-3 {
+> +		temperature = <90000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-4 {
+> +		temperature = <95000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-5 {
+> +		temperature = <100000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-6 {
+> +		temperature = <110000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	/* HW Trip point */
+
+The comment looks unnecessary, all of these are HW trip points, right?
+
+> +	cpu-crit-0 {
+> +		temperature = <115000>; /* millicelsius */
+> +		hysteresis = <0>; /* millicelsius */
+> +		type = "critical";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index c662f98..fc9d130 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -27,6 +27,7 @@
+>  		pinctrl6 = &pinctrl_fsys0;
+>  		pinctrl7 = &pinctrl_fsys1;
+>  		pinctrl8 = &pinctrl_bus1;
+> +		tmuctrl0 = &tmuctrl_0;
+
+Why the alias is needed?
+
+>  	};
+>  
+>  	cpus {
+> @@ -538,6 +539,25 @@
+>  			clocks = <&clock_peric0 PCLK_PWM>;
+>  			clock-names = "timers";
+>  		};
+> +
+> +		tmuctrl_0: tmu@10060000 {
+> +			compatible = "samsung,exynos7-tmu";
+> +			reg = <0x10060000 0x200>;
+> +			interrupts = <0 108 0>;
+> +			clocks = <&clock_peris PCLK_TMU>,
+> +				 <&clock_peris SCLK_TMU>;
+> +			clock-names = "tmu_apbif", "tmu_sclk";
+> +			#include "exynos7-tmu-sensor-conf.dtsi"
+> +		};
+> +
+> +		thermal-zones {
+> +			atlas_thermal: atlas-thermal {
+
+The atlas is a Exynos7 specific codename. The name of node should be a
+general class of the device, so maybe:
+	atlas_thermal: cluster0-thermal
+?
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
