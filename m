@@ -1,45 +1,48 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH] SATA: rcar: add device tree support for r8a7792
-Date: Thu, 25 Feb 2016 10:16:25 +0900
-Message-ID: <1456362985-24137-1-git-send-email-horms+renesas@verge.net.au>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v3] dts/ls2080a: Update PCIe compatible
+Date: Wed, 24 Feb 2016 16:40:38 -0800
+Message-ID: <20160225004038.GE10126@localhost>
+References: <1455674663-9273-1-git-send-email-Mingkai.Hu@freescale.com>
+ <20160218143639.GK9654@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160218143639.GK9654@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yang.shi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Simply document new compatibility string.
-As a previous patch adds a generic R-Car Gen2 compatibility string
-there appears to be no need for a driver updates.
+On Thu, Feb 18, 2016 at 08:36:39AM -0600, Rob Herring wrote:
+> On Wed, Feb 17, 2016 at 10:04:23AM +0800, Mingkai Hu wrote:
+> > From: Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
+> > 
+> > The patch adds LS2085a to PCIe compatible to fix the compatibility
+> > issue when using firmware with LS2085a compatible property.
+> > 
+> > Signed-off-by: Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
+> > Signed-off-by: Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> > v3:
+> >  - Make the compatible consistent between layerscape-pci.txt
+> >    and dts file.
+> > 
+> > v2:
+> >   - Rebased to latest kernel base
+> > 
+> >  Documentation/devicetree/bindings/pci/layerscape-pci.txt |  2 +-
+> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12 ++++++++----
+> >  2 files changed, 9 insertions(+), 5 deletions(-)
+> > 
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-By documenting this compat sting it may be used in DTSs shipped, for
-example as part of ROMs. It must be used in conjunction with the Gen2
-fallback compat string. At this time there are no known differences between
-the r8a7792 IP block and that implemented by the driver for the Gen2
-fallback compat string. Thus there is no need to update the driver as the
-use of the Gen2 fallback compat string will activate the correct code in
-the current driver while leaving the option for r8a7792-specific driver
-code to be activated in an updated driver should the need arise.
+Applied, thanks.
 
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- Documentation/devicetree/bindings/ata/sata_rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
 
- Based on the for-next branch of the libata tree
-
-diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-index 0764f9ab63dc..539dbdfba8de 100644
---- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-+++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-@@ -7,6 +7,7 @@ Required properties:
- 			  - "renesas,sata-r8a7790-es1" for R-Car H2 ES1
- 			  - "renesas,sata-r8a7790" for R-Car H2 other than ES1
- 			  - "renesas,sata-r8a7791" for R-Car M2-W
-+			  - "renesas,sata-r8a7792" for R-Car V2H
- 			  - "renesas,sata-r8a7793" for R-Car M2-N
- 			  - "renesas,sata-r8a7795" for R-Car H3
- - reg			: address and length of the SATA registers;
--- 
-2.7.0.rc3.207.g0ac5344
-
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
