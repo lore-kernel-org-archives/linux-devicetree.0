@@ -1,93 +1,59 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCH v2] dts: add specific compatible type for Terasic DE0-NANO-SoC
-  Board
-Date: Thu, 25 Feb 2016 10:56:28 -0600
-Message-ID: <56CF323C.90202@opensource.altera.com>
-References: <8416439.76b9YNhpgR@dabox> <alpine.DEB.2.02.1602241048100.3815@linux-builds1> <2186741.ZYdHdfu2ug@dabox> <20160225103820.GB747@pengutronix.de>
+From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v3 1/2] dt/bindings: Add bindings for the PIC32 real time clock
+Date: Thu, 25 Feb 2016 10:30:43 -0700
+Message-ID: <1456421449-18225-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160225103820.GB747@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Tim Sander <tim@krieglstein.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/2016 04:38 AM, Steffen Trumtrar wrote:
-> Hi Tim!
-> 
-> On Thu, Feb 25, 2016 at 11:05:05AM +0100, Tim Sander wrote:
->> From: Tim Sander <tim@krieglstein.org>
->>
->> Add a more specific compatible string:"terasic,de0-nano-soc" for respective board.
->> Background: when checking for bootspec entries, some board specific fixups are
->> not apropriate for board of the same platform ("altr,socfpga-cyclone5").
->> The same aproach is taken with the EBV-Socrates board.
->>
->> Signed-off-by: Tim Sander <tim@krieglstein.org>
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts     | 2 +-
->>  2 files changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 72e2c5a..d1f7803 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -230,6 +230,7 @@ synology	Synology, Inc.
->>  tbs	TBS Technologies
->>  tcl	Toby Churchill Ltd.
->>  technologic	Technologic Systems
->> +terasic	Terasic Inc.
->>  thine	THine Electronics, Inc.
->>  ti	Texas Instruments
->>  tlm	Trusted Logic Mobility
-> 
-> You should IMHO split this up in two patches.
-> First patch: add terasic
-> 
+Document the devicetree bindings for the real time clock found
+on Microchip PIC32 class devices.
 
-That's right. That patch will go through the DTS maintainer's tree.
+Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+Changes since v2: None
+Changes since v1: None
+---
+ .../bindings/rtc/microchip,pic32-rtc.txt           |   21 ++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt
 
->> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
->> index afea364..704aa9d 100644
->> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
->> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
->> @@ -18,7 +18,7 @@
->>  
->>  / {
->>  	model = "Terasic DE-0(Atlas)";
->> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
->> +	compatible = "terasic,de0-nano-soc","altr,socfpga-cyclone5", "altr,socfpga";
-> 
+diff --git a/Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt b/Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt
+new file mode 100644
+index 0000000..180b714
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/microchip,pic32-rtc.txt
+@@ -0,0 +1,21 @@
++* Microchip PIC32 Real Time Clock and Calendar
++
++The RTCC keeps time in hours, minutes, and seconds, and one half second. It
++provides a calendar in weekday, date, month, and year. It also provides a
++configurable alarm.
++
++Required properties:
++- compatible: should be: "microchip,pic32mzda-rtc"
++- reg: physical base address of the controller and length of memory mapped
++    region.
++- interrupts: RTC alarm/event interrupt
++- clocks: clock phandle
++
++Example:
++
++	rtc: rtc@1f8c0000 {
++		compatible = "microchip,pic32mzda-rtc";
++		reg = <0x1f8c0000 0x60>;
++		interrupts = <166 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&PBCLK6>;
++	};
+-- 
+1.7.9.5
 
-So perhaps, "terasic,de0-sockit"?
-
-> Second patch: this.
-> 
-
-And I can take this one.
-
->>  
->>  	chosen {
->>  		bootargs = "earlyprintk";
-> 
-> The naming of this board still confuses me though.
-> It has 3 different names now:
-> 
-> 	- de0_sockit.dts
-> 	- Terasic DE-0(Atlas)
-> 	- de0-nano-soc
-> 
-> And according to Terasic DE0-Nano-SoC is the same as Atlas-SoC with a different software?!
-> So all three names are actually correct ?! Weird.
-> 
-
-I had a hard time understanding this myself. But from what I gather
-from[1], I just name the file de0_sockit.
-
-Dinh
-
-[1]
-http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=13&List=Simple#Category167
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
