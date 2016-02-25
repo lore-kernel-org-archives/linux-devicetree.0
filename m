@@ -1,113 +1,125 @@
-Return-Path: <ulf.hansson@linaro.org>
+Return-Path: <andy.gross@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1455848322-2210-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1455848322-2210-1-git-send-email-shawn.lin@rock-chips.com>
-Date: Fri, 19 Feb 2016 23:23:02 +0100
-Message-ID: <CAPDyKFojtZamH-xwM9UTyWdeW3SSSS3-uUyVr2R1t9NkwCXvYg@mail.gmail.com>
-Subject: Re: [RESEND PATCH v5 0/2] Add phy support for arasan,sdhci-5.1
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Content-Type: multipart/alternative; boundary=001a1141fa822d700d052c26edc2
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>
+In-Reply-To: <56CEE3D4.3030407@linaro.org>
+References: <1456246153-18087-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<1456246236-18341-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<56CE3780.5060408@codeaurora.org>
+	<56CEE3D4.3030407@linaro.org>
+Date: Thu, 25 Feb 2016 17:44:37 -0600
+Message-ID: <CAPBZ5QfD4q4hDg2Vfj8E_2Hjoa80feFN4cM+LkhdGgHLDkKx_g@mail.gmail.com>
+Subject: Re: [PATCH v3 6/8] arm64: dts: qcom: fix usb digital voltage levels
+From: Andy Gross <andy.gross@linaro.org>
+Content-Type: multipart/alternative; boundary=001a1141b2a6f0ea14052ca0c36c
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a1141fa822d700d052c26edc2
+--001a1141b2a6f0ea14052ca0c36c
 Content-Type: text/plain; charset=UTF-8
 
-Den 19 feb 2016 3:24 fm skrev "Shawn Lin" <shawn.lin@rock-chips.com>:
+I think the vdd-levels were an oversight.  The voltages definitely need to
+be correct.  As for the corner regulators, I believe the CPR driver was
+supposed to address this.  The USB requests a specific voltage and
+frequency and based on this the CPR would set the corner for the regulator.
+
+Stephen, correct me if i am wrong.
+
+On 25 February 2016 at 05:21, Srinivas Kandagatla <
+srinivas.kandagatla@linaro.org> wrote:
+
 >
 >
-> Hello Ulf and Adrian,
+> On 24/02/16 23:06, Stephen Boyd wrote:
 >
-> Sorry for delay the new version for this topic. Actually I have no
-> platform available to test phy stuff since v4. Now, I can rework it.:)
-> I remove rpm support from v5 because this patchset just need to focus
-> on phy stuff, which will make the changes more precise. Another reason
-> is that phy_power_on take too much time from rpm, however the power profit
-> gained from phy_power_off is little due to the low power mechanism with
-the
-> phy itself observed from experiments.
+>> On 02/23/2016 08:50 AM, Srinivas Kandagatla wrote:
+>>
+>>> This patch updates the digital voltage levels from corner values to
+>>> microvolts as we are going to use s1 regulator directly for vddcx
+>>> instead of s1_corner.
+>>>
+>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>> ---
+>>>
+>>
+>> What's the plan for corners? Maybe we should remove the voltage setting
+>> from the usb driver or drop the usb node entirely on msm8916 until we
+>> resolve how we're going to handle corners. I'd like to avoid getting
+>> stuck into some DT binding ABI mess here.
+>>
 >
-> v4 can be found here:
-> https://patchwork.kernel.org/patch/7463251/
+> Andy/Bjorn, any comments on plans on corner regulators?
 >
-> Note:
-> Phy is mandatory requirement for arasan,sdhci-5.1, so we introduce
-> generic phy support for sdhci-of-arasan.
+> Please note, that this is a patch to fix what is already in the mainline.
+> Without this patch the regulator would be configured with 1uV or 5uV or 7uV
+> which would obviously fail.
 >
+> THB, it does not make sense to drop feature which is functional, and I
+> also agree that we should cleanup some of this mess at some point in time
+> once we all the bits and pieces ready.
 >
-> Shawn Lin (2):
->   Documentation: bindings: add description of phy for sdhci-of-arasan
->   mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
+> I was surprised to see these usb bindings(qcom,vdd-levels) existed even
+> before we had concept of corner regulators in mainline kernel. Which also
+> suggests that this driver needs a proper relook once again.
 >
->  .../devicetree/bindings/mmc/arasan,sdhci.txt       | 20 ++++++-
->  drivers/mmc/host/sdhci-of-arasan.c                 | 66
-++++++++++++++++++++--
->  2 files changed, 80 insertions(+), 6 deletions(-)
->
-> --
-> 2.3.7
->
+> Thanks,
+> srini
 >
 
-This looks good to me! When acks has been received I am ready to queue it
-for next.
-
-Kind regards
-Uffe
-
---001a1141fa822d700d052c26edc2
+--001a1141b2a6f0ea14052ca0c36c
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr"><br>
-Den 19 feb 2016 3:24 fm skrev &quot;Shawn Lin&quot; &lt;<a href=3D"mailto:s=
-hawn.lin@rock-chips.com">shawn.lin@rock-chips.com</a>&gt;:<br>
-&gt;<br>
-&gt;<br>
-&gt; Hello Ulf and Adrian,<br>
-&gt;<br>
-&gt; Sorry for delay the new version for this topic. Actually I have no<br>
-&gt; platform available to test phy stuff since v4. Now, I can rework it.:)=
+<div dir=3D"ltr">I think the vdd-levels were an oversight.=C2=A0 The voltag=
+es definitely need to be correct.=C2=A0 As for the corner regulators, I bel=
+ieve the CPR driver was supposed to address this.=C2=A0 The USB requests a =
+specific voltage and frequency and based on this the CPR would set the corn=
+er for the regulator.<div><br></div><div>Stephen, correct me if i am wrong.=
+</div></div><div class=3D"gmail_extra"><br><div class=3D"gmail_quote">On 25=
+ February 2016 at 05:21, Srinivas Kandagatla <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:srinivas.kandagatla@linaro.org" target=3D"_blank">srinivas.kanda=
+gatla@linaro.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote"=
+ style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><s=
+pan class=3D""><br>
 <br>
-&gt; I remove rpm support from v5 because this patchset just need to focus<=
-br>
-&gt; on phy stuff, which will make the changes more precise. Another reason=
+On 24/02/16 23:06, Stephen Boyd wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+On 02/23/2016 08:50 AM, Srinivas Kandagatla wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+This patch updates the digital voltage levels from corner values to<br>
+microvolts as we are going to use s1 regulator directly for vddcx<br>
+instead of s1_corner.<br>
 <br>
-&gt; is that phy_power_on take too much time from rpm, however the power pr=
-ofit<br>
-&gt; gained from phy_power_off is little due to the low power mechanism wit=
-h the<br>
-&gt; phy itself observed from experiments.<br>
-&gt;<br>
-&gt; v4 can be found here:<br>
-&gt; <a href=3D"https://patchwork.kernel.org/patch/7463251/">https://patchw=
-ork.kernel.org/patch/7463251/</a><br>
-&gt;<br>
-&gt; Note:<br>
-&gt; Phy is mandatory requirement for arasan,sdhci-5.1, so we introduce<br>
-&gt; generic phy support for sdhci-of-arasan.<br>
-&gt;<br>
-&gt;<br>
-&gt; Shawn Lin (2):<br>
-&gt; =C2=A0 Documentation: bindings: add description of phy for sdhci-of-ar=
-asan<br>
-&gt; =C2=A0 mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan<br>
-&gt;<br>
-&gt; =C2=A0.../devicetree/bindings/mmc/arasan,sdhci.txt=C2=A0 =C2=A0 =C2=A0=
- =C2=A0| 20 ++++++-<br>
-&gt; =C2=A0drivers/mmc/host/sdhci-of-arasan.c=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 66 ++++++++++++++++++++--<br>
-&gt; =C2=A02 files changed, 80 insertions(+), 6 deletions(-)<br>
-&gt;<br>
-&gt; --<br>
-&gt; 2.3.7<br>
-&gt;<br>
-&gt;</p>
-<p dir=3D"ltr">This looks good to me! When acks has been received I am read=
-y to queue it for next. </p>
-<p dir=3D"ltr">Kind regards <br>
-Uffe <br>
-</p>
+Signed-off-by: Srinivas Kandagatla &lt;<a href=3D"mailto:srinivas.kandagatl=
+a@linaro.org" target=3D"_blank">srinivas.kandagatla@linaro.org</a>&gt;<br>
+---<br>
+</blockquote>
+<br>
+What&#39;s the plan for corners? Maybe we should remove the voltage setting=
+<br>
+from the usb driver or drop the usb node entirely on msm8916 until we<br>
+resolve how we&#39;re going to handle corners. I&#39;d like to avoid gettin=
+g<br>
+stuck into some DT binding ABI mess here.<br>
+</blockquote>
+<br></span>
+Andy/Bjorn, any comments on plans on corner regulators?<br>
+<br>
+Please note, that this is a patch to fix what is already in the mainline. W=
+ithout this patch the regulator would be configured with 1uV or 5uV or 7uV =
+which would obviously fail.<br>
+<br>
+THB, it does not make sense to drop feature which is functional, and I also=
+ agree that we should cleanup some of this mess at some point in time once =
+we all the bits and pieces ready.<br>
+<br>
+I was surprised to see these usb bindings(qcom,vdd-levels) existed even bef=
+ore we had concept of corner regulators in mainline kernel. Which also sugg=
+ests that this driver needs a proper relook once again.<br>
+<br>
+Thanks,<br>
+srini<br>
+</blockquote></div><br></div>
 
---001a1141fa822d700d052c26edc2--
+--001a1141b2a6f0ea14052ca0c36c--
