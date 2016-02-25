@@ -1,71 +1,93 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2 2/2] rtc: rtc-pic32: Add PIC32 real time clock driver
-Date: Thu, 25 Feb 2016 17:54:49 +0100
-Message-ID: <20160225165449.GH12073@piout.net>
-References: <1455905390-3491-2-git-send-email-joshua.henderson@microchip.com>
- <20160224222555.GA12073@piout.net>
- <56CF2A9B.5080005@microchip.com>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCH v2] dts: add specific compatible type for Terasic DE0-NANO-SoC
+  Board
+Date: Thu, 25 Feb 2016 10:56:28 -0600
+Message-ID: <56CF323C.90202@opensource.altera.com>
+References: <8416439.76b9YNhpgR@dabox> <alpine.DEB.2.02.1602241048100.3815@linux-builds1> <2186741.ZYdHdfu2ug@dabox> <20160225103820.GB747@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56CF2A9B.5080005@microchip.com>
+In-Reply-To: <20160225103820.GB747@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joshua Henderson <joshua.henderson@microchip.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, rtc-linux@googlegroups.com
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Tim Sander <tim@krieglstein.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/02/2016 at 09:23:55 -0700, Joshua Henderson wrote :
-> On 02/24/2016 03:25 PM, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > On 19/02/2016 at 11:09:45 -0700, Joshua Henderson wrote :
-> >> +static int pic32_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
-> >> +{
-> >> +	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-> >> +	void __iomem *base = pdata->reg_base;
-> >> +	unsigned int tries = 0;
-> >> +
-> >> +	clk_enable(pdata->clk);
-> >> +
-> >> +	do {
-> >> +		rtc_tm->tm_hour = readb(base + PIC32_RTCHOUR);
-> >> +		rtc_tm->tm_min = readb(base + PIC32_RTCMIN);
-> >> +		rtc_tm->tm_mon  = readb(base + PIC32_RTCMON);
-> >> +		rtc_tm->tm_mday = readb(base + PIC32_RTCDAY);
-> >> +		rtc_tm->tm_year = readb(base + PIC32_RTCYEAR);
-> >> +		rtc_tm->tm_sec  = readb(base + PIC32_RTCSEC);
-> >> +
-> >> +		/*
-> >> +		 * The only way to work out whether the system was mid-update
-> >> +		 * when we read it is to check the second counter, and if it
-> >> +		 * is zero, then we re-try the entire read.
-> >> +		 */
-> >> +		tries = 1;
-> >> +	} while (rtc_tm->tm_sec == 0 && tries < 2);
-> >> +
-> > 
-> > This doesn't seem right. It will wait up to a second as tries will
-> > always be less than 2, this is probably not what you want.
+On 02/25/2016 04:38 AM, Steffen Trumtrar wrote:
+> Hi Tim!
 > 
-> Dang good catch.  When fixed, it will work as expected:
+> On Thu, Feb 25, 2016 at 11:05:05AM +0100, Tim Sander wrote:
+>> From: Tim Sander <tim@krieglstein.org>
+>>
+>> Add a more specific compatible string:"terasic,de0-nano-soc" for respective board.
+>> Background: when checking for bootspec entries, some board specific fixups are
+>> not apropriate for board of the same platform ("altr,socfpga-cyclone5").
+>> The same aproach is taken with the EBV-Socrates board.
+>>
+>> Signed-off-by: Tim Sander <tim@krieglstein.org>
+>> ---
+>>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts     | 2 +-
+>>  2 files changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 72e2c5a..d1f7803 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -230,6 +230,7 @@ synology	Synology, Inc.
+>>  tbs	TBS Technologies
+>>  tcl	Toby Churchill Ltd.
+>>  technologic	Technologic Systems
+>> +terasic	Terasic Inc.
+>>  thine	THine Electronics, Inc.
+>>  ti	Texas Instruments
+>>  tlm	Trusted Logic Mobility
 > 
-> # hwclock
-> tries 1
-> Sun Oct 17 19:23:59 2010  0.000000 seconds
-> # hwclock
-> tries 1
-> tries 2
-> Sun Oct 17 19:24:00 2010  0.000000 seconds
-> # hwclock
-> tries 1
-> Sun Oct 17 19:24:01 2010  0.000000 seconds
+> You should IMHO split this up in two patches.
+> First patch: add terasic
 > 
 
-Sure, just send v3, I'll apply it right away ;)
+That's right. That patch will go through the DTS maintainer's tree.
 
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+>> index afea364..704aa9d 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+>> @@ -18,7 +18,7 @@
+>>  
+>>  / {
+>>  	model = "Terasic DE-0(Atlas)";
+>> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+>> +	compatible = "terasic,de0-nano-soc","altr,socfpga-cyclone5", "altr,socfpga";
+> 
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+So perhaps, "terasic,de0-sockit"?
+
+> Second patch: this.
+> 
+
+And I can take this one.
+
+>>  
+>>  	chosen {
+>>  		bootargs = "earlyprintk";
+> 
+> The naming of this board still confuses me though.
+> It has 3 different names now:
+> 
+> 	- de0_sockit.dts
+> 	- Terasic DE-0(Atlas)
+> 	- de0-nano-soc
+> 
+> And according to Terasic DE0-Nano-SoC is the same as Atlas-SoC with a different software?!
+> So all three names are actually correct ?! Weird.
+> 
+
+I had a hard time understanding this myself. But from what I gather
+from[1], I just name the file de0_sockit.
+
+Dinh
+
+[1]
+http://www.terasic.com.tw/cgi-bin/page/archive.pl?Language=English&CategoryNo=13&List=Simple#Category167
