@@ -1,46 +1,36 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2] clk: add userspace clock consumer
-Date: Thu, 25 Feb 2016 15:01:12 -0800
-Message-ID: <20160225230112.GA28849@codeaurora.org>
-References: <1456141719-2543-1-git-send-email-akinobu.mita@gmail.com>
- <20160223214944.GA20852@rob-hp-laptop>
- <20160224220819.GF4847@codeaurora.org>
- <CAC5umyjs_Q_G4jpcmPWk4Ug16tdwq+7c3UH1kwastj2P1UenqA@mail.gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v9 13/14] clk: mediatek: remove hdmitx_dig_cts from TOP
+ clocks
+Date: Thu, 25 Feb 2016 15:09:27 -0800
+Message-ID: <20160225230927.GE28849@codeaurora.org>
+References: <1452611750-16283-1-git-send-email-p.zabel@pengutronix.de>
+ <1452611750-16283-14-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <CAC5umyjs_Q_G4jpcmPWk4Ug16tdwq+7c3UH1kwastj2P1UenqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1452611750-16283-14-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel@lists.freedesktop.org, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/25, Akinobu Mita wrote:
-> 2016-02-25 7:08 GMT+09:00 Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>:
-> > Agreed. Plus, the userspace regulator consumer doesn't have any
-> > DT binding for it, so I don't see why we would have a DT binding
-> > for the clk one.
-> 
-> OK.  I'll drop a DT binding part of this driver.
-> 
-> I'll still try to expose this feature by platform device instead of
-> exposing under clk debugfs.  Because we don't want to allow controlling
-> all clock devices (which may result abuse of the feature).  Instead,
-> this userspace consumer only allows explicitly specified devices to
-> control.
-
-I'm pretty lost on this whole patch. Is it for debug? Or is it to
-put clk control into userspace? If it's for debug, why not just
-keep this patch around locally and use it for debugging? If it's
-for userspace clk control we need to have a larger discussion
-around the concept of that (since Rob doesn't think it should be
-done at all) and ABI (sysfs or ioctl?) before moving forward.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDEvMTIsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4gVGhlIGhkbWl0eF9kaWdfY3RzIGNsb2Nr
+IHNpZ25hbCBpcyBub3QgYSBjaGlsZCBvZiB0dmRwbGxfNDQ1cDVtLAo+IGJ1dCBpcyByb3V0ZWQg
+b3V0IG9mIHRoZSBIRE1JIFBIWSBtb2R1bGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogUGhpbGlwcCBa
+YWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KPiAtLS0KCkFja2VkLWJ5OiBTdGVwaGVuIEJv
+eWQgPHNib3lkQGNvZGVhdXJvcmEub3JnPgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRp
+b24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
