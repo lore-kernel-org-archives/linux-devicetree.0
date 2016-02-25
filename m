@@ -1,280 +1,85 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH V7 1/2] regulator: Add document for MT6323 regulator
-Date: Thu, 25 Feb 2016 11:37:10 +0100
-Message-ID: <1456396631-12788-1-git-send-email-blogic@openwrt.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v2] dts: add specific compatible type for Terasic
+ DE0-NANO-SoC  Board
+Date: Thu, 25 Feb 2016 11:38:20 +0100
+Message-ID: <20160225103820.GB747@pengutronix.de>
+References: <8416439.76b9YNhpgR@dabox>
+ <alpine.DEB.2.02.1602241048100.3815@linux-builds1>
+ <2186741.ZYdHdfu2ug@dabox>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2186741.ZYdHdfu2ug@dabox>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
+To: Tim Sander <tim@krieglstein.org>
+Cc: Dinh Nguyen <dinguyen@opensource.altera.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Cc: devicetree@vger.kernel.org
----
-This patch needs to be merged post-rc1 as it depends on the MFD series of
-the PMIC which is already inside Lee's tree pending the PR.
+Hi Tim!
 
-Changes in V7
-* remove another compatible string
-* small wording changes
+On Thu, Feb 25, 2016 at 11:05:05AM +0100, Tim Sander wrote:
+> From: Tim Sander <tim@krieglstein.org>
+> 
+> Add a more specific compatible string:"terasic,de0-nano-soc" for respective board.
+> Background: when checking for bootspec entries, some board specific fixups are
+> not apropriate for board of the same platform ("altr,socfpga-cyclone5").
+> The same aproach is taken with the EBV-Socrates board.
+> 
+> Signed-off-by: Tim Sander <tim@krieglstein.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts     | 2 +-
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 72e2c5a..d1f7803 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -230,6 +230,7 @@ synology	Synology, Inc.
+>  tbs	TBS Technologies
+>  tcl	Toby Churchill Ltd.
+>  technologic	Technologic Systems
+> +terasic	Terasic Inc.
+>  thine	THine Electronics, Inc.
+>  ti	Texas Instruments
+>  tlm	Trusted Logic Mobility
 
-Changes in V6
-* remove the compatible string
+You should IMHO split this up in two patches.
+First patch: add terasic
 
-Changes in V5
-* regulator vs regulators
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> index afea364..704aa9d 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+> @@ -18,7 +18,7 @@
+>  
+>  / {
+>  	model = "Terasic DE-0(Atlas)";
+> -	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
+> +	compatible = "terasic,de0-nano-soc","altr,socfpga-cyclone5", "altr,socfpga";
 
-Changes in V4
-* regulator is a subnode and not a property
+Second patch: this.
 
- .../bindings/regulator/mt6323-regulator.txt        |  239 ++++++++++++++++++++
- 1 file changed, 239 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
+>  
+>  	chosen {
+>  		bootargs = "earlyprintk";
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-new file mode 100644
-index 0000000..9fd95e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6323-regulator.txt
-@@ -0,0 +1,239 @@
-+Mediatek MT6323 Regulator Driver
-+
-+All voltage regulators are defined as subnodes of the regulators node. A list
-+of regulators provided by this controller are defined as subnodes of the
-+PMIC's node. Each regulator is named according to its regulator type,
-+buck_<name> and ldo_<name>. The definition for each of these nodes is defined
-+using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+The valid names for regulators are::
-+BUCK:
-+  buck_vproc, buck_vsys, buck_vpa
-+LDO:
-+  ldo_vtcxo, ldo_vcn28, ldo_vcn33_bt, ldo_vcn33_wifi, ldo_va, ldo_vcama,
-+  ldo_vio28, ldo_vusb, ldo_vmc, ldo_vmch, ldo_vemc3v3, ldo_vgp1, ldo_vgp2,
-+  ldo_vgp3, ldo_vcn18, ldo_vsim1, ldo_vsim2, ldo_vrtc, ldo_vcamaf, ldo_vibr,
-+  ldo_vrf18, ldo_vm, ldo_vio18, ldo_vcamd, ldo_vcamio
-+
-+Example:
-+
-+	pmic: mt6323 {
-+		compatible = "mediatek,mt6323";
-+
-+		mt6323regulator: regulators {
-+			mt6323_vproc_reg: buck_vproc{
-+				regulator-name = "vproc";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vsys_reg: buck_vsys{
-+				regulator-name = "vsys";
-+				regulator-min-microvolt = <1400000>;
-+				regulator-max-microvolt = <2987500>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vpa_reg: buck_vpa{
-+				regulator-name = "vpa";
-+				regulator-min-microvolt = < 500000>;
-+				regulator-max-microvolt = <3650000>;
-+			};
-+
-+			mt6323_vtcxo_reg: ldo_vtcxo{
-+				regulator-name = "vtcxo";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <90>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcn28_reg: ldo_vcn28{
-+				regulator-name = "vcn28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_vcn33_bt_reg: ldo_vcn33_bt{
-+				regulator-name = "vcn33_bt";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_vcn33_wifi_reg: ldo_vcn33_wifi{
-+				regulator-name = "vcn33_wifi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_va_reg: ldo_va{
-+				regulator-name = "va";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcama_reg: ldo_vcama{
-+				regulator-name = "vcama";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vio28_reg: ldo_vio28{
-+				regulator-name = "vio28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vusb_reg: ldo_vusb{
-+				regulator-name = "vusb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vmc_reg: ldo_vmc{
-+				regulator-name = "vmc";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vmch_reg: ldo_vmch{
-+				regulator-name = "vmch";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vemc3v3_reg: ldo_vemc3v3{
-+				regulator-name = "vemc3v3";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vgp1_reg: ldo_vgp1{
-+				regulator-name = "vgp1";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vgp2_reg: ldo_vgp2{
-+				regulator-name = "vgp2";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vgp3_reg: ldo_vgp3{
-+				regulator-name = "vgp3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vcn18_reg: ldo_vcn18{
-+				regulator-name = "vcn18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vsim1_reg: ldo_vsim1{
-+				regulator-name = "vsim1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vsim2_reg: ldo_vsim2{
-+				regulator-name = "vsim2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vrtc_reg: ldo_vrtc{
-+				regulator-name = "vrtc";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcamaf_reg: ldo_vcamaf{
-+				regulator-name = "vcamaf";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vibr_reg: ldo_vibr{
-+				regulator-name = "vibr";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+			};
-+
-+			mt6323_vrf18_reg: ldo_vrf18{
-+				regulator-name = "vrf18";
-+				regulator-min-microvolt = <1825000>;
-+				regulator-max-microvolt = <1825000>;
-+				regulator-enable-ramp-delay = <187>;
-+			};
-+
-+			mt6323_vm_reg: ldo_vm{
-+				regulator-name = "vm";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vio18_reg: ldo_vio18{
-+				regulator-name = "vio18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcamd_reg: ldo_vcamd{
-+				regulator-name = "vcamd";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vcamio_reg: ldo_vcamio{
-+				regulator-name = "vcamio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+		};
-+	};
+The naming of this board still confuses me though.
+It has 3 different names now:
+
+	- de0_sockit.dts
+	- Terasic DE-0(Atlas)
+	- de0-nano-soc
+
+And according to Terasic DE0-Nano-SoC is the same as Atlas-SoC with a different software?!
+So all three names are actually correct ?! Weird.
+
+Regards,
+Steffen
+
 -- 
-1.7.10.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
