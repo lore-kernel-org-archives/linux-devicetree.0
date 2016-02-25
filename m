@@ -1,494 +1,200 @@
-From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v3 2/2] rtc: rtc-pic32: Add PIC32 real time clock driver
-Date: Thu, 25 Feb 2016 10:30:44 -0700
-Message-ID: <1456421449-18225-2-git-send-email-joshua.henderson@microchip.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm/marvell: ABI unstability warning
+ about Marvell 7K/8K
+Date: Thu, 25 Feb 2016 17:56:04 +0000
+Message-ID: <20160225175603.GD10593@leverpostej>
+References: <1456327007-31008-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1456327007-31008-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20160224172545.GC9137@leverpostej>
+ <20160224211045.379352d3@free-electrons.com>
+ <CAL_JsqLevrujSeYNBvSJA-5T0Ho8y7c0fKid7QvVm8LLvYLotw@mail.gmail.com>
+ <20160225090927.13492cfb@free-electrons.com>
+ <20160225161642.GC10593@leverpostej>
+ <20160225173811.23be5b05@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160225173811.23be5b05-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver adds support for the PIC32 real time clock and calendar
-peripheral:
-	- reading and setting time
-	- alarms provided by dedicated IRQ
+Hi,
 
-Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
----
-Changes since v2:
-	- Fix rework bug causing unecessary retries for gettime.
-	- Word commit message to be more precise.
-Changes since v1:
-	- Fix checkpatch.pl --strict issues.
-	- Fix alpabetical makefile ordering.
-	- Specify consistent license.
-	- General formatting cleanup.
-	- Drop unecessary flags_lock.
-	- Replace ugly gogo with do while.
-	- Remove unecessary checks on time when setting alarm.
-	- Don't initialize the RTC in probe.
----
- drivers/rtc/Kconfig     |   10 ++
- drivers/rtc/Makefile    |    1 +
- drivers/rtc/rtc-pic32.c |  411 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 422 insertions(+)
- create mode 100644 drivers/rtc/rtc-pic32.c
+On Thu, Feb 25, 2016 at 05:38:11PM +0100, Thomas Petazzoni wrote:
+> Hello Mark,
+> 
+> On Thu, 25 Feb 2016 16:16:47 +0000, Mark Rutland wrote:
+> 
+> > > Either because the internal processes are complicated, or simply
+> > > because the Linux kernel support is done without cooperation from the
+> > > HW vendor (it's not the case of this Marvell platform, but it's the
+> > > case of many other platforms).
+> > 
+> > Yes, this is a problem in some cases, and that should be considered in
+> > those cases. There are always shades of grey.
+> 
+> Sure.
+> 
+> > Per the above, that isn't relevant in this case. This is a pretty
+> > black-and-white stand against the usual rules.
+> 
+> I don't see why. The datasheets have not been completely written yet
+> for this particular chip. For other chips we've worked on where we
+> collaborated with the SoC vendor, we never had any datasheet, simply
+> because the SoC vendor doesn't have any. They have the digital logic
+> source code, and then tons of spreadsheets or text documents that are
+> not proper datasheets and that they generally cannot share with
+> third-parties.
+> 
+> Hence, even when the support for a SoC is being done in collaboration
+> with the SoC vendor, we don't always have a nice full datasheet that
+> tells us what all the registers are doing and how they are organized.
+> We discover things as we go.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 376322f..c8fc40e 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1622,6 +1622,16 @@ config RTC_DRV_XGENE
- 	  This driver can also be built as a module, if so, the module
- 	  will be called "rtc-xgene".
- 
-+config RTC_DRV_PIC32
-+	tristate "Microchip PIC32 RTC"
-+	depends on MACH_PIC32
-+	default y
-+	help
-+	   If you say yes here you get support for the PIC32 RTC module.
-+
-+	   This driver can also be built as a module. If so, the module
-+	   will be called rtc-pic32
-+
- comment "HID Sensor RTC drivers"
- 
- config RTC_DRV_HID_SENSOR_TIME
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 62d61b2..7aaacc3 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -112,6 +112,7 @@ obj-$(CONFIG_RTC_DRV_PCF85063)	+= rtc-pcf85063.o
- obj-$(CONFIG_RTC_DRV_PCF8523)	+= rtc-pcf8523.o
- obj-$(CONFIG_RTC_DRV_PCF8563)	+= rtc-pcf8563.o
- obj-$(CONFIG_RTC_DRV_PCF8583)	+= rtc-pcf8583.o
-+obj-$(CONFIG_RTC_DRV_PIC32)	+= rtc-pic32.o
- obj-$(CONFIG_RTC_DRV_PL030)	+= rtc-pl030.o
- obj-$(CONFIG_RTC_DRV_PL031)	+= rtc-pl031.o
- obj-$(CONFIG_RTC_DRV_PM8XXX)	+= rtc-pm8xxx.o
-diff --git a/drivers/rtc/rtc-pic32.c b/drivers/rtc/rtc-pic32.c
-new file mode 100644
-index 0000000..64e1e45
---- /dev/null
-+++ b/drivers/rtc/rtc-pic32.c
-@@ -0,0 +1,411 @@
-+/*
-+ * PIC32 RTC driver
-+ *
-+ * Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-+ * Copyright (C) 2016 Microchip Technology Inc.  All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ */
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/clk.h>
-+#include <linux/rtc.h>
-+#include <linux/bcd.h>
-+
-+#include <asm/mach-pic32/pic32.h>
-+
-+#define PIC32_RTCCON		0x00
-+#define PIC32_RTCCON_ON		BIT(15)
-+#define PIC32_RTCCON_SIDL	BIT(13)
-+#define PIC32_RTCCON_RTCCLKSEL	(3 << 9)
-+#define PIC32_RTCCON_RTCCLKON	BIT(6)
-+#define PIC32_RTCCON_RTCWREN	BIT(3)
-+#define PIC32_RTCCON_RTCSYNC	BIT(2)
-+#define PIC32_RTCCON_HALFSEC	BIT(1)
-+#define PIC32_RTCCON_RTCOE	BIT(0)
-+
-+#define PIC32_RTCALRM		0x10
-+#define PIC32_RTCALRM_ALRMEN	BIT(15)
-+#define PIC32_RTCALRM_CHIME	BIT(14)
-+#define PIC32_RTCALRM_PIV	BIT(13)
-+#define PIC32_RTCALRM_ALARMSYNC	BIT(12)
-+#define PIC32_RTCALRM_AMASK	0x0F00
-+#define PIC32_RTCALRM_ARPT	0xFF
-+
-+#define PIC32_RTCHOUR		0x23
-+#define PIC32_RTCMIN		0x22
-+#define PIC32_RTCSEC		0x21
-+#define PIC32_RTCYEAR		0x33
-+#define PIC32_RTCMON		0x32
-+#define PIC32_RTCDAY		0x31
-+
-+#define PIC32_ALRMTIME		0x40
-+#define PIC32_ALRMDATE		0x50
-+
-+#define PIC32_ALRMHOUR		0x43
-+#define PIC32_ALRMMIN		0x42
-+#define PIC32_ALRMSEC		0x41
-+#define PIC32_ALRMYEAR		0x53
-+#define PIC32_ALRMMON		0x52
-+#define PIC32_ALRMDAY		0x51
-+
-+struct pic32_rtc_dev {
-+	struct rtc_device	*rtc;
-+	void __iomem		*reg_base;
-+	struct clk		*clk;
-+	spinlock_t		alarm_lock;
-+	int			alarm_irq;
-+	bool			alarm_clk_enabled;
-+};
-+
-+static void pic32_rtc_alarm_clk_enable(struct pic32_rtc_dev *pdata,
-+				       bool enable)
-+{
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&pdata->alarm_lock, flags);
-+	if (enable) {
-+		if (!pdata->alarm_clk_enabled) {
-+			clk_enable(pdata->clk);
-+			pdata->alarm_clk_enabled = true;
-+		}
-+	} else {
-+		if (pdata->alarm_clk_enabled) {
-+			clk_disable(pdata->clk);
-+			pdata->alarm_clk_enabled = false;
-+		}
-+	}
-+	spin_unlock_irqrestore(&pdata->alarm_lock, flags);
-+}
-+
-+static irqreturn_t pic32_rtc_alarmirq(int irq, void *id)
-+{
-+	struct pic32_rtc_dev *pdata = (struct pic32_rtc_dev *)id;
-+
-+	clk_enable(pdata->clk);
-+	rtc_update_irq(pdata->rtc, 1, RTC_AF | RTC_IRQF);
-+	clk_disable(pdata->clk);
-+
-+	pic32_rtc_alarm_clk_enable(pdata, false);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int pic32_rtc_setaie(struct device *dev, unsigned int enabled)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	void __iomem *base = pdata->reg_base;
-+
-+	clk_enable(pdata->clk);
-+
-+	writel(PIC32_RTCALRM_ALRMEN,
-+	       base + (enabled ? PIC32_SET(PIC32_RTCALRM) :
-+		       PIC32_CLR(PIC32_RTCALRM)));
-+
-+	clk_disable(pdata->clk);
-+
-+	pic32_rtc_alarm_clk_enable(pdata, enabled);
-+
-+	return 0;
-+}
-+
-+static int pic32_rtc_setfreq(struct device *dev, int freq)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	void __iomem *base = pdata->reg_base;
-+
-+	clk_enable(pdata->clk);
-+
-+	writel(PIC32_RTCALRM_AMASK, base + PIC32_CLR(PIC32_RTCALRM));
-+	writel(freq << 8, base + PIC32_SET(PIC32_RTCALRM));
-+	writel(PIC32_RTCALRM_CHIME, base + PIC32_SET(PIC32_RTCALRM));
-+
-+	clk_disable(pdata->clk);
-+
-+	return 0;
-+}
-+
-+static int pic32_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	void __iomem *base = pdata->reg_base;
-+	unsigned int tries = 0;
-+
-+	clk_enable(pdata->clk);
-+
-+	do {
-+		rtc_tm->tm_hour = readb(base + PIC32_RTCHOUR);
-+		rtc_tm->tm_min = readb(base + PIC32_RTCMIN);
-+		rtc_tm->tm_mon  = readb(base + PIC32_RTCMON);
-+		rtc_tm->tm_mday = readb(base + PIC32_RTCDAY);
-+		rtc_tm->tm_year = readb(base + PIC32_RTCYEAR);
-+		rtc_tm->tm_sec  = readb(base + PIC32_RTCSEC);
-+
-+		/*
-+		 * The only way to work out whether the system was mid-update
-+		 * when we read it is to check the second counter, and if it
-+		 * is zero, then we re-try the entire read.
-+		 */
-+		tries += 1;
-+	} while (rtc_tm->tm_sec == 0 && tries < 2);
-+
-+	rtc_tm->tm_sec = bcd2bin(rtc_tm->tm_sec);
-+	rtc_tm->tm_min = bcd2bin(rtc_tm->tm_min);
-+	rtc_tm->tm_hour = bcd2bin(rtc_tm->tm_hour);
-+	rtc_tm->tm_mday = bcd2bin(rtc_tm->tm_mday);
-+	rtc_tm->tm_mon = bcd2bin(rtc_tm->tm_mon) - 1;
-+	rtc_tm->tm_year = bcd2bin(rtc_tm->tm_year);
-+
-+	rtc_tm->tm_year += 100;
-+
-+	dev_dbg(dev, "read time %04d.%02d.%02d %02d:%02d:%02d\n",
-+		1900 + rtc_tm->tm_year, rtc_tm->tm_mon, rtc_tm->tm_mday,
-+		rtc_tm->tm_hour, rtc_tm->tm_min, rtc_tm->tm_sec);
-+
-+	clk_disable(pdata->clk);
-+	return rtc_valid_tm(rtc_tm);
-+}
-+
-+static int pic32_rtc_settime(struct device *dev, struct rtc_time *tm)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	void __iomem *base = pdata->reg_base;
-+	int year = tm->tm_year - 100;
-+
-+	dev_dbg(dev, "set time %04d.%02d.%02d %02d:%02d:%02d\n",
-+		1900 + tm->tm_year, tm->tm_mon, tm->tm_mday,
-+		tm->tm_hour, tm->tm_min, tm->tm_sec);
-+
-+	if (year < 0 || year >= 100) {
-+		dev_err(dev, "rtc only supports 100 years\n");
-+		return -EINVAL;
-+	}
-+
-+	clk_enable(pdata->clk);
-+	writeb(bin2bcd(tm->tm_sec),  base + PIC32_RTCSEC);
-+	writeb(bin2bcd(tm->tm_min),  base + PIC32_RTCMIN);
-+	writeb(bin2bcd(tm->tm_hour), base + PIC32_RTCHOUR);
-+	writeb(bin2bcd(tm->tm_mday), base + PIC32_RTCDAY);
-+	writeb(bin2bcd(tm->tm_mon + 1), base + PIC32_RTCMON);
-+	writeb(bin2bcd(year), base + PIC32_RTCYEAR);
-+	clk_disable(pdata->clk);
-+
-+	return 0;
-+}
-+
-+static int pic32_rtc_getalarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	struct rtc_time *alm_tm = &alrm->time;
-+	void __iomem *base = pdata->reg_base;
-+	unsigned int alm_en;
-+
-+	clk_enable(pdata->clk);
-+	alm_tm->tm_sec  = readb(base + PIC32_ALRMSEC);
-+	alm_tm->tm_min  = readb(base + PIC32_ALRMMIN);
-+	alm_tm->tm_hour = readb(base + PIC32_ALRMHOUR);
-+	alm_tm->tm_mon  = readb(base + PIC32_ALRMMON);
-+	alm_tm->tm_mday = readb(base + PIC32_ALRMDAY);
-+	alm_tm->tm_year = readb(base + PIC32_ALRMYEAR);
-+
-+	alm_en = readb(base + PIC32_RTCALRM);
-+
-+	alrm->enabled = (alm_en & PIC32_RTCALRM_ALRMEN) ? 1 : 0;
-+
-+	dev_dbg(dev, "getalarm: %d, %04d.%02d.%02d %02d:%02d:%02d\n",
-+		alm_en,
-+		1900 + alm_tm->tm_year, alm_tm->tm_mon, alm_tm->tm_mday,
-+		alm_tm->tm_hour, alm_tm->tm_min, alm_tm->tm_sec);
-+
-+	alm_tm->tm_sec = bcd2bin(alm_tm->tm_sec);
-+	alm_tm->tm_min = bcd2bin(alm_tm->tm_min);
-+	alm_tm->tm_hour = bcd2bin(alm_tm->tm_hour);
-+	alm_tm->tm_mday = bcd2bin(alm_tm->tm_mday);
-+	alm_tm->tm_mon = bcd2bin(alm_tm->tm_mon) - 1;
-+	alm_tm->tm_year = bcd2bin(alm_tm->tm_year);
-+
-+	clk_disable(pdata->clk);
-+	return 0;
-+}
-+
-+static int pic32_rtc_setalarm(struct device *dev, struct rtc_wkalrm *alrm)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	struct rtc_time *tm = &alrm->time;
-+	void __iomem *base = pdata->reg_base;
-+
-+	clk_enable(pdata->clk);
-+	dev_dbg(dev, "setalarm: %d, %04d.%02d.%02d %02d:%02d:%02d\n",
-+		alrm->enabled,
-+		1900 + tm->tm_year, tm->tm_mon + 1, tm->tm_mday,
-+		tm->tm_hour, tm->tm_min, tm->tm_sec);
-+
-+	writel(0x00, base + PIC32_ALRMTIME);
-+	writel(0x00, base + PIC32_ALRMDATE);
-+
-+	pic32_rtc_setaie(dev, alrm->enabled);
-+
-+	clk_disable(pdata->clk);
-+	return 0;
-+}
-+
-+static int pic32_rtc_proc(struct device *dev, struct seq_file *seq)
-+{
-+	struct pic32_rtc_dev *pdata = dev_get_drvdata(dev);
-+	void __iomem *base = pdata->reg_base;
-+	unsigned int repeat;
-+
-+	clk_enable(pdata->clk);
-+
-+	repeat = readw(base + PIC32_RTCALRM);
-+	repeat &= PIC32_RTCALRM_ARPT;
-+	seq_printf(seq, "periodic_IRQ\t: %s\n", repeat  ? "yes" : "no");
-+
-+	clk_disable(pdata->clk);
-+	return 0;
-+}
-+
-+static const struct rtc_class_ops pic32_rtcops = {
-+	.read_time	  = pic32_rtc_gettime,
-+	.set_time	  = pic32_rtc_settime,
-+	.read_alarm	  = pic32_rtc_getalarm,
-+	.set_alarm	  = pic32_rtc_setalarm,
-+	.proc		  = pic32_rtc_proc,
-+	.alarm_irq_enable = pic32_rtc_setaie,
-+};
-+
-+static void pic32_rtc_enable(struct pic32_rtc_dev *pdata, int en)
-+{
-+	void __iomem *base = pdata->reg_base;
-+
-+	if (!base)
-+		return;
-+
-+	clk_enable(pdata->clk);
-+	if (!en) {
-+		writel(PIC32_RTCCON_ON, base + PIC32_CLR(PIC32_RTCCON));
-+	} else {
-+		pic32_syskey_unlock();
-+
-+		writel(PIC32_RTCCON_RTCWREN, base + PIC32_SET(PIC32_RTCCON));
-+		writel(3 << 9, base + PIC32_CLR(PIC32_RTCCON));
-+
-+		if (!(readl(base + PIC32_RTCCON) & PIC32_RTCCON_ON))
-+			writel(PIC32_RTCCON_ON, base + PIC32_SET(PIC32_RTCCON));
-+	}
-+	clk_disable(pdata->clk);
-+}
-+
-+static int pic32_rtc_remove(struct platform_device *pdev)
-+{
-+	struct pic32_rtc_dev *pdata = platform_get_drvdata(pdev);
-+
-+	pic32_rtc_setaie(&pdev->dev, 0);
-+	clk_unprepare(pdata->clk);
-+	pdata->clk = NULL;
-+
-+	return 0;
-+}
-+
-+static int pic32_rtc_probe(struct platform_device *pdev)
-+{
-+	struct pic32_rtc_dev *pdata;
-+	struct resource *res;
-+	int ret;
-+
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, pdata);
-+
-+	pdata->alarm_irq = platform_get_irq(pdev, 0);
-+	if (pdata->alarm_irq < 0) {
-+		dev_err(&pdev->dev, "no irq for alarm\n");
-+		return pdata->alarm_irq;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pdata->reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(pdata->reg_base))
-+		return PTR_ERR(pdata->reg_base);
-+
-+	pdata->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(pdata->clk)) {
-+		dev_err(&pdev->dev, "failed to find rtc clock source\n");
-+		ret = PTR_ERR(pdata->clk);
-+		pdata->clk = NULL;
-+		return ret;
-+	}
-+
-+	spin_lock_init(&pdata->alarm_lock);
-+
-+	clk_prepare_enable(pdata->clk);
-+
-+	pic32_rtc_enable(pdata, 1);
-+
-+	device_init_wakeup(&pdev->dev, 1);
-+
-+	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
-+						 &pic32_rtcops,
-+						 THIS_MODULE);
-+	if (IS_ERR(pdata->rtc)) {
-+		ret = PTR_ERR(pdata->rtc);
-+		goto err_nortc;
-+	}
-+
-+	pdata->rtc->max_user_freq = 128;
-+
-+	pic32_rtc_setfreq(&pdev->dev, 1);
-+	ret = devm_request_irq(&pdev->dev, pdata->alarm_irq,
-+			       pic32_rtc_alarmirq, 0,
-+			       dev_name(&pdev->dev), pdata);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"IRQ %d error %d\n", pdata->alarm_irq, ret);
-+		goto err_nortc;
-+	}
-+
-+	clk_disable(pdata->clk);
-+
-+	return 0;
-+
-+err_nortc:
-+	pic32_rtc_enable(pdata, 0);
-+	clk_disable_unprepare(pdata->clk);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id pic32_rtc_dt_ids[] = {
-+	{ .compatible = "microchip,pic32mzda-rtc" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pic32_rtc_dt_ids);
-+
-+static struct platform_driver pic32_rtc_driver = {
-+	.probe		= pic32_rtc_probe,
-+	.remove		= pic32_rtc_remove,
-+	.driver		= {
-+		.name	= "pic32-rtc",
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= of_match_ptr(pic32_rtc_dt_ids),
-+	},
-+};
-+module_platform_driver(pic32_rtc_driver);
-+
-+MODULE_DESCRIPTION("Microchip PIC32 RTC Driver");
-+MODULE_AUTHOR("Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>");
-+MODULE_LICENSE("GPL");
--- 
-1.7.9.5
+So as and when you believe you need to break a binding, we can have a
+discussion on that case-by-case basis.
 
+That's different to stating that the usual rules don't apply at all,
+which is black-and-white stand I'm referring to.
+
+> > Submitting prototypes and RFCs is the usual way we get things reviewed
+> > early, and to allow maintainers and others to get a feel for things
+> > earlier. Submitting patches _for merging_ when you're not sure about
+> > things and don't want to agree to support them is what's being pushed
+> > back on.
+> 
+> This simply doesn't work. This initial support of a few patches (clock,
+> basic DT, irqchip, dmaengine) is going to be followed very soon by lots
+> of other patches to enable more aspects of the SoC. And we should keep
+> all of those patches out-of-tree, piling up hundreds of out-of-tree
+> patches ? Not practical at all.
+> 
+> And then when we'll submit them, they will all be accepted in one go,
+> in one kernel cycle ? Clearly not, so we would have to wait several
+> kernel cycles, which is clearly not what we want.
+> 
+> Instead, what we want is to submit the basic stuff early, and then
+> progressively build on top of this basic stuff by merging more and more
+> features. This way:
+> 
+>  * We don't have to pile up hundreds of out of tree patches;
+
+Then _support_ what you have upstreamed already. Either it's ready to be
+supported or it is not. If it is, there's no need for DT breakage, and
+if it isn't, then it's not ready for mainline. That's all this boils
+down to. 
+
+If it must go in, then it must be supported.
+
+>  * We have a support in the mainline kernel that is progressively
+>    getting better as we enable more and more feature. We can show that
+>    4.6 has this small set of features, 4.7 has this slightly extended
+>    set of features supported, and so on.
+
+It's not "progressively getting better", if DTBs are arbitrarily getting
+broken.
+
+It's possible to incrementally add support without having to break
+existing DTBs.
+
+> > If you're unsure about something, but still want it merged, then you
+> > have to commit to maintaining that as far as reasonably possible, even
+> > if it turns out to not be quite right.
+> 
+> We are perfectly fine with maintaining *code*. And we have been doing
+> so for several years on Marvell platforms: caring about older
+> platforms, converting old legacy code and legacy platforms to the
+> Device Tree, etc.
+
+The parsing and handling of the existing binding is code, which you are
+arguing you do not need to support.
+
+> What we don't want to commit to is to maintain the DT stability
+> *before* the support for a given device is sufficiently stable/sane.
+
+I do not follow what you mean by support being *not sane*. If it isn't
+sane, why was it merged?
+
+If it was previously considered sane, and the code was considered
+supportable, why is it necessary to break a DT that it supported?
+
+> > > Do you realize that this all DT binding stuff is today the *biggest* to
+> > > getting HW support in the Linux kernel? It has become more complicated
+> > > to merge a 4 properties DT binding than to merge multiple thousands of
+> > > lines of driver code. 
+> > 
+> > As times have changed, pain points have moved around.
+> > 
+> > To some extent that is unavoidable; more up-front effort is required
+> > where crutches we previously relied on are not applicable.
+> > 
+> > Elsewhere we can certainly do better.
+> > 
+> > Throwing your hands up and stating "this is unstable, it might change"
+> > is a crutch. It prevents any real solution to the pain points you
+> > encounter, and creates pain points for others. It only provides the
+> > _illusion_ of support.
+> 
+> Could you please explicit which pain points it creates for others ?
+> 
+> Having unstable DT bindings specific to a platform does not create any
+> single pain point for anyone.
+> 
+> Why are you talking about "illusion" of support ? Sorry, but with
+> unstable DT bindings, as long as you use the DT that comes with the
+> kernel sources, everything works perfectly fine, and is perfectly
+> supported.
+
+A few examples:
+
+* Distro installation (in the absence of a stable DT and a consistent
+  boot environment, you have no idea how to get a kernel up and
+  running). Either your user has to be intimately familiar with the
+  platform, or the distro needs a separate release for each and every
+  platform.
+
+* Distro maintenance. I just upgraded to a point-release kernel and now
+  have to pull down the DTBs. That required the distro to _somehow_
+  identify the relevant DTBs, how to install this in the correct
+  location such that the firmware and/or bootloader can pick it up, etc.
+
+* Other developers tracking down problems that inevitable crop up on the
+  platform, who now have to jump through the hoops above. As the DTBs
+  change, so may the user-facing elements and/or kernel behaviour, so
+  bisecting is extremely painful (though admittedly possible).
+
+  Notice that in this case, the user has to go back in time for their
+  starting point. So it doesn't matter if they're not a user _yet_.
+
+* Portable hypervisors, bootloaders, or other system-level software
+  can't add any (DTB-aware) support for a platform until the kernel
+  support is considered "sane" per your argument above. That time is an
+  arbitrary unknown in the future (which may be at infinity), so they
+  are either indefinitely delayed or end up having attempt to have
+  stable support for a variety of unstable bindings anyway, which may or
+  may not be possible depending on how bindings got broken.
+
+These may not affect _you_ directly, but they do hinder realistic
+user-facing support.
+
+> Even Fedora is installing DTBs in a directory that is kernel-version
+> specific!
+
+This is a _symptom_ of the problem. Read this as:
+
+	Even Fedora _have to_ install DTBs in a directory that is
+	kernel-version specific!
+
+Notice how that does not sound great. Distros are being _forced_ to do
+this because stuff gets broken. As covered above, this doesn't always
+work anyway, so it's really not an argument in favour of breaking
+things.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
