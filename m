@@ -1,48 +1,49 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v3] dts/ls2080a: Update PCIe compatible
-Date: Wed, 24 Feb 2016 16:40:38 -0800
-Message-ID: <20160225004038.GE10126@localhost>
-References: <1455674663-9273-1-git-send-email-Mingkai.Hu@freescale.com>
- <20160218143639.GK9654@rob-hp-laptop>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v4 12/12] arm64: defconfig: enable Armada 3700 related
+ config
+Date: Wed, 24 Feb 2016 16:47:49 -0800
+Message-ID: <20160225004749.GF10126@localhost>
+References: <1455646502-23834-1-git-send-email-gregory.clement@free-electrons.com>
+ <1455646502-23834-13-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160218143639.GK9654@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, yang.shi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1455646502-23834-13-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 08:36:39AM -0600, Rob Herring wrote:
-> On Wed, Feb 17, 2016 at 10:04:23AM +0800, Mingkai Hu wrote:
-> > From: Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
-> > 
-> > The patch adds LS2085a to PCIe compatible to fix the compatibility
-> > issue when using firmware with LS2085a compatible property.
-> > 
-> > Signed-off-by: Minghuan Lian <minghuan.lian-3arQi8VN3Tc@public.gmane.org>
-> > Signed-off-by: Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> > v3:
-> >  - Make the compatible consistent between layerscape-pci.txt
-> >    and dts file.
-> > 
-> > v2:
-> >   - Rebased to latest kernel base
-> > 
-> >  Documentation/devicetree/bindings/pci/layerscape-pci.txt |  2 +-
-> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi           | 12 ++++++++----
-> >  2 files changed, 9 insertions(+), 5 deletions(-)
-> > 
+On Tue, Feb 16, 2016 at 07:15:02PM +0100, Gregory CLEMENT wrote:
+> This patch enables the configuration for the Armada 3700 family and for
+> the related driver it uses.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+>  arch/arm64/configs/defconfig | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 18ca9fb9e65f..7ca2f0247ec5 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -31,6 +31,7 @@ CONFIG_MODULES=y
+>  CONFIG_MODULE_UNLOAD=y
+>  # CONFIG_BLK_DEV_BSG is not set
+>  # CONFIG_IOSCHED_DEADLINE is not set
+> +CONFIG_ARCH_MVEBU=y
+>  CONFIG_ARCH_BCM_IPROC=y
+>  CONFIG_ARCH_BERLIN=y
+>  CONFIG_ARCH_EXYNOS7=y
 
-Applied, thanks.
+How did this end up here? It's in alphabetical order in the Kconfig, and here
+you're inserting it first. Savedefconfig inserts it at the expected location.
+
+
+I've fixed it up in the merge now, which isn't ideal. Maybe you edited
+the defconfig by hand?
 
 
 -Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
