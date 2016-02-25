@@ -1,53 +1,122 @@
-From: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v10 10/59] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
-Date: Wed, 24 Feb 2016 18:12:01 -0800
-Message-ID: <1456366370-28995-11-git-send-email-yinghai@kernel.org>
-References: <1456366370-28995-1-git-send-email-yinghai@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456366370-28995-1-git-send-email-yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Wei Yang <weiyang-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, TJ <linux-7m3hRoVZU5A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Khalid Aziz <khalid.aziz-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v5 01/11] drm/hisilicon: Add device tree binding for
+ hi6220 display subsystem
+Date: Thu, 25 Feb 2016 10:21:26 +0800
+Message-ID: <CAGd==06LUCn74K18njP8+R-83tJ6OOjmwqmx9MFS=AQyVioFZQ@mail.gmail.com>
+References: <1456196431-19923-1-git-send-email-xinliang.liu@linaro.org>
+ <1456196431-19923-2-git-send-email-xinliang.liu@linaro.org>
+ <20160223183726.GA10246@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20160223183726.GA10246@leverpostej>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-For device resource PREF bit setting under bridge 64-bit pref resource,
-we need to make sure only set PREF for 64bit resource.
-
-This patch set IORESOUCE_MEM_64 for 64bit resource during OF device resource
-flags parsing.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
-Signed-off-by: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Tested-by: Khalid Aziz <khalid.aziz-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
----
- drivers/of/address.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 91a469d..3b09261 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
- 		flags |= IORESOURCE_IO;
- 		break;
- 	case 0x02: /* 32 bits */
--	case 0x03: /* 64 bits */
- 		flags |= IORESOURCE_MEM;
- 		break;
-+	case 0x03: /* 64 bits */
-+		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
-+		break;
- 	}
- 	if (w & 0x40000000)
- 		flags |= IORESOURCE_PREFETCH;
--- 
-1.8.4.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjQgRmVicnVhcnkgMjAxNiBhdCAwMjozNywgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT4gd3JvdGU6CkhpIE1hcmssIHRoYW5rcyBmb3IgcmV2aWV3LgoKPiBPbiBUdWUsIEZl
+YiAyMywgMjAxNiBhdCAxMTowMDoyMUFNICswODAwLCBYaW5saWFuZyBMaXUgd3JvdGU6Cj4+IEFk
+ZCBBREUgZGlzcGxheSBjb250cm9sbGVyIGJpbmRpbmcgZG9jLgo+PiBBZGQgRGVzaWduV2FyZSBE
+U0kgSG9zdCBDb250cm9sbGVyIHYxLjIwYSBiaW5kaW5nIGRvYy4KPj4KPj4gdjU6Cj4+IC0gUmVt
+b3ZlIGVuZHBvaW50IHVuaXQgYWRkcmVzcyBvZiBkc2kgb3V0cHV0IHBvcnQuCj4+IC0gQWRkICJo
+aXNpbGljb24sbm9jLXN5c2NvbiIgcHJvcGVydHkgZm9yIEFERSBOT0MgUW9TIHN5c2Nvbi4KPj4g
+LSBBZGQgInJlc2V0cyIgcHJvcGVydHkgZm9yIEFERSByZXNldC4KPj4gdjQ6Cj4+IC0gRGVzY3Jp
+YmUgbW9yZSBzcGVjaWZpYyBvZiBjbG9ja3MgYW5kIHBvcnRzLgo+PiAtIEZpeCBpbmRlbnRhdGlv
+bi4KPj4gdjM6Cj4+IC0gTWFrZSBhZGUgYXMgdGhlIGRybSBtYXN0ZXIgbm9kZS4KPj4gLSBVc2Ug
+YXNzaWduZWQtY2xvY2tzIHRvIHNldCBjbG9jayByYXRlLgo+PiAtIFVzZSBwb3J0cyB0byBjb25u
+ZWN0IGRpc3BsYXkgcmVsYXZhbnQgbm9kZXMuCj4+IHYyOgo+PiAtIE1vdmUgZHQgYmluZGluZyBk
+b2NzIHRvIGJpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uIGRpcmVjdG9yeS4KPj4KPj4gU2lnbmVk
+LW9mZi1ieTogWGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBoaXNpbGljb24uY29tPgo+PiBT
+aWduZWQtb2ZmLWJ5OiBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPgo+PiAt
+LS0KPj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNvbi9kdy1kc2kudHh0ICAgICAgICAg
+IHwgNzIgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvaGlz
+aWxpY29uL2hpc2ktYWRlLnR4dCAgICAgICAgfCA2NCArKysrKysrKysrKysrKysrKysrCj4+ICAy
+IGZpbGVzIGNoYW5nZWQsIDEzNiBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2R3LWRz
+aS50eHQKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9oaXNpbGljb24vaGlzaS1hZGUudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24vZHctZHNp
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2hpc2lsaWNv
+bi9kdy1kc2kudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAwMDAw
+MC4uMGQyMzRiNWUxOWFmCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvaGlzaWxpY29uL2R3LWRzaS50eHQKPj4gQEAgLTAs
+MCArMSw3MiBAQAo+PiArRGV2aWNlLVRyZWUgYmluZGluZ3MgZm9yIERlc2lnbldhcmUgRFNJIEhv
+c3QgQ29udHJvbGxlciB2MS4yMGEgZHJpdmVyCj4+ICsKPj4gK0EgRFNJIEhvc3QgQ29udHJvbGxl
+ciByZXNpZGVzIGluIHRoZSBtaWRkbGUgb2YgZGlzcGxheSBjb250cm9sbGVyIGFuZCBleHRlcm5h
+bAo+PiArSERNSSBjb252ZXJ0ZXIgb3IgcGFuZWwuCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRp
+ZXM6Cj4+ICstIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAiaGlzaWxpY29uLGhpNjIyMC1k
+c2kiLgo+PiArLSByZWc6IHBoeXNpY2FsIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIGRzaSBj
+b250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+PiArLSBjbG9ja3M6IHRoZSBjbG9ja3MgbmVlZGVkLgo+
+PiArLSBjbG9jay1uYW1lczogdGhlIG5hbWUgb2YgdGhlIGNsb2Nrcy4KPgo+IFlvdSBfbXVzdF8g
+c3BlY2lmeSB0aGUgcHJlY2lzZSBzZXQgb2YgY2xvY2sgbmFtZXMgeW91IGV4cGVjdCBoZXJlLgo+
+Cj4gUGVyIHRoZSBleGFtcGxlLCB5b3Ugc2VlbSB0byBleHBlY3QgInBjbGtfZHNpIi4KPgo+IElz
+IHRoYXQgdGhlIG5hbWUgZ2l2ZW4gaW4gdGhlIERTSSBjb250cm9sbGVyIG1hbnVhbD8gT3IgaXMg
+aXQganVzdAo+ICJwY2xrIj8gSXQncyBhbHJlYWR5IHNwZWNpZmljIHRvIHRoZSBEU0kgY29udHJv
+bGxlci4uLgo+CgpJIGhhdmUgcmVhZCB0aGUgU29DIG1hbnVhbCBhZ2FpbiwgYW5kIGl0IGlzIHRo
+ZSBjb25maWd1cmF0aW9uIGNsb2NrLgpNYXliZSB3ZSBjYW4gY2FsbCBpdCAiY2ZnX2NsayIuCgo+
+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+aGlzaWxpY29uL2hpc2ktYWRlLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2hpc2lsaWNvbi9oaXNpLWFkZS50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5jMTg0NGIzZmY4NzgKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9oaXNpbGljb24v
+aGlzaS1hZGUudHh0Cj4+IEBAIC0wLDAgKzEsNjQgQEAKPj4gK0RldmljZS1UcmVlIGJpbmRpbmdz
+IGZvciBoaXNpbGljb24gQURFIGRpc3BsYXkgY29udHJvbGxlciBkcml2ZXIKPj4gKwo+PiArQURF
+IChBZHZhbmNlZCBEaXNwbGF5IEVuZ2luZSkgaXMgdGhlIGRpc3BsYXkgY29udHJvbGxlciB3aGlj
+aCBncmFiIGltYWdlCj4+ICtkYXRhIGZyb20gbWVtb3J5LCBkbyBjb21wb3NpdGlvbiwgZG8gcG9z
+dCBpbWFnZSBwcm9jZXNzaW5nLCBnZW5lcmF0ZSBSR0IKPj4gK3RpbWluZyBzdHJlYW0gYW5kIHRy
+YW5zZmVyIHRvIERTSS4KPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0
+aWJsZTogdmFsdWUgc2hvdWxkIGJlICJoaXNpbGljb24saGk2MjIwLWFkZSIuCj4+ICstIHJlZzog
+cGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIEFERSBjb250cm9sbGVyJ3Mg
+cmVnaXN0ZXJzLgo+PiArICBWYWx1ZSBzaG91bGQgYmUgIjwweDAgMHhmNDEwMDAwMCAweDAgMHg3
+ODAwPiIuCj4KPiBHZXQgcmlkIG9mIHRoZSAiVmFsdWUgc2hvdWxkIGJlIC4uLiAiIHBhcnQuIEl0
+IGlzIG5vbnNlbnNpY2FsIHRvCj4gZGVzY3JpYmUgdGhpcyBpbiB0aGUgYmluZGluZy4gSnVzdCBk
+ZXNjcmliZSB3aGF0IHRoaXMgaXMgd2l0aCByZWxhdGlvbgo+IHRvIF90aGlzXyBJUCBibG9jay4K
+Ck9LLCB3aWxsIGZpeCBhbGwgdGhlc2UgcGFydHMgaW4gbmV4dCB2ZXJzaW9uLgoKPgo+PiArLSBy
+ZWctbmFtZXM6IG5hbWUgb2YgcGh5c2ljYWwgYmFzZS4gVmFsdWUgc2hvdWxkIGJlICJhZGVfYmFz
+ZSIuCj4KPiBUaGF0IG9idmlvdXNseSBkb2Vzbid0IGFwcGx5IHRvICotbmFtZXMgcHJvcGVydGll
+c20gd2hpY2ggbXVzdCBhbGwgYmUKPiBzcGVjaWZpZWQgaW4gdGhlIGJpbmRpbmcgKHRoZXkncmUg
+bG9jYWwgdG8gdGhlIGRldmljZSByYXRoZXIgdGhhbgo+IHJlbW90ZSkuCj4KPj4gKy0gaGlzaWxp
+Y29uLG5vYy1zeXNjb246IEFERSBOT0MgUW9TIHN5c2Nvbi4gVmFsdWUgc2hvdWxkIGJlICI8Jm1l
+ZGlhbm9jX2FkZT4iCj4+ICstIHJlc2V0czogVGhlIEFERSByZXNldCBjb250cm9sbGVyIG5vZGUu
+IFZhbHVlIHNob3VsZCBiZSAiPCZtZWRpYV9jdHJsCj4+ICsgIE1FRElBX0FERT4iLgo+Cj4gTGlr
+ZXdpc2UuCj4KPj4gKy0gaW50ZXJydXB0OiB0aGUgbGRpIHZibGFuayBpbnRlcnJ1cHQgbnVtYmVy
+IHVzZWQuCj4+ICstIGNsb2NrczogdGhlIGNsb2NrcyBuZWVkZWQuIFRocmVlIGNsb2NrcyBhcmUg
+dXNlZCBpbiBBREUgZHJpdmVyOgo+PiArICBBREUgY29yZSBjbG9jaywgdmFsdWUgc2hvdWxkIGJl
+ICI8Jm1lZGlhX2N0cmwgSEk2MjIwX0FERV9DT1JFPiI7Cj4+ICsgIEFERSBwaXhlbCBjbG9rLCB2
+YWx1ZSBzaG91bGQgYmUgIjwmbWVkaWFfY3RybCBISTYyMjBfQURFX1BJWF9TUkM+IjsKPj4gKyAg
+bWVkaWEgTk9DIFFvUyBjbG9jaywgdmFsdWUgc2hvdWxkIGJlICI8Jm1lZGlhX2N0cmwgSEk2MjIw
+X0NPREVDX0pQRUc+Ii4KPj4gKy0gY2xvY2stbmFtZXM6IHRoZSBuYW1lIG9mIHRoZSBjbG9ja3Mu
+IFZhbHVlcyBzaG91bGQgYmUgImNsa19hZGVfY29yZSIsCj4+ICsgICJjbGtfY29kZWNfanBlZyIg
+YW5kICJjbGtfYWRlX3BpeCIuCj4KPiBMaWtld2lzZSwgZG9uJ3Qgc3BlY2lmeSB0aGUgdmFsdWUu
+Cj4KPiBKc3V0IGRlZmluZSBjbG9ja3MgaW4gdGVybXMgb2YgY2xvY2stbmFtZXMsIGUuZy4KPgo+
+IC0gY2xvY2tzOiBhIGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25l
+IGZvciBlYWNoIGVudHJ5Cj4gICBpbiBjbG9jay1uYW1lcy4KPiAtIGNsb2NrLW5hbWVzOiBzaG91
+bGQgY29udGFpbjoKPiAgICogImNsa19hZGVfY29yZSIgZm9yIHRoZSBBREUgY2lvcmUgY2xvY2sK
+PiAgICogLi4uCj4gICAqIC4uLgoKQWxsIHJpZ2h0LCBnb3QgaXQuIFRoYW5rcyBmb3IgdGVhY2hp
+bmcgbWUgaG93IHRvIHRvLgoKPgo+PiArLSBhc3NpZ25lZC1jbG9ja3M6IGNsb2NrcyB0byBiZSBh
+c3NpZ25lZCByYXRlLgo+PiArLSBhc3NpZ25lZC1jbG9jay1yYXRlczogY2xvY2sgcmF0ZXMgd2hp
+Y2ggYXJlIGFzc2lnbmVkIHRvIGFzc2lnbmVkLWNsb2Nrcy4KPj4gKyAgVGhlIHJhdGUgb2YgPCZt
+ZWRpYV9jdHJsIEhJNjIyMF9BREVfQ09SRT4gY291bGQgYmUgIjM2MDAwMDAwMCIgb3IKPj4gKyAg
+IjE4MDAwMDAwMCI7Cj4+ICsgIFRoZSByYXRlIG9mIDwmbWVkaWFfY3RybCBISTYyMjBfQ09ERUNf
+SlBFRz4gY291bGQgYmUgbGVzcyB0aGFuICIxNDQwMDAwMDAwIi4KPgo+IElzIHRoaXMgc3RyaWN0
+bHkgbmVjZXNzYXJ5PyBXaHkgY2FuIHRoZSBkcnVpdmVyIG5vdCBjb25maWd1cmUgdGhpcz8KPgo+
+IERvZXMgdGhpcyBoYXZlIHRvIG1hdGNoIHNvbWUgcHJlLWV4aXN0aW5nIGJvb3QtdGltZSBjb25m
+aWd1cmF0aW9uPwoKVGhpcyBpcyB0aGUgbWF4aW11bSBjb25maWd1cmF0aW9uIHZhbHVlIGR1ZSB0
+byB0aGUgcGFyZW50IGNsayBhbmQgZGl2aWRlci4KQW5kIHRoZXJlIGlzIG5vIHByZS1leGlzdGlu
+ZyBib290LXRpbWUgY29uZmlndXJhdGlvbiBhYm91dCB0aGlzLgpEcml2ZXIgY291bGQgY29uZmln
+dXJlIHRoZSB2YWx1ZSBhY2NvcmRpbmcgdG8gdGhlIHBlcmZvcm1hbmNlIGFuZApwb3dlciBjb25z
+dW1wdGlvbi4KClRoYW5rcywKLXhpbmxpYW5nCgo+Cj4gVGhhbmtzLAo+IE1hcmsuCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
