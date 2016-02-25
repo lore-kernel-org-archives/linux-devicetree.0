@@ -1,39 +1,51 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 0/2] PINT irqchip driver for NXP LPC18xx family
-Date: Thu, 25 Feb 2016 23:04:45 +0100
-Message-ID: <1456437887-24432-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: [PATCH 2/2] devicetree: document NXP LPC1850 PINT irq controller binding
+Date: Thu, 25 Feb 2016 23:04:47 +0100
+Message-ID: <1456437887-24432-3-git-send-email-manabian@gmail.com>
+References: <1456437887-24432-1-git-send-email-manabian@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456437887-24432-1-git-send-email-manabian@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de
+Cc: Joachim Eastwood <manabian@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LPC1850 has no less than 3 GPIO interrupt blocks. One of these
-blocks is called 'gpio pin interrupt' or just PINT. LPC1850 PINT can
-handle up to 8 interrupts and these have a one-to-one relationship with
-the main interrupt controller (NVIC).
+Add binding documentation for NXP LPC1850 GPIO Pin Interrupt (PINT)
+controller.
 
-The interrupts on PINT can be either level or edge trigger and supports
-any polarity.
-
-This patch set adds an irqchip driver for the PINT found on lpc18xx.
-
-Joachim Eastwood (2):
-  irqchip: add lpc18xx gpio pin interrupt driver
-  devicetree: document NXP LPC1850 PINT irq controller binding
-
- .../interrupt-controller/nxp,lpc1850-gpio-pint.txt |  22 ++
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-lpc18xx-gpio-pint.c            | 238 +++++++++++++++++++++
- 4 files changed, 266 insertions(+)
+Signed-off-by: Joachim Eastwood <manabian@gmail.com>
+---
+ .../interrupt-controller/nxp,lpc1850-gpio-pint.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/nxp,lpc1850-gpio-pint.txt
- create mode 100644 drivers/irqchip/irq-lpc18xx-gpio-pint.c
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc1850-gpio-pint.txt b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc1850-gpio-pint.txt
+new file mode 100644
+index 000000000000..dc43f187ebda
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/nxp,lpc1850-gpio-pint.txt
+@@ -0,0 +1,22 @@
++NXP LPC18xx/43xx GPIO Pin Interrupt (PINT) controller
++
++Required properties:
++
++- compatible : should be "nxp,lpc1850-gpio-pint".
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 2.
++- interrupts : Specifies the CPU interrupts the controller is connected to.
++- clocks: Must contain a reference to the functional clock.
++
++Example:
++
++pint: interrupt-controller@40087000 {
++	compatible = "nxp,lpc1850-gpio-pint";
++	reg = <0x40087000 0x1000>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	interrupts = <32 33 34 35 36 37 38 39>;
++	clocks = <&ccu1 CLK_CPU_GPIO>;
++};
 -- 
 1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
