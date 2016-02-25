@@ -1,70 +1,49 @@
-From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v2 3/7] QE: Add uqe_serial document to bindings
-Date: Thu, 25 Feb 2016 04:44:44 +0000
-Message-ID: <AM3PR04MB1185D43F4D2C5F9228DB99F591A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
-References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
- <1455757572-44955-3-git-send-email-qiang.zhao@nxp.com>
- <20160223202342.GA9008@rob-hp-laptop>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: dra7: Support QSPI MODE-0 operation at 64MHz
+Date: Thu, 25 Feb 2016 10:17:32 +0530
+Message-ID: <1456375652-14071-1-git-send-email-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160223202342.GA9008@rob-hp-laptop>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+According to Data Manual(SPRS915P) of AM57x, TI QSPI controller on
+DRA74(rev 1.1+) can support up to 64MHz in MODE-0, whereas MODE-3 is
+limited to 48MHz. Hence, switch to MODE-0 for better throughput.
 
-On Wed, Feb 24, 2016 at 04:24AM, Rob Herring wrote:
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Wednesday, February 24, 2016 4:24 AM
-> To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
-> dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [PATCH v2 3/7] QE: Add uqe_serial document to bindings
-> 
-> On Thu, Feb 18, 2016 at 09:06:08AM +0800, Zhao Qiang wrote:
-> > Add uqe_serial document to
-> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> >
-> > Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> > Changes for v2
-> > 	- modify tx/rx-clock-name specification
-> >
-> >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt        | 19
-> +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> > new file mode 100644
-> > index 0000000..436c71c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
-> > +++ txt
-> > @@ -0,0 +1,19 @@
-> > +* Serial
-> > +
-> > +Currently defined compatibles:
-> > +- ucc_uart
-> > +
-> > +Properties for ucc_uart:
-> > +port-number : port number of UCC-UART
-> 
-> How is this used?
+Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra7-evm.dts | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-It used for uart port index.
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index cfc24e52244e..15f10bdc8c31 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -653,15 +653,13 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&qspi1_pins>;
+ 
+-	spi-max-frequency = <48000000>;
++	spi-max-frequency = <64000000>;
+ 	m25p80@0 {
+ 		compatible = "s25fl256s1";
+-		spi-max-frequency = <48000000>;
++		spi-max-frequency = <64000000>;
+ 		reg = <0>;
+ 		spi-tx-bus-width = <1>;
+ 		spi-rx-bus-width = <4>;
+-		spi-cpol;
+-		spi-cpha;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-- 
+2.7.1
 
-BR
--Zhao
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
