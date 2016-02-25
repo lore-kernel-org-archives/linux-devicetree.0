@@ -1,32 +1,75 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [PATCH v2] dts: add specific compatible type for Terasic DE0-NANO-SoC
- Board
-Date: Thu, 25 Feb 2016 17:38:17 -0600
-Message-ID: <56CF9069.4060505@opensource.altera.com>
-References: <8416439.76b9YNhpgR@dabox> <20160225103820.GB747@pengutronix.de> <56CF323C.90202@opensource.altera.com> <1595377.ZIYnBnVf5Q@virgo>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH v3 6/8] arm64: dts: qcom: fix usb digital voltage levels
+Date: Thu, 25 Feb 2016 17:48:49 -0600
+Message-ID: <CAPBZ5QeJGV5iqx5wwGP3mwr292-rkqmORnTe8qtHSX2DzVc97Q@mail.gmail.com>
+References: <1456246153-18087-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<1456246236-18341-1-git-send-email-srinivas.kandagatla@linaro.org>
+	<56CE3780.5060408@codeaurora.org>
+	<56CEE3D4.3030407@linaro.org>
+	<CAPBZ5QfD4q4hDg2Vfj8E_2Hjoa80feFN4cM+LkhdGgHLDkKx_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1595377.ZIYnBnVf5Q@virgo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tim Sander <tim-cVflAIDvGO/+u4ArqExSyQ@public.gmane.org>
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAPBZ5QfD4q4hDg2Vfj8E_2Hjoa80feFN4cM+LkhdGgHLDkKx_g@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/2016 05:34 PM, Tim Sander wrote:
+I think the vdd-levels were an oversight.  The voltages definitely
+need to be correct.  As for the corner regulators, I believe the CPR
+driver was supposed to address this.  The USB requests a specific
+voltage and frequency and based on this the CPR would set the corner
+for the regulator.
 
-> As far as i remember there are different de0 and different sockit boards, so 
-> the name does not seem to be as concise? I don't care but i would say that
-> de0-nano-soc is the most concise and easier to search for than atlas which
-> might turn up more false postives?
-> 
+Stephen, correct me if i am wrong.
 
-I'm fine with "terasic,de0-nano-soc".
-
-Dinh
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 25 February 2016 at 17:44, Andy Gross <andy.gross@linaro.org> wrote:
+> I think the vdd-levels were an oversight.  The voltages definitely need to
+> be correct.  As for the corner regulators, I believe the CPR driver was
+> supposed to address this.  The USB requests a specific voltage and frequency
+> and based on this the CPR would set the corner for the regulator.
+>
+> Stephen, correct me if i am wrong.
+>
+> On 25 February 2016 at 05:21, Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>>
+>>
+>>
+>> On 24/02/16 23:06, Stephen Boyd wrote:
+>>>
+>>> On 02/23/2016 08:50 AM, Srinivas Kandagatla wrote:
+>>>>
+>>>> This patch updates the digital voltage levels from corner values to
+>>>> microvolts as we are going to use s1 regulator directly for vddcx
+>>>> instead of s1_corner.
+>>>>
+>>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>>> ---
+>>>
+>>>
+>>> What's the plan for corners? Maybe we should remove the voltage setting
+>>> from the usb driver or drop the usb node entirely on msm8916 until we
+>>> resolve how we're going to handle corners. I'd like to avoid getting
+>>> stuck into some DT binding ABI mess here.
+>>
+>>
+>> Andy/Bjorn, any comments on plans on corner regulators?
+>>
+>> Please note, that this is a patch to fix what is already in the mainline.
+>> Without this patch the regulator would be configured with 1uV or 5uV or 7uV
+>> which would obviously fail.
+>>
+>> THB, it does not make sense to drop feature which is functional, and I
+>> also agree that we should cleanup some of this mess at some point in time
+>> once we all the bits and pieces ready.
+>>
+>> I was surprised to see these usb bindings(qcom,vdd-levels) existed even
+>> before we had concept of corner regulators in mainline kernel. Which also
+>> suggests that this driver needs a proper relook once again.
+>>
+>> Thanks,
+>> srini
+>
+>
