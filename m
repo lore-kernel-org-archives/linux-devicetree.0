@@ -1,72 +1,48 @@
-From: Duc Dang <dhdang@apm.com>
-Subject: Re: [PATCH v6 3/3] arm64: dts: mailbox device tree node for APM
- X-Gene platform.
-Date: Thu, 25 Feb 2016 14:33:53 -0800
-Message-ID: <CADaLNDkswDHbgX1T52ivniHojTpscGvF+vLinhTT3h_P20OMzw@mail.gmail.com>
-References: <CANLsYkxPnFCuJLyKsHnXKdbvAwNurtgQgJ-WF+bD26+8EjkfJw@mail.gmail.com>
- <cover.1455333720.git.dhdang@apm.com> <eeac516f6daa15b22a1c448160ed40991833035a.1455333720.git.dhdang@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eeac516f6daa15b22a1c448160ed40991833035a.1455333720.git.dhdang@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
-Cc: Paul Bolle <pebolle@tiscali.nl>, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Duc Dang <dhdang@apm.com>, Feng Kan <fkan@apm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH v3 0/5] Add support for PWMSS on DRA7
+Date: Thu, 25 Feb 2016 16:36:31 -0600
+Message-ID: <1456439796-28546-1-git-send-email-fcooper@ti.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: paul@pwsan.com, t-kristo@ti.com, tony@atomide.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 12, 2016 at 7:39 PM, Duc Dang <dhdang@apm.com> wrote:
->
-> Mailbox device tree node for APM X-Gene platform.
+This patch series adds support for PWMSS on DRA7. The IP is same as that
+present in AM33XX and AM43XX.
 
-Hi Jassi,
+This is an updated version of the patch series originally sent by Vignesh.
+The biggest difference is the removal of local clock gating support from
+various drivers due to silicon issue.
 
-Will you take this patch to your mailbox tree or you want me to
-include it into my git pull request to Olof/Arnd (arm-soc tree)?
+Links to v2 series:
+https://patchwork.ozlabs.org/patch/479933/ (already in mainline)
+https://patchwork.ozlabs.org/patch/479932/
+https://patchwork.ozlabs.org/patch/479931/
+https://patchwork.ozlabs.org/patch/479930/
+https://patchwork.ozlabs.org/patch/479929/
 
-Regards,
-Duc Dang.
->
-> Signed-off-by: Feng Kan <fkan@apm.com>
-> Signed-off-by: Duc Dang <dhdang@apm.com>
-> ---
-> Changes since v5:
->         - None
->
-> Changes since v4:
->         - Rebase over v4.5-rc1
->         - Change node name to mailbox@10540000
->
-> Changes since v3:
->         - Rebase over v4.4
->
->  arch/arm64/boot/dts/apm/apm-storm.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> index fe30f76..d91338a 100644
-> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
-> @@ -691,6 +691,20 @@
->                         msi-parent = <&msi>;
->                 };
->
-> +               mailbox: mailbox@10540000 {
-> +                       compatible = "apm,xgene-slimpro-mbox";
-> +                       reg = <0x0 0x10540000 0x0 0xa000>;
-> +                       #mbox-cells = <1>;
-> +                       interrupts =    <0x0 0x0 0x4>,
-> +                                       <0x0 0x1 0x4>,
-> +                                       <0x0 0x2 0x4>,
-> +                                       <0x0 0x3 0x4>,
-> +                                       <0x0 0x4 0x4>,
-> +                                       <0x0 0x5 0x4>,
-> +                                       <0x0 0x6 0x4>,
-> +                                       <0x0 0x7 0x4>;
-> +               };
-> +
->                 serial0: serial@1c020000 {
->                         status = "disabled";
->                         device_type = "serial";
-> --
-> 1.9.1
->
+Franklin S Cooper Jr (1):
+  pwms: pwm-ti*: Remove support for local clock gating
+
+Vignesh R (4):
+  ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
+  ARM: dts: DRA7: Add TBCLK for PWMSS
+  clk: ti: DRA7: Add tbclk data for ehrpwm
+  ARM: dts: DRA7: Add dt nodes for PWMSS
+
+ .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   8 +
+ .../devicetree/bindings/pwm/pwm-tipwmss.txt        |  17 +-
+ arch/arm/boot/dts/dra7.dtsi                        |  64 ++++++
+ arch/arm/boot/dts/dra7xx-clocks.dtsi               |  24 +++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c          | 239 +++++++++++++++++++++
+ drivers/clk/ti/clk-7xx.c                           |   3 +
+ drivers/pwm/pwm-tiecap.c                           |  28 ---
+ drivers/pwm/pwm-tiehrpwm.c                         |  29 ---
+ drivers/pwm/pwm-tipwmss.c                          |  49 -----
+ drivers/pwm/pwm-tipwmss.h                          |  39 ----
+ 10 files changed, 354 insertions(+), 146 deletions(-)
+ delete mode 100644 drivers/pwm/pwm-tipwmss.h
+
+-- 
+2.7.0
