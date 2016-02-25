@@ -1,93 +1,97 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/5] Modularize PCI_DW related drivers.
-Date: Thu, 25 Feb 2016 09:35:43 +0100
-Message-ID: <2837386.VTD89bjPJz@wuerfel>
-References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com> <6350001.oOdGGcH81x@wuerfel> <56CEB7BC.7010803@ti.com>
+From: Alexandre Torgue <alexandre.torgue@gmail.com>
+Subject: Re: [PATCH v2 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Thu, 25 Feb 2016 09:43:45 +0100
+Message-ID: <CAJgp7zyEkQqBc4rgPxXfaYwieQ8ezL543gSKG+tJoNz9JqBg=A@mail.gmail.com>
+References: <1456240244-10275-1-git-send-email-alexandre.torgue@gmail.com>
+	<1456240244-10275-3-git-send-email-alexandre.torgue@gmail.com>
+	<CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56CEB7BC.7010803@ti.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGhQ9VwsSb-Nb4nQ4Q9=b-Dj_8EhSi=LOK-r4JbKcE=nfODufw@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 25 February 2016 13:43:48 Kishon Vijay Abraham I wrote:
-> Hi Arnd,
-> 
-> On Wednesday 24 February 2016 02:34 PM, Arnd Bergmann wrote:
-> > On Wednesday 24 February 2016 11:39:26 Kishon Vijay Abraham I wrote:
-> >> Hi,
-> >>
-> >> On Monday 08 February 2016 05:30 AM, Paul Gortmaker wrote:
-> >>> In a recent patch series that aimed to remove code related to module
-> >>> unload for PCI support that was simply non modular, the discussion
-> >>> led to people wanting to keep the code and push towards taking the
-> >>> steps needed to support moving it towards tristate instead[1].
-> >>>
-> >>> Here, we take step one, which is simply making the Kconfig change
-> >>> and then dealing with any build fallout or modpost fallout.  What
-> >>> amounts to essentially a sanity build test.  To be clear, these
-> >>> have not been runtime validated; that will need to be done by those
-> >>> with access to real hardware.  However, the changes are not anything
-> >>> that should disrupt any existing built-in validation, so real world
-> >>> users should not be impacted by this change.
-> >>>
-> >>> We start with a smaller family of drivers; those that actively select
-> >>> PCI_DW, as a nice self contained group to test the waters and see if
-> >>> everyone is still good with this approach before investing more time
-> >>> on a wider scale to other pci/host/ code blocks.
-> >>>
-> >>> As such the drivers here share a dependency on having the same group
-> >>> of functions exported in order to successfully complete modpost.
-> >>>
-> >>> In addition, we have to stray outside drivers/pci to add exports
-> >>> in two places; once for an ARM fault handler, and once for an OF
-> >>> variable.
-> >>>
-> >>> The pci-keystone-dw.c instance was handled separately because it
-> >>> consists of two source files that need their own group of driver
-> >>> specific exports above and beyond the "shared" ones.
-> >>>
-> >>> Then we convert the Kconfig for all remaining at once; we could have
-> >>> done it on a per driver basis for ease of revert if anyone really
-> >>> objects, but since it would be a one line change, that seemed like
-> >>> not a real concern.
-> >>>
-> >>> Build testing was done on the linux-next tree for arm allmodconfig.
-> >>
-> >> I took these patches and gave a test with DRA7xx board. As expected there was
-> >> no issues when the driver was built-in. However when I tried to rmmod/modprobe
-> >> I got this error [2].
-> > 
-> > Thanks for testing this!
-> > 
-> >> [2] -> http://pastebin.ubuntu.com/15185894/
-> > 
-> > It looks like you are hitting the BUG_ON() in ioremap_pte_range()
-> > that checks if a virtual address already has a page table entry,
-> > which in turn is probably a result of dw_pcie_host_init()
-> > calling pci_remap_iospace() again for the same memory area
-> > it has called the last time, and no cleanup done inbetween.
-> > 
-> > Could you try adding a pci_unmap_iospace() and calling that
-> > in the device remove function? Let me know if you need help
-> > implementing it.
-> 
-> That didn't look straight forward to me :-( I'll try to see this next week. Any
-> help from you will make it simpler for me.
+Hi Joachim,
 
-I tried writing the function now, and I think it's actually quite easy:
+2016-02-23 23:37 GMT+01:00 Joachim  Eastwood <manabian@gmail.com>:
+> Hi Alexandre,
+>
+> You should copy 'devicetree@vger.kernel.org' on bindings doc. Adding cc here.
+>
+> On 23 February 2016 at 16:10, Alexandre TORGUE
+> <alexandre.torgue@gmail.com> wrote:
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>> new file mode 100644
+>> index 0000000..18734b3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>> @@ -0,0 +1,41 @@
+>> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+>> +
+>> +This file documents platform glue layer for stmmac.
+>> +Please see stmmac.txt for the other unchanged properties.
+>> +
+>> +The device node has following properties.
+>> +
+>> +Required properties:
+>> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+>> +              "snps,dwmac-3.50a" to select IP vesrion.
+>> +- clocks: Should contain the GMAC main clock, and tx clock
+>> +- compatible:  Should be "st,stm32-dwmac" to select glue and
+>> +              "snps,dwmac-3.50a" to select IP version.
+>> +- clocks: Should contain the MAC main clock
+>> +- clock-names: Should contain the clock names "stmmaceth".
+>> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+>> +             encompases the glue register, and the offset of the control register.
+>> +
+>> +Optional properties:
+>> +- clocks: Could contain:
+>> +       - the tx clock,
+>> +       - the rx clock
+>> +- clock-names: Could contain the clock names "tx-clk", "rx-clk"
+>> +
+>> +Example:
+>> +
+>> +               ethernet0: dwmac@40028000 {
+>> +                       device_type = "network";
+>
+> What is this 'device_type = "network"' for?
+> It seems to used in a lot of powerpc DTs, but only a couple of arm DTs.
 
-void pci_unmap_iospace(const struct resource *res)
-{
-#if defined(PCI_IOBASE) && defined(CONFIG_MMU)
-        return iounmap(PCI_IOBASE + res->start);
-#endif
-}
+Actually it seems that this entry is deprecated for ARM
+(http://lists.openwall.net/linux-kernel/2013/12/11/372)
+Concerning stmmac driver I don't see an issue to remove it (tested).
+So If Rob and Peppe could confirm, I will remove it in my V3.
 
-You just need to pass the same resource in here htat you pass into
-pci_remap_iospace().
+Br
 
-	Arnd
+Alexandre
+
+
+>
+> Maybe Rob could enlighten us?
+>
+>> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+>> +                       status = "disabled";
+>> +                       reg = <0x40028000 0x8000>;
+>> +                       reg-names = "stmmaceth";
+>> +                       interrupts = <0 61 0>, <0 62 0>;
+>> +                       interrupt-names = "macirq", "eth_wake_irq";
+>> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+>> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+>> +                       st,syscon = <&syscfg 0x4>;
+>> +                       snps,pbl = <32>;
+>
+> Regarding snps,pbl; using 32 here might not give you what you would except.
+> See comment in dwmac1000_dma_init().
+>
+> The driver is hard coded to use PBL4X/PBL8X mode. Just a heads up.
+>
+>
+> regards,
+> Joachim Eastwood
