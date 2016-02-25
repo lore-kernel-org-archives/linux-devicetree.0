@@ -1,50 +1,75 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v10 0/5] MT8173 IOMMU SUPPORT
-Date: Thu, 25 Feb 2016 16:50:07 +0100
-Message-ID: <20160225155007.GA19092@8bytes.org>
-References: <1456161651-6136-1-git-send-email-yong.wu@mediatek.com>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH V8 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
+Date: Thu, 25 Feb 2016 17:15:11 +0100
+Message-ID: <20160225161510.GB1903@ulmo.nvidia.com>
+References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>
+ <20160216160029.GC11400@ulmo.nvidia.com>
+ <56C7EE58.8000905@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jq0ap7NbKX2Kqbes"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56C7EE58.8000905@nvidia.com>
 Content-Disposition: inline
-In-Reply-To: <1456161651-6136-1-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, k.kozlowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 01:20:46AM +0800, Yong Wu wrote:
-> Yong Wu (5):
->   dt-bindings: iommu: Add binding for mediatek IOMMU
->   dt-bindings: mediatek: Add smi dts binding
->   memory: mediatek: Add SMI driver
->   iommu/mediatek: Add mt8173 IOMMU driver
->   dts: mt8173: Add iommu/smi nodes for mt8173
-> 
->  .../devicetree/bindings/iommu/mediatek,iommu.txt   |  68 ++
->  .../memory-controllers/mediatek,smi-common.txt     |  24 +
->  .../memory-controllers/mediatek,smi-larb.txt       |  25 +
->  arch/arm64/boot/dts/mediatek/mt8173.dtsi           |  81 +++
->  drivers/iommu/Kconfig                              |  16 +
->  drivers/iommu/Makefile                             |   1 +
->  drivers/iommu/mtk_iommu.c                          | 737 +++++++++++++++++++++
->  drivers/memory/Kconfig                             |   8 +
->  drivers/memory/Makefile                            |   1 +
->  drivers/memory/mtk-smi.c                           | 273 ++++++++
->  include/dt-bindings/memory/mt8173-larb-port.h      | 111 ++++
->  include/soc/mediatek/smi.h                         |  58 ++
->  12 files changed, 1403 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iommu/mediatek,iommu.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/mediatek,smi-common.txt
->  create mode 100644 Documentation/devicetree/bindings/memory-controllers/mediatek,smi-larb.txt
->  create mode 100644 drivers/iommu/mtk_iommu.c
->  create mode 100644 drivers/memory/mtk-smi.c
->  create mode 100644 include/dt-bindings/memory/mt8173-larb-port.h
->  create mode 100644 include/soc/mediatek/smi.h
+--jq0ap7NbKX2Kqbes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Applied all, thanks.
+On Sat, Feb 20, 2016 at 10:10:56AM +0530, Laxman Dewangan wrote:
+>=20
+> On Tuesday 16 February 2016 09:30 PM, Thierry Reding wrote:
+> >On Thu, Feb 11, 2016 at 05:26:26PM +0530, Laxman Dewangan wrote:
+> >>Add SW support for MAXIM Semiconductor's Power Management
+> >>IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
+> >>RTC, watchdog, clocks etc.
+> >Hi Laxman,
+> >
+> >This series is starting to look pretty good. Do you have patches in the
+> >works to add the corresponding DT content for the various boards that we
+> >support? I think the Jetson TX1 patch would be most interesting since
+> >that's what people can get their hands on.
+> >
+>=20
+> Yes, I am just waiting for this series to be concluded and applied. Once =
+it
+> is done, I will immediately post the patches to enable this driver in con=
+fig
+> and dt entry for the Jetson-TX1.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Why hold back on the patches? I'm currently having trouble testing
+your stash here on Jetson TX1 and I suspect that I'm using the wrong
+device tree content (it was derived from downstream many moons ago).
+There's nothing wrong with posting patches that depend on patches on
+the list. Typically you'd note the dependency in the cover letter to
+make it easier for people to find what belongs together.
+
+Thierry
+
+--jq0ap7NbKX2Kqbes
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJWzyiOAAoJEN0jrNd/PrOhx6wP/j3nl4wG3BodnmqWDktA7uJK
+KmhX4+Xd/vdP31e9Hp1EEauCNG9dxz7rAKeWNxsI+leY2IXJplSbgLW6lRjJNMs2
+27W4EPUrqmzFqwEofVAVu9hZF4aTkXF9QWjgI1OEAad2W9w22ahzZ9WKWwERjKLE
+ROHQtZ9fL3BBfdpGyz8Ama8q1jdueE3A3/e92AgsCl8GV5ut3QQpVTDbrt6jrkDC
+c6FhzT3w+ftDlY+RHdK7RHIL8XlJgwthMpXdnzEhANkK8+GusAua/eZ97t7FeG2j
+2GV2bPXfWFJXRxdRQ/2ujxZ12xUahHHddpYz2NgvH4IVZ3Gd1IYdvwjkNYuFnnVV
+OqeeuxaWf/jsVrjuGgIT0o0gdEQJQx+6wVyQGHRUyhX+BbXHX3VffxIlwxudK/qE
+Np0u3+tKAEvzn71EfWaVKsr1EIdih+zWYsBrno3zik/iv0XwqsDSr6ueaidaPp2j
+9WrzYACNbXSoYuCeN+hfA74FG7iOPycY7bYujl6aXchcG4FhJIcT4WFURytqghsu
+KgrXJmOVgKszr5Q7bsYuGsVAVERDSJEHpF3IVD2av9OqKqkZqzPtMaPPa6okVef7
+Q/sxRk13Sa+Oww1NMhm6UCy1pQIaoLNepq0FIF2EY1L7e1OHs4QRnWUveYhm/hmb
+KCZ9etWc/J9GD+KkHk+2
+=4kMH
+-----END PGP SIGNATURE-----
+
+--jq0ap7NbKX2Kqbes--
