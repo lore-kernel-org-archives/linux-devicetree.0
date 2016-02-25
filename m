@@ -1,83 +1,108 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] PCI: generic: add description of property
- "interrupt-skip-mask"
-Date: Thu, 25 Feb 2016 12:20:35 +0000
-Message-ID: <20160225122035.GB10593@leverpostej>
-References: <1456401208-10136-1-git-send-email-thunder.leizhen@huawei.com>
- <1456401208-10136-2-git-send-email-thunder.leizhen@huawei.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support
+ of a DT graph of ports
+Date: Thu, 25 Feb 2016 15:42:50 +0200
+Message-ID: <56CF04DA.8080905@ti.com>
+References: <cover.1455720381.git.jsarha@ti.com>
+ <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
+ <20160218143530.GB9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456401208-10136-2-git-send-email-thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160218143530.GB9654@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, moinejf@free.fr, airlied@linux.ie, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 02/18/16 16:35, Rob Herring wrote:
+> On Wed, Feb 17, 2016 at 04:49:05PM +0200, Jyri Sarha wrote:
+>> From: Jean-Francois Moine <moinejf@free.fr>
+>>
+>> Two kinds of ports may be declared in a DT graph of ports: video and audio.
+>> This patch accepts the port value from a video port as an alternative
+>> to the video-ports property.
+>> It also accepts audio ports in the case the transmitter is not used as
+>> a slave encoder.
+>> The new file include/sound/tda998x.h prepares to the definition of
+>> a tda998x CODEC.
+>>
+>> Signed-off-by: Jean-Francois Moine <moinejf@free.fr>
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> ---
+>>   .../devicetree/bindings/display/bridge/tda998x.txt | 51 ++++++++++++
+>>   drivers/gpu/drm/i2c/tda998x_drv.c                  | 90 +++++++++++++++++++---
+>>   include/sound/tda998x.h                            |  8 ++
+>>   3 files changed, 140 insertions(+), 9 deletions(-)
+>>   create mode 100644 include/sound/tda998x.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/tda998x.txt b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+>> index e9e4bce..35f6a80 100644
+>> --- a/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+>> +++ b/Documentation/devicetree/bindings/display/bridge/tda998x.txt
+>> @@ -16,6 +16,35 @@ Optional properties:
+>>
+>>     - video-ports: 24 bits value which defines how the video controller
+>>   	output is wired to the TDA998x input - default: <0x230145>
+>> +	This property is not used when ports are defined.
+>> +
+>> +Optional nodes:
+>> +
+>> +  - port: up to three ports.
+>> +	The ports are defined according to [1].
+>> +
+>> +    Video port.
+>> +	There may be only one video port.
+>> +	This one must contain the following property:
+>> +
+>> +	- port-type: must be "rgb"
+>
+> This should be implied from the port unit address. In other words,
+> port@0 is defined to be the rgb port. Now, if this is one of several
+> modes for the video port, then that is a different story.
+>
 
-In future, please send the binding document first in a series, per point
-3 of Documentation/devicetree/bindings/submitting-patches.txt. It makes
-review easier/faster.
+Do you suggest that also the audio i2s and s/p-dif port-types should be 
+coded in the port unit addresses? Something like: port@0 is always rgb, 
+port@1 is i2s, and port@2 is spdif?
 
-On Thu, Feb 25, 2016 at 07:53:28PM +0800, Zhen Lei wrote:
-> Interrupt Pin register is read-only and optional. Some pci devices may use
-> msi/msix but leave the value of Interrupt Pin non-zero.
+Having the port-type information explicitly written serves the purpose 
+keeping the dts files human readable. Is saving couple of bytes this 
+important or is there some other reason to not to have the port-type 
+property?
 
-Is that permitted by the spec? Surely 'optional' means it must be zero
-if not implemented?
+>> +	and may contain the optional property:
+>> +
+>> +	- reg: 24 bits value which defines how the video controller
+>> +		output is wired to the TDA998x input (video pins)
+>> +		When absent, the default value is <0x230145>.
+>
+> This is not really how reg is intended to be used. Can you explain how
+> this value is determined?
+>
 
-> In this case, the driver will print information as below: pci
-> 0000:40:00.0: of_irq_parse_pci() failed with rc=-22
-> 
-> It's easily lead to misinterpret.
+I never liked this unorthodox usage of reg property either. I'll replace 
+the reg -properties with something more explicit.
 
-If this is limited to a subset of devices which we know are broken in
-this regard, can we not handle these cases explicitly?
-
-> Signed-off-by: Zhen Lei <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/pci/host-generic-pci.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/host-generic-pci.txt b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> index 3f1d3fc..0f10978 100644
-> --- a/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> @@ -70,6 +70,8 @@ Practice: Interrupt Mapping' and requires the following properties:
-> 
->  - interrupt-map-mask : <see aforementioned specification>
-> 
-> +- interrupt-skip-mask: Explicitly declare which pci devices only use msi/msix
-> +but leave the value of Interrupt Pin non-zero.
-
-Unlike the rest of the interrupt mapping properties, this is not
-described in  `Open Firmware Recommended Practice: Interrupt Mapping'.
-
-This needs a far more complete description.
-
-This also doesn't strike me as th right approach. The interrupt-map-mask
-property describe as relationship between the host-controller-provided
-interrupt lines and endpoints, while this seems to be a bug completely
-contained within an endpoint.
-
-Thanks,
-Mark.
-
-> 
->  Example:
-> 
-> --
-> 2.5.0
-> 
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +    Audio ports.
+>> +	There may be one or two audio ports.
+>> +	These ones must contain the following properties:
+>> +
+>> +	- port-type: must be "i2s" or "spdif"
+>> +
+>> +	- reg: 8 bits value which defines how the audio controller
+>> +		output is wired to the TDA998x input (audio pins)
+>
+> Same here.
+>
+> Rob
+>
