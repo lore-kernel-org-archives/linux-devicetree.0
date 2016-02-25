@@ -1,101 +1,111 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
-Date: Thu, 25 Feb 2016 21:09:46 +0100
-Message-ID: <20160225210946.6c842f4b@bbrezillon>
-References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
-	<20160224144652.14068468@bbrezillon>
-	<CACna6rxemvBOu9fy9KP0327TsqonO7dFY5EsQjf1k9Ln6hX8cw@mail.gmail.com>
+From: Krzysztof Adamski <k@japko.eu>
+Subject: [PATCH v2] ARM: dts: sun8i: Add leds and switch on
+ Orangepi Plus boards
+Date: Thu, 25 Feb 2016 21:42:35 +0100
+Message-ID: <20160225204234.GA31610@box2.japko.eu>
+Reply-To: k@japko.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rxemvBOu9fy9KP0327TsqonO7dFY5EsQjf1k9Ln6hX8cw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDIL57GUWIARBFOPXW3AKGQECM6FBXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Feb 2016 20:56:36 +0100
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+OrangePi Plus board has dwo leds - green ("pwr") and red ("status")
+and a switch ("sw4"). This patch describes them in a devicetree.
 
-> On 24 February 2016 at 14:46, Boris Brezillon
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Fri, 12 Feb 2016 19:11:23 +0100
-> > Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> >> This allows specifying algorithm used for NAND ECC. There are two
-> >> available values: "bch" and "hamming". It's important as having ju=
-st
-> >> ECC parameters (step, strength) isn't enough to determine algorith=
-m,
-> >> e.g. you can't distinct BCH-1 and Hamming.
-> >>
-> >> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/mtd/nand.txt |  3 +++
-> >>  drivers/of/of_mtd.c                            | 33 +++++++++++++=
-+++++++++++++
-> >>  include/linux/mtd/nand.h                       |  5 ++++
-> >>  include/linux/of_mtd.h                         |  6 +++++
-> >>  4 files changed, 47 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Docu=
-mentation/devicetree/bindings/mtd/nand.txt
-> >> index b53f92e..a2c2df5 100644
-> >> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> >> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> >> @@ -3,6 +3,9 @@
-> >>  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
-> >>    Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_=
-oob_first",
-> >>    "soft_bch".
-> >> +- nand-ecc-algo : string, algorithm of NAND ecc.
-> >> +               Supported values are: "bch", "hamming". The defaul=
-t one is
-> >> +               "bch".
-> >
-> > I like the idea of specifying which ECC algorithm should be used, a=
-nd
-> > this is IMO clearer than putting the information directly in
-> > nand-ecc-mode (as is already done for the "soft" and "soft_bch" mod=
-es,
-> > which are respectively encoding software hamming and software bch
-> > implementations).
-> >
-> > But shouldn't we take this even further and add new DT properties
-> > to encode the ECC layout (syndrome, oob_first), and another one to
-> > specify the implementation type (software or hardware)?
-> >
-> > nand-ecc-layout =3D "nornal", "syndrome" or "oob_first"
-> > nand-ecc-engine =3D "none", "soft" or "hw" ("on-die" ?)
-> >
-> > Note that it's not something I ask you to do right now, I just want=
- to
-> > bring the topic on the table.
->=20
-> So far I was fine with whatever drvier/NAND core picked, didn't have
-> any issue with it. If at some point we'll see a real need of
-> specifying it manually as well, I guess we should do as you suggested=
-=2E
->
+Signed-off-by: Krzysztof Adamski <k@japko.eu>
+---
 
-My point is that it's kind of weird to have the same information
-duplicated in two different properties with possibly some conflicting
-configurations, like:
+Changes compared to v1:
+ - Fixed leds labels
+ - Merged two led sections into one
 
-	nand-ecc-mode =3D "soft_bch"; /* software BCH implementation... */
-	nand-ecc-algo =3D "hamming"; /* ... and here you choose Hamming */
 
-Of course this won't be a real problem until NAND core starts using
-this property to decide which soft implementation should be used, but
-providing a consistent binding is important IMO.
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 57 ++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+index e67df59..d81eca6 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+@@ -45,6 +45,7 @@
+ #include "sunxi-common-regulators.dtsi"
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+@@ -58,6 +59,62 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_opc &leds_r_opc>;
++
++		status_led {
++			label = "orangepi-plus:red:status";
++			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
++		};
++
++		pwr_led {
++			label = "orangepi-plus:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++	};
++
++	r_gpio_keys {
++		compatible = "gpio-keys";
++		input-name = "sw4";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_opc>;
++
++		sw4@0 {
++			label = "sw4";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&pio {
++	leds_opc: led_pins@0 {
++		allwinner,pins = "PA15";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&r_pio {
++	leds_r_opc: led_pins@0 {
++		allwinner,pins = "PL10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	sw_r_opc: key_pins@0 {
++		allwinner,pins = "PL03";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
+ };
+ 
+ &mmc0 {
+-- 
+2.1.4
