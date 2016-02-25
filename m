@@ -1,111 +1,122 @@
-From: Krzysztof Adamski <k@japko.eu>
-Subject: [PATCH v2] ARM: dts: sun8i: Add leds and switch on
- Orangepi Plus boards
-Date: Thu, 25 Feb 2016 21:42:35 +0100
-Message-ID: <20160225204234.GA31610@box2.japko.eu>
-Reply-To: k@japko.eu
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V2] ARM64: tegra: Add support for Google Pixel C
+Date: Thu, 25 Feb 2016 13:07:43 -0800
+Message-ID: <CAL1qeaHVuvwTkctEMo6TFggPPgqaQZDnKZGYn1QRUROpJ9Dhrw@mail.gmail.com>
+References: <1454949199-27050-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDIL57GUWIARBFOPXW3AKGQECM6FBXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454949199-27050-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-OrangePi Plus board has dwo leds - green ("pwr") and red ("status")
-and a switch ("sw4"). This patch describes them in a devicetree.
+Jon,
 
-Signed-off-by: Krzysztof Adamski <k@japko.eu>
----
+On Mon, Feb 8, 2016 at 8:33 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Add initial device-tree support for Google Pixel C (a.k.a. Smaug) based
+> upon Tegra210 SoC with 3 GiB of LPDDR4 RAM.
+>
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Changes compared to v1:
- - Fixed leds labels
- - Merged two led sections into one
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
+... and I booted up my Smaug with v4.5-rc5 + this patch, so:
 
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 57 ++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+Tested-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index e67df59..d81eca6 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -45,6 +45,7 @@
- #include "sunxi-common-regulators.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
-@@ -58,6 +59,62 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&leds_opc &leds_r_opc>;
-+
-+		status_led {
-+			label = "orangepi-plus:red:status";
-+			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		pwr_led {
-+			label = "orangepi-plus:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	r_gpio_keys {
-+		compatible = "gpio-keys";
-+		input-name = "sw4";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sw_r_opc>;
-+
-+		sw4@0 {
-+			label = "sw4";
-+			linux,code = <BTN_0>;
-+			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&pio {
-+	leds_opc: led_pins@0 {
-+		allwinner,pins = "PA15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&r_pio {
-+	leds_r_opc: led_pins@0 {
-+		allwinner,pins = "PL10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	sw_r_opc: key_pins@0 {
-+		allwinner,pins = "PL03";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
- };
- 
- &mmc0 {
--- 
-2.1.4
+Thanks,
+Andrew
+
+> ---
+>  arch/arm64/boot/dts/nvidia/Makefile           |  1 +
+>  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 60 +++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+>
+> diff --git a/arch/arm64/boot/dts/nvidia/Makefile b/arch/arm64/boot/dts/nvidia/Makefile
+> index a7e865da1005..0f7cdf3e05c1 100644
+> --- a/arch/arm64/boot/dts/nvidia/Makefile
+> +++ b/arch/arm64/boot/dts/nvidia/Makefile
+> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_TEGRA_132_SOC) += tegra132-norrin.dtb
+>  dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-0000.dtb
+>  dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2371-2180.dtb
+>  dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-p2571.dtb
+> +dtb-$(CONFIG_ARCH_TEGRA_210_SOC) += tegra210-smaug.dtb
+>
+>  always         := $(dtb-y)
+>  clean-files    := *.dtb
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+> new file mode 100644
+> index 000000000000..59acdb6b4f23
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+> @@ -0,0 +1,60 @@
+> +/dts-v1/;
+> +
+> +#include "tegra210.dtsi"
+> +
+> +/ {
+> +       model = "Google Pixel C";
+> +       compatible = "google,smaug-rev8", "google,smaug-rev7",
+> +                    "google,smaug-rev6", "google,smaug-rev5",
+> +                    "google,smaug-rev4", "google,smaug-rev3",
+> +                    "google,smaug-rev1", "google,smaug", "nvidia,tegra210";
+> +
+> +       aliases {
+> +               serial0 = &uarta;
+> +       };
+> +
+> +       chosen {
+> +               bootargs = "earlycon";
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x0 0x80000000 0x0 0xc0000000>;
+> +       };
+> +
+> +       serial@0,70006000 {
+> +               status = "okay";
+> +       };
+> +
+> +       pmc@0,7000e400 {
+> +               nvidia,invert-interrupt;
+> +               nvidia,suspend-mode = <0>;
+> +               nvidia,cpu-pwr-good-time = <0>;
+> +               nvidia,cpu-pwr-off-time = <0>;
+> +               nvidia,core-pwr-good-time = <12000 6000>;
+> +               nvidia,core-pwr-off-time = <39053>;
+> +               nvidia,core-power-req-active-high;
+> +               nvidia,sys-clock-req-active-high;
+> +               status = "okay";
+> +       };
+> +
+> +       sdhci@0,700b0600 {
+> +               bus-width = <8>;
+> +               non-removable;
+> +               status = "okay";
+> +       };
+> +
+> +       clocks {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               clk32k_in: clock@0 {
+> +                       compatible = "fixed-clock";
+> +                       reg = <0>;
+> +                       #clock-cells = <0>;
+> +                       clock-frequency = <32768>;
+> +               };
+> +       };
+> +};
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
