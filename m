@@ -1,90 +1,156 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree
- bindings.
-Date: Wed, 24 Feb 2016 21:11:48 -0600
-Message-ID: <1456369908.5360.28.camel@buserror.net>
-References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
-	 <20160223201520.GA3354@rob-hp-laptop>
-	 <1456258812.5360.22.camel@buserror.net>
-	 <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH] arm64: dts: Add tmu node for exynos7
+Date: Thu, 25 Feb 2016 08:57:45 +0530
+Message-ID: <1456370865-10086-1-git-send-email-pankaj.dubey@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Qiang Zhao <qiang.zhao@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: Yang-Leo Li <leoyang.li@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-02-25 at 03:10 +0000, Qiang Zhao wrote:
-> On Wed, 2016-02-24 at 04:20  AM, Scott Wood wrote:
-> > -----Original Message-----
-> > From: Scott Wood [mailto:oss@buserror.net]
-> > Sent: Wednesday, February 24, 2016 4:20 AM
-> > To: Rob Herring <robh@kernel.org>; Qiang Zhao <qiang.zhao@nxp.com>
-> > Cc: Yang-Leo Li <leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
-> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to de=
-vice
-> > tree
-> > bindings.
-> >=20
-> > On Tue, 2016-02-23 at 14:15 -0600, Rob Herring wrote:
-> > > On Thu, Feb 18, 2016 at 09:06:06AM +0800, Zhao Qiang wrote:
-> > > > Add IC, SI and SIRAM document of QE to
-> > > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
-> > > >=20
-> > > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
-> > > > ---
-> > > > Changes for v2
-> > > > 	- Add interrupt-controller in Required properties
-> > > > 	- delete address-cells and size-cells for qe-si and qe-siram
-> > > >=20
-> > > >  .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50
-> > > > ++++++++++++++++++++++
-> > > >  1 file changed, 50 insertions(+)
-> > > >=20
-> > > > diff --git
-> > > > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
-> > > > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
-> > > > index 4f89302..84052a7 100644
-> > > > --- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
-xt
-> > > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
-xt
-> > > > @@ -69,6 +69,56 @@ Example:
-> > > >  	};
-> > > >       };
-> > > >=20
-> > > > +* Interrupt Controller (IC)
-> > > > +
-> > > > +Required properties:
-> > > > +- compatible : should be "fsl,qe-ic".
-> > >=20
-> > > > +- compatible : should be "fsl,qe-si".
-> > >=20
-> > > > +- compatible : should be "fsl,qe-siram".
-> > >=20
-> > > These compatible strings are all a bit generic and should have So=
-C
-> > > specific compatible strings.
-> >=20
-> > I don't know about si/siram, but "fsl,qe-ic" has been around since =
-2008,
-> > so it
-> > should be documented even if a more specific compatible is also add=
-ed.
->=20
-> Agree, and si/siram are also has been around since 2008.
+From: Alim Akhtar <alim.akhtar@samsung.com>
 
-Where?  I couldn't find them when grepping.
+This patch adds tmu node, related temprature sensor and triping
+point data for Atlas cpu core found on exynos7 SoC.
 
-> In addition, I don=E2=80=99t think it is needed to add specific compa=
-tible, because
-> they are
-> the same in qe-supported soc.
+Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi   |   25 +++++++++
+ .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   55 ++++++++++++++++++++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi            |   20 +++++++
+ 3 files changed, 100 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
 
-How do we know that they are 100% the same?
-
--Scott
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+new file mode 100644
+index 0000000..1d6dcf2
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+@@ -0,0 +1,25 @@
++/*
++ * Device tree sources for Exynos7 TMU sensor configuration
++ *
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++#include <dt-bindings/thermal/thermal_exynos.h>
++
++#thermal-sensor-cells = <0>;
++samsung,tmu_gain = <9>;
++samsung,tmu_reference_voltage = <17>;
++samsung,tmu_noise_cancel_mode = <4>;
++samsung,tmu_efuse_value = <75>;
++samsung,tmu_min_efuse_value = <15>;
++samsung,tmu_max_efuse_value = <100>;
++samsung,tmu_first_point_trim = <25>;
++samsung,tmu_second_point_trim = <85>;
++samsung,tmu_default_temp_offset = <50>;
++samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+new file mode 100644
+index 0000000..3970545
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+@@ -0,0 +1,55 @@
++/*
++ * Device tree sources for default Exynos7 thermal zone definition
++ *
++ * Copyright (c) 2016 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ */
++
++trips {
++	cpu-alert-0 {
++		temperature = <75000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	cpu-alert-1 {
++		temperature = <80000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	cpu-alert-2 {
++		temperature = <85000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	cpu-alert-3 {
++		temperature = <90000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	cpu-alert-4 {
++		temperature = <95000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	cpu-alert-5 {
++		temperature = <100000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	cpu-alert-6 {
++		temperature = <110000>; /* millicelsius */
++		hysteresis = <10000>; /* millicelsius */
++		type = "passive";
++	};
++	/* HW Trip point */
++	cpu-crit-0 {
++		temperature = <115000>; /* millicelsius */
++		hysteresis = <0>; /* millicelsius */
++		type = "critical";
++	};
++};
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index c662f98..fc9d130 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -27,6 +27,7 @@
+ 		pinctrl6 = &pinctrl_fsys0;
+ 		pinctrl7 = &pinctrl_fsys1;
+ 		pinctrl8 = &pinctrl_bus1;
++		tmuctrl0 = &tmuctrl_0;
+ 	};
+ 
+ 	cpus {
+@@ -538,6 +539,25 @@
+ 			clocks = <&clock_peric0 PCLK_PWM>;
+ 			clock-names = "timers";
+ 		};
++
++		tmuctrl_0: tmu@10060000 {
++			compatible = "samsung,exynos7-tmu";
++			reg = <0x10060000 0x200>;
++			interrupts = <0 108 0>;
++			clocks = <&clock_peris PCLK_TMU>,
++				 <&clock_peris SCLK_TMU>;
++			clock-names = "tmu_apbif", "tmu_sclk";
++			#include "exynos7-tmu-sensor-conf.dtsi"
++		};
++
++		thermal-zones {
++			atlas_thermal: atlas-thermal {
++				polling-delay-passive = <0>; /* milliseconds */
++				polling-delay = <0>; /* milliseconds */
++				thermal-sensors = <&tmuctrl_0>;
++				#include "exynos7-trip-points.dtsi"
++			};
++		};
+ 	};
+ };
+ 
+-- 
+1.7.10.4
