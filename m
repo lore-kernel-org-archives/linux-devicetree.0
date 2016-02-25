@@ -1,65 +1,177 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: arm/marvell: add DT bindings for
- AP806 DFX Server
-Date: Thu, 25 Feb 2016 15:37:10 -0800
-Message-ID: <20160225233710.GJ28849@codeaurora.org>
-References: <1456326866-30854-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1456326866-30854-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Alan Tull <atull@opensource.altera.com>
+Subject: [PATCH] of/overlay: add of overlay notifications
+Date: Thu, 25 Feb 2016 17:36:22 -0600
+Message-ID: <1456443382-29781-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456326866-30854-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Alan Tull <atull@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/24, Thomas Petazzoni wrote:
-> +Marvell AP806 DFX Server
-> +------------------------
-> +
-> +The Marvell AP806 HW block (which is a core component of the Marvell
-> +Armada 7K and 8K SOCs) has a set of registers called "DFX
-> +Server". This set of registers contains miscellaneous registers, most
-> +of them being used for silicon fine-tuning and manufacturing testing,
-> +and as such are not publicly documented. However, this DFX server
-> +register range also contains a few documented and useful registers,
-> +for example for clock control.
-> +
-> +This Device Tree binding allows to represent the entire DFX server
-> +register space as one single DT node.
-> +
-> +Required properties:
-> +- compatible: the first and second values must be:
-> +	"simple-mfd", "syscon"
-> +- reg: address and length of following register sets for the DFX
-> +  server
+This patch add of overlay notifications.
 
-Example?
+When DT overlays are being added, some drivers/subsystems
+need to see device tree overlays before the changes go into
+the live tree.
 
-I would think the binding would be done in a way that we don't
-have to describe every little register in this misc register
-block. Instead, dfx server has a compatible:
+This is distinct from reconfig notifiers that are
+post-apply or post-remove and which issue very granular
+notifications without providing access to the context
+of a whole overlay.
 
- node@f00 {
- 	reg = <0xf00 0x100>;
-	compatible = "marvell,dfx-ap806";
-	#clock-cells = <1>;
- };
+The following 4 notificatons are issued:
+  OF_OVERLAY_PRE_APPLY
+  OF_OVERLAY_POST_APPLY
+  OF_OVERLAY_PRE_REMOVE
+  OF_OVERLAY_POST_REMOVE
 
-And then a driver that probes this compatible string and
-registers a handful of clks. If we ever get into a situation
-where we want to expose non-clk functionality from this device
-node, we would make some sort of mfd driver that probes based on
-the same compatible string and creates platform devices in
-software to register the clk device component and whatever other
-device type is used. In that situation, we could assign a regmap
-to the mfd device and the clk device would be a child of the mfd
-and get a regmap through the dev->parent pointer.
+In the case of pre-apply notification, if the notifier
+returns error, the overlay will be rejected.
 
-TL;DR I'm still lost why we have to describe each clk in DT.
+This patch exports two functions for registering/unregistering
+notifications:
+  of_overlay_notifier_register(struct notifier_block *nb)
+  of_overlay_notifier_unregister(struct notifier_block *nb)
 
+The notification data includes pointers to the overlay
+target and the overlay:
+
+struct of_overlay_notify_data {
+       struct device_node *overlay;
+       struct device_node *target;
+};
+
+Signed-off-by: Alan Tull <atull@opensource.altera.com>
+---
+ drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/of.h   |   25 +++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 8225081..a26f0ed 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -56,6 +56,41 @@ struct of_overlay {
+ static int of_overlay_apply_one(struct of_overlay *ov,
+ 		struct device_node *target, const struct device_node *overlay);
+ 
++static BLOCKING_NOTIFIER_HEAD(of_overlay_chain);
++
++int of_overlay_notifier_register(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&of_overlay_chain, nb);
++}
++EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
++
++int of_overlay_notifier_unregister(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&of_overlay_chain, nb);
++}
++EXPORT_SYMBOL_GPL(of_overlay_notifier_unregister);
++
++static int of_overlay_notify(struct of_overlay *ov,
++			     enum of_overlay_notify_action action)
++{
++	struct of_overlay_notify_data nd;
++	int i, ret;
++
++	for (i = 0; i < ov->count; i++) {
++		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
++
++		nd.target = ovinfo->target;
++		nd.overlay = ovinfo->overlay;
++
++		ret = blocking_notifier_call_chain(&of_overlay_chain,
++						   action, &nd);
++		if (ret)
++			return notifier_to_errno(ret);
++	}
++
++	return 0;
++}
++
+ static int of_overlay_apply_single_property(struct of_overlay *ov,
+ 		struct device_node *target, struct property *prop)
+ {
+@@ -370,6 +405,13 @@ int of_overlay_create(struct device_node *tree)
+ 		goto err_free_idr;
+ 	}
+ 
++	err = of_overlay_notify(ov, OF_OVERLAY_PRE_APPLY);
++	if (err < 0) {
++		pr_err("%s: Pre-apply notifier failed (err=%d)\n",
++		       __func__, err);
++		goto err_free_idr;
++	}
++
+ 	/* apply the overlay */
+ 	err = of_overlay_apply(ov);
+ 	if (err) {
+@@ -389,6 +431,8 @@ int of_overlay_create(struct device_node *tree)
+ 	/* add to the tail of the overlay list */
+ 	list_add_tail(&ov->node, &ov_list);
+ 
++	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
++
+ 	mutex_unlock(&of_mutex);
+ 
+ 	return id;
+@@ -509,9 +553,10 @@ int of_overlay_destroy(int id)
+ 		goto out;
+ 	}
+ 
+-
++	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
+ 	list_del(&ov->node);
+ 	__of_changeset_revert(&ov->cset);
++	of_overlay_notify(ov, OF_OVERLAY_POST_REMOVE);
+ 	of_free_overlay_info(ov);
+ 	idr_remove(&ov_idr, id);
+ 	of_changeset_destroy(&ov->cset);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dc6e396..e70a686 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1083,6 +1083,21 @@ int of_overlay_create(struct device_node *tree);
+ int of_overlay_destroy(int id);
+ int of_overlay_destroy_all(void);
+ 
++enum of_overlay_notify_action {
++	OF_OVERLAY_PRE_APPLY,
++	OF_OVERLAY_POST_APPLY,
++	OF_OVERLAY_PRE_REMOVE,
++	OF_OVERLAY_POST_REMOVE,
++};
++
++struct of_overlay_notify_data {
++	struct device_node *overlay;
++	struct device_node *target;
++};
++
++int of_overlay_notifier_register(struct notifier_block *nb);
++int of_overlay_notifier_unregister(struct notifier_block *nb);
++
+ #else
+ 
+ static inline int of_overlay_create(struct device_node *tree)
+@@ -1100,6 +1115,16 @@ static inline int of_overlay_destroy_all(void)
+ 	return -ENOTSUPP;
+ }
+ 
++int of_overlay_notifier_register(struct notifier_block *nb)
++{
++	return 0;
++}
++
++int of_overlay_notifier_unregister(struct notifier_block *nb)
++{
++	return 0;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_OF_H */
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.9.5
