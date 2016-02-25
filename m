@@ -1,119 +1,88 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree
- bindings.
-Date: Wed, 24 Feb 2016 23:56:44 -0600
-Message-ID: <1456379804.5360.43.camel@buserror.net>
-References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
-	 <20160223201520.GA3354@rob-hp-laptop>
-	 <1456258812.5360.22.camel@buserror.net>
-	 <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
-	 <1456369908.5360.28.camel@buserror.net>
-	 <AM3PR04MB118518B07AE928823BE73B8491A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH v6 4/7] clk: mediatek: Add MT2701 clock support
+Date: Thu, 25 Feb 2016 14:24:37 +0800
+Message-ID: <1456381477.22545.24.camel@mtksdaap41>
+References: <1454665050-37776-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1454665050-37776-5-git-send-email-jamesjj.liao@mediatek.com>
+	 <20160210200853.26445.15165@quark.deferred.io>
+	 <1455527982.29688.8.camel@mtksdaap41>
+	 <20160224212533.2278.7597@quark.deferred.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB118518B07AE928823BE73B8491A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qiang Zhao <qiang.zhao@nxp.com>, Rob Herring <robh@kernel.org>
-Cc: Yang-Leo Li <leoyang.li@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160224212533.2278.7597@quark.deferred.io>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh@kernel.org>, John Crispin <blogic@openwrt.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <kernel@pengutronix.de>, Daniel Kurtz <djkurtz@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, Shunli Wang <shunli.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-02-25 at 05:55 +0000, Qiang Zhao wrote:
-> On Thu, 2016-02-25 at 11:12  AM, Scott Wood wrote:
-> > -----Original Message-----
-> > From: Scott Wood [mailto:oss@buserror.net]
-> > Sent: Thursday, February 25, 2016 11:12 AM
-> > To: Qiang Zhao <qiang.zhao@nxp.com>; Rob Herring <robh@kernel.org>
-> > Cc: Yang-Leo Li <leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
-> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org
-> > Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to de=
-vice
-> > tree
-> > bindings.
-> >=20
-> > On Thu, 2016-02-25 at 03:10 +0000, Qiang Zhao wrote:
-> > > On Wed, 2016-02-24 at 04:20  AM, Scott Wood wrote:
-> > > > -----Original Message-----
-> > > > From: Scott Wood [mailto:oss@buserror.net]
-> > > > Sent: Wednesday, February 24, 2016 4:20 AM
-> > > > To: Rob Herring <robh@kernel.org>; Qiang Zhao <qiang.zhao@nxp.c=
-om>
-> > > > Cc: Yang-Leo Li <leoyang.li@nxp.com>; linux-kernel@vger.kernel.=
-org;
-> > > > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org
-> > > > Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document t=
-o
-> > > > device tree bindings.
-> > > >=20
-> > > > On Tue, 2016-02-23 at 14:15 -0600, Rob Herring wrote:
-> > > > > On Thu, Feb 18, 2016 at 09:06:06AM +0800, Zhao Qiang wrote:
-> > > > > > Add IC, SI and SIRAM document of QE to
-> > > > > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
-> > > > > >=20
-> > > > > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
-> > > > > > ---
-> > > > > > Changes for v2
-> > > > > > 	- Add interrupt-controller in Required properties
-> > > > > > 	- delete address-cells and size-cells for qe-si and qe-sir=
-am
-> > > > > >=20
-> > > > > >  .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50
-> > > > > > ++++++++++++++++++++++
-> > > > > >  1 file changed, 50 insertions(+)
-> > > > > >=20
-> > > > > > diff --git
-> > > > > > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
-xt
-> > > > > > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
-xt
-> > > > > > index 4f89302..84052a7 100644
-> > > > > > ---
-> > > > > > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
-xt
-> > > > > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/=
-qe.tx
-> > > > > > +++ t
-> > > > > > @@ -69,6 +69,56 @@ Example:
-> > > > > >  	};
-> > > > > >       };
-> > > > > >=20
-> > > > > > +* Interrupt Controller (IC)
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +- compatible : should be "fsl,qe-ic".
-> > > > >=20
-> > > > > > +- compatible : should be "fsl,qe-si".
-> > > > >=20
-> > > > > > +- compatible : should be "fsl,qe-siram".
-> > > > >=20
-> > > > > These compatible strings are all a bit generic and should hav=
-e SoC
-> > > > > specific compatible strings.
-> > > >=20
-> > > > I don't know about si/siram, but "fsl,qe-ic" has been around si=
-nce
-> > > > 2008, so it should be documented even if a more specific compat=
-ible
-> > > > is also added.
-> > >=20
-> > > Agree, and si/siram are also has been around since 2008.
-> >=20
-> > Where?  I couldn't find them when grepping.
->=20
-> Sorry, I make a mistake, they have not been in upstream.
->=20
-> >=20
-> > > In addition, I don=E2=80=99t think it is needed to add specific c=
-ompatible,
-> > > because they are the same in qe-supported soc.
-> >=20
-> > How do we know that they are 100% the same?
->=20
-> You mean it will be changed in later version?
+Hi Mike,
 
-That's always a possibility, but even on current chips, what bit of
-documentation are you referring to that confirms it's the exact same lo=
-gic?
+On Wed, 2016-02-24 at 13:25 -0800, Michael Turquette wrote:
+> Hi James,
+> 
+> Quoting James Liao (2016-02-15 01:19:42)
+> > Hi Mike,
+> > 
+> > On Wed, 2016-02-10 at 12:08 -0800, Michael Turquette wrote:
+> > > Quoting James Liao (2016-02-05 01:37:27)
+> > > > +CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
+> > > > +CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
+> > > > +CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
+> > > > +CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt2701-mmsys", mtk_mmsys_init);
+> > > > +CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt2701-imgsys", mtk_imgsys_init);
+> > > > +CLK_OF_DECLARE(mtk_vdecsys, "mediatek,mt2701-vdecsys", mtk_vdecsys_init);
+> > > > +CLK_OF_DECLARE(mtk_hifsys, "mediatek,mt2701-hifsys", mtk_hifsys_init);
+> > > > +CLK_OF_DECLARE(mtk_ethsys, "mediatek,mt2701-ethsys", mtk_ethsys_init);
+> > > > +CLK_OF_DECLARE(mtk_bdpsys, "mediatek,mt2701-bdpsys", mtk_bdpsys_init);
+> > > > +CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
+> > > 
+> > > :-/
+> > > 
+> > > This is way too much CLK_OF_DECLARE and not enough Linux Driver Model.
+> > > 
+> > > I understand that some platforms really must initialize some clocks very
+> > > early, but can we please separate those into one table and call
+> > > CLK_OF_DECLARE on only that set, and then register the rest through a
+> > > platform_driver later on?
+> > 
+> > I know CLK_OF_DECLARE is much earlier than platform_driver, so it can
+> > ensure all drivers lookup their clocks successfully during
+> > platform_driver probe. Is there anything different to init these clock
+> > providers in CLK_OF_DECLARE and platform_driver?
+> 
+> This a common pattern we're seeing right now. Joachim did a nice job of
+> supporting early clocks with CLK_OF_DECLARE, and also using a proper
+> driver in his lpc18xx implementation:
+> 
+> http://marc.info/?l=devicetree&m=145618160610001
 
--Scott
+Do you mean we should keep most clock init in platform_driver_probe and
+use CLK_OF_DECLARE for some early clocks only?
+
+Using CLK_OF_DECLARE() for all clock providers is convenient. The
+convenience includes coding structure and driver init order. The coding
+structure means we can use a consistency way to add clock providers, so
+we can reduce errors and apply code generator on clock drivers.
+
+The driver init order is another issue. In lpc18xx driver you mentioned
+in [1], it uses ERR_PTR(-EPROBE_DEFER) to be the place holder for
+non-early clocks in arch_init (CLK_OF_DECLARE), and then register early
+and non-early clocks again in module_init. The EPROBE_DEFER place holder
+is an interesting idea to resolve init order issue. But to register
+clocks twice on the same clock provider seems not a good idea, although
+it can still work in current CCF implementation.
+
+Is it important to move clock init into platform_driver? If not, I
+prefer to keep current implementation on MT2701, and look for a better
+way to init clocks in platform_driver in new SoCs.
+
+
+[1] http://marc.info/?l=devicetree&m=145618160610001
+
+
+Best regards,
+
+James
+
