@@ -1,49 +1,53 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v4 12/12] arm64: defconfig: enable Armada 3700 related
- config
-Date: Wed, 24 Feb 2016 16:47:49 -0800
-Message-ID: <20160225004749.GF10126@localhost>
-References: <1455646502-23834-1-git-send-email-gregory.clement@free-electrons.com>
- <1455646502-23834-13-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455646502-23834-13-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, arm@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Tejun Heo <tj@kernel.org>, Hans de Goede <hdegoede@redhat.com>, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>
+From: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v10 10/59] OF/PCI: Add IORESOURCE_MEM_64 for 64-bit resource
+Date: Wed, 24 Feb 2016 18:12:01 -0800
+Message-ID: <1456366370-28995-11-git-send-email-yinghai@kernel.org>
+References: <1456366370-28995-1-git-send-email-yinghai@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456366370-28995-1-git-send-email-yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Wei Yang <weiyang-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, TJ <linux-7m3hRoVZU5A@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Khalid Aziz <khalid.aziz-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 16, 2016 at 07:15:02PM +0100, Gregory CLEMENT wrote:
-> This patch enables the configuration for the Armada 3700 family and for
-> the related driver it uses.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->  arch/arm64/configs/defconfig | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 18ca9fb9e65f..7ca2f0247ec5 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -31,6 +31,7 @@ CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
->  # CONFIG_BLK_DEV_BSG is not set
->  # CONFIG_IOSCHED_DEADLINE is not set
-> +CONFIG_ARCH_MVEBU=y
->  CONFIG_ARCH_BCM_IPROC=y
->  CONFIG_ARCH_BERLIN=y
->  CONFIG_ARCH_EXYNOS7=y
+For device resource PREF bit setting under bridge 64-bit pref resource,
+we need to make sure only set PREF for 64bit resource.
 
-How did this end up here? It's in alphabetical order in the Kconfig, and here
-you're inserting it first. Savedefconfig inserts it at the expected location.
+This patch set IORESOUCE_MEM_64 for 64bit resource during OF device resource
+flags parsing.
 
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96261
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=96241
+Signed-off-by: Yinghai Lu <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Tested-by: Khalid Aziz <khalid.aziz-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/of/address.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I've fixed it up in the merge now, which isn't ideal. Maybe you edited
-the defconfig by hand?
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 91a469d..3b09261 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -128,9 +128,11 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+ 		flags |= IORESOURCE_IO;
+ 		break;
+ 	case 0x02: /* 32 bits */
+-	case 0x03: /* 64 bits */
+ 		flags |= IORESOURCE_MEM;
+ 		break;
++	case 0x03: /* 64 bits */
++		flags |= IORESOURCE_MEM | IORESOURCE_MEM_64;
++		break;
+ 	}
+ 	if (w & 0x40000000)
+ 		flags |= IORESOURCE_PREFETCH;
+-- 
+1.8.4.5
 
-
--Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
