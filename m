@@ -1,44 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm/marvell: ABI unstability warning
- about Marvell 7K/8K
-Date: Thu, 25 Feb 2016 16:27:26 +0100
-Message-ID: <20160225162726.6ad4a224@free-electrons.com>
-References: <1456327007-31008-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1456327007-31008-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20160224172545.GC9137@leverpostej>
-	<20160224211045.379352d3@free-electrons.com>
-	<CAL_JsqLevrujSeYNBvSJA-5T0Ho8y7c0fKid7QvVm8LLvYLotw@mail.gmail.com>
-	<20160225090927.13492cfb@free-electrons.com>
-	<87h9gwompa.fsf@free-electrons.com>
+From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: Re: [PATCH v3 2/2] iio: dac: vf610_dac: Add IIO DAC driver for
+ Vybrid SoC
+Date: Thu, 25 Feb 2016 21:00:45 +0530
+Message-ID: <20160225153045.GA15913@Sanchayan-Arch>
+References: <cover.1456121233.git.maitysanchayan@gmail.com>
+ <1a70acdd3ffae273bbfe2f80c5e3952d152921df.1456121233.git.maitysanchayan@gmail.com>
+ <20160223205437.GA27366@rob-hp-laptop>
+ <56CE18AC.6020603@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87h9gwompa.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56CE18AC.6020603-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Thu, 25 Feb 2016 16:04:49 +0100, Gregory CLEMENT wrote:
+On 16-02-24 20:55:08, Jonathan Cameron wrote:
+> On 23/02/16 20:54, Rob Herring wrote:
+> > On Mon, Feb 22, 2016 at 11:48:37AM +0530, Sanchayan Maity wrote:
+> >> Add driver support for DAC peripheral on Vybrid SoC.
+> >>
+> >> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-bus-iio-vf610      |   9 +
+> >>  .../devicetree/bindings/iio/dac/vf610-dac.txt      |  20 ++
+> > 
+> > For the binding:
+> > 
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Applied to the togreg branch of iio.git - initially pushed out as testing
+> for the autobuilders to play with it.
 
-> > Gregory, can you skip patch 1/3, and merge patches 2/3 and 3/3, once
-> > the new clock DT binding has been approved.
+Thanks Jonathan.
+
 > 
-> I applied patch 2 and 3 on mvebu/dt64 and I amended the title by using
-> "arm64: dts : marvell:" instead of "arm64: marvell:" as requested by
-> Olof on ly first mvebu/dt64 pull request.
+> Note the dts change probably wants to go via the relevant arch trees.
+> I can take it with an appropriate ack if not.
 
-Thanks, I'll try to remember this convention for the next patches!
+Generally shawn picks up the device tree changes once the driver makes
+it to his for-next branch. I will ping shawn to pick this up once the
+driver lands in shawn's for-next branch.
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sanchayan.
