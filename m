@@ -1,116 +1,59 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH 3/3] arm64: dts: register Hi6220's thermal zone for power
- allocator
-Date: Thu, 25 Feb 2016 10:41:52 +0800
-Message-ID: <20160225024152.GA20591@leoy-linaro>
-References: <1455983529-9559-1-git-send-email-leo.yan@linaro.org>
- <1455983529-9559-4-git-send-email-leo.yan@linaro.org>
- <20160224182856.GD3006@e104805>
+From: <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] powerpc/p5040: Add device node for RAID Engine
+Date: Thu, 25 Feb 2016 09:14:05 +0800
+Message-ID: <1456362845-12169-1-git-send-email-xuelin.shi@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160224182856.GD3006@e104805>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javi Merino <javi.merino@arm.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xuelin Shi <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javi,
+From: Xuelin Shi <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
 
-Thanks for review.
+add the missing RAID Engine device node for p5040.
+otherwise, the device can not be detected.
 
-On Wed, Feb 24, 2016 at 06:28:57PM +0000, Javi Merino wrote:
-> On Sat, Feb 20, 2016 at 11:52:09PM +0800, Leo Yan wrote:
-> > With profiling Hi6220's power modeling so get dynamic coefficient and
-> > sustainable power. So pass these parameters from DT.
-> > 
-> > Now enable power allocator wit only one actor for CPU part, so directly
-> > use cluster0's thermal sensor for monitoring temperature.
-> > 
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 36 +++++++++++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > index 50ba1b0..3608a3e 100644
-> > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > @@ -6,6 +6,7 @@
-> >  
-> >  #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >  #include <dt-bindings/clock/hi6220-clock.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >  
-> >  / {
-> >  	compatible = "hisilicon,hi6220";
-> > @@ -87,6 +88,7 @@
-> >  			cooling-max-level = <0>;
-> >  			#cooling-cells = <2>; /* min followed by max */
-> >  			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
-> > +			dynamic-power-coefficient = <311>;
-> >  		};
-> >  
-> >  		cpu1: cpu@1 {
-> > @@ -322,5 +324,39 @@
-> >  			clock-names = "thermal_clk";
-> >  			#thermal-sensor-cells = <1>;
-> >  		};
-> > +
-> > +		thermal-zones {
-> > +
-> > +			cls0: cls0 {
-> > +				polling-delay = <1000>;
-> > +				polling-delay-passive = <100>;
-> > +				sustainable-power = <3326>;
-> > +
-> > +				/* sensor ID */
-> > +				thermal-sensors = <&tsensor 2>;
-> > +
-> > +				trips {
-> > +					threshold: trip-point@0 {
-> > +						temperature = <65000>;
-> > +						hysteresis = <1000>;
-> 
-> As far as I know, hysteresis is ignored in the thermal subsystem right
-> now, so you could remove it from both trip points.
+Signed-off-by: Xuelin Shi <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
+---
+ arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 1 +
+ arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi  | 6 ++++++
+ 2 files changed, 7 insertions(+)
 
-Will remove it.
+diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+index 2f227b1..e2bd931 100644
+--- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+@@ -420,6 +420,7 @@
+ 		fsl,iommu-parent = <&pamu4>;
+ 	};
+ 
++/include/ "qoriq-raid1.0-0.dtsi"
+ /include/ "qoriq-qman1.dtsi"
+ /include/ "qoriq-bman1.dtsi"
+ 
+diff --git a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
+index 0659d5b..dbd5775 100644
+--- a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
+@@ -73,6 +73,12 @@
+ 		rtic_d = &rtic_d;
+ 		sec_mon = &sec_mon;
+ 
++		raideng = &raideng;
++		raideng_jr0 = &raideng_jr0;
++		raideng_jr1 = &raideng_jr1;
++		raideng_jr2 = &raideng_jr2;
++		raideng_jr3 = &raideng_jr3;
++
+ 		fman0 = &fman0;
+ 		fman1 = &fman1;
+ 		ethernet0 = &enet0;
+-- 
+1.8.4
 
-> > +						type = "passive";
-> > +					};
-> > +
-> > +					target: trip-point@1 {
-> > +						temperature = <75000>;
-> > +						hysteresis = <1000>;
-> > +						type = "passive";
-> > +					};
-> > +				};
-> > +
-> > +				cooling-maps {
-> > +					map0 {
-> > +						trip = <&target>;
-> > +						contribution = <1024>;
-> 
-> As Hikey has only one voltage domain, you only have one cpu cooling
-> device.  "contribution" is only useful when you have more than one
-> cooling device, as it's relative to the other cooling device's
-> contribution.  You can remove contribution from here.
-> 
-> Other than this minor stuff, it looks good to me. FWIW,
-> 
-> Reviewed-by: Javi Merino <javi.merino@arm.com>
-
-Thanks for review. Will sent out new version.
-
-Thanks,
-Leo Yan
-
-> > +						cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +					};
-> > +				};
-> > +			};
-> > +		};
-> >  	};
-> >  };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
