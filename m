@@ -1,82 +1,48 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/5] Modularize PCI_DW related drivers.
-Date: Thu, 25 Feb 2016 13:43:48 +0530
-Message-ID: <56CEB7BC.7010803@ti.com>
-References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
- <56CD4916.3050904@ti.com> <6350001.oOdGGcH81x@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <6350001.oOdGGcH81x@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [RESPIN 1/6] dt-bindings: EXYNOS: Add exynos-srom device tree binding
+Date: Thu, 25 Feb 2016 14:03:37 +0530
+Message-ID: <1456389222-12738-2-git-send-email-pankaj.dubey@samsung.com>
+References: <1456389222-12738-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1456389222-12738-1-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kgene.kim@samsung.com, k.kozlowski@samsung.com, thomas.ab@samsung.com, olof@lixom.net, p.fedin@samsung.com, Pankaj Dubey <pankaj.dubey@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+This patch adds exynos-srom binding information for SROM Controller
+driver on Exynos SoCs.
 
-On Wednesday 24 February 2016 02:34 PM, Arnd Bergmann wrote:
-> On Wednesday 24 February 2016 11:39:26 Kishon Vijay Abraham I wrote:
->> Hi,
->>
->> On Monday 08 February 2016 05:30 AM, Paul Gortmaker wrote:
->>> In a recent patch series that aimed to remove code related to module
->>> unload for PCI support that was simply non modular, the discussion
->>> led to people wanting to keep the code and push towards taking the
->>> steps needed to support moving it towards tristate instead[1].
->>>
->>> Here, we take step one, which is simply making the Kconfig change
->>> and then dealing with any build fallout or modpost fallout.  What
->>> amounts to essentially a sanity build test.  To be clear, these
->>> have not been runtime validated; that will need to be done by those
->>> with access to real hardware.  However, the changes are not anything
->>> that should disrupt any existing built-in validation, so real world
->>> users should not be impacted by this change.
->>>
->>> We start with a smaller family of drivers; those that actively select
->>> PCI_DW, as a nice self contained group to test the waters and see if
->>> everyone is still good with this approach before investing more time
->>> on a wider scale to other pci/host/ code blocks.
->>>
->>> As such the drivers here share a dependency on having the same group
->>> of functions exported in order to successfully complete modpost.
->>>
->>> In addition, we have to stray outside drivers/pci to add exports
->>> in two places; once for an ARM fault handler, and once for an OF
->>> variable.
->>>
->>> The pci-keystone-dw.c instance was handled separately because it
->>> consists of two source files that need their own group of driver
->>> specific exports above and beyond the "shared" ones.
->>>
->>> Then we convert the Kconfig for all remaining at once; we could have
->>> done it on a per driver basis for ease of revert if anyone really
->>> objects, but since it would be a one line change, that seemed like
->>> not a real concern.
->>>
->>> Build testing was done on the linux-next tree for arm allmodconfig.
->>
->> I took these patches and gave a test with DRA7xx board. As expected there was
->> no issues when the driver was built-in. However when I tried to rmmod/modprobe
->> I got this error [2].
-> 
-> Thanks for testing this!
-> 
->> [2] -> http://pastebin.ubuntu.com/15185894/
-> 
-> It looks like you are hitting the BUG_ON() in ioremap_pte_range()
-> that checks if a virtual address already has a page table entry,
-> which in turn is probably a result of dw_pcie_host_init()
-> calling pci_remap_iospace() again for the same memory area
-> it has called the last time, and no cleanup done inbetween.
-> 
-> Could you try adding a pci_unmap_iospace() and calling that
-> in the device remove function? Let me know if you need help
-> implementing it.
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: devicetree@vger.kernel.org
+Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Signed-off-by: Kukjin Kim <kgene@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ .../devicetree/bindings/memory-controllers/exynos-srom.txt   | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
 
-That didn't look straight forward to me :-( I'll try to see this next week. Any
-help from you will make it simpler for me.
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
+new file mode 100644
+index 0000000..33886d5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
+@@ -0,0 +1,12 @@
++SAMSUNG Exynos SoCs SROM Controller driver.
++
++Required properties:
++- compatible : Should contain "samsung,exynos-srom".
++
++- reg: offset and length of the register set
++
++Example:
++	sromc@12570000 {
++		compatible = "samsung,exynos-srom";
++		reg = <0x12570000 0x10>;
++	};
+-- 
+2.4.5
