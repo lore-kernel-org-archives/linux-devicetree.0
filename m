@@ -1,108 +1,58 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: add pre-operation notifications
-Date: Wed, 24 Feb 2016 21:41:34 -0600
-Message-ID: <CAL_Jsq+YF-+frAJANSSEO60-O6dmavsE4PJ69VMwSjPAm0UJUQ@mail.gmail.com>
-References: <1456352937-28311-1-git-send-email-atull@opensource.altera.com>
+From: Qiang Zhao <qiang.zhao@nxp.com>
+Subject: RE: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree
+ bindings.
+Date: Thu, 25 Feb 2016 03:10:26 +0000
+Message-ID: <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
+	 <20160223201520.GA3354@rob-hp-laptop>
+ <1456258812.5360.22.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456352937-28311-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456258812.5360.22.camel@buserror.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, Rob Herring <robh@kernel.org>
+Cc: Yang-Leo Li <leoyang.li@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 24, 2016 at 4:28 PM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
-> Add pre-apply and pre-remove notifications.
->
-> For pre-apply notifications that result from creating an overlay,
-> include a device node to the overlay fragment in of_reconfig_data.
->
-> If a pre-apply notifier return error, reject the changeset.
-
-A couple of high level comments.
-
->
-> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> ---
->  drivers/of/base.c    |   20 +++++++++++++
->  drivers/of/dynamic.c |   79 +++++++++++++++++++++++++++++++++++++++++++++-----
->  drivers/of/overlay.c |   46 +++++++++++++++++++++++++----
->  include/linux/of.h   |    7 +++++
->  4 files changed, 138 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 017dd94..6d170e0 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1719,6 +1719,12 @@ int of_add_property(struct device_node *np, struct property *prop)
->
->         mutex_lock(&of_mutex);
->
-> +       rc = of_property_notify(OF_RECONFIG_PRE_ADD_PROPERTY, np, prop, NULL);
-
-Do we really need these for properties too? I thought nodes would be enough.
-
-[...]
-
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 8225081..9d0c0d9 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -53,13 +53,30 @@ struct of_overlay {
->         struct of_changeset cset;
->  };
->
-> +static int of_overlay_notify(unsigned long action, struct device_node *np,
-> +                            struct property *prop, struct property *old_prop,
-> +                            struct device_node *overlay)
-> +{
-> +       struct of_reconfig_data rd;
-> +
-> +       memset(&rd, 0, sizeof(rd));
-> +       rd.dn = np;
-> +       rd.prop = prop;
-> +       rd.old_prop = old_prop;
-> +       rd.overlay = overlay;
-> +       return of_reconfig_notify(action, &rd);
-> +}
-> +
->  static int of_overlay_apply_one(struct of_overlay *ov,
-> -               struct device_node *target, const struct device_node *overlay);
-> +               struct device_node *target, struct device_node *overlay);
->
->  static int of_overlay_apply_single_property(struct of_overlay *ov,
-> -               struct device_node *target, struct property *prop)
-> +               struct device_node *target, struct property *prop,
-> +               struct device_node *overlay)
->  {
->         struct property *propn, *tprop;
-> +       unsigned long action;
-> +       int ret;
->
->         /* NOTE: Multiple changes of single properties not supported */
->         tprop = of_find_property(target, prop->name, NULL);
-> @@ -74,6 +91,15 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
->         if (propn == NULL)
->                 return -ENOMEM;
->
-> +       if (!tprop)
-> +               action = OF_RECONFIG_PRE_ADD_PROPERTY;
-> +       else
-> +               action = OF_RECONFIG_PRE_UPDATE_PROPERTY;
-> +
-> +       ret = of_overlay_notify(action, target, propn, tprop, overlay);
-> +       if (ret)
-> +               return ret;
-> +
-I don't understand why the notifier is in the overlay code. All the
-notifiers should be contained within the changeset code. Or if we do
-need changeset and overlay notifiers, they should be distinct.
-
->         /* not found? add */
->         if (tprop == NULL)
->                 return of_changeset_add_property(&ov->cset, target, propn);
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyMDE2LTAyLTI0IGF0IDA0OjIwICBBTSwgU2NvdHQgV29vZCB3cm90ZToNCj4gLS0t
+LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCBbbWFpbHRvOm9zc0Bi
+dXNlcnJvci5uZXRdDQo+IFNlbnQ6IFdlZG5lc2RheSwgRmVicnVhcnkgMjQsIDIwMTYgNDoyMCBB
+TQ0KPiBUbzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz47IFFpYW5nIFpoYW8gPHFpYW5n
+LnpoYW9AbnhwLmNvbT4NCj4gQ2M6IFlhbmctTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBs
+aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+MiAxLzddIFFFOiBBZGQgSUMsIFNJIGFuZCBTSVJBTSBkb2N1bWVudCB0byBkZXZpY2UgdHJlZQ0K
+PiBiaW5kaW5ncy4NCj4gDQo+IE9uIFR1ZSwgMjAxNi0wMi0yMyBhdCAxNDoxNSAtMDYwMCwgUm9i
+IEhlcnJpbmcgd3JvdGU6DQo+ID4gT24gVGh1LCBGZWIgMTgsIDIwMTYgYXQgMDk6MDY6MDZBTSAr
+MDgwMCwgWmhhbyBRaWFuZyB3cm90ZToNCj4gPiA+IEFkZCBJQywgU0kgYW5kIFNJUkFNIGRvY3Vt
+ZW50IG9mIFFFIHRvDQo+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
+ZXJwYy9mc2wvY3BtX3FlL3FlLnR4dA0KPiA+ID4NCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFpoYW8g
+UWlhbmcgPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gQ2hhbmdlcyBmb3Ig
+djINCj4gPiA+IAktIEFkZCBpbnRlcnJ1cHQtY29udHJvbGxlciBpbiBSZXF1aXJlZCBwcm9wZXJ0
+aWVzDQo+ID4gPiAJLSBkZWxldGUgYWRkcmVzcy1jZWxscyBhbmQgc2l6ZS1jZWxscyBmb3IgcWUt
+c2kgYW5kIHFlLXNpcmFtDQo+ID4gPg0KPiA+ID4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
+d2VycGMvZnNsL2NwbV9xZS9xZS50eHQgIHwgNTANCj4gPiA+ICsrKysrKysrKysrKysrKysrKysr
+KysNCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNTAgaW5zZXJ0aW9ucygrKQ0KPiA+ID4NCj4gPiA+
+IGRpZmYgLS1naXQNCj4gPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
+d2VycGMvZnNsL2NwbV9xZS9xZS50eHQNCj4gPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9xZS50eHQNCj4gPiA+IGluZGV4IDRmODkzMDIu
+Ljg0MDUyYTcgMTAwNjQ0DQo+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3FlLnR4dA0KPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwbV9xZS9xZS50eHQNCj4gPiA+IEBA
+IC02OSw2ICs2OSw1NiBAQCBFeGFtcGxlOg0KPiA+ID4gIAl9Ow0KPiA+ID4gICAgICAgfTsNCj4g
+PiA+DQo+ID4gPiArKiBJbnRlcnJ1cHQgQ29udHJvbGxlciAoSUMpDQo+ID4gPiArDQo+ID4gPiAr
+UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZz
+bCxxZS1pYyIuDQo+ID4NCj4gPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZzbCxxZS1z
+aSIuDQo+ID4NCj4gPiA+ICstIGNvbXBhdGlibGUgOiBzaG91bGQgYmUgImZzbCxxZS1zaXJhbSIu
+DQo+ID4NCj4gPiBUaGVzZSBjb21wYXRpYmxlIHN0cmluZ3MgYXJlIGFsbCBhIGJpdCBnZW5lcmlj
+IGFuZCBzaG91bGQgaGF2ZSBTb0MNCj4gPiBzcGVjaWZpYyBjb21wYXRpYmxlIHN0cmluZ3MuDQo+
+IA0KPiBJIGRvbid0IGtub3cgYWJvdXQgc2kvc2lyYW0sIGJ1dCAiZnNsLHFlLWljIiBoYXMgYmVl
+biBhcm91bmQgc2luY2UgMjAwOCwgc28gaXQNCj4gc2hvdWxkIGJlIGRvY3VtZW50ZWQgZXZlbiBp
+ZiBhIG1vcmUgc3BlY2lmaWMgY29tcGF0aWJsZSBpcyBhbHNvIGFkZGVkLg0KDQpBZ3JlZSwgYW5k
+IHNpL3NpcmFtIGFyZSBhbHNvIGhhcyBiZWVuIGFyb3VuZCBzaW5jZSAyMDA4Lg0KSW4gYWRkaXRp
+b24sIEkgZG9u4oCZdCB0aGluayBpdCBpcyBuZWVkZWQgdG8gYWRkIHNwZWNpZmljIGNvbXBhdGli
+bGUsIGJlY2F1c2UgdGhleSBhcmUNCnRoZSBzYW1lIGluIHFlLXN1cHBvcnRlZCBzb2MuDQoNCkJS
+DQotWmhhbw0K
