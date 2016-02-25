@@ -1,156 +1,108 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH] arm64: dts: Add tmu node for exynos7
-Date: Thu, 25 Feb 2016 08:57:45 +0530
-Message-ID: <1456370865-10086-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: add pre-operation notifications
+Date: Wed, 24 Feb 2016 21:41:34 -0600
+Message-ID: <CAL_Jsq+YF-+frAJANSSEO60-O6dmavsE4PJ69VMwSjPAm0UJUQ@mail.gmail.com>
+References: <1456352937-28311-1-git-send-email-atull@opensource.altera.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456352937-28311-1-git-send-email-atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alim Akhtar <alim.akhtar@samsung.com>
+On Wed, Feb 24, 2016 at 4:28 PM, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org> wrote:
+> Add pre-apply and pre-remove notifications.
+>
+> For pre-apply notifications that result from creating an overlay,
+> include a device node to the overlay fragment in of_reconfig_data.
+>
+> If a pre-apply notifier return error, reject the changeset.
 
-This patch adds tmu node, related temprature sensor and triping
-point data for Atlas cpu core found on exynos7 SoC.
+A couple of high level comments.
 
-Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi   |   25 +++++++++
- .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   55 ++++++++++++++++++++
- arch/arm64/boot/dts/exynos/exynos7.dtsi            |   20 +++++++
- 3 files changed, 100 insertions(+)
- create mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
- create mode 100644 arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+>
+> Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+> ---
+>  drivers/of/base.c    |   20 +++++++++++++
+>  drivers/of/dynamic.c |   79 +++++++++++++++++++++++++++++++++++++++++++++-----
+>  drivers/of/overlay.c |   46 +++++++++++++++++++++++++----
+>  include/linux/of.h   |    7 +++++
+>  4 files changed, 138 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 017dd94..6d170e0 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1719,6 +1719,12 @@ int of_add_property(struct device_node *np, struct property *prop)
+>
+>         mutex_lock(&of_mutex);
+>
+> +       rc = of_property_notify(OF_RECONFIG_PRE_ADD_PROPERTY, np, prop, NULL);
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
-new file mode 100644
-index 0000000..1d6dcf2
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
-@@ -0,0 +1,25 @@
-+/*
-+ * Device tree sources for Exynos7 TMU sensor configuration
-+ *
-+ * Copyright (c) 2016 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <dt-bindings/thermal/thermal_exynos.h>
-+
-+#thermal-sensor-cells = <0>;
-+samsung,tmu_gain = <9>;
-+samsung,tmu_reference_voltage = <17>;
-+samsung,tmu_noise_cancel_mode = <4>;
-+samsung,tmu_efuse_value = <75>;
-+samsung,tmu_min_efuse_value = <15>;
-+samsung,tmu_max_efuse_value = <100>;
-+samsung,tmu_first_point_trim = <25>;
-+samsung,tmu_second_point_trim = <85>;
-+samsung,tmu_default_temp_offset = <50>;
-+samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
-new file mode 100644
-index 0000000..3970545
---- /dev/null
-+++ b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
-@@ -0,0 +1,55 @@
-+/*
-+ * Device tree sources for default Exynos7 thermal zone definition
-+ *
-+ * Copyright (c) 2016 Samsung Electronics Co., Ltd.
-+ *		http://www.samsung.com
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+trips {
-+	cpu-alert-0 {
-+		temperature = <75000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	cpu-alert-1 {
-+		temperature = <80000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	cpu-alert-2 {
-+		temperature = <85000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	cpu-alert-3 {
-+		temperature = <90000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	cpu-alert-4 {
-+		temperature = <95000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	cpu-alert-5 {
-+		temperature = <100000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	cpu-alert-6 {
-+		temperature = <110000>; /* millicelsius */
-+		hysteresis = <10000>; /* millicelsius */
-+		type = "passive";
-+	};
-+	/* HW Trip point */
-+	cpu-crit-0 {
-+		temperature = <115000>; /* millicelsius */
-+		hysteresis = <0>; /* millicelsius */
-+		type = "critical";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index c662f98..fc9d130 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -27,6 +27,7 @@
- 		pinctrl6 = &pinctrl_fsys0;
- 		pinctrl7 = &pinctrl_fsys1;
- 		pinctrl8 = &pinctrl_bus1;
-+		tmuctrl0 = &tmuctrl_0;
- 	};
- 
- 	cpus {
-@@ -538,6 +539,25 @@
- 			clocks = <&clock_peric0 PCLK_PWM>;
- 			clock-names = "timers";
- 		};
-+
-+		tmuctrl_0: tmu@10060000 {
-+			compatible = "samsung,exynos7-tmu";
-+			reg = <0x10060000 0x200>;
-+			interrupts = <0 108 0>;
-+			clocks = <&clock_peris PCLK_TMU>,
-+				 <&clock_peris SCLK_TMU>;
-+			clock-names = "tmu_apbif", "tmu_sclk";
-+			#include "exynos7-tmu-sensor-conf.dtsi"
-+		};
-+
-+		thermal-zones {
-+			atlas_thermal: atlas-thermal {
-+				polling-delay-passive = <0>; /* milliseconds */
-+				polling-delay = <0>; /* milliseconds */
-+				thermal-sensors = <&tmuctrl_0>;
-+				#include "exynos7-trip-points.dtsi"
-+			};
-+		};
- 	};
- };
- 
--- 
-1.7.10.4
+Do we really need these for properties too? I thought nodes would be enough.
+
+[...]
+
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 8225081..9d0c0d9 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -53,13 +53,30 @@ struct of_overlay {
+>         struct of_changeset cset;
+>  };
+>
+> +static int of_overlay_notify(unsigned long action, struct device_node *np,
+> +                            struct property *prop, struct property *old_prop,
+> +                            struct device_node *overlay)
+> +{
+> +       struct of_reconfig_data rd;
+> +
+> +       memset(&rd, 0, sizeof(rd));
+> +       rd.dn = np;
+> +       rd.prop = prop;
+> +       rd.old_prop = old_prop;
+> +       rd.overlay = overlay;
+> +       return of_reconfig_notify(action, &rd);
+> +}
+> +
+>  static int of_overlay_apply_one(struct of_overlay *ov,
+> -               struct device_node *target, const struct device_node *overlay);
+> +               struct device_node *target, struct device_node *overlay);
+>
+>  static int of_overlay_apply_single_property(struct of_overlay *ov,
+> -               struct device_node *target, struct property *prop)
+> +               struct device_node *target, struct property *prop,
+> +               struct device_node *overlay)
+>  {
+>         struct property *propn, *tprop;
+> +       unsigned long action;
+> +       int ret;
+>
+>         /* NOTE: Multiple changes of single properties not supported */
+>         tprop = of_find_property(target, prop->name, NULL);
+> @@ -74,6 +91,15 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
+>         if (propn == NULL)
+>                 return -ENOMEM;
+>
+> +       if (!tprop)
+> +               action = OF_RECONFIG_PRE_ADD_PROPERTY;
+> +       else
+> +               action = OF_RECONFIG_PRE_UPDATE_PROPERTY;
+> +
+> +       ret = of_overlay_notify(action, target, propn, tprop, overlay);
+> +       if (ret)
+> +               return ret;
+> +
+I don't understand why the notifier is in the overlay code. All the
+notifiers should be contained within the changeset code. Or if we do
+need changeset and overlay notifiers, they should be distinct.
+
+>         /* not found? add */
+>         if (tprop == NULL)
+>                 return of_changeset_add_property(&ov->cset, target, propn);
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
