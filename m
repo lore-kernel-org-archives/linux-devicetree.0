@@ -1,30 +1,72 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv2 13/16] clk: imx: whitespace cleanup; no functional
- change
-Date: Thu, 25 Feb 2016 14:27:10 -0800
-Message-ID: <20160225222710.GM4847@codeaurora.org>
-References: <1452619291-13625-1-git-send-email-LW@KARO-electronics.de>
- <1453284549-16363-1-git-send-email-LW@KARO-electronics.de>
- <1453284549-16363-14-git-send-email-LW@KARO-electronics.de>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH v6 3/3] arm64: dts: mailbox device tree node for APM
+ X-Gene platform.
+Date: Thu, 25 Feb 2016 14:33:53 -0800
+Message-ID: <CADaLNDkswDHbgX1T52ivniHojTpscGvF+vLinhTT3h_P20OMzw@mail.gmail.com>
+References: <CANLsYkxPnFCuJLyKsHnXKdbvAwNurtgQgJ-WF+bD26+8EjkfJw@mail.gmail.com>
+ <cover.1455333720.git.dhdang@apm.com> <eeac516f6daa15b22a1c448160ed40991833035a.1455333720.git.dhdang@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1453284549-16363-14-git-send-email-LW@KARO-electronics.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Anson Huang <b20788@freescale.com>, Bai Ping <b51503@freescale.com>, Frank Li <Frank.Li@freescale.com>, Fugang Duan <B38611@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <eeac516f6daa15b22a1c448160ed40991833035a.1455333720.git.dhdang@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>
+Cc: Paul Bolle <pebolle@tiscali.nl>, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, patches <patches@apm.com>, Duc Dang <dhdang@apm.com>, Feng Kan <fkan@apm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20, Lothar Wa=DFmann wrote:
-> remove whitespace before TAB.
->=20
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
+On Fri, Feb 12, 2016 at 7:39 PM, Duc Dang <dhdang@apm.com> wrote:
+>
+> Mailbox device tree node for APM X-Gene platform.
+
+Hi Jassi,
+
+Will you take this patch to your mailbox tree or you want me to
+include it into my git pull request to Olof/Arnd (arm-soc tree)?
+
+Regards,
+Duc Dang.
+>
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> Signed-off-by: Duc Dang <dhdang@apm.com>
 > ---
-
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
-
---=20
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> Changes since v5:
+>         - None
+>
+> Changes since v4:
+>         - Rebase over v4.5-rc1
+>         - Change node name to mailbox@10540000
+>
+> Changes since v3:
+>         - Rebase over v4.4
+>
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apm/apm-storm.dtsi b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> index fe30f76..d91338a 100644
+> --- a/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-storm.dtsi
+> @@ -691,6 +691,20 @@
+>                         msi-parent = <&msi>;
+>                 };
+>
+> +               mailbox: mailbox@10540000 {
+> +                       compatible = "apm,xgene-slimpro-mbox";
+> +                       reg = <0x0 0x10540000 0x0 0xa000>;
+> +                       #mbox-cells = <1>;
+> +                       interrupts =    <0x0 0x0 0x4>,
+> +                                       <0x0 0x1 0x4>,
+> +                                       <0x0 0x2 0x4>,
+> +                                       <0x0 0x3 0x4>,
+> +                                       <0x0 0x4 0x4>,
+> +                                       <0x0 0x5 0x4>,
+> +                                       <0x0 0x6 0x4>,
+> +                                       <0x0 0x7 0x4>;
+> +               };
+> +
+>                 serial0: serial@1c020000 {
+>                         status = "disabled";
+>                         device_type = "serial";
+> --
+> 1.9.1
+>
