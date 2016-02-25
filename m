@@ -1,59 +1,90 @@
-From: <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] powerpc/p5040: Add device node for RAID Engine
-Date: Thu, 25 Feb 2016 09:14:05 +0800
-Message-ID: <1456362845-12169-1-git-send-email-xuelin.shi@nxp.com>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to device tree
+ bindings.
+Date: Wed, 24 Feb 2016 21:11:48 -0600
+Message-ID: <1456369908.5360.28.camel@buserror.net>
+References: <1455757572-44955-1-git-send-email-qiang.zhao@nxp.com>
+	 <20160223201520.GA3354@rob-hp-laptop>
+	 <1456258812.5360.22.camel@buserror.net>
+	 <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xuelin Shi <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM3PR04MB1185D9D56F72F7AD64AC92E291A60@AM3PR04MB1185.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Qiang Zhao <qiang.zhao@nxp.com>, Rob Herring <robh@kernel.org>
+Cc: Yang-Leo Li <leoyang.li@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Xuelin Shi <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
+On Thu, 2016-02-25 at 03:10 +0000, Qiang Zhao wrote:
+> On Wed, 2016-02-24 at 04:20  AM, Scott Wood wrote:
+> > -----Original Message-----
+> > From: Scott Wood [mailto:oss@buserror.net]
+> > Sent: Wednesday, February 24, 2016 4:20 AM
+> > To: Rob Herring <robh@kernel.org>; Qiang Zhao <qiang.zhao@nxp.com>
+> > Cc: Yang-Leo Li <leoyang.li@nxp.com>; linux-kernel@vger.kernel.org;
+> > devicetree@vger.kernel.org; linuxppc-dev@lists.ozlabs.org
+> > Subject: Re: [PATCH v2 1/7] QE: Add IC, SI and SIRAM document to de=
+vice
+> > tree
+> > bindings.
+> >=20
+> > On Tue, 2016-02-23 at 14:15 -0600, Rob Herring wrote:
+> > > On Thu, Feb 18, 2016 at 09:06:06AM +0800, Zhao Qiang wrote:
+> > > > Add IC, SI and SIRAM document of QE to
+> > > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> > > >=20
+> > > > Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> > > > ---
+> > > > Changes for v2
+> > > > 	- Add interrupt-controller in Required properties
+> > > > 	- delete address-cells and size-cells for qe-si and qe-siram
+> > > >=20
+> > > >  .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50
+> > > > ++++++++++++++++++++++
+> > > >  1 file changed, 50 insertions(+)
+> > > >=20
+> > > > diff --git
+> > > > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> > > > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+> > > > index 4f89302..84052a7 100644
+> > > > --- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
+xt
+> > > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.t=
+xt
+> > > > @@ -69,6 +69,56 @@ Example:
+> > > >  	};
+> > > >       };
+> > > >=20
+> > > > +* Interrupt Controller (IC)
+> > > > +
+> > > > +Required properties:
+> > > > +- compatible : should be "fsl,qe-ic".
+> > >=20
+> > > > +- compatible : should be "fsl,qe-si".
+> > >=20
+> > > > +- compatible : should be "fsl,qe-siram".
+> > >=20
+> > > These compatible strings are all a bit generic and should have So=
+C
+> > > specific compatible strings.
+> >=20
+> > I don't know about si/siram, but "fsl,qe-ic" has been around since =
+2008,
+> > so it
+> > should be documented even if a more specific compatible is also add=
+ed.
+>=20
+> Agree, and si/siram are also has been around since 2008.
 
-add the missing RAID Engine device node for p5040.
-otherwise, the device can not be detected.
+Where?  I couldn't find them when grepping.
 
-Signed-off-by: Xuelin Shi <xuelin.shi-3arQi8VN3Tc@public.gmane.org>
----
- arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi  | 6 ++++++
- 2 files changed, 7 insertions(+)
+> In addition, I don=E2=80=99t think it is needed to add specific compa=
+tible, because
+> they are
+> the same in qe-supported soc.
 
-diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-index 2f227b1..e2bd931 100644
---- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-@@ -420,6 +420,7 @@
- 		fsl,iommu-parent = <&pamu4>;
- 	};
- 
-+/include/ "qoriq-raid1.0-0.dtsi"
- /include/ "qoriq-qman1.dtsi"
- /include/ "qoriq-bman1.dtsi"
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
-index 0659d5b..dbd5775 100644
---- a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
-@@ -73,6 +73,12 @@
- 		rtic_d = &rtic_d;
- 		sec_mon = &sec_mon;
- 
-+		raideng = &raideng;
-+		raideng_jr0 = &raideng_jr0;
-+		raideng_jr1 = &raideng_jr1;
-+		raideng_jr2 = &raideng_jr2;
-+		raideng_jr3 = &raideng_jr3;
-+
- 		fman0 = &fman0;
- 		fman1 = &fman1;
- 		ethernet0 = &enet0;
--- 
-1.8.4
+How do we know that they are 100% the same?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Scott
