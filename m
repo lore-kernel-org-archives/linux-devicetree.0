@@ -1,53 +1,55 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] SATA: rcar: add device tree support for r8a7792
-Date: Thu, 25 Feb 2016 18:40:51 +0900
-Message-ID: <20160225094051.GB28141@verge.net.au>
-References: <1456362985-24137-1-git-send-email-horms+renesas@verge.net.au>
+From: Tim Sander <tim@krieglstein.org>
+Subject: [PATCH v2] dts: add specific compatible type for Terasic DE0-NANO-SoC  Board
+Date: Thu, 25 Feb 2016 11:05:05 +0100
+Message-ID: <2186741.ZYdHdfu2ug@dabox>
+References: <8416439.76b9YNhpgR@dabox> <alpine.DEB.2.02.1602241048100.3815@linux-builds1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456362985-24137-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>
-Cc: linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1602241048100.3815@linux-builds1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@opensource.altera.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 25, 2016 at 10:16:25AM +0900, Simon Horman wrote:
-> Simply document new compatibility string.
-> As a previous patch adds a generic R-Car Gen2 compatibility string
-> there appears to be no need for a driver updates.
-> 
-> By documenting this compat sting it may be used in DTSs shipped, for
-> example as part of ROMs. It must be used in conjunction with the Gen2
-> fallback compat string. At this time there are no known differences between
-> the r8a7792 IP block and that implemented by the driver for the Gen2
-> fallback compat string. Thus there is no need to update the driver as the
-> use of the Gen2 fallback compat string will activate the correct code in
-> the current driver while leaving the option for r8a7792-specific driver
-> code to be activated in an updated driver should the need arise.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> ---
->  Documentation/devicetree/bindings/ata/sata_rcar.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
->  Based on the for-next branch of the libata tree
+From: Tim Sander <tim@krieglstein.org>
 
-I seem to have omitted the patch to add the fallback binding.
-I'll respin. In the mean time please ignore this patch.
+Add a more specific compatible string:"terasic,de0-nano-soc" for respective board.
+Background: when checking for bootspec entries, some board specific fixups are
+not apropriate for board of the same platform ("altr,socfpga-cyclone5").
+The same aproach is taken with the EBV-Socrates board.
 
-> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> index 0764f9ab63dc..539dbdfba8de 100644
-> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
-> @@ -7,6 +7,7 @@ Required properties:
->  			  - "renesas,sata-r8a7790-es1" for R-Car H2 ES1
->  			  - "renesas,sata-r8a7790" for R-Car H2 other than ES1
->  			  - "renesas,sata-r8a7791" for R-Car M2-W
-> +			  - "renesas,sata-r8a7792" for R-Car V2H
->  			  - "renesas,sata-r8a7793" for R-Car M2-N
->  			  - "renesas,sata-r8a7795" for R-Car H3
->  - reg			: address and length of the SATA registers;
-> -- 
-> 2.7.0.rc3.207.g0ac5344
+Signed-off-by: Tim Sander <tim@krieglstein.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts     | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 72e2c5a..d1f7803 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -230,6 +230,7 @@ synology	Synology, Inc.
+ tbs	TBS Technologies
+ tcl	Toby Churchill Ltd.
+ technologic	Technologic Systems
++terasic	Terasic Inc.
+ thine	THine Electronics, Inc.
+ ti	Texas Instruments
+ tlm	Trusted Logic Mobility
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+index afea364..704aa9d 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dts
+@@ -18,7 +18,7 @@
+ 
+ / {
+ 	model = "Terasic DE-0(Atlas)";
+-	compatible = "altr,socfpga-cyclone5", "altr,socfpga";
++	compatible = "terasic,de0-nano-soc","altr,socfpga-cyclone5", "altr,socfpga";
+ 
+ 	chosen {
+ 		bootargs = "earlyprintk";
+-- 
+1.9.1
