@@ -1,177 +1,96 @@
-From: Alan Tull <atull@opensource.altera.com>
-Subject: [PATCH] of/overlay: add of overlay notifications
-Date: Thu, 25 Feb 2016 17:36:22 -0600
-Message-ID: <1456443382-29781-1-git-send-email-atull@opensource.altera.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v9 2/6] clk: hisilicon: add CRG driver for hi3519 soc
+Date: Thu, 25 Feb 2016 15:42:15 -0800
+Message-ID: <20160225234215.GK28849@codeaurora.org>
+References: <1456127280-23275-1-git-send-email-xuejiancheng@huawei.com>
+ <1456127280-23275-3-git-send-email-xuejiancheng@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, Alan Tull <atull@opensource.altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456127280-23275-3-git-send-email-xuejiancheng@huawei.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@huawei.com>
+Cc: mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-This patch add of overlay notifications.
+On 02/22, Jiancheng Xue wrote:
+> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+> new file mode 100644
+> index 0000000..2d23950
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+> @@ -0,0 +1,46 @@
+> +Example: CRG nodes
+> +CRG: clock-reset-controller@12010000 {
+> +	compatible = "hisilicon,hi3519-crg";
 
-When DT overlays are being added, some drivers/subsystems
-need to see device tree overlays before the changes go into
-the live tree.
+Indentation is off here.
 
-This is distinct from reconfig notifiers that are
-post-apply or post-remove and which issue very granular
-notifications without providing access to the context
-of a whole overlay.
+> +        reg = <0x12010000 0x10000>;
+> +        #clock-cells = <1>;
+> +        #reset-cells = <2>;
+> +};
+> +
+> +Example: consumer nodes
+> +i2c0: i2c@12110000 {
+> +	compatible = "hisilicon,hi3519-i2c";
+> +        reg = <0x12110000 0x1000>;
+> +        clocks = <&CRG HI3519_I2C0_RST>;*/
+> +        resets = <&CRG 0xe4 0>;
+> +};
+> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
+> index e434854..296371f 100644
+> --- a/drivers/clk/hisilicon/Kconfig
+> +++ b/drivers/clk/hisilicon/Kconfig
+> @@ -1,3 +1,11 @@
+> +config COMMON_CLK_HI3519
+> +	tristate "Hi3519 Clock Driver"
+> +	depends on ARCH_HISI || COMPILE_TEST
+> +	select RESET_HISI
+> +	default y
 
-The following 4 notificatons are issued:
-  OF_OVERLAY_PRE_APPLY
-  OF_OVERLAY_POST_APPLY
-  OF_OVERLAY_PRE_REMOVE
-  OF_OVERLAY_POST_REMOVE
+default ARCH_HISI
 
-In the case of pre-apply notification, if the notifier
-returns error, the overlay will be rejected.
+> +	help
+> +	  Build the clock driver for hi3519.
+> +
+> diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
+> new file mode 100644
+> index 0000000..50e00e7
+> --- /dev/null
+> +++ b/drivers/clk/hisilicon/reset.c
+> +
+> +int hisi_reset_init(struct device_node *np)
+> +{
+> +	struct hisi_reset_controller *rstc;
+> +
+> +	rstc = kzalloc(sizeof(*rstc), GFP_KERNEL);
+> +	if (!rstc)
+> +		return -ENOMEM;
+> +
+> +	rstc->membase = of_iomap(np, 0);
 
-This patch exports two functions for registering/unregistering
-notifications:
-  of_overlay_notifier_register(struct notifier_block *nb)
-  of_overlay_notifier_unregister(struct notifier_block *nb)
+Any reason why we can't pass the platform device here and map the
+register space with platform device APIs?
 
-The notification data includes pointers to the overlay
-target and the overlay:
+> +	if (!rstc->membase)
+> +		return -EINVAL;
+> +
+> +	spin_lock_init(&rstc->lock);
+> +
+> +	rstc->rcdev.owner = THIS_MODULE;
+> +	rstc->rcdev.ops = &hisi_reset_ops;
+> +	rstc->rcdev.of_node = np;
+> +	rstc->rcdev.of_reset_n_cells = 2;
+> +	rstc->rcdev.of_xlate = hisi_reset_of_xlate;
+> +
+> +	return reset_controller_register(&rstc->rcdev);
+> +}
+> +EXPORT_SYMBOL(hisi_reset_init);
 
-struct of_overlay_notify_data {
-       struct device_node *overlay;
-       struct device_node *target;
-};
+Why not GPL?
 
-Signed-off-by: Alan Tull <atull@opensource.altera.com>
----
- drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/of.h   |   25 +++++++++++++++++++++++++
- 2 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 8225081..a26f0ed 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -56,6 +56,41 @@ struct of_overlay {
- static int of_overlay_apply_one(struct of_overlay *ov,
- 		struct device_node *target, const struct device_node *overlay);
- 
-+static BLOCKING_NOTIFIER_HEAD(of_overlay_chain);
-+
-+int of_overlay_notifier_register(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_register(&of_overlay_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
-+
-+int of_overlay_notifier_unregister(struct notifier_block *nb)
-+{
-+	return blocking_notifier_chain_unregister(&of_overlay_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(of_overlay_notifier_unregister);
-+
-+static int of_overlay_notify(struct of_overlay *ov,
-+			     enum of_overlay_notify_action action)
-+{
-+	struct of_overlay_notify_data nd;
-+	int i, ret;
-+
-+	for (i = 0; i < ov->count; i++) {
-+		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
-+
-+		nd.target = ovinfo->target;
-+		nd.overlay = ovinfo->overlay;
-+
-+		ret = blocking_notifier_call_chain(&of_overlay_chain,
-+						   action, &nd);
-+		if (ret)
-+			return notifier_to_errno(ret);
-+	}
-+
-+	return 0;
-+}
-+
- static int of_overlay_apply_single_property(struct of_overlay *ov,
- 		struct device_node *target, struct property *prop)
- {
-@@ -370,6 +405,13 @@ int of_overlay_create(struct device_node *tree)
- 		goto err_free_idr;
- 	}
- 
-+	err = of_overlay_notify(ov, OF_OVERLAY_PRE_APPLY);
-+	if (err < 0) {
-+		pr_err("%s: Pre-apply notifier failed (err=%d)\n",
-+		       __func__, err);
-+		goto err_free_idr;
-+	}
-+
- 	/* apply the overlay */
- 	err = of_overlay_apply(ov);
- 	if (err) {
-@@ -389,6 +431,8 @@ int of_overlay_create(struct device_node *tree)
- 	/* add to the tail of the overlay list */
- 	list_add_tail(&ov->node, &ov_list);
- 
-+	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
-+
- 	mutex_unlock(&of_mutex);
- 
- 	return id;
-@@ -509,9 +553,10 @@ int of_overlay_destroy(int id)
- 		goto out;
- 	}
- 
--
-+	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
- 	list_del(&ov->node);
- 	__of_changeset_revert(&ov->cset);
-+	of_overlay_notify(ov, OF_OVERLAY_POST_REMOVE);
- 	of_free_overlay_info(ov);
- 	idr_remove(&ov_idr, id);
- 	of_changeset_destroy(&ov->cset);
-diff --git a/include/linux/of.h b/include/linux/of.h
-index dc6e396..e70a686 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1083,6 +1083,21 @@ int of_overlay_create(struct device_node *tree);
- int of_overlay_destroy(int id);
- int of_overlay_destroy_all(void);
- 
-+enum of_overlay_notify_action {
-+	OF_OVERLAY_PRE_APPLY,
-+	OF_OVERLAY_POST_APPLY,
-+	OF_OVERLAY_PRE_REMOVE,
-+	OF_OVERLAY_POST_REMOVE,
-+};
-+
-+struct of_overlay_notify_data {
-+	struct device_node *overlay;
-+	struct device_node *target;
-+};
-+
-+int of_overlay_notifier_register(struct notifier_block *nb);
-+int of_overlay_notifier_unregister(struct notifier_block *nb);
-+
- #else
- 
- static inline int of_overlay_create(struct device_node *tree)
-@@ -1100,6 +1115,16 @@ static inline int of_overlay_destroy_all(void)
- 	return -ENOTSUPP;
- }
- 
-+int of_overlay_notifier_register(struct notifier_block *nb)
-+{
-+	return 0;
-+}
-+
-+int of_overlay_notifier_unregister(struct notifier_block *nb)
-+{
-+	return 0;
-+}
-+
- #endif
- 
- #endif /* _LINUX_OF_H */
 -- 
-1.7.9.5
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
