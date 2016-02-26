@@ -1,191 +1,66 @@
-From: atull <atull@opensource.altera.com>
-Subject: Re: [PATCH] of/overlay: add of overlay notifications
-Date: Thu, 25 Feb 2016 19:14:52 -0600
-Message-ID: <alpine.DEB.2.10.1602251913590.2308@atull-730U3E-740U3E>
-References: <1456443382-29781-1-git-send-email-atull@opensource.altera.com>
+From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v11 08/10] dt, numa: Add NUMA dt binding implementation.
+Date: Thu, 25 Feb 2016 17:26:34 -0800
+Message-ID: <56CFA9CA.6090803@caviumnetworks.com>
+References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com> <1455930799-5371-9-git-send-email-ddaney.cavm@gmail.com> <20160223193651.GA8491@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456443382-29781-1-git-send-email-atull@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160223193651.GA8491@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 25 Feb 2016, Alan Tull wrote:
+On 02/23/2016 11:36 AM, Rob Herring wrote:
+> On Fri, Feb 19, 2016 at 05:13:17PM -0800, David Daney wrote:
+>> From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>>
+>> ADD device tree node parsing for NUMA topology using device
+>> "numa-node-id" property distance-map.
+>
+> I still want an adequate explanation why NUMA setup cannot be done with
+> an unflattened tree. PowerPC manages to do that and should have a
+> similar init flow being memblock based, so I would expect arm64 can too.
 
-> This patch add of overlay notifications.
-> 
-> When DT overlays are being added, some drivers/subsystems
-> need to see device tree overlays before the changes go into
-> the live tree.
-> 
-> This is distinct from reconfig notifiers that are
-> post-apply or post-remove and which issue very granular
-> notifications without providing access to the context
-> of a whole overlay.
-> 
-> The following 4 notificatons are issued:
->   OF_OVERLAY_PRE_APPLY
->   OF_OVERLAY_POST_APPLY
->   OF_OVERLAY_PRE_REMOVE
->   OF_OVERLAY_POST_REMOVE
-> 
-> In the case of pre-apply notification, if the notifier
-> returns error, the overlay will be rejected.
-> 
-> This patch exports two functions for registering/unregistering
-> notifications:
->   of_overlay_notifier_register(struct notifier_block *nb)
->   of_overlay_notifier_unregister(struct notifier_block *nb)
-> 
-> The notification data includes pointers to the overlay
-> target and the overlay:
-> 
-> struct of_overlay_notify_data {
->        struct device_node *overlay;
->        struct device_node *target;
-> };
-> 
-> Signed-off-by: Alan Tull <atull@opensource.altera.com>
-> ---
->  drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
->  include/linux/of.h   |   25 +++++++++++++++++++++++++
->  2 files changed, 71 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 8225081..a26f0ed 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -56,6 +56,41 @@ struct of_overlay {
->  static int of_overlay_apply_one(struct of_overlay *ov,
->  		struct device_node *target, const struct device_node *overlay);
->  
-> +static BLOCKING_NOTIFIER_HEAD(of_overlay_chain);
-> +
-> +int of_overlay_notifier_register(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_register(&of_overlay_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
-> +
-> +int of_overlay_notifier_unregister(struct notifier_block *nb)
-> +{
-> +	return blocking_notifier_chain_unregister(&of_overlay_chain, nb);
-> +}
-> +EXPORT_SYMBOL_GPL(of_overlay_notifier_unregister);
-> +
-> +static int of_overlay_notify(struct of_overlay *ov,
-> +			     enum of_overlay_notify_action action)
-> +{
-> +	struct of_overlay_notify_data nd;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < ov->count; i++) {
-> +		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
-> +
-> +		nd.target = ovinfo->target;
-> +		nd.overlay = ovinfo->overlay;
-> +
-> +		ret = blocking_notifier_call_chain(&of_overlay_chain,
-> +						   action, &nd);
-> +		if (ret)
-> +			return notifier_to_errno(ret);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int of_overlay_apply_single_property(struct of_overlay *ov,
->  		struct device_node *target, struct property *prop)
->  {
-> @@ -370,6 +405,13 @@ int of_overlay_create(struct device_node *tree)
->  		goto err_free_idr;
->  	}
->  
-> +	err = of_overlay_notify(ov, OF_OVERLAY_PRE_APPLY);
-> +	if (err < 0) {
-> +		pr_err("%s: Pre-apply notifier failed (err=%d)\n",
-> +		       __func__, err);
-> +		goto err_free_idr;
-> +	}
-> +
->  	/* apply the overlay */
->  	err = of_overlay_apply(ov);
->  	if (err) {
-> @@ -389,6 +431,8 @@ int of_overlay_create(struct device_node *tree)
->  	/* add to the tail of the overlay list */
->  	list_add_tail(&ov->node, &ov_list);
->  
-> +	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
-> +
->  	mutex_unlock(&of_mutex);
->  
->  	return id;
-> @@ -509,9 +553,10 @@ int of_overlay_destroy(int id)
->  		goto out;
->  	}
->  
-> -
-> +	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
->  	list_del(&ov->node);
->  	__of_changeset_revert(&ov->cset);
-> +	of_overlay_notify(ov, OF_OVERLAY_POST_REMOVE);
->  	of_free_overlay_info(ov);
->  	idr_remove(&ov_idr, id);
->  	of_changeset_destroy(&ov->cset);
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index dc6e396..e70a686 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -1083,6 +1083,21 @@ int of_overlay_create(struct device_node *tree);
->  int of_overlay_destroy(int id);
->  int of_overlay_destroy_all(void);
->  
-> +enum of_overlay_notify_action {
-> +	OF_OVERLAY_PRE_APPLY,
-> +	OF_OVERLAY_POST_APPLY,
-> +	OF_OVERLAY_PRE_REMOVE,
-> +	OF_OVERLAY_POST_REMOVE,
-> +};
-> +
-> +struct of_overlay_notify_data {
-> +	struct device_node *overlay;
-> +	struct device_node *target;
-> +};
-> +
-> +int of_overlay_notifier_register(struct notifier_block *nb);
-> +int of_overlay_notifier_unregister(struct notifier_block *nb);
-> +
->  #else
->  
->  static inline int of_overlay_create(struct device_node *tree)
-> @@ -1100,6 +1115,16 @@ static inline int of_overlay_destroy_all(void)
->  	return -ENOTSUPP;
->  }
->  
-> +int of_overlay_notifier_register(struct notifier_block *nb)
+Many things could be done.  Really, we want to know what *should* be done.
 
-Needs 'static inline'
+In the context of the current arm64 memory initialization we (more or 
+less) do:
 
-> +{
-> +	return 0;
-> +}
-> +
-> +int of_overlay_notifier_unregister(struct notifier_block *nb)
+  1) early_init_fdt_scan_reserved_mem();
+  2) memory_present()
+  3) sparse_init()
+  4) other things
+  5) unflatten_device_tree()
 
-Needs 'static inline'
+We are already reading information out of the FDT at #1.
 
-Alan
+This patch set adds a step between 1 and 2 where we read NUMA 
+information out of the FDT.
 
-> +{
-> +	return 0;
-> +}
-> +
->  #endif
->  
->  #endif /* _LINUX_OF_H */
-> -- 
-> 1.7.9.5
-> 
-> 
+Hypothetically, it might be possible to rewrite the arm64 setup code so 
+that the ordering was different, and the NUMA setup was done on the 
+unflattened tree, but that would certainly be a much more invasive patch.
+
+If the arm64 maintainers would like a rewrite of:
+
+   arch/arm64/kernel/setup.c
+   arch/arm64/mm/init.c
+   arch/arm64/mm/mm/mmu.c
+   .
+   .
+   .
+
+we can discuss doing NUMA setup with the unflattened tree.  With the 
+current memory initialization code, I think it makes more sense to parse 
+the NUMA information out of the flattened form.
+
+David Daney
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
