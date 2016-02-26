@@ -1,57 +1,184 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
-Date: Fri, 26 Feb 2016 22:28:51 +0100
-Message-ID: <20160226222851.7821d371@bbrezillon>
-References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
-	<20160224144652.14068468@bbrezillon>
-	<CACna6rxemvBOu9fy9KP0327TsqonO7dFY5EsQjf1k9Ln6hX8cw@mail.gmail.com>
-	<20160225210946.6c842f4b@bbrezillon>
-	<CACna6ryVuqSLv8WdzzGUQzpA-F35JxXoHoa2jcLzZeHaXtoexA@mail.gmail.com>
-	<20160226175506.75d6c7b0@bbrezillon>
-	<CACna6rzRROfYwagsBGo5b8d_bydUBrJ=9RvGZSt1G85xP=gKaw@mail.gmail.com>
+From: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH] of/overlay: add of overlay notifications
+Date: Fri, 26 Feb 2016 15:44:16 -0600
+Message-ID: <1456523056-15352-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6rzRROfYwagsBGo5b8d_bydUBrJ=9RvGZSt1G85xP=gKaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Feb 2016 22:24:21 +0100
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+This patch add of overlay notifications.
 
-> On 26 February 2016 at 17:55, Boris Brezillon
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Fri, 26 Feb 2016 17:30:47 +0100
-> > Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> What about:
-> >> 1) Adding new nand-ecc-algo as this patch does
-> >> 2) Deprecating "soft_bch" value from nand-ecc-mode property
-> >>
-> >
-> > Sounds good to me.
->=20
-> I have problems understanding "soft" values which maps to the
-> NAND_ECC_SOFT. What exactly algorithm is that? It uses functions from
-> drivers/mtd/nand/nand_ecc.c but this file isn't really helpful. I was
-> only able to find "3-byte ECC" phase. Kconfig config MTD_NAND_ECC als=
-o
-> doesn't have any description. I also tried looking at
-> Documentation/mtd/nand_ecc.txt but still no luck.
->=20
-> Does this algorithm has any name?
->=20
+When DT overlays are being added, some drivers/subsystems
+need to see device tree overlays before the changes go into
+the live tree.
 
-AFAIR, nand_ecc.c is implementing Hamming ECC.
+This is distinct from reconfig notifiers that are
+post-apply or post-remove and which issue very granular
+notifications without providing access to the context
+of a whole overlay.
 
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+The following 4 notificatons are issued:
+  OF_OVERLAY_PRE_APPLY
+  OF_OVERLAY_POST_APPLY
+  OF_OVERLAY_PRE_REMOVE
+  OF_OVERLAY_POST_REMOVE
+
+In the case of pre-apply notification, if the notifier
+returns error, the overlay will be rejected.
+
+This patch exports two functions for registering/unregistering
+notifications:
+  of_overlay_notifier_register(struct notifier_block *nb)
+  of_overlay_notifier_unregister(struct notifier_block *nb)
+
+The notification data includes pointers to the overlay
+target and the overlay:
+
+struct of_overlay_notify_data {
+       struct device_node *overlay;
+       struct device_node *target;
+};
+
+Signed-off-by: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+---
+v2: add missing 'static inline' in of.h
+---
+ drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/of.h   |   25 +++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 8225081..a26f0ed 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -56,6 +56,41 @@ struct of_overlay {
+ static int of_overlay_apply_one(struct of_overlay *ov,
+ 		struct device_node *target, const struct device_node *overlay);
+ 
++static BLOCKING_NOTIFIER_HEAD(of_overlay_chain);
++
++int of_overlay_notifier_register(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&of_overlay_chain, nb);
++}
++EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
++
++int of_overlay_notifier_unregister(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&of_overlay_chain, nb);
++}
++EXPORT_SYMBOL_GPL(of_overlay_notifier_unregister);
++
++static int of_overlay_notify(struct of_overlay *ov,
++			     enum of_overlay_notify_action action)
++{
++	struct of_overlay_notify_data nd;
++	int i, ret;
++
++	for (i = 0; i < ov->count; i++) {
++		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
++
++		nd.target = ovinfo->target;
++		nd.overlay = ovinfo->overlay;
++
++		ret = blocking_notifier_call_chain(&of_overlay_chain,
++						   action, &nd);
++		if (ret)
++			return notifier_to_errno(ret);
++	}
++
++	return 0;
++}
++
+ static int of_overlay_apply_single_property(struct of_overlay *ov,
+ 		struct device_node *target, struct property *prop)
+ {
+@@ -370,6 +405,13 @@ int of_overlay_create(struct device_node *tree)
+ 		goto err_free_idr;
+ 	}
+ 
++	err = of_overlay_notify(ov, OF_OVERLAY_PRE_APPLY);
++	if (err < 0) {
++		pr_err("%s: Pre-apply notifier failed (err=%d)\n",
++		       __func__, err);
++		goto err_free_idr;
++	}
++
+ 	/* apply the overlay */
+ 	err = of_overlay_apply(ov);
+ 	if (err) {
+@@ -389,6 +431,8 @@ int of_overlay_create(struct device_node *tree)
+ 	/* add to the tail of the overlay list */
+ 	list_add_tail(&ov->node, &ov_list);
+ 
++	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
++
+ 	mutex_unlock(&of_mutex);
+ 
+ 	return id;
+@@ -509,9 +553,10 @@ int of_overlay_destroy(int id)
+ 		goto out;
+ 	}
+ 
+-
++	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
+ 	list_del(&ov->node);
+ 	__of_changeset_revert(&ov->cset);
++	of_overlay_notify(ov, OF_OVERLAY_POST_REMOVE);
+ 	of_free_overlay_info(ov);
+ 	idr_remove(&ov_idr, id);
+ 	of_changeset_destroy(&ov->cset);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dc6e396..b79e1c5 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1083,6 +1083,21 @@ int of_overlay_create(struct device_node *tree);
+ int of_overlay_destroy(int id);
+ int of_overlay_destroy_all(void);
+ 
++enum of_overlay_notify_action {
++	OF_OVERLAY_PRE_APPLY,
++	OF_OVERLAY_POST_APPLY,
++	OF_OVERLAY_PRE_REMOVE,
++	OF_OVERLAY_POST_REMOVE,
++};
++
++struct of_overlay_notify_data {
++	struct device_node *overlay;
++	struct device_node *target;
++};
++
++int of_overlay_notifier_register(struct notifier_block *nb);
++int of_overlay_notifier_unregister(struct notifier_block *nb);
++
+ #else
+ 
+ static inline int of_overlay_create(struct device_node *tree)
+@@ -1100,6 +1115,16 @@ static inline int of_overlay_destroy_all(void)
+ 	return -ENOTSUPP;
+ }
+ 
++static inline int of_overlay_notifier_register(struct notifier_block *nb)
++{
++	return 0;
++}
++
++static inline int of_overlay_notifier_unregister(struct notifier_block *nb)
++{
++	return 0;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_OF_H */
+-- 
+1.7.9.5
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
