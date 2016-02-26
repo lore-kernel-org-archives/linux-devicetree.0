@@ -1,198 +1,69 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V14 9/9] vfio, platform: add QTI HIDMA reset driver
-Date: Fri, 26 Feb 2016 14:05:58 -0500
-Message-ID: <56D0A216.8090006@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
- <56D090C3.8060608@linaro.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA7: change address-cells and size-cells
+Date: Fri, 26 Feb 2016 11:11:27 -0800
+Message-ID: <20160226191127.GE13417@atomide.com>
+References: <1456308664-28308-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56D090C3.8060608@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Eric Auger <eric.auger@linaro.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456308664-28308-1-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/26/2016 12:52 PM, Eric Auger wrote:
-> Hi Sinan,
-> On 02/05/2016 05:34 AM, Sinan Kaya wrote:
->> In situations where the userspace driver is stopped abnormally and the
->> VFIO platform device is released, the assigned HW device currently is
->> left running. As a consequence the HW device might continue issuing IRQs
->> and performing DMA accesses.
->>
->> This patch is implementing a reset driver for HIDMA platform driver.
->> This gets called by the VFIO platform reset interface.
->>
->> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
->> ---
->>  drivers/vfio/platform/reset/Kconfig                |  9 ++
->>  drivers/vfio/platform/reset/Makefile               |  2 +
->>  .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
->>  3 files changed, 110 insertions(+)
->>  create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
->>
->> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
->> index 70cccc5..d02b3b5 100644
->> --- a/drivers/vfio/platform/reset/Kconfig
->> +++ b/drivers/vfio/platform/reset/Kconfig
->> @@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
->>  	  Enables the VFIO platform driver to handle reset for AMD XGBE
->>  
->>  	  If you don't know what to do here, say N.
->> +
->> +config VFIO_PLATFORM_QCOMHIDMA_RESET
->> +	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
->> +	depends on VFIO_PLATFORM
->> +	help
->> +	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
->> +	  HIDMA Channel.
->> +
->> +	  If you don't know what to do here, say N.
->> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
->> index 93f4e23..ec7748a 100644
->> --- a/drivers/vfio/platform/reset/Makefile
->> +++ b/drivers/vfio/platform/reset/Makefile
->> @@ -1,7 +1,9 @@
->>  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
->>  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
->> +vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
->>  
->>  ccflags-y += -Idrivers/vfio/platform
->>  
->>  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
->> +obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
->>  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
->> diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
->> new file mode 100644
->> index 0000000..70d7eed
->> --- /dev/null
->> +++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
->> @@ -0,0 +1,99 @@
->> +/*
->> + * Qualcomm Technologies HIDMA VFIO Reset Driver
->> + *
->> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 and
->> + * only version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/kernel.h>
->> +#include <linux/init.h>
->> +#include <linux/io.h>
->> +#include <linux/device.h>
->> +#include <linux/iopoll.h>
->> +
->> +#include "vfio_platform_private.h"
->> +
->> +#define TRCA_CTRLSTS_OFFSET		0x000
->> +#define EVCA_CTRLSTS_OFFSET		0x000
->> +
->> +#define CH_CONTROL_MASK		GENMASK(7, 0)
-> nit: alignment
-> 
-> Besides it looks ok to me
-> Reviewed-by: Eric Auger <eric.auger@linaro.org>
-> 
-> If it better suits you maybe you can separate the upstream of your
-> management/channel driver from the VFIO reset driver upstream.
+* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [160224 02:14]:
+> DRA7 SoC has the capability to support DDR memory upto 4GB. In order to
+> represent this in memory dt node, the address-cells and size cells
+> should be 2. So, changing the address-cells and size-cells to 2 and
+> updating the memory nodes accordingly.
+> @@ -57,10 +57,10 @@
+>  		compatible = "arm,cortex-a15-gic";
+>  		interrupt-controller;
+>  		#interrupt-cells = <3>;
+> -		reg = <0x48211000 0x1000>,
+> -		      <0x48212000 0x1000>,
+> -		      <0x48214000 0x2000>,
+> -		      <0x48216000 0x2000>;
+> +		reg = <0x0 0x48211000 0x0 0x1000>,
+> +		      <0x0 0x48212000 0x0 0x1000>,
+> +		      <0x0 0x48214000 0x0 0x2000>,
+> +		      <0x0 0x48216000 0x0 0x2000>;
+>  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
+>  		interrupt-parent = <&gic>;
+>  	};
+> @@ -69,7 +69,7 @@
+>  		compatible = "ti,omap5-wugen-mpu", "ti,omap4-wugen-mpu";
+>  		interrupt-controller;
+>  		#interrupt-cells = <3>;
+> -		reg = <0x48281000 0x1000>;
+> +		reg = <0x0 0x48281000 0x0 0x1000>;
+>  		interrupt-parent = <&gic>;
+>  	};
+>  
+> @@ -96,10 +96,10 @@
+>  		compatible = "ti,dra7-l3-noc", "simple-bus";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> -		ranges;
+> +		ranges = <0x0 0x0 0x0 0xc0000000>;
+>  		ti,hwmods = "l3_main_1", "l3_main_2";
+> -		reg = <0x44000000 0x1000000>,
+> -		      <0x45000000 0x1000>;
+> +		reg = <0x0 0x44000000 0x0 0x1000000>,
+> +		      <0x0 0x45000000 0x0 0x1000>;
+>  		interrupts-extended = <&crossbar_mpu GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>  				      <&wakeupgen GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
+>  
 
-Thanks, I wanted to keep things together. There were some review concerns
-to whether I'm doing the right thing when it comes to virtualization. 
+Is size-cells 2 needed for all these devices too? Can't
+you just set it for the memory nodes?
 
-Patches 8 & 9 definitely needs to go in through another merge branch.
+Regards,
 
-> 
-> Best Regards
-> 
-> Eric
-> 
->> +#define CH_STATE_MASK			GENMASK(7, 0)
->> +#define CH_STATE_BIT_POS		0x8
->> +
->> +#define HIDMA_CH_STATE(val)	\
->> +	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
->> +
->> +#define EVCA_IRQ_EN_OFFSET		0x110
->> +
->> +#define CH_RESET			9
->> +#define CH_DISABLED			0
->> +
->> +int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
->> +{
->> +	struct vfio_platform_region *trreg;
->> +	struct vfio_platform_region *evreg;
->> +	u32 val;
->> +	int ret;
->> +
->> +	if (vdev->num_regions != 2)
->> +		return -ENODEV;
->> +
->> +	trreg = &vdev->regions[0];
->> +	if (!trreg->ioaddr) {
->> +		trreg->ioaddr =
->> +			ioremap_nocache(trreg->addr, trreg->size);
->> +		if (!trreg->ioaddr)
->> +			return -ENOMEM;
->> +	}
->> +
->> +	evreg = &vdev->regions[1];
->> +	if (!evreg->ioaddr) {
->> +		evreg->ioaddr =
->> +			ioremap_nocache(evreg->addr, evreg->size);
->> +		if (!evreg->ioaddr)
->> +			return -ENOMEM;
->> +	}
->> +
->> +	/* disable IRQ */
->> +	writel(0, evreg->ioaddr + EVCA_IRQ_EN_OFFSET);
->> +
->> +	/* reset both transfer and event channels */
->> +	val = readl(trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
->> +	val &= ~(CH_CONTROL_MASK << 16);
->> +	val |= CH_RESET << 16;
->> +	writel(val, trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
->> +
->> +	ret = readl_poll_timeout(trreg->ioaddr + TRCA_CTRLSTS_OFFSET, val,
->> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
->> +				 10000);
->> +	if (ret)
->> +		return ret;
->> +
->> +	val = readl(evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
->> +	val &= ~(CH_CONTROL_MASK << 16);
->> +	val |= CH_RESET << 16;
->> +	writel(val, evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
->> +
->> +	ret = readl_poll_timeout(evreg->ioaddr + EVCA_CTRLSTS_OFFSET, val,
->> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
->> +				 10000);
->> +	if (ret)
->> +		return ret;
->> +
->> +	pr_info("HIDMA channel reset\n");
->> +	return 0;
->> +}
->> +module_vfio_reset_handler("qcom,hidma-1.0", "QCOM8061",
->> +			  vfio_platform_qcomhidma_reset);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
->>
-> 
-
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
