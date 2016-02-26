@@ -1,47 +1,38 @@
-From: xuejiancheng <xuejiancheng@huawei.com>
-Subject: Re: [PATCH v9 2/6] clk: hisilicon: add CRG driver for hi3519 soc
-Date: Fri, 26 Feb 2016 10:17:51 +0800
-Message-ID: <56CFB5CF.2050800@huawei.com>
-References: <1456127280-23275-1-git-send-email-xuejiancheng@huawei.com>
- <1456127280-23275-3-git-send-email-xuejiancheng@huawei.com>
- <20160225234215.GK28849@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Jianqun Xu <jay.xu@rock-chips.com>
+Subject: [PATCH v2 0/3] Rockchip: rk3399: Add core dtsi for rk3399
+Date: Fri, 26 Feb 2016 11:12:18 +0800
+Message-ID: <1456456341-14282-1-git-send-email-jay.xu@rock-chips.com>
+References: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160225234215.GK28849@codeaurora.org>
+In-Reply-To: <1456210864-29037-1-git-send-email-jay.xu@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mturquette@baylibre.com, p.zabel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com, haojian.zhuang@linaro.org, zhangfei.gao@linaro.org, bintian.wang@huawei.com, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, lidongpo@hisilicon.com
+To: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, broonie@kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, sboyd@codeaurora.org, linus.walleij@linaro.org, sjoerd.simons@collabora.co.uk, zhengxing@rock-chips.com
+Cc: huangtao@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dianders@chromium.org, davidriley@chromium.org, smbarber@chromium.org, jwerner@chromium.org, Jianqun Xu <jay.xu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+There is the new SoCs from Rockchip which named rk3399, the
+patches are added to support them.
 
-On 2016/2/26 7:42, Stephen Boyd wrote:
->> diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
->> new file mode 100644
->> index 0000000..50e00e7
->> --- /dev/null
->> +++ b/drivers/clk/hisilicon/reset.c
->> +
->> +int hisi_reset_init(struct device_node *np)
->> +{
->> +	struct hisi_reset_controller *rstc;
->> +
->> +	rstc = kzalloc(sizeof(*rstc), GFP_KERNEL);
->> +	if (!rstc)
->> +		return -ENOMEM;
->> +
->> +	rstc->membase = of_iomap(np, 0);
-> 
-> Any reason why we can't pass the platform device here and map the
-> register space with platform device APIs?
-> 
-This function can be called by other clock drivers except clk-hi3519. Some
-clock drivers may not be registered as platform drivers. Moreover this function
-may be called early even before platform_bus_init.
+Jianqun Xu (1):
+  ARM64: dts: rockchip: add core dtsi file for rk3399
 
-Thank you!
+Xing Zheng (2):
+  dt-bindings: add bindings for rk3399 clock controller
+  clk: rockchip: add dt-binding header for rk3399
 
-Regards,
-Jiancheng.
+ .../bindings/clock/rockchip,rk3399-cru.txt         |  82 ++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 950 +++++++++++++++++++++
+ include/dt-bindings/clock/rk3399-cru.h             | 716 ++++++++++++++++
+ 3 files changed, 1748 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399.dtsi
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
+
+-- 
+changes in v2:
+- remove applied grf patch (applied by Heiko)
+- add "rockchip,grf = <&pmugrf>" for pmucru node (xing)
+- add NR_CLK defination (xing)
+
+1.9.1
