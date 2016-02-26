@@ -1,33 +1,191 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v1 0/4] Add clock ids for RK3228 HDMI/VOP modules
-Date: Fri, 26 Feb 2016 02:14:26 +0100
-Message-ID: <2198453.NY4VYR4LaI@phil>
-References: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH] of/overlay: add of overlay notifications
+Date: Thu, 25 Feb 2016 19:14:52 -0600
+Message-ID: <alpine.DEB.2.10.1602251913590.2308@atull-730U3E-740U3E>
+References: <1456443382-29781-1-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456308303-29706-1-git-send-email-ykk@rock-chips.com>
+In-Reply-To: <1456443382-29781-1-git-send-email-atull@opensource.altera.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Dinh Nguyen <dinguyen@opensource.altera.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 24. Februar 2016, 18:05:03 schrieb Yakir Yang:
-> Add clocks ids for RK3228 HDMI/VOP modules which driver already have been
-> posted.
+On Thu, 25 Feb 2016, Alan Tull wrote:
+
+> This patch add of overlay notifications.
 > 
-> RK3228 HDMI driver: https://patchwork.kernel.org/patch/7974671
-> RK3228 VOP driver: https://patchwork.kernel.org/patch/7952591
+> When DT overlays are being added, some drivers/subsystems
+> need to see device tree overlays before the changes go into
+> the live tree.
 > 
-> Yakir Yang (4):
->   clk: rockchip: add the new clock ids for RK3228 VOP
->   clk: rockchip: set the clock ids for RK3228 VOP
->   clk: rockchip: add the new clock ids for RK3228 HDMI
->   clk: rockchip: set the clock ids for RK3228 HDMI
+> This is distinct from reconfig notifiers that are
+> post-apply or post-remove and which issue very granular
+> notifications without providing access to the context
+> of a whole overlay.
+> 
+> The following 4 notificatons are issued:
+>   OF_OVERLAY_PRE_APPLY
+>   OF_OVERLAY_POST_APPLY
+>   OF_OVERLAY_PRE_REMOVE
+>   OF_OVERLAY_POST_REMOVE
+> 
+> In the case of pre-apply notification, if the notifier
+> returns error, the overlay will be rejected.
+> 
+> This patch exports two functions for registering/unregistering
+> notifications:
+>   of_overlay_notifier_register(struct notifier_block *nb)
+>   of_overlay_notifier_unregister(struct notifier_block *nb)
+> 
+> The notification data includes pointers to the overlay
+> target and the overlay:
+> 
+> struct of_overlay_notify_data {
+>        struct device_node *overlay;
+>        struct device_node *target;
+> };
+> 
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> ---
+>  drivers/of/overlay.c |   47 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/of.h   |   25 +++++++++++++++++++++++++
+>  2 files changed, 71 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 8225081..a26f0ed 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -56,6 +56,41 @@ struct of_overlay {
+>  static int of_overlay_apply_one(struct of_overlay *ov,
+>  		struct device_node *target, const struct device_node *overlay);
+>  
+> +static BLOCKING_NOTIFIER_HEAD(of_overlay_chain);
+> +
+> +int of_overlay_notifier_register(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_register(&of_overlay_chain, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(of_overlay_notifier_register);
+> +
+> +int of_overlay_notifier_unregister(struct notifier_block *nb)
+> +{
+> +	return blocking_notifier_chain_unregister(&of_overlay_chain, nb);
+> +}
+> +EXPORT_SYMBOL_GPL(of_overlay_notifier_unregister);
+> +
+> +static int of_overlay_notify(struct of_overlay *ov,
+> +			     enum of_overlay_notify_action action)
+> +{
+> +	struct of_overlay_notify_data nd;
+> +	int i, ret;
+> +
+> +	for (i = 0; i < ov->count; i++) {
+> +		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
+> +
+> +		nd.target = ovinfo->target;
+> +		nd.overlay = ovinfo->overlay;
+> +
+> +		ret = blocking_notifier_call_chain(&of_overlay_chain,
+> +						   action, &nd);
+> +		if (ret)
+> +			return notifier_to_errno(ret);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int of_overlay_apply_single_property(struct of_overlay *ov,
+>  		struct device_node *target, struct property *prop)
+>  {
+> @@ -370,6 +405,13 @@ int of_overlay_create(struct device_node *tree)
+>  		goto err_free_idr;
+>  	}
+>  
+> +	err = of_overlay_notify(ov, OF_OVERLAY_PRE_APPLY);
+> +	if (err < 0) {
+> +		pr_err("%s: Pre-apply notifier failed (err=%d)\n",
+> +		       __func__, err);
+> +		goto err_free_idr;
+> +	}
+> +
+>  	/* apply the overlay */
+>  	err = of_overlay_apply(ov);
+>  	if (err) {
+> @@ -389,6 +431,8 @@ int of_overlay_create(struct device_node *tree)
+>  	/* add to the tail of the overlay list */
+>  	list_add_tail(&ov->node, &ov_list);
+>  
+> +	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
+> +
+>  	mutex_unlock(&of_mutex);
+>  
+>  	return id;
+> @@ -509,9 +553,10 @@ int of_overlay_destroy(int id)
+>  		goto out;
+>  	}
+>  
+> -
+> +	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
+>  	list_del(&ov->node);
+>  	__of_changeset_revert(&ov->cset);
+> +	of_overlay_notify(ov, OF_OVERLAY_POST_REMOVE);
+>  	of_free_overlay_info(ov);
+>  	idr_remove(&ov_idr, id);
+>  	of_changeset_destroy(&ov->cset);
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index dc6e396..e70a686 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -1083,6 +1083,21 @@ int of_overlay_create(struct device_node *tree);
+>  int of_overlay_destroy(int id);
+>  int of_overlay_destroy_all(void);
+>  
+> +enum of_overlay_notify_action {
+> +	OF_OVERLAY_PRE_APPLY,
+> +	OF_OVERLAY_POST_APPLY,
+> +	OF_OVERLAY_PRE_REMOVE,
+> +	OF_OVERLAY_POST_REMOVE,
+> +};
+> +
+> +struct of_overlay_notify_data {
+> +	struct device_node *overlay;
+> +	struct device_node *target;
+> +};
+> +
+> +int of_overlay_notifier_register(struct notifier_block *nb);
+> +int of_overlay_notifier_unregister(struct notifier_block *nb);
+> +
+>  #else
+>  
+>  static inline int of_overlay_create(struct device_node *tree)
+> @@ -1100,6 +1115,16 @@ static inline int of_overlay_destroy_all(void)
+>  	return -ENOTSUPP;
+>  }
+>  
+> +int of_overlay_notifier_register(struct notifier_block *nb)
 
-applied all 4 to my clk-branch
+Needs 'static inline'
 
+> +{
+> +	return 0;
+> +}
+> +
+> +int of_overlay_notifier_unregister(struct notifier_block *nb)
 
-Thanks
-Heiko
+Needs 'static inline'
+
+Alan
+
+> +{
+> +	return 0;
+> +}
+> +
+>  #endif
+>  
+>  #endif /* _LINUX_OF_H */
+> -- 
+> 1.7.9.5
+> 
+> 
