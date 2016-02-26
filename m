@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 2/5] ARM: bcm2835: Replace alt0/i2s_alt[02] with standard groups.
-Date: Fri, 26 Feb 2016 10:19:13 -0800
-Message-ID: <1456510756-15337-3-git-send-email-eric@anholt.net>
+Subject: [PATCH 1/5] ARM: bcm2835: Define standard pinctrl groups in the gpio node.
+Date: Fri, 26 Feb 2016 10:19:12 -0800
+Message-ID: <1456510756-15337-2-git-send-email-eric@anholt.net>
 References: <1456510756-15337-1-git-send-email-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1456510756-15337-1-git-send-email-eric@anholt.net>
@@ -10,184 +10,197 @@ To: linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Since all of these pins were documented, we can use their names to
-explain what's going on.
+The BCM2835-ARM-Peripherals.pdf documentation specifies what the
+function selects do for the pins, and there are a bunch of obvious
+groupings to be made.  With these created, we'll be able to replace
+bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
+references to specific groups we want enabled.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 17 ++++++++++-------
- arch/arm/boot/dts/bcm2835-rpi-a.dts      | 17 ++++++++++-------
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 17 ++++++++++-------
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 17 ++++++++++-------
- arch/arm/boot/dts/bcm2835-rpi-b.dts      | 10 +++++++++-
- arch/arm/boot/dts/bcm2835-rpi.dtsi       |  5 -----
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 17 ++++++++++-------
- 7 files changed, 59 insertions(+), 41 deletions(-)
+ arch/arm/boot/dts/bcm283x.dtsi | 170 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 170 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-index 228614f..0a8b92e 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -21,11 +21,14 @@
- };
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index 8aaf193..e91198e 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -110,6 +110,176 @@
  
- &gpio {
--	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
--
--	/* I2S interface */
--	i2s_alt0: i2s_alt0 {
--		brcm,pins = <18 19 20 21>;
--		brcm,function = <BCM2835_FSEL_ALT0>;
--	};
-+	pinctrl-0 = <&i2c0_gpio0
-+		     &i2c1_gpio2
-+		     &gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &spi0_gpio7
-+		     &pcm_gpio18
-+		     &pwm0_gpio40
-+		     &pwm1_gpio45
-+		     &gpioout
-+		     &alt3>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-index ddbbbbd..d093407 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-@@ -14,11 +14,14 @@
- };
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++
++			/* Defines pin muxing groups according to
++			 * BCM2835-ARM-Peripherals.pdf page 102.
++			 *
++			 * While each pin can have its mux selected
++			 * for various functions individually, some
++			 * groups only make sense to switch to a
++			 * particular function together.
++			 */
++			i2c0_gpio0: i2c0_gpio0 {
++				brcm,pins = <0 1>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			i2c1_gpio2: i2c1_gpio2 {
++				brcm,pins = <2 3>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			gpclk0_gpio4: gpclk0_gpio4 {
++				brcm,pins = <4>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			gpclk1_gpio5: gpclk1_gpio5 {
++				brcm,pins = <5>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			gpclk2_gpio6: gpclk2_gpio6 {
++				brcm,pins = <6>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			spi0_gpio7: spi0_gpio7 {
++				brcm,pins = <7 8 9 10 11>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			pwm0_gpio12: pwm0_gpio12 {
++				brcm,pins = <12>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			pwm1_gpio13: pwm1_gpio13 {
++				brcm,pins = <13>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			uart0_gpio14: uart0_gpio14 {
++				brcm,pins = <14 15>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			pcm_gpio18: pcm_gpio18 {
++				brcm,pins = <18 19 20 21>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			i2c0_gpio32: i2c0_gpio32 {
++				brcm,pins = <32 34>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			spio0_gpio35: spio0_gpio35 {
++				brcm,pins = <35 36 37 38 39>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			pwm0_gpio40: pwm0_gpio40 {
++				brcm,pins = <40>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			pwm1_gpio41: pwm1_gpio41 {
++				brcm,pins = <41>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			gpclk1_gpio42: gpclk1_gpio42 {
++				brcm,pins = <42>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			gpclk2_gpio43: gpclk2_gpio43 {
++				brcm,pins = <43>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			gpclk1_gpio44: gpclk1_gpio44 {
++				brcm,pins = <44>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			pwm1_gpio45: pwm1_gpio45 {
++				brcm,pins = <45>;
++				brcm,function = <BCM2835_FSEL_ALT0>;
++			};
++			i2c0_gpio44: i2c0_gpio44 {
++				brcm,pins = <44 45>;
++				brcm,function = <BCM2835_FSEL_ALT1>;
++			};
++			pcm_gpio28: pcm_gpio28 {
++				brcm,pins = <28 29 30 31>;
++				brcm,function = <BCM2835_FSEL_ALT2>;
++			};
++			uart1_gpio36: uart1_gpio36 {
++				brcm,pins = <36 37 38 39>;
++				brcm,function = <BCM2835_FSEL_ALT2>;
++			};
++			i2c1_gpio44: i2c1_gpio44 {
++				brcm,pins = <44 45>;
++				brcm,function = <BCM2835_FSEL_ALT2>;
++			};
++			/* Separate from the uart0_gpio14 group
++			 * because it conflicts with spi1_gpio16, and
++			 * people often run uart0 on the two pins
++			 * without flow contrl.
++			 */
++			uart0_ctsrts_gpio16: uart0_ctsrts_gpio16 {
++				brcm,pins = <16 17>;
++				brcm,function = <BCM2835_FSEL_ALT3>;
++			};
++			i2c_slave_gpio18: i2c_slave_gpio18 {
++				brcm,pins = <18 19 20 21>;
++				brcm,function = <BCM2835_FSEL_ALT3>;
++			};
++			emmc_gpio22: emmc_gpio22 {
++				brcm,pins = <22 23 24 25 26 27>;
++				brcm,function = <BCM2835_FSEL_ALT3>;
++			};
++			uart0_gpio30: uart0_gpio30 {
++				brcm,pins = <30 31>;
++				brcm,function = <BCM2835_FSEL_ALT3>;
++			};
++			uart0_ctsrts_gpio32: uart0_ctsrts_gpio32 {
++				brcm,pins = <32 33>;
++				brcm,function = <BCM2835_FSEL_ALT3>;
++			};
++			spi1_gpio16: spi1_gpio16 {
++				brcm,pins = <16 17 18 19 20 21>;
++				brcm,function = <BCM2835_FSEL_ALT4>;
++			};
++			jtag_gpio22: jtag_gpio22 {
++				brcm,pins = <22 23 24 25 26 27>;
++				brcm,function = <BCM2835_FSEL_ALT4>;
++			};
++			spi2_gpio40: spi2_gpio40 {
++				brcm,pins = <40 41 42 43 44 45>;
++				brcm,function = <BCM2835_FSEL_ALT4>;
++			};
++			jtag_gpio4: jtag_gpio4 {
++				brcm,pins = <4 5 6 12 13>;
++				brcm,function = <BCM2835_FSEL_ALT4>;
++			};
++			uart1_gpio14: uart1_gpio14 {
++				brcm,pins = <14 15>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			uart1_ctsrts_gpio16: uart1_ctsrts_gpio16 {
++				brcm,pins = <16 17>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			pwm0_gpio18: pwm0_gpio18 {
++				brcm,pins = <18>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			pwm1_gpio19: pwm1_gpio19 {
++				brcm,pins = <19>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			uart1_gpio32: uart1_gpio32 {
++				brcm,pins = <32 33>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			uart1_ctsrts_gpio30: uart1_ctsrts_gpio30 {
++				brcm,pins = <30 31>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			uart1_gpio40: uart1_gpio40 {
++				brcm,pins = <40 41>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
++			uart1_ctsrts_gpio42: uart1_ctsrts_gpio42 {
++				brcm,pins = <42 43>;
++				brcm,function = <BCM2835_FSEL_ALT5>;
++			};
+ 		};
  
- &gpio {
--	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
--
--	/* I2S interface */
--	i2s_alt2: i2s_alt2 {
--		brcm,pins = <28 29 30 31>;
--		brcm,function = <BCM2835_FSEL_ALT2>;
--	};
-+	pinctrl-0 = <&i2c0_gpio0
-+		     &i2c1_gpio2
-+		     &gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &spi0_gpio7
-+		     &pcm_gpio28
-+		     &pwm0_gpio40
-+		     &pwm1_gpio45
-+		     &gpioout
-+		     &alt3>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index ef54050..c26b81d 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -21,11 +21,14 @@
- };
- 
- &gpio {
--	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
--
--	/* I2S interface */
--	i2s_alt0: i2s_alt0 {
--		brcm,pins = <18 19 20 21>;
--		brcm,function = <BCM2835_FSEL_ALT0>;
--	};
-+	pinctrl-0 = <&i2c0_gpio0
-+		     &i2c1_gpio2
-+		     &gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &spi0_gpio7
-+		     &pcm_gpio18
-+		     &pwm0_gpio40
-+		     &pwm1_gpio45
-+		     &gpioout
-+		     &alt3>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index 86f1f2f..a5b606e 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -14,11 +14,14 @@
- };
- 
- &gpio {
--	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
--
--	/* I2S interface */
--	i2s_alt2: i2s_alt2 {
--		brcm,pins = <28 29 30 31>;
--		brcm,function = <BCM2835_FSEL_ALT2>;
--	};
-+	pinctrl-0 = <&i2c0_gpio0
-+		     &i2c1_gpio2
-+		     &gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &spi0_gpio7
-+		     &pcm_gpio28
-+		     &pwm0_gpio40
-+		     &pwm1_gpio45
-+		     &gpioout
-+		     &alt3>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index 4859e9d..97e3c2f 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -14,5 +14,13 @@
- };
- 
- &gpio {
--	pinctrl-0 = <&gpioout &alt0 &alt3>;
-+	pinctrl-0 = <&i2c0_gpio0
-+		     &i2c1_gpio2
-+		     &gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &spi0_gpio7
-+		     &pwm0_gpio40
-+		     &pwm1_gpio45
-+		     &gpioout
-+		     &alt3>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index 76bdbca..141b18c 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -37,11 +37,6 @@
- 		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
- 	};
- 
--	alt0: alt0 {
--		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
--		brcm,function = <BCM2835_FSEL_ALT0>;
--	};
--
- 	alt3: alt3 {
- 		brcm,pins = <48 49 50 51 52 53>;
- 		brcm,function = <BCM2835_FSEL_ALT3>;
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index ff94666..52798ca 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -25,11 +25,14 @@
- };
- 
- &gpio {
--	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
--
--	/* I2S interface */
--	i2s_alt0: i2s_alt0 {
--		brcm,pins = <18 19 20 21>;
--		brcm,function = <BCM2835_FSEL_ALT0>;
--	};
-+	pinctrl-0 = <&i2c0_gpio0
-+		     &i2c1_gpio2
-+		     &gpclk0_gpio4
-+		     &gpclk1_gpio5
-+		     &spi0_gpio7
-+		     &pcm_gpio18
-+		     &pwm0_gpio40
-+		     &pwm1_gpio45
-+		     &gpioout
-+		     &alt3>;
- };
+ 		uart0: serial@7e201000 {
 -- 
 2.7.0
