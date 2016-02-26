@@ -1,50 +1,36 @@
-From: Li Yang <leoli@freescale.com>
-Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on
- device tree
-Date: Fri, 26 Feb 2016 12:04:59 -0600
-Message-ID: <CADRPPNSqXBqD0of0ZorXFOKQc1OQaaJCPFUTMUezJexkegHY9A@mail.gmail.com>
-References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com>
-	<1697588.dLcbZBRWO4@vostro.rjw.lan>
-	<3550740.QzZi28fbXg@wuerfel>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH v3 1/4] net: ethernet: dwmac: add Ethernet glue logic for
+ stm32 chip
+Date: Fri, 26 Feb 2016 19:08:01 +0100
+Message-ID: <CAGhQ9Vy7VNjtCpqqUpnuMVfArryO7ixpGeUcvziUr6wBee8fog@mail.gmail.com>
+References: <1456483912-32090-1-git-send-email-alexandre.torgue@gmail.com>
+	<1456483912-32090-2-git-send-email-alexandre.torgue@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <3550740.QzZi28fbXg@wuerfel>
-Sender: linux-pm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jia Hongtao <hongtao.jia@freescale.com>, edubezval@gmail.com, viresh.kumar@linaro.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, Scott Wood <scottwood@freescale.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456483912-32090-2-git-send-email-alexandre.torgue@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@gmail.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 18, 2015 at 4:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 15 December 2015 00:58:26 Rafael J. Wysocki wrote:
->> On Thursday, November 26, 2015 05:21:11 PM Jia Hongtao wrote:
->> > Register the qoriq cpufreq driver as a cooling device, based on the
->> > thermal device tree framework. When temperature crosses the passive trip
->> > point cpufreq is used to throttle CPUs.
->> >
->> > Signed-off-by: Jia Hongtao <hongtao.jia@freescale.com>
->> > Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
->>
->> Applied, thanks!
->>
->
-> I got a randconfig build error today:
->
-> drivers/built-in.o: In function `qoriq_cpufreq_ready':
-> debugfs.c:(.text+0x1f4688): undefined reference to `of_cpufreq_cooling_register'
->
-> CONFIG_OF=y
-> CONFIG_QORIQ_CPUFREQ=y
-> CONFIG_THERMAL=m
-> CONFIG_THERMAL_OF=y
->
-> I think you need a 'depends on THERMAL' to prevent the driver from
-> being built-in when THERMAL=m.
+Hi Alexandre,
 
-Maybe this is not the best approach.  The cpufreq feature itself
-should be working independently without thermal framework.  I think we
-should make the qoriq_cpufreq_ready() defined as null function if
-THERMAL is not defined.
+When people comment on your patch please CC them on the next version.
 
-Regards,
-Leo
+On 26 February 2016 at 11:51, Alexandre TORGUE
+<alexandre.torgue@gmail.com> wrote:
+> stm324xx family chips support Synopsys MAC 3.510 IP.
+> This patch adds settings for logical glue logic:
+> -clocks
+> -mode selection MII or RMII.
+>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
+
+Driver looks good now, thanks.
+
+Reviewed-by: Joachim Eastwood <manabian@gmail.com>
+
+
+regards,
+Joachim Eastwood
