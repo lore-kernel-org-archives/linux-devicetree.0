@@ -1,83 +1,96 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 RESEND 0/4] mailbox: hisilicon: add Hi6220 mailbox driver
-Date: Fri, 26 Feb 2016 17:10:11 +0530
-Message-ID: <CABb+yY0_OzKmftb0HQKyfuE+2jgOfoRLHp-ok=Ux36sK8na6Ag@mail.gmail.com>
-References: <1455544226-10094-1-git-send-email-leo.yan@linaro.org>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] PCI: generic: add description of property
+ "interrupt-skip-mask"
+Date: Fri, 26 Feb 2016 11:46:43 +0000
+Message-ID: <20160226114643.GA8728@leverpostej>
+References: <1456401208-10136-1-git-send-email-thunder.leizhen@huawei.com>
+ <1456401208-10136-2-git-send-email-thunder.leizhen@huawei.com>
+ <20160225122035.GB10593@leverpostej>
+ <56CFFC9B.20703@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455544226-10094-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56CFFC9B.20703-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 15, 2016 at 7:20 PM, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
-> with a maximum message size of 8 words. I/O is performed using register
-> access (there is no DMA) and the cell raises an interrupt when messages
-> are received.
->
-> This patch series is to implement Hi6220 mailbox driver. It registers
-> two channels into framework for communication with MCU, one is tx channel
-> and another is rx channel. Now mailbox driver is used to send message to
-> MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
->
-> Changes from v6:
-> * Fix to use lowercase for hexadecimal value in DT binding document
->
-> Changes from v5:
-> * Refine to use mailbox three specifiers for client driver, so add xlate
->   callback function in mailbox driver to support these specifiers
-> * Refine document for property "hi6220,mbox-tx-noirq"
->
-> Changes from v4:
-> * According to Jassi's suggestion, using DT binding to register channels
-> * Change to use operating-points-v2 to register operating points
->
-> Changes from v3:
-> * The patch series for enabling idle state for Hi6220 has reserved memory
->   regions, so this series will not include it anymore
-> * Refined mailbox driver according to Jassi's suggestion;
->   Removed kfifo from mailbox driver;
->   Removed spinlock for ipc registers accessing, due every channel has its
->   own dedicated bit in ipc register and readl/writel will introduce memory
->   barrier, so don't need spinlock to protect ipc registers accessing
-> * After mailbox driver is ready, can use patch 4 to enable CPU's OPPs and
->   stub clock driver; finally can enable CPUFreq driver for CPU frequency
->   scaling
->
-> Changes from v2:
-> * Get rid of unused memory regions from memory node in DT, and don't use
->   reserved-memory node according to Mark and Leif's suggestion; Haojian also
->   has updated UEFI for efi memory info
->
-> Changes from v1:
-> * Correct lock usage for SMP scenario
->
-> Changes from RFC:
-> * According to Jassi's review, totally remove the abstract common driver
->   layer and only commit driver dedicated for Hi6220
-> * According to Paul Bolle's review, fix typo issue for Kconfig and remove
->   unnecessary dependency with OF and fix minor for mailbox driver
-> * Refine a little for dts nodes
->
->
-> Leo Yan (4):
->   dt-bindings: mailbox: Document Hi6220 mailbox driver
->   mailbox: Hi6220: add mailbox driver
->   arm64: dts: add mailbox node for Hi6220
->   arm64: dts: add Hi6220's stub clock node
->
->  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  74 ++++
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
->  drivers/mailbox/Kconfig                            |   8 +
->  drivers/mailbox/Makefile                           |   2 +
->  drivers/mailbox/hi6220-mailbox.c                   | 395 +++++++++++++++++++++
->
-Applied 1 & 2 to mailbox-for-next.  Patch-3&4 should go via asoc tree.
+On Fri, Feb 26, 2016 at 03:19:55PM +0800, Leizhen (ThunderTown) wrote:
+> 
+> On 2016/2/25 20:20, Mark Rutland wrote:
+> > Hi,
+> > 
+> > In future, please send the binding document first in a series, per point
+> > 3 of Documentation/devicetree/bindings/submitting-patches.txt. It makes
+> > review easier/faster.
+> Thank you for your reminding.
+> 
+> > On Thu, Feb 25, 2016 at 07:53:28PM +0800, Zhen Lei wrote:
+> >> Interrupt Pin register is read-only and optional. Some pci devices may use
+> >> msi/msix but leave the value of Interrupt Pin non-zero.
+> > 
+> > Is that permitted by the spec? Surely 'optional' means it must be zero
+> > if not implemented?
+> 
+> In <PCI Local Bus Specification Revision 3.0>:
+> Devices (or device functions) that do not use an interrupt pin must put a 0 in this register. This register is read-only.
+> 
+> So, do you think this is a hardware bug?
 
-Thanks
+Per the above, that does appear to be the case.
+
+> But these pci-devices are not produced by our company.
+> 
+> In function init_service_irqs, it try msix first, then msi, Interrupt
+> PIN is the last attemption. But of_irq_parse_pci() happened before
+> this.
+
+I assume that for devices with 0 in this register we do not produce a
+warning. So where do we check the interrupt pin register, and when does
+this happen relative to of_irq_parse_pci such that we do not produce
+that warning?
+
+I als assume that all instances of these particular devices broken in
+this regard? If so, I think we need to identify them by Device ID and
+Vendor ID, and treat them as if the interrupt pin register read as
+zero, in the place we normally check the interrupt pin register.
+
+Note that this is completely independent of the RID/BDF, so the
+interrupt-*-mask approach is insufficient.
+
+> In fact, there also a familiar problem exist. As below:
+> pci 0000:42:00.0: BAR 7: no space for [io  size 0x1000]
+> pci 0000:42:00.0: BAR 7: failed to assign [io  size 0x1000]
+> 
+> There no "io space" on arm64, maybe only exist on X86. And the Memory Space Indicator also read-only in BAR register.
+
+I'm not entirely sure, but I thought we handled the PCI I/O space as an
+MMIO region on ARM64. Do you have many devices/functions attached? It
+may be that our VA carveout of 16M is too small.
+
+This is probably worth a separate thread.
+
+> >> In this case, the driver will print information as below: pci
+> >> 0000:40:00.0: of_irq_parse_pci() failed with rc=-22
+> >>
+> >> It's easily lead to misinterpret.
+> > 
+> > If this is limited to a subset of devices which we know are broken in
+> > this regard, can we not handle these cases explicitly?
+> Actually, we have another way to block this warning. Use "interrupt-map" to map it to a pesudo IRQ. But I think it will also be misunderstanded.
+
+This is very fragile, as it depends on the RIDs/addresses assigned by
+the host controller. If devices are plugged into different slots then
+that could change, you get the warning, and other devices may be
+prevented from using wired interrupts.
+
+As I mentioned above, I think we need to identify the buggy devices by
+ID, rather than by topology.
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
