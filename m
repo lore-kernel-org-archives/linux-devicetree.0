@@ -1,64 +1,37 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: [PATCH V6 10/10] ARM64: tegra: Add audio PM domain device node for Tegra210
-Date: Fri, 26 Feb 2016 15:48:44 +0000
-Message-ID: <1456501724-28477-11-git-send-email-jonathanh@nvidia.com>
-References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v10 0/5] MT8173 IOMMU SUPPORT
+Date: Fri, 26 Feb 2016 16:49:12 +0100
+Message-ID: <1456501752.3383.26.camel@pengutronix.de>
+References: <1456161651-6136-1-git-send-email-yong.wu@mediatek.com>
+	 <20160225155007.GA19092@8bytes.org>
+	 <1456476955.3383.21.camel@pengutronix.de>
+	 <20160226110633.GE22747@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160226110633.GE22747-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the audio power-domain for tegra210. Note that this also removes the
-existing "#power-domain-cells" which was incorrectly included by
-commit e53095857166 ("arm64: tegra: Add Tegra210 support").
+Am Freitag, den 26.02.2016, 12:06 +0100 schrieb Joerg Roedel:
+> Hi Philipp,
+> 
+> On Fri, Feb 26, 2016 at 09:55:55AM +0100, Philipp Zabel wrote:
+> > Do you have a stable branch that I could base the mediatek-drm patches
+> > on and that I may include in a pull request to be merged via drm-next?
+> 
+> You can base it on the arm/mediatek branch of the iommu tree. I'll push
+> it out in the next minutes.
 
-Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+Excellent, thank you.
 
----
+regards
+Philipp
 
-So far I have only added the audio power-domain for tegra210 as this is
-what I have been testing with to date. However, once this series is
-accepted then we can begin to add more.
-
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index cd4f45ccd6a7..d2b6bb4eb202 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -2,6 +2,7 @@
- #include <dt-bindings/gpio/tegra-gpio.h>
- #include <dt-bindings/memory/tegra210-mc.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
-+#include <dt-bindings/power/tegra-powergate.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- / {
-@@ -581,7 +582,18 @@
- 		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
- 		clock-names = "pclk", "clk32k_in";
- 
--		#power-domain-cells = <1>;
-+		powergates {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			pd_audio: aud {
-+				reg = <TEGRA_POWERGATE_AUD>;
-+				clocks = <&tegra_car TEGRA210_CLK_APE>,
-+					 <&tegra_car TEGRA210_CLK_APB2APE>;
-+				resets = <&tegra_car 198>;
-+				#power-domain-cells = <0>;
-+			};
-+		};
- 	};
- 
- 	fuse@0,7000f800 {
--- 
-2.1.4
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
