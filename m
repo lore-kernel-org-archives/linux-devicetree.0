@@ -1,174 +1,163 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 2/9] ARM: dts: uniphier: factor out ranges property of support
- card
-Date: Fri, 26 Feb 2016 16:18:29 +0900
-Message-ID: <1456471116-8140-3-git-send-email-yamada.masahiro@socionext.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH 3/9] ARM: dts: uniphier: rework UniPhier System Bus nodes
+Date: Fri, 26 Feb 2016 16:18:30 +0900
+Message-ID: <1456471116-8140-4-git-send-email-yamada.masahiro@socionext.com>
 References: <1456471116-8140-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1456471116-8140-1-git-send-email-yamada.masahiro@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456471116-8140-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This property is used in common by several boards.  Move it to the
-common place (uniphier-support-card.dtsi).  If necessary, each board
-can still override the property.
+During the review process of the UniPhier System Bus driver
+(drivers/bus/uniphier.c), the current binding of the System Bus
+Controller turned out to be no good.  In order to make the driver
+really usable, we have to switch over to the new binding defined by
+Documentation/devicetree/bindings/bus/uniphier-system-bus.txt.
+The old binding will be still supported for a while to keep the
+backward compatibility.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 ---
 
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts              | 8 --------
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts             | 8 --------
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts             | 8 --------
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts             | 8 --------
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts             | 8 --------
- arch/arm/boot/dts/uniphier-support-card.dtsi            | 3 +++
- arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts | 8 --------
- 7 files changed, 3 insertions(+), 48 deletions(-)
+ arch/arm/boot/dts/uniphier-common32.dtsi             | 20 +++++++++++---------
+ arch/arm/boot/dts/uniphier-ph1-sld3.dtsi             | 20 +++++++++++---------
+ arch/arm/boot/dts/uniphier-support-card.dtsi         |  3 ++-
+ arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi | 19 +++++++++++++------
+ 4 files changed, 37 insertions(+), 25 deletions(-)
 
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-index f1e9d40..ec94b7a 100644
---- a/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts
-@@ -72,14 +72,6 @@
- 	};
- };
+diff --git a/arch/arm/boot/dts/uniphier-common32.dtsi b/arch/arm/boot/dts/uniphier-common32.dtsi
+index ea9301a..f847e68 100644
+--- a/arch/arm/boot/dts/uniphier-common32.dtsi
++++ b/arch/arm/boot/dts/uniphier-common32.dtsi
+@@ -52,12 +52,6 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
  
--&extbus {
--	ranges = <1 0x00000000 0x42000000 0x02000000>;
--};
+-		extbus: extbus {
+-			compatible = "simple-bus";
+-			#address-cells = <2>;
+-			#size-cells = <1>;
+-		};
 -
--&support_card {
--	ranges = <0x00000000 1 0x01f00000 0x00100000>;
--};
--
- &ethsc {
- 	interrupts = <0 49 4>;
- };
-diff --git a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-index 5baa9fc..b8134c6 100644
---- a/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts
-@@ -74,14 +74,6 @@
- 	};
- };
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+@@ -98,9 +92,17 @@
+ 			clocks = <&uart_clk>;
+ 		};
  
--&extbus {
--	ranges = <1 0x00000000 0x42000000 0x02000000>;
--};
--
--&support_card {
--	ranges = <0x00000000 1 0x01f00000 0x00100000>;
--};
--
- &ethsc {
- 	interrupts = <0 52 4>;
- };
-diff --git a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-index 2462668..95f631a 100644
---- a/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts
-@@ -74,14 +74,6 @@
- 	};
- };
+-		system-bus-controller@58c00000 {
+-			compatible = "socionext,uniphier-system-bus-controller";
+-			reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
++		system_bus: system-bus@58c00000 {
++			compatible = "socionext,uniphier-system-bus";
++			status = "disabled";
++			reg = <0x58c00000 0x400>;
++			#address-cells = <2>;
++			#size-cells = <1>;
++		};
++
++		smpctrl@59800000 {
++			compatible = "socionext,uniphier-smpctrl";
++			reg = <0x59801000 0x400>;
+ 		};
  
--&extbus {
--	ranges = <1 0x00000000 0x42000000 0x02000000>;
--};
--
--&support_card {
--	ranges = <0x00000000 1 0x01f00000 0x00100000>;
--};
--
- &ethsc {
- 	interrupts = <0 50 4>;
- };
-diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-index b7a03215..acb4204 100644
---- a/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts
-@@ -73,14 +73,6 @@
- 	};
- };
+ 		timer@60000200 {
+diff --git a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+index 691a17d..4c746ea 100644
+--- a/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
++++ b/arch/arm/boot/dts/uniphier-ph1-sld3.dtsi
+@@ -94,12 +94,6 @@
+ 		ranges;
+ 		interrupt-parent = <&intc>;
  
--&extbus {
--	ranges = <1 0x00000000 0x42000000 0x02000000>;
--};
+-		extbus: extbus {
+-			compatible = "simple-bus";
+-			#address-cells = <2>;
+-			#size-cells = <1>;
+-		};
 -
--&support_card {
--	ranges = <0x00000000 1 0x01f00000 0x00100000>;
--};
--
- &ethsc {
- 	interrupts = <0 49 4>;
- };
-diff --git a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-index fc7250c..d594f40 100644
---- a/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-+++ b/arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts
-@@ -72,14 +72,6 @@
- 	};
- };
+ 		timer@20000200 {
+ 			compatible = "arm,cortex-a9-global-timer";
+ 			reg = <0x20000200 0x20>;
+@@ -216,9 +210,17 @@
+ 			clock-frequency = <400000>;
+ 		};
  
--&extbus {
--	ranges = <1 0x00000000 0x42000000 0x02000000>;
--};
--
--&support_card {
--	ranges = <0x00000000 1 0x01f00000 0x00100000>;
--};
--
- &ethsc {
- 	interrupts = <0 48 4>;
- };
+-		system-bus-controller@58c00000 {
+-			compatible = "socionext,uniphier-system-bus-controller";
+-			reg = <0x58c00000 0x400>, <0x59800000 0x2000>;
++		system_bus: system-bus@58c00000 {
++			compatible = "socionext,uniphier-system-bus";
++			status = "disabled";
++			reg = <0x58c00000 0x400>;
++			#address-cells = <2>;
++			#size-cells = <1>;
++		};
++
++		smpctrl@59800000 {
++			compatible = "socionext,uniphier-smpctrl";
++			reg = <0x59801000 0x400>;
+ 		};
+ 
+ 		usb0: usb@5a800100 {
 diff --git a/arch/arm/boot/dts/uniphier-support-card.dtsi b/arch/arm/boot/dts/uniphier-support-card.dtsi
-index da271e3..fa807e8 100644
+index fa807e8..51ecc9b9 100644
 --- a/arch/arm/boot/dts/uniphier-support-card.dtsi
 +++ b/arch/arm/boot/dts/uniphier-support-card.dtsi
-@@ -43,10 +43,13 @@
+@@ -42,7 +42,8 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
   */
  
- &extbus {
-+	ranges = <1 0x00000000 0x42000000 0x02000000>;
-+
- 	support_card: support_card {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-+		ranges = <0x00000000 1 0x01f00000 0x00100000>;
- 
- 		ethsc: ethernet@00000000 {
- 			compatible = "smsc,lan9118", "smsc,lan9115";
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
-index 80f71ba..727ae5f 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
-@@ -74,14 +74,6 @@
- 	};
- };
- 
 -&extbus {
--	ranges = <1 0x00000000 0x42000000 0x02000000>;
--};
++&system_bus {
++	status = "okay";
+ 	ranges = <1 0x00000000 0x42000000 0x02000000>;
+ 
+ 	support_card: support_card {
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+index e6871ea..e682a3f 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+@@ -133,12 +133,6 @@
+ 		#size-cells = <1>;
+ 		ranges = <0 0 0 0xffffffff>;
+ 
+-		extbus: extbus {
+-			compatible = "simple-bus";
+-			#address-cells = <2>;
+-			#size-cells = <1>;
+-		};
 -
--&support_card {
--	ranges = <0x00000000 1 0x01f00000 0x00100000>;
--};
--
- &ethsc {
- 	interrupts = <0 48 4>;
- };
+ 		serial0: serial@54006800 {
+ 			compatible = "socionext,uniphier-uart";
+ 			status = "disabled";
+@@ -261,6 +255,19 @@
+ 			clock-frequency = <400000>;
+ 		};
+ 
++		system_bus: system-bus@58c00000 {
++			compatible = "socionext,uniphier-system-bus";
++			status = "disabled";
++			reg = <0x58c00000 0x400>;
++			#address-cells = <2>;
++			#size-cells = <1>;
++		};
++
++		smpctrl@59800000 {
++			compatible = "socionext,uniphier-smpctrl";
++			reg = <0x59801000 0x400>;
++		};
++
+ 		pinctrl: pinctrl@5f801000 {
+ 			compatible = "socionext,ph1-ld20-pinctrl", "syscon";
+ 			reg = <0x5f801000 0xe00>;
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
