@@ -1,112 +1,377 @@
-From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: RE: [RFC PATCH] drivers: ata: Read Rx water mark value from
- device-tree
-Date: Fri, 26 Feb 2016 13:48:45 +0000
-Message-ID: <3802E9A6666DF54886E2B9CBF743BA9825E019B4@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com>
- <18251200.Xfr10N5eWq@wuerfel>
- <3802E9A6666DF54886E2B9CBF743BA9825E01009@XAP-PVEXMBX01.xlnx.xilinx.com>
- <8540232.vQE3WQTD95@wuerfel>
- <3802E9A6666DF54886E2B9CBF743BA9825E0117F@XAP-PVEXMBX01.xlnx.xilinx.com>
- <20160223192942.GA6235@rob-hp-laptop>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] watchdog: pic32-wdt: Add PIC32 watchdog driver
+Date: Fri, 26 Feb 2016 06:06:24 -0800
+Message-ID: <56D05BE0.8020609@roeck-us.net>
+References: <1456424846-24409-2-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160223192942.GA6235@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456424846-24409-2-git-send-email-joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 02/25/2016 10:27 AM, Joshua Henderson wrote:
+> Add support for the watchdog peripheral found on PIC32 class
+> devices.
+>
+> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+> ---
+> Note: Please merge this patch series through the MIPS tree.
+>
+> Changes since v1:
+> 	- Shorten commit description
+> 	- Don't default to y in Kconfig
+> 	- Alphabetical ordering of includes
+> 	- Use BIT() where applicable
+> 	- Use consistent function name prefixes
+> 	- Inline some single use functions
+> 	- Use a return of bool when appropriate
+> 	- Replace cpu_relax() with nop and explain why this is needed
+> 	- Better error handling, especially to prevent divide by zero
+> 	- Remove unecessary pr_info().
+> 	- Remove redudant driver spinlock which is already covered by
+> 	  watchdog core
+> 	- Drop .get_timeleft implementation
+> 	- Fix typo in compatibility flag and driver name
+> 	- Remove wdt->timeout variable and calculation
+> 	- Fix race condition in watchdog driver registration
+> ---
+>   drivers/watchdog/Kconfig     |   13 +++
+>   drivers/watchdog/Makefile    |    1 +
+>   drivers/watchdog/pic32-wdt.c |  264 ++++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 278 insertions(+)
+>   create mode 100644 drivers/watchdog/pic32-wdt.c
+>
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 0f6d851..543fa81 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -1414,6 +1414,19 @@ config MT7621_WDT
+>   	help
+>   	  Hardware driver for the Mediatek/Ralink MT7621/8 SoC Watchdog Timer.
+>
+> +config PIC32_WDT
+> +	tristate "Microchip PIC32 hardware watchdog"
+> +	select WATCHDOG_CORE
+> +	depends on MACH_PIC32
+> +	help
+> +	  Watchdog driver for the built in watchdog hardware in a PIC32.
+> +
+> +	  Configuration bits must be set appropriately for the watchdog to be
+> +	  controlled by this driver.
+> +
+> +	  To compile this driver as a loadable module, choose M here.
+> +	  The module will be called pic32-wdt.
+> +
+>   # PARISC Architecture
+>
+>   # POWERPC Architecture
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index f566753..244ed80 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -153,6 +153,7 @@ obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
+>   obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
+>   obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
+>   obj-$(CONFIG_MT7621_WDT) += mt7621_wdt.o
+> +obj-$(CONFIG_PIC32_WDT) += pic32-wdt.o
+>
+>   # PARISC Architecture
+>
+> diff --git a/drivers/watchdog/pic32-wdt.c b/drivers/watchdog/pic32-wdt.c
+> new file mode 100644
+> index 0000000..caec459
+> --- /dev/null
+> +++ b/drivers/watchdog/pic32-wdt.c
+> @@ -0,0 +1,264 @@
+> +/*
+> + * PIC32 watchdog driver
+> + *
+> + * Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> + * Copyright (c) 2016, Microchip Technology Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version
+> + * 2 of the License, or (at your option) any later version.
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/clk.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm.h>
+> +#include <linux/watchdog.h>
+> +
+> +#include <asm/mach-pic32/pic32.h>
+> +
+> +/* Watchdog Timer Registers */
+> +#define WDTCON_REG		0x00
+> +
+> +/* Watchdog Timer Control Register fields */
+> +#define WDTCON_WIN_EN		BIT(0)
+> +#define WDTCON_RMCS_MASK	0x0003
+> +#define WDTCON_RMCS_SHIFT	0x0006
+> +#define WDTCON_RMPS_MASK	0x001F
+> +#define WDTCON_RMPS_SHIFT	0x0008
+> +#define WDTCON_ON		BIT(15)
+> +#define WDTCON_CLR_KEY		0x5743
+> +
+> +/* Reset Control Register fields for watchdog */
+> +#define RESETCON_TIMEOUT_IDLE	BIT(2)
+> +#define RESETCON_TIMEOUT_SLEEP	BIT(3)
+> +#define RESETCON_WDT_TIMEOUT	BIT(4)
+> +
+> +struct pic32_wdt {
+> +	void __iomem	*regs;
+> +	void __iomem	*rst_base;
+> +	struct clk	*clk;
+> +};
+> +
+> +static inline bool pic32_wdt_is_win_enabled(struct pic32_wdt *wdt)
+> +{
+> +	return !!(readl(wdt->regs + WDTCON_REG) & WDTCON_WIN_EN);
+> +}
+> +
+> +static inline u32 pic32_wdt_get_post_scaler(struct pic32_wdt *wdt)
+> +{
+> +	u32 v = readl(wdt->regs + WDTCON_REG);
+> +
+> +	return (v >> WDTCON_RMPS_SHIFT) & WDTCON_RMPS_MASK;
+> +}
+> +
+> +static inline u32 pic32_wdt_get_clk_id(struct pic32_wdt *wdt)
+> +{
+> +	u32 v = readl(wdt->regs + WDTCON_REG);
+> +
+> +	return (v >> WDTCON_RMCS_SHIFT) & WDTCON_RMCS_MASK;
+> +}
+> +
+> +static int pic32_wdt_bootstatus(struct pic32_wdt *wdt)
+> +{
+> +	u32 v = readl(wdt->rst_base);
+> +
+> +	writel(RESETCON_WDT_TIMEOUT, PIC32_CLR(wdt->rst_base));
+> +
+> +	return v & RESETCON_WDT_TIMEOUT;
+> +}
+> +
+> +static int pic32_wdt_get_timeout_secs(struct pic32_wdt *wdt)
+> +{
+> +	unsigned long rate;
+> +	u32 period, ps, terminal;
+> +
+> +	rate = clk_get_rate(wdt->clk);
+> +	if (!rate)
+> +		return 0;
+> +
+> +	pr_debug("wdt: clk_id %d, clk_rate %lu (prescale)\n",
+> +		 pic32_wdt_get_clk_id(wdt), rate);
+> +
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Wednesday, February 24, 2016 1:00 AM
-> To: Anurag Kumar Vulisha
-> Cc: Arnd Bergmann; pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; tj@kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> ide@vger.kernel.org; Anirudha Sarangi; Srikanth Vemula; Punnaiah Choudary
-> Kalluri
-> Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-
-> tree
-> 
-> On Tue, Feb 23, 2016 at 03:29:55PM +0000, Anurag Kumar Vulisha wrote:
-> > Hi Arnd,
-> >
-> > > -----Original Message-----
-> > > From: Arnd Bergmann [mailto:arnd@arndb.de]
-> > > Sent: Tuesday, February 23, 2016 3:51 PM
-> > > To: Anurag Kumar Vulisha
-> > > Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
-> > > ijc+devicetree@hellion.org.uk; galak@codeaurora.org; tj@kernel.org;
-> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> > > ide@vger.kernel.org; Anirudha Sarangi; Srikanth Vemula; Punnaiah
-> > > Choudary Kalluri
-> > > Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from
-> > > device- tree
-> > >
-> > > On Tuesday 23 February 2016 05:58:32 Anurag Kumar Vulisha wrote:
-> > > > >
-> > > > > I don't know what is appropriate because I have no idea what
-> > > > > Rxwatermark is good for. Can you try describing why we can't
-> > > > > just set it to the correct value for everyone automatically?
-> > > > >
-> > > >
-> > > > This RX watermark level sets the minimum number of free locations
-> > > > within the RX FIFO .When the rx fifo level crosses the programmed
-> > > > watermark level ,sata controller  will transmit HOLDS to the
-> > > > device asking it
-> > > to wait. This happens when dma reads the rx fifo data slower than
-> > > the device is sending the data. Note that it can take some time for
-> > > the HOLDs to get to the other end and in the time there must be
-> > > enough room in the FIFO to absorb all data that could arrive from the
-> device.
-> > > > Currently we are using 0x40 for this value, which works fine with
-> > > > all hardware designs  we are currently having. But hoping that
-> > > > this value may vary for future silicon versions, I wanted to make
-> > > > this as a configurable
-> > > value. So for this reason I thought of moving it either to
-> > > device-tree or making it as a module_param() property.
-> > > >
-> > >
-> > > Ok, so if this depends on the silicon version, your initial approach
-> > > would be better than the module_param.
-> > >
-> > > I would probably make this dependent on the compatible string
-> > > instead, and have a table in the device driver that uses a specific
-> > > value for each variant of the device, but either way should be fine.
-> > >
-> > > Having a separate property is most appropriate if for each hardware
-> > > revision there is exactly one ideal value, while a table in the
-> > > driver makes more sense if this takes a bit of tuning and the driver
-> > > might choose to optimize it differently based on other constraints,
-> > > such as its own interrupt handler implementation.
-> > >
-> >
-> > Since we are  currently having one value in common for all the
-> > hardware and also changing the rx water mark does not require any
-> > changes other than vendor specific PTC register update , I think it
-> > would be better  to  use device tree property for that rx watermark value.
-> Doing this makes the updating of rx watermark value easy, if any changes
-> required.
-> >
-> > In future, if any silicon version rx water mark value doesn't work
-> > with the current versions, then  I will do as you said by maintaining
-> > the table in device driver. But at present  I feel that single rx
-> > watermark property in device tree would be enough, since it works with all
-> the hardware versions we have.
-> 
-> If you currently have no reason to modify it now, then add it later when you
-> actually have a use case.
+Please pass 'dev' as argument and use dev_dbg().
+Then you can also remove the #define pr_fmt above.
+
+> +	/* default, prescaler of 32 (i.e. div-by-32) is implicit. */
+> +	rate >>= 5;
+
+Instead of checking rate for 0 above, it might make more sense
+to check if it is 0 here.
+
+> +
+> +	/* calculate terminal count from postscaler. */
+> +	ps = pic32_wdt_get_post_scaler(wdt);
+> +	terminal = BIT(ps);
+> +
+> +	/* find time taken (in secs) to reach terminal count */
+> +	period = terminal / rate;
+
+With ps == 31, and rate == 1, the period would end up being 0x80000000,
+or negative. Not that it matters (it is assigned to an unsigned on return),
+but for consistency it might be better to return an unsigned int.
+
+> +	pr_debug("wdt: clk_rate %lu (postscale) / terminal %d, timeout %dsec\n",
+> +		 rate, terminal, period);
+> +
+> +	return period;
+> +}
+> +
+> +static void pic32_wdt_keepalive(struct pic32_wdt *wdt)
+> +{
+> +	/* write key through single half-word */
+> +	writew(WDTCON_CLR_KEY, wdt->regs + WDTCON_REG + 2);
+> +}
+> +
+> +static int pic32_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	writel(WDTCON_ON, PIC32_SET(wdt->regs + WDTCON_REG));
+> +	pic32_wdt_keepalive(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int pic32_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	writel(WDTCON_ON, PIC32_CLR(wdt->regs + WDTCON_REG));
+> +	/*
+> +	 * Cannot touch registers in the CPU cycle following clearing the
+> +	 * ON bit.
+> +	 */
+> +	nop();
+> +
+> +	return 0;
+> +}
+> +
+> +static int pic32_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	pic32_wdt_keepalive(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct watchdog_ops pic32_wdt_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.start		= pic32_wdt_start,
+> +	.stop		= pic32_wdt_stop,
+> +	.ping		= pic32_wdt_ping,
+> +};
+> +
+> +static const struct watchdog_info pic32_wdt_ident = {
+> +	.options = WDIOF_KEEPALIVEPING |
+> +			WDIOF_MAGICCLOSE | WDIOF_CARDRESET,
+> +	.identity = "PIC32 Watchdog",
+> +};
+> +
+> +static struct watchdog_device pic32_wdd = {
+> +	.info		= &pic32_wdt_ident,
+> +	.ops		= &pic32_wdt_fops,
+> +};
+> +
+> +static const struct of_device_id pic32_wdt_dt_ids[] = {
+> +	{ .compatible = "microchip,pic32mzda-wdt", },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pic32_wdt_dt_ids);
+> +
+> +static int pic32_wdt_drv_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct watchdog_device *wdd = &pic32_wdd;
+> +	struct pic32_wdt *wdt;
+> +	struct resource *mem;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (IS_ERR(wdt))
+> +		return PTR_ERR(wdt);
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->regs = devm_ioremap_resource(&pdev->dev, mem);
+> +	if (IS_ERR(wdt->regs))
+> +		return PTR_ERR(wdt->regs);
+> +
+> +	wdt->rst_base = devm_ioremap(&pdev->dev, PIC32_BASE_RESET, 0x10);
+> +	if (IS_ERR(wdt->rst_base))
+> +		return PTR_ERR(wdt->rst_base);
+> +
+> +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(wdt->clk)) {
+> +		dev_err(&pdev->dev, "clk not found\n");
+> +		return PTR_ERR(wdt->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "clk enable failed\n");
+> +		return ret;
+> +	}
+> +
+> +	if (pic32_wdt_is_win_enabled(wdt)) {
+> +		dev_err(&pdev->dev, "windowed-clear mode is not supported.\n");
+> +		ret = -EOPNOTSUPP;
+
+-ENODEV, please.
+
+> +		goto out_disable_clk;
+> +	}
+> +
+> +	wdd->timeout = pic32_wdt_get_timeout_secs(wdt);
+> +	if (!wdd->timeout) {
+> +		dev_err(&pdev->dev,
+> +			"failed to read watchdog register timeout\n");
+> +		ret = -EINVAL;
+> +		goto out_disable_clk;
+> +	}
+> +
+> +	dev_info(&pdev->dev, "timeout %d\n", wdd->timeout);
+> +
+> +	wdd->bootstatus = pic32_wdt_bootstatus(wdt) ? WDIOF_CARDRESET : 0;
+> +
+> +	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
+> +	watchdog_set_drvdata(wdd, wdt);
+> +
+> +	ret = watchdog_register_device(wdd);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "watchdog register failed, err %d\n", ret);
+> +		goto out_disable_clk;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, wdd);
+> +
+> +	return 0;
+> +
+> +out_disable_clk:
+> +	clk_disable_unprepare(wdt->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int pic32_wdt_drv_remove(struct platform_device *pdev)
+> +{
+> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
+> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	watchdog_unregister_device(wdd);
+> +	clk_disable_unprepare(wdt->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver pic32_wdt_driver = {
+> +	.probe		= pic32_wdt_drv_probe,
+> +	.remove		= pic32_wdt_drv_remove,
+> +	.driver		= {
+> +		.name		= "pic32-wdt",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(pic32_wdt_dt_ids),
+> +	}
+> +};
+> +
+> +module_platform_driver(pic32_wdt_driver);
+> +
+> +MODULE_AUTHOR("Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>");
+> +MODULE_DESCRIPTION("Microchip PIC32 Watchdog Timer");
+> +MODULE_LICENSE("GPL");
 >
 
-This property may vary from board to board . It also depends on the phy reference clock
-frequency which can be changed based on use case. So moving this property to device
-tree will make it easy for the  user  to  configure  this property based on the requirement.
-
-Thanks,
-Anuarg Kumar V
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
