@@ -1,34 +1,86 @@
-From: Krzysztof Adamski <k@japko.eu>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] ARM: dts: sun8i: Add leds and
- switch on Orangepi Plus boards
-Date: Fri, 26 Feb 2016 09:24:20 +0100
-Message-ID: <20160226082420.GD25658@box2.japko.eu>
-References: <20160225204234.GA31610@box2.japko.eu>
- <201602260632.mOdfvVuL%fengguang.wu@intel.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v2 1/6] dt-bindings: arm/marvell: add DT bindings for
+ AP806 DFX Server
+Date: Fri, 26 Feb 2016 09:32:27 +0100
+Message-ID: <20160226093227.5d4dc1a7@free-electrons.com>
+References: <1456326866-30854-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1456326866-30854-2-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160225233710.GJ28849@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201602260632.mOdfvVuL%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160225233710.GJ28849@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 06:54:29AM +0800, kbuild test robot wrote:
->Hi Krzysztof,
->
->[auto build test ERROR on robh/for-next]
->[also build test ERROR on v4.5-rc5 next-20160225]
+Stephen,
 
-I posted this patch to early. Patches it depends on are only avaiable in 
-next-20160226, not 25. It went through Maximes tree (
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/ 
-sunxi/for-next). This build error can be ignored.
+Thanks for your feedback!
+
+On Thu, 25 Feb 2016 15:37:10 -0800, Stephen Boyd wrote:
+
+> I would think the binding would be done in a way that we don't
+> have to describe every little register in this misc register
+> block. Instead, dfx server has a compatible:
+> 
+>  node@f00 {
+>  	reg = <0xf00 0x100>;
+> 	compatible = "marvell,dfx-ap806";
+> 	#clock-cells = <1>;
+>  };
+> 
+> And then a driver that probes this compatible string and
+> registers a handful of clks. If we ever get into a situation
+> where we want to expose non-clk functionality from this device
+> node, we would make some sort of mfd driver that probes based on
+> the same compatible string and creates platform devices in
+> software to register the clk device component and whatever other
+> device type is used. In that situation, we could assign a regmap
+> to the mfd device and the clk device would be a child of the mfd
+> and get a regmap through the dev->parent pointer.
+> 
+> TL;DR I'm still lost why we have to describe each clk in DT.
+
+I would entirely agree with you if this DFX Server was some sort of
+"system control" IP block that provided clocks, resets, and all sort of
+other features.
+
+But this DFX server thing is just a bunch of registers with absolutely
+no relation to clocks. Due to this, it would be completely awkward to
+have clock references like:
+
+	serial {
+		clocks = <&dfxserver 42>;
+	};
+
+One will wonder "why the heck this UART controller is using a clock
+from this really odd dfxserver thing" ? Currently we have:
+
+	serial {
+		clocks = <&coreclk 4>;
+	};
+
+which makes a *lot* more sense.
+
+Also, your idea of just hiding everything behind a MFD bothers me quite
+a bit. If I push this idea further, then why shouldn't I replace my
+entire DT with a single node, that covers the entire register space of
+my SoC, and then handle *everything* as a huge MFD. In a way, it would
+be quite useful for me, as it would resolve the on-going dispute over
+DT binding stability with Rob and Mark.
+
+For sure, I wouldn't have any DT backward compatibility issue, because
+everything is hidden in my big MFD. But in terms of the DT as a
+representation of the different HW blocks and the relations between
+then, such a choice would be quite a failure.
 
 Best regards,
-Krzysztof Adamski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
