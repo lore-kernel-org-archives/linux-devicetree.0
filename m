@@ -1,74 +1,198 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v12 5/5] arm64, mm, numa: Add NUMA balancing support for
- arm64.
-Date: Fri, 26 Feb 2016 18:53:57 +0000
-Message-ID: <20160226185356.GO29125@arm.com>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
- <1456192703-2274-6-git-send-email-ddaney.cavm@gmail.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V14 9/9] vfio, platform: add QTI HIDMA reset driver
+Date: Fri, 26 Feb 2016 14:05:58 -0500
+Message-ID: <56D0A216.8090006@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
+ <56D090C3.8060608@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456192703-2274-6-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56D090C3.8060608@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Eric Auger <eric.auger@linaro.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 05:58:23PM -0800, David Daney wrote:
-> From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+On 2/26/2016 12:52 PM, Eric Auger wrote:
+> Hi Sinan,
+> On 02/05/2016 05:34 AM, Sinan Kaya wrote:
+>> In situations where the userspace driver is stopped abnormally and the
+>> VFIO platform device is released, the assigned HW device currently is
+>> left running. As a consequence the HW device might continue issuing IRQs
+>> and performing DMA accesses.
+>>
+>> This patch is implementing a reset driver for HIDMA platform driver.
+>> This gets called by the VFIO platform reset interface.
+>>
+>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>> ---
+>>  drivers/vfio/platform/reset/Kconfig                |  9 ++
+>>  drivers/vfio/platform/reset/Makefile               |  2 +
+>>  .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
+>>  3 files changed, 110 insertions(+)
+>>  create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+>>
+>> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
+>> index 70cccc5..d02b3b5 100644
+>> --- a/drivers/vfio/platform/reset/Kconfig
+>> +++ b/drivers/vfio/platform/reset/Kconfig
+>> @@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
+>>  	  Enables the VFIO platform driver to handle reset for AMD XGBE
+>>  
+>>  	  If you don't know what to do here, say N.
+>> +
+>> +config VFIO_PLATFORM_QCOMHIDMA_RESET
+>> +	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
+>> +	depends on VFIO_PLATFORM
+>> +	help
+>> +	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
+>> +	  HIDMA Channel.
+>> +
+>> +	  If you don't know what to do here, say N.
+>> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
+>> index 93f4e23..ec7748a 100644
+>> --- a/drivers/vfio/platform/reset/Makefile
+>> +++ b/drivers/vfio/platform/reset/Makefile
+>> @@ -1,7 +1,9 @@
+>>  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
+>>  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
+>> +vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
+>>  
+>>  ccflags-y += -Idrivers/vfio/platform
+>>  
+>>  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
+>> +obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
+>>  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
+>> diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+>> new file mode 100644
+>> index 0000000..70d7eed
+>> --- /dev/null
+>> +++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+>> @@ -0,0 +1,99 @@
+>> +/*
+>> + * Qualcomm Technologies HIDMA VFIO Reset Driver
+>> + *
+>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/device.h>
+>> +#include <linux/iopoll.h>
+>> +
+>> +#include "vfio_platform_private.h"
+>> +
+>> +#define TRCA_CTRLSTS_OFFSET		0x000
+>> +#define EVCA_CTRLSTS_OFFSET		0x000
+>> +
+>> +#define CH_CONTROL_MASK		GENMASK(7, 0)
+> nit: alignment
 > 
-> Enable NUMA balancing for arm64 platforms.
-> Add pte, pmd protnone helpers for use by automatic NUMA balancing.
+> Besides it looks ok to me
+> Reviewed-by: Eric Auger <eric.auger@linaro.org>
 > 
-> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm64/Kconfig               |  1 +
->  arch/arm64/include/asm/pgtable.h | 15 +++++++++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 9f0972a..6e22503 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -11,6 +11,7 @@ config ARM64
->  	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
->  	select ARCH_USE_CMPXCHG_LOCKREF
->  	select ARCH_SUPPORTS_ATOMIC_RMW
-> +	select ARCH_SUPPORTS_NUMA_BALANCING
->  	select ARCH_WANT_OPTIONAL_GPIOLIB
->  	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
->  	select ARCH_WANT_FRAME_POINTERS
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index bf464de..5af9db2 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -346,6 +346,21 @@ static inline pgprot_t mk_sect_prot(pgprot_t prot)
->  	return __pgprot(pgprot_val(prot) & ~PTE_TABLE_BIT);
->  }
->  
-> +#ifdef CONFIG_NUMA_BALANCING
-> +/*
-> + * See the comment in include/asm-generic/pgtable.h
-> + */
-> +static inline int pte_protnone(pte_t pte)
-> +{
-> +	return (pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)) == PTE_PROT_NONE;
-> +}
-> +
-> +static inline int pmd_protnone(pmd_t pmd)
-> +{
-> +	return pte_protnone(pmd_pte(pmd));
-> +}
-> +#endif
+> If it better suits you maybe you can separate the upstream of your
+> management/channel driver from the VFIO reset driver upstream.
 
-Can these not be macros, like our other pte_* and pmd_* predicates in
-this header file?
+Thanks, I wanted to keep things together. There were some review concerns
+to whether I'm doing the right thing when it comes to virtualization. 
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patches 8 & 9 definitely needs to go in through another merge branch.
+
+> 
+> Best Regards
+> 
+> Eric
+> 
+>> +#define CH_STATE_MASK			GENMASK(7, 0)
+>> +#define CH_STATE_BIT_POS		0x8
+>> +
+>> +#define HIDMA_CH_STATE(val)	\
+>> +	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
+>> +
+>> +#define EVCA_IRQ_EN_OFFSET		0x110
+>> +
+>> +#define CH_RESET			9
+>> +#define CH_DISABLED			0
+>> +
+>> +int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
+>> +{
+>> +	struct vfio_platform_region *trreg;
+>> +	struct vfio_platform_region *evreg;
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	if (vdev->num_regions != 2)
+>> +		return -ENODEV;
+>> +
+>> +	trreg = &vdev->regions[0];
+>> +	if (!trreg->ioaddr) {
+>> +		trreg->ioaddr =
+>> +			ioremap_nocache(trreg->addr, trreg->size);
+>> +		if (!trreg->ioaddr)
+>> +			return -ENOMEM;
+>> +	}
+>> +
+>> +	evreg = &vdev->regions[1];
+>> +	if (!evreg->ioaddr) {
+>> +		evreg->ioaddr =
+>> +			ioremap_nocache(evreg->addr, evreg->size);
+>> +		if (!evreg->ioaddr)
+>> +			return -ENOMEM;
+>> +	}
+>> +
+>> +	/* disable IRQ */
+>> +	writel(0, evreg->ioaddr + EVCA_IRQ_EN_OFFSET);
+>> +
+>> +	/* reset both transfer and event channels */
+>> +	val = readl(trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
+>> +	val &= ~(CH_CONTROL_MASK << 16);
+>> +	val |= CH_RESET << 16;
+>> +	writel(val, trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
+>> +
+>> +	ret = readl_poll_timeout(trreg->ioaddr + TRCA_CTRLSTS_OFFSET, val,
+>> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
+>> +				 10000);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	val = readl(evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
+>> +	val &= ~(CH_CONTROL_MASK << 16);
+>> +	val |= CH_RESET << 16;
+>> +	writel(val, evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
+>> +
+>> +	ret = readl_poll_timeout(evreg->ioaddr + EVCA_CTRLSTS_OFFSET, val,
+>> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
+>> +				 10000);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	pr_info("HIDMA channel reset\n");
+>> +	return 0;
+>> +}
+>> +module_vfio_reset_handler("qcom,hidma-1.0", "QCOM8061",
+>> +			  vfio_platform_qcomhidma_reset);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
+>>
+> 
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
