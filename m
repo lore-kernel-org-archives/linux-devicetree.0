@@ -1,131 +1,76 @@
-From: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v12 4/5] arm64, numa: Add NUMA support for arm64 platforms.
-Date: Fri, 26 Feb 2016 11:51:32 -0800
-Message-ID: <56D0ACC4.1060605@caviumnetworks.com>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com> <1456192703-2274-5-git-send-email-ddaney.cavm@gmail.com> <20160226185341.GN29125@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on device tree
+Date: Fri, 26 Feb 2016 21:20:04 +0100
+Message-ID: <2396230.MApG9VTrxr@wuerfel>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com> <3550740.QzZi28fbXg@wuerfel> <CADRPPNSqXBqD0of0ZorXFOKQc1OQaaJCPFUTMUezJexkegHY9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160226185341.GN29125-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNSqXBqD0of0ZorXFOKQc1OQaaJCPFUTMUezJexkegHY9A@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Li Yang <leoli@freescale.com>, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jia Hongtao <hongtao.jia@freescale.com>, edubezval@gmail.com, viresh.kumar@linaro.org, Scott Wood <scottwood@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2016 10:53 AM, Will Deacon wrote:
-[...]
->> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
->> new file mode 100644
->> index 0000000..604e886
->> --- /dev/null
->> +++ b/arch/arm64/mm/numa.c
->> @@ -0,0 +1,403 @@
-[...]
->> +
->> +static int numa_off;
->> +static int numa_distance_cnt;
->> +static u8 *numa_distance;
->> +
->> +static __init int numa_parse_early_param(char *opt)
->> +{
->> +	if (!opt)
->> +		return -EINVAL;
->> +	if (!strncmp(opt, "off", 3)) {
->> +		pr_info("%s\n", "NUMA turned off");
->> +		numa_off = 1;
->> +	}
->> +	return 0;
->> +}
->> +early_param("numa", numa_parse_early_param);
->
-> Curious, but when is this option actually useful?
->
+On Friday 26 February 2016 12:04:59 Li Yang wrote:
+> On Fri, Dec 18, 2015 at 4:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Tuesday 15 December 2015 00:58:26 Rafael J. Wysocki wrote:
+> >> On Thursday, November 26, 2015 05:21:11 PM Jia Hongtao wrote:
+> >> > Register the qoriq cpufreq driver as a cooling device, based on the
+> >> > thermal device tree framework. When temperature crosses the passive trip
+> >> > point cpufreq is used to throttle CPUs.
+> >> >
+> >> > Signed-off-by: Jia Hongtao <hongtao.jia@freescale.com>
+> >> > Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+> >>
+> >> Applied, thanks!
+> >>
+> >
+> > I got a randconfig build error today:
+> >
+> > drivers/built-in.o: In function `qoriq_cpufreq_ready':
+> > debugfs.c:(.text+0x1f4688): undefined reference to `of_cpufreq_cooling_register'
+> >
+> > CONFIG_OF=y
+> > CONFIG_QORIQ_CPUFREQ=y
+> > CONFIG_THERMAL=m
+> > CONFIG_THERMAL_OF=y
+> >
+> > I think you need a 'depends on THERMAL' to prevent the driver from
+> > being built-in when THERMAL=m.
+> 
+> Maybe this is not the best approach.  The cpufreq feature itself
+> should be working independently without thermal framework.  I think we
+> should make the qoriq_cpufreq_ready() defined as null function if
+> THERMAL is not defined.
 
-Good point.  I will remove that bit, it was used as an aid in debugging 
-while bringing up the patch set.
+It already does this when CONFIG_THERMAL is not defined, and my
+patch doesn't change that. I'm not sure what you are asking for now.
+
+Do you want to allow using the cpufreq driver as a built-in driver
+even when the thermal code is in a module, and then silently skip
+all thermal management as if it was turned off?
+
+That would be this patch:
+
+diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
+index c156f5082758..a8d9241fc1bb 100644
+--- a/include/linux/cpu_cooling.h
++++ b/include/linux/cpu_cooling.h
+@@ -48,7 +48,7 @@ cpufreq_power_cooling_register(const struct cpumask *clip_cpus,
+  * @np: a valid struct device_node to the cooling device device tree node.
+  * @clip_cpus: cpumask of cpus where the frequency constraints will happen
+  */
+-#ifdef CONFIG_THERMAL_OF
++#if IS_REACHABLE(CONFIG_THERMAL_OF)
+ struct thermal_cooling_device *
+ of_cpufreq_cooling_register(struct device_node *np,
+ 			    const struct cpumask *clip_cpus);
 
 
->> +
->> +cpumask_var_t node_to_cpumask_map[MAX_NUMNODES];
->> +EXPORT_SYMBOL(node_to_cpumask_map);
->> +
->> +#ifdef CONFIG_DEBUG_PER_CPU_MAPS
->> +
->> +/*
->> + * Returns a pointer to the bitmask of CPUs on Node 'node'.
->> + */
->> +const struct cpumask *cpumask_of_node(int node)
->> +{
->> +	if (WARN_ON(node >= nr_node_ids))
->> +		return cpu_none_mask;
->> +
->> +	if (WARN_ON(node_to_cpumask_map[node] == NULL))
->> +		return cpu_online_mask;
->> +
->> +	return node_to_cpumask_map[node];
->> +}
->> +EXPORT_SYMBOL(cpumask_of_node);
->> +
->> +#endif
->> +
->> +static void map_cpu_to_node(unsigned int cpu, int nid)
->> +{
->> +	set_cpu_numa_node(cpu, nid);
->> +	if (nid >= 0)
->> +		cpumask_set_cpu(cpu, node_to_cpumask_map[nid]);
->> +}
->> +
->> +static void unmap_cpu_to_node(unsigned int cpu)
->> +{
->> +	int nid = cpu_to_node(cpu);
->> +
->> +	if (nid >= 0)
->> +		cpumask_clear_cpu(cpu, node_to_cpumask_map[nid]);
->> +	set_cpu_numa_node(cpu, NUMA_NO_NODE);
->> +}
->
-> How do you end up with negative nids this late in the game?
->
+but my feeling is that this would cause more surprises when users
+find their thermal management is not active even though it was
+enabled in Kconfig and the thermal module gets loaded.
 
-It might be possible with some of the hot plugging code.  It is a little 
-paranoia programming.
-
-If you really don't like it, we can remove it.
-
->> +
->> +void numa_clear_node(unsigned int cpu)
->> +{
->> +	unmap_cpu_to_node(cpu);
->
-> Why don't you just inline this function?
-
-Good point, I will do that.
-
-[...]
->> +int __init numa_add_memblk(int nid, u64 start, u64 size)
->> +{
->> +	int ret;
->> +
->> +	ret = memblock_set_node(start, size, &memblock.memory, nid);
->> +	if (ret < 0) {
->> +		pr_err("NUMA: memblock [0x%llx - 0x%llx] failed to add on node %d\n",
->> +			start, (start + size - 1), nid);
->> +		return ret;
->> +	}
->> +
->> +	node_set(nid, numa_nodes_parsed);
->> +	pr_info("NUMA: Adding memblock [0x%llx - 0x%llx] on node %d\n",
->> +			start, (start + size - 1), nid);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL(numa_add_memblk);
->
-> But this is marked __init... (and you've done this elsewhere in the patch
-> too).
-
-I will fix these.
-
->
-> Will
->
+	Arnd
