@@ -1,66 +1,95 @@
-From: =?big5?B?SmVmZnJleSBMaW4gKKpMuHGzuSk=?= <Jeffrey.Lin@rad-ic.com>
-Subject: RE: [PATCH] driver: input :touchscreen : add Raydium I2C touch
- driver file
-Date: Fri, 26 Feb 2016 09:24:23 +0000
-Message-ID: <9BE4B49389AB2F41A64A32DFC844F1DF73EF7EE7@RADHCMS5.corp.rad-ic.com>
-References: <201602261633.y2ggBswA%fengguang.wu@intel.com>
- <alpine.DEB.2.10.1602260951390.2614@hadrien>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support
+ of a DT graph of ports
+Date: Fri, 26 Feb 2016 12:14:44 +0200
+Message-ID: <56D02594.4020407@ti.com>
+References: <cover.1455720381.git.jsarha@ti.com>
+ <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
+ <20160218143530.GB9654@rob-hp-laptop> <56CF04DA.8080905@ti.com>
+ <20160226004311.GM5783@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.10.1602260951390.2614@hadrien>
-Content-Language: zh-TW
-Sender: linux-input-owner@vger.kernel.org
-To: Julia Lawall <julia.lawall@lip6.fr>, "jeffrey.lin" <yajohn@gmail.com>
-Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, =?big5?B?Um9nZXIgWWFuZyAot6jC7d6zKQ==?= <Roger.Yang@rad-ic.com>, =?big5?B?S1AgTGkgKKf1qfitvyk=?= <KP.Li@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160226004311.GM5783@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, moinejf@free.fr, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SnVsaWE6DQpUaGFua3MgZm9yIHlvdXIgcmVzcG9uc2UuIEknbGwgZml4IHRoZW0gaW4gbmV4dCB2
-ZXJzaW9uLg0KDQpCZXN0IFJlZ2FyZHMNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkplZmZyZXkgTGluLKpMuHGz
-uQ0Kt+e5qazsp94NClJheWRpdW0gU2VtaWNvbmR1Y3RvciBDb3Jwb3JhdGlvbg0KVGVsOigwMyk2
-NjYtMTgxOCBFeHQuNDE2Mw0KRmF4OigwMyk2NjYtMTkxOQ0KDQotLS0tLU9yaWdpbmFsIE1lc3Nh
-Z2UtLS0tLQ0KRnJvbTogSnVsaWEgTGF3YWxsIFttYWlsdG86anVsaWEubGF3YWxsQGxpcDYuZnJd
-IA0KU2VudDogRnJpZGF5LCBGZWJydWFyeSAyNiwgMjAxNiA0OjUzIFBNDQpUbzogamVmZnJleS5s
-aW4NCkNjOiBrYnVpbGQtYWxsQDAxLm9yZzsgZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsgcnlk
-YmVyZ0BldXJvbWFpbC5zZTsgZ3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVs
-Lm9yZzsgamVlc3dAbWVsZmFzLmNvbTsgYmxldW5nQGNocm9taXVtLm9yZzsgc2NvdHQubGl1QGVt
-Yy5jb20udHc7IEplZmZyZXkgTGluICiqTLhxs7kpOyBSb2dlciBZYW5nICi3qMLt3rMpOyBLUCBM
-aSAop/Wp+K2/KTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtaW5wdXRAdmdl
-ci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQ
-QVRDSF0gZHJpdmVyOiBpbnB1dCA6dG91Y2hzY3JlZW4gOiBhZGQgUmF5ZGl1bSBJMkMgdG91Y2gg
-ZHJpdmVyIGZpbGUNCg0KUGxlYXNlIGFkanVzdCB0aGUgaW5kZW50YXRpb24uDQoNCmp1bGlhDQoN
-Ck9uIEZyaSwgMjYgRmViIDIwMTYsIGtidWlsZCB0ZXN0IHJvYm90IHdyb3RlOg0KDQo+IEhpIGpl
-ZmZyZXkubGluLA0KPg0KPiBbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gaW5wdXQvbmV4dF0g
-W2Fsc28gYnVpbGQgdGVzdCBXQVJOSU5HIG9uIA0KPiB2NC41LXJjNSBuZXh0LTIwMTYwMjI2XSBb
-aWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9uZyBnaXQgDQo+IHRyZWUsIHBsZWFz
-ZSBkcm9wIHVzIGEgbm90ZSB0byBoZWxwIGltcHJvdmluZyB0aGUgc3lzdGVtXQ0KPg0KPiB1cmw6
-ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvamVmZnJleS1saW4v
-ZHJpdmVyLWlucHV0LXRvdWNoc2NyZWVuLWFkZC1SYXlkaXVtLUkyQy10b3VjaC1kcml2ZXItZmls
-ZS8yMDE2MDIyNi0xNTI1NDINCj4gYmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
-Y20vbGludXgva2VybmVsL2dpdC9kdG9yL2lucHV0LmdpdCBuZXh0DQo+IDo6Ojo6OiBicmFuY2gg
-ZGF0ZTogNjQgbWludXRlcyBhZ28NCj4gOjo6Ojo6IGNvbW1pdCBkYXRlOiA2NCBtaW51dGVzIGFn
-bw0KPg0KPiA+PiBkcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL3JheWRpdW1faTJjX3RzLmM6NTM2
-OjMtMTI6IGNvZGUgYWxpZ25lZCANCj4gPj4gd2l0aCBmb2xsb3dpbmcgY29kZSBvbiBsaW5lIDUz
-OA0KPg0KPiBnaXQgcmVtb3RlIGFkZCBsaW51eC1yZXZpZXcgaHR0cHM6Ly9naXRodWIuY29tLzBk
-YXktY2kvbGludXggZ2l0IA0KPiByZW1vdGUgdXBkYXRlIGxpbnV4LXJldmlldyBnaXQgY2hlY2tv
-dXQgDQo+IDE4ZGRkMjg1NjdkMDhiMTE0YjU3NmU4MDE0NzVkNmQ3MjA5Zjc2ZjUNCj4gdmltICs1
-MzYgZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9yYXlkaXVtX2kyY190cy5jDQo+DQo+IDE4ZGRk
-Mjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDUzMA0KPiAxOGRkZDI4NSBqZWZmcmV5LmxpbiAy
-MDE2LTAyLTI2ICA1MzEgIAkJaW5wdXRfbXRfc2xvdCh0cy0+aW5wdXQsIGkpOw0KPiAxOGRkZDI4
-NSBqZWZmcmV5LmxpbiAyMDE2LTAyLTI2ICA1MzIgIAkJaW5wdXRfbXRfcmVwb3J0X3Nsb3Rfc3Rh
-dGUodHMtPmlucHV0LA0KPiAxOGRkZDI4NSBqZWZmcmV5LmxpbiAyMDE2LTAyLTI2ICA1MzMgIAkJ
-CQlNVF9UT09MX0ZJTkdFUiwgZl9zdGF0ZSAhPSAwKTsNCj4gMThkZGQyODUgamVmZnJleS5saW4g
-MjAxNi0wMi0yNiAgNTM0DQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDUzNSAg
-CQlpZiAoIWZfc3RhdGUpDQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgQDUzNiAg
-CQkJY29udGludWU7DQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDUzNw0KPiAx
-OGRkZDI4NSBqZWZmcmV5LmxpbiAyMDE2LTAyLTI2IEA1MzggIAkJCXggPSAoZGF0YS0+eF9wb3Nf
-bXNiIDw8IDgpIHwgKGRhdGEtPnhfcG9zX2xzYik7DQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIw
-MTYtMDItMjYgIDUzOSAgCQkJeSA9IChkYXRhLT55X3Bvc19tc2IgPDwgOCkgfCAoZGF0YS0+eV9w
-b3NfbHNiKTsNCj4gMThkZGQyODUgamVmZnJleS5saW4gMjAxNi0wMi0yNiAgNTQwDQo+IDE4ZGRk
-Mjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDU0MSAgCQkJaW5wdXRfcmVwb3J0X2tleSh0cy0+
-aW5wdXQsDQo+DQo+IC0tLQ0KPiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVyZSAgICAg
-ICAgICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcg0KPiBodHRwczovL2xpc3Rz
-LjAxLm9yZy9waXBlcm1haWwva2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJbnRlbCBDb3Jw
-b3JhdGlvbg0KPg0K
+On 02/26/16 02:43, Russell King - ARM Linux wrote:
+> On Thu, Feb 25, 2016 at 03:42:50PM +0200, Jyri Sarha wrote:
+>> On 02/18/16 16:35, Rob Herring wrote:
+>>> This should be implied from the port unit address. In other words,
+>>> port@0 is defined to be the rgb port. Now, if this is one of several
+>>> modes for the video port, then that is a different story.
+>>>
+>>
+>> Do you suggest that also the audio i2s and s/p-dif port-types should be
+>> coded in the port unit addresses? Something like: port@0 is always rgb,
+>> port@1 is i2s, and port@2 is spdif?
+>
+> For the audio inputs, the port address corresponds to the input pin.
+> TDA998x devices can have multiple streams routed to the pins, and can
+> select between them.
+>
+> For example, there may be four I2S data pins and one I2S clock pin.
+> When using stereo, you can select which of the four I2S data pins
+> carries the audio data.
+>
+
+Sure, but I do not think that would be the usual setup. The only 
+"normal" situation I can think for having a need to have two alternative 
+audio setups would one for i2s and another for s/p-dif. But then again 
+it is possible to come up with a design with multiple alternative audio 
+wirings and it relatively simple handle that in DT binding, so why not.
+
+> When using SPDIF, there may be two SPDIF inputs, and you can select
+> which SPDIF input is used.
+>
+> So, "reg" may not be an address in terms of a CPU visible address, but
+> it's an address as far as selecting the appropriate input - and it
+> fits in with the requirements of ePAPR, which are that if you have
+> a unit-address (which is required to distinguish different port nodes)
+> then you must have a matching "reg" property.
+>
+
+Still I do not see why it is desirable to reuse reg property, when we 
+can introduce new property for describing the audio wiring.
+
+> I don't particularly like the video node using the RGB routing register
+> value either for the reg property, but I've kept quiet because I have
+> nothing to offer there: again, this comes down to ePAPR requirements
+> and the need to specify multiple "port { }" nodes.  You can't have two
+> "port { }" nodes without using a unit-address, and we'd need to chose
+> a unit-address for it which doesn't conflict with the audio ports...
+> so there's a kind of logic to using the RGB routing value, which will
+> never conflict.
+>
+
+If we after all decide to go with using reg property for audio wiring 
+(and essentially writing the value directly to AP_ENA register), then we 
+could also agree that video port's unit address is always 0 as it 
+corresponds to audio disabled in AP_ENA register and would not collide 
+with any audio "address". Then we could keep the old video-ports 
+property to configure the video wiring. How does this sound?
+
+Best regards,
+Jyri
+
+ps. Then we still have the alternative of not using the graph/ports 
+binding for audio at all. No other audio driver is currently using that 
+and the graph binding is not particularly well suited for i2s 
+connections as there may be more than two components connected to the 
+same wires and sharing the bandwidth with both TDM and different data 
+wires. But I am not sure if I want to go there any more as I have a 
+feeling that I have been running in circles for couple of years with 
+this now.
