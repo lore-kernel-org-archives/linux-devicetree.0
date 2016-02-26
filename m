@@ -1,101 +1,84 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph
- of ports
-Date: Fri, 26 Feb 2016 11:21:59 +0000
-Message-ID: <20160226112159.GO5783@n2100.arm.linux.org.uk>
-References: <cover.1455720381.git.jsarha@ti.com>
- <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
- <20160218143530.GB9654@rob-hp-laptop> <56CF04DA.8080905@ti.com>
- <20160226004311.GM5783@n2100.arm.linux.org.uk>
- <56D02594.4020407@ti.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 RESEND 0/4] mailbox: hisilicon: add Hi6220 mailbox driver
+Date: Fri, 26 Feb 2016 17:10:11 +0530
+Message-ID: <CABb+yY0_OzKmftb0HQKyfuE+2jgOfoRLHp-ok=Ux36sK8na6Ag@mail.gmail.com>
+References: <1455544226-10094-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <56D02594.4020407@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455544226-10094-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjYsIDIwMTYgYXQgMTI6MTQ6NDRQTSArMDIwMCwgSnlyaSBTYXJoYSB3cm90
-ZToKPiBPbiAwMi8yNi8xNiAwMjo0MywgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IHdyb3RlOgo+
-ID5PbiBUaHUsIEZlYiAyNSwgMjAxNiBhdCAwMzo0Mjo1MFBNICswMjAwLCBKeXJpIFNhcmhhIHdy
-b3RlOgo+ID4+T24gMDIvMTgvMTYgMTY6MzUsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4+PlRoaXMg
-c2hvdWxkIGJlIGltcGxpZWQgZnJvbSB0aGUgcG9ydCB1bml0IGFkZHJlc3MuIEluIG90aGVyIHdv
-cmRzLAo+ID4+PnBvcnRAMCBpcyBkZWZpbmVkIHRvIGJlIHRoZSByZ2IgcG9ydC4gTm93LCBpZiB0
-aGlzIGlzIG9uZSBvZiBzZXZlcmFsCj4gPj4+bW9kZXMgZm9yIHRoZSB2aWRlbyBwb3J0LCB0aGVu
-IHRoYXQgaXMgYSBkaWZmZXJlbnQgc3RvcnkuCj4gPj4+Cj4gPj4KPiA+PkRvIHlvdSBzdWdnZXN0
-IHRoYXQgYWxzbyB0aGUgYXVkaW8gaTJzIGFuZCBzL3AtZGlmIHBvcnQtdHlwZXMgc2hvdWxkIGJl
-Cj4gPj5jb2RlZCBpbiB0aGUgcG9ydCB1bml0IGFkZHJlc3Nlcz8gU29tZXRoaW5nIGxpa2U6IHBv
-cnRAMCBpcyBhbHdheXMgcmdiLAo+ID4+cG9ydEAxIGlzIGkycywgYW5kIHBvcnRAMiBpcyBzcGRp
-Zj8KPiA+Cj4gPkZvciB0aGUgYXVkaW8gaW5wdXRzLCB0aGUgcG9ydCBhZGRyZXNzIGNvcnJlc3Bv
-bmRzIHRvIHRoZSBpbnB1dCBwaW4uCj4gPlREQTk5OHggZGV2aWNlcyBjYW4gaGF2ZSBtdWx0aXBs
-ZSBzdHJlYW1zIHJvdXRlZCB0byB0aGUgcGlucywgYW5kIGNhbgo+ID5zZWxlY3QgYmV0d2VlbiB0
-aGVtLgo+ID4KPiA+Rm9yIGV4YW1wbGUsIHRoZXJlIG1heSBiZSBmb3VyIEkyUyBkYXRhIHBpbnMg
-YW5kIG9uZSBJMlMgY2xvY2sgcGluLgo+ID5XaGVuIHVzaW5nIHN0ZXJlbywgeW91IGNhbiBzZWxl
-Y3Qgd2hpY2ggb2YgdGhlIGZvdXIgSTJTIGRhdGEgcGlucwo+ID5jYXJyaWVzIHRoZSBhdWRpbyBk
-YXRhLgo+ID4KPiAKPiBTdXJlLCBidXQgSSBkbyBub3QgdGhpbmsgdGhhdCB3b3VsZCBiZSB0aGUg
-dXN1YWwgc2V0dXAuIFRoZSBvbmx5ICJub3JtYWwiCj4gc2l0dWF0aW9uIEkgY2FuIHRoaW5rIGZv
-ciBoYXZpbmcgYSBuZWVkIHRvIGhhdmUgdHdvIGFsdGVybmF0aXZlIGF1ZGlvIHNldHVwcwo+IHdv
-dWxkIG9uZSBmb3IgaTJzIGFuZCBhbm90aGVyIGZvciBzL3AtZGlmLiBCdXQgdGhlbiBhZ2FpbiBp
-dCBpcyBwb3NzaWJsZSB0bwo+IGNvbWUgdXAgd2l0aCBhIGRlc2lnbiB3aXRoIG11bHRpcGxlIGFs
-dGVybmF0aXZlIGF1ZGlvIHdpcmluZ3MgYW5kIGl0Cj4gcmVsYXRpdmVseSBzaW1wbGUgaGFuZGxl
-IHRoYXQgaW4gRFQgYmluZGluZywgc28gd2h5IG5vdC4KClRoZXJlJ3MgYW5vdGhlciByZWFzb246
-IGlmIHlvdSB3YW50IHRvIHN1cHBvcnQgOCBjaGFubmVsIGF1ZGlvIHVzaW5nIEkyUwpyYXRoZXIg
-dGhhbiBTUERJRiwgdGhlbiB5b3UgbmVlZCB0byB1c2UgZm91ciBJMlMgZGF0YSBpbnB1dHMuICBF
-YWNoIEkyUwpkYXRhIGlucHV0IGNhbiBzdXBwb3J0IG9ubHkgdHdvIGNoYW5uZWxzLgoKPiA+V2hl
-biB1c2luZyBTUERJRiwgdGhlcmUgbWF5IGJlIHR3byBTUERJRiBpbnB1dHMsIGFuZCB5b3UgY2Fu
-IHNlbGVjdAo+ID53aGljaCBTUERJRiBpbnB1dCBpcyB1c2VkLgo+ID4KPiA+U28sICJyZWciIG1h
-eSBub3QgYmUgYW4gYWRkcmVzcyBpbiB0ZXJtcyBvZiBhIENQVSB2aXNpYmxlIGFkZHJlc3MsIGJ1
-dAo+ID5pdCdzIGFuIGFkZHJlc3MgYXMgZmFyIGFzIHNlbGVjdGluZyB0aGUgYXBwcm9wcmlhdGUg
-aW5wdXQgLSBhbmQgaXQKPiA+Zml0cyBpbiB3aXRoIHRoZSByZXF1aXJlbWVudHMgb2YgZVBBUFIs
-IHdoaWNoIGFyZSB0aGF0IGlmIHlvdSBoYXZlCj4gPmEgdW5pdC1hZGRyZXNzICh3aGljaCBpcyBy
-ZXF1aXJlZCB0byBkaXN0aW5ndWlzaCBkaWZmZXJlbnQgcG9ydCBub2RlcykKPiA+dGhlbiB5b3Ug
-bXVzdCBoYXZlIGEgbWF0Y2hpbmcgInJlZyIgcHJvcGVydHkuCj4gCj4gU3RpbGwgSSBkbyBub3Qg
-c2VlIHdoeSBpdCBpcyBkZXNpcmFibGUgdG8gcmV1c2UgcmVnIHByb3BlcnR5LCB3aGVuIHdlIGNh
-bgo+IGludHJvZHVjZSBuZXcgcHJvcGVydHkgZm9yIGRlc2NyaWJpbmcgdGhlIGF1ZGlvIHdpcmlu
-Zy4KCkRpZmZlcmVudCBwZW9wbGUgaGF2ZSBkaWZmZXJlbnQgb3BpbmlvbnMuICBZb3VyIG9waW5p
-b24gaXMganVzdCBhbm90aGVyCmV4YW1wbGUgb2Ygc29tZW9uZSBob2xkaW5nIGEgZGlmZmVyZW50
-IHZpZXcuCgpZb3UgX2hhdmVfIHRvIGhhdmUgYSB1bml0IGFkZHJlc3MsIGFuZCB0aGVyZWZvcmUg
-eW91IF9oYXZlXyB0byBoYXZlIGEKcmVnIHByb3BlcnR5LiAgSWYgeW91IHdhbnQgdG8gdXNlIHNv
-bWUgb3RoZXIgcHJvcGVydHkgdG8gZGVzY3JpYmUgdGhlCmF1ZGlvIGlucHV0IHBpbiwgdGhlbiB5
-b3Ugd2lsbCBuZWVkIHRvIG1ha2UgdXAgYSB0b3RhbGx5IGZpY3RpY2lvdXMKdW5pdC1hZGRyZXNz
-IGFuZCByZWcgcHJvcGVydHkgZm9yIGVhY2ggYXVkaW8gaW5wdXQgcGluLgoKVGhhdCdzIGFkZGlu
-ZyBjb21wbGV4aXR5LCBhcmd1YWJseSB1bm5lY2Vzc2FyeSBjb21wbGV4aXR5LCBhbmQgbWFraW5n
-CnRoZSBiaW5kaW5nIHVubmVjZXNzYXJpbHkgbW9yZSBjb21wbGV4IGZvciBubyBnb29kIHJlYXNv
-bi4KCj4gPkkgZG9uJ3QgcGFydGljdWxhcmx5IGxpa2UgdGhlIHZpZGVvIG5vZGUgdXNpbmcgdGhl
-IFJHQiByb3V0aW5nIHJlZ2lzdGVyCj4gPnZhbHVlIGVpdGhlciBmb3IgdGhlIHJlZyBwcm9wZXJ0
-eSwgYnV0IEkndmUga2VwdCBxdWlldCBiZWNhdXNlIEkgaGF2ZQo+ID5ub3RoaW5nIHRvIG9mZmVy
-IHRoZXJlOiBhZ2FpbiwgdGhpcyBjb21lcyBkb3duIHRvIGVQQVBSIHJlcXVpcmVtZW50cwo+ID5h
-bmQgdGhlIG5lZWQgdG8gc3BlY2lmeSBtdWx0aXBsZSAicG9ydCB7IH0iIG5vZGVzLiAgWW91IGNh
-bid0IGhhdmUgdHdvCj4gPiJwb3J0IHsgfSIgbm9kZXMgd2l0aG91dCB1c2luZyBhIHVuaXQtYWRk
-cmVzcywgYW5kIHdlJ2QgbmVlZCB0byBjaG9zZQo+ID5hIHVuaXQtYWRkcmVzcyBmb3IgaXQgd2hp
-Y2ggZG9lc24ndCBjb25mbGljdCB3aXRoIHRoZSBhdWRpbyBwb3J0cy4uLgo+ID5zbyB0aGVyZSdz
-IGEga2luZCBvZiBsb2dpYyB0byB1c2luZyB0aGUgUkdCIHJvdXRpbmcgdmFsdWUsIHdoaWNoIHdp
-bGwKPiA+bmV2ZXIgY29uZmxpY3QuCj4gPgo+IAo+IElmIHdlIGFmdGVyIGFsbCBkZWNpZGUgdG8g
-Z28gd2l0aCB1c2luZyByZWcgcHJvcGVydHkgZm9yIGF1ZGlvIHdpcmluZyAoYW5kCj4gZXNzZW50
-aWFsbHkgd3JpdGluZyB0aGUgdmFsdWUgZGlyZWN0bHkgdG8gQVBfRU5BIHJlZ2lzdGVyKSwgdGhl
-biB3ZSBjb3VsZAo+IGFsc28gYWdyZWUgdGhhdCB2aWRlbyBwb3J0J3MgdW5pdCBhZGRyZXNzIGlz
-IGFsd2F5cyAwIGFzIGl0IGNvcnJlc3BvbmRzIHRvCj4gYXVkaW8gZGlzYWJsZWQgaW4gQVBfRU5B
-IHJlZ2lzdGVyIGFuZCB3b3VsZCBub3QgY29sbGlkZSB3aXRoIGFueSBhdWRpbwo+ICJhZGRyZXNz
-Ii4gVGhlbiB3ZSBjb3VsZCBrZWVwIHRoZSBvbGQgdmlkZW8tcG9ydHMgcHJvcGVydHkgdG8gY29u
-ZmlndXJlIHRoZQo+IHZpZGVvIHdpcmluZy4gSG93IGRvZXMgdGhpcyBzb3VuZD8KClN1Yi1zdGFu
-ZGFyZCA6KQoKVGhpcyBoYXMgYWN0dWFsbHkgYmVlbiBkaXNjdXNzZWQgYmVmb3JlLiAgU2VlIHRo
-ZSB0aHJlYWQ6CgoiW1BBVENIIHY5IDEvNF0gZHJtL2kyYzogdGRhOTk4eDogQWRkIERUIHN1cHBv
-cnQgZm9yIGF1ZGlvIgoKZnJvbSBKYW51YXJ5IDIwMTUuCgotLSAKUk1LJ3MgUGF0Y2ggc3lzdGVt
-OiBodHRwOi8vd3d3LmFybS5saW51eC5vcmcudWsvZGV2ZWxvcGVyL3BhdGNoZXMvCkZUVEMgYnJv
-YWRiYW5kIGZvciAwLjhtaWxlIGxpbmU6IGN1cnJlbnRseSBhdCA5LjZNYnBzIGRvd24gNDAwa2Jw
-cyB1cAphY2NvcmRpbmcgdG8gc3BlZWR0ZXN0Lm5ldC4KX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Feb 15, 2016 at 7:20 PM, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
+> with a maximum message size of 8 words. I/O is performed using register
+> access (there is no DMA) and the cell raises an interrupt when messages
+> are received.
+>
+> This patch series is to implement Hi6220 mailbox driver. It registers
+> two channels into framework for communication with MCU, one is tx channel
+> and another is rx channel. Now mailbox driver is used to send message to
+> MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
+>
+> Changes from v6:
+> * Fix to use lowercase for hexadecimal value in DT binding document
+>
+> Changes from v5:
+> * Refine to use mailbox three specifiers for client driver, so add xlate
+>   callback function in mailbox driver to support these specifiers
+> * Refine document for property "hi6220,mbox-tx-noirq"
+>
+> Changes from v4:
+> * According to Jassi's suggestion, using DT binding to register channels
+> * Change to use operating-points-v2 to register operating points
+>
+> Changes from v3:
+> * The patch series for enabling idle state for Hi6220 has reserved memory
+>   regions, so this series will not include it anymore
+> * Refined mailbox driver according to Jassi's suggestion;
+>   Removed kfifo from mailbox driver;
+>   Removed spinlock for ipc registers accessing, due every channel has its
+>   own dedicated bit in ipc register and readl/writel will introduce memory
+>   barrier, so don't need spinlock to protect ipc registers accessing
+> * After mailbox driver is ready, can use patch 4 to enable CPU's OPPs and
+>   stub clock driver; finally can enable CPUFreq driver for CPU frequency
+>   scaling
+>
+> Changes from v2:
+> * Get rid of unused memory regions from memory node in DT, and don't use
+>   reserved-memory node according to Mark and Leif's suggestion; Haojian also
+>   has updated UEFI for efi memory info
+>
+> Changes from v1:
+> * Correct lock usage for SMP scenario
+>
+> Changes from RFC:
+> * According to Jassi's review, totally remove the abstract common driver
+>   layer and only commit driver dedicated for Hi6220
+> * According to Paul Bolle's review, fix typo issue for Kconfig and remove
+>   unnecessary dependency with OF and fix minor for mailbox driver
+> * Refine a little for dts nodes
+>
+>
+> Leo Yan (4):
+>   dt-bindings: mailbox: Document Hi6220 mailbox driver
+>   mailbox: Hi6220: add mailbox driver
+>   arm64: dts: add mailbox node for Hi6220
+>   arm64: dts: add Hi6220's stub clock node
+>
+>  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  74 ++++
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
+>  drivers/mailbox/Kconfig                            |   8 +
+>  drivers/mailbox/Makefile                           |   2 +
+>  drivers/mailbox/hi6220-mailbox.c                   | 395 +++++++++++++++++++++
+>
+Applied 1 & 2 to mailbox-for-next.  Patch-3&4 should go via asoc tree.
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
