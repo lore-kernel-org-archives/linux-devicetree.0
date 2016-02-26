@@ -1,78 +1,105 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 0/9] ARM: dts: uniphier: UniPhier DT updates for Linux 4.6-rc1
- (2nd round)
-Date: Fri, 26 Feb 2016 16:18:27 +0900
-Message-ID: <1456471116-8140-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH 1/9] arm64: dts: uniphier: rename PH1-LD10 to PH1-LD20
+Date: Fri, 26 Feb 2016 16:18:28 +0900
+Message-ID: <1456471116-8140-2-git-send-email-yamada.masahiro@socionext.com>
+References: <1456471116-8140-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456471116-8140-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Due to the company's awful projecting, this chip has been renamed to
+PH1-LD20.  It has not been shipped yet, this change would have no
+impact on our customers.
 
-Hi Olof,
+Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
 
-Here is a series for UniPhier DT updates.
+ arch/arm64/boot/dts/socionext/Makefile                            | 2 +-
+ .../{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts}      | 8 ++++----
+ .../socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi}  | 6 +++---
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+ rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts} (92%)
+ rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi} (98%)
 
-It intentionally includes DT updates for ARM 32bit and ARM 64bit
-in order to avoid conflicts and build errors.
-
-(Some files in arch/arm64/boot/dts/socionext points to
-arch/arm/boot/dts/* by symbolic links, so I needed to
-change them atomically.)
-
-Please apply the whole series to one branch.
-
-
-
-Masahiro Yamada (9):
-  arm64: dts: uniphier: rename PH1-LD10 to PH1-LD20
-  ARM: dts: uniphier: factor out ranges property of support card
-  ARM: dts: uniphier: rework UniPhier System Bus nodes
-  ARM: dts: uniphier: add reference clock nodes
-  ARM: dts: uniphier: add EEPROM node for ProXstream2 Gentil board
-  ARM: dts: uniphier: enable I2C channel 2 of ProXstream2 Gentil board
-  ARM: dts: uniphier: add PH1-Pro4 Ace board support
-  ARM: dts: uniphier: add PH1-Pro4 Sanji board support
-  ARM: dts: uniphier: add @{address} to EEPROM node
-
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/uniphier-common32.dtsi           |  27 +++--
- arch/arm/boot/dts/uniphier-ph1-ld4-ref.dts         |   8 --
- arch/arm/boot/dts/uniphier-ph1-ld4.dtsi            |   4 +
- arch/arm/boot/dts/uniphier-ph1-ld6b-ref.dts        |   8 --
- arch/arm/boot/dts/uniphier-ph1-pro4-ace.dts        | 113 +++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-pro4-ref.dts        |   8 --
- arch/arm/boot/dts/uniphier-ph1-pro4-sanji.dts      | 108 ++++++++++++++++++++
- arch/arm/boot/dts/uniphier-ph1-pro4.dtsi           |   4 +
- arch/arm/boot/dts/uniphier-ph1-pro5.dtsi           |   4 +
- arch/arm/boot/dts/uniphier-ph1-sld3-ref.dts        |   8 --
- arch/arm/boot/dts/uniphier-ph1-sld3.dtsi           |  26 +++--
- arch/arm/boot/dts/uniphier-ph1-sld8-ref.dts        |   8 --
- arch/arm/boot/dts/uniphier-ph1-sld8.dtsi           |   4 +
- arch/arm/boot/dts/uniphier-proxstream2-gentil.dts  |  10 ++
- arch/arm/boot/dts/uniphier-proxstream2.dtsi        |   4 +
- arch/arm/boot/dts/uniphier-ref-daughter.dtsi       |   2 +-
- arch/arm/boot/dts/uniphier-support-card.dtsi       |   6 +-
- arch/arm64/boot/dts/socionext/Makefile             |   2 +-
- ...-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts} |  16 +--
- ...iphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi} |  25 +++--
- 21 files changed, 315 insertions(+), 82 deletions(-)
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4-ace.dts
- create mode 100644 arch/arm/boot/dts/uniphier-ph1-pro4-sanji.dts
- rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10-ref.dts => uniphier-ph1-ld20-ref.dts} (88%)
- rename arch/arm64/boot/dts/socionext/{uniphier-ph1-ld10.dtsi => uniphier-ph1-ld20.dtsi} (94%)
-
+diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
+index 8d72771..299b67e 100644
+--- a/arch/arm64/boot/dts/socionext/Makefile
++++ b/arch/arm64/boot/dts/socionext/Makefile
+@@ -1,4 +1,4 @@
+-dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld10-ref.dtb
++dtb-$(CONFIG_ARCH_UNIPHIER) += uniphier-ph1-ld20-ref.dtb
+ 
+ always		:= $(dtb-y)
+ clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+similarity index 92%
+rename from arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
+rename to arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+index 3e53317..80f71ba 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10-ref.dts
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20-ref.dts
+@@ -1,5 +1,5 @@
+ /*
+- * Device Tree Source for UniPhier PH1-LD10 Reference Board
++ * Device Tree Source for UniPhier PH1-LD20 Reference Board
+  *
+  * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+  *
+@@ -43,12 +43,12 @@
+  */
+ 
+ /dts-v1/;
+-/include/ "uniphier-ph1-ld10.dtsi"
++/include/ "uniphier-ph1-ld20.dtsi"
+ /include/ "uniphier-support-card.dtsi"
+ 
+ / {
+-	model = "UniPhier PH1-LD10 Reference Board";
+-	compatible = "socionext,ph1-ld10-ref", "socionext,ph1-ld10";
++	model = "UniPhier PH1-LD20 Reference Board";
++	compatible = "socionext,ph1-ld20-ref", "socionext,ph1-ld20";
+ 
+ 	memory {
+ 		device_type = "memory";
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+similarity index 98%
+rename from arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
+rename to arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+index 0296af9..e6871ea 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ph1-ld10.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ph1-ld20.dtsi
+@@ -1,5 +1,5 @@
+ /*
+- * Device Tree Source for UniPhier PH1-LD10 SoC
++ * Device Tree Source for UniPhier PH1-LD20 SoC
+  *
+  * Copyright (C) 2015 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+  *
+@@ -43,7 +43,7 @@
+  */
+ 
+ / {
+-	compatible = "socionext,ph1-ld10";
++	compatible = "socionext,ph1-ld20";
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 	interrupt-parent = <&gic>;
+@@ -262,7 +262,7 @@
+ 		};
+ 
+ 		pinctrl: pinctrl@5f801000 {
+-			compatible = "socionext,ph1-ld10-pinctrl", "syscon";
++			compatible = "socionext,ph1-ld20-pinctrl", "syscon";
+ 			reg = <0x5f801000 0xe00>;
+ 		};
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
