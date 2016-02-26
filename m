@@ -1,140 +1,92 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
-Date: Fri, 26 Feb 2016 17:55:06 +0100
-Message-ID: <20160226175506.75d6c7b0@bbrezillon>
-References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
-	<20160224144652.14068468@bbrezillon>
-	<CACna6rxemvBOu9fy9KP0327TsqonO7dFY5EsQjf1k9Ln6hX8cw@mail.gmail.com>
-	<20160225210946.6c842f4b@bbrezillon>
-	<CACna6ryVuqSLv8WdzzGUQzpA-F35JxXoHoa2jcLzZeHaXtoexA@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Fri, 26 Feb 2016 18:00:18 +0100
+Message-ID: <2709755.YfRKeiaS4S@wuerfel>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com> <2692251.6GoexVJEYt@wuerfel> <CAOQ7t2Y2B8hfGim9UegUZsurQM0+Df0K0_DjsQ0r8+qMjUSBEw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACna6ryVuqSLv8WdzzGUQzpA-F35JxXoHoa2jcLzZeHaXtoexA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAOQ7t2Y2B8hfGim9UegUZsurQM0+Df0K0_DjsQ0r8+qMjUSBEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 Feb 2016 17:30:47 +0100
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> On 25 February 2016 at 21:09, Boris Brezillon
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Thu, 25 Feb 2016 20:56:36 +0100
-> > Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >
-> >> On 24 February 2016 at 14:46, Boris Brezillon
-> >> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> > On Fri, 12 Feb 2016 19:11:23 +0100
-> >> > Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> >
-> >> >> This allows specifying algorithm used for NAND ECC. There are t=
-wo
-> >> >> available values: "bch" and "hamming". It's important as having=
- just
-> >> >> ECC parameters (step, strength) isn't enough to determine algor=
-ithm,
-> >> >> e.g. you can't distinct BCH-1 and Hamming.
-> >> >>
-> >> >> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> >> ---
-> >> >>  Documentation/devicetree/bindings/mtd/nand.txt |  3 +++
-> >> >>  drivers/of/of_mtd.c                            | 33 ++++++++++=
-++++++++++++++++
-> >> >>  include/linux/mtd/nand.h                       |  5 ++++
-> >> >>  include/linux/of_mtd.h                         |  6 +++++
-> >> >>  4 files changed, 47 insertions(+)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/D=
-ocumentation/devicetree/bindings/mtd/nand.txt
-> >> >> index b53f92e..a2c2df5 100644
-> >> >> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> >> >> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> >> >> @@ -3,6 +3,9 @@
-> >> >>  - nand-ecc-mode : String, operation mode of the NAND ecc mode.
-> >> >>    Supported values are: "none", "soft", "hw", "hw_syndrome", "=
-hw_oob_first",
-> >> >>    "soft_bch".
-> >> >> +- nand-ecc-algo : string, algorithm of NAND ecc.
-> >> >> +               Supported values are: "bch", "hamming". The def=
-ault one is
-> >> >> +               "bch".
-> >> >
-> >> > I like the idea of specifying which ECC algorithm should be used=
-, and
-> >> > this is IMO clearer than putting the information directly in
-> >> > nand-ecc-mode (as is already done for the "soft" and "soft_bch" =
-modes,
-> >> > which are respectively encoding software hamming and software bc=
-h
-> >> > implementations).
-> >> >
-> >> > But shouldn't we take this even further and add new DT propertie=
-s
-> >> > to encode the ECC layout (syndrome, oob_first), and another one =
-to
-> >> > specify the implementation type (software or hardware)?
-> >> >
-> >> > nand-ecc-layout =3D "nornal", "syndrome" or "oob_first"
-> >> > nand-ecc-engine =3D "none", "soft" or "hw" ("on-die" ?)
-> >> >
-> >> > Note that it's not something I ask you to do right now, I just w=
-ant to
-> >> > bring the topic on the table.
+On Friday 26 February 2016 17:43:54 Carlo Caione wrote:
+> On Fri, Feb 26, 2016 at 5:00 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Friday 26 February 2016 16:34:59 Carlo Caione wrote:
+> >> On Fri, Feb 19, 2016 at 1:54 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 > >>
-> >> So far I was fine with whatever drvier/NAND core picked, didn't ha=
-ve
-> >> any issue with it. If at some point we'll see a real need of
-> >> specifying it manually as well, I guess we should do as you sugges=
-ted.
+> >> <cut>
 > >>
+> >> > This still really sounds like a mixed bag to me, which should better get represented
+> >> > as a syscon node, except that there are also some more structured areas in
+> >> > CBUS.
+> >> >
+> >> > Having just the registers between METAL_REVISION and HW_REV in a syscon
+> >> > is clearly wrong, as that would include the pinctrl area that already has
+> >> > a driver, but would not include some other parts that want the syscon.
+> >> >
+> >> > Maybe the best way is to make it compatible with both syscon and
+> >> > simple-bus and put the other nodes underneath. That is still rather
+> >> > ugly, but at least it works and can be extended.
+> >>
+> >> More on this topic.
+> >>
+> >> On the meson platforms (at least on the meson8 / meson8b) we have two
+> >> buses: cbus and aobus. Since in cbus we have a bunch of scattered
+> >> registers, Arnd suggested to make it compatible with both syscon and
+> >> simple-bus. So my idea was actually to update the meson8b DTSI file
+> >> adding the two buses to make it closer to the actual hardware.
+> >>
+> >> In the most simple cases moving the devices under the correct bus is a
+> >> trivial operation since (of course) the same driver can be used when
+> >> the device is attached to a different bus, like in the uart_AO case
+> >> (http://lxr.free-electrons.com/source/arch/arm/boot/dts/meson8b.dtsi#L114).
+> >>
+> >> Unfortunately pinctrl is a different beast since it requires
+> >> (http://lxr.free-electrons.com/source/drivers/pinctrl/meson/pinctrl-meson.c#L659)
+> >> at least two subnodes: one accessing registers from aobus, and the
+> >> other one from cbus.
+> >>
+> >> I know this is quite a peculiar case but I'm wondering what is the
+> >> best way to approach this issue.
+> >>
+> >> 1) We could move only the pinctrl device outside both aobus and cbus
+> >> but IMO this is ugly (at this point is probably better not having the
+> >> two buses at all described in the DTS).
+> >> 2) The second option is just to fix the driver so that the two
+> >> subnodes are not strictly required. The problem with this second
+> >> solution is that in the driver we still need to access some data
+> >> (http://lxr.free-electrons.com/source/drivers/pinctrl/meson/pinctrl-meson8b.c#L873)
+> >> that is specific to each bus. So we will end up having two different
+> >> compatibles for the two buses (meson8b-pinctrl-aobus using data from
+> >> 'ao-bank', and meson8b-pinctrl-cbus using data from 'banks').
+> >> 3) Another option is just to have the driver with a unique compatible
+> >> poking the parent node (or just to another property) to determine on
+> >> which bus it is so that it can use the correct bus-specific data.
+> >>
+> >> Any idea / feedback?
 > >
-> > My point is that it's kind of weird to have the same information
-> > duplicated in two different properties with possibly some conflicti=
-ng
-> > configurations, like:
-> >
-> >         nand-ecc-mode =3D "soft_bch"; /* software BCH implementatio=
-n... */
-> >         nand-ecc-algo =3D "hamming"; /* ... and here you choose Ham=
-ming */
-> >
-> > Of course this won't be a real problem until NAND core starts using
-> > this property to decide which soft implementation should be used, b=
-ut
-> > providing a consistent binding is important IMO.
->=20
-> Sorry, I didn't pay enough attention to NAND properties and missed
-> your point. I was a bit surprised to see NAND_ECC_SOFT_BCH value and
-> "soft_bch" as mapping. This is indeed a bit confusing.
->=20
-> So I'm trying to find a proper way to split nand-ecc-mode. What you
-> suggested isn't exactly clear to me. AFAIR both enums: SYNDROME and
-> OOB_FIRST specify they way ECC info has to be accessed. For example
-> when using NAND_ECC_HW_OOB_FIRST you have to read OOB and after that
-> read data. I don't see how it's really related to the ECC layout (you
-> suggested "oob_first" as possible value of nand-ecc-layout).
+> > Would it be possible to split the pin controller driver into two drivers
+> > that each only access registers on one of the buses? Is that a split
+> > that makes sense from the point of view of that driver?
+> 
+> AFAICT (I'm not the driver author) there is no a really strict reason
+> to have one single driver accessing registers on both buses. Of course
+> the driver has to be changed a bit.
+> Are you suggesting to have two different drivers with two different compatibles?
 
-Because it's encoding where the ECC bytes are stored in a NAND page.
-Maybe ecc-layout is not the correct name (how about nand-page-layout),
-but neither ecc-mode is ;-).
+Just an idea, but yes: if the register layout is different, then they
+would also need different compatible strings.
 
->=20
-> What about:
-> 1) Adding new nand-ecc-algo as this patch does
-> 2) Deprecating "soft_bch" value from nand-ecc-mode property
->=20
-
-Sounds good to me.
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+This is mostly a question of how the hardware design really looks:
+are these two separate pin controllers that each are responsible for
+a clear subset of the pins?
+	
+	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
