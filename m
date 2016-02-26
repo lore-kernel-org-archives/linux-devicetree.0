@@ -1,81 +1,47 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 1/4] ASoC: wm9713: add binding for WM9713 codec
-Date: Fri, 26 Feb 2016 22:04:15 +0100
-Message-ID: <87k2lruqsw.fsf@belgarion.home>
-References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
-	<20160220171459.GA18327@sirena.org.uk> <871t87z1gz.fsf@belgarion.home>
-	<20160220195925.GF18327@sirena.org.uk> <87twl3xgud.fsf@belgarion.home>
-	<20160220211659.GG18327@sirena.org.uk> <878u2fxbp9.fsf@belgarion.home>
-	<20160221014920.GK18327@sirena.org.uk> <87povkuuf6.fsf@belgarion.home>
-	<20160226023021.GH18327@sirena.org.uk>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
+Date: Fri, 26 Feb 2016 22:24:21 +0100
+Message-ID: <CACna6rzRROfYwagsBGo5b8d_bydUBrJ=9RvGZSt1G85xP=gKaw@mail.gmail.com>
+References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
+	<20160224144652.14068468@bbrezillon>
+	<CACna6rxemvBOu9fy9KP0327TsqonO7dFY5EsQjf1k9Ln6hX8cw@mail.gmail.com>
+	<20160225210946.6c842f4b@bbrezillon>
+	<CACna6ryVuqSLv8WdzzGUQzpA-F35JxXoHoa2jcLzZeHaXtoexA@mail.gmail.com>
+	<20160226175506.75d6c7b0@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160226023021.GH18327@sirena.org.uk> (Mark Brown's message of
-	"Fri, 26 Feb 2016 11:30:21 +0900")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160226175506.75d6c7b0@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> writes:
-
-> On Fri, Feb 26, 2016 at 02:33:49AM +0100, Robert Jarzmik wrote:
->> Mark Brown <broonie@kernel.org> writes:
+On 26 February 2016 at 17:55, Boris Brezillon
+<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Fri, 26 Feb 2016 17:30:47 +0100
+> Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> What about:
+>> 1) Adding new nand-ecc-algo as this patch does
+>> 2) Deprecating "soft_bch" value from nand-ecc-mode property
+>>
 >
->> > It will not be called, the generic AC'97 code will be used.
->
->> Ok, if it's not called no code in sound/soc/codecs/wm9713.c will be used, right
->> ?
->> In that case wm9713_set_dai_clkdiv() will never be used, nor will the
->> wm9713_audio_map or wm9713_dapm_widgets be created, which will break all
->> userspace programs relying on these mixers and DAPM routes.
->
->> Or am I missing something ?
->
-> No, you're not missing anything - that'll be what happens.  If you need
-> to preserve the userspace ABI on your board you'd need a much bigger
-> (but very welcome) refactoring of the AC'97 code to be less hacky and
-> use the device model more directly, or at least define a generic AC'97
-> binding somehow.  All the AC'97 support has never really been properly
-> moved over to the device model and unfortunately nobody's yet cared
-> about it for device tree except in the simple cases supported by the
-> generic AC'97 code.  I appreciate that this isn't very helpful, it's
-> an unfortunate consequence of DT as an ABI.
->
-> We probably want to end up with something like what the Intel folks have
-> been doing recently for HDA to get that working within ASoC.
+> Sounds good to me.
 
-Ok, let me think about it and propose something, an approach.
+I have problems understanding "soft" values which maps to the
+NAND_ECC_SOFT. What exactly algorithm is that? It uses functions from
+drivers/mtd/nand/nand_ecc.c but this file isn't really helpful. I was
+only able to find "3-byte ECC" phase. Kconfig config MTD_NAND_ECC also
+doesn't have any description. I also tried looking at
+Documentation/mtd/nand_ecc.txt but still no luck.
 
-I must admit I like the structure I saw in drivers/amba/bus.c, ie. to have
-something like :
- - a bus driver core (sound/ac97/bus.c ?)
-   Split between this and sound/pci/ac97_codec.c I don't know yet.
-   => an instance of this bus will be instanciated from each snd_ac97_bus() call
-      just as now
-   => bus_register(&ac97_bustype)
-   => ac97_bus_probe/remove(), match/uevent/dev_attrs
-   => ac97_driver_register(struct ac97_driver *drv)
+Does this algorithm has any name?
 
- - a ac97 driver structure (struct ac97_driver) with :
-   => u32 vendor_id (vendor_id = lambda(vendor_id1, vendor_id2))
-   => u32 vendor_id_mask (mask of bits to match)
-   ...
-
- - each ac97 controller will call snd_ac97_bus().
-   In my case, that's sound/arm/pxa2xx-ac97.c or sound/soc/pxa2xx-ac97.c,
-   whatever.
-
- - each ac97 codec will subscribe to the bus
-   ac97_driver_register(struct ac97_driver *drv, u32 vendor_id, u32 vendor_mask)
-   For example wm9713.c will call :
-     ac97_driver_register(drv, AC97_VENDOR(0x...., 0x....), 0xffffffff);
-
-Well, if I'm totally mistaken, tell me. If not it will take me a bit of time to
-write is down properly in a Documentation/ file.
-
-Cheers.
-
--- 
-Robert
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
