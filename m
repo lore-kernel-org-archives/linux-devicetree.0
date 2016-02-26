@@ -1,59 +1,78 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Add CAN external clock support
-Date: Fri, 26 Feb 2016 16:54:58 +0100
-Message-ID: <CAMuHMdWEkNcBSdm42pZCRxmETvJpT_=PNx2E-AjTBSG4yH973A@mail.gmail.com>
-References: <1456496023-16240-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-	<CAMuHMdXJRN2kF2r=bqcY8v87aYHj_OKr2=5vzcfoHwvr02Y2CA@mail.gmail.com>
-	<SG2PR06MB1038B995B4C12A01C280DFC4C3A70@SG2PR06MB1038.apcprd06.prod.outlook.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
+Date: Fri, 26 Feb 2016 17:00:57 +0100
+Message-ID: <2692251.6GoexVJEYt@wuerfel>
+References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com> <3072897.5MMsyiojns@wuerfel> <CAOQ7t2Za5t_3nAm0wyf0rmFa+RTRSGUDAg5b64VvXp-okLMoNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1038B995B4C12A01C280DFC4C3A70@SG2PR06MB1038.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOQ7t2Za5t_3nAm0wyf0rmFa+RTRSGUDAg5b64VvXp-okLMoNQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+On Friday 26 February 2016 16:34:59 Carlo Caione wrote:
+> On Fri, Feb 19, 2016 at 1:54 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> 
+> <cut>
+> 
+> > This still really sounds like a mixed bag to me, which should better get represented
+> > as a syscon node, except that there are also some more structured areas in
+> > CBUS.
+> >
+> > Having just the registers between METAL_REVISION and HW_REV in a syscon
+> > is clearly wrong, as that would include the pinctrl area that already has
+> > a driver, but would not include some other parts that want the syscon.
+> >
+> > Maybe the best way is to make it compatible with both syscon and
+> > simple-bus and put the other nodes underneath. That is still rather
+> > ugly, but at least it works and can be extended.
+> 
+> More on this topic.
+> 
+> On the meson platforms (at least on the meson8 / meson8b) we have two
+> buses: cbus and aobus. Since in cbus we have a bunch of scattered
+> registers, Arnd suggested to make it compatible with both syscon and
+> simple-bus. So my idea was actually to update the meson8b DTSI file
+> adding the two buses to make it closer to the actual hardware.
+> 
+> In the most simple cases moving the devices under the correct bus is a
+> trivial operation since (of course) the same driver can be used when
+> the device is attached to a different bus, like in the uart_AO case
+> (http://lxr.free-electrons.com/source/arch/arm/boot/dts/meson8b.dtsi#L114).
+> 
+> Unfortunately pinctrl is a different beast since it requires
+> (http://lxr.free-electrons.com/source/drivers/pinctrl/meson/pinctrl-meson.c#L659)
+> at least two subnodes: one accessing registers from aobus, and the
+> other one from cbus.
+> 
+> I know this is quite a peculiar case but I'm wondering what is the
+> best way to approach this issue.
+> 
+> 1) We could move only the pinctrl device outside both aobus and cbus
+> but IMO this is ugly (at this point is probably better not having the
+> two buses at all described in the DTS).
+> 2) The second option is just to fix the driver so that the two
+> subnodes are not strictly required. The problem with this second
+> solution is that in the driver we still need to access some data
+> (http://lxr.free-electrons.com/source/drivers/pinctrl/meson/pinctrl-meson8b.c#L873)
+> that is specific to each bus. So we will end up having two different
+> compatibles for the two buses (meson8b-pinctrl-aobus using data from
+> 'ao-bank', and meson8b-pinctrl-cbus using data from 'banks').
+> 3) Another option is just to have the driver with a unique compatible
+> poking the parent node (or just to another property) to determine on
+> which bus it is so that it can use the correct bus-specific data.
+> 
+> Any idea / feedback?
 
-On Fri, Feb 26, 2016 at 4:00 PM, Ramesh Shanmugasundaram
-<ramesh.shanmugasundaram@bp.renesas.com> wrote:
->> On Fri, Feb 26, 2016 at 3:13 PM, Ramesh Shanmugasundaram
->> <ramesh.shanmugasundaram@bp.renesas.com> wrote:
->> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->> > @@ -115,6 +115,13 @@
->> >                 clock-frequency = <0>;
->> >         };
->> >
->> > +       /* External CAN clock - to be overridden by boards that provide
->> it */
->> > +       can_clk: can {
->> > +               compatible = "fixed-clock";
->> > +               #clock-cells = <0>;
->> > +               clock-frequency = <0>;
->>
->> As this is an optional clock, it should have
->>
->>         status = "disabled";
->
-> Yes, I too thought the same but the status property is not obeyed. The
-> "disabled" clock still shows up in clk_tree and clk_xxx apis works just fine
-> (Is this a DT bug?). Hence left the ambiguous "status". In code I use
-> clk_get_rate(can_clk) != 0 to see if it's enabled, which seems logical.
->
-> If you add this as a child of soc node, status property is obeyed. But all
-> external clocks are defined outside soc (correctly) and I followed the same.
+Would it be possible to split the pin controller driver into two drivers
+that each only access registers on one of the buses? Is that a split
+that makes sense from the point of view of that driver?
 
-You're right. That's clearly a bug. I sent a patch to fix that.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+	Arnd
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
