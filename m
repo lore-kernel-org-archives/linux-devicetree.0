@@ -1,76 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on device tree
-Date: Fri, 26 Feb 2016 21:20:04 +0100
-Message-ID: <2396230.MApG9VTrxr@wuerfel>
-References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com> <3550740.QzZi28fbXg@wuerfel> <CADRPPNSqXBqD0of0ZorXFOKQc1OQaaJCPFUTMUezJexkegHY9A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNSqXBqD0of0ZorXFOKQc1OQaaJCPFUTMUezJexkegHY9A@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Li Yang <leoli@freescale.com>, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jia Hongtao <hongtao.jia@freescale.com>, edubezval@gmail.com, viresh.kumar@linaro.org, Scott Wood <scottwood@freescale.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH 0/5] BCM2835 pinctrl DT rework (resend)
+Date: Fri, 26 Feb 2016 10:19:11 -0800
+Message-ID: <1456510756-15337-1-git-send-email-eric@anholt.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 26 February 2016 12:04:59 Li Yang wrote:
-> On Fri, Dec 18, 2015 at 4:32 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 15 December 2015 00:58:26 Rafael J. Wysocki wrote:
-> >> On Thursday, November 26, 2015 05:21:11 PM Jia Hongtao wrote:
-> >> > Register the qoriq cpufreq driver as a cooling device, based on the
-> >> > thermal device tree framework. When temperature crosses the passive trip
-> >> > point cpufreq is used to throttle CPUs.
-> >> >
-> >> > Signed-off-by: Jia Hongtao <hongtao.jia@freescale.com>
-> >> > Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >>
-> >> Applied, thanks!
-> >>
-> >
-> > I got a randconfig build error today:
-> >
-> > drivers/built-in.o: In function `qoriq_cpufreq_ready':
-> > debugfs.c:(.text+0x1f4688): undefined reference to `of_cpufreq_cooling_register'
-> >
-> > CONFIG_OF=y
-> > CONFIG_QORIQ_CPUFREQ=y
-> > CONFIG_THERMAL=m
-> > CONFIG_THERMAL_OF=y
-> >
-> > I think you need a 'depends on THERMAL' to prevent the driver from
-> > being built-in when THERMAL=m.
-> 
-> Maybe this is not the best approach.  The cpufreq feature itself
-> should be working independently without thermal framework.  I think we
-> should make the qoriq_cpufreq_ready() defined as null function if
-> THERMAL is not defined.
+Here's a series for cleaning up the pinctrl groups on BCM2835
+(Raspberry Pi).  This was partially inspired by Stefan Wahren's
+patches for the EMMC SDHCI controller, but really triggered by needing
+to switch pinmuxes to enable the SDHOST SD controller (which gives me
+a 60% read speed improvement).  Patches for adding that driver will
+follow.
 
-It already does this when CONFIG_THERMAL is not defined, and my
-patch doesn't change that. I'm not sure what you are asking for now.
+I think this is more or less how pinctrl is expected to be used for a
+platform like this.  It certainly cleans up the board files.
 
-Do you want to allow using the cpufreq driver as a built-in driver
-even when the thermal code is in a module, and then silently skip
-all thermal management as if it was turned off?
+This is a resend because only 3 came through last time.  My former
+SMTP relay decided to start rejecting half my mails this week.  I've
+now swapped systems.
 
-That would be this patch:
+Eric Anholt (5):
+  ARM: bcm2835: Define standard pinctrl groups in the gpio node.
+  ARM: bcm2835: Replace alt0/i2s_alt[02] with standard groups.
+  ARM: bcm2835: Move the emmc pin group to bcm283x.dtsi.
+  ARM: bcm2835: Add a group for mapping pins 48-53 to sdhost.
+  ARM: bcm2835: Move most RPi default pin groups to their devices.
 
-diff --git a/include/linux/cpu_cooling.h b/include/linux/cpu_cooling.h
-index c156f5082758..a8d9241fc1bb 100644
---- a/include/linux/cpu_cooling.h
-+++ b/include/linux/cpu_cooling.h
-@@ -48,7 +48,7 @@ cpufreq_power_cooling_register(const struct cpumask *clip_cpus,
-  * @np: a valid struct device_node to the cooling device device tree node.
-  * @clip_cpus: cpumask of cpus where the frequency constraints will happen
-  */
--#ifdef CONFIG_THERMAL_OF
-+#if IS_REACHABLE(CONFIG_THERMAL_OF)
- struct thermal_cooling_device *
- of_cpufreq_cooling_register(struct device_node *np,
- 			    const struct cpumask *clip_cpus);
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts |  11 +-
+ arch/arm/boot/dts/bcm2835-rpi-a.dts      |  11 +-
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |  11 +-
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts |  11 +-
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      |   4 -
+ arch/arm/boot/dts/bcm2835-rpi.dtsi       |  30 ++++--
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts    |  11 +-
+ arch/arm/boot/dts/bcm283x.dtsi           | 178 +++++++++++++++++++++++++++++++
+ 8 files changed, 213 insertions(+), 54 deletions(-)
 
+-- 
+2.7.0
 
-but my feeling is that this would cause more surprises when users
-find their thermal management is not active even though it was
-enabled in Kconfig and the thermal module gets loaded.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
