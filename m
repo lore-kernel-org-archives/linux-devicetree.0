@@ -1,68 +1,107 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 1/4] ASoC: wm9713: add binding for WM9713
-	codec
-Date: Fri, 26 Feb 2016 02:33:49 +0100
-Message-ID: <87povkuuf6.fsf@belgarion.home>
-References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
- <20160220171459.GA18327@sirena.org.uk> <871t87z1gz.fsf@belgarion.home>
- <20160220195925.GF18327@sirena.org.uk> <87twl3xgud.fsf@belgarion.home>
- <20160220211659.GG18327@sirena.org.uk> <878u2fxbp9.fsf@belgarion.home>
- <20160221014920.GK18327@sirena.org.uk>
+From: xuejiancheng <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 2/6] clk: hisilicon: add CRG driver for hi3519 soc
+Date: Fri, 26 Feb 2016 09:54:25 +0800
+Message-ID: <56CFB051.3050809@huawei.com>
+References: <1456127280-23275-1-git-send-email-xuejiancheng@huawei.com>
+ <1456127280-23275-3-git-send-email-xuejiancheng@huawei.com>
+ <20160225234215.GK28849@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160221014920.GK18327@sirena.org.uk> (Mark Brown's message of
- "Sun, 21 Feb 2016 10:49:20 +0900")
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, Liam Girdwood <lgirdwood@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Takashi Iwai <tiwai@suse.com>, linux-arm-kernel@lists.infradead.org, Daniel Mack <daniel@zonque.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160225234215.GK28849-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lidongpo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mark Brown <broonie@kernel.org> writes:
+Hi Stephen,
+    Thank you for your advice.  I'll fixed them in next version.
 
->> > It will eumerate the AC'97 bus by itself and does not need the CODEC to
->> > be described.
->
->> I think I still don't get it.
->
->> So let's rephrase it another way : how will the function wm9713_probe() be
->> called, ie. what is the possible function backtrace leading to that call ?
->
-> It will not be called, the generic AC'97 code will be used.
+Regards,
 
-Ok, if it's not called no code in sound/soc/codecs/wm9713.c will be used, right
-?
-In that case wm9713_set_dai_clkdiv() will never be used, nor will the
-wm9713_audio_map or wm9713_dapm_widgets be created, which will break all
-userspace programs relying on these mixers and DAPM routes.
+Jiancheng.
 
-Or am I missing something ?
+On 2016/2/26 7:42, Stephen Boyd wrote:
+> On 02/22, Jiancheng Xue wrote:
+>> diff --git a/Documentation/devicetree/bindings/clock/hi3519-crg.txt b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> new file mode 100644
+>> index 0000000..2d23950
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/hi3519-crg.txt
+>> @@ -0,0 +1,46 @@
+>> +Example: CRG nodes
+>> +CRG: clock-reset-controller@12010000 {
+>> +	compatible = "hisilicon,hi3519-crg";
+> 
+> Indentation is off here.
+> 
+>> +        reg = <0x12010000 0x10000>;
+>> +        #clock-cells = <1>;
+>> +        #reset-cells = <2>;
+>> +};
+>> +
+>> +Example: consumer nodes
+>> +i2c0: i2c@12110000 {
+>> +	compatible = "hisilicon,hi3519-i2c";
+>> +        reg = <0x12110000 0x1000>;
+>> +        clocks = <&CRG HI3519_I2C0_RST>;*/
+>> +        resets = <&CRG 0xe4 0>;
+>> +};
+>> diff --git a/drivers/clk/hisilicon/Kconfig b/drivers/clk/hisilicon/Kconfig
+>> index e434854..296371f 100644
+>> --- a/drivers/clk/hisilicon/Kconfig
+>> +++ b/drivers/clk/hisilicon/Kconfig
+>> @@ -1,3 +1,11 @@
+>> +config COMMON_CLK_HI3519
+>> +	tristate "Hi3519 Clock Driver"
+>> +	depends on ARCH_HISI || COMPILE_TEST
+>> +	select RESET_HISI
+>> +	default y
+> 
+> default ARCH_HISI
+> 
+>> +	help
+>> +	  Build the clock driver for hi3519.
+>> +
+>> diff --git a/drivers/clk/hisilicon/reset.c b/drivers/clk/hisilicon/reset.c
+>> new file mode 100644
+>> index 0000000..50e00e7
+>> --- /dev/null
+>> +++ b/drivers/clk/hisilicon/reset.c
+>> +
+>> +int hisi_reset_init(struct device_node *np)
+>> +{
+>> +	struct hisi_reset_controller *rstc;
+>> +
+>> +	rstc = kzalloc(sizeof(*rstc), GFP_KERNEL);
+>> +	if (!rstc)
+>> +		return -ENOMEM;
+>> +
+>> +	rstc->membase = of_iomap(np, 0);
+> 
+> Any reason why we can't pass the platform device here and map the
+> register space with platform device APIs?
+> 
+>> +	if (!rstc->membase)
+>> +		return -EINVAL;
+>> +
+>> +	spin_lock_init(&rstc->lock);
+>> +
+>> +	rstc->rcdev.owner = THIS_MODULE;
+>> +	rstc->rcdev.ops = &hisi_reset_ops;
+>> +	rstc->rcdev.of_node = np;
+>> +	rstc->rcdev.of_reset_n_cells = 2;
+>> +	rstc->rcdev.of_xlate = hisi_reset_of_xlate;
+>> +
+>> +	return reset_controller_register(&rstc->rcdev);
+>> +}
+>> +EXPORT_SYMBOL(hisi_reset_init);
+> 
+> Why not GPL?
+> 
 
->> Do you have a devicetree example somewhere, with (ac97 host, audio codec) pair I
->> can have a look at to understand ?
->
-> Some Atmel boards do this IIRC, as does the AACI driver (via AMBA but
-> same effect).
-I suppose you mean sound/arm/aaci.c, which is more a platform_data like driver
-(if I understood the integrator code correctly).
-
-I suppose we can achieve comparable result with sound/arm/pxa2xx-ac97.c, but as
-to know if the functionality will be comparable to sound/soc/pxa/pxa2xx-ac97.c,
-it's hard to say. If I count the DMA requestors, I see 5 in the sound/soc
-version, and 2 in sound/arm.
-
-That makes me believe the sound/arm version is inferior.
-
-Cheers.
-
--- 
-Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
