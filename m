@@ -1,297 +1,78 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Fri, 26 Feb 2016 11:24:13 -0500
-Message-ID: <56D07C2D.5030702@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC v2 04/11] soc: renesas: rcar: Add DT support for SYSC PM domains
+Date: Fri, 26 Feb 2016 18:28:55 +0200
+Message-ID: <5625748.8DscGPjtYP@avalon>
+References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be> <3535519.g4KL1PCIZy@avalon> <CAMuHMdVo2V7Ez5g8ZW74w-QWiwS8i2mbYeCjOU9brxRzNjMAdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454646882-24369-9-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVo2V7Ez5g8ZW74w-QWiwS8i2mbYeCjOU9brxRzNjMAdg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+Hi Geert,
 
-On 2/4/2016 11:34 PM, Sinan Kaya wrote:
-> The code is using the compatible DT string to associate a reset driver with
-> the actual device itself. The compatible string does not exist on ACPI
-> based systems. HID is the unique identifier for a device driver instead.
-> The change allows a driver to register with DT compatible string or ACPI
-> HID and then match the object with one of these conditions.
+On Friday 26 February 2016 16:41:27 Geert Uytterhoeven wrote:
+> On Mon, Feb 15, 2016 at 11:51 PM, Laurent Pinchart wrote:
+> >>  drivers/soc/renesas/pm-rcar.c | 327 ++++++++++++++++++++++++++++++++++++
+> >>  1 file changed, 327 insertions(+)
+> >> 
+> >> diff --git a/drivers/soc/renesas/pm-rcar.c
+> >> b/drivers/soc/renesas/pm-rcar.c
+> >> index cc684e9cc8db5d1c..c0540934126e58eb 100644
+> >> --- a/drivers/soc/renesas/pm-rcar.c
+> >> +++ b/drivers/soc/renesas/pm-rcar.c
+> >> 
+> >> +static int __init rcar_init_pm_domains(void)
+> >> +{
+> >> +     const struct of_device_id *match;
+> >> +     struct device_node *np, *pmd;
+> >> +     bool scanned = false;
+> >> +     void __iomem *base;
+> >> +     int ret = 0;
+> >> +
+> >> +     for_each_matching_node_and_match(np, rcar_sysc_matches, &match) {
+> >> +             u32 syscier = 0;
+> >> +
+> >> +             rcar_gen = (uintptr_t)match->data;
+> >> +
+> >> +             base = of_iomap(np, 0);
+> >> +             if (!base) {
+> >> +                     pr_warn("%s cannot map reg 0\n", np->full_name);
+> >> +                     continue;
+> >> +             }
+> >> +
+> >> +             rcar_sysc_base = base;  // FIXME conflicts with
+> >> rcar_sysc_init() +
+> >> +             pmd = of_get_child_by_name(np, "pm-domains");
+> >> +             if (!pmd) {
+> >> +                     pr_warn("%s lacks pm-domains node\n",
+> >> np->full_name);
+> > 
+> > Shouldn't you call iounmap() here ?
 > 
-> Rules for loading the reset driver are as follow:
-> - ACPI HID needs match for ACPI systems
-> - DT compat needs to match for OF systems
+> Yes. Will fix.
 > 
-> Tested-by: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (device tree only)
-> Tested-by: Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (ACPI only)
-> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |  3 +-
->  .../platform/reset/vfio_platform_calxedaxgmac.c    |  3 +-
->  drivers/vfio/platform/vfio_platform_common.c       | 80 +++++++++++++++++++---
->  drivers/vfio/platform/vfio_platform_private.h      | 41 ++++++-----
->  4 files changed, 96 insertions(+), 31 deletions(-)
+> >> +             /*
+> >> +              * Enable all interrupt sources, but do not use interrupt
+> >> +              * handler
+> >> +              */
+> >> +             pr_debug("%s: syscier = 0x%08x\n", np->full_name, syscier);
+> >> +             iowrite32(syscier, rcar_sysc_base + SYSCIER);
+> >> +             iowrite32(0, rcar_sysc_base + SYSCIMR);
+> > 
+> > Shouldn't the SYSCIMR bits be set to 1 to mask interrupts ?
 > 
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> index d4030d0..cc5b4fa 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> @@ -119,7 +119,8 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
->  	return 0;
->  }
->  
-> -module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
-> +module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
-> +			  vfio_platform_amdxgbe_reset);
->  
->  MODULE_VERSION("0.1");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-> index e3d3d94..0e57529 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-> @@ -77,7 +77,8 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
->  	return 0;
->  }
->  
-> -module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
-> +module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
-> +			  vfio_platform_calxedaxgmac_reset);
->  
->  MODULE_VERSION(DRIVER_VERSION);
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-> index 418cdd9..5b42e93 100644
-> --- a/drivers/vfio/platform/vfio_platform_common.c
-> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> @@ -13,6 +13,7 @@
->   */
->  
->  #include <linux/device.h>
-> +#include <linux/acpi.h>
->  #include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> @@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
->  static DEFINE_MUTEX(driver_lock);
->  
->  static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
-> -					struct module **module)
-> +				  const char *acpihid, struct module **module)
->  {
->  	struct vfio_platform_reset_node *iter;
->  	vfio_platform_reset_fn_t reset_fn = NULL;
->  
->  	mutex_lock(&driver_lock);
->  	list_for_each_entry(iter, &reset_list, link) {
-> -		if (!strcmp(iter->compat, compat) &&
-> +		if (acpihid && iter->acpihid &&
-> +		    !strcmp(iter->acpihid, acpihid) &&
-> +			try_module_get(iter->owner)) {
-> +			*module = iter->owner;
-> +			reset_fn = iter->reset;
-> +			break;
-> +		}
-> +		if (compat && iter->compat &&
-> +		    !strcmp(iter->compat, compat) &&
->  			try_module_get(iter->owner)) {
->  			*module = iter->owner;
->  			reset_fn = iter->reset;
-> @@ -51,11 +60,12 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->  
->  static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
->  {
-> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
-> -						&vdev->reset_module);
-> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
-> +						 &vdev->reset_module);
->  	if (!vdev->reset) {
->  		request_module("vfio-reset:%s", vdev->compat);
->  		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
-> +							 vdev->acpihid,
->  							 &vdev->reset_module);
->  	}
->  }
-> @@ -541,6 +551,46 @@ static const struct vfio_device_ops vfio_platform_ops = {
->  	.mmap		= vfio_platform_mmap,
->  };
->  
-> +#ifdef CONFIG_ACPI
-> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
-> +			     struct device *dev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (!adev)
-> +		return -EINVAL;
-> +
-> +	vdev->acpihid = acpi_device_hid(adev);
-> +	if (!vdev->acpihid) {
-> +		pr_err("VFIO: cannot find ACPI HID for %s\n",
-> +		       vdev->name);
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +#else
-> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
-> +			     struct device *dev)
-> +{
-> +	return -EINVAL;
-> +}
-> +#endif
-> +
-> +int vfio_platform_probe_of(struct vfio_platform_device *vdev,
-> +			   struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	ret = device_property_read_string(dev, "compatible",
-> +					  &vdev->compat);
-> +	if (ret) {
-> +		pr_err("VFIO: cannot retrieve compat for %s\n",
-> +			vdev->name);
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
->  int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->  			       struct device *dev)
->  {
-> @@ -550,14 +600,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->  	if (!vdev)
->  		return -EINVAL;
->  
-> -	ret = device_property_read_string(dev, "compatible", &vdev->compat);
-> -	if (ret) {
-> -		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
-> -		return -EINVAL;
-> -	}
-> +	ret = vfio_platform_probe_acpi(vdev, dev);
-> +	if (ret)
-> +		ret = vfio_platform_probe_of(vdev, dev);
->  
-> -	vdev->device = dev;
-> +	if (ret)
-> +		return ret;
->  
-> +	vdev->device = dev;
->  	group = iommu_group_get(dev);
->  	if (!group) {
->  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
-> @@ -602,13 +652,21 @@ void __vfio_platform_register_reset(struct vfio_platform_reset_node *node)
->  EXPORT_SYMBOL_GPL(__vfio_platform_register_reset);
->  
->  void vfio_platform_unregister_reset(const char *compat,
-> +				    const char *acpihid,
->  				    vfio_platform_reset_fn_t fn)
->  {
->  	struct vfio_platform_reset_node *iter, *temp;
->  
->  	mutex_lock(&driver_lock);
->  	list_for_each_entry_safe(iter, temp, &reset_list, link) {
-> -		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
-> +		if (acpihid && iter->acpihid &&
-> +		    !strcmp(iter->acpihid, acpihid) && (iter->reset == fn)) {
-> +			list_del(&iter->link);
-> +			break;
-> +		}
-> +
-> +		if (compat && iter->compat &&
-> +		    !strcmp(iter->compat, compat) && (iter->reset == fn)) {
->  			list_del(&iter->link);
->  			break;
->  		}
-> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
-> index 42816dd..32feba3 100644
-> --- a/drivers/vfio/platform/vfio_platform_private.h
-> +++ b/drivers/vfio/platform/vfio_platform_private.h
-> @@ -58,6 +58,7 @@ struct vfio_platform_device {
->  	struct mutex			igate;
->  	struct module			*parent_module;
->  	const char			*compat;
-> +	const char			*acpihid;
->  	struct module			*reset_module;
->  	struct device			*device;
->  
-> @@ -79,6 +80,7 @@ typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
->  struct vfio_platform_reset_node {
->  	struct list_head link;
->  	char *compat;
-> +	char *acpihid;
->  	struct module *owner;
->  	vfio_platform_reset_fn_t reset;
->  };
-> @@ -98,27 +100,30 @@ extern int vfio_platform_set_irqs_ioctl(struct vfio_platform_device *vdev,
->  
->  extern void __vfio_platform_register_reset(struct vfio_platform_reset_node *n);
->  extern void vfio_platform_unregister_reset(const char *compat,
-> +					   const char *acpihid,
->  					   vfio_platform_reset_fn_t fn);
-> -#define vfio_platform_register_reset(__compat, __reset)		\
-> -static struct vfio_platform_reset_node __reset ## _node = {	\
-> -	.owner = THIS_MODULE,					\
-> -	.compat = __compat,					\
-> -	.reset = __reset,					\
-> -};								\
-> +
-> +#define vfio_platform_register_reset(__compat, __acpihid, __reset)	\
-> +static struct vfio_platform_reset_node __reset ## _node = {		\
-> +	.owner = THIS_MODULE,						\
-> +	.compat = __compat,						\
-> +	.acpihid = __acpihid,						\
-> +	.reset = __reset,						\
-> +};									\
->  __vfio_platform_register_reset(&__reset ## _node)
->  
-> -#define module_vfio_reset_handler(compat, reset)		\
-> -MODULE_ALIAS("vfio-reset:" compat);				\
-> -static int __init reset ## _module_init(void)			\
-> -{								\
-> -	vfio_platform_register_reset(compat, reset);		\
-> -	return 0;						\
-> -};								\
-> -static void __exit reset ## _module_exit(void)			\
-> -{								\
-> -	vfio_platform_unregister_reset(compat, reset);		\
-> -};								\
-> -module_init(reset ## _module_init);				\
-> +#define module_vfio_reset_handler(compat, acpihid, reset)		\
-> +MODULE_ALIAS("vfio-reset:" compat);					\
-> +static int __init reset ## _module_init(void)				\
-> +{									\
-> +	vfio_platform_register_reset(compat, acpihid, reset);		\
-> +	return 0;							\
-> +};									\
-> +static void __exit reset ## _module_exit(void)				\
-> +{									\
-> +	vfio_platform_unregister_reset(compat, acpihid, reset);		\
-> +};									\
-> +module_init(reset ## _module_init);					\
->  module_exit(reset ## _module_exit)
->  
->  #endif /* VFIO_PLATFORM_PRIVATE_H */
-> 
+> That would work, too. It doesn't matter much, as the driver doesn't use
+> interrupts, so they stay disabled at the GIC level.
 
-I believe these two reviews need to be reviewed by you as they are in the VFIO world.
-Would you please take a look?
+You're right, but as you write to the SYSCIMR register anyway, I'd feel safer 
+if interrupts were masked in it too.
 
-[PATCH V14 8/9] vfio, platform: add support for ACPI while detecting the reset driver
-[PATCH V14 9/9] vfio, platform: add QTI HIDMA reset driver
-
-Sinan
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Laurent Pinchart
