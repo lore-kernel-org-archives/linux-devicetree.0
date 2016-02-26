@@ -1,51 +1,183 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
-Date: Fri, 26 Feb 2016 18:40:11 +0100
-Message-ID: <CAOQ7t2b4N+uxkR7_aiiVWzr=DEFjz5BeAEfXiK+YgQZxzF31nQ@mail.gmail.com>
-References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
-	<2692251.6GoexVJEYt@wuerfel>
-	<CAOQ7t2Y2B8hfGim9UegUZsurQM0+Df0K0_DjsQ0r8+qMjUSBEw@mail.gmail.com>
-	<2709755.YfRKeiaS4S@wuerfel>
+From: Eric Auger <eric.auger@linaro.org>
+Subject: Re: [PATCH V14 9/9] vfio, platform: add QTI HIDMA reset driver
+Date: Fri, 26 Feb 2016 18:52:03 +0100
+Message-ID: <56D090C3.8060608@linaro.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2709755.YfRKeiaS4S@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 6:00 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 26 February 2016 17:43:54 Carlo Caione wrote:
+Hi Sinan,
+On 02/05/2016 05:34 AM, Sinan Kaya wrote:
+> In situations where the userspace driver is stopped abnormally and the
+> VFIO platform device is released, the assigned HW device currently is
+> left running. As a consequence the HW device might continue issuing IRQs
+> and performing DMA accesses.
+> 
+> This patch is implementing a reset driver for HIDMA platform driver.
+> This gets called by the VFIO platform reset interface.
+> 
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  drivers/vfio/platform/reset/Kconfig                |  9 ++
+>  drivers/vfio/platform/reset/Makefile               |  2 +
+>  .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
+>  3 files changed, 110 insertions(+)
+>  create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+> 
+> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
+> index 70cccc5..d02b3b5 100644
+> --- a/drivers/vfio/platform/reset/Kconfig
+> +++ b/drivers/vfio/platform/reset/Kconfig
+> @@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
+>  	  Enables the VFIO platform driver to handle reset for AMD XGBE
+>  
+>  	  If you don't know what to do here, say N.
+> +
+> +config VFIO_PLATFORM_QCOMHIDMA_RESET
+> +	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
+> +	depends on VFIO_PLATFORM
+> +	help
+> +	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
+> +	  HIDMA Channel.
+> +
+> +	  If you don't know what to do here, say N.
+> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
+> index 93f4e23..ec7748a 100644
+> --- a/drivers/vfio/platform/reset/Makefile
+> +++ b/drivers/vfio/platform/reset/Makefile
+> @@ -1,7 +1,9 @@
+>  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
+>  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
+> +vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
+>  
+>  ccflags-y += -Idrivers/vfio/platform
+>  
+>  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
+> +obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
+>  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+> new file mode 100644
+> index 0000000..70d7eed
+> --- /dev/null
+> +++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+> @@ -0,0 +1,99 @@
+> +/*
+> + * Qualcomm Technologies HIDMA VFIO Reset Driver
+> + *
+> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 and
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/device.h>
+> +#include <linux/iopoll.h>
+> +
+> +#include "vfio_platform_private.h"
+> +
+> +#define TRCA_CTRLSTS_OFFSET		0x000
+> +#define EVCA_CTRLSTS_OFFSET		0x000
+> +
+> +#define CH_CONTROL_MASK		GENMASK(7, 0)
+nit: alignment
 
-[cut]
+Besides it looks ok to me
+Reviewed-by: Eric Auger <eric.auger@linaro.org>
 
->> AFAICT (I'm not the driver author) there is no a really strict reason
->> to have one single driver accessing registers on both buses. Of course
->> the driver has to be changed a bit.
->> Are you suggesting to have two different drivers with two different compatibles?
->
-> Just an idea, but yes: if the register layout is different, then they
-> would also need different compatible strings.
+If it better suits you maybe you can separate the upstream of your
+management/channel driver from the VFIO reset driver upstream.
 
-The meson pin controller driver basically defines the register layout
-in the DTS: http://lxr.free-electrons.com/source/arch/arm/boot/dts/meson8.dtsi
-#L102 and #L111, so yes, we have a different layouts.
+Best Regards
 
-> This is mostly a question of how the hardware design really looks:
-> are these two separate pin controllers that each are responsible for
-> a clear subset of the pins?
+Eric
 
-Exactly. All the GPIOAO_XX pins are managed by the pin controller on the AO bus.
-At this point I guess it is needed to rework a bit the pinctrl driver
-to address this problem switching to two drivers with different
-compatibles for the two buses.
-
-Thanks,
-
--- 
-Carlo Caione
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +#define CH_STATE_MASK			GENMASK(7, 0)
+> +#define CH_STATE_BIT_POS		0x8
+> +
+> +#define HIDMA_CH_STATE(val)	\
+> +	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
+> +
+> +#define EVCA_IRQ_EN_OFFSET		0x110
+> +
+> +#define CH_RESET			9
+> +#define CH_DISABLED			0
+> +
+> +int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
+> +{
+> +	struct vfio_platform_region *trreg;
+> +	struct vfio_platform_region *evreg;
+> +	u32 val;
+> +	int ret;
+> +
+> +	if (vdev->num_regions != 2)
+> +		return -ENODEV;
+> +
+> +	trreg = &vdev->regions[0];
+> +	if (!trreg->ioaddr) {
+> +		trreg->ioaddr =
+> +			ioremap_nocache(trreg->addr, trreg->size);
+> +		if (!trreg->ioaddr)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	evreg = &vdev->regions[1];
+> +	if (!evreg->ioaddr) {
+> +		evreg->ioaddr =
+> +			ioremap_nocache(evreg->addr, evreg->size);
+> +		if (!evreg->ioaddr)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	/* disable IRQ */
+> +	writel(0, evreg->ioaddr + EVCA_IRQ_EN_OFFSET);
+> +
+> +	/* reset both transfer and event channels */
+> +	val = readl(trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
+> +	val &= ~(CH_CONTROL_MASK << 16);
+> +	val |= CH_RESET << 16;
+> +	writel(val, trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
+> +
+> +	ret = readl_poll_timeout(trreg->ioaddr + TRCA_CTRLSTS_OFFSET, val,
+> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
+> +				 10000);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = readl(evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
+> +	val &= ~(CH_CONTROL_MASK << 16);
+> +	val |= CH_RESET << 16;
+> +	writel(val, evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
+> +
+> +	ret = readl_poll_timeout(evreg->ioaddr + EVCA_CTRLSTS_OFFSET, val,
+> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
+> +				 10000);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pr_info("HIDMA channel reset\n");
+> +	return 0;
+> +}
+> +module_vfio_reset_handler("qcom,hidma-1.0", "QCOM8061",
+> +			  vfio_platform_qcomhidma_reset);
+> +
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
+> 
