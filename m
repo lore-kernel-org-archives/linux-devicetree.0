@@ -1,96 +1,37 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] PCI: generic: add description of property
- "interrupt-skip-mask"
-Date: Fri, 26 Feb 2016 11:46:43 +0000
-Message-ID: <20160226114643.GA8728@leverpostej>
-References: <1456401208-10136-1-git-send-email-thunder.leizhen@huawei.com>
- <1456401208-10136-2-git-send-email-thunder.leizhen@huawei.com>
- <20160225122035.GB10593@leverpostej>
- <56CFFC9B.20703@huawei.com>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 0/8] Add MT8173 Video Encoder Driver and VPU Driver
+Date: Fri, 26 Feb 2016 13:58:26 +0200
+Message-ID: <56D03DE2.1090400@mm-sol.com>
+References: <1456215081-16858-1-git-send-email-tiffany.lin@mediatek.com>
+ <56CC1CAB.1060409@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56CFFC9B.20703-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <56CC1CAB.1060409-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Leizhen (ThunderTown)" <thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zefan Li <lizefan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Xinwei Hu <huxinwei-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Tianhong Ding <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Hanjun Guo <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Yijing Wang <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 03:19:55PM +0800, Leizhen (ThunderTown) wrote:
+Hi Hans,
+
+<snip>
+
+> Nice!
 > 
-> On 2016/2/25 20:20, Mark Rutland wrote:
-> > Hi,
-> > 
-> > In future, please send the binding document first in a series, per point
-> > 3 of Documentation/devicetree/bindings/submitting-patches.txt. It makes
-> > review easier/faster.
-> Thank you for your reminding.
-> 
-> > On Thu, Feb 25, 2016 at 07:53:28PM +0800, Zhen Lei wrote:
-> >> Interrupt Pin register is read-only and optional. Some pci devices may use
-> >> msi/msix but leave the value of Interrupt Pin non-zero.
-> > 
-> > Is that permitted by the spec? Surely 'optional' means it must be zero
-> > if not implemented?
-> 
-> In <PCI Local Bus Specification Revision 3.0>:
-> Devices (or device functions) that do not use an interrupt pin must put a 0 in this register. This register is read-only.
-> 
-> So, do you think this is a hardware bug?
+> Can you try 'v4l2-compliance -s'? Note that this may not work since I know
+> that v4l2-compliance doesn't work all that well with codecs, but I am
+> curious what the output is when you try streaming.
 
-Per the above, that does appear to be the case.
+Sorry for the off topic question.
 
-> But these pci-devices are not produced by our company.
-> 
-> In function init_service_irqs, it try msix first, then msi, Interrupt
-> PIN is the last attemption. But of_irq_parse_pci() happened before
-> this.
+Does every new v4l2 encoder/decoder driver must use v4l2 mem2mem device
+framework, with other words is that mandatory?
 
-I assume that for devices with 0 in this register we do not produce a
-warning. So where do we check the interrupt pin register, and when does
-this happen relative to of_irq_parse_pci such that we do not produce
-that warning?
-
-I als assume that all instances of these particular devices broken in
-this regard? If so, I think we need to identify them by Device ID and
-Vendor ID, and treat them as if the interrupt pin register read as
-zero, in the place we normally check the interrupt pin register.
-
-Note that this is completely independent of the RID/BDF, so the
-interrupt-*-mask approach is insufficient.
-
-> In fact, there also a familiar problem exist. As below:
-> pci 0000:42:00.0: BAR 7: no space for [io  size 0x1000]
-> pci 0000:42:00.0: BAR 7: failed to assign [io  size 0x1000]
-> 
-> There no "io space" on arm64, maybe only exist on X86. And the Memory Space Indicator also read-only in BAR register.
-
-I'm not entirely sure, but I thought we handled the PCI I/O space as an
-MMIO region on ARM64. Do you have many devices/functions attached? It
-may be that our VA carveout of 16M is too small.
-
-This is probably worth a separate thread.
-
-> >> In this case, the driver will print information as below: pci
-> >> 0000:40:00.0: of_irq_parse_pci() failed with rc=-22
-> >>
-> >> It's easily lead to misinterpret.
-> > 
-> > If this is limited to a subset of devices which we know are broken in
-> > this regard, can we not handle these cases explicitly?
-> Actually, we have another way to block this warning. Use "interrupt-map" to map it to a pesudo IRQ. But I think it will also be misunderstanded.
-
-This is very fragile, as it depends on the RIDs/addresses assigned by
-the host controller. If devices are plugged into different slots then
-that could change, you get the warning, and other devices may be
-prevented from using wired interrupts.
-
-As I mentioned above, I think we need to identify the buggy devices by
-ID, rather than by topology.
-
-Thanks,
-Mark.
+-- 
+regards,
+Stan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
