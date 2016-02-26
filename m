@@ -1,141 +1,66 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
- family of LED drivers
-Date: Fri, 26 Feb 2016 10:56:57 +0100
-Message-ID: <56D02169.8000709@samsung.com>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
- <1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
- <56CDD4A1.5030802@samsung.com>
- <20160224143440.374651b1.drivshin.allworx@gmail.com>
- <CAL_JsqJzcgSBW+fQ2dAV5M9O=pi_xc+KPymOhCyO4oifHo7y3Q@mail.gmail.com>
- <20160225193023.6f8f1f89.drivshin.allworx@gmail.com>
+From: =?big5?B?SmVmZnJleSBMaW4gKKpMuHGzuSk=?= <Jeffrey.Lin@rad-ic.com>
+Subject: RE: [PATCH] driver: input :touchscreen : add Raydium I2C touch
+ driver file
+Date: Fri, 26 Feb 2016 09:24:23 +0000
+Message-ID: <9BE4B49389AB2F41A64A32DFC844F1DF73EF7EE7@RADHCMS5.corp.rad-ic.com>
+References: <201602261633.y2ggBswA%fengguang.wu@intel.com>
+ <alpine.DEB.2.10.1602260951390.2614@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20160225193023.6f8f1f89.drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.10.1602260951390.2614@hadrien>
+Content-Language: zh-TW
+Sender: linux-input-owner@vger.kernel.org
+To: Julia Lawall <julia.lawall@lip6.fr>, "jeffrey.lin" <yajohn@gmail.com>
+Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>, =?big5?B?Um9nZXIgWWFuZyAot6jC7d6zKQ==?= <Roger.Yang@rad-ic.com>, =?big5?B?S1AgTGkgKKf1qfitvyk=?= <KP.Li@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2016 01:30 AM, David Rivshin (Allworx) wrote:
-> On Wed, 24 Feb 2016 13:49:46 -0600
-> Rob Herring <robh+dt@kernel.org> wrote:
->
->> On Wed, Feb 24, 2016 at 1:34 PM, David Rivshin (Allworx)
->> <drivshin.allworx@gmail.com> wrote:
->>> On Wed, 24 Feb 2016 17:04:49 +0100
->>> Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
->>>
->>>> Hi David,
->>>>
->>>> Thanks for the patch.
->>>>
->>>> On 02/23/2016 07:17 PM, David Rivshin (Allworx) wrote:
->>>>> From: David Rivshin <drivshin@allworx.com>
->>>>>
->>>>> This adds a binding description for the is31fl3236/35/18/16 I2C LED
->>>>> drivers.
->>>>>
->>>>> Signed-off-by: David Rivshin <drivshin@allworx.com>
->>>>> ---
->>>>>    .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
->>>>>    1 file changed, 51 insertions(+)
->>>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->>>>> new file mode 100644
->>>>> index 0000000..0a05a1d
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->>>>> @@ -0,0 +1,51 @@
->>>>> +Binding for ISSI IS31FL32xx LED Drivers
->>>>> +
->>>>> +The IS31FL32xx family of LED drivers are I2C devices with multiple
->>>>> +constant-current channels, each with independent 256-level PWM control.
->>>>> +Each LED is represented as a sub-node of the device.
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: one of
->>>>> +   issi,is31fl3236
->>>>> +   issi,is31fl3235
->>>>> +   issi,is31fl3218
->>>>> +   issi,is31fl3216
->>>>> +- reg: I2C slave address
->>>>> +- address-cells : must be 1
->>>>> +- size-cells : must be 0
->>>>> +
->>>>> +LED sub-node properties:
->>>>> +- reg : LED channel number (1..N)
->>>>> +- max-brightness : (optional) Maximum brightness possible for the LED.
->>>>
->>>> Please use led-max-microamp instead. You can refer to
->>>> Documentation/devicetree/bindings/leds/common.txt for detailed
->>>> description.
->>>
->>> FYI, I think I got that property from leds-pwm, since these use PWMs
->>> internally, although I don't actually use it myself.
->>>
->>> I can see how led-max-microamp could be a useful property, however
->>> I'm uncertain about computing cdev->max_brightness from it as these
->>> devices look to control their max current via an external resistor.
->>> I suppose either the resistor value, or the resultant max-current
->>> would need to be given in the devicetree, and then that used along
->>> with led-max-microamp to compute cdev->max_brightness. Although I'd
->>> want it to be optional as I suspect most users don't need any
->>> restriction. Also, I don't think I can properly test the result,
->>> which always makes me nervous.
->>>
->>> Would it be acceptable to simply remove the max-brightness property
->>> without adding led-max-microamp? It can always be added if a user
->>> turns out to need it in the future. Or do you feel strongly that
->>> led-max-microamp should be in the binding from the start?
->>
->> You should put in DT whatever makes sense for the controls the h/w
->> has. If you only have a PWM, then only max-brightness makes sense and
->> led-max-microamp does not.
->
-> There are multiple ways you can look at it, and I'm not sure which
-> is the overriding one. The brightness of the LED is determined by the
-> current, which is in turn a combination of the following:
-> - The max per-LED current is set with an external resistor.
-> - Some devices have a scaling factor, which can be changed dynamically:
->    - One of the devices has either a global scaling factor in a register,
->      that can adjust max-current from 0.25x to 2x.
->    - Two of the devices have a per-LED current divisor (1, 2, 3, or 4).
-> - The main control is a 0-255 "PWM duty cycle" register, which
->    effectively scales the current.
-> IOW, the final current is:
->   <resistor-setting> * <scaling> * <PWM-duty-cycle>
-> Currently the binding and driver do not support setting either type of
-> scaling (always unity) and only use the PWM duty cycle to dim the LED.
->
-> So if the purpose is to say "never allow this LED channel to go above
-> X current", the leds-max-microamp probably makes sense.
->
-> If the purpose is to say "never allow the PWM duty cycle register
-> for this channel to go above value X", then max-brightness perhaps
-> makes sense.
->
-> If the scaling is fixed by the DT (i.e won't be changed dynamically
-> by the OS), then those two are basically equivalent in functionality.
-> But if scaling can be changed dynamically, then they have different
-> implications.
-
-Actually we introduced led-max-microamp property because we came
-to conclusion that brightness level is not a suitable unit for
-describing hardware.
-
-As stated in Documentation/devicetree/bindings/leds/common.txt,
-the led-max-microamp's property purpose is to protect the LEDs
-from damaging in case of excessive current is set. This is especially
-vital in case of flash LED controllers where the current can reach ~1A.
-
-IMO having max-brightness only for defining a LED class device
-usage policy is not justified, since this can be accomplished
-from user space.
-
--- 
-Best regards,
-Jacek Anaszewski
+SnVsaWE6DQpUaGFua3MgZm9yIHlvdXIgcmVzcG9uc2UuIEknbGwgZml4IHRoZW0gaW4gbmV4dCB2
+ZXJzaW9uLg0KDQpCZXN0IFJlZ2FyZHMNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkplZmZyZXkgTGluLKpMuHGz
+uQ0Kt+e5qazsp94NClJheWRpdW0gU2VtaWNvbmR1Y3RvciBDb3Jwb3JhdGlvbg0KVGVsOigwMyk2
+NjYtMTgxOCBFeHQuNDE2Mw0KRmF4OigwMyk2NjYtMTkxOQ0KDQotLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQ0KRnJvbTogSnVsaWEgTGF3YWxsIFttYWlsdG86anVsaWEubGF3YWxsQGxpcDYuZnJd
+IA0KU2VudDogRnJpZGF5LCBGZWJydWFyeSAyNiwgMjAxNiA0OjUzIFBNDQpUbzogamVmZnJleS5s
+aW4NCkNjOiBrYnVpbGQtYWxsQDAxLm9yZzsgZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsgcnlk
+YmVyZ0BldXJvbWFpbC5zZTsgZ3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgamVlc3dAbWVsZmFzLmNvbTsgYmxldW5nQGNocm9taXVtLm9yZzsgc2NvdHQubGl1QGVt
+Yy5jb20udHc7IEplZmZyZXkgTGluICiqTLhxs7kpOyBSb2dlciBZYW5nICi3qMLt3rMpOyBLUCBM
+aSAop/Wp+K2/KTsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtaW5wdXRAdmdl
+ci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQ
+QVRDSF0gZHJpdmVyOiBpbnB1dCA6dG91Y2hzY3JlZW4gOiBhZGQgUmF5ZGl1bSBJMkMgdG91Y2gg
+ZHJpdmVyIGZpbGUNCg0KUGxlYXNlIGFkanVzdCB0aGUgaW5kZW50YXRpb24uDQoNCmp1bGlhDQoN
+Ck9uIEZyaSwgMjYgRmViIDIwMTYsIGtidWlsZCB0ZXN0IHJvYm90IHdyb3RlOg0KDQo+IEhpIGpl
+ZmZyZXkubGluLA0KPg0KPiBbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gaW5wdXQvbmV4dF0g
+W2Fsc28gYnVpbGQgdGVzdCBXQVJOSU5HIG9uIA0KPiB2NC41LXJjNSBuZXh0LTIwMTYwMjI2XSBb
+aWYgeW91ciBwYXRjaCBpcyBhcHBsaWVkIHRvIHRoZSB3cm9uZyBnaXQgDQo+IHRyZWUsIHBsZWFz
+ZSBkcm9wIHVzIGEgbm90ZSB0byBoZWxwIGltcHJvdmluZyB0aGUgc3lzdGVtXQ0KPg0KPiB1cmw6
+ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4L2NvbW1pdHMvamVmZnJleS1saW4v
+ZHJpdmVyLWlucHV0LXRvdWNoc2NyZWVuLWFkZC1SYXlkaXVtLUkyQy10b3VjaC1kcml2ZXItZmls
+ZS8yMDE2MDIyNi0xNTI1NDINCj4gYmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9z
+Y20vbGludXgva2VybmVsL2dpdC9kdG9yL2lucHV0LmdpdCBuZXh0DQo+IDo6Ojo6OiBicmFuY2gg
+ZGF0ZTogNjQgbWludXRlcyBhZ28NCj4gOjo6Ojo6IGNvbW1pdCBkYXRlOiA2NCBtaW51dGVzIGFn
+bw0KPg0KPiA+PiBkcml2ZXJzL2lucHV0L3RvdWNoc2NyZWVuL3JheWRpdW1faTJjX3RzLmM6NTM2
+OjMtMTI6IGNvZGUgYWxpZ25lZCANCj4gPj4gd2l0aCBmb2xsb3dpbmcgY29kZSBvbiBsaW5lIDUz
+OA0KPg0KPiBnaXQgcmVtb3RlIGFkZCBsaW51eC1yZXZpZXcgaHR0cHM6Ly9naXRodWIuY29tLzBk
+YXktY2kvbGludXggZ2l0IA0KPiByZW1vdGUgdXBkYXRlIGxpbnV4LXJldmlldyBnaXQgY2hlY2tv
+dXQgDQo+IDE4ZGRkMjg1NjdkMDhiMTE0YjU3NmU4MDE0NzVkNmQ3MjA5Zjc2ZjUNCj4gdmltICs1
+MzYgZHJpdmVycy9pbnB1dC90b3VjaHNjcmVlbi9yYXlkaXVtX2kyY190cy5jDQo+DQo+IDE4ZGRk
+Mjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDUzMA0KPiAxOGRkZDI4NSBqZWZmcmV5LmxpbiAy
+MDE2LTAyLTI2ICA1MzEgIAkJaW5wdXRfbXRfc2xvdCh0cy0+aW5wdXQsIGkpOw0KPiAxOGRkZDI4
+NSBqZWZmcmV5LmxpbiAyMDE2LTAyLTI2ICA1MzIgIAkJaW5wdXRfbXRfcmVwb3J0X3Nsb3Rfc3Rh
+dGUodHMtPmlucHV0LA0KPiAxOGRkZDI4NSBqZWZmcmV5LmxpbiAyMDE2LTAyLTI2ICA1MzMgIAkJ
+CQlNVF9UT09MX0ZJTkdFUiwgZl9zdGF0ZSAhPSAwKTsNCj4gMThkZGQyODUgamVmZnJleS5saW4g
+MjAxNi0wMi0yNiAgNTM0DQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDUzNSAg
+CQlpZiAoIWZfc3RhdGUpDQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgQDUzNiAg
+CQkJY29udGludWU7DQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDUzNw0KPiAx
+OGRkZDI4NSBqZWZmcmV5LmxpbiAyMDE2LTAyLTI2IEA1MzggIAkJCXggPSAoZGF0YS0+eF9wb3Nf
+bXNiIDw8IDgpIHwgKGRhdGEtPnhfcG9zX2xzYik7DQo+IDE4ZGRkMjg1IGplZmZyZXkubGluIDIw
+MTYtMDItMjYgIDUzOSAgCQkJeSA9IChkYXRhLT55X3Bvc19tc2IgPDwgOCkgfCAoZGF0YS0+eV9w
+b3NfbHNiKTsNCj4gMThkZGQyODUgamVmZnJleS5saW4gMjAxNi0wMi0yNiAgNTQwDQo+IDE4ZGRk
+Mjg1IGplZmZyZXkubGluIDIwMTYtMDItMjYgIDU0MSAgCQkJaW5wdXRfcmVwb3J0X2tleSh0cy0+
+aW5wdXQsDQo+DQo+IC0tLQ0KPiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVyZSAgICAg
+ICAgICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcg0KPiBodHRwczovL2xpc3Rz
+LjAxLm9yZy9waXBlcm1haWwva2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJbnRlbCBDb3Jw
+b3JhdGlvbg0KPg0K
