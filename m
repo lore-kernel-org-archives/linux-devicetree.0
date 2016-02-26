@@ -1,75 +1,84 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: meson: Adding hwrev syscon node
-Date: Fri, 26 Feb 2016 16:34:59 +0100
-Message-ID: <CAOQ7t2Za5t_3nAm0wyf0rmFa+RTRSGUDAg5b64VvXp-okLMoNQ@mail.gmail.com>
-References: <1455730114-2547-1-git-send-email-romain.perier@gmail.com>
-	<CAOQ7t2aqZj3STFsdTSQZMTK5U+8Oem8oFroxHKWkt=AeP+Zczg@mail.gmail.com>
-	<CAD8Lp47LGUc3-MFpU+3iNjXJL0i4nLTY_49NUxFXeZ2SokDuaQ@mail.gmail.com>
-	<3072897.5MMsyiojns@wuerfel>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH/RFC v2 04/11] soc: renesas: rcar: Add DT support for SYSC
+ PM domains
+Date: Fri, 26 Feb 2016 16:41:27 +0100
+Message-ID: <CAMuHMdVo2V7Ez5g8ZW74w-QWiwS8i2mbYeCjOU9brxRzNjMAdg@mail.gmail.com>
+References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
+	<1455571020-18968-5-git-send-email-geert+renesas@glider.be>
+	<3535519.g4KL1PCIZy@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3072897.5MMsyiojns@wuerfel>
+In-Reply-To: <3535519.g4KL1PCIZy@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Daniel Drake <drake-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Romain Perier <romain.perier-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 1:54 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+Hi Laurent,
 
-<cut>
+On Mon, Feb 15, 2016 at 11:51 PM, Laurent Pinchart
+<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+>>  drivers/soc/renesas/pm-rcar.c | 327 +++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 327 insertions(+)
+>>
+>> diff --git a/drivers/soc/renesas/pm-rcar.c b/drivers/soc/renesas/pm-rcar.c
+>> index cc684e9cc8db5d1c..c0540934126e58eb 100644
+>> --- a/drivers/soc/renesas/pm-rcar.c
+>> +++ b/drivers/soc/renesas/pm-rcar.c
 
-> This still really sounds like a mixed bag to me, which should better get represented
-> as a syscon node, except that there are also some more structured areas in
-> CBUS.
+>> +static int __init rcar_init_pm_domains(void)
+>> +{
+>> +     const struct of_device_id *match;
+>> +     struct device_node *np, *pmd;
+>> +     bool scanned = false;
+>> +     void __iomem *base;
+>> +     int ret = 0;
+>> +
+>> +     for_each_matching_node_and_match(np, rcar_sysc_matches, &match) {
+>> +             u32 syscier = 0;
+>> +
+>> +             rcar_gen = (uintptr_t)match->data;
+>> +
+>> +             base = of_iomap(np, 0);
+>> +             if (!base) {
+>> +                     pr_warn("%s cannot map reg 0\n", np->full_name);
+>> +                     continue;
+>> +             }
+>> +
+>> +             rcar_sysc_base = base;  // FIXME conflicts with rcar_sysc_init()
+>> +
+>> +             pmd = of_get_child_by_name(np, "pm-domains");
+>> +             if (!pmd) {
+>> +                     pr_warn("%s lacks pm-domains node\n", np->full_name);
 >
-> Having just the registers between METAL_REVISION and HW_REV in a syscon
-> is clearly wrong, as that would include the pinctrl area that already has
-> a driver, but would not include some other parts that want the syscon.
+> Shouldn't you call iounmap() here ?
+
+Yes. Will fix.
+
+>> +             /*
+>> +              * Enable all interrupt sources, but do not use interrupt
+>> +              * handler
+>> +              */
+>> +             pr_debug("%s: syscier = 0x%08x\n", np->full_name, syscier);
+>> +             iowrite32(syscier, rcar_sysc_base + SYSCIER);
+>> +             iowrite32(0, rcar_sysc_base + SYSCIMR);
 >
-> Maybe the best way is to make it compatible with both syscon and
-> simple-bus and put the other nodes underneath. That is still rather
-> ugly, but at least it works and can be extended.
+> Shouldn't the SYSCIMR bits be set to 1 to mask interrupts ?
 
-More on this topic.
+That would work, too. It doesn't matter much, as the driver doesn't use
+interrupts, so they stay disabled at the GIC level.
 
-On the meson platforms (at least on the meson8 / meson8b) we have two
-buses: cbus and aobus. Since in cbus we have a bunch of scattered
-registers, Arnd suggested to make it compatible with both syscon and
-simple-bus. So my idea was actually to update the meson8b DTSI file
-adding the two buses to make it closer to the actual hardware.
+Gr{oetje,eeting}s,
 
-In the most simple cases moving the devices under the correct bus is a
-trivial operation since (of course) the same driver can be used when
-the device is attached to a different bus, like in the uart_AO case
-(http://lxr.free-electrons.com/source/arch/arm/boot/dts/meson8b.dtsi#L114).
+                        Geert
 
-Unfortunately pinctrl is a different beast since it requires
-(http://lxr.free-electrons.com/source/drivers/pinctrl/meson/pinctrl-meson.c#L659)
-at least two subnodes: one accessing registers from aobus, and the
-other one from cbus.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-I know this is quite a peculiar case but I'm wondering what is the
-best way to approach this issue.
-
-1) We could move only the pinctrl device outside both aobus and cbus
-but IMO this is ugly (at this point is probably better not having the
-two buses at all described in the DTS).
-2) The second option is just to fix the driver so that the two
-subnodes are not strictly required. The problem with this second
-solution is that in the driver we still need to access some data
-(http://lxr.free-electrons.com/source/drivers/pinctrl/meson/pinctrl-meson8b.c#L873)
-that is specific to each bus. So we will end up having two different
-compatibles for the two buses (meson8b-pinctrl-aobus using data from
-'ao-bank', and meson8b-pinctrl-cbus using data from 'banks').
-3) Another option is just to have the driver with a unique compatible
-poking the parent node (or just to another property) to determine on
-which bus it is so that it can use the correct bus-specific data.
-
-Any idea / feedback?
-
--- 
-Carlo Caione
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
