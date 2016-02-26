@@ -1,38 +1,57 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: Re: [PATCH v3 5/5] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Fri, 26 Feb 2016 13:43:14 -0600
-Message-ID: <56D0AAD2.7060003@ti.com>
-References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
- <1456439796-28546-6-git-send-email-fcooper@ti.com>
- <20160226191848.GJ13417@atomide.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RFC v2 12/12] ARM64: dts: Define CPU power domain for MSM8916
+Date: Fri, 26 Feb 2016 11:50:35 -0800
+Message-ID: <20160226195035.GA28849@codeaurora.org>
+References: <1455310238-8963-1-git-send-email-lina.iyer@linaro.org>
+ <1455310238-8963-13-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20160226191848.GJ13417@atomide.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: paul@pwsan.com, t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455310238-8963-13-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lina Iyer <lina.iyer@linaro.org>
+Cc: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, geert@linux-m68k.org, k.kozlowski@samsung.com, msivasub@codeaurora.org, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, ahaslam@baylibre.com, mtitinger@baylibre.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony
+On 02/12, Lina Iyer wrote:
+> @@ -101,6 +105,27 @@
+>  		};
+>  	};
+>  
+> +	CPU_PD: cpu-pd@0 {
+> +		#power-domain-cells = <0>;
+> +		power-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
 
-On 02/26/2016 01:18 PM, Tony Lindgren wrote:
-> * Franklin S Cooper Jr <fcooper@ti.com> [160225 14:37]:
->> From: Vignesh R <vigneshr@ti.com>
->>
->> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
->> for dt bindings.
-> 
-> Are the dts changes safe to pick separately? I'm mostly worried
-> about clock related hangs unless the clock changes are merged
-> first.
-> 
-> Regards,
-> 
-> Tony
-> 
+Why isn't this part of the psci node? PSCI is the node that's
+providing the code/logic for the power domain.
 
-I just did a boot test where I only had this patch applied and the dra7 board booted successfully. Of course I assume there will be problems if someone actually tried to enable EPWM or ECAP without the other clock patches.
+> +	};
+> +
+> +	pd-power-states {
+> +		CLUSTER_RET: power-state@1 {
+> +			state-param = <0x1000010>;
+> +			entry-latency-us = <500>;
+> +			exit-latency-us = <500>;
+> +			residency-us = <2000>;
+> +		 };
+> +
+> +		CLUSTER_PWR_DWN: power-state@2 {
+> +			state-param = <0x1000030>;
+> +			entry-latency-us = <2000>;
+> +			exit-latency-us = <2000>;
+> +			residency-us = <6000>;
+> +		};
+> +	};
+> +
 
-Bootlog: http://pastebin.ubuntu.com/15208985/
+And I would expect these to be put somewhere inside the power
+domain provider as well? Is this documented somewhere?
+
+>  	psci {
+>  		compatible = "arm,psci-1.0";
+>  		method = "smc";
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
