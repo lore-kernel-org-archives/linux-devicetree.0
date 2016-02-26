@@ -1,88 +1,29 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [RFC 3/3] CMDQ: Mediatek CMDQ driver
-Date: Sat, 27 Feb 2016 00:47:24 +0800
-Message-ID: <CAGS+omBRhYugsiFTzfDG2jtON4rj7Y4aDY-X2afRSh09G-ZC+A@mail.gmail.com>
-References: <8A0FDEEF9DBBD140A3857422D81DA20F867B19FD@mtkmbs01n1>
- <1454479333.11967.12.camel@mtksdaap41> <CAGS+omABD93f3X0pfiFgaxa9Lob2txkJfUUomUvs+hiRkxSuHw@mail.gmail.com>
- <1456477230.17841.2.camel@mtksdaap41>
+From: Timur Tabi <timur@codeaurora.org>
+Subject: Re: [PATCH V14 0/9] dma: add Qualcomm Technologies HIDMA driver
+Date: Fri, 26 Feb 2016 10:52:39 -0600
+Message-ID: <56D082D7.1050002@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <56D07B71.4080209@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456477230.17841.2.camel@mtksdaap41>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Horng-Shyang Liao <hs.liao@mediatek.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Yong Wu <yong.wu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56D07B71.4080209@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com
+Cc: Sinan Kaya <okaya@codeaurora.org>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 5:00 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
+Sinan Kaya wrote:
+> Hi Marc Zyngier, Mark Rutland;
 >
-> On Wed, 2016-02-03 at 14:40 +0800, Daniel Kurtz wrote:
-> > > Hi Dan,
-> > >
-> > > Thanks for your comment.
-> > > This solution looks good to me.
-> > > I will change it as your suggestion.
-> > >
-> > > But, I have a question about 'mask out the provided *device virtual*
-> > > address'.
-> > > Are lower 16-bits (or 24-bits for JUMP op) of device virtual address the
-> > > same as device physical address?
-> >
-> > I'm not sure.  But I doubt it we can rely on this.
-> > My guess would be that the ioremap only preserves the lower 12 bits
-> > (4k page size).
-> >
-> > > If not, we still need to pass in physical address into CMDQ driver.
-> >
-> > Or, instead of the iommu/slot approach, we can just provide a
-> > registration function for the gce driver.
-> > Each gce consumer could then have a simple gce node, with no slot/address:
-> >
-> >   mediatek,gce = <&gce>;
-> >
-> > Then on probe, the gce consumer could pass in its (struct device *) to
-> > gce_register_device().  gce_register_device() could then access the
-> > device's of_node to extract its physical address range, and look up
-> > its physical address in its table of per-soc of
-> > "device_address:gce_subsys_address" entries.  If the physical address
-> > is in a valid subsys ranges, the gce_register_device would cache the
-> > subsys address, and an offset in a (struct gce_consumer).
-> > gce_register_device() could then add this struct to a struct list_head
-> > of gce_consumers, and finally return a pointer to it back to the
-> > caller.
-> >
-> > Later, the gce consumer could pass in ths (struct gce_consumer *) when
-> > make gce calls, along with the *offset* (not the physical address or
-> > virtual address) for the register that it wishes to access.  Then the
-> > gce driver can simply use the gce_consumer->subsys entry to create a
-> > gce address from the passed in offset.
-> >
-> > This will keep the binding very simple, and would remove the need to
-> > convert from device virtual to physical addresses by the gce consumer,
-> > but require a little more per-gce-consumer setup.
-> >
-> > -Dan
->
-> Hi Dan,
->
-> When I try to implement this comment, I realize the only benefit from
-> this comment is to wrap physical address.
->
-> Recall from my previous reply: gce address = subsys + valid low bits.
-> So, CMDQ driver still need to do "(Base + offset) & valid mask" to get
-> gce valid low bits.
-> Current implementation let display driver do "base + offset".
-> This comment just transfers this calculation from display driver to CMDQ
-> driver.
->
-> However, this comment will let CMDQ interface (behavior) become more
-> complicated, e.g. gce_register_device(), struct gce_consumer, and int
-> cmdq_rec_write(struct cmdq_rec *handle, u32 value, struct gce_consumer
-> *consumer, u32 offset)
->
-> Do you think it is worth to do this effort to wrap physical address?
+> I'm looking forward to hear your feedback on this series.
 
-Yes, I think it is worth it to unify the gce address computation and
-move it into the gce driver.
+Would it be possible to get this patchset into 4.6?  We're already at 
+v14, and there have been no review comments since this patch was posted 
+on the fourth (over three weeks ago).
 
--Dan
+-- 
+Sent by an employee of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the
+Code Aurora Forum, hosted by The Linux Foundation.
