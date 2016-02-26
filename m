@@ -1,48 +1,193 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 0/5] BCM2835 pinctrl DT rework (resend)
-Date: Fri, 26 Feb 2016 10:19:11 -0800
-Message-ID: <1456510756-15337-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 2/5] ARM: bcm2835: Replace alt0/i2s_alt[02] with standard groups.
+Date: Fri, 26 Feb 2016 10:19:13 -0800
+Message-ID: <1456510756-15337-3-git-send-email-eric@anholt.net>
+References: <1456510756-15337-1-git-send-email-eric@anholt.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456510756-15337-1-git-send-email-eric@anholt.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Here's a series for cleaning up the pinctrl groups on BCM2835
-(Raspberry Pi).  This was partially inspired by Stefan Wahren's
-patches for the EMMC SDHCI controller, but really triggered by needing
-to switch pinmuxes to enable the SDHOST SD controller (which gives me
-a 60% read speed improvement).  Patches for adding that driver will
-follow.
+Since all of these pins were documented, we can use their names to
+explain what's going on.
 
-I think this is more or less how pinctrl is expected to be used for a
-platform like this.  It certainly cleans up the board files.
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 17 ++++++++++-------
+ arch/arm/boot/dts/bcm2835-rpi-a.dts      | 17 ++++++++++-------
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 17 ++++++++++-------
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 17 ++++++++++-------
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      | 10 +++++++++-
+ arch/arm/boot/dts/bcm2835-rpi.dtsi       |  5 -----
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 17 ++++++++++-------
+ 7 files changed, 59 insertions(+), 41 deletions(-)
 
-This is a resend because only 3 came through last time.  My former
-SMTP relay decided to start rejecting half my mails this week.  I've
-now swapped systems.
-
-Eric Anholt (5):
-  ARM: bcm2835: Define standard pinctrl groups in the gpio node.
-  ARM: bcm2835: Replace alt0/i2s_alt[02] with standard groups.
-  ARM: bcm2835: Move the emmc pin group to bcm283x.dtsi.
-  ARM: bcm2835: Add a group for mapping pins 48-53 to sdhost.
-  ARM: bcm2835: Move most RPi default pin groups to their devices.
-
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts |  11 +-
- arch/arm/boot/dts/bcm2835-rpi-a.dts      |  11 +-
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |  11 +-
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts |  11 +-
- arch/arm/boot/dts/bcm2835-rpi-b.dts      |   4 -
- arch/arm/boot/dts/bcm2835-rpi.dtsi       |  30 ++++--
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts    |  11 +-
- arch/arm/boot/dts/bcm283x.dtsi           | 178 +++++++++++++++++++++++++++++++
- 8 files changed, 213 insertions(+), 54 deletions(-)
-
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+index 228614f..0a8b92e 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+@@ -21,11 +21,14 @@
+ };
+ 
+ &gpio {
+-	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+-
+-	/* I2S interface */
+-	i2s_alt0: i2s_alt0 {
+-		brcm,pins = <18 19 20 21>;
+-		brcm,function = <BCM2835_FSEL_ALT0>;
+-	};
++	pinctrl-0 = <&i2c0_gpio0
++		     &i2c1_gpio2
++		     &gpclk0_gpio4
++		     &gpclk1_gpio5
++		     &spi0_gpio7
++		     &pcm_gpio18
++		     &pwm0_gpio40
++		     &pwm1_gpio45
++		     &gpioout
++		     &alt3>;
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+index ddbbbbd..d093407 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+@@ -14,11 +14,14 @@
+ };
+ 
+ &gpio {
+-	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
+-
+-	/* I2S interface */
+-	i2s_alt2: i2s_alt2 {
+-		brcm,pins = <28 29 30 31>;
+-		brcm,function = <BCM2835_FSEL_ALT2>;
+-	};
++	pinctrl-0 = <&i2c0_gpio0
++		     &i2c1_gpio2
++		     &gpclk0_gpio4
++		     &gpclk1_gpio5
++		     &spi0_gpio7
++		     &pcm_gpio28
++		     &pwm0_gpio40
++		     &pwm1_gpio45
++		     &gpioout
++		     &alt3>;
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index ef54050..c26b81d 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -21,11 +21,14 @@
+ };
+ 
+ &gpio {
+-	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+-
+-	/* I2S interface */
+-	i2s_alt0: i2s_alt0 {
+-		brcm,pins = <18 19 20 21>;
+-		brcm,function = <BCM2835_FSEL_ALT0>;
+-	};
++	pinctrl-0 = <&i2c0_gpio0
++		     &i2c1_gpio2
++		     &gpclk0_gpio4
++		     &gpclk1_gpio5
++		     &spi0_gpio7
++		     &pcm_gpio18
++		     &pwm0_gpio40
++		     &pwm1_gpio45
++		     &gpioout
++		     &alt3>;
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 86f1f2f..a5b606e 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -14,11 +14,14 @@
+ };
+ 
+ &gpio {
+-	pinctrl-0 = <&gpioout &alt0 &i2s_alt2 &alt3>;
+-
+-	/* I2S interface */
+-	i2s_alt2: i2s_alt2 {
+-		brcm,pins = <28 29 30 31>;
+-		brcm,function = <BCM2835_FSEL_ALT2>;
+-	};
++	pinctrl-0 = <&i2c0_gpio0
++		     &i2c1_gpio2
++		     &gpclk0_gpio4
++		     &gpclk1_gpio5
++		     &spi0_gpio7
++		     &pcm_gpio28
++		     &pwm0_gpio40
++		     &pwm1_gpio45
++		     &gpioout
++		     &alt3>;
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 4859e9d..97e3c2f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -14,5 +14,13 @@
+ };
+ 
+ &gpio {
+-	pinctrl-0 = <&gpioout &alt0 &alt3>;
++	pinctrl-0 = <&i2c0_gpio0
++		     &i2c1_gpio2
++		     &gpclk0_gpio4
++		     &gpclk1_gpio5
++		     &spi0_gpio7
++		     &pwm0_gpio40
++		     &pwm1_gpio45
++		     &gpioout
++		     &alt3>;
+ };
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 76bdbca..141b18c 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -37,11 +37,6 @@
+ 		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
+ 	};
+ 
+-	alt0: alt0 {
+-		brcm,pins = <0 1 2 3 4 5 7 8 9 10 11 14 15 40 45>;
+-		brcm,function = <BCM2835_FSEL_ALT0>;
+-	};
+-
+ 	alt3: alt3 {
+ 		brcm,pins = <48 49 50 51 52 53>;
+ 		brcm,function = <BCM2835_FSEL_ALT3>;
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index ff94666..52798ca 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -25,11 +25,14 @@
+ };
+ 
+ &gpio {
+-	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
+-
+-	/* I2S interface */
+-	i2s_alt0: i2s_alt0 {
+-		brcm,pins = <18 19 20 21>;
+-		brcm,function = <BCM2835_FSEL_ALT0>;
+-	};
++	pinctrl-0 = <&i2c0_gpio0
++		     &i2c1_gpio2
++		     &gpclk0_gpio4
++		     &gpclk1_gpio5
++		     &spi0_gpio7
++		     &pcm_gpio18
++		     &pwm0_gpio40
++		     &pwm1_gpio45
++		     &gpioout
++		     &alt3>;
+ };
 -- 
 2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
