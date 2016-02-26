@@ -1,395 +1,313 @@
-From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] watchdog: pic32-wdt: Add PIC32 watchdog driver
-Date: Fri, 26 Feb 2016 10:15:15 -0700
-Message-ID: <56D08823.2020709@microchip.com>
-References: <1456424846-24409-2-git-send-email-joshua.henderson@microchip.com>
- <56D05BE0.8020609@roeck-us.net>
+From: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
+ detecting the reset driver
+Date: Fri, 26 Feb 2016 18:15:47 +0100
+Message-ID: <56D08843.5020306@linaro.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D05BE0.8020609-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <1454646882-24369-9-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Cc: shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Guenter,
-
-On 02/26/2016 07:06 AM, Guenter Roeck wrote:
-> On 02/25/2016 10:27 AM, Joshua Henderson wrote:
->> Add support for the watchdog peripheral found on PIC32 class
->> devices.
->>
->> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
->> ---
->> Note: Please merge this patch series through the MIPS tree.
->>
->> Changes since v1:
->>     - Shorten commit description
->>     - Don't default to y in Kconfig
->>     - Alphabetical ordering of includes
->>     - Use BIT() where applicable
->>     - Use consistent function name prefixes
->>     - Inline some single use functions
->>     - Use a return of bool when appropriate
->>     - Replace cpu_relax() with nop and explain why this is needed
->>     - Better error handling, especially to prevent divide by zero
->>     - Remove unecessary pr_info().
->>     - Remove redudant driver spinlock which is already covered by
->>       watchdog core
->>     - Drop .get_timeleft implementation
->>     - Fix typo in compatibility flag and driver name
->>     - Remove wdt->timeout variable and calculation
->>     - Fix race condition in watchdog driver registration
->> ---
->>   drivers/watchdog/Kconfig     |   13 +++
->>   drivers/watchdog/Makefile    |    1 +
->>   drivers/watchdog/pic32-wdt.c |  264 ++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 278 insertions(+)
->>   create mode 100644 drivers/watchdog/pic32-wdt.c
->>
->> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> index 0f6d851..543fa81 100644
->> --- a/drivers/watchdog/Kconfig
->> +++ b/drivers/watchdog/Kconfig
->> @@ -1414,6 +1414,19 @@ config MT7621_WDT
->>       help
->>         Hardware driver for the Mediatek/Ralink MT7621/8 SoC Watchdog Timer.
->>
->> +config PIC32_WDT
->> +    tristate "Microchip PIC32 hardware watchdog"
->> +    select WATCHDOG_CORE
->> +    depends on MACH_PIC32
->> +    help
->> +      Watchdog driver for the built in watchdog hardware in a PIC32.
->> +
->> +      Configuration bits must be set appropriately for the watchdog to be
->> +      controlled by this driver.
->> +
->> +      To compile this driver as a loadable module, choose M here.
->> +      The module will be called pic32-wdt.
->> +
->>   # PARISC Architecture
->>
->>   # POWERPC Architecture
->> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->> index f566753..244ed80 100644
->> --- a/drivers/watchdog/Makefile
->> +++ b/drivers/watchdog/Makefile
->> @@ -153,6 +153,7 @@ obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
->>   obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
->>   obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
->>   obj-$(CONFIG_MT7621_WDT) += mt7621_wdt.o
->> +obj-$(CONFIG_PIC32_WDT) += pic32-wdt.o
->>
->>   # PARISC Architecture
->>
->> diff --git a/drivers/watchdog/pic32-wdt.c b/drivers/watchdog/pic32-wdt.c
->> new file mode 100644
->> index 0000000..caec459
->> --- /dev/null
->> +++ b/drivers/watchdog/pic32-wdt.c
->> @@ -0,0 +1,264 @@
->> +/*
->> + * PIC32 watchdog driver
->> + *
->> + * Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> + * Copyright (c) 2016, Microchip Technology Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * as published by the Free Software Foundation; either version
->> + * 2 of the License, or (at your option) any later version.
->> + */
->> +
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/clk.h>
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm.h>
->> +#include <linux/watchdog.h>
->> +
->> +#include <asm/mach-pic32/pic32.h>
->> +
->> +/* Watchdog Timer Registers */
->> +#define WDTCON_REG        0x00
->> +
->> +/* Watchdog Timer Control Register fields */
->> +#define WDTCON_WIN_EN        BIT(0)
->> +#define WDTCON_RMCS_MASK    0x0003
->> +#define WDTCON_RMCS_SHIFT    0x0006
->> +#define WDTCON_RMPS_MASK    0x001F
->> +#define WDTCON_RMPS_SHIFT    0x0008
->> +#define WDTCON_ON        BIT(15)
->> +#define WDTCON_CLR_KEY        0x5743
->> +
->> +/* Reset Control Register fields for watchdog */
->> +#define RESETCON_TIMEOUT_IDLE    BIT(2)
->> +#define RESETCON_TIMEOUT_SLEEP    BIT(3)
->> +#define RESETCON_WDT_TIMEOUT    BIT(4)
->> +
->> +struct pic32_wdt {
->> +    void __iomem    *regs;
->> +    void __iomem    *rst_base;
->> +    struct clk    *clk;
->> +};
->> +
->> +static inline bool pic32_wdt_is_win_enabled(struct pic32_wdt *wdt)
->> +{
->> +    return !!(readl(wdt->regs + WDTCON_REG) & WDTCON_WIN_EN);
->> +}
->> +
->> +static inline u32 pic32_wdt_get_post_scaler(struct pic32_wdt *wdt)
->> +{
->> +    u32 v = readl(wdt->regs + WDTCON_REG);
->> +
->> +    return (v >> WDTCON_RMPS_SHIFT) & WDTCON_RMPS_MASK;
->> +}
->> +
->> +static inline u32 pic32_wdt_get_clk_id(struct pic32_wdt *wdt)
->> +{
->> +    u32 v = readl(wdt->regs + WDTCON_REG);
->> +
->> +    return (v >> WDTCON_RMCS_SHIFT) & WDTCON_RMCS_MASK;
->> +}
->> +
->> +static int pic32_wdt_bootstatus(struct pic32_wdt *wdt)
->> +{
->> +    u32 v = readl(wdt->rst_base);
->> +
->> +    writel(RESETCON_WDT_TIMEOUT, PIC32_CLR(wdt->rst_base));
->> +
->> +    return v & RESETCON_WDT_TIMEOUT;
->> +}
->> +
->> +static int pic32_wdt_get_timeout_secs(struct pic32_wdt *wdt)
->> +{
->> +    unsigned long rate;
->> +    u32 period, ps, terminal;
->> +
->> +    rate = clk_get_rate(wdt->clk);
->> +    if (!rate)
->> +        return 0;
->> +
->> +    pr_debug("wdt: clk_id %d, clk_rate %lu (prescale)\n",
->> +         pic32_wdt_get_clk_id(wdt), rate);
->> +
+Hi Sinan,
+On 02/05/2016 05:34 AM, Sinan Kaya wrote:
+> The code is using the compatible DT string to associate a reset driver with
+> the actual device itself. The compatible string does not exist on ACPI
+> based systems. HID is the unique identifier for a device driver instead.
+> The change allows a driver to register with DT compatible string or ACPI
+> HID and then match the object with one of these conditions.
 > 
-> Please pass 'dev' as argument and use dev_dbg().
-> Then you can also remove the #define pr_fmt above.
-
-Ack.
-
+> Rules for loading the reset driver are as follow:
+> - ACPI HID needs match for ACPI systems
+> - DT compat needs to match for OF systems
 > 
->> +    /* default, prescaler of 32 (i.e. div-by-32) is implicit. */
->> +    rate >>= 5;
+> Tested-by: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (device tree only)
+> Tested-by: Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (ACPI only)
+> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |  3 +-
+>  .../platform/reset/vfio_platform_calxedaxgmac.c    |  3 +-
+>  drivers/vfio/platform/vfio_platform_common.c       | 80 +++++++++++++++++++---
+>  drivers/vfio/platform/vfio_platform_private.h      | 41 ++++++-----
+>  4 files changed, 96 insertions(+), 31 deletions(-)
 > 
-> Instead of checking rate for 0 above, it might make more sense
-> to check if it is 0 here.
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> index d4030d0..cc5b4fa 100644
+> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+> @@ -119,7 +119,8 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+>  	return 0;
+>  }
+>  
+> -module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
+> +module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
+> +			  vfio_platform_amdxgbe_reset);
+>  
+>  MODULE_VERSION("0.1");
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> index e3d3d94..0e57529 100644
+> --- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> +++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+> @@ -77,7 +77,8 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
+>  	return 0;
+>  }
+>  
+> -module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
+> +module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
+> +			  vfio_platform_calxedaxgmac_reset);
+>  
+>  MODULE_VERSION(DRIVER_VERSION);
+>  MODULE_LICENSE("GPL v2");
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index 418cdd9..5b42e93 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -13,6 +13,7 @@
+>   */
+>  
+>  #include <linux/device.h>
+> +#include <linux/acpi.h>
+>  #include <linux/iommu.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> @@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
+>  static DEFINE_MUTEX(driver_lock);
+>  
+>  static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+> -					struct module **module)
+> +				  const char *acpihid, struct module **module)
+>  {
+>  	struct vfio_platform_reset_node *iter;
+>  	vfio_platform_reset_fn_t reset_fn = NULL;
+>  
+>  	mutex_lock(&driver_lock);
+>  	list_for_each_entry(iter, &reset_list, link) {
+> -		if (!strcmp(iter->compat, compat) &&
+> +		if (acpihid && iter->acpihid &&
+> +		    !strcmp(iter->acpihid, acpihid) &&
+> +			try_module_get(iter->owner)) {
+> +			*module = iter->owner;
+> +			reset_fn = iter->reset;
+> +			break;
+> +		}
+> +		if (compat && iter->compat &&
+> +		    !strcmp(iter->compat, compat) &&
+>  			try_module_get(iter->owner)) {
+>  			*module = iter->owner;
+>  			reset_fn = iter->reset;
+> @@ -51,11 +60,12 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+>  
+>  static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  {
+> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+> -						&vdev->reset_module);
+> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
+> +						 &vdev->reset_module);
+>  	if (!vdev->reset) {
+>  		request_module("vfio-reset:%s", vdev->compat);
+>  		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+> +							 vdev->acpihid,
+>  							 &vdev->reset_module);
+>  	}
+>  }
+> @@ -541,6 +551,46 @@ static const struct vfio_device_ops vfio_platform_ops = {
+>  	.mmap		= vfio_platform_mmap,
+>  };
+>  
+> +#ifdef CONFIG_ACPI
+> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
+> +			     struct device *dev)
+> +{
+> +	struct acpi_device *adev = ACPI_COMPANION(dev);
+> +
+> +	if (!adev)
+> +		return -EINVAL;
+-ENODEV seems to be commonly used in that case
+> +
+> +	vdev->acpihid = acpi_device_hid(adev);
+> +	if (!vdev->acpihid) {
+can it return NULL? Seems to return dummy "device" or actual hid
+> +		pr_err("VFIO: cannot find ACPI HID for %s\n",
+> +		       vdev->name);
+> +		return -EINVAL;
+-ENODEV too?
+> +	}
+> +	return 0;
+> +}
+> +#else
+> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
+> +			     struct device *dev)
+> +{
+> +	return -EINVAL;
+> +}
+> +#endif
+> +
+> +int vfio_platform_probe_of(struct vfio_platform_device *vdev,
+> +			   struct device *dev)
+> +{
+> +	int ret;
+> +
+> +	ret = device_property_read_string(dev, "compatible",
+> +					  &vdev->compat);
+> +	if (ret) {
+> +		pr_err("VFIO: cannot retrieve compat for %s\n",
+> +			vdev->name);
+> +		return -EINVAL;
+return ret instead.
+> +	}
+> +	return 0;
+> +}
+> +
+>  int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  			       struct device *dev)
+>  {
+> @@ -550,14 +600,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  	if (!vdev)
+>  		return -EINVAL;
+>  
+> -	ret = device_property_read_string(dev, "compatible", &vdev->compat);
+> -	if (ret) {
+> -		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
+> -		return -EINVAL;
+> -	}
+> +	ret = vfio_platform_probe_acpi(vdev, dev);
+> +	if (ret)
+> +		ret = vfio_platform_probe_of(vdev, dev);
+>  
+> -	vdev->device = dev;
+> +	if (ret)
+> +		return ret;
+>  
+> +	vdev->device = dev;
+>  	group = iommu_group_get(dev);
+>  	if (!group) {
+>  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+> @@ -602,13 +652,21 @@ void __vfio_platform_register_reset(struct vfio_platform_reset_node *node)
+>  EXPORT_SYMBOL_GPL(__vfio_platform_register_reset);
+>  
+>  void vfio_platform_unregister_reset(const char *compat,
+> +				    const char *acpihid,
+>  				    vfio_platform_reset_fn_t fn)
+>  {
+>  	struct vfio_platform_reset_node *iter, *temp;
+>  
+>  	mutex_lock(&driver_lock);
+>  	list_for_each_entry_safe(iter, temp, &reset_list, link) {
+> -		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
+> +		if (acpihid && iter->acpihid &&
+> +		    !strcmp(iter->acpihid, acpihid) && (iter->reset == fn)) {
+> +			list_del(&iter->link);
+> +			break;
+> +		}
+> +
+> +		if (compat && iter->compat &&
+> +		    !strcmp(iter->compat, compat) && (iter->reset == fn)) {
+>  			list_del(&iter->link);
+>  			break;
+>  		}
 
-Ack.
+in vfio_platform_get_reset, if the 1st vfio_platform_lookup_reset call
+does not return anything then we currently call
+request_module("vfio-reset:%s", vdev->compat);
 
+you need to handle the case where compat is not set but vdev->acpihid
+is, instead.
+
+currently the module alias is constructed with the compat only
+MODULE_ALIAS("vfio-reset:" compat);
+
+Looks you can define several ones ( for instance in
+drivers/block/xen-blkfront.c).
+
+If I am not wrong this currently would not work with
+vfio-platform-qcomhidma compiled as a module.
+
+
+
+
+
+> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+> index 42816dd..32feba3 100644
+> --- a/drivers/vfio/platform/vfio_platform_private.h
+> +++ b/drivers/vfio/platform/vfio_platform_private.h
+> @@ -58,6 +58,7 @@ struct vfio_platform_device {
+>  	struct mutex			igate;
+>  	struct module			*parent_module;
+>  	const char			*compat;
+> +	const char			*acpihid;
+>  	struct module			*reset_module;
+>  	struct device			*device;
+>  
+> @@ -79,6 +80,7 @@ typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
+>  struct vfio_platform_reset_node {
+>  	struct list_head link;
+>  	char *compat;
+> +	char *acpihid;
+>  	struct module *owner;
+>  	vfio_platform_reset_fn_t reset;
+>  };
+> @@ -98,27 +100,30 @@ extern int vfio_platform_set_irqs_ioctl(struct vfio_platform_device *vdev,
+>  
+>  extern void __vfio_platform_register_reset(struct vfio_platform_reset_node *n);
+>  extern void vfio_platform_unregister_reset(const char *compat,
+> +					   const char *acpihid,
+>  					   vfio_platform_reset_fn_t fn);
+> -#define vfio_platform_register_reset(__compat, __reset)		\
+> -static struct vfio_platform_reset_node __reset ## _node = {	\
+> -	.owner = THIS_MODULE,					\
+> -	.compat = __compat,					\
+> -	.reset = __reset,					\
+> -};								\
+> +
+> +#define vfio_platform_register_reset(__compat, __acpihid, __reset)	\
+> +static struct vfio_platform_reset_node __reset ## _node = {		\
+> +	.owner = THIS_MODULE,						\
+> +	.compat = __compat,						\
+> +	.acpihid = __acpihid,						\
+> +	.reset = __reset,						\
+> +};									\
+>  __vfio_platform_register_reset(&__reset ## _node)
+>  
+> -#define module_vfio_reset_handler(compat, reset)		\
+> -MODULE_ALIAS("vfio-reset:" compat);				\
+> -static int __init reset ## _module_init(void)			\
+> -{								\
+> -	vfio_platform_register_reset(compat, reset);		\
+> -	return 0;						\
+> -};								\
+> -static void __exit reset ## _module_exit(void)			\
+> -{								\
+> -	vfio_platform_unregister_reset(compat, reset);		\
+> -};								\
+> -module_init(reset ## _module_init);				\
+> +#define module_vfio_reset_handler(compat, acpihid, reset)		\
+> +MODULE_ALIAS("vfio-reset:" compat);					\
+Here you need to handle alias for hid case I think
+
+Best Regards
+
+Eric
+> +static int __init reset ## _module_init(void)				\
+> +{									\
+> +	vfio_platform_register_reset(compat, acpihid, reset);		\
+> +	return 0;							\
+> +};									\
+> +static void __exit reset ## _module_exit(void)				\
+> +{									\
+> +	vfio_platform_unregister_reset(compat, acpihid, reset);		\
+> +};									\
+> +module_init(reset ## _module_init);					\
+>  module_exit(reset ## _module_exit)
+>  
+>  #endif /* VFIO_PLATFORM_PRIVATE_H */
 > 
->> +
->> +    /* calculate terminal count from postscaler. */
->> +    ps = pic32_wdt_get_post_scaler(wdt);
->> +    terminal = BIT(ps);
->> +
->> +    /* find time taken (in secs) to reach terminal count */
->> +    period = terminal / rate;
-> 
-> With ps == 31, and rate == 1, the period would end up being 0x80000000,
-> or negative. Not that it matters (it is assigned to an unsigned on return),
-> but for consistency it might be better to return an unsigned int.
-
-Makes sense.
-
-> 
->> +    pr_debug("wdt: clk_rate %lu (postscale) / terminal %d, timeout %dsec\n",
->> +         rate, terminal, period);
->> +
->> +    return period;
->> +}
->> +
->> +static void pic32_wdt_keepalive(struct pic32_wdt *wdt)
->> +{
->> +    /* write key through single half-word */
->> +    writew(WDTCON_CLR_KEY, wdt->regs + WDTCON_REG + 2);
->> +}
->> +
->> +static int pic32_wdt_start(struct watchdog_device *wdd)
->> +{
->> +    struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
->> +
->> +    writel(WDTCON_ON, PIC32_SET(wdt->regs + WDTCON_REG));
->> +    pic32_wdt_keepalive(wdt);
->> +
->> +    return 0;
->> +}
->> +
->> +static int pic32_wdt_stop(struct watchdog_device *wdd)
->> +{
->> +    struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
->> +
->> +    writel(WDTCON_ON, PIC32_CLR(wdt->regs + WDTCON_REG));
->> +    /*
->> +     * Cannot touch registers in the CPU cycle following clearing the
->> +     * ON bit.
->> +     */
->> +    nop();
->> +
->> +    return 0;
->> +}
->> +
->> +static int pic32_wdt_ping(struct watchdog_device *wdd)
->> +{
->> +    struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
->> +
->> +    pic32_wdt_keepalive(wdt);
->> +
->> +    return 0;
->> +}
->> +
->> +static const struct watchdog_ops pic32_wdt_fops = {
->> +    .owner        = THIS_MODULE,
->> +    .start        = pic32_wdt_start,
->> +    .stop        = pic32_wdt_stop,
->> +    .ping        = pic32_wdt_ping,
->> +};
->> +
->> +static const struct watchdog_info pic32_wdt_ident = {
->> +    .options = WDIOF_KEEPALIVEPING |
->> +            WDIOF_MAGICCLOSE | WDIOF_CARDRESET,
->> +    .identity = "PIC32 Watchdog",
->> +};
->> +
->> +static struct watchdog_device pic32_wdd = {
->> +    .info        = &pic32_wdt_ident,
->> +    .ops        = &pic32_wdt_fops,
->> +};
->> +
->> +static const struct of_device_id pic32_wdt_dt_ids[] = {
->> +    { .compatible = "microchip,pic32mzda-wdt", },
->> +    { /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, pic32_wdt_dt_ids);
->> +
->> +static int pic32_wdt_drv_probe(struct platform_device *pdev)
->> +{
->> +    int ret;
->> +    struct watchdog_device *wdd = &pic32_wdd;
->> +    struct pic32_wdt *wdt;
->> +    struct resource *mem;
->> +
->> +    wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
->> +    if (IS_ERR(wdt))
->> +        return PTR_ERR(wdt);
->> +
->> +    mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +    wdt->regs = devm_ioremap_resource(&pdev->dev, mem);
->> +    if (IS_ERR(wdt->regs))
->> +        return PTR_ERR(wdt->regs);
->> +
->> +    wdt->rst_base = devm_ioremap(&pdev->dev, PIC32_BASE_RESET, 0x10);
->> +    if (IS_ERR(wdt->rst_base))
->> +        return PTR_ERR(wdt->rst_base);
->> +
->> +    wdt->clk = devm_clk_get(&pdev->dev, NULL);
->> +    if (IS_ERR(wdt->clk)) {
->> +        dev_err(&pdev->dev, "clk not found\n");
->> +        return PTR_ERR(wdt->clk);
->> +    }
->> +
->> +    ret = clk_prepare_enable(wdt->clk);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "clk enable failed\n");
->> +        return ret;
->> +    }
->> +
->> +    if (pic32_wdt_is_win_enabled(wdt)) {
->> +        dev_err(&pdev->dev, "windowed-clear mode is not supported.\n");
->> +        ret = -EOPNOTSUPP;
-> 
-> -ENODEV, please.
-
-Ack.
-
-> 
->> +        goto out_disable_clk;
->> +    }
->> +
->> +    wdd->timeout = pic32_wdt_get_timeout_secs(wdt);
->> +    if (!wdd->timeout) {
->> +        dev_err(&pdev->dev,
->> +            "failed to read watchdog register timeout\n");
->> +        ret = -EINVAL;
->> +        goto out_disable_clk;
->> +    }
->> +
->> +    dev_info(&pdev->dev, "timeout %d\n", wdd->timeout);
->> +
->> +    wdd->bootstatus = pic32_wdt_bootstatus(wdt) ? WDIOF_CARDRESET : 0;
->> +
->> +    watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
->> +    watchdog_set_drvdata(wdd, wdt);
->> +
->> +    ret = watchdog_register_device(wdd);
->> +    if (ret) {
->> +        dev_err(&pdev->dev, "watchdog register failed, err %d\n", ret);
->> +        goto out_disable_clk;
->> +    }
->> +
->> +    platform_set_drvdata(pdev, wdd);
->> +
->> +    return 0;
->> +
->> +out_disable_clk:
->> +    clk_disable_unprepare(wdt->clk);
->> +
->> +    return ret;
->> +}
->> +
->> +static int pic32_wdt_drv_remove(struct platform_device *pdev)
->> +{
->> +    struct watchdog_device *wdd = platform_get_drvdata(pdev);
->> +    struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
->> +
->> +    watchdog_unregister_device(wdd);
->> +    clk_disable_unprepare(wdt->clk);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct platform_driver pic32_wdt_driver = {
->> +    .probe        = pic32_wdt_drv_probe,
->> +    .remove        = pic32_wdt_drv_remove,
->> +    .driver        = {
->> +        .name        = "pic32-wdt",
->> +        .owner        = THIS_MODULE,
->> +        .of_match_table = of_match_ptr(pic32_wdt_dt_ids),
->> +    }
->> +};
->> +
->> +module_platform_driver(pic32_wdt_driver);
->> +
->> +MODULE_AUTHOR("Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>");
->> +MODULE_DESCRIPTION("Microchip PIC32 Watchdog Timer");
->> +MODULE_LICENSE("GPL");
->>
-> 
-
-Thanks,
-Josh
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
