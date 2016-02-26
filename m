@@ -1,222 +1,200 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v6 02/11] drm/hisilicon: Add hisilicon kirin drm master
- driver
-Date: Fri, 26 Feb 2016 14:24:18 +0530
-Message-ID: <56D012BA.9000509@codeaurora.org>
-References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
- <1456476028-36880-3-git-send-email-xinliang.liu@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm/marvell: ABI unstability warning
+ about Marvell 7K/8K
+Date: Fri, 26 Feb 2016 09:55:10 +0100
+Message-ID: <20160226095510.28a056be@free-electrons.com>
+References: <1456327007-31008-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1456327007-31008-2-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20160224172545.GC9137@leverpostej>
+	<20160224211045.379352d3@free-electrons.com>
+	<CAL_JsqLevrujSeYNBvSJA-5T0Ho8y7c0fKid7QvVm8LLvYLotw@mail.gmail.com>
+	<20160225090927.13492cfb@free-electrons.com>
+	<20160225161642.GC10593@leverpostej>
+	<20160225173811.23be5b05@free-electrons.com>
+	<20160225175603.GD10593@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1456476028-36880-3-git-send-email-xinliang.liu@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Xinliang Liu <xinliang.liu@linaro.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com
-Cc: andy.green@linaro.org, xuyiping@hisilicon.com, guodong.xu@linaro.org, linux-doc@vger.kernel.org, w.f@huawei.com, zourongrong@huawei.com, linuxarm@huawei.com, xuwei5@hisilicon.com, bintian.wang@huawei.com, haojian.zhuang@linaro.org, benjamin.gaignard@linaro.org, puck.chen@hisilicon.com, liguozhu@hisilicon.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160225175603.GD10593@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpJIGhhZCBzb21lIG1pbm9yIGNvbW1lbnRzLiBTb3JyeSBhYm91dCBzaGFyaW5nIHRoaXMg
-bGF0ZS4gT3RoZXJ3aXNlLAp0aGUgbG9va3MgZ29vZCB0byBtZS4KCk9uIDAyLzI2LzIwMTYgMDI6
-MTAgUE0sIFhpbmxpYW5nIExpdSB3cm90ZToKPiBBZGQga2lyaW4gRFJNIG1hc3RlciBkcml2ZXIg
-Zm9yIGhpNjIyMCBTb0Mgd2hpY2ggdXNlZCBpbiBIaUtleSBib2FyZC4KPiBBZGQgZHVtYiBidWZm
-ZXIgZmVhdHVyZS4KPiBBZGQgcHJpbWUgZG1hYnVmIGZlYXR1cmUuCj4KPiB2NjogTm9uZS4KPiB2
-NTogTm9uZS4KPiB2NDogTm9uZS4KPiB2MzoKPiAtIE1vdmUgYW5kIHJlbmFtZSBhbGwgdGhlIGZp
-bGVzIHRvIGtpcmluIHN1Yi1kaXJlY3RvcnkuCj4gICAgU28gdGhhdCB3ZSBjb3VsZCBzZXBhcmF0
-ZSBkaWZmZXJlbnQgc2VpcmVzIFNvQ3MnIGRyaXZlci4KPiAtIFJlcGxhY2UgZHJtX3BsYXRmb3Jt
-X2luaXQsIGxvYWQsIHVubG9hZCBpbXBsZW1lbnRhdGlvbi4KPiB2MjoKPiAtIFJlbW92ZSBhYnRy
-YWN0aW9uIGxheWVyLgo+Cj4gU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5saWFuZy5s
-aXVAbGluYXJvLm9yZz4KPiAtLS0KPiAgIGRyaXZlcnMvZ3B1L2RybS9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgICAyICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
-S2NvbmZpZyAgICAgICAgICAgICAgIHwgICA1ICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGlj
-b24vTWFrZWZpbGUgICAgICAgICAgICAgIHwgICA1ICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9oaXNp
-bGljb24va2lyaW4vS2NvbmZpZyAgICAgICAgIHwgICA5ICsKPiAgIGRyaXZlcnMvZ3B1L2RybS9o
-aXNpbGljb24va2lyaW4vTWFrZWZpbGUgICAgICAgIHwgICAzICsKPiAgIGRyaXZlcnMvZ3B1L2Ry
-bS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Rydi5jIHwgMzIxICsrKysrKysrKysrKysrKysr
-KysrKysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2
-LmggfCAgMjAgKysKPiAgIDggZmlsZXMgY2hhbmdlZCwgMzY2IGluc2VydGlvbnMoKykKPiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcKPiAgIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlCj4gICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9LY29uZmln
-Cj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9N
-YWtlZmlsZQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
-a2lyaW4va2lyaW5fZHJtX2Rydi5jCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
-ZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmgKPgo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCj4gaW5kZXggYjUw
-YWU2MGY1ZjUwLi5mNWM1NjU2ZTI1NDcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL0tj
-b25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vS2NvbmZpZwo+IEBAIC0yNzcsMyArMjc3LDUg
-QEAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vaW14L0tjb25maWciCj4gICBzb3VyY2UgImRyaXZl
-cnMvZ3B1L2RybS92YzQvS2NvbmZpZyIKPgo+ICAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vZXRu
-YXZpdi9LY29uZmlnIgo+ICsKPiArc291cmNlICJkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL0tj
-b25maWciCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSBiL2RyaXZlcnMv
-Z3B1L2RybS9NYWtlZmlsZQo+IGluZGV4IDYxNzY2ZGVjNmE4ZC4uNjA1NTQ4MzIwNzljIDEwMDY0
-NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZQo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9NYWtlZmlsZQo+IEBAIC03NCwzICs3NCw0IEBAIG9iai15CQkJKz0gcGFuZWwvCj4gICBvYmot
-eQkJCSs9IGJyaWRnZS8KPiAgIG9iai0kKENPTkZJR19EUk1fRlNMX0RDVSkgKz0gZnNsLWRjdS8K
-PiAgIG9iai0kKENPTkZJR19EUk1fRVROQVZJVikgKz0gZXRuYXZpdi8KPiArb2JqLXkJCQkrPSBo
-aXNpbGljb24vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vS2NvbmZp
-ZyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vS2NvbmZpZwo+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi41NThjNjFiMWI4ZTgKPiAtLS0gL2Rldi9udWxsCj4g
-KysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9LY29uZmlnCj4gQEAgLTAsMCArMSw1IEBA
-Cj4gKyMKPiArIyBoaXNpbGljb24gZHJtIGRldmljZSBjb25maWd1cmF0aW9uLgo+ICsjIFBsZWFz
-ZSBrZWVwIHRoaXMgbGlzdCBzb3J0ZWQgYWxwaGFiZXRpY2FsbHkKPiArCj4gK3NvdXJjZSAiZHJp
-dmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9LY29uZmlnIgo+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vaGlzaWxpY29uL01ha2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
-bi9NYWtlZmlsZQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi5l
-M2Y2ZDQ5M2M5OTYKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2ls
-aWNvbi9NYWtlZmlsZQo+IEBAIC0wLDAgKzEsNSBAQAo+ICsjCj4gKyMgTWFrZWZpbGUgZm9yIGhp
-c2lsaWNvbiBkcm0gZHJpdmVycy4KPiArIyBQbGVhc2Uga2VlcCB0aGlzIGxpc3Qgc29ydGVkIGFs
-cGhhYmV0aWNhbGx5Cj4gKwo+ICtvYmotJChDT05GSUdfRFJNX0hJU0lfS0lSSU4pICs9IGtpcmlu
-Lwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL0tjb25maWcg
-Yi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL0tjb25maWcKPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uM2FjNGI4ZWRlYWMxCj4gLS0tIC9kZXYvbnVs
-bAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vS2NvbmZpZwo+IEBAIC0w
-LDAgKzEsOSBAQAo+ICtjb25maWcgRFJNX0hJU0lfS0lSSU4KPiArCXRyaXN0YXRlICJEUk0gU3Vw
-cG9ydCBmb3IgSGlzaWxpY29uIEtpcmluIHNlcmllcyBTb0NzIFBsYXRmb3JtIgo+ICsJZGVwZW5k
-cyBvbiBEUk0KPiArCXNlbGVjdCBEUk1fS01TX0hFTFBFUgo+ICsJc2VsZWN0IERSTV9HRU1fQ01B
-X0hFTFBFUgo+ICsJc2VsZWN0IERSTV9LTVNfQ01BX0hFTFBFUgo+ICsJaGVscAo+ICsJICBDaG9v
-c2UgdGhpcyBvcHRpb24gaWYgeW91IGhhdmUgYSBoaXNpbGljb24gS2lyaW4gY2hpcHNldHMoaGk2
-MjIwKS4KPiArCSAgSWYgTSBpcyBzZWxlY3RlZCB0aGUgbW9kdWxlIHdpbGwgYmUgY2FsbGVkIGtp
-cmluLWRybS4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9N
-YWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vTWFrZWZpbGUKPiBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uY2IzNDZkZTQ3ZDQ4Cj4gLS0t
-IC9kZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vTWFrZWZp
-bGUKPiBAQCAtMCwwICsxLDMgQEAKPiAra2lyaW4tZHJtLXkgOj0ga2lyaW5fZHJtX2Rydi5vCj4g
-Kwo+ICtvYmotJChDT05GSUdfRFJNX0hJU0lfS0lSSU4pICs9IGtpcmluLWRybS5vCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Rydi5jIGIv
-ZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmMKPiBuZXcgZmls
-ZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uNzg5ZWJkMWY1OTIyCj4gLS0tIC9k
-ZXYvbnVsbAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJt
-X2Rydi5jCj4gQEAgLTAsMCArMSwzMjEgQEAKPiArLyoKPiArICogSGlzaWxpY29uIEtpcmluIFNv
-Q3MgZHJtIG1hc3RlciBkcml2ZXIKPiArICoKPiArICogQ29weXJpZ2h0IChjKSAyMDE2IExpbmFy
-byBMaW1pdGVkLgo+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTQtMjAxNiBIaXNpbGljb24gTGltaXRl
-ZC4KPiArICoKPiArICogQXV0aG9yOgo+ICsgKglYaW5saWFuZyBMaXUgPHoubGl1eGlubGlhbmdA
-aGlzaWxpY29uLmNvbT4KPiArICoJWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9y
-Zz4KPiArICoJWGlud2VpIEtvbmcgPGtvbmcua29uZ3hpbndlaUBoaXNpbGljb24uY29tPgo+ICsg
-Kgo+ICsgKiBUaGlzIHByb2dyYW0gaXMgZnJlZSBzb2Z0d2FyZTsgeW91IGNhbiByZWRpc3RyaWJ1
-dGUgaXQgYW5kL29yIG1vZGlmeQo+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBH
-ZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24gMiBhcwo+ICsgKiBwdWJsaXNoZWQgYnkgdGhl
-IEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPiArICoKPiArICovCj4gKwo+ICsjaW5jbHVkZSA8
-bGludXgvb2ZfcGxhdGZvcm0uaD4KPiArI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+ICsj
-aW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPiArCj4gKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+
-ICsjaW5jbHVkZSA8ZHJtL2RybV9nZW1fY21hX2hlbHBlci5oPgo+ICsjaW5jbHVkZSA8ZHJtL2Ry
-bV9mYl9jbWFfaGVscGVyLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4K
-PiArCj4gKyNpbmNsdWRlICJraXJpbl9kcm1fZHJ2LmgiCj4gKwo+ICtzdGF0aWMgc3RydWN0IGtp
-cmluX2RjX29wcyAqZGNfb3BzOwo+ICsKPiArc3RhdGljIGludCBraXJpbl9kcm1fa21zX2NsZWFu
-dXAoc3RydWN0IGRybV9kZXZpY2UgKmRldikKPiArewo+ICsJZGNfb3BzLT5jbGVhbnVwKGRldik7
-Cj4gKwlkcm1fbW9kZV9jb25maWdfY2xlYW51cChkZXYpOwo+ICsKPiArCXJldHVybiAwOwo+ICt9
-Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9tb2RlX2NvbmZpZ19mdW5jcyBraXJpbl9k
-cm1fbW9kZV9jb25maWdfZnVuY3MgPSB7Cj4gKwkuZmJfY3JlYXRlID0gZHJtX2ZiX2NtYV9jcmVh
-dGUsCj4gKwkuYXRvbWljX2NoZWNrID0gZHJtX2F0b21pY19oZWxwZXJfY2hlY2ssCj4gKwkuYXRv
-bWljX2NvbW1pdCA9IGRybV9hdG9taWNfaGVscGVyX2NvbW1pdCwKPiArfTsKPiArCj4gK3N0YXRp
-YyB2b2lkIGtpcmluX2RybV9tb2RlX2NvbmZpZ19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYp
-Cj4gK3sKPiArCWRldi0+bW9kZV9jb25maWcubWluX3dpZHRoID0gMDsKPiArCWRldi0+bW9kZV9j
-b25maWcubWluX2hlaWdodCA9IDA7Cj4gKwo+ICsJZGV2LT5tb2RlX2NvbmZpZy5tYXhfd2lkdGgg
-PSAyMDQ4Owo+ICsJZGV2LT5tb2RlX2NvbmZpZy5tYXhfaGVpZ2h0ID0gMjA0ODsKPiArCj4gKwlk
-ZXYtPm1vZGVfY29uZmlnLmZ1bmNzID0gJmtpcmluX2RybV9tb2RlX2NvbmZpZ19mdW5jczsKPiAr
-fQo+ICsKPiArc3RhdGljIGludCBraXJpbl9kcm1fa21zX2luaXQoc3RydWN0IGRybV9kZXZpY2Ug
-KmRldikKPiArewo+ICsJaW50IHJldDsKPiArCj4gKwlkZXZfc2V0X2RydmRhdGEoZGV2LT5kZXYs
-IGRldik7Cj4gKwo+ICsJLyogZGV2LT5tb2RlX2NvbmZpZyBpbml0aWFsaXphdGlvbiAqLwo+ICsJ
-ZHJtX21vZGVfY29uZmlnX2luaXQoZGV2KTsKPiArCWtpcmluX2RybV9tb2RlX2NvbmZpZ19pbml0
-KGRldik7Cj4gKwo+ICsJLyogZGlzcGxheSBjb250cm9sbGVyIGluaXQgKi8KPiArCXJldCA9IGRj
-X29wcy0+aW5pdChkZXYpOwo+ICsJaWYgKHJldCkKPiArCQlnb3RvIGVycl9tb2RlX2NvbmZpZ19j
-bGVhbnVwOwo+ICsKPiArCS8qIGJpbmQgYW5kIGluaXQgc3ViIGRyaXZlcnMgKi8KPiArCXJldCA9
-IGNvbXBvbmVudF9iaW5kX2FsbChkZXYtPmRldiwgZGV2KTsKPiArCWlmIChyZXQpIHsKPiArCQlE
-Uk1fRVJST1IoImZhaWxlZCB0byBiaW5kIGFsbCBjb21wb25lbnQuXG4iKTsKPiArCQlnb3RvIGVy
-cl9kY19jbGVhbnVwOwo+ICsJfQo+ICsKPiArCS8qIHJlc2V0IGFsbCB0aGUgc3RhdGVzIG9mIGNy
-dGMvcGxhbmUvZW5jb2Rlci9jb25uZWN0b3IgKi8KPiArCWRybV9tb2RlX2NvbmZpZ19yZXNldChk
-ZXYpOwo+ICsKPiArCXJldHVybiAwOwo+ICsKPiArZXJyX2RjX2NsZWFudXA6Cj4gKwlkY19vcHMt
-PmNsZWFudXAoZGV2KTsKPiArZXJyX21vZGVfY29uZmlnX2NsZWFudXA6Cj4gKwlkcm1fbW9kZV9j
-b25maWdfY2xlYW51cChkZXYpOwo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KPiArCj4gK3N0YXRp
-YyBjb25zdCBzdHJ1Y3QgZmlsZV9vcGVyYXRpb25zIGtpcmluX2RybV9mb3BzID0gewo+ICsJLm93
-bmVyCQk9IFRISVNfTU9EVUxFLAo+ICsJLm9wZW4JCT0gZHJtX29wZW4sCj4gKwkucmVsZWFzZQk9
-IGRybV9yZWxlYXNlLAo+ICsJLnVubG9ja2VkX2lvY3RsCT0gZHJtX2lvY3RsLAo+ICsjaWZkZWYg
-Q09ORklHX0NPTVBBVAo+ICsJLmNvbXBhdF9pb2N0bAk9IGRybV9jb21wYXRfaW9jdGwsCj4gKyNl
-bmRpZgo+ICsJLnBvbGwJCT0gZHJtX3BvbGwsCj4gKwkucmVhZAkJPSBkcm1fcmVhZCwKPiArCS5s
-bHNlZWsJCT0gbm9fbGxzZWVrLAo+ICsJLm1tYXAJCT0gZHJtX2dlbV9jbWFfbW1hcCwKPiArfTsK
-PiArCj4gK3N0YXRpYyBpbnQga2lyaW5fZ2VtX2NtYV9kdW1iX2NyZWF0ZShzdHJ1Y3QgZHJtX2Zp
-bGUgKmZpbGUsCj4gKwkJCQkgICAgIHN0cnVjdCBkcm1fZGV2aWNlICpkZXYsCj4gKwkJCQkgICAg
-IHN0cnVjdCBkcm1fbW9kZV9jcmVhdGVfZHVtYiAqYXJncykKPiArewo+ICsJcmV0dXJuIGRybV9n
-ZW1fY21hX2R1bWJfY3JlYXRlX2ludGVybmFsKGZpbGUsIGRldiwgYXJncyk7Cj4gK30KPiArCj4g
-K3N0YXRpYyBzdHJ1Y3QgZHJtX2RyaXZlciBraXJpbl9kcm1fZHJpdmVyID0gewo+ICsJLmRyaXZl
-cl9mZWF0dXJlcwk9IERSSVZFUl9HRU0gfCBEUklWRVJfTU9ERVNFVCB8IERSSVZFUl9QUklNRSB8
-Cj4gKwkJCQkgIERSSVZFUl9BVE9NSUMsCj4gKwkuZm9wcwkJCT0gJmtpcmluX2RybV9mb3BzLAo+
-ICsJLnNldF9idXNpZAkJPSBkcm1fcGxhdGZvcm1fc2V0X2J1c2lkLAo+ICsKPiArCS5nZW1fZnJl
-ZV9vYmplY3QJPSBkcm1fZ2VtX2NtYV9mcmVlX29iamVjdCwKPiArCS5nZW1fdm1fb3BzCQk9ICZk
-cm1fZ2VtX2NtYV92bV9vcHMsCj4gKwkuZHVtYl9jcmVhdGUJCT0ga2lyaW5fZ2VtX2NtYV9kdW1i
-X2NyZWF0ZSwKPiArCS5kdW1iX21hcF9vZmZzZXQJPSBkcm1fZ2VtX2NtYV9kdW1iX21hcF9vZmZz
-ZXQsCj4gKwkuZHVtYl9kZXN0cm95CQk9IGRybV9nZW1fZHVtYl9kZXN0cm95LAo+ICsKPiArCS5w
-cmltZV9oYW5kbGVfdG9fZmQJPSBkcm1fZ2VtX3ByaW1lX2hhbmRsZV90b19mZCwKPiArCS5wcmlt
-ZV9mZF90b19oYW5kbGUJPSBkcm1fZ2VtX3ByaW1lX2ZkX3RvX2hhbmRsZSwKPiArCS5nZW1fcHJp
-bWVfZXhwb3J0CT0gZHJtX2dlbV9wcmltZV9leHBvcnQsCj4gKwkuZ2VtX3ByaW1lX2ltcG9ydAk9
-IGRybV9nZW1fcHJpbWVfaW1wb3J0LAo+ICsJLmdlbV9wcmltZV9nZXRfc2dfdGFibGUgPSBkcm1f
-Z2VtX2NtYV9wcmltZV9nZXRfc2dfdGFibGUsCj4gKwkuZ2VtX3ByaW1lX2ltcG9ydF9zZ190YWJs
-ZSA9IGRybV9nZW1fY21hX3ByaW1lX2ltcG9ydF9zZ190YWJsZSwKPiArCS5nZW1fcHJpbWVfdm1h
-cAkJPSBkcm1fZ2VtX2NtYV9wcmltZV92bWFwLAo+ICsJLmdlbV9wcmltZV92dW5tYXAJPSBkcm1f
-Z2VtX2NtYV9wcmltZV92dW5tYXAsCj4gKwkuZ2VtX3ByaW1lX21tYXAJCT0gZHJtX2dlbV9jbWFf
-cHJpbWVfbW1hcCwKPiArCj4gKwkubmFtZQkJCT0gImtpcmluIiwKPiArCS5kZXNjCQkJPSAiSGlz
-aWxpY29uIEtpcmluIFNvQ3MnIERSTSBEcml2ZXIiLAo+ICsJLmRhdGUJCQk9ICIyMDE1MDcxOCIs
-Cj4gKwkubWFqb3IJCQk9IDEsCj4gKwkubWlub3IJCQk9IDAsCj4gK307Cj4gKwo+ICtzdGF0aWMg
-aW50IGNvbXBhcmVfb2Yoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpkYXRhKQo+ICt7Cj4gKwly
-ZXR1cm4gZGV2LT5vZl9ub2RlID09IGRhdGE7Cj4gK30KPiArCj4gK3N0YXRpYyBpbnQga2lyaW5f
-ZHJtX2Nvbm5lY3RvcnNfcmVnaXN0ZXIoc3RydWN0IGRybV9kZXZpY2UgKmRldikKPiArewo+ICsJ
-c3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvcjsKPiArCXN0cnVjdCBkcm1fY29ubmVjdG9y
-ICpmYWlsZWRfY29ubmVjdG9yOwo+ICsJaW50IHJldDsKPiArCgpUaGlzIGFjY2VzcyBuZWVkcyB0
-byBiZSBwcm90ZWN0ZWQgYnkgdGhlIGRldi0+bW9kZV9jb25maWcubXV0ZXgKCj4gKwlsaXN0X2Zv
-cl9lYWNoX2VudHJ5KGNvbm5lY3RvciwgJmRldi0+bW9kZV9jb25maWcuY29ubmVjdG9yX2xpc3Qs
-IGhlYWQpIHsKClRoZSBhYm92ZSBjYW4gYmUgcmVwbGFjZWQgd2l0aDoKCmRybV9mb3JfZWFjaF9j
-b25uZWN0b3IoY29ubmVjdG9yLCBkZXYpIHsKCj4gKwkJcmV0ID0gZHJtX2Nvbm5lY3Rvcl9yZWdp
-c3Rlcihjb25uZWN0b3IpOwo+ICsJCWlmIChyZXQpIHsKPiArCQkJZmFpbGVkX2Nvbm5lY3RvciA9
-IGNvbm5lY3RvcjsKPiArCQkJZ290byBlcnI7Cj4gKwkJfQo+ICsJfQo+ICsKPiArCXJldHVybiAw
-Owo+ICsKPiArZXJyOgo+ICsJbGlzdF9mb3JfZWFjaF9lbnRyeShjb25uZWN0b3IsICZkZXYtPm1v
-ZGVfY29uZmlnLmNvbm5lY3Rvcl9saXN0LCBoZWFkKSB7Cj4gKwkJaWYgKGZhaWxlZF9jb25uZWN0
-b3IgPT0gY29ubmVjdG9yKQo+ICsJCQlicmVhazsKPiArCQlkcm1fY29ubmVjdG9yX3VucmVnaXN0
-ZXIoY29ubmVjdG9yKTsKPiArCX0KClNhbWUgcG9pbnRzIGFzIGFib3ZlLgoKPiArCj4gKwlyZXR1
-cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGtpcmluX2RybV9iaW5kKHN0cnVjdCBkZXZp
-Y2UgKmRldikKPiArewo+ICsJc3RydWN0IGRybV9kcml2ZXIgKmRyaXZlciA9ICZraXJpbl9kcm1f
-ZHJpdmVyOwo+ICsJc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXY7Cj4gKwlpbnQgcmV0Owo+ICsK
-PiArCWRybV9kZXYgPSBkcm1fZGV2X2FsbG9jKGRyaXZlciwgZGV2KTsKPiArCWlmICghZHJtX2Rl
-dikKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwlkcm1fZGV2LT5wbGF0Zm9ybWRldiA9IHRv
-X3BsYXRmb3JtX2RldmljZShkZXYpOwo+ICsKPiArCXJldCA9IGtpcmluX2RybV9rbXNfaW5pdChk
-cm1fZGV2KTsKPiArCWlmIChyZXQpCj4gKwkJZ290byBlcnJfZHJtX2Rldl91bnJlZjsKPiArCj4g
-KwlyZXQgPSBkcm1fZGV2X3JlZ2lzdGVyKGRybV9kZXYsIDApOwo+ICsJaWYgKHJldCkKPiArCQln
-b3RvIGVycl9rbXNfY2xlYW51cDsKPiArCj4gKwkvKiBjb25uZWN0b3JzIHNob3VsZCBiZSByZWdp
-c3RlcmVkIGFmdGVyIGRybSBkZXZpY2UgcmVnaXN0ZXIgKi8KPiArCXJldCA9IGtpcmluX2RybV9j
-b25uZWN0b3JzX3JlZ2lzdGVyKGRybV9kZXYpOwo+ICsJaWYgKHJldCkKPiArCQlnb3RvIGVycl9k
-cm1fZGV2X3VucmVnaXN0ZXI7Cj4gKwo+ICsJRFJNX0lORk8oIkluaXRpYWxpemVkICVzICVkLiVk
-LiVkICVzIG9uIG1pbm9yICVkXG4iLAo+ICsJCSBkcml2ZXItPm5hbWUsIGRyaXZlci0+bWFqb3Is
-IGRyaXZlci0+bWlub3IsIGRyaXZlci0+cGF0Y2hsZXZlbCwKPiArCQkgZHJpdmVyLT5kYXRlLCBk
-cm1fZGV2LT5wcmltYXJ5LT5pbmRleCk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gKwo+ICtlcnJfZHJt
-X2Rldl91bnJlZ2lzdGVyOgo+ICsJZHJtX2Rldl91bnJlZ2lzdGVyKGRybV9kZXYpOwo+ICtlcnJf
-a21zX2NsZWFudXA6Cj4gKwlraXJpbl9kcm1fa21zX2NsZWFudXAoZHJtX2Rldik7Cj4gK2Vycl9k
-cm1fZGV2X3VucmVmOgo+ICsJZHJtX2Rldl91bnJlZihkcm1fZGV2KTsKPiArCj4gKwlyZXR1cm4g
-cmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgdm9pZCBraXJpbl9kcm1fdW5iaW5kKHN0cnVjdCBkZXZp
-Y2UgKmRldikKPiArewo+ICsJZHJtX3B1dF9kZXYoZGV2X2dldF9kcnZkYXRhKGRldikpOwo+ICt9
-Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNvbXBvbmVudF9tYXN0ZXJfb3BzIGtpcmluX2Ry
-bV9vcHMgPSB7Cj4gKwkuYmluZCA9IGtpcmluX2RybV9iaW5kLAo+ICsJLnVuYmluZCA9IGtpcmlu
-X2RybV91bmJpbmQsCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBraXJpbl9kcm1fZHRfaWRzW10gPSB7Cj4gKwl7IC8qIGVuZCBub2RlICovIH0sCj4gK307Cj4g
-K01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGtpcmluX2RybV9kdF9pZHMpOwo+ICsKPiArc3RhdGlj
-IGludCBraXJpbl9nZXRfZGNfb3BzKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4gK3sKPiArCWNv
-bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgKm1hdGNoX2lkOwo+ICsKPiArCW1hdGNoX2lkID0gb2Zf
-bWF0Y2hfbm9kZShraXJpbl9kcm1fZHRfaWRzLCBucCk7Cj4gKwlpZiAoIW1hdGNoX2lkKSB7Cj4g
-KwkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gbWF0Y2ggZHQgaWRcbiIpOwo+ICsJCXJldHVybiAtRUlO
-VkFMOwo+ICsJfQo+ICsKPiArCWRjX29wcyA9IChzdHJ1Y3Qga2lyaW5fZGNfb3BzICopbWF0Y2hf
-aWQtPmRhdGE7Cj4gKwlpZiAoIWRjX29wcykgewo+ICsJCURSTV9FUlJPUigiZHQgaWQgZGF0YSBp
-cyBudWxsXG4iKTsKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCX0KCldlIGNhbiB1c2Ugb2ZfZGV2
-aWNlX2dldF9tYXRjaF9kYXRhIHRvIGdldCB0aGUgbWF0Y2ggZGF0YSwKYW5kIG1vdmUgdGhlIGtp
-cmluX2RybV9kdF9pZHMgdGFibGUgZG93biB3aGVyZSB0aGUgZHJpdmVyIGlzCmRlZmluZWQuCgo8
-c25pcD4KClRoYW5rcywKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
-LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBU
-aGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Hello Mark,
+
+On Thu, 25 Feb 2016 17:56:04 +0000, Mark Rutland wrote:
+
+> > Hence, even when the support for a SoC is being done in collaboration
+> > with the SoC vendor, we don't always have a nice full datasheet that
+> > tells us what all the registers are doing and how they are organized.
+> > We discover things as we go.
+> 
+> So as and when you believe you need to break a binding, we can have a
+> discussion on that case-by-case basis.
+> 
+> That's different to stating that the usual rules don't apply at all,
+> which is black-and-white stand I'm referring to.
+
+This would at least be a somewhat reasonable compromise, if that's your
+preference.
+
+However, my proposal had the advantage that potential users of the
+platform are *aware* that the DT bindings are in-flux and that they may
+change.
+
+With your proposal, there is no such statement, even if we reserve the
+right, on case-by-case basis to have a discussion about potentially
+breaking the DT bindings.
+
+But if that's OK for you, I'm happy with that as well.
+
+> > Instead, what we want is to submit the basic stuff early, and then
+> > progressively build on top of this basic stuff by merging more and more
+> > features. This way:
+> > 
+> >  * We don't have to pile up hundreds of out of tree patches;
+> 
+> Then _support_ what you have upstreamed already. Either it's ready to be
+> supported or it is not. If it is, there's no need for DT breakage, and
+> if it isn't, then it's not ready for mainline. That's all this boils
+> down to. 
+> 
+> If it must go in, then it must be supported.
+
+Supporting something has absolutely nothing to do with keeping the DT
+bindings unchanged. Supporting something means that I'll watch for
+build failures and fix them, I'll watch for bug reports and act on
+them, I'll watch on subsystem/infrastructure changes and change my
+driver code accordingly. This is what supporting means.
+
+> >  * We have a support in the mainline kernel that is progressively
+> >    getting better as we enable more and more feature. We can show that
+> >    4.6 has this small set of features, 4.7 has this slightly extended
+> >    set of features supported, and so on.
+> 
+> It's not "progressively getting better", if DTBs are arbitrarily getting
+> broken.
+> 
+> It's possible to incrementally add support without having to break
+> existing DTBs.
+
+Except if:
+
+ 1/ Your final production chip has some differences from your test chip
+    which do affect the DT representation. The kernel community has
+    asked for years that HW vendors start submitting code as early as
+    possible, and they are now doing it. In order to do it as soon as
+    possible, they start doing it based on test chips, which may be
+    slightly different from the final chips. The kernel community
+    should then understand this and be a bit flexible in that the
+    kernel support might change a bit, as the HW might change a bit
+    before it reaches production.
+
+ 2/ You have no documentation for your HW, and you're simply
+    discovering how it works progressively. Look at all the folks who
+    write nice upstream code solely based on crappy vendor BSPs, with
+    no datasheet whatsoever. Do you think they can sanely have a good
+    overall understanding of the HW from day 1 ? Certainly not. They
+    will discover that such or such HW block is not only a timer, but
+    also a watchdog. That this other HW block not only contains
+    clocks, but reset and pinctrl lines.
+
+I don't like to self-promote my own stuff, but I think you should read
+the slides of my talk "Device Tree as a stable ABI: a fairy
+tale" (http://free-electrons.com/pub/conferences/2015/elc/petazzoni-dt-as-stable-abi-fairy-tale/petazzoni-dt-as-stable-abi-fairy-tale.pdf).
+I will clearly not suggest you to watch the video recording, as I don't
+want you to suffer from one hour of my terrible English accent.
+
+> > We are perfectly fine with maintaining *code*. And we have been doing
+> > so for several years on Marvell platforms: caring about older
+> > platforms, converting old legacy code and legacy platforms to the
+> > Device Tree, etc.
+> 
+> The parsing and handling of the existing binding is code, which you are
+> arguing you do not need to support.
+
+So you like to have tons and tons of essentially dead code to parse old
+versions of DT bindings?
+
+What really strikes me here is that the Linux kernel always had a
+version strong position, detailed in
+Documentation/stable_api_nonsense.txt, that the kernel developers don't
+want to maintain a stable API for kernel modules, because keeping old
+APIs around means keeping old code, that isn't tested, confuses people,
+etc. Read the file if you've never done so.
+
+And now, for something pretty much as complicated (if not more) as the
+kernel module API, the DT bindings, you want to do *exactly* what this
+stable_api_nonsense.txt says we shouldn't do ?
+
+> > What we don't want to commit to is to maintain the DT stability
+> > *before* the support for a given device is sufficiently stable/sane.
+> 
+> I do not follow what you mean by support being *not sane*. If it isn't
+> sane, why was it merged?
+> 
+> If it was previously considered sane, and the code was considered
+> supportable, why is it necessary to break a DT that it supported?
+
+See above: the HW has changed, or the HW is not working as it was
+originally understood when the DT binding was initially designed.
+
+> > Why are you talking about "illusion" of support ? Sorry, but with
+> > unstable DT bindings, as long as you use the DT that comes with the
+> > kernel sources, everything works perfectly fine, and is perfectly
+> > supported.
+> 
+> A few examples:
+> 
+> * Distro installation (in the absence of a stable DT and a consistent
+>   boot environment, you have no idea how to get a kernel up and
+>   running). Either your user has to be intimately familiar with the
+>   platform, or the distro needs a separate release for each and every
+>   platform.
+
+Irrelevant: the distro shall just ship with all the Device Trees for
+all supported platforms, and that's it. Exactly like the x86 kernels
+shipped by distros have essentially all kernel drivers enabled in order
+to be able to have a kernel that works on all platforms.
+
+> * Distro maintenance. I just upgraded to a point-release kernel and now
+>   have to pull down the DTBs. That required the distro to _somehow_
+>   identify the relevant DTBs, how to install this in the correct
+>   location such that the firmware and/or bootloader can pick it up, etc.
+
+Same, irrelevant: the DTB comes with the distro kernel package, and like
+kernel modules, they are installed in a per-kernel version directory.
+
+> * Other developers tracking down problems that inevitable crop up on the
+>   platform, who now have to jump through the hoops above. As the DTBs
+>   change, so may the user-facing elements and/or kernel behaviour, so
+>   bisecting is extremely painful (though admittedly possible).
+
+Exactly like they have to change their kernel modules so that they are
+compatible with the kernel version they run.
+
+> * Portable hypervisors, bootloaders, or other system-level software
+>   can't add any (DTB-aware) support for a platform until the kernel
+>   support is considered "sane" per your argument above. That time is an
+>   arbitrary unknown in the future (which may be at infinity), so they
+>   are either indefinitely delayed or end up having attempt to have
+>   stable support for a variety of unstable bindings anyway, which may or
+>   may not be possible depending on how bindings got broken.
+
+Those hypervisors, bootloaders or system-level should not hardcode the
+platform DTB, but simply use the one that is provided together with the
+kernel.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
