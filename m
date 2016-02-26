@@ -1,260 +1,857 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v6 02/11] drm/hisilicon: Add hisilicon kirin drm master
- driver
-Date: Fri, 26 Feb 2016 17:14:38 +0800
-Message-ID: <CAGd==0611feQcgMb3KTt_fgyo-2+mu3y_0AUvPwRBppvuKkE8g@mail.gmail.com>
-References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
- <1456476028-36880-3-git-send-email-xinliang.liu@linaro.org>
- <56D012BA.9000509@codeaurora.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH RFC 3/3] leds: Add driver for the ISSI IS31FL32xx family of
+ LED drivers
+Date: Fri, 26 Feb 2016 10:47:46 +0100
+Message-ID: <56D01F42.70409@samsung.com>
+References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
+ <1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
+ <56CDD4AA.5030801@samsung.com>
+ <20160224212450.195330ed.drivshin.allworx@gmail.com>
+ <56CEDDBE.2080601@samsung.com>
+ <20160225141215.2ef2707e.drivshin.allworx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56D012BA.9000509@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <20160225141215.2ef2707e.drivshin.allworx@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAyNiBGZWJydWFyeSAyMDE2IGF0IDE2OjU0LCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0
-QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiBIaSwKPgo+IEkgaGFkIHNvbWUgbWlub3IgY29tbWVu
-dHMuIFNvcnJ5IGFib3V0IHNoYXJpbmcgdGhpcyBsYXRlLiBPdGhlcndpc2UsCj4gdGhlIGxvb2tz
-IGdvb2QgdG8gbWUuCgpIaSBBcmNoaXQsICB5b3UgYXJlIHdlbGNvbWUgOi0pClRoYW5rcyBmb3Ig
-cmV2aWV3IGFnYWluLgoKPgo+Cj4gT24gMDIvMjYvMjAxNiAwMjoxMCBQTSwgWGlubGlhbmcgTGl1
-IHdyb3RlOgo+Pgo+PiBBZGQga2lyaW4gRFJNIG1hc3RlciBkcml2ZXIgZm9yIGhpNjIyMCBTb0Mg
-d2hpY2ggdXNlZCBpbiBIaUtleSBib2FyZC4KPj4gQWRkIGR1bWIgYnVmZmVyIGZlYXR1cmUuCj4+
-IEFkZCBwcmltZSBkbWFidWYgZmVhdHVyZS4KPj4KPj4gdjY6IE5vbmUuCj4+IHY1OiBOb25lLgo+
-PiB2NDogTm9uZS4KPj4gdjM6Cj4+IC0gTW92ZSBhbmQgcmVuYW1lIGFsbCB0aGUgZmlsZXMgdG8g
-a2lyaW4gc3ViLWRpcmVjdG9yeS4KPj4gICAgU28gdGhhdCB3ZSBjb3VsZCBzZXBhcmF0ZSBkaWZm
-ZXJlbnQgc2VpcmVzIFNvQ3MnIGRyaXZlci4KPj4gLSBSZXBsYWNlIGRybV9wbGF0Zm9ybV9pbml0
-LCBsb2FkLCB1bmxvYWQgaW1wbGVtZW50YXRpb24uCj4+IHYyOgo+PiAtIFJlbW92ZSBhYnRyYWN0
-aW9uIGxheWVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBYaW5saWFuZyBMaXUgPHhpbmxpYW5nLmxp
-dUBsaW5hcm8ub3JnPgo+PiAtLS0KPj4gICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAg
-ICAgICAgICAgICAgICAgICB8ICAgMiArCj4+ICAgZHJpdmVycy9ncHUvZHJtL01ha2VmaWxlICAg
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGlj
-b24vS2NvbmZpZyAgICAgICAgICAgICAgIHwgICA1ICsKPj4gICBkcml2ZXJzL2dwdS9kcm0vaGlz
-aWxpY29uL01ha2VmaWxlICAgICAgICAgICAgICB8ICAgNSArCj4+ICAgZHJpdmVycy9ncHUvZHJt
-L2hpc2lsaWNvbi9raXJpbi9LY29uZmlnICAgICAgICAgfCAgIDkgKwo+PiAgIGRyaXZlcnMvZ3B1
-L2RybS9oaXNpbGljb24va2lyaW4vTWFrZWZpbGUgICAgICAgIHwgICAzICsKPj4gICBkcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2RybV9kcnYuYyB8IDMyMQo+PiArKysrKysr
-KysrKysrKysrKysrKysrKysKPj4gICBkcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tp
-cmluX2RybV9kcnYuaCB8ICAyMCArKwo+PiAgIDggZmlsZXMgY2hhbmdlZCwgMzY2IGluc2VydGlv
-bnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9L
-Y29uZmlnCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24v
-TWFrZWZpbGUKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
-bi9raXJpbi9LY29uZmlnCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9o
-aXNpbGljb24va2lyaW4vTWFrZWZpbGUKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmMKPj4gICBjcmVhdGUgbW9kZSAx
-MDA2NDQgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmgKPj4K
-Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJt
-L0tjb25maWcKPj4gaW5kZXggYjUwYWU2MGY1ZjUwLi5mNWM1NjU2ZTI1NDcgMTAwNjQ0Cj4+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9LY29uZmlnCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9LY29u
-ZmlnCj4+IEBAIC0yNzcsMyArMjc3LDUgQEAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vaW14L0tj
-b25maWciCj4+ICAgc291cmNlICJkcml2ZXJzL2dwdS9kcm0vdmM0L0tjb25maWciCj4+Cj4+ICAg
-c291cmNlICJkcml2ZXJzL2dwdS9kcm0vZXRuYXZpdi9LY29uZmlnIgo+PiArCj4+ICtzb3VyY2Ug
-ImRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vS2NvbmZpZyIKPj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZQo+PiBpbmRleCA2
-MTc2NmRlYzZhOGQuLjYwNTU0ODMyMDc5YyAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L01ha2VmaWxlCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZQo+PiBAQCAtNzQsMyAr
-NzQsNCBAQCBvYmoteSAgICAgICAgICAgICAgICAgKz0gcGFuZWwvCj4+ICAgb2JqLXkgICAgICAg
-ICAgICAgICAgICs9IGJyaWRnZS8KPj4gICBvYmotJChDT05GSUdfRFJNX0ZTTF9EQ1UpICs9IGZz
-bC1kY3UvCj4+ICAgb2JqLSQoQ09ORklHX0RSTV9FVE5BVklWKSArPSBldG5hdml2Lwo+PiArb2Jq
-LXkgICAgICAgICAgICAgICAgICArPSBoaXNpbGljb24vCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vaGlzaWxpY29uL0tjb25maWcKPj4gYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
-L0tjb25maWcKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAwMDAwLi41
-NThjNjFiMWI4ZTgKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaGlz
-aWxpY29uL0tjb25maWcKPj4gQEAgLTAsMCArMSw1IEBACj4+ICsjCj4+ICsjIGhpc2lsaWNvbiBk
-cm0gZGV2aWNlIGNvbmZpZ3VyYXRpb24uCj4+ICsjIFBsZWFzZSBrZWVwIHRoaXMgbGlzdCBzb3J0
-ZWQgYWxwaGFiZXRpY2FsbHkKPj4gKwo+PiArc291cmNlICJkcml2ZXJzL2dwdS9kcm0vaGlzaWxp
-Y29uL2tpcmluL0tjb25maWciCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxp
-Y29uL01ha2VmaWxlCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9NYWtlZmlsZQo+PiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmUzZjZkNDkzYzk5Ngo+
-PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24vTWFrZWZp
-bGUKPj4gQEAgLTAsMCArMSw1IEBACj4+ICsjCj4+ICsjIE1ha2VmaWxlIGZvciBoaXNpbGljb24g
-ZHJtIGRyaXZlcnMuCj4+ICsjIFBsZWFzZSBrZWVwIHRoaXMgbGlzdCBzb3J0ZWQgYWxwaGFiZXRp
-Y2FsbHkKPj4gKwo+PiArb2JqLSQoQ09ORklHX0RSTV9ISVNJX0tJUklOKSArPSBraXJpbi8KPj4g
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vS2NvbmZpZwo+PiBi
-L2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vS2NvbmZpZwo+PiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjNhYzRiOGVkZWFjMQo+PiAtLS0gL2Rldi9u
-dWxsCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vS2NvbmZpZwo+PiBA
-QCAtMCwwICsxLDkgQEAKPj4gK2NvbmZpZyBEUk1fSElTSV9LSVJJTgo+PiArICAgICAgIHRyaXN0
-YXRlICJEUk0gU3VwcG9ydCBmb3IgSGlzaWxpY29uIEtpcmluIHNlcmllcyBTb0NzIFBsYXRmb3Jt
-Igo+PiArICAgICAgIGRlcGVuZHMgb24gRFJNCj4+ICsgICAgICAgc2VsZWN0IERSTV9LTVNfSEVM
-UEVSCj4+ICsgICAgICAgc2VsZWN0IERSTV9HRU1fQ01BX0hFTFBFUgo+PiArICAgICAgIHNlbGVj
-dCBEUk1fS01TX0NNQV9IRUxQRVIKPj4gKyAgICAgICBoZWxwCj4+ICsgICAgICAgICBDaG9vc2Ug
-dGhpcyBvcHRpb24gaWYgeW91IGhhdmUgYSBoaXNpbGljb24gS2lyaW4KPj4gY2hpcHNldHMoaGk2
-MjIwKS4KPj4gKyAgICAgICAgIElmIE0gaXMgc2VsZWN0ZWQgdGhlIG1vZHVsZSB3aWxsIGJlIGNh
-bGxlZCBraXJpbi1kcm0uCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29u
-L2tpcmluL01ha2VmaWxlCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9NYWtl
-ZmlsZQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLmNiMzQ2
-ZGU0N2Q0OAo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGlj
-b24va2lyaW4vTWFrZWZpbGUKPj4gQEAgLTAsMCArMSwzIEBACj4+ICtraXJpbi1kcm0teSA6PSBr
-aXJpbl9kcm1fZHJ2Lm8KPj4gKwo+PiArb2JqLSQoQ09ORklHX0RSTV9ISVNJX0tJUklOKSArPSBr
-aXJpbi1kcm0ubwo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJp
-bi9raXJpbl9kcm1fZHJ2LmMKPj4gYi9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tp
-cmluX2RybV9kcnYuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwMDAw
-MDAuLjc4OWViZDFmNTkyMgo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Rydi5jCj4+IEBAIC0wLDAgKzEsMzIxIEBACj4+
-ICsvKgo+PiArICogSGlzaWxpY29uIEtpcmluIFNvQ3MgZHJtIG1hc3RlciBkcml2ZXIKPj4gKyAq
-Cj4+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTYgTGluYXJvIExpbWl0ZWQuCj4+ICsgKiBDb3B5cmln
-aHQgKGMpIDIwMTQtMjAxNiBIaXNpbGljb24gTGltaXRlZC4KPj4gKyAqCj4+ICsgKiBBdXRob3I6
-Cj4+ICsgKiAgICAgWGlubGlhbmcgTGl1IDx6LmxpdXhpbmxpYW5nQGhpc2lsaWNvbi5jb20+Cj4+
-ICsgKiAgICAgWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4KPj4gKyAqICAg
-ICBYaW53ZWkgS29uZyA8a29uZy5rb25neGlud2VpQGhpc2lsaWNvbi5jb20+Cj4+ICsgKgo+PiAr
-ICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0
-IGFuZC9vciBtb2RpZnkKPj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVy
-YWwgUHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzCj4+ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZy
-ZWUgU29mdHdhcmUgRm91bmRhdGlvbi4KPj4gKyAqCj4+ICsgKi8KPj4gKwo+PiArI2luY2x1ZGUg
-PGxpbnV4L29mX3BsYXRmb3JtLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvY29tcG9uZW50Lmg+Cj4+
-ICsjaW5jbHVkZSA8bGludXgvb2ZfZ3JhcGguaD4KPj4gKwo+PiArI2luY2x1ZGUgPGRybS9kcm1Q
-Lmg+Cj4+ICsjaW5jbHVkZSA8ZHJtL2RybV9nZW1fY21hX2hlbHBlci5oPgo+PiArI2luY2x1ZGUg
-PGRybS9kcm1fZmJfY21hX2hlbHBlci5oPgo+PiArI2luY2x1ZGUgPGRybS9kcm1fYXRvbWljX2hl
-bHBlci5oPgo+PiArCj4+ICsjaW5jbHVkZSAia2lyaW5fZHJtX2Rydi5oIgo+PiArCj4+ICtzdGF0
-aWMgc3RydWN0IGtpcmluX2RjX29wcyAqZGNfb3BzOwo+PiArCj4+ICtzdGF0aWMgaW50IGtpcmlu
-X2RybV9rbXNfY2xlYW51cChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQo+PiArewo+PiArICAgICAg
-IGRjX29wcy0+Y2xlYW51cChkZXYpOwo+PiArICAgICAgIGRybV9tb2RlX2NvbmZpZ19jbGVhbnVw
-KGRldik7Cj4+ICsKPj4gKyAgICAgICByZXR1cm4gMDsKPj4gK30KPj4gKwo+PiArc3RhdGljIGNv
-bnN0IHN0cnVjdCBkcm1fbW9kZV9jb25maWdfZnVuY3Mga2lyaW5fZHJtX21vZGVfY29uZmlnX2Z1
-bmNzID0gewo+PiArICAgICAgIC5mYl9jcmVhdGUgPSBkcm1fZmJfY21hX2NyZWF0ZSwKPj4gKyAg
-ICAgICAuYXRvbWljX2NoZWNrID0gZHJtX2F0b21pY19oZWxwZXJfY2hlY2ssCj4+ICsgICAgICAg
-LmF0b21pY19jb21taXQgPSBkcm1fYXRvbWljX2hlbHBlcl9jb21taXQsCj4+ICt9Owo+PiArCj4+
-ICtzdGF0aWMgdm9pZCBraXJpbl9kcm1fbW9kZV9jb25maWdfaW5pdChzdHJ1Y3QgZHJtX2Rldmlj
-ZSAqZGV2KQo+PiArewo+PiArICAgICAgIGRldi0+bW9kZV9jb25maWcubWluX3dpZHRoID0gMDsK
-Pj4gKyAgICAgICBkZXYtPm1vZGVfY29uZmlnLm1pbl9oZWlnaHQgPSAwOwo+PiArCj4+ICsgICAg
-ICAgZGV2LT5tb2RlX2NvbmZpZy5tYXhfd2lkdGggPSAyMDQ4Owo+PiArICAgICAgIGRldi0+bW9k
-ZV9jb25maWcubWF4X2hlaWdodCA9IDIwNDg7Cj4+ICsKPj4gKyAgICAgICBkZXYtPm1vZGVfY29u
-ZmlnLmZ1bmNzID0gJmtpcmluX2RybV9tb2RlX2NvbmZpZ19mdW5jczsKPj4gK30KPj4gKwo+PiAr
-c3RhdGljIGludCBraXJpbl9kcm1fa21zX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldikKPj4g
-K3sKPj4gKyAgICAgICBpbnQgcmV0Owo+PiArCj4+ICsgICAgICAgZGV2X3NldF9kcnZkYXRhKGRl
-di0+ZGV2LCBkZXYpOwo+PiArCj4+ICsgICAgICAgLyogZGV2LT5tb2RlX2NvbmZpZyBpbml0aWFs
-aXphdGlvbiAqLwo+PiArICAgICAgIGRybV9tb2RlX2NvbmZpZ19pbml0KGRldik7Cj4+ICsgICAg
-ICAga2lyaW5fZHJtX21vZGVfY29uZmlnX2luaXQoZGV2KTsKPj4gKwo+PiArICAgICAgIC8qIGRp
-c3BsYXkgY29udHJvbGxlciBpbml0ICovCj4+ICsgICAgICAgcmV0ID0gZGNfb3BzLT5pbml0KGRl
-dik7Cj4+ICsgICAgICAgaWYgKHJldCkKPj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyX21vZGVf
-Y29uZmlnX2NsZWFudXA7Cj4+ICsKPj4gKyAgICAgICAvKiBiaW5kIGFuZCBpbml0IHN1YiBkcml2
-ZXJzICovCj4+ICsgICAgICAgcmV0ID0gY29tcG9uZW50X2JpbmRfYWxsKGRldi0+ZGV2LCBkZXYp
-Owo+PiArICAgICAgIGlmIChyZXQpIHsKPj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigiZmFp
-bGVkIHRvIGJpbmQgYWxsIGNvbXBvbmVudC5cbiIpOwo+PiArICAgICAgICAgICAgICAgZ290byBl
-cnJfZGNfY2xlYW51cDsKPj4gKyAgICAgICB9Cj4+ICsKPj4gKyAgICAgICAvKiByZXNldCBhbGwg
-dGhlIHN0YXRlcyBvZiBjcnRjL3BsYW5lL2VuY29kZXIvY29ubmVjdG9yICovCj4+ICsgICAgICAg
-ZHJtX21vZGVfY29uZmlnX3Jlc2V0KGRldik7Cj4+ICsKPj4gKyAgICAgICByZXR1cm4gMDsKPj4g
-Kwo+PiArZXJyX2RjX2NsZWFudXA6Cj4+ICsgICAgICAgZGNfb3BzLT5jbGVhbnVwKGRldik7Cj4+
-ICtlcnJfbW9kZV9jb25maWdfY2xlYW51cDoKPj4gKyAgICAgICBkcm1fbW9kZV9jb25maWdfY2xl
-YW51cChkZXYpOwo+PiArCj4+ICsgICAgICAgcmV0dXJuIHJldDsKPj4gK30KPj4gKwo+PiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBmaWxlX29wZXJhdGlvbnMga2lyaW5fZHJtX2ZvcHMgPSB7Cj4+ICsg
-ICAgICAgLm93bmVyICAgICAgICAgID0gVEhJU19NT0RVTEUsCj4+ICsgICAgICAgLm9wZW4gICAg
-ICAgICAgID0gZHJtX29wZW4sCj4+ICsgICAgICAgLnJlbGVhc2UgICAgICAgID0gZHJtX3JlbGVh
-c2UsCj4+ICsgICAgICAgLnVubG9ja2VkX2lvY3RsID0gZHJtX2lvY3RsLAo+PiArI2lmZGVmIENP
-TkZJR19DT01QQVQKPj4gKyAgICAgICAuY29tcGF0X2lvY3RsICAgPSBkcm1fY29tcGF0X2lvY3Rs
-LAo+PiArI2VuZGlmCj4+ICsgICAgICAgLnBvbGwgICAgICAgICAgID0gZHJtX3BvbGwsCj4+ICsg
-ICAgICAgLnJlYWQgICAgICAgICAgID0gZHJtX3JlYWQsCj4+ICsgICAgICAgLmxsc2VlayAgICAg
-ICAgID0gbm9fbGxzZWVrLAo+PiArICAgICAgIC5tbWFwICAgICAgICAgICA9IGRybV9nZW1fY21h
-X21tYXAsCj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgaW50IGtpcmluX2dlbV9jbWFfZHVtYl9jcmVh
-dGUoc3RydWN0IGRybV9maWxlICpmaWxlLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fbW9kZV9jcmVhdGVfZHVtYiAqYXJncykKPj4gK3sK
-Pj4gKyAgICAgICByZXR1cm4gZHJtX2dlbV9jbWFfZHVtYl9jcmVhdGVfaW50ZXJuYWwoZmlsZSwg
-ZGV2LCBhcmdzKTsKPj4gK30KPj4gKwo+PiArc3RhdGljIHN0cnVjdCBkcm1fZHJpdmVyIGtpcmlu
-X2RybV9kcml2ZXIgPSB7Cj4+ICsgICAgICAgLmRyaXZlcl9mZWF0dXJlcyAgICAgICAgPSBEUklW
-RVJfR0VNIHwgRFJJVkVSX01PREVTRVQgfAo+PiBEUklWRVJfUFJJTUUgfAo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgRFJJVkVSX0FUT01JQywKPj4gKyAgICAgICAuZm9wcyAg
-ICAgICAgICAgICAgICAgICA9ICZraXJpbl9kcm1fZm9wcywKPj4gKyAgICAgICAuc2V0X2J1c2lk
-ICAgICAgICAgICAgICA9IGRybV9wbGF0Zm9ybV9zZXRfYnVzaWQsCj4+ICsKPj4gKyAgICAgICAu
-Z2VtX2ZyZWVfb2JqZWN0ICAgICAgICA9IGRybV9nZW1fY21hX2ZyZWVfb2JqZWN0LAo+PiArICAg
-ICAgIC5nZW1fdm1fb3BzICAgICAgICAgICAgID0gJmRybV9nZW1fY21hX3ZtX29wcywKPj4gKyAg
-ICAgICAuZHVtYl9jcmVhdGUgICAgICAgICAgICA9IGtpcmluX2dlbV9jbWFfZHVtYl9jcmVhdGUs
-Cj4+ICsgICAgICAgLmR1bWJfbWFwX29mZnNldCAgICAgICAgPSBkcm1fZ2VtX2NtYV9kdW1iX21h
-cF9vZmZzZXQsCj4+ICsgICAgICAgLmR1bWJfZGVzdHJveSAgICAgICAgICAgPSBkcm1fZ2VtX2R1
-bWJfZGVzdHJveSwKPj4gKwo+PiArICAgICAgIC5wcmltZV9oYW5kbGVfdG9fZmQgICAgID0gZHJt
-X2dlbV9wcmltZV9oYW5kbGVfdG9fZmQsCj4+ICsgICAgICAgLnByaW1lX2ZkX3RvX2hhbmRsZSAg
-ICAgPSBkcm1fZ2VtX3ByaW1lX2ZkX3RvX2hhbmRsZSwKPj4gKyAgICAgICAuZ2VtX3ByaW1lX2V4
-cG9ydCAgICAgICA9IGRybV9nZW1fcHJpbWVfZXhwb3J0LAo+PiArICAgICAgIC5nZW1fcHJpbWVf
-aW1wb3J0ICAgICAgID0gZHJtX2dlbV9wcmltZV9pbXBvcnQsCj4+ICsgICAgICAgLmdlbV9wcmlt
-ZV9nZXRfc2dfdGFibGUgPSBkcm1fZ2VtX2NtYV9wcmltZV9nZXRfc2dfdGFibGUsCj4+ICsgICAg
-ICAgLmdlbV9wcmltZV9pbXBvcnRfc2dfdGFibGUgPSBkcm1fZ2VtX2NtYV9wcmltZV9pbXBvcnRf
-c2dfdGFibGUsCj4+ICsgICAgICAgLmdlbV9wcmltZV92bWFwICAgICAgICAgPSBkcm1fZ2VtX2Nt
-YV9wcmltZV92bWFwLAo+PiArICAgICAgIC5nZW1fcHJpbWVfdnVubWFwICAgICAgID0gZHJtX2dl
-bV9jbWFfcHJpbWVfdnVubWFwLAo+PiArICAgICAgIC5nZW1fcHJpbWVfbW1hcCAgICAgICAgID0g
-ZHJtX2dlbV9jbWFfcHJpbWVfbW1hcCwKPj4gKwo+PiArICAgICAgIC5uYW1lICAgICAgICAgICAg
-ICAgICAgID0gImtpcmluIiwKPj4gKyAgICAgICAuZGVzYyAgICAgICAgICAgICAgICAgICA9ICJI
-aXNpbGljb24gS2lyaW4gU29DcycgRFJNIERyaXZlciIsCj4+ICsgICAgICAgLmRhdGUgICAgICAg
-ICAgICAgICAgICAgPSAiMjAxNTA3MTgiLAo+PiArICAgICAgIC5tYWpvciAgICAgICAgICAgICAg
-ICAgID0gMSwKPj4gKyAgICAgICAubWlub3IgICAgICAgICAgICAgICAgICA9IDAsCj4+ICt9Owo+
-PiArCj4+ICtzdGF0aWMgaW50IGNvbXBhcmVfb2Yoc3RydWN0IGRldmljZSAqZGV2LCB2b2lkICpk
-YXRhKQo+PiArewo+PiArICAgICAgIHJldHVybiBkZXYtPm9mX25vZGUgPT0gZGF0YTsKPj4gK30K
-Pj4gKwo+PiArc3RhdGljIGludCBraXJpbl9kcm1fY29ubmVjdG9yc19yZWdpc3RlcihzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGV2KQo+PiArewo+PiArICAgICAgIHN0cnVjdCBkcm1fY29ubmVjdG9yICpj
-b25uZWN0b3I7Cj4+ICsgICAgICAgc3RydWN0IGRybV9jb25uZWN0b3IgKmZhaWxlZF9jb25uZWN0
-b3I7Cj4+ICsgICAgICAgaW50IHJldDsKPj4gKwo+Cj4KPiBUaGlzIGFjY2VzcyBuZWVkcyB0byBi
-ZSBwcm90ZWN0ZWQgYnkgdGhlIGRldi0+bW9kZV9jb25maWcubXV0ZXgKCnRoYW5rcyBmb3IgcG9p
-bnRpbmcgb3V0IHRoaXMuIHdpbGwgZml4IGluIG5leHQgdmVyc2lvbi4KCj4KPj4gKyAgICAgICBs
-aXN0X2Zvcl9lYWNoX2VudHJ5KGNvbm5lY3RvciwgJmRldi0+bW9kZV9jb25maWcuY29ubmVjdG9y
-X2xpc3QsCj4+IGhlYWQpIHsKPgo+Cj4gVGhlIGFib3ZlIGNhbiBiZSByZXBsYWNlZCB3aXRoOgo+
-Cj4gZHJtX2Zvcl9lYWNoX2Nvbm5lY3Rvcihjb25uZWN0b3IsIGRldikgewoKR3JlYXQsIHRoaXMg
-bWFrZXMgdGhpbmdzIG1vcmUgY2xlYXIuIHdpbGwgY2hhbmdlIGluIG5leHQgdmVyc2lvbi4KCj4K
-Pj4gKyAgICAgICAgICAgICAgIHJldCA9IGRybV9jb25uZWN0b3JfcmVnaXN0ZXIoY29ubmVjdG9y
-KTsKPj4gKyAgICAgICAgICAgICAgIGlmIChyZXQpIHsKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgZmFpbGVkX2Nvbm5lY3RvciA9IGNvbm5lY3RvcjsKPj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgZ290byBlcnI7Cj4+ICsgICAgICAgICAgICAgICB9Cj4+ICsgICAgICAgfQo+PiArCj4+ICsg
-ICAgICAgcmV0dXJuIDA7Cj4+ICsKPj4gK2VycjoKPj4gKyAgICAgICBsaXN0X2Zvcl9lYWNoX2Vu
-dHJ5KGNvbm5lY3RvciwgJmRldi0+bW9kZV9jb25maWcuY29ubmVjdG9yX2xpc3QsCj4+IGhlYWQp
-IHsKPj4gKyAgICAgICAgICAgICAgIGlmIChmYWlsZWRfY29ubmVjdG9yID09IGNvbm5lY3RvcikK
-Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4+ICsgICAgICAgICAgICAgICBkcm1f
-Y29ubmVjdG9yX3VucmVnaXN0ZXIoY29ubmVjdG9yKTsKPj4gKyAgICAgICB9Cj4KPgo+IFNhbWUg
-cG9pbnRzIGFzIGFib3ZlLgo+Cj4KPj4gKwo+PiArICAgICAgIHJldHVybiByZXQ7Cj4+ICt9Cj4+
-ICsKPj4gK3N0YXRpYyBpbnQga2lyaW5fZHJtX2JpbmQoc3RydWN0IGRldmljZSAqZGV2KQo+PiAr
-ewo+PiArICAgICAgIHN0cnVjdCBkcm1fZHJpdmVyICpkcml2ZXIgPSAma2lyaW5fZHJtX2RyaXZl
-cjsKPj4gKyAgICAgICBzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2RldjsKPj4gKyAgICAgICBpbnQg
-cmV0Owo+PiArCj4+ICsgICAgICAgZHJtX2RldiA9IGRybV9kZXZfYWxsb2MoZHJpdmVyLCBkZXYp
-Owo+PiArICAgICAgIGlmICghZHJtX2RldikKPj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5P
-TUVNOwo+PiArCj4+ICsgICAgICAgZHJtX2Rldi0+cGxhdGZvcm1kZXYgPSB0b19wbGF0Zm9ybV9k
-ZXZpY2UoZGV2KTsKPj4gKwo+PiArICAgICAgIHJldCA9IGtpcmluX2RybV9rbXNfaW5pdChkcm1f
-ZGV2KTsKPj4gKyAgICAgICBpZiAocmV0KQo+PiArICAgICAgICAgICAgICAgZ290byBlcnJfZHJt
-X2Rldl91bnJlZjsKPj4gKwo+PiArICAgICAgIHJldCA9IGRybV9kZXZfcmVnaXN0ZXIoZHJtX2Rl
-diwgMCk7Cj4+ICsgICAgICAgaWYgKHJldCkKPj4gKyAgICAgICAgICAgICAgIGdvdG8gZXJyX2tt
-c19jbGVhbnVwOwo+PiArCj4+ICsgICAgICAgLyogY29ubmVjdG9ycyBzaG91bGQgYmUgcmVnaXN0
-ZXJlZCBhZnRlciBkcm0gZGV2aWNlIHJlZ2lzdGVyICovCj4+ICsgICAgICAgcmV0ID0ga2lyaW5f
-ZHJtX2Nvbm5lY3RvcnNfcmVnaXN0ZXIoZHJtX2Rldik7Cj4+ICsgICAgICAgaWYgKHJldCkKPj4g
-KyAgICAgICAgICAgICAgIGdvdG8gZXJyX2RybV9kZXZfdW5yZWdpc3RlcjsKPj4gKwo+PiArICAg
-ICAgIERSTV9JTkZPKCJJbml0aWFsaXplZCAlcyAlZC4lZC4lZCAlcyBvbiBtaW5vciAlZFxuIiwK
-Pj4gKyAgICAgICAgICAgICAgICBkcml2ZXItPm5hbWUsIGRyaXZlci0+bWFqb3IsIGRyaXZlci0+
-bWlub3IsCj4+IGRyaXZlci0+cGF0Y2hsZXZlbCwKPj4gKyAgICAgICAgICAgICAgICBkcml2ZXIt
-PmRhdGUsIGRybV9kZXYtPnByaW1hcnktPmluZGV4KTsKPj4gKwo+PiArICAgICAgIHJldHVybiAw
-Owo+PiArCj4+ICtlcnJfZHJtX2Rldl91bnJlZ2lzdGVyOgo+PiArICAgICAgIGRybV9kZXZfdW5y
-ZWdpc3Rlcihkcm1fZGV2KTsKPj4gK2Vycl9rbXNfY2xlYW51cDoKPj4gKyAgICAgICBraXJpbl9k
-cm1fa21zX2NsZWFudXAoZHJtX2Rldik7Cj4+ICtlcnJfZHJtX2Rldl91bnJlZjoKPj4gKyAgICAg
-ICBkcm1fZGV2X3VucmVmKGRybV9kZXYpOwo+PiArCj4+ICsgICAgICAgcmV0dXJuIHJldDsKPj4g
-K30KPj4gKwo+PiArc3RhdGljIHZvaWQga2lyaW5fZHJtX3VuYmluZChzdHJ1Y3QgZGV2aWNlICpk
-ZXYpCj4+ICt7Cj4+ICsgICAgICAgZHJtX3B1dF9kZXYoZGV2X2dldF9kcnZkYXRhKGRldikpOwo+
-PiArfQo+PiArCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNvbXBvbmVudF9tYXN0ZXJfb3BzIGtp
-cmluX2RybV9vcHMgPSB7Cj4+ICsgICAgICAgLmJpbmQgPSBraXJpbl9kcm1fYmluZCwKPj4gKyAg
-ICAgICAudW5iaW5kID0ga2lyaW5fZHJtX3VuYmluZCwKPj4gK307Cj4+ICsKPj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGtpcmluX2RybV9kdF9pZHNbXSA9IHsKPj4gKyAgICAg
-ICB7IC8qIGVuZCBub2RlICovIH0sCj4+ICt9Owo+PiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwg
-a2lyaW5fZHJtX2R0X2lkcyk7Cj4+ICsKPj4gK3N0YXRpYyBpbnQga2lyaW5fZ2V0X2RjX29wcyhz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQo+PiArewo+PiArICAgICAgIGNvbnN0IHN0cnVjdCBvZl9k
-ZXZpY2VfaWQgKm1hdGNoX2lkOwo+PiArCj4+ICsgICAgICAgbWF0Y2hfaWQgPSBvZl9tYXRjaF9u
-b2RlKGtpcmluX2RybV9kdF9pZHMsIG5wKTsKPj4gKyAgICAgICBpZiAoIW1hdGNoX2lkKSB7Cj4+
-ICsgICAgICAgICAgICAgICBEUk1fRVJST1IoImZhaWxlZCB0byBtYXRjaCBkdCBpZFxuIik7Cj4+
-ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPj4gKyAgICAgICB9Cj4+ICsKPj4gKyAg
-ICAgICBkY19vcHMgPSAoc3RydWN0IGtpcmluX2RjX29wcyAqKW1hdGNoX2lkLT5kYXRhOwo+PiAr
-ICAgICAgIGlmICghZGNfb3BzKSB7Cj4+ICsgICAgICAgICAgICAgICBEUk1fRVJST1IoImR0IGlk
-IGRhdGEgaXMgbnVsbFxuIik7Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPj4g
-KyAgICAgICB9Cj4KPgo+IFdlIGNhbiB1c2Ugb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhIHRvIGdl
-dCB0aGUgbWF0Y2ggZGF0YSwKPiBhbmQgbW92ZSB0aGUga2lyaW5fZHJtX2R0X2lkcyB0YWJsZSBk
-b3duIHdoZXJlIHRoZSBkcml2ZXIgaXMKPiBkZWZpbmVkLgo+CgpTYW1lLCBpdCBpcyBiZXR0ZXIg
-dG8gZG8gbGlrZSB5b3Ugc2FpZC4gd2lsbCBjaGFuZ2UgaW4gbmV4dCB2ZXJzaW9uLgoKVGhhbmtz
-LAoteGlubGlhbmcKCj4gPHNuaXA+Cj4KPiBUaGFua3MsCj4gQXJjaGl0Cj4KPiAtLQo+IFRoZSBR
-dWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBB
-dXJvcmEgRm9ydW0sCj4gaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 02/25/2016 08:12 PM, David Rivshin (Allworx) wrote:
+> On Thu, 25 Feb 2016 11:55:58 +0100
+> Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+>
+>> On 02/25/2016 03:24 AM, David Rivshin (Allworx) wrote:
+>>> On Wed, 24 Feb 2016 17:04:58 +0100
+>>> Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+>>>
+>>>> Hi David,
+>>>>
+>>>> Thanks for the patch. Very nice driver. I have few comments
+>>>> below.
+>>>
+>>> Thanks Jacek, I have responded the comments inline. I also wanted to
+>>> double check whether you noticed some questions I had in the cover
+>>> letter [1]. As I mentioned in another email to Rob, in hindsight I'm
+>>> guessing I should have included them in the patch comments as well (or
+>>> instead of).
+>>
+>> I saw them. I assumed that the review itself will address those
+>> questions.
+>
+> Fair enough, thanks for the confirmation.
+>
+>>> Your review comments here effectively answered some of the questions, but
+>>> the big one I'm still unsure of is whether it actually makes sense to
+>>> have all 4 of these devices supported by a single driver.
+>>
+>> It's perfectly fine. Many drivers implement this pattern.
+>
+> OK, then I'll assume you think this driver is not yet too complicated
+> for it's own good. Out of curiosity, might that view change if the
+> 3216 specific features were ever implemented, especially GPIO and HW
+> animation support? Gut feel is that would make 3216 specific code
+> bigger than the rest of the code combined.
+
+I don't think so.
+
+> Bigger question is what should be dvi sone in terms of the overlap in device
+> support between this driver and leds-sn3218? If you think I should leave
+> the *3218 support in this driver, then I would propose:
+>    - remove leds-sn3218 and its separate binding doc
+>    - add the "si-en,sn3218" compatible string to this driver and binding doc
+> Note that while I expect this driver to work with the 3218 chips, I do
+> not have one to test against. If we go down this route I would definitely
+> want Stefan to test so that I don't accidentally break him.
+
+I'd prefer to have a single driver for the same hardware. Stefan, would
+it be possible for you to test David's driver with the hardware you
+have an access to?
+
+> Also I feel I should point out some differences between the 3218 support
+> in this driver versus the leds-sn3218 driver, in case they have any
+> impact:
+>    - (as previously mentioned) leds-sn3218 turns off an LEDs enable
+>      bit if the brightness is set to 0. This driver just sets the PWM
+>      to 0 and leaves the enable bits always on.
+
+Setting brightness to 0 is an equivalent to turning the device in
+a power down mode or at least in the state where the current consumption
+is as low as possible. A hardware configuration that is most fitting
+for this requirements should be chosen.
+
+>    - leds-sn3218 uses a regmap, I think mostly to deal with the enable
+>      bits, but it also has the benefit of showing up in debugfs. This
+>      could be seen as useful in and of itself by some users. On the other
+>      hand regmap introduces another mutex on every write.
+
+I will not insist on using regmap if you don't refer to the current
+state of hw registers in your driver.
+
+>    - leds-sn3218 implements the shutdown callback. Actually, I think I
+>      should add that to this driver in any event.
+
+Do you see use cases or hardware configurations that need such
+a callback? I didn't oppose in case of Stefan's driver, but if we are
+at it, we can consult Stefan if he saw that use case?
+
+I'd say that shutdown op is usually useful when CPU and LED
+controller are powered from different sources, which can result in
+a situation when CPU is turned off, but LED remains on.
+
+>    - leds-sn3218 just puts the chip in software-shutdown mode on remove/
+>      shutdown. This driver uses the reset register to put the device in
+>      poweron state, and software-shutdown is part of the poweron state.
+>      Only difference would be if the next code to use the device does
+>      not do it's own full initialization (which seems unlikely, or at
+>      least unwise), but instead just clears software-shutdown.
+
+I believe that my above explanations address this question, i.e.
+both brightness = 0 an remove/shutdown should set the device
+in a power down mode.
+
+>
+>>> I won't
+>>> clutter this email with a duplicate of the details (it's somewhat long),
+>>> but if you could check the cover letter and give some guidance, I would
+>>> appreciate it.
+>>>
+>>> [1] http://www.spinics.net/lists/linux-leds/msg05564.html
+>>>       http://thread.gmane.org/gmane.linux.leds/4530
+>>>
+>>>>
+>>>> On 02/23/2016 07:17 PM, David Rivshin (Allworx) wrote:
+>>>>> From: David Rivshin <drivshin@allworx.com>
+>>>>>
+>>>>> The IS31FL32xx family of LED drivers are I2C devices with multiple
+>>>>> constant-current channels, each with independent 256-level PWM control.
+>>>>>
+>>>>> HW Docs: http://www.issi.com/US/product-analog-fxled-driver.shtml
+>>>>>
+>>>>> This has been tested on the IS31FL3236 and IS31FL3216 on an ARM
+>>>>> (TI am335x) platform.
+>>>>>
+>>>>> The programming paradigm of these devices is similar in the following
+>>>>> ways:
+>>>>>     - All registers are 8 bit
+>>>>>     - All LED control registers are write-only
+>>>>>     - Each LED channel has a PWM register (0-255)
+>>>>>     - PWM register writes are shadowed until an Update register is poked
+>>>>>     - All have a concept of Software Shutdown, which disables output
+>>>>>
+>>>>> However, there are some differences in devices:
+>>>>>     - 3236/3235 have a separate Control register for each LED,
+>>>>>       (3218/3216 pack the enable bits into fewer registers)
+>>>>>     - 3236/3235 have a per-channel current divisor setting
+>>>>>     - 3236/3235 have a Global Control register that can turn off all LEDs
+>>>>>     - 3216 is unique in a number of ways
+>>>>>        - OUT9-OUT16 can be configured as GPIOs instead of LED controls
+>>>>>        - LEDs can be programmed with an 8-frame animation, with
+>>>>>          programmable delay between frames
+>>>>>        - LEDs can be modulated by an input audio signal
+>>>>>        - Max output current can be adjusted from 1/4 to 2x globally
+>>>>>        - Has a Configuration register instead of a Shutdown register
+>>>>>
+>>>>> This driver currently only supports the base PWM control function
+>>>>> of these devices. The following features of these devices are not
+>>>>> implemented, although it should be possible to add them in the future:
+>>>>>     - All devices are capable of going into a lower-power "software
+>>>>>       shutdown" mode.
+>>>>>     - The is31fl3236 and is31fl3235 can reduce the max output current
+>>>>>       per-channel with a divisor of 1, 2, 3, or 4.
+>>>>>     - The is31fl3216 can use some LED channels as GPIOs instead.
+>>>>>     - The is31fl3216 can animate LEDs in hardware.
+>>>>>     - The is31fl3216 can modulate LEDs according to an audio input.
+>>>>>     - The is31fl3216 can reduce/increase max output current globally.
+>>>>>
+>>>>> Signed-off-by: David Rivshin <drivshin@allworx.com>
+>>>>> ---
+>>>>>     drivers/leds/Kconfig           |   9 +
+>>>>>     drivers/leds/Makefile          |   1 +
+>>>>>     drivers/leds/leds-is31fl32xx.c | 442 +++++++++++++++++++++++++++++++++++++++++
+>>>>>     3 files changed, 452 insertions(+)
+>>>>>     create mode 100644 drivers/leds/leds-is31fl32xx.c
+>>>>>
+>>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>>> index 1034696..8f6c46f 100644
+>>>>> --- a/drivers/leds/Kconfig
+>>>>> +++ b/drivers/leds/Kconfig
+>>>>> @@ -580,6 +580,15 @@ config LEDS_SN3218
+>>>>>     	  This driver can also be built as a module. If so the module
+>>>>>     	  will be called leds-sn3218.
+>>>>>
+>>>>> +config LEDS_IS31FL32XX
+>>>>> +	tristate "Driver for ISSI IS31FL32XX I2C LED driver chip family"
+>>>>
+>>>> 2 x "[Dd]river".
+>>>>
+>>>> How about:
+>>>>
+>>>> "LED Support for ISSI IS31FL32XX I2C LED chip family" ?
+>>>
+>>> Yes, I found that awkward as well. HW folks (and the datasheets) seem
+>>> always refer to devices of this type as "LED Driver"s (which can lead
+>>> to some interesting confusions). Taking a cue from the LP5521/23/62
+>>> entries, how about:
+>>>    "LED Support for the ISSI IS31FL32XX I2C LED driver chip family" ?
+>>
+>> "LED Support" means "LED class driver". Driver is a software support
+>> for hardware chip. What discrepancy do you see in the description
+>> I proposed?
+>
+> I think in this case "driver" also means "hardware device which drives
+> a physical LED".
+
+Let's not confuse these notions. From Linux perspective "driver" refers
+to a piece of software used for controlling a hardware.
+
+> It seems that "LED driver" is the term universally used
+> to describe this type of HW device in datasheets.
+
+There are also e.g. "LED controllers", "LED current regulators".
+Let's stick to the convention predominantly used in the LED subsystem
+kernel config menu.
+
+> So it seemed useful to
+> use exactly that phrase in the description of what hardware this software
+> supports. I could see someone interpreting the phrase "LED chip" as
+> referring to an actual LED device.
+> I don't feel very strongly on this topic, but for the sake of discussion,
+> maybe "LED controller" would avoid any possible confusion in both
+> directions?
+
+Right, so let's use the following:
+
+"LED Support for ISSI IS31FL32XX I2C LED controller family"
+
+I understand "LED Support" as "Linux LED subsystem support".
+
+>>> Perhaps that's the best of both worlds?
+>>>
+>>>>> +	depends on LEDS_CLASS && I2C && OF
+>>>>> +	help
+>>>>> +	  Say Y here to include support for the ISSI 31FL32XX LED driver family.
+>>>>
+>>>> s/driver/chip/
+>>>>
+>>>>> +	  They are I2C devices with multiple constant-current channels, each
+>>>>> +	  with independent 256-level PWM control. This will only work with
+>>>>> +	  device tree enabled devices.
+>>>>
+>>>> We can skip the last sentence I think.
+>>>
+>>> OK. FYI, I think I got that verbiage from LEDS_SYSCON.
+>>
+>> Having "depends on OF" is self-explanatory here.
+>
+> Noted.
+>
+>>>>> +
+>>>>>     comment "LED driver for blink(1) USB RGB LED is under Special HID drivers (HID_THINGM)"
+>>>>>
+>>>>>     config LEDS_BLINKM
+>>>>> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+>>>>> index 89c9b6f..3fdf313 100644
+>>>>> --- a/drivers/leds/Makefile
+>>>>> +++ b/drivers/leds/Makefile
+>>>>> @@ -67,6 +67,7 @@ obj-$(CONFIG_LEDS_KTD2692)		+= leds-ktd2692.o
+>>>>>     obj-$(CONFIG_LEDS_POWERNV)		+= leds-powernv.o
+>>>>>     obj-$(CONFIG_LEDS_SEAD3)		+= leds-sead3.o
+>>>>>     obj-$(CONFIG_LEDS_SN3218)		+= leds-sn3218.o
+>>>>> +obj-$(CONFIG_LEDS_IS31FL32XX)		+= leds-is31fl32xx.o
+>>>>>
+>>>>>     # LED SPI Drivers
+>>>>>     obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+>>>>> diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is31fl32xx.c
+>>>>> new file mode 100644
+>>>>> index 0000000..8dea518
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/leds/leds-is31fl32xx.c
+>>>>> @@ -0,0 +1,442 @@
+>>>>> +/*
+>>>>> + * linux/drivers/leds-is31fl32xx.c
+>>>>> + *
+>>>>> + * Driver for ISSI IS31FL32xx family of I2C LED controllers
+>>>>> + *
+>>>>> + * Copyright 2015 Allworx Corp.
+>>>>> + *
+>>>>> + *
+>>>>> + * This program is free software; you can redistribute it and/or modify
+>>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>>> + * published by the Free Software Foundation.
+>>>>> + *
+>>>>> + * HW Docs: http://www.issi.com/US/product-analog-fxled-driver.shtml
+>>>>> + */
+>>>>> +
+>>>>> +#include <linux/err.h>
+>>>>> +#include <linux/i2c.h>
+>>>>> +#include <linux/kernel.h>
+>>>>> +#include <linux/leds.h>
+>>>>> +#include <linux/module.h>
+>>>>> +#include <linux/of_platform.h>
+>>>>> +
+>>>>> +#ifdef DEBUG
+>>>>> + #undef dev_dbg
+>>>>> + #define dev_dbg dev_info
+>>>>> +#endif
+>>>>
+>>>> What's the benefit of the above?
+>>>
+>>> It gave me a way to easily see debug output from the driver while it
+>>> was parsing the DT (especially if the driver was built-in). Early on
+>>> there were other things within that #ifdef as well.
+>>> Regardless, passing ddebug_query on the kernel commandline is a more
+>>> appropriate way of accomplishing that; I'll remove for the next version.
+>>
+>> Thanks.
+>>
+>>>>> +/* Used to indicate a device has no such register */
+>>>>> +#define IS31FL32XX_REG_NONE 0xFF
+>>>>> +
+>>>>> +#define IS31FL3216_CONFIG_REG 0x00
+>>>>> +#define IS31FL3216_LIGHTING_EFFECT_REG 0x03
+>>>>> +#define IS31FL3216_CHANNEL_CONFIG_REG 0x04
+>>>>> +
+>>>>> +struct is31fl32xx_priv;
+>>>>> +struct is31fl32xx_led_data {
+>>>>> +	struct led_classdev cdev;
+>>>>> +	u8 channel; /* 1-based, max priv->cdef->channels */
+>>>>> +	struct is31fl32xx_priv *priv;
+>>>>> +};
+>>>>> +
+>>>>> +struct is31fl32xx_priv {
+>>>>> +	const struct is31fl32xx_chipdef *cdef;
+>>>>> +	struct i2c_client *client;
+>>>>> +	unsigned int num_leds;
+>>>>> +	struct is31fl32xx_led_data leds[0];
+>>>>
+>>>> Is there any specific reason for not having *leds here instead?
+>>>
+>>> I followed a pattern from leds-pwm where it did a single allocation
+>>> for both priv and priv->leds[]. See sizeof_is31fl32xx_priv(), and
+>>> its use, below. I saw the benefit as one fewer small allocation, so
+>>> slightly more kind to the allocator (and devres). If you'd prefer to
+>>> do it as two allocations, I'll make the change.
+>>
+>> OK, I had to look at this one more time. I like the idea.
+>
+> OK, I'll keep it as-is.
+>
+>>>>> +};
+>>>>> +
+>>>>> +/**
+>>>>> + * struct is31fl32xx_chipdef - chip-specific attributes
+>>>>> + * @channels            : Number of LED channels
+>>>>> + * @shutdown_reg        : address of Shutdown register (optional)
+>>>>> + * @pwm_update_reg      : address of PWM Update register
+>>>>> + * @global_control_reg	: address of Global Control register (optional)
+>>>>> + * @reset_reg           : address of Reset register (optional)
+>>>>> + * @pwm_register_base	: address of first PWM register
+>>>>> + * @pwm_registers_reversed: : true if PWM registers count down instead of up
+>>>>> + * @led_control_register_base : address of first LED control register (optional)
+>>>>> + * @enable_bits_per_led_control_register: number of LEDs enable bits in each
+>>>>> + * @reset_func:         : pointer to reset function
+>>>>> + *
+>>>>> + * For all optional register addresses, the sentinel value %IS31FL32XX_REG_NONE
+>>>>> + * indicates that this chip has no such register.
+>>>>> + *
+>>>>> + * If non-NULL, @reset_func will be called during probing to set all
+>>>>> + * necessary registers to a known initialization state. This is needed
+>>>>> + * for chips that do not have a @reset_reg.
+>>>>> + *
+>>>>> + * @enable_bits_per_led_control_register must be >=1 if
+>>>>> + * @led_control_register_base != %IS31FL32XX_REG_NONE.
+>>>>> + */
+>>>>> +struct is31fl32xx_chipdef {
+>>>>> +	u8	channels;
+>>>>> +	u8	shutdown_reg;
+>>>>> +	u8	pwm_update_reg;
+>>>>> +	u8	global_control_reg;
+>>>>> +	u8	reset_reg;
+>>>>> +	u8	pwm_register_base;
+>>>>> +	bool	pwm_registers_reversed;
+>>>>> +	u8	led_control_register_base;
+>>>>> +	u8	enable_bits_per_led_control_register;
+>>>>> +	int (*reset_func)(struct is31fl32xx_priv *priv);
+>>>>> +};
+>>>>> +
+>>>>> +static const struct is31fl32xx_chipdef is31fl3236_cdef = {
+>>>>> +	.channels				= 36,
+>>>>> +	.shutdown_reg				= 0x00,
+>>>>> +	.pwm_update_reg				= 0x25,
+>>>>> +	.global_control_reg			= 0x4a,
+>>>>> +	.reset_reg				= 0x4f,
+>>>>> +	.pwm_register_base			= 0x01,
+>>>>> +	.led_control_register_base		= 0x26,
+>>>>> +	.enable_bits_per_led_control_register	= 1,
+>>>>> +};
+>>>>> +
+>>>>> +static const struct is31fl32xx_chipdef is31fl3235_cdef = {
+>>>>> +	.channels				= 28,
+>>>>> +	.shutdown_reg				= 0x00,
+>>>>> +	.pwm_update_reg				= 0x25,
+>>>>> +	.global_control_reg			= 0x4a,
+>>>>> +	.reset_reg				= 0x4f,
+>>>>> +	.pwm_register_base			= 0x05,
+>>>>> +	.led_control_register_base		= 0x2a,
+>>>>> +	.enable_bits_per_led_control_register	= 1,
+>>>>> +};
+>>>>> +
+>>>>> +static const struct is31fl32xx_chipdef is31fl3218_cdef = {
+>>>>> +	.channels				= 18,
+>>>>> +	.shutdown_reg				= 0x00,
+>>>>> +	.pwm_update_reg				= 0x16,
+>>>>> +	.global_control_reg			= IS31FL32XX_REG_NONE,
+>>>>> +	.reset_reg				= 0x17,
+>>>>> +	.pwm_register_base			= 0x01,
+>>>>> +	.led_control_register_base		= 0x13,
+>>>>> +	.enable_bits_per_led_control_register	= 6,
+>>>>> +};
+>>>>> +
+>>>>> +static int is31fl3216_reset(struct is31fl32xx_priv *priv);
+>>>>> +static const struct is31fl32xx_chipdef is31fl3216_cdef = {
+>>>>> +	.channels				= 16,
+>>>>> +	.shutdown_reg				= IS31FL32XX_REG_NONE,
+>>>>> +	.pwm_update_reg				= 0xB0,
+>>>>> +	.global_control_reg			= IS31FL32XX_REG_NONE,
+>>>>> +	.reset_reg				= IS31FL32XX_REG_NONE,
+>>>>> +	.pwm_register_base			= 0x10,
+>>>>> +	.pwm_registers_reversed			= true,
+>>>>> +	.led_control_register_base		= 0x01,
+>>>>> +	.enable_bits_per_led_control_register	= 8,
+>>>>> +	.reset_func				= is31fl3216_reset,
+>>>>> +};
+>>>>> +
+>>>>> +static int is31fl32xx_write(struct is31fl32xx_priv *priv, u8 reg, u8 val)
+>>>>> +{
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	dev_dbg(&priv->client->dev, "writing register 0x%02X=0x%02X", reg, val);
+>>>>> +
+>>>>> +	ret =  i2c_smbus_write_byte_data(priv->client, reg, val);
+>>>>> +	if (ret) {
+>>>>> +		dev_err(&priv->client->dev,
+>>>>> +			"register write to 0x%02X failed (error %d)",
+>>>>> +			reg, ret);
+>>>>> +	}
+>>>>> +	return ret;
+>>>>> +}
+>>>>> +
+>>>>> +/*
+>>>>> + * Custom reset function for IS31FL3216 because it does not have a RESET
+>>>>> + * register the way that the other IS31FL32xx chips do. We don't bother
+>>>>> + * writing the GPIO and animation registers, because the registers we
+>>>>> + * do write ensure those will have no effect.
+>>>>> + */
+>>>>> +static int is31fl3216_reset(struct is31fl32xx_priv *priv)
+>>>>> +{
+>>>>> +	unsigned int i;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	for (i = 0; i < priv->cdef->channels; i++) {
+>>>>> +		ret = is31fl32xx_write(priv, priv->cdef->pwm_register_base+i,
+>>>>> +				       0x00);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +	ret = is31fl32xx_write(priv, priv->cdef->pwm_update_reg, 0);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +	ret = is31fl32xx_write(priv, IS31FL3216_LIGHTING_EFFECT_REG, 0x00);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +	ret = is31fl32xx_write(priv, IS31FL3216_CHANNEL_CONFIG_REG, 0x00);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +	ret = is31fl32xx_write(priv, IS31FL3216_CONFIG_REG, 0x00);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +
+>>>>> +static int is31fl32xx_brightness_set(struct led_classdev *led_cdev,
+>>>>> +				     enum led_brightness brightness)
+>>>>> +{
+>>>>> +	const struct is31fl32xx_led_data *led_data =
+>>>>> +		container_of(led_cdev, struct is31fl32xx_led_data, cdev);
+>>>>> +	const struct is31fl32xx_chipdef *cdef = led_data->priv->cdef;
+>>>>> +	u8 pwm_register_offset;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	dev_dbg(led_cdev->dev, "%s: %d\n", __func__, brightness);
+>>>>> +
+>>>>> +	/* NOTE: led_data->channel is 1-based */
+>>>>> +	if (cdef->pwm_registers_reversed)
+>>>>> +		pwm_register_offset = cdef->channels - led_data->channel;
+>>>>> +	else
+>>>>> +		pwm_register_offset = led_data->channel - 1;
+>>>>> +
+>>>>> +	ret = is31fl32xx_write(led_data->priv,
+>>>>> +			       cdef->pwm_register_base + pwm_register_offset,
+>>>>> +			       brightness);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>
+>>>> I infer that nothing wrong happens in case current process is preempted
+>>>> here by the call originating from the other sub-LED?
+>>>
+>>> I do not believe so. All the driver-specific data used here is read-only
+>>> after probing. chipdefs are entirely const, and the only thing in priv
+>>> that's referenced is the chipdef pointer which logically could not change
+>>> post-probe. Actually nothing else in priv is modified post-probe either.
+>>>
+>>> The I2C core code has a mutex on the bus, so two writes cannot happen at
+>>> once.
+>>>
+>>> In all these devices there is a unique PWM duty-cycle register for each
+>>> LED channel (which is what is being written here), so no register writes
+>>> for one LED channel effect any others.
+>>>
+>>> I believe the worst that could happen is that the device would see:
+>>> 	PWM_REG_A write X
+>>> 	PWM_REG_B write Y
+>>> 	UPDATE_REG write 0
+>>> 	UPDATE_REG write 0
+>>> instead of
+>>> 	PWM_REG_A write X
+>>> 	UPDATE_REG write 0
+>>> 	PWM_REG_B write Y
+>>> 	UPDATE_REG write 0
+>>> but that makes no difference to the functionality. Poking the update
+>>> register merely applies all PWM register writes up to that point (I'm
+>>> assuming to allow atomically changing the state of multiple LEDs at
+>>> once).
+>>
+>> Thanks for this comprehensive explanation.
+>
+> Should I put some part of this explanation in a comment somewhere? Seems
+> like the kind of thing someone else might wonder about in the future also.
+
+Good idea.
+
+>>> I should note here (as mentioned in cover letter), I made a choice to
+>>> always leave the per-LED "enable" bits on, and let the PWM just get set
+>>> to 0 naturally to turn an LED off. This differs from the existing SN3218
+>>> driver, which used regmap_update_bits, and is then protected by a per-
+>>> regmap mutex.
+>>
+>> ack.
+>>
+>>>>> +	return is31fl32xx_write(led_data->priv, cdef->pwm_update_reg, 0);
+>>>>> +
+>>>>> +}
+>>>>> +
+>>>>> +static int is31fl32xx_init_regs(struct is31fl32xx_priv *priv)
+>>>>> +{
+>>>>> +	const struct is31fl32xx_chipdef *cdef = priv->cdef;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	if (cdef->reset_reg != IS31FL32XX_REG_NONE) {
+>>>>> +		ret = is31fl32xx_write(priv, cdef->reset_reg, 0);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +	if (cdef->reset_func) {
+>>>>> +		ret = cdef->reset_func(priv);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +	if (cdef->led_control_register_base != IS31FL32XX_REG_NONE) {
+>>>>> +		u8 value =
+>>>>> +		    GENMASK(cdef->enable_bits_per_led_control_register-1, 0);
+>>>>> +		u8 num_regs = cdef->channels /
+>>>>> +				cdef->enable_bits_per_led_control_register;
+>>>>> +		int i;
+>>>>> +
+>>>>> +		for (i = 0; i < num_regs; i++) {
+>>>>> +			ret = is31fl32xx_write(priv,
+>>>>> +					       cdef->led_control_register_base+i,
+>>>>> +					       value);
+>>>>> +			if (ret)
+>>>>> +				return ret;
+>>>>> +		}
+>>>>> +	}
+>>>>> +	if (cdef->shutdown_reg != IS31FL32XX_REG_NONE) {
+>>>>> +		ret = is31fl32xx_write(priv, cdef->shutdown_reg, BIT(0));
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +	if (cdef->global_control_reg != IS31FL32XX_REG_NONE) {
+>>>>> +		ret = is31fl32xx_write(priv, cdef->global_control_reg, 0x00);
+>>>>> +		if (ret)
+>>>>> +			return ret;
+>>>>> +	}
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static inline size_t sizeof_is31fl32xx_priv(int num_leds)
+>>>>> +{
+>>>>> +	return sizeof(struct is31fl32xx_priv) +
+>>>>> +		      (sizeof(struct is31fl32xx_led_data) * num_leds);
+>>>>> +}
+>>>>> +
+>>>>> +static int is31fl32xx_parse_child_dt(const struct device *dev,
+>>>>> +				     const struct device_node *child,
+>>>>> +				     struct is31fl32xx_led_data *led_data)
+>>>>> +{
+>>>>> +	struct led_classdev *cdev = &led_data->cdev;
+>>>>> +	int ret = 0;
+>>>>> +	u32 reg;
+>>>>> +
+>>>>> +	cdev->name = of_get_property(child, "label", NULL) ? : child->name;
+>>>>> +
+>>>>> +	ret = of_property_read_u32(child, "reg", &reg);
+>>>>> +	if (ret || reg < 1 || reg > led_data->priv->cdef->channels) {
+>>>>> +		dev_err(dev,
+>>>>> +			"Child node %s does not have a valid reg property\n",
+>>>>> +			child->name);
+>>>>> +		return -EINVAL;
+>>>>> +	}
+>>>>> +	led_data->channel = reg;
+>>>>> +
+>>>>> +	cdev->default_trigger = of_get_property(child, "linux,default-trigger",
+>>>>> +						NULL);
+>>>>> +	cdev->brightness = LED_OFF;
+>>>>
+>>>> devm_kzalloc secures that.
+>>>
+>>> OK, I will remove.
+>>>
+>>>>> +	ret = of_property_read_u32(child, "max-brightness",
+>>>>> +				   &cdev->max_brightness);
+>>>>> +	if (ret == -EINVAL) {
+>>>>> +		cdev->max_brightness = 255;
+>>>>
+>>>> s/255/LED_FULL/
+>>>
+>>> Noted, although (from the patch 2 discussion) max-brightness property is
+>>> removed/replaced, this would go away anyways.
+>>>
+>>>>> +	} else if (ret) {
+>>>>> +		dev_dbg(dev,
+>>>>> +			"Child node %s has an invalid max-brightness property\n",
+>>>>> +			child->name);
+>>>>> +		return -EINVAL;
+>>>>> +	}
+>>>>> +
+>>>>> +	cdev->brightness_set_blocking = is31fl32xx_brightness_set;
+>>>>
+>>>> Please add empty line here.
+>>>
+>>> Done.
+>>>
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static struct is31fl32xx_led_data *is31fl32xx_find_led_data(
+>>>>> +					struct is31fl32xx_priv *priv,
+>>>>> +					u8 channel)
+>>>>> +{
+>>>>> +	size_t i;
+>>>>> +
+>>>>> +	for (i = 0; i < priv->num_leds; i++) {
+>>>>> +		if (priv->leds[i].channel == channel)
+>>>>> +			return &priv->leds[i];
+>>>>> +	}
+>>>>
+>>>> Ditto.
+>>>
+>>> Done.
+>>>
+>>>>> +	return NULL;
+>>>>> +}
+>>>>> +
+>>>>> +static int is31fl32xx_parse_dt(struct device *dev,
+>>>>> +			       struct is31fl32xx_priv *priv)
+>>>>> +{
+>>>>> +	struct device_node *child;
+>>>>> +
+>>>>> +	for_each_child_of_node(dev->of_node, child) {
+>>>>> +		struct is31fl32xx_led_data *led_data =
+>>>>> +			&priv->leds[priv->num_leds];
+>>>>> +		int ret = 0;
+>>>>> +		const struct is31fl32xx_led_data *other_led_data;
+>>>>> +
+>>>>> +		led_data->priv = priv;
+>>>>> +
+>>>>> +		ret = is31fl32xx_parse_child_dt(dev, child, led_data);
+>>>>> +		if (ret)
+>>>>> +			continue;
+>>>>
+>>>> I prefer failing in such cases,
+>>>
+>>> OK, I will change to an 'goto err' which will have an 'of_node_put()'
+>>> and 'return ret'.
+>>>
+>>> I will say, however, that while testing the error-detection in the
+>>> parsing logic, it was very convenient to construct a single devicetree
+>>> with a variety of errors. Then a single boot would test multiple
+>>> cases at once.
+>>
+>> Good idea for testing, but in case some failure occurs during DT child
+>> node parsing in the release environment you're left with unused
+>> allocated memory.
+>
+> Agreed. BTW, I assume from this that it's common to say "if there's
+> anything wrong in one part of your DT, there is no guarantee as to what
+> parts will actually be used"? I say this because what we're saying is that
+> if one LED node on this device is faulty, that all of them are ignored.
+> Analogy might be to a whole I2C bus being ignored because one of the
+> devices on it failed to probe. To the devicetree it's still a parent/child
+> bus/address relationship, even though the driver implementation is
+> very different.
+
+I2C example is too generic I think. I2C controller is not as tightly
+coupled with I2C clients as LED controller with its current outputs.
+Besides, I2C controller doesn't have an idea what devices will attach
+to the bus it controls upon probing, contrarily to a LED controller.
+
+>>>>> +
+>>>>> +		/* Detect if channel is already in use by another child */
+>>>>> +		other_led_data = is31fl32xx_find_led_data(priv,
+>>>>> +							  led_data->channel);
+>>>>> +		if (other_led_data) {
+>>>>> +			dev_err(dev,
+>>>>> +				"%s ignored: channel %d already used by %s",
+>>>>> +				led_data->cdev.name,
+>>>>> +				led_data->channel,
+>>>>> +				other_led_data->cdev.name);
+>>>>> +			continue;
+>>>>
+>>>> Ditto.
+>>>
+>>> OK.
+>>>
+>>>>> +		}
+>>>>> +
+>>>>> +		ret = devm_led_classdev_register(dev, &led_data->cdev);
+>>>>> +		if (ret == 0) {
+>>>>> +			priv->num_leds++;
+>>>>> +		} else {
+>>>>> +			dev_err(dev, "failed to register PWM led for %s: %d\n",
+>>>>> +				led_data->cdev.name, ret);
+>>>
+>>> Should I also fail here, then? Right now it will continue trying to
+>>> register future LED devices if a classdev_register fails for some
+>>> reason, and will successfully load even if all of them fail.
+>>
+>> Please fail here too. If we can't setup the sub-LED that is advertised
+>> in a DT child node, then it means that something went wrong.
+>> This is clear error case.
+>
+> Done.
+>
+>>>>> +		}
+>>>>> +	}
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static const struct of_device_id of_is31fl31xx_match[] = {
+>>>>> +	{ .compatible = "issi,is31fl3236", .data = &is31fl3236_cdef, },
+>>>>> +	{ .compatible = "issi,is31fl3235", .data = &is31fl3235_cdef, },
+>>>>> +	{ .compatible = "issi,is31fl3218", .data = &is31fl3218_cdef, },
+>>>>> +	{ .compatible = "issi,is31fl3216", .data = &is31fl3216_cdef, },
+>>>>> +	{},
+>>>>> +};
+>>>>> +
+>>>>> +MODULE_DEVICE_TABLE(of, of_is31fl31xx_match);
+>>>>> +
+>>>>> +static int is31fl32xx_probe(struct i2c_client *client,
+>>>>> +				  const struct i2c_device_id *id)
+>>>>> +{
+>>>>> +	const struct is31fl32xx_chipdef *cdef;
+>>>>> +	const struct of_device_id *of_dev_id;
+>>>>> +	struct device *dev = &client->dev;
+>>>>> +	struct is31fl32xx_priv *priv;
+>>>>> +	int count;
+>>>>> +	int ret = 0;
+>>>>> +
+>>>>> +	of_dev_id = of_match_device(of_is31fl31xx_match, dev);
+>>>>> +	if (!of_dev_id)
+>>>>> +		return -EINVAL;
+>>>>> +
+>>>>> +	cdef = of_dev_id->data;
+>>>>> +
+>>>>> +	count = of_get_child_count(dev->of_node);
+>>>>> +	if (!count)
+>>>>> +		return -EINVAL;
+>>>>> +
+>>>>> +	priv = devm_kzalloc(dev, sizeof_is31fl32xx_priv(count),
+>>>>> +			    GFP_KERNEL);
+>>>>> +	if (!priv)
+>>>>> +		return -ENOMEM;
+>>>>> +
+>>>>> +	priv->client = client;
+>>>>> +	priv->cdef = cdef;
+>>>>> +	i2c_set_clientdata(client, priv);
+>>>>> +
+>>>>> +	ret = is31fl32xx_init_regs(priv);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	ret = is31fl32xx_parse_dt(dev, priv);
+>>>>> +	if (ret)
+>>>>> +		return ret;
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +static int is31fl32xx_remove(struct i2c_client *client)
+>>>>> +{
+>>>>> +	struct is31fl32xx_priv *priv = i2c_get_clientdata(client);
+>>>>> +
+>>>>> +	/* If there is a reset reg, then it does everything we need */
+>>>>> +	if (priv->cdef->reset_reg != IS31FL32XX_REG_NONE)
+>>>>> +		return is31fl32xx_write(priv, priv->cdef->reset_reg, 0);
+>>>>> +
+>>>>> +	/* If there is a reset func, then it does everything we need */
+>>>>> +	if (priv->cdef->reset_func)
+>>>>> +		return priv->cdef->reset_func(priv);
+>>>>> +
+>>>>> +	/* If we can't reset, then try just using software-shutdown mode */
+>>>>> +	if (priv->cdef->shutdown_reg != IS31FL32XX_REG_NONE)
+>>>>> +		return is31fl32xx_write(priv, priv->cdef->shutdown_reg, 0x00);
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>> +/*
+>>>>> + * i2c-core requires that id_table be non-NULL, even though
+>>>>> + * it is not used for DeviceTree based instantiation.
+>>>>> + */
+>>>>> +static const struct i2c_device_id is31fl31xx_id[] = {
+>>>>> +	{},
+>>>>> +};
+>>>>> +
+>>>>> +MODULE_DEVICE_TABLE(i2c, is31fl31xx_id);
+>>>>> +
+>>>>> +static struct i2c_driver is31fl32xx_driver = {
+>>>>> +	.driver = {
+>>>>> +		.name	= "is31fl32xx",
+>>>>> +		.of_match_table = of_is31fl31xx_match,
+>>>>> +	},
+>>>>> +	.probe		= is31fl32xx_probe,
+>>>>> +	.remove		= is31fl32xx_remove,
+>>>>> +	.id_table	= is31fl31xx_id,
+>>>>> +};
+>>>>> +
+>>>>> +module_i2c_driver(is31fl32xx_driver);
+>>>>> +
+>>>>> +MODULE_AUTHOR("David Rivshin <drivshin@allworx.com>");
+>>>>> +MODULE_DESCRIPTION("ISSI IS31FL32xx LED driver");
+>>>>> +MODULE_LICENSE("GPL v2");
+>>>>>
+>
+>
+>
+
+
+-- 
+Best regards,
+Jacek Anaszewski
