@@ -1,85 +1,62 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH/RFC v2 04/11] soc: renesas: rcar: Add DT support for SYSC
- PM domains
-Date: Fri, 26 Feb 2016 16:41:27 +0100
-Message-ID: <CAMuHMdVo2V7Ez5g8ZW74w-QWiwS8i2mbYeCjOU9brxRzNjMAdg@mail.gmail.com>
-References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
-	<1455571020-18968-5-git-send-email-geert+renesas@glider.be>
-	<3535519.g4KL1PCIZy@avalon>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: Re: [PATCH] ASoC: rt5640: add master clock handling
+ for rt5640
+Date: Fri, 26 Feb 2016 09:43:15 -0600
+Message-ID: <56D07293.902@linux.intel.com>
+References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
+ <56CC719C.1090901@linux.intel.com> <2199435.lA9iTvxnKV@phil>
+ <20160224033259.GL18327@sirena.org.uk> <56CDD5DD.6040006@linux.intel.com>
+ <20160226010818.GZ18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3535519.g4KL1PCIZy@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160226010818.GZ18327@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Oder Chiou <oder_chiou@realtek.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Mon, Feb 15, 2016 at 11:51 PM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
->>  drivers/soc/renesas/pm-rcar.c | 327 +++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 327 insertions(+)
->>
->> diff --git a/drivers/soc/renesas/pm-rcar.c b/drivers/soc/renesas/pm-rcar.c
->> index cc684e9cc8db5d1c..c0540934126e58eb 100644
->> --- a/drivers/soc/renesas/pm-rcar.c
->> +++ b/drivers/soc/renesas/pm-rcar.c
-
->> +static int __init rcar_init_pm_domains(void)
->> +{
->> +     const struct of_device_id *match;
->> +     struct device_node *np, *pmd;
->> +     bool scanned = false;
->> +     void __iomem *base;
->> +     int ret = 0;
->> +
->> +     for_each_matching_node_and_match(np, rcar_sysc_matches, &match) {
->> +             u32 syscier = 0;
->> +
->> +             rcar_gen = (uintptr_t)match->data;
->> +
->> +             base = of_iomap(np, 0);
->> +             if (!base) {
->> +                     pr_warn("%s cannot map reg 0\n", np->full_name);
->> +                     continue;
->> +             }
->> +
->> +             rcar_sysc_base = base;  // FIXME conflicts with rcar_sysc_init()
->> +
->> +             pmd = of_get_child_by_name(np, "pm-domains");
->> +             if (!pmd) {
->> +                     pr_warn("%s lacks pm-domains node\n", np->full_name);
+On 2/25/16 7:08 PM, Mark Brown wrote:
+> On Wed, Feb 24, 2016 at 10:10:05AM -0600, Pierre-Louis Bossart wrote:
+>> On 2/23/16 9:32 PM, Mark Brown wrote:
 >
-> Shouldn't you call iounmap() here ?
-
-Yes. Will fix.
-
->> +             /*
->> +              * Enable all interrupt sources, but do not use interrupt
->> +              * handler
->> +              */
->> +             pr_debug("%s: syscier = 0x%08x\n", np->full_name, syscier);
->> +             iowrite32(syscier, rcar_sysc_base + SYSCIER);
->> +             iowrite32(0, rcar_sysc_base + SYSCIMR);
+>>> That said we really do need x86 to transition to use the clock API
+>>> in order to integrate with external devices, where the machine driver
+>>> does manage clocks we want that to move to being done using the clock
+>>> API rather than custom APIs.
 >
-> Shouldn't the SYSCIMR bits be set to 1 to mask interrupts ?
+>> For Baytrail audio we have a single platform clock that can be turned
+>> on/off and set to 19.2 MHz or 25 MHz. No other controls are available,
+>> no multipliers or complicated dependencies on other clocks, parents or
+>> children and no other users for this clock but the audio subsystem.
+>> I looked at the clock framework and couldn't figure out how it would simply
+>> map the hardware so for now the use of the MCLK is only enabled with an
+>> on/off or set-rate(19.2|25) custom API. I am not an expert here so if this
+>> clock framework becomes a requirement to upstream code I would appreciate
+>> any pointers to do the right thing. I really couldn't find a simple example
+>> with 'Put your code here' comments to use this framework.
+>
+> There's a lot of helpers like -fixed, -gate and so on - this sounds like
+> you could probably use those helpers (there should be lots of examples
+> in the kernel) or just implement a simple provider (see clk-provider.h)
+> depending on how the control is mapped in.  If it's that simple just
+> open coding a provider ought to do the job.  Then set up the client
+> linkage with clkdev in some way that makes sense for your platform.
 
-That would work, too. It doesn't matter much, as the driver doesn't use
-interrupts, so they stay disabled at the GIC level.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes there are documentation and helpers I looked into, but to the best 
+of my limited knowledge not for the gate + dual-rate case. Then you jump 
+to complicated configurations combining multiple base clocks that don't 
+really make sense here. After one frustrating day of trying to wrap 100 
+lines of code into the clock framework I gave up and kept the simple 
+custom driver. There is a single client for this clock so I don't quite 
+see the benefits/ROI of mapping a simple piece of hardware with a 
+complex model.
