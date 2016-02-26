@@ -1,183 +1,79 @@
-From: Eric Auger <eric.auger@linaro.org>
-Subject: Re: [PATCH V14 9/9] vfio, platform: add QTI HIDMA reset driver
-Date: Fri, 26 Feb 2016 18:52:03 +0100
-Message-ID: <56D090C3.8060608@linaro.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Fri, 26 Feb 2016 18:57:53 +0100
+Message-ID: <CAGhQ9VyQTfYbqcZ7pYzwmhcj8FZ+FZ51ciexOLC-9ZhU4eKT2A@mail.gmail.com>
+References: <1456483912-32090-1-git-send-email-alexandre.torgue@gmail.com>
+	<1456483912-32090-3-git-send-email-alexandre.torgue@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1454646882-24369-10-git-send-email-okaya@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456483912-32090-3-git-send-email-alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
-On 02/05/2016 05:34 AM, Sinan Kaya wrote:
-> In situations where the userspace driver is stopped abnormally and the
-> VFIO platform device is released, the assigned HW device currently is
-> left running. As a consequence the HW device might continue issuing IRQs
-> and performing DMA accesses.
-> 
-> This patch is implementing a reset driver for HIDMA platform driver.
-> This gets called by the VFIO platform reset interface.
-> 
-> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
-> ---
->  drivers/vfio/platform/reset/Kconfig                |  9 ++
->  drivers/vfio/platform/reset/Makefile               |  2 +
->  .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 99 ++++++++++++++++++++++
->  3 files changed, 110 insertions(+)
->  create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
-> 
-> diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
-> index 70cccc5..d02b3b5 100644
-> --- a/drivers/vfio/platform/reset/Kconfig
-> +++ b/drivers/vfio/platform/reset/Kconfig
-> @@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
->  	  Enables the VFIO platform driver to handle reset for AMD XGBE
->  
->  	  If you don't know what to do here, say N.
-> +
-> +config VFIO_PLATFORM_QCOMHIDMA_RESET
-> +	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
-> +	depends on VFIO_PLATFORM
-> +	help
-> +	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
-> +	  HIDMA Channel.
-> +
-> +	  If you don't know what to do here, say N.
-> diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
-> index 93f4e23..ec7748a 100644
-> --- a/drivers/vfio/platform/reset/Makefile
-> +++ b/drivers/vfio/platform/reset/Makefile
-> @@ -1,7 +1,9 @@
->  vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
->  vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
-> +vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
->  
->  ccflags-y += -Idrivers/vfio/platform
->  
->  obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
-> +obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
->  obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+Hi Alexandre,
+
+On 26 February 2016 at 11:51, Alexandre TORGUE
+<alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
 > new file mode 100644
-> index 0000000..70d7eed
+> index 0000000..67fceda
 > --- /dev/null
-> +++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
-> @@ -0,0 +1,99 @@
-> +/*
-> + * Qualcomm Technologies HIDMA VFIO Reset Driver
-> + *
-> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> @@ -0,0 +1,40 @@
+> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
 > +
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/device.h>
-> +#include <linux/iopoll.h>
+> +This file documents platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
 > +
-> +#include "vfio_platform_private.h"
+> +The device node has following properties.
 > +
-> +#define TRCA_CTRLSTS_OFFSET		0x000
-> +#define EVCA_CTRLSTS_OFFSET		0x000
+> +Required properties:
+> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+> +              "snps,dwmac-3.50a" to select IP vesrion.
+> +- clocks: Should contain the GMAC main clock, and tx clock
+> +- compatible:  Should be "st,stm32-dwmac" to select glue and
+> +              "snps,dwmac-3.50a" to select IP version.
+> +- clocks: Should contain the MAC main clock
+> +- clock-names: Should contain the clock names "stmmaceth".
+> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> +             encompases the glue register, and the offset of the control register.
 > +
-> +#define CH_CONTROL_MASK		GENMASK(7, 0)
-nit: alignment
+> +Optional properties:
+> +- clocks: Could contain:
+> +       - the tx clock,
+> +       - the rx clock
+> +- clock-names: Could contain the clock names "tx-clk", "rx-clk"
+> +
+> +Example:
+> +
+> +               ethernet0: dwmac@40028000 {
+> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> +                       status = "disabled";
+> +                       reg = <0x40028000 0x8000>;
+> +                       reg-names = "stmmaceth";
+> +                       interrupts = <0 61 0>, <0 62 0>;
+> +                       interrupt-names = "macirq", "eth_wake_irq";
+> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> +                       st,syscon = <&syscfg 0x4>;
+> +                       snps,pbl = <8>;
+> +                       snps,mixed-burst;
+> +                       dma-ranges;
+> +               };
 
-Besides it looks ok to me
-Reviewed-by: Eric Auger <eric.auger@linaro.org>
+Looks just like any other dwmac-driver binding so:
 
-If it better suits you maybe you can separate the upstream of your
-management/channel driver from the VFIO reset driver upstream.
+Acked-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Best Regards
 
-Eric
-
-> +#define CH_STATE_MASK			GENMASK(7, 0)
-> +#define CH_STATE_BIT_POS		0x8
-> +
-> +#define HIDMA_CH_STATE(val)	\
-> +	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
-> +
-> +#define EVCA_IRQ_EN_OFFSET		0x110
-> +
-> +#define CH_RESET			9
-> +#define CH_DISABLED			0
-> +
-> +int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
-> +{
-> +	struct vfio_platform_region *trreg;
-> +	struct vfio_platform_region *evreg;
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (vdev->num_regions != 2)
-> +		return -ENODEV;
-> +
-> +	trreg = &vdev->regions[0];
-> +	if (!trreg->ioaddr) {
-> +		trreg->ioaddr =
-> +			ioremap_nocache(trreg->addr, trreg->size);
-> +		if (!trreg->ioaddr)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	evreg = &vdev->regions[1];
-> +	if (!evreg->ioaddr) {
-> +		evreg->ioaddr =
-> +			ioremap_nocache(evreg->addr, evreg->size);
-> +		if (!evreg->ioaddr)
-> +			return -ENOMEM;
-> +	}
-> +
-> +	/* disable IRQ */
-> +	writel(0, evreg->ioaddr + EVCA_IRQ_EN_OFFSET);
-> +
-> +	/* reset both transfer and event channels */
-> +	val = readl(trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
-> +	val &= ~(CH_CONTROL_MASK << 16);
-> +	val |= CH_RESET << 16;
-> +	writel(val, trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
-> +
-> +	ret = readl_poll_timeout(trreg->ioaddr + TRCA_CTRLSTS_OFFSET, val,
-> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
-> +				 10000);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val = readl(evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
-> +	val &= ~(CH_CONTROL_MASK << 16);
-> +	val |= CH_RESET << 16;
-> +	writel(val, evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
-> +
-> +	ret = readl_poll_timeout(evreg->ioaddr + EVCA_CTRLSTS_OFFSET, val,
-> +				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
-> +				 10000);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pr_info("HIDMA channel reset\n");
-> +	return 0;
-> +}
-> +module_vfio_reset_handler("qcom,hidma-1.0", "QCOM8061",
-> +			  vfio_platform_qcomhidma_reset);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
-> 
+regards,
+Joachim Eastwood
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
