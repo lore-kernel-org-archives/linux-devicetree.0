@@ -1,315 +1,59 @@
-From: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Fri, 26 Feb 2016 18:15:47 +0100
-Message-ID: <56D08843.5020306@linaro.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
+From: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v3 1/2] dt/bindings: Add bindings for PIC32 watchdog peripheral
+Date: Fri, 26 Feb 2016 10:19:27 -0700
+Message-ID: <1456507177-5502-1-git-send-email-joshua.henderson@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1454646882-24369-9-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
-On 02/05/2016 05:34 AM, Sinan Kaya wrote:
-> The code is using the compatible DT string to associate a reset driver with
-> the actual device itself. The compatible string does not exist on ACPI
-> based systems. HID is the unique identifier for a device driver instead.
-> The change allows a driver to register with DT compatible string or ACPI
-> HID and then match the object with one of these conditions.
-> 
-> Rules for loading the reset driver are as follow:
-> - ACPI HID needs match for ACPI systems
-> - DT compat needs to match for OF systems
-> 
-> Tested-by: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (device tree only)
-> Tested-by: Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (ACPI only)
-> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |  3 +-
->  .../platform/reset/vfio_platform_calxedaxgmac.c    |  3 +-
->  drivers/vfio/platform/vfio_platform_common.c       | 80 +++++++++++++++++++---
->  drivers/vfio/platform/vfio_platform_private.h      | 41 ++++++-----
->  4 files changed, 96 insertions(+), 31 deletions(-)
-> 
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> index d4030d0..cc5b4fa 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
-> @@ -119,7 +119,8 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
->  	return 0;
->  }
->  
-> -module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
-> +module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
-> +			  vfio_platform_amdxgbe_reset);
->  
->  MODULE_VERSION("0.1");
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-> index e3d3d94..0e57529 100644
-> --- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-> +++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
-> @@ -77,7 +77,8 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
->  	return 0;
->  }
->  
-> -module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
-> +module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
-> +			  vfio_platform_calxedaxgmac_reset);
->  
->  MODULE_VERSION(DRIVER_VERSION);
->  MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-> index 418cdd9..5b42e93 100644
-> --- a/drivers/vfio/platform/vfio_platform_common.c
-> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> @@ -13,6 +13,7 @@
->   */
->  
->  #include <linux/device.h>
-> +#include <linux/acpi.h>
->  #include <linux/iommu.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> @@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
->  static DEFINE_MUTEX(driver_lock);
->  
->  static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
-> -					struct module **module)
-> +				  const char *acpihid, struct module **module)
->  {
->  	struct vfio_platform_reset_node *iter;
->  	vfio_platform_reset_fn_t reset_fn = NULL;
->  
->  	mutex_lock(&driver_lock);
->  	list_for_each_entry(iter, &reset_list, link) {
-> -		if (!strcmp(iter->compat, compat) &&
-> +		if (acpihid && iter->acpihid &&
-> +		    !strcmp(iter->acpihid, acpihid) &&
-> +			try_module_get(iter->owner)) {
-> +			*module = iter->owner;
-> +			reset_fn = iter->reset;
-> +			break;
-> +		}
-> +		if (compat && iter->compat &&
-> +		    !strcmp(iter->compat, compat) &&
->  			try_module_get(iter->owner)) {
->  			*module = iter->owner;
->  			reset_fn = iter->reset;
-> @@ -51,11 +60,12 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->  
->  static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
->  {
-> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
-> -						&vdev->reset_module);
-> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
-> +						 &vdev->reset_module);
->  	if (!vdev->reset) {
->  		request_module("vfio-reset:%s", vdev->compat);
->  		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
-> +							 vdev->acpihid,
->  							 &vdev->reset_module);
->  	}
->  }
-> @@ -541,6 +551,46 @@ static const struct vfio_device_ops vfio_platform_ops = {
->  	.mmap		= vfio_platform_mmap,
->  };
->  
-> +#ifdef CONFIG_ACPI
-> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
-> +			     struct device *dev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(dev);
-> +
-> +	if (!adev)
-> +		return -EINVAL;
--ENODEV seems to be commonly used in that case
-> +
-> +	vdev->acpihid = acpi_device_hid(adev);
-> +	if (!vdev->acpihid) {
-can it return NULL? Seems to return dummy "device" or actual hid
-> +		pr_err("VFIO: cannot find ACPI HID for %s\n",
-> +		       vdev->name);
-> +		return -EINVAL;
--ENODEV too?
-> +	}
-> +	return 0;
-> +}
-> +#else
-> +int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
-> +			     struct device *dev)
-> +{
-> +	return -EINVAL;
-> +}
-> +#endif
-> +
-> +int vfio_platform_probe_of(struct vfio_platform_device *vdev,
-> +			   struct device *dev)
-> +{
-> +	int ret;
-> +
-> +	ret = device_property_read_string(dev, "compatible",
-> +					  &vdev->compat);
-> +	if (ret) {
-> +		pr_err("VFIO: cannot retrieve compat for %s\n",
-> +			vdev->name);
-> +		return -EINVAL;
-return ret instead.
-> +	}
-> +	return 0;
-> +}
-> +
->  int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->  			       struct device *dev)
->  {
-> @@ -550,14 +600,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->  	if (!vdev)
->  		return -EINVAL;
->  
-> -	ret = device_property_read_string(dev, "compatible", &vdev->compat);
-> -	if (ret) {
-> -		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
-> -		return -EINVAL;
-> -	}
-> +	ret = vfio_platform_probe_acpi(vdev, dev);
-> +	if (ret)
-> +		ret = vfio_platform_probe_of(vdev, dev);
->  
-> -	vdev->device = dev;
-> +	if (ret)
-> +		return ret;
->  
-> +	vdev->device = dev;
->  	group = iommu_group_get(dev);
->  	if (!group) {
->  		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
-> @@ -602,13 +652,21 @@ void __vfio_platform_register_reset(struct vfio_platform_reset_node *node)
->  EXPORT_SYMBOL_GPL(__vfio_platform_register_reset);
->  
->  void vfio_platform_unregister_reset(const char *compat,
-> +				    const char *acpihid,
->  				    vfio_platform_reset_fn_t fn)
->  {
->  	struct vfio_platform_reset_node *iter, *temp;
->  
->  	mutex_lock(&driver_lock);
->  	list_for_each_entry_safe(iter, temp, &reset_list, link) {
-> -		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
-> +		if (acpihid && iter->acpihid &&
-> +		    !strcmp(iter->acpihid, acpihid) && (iter->reset == fn)) {
-> +			list_del(&iter->link);
-> +			break;
-> +		}
-> +
-> +		if (compat && iter->compat &&
-> +		    !strcmp(iter->compat, compat) && (iter->reset == fn)) {
->  			list_del(&iter->link);
->  			break;
->  		}
+Document the devicetree bindings for the watchdog peripheral found on
+Microchip PIC32 SoC class devices.
 
-in vfio_platform_get_reset, if the 1st vfio_platform_lookup_reset call
-does not return anything then we currently call
-request_module("vfio-reset:%s", vdev->compat);
+Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+---
+Note: Please merge this patch series through the MIPS tree.
 
-you need to handle the case where compat is not set but vdev->acpihid
-is, instead.
+Changes since v2: None
+Changes since v1:
+	- Change the example node name to be standard.
+---
+ .../bindings/watchdog/microchip,pic32-wdt.txt      |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt
 
-currently the module alias is constructed with the compat only
-MODULE_ALIAS("vfio-reset:" compat);
-
-Looks you can define several ones ( for instance in
-drivers/block/xen-blkfront.c).
-
-If I am not wrong this currently would not work with
-vfio-platform-qcomhidma compiled as a module.
-
-
-
-
-
-> diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
-> index 42816dd..32feba3 100644
-> --- a/drivers/vfio/platform/vfio_platform_private.h
-> +++ b/drivers/vfio/platform/vfio_platform_private.h
-> @@ -58,6 +58,7 @@ struct vfio_platform_device {
->  	struct mutex			igate;
->  	struct module			*parent_module;
->  	const char			*compat;
-> +	const char			*acpihid;
->  	struct module			*reset_module;
->  	struct device			*device;
->  
-> @@ -79,6 +80,7 @@ typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
->  struct vfio_platform_reset_node {
->  	struct list_head link;
->  	char *compat;
-> +	char *acpihid;
->  	struct module *owner;
->  	vfio_platform_reset_fn_t reset;
->  };
-> @@ -98,27 +100,30 @@ extern int vfio_platform_set_irqs_ioctl(struct vfio_platform_device *vdev,
->  
->  extern void __vfio_platform_register_reset(struct vfio_platform_reset_node *n);
->  extern void vfio_platform_unregister_reset(const char *compat,
-> +					   const char *acpihid,
->  					   vfio_platform_reset_fn_t fn);
-> -#define vfio_platform_register_reset(__compat, __reset)		\
-> -static struct vfio_platform_reset_node __reset ## _node = {	\
-> -	.owner = THIS_MODULE,					\
-> -	.compat = __compat,					\
-> -	.reset = __reset,					\
-> -};								\
-> +
-> +#define vfio_platform_register_reset(__compat, __acpihid, __reset)	\
-> +static struct vfio_platform_reset_node __reset ## _node = {		\
-> +	.owner = THIS_MODULE,						\
-> +	.compat = __compat,						\
-> +	.acpihid = __acpihid,						\
-> +	.reset = __reset,						\
-> +};									\
->  __vfio_platform_register_reset(&__reset ## _node)
->  
-> -#define module_vfio_reset_handler(compat, reset)		\
-> -MODULE_ALIAS("vfio-reset:" compat);				\
-> -static int __init reset ## _module_init(void)			\
-> -{								\
-> -	vfio_platform_register_reset(compat, reset);		\
-> -	return 0;						\
-> -};								\
-> -static void __exit reset ## _module_exit(void)			\
-> -{								\
-> -	vfio_platform_unregister_reset(compat, reset);		\
-> -};								\
-> -module_init(reset ## _module_init);				\
-> +#define module_vfio_reset_handler(compat, acpihid, reset)		\
-> +MODULE_ALIAS("vfio-reset:" compat);					\
-Here you need to handle alias for hid case I think
-
-Best Regards
-
-Eric
-> +static int __init reset ## _module_init(void)				\
-> +{									\
-> +	vfio_platform_register_reset(compat, acpihid, reset);		\
-> +	return 0;							\
-> +};									\
-> +static void __exit reset ## _module_exit(void)				\
-> +{									\
-> +	vfio_platform_unregister_reset(compat, acpihid, reset);		\
-> +};									\
-> +module_init(reset ## _module_init);					\
->  module_exit(reset ## _module_exit)
->  
->  #endif /* VFIO_PLATFORM_PRIVATE_H */
-> 
+diff --git a/Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt b/Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt
+new file mode 100644
+index 0000000..d140103
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/microchip,pic32-wdt.txt
+@@ -0,0 +1,18 @@
++* Microchip PIC32 Watchdog Timer
++
++When enabled, the watchdog peripheral can be used to reset the device if the
++WDT is not cleared periodically in software.
++
++Required properties:
++- compatible: must be "microchip,pic32mzda-wdt".
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- clocks: phandle of source clk. should be <&LPRC> clk.
++
++Example:
++
++	watchdog@1f800800 {
++		compatible = "microchip,pic32mzda-wdt";
++		reg = <0x1f800800 0x200>;
++		clocks = <&LPRC>;
++	};
+-- 
+1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
