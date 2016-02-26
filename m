@@ -1,138 +1,81 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 3/5] ARM: bcm2835: Move the emmc pin group to bcm283x.dtsi.
-Date: Fri, 26 Feb 2016 10:19:14 -0800
-Message-ID: <1456510756-15337-4-git-send-email-eric@anholt.net>
-References: <1456510756-15337-1-git-send-email-eric@anholt.net>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 1/4] ASoC: wm9713: add binding for WM9713 codec
+Date: Fri, 26 Feb 2016 22:04:15 +0100
+Message-ID: <87k2lruqsw.fsf@belgarion.home>
+References: <1455979079-9030-1-git-send-email-robert.jarzmik@free.fr>
+	<20160220171459.GA18327@sirena.org.uk> <871t87z1gz.fsf@belgarion.home>
+	<20160220195925.GF18327@sirena.org.uk> <87twl3xgud.fsf@belgarion.home>
+	<20160220211659.GG18327@sirena.org.uk> <878u2fxbp9.fsf@belgarion.home>
+	<20160221014920.GK18327@sirena.org.uk> <87povkuuf6.fsf@belgarion.home>
+	<20160226023021.GH18327@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456510756-15337-1-git-send-email-eric@anholt.net>
+In-Reply-To: <20160226023021.GH18327@sirena.org.uk> (Mark Brown's message of
+	"Fri, 26 Feb 2016 11:30:21 +0900")
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>
+To: Mark Brown <broonie@kernel.org>
+Cc: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-While it's not documented in the public PDF, it is internally.  This
-is a standard pin group for the 283x, not rpi-specific.
+Mark Brown <broonie@kernel.org> writes:
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-a.dts      | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-b.dts      | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi.dtsi       | 5 -----
- arch/arm/boot/dts/bcm2836-rpi-2-b.dts    | 4 ++--
- arch/arm/boot/dts/bcm283x.dtsi           | 4 ++++
- 8 files changed, 16 insertions(+), 17 deletions(-)
+> On Fri, Feb 26, 2016 at 02:33:49AM +0100, Robert Jarzmik wrote:
+>> Mark Brown <broonie@kernel.org> writes:
+>
+>> > It will not be called, the generic AC'97 code will be used.
+>
+>> Ok, if it's not called no code in sound/soc/codecs/wm9713.c will be used, right
+>> ?
+>> In that case wm9713_set_dai_clkdiv() will never be used, nor will the
+>> wm9713_audio_map or wm9713_dapm_widgets be created, which will break all
+>> userspace programs relying on these mixers and DAPM routes.
+>
+>> Or am I missing something ?
+>
+> No, you're not missing anything - that'll be what happens.  If you need
+> to preserve the userspace ABI on your board you'd need a much bigger
+> (but very welcome) refactoring of the AC'97 code to be less hacky and
+> use the device model more directly, or at least define a generic AC'97
+> binding somehow.  All the AC'97 support has never really been properly
+> moved over to the device model and unfortunately nobody's yet cared
+> about it for device tree except in the simple cases supported by the
+> generic AC'97 code.  I appreciate that this isn't very helpful, it's
+> an unfortunate consequence of DT as an ABI.
+>
+> We probably want to end up with something like what the Intel folks have
+> been doing recently for HDA to get that working within ASoC.
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-index 0a8b92e..1db6835 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -29,6 +29,6 @@
- 		     &pcm_gpio18
- 		     &pwm0_gpio40
- 		     &pwm1_gpio45
--		     &gpioout
--		     &alt3>;
-+		     &emmc_gpio48
-+		     &gpioout>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-index d093407..25d2114 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
-@@ -22,6 +22,6 @@
- 		     &pcm_gpio28
- 		     &pwm0_gpio40
- 		     &pwm1_gpio45
--		     &gpioout
--		     &alt3>;
-+		     &emmc_gpio48
-+		     &gpioout>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index c26b81d..d8057b8 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -29,6 +29,6 @@
- 		     &pcm_gpio18
- 		     &pwm0_gpio40
- 		     &pwm1_gpio45
--		     &gpioout
--		     &alt3>;
-+		     &emmc_gpio48
-+		     &gpioout>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-index a5b606e..e7dbff4 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
-@@ -22,6 +22,6 @@
- 		     &pcm_gpio28
- 		     &pwm0_gpio40
- 		     &pwm1_gpio45
--		     &gpioout
--		     &alt3>;
-+		     &emmc_gpio48
-+		     &gpioout>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-index 97e3c2f..d154049 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
-@@ -21,6 +21,6 @@
- 		     &spi0_gpio7
- 		     &pwm0_gpio40
- 		     &pwm1_gpio45
--		     &gpioout
--		     &alt3>;
-+		     &emmc_gpio48
-+		     &gpioout>;
- };
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index 141b18c..eff27b0 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -36,11 +36,6 @@
- 		brcm,pins = <6>;
- 		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
- 	};
--
--	alt3: alt3 {
--		brcm,pins = <48 49 50 51 52 53>;
--		brcm,function = <BCM2835_FSEL_ALT3>;
--	};
- };
- 
- &i2c0 {
-diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-index 52798ca..3e9226f 100644
---- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-+++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
-@@ -33,6 +33,6 @@
- 		     &pcm_gpio18
- 		     &pwm0_gpio40
- 		     &pwm1_gpio45
--		     &gpioout
--		     &alt3>;
-+		     &emmc_gpio48
-+		     &gpioout>;
- };
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index e91198e..70a6814 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -232,6 +232,10 @@
- 				brcm,pins = <32 33>;
- 				brcm,function = <BCM2835_FSEL_ALT3>;
- 			};
-+			emmc_gpio48: emmc_gpio48 {
-+				brcm,pins = <48 49 50 51 52 53>;
-+				brcm,function = <BCM2835_FSEL_ALT3>;
-+			};
- 			spi1_gpio16: spi1_gpio16 {
- 				brcm,pins = <16 17 18 19 20 21>;
- 				brcm,function = <BCM2835_FSEL_ALT4>;
+Ok, let me think about it and propose something, an approach.
+
+I must admit I like the structure I saw in drivers/amba/bus.c, ie. to have
+something like :
+ - a bus driver core (sound/ac97/bus.c ?)
+   Split between this and sound/pci/ac97_codec.c I don't know yet.
+   => an instance of this bus will be instanciated from each snd_ac97_bus() call
+      just as now
+   => bus_register(&ac97_bustype)
+   => ac97_bus_probe/remove(), match/uevent/dev_attrs
+   => ac97_driver_register(struct ac97_driver *drv)
+
+ - a ac97 driver structure (struct ac97_driver) with :
+   => u32 vendor_id (vendor_id = lambda(vendor_id1, vendor_id2))
+   => u32 vendor_id_mask (mask of bits to match)
+   ...
+
+ - each ac97 controller will call snd_ac97_bus().
+   In my case, that's sound/arm/pxa2xx-ac97.c or sound/soc/pxa2xx-ac97.c,
+   whatever.
+
+ - each ac97 codec will subscribe to the bus
+   ac97_driver_register(struct ac97_driver *drv, u32 vendor_id, u32 vendor_mask)
+   For example wm9713.c will call :
+     ac97_driver_register(drv, AC97_VENDOR(0x...., 0x....), 0xffffffff);
+
+Well, if I'm totally mistaken, tell me. If not it will take me a bit of time to
+write is down properly in a Documentation/ file.
+
+Cheers.
+
 -- 
-2.7.0
+Robert
