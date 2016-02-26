@@ -1,168 +1,64 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [RESPIN/PATCH] arm64: dts: Add tmu node for exynos7
-Date: Fri, 26 Feb 2016 09:38:43 +0900
-Message-ID: <56CF9E93.9090905@samsung.com>
-References: <1456391116-11553-1-git-send-email-alim.akhtar@samsung.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph
+ of ports
+Date: Fri, 26 Feb 2016 00:43:11 +0000
+Message-ID: <20160226004311.GM5783@n2100.arm.linux.org.uk>
+References: <cover.1455720381.git.jsarha@ti.com>
+ <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
+ <20160218143530.GB9654@rob-hp-laptop>
+ <56CF04DA.8080905@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1456391116-11553-1-git-send-email-alim.akhtar@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, l.majewski@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56CF04DA.8080905-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, moinejf-GANU6spQydw@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25.02.2016 18:05, Alim Akhtar wrote:
-> This patch adds tmu node, related temprature sensor and triping
-> point data for Atlas cpu core found on exynos7 SoC.
+On Thu, Feb 25, 2016 at 03:42:50PM +0200, Jyri Sarha wrote:
+> On 02/18/16 16:35, Rob Herring wrote:
+> >This should be implied from the port unit address. In other words,
+> >port@0 is defined to be the rgb port. Now, if this is one of several
+> >modes for the video port, then that is a different story.
+> >
 > 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
-> Change log:
-> * no changes, just sending back from my email id.
+> Do you suggest that also the audio i2s and s/p-dif port-types should be
+> coded in the port unit addresses? Something like: port@0 is always rgb,
+> port@1 is i2s, and port@2 is spdif?
 
-All my comments from previous submission are still valid...
+For the audio inputs, the port address corresponds to the input pin.
+TDA998x devices can have multiple streams routed to the pins, and can
+select between them.
 
-Best regards,
-Krzysztof
+For example, there may be four I2S data pins and one I2S clock pin.
+When using stereo, you can select which of the four I2S data pins
+carries the audio data.
 
-> 
->  .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi   |   25 +++++++++
->  .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   55 ++++++++++++++++++++
->  arch/arm64/boot/dts/exynos/exynos7.dtsi            |   20 +++++++
->  3 files changed, 100 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
->  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
-> new file mode 100644
-> index 0000000..1d6dcf2
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
-> @@ -0,0 +1,25 @@
-> +/*
-> + * Device tree sources for Exynos7 TMU sensor configuration
-> + *
-> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +#include <dt-bindings/thermal/thermal_exynos.h>
-> +
-> +#thermal-sensor-cells = <0>;
-> +samsung,tmu_gain = <9>;
-> +samsung,tmu_reference_voltage = <17>;
-> +samsung,tmu_noise_cancel_mode = <4>;
-> +samsung,tmu_efuse_value = <75>;
-> +samsung,tmu_min_efuse_value = <15>;
-> +samsung,tmu_max_efuse_value = <100>;
-> +samsung,tmu_first_point_trim = <25>;
-> +samsung,tmu_second_point_trim = <85>;
-> +samsung,tmu_default_temp_offset = <50>;
-> +samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
-> new file mode 100644
-> index 0000000..3970545
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
-> @@ -0,0 +1,55 @@
-> +/*
-> + * Device tree sources for default Exynos7 thermal zone definition
-> + *
-> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
-> + *		http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +
-> +trips {
-> +	cpu-alert-0 {
-> +		temperature = <75000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	cpu-alert-1 {
-> +		temperature = <80000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	cpu-alert-2 {
-> +		temperature = <85000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	cpu-alert-3 {
-> +		temperature = <90000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	cpu-alert-4 {
-> +		temperature = <95000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	cpu-alert-5 {
-> +		temperature = <100000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	cpu-alert-6 {
-> +		temperature = <110000>; /* millicelsius */
-> +		hysteresis = <10000>; /* millicelsius */
-> +		type = "passive";
-> +	};
-> +	/* HW Trip point */
-> +	cpu-crit-0 {
-> +		temperature = <115000>; /* millicelsius */
-> +		hysteresis = <0>; /* millicelsius */
-> +		type = "critical";
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> index c662f98..fc9d130 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> @@ -27,6 +27,7 @@
->  		pinctrl6 = &pinctrl_fsys0;
->  		pinctrl7 = &pinctrl_fsys1;
->  		pinctrl8 = &pinctrl_bus1;
-> +		tmuctrl0 = &tmuctrl_0;
->  	};
->  
->  	cpus {
-> @@ -538,6 +539,25 @@
->  			clocks = <&clock_peric0 PCLK_PWM>;
->  			clock-names = "timers";
->  		};
-> +
-> +		tmuctrl_0: tmu@10060000 {
-> +			compatible = "samsung,exynos7-tmu";
-> +			reg = <0x10060000 0x200>;
-> +			interrupts = <0 108 0>;
-> +			clocks = <&clock_peris PCLK_TMU>,
-> +				 <&clock_peris SCLK_TMU>;
-> +			clock-names = "tmu_apbif", "tmu_sclk";
-> +			#include "exynos7-tmu-sensor-conf.dtsi"
-> +		};
-> +
-> +		thermal-zones {
-> +			atlas_thermal: atlas-thermal {
-> +				polling-delay-passive = <0>; /* milliseconds */
-> +				polling-delay = <0>; /* milliseconds */
-> +				thermal-sensors = <&tmuctrl_0>;
-> +				#include "exynos7-trip-points.dtsi"
-> +			};
-> +		};
->  	};
->  };
->  
-> 
+When using SPDIF, there may be two SPDIF inputs, and you can select
+which SPDIF input is used.
+
+So, "reg" may not be an address in terms of a CPU visible address, but
+it's an address as far as selecting the appropriate input - and it
+fits in with the requirements of ePAPR, which are that if you have
+a unit-address (which is required to distinguish different port nodes)
+then you must have a matching "reg" property.
+
+I don't particularly like the video node using the RGB routing register
+value either for the reg property, but I've kept quiet because I have
+nothing to offer there: again, this comes down to ePAPR requirements
+and the need to specify multiple "port { }" nodes.  You can't have two
+"port { }" nodes without using a unit-address, and we'd need to chose
+a unit-address for it which doesn't conflict with the audio ports...
+so there's a kind of logic to using the RGB routing value, which will
+never conflict.
+
+-- 
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
