@@ -1,122 +1,168 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: Re: [PATCH RFC 2/3] DT: leds: Add binding for the ISSI IS31FL32xx
- family of LED drivers
-Date: Thu, 25 Feb 2016 19:30:23 -0500
-Message-ID: <20160225193023.6f8f1f89.drivshin.allworx@gmail.com>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
-	<1456251445-23970-3-git-send-email-drivshin.allworx@gmail.com>
-	<56CDD4A1.5030802@samsung.com>
-	<20160224143440.374651b1.drivshin.allworx@gmail.com>
-	<CAL_JsqJzcgSBW+fQ2dAV5M9O=pi_xc+KPymOhCyO4oifHo7y3Q@mail.gmail.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [RESPIN/PATCH] arm64: dts: Add tmu node for exynos7
+Date: Fri, 26 Feb 2016 09:38:43 +0900
+Message-ID: <56CF9E93.9090905@samsung.com>
+References: <1456391116-11553-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJzcgSBW+fQ2dAV5M9O=pi_xc+KPymOhCyO4oifHo7y3Q@mail.gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1456391116-11553-1-git-send-email-alim.akhtar@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, l.majewski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 24 Feb 2016 13:49:46 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
-
-> On Wed, Feb 24, 2016 at 1:34 PM, David Rivshin (Allworx)
-> <drivshin.allworx@gmail.com> wrote:
-> > On Wed, 24 Feb 2016 17:04:49 +0100
-> > Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
-> >  
-> >> Hi David,
-> >>
-> >> Thanks for the patch.
-> >>
-> >> On 02/23/2016 07:17 PM, David Rivshin (Allworx) wrote:  
-> >> > From: David Rivshin <drivshin@allworx.com>
-> >> >
-> >> > This adds a binding description for the is31fl3236/35/18/16 I2C LED
-> >> > drivers.
-> >> >
-> >> > Signed-off-by: David Rivshin <drivshin@allworx.com>
-> >> > ---
-> >> >   .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 51 ++++++++++++++++++++++
-> >> >   1 file changed, 51 insertions(+)
-> >> >   create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-> >> >
-> >> > diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-> >> > new file mode 100644
-> >> > index 0000000..0a05a1d
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-> >> > @@ -0,0 +1,51 @@
-> >> > +Binding for ISSI IS31FL32xx LED Drivers
-> >> > +
-> >> > +The IS31FL32xx family of LED drivers are I2C devices with multiple
-> >> > +constant-current channels, each with independent 256-level PWM control.
-> >> > +Each LED is represented as a sub-node of the device.
-> >> > +
-> >> > +Required properties:
-> >> > +- compatible: one of
-> >> > +   issi,is31fl3236
-> >> > +   issi,is31fl3235
-> >> > +   issi,is31fl3218
-> >> > +   issi,is31fl3216
-> >> > +- reg: I2C slave address
-> >> > +- address-cells : must be 1
-> >> > +- size-cells : must be 0
-> >> > +
-> >> > +LED sub-node properties:
-> >> > +- reg : LED channel number (1..N)
-> >> > +- max-brightness : (optional) Maximum brightness possible for the LED.  
-> >>
-> >> Please use led-max-microamp instead. You can refer to
-> >> Documentation/devicetree/bindings/leds/common.txt for detailed
-> >> description.  
-> >
-> > FYI, I think I got that property from leds-pwm, since these use PWMs
-> > internally, although I don't actually use it myself.
-> >
-> > I can see how led-max-microamp could be a useful property, however
-> > I'm uncertain about computing cdev->max_brightness from it as these
-> > devices look to control their max current via an external resistor.
-> > I suppose either the resistor value, or the resultant max-current
-> > would need to be given in the devicetree, and then that used along
-> > with led-max-microamp to compute cdev->max_brightness. Although I'd
-> > want it to be optional as I suspect most users don't need any
-> > restriction. Also, I don't think I can properly test the result,
-> > which always makes me nervous.
-> >
-> > Would it be acceptable to simply remove the max-brightness property
-> > without adding led-max-microamp? It can always be added if a user
-> > turns out to need it in the future. Or do you feel strongly that
-> > led-max-microamp should be in the binding from the start?  
+On 25.02.2016 18:05, Alim Akhtar wrote:
+> This patch adds tmu node, related temprature sensor and triping
+> point data for Atlas cpu core found on exynos7 SoC.
 > 
-> You should put in DT whatever makes sense for the controls the h/w
-> has. If you only have a PWM, then only max-brightness makes sense and
-> led-max-microamp does not.
+> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
+> ---
+> Change log:
+> * no changes, just sending back from my email id.
 
-There are multiple ways you can look at it, and I'm not sure which
-is the overriding one. The brightness of the LED is determined by the 
-current, which is in turn a combination of the following:
-- The max per-LED current is set with an external resistor.
-- Some devices have a scaling factor, which can be changed dynamically:
-  - One of the devices has either a global scaling factor in a register,
-    that can adjust max-current from 0.25x to 2x.
-  - Two of the devices have a per-LED current divisor (1, 2, 3, or 4).
-- The main control is a 0-255 "PWM duty cycle" register, which 
-  effectively scales the current.
-IOW, the final current is:
- <resistor-setting> * <scaling> * <PWM-duty-cycle>
-Currently the binding and driver do not support setting either type of 
-scaling (always unity) and only use the PWM duty cycle to dim the LED.
+All my comments from previous submission are still valid...
 
-So if the purpose is to say "never allow this LED channel to go above 
-X current", the leds-max-microamp probably makes sense.
+Best regards,
+Krzysztof
 
-If the purpose is to say "never allow the PWM duty cycle register
-for this channel to go above value X", then max-brightness perhaps
-makes sense. 
-
-If the scaling is fixed by the DT (i.e won't be changed dynamically 
-by the OS), then those two are basically equivalent in functionality. 
-But if scaling can be changed dynamically, then they have different 
-implications.
+> 
+>  .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi   |   25 +++++++++
+>  .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   55 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi            |   20 +++++++
+>  3 files changed, 100 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+> new file mode 100644
+> index 0000000..1d6dcf2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+> @@ -0,0 +1,25 @@
+> +/*
+> + * Device tree sources for Exynos7 TMU sensor configuration
+> + *
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <dt-bindings/thermal/thermal_exynos.h>
+> +
+> +#thermal-sensor-cells = <0>;
+> +samsung,tmu_gain = <9>;
+> +samsung,tmu_reference_voltage = <17>;
+> +samsung,tmu_noise_cancel_mode = <4>;
+> +samsung,tmu_efuse_value = <75>;
+> +samsung,tmu_min_efuse_value = <15>;
+> +samsung,tmu_max_efuse_value = <100>;
+> +samsung,tmu_first_point_trim = <25>;
+> +samsung,tmu_second_point_trim = <85>;
+> +samsung,tmu_default_temp_offset = <50>;
+> +samsung,tmu_cal_type = <TYPE_ONE_POINT_TRIMMING>;
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+> new file mode 100644
+> index 0000000..3970545
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+> @@ -0,0 +1,55 @@
+> +/*
+> + * Device tree sources for default Exynos7 thermal zone definition
+> + *
+> + * Copyright (c) 2016 Samsung Electronics Co., Ltd.
+> + *		http://www.samsung.com
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +trips {
+> +	cpu-alert-0 {
+> +		temperature = <75000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-1 {
+> +		temperature = <80000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-2 {
+> +		temperature = <85000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-3 {
+> +		temperature = <90000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-4 {
+> +		temperature = <95000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-5 {
+> +		temperature = <100000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	cpu-alert-6 {
+> +		temperature = <110000>; /* millicelsius */
+> +		hysteresis = <10000>; /* millicelsius */
+> +		type = "passive";
+> +	};
+> +	/* HW Trip point */
+> +	cpu-crit-0 {
+> +		temperature = <115000>; /* millicelsius */
+> +		hysteresis = <0>; /* millicelsius */
+> +		type = "critical";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index c662f98..fc9d130 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -27,6 +27,7 @@
+>  		pinctrl6 = &pinctrl_fsys0;
+>  		pinctrl7 = &pinctrl_fsys1;
+>  		pinctrl8 = &pinctrl_bus1;
+> +		tmuctrl0 = &tmuctrl_0;
+>  	};
+>  
+>  	cpus {
+> @@ -538,6 +539,25 @@
+>  			clocks = <&clock_peric0 PCLK_PWM>;
+>  			clock-names = "timers";
+>  		};
+> +
+> +		tmuctrl_0: tmu@10060000 {
+> +			compatible = "samsung,exynos7-tmu";
+> +			reg = <0x10060000 0x200>;
+> +			interrupts = <0 108 0>;
+> +			clocks = <&clock_peris PCLK_TMU>,
+> +				 <&clock_peris SCLK_TMU>;
+> +			clock-names = "tmu_apbif", "tmu_sclk";
+> +			#include "exynos7-tmu-sensor-conf.dtsi"
+> +		};
+> +
+> +		thermal-zones {
+> +			atlas_thermal: atlas-thermal {
+> +				polling-delay-passive = <0>; /* milliseconds */
+> +				polling-delay = <0>; /* milliseconds */
+> +				thermal-sensors = <&tmuctrl_0>;
+> +				#include "exynos7-trip-points.dtsi"
+> +			};
+> +		};
+>  	};
+>  };
+>  
+> 
