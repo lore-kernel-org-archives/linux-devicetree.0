@@ -1,109 +1,59 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/8] arm64: dts: qcom: fix usb digital voltage levels
-Date: Fri, 26 Feb 2016 17:50:49 -0800
-Message-ID: <20160227015049.GE28849@codeaurora.org>
-References: <1456246153-18087-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1456246236-18341-1-git-send-email-srinivas.kandagatla@linaro.org>
- <56CE3780.5060408@codeaurora.org>
- <56CEE3D4.3030407@linaro.org>
- <CAPBZ5QfD4q4hDg2Vfj8E_2Hjoa80feFN4cM+LkhdGgHLDkKx_g@mail.gmail.com>
- <CAPBZ5QeJGV5iqx5wwGP3mwr292-rkqmORnTe8qtHSX2DzVc97Q@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH] ASoC: rt5640: add master clock handling for
+ rt5640
+Date: Sat, 27 Feb 2016 10:51:43 +0900
+Message-ID: <20160227015143.GV18327@sirena.org.uk>
+References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
+ <56CC719C.1090901@linux.intel.com>
+ <2199435.lA9iTvxnKV@phil>
+ <20160224033259.GL18327@sirena.org.uk>
+ <56CDD5DD.6040006@linux.intel.com>
+ <20160226010818.GZ18327@sirena.org.uk>
+ <56D07293.902@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fyFqtIrDrUc8SGBF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPBZ5QeJGV5iqx5wwGP3mwr292-rkqmORnTe8qtHSX2DzVc97Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <56D07293.902@linux.intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Oder Chiou <oder_chiou@realtek.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/25, Andy Gross wrote:
-> > On 25 February 2016 at 05:21, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >>
-> >> Andy/Bjorn, any comments on plans on corner regulators?
-> >>
-> >> Please note, that this is a patch to fix what is already in the mainline.
-> >> Without this patch the regulator would be configured with 1uV or 5uV or 7uV
-> >> which would obviously fail.
-> >>
-> >> THB, it does not make sense to drop feature which is functional, and I
-> >> also agree that we should cleanup some of this mess at some point in time
-> >> once we all the bits and pieces ready.
-> >>
-> >> I was surprised to see these usb bindings(qcom,vdd-levels) existed even
-> >> before we had concept of corner regulators in mainline kernel. Which also
-> >> suggests that this driver needs a proper relook once again.
->
-> I think the vdd-levels were an oversight.  The voltages definitely
-> need to be correct.  As for the corner regulators, I believe the CPR
-> driver was supposed to address this.  The USB requests a specific
-> voltage and frequency and based on this the CPR would set the corner
-> for the regulator.
-> 
-> Stephen, correct me if i am wrong.
 
-There's CPR for the CPU voltage and there's CPR for the digital
-voltage. The RPM controls the latter, and so all we have on the
-Linux side is an API to request corners, not voltages, for
-digital logic. Almost everything in the SoC is using the digital
-voltage, so having USB be the only consumer of this voltage and
-then be the only driver telling the RPM what corner or voltage we
-want here is potentially very dangerous.
+--fyFqtIrDrUc8SGBF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Consider the case where USB goes to runtime suspend and USB
-driver says it only needs "low" voltage. This might cause RPM to
-go and lower the voltage because no other master in the system is
-asking for anything else besides "low". But we may have other
-hardware blocks using the digital logic supply in the system,
-e.g. GPU is running at max speed, and those blocks need "high"
-voltage. We just browned out the GPU.
+On Fri, Feb 26, 2016 at 09:43:15AM -0600, Pierre-Louis Bossart wrote:
 
-So maybe we should just remove this code from the USB driver for
-now? By default the voltage is nominal, and when the bus clocks
-are maxed out the voltage goes to the highest level. So as long
-as RPM bus clocks are maxed this code is not doing anything.
+> Yes there are documentation and helpers I looked into, but to the best of my
+> limited knowledge not for the gate + dual-rate case. Then you jump to
+> complicated configurations combining multiple base clocks that don't really
+> make sense here. After one frustrating day of trying to wrap 100 lines of
+> code into the clock framework I gave up and kept the simple custom driver.
+> There is a single client for this clock so I don't quite see the
+> benefits/ROI of mapping a simple piece of hardware with a complex model.
 
-My plan for handling corners is to hide it behind the OPP
-framework and/or generic power domains. The digital logic supply
-is really a regulator that supplies a large power domain called
-CX. All the digital logic in the SoC lives within this power
-domain. As an aside, it's quite typical that a hardware block
-sits in a few domains: digital, analog, memories, etc. so this
-may require us to expand the ability for devices to be in
-multiple PM domains at one time. But regardless, the frequency
-that a device in the digital logic domain is running at is used
-to pick a voltage that is "maxed" across all devices and factors
-into the voltage requirement of the domain. Another way to put it
-is that each device casts a "vote" for the CX voltage based on
-their frequency and the largest uV wins and is set.
+If the helpers aren't fitting your needs then surely just writing a
+simple driver with set rate and enable callbacks isn't going to be too
+hard?  The wm831x driver was pretty trivial to write and seems to be on
+a similar order of complexity to this.
 
-This is further complicated by CPR, which takes away the uV units
-from this calculation and transforms that into a "corner". Each
-hardware block now knows what voltage "corner" it needs for CX
-when their clock is at a particular frequency. We'll probably
-need to add some sort of "corner" property to the OPP binding to
-express this. Hopefully it can be a generic power domain level
-thing (keep reading!).
+--fyFqtIrDrUc8SGBF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-So I'm thinking each device gets an OPP table of frequency to
-voltage/corner pairs. Devices would change their OPP through OPP
-framework and this would adjust the clk and voltage/corner
-appropriately. To make things generic between voltages and
-corners, we could hide that part behind the genpd framework by
-having OPP pick a "power level" that the power domain should be
-at. On SoCs where the power domain is supplied by a regulator the
-level would be translated into a uV (probably need some sort of
-level to uV table in DT or just put that in the code). On SoCs
-where the power domain is supplied by a regulator with corners,
-the level would be used as is and sent to the RPM. OPP framework
-wouldn't care, as long as the genpd driver handles the voltage
-vs. corner stuff.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQEcBAEBCAAGBQJW0QEsAAoJECTWi3JdVIfQRQUH+wWufcVgRXjkOgaFnVY07VAC
+Cy1icjgUb+Soj9uNg8ndpozN80mkqnPAsbH5IjjEU4gVu5kxyG0wwd9ei3NjP/YE
+GsoFtEITrZc04Rg3GSJzpMCtV4v4unEt5KCyb6kH0Qoxlk+OamyUWNYnguyTv0fT
+x6VjRZydGSE8blzY8BjODnqpC78254Yad8aPLJiw2CvafTU5tzvhDNxYS0TPdijX
+X8wm68UG/q7QjI/uhR5UYH7O2PZyp2cY/RPt2A7ZPzy///1vSo5JRfj3JP/rHFSw
+LXSevfaUAbne5PFXJ+v3t8WokmNTNf4+DfUkoSnPGUEO+8aqMQFjbrIpVKBVt6s=
+=HNHK
+-----END PGP SIGNATURE-----
+
+--fyFqtIrDrUc8SGBF--
