@@ -1,143 +1,122 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 2/2] ohci-platform: Add support for controllers with multiple reset lines
-Date: Sat, 27 Feb 2016 17:58:59 +0100
-Message-ID: <1456592339-31767-3-git-send-email-hdegoede@redhat.com>
-References: <1456592339-31767-1-git-send-email-hdegoede@redhat.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v6] arm: pxa: support ICP DAS LP-8x4x FPGA irq
+Date: Sat, 27 Feb 2016 17:41:00 +0000
+Message-ID: <20160227174100.GG7219@io.lakedaemon.net>
+References: <1450207582-17957-1-git-send-email-ynvich@gmail.com>
+ <1456588562-24715-1-git-send-email-ynvich@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456592339-31767-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456588562-24715-1-git-send-email-ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
-reset lines, the controller will not initialize while the reset for
-its companion is still asserted, which means we need to de-assert
-2 resets for the controller to work.
+Hi Sergei,
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
----
-Changes in v2:
--New patch in v2 of this patch-set, to complement the identical patch for
- the ehci-platform code
-Changes in v3:
--Adjust for changes to shared-reset reset-controller functions
-Changes in v4:
--Fix Ugly continuation line
----
- Documentation/devicetree/bindings/usb/usb-ohci.txt |  2 +-
- drivers/usb/host/ohci-platform.c                   | 43 ++++++++++++----------
- 2 files changed, 24 insertions(+), 21 deletions(-)
+Marc, Rob, please see below.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-index 19233b7..9df4569 100644
---- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -14,7 +14,7 @@ Optional properties:
- - clocks : a list of phandle + clock specifier pairs
- - phys : phandle + phy specifier pair
- - phy-names : "usb"
--- resets : phandle + reset specifier pair
-+- resets : a list of phandle + reset specifier pairs
- 
- Example:
- 
-diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-index c2669f18..85f5c9a 100644
---- a/drivers/usb/host/ohci-platform.c
-+++ b/drivers/usb/host/ohci-platform.c
-@@ -33,11 +33,12 @@
- 
- #define DRIVER_DESC "OHCI generic platform driver"
- #define OHCI_MAX_CLKS 3
-+#define OHCI_MAX_RESETS 2
- #define hcd_to_ohci_priv(h) ((struct ohci_platform_priv *)hcd_to_ohci(h)->priv)
- 
- struct ohci_platform_priv {
- 	struct clk *clks[OHCI_MAX_CLKS];
--	struct reset_control *rst;
-+	struct reset_control *resets[OHCI_MAX_RESETS];
- 	struct phy **phys;
- 	int num_phys;
- };
-@@ -117,7 +118,7 @@ static int ohci_platform_probe(struct platform_device *dev)
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
- 	struct ohci_platform_priv *priv;
- 	struct ohci_hcd *ohci;
--	int err, irq, phy_num, clk = 0;
-+	int err, irq, phy_num, clk = 0, rst = 0;
- 
- 	if (usb_disabled())
- 		return -ENODEV;
-@@ -195,19 +196,21 @@ static int ohci_platform_probe(struct platform_device *dev)
- 				break;
- 			}
- 		}
--
--	}
--
--	priv->rst = devm_reset_control_get_optional(&dev->dev, NULL);
--	if (IS_ERR(priv->rst)) {
--		err = PTR_ERR(priv->rst);
--		if (err == -EPROBE_DEFER)
--			goto err_put_clks;
--		priv->rst = NULL;
--	} else {
--		err = reset_control_deassert(priv->rst);
--		if (err)
--			goto err_put_clks;
-+		for (rst = 0; rst < OHCI_MAX_RESETS; rst++) {
-+			priv->resets[rst] =
-+				devm_reset_control_get_shared_by_index(
-+						&dev->dev, rst);
-+			if (IS_ERR(priv->resets[rst])) {
-+				err = PTR_ERR(priv->resets[rst]);
-+				if (err == -EPROBE_DEFER)
-+					goto err_reset;
-+				priv->resets[rst] = NULL;
-+				break;
-+			}
-+			err = reset_control_deassert(priv->resets[rst]);
-+			if (err)
-+				goto err_reset;
-+		}
- 	}
- 
- 	if (pdata->big_endian_desc)
-@@ -265,8 +268,8 @@ err_power:
- 	if (pdata->power_off)
- 		pdata->power_off(dev);
- err_reset:
--	if (priv->rst)
--		reset_control_assert(priv->rst);
-+	while (--rst >= 0)
-+		reset_control_assert(priv->resets[rst]);
- err_put_clks:
- 	while (--clk >= 0)
- 		clk_put(priv->clks[clk]);
-@@ -284,15 +287,15 @@ static int ohci_platform_remove(struct platform_device *dev)
- 	struct usb_hcd *hcd = platform_get_drvdata(dev);
- 	struct usb_ohci_pdata *pdata = dev_get_platdata(&dev->dev);
- 	struct ohci_platform_priv *priv = hcd_to_ohci_priv(hcd);
--	int clk;
-+	int clk, rst;
- 
- 	usb_remove_hcd(hcd);
- 
- 	if (pdata->power_off)
- 		pdata->power_off(dev);
- 
--	if (priv->rst)
--		reset_control_assert(priv->rst);
-+	for (rst = 0; rst < OHCI_MAX_RESETS && priv->resets[rst]; rst++)
-+		reset_control_assert(priv->resets[rst]);
- 
- 	for (clk = 0; clk < OHCI_MAX_CLKS && priv->clks[clk]; clk++)
- 		clk_put(priv->clks[clk]);
--- 
-2.7.1
+On Sat, Feb 27, 2016 at 06:56:01PM +0300, Sergei Ianovich wrote:
+> 
 
+nit: Subject line of the patch should match 'irqchip/lp8841: [A-Z].*'
+
+> ICP DAS LP-8x4x contains FPGA chip. The chip functions as an interrupt
+> source providing 16 additional interrupts among other things. The
+> interrupt lines are muxed to a GPIO pin of a 2nd level PXA-GPIO
+> interrupt controller. GPIO pins of the 2nd level controller are in turn
+> muxed to a CPU interrupt line.
+> 
+> Until pxa is completely converted to device tree, it is impossible
+> to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
+> Drivers for the on-CPU IRQs and GPIO-IRQs are loaded using
+> postcore_initcall(). We need to have all irq domain drivers loaded prior
+> to DT parsing in order to allow normal initialization of IRQ resources
+> with DT.
+> 
+> Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+nit:  From here, down should be below the '---' so that it isn't a part
+of the commit log.  We add a link to the commit log that points to the
+patch submission in the mailinglist archives.  So curious folks have
+quick access to this info.
+
+> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> 
+>    v5..v6
+>    fixes according to Rob Herring review comments:
+>    * drop wildcards in binding and file names
+>    * rename alias 'fpga'->'fpga_irq'
+> 
+>    fixes according to Marc Zyngier review comments:
+>    * use writeb/readb not iowrite8/ioread8
+>    * redefine 2nd mask using inversion on 1st
+>    * add comments
+> 
+>    v4..v5
+>    * constify struct of_device_id
+>    * drop irq number from handler signature
+> 
+>    v3.2..v4
+>    * move DTS binding to a different patch (8/21)
+> 
+>    v3.1..v3.2
+>    fixes to apply Linus Walleij's "Reviewed-by":
+>    * add kerneldoc comment for state container struct
+>    * rename irq -> hwirq for clarity
+>    * drop overzealous error checks from the hotpaths
+> 
+>    v3..v3.1
+>    fixes according to Linus Walleij review comments:
+>    * update commit message
+>    * use state container instead of global variables
+>    * get hardware irq nums from irq_data, don't calculate them
+>    * use BIT() macro
+>    * add defines for system irq register masks
+>    * replace cycle control variable with break
+>    * use better names for resource variables
+>    * add a linear domain instead of a legacy one
+>    * use irq_create_mapping() instead of irq_alloc_desc()
+> 
+>    v2..v3
+>    * no changes (except number 09/16 -> 11/21)
+> 
+>    v0..v2
+>    * extract irqchip and move to drivers/irqchip/
+>    * use device tree
+>    * use devm helpers where possible
+
+
+> ---
+
+iow, it should be moved here.
+
+>  .../interrupt-controller/icpdas-lp8x4x-irq.txt     |  49 ++++
+>  drivers/irqchip/Kconfig                            |   5 +
+>  drivers/irqchip/Makefile                           |   1 +
+>  drivers/irqchip/irq-lp8841.c                       | 246 +++++++++++++++++++++
+>  4 files changed, 301 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/icpdas-lp8x4x-irq.txt
+>  create mode 100644 drivers/irqchip/irq-lp8841.c
+
+I don't seem to have the previous versions, and their threads, in my
+email archive.  From the changelog, it looks like Marc and Rob have been
+reviewing this most recently.
+
+If you guys could give me an Acked-by/Reviewed-by, I'll go ahead and
+queue this up for v4.6.
+
+I'll fix up the Subject line and the commit log when I bring it in.
+I'll be adding the tags anyway.  No need to resubmit.
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
