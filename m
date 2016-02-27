@@ -1,12 +1,12 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 1/5] clk: sunxi: mod1 clock should modify it's parent
-Date: Sat, 27 Feb 2016 17:18:25 +0100
-Message-ID: <1456589909-2428-2-git-send-email-codekipper@gmail.com>
+Subject: [PATCH 5/5] ARM: dts: sun7i: Add SPDIF to Itead Ibox
+Date: Sat, 27 Feb 2016 17:18:29 +0100
+Message-ID: <1456589909-2428-6-git-send-email-codekipper@gmail.com>
 References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBWMYY63AKGQEUQCEPSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBX4YY63AKGQEWHXW3AY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1456589909-2428-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,27 +19,56 @@ To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-add CLK_SET_RATE_PARENT to modify the rate on clk upstream
+Enable the S/PDIF transmitter that is present on the Itead Ibox.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clk/sunxi/clk-a10-mod1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/clk/sunxi/clk-a10-mod1.c b/drivers/clk/sunxi/clk-a10-mod1.c
-index e9d870d..e2819fa 100644
---- a/drivers/clk/sunxi/clk-a10-mod1.c
-+++ b/drivers/clk/sunxi/clk-a10-mod1.c
-@@ -62,7 +62,7 @@ static void __init sun4i_mod1_clk_setup(struct device_node *node)
- 	clk = clk_register_composite(NULL, clk_name, parents, i,
- 				     &mux->hw, &clk_mux_ops,
- 				     NULL, NULL,
--				     &gate->hw, &clk_gate_ops, 0);
-+				     &gate->hw, &clk_gate_ops, CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		goto err_free_gate;
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+index a512581..df76b74 100644
+--- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
++++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+@@ -65,6 +65,23 @@
+ 			default-state = "on";
+ 		};
+ 	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "On-board SPDIF";
++		simple-audio-card,cpu {
++			sound-dai = <&spdif>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&spdif_out>;
++		};
++	};
++
++	spdif_out: spdif-out {
++		#sound-dai-cells = <0>;
++		compatible = "linux,spdif-dit";
++	};
+ };
  
+ &ahci {
+@@ -131,6 +148,13 @@
+ 	status = "okay";
+ };
+ 
++
++&spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spdif_tx_pins_a>;
++	status = "okay";
++};
++
+ &usbphy {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb0_id_detect_pin>;
 -- 
 2.7.1
