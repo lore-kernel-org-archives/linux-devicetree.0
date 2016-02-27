@@ -1,13 +1,11 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 5/5] ARM: dts: sun7i: Add SPDIF to Itead Ibox
-Date: Sat, 27 Feb 2016 17:18:29 +0100
-Message-ID: <1456589909-2428-6-git-send-email-codekipper@gmail.com>
-References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
+Subject: [PATCH 0/5] ARM: sunxi: Add SPDIF playback support
+Date: Sat, 27 Feb 2016 17:18:24 +0100
+Message-ID: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBX4YY63AKGQEWHXW3AY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1456589909-2428-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBWEYY63AKGQEUYU236Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,54 +19,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Enable the S/PDIF transmitter that is present on the Itead Ibox.
+Hi All,
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+now that the sun4i-spdif driver has made it into linux-next then this patch
+series completes what is needed to have SPDIF working on both A10 and A20
+devices.
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-index a512581..df76b74 100644
---- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
-@@ -65,6 +65,23 @@
- 			default-state = "on";
- 		};
- 	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board SPDIF";
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_out>;
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+	};
- };
- 
- &ahci {
-@@ -131,6 +148,13 @@
- 	status = "okay";
- };
- 
-+
-+&spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spdif_tx_pins_a>;
-+	status = "okay";
-+};
-+
- &usbphy {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&usb0_id_detect_pin>;
+Enjoy,
+CK
+
+Andrea Venturi (1):
+  clk: sunxi: mod1 clock should modify it's parent
+
+Marcus Cooper (4):
+  ARM: dts :sunxi: Add SPDIF pins to A10 and A20
+  ARM: dts: sunxi: Add the SPDIF to the A10 and A20
+  ARM: dts: sun4i: Add SPDIF to the Mele A1000
+  ARM: dts: sun7i: Add SPDIF to Itead Ibox
+
+ arch/arm/boot/dts/sun4i-a10-a1000.dts      | 23 ++++++++++++++++
+ arch/arm/boot/dts/sun4i-a10.dtsi           | 44 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 ++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi           | 44 ++++++++++++++++++++++++++++++
+ drivers/clk/sunxi/clk-a10-mod1.c           |  2 +-
+ 5 files changed, 136 insertions(+), 1 deletion(-)
+
 -- 
 2.7.1
