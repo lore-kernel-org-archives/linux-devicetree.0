@@ -1,12 +1,13 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH 4/5] ARM: dts: sun4i: Add SPDIF to the Mele A1000
-Date: Sat, 27 Feb 2016 17:18:28 +0100
-Message-ID: <1456589909-2428-5-git-send-email-codekipper@gmail.com>
+Subject: [PATCH 3/5] ARM: dts: sunxi: Add the SPDIF to the A10
+ and A20
+Date: Sat, 27 Feb 2016 17:18:27 +0100
+Message-ID: <1456589909-2428-4-git-send-email-codekipper@gmail.com>
 References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBXUYY63AKGQEYH4EUBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBXEYY63AKGQEUDPOTBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1456589909-2428-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,53 +22,96 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Enable the S/PDIF transmitter that is present on the A1000.
+Add the SPDIF transceiver controller and clock to the A10 and
+A20 dtsi.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10-a1000.dts | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 23 +++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 23 +++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-index 97570cb..aaf5605 100644
---- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-@@ -87,6 +87,23 @@
- 		enable-active-high;
- 		gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;
- 	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board SPDIF";
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 0483640..83d46b2 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -477,6 +477,17 @@
+ 			clock-output-names = "ir1";
+ 		};
+ 
++		spdif_clk: clk@01c200c0 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod1-clk";
++			reg = <0x01c200c0 0x4>;
++			clocks = <&pll2 SUN4I_A10_PLL2_8X>,
++				 <&pll2 SUN4I_A10_PLL2_4X>,
++				 <&pll2 SUN4I_A10_PLL2_2X>,
++				 <&pll2 SUN4I_A10_PLL2_1X>;
++			clock-output-names = "spdif";
 +		};
 +
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_out>;
+ 		usb_clk: clk@01c200cc {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+@@ -1055,6 +1066,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		spdif: spdif@01c21000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun4i-a10-spdif";
++			reg = <0x01c21000 0x40>;
++			interrupts = <13>;
++			clocks = <&apb0_gates 1>, <&spdif_clk>;
++			clock-names = "apb", "spdif";
++			dmas = <&dma 0 2>, <&dma 0 2>;
++			dma-names = "rx", "tx";
++			status = "disabled";
 +		};
-+	};
 +
-+	spdif_out: spdif-out {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+	};
- };
+ 		ir0: ir@01c21800 {
+ 			compatible = "allwinner,sun4i-a10-ir";
+ 			clocks = <&apb0_gates 6>, <&ir0_clk>;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 7264d5e..4631660 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -476,6 +476,17 @@
+ 			clock-output-names = "ir1";
+ 		};
  
- &ahci {
-@@ -188,6 +205,12 @@
- 	status = "okay";
- };
- 
-+&spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spdif_tx_pins_a>;
-+	status = "okay";
-+};
++		spdif_clk: clk@01c200c0 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod1-clk";
++			reg = <0x01c200c0 0x4>;
++			clocks = <&pll2 SUN4I_A10_PLL2_8X>,
++				 <&pll2 SUN4I_A10_PLL2_4X>,
++				 <&pll2 SUN4I_A10_PLL2_2X>,
++				 <&pll2 SUN4I_A10_PLL2_1X>;
++			clock-output-names = "spdif";
++		};
 +
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
+ 		keypad_clk: clk@01c200c4 {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun4i-a10-mod0-clk";
+@@ -1247,6 +1258,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		spdif: spdif@01c21000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun4i-a10-spdif";
++			reg = <0x01c21000 0x40>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&apb0_gates 1>, <&spdif_clk>;
++			clock-names = "apb", "spdif";
++			dmas = <&dma 0 2>, <&dma 0 2>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		ir0: ir@01c21800 {
+ 			compatible = "allwinner,sun4i-a10-ir";
+ 			clocks = <&apb0_gates 6>, <&ir0_clk>;
 -- 
 2.7.1
