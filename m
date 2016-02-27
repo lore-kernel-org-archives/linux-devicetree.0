@@ -1,97 +1,59 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: arm/marvell: add DT bindings for
- AP806 DFX Server
-Date: Fri, 26 Feb 2016 15:55:49 -0800
-Message-ID: <20160226235549.GB28849@codeaurora.org>
-References: <1456326866-30854-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1456326866-30854-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20160225233710.GJ28849@codeaurora.org>
- <20160226093227.5d4dc1a7@free-electrons.com>
+From: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on
+ device tree
+Date: Fri, 26 Feb 2016 18:04:17 -0600
+Message-ID: <CADRPPNQPOUE-2_UnHbfMvGXCuuKYkX4a2Pp3Sb9Uc3vgMr-HuQ@mail.gmail.com>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com>
+	<2396230.MApG9VTrxr@wuerfel>
+	<CADRPPNTeBXJBybGwm4jkS64nSyWg+oaod3KJbE_SqfdSuUCA_Q@mail.gmail.com>
+	<3593471.QAyZdAuTcW@wuerfel>
+	<CADRPPNSASmfxS=BWKvOxGKyCiqno9YvOuAfBaHwKL-Y=jQ2Dzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160226093227.5d4dc1a7@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CADRPPNSASmfxS=BWKvOxGKyCiqno9YvOuAfBaHwKL-Y=jQ2Dzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Jia Hongtao <hongtao.jia-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26, Thomas Petazzoni wrote:
-> I would entirely agree with you if this DFX Server was some sort of
-> "system control" IP block that provided clocks, resets, and all sort of
-> other features.
-> 
-> But this DFX server thing is just a bunch of registers with absolutely
-> no relation to clocks. Due to this, it would be completely awkward to
-> have clock references like:
-> 
-> 	serial {
-> 		clocks = <&dfxserver 42>;
-> 	};
-> 
-> One will wonder "why the heck this UART controller is using a clock
-> from this really odd dfxserver thing" ? Currently we have:
-> 
-> 	serial {
-> 		clocks = <&coreclk 4>;
-> 	};
-> 
-> which makes a *lot* more sense.
+On Fri, Feb 26, 2016 at 5:31 PM, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> On Fri, Feb 26, 2016 at 5:16 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Friday 26 February 2016 17:07:09 Li Yang wrote:
+>>>
+>>> I don't have a perfect solution either.  But I think this is still
+>>> better than making cpufreq not usable.  The cpufreq driver will print
+>>> out an error message if thermal is not reachable.  Maybe this can
+>>> relief the confusion a little bit?
+>>
+>> With my patch, the configuration will just force the cpufreq
+>> driver to be a loadable module as well if thermal is a module,
+>> so the dependency can be resolved by loading the thermal module first.
+>
+> It would be perfect if this it true.  But I tried with the following
+> change, it just makes QORIQ_CPUFREQ non-selectable if THERMAL=m.
+>
+> diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> index dcb972a38fbc..ca05037dd565 100644
+> --- a/drivers/cpufreq/Kconfig
+> +++ b/drivers/cpufreq/Kconfig
+> @@ -297,6 +297,7 @@ endif
+>  config QORIQ_CPUFREQ
+>         tristate "CPU frequency scaling driver for Freescale QorIQ SoCs"
+>         depends on OF && COMMON_CLK && (PPC_E500MC || ARM)
+> +       depends on !CPU_THERMAL || THERMAL=y
+>         select CLK_QORIQ
+>         help
+>           This adds the CPUFreq driver support for Freescale QorIQ SoCs
 
-Sorry I don't see the difference and I don't agree with this
-argument. dfxserver is just a phandle and possibly a poorly named
-one at that. So is coreclk. The second example doesn't make a
-*lot* more sense or really any more sense than the first example.
-Maybe some #define should be used to make things readable:
-&dfxserver CORE_CLK_X or something. Why someone would care what
-the name of the phandle is for where the clk is coming from makes
-no sense to me.
 
-The miscellaneous register dumping ground, i.e. dfxserver, is a
-total mess in hardware, agreed, but it doesn't mean we need to
-pick it apart and describe the bits and pieces of it so that our
-DT can be read as &coreclk 4 instead of &dfxserver 42.
+I find we can achieve your desired result with the following change instead:
 
-Somebody delivered this dfxserver hardware block into the SoC.
-They decided to put random clk control in there. In terms of
-hardware blocks, I would guess that dfxserver has a couple clk
-wires coming out and some SoC integration engineer had to wire
-those up to the places like the uart that actually use them.
-Embrace these hardware design decisions. Represent the hardware
-in DT as it is represented in hardware by making one node for the
-dfxserver because dfxserver is a hardware block.
++       depends on (THERMAL=m && m) || THERMAL=y || THERMAL=n
 
-> 
-> Also, your idea of just hiding everything behind a MFD bothers me quite
-> a bit. If I push this idea further, then why shouldn't I replace my
-> entire DT with a single node, that covers the entire register space of
-> my SoC, and then handle *everything* as a huge MFD. In a way, it would
-> be quite useful for me, as it would resolve the on-going dispute over
-> DT binding stability with Rob and Mark.
-
-That's a straw man fallacy. Nobody is asking for this. DT is
-about describing relations between hardware blocks and the
-resources they use. It is *not* about describing register level
-details of hardware blocks and providing some data heavy format
-so that drivers are nothing besides DT data driven husks of code.
-Nor is it about grouping clk subtypes into different DT subnodes
-to make writing drivers easier. That's what gets us into the mess
-of DT backward compatibility when the data that should have been
-in the driver has been put into DT.
-
-> 
-> For sure, I wouldn't have any DT backward compatibility issue, because
-> everything is hidden in my big MFD. But in terms of the DT as a
-> representation of the different HW blocks and the relations between
-> then, such a choice would be quite a failure.
-> 
-
-I don't see any failure. The dfxserver is a hardware block and
-that happens to be a clk provider, plain and simple. Consumers of
-those clks are related to the dfxserver and we've properly
-expressed the relations between them.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards,
+Leo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
