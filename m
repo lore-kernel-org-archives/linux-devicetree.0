@@ -1,368 +1,109 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] watchdog: pic32-wdt: Add PIC32 watchdog driver
-Date: Fri, 26 Feb 2016 17:44:24 -0800
-Message-ID: <56D0FF78.7030208@roeck-us.net>
-References: <1456507177-5502-2-git-send-email-joshua.henderson@microchip.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v3 6/8] arm64: dts: qcom: fix usb digital voltage levels
+Date: Fri, 26 Feb 2016 17:50:49 -0800
+Message-ID: <20160227015049.GE28849@codeaurora.org>
+References: <1456246153-18087-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1456246236-18341-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <56CE3780.5060408@codeaurora.org>
+ <56CEE3D4.3030407@linaro.org>
+ <CAPBZ5QfD4q4hDg2Vfj8E_2Hjoa80feFN4cM+LkhdGgHLDkKx_g@mail.gmail.com>
+ <CAPBZ5QeJGV5iqx5wwGP3mwr292-rkqmORnTe8qtHSX2DzVc97Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456507177-5502-2-git-send-email-joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPBZ5QeJGV5iqx5wwGP3mwr292-rkqmORnTe8qtHSX2DzVc97Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2016 09:19 AM, Joshua Henderson wrote:
-> Add support for the watchdog peripheral found on PIC32 class
-> devices.
+On 02/25, Andy Gross wrote:
+> > On 25 February 2016 at 05:21, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >>
+> >> Andy/Bjorn, any comments on plans on corner regulators?
+> >>
+> >> Please note, that this is a patch to fix what is already in the mainline.
+> >> Without this patch the regulator would be configured with 1uV or 5uV or 7uV
+> >> which would obviously fail.
+> >>
+> >> THB, it does not make sense to drop feature which is functional, and I
+> >> also agree that we should cleanup some of this mess at some point in time
+> >> once we all the bits and pieces ready.
+> >>
+> >> I was surprised to see these usb bindings(qcom,vdd-levels) existed even
+> >> before we had concept of corner regulators in mainline kernel. Which also
+> >> suggests that this driver needs a proper relook once again.
 >
-> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+> I think the vdd-levels were an oversight.  The voltages definitely
+> need to be correct.  As for the corner regulators, I believe the CPR
+> driver was supposed to address this.  The USB requests a specific
+> voltage and frequency and based on this the CPR would set the corner
+> for the regulator.
+> 
+> Stephen, correct me if i am wrong.
 
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+There's CPR for the CPU voltage and there's CPR for the digital
+voltage. The RPM controls the latter, and so all we have on the
+Linux side is an API to request corners, not voltages, for
+digital logic. Almost everything in the SoC is using the digital
+voltage, so having USB be the only consumer of this voltage and
+then be the only driver telling the RPM what corner or voltage we
+want here is potentially very dangerous.
 
-> ---
-> Note: Please merge this patch series through the MIPS tree.
->
-> Changes since v2:
-> 	- Remove pr_fmt and replace pr_debug with dev_dbg
-> 	- Check whether rate is zero later when looking for div/zero
-> 	- Be consistent and return u32 on pic32_wdt_get_timeout_secs()
-> 	- Use -ENODEV instead of -EOPNOTSUPP in probe failure
-> Changes since v1:
-> 	- Shorten commit description
-> 	- Don't default to y in Kconfig
-> 	- Alphabetical ordering of includes
-> 	- Use BIT() where applicable
-> 	- Use consistent function name prefixes
-> 	- Inline some single use functions
-> 	- Use a return of bool when appropriate
-> 	- Replace cpu_relax() with nop and explain why this is needed
-> 	- Better error handling, especially to prevent divide by zero
-> 	- Remove unecessary pr_info().
-> 	- Remove redudant driver spinlock which is already covered by
-> 	  watchdog core
-> 	- Drop .get_timeleft implementation
-> 	- Fix typo in compatibility flag and driver name
-> 	- Remove wdt->timeout variable and calculation
-> 	- Fix race condition in watchdog driver registration
-> ---
->   drivers/watchdog/Kconfig     |   13 +++
->   drivers/watchdog/Makefile    |    1 +
->   drivers/watchdog/pic32-wdt.c |  263 ++++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 277 insertions(+)
->   create mode 100644 drivers/watchdog/pic32-wdt.c
->
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 0f6d851..543fa81 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -1414,6 +1414,19 @@ config MT7621_WDT
->   	help
->   	  Hardware driver for the Mediatek/Ralink MT7621/8 SoC Watchdog Timer.
->
-> +config PIC32_WDT
-> +	tristate "Microchip PIC32 hardware watchdog"
-> +	select WATCHDOG_CORE
-> +	depends on MACH_PIC32
-> +	help
-> +	  Watchdog driver for the built in watchdog hardware in a PIC32.
-> +
-> +	  Configuration bits must be set appropriately for the watchdog to be
-> +	  controlled by this driver.
-> +
-> +	  To compile this driver as a loadable module, choose M here.
-> +	  The module will be called pic32-wdt.
-> +
->   # PARISC Architecture
->
->   # POWERPC Architecture
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index f566753..244ed80 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -153,6 +153,7 @@ obj-$(CONFIG_LANTIQ_WDT) += lantiq_wdt.o
->   obj-$(CONFIG_RALINK_WDT) += rt2880_wdt.o
->   obj-$(CONFIG_IMGPDC_WDT) += imgpdc_wdt.o
->   obj-$(CONFIG_MT7621_WDT) += mt7621_wdt.o
-> +obj-$(CONFIG_PIC32_WDT) += pic32-wdt.o
->
->   # PARISC Architecture
->
-> diff --git a/drivers/watchdog/pic32-wdt.c b/drivers/watchdog/pic32-wdt.c
-> new file mode 100644
-> index 0000000..6047aa8
-> --- /dev/null
-> +++ b/drivers/watchdog/pic32-wdt.c
-> @@ -0,0 +1,263 @@
-> +/*
-> + * PIC32 watchdog driver
-> + *
-> + * Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> + * Copyright (c) 2016, Microchip Technology Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm.h>
-> +#include <linux/watchdog.h>
-> +
-> +#include <asm/mach-pic32/pic32.h>
-> +
-> +/* Watchdog Timer Registers */
-> +#define WDTCON_REG		0x00
-> +
-> +/* Watchdog Timer Control Register fields */
-> +#define WDTCON_WIN_EN		BIT(0)
-> +#define WDTCON_RMCS_MASK	0x0003
-> +#define WDTCON_RMCS_SHIFT	0x0006
-> +#define WDTCON_RMPS_MASK	0x001F
-> +#define WDTCON_RMPS_SHIFT	0x0008
-> +#define WDTCON_ON		BIT(15)
-> +#define WDTCON_CLR_KEY		0x5743
-> +
-> +/* Reset Control Register fields for watchdog */
-> +#define RESETCON_TIMEOUT_IDLE	BIT(2)
-> +#define RESETCON_TIMEOUT_SLEEP	BIT(3)
-> +#define RESETCON_WDT_TIMEOUT	BIT(4)
-> +
-> +struct pic32_wdt {
-> +	void __iomem	*regs;
-> +	void __iomem	*rst_base;
-> +	struct clk	*clk;
-> +};
-> +
-> +static inline bool pic32_wdt_is_win_enabled(struct pic32_wdt *wdt)
-> +{
-> +	return !!(readl(wdt->regs + WDTCON_REG) & WDTCON_WIN_EN);
-> +}
-> +
-> +static inline u32 pic32_wdt_get_post_scaler(struct pic32_wdt *wdt)
-> +{
-> +	u32 v = readl(wdt->regs + WDTCON_REG);
-> +
-> +	return (v >> WDTCON_RMPS_SHIFT) & WDTCON_RMPS_MASK;
-> +}
-> +
-> +static inline u32 pic32_wdt_get_clk_id(struct pic32_wdt *wdt)
-> +{
-> +	u32 v = readl(wdt->regs + WDTCON_REG);
-> +
-> +	return (v >> WDTCON_RMCS_SHIFT) & WDTCON_RMCS_MASK;
-> +}
-> +
-> +static int pic32_wdt_bootstatus(struct pic32_wdt *wdt)
-> +{
-> +	u32 v = readl(wdt->rst_base);
-> +
-> +	writel(RESETCON_WDT_TIMEOUT, PIC32_CLR(wdt->rst_base));
-> +
-> +	return v & RESETCON_WDT_TIMEOUT;
-> +}
-> +
-> +static u32 pic32_wdt_get_timeout_secs(struct pic32_wdt *wdt, struct device *dev)
-> +{
-> +	unsigned long rate;
-> +	u32 period, ps, terminal;
-> +
-> +	rate = clk_get_rate(wdt->clk);
-> +
-> +	dev_dbg(dev, "wdt: clk_id %d, clk_rate %lu (prescale)\n",
-> +		pic32_wdt_get_clk_id(wdt), rate);
-> +
-> +	/* default, prescaler of 32 (i.e. div-by-32) is implicit. */
-> +	rate >>= 5;
-> +	if (!rate)
-> +		return 0;
-> +
-> +	/* calculate terminal count from postscaler. */
-> +	ps = pic32_wdt_get_post_scaler(wdt);
-> +	terminal = BIT(ps);
-> +
-> +	/* find time taken (in secs) to reach terminal count */
-> +	period = terminal / rate;
-> +	dev_dbg(dev,
-> +		"wdt: clk_rate %lu (postscale) / terminal %d, timeout %dsec\n",
-> +		rate, terminal, period);
-> +
-> +	return period;
-> +}
-> +
-> +static void pic32_wdt_keepalive(struct pic32_wdt *wdt)
-> +{
-> +	/* write key through single half-word */
-> +	writew(WDTCON_CLR_KEY, wdt->regs + WDTCON_REG + 2);
-> +}
-> +
-> +static int pic32_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	writel(WDTCON_ON, PIC32_SET(wdt->regs + WDTCON_REG));
-> +	pic32_wdt_keepalive(wdt);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pic32_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	writel(WDTCON_ON, PIC32_CLR(wdt->regs + WDTCON_REG));
-> +
-> +	/*
-> +	 * Cannot touch registers in the CPU cycle following clearing the
-> +	 * ON bit.
-> +	 */
-> +	nop();
-> +
-> +	return 0;
-> +}
-> +
-> +static int pic32_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	pic32_wdt_keepalive(wdt);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct watchdog_ops pic32_wdt_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.start		= pic32_wdt_start,
-> +	.stop		= pic32_wdt_stop,
-> +	.ping		= pic32_wdt_ping,
-> +};
-> +
-> +static const struct watchdog_info pic32_wdt_ident = {
-> +	.options = WDIOF_KEEPALIVEPING |
-> +			WDIOF_MAGICCLOSE | WDIOF_CARDRESET,
-> +	.identity = "PIC32 Watchdog",
-> +};
-> +
-> +static struct watchdog_device pic32_wdd = {
-> +	.info		= &pic32_wdt_ident,
-> +	.ops		= &pic32_wdt_fops,
-> +};
-> +
-> +static const struct of_device_id pic32_wdt_dt_ids[] = {
-> +	{ .compatible = "microchip,pic32mzda-wdt", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pic32_wdt_dt_ids);
-> +
-> +static int pic32_wdt_drv_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct watchdog_device *wdd = &pic32_wdd;
-> +	struct pic32_wdt *wdt;
-> +	struct resource *mem;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (IS_ERR(wdt))
-> +		return PTR_ERR(wdt);
-> +
-> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	wdt->regs = devm_ioremap_resource(&pdev->dev, mem);
-> +	if (IS_ERR(wdt->regs))
-> +		return PTR_ERR(wdt->regs);
-> +
-> +	wdt->rst_base = devm_ioremap(&pdev->dev, PIC32_BASE_RESET, 0x10);
-> +	if (IS_ERR(wdt->rst_base))
-> +		return PTR_ERR(wdt->rst_base);
-> +
-> +	wdt->clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(wdt->clk)) {
-> +		dev_err(&pdev->dev, "clk not found\n");
-> +		return PTR_ERR(wdt->clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(wdt->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "clk enable failed\n");
-> +		return ret;
-> +	}
-> +
-> +	if (pic32_wdt_is_win_enabled(wdt)) {
-> +		dev_err(&pdev->dev, "windowed-clear mode is not supported.\n");
-> +		ret = -ENODEV;
-> +		goto out_disable_clk;
-> +	}
-> +
-> +	wdd->timeout = pic32_wdt_get_timeout_secs(wdt, &pdev->dev);
-> +	if (!wdd->timeout) {
-> +		dev_err(&pdev->dev,
-> +			"failed to read watchdog register timeout\n");
-> +		ret = -EINVAL;
-> +		goto out_disable_clk;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "timeout %d\n", wdd->timeout);
-> +
-> +	wdd->bootstatus = pic32_wdt_bootstatus(wdt) ? WDIOF_CARDRESET : 0;
-> +
-> +	watchdog_set_nowayout(wdd, WATCHDOG_NOWAYOUT);
-> +	watchdog_set_drvdata(wdd, wdt);
-> +
-> +	ret = watchdog_register_device(wdd);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "watchdog register failed, err %d\n", ret);
-> +		goto out_disable_clk;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, wdd);
-> +
-> +	return 0;
-> +
-> +out_disable_clk:
-> +	clk_disable_unprepare(wdt->clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static int pic32_wdt_drv_remove(struct platform_device *pdev)
-> +{
-> +	struct watchdog_device *wdd = platform_get_drvdata(pdev);
-> +	struct pic32_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	watchdog_unregister_device(wdd);
-> +	clk_disable_unprepare(wdt->clk);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver pic32_wdt_driver = {
-> +	.probe		= pic32_wdt_drv_probe,
-> +	.remove		= pic32_wdt_drv_remove,
-> +	.driver		= {
-> +		.name		= "pic32-wdt",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(pic32_wdt_dt_ids),
-> +	}
-> +};
-> +
-> +module_platform_driver(pic32_wdt_driver);
-> +
-> +MODULE_AUTHOR("Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>");
-> +MODULE_DESCRIPTION("Microchip PIC32 Watchdog Timer");
-> +MODULE_LICENSE("GPL");
->
+Consider the case where USB goes to runtime suspend and USB
+driver says it only needs "low" voltage. This might cause RPM to
+go and lower the voltage because no other master in the system is
+asking for anything else besides "low". But we may have other
+hardware blocks using the digital logic supply in the system,
+e.g. GPU is running at max speed, and those blocks need "high"
+voltage. We just browned out the GPU.
 
+So maybe we should just remove this code from the USB driver for
+now? By default the voltage is nominal, and when the bus clocks
+are maxed out the voltage goes to the highest level. So as long
+as RPM bus clocks are maxed this code is not doing anything.
+
+My plan for handling corners is to hide it behind the OPP
+framework and/or generic power domains. The digital logic supply
+is really a regulator that supplies a large power domain called
+CX. All the digital logic in the SoC lives within this power
+domain. As an aside, it's quite typical that a hardware block
+sits in a few domains: digital, analog, memories, etc. so this
+may require us to expand the ability for devices to be in
+multiple PM domains at one time. But regardless, the frequency
+that a device in the digital logic domain is running at is used
+to pick a voltage that is "maxed" across all devices and factors
+into the voltage requirement of the domain. Another way to put it
+is that each device casts a "vote" for the CX voltage based on
+their frequency and the largest uV wins and is set.
+
+This is further complicated by CPR, which takes away the uV units
+from this calculation and transforms that into a "corner". Each
+hardware block now knows what voltage "corner" it needs for CX
+when their clock is at a particular frequency. We'll probably
+need to add some sort of "corner" property to the OPP binding to
+express this. Hopefully it can be a generic power domain level
+thing (keep reading!).
+
+So I'm thinking each device gets an OPP table of frequency to
+voltage/corner pairs. Devices would change their OPP through OPP
+framework and this would adjust the clk and voltage/corner
+appropriately. To make things generic between voltages and
+corners, we could hide that part behind the genpd framework by
+having OPP pick a "power level" that the power domain should be
+at. On SoCs where the power domain is supplied by a regulator the
+level would be translated into a uV (probably need some sort of
+level to uV table in DT or just put that in the code). On SoCs
+where the power domain is supplied by a regulator with corners,
+the level would be used as is and sent to the RPM. OPP framework
+wouldn't care, as long as the genpd driver handles the voltage
+vs. corner stuff.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
