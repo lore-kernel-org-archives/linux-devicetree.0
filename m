@@ -1,77 +1,101 @@
-From: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Subject: [PATCH v4 1/3] input: cygnus-update touchscreen dt node document
-Date: Sat, 27 Feb 2016 12:29:54 +0530
-Message-ID: <1456556396-4759-2-git-send-email-raveendra.padasalagi@broadcom.com>
-References: <1456556396-4759-1-git-send-email-raveendra.padasalagi@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456556396-4759-1-git-send-email-raveendra.padasalagi@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Richardson <jonathar@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Anup Patel <anup.patel@broadcom.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v7 RESEND 0/4] mailbox: hisilicon: add Hi6220 mailbox
+ driver
+Date: Sat, 27 Feb 2016 15:53:41 +0800
+Message-ID: <56D15605.5040505@hisilicon.com>
+References: <1455544226-10094-1-git-send-email-leo.yan@linaro.org>
+ <CABb+yY0_OzKmftb0HQKyfuE+2jgOfoRLHp-ok=Ux36sK8na6Ag@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY0_OzKmftb0HQKyfuE+2jgOfoRLHp-ok=Ux36sK8na6Ag-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In Cygnus SOC touch screen controller registers are shared
-with ADC and flex timer. Using readl/writel could lead to
-race condition. So touch screen driver is enhanced to support
-register access using syscon framework API's to take care of
-mutually exclusive access.In addition to this existing touchscreen
-node name "tsc" is renamed to "touchscreen".
+Hi Leo and Jassi,
 
-Hence touchscreen dt node bindings document is updated to take care
-of above changes in the touchscreen driver.
+On 26/02/2016 19:40, Jassi Brar wrote:
+> On Mon, Feb 15, 2016 at 7:20 PM, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Hi6220 mailbox supports up to 32 channels. Each channel is unidirectional
+>> with a maximum message size of 8 words. I/O is performed using register
+>> access (there is no DMA) and the cell raises an interrupt when messages
+>> are received.
+>>
+>> This patch series is to implement Hi6220 mailbox driver. It registers
+>> two channels into framework for communication with MCU, one is tx channel
+>> and another is rx channel. Now mailbox driver is used to send message to
+>> MCU to control dynamic voltage and frequency scaling for CPU, GPU and DDR.
+>>
+>> Changes from v6:
+>> * Fix to use lowercase for hexadecimal value in DT binding document
+>>
+>> Changes from v5:
+>> * Refine to use mailbox three specifiers for client driver, so add xlate
+>>   callback function in mailbox driver to support these specifiers
+>> * Refine document for property "hi6220,mbox-tx-noirq"
+>>
+>> Changes from v4:
+>> * According to Jassi's suggestion, using DT binding to register channels
+>> * Change to use operating-points-v2 to register operating points
+>>
+>> Changes from v3:
+>> * The patch series for enabling idle state for Hi6220 has reserved memory
+>>   regions, so this series will not include it anymore
+>> * Refined mailbox driver according to Jassi's suggestion;
+>>   Removed kfifo from mailbox driver;
+>>   Removed spinlock for ipc registers accessing, due every channel has its
+>>   own dedicated bit in ipc register and readl/writel will introduce memory
+>>   barrier, so don't need spinlock to protect ipc registers accessing
+>> * After mailbox driver is ready, can use patch 4 to enable CPU's OPPs and
+>>   stub clock driver; finally can enable CPUFreq driver for CPU frequency
+>>   scaling
+>>
+>> Changes from v2:
+>> * Get rid of unused memory regions from memory node in DT, and don't use
+>>   reserved-memory node according to Mark and Leif's suggestion; Haojian also
+>>   has updated UEFI for efi memory info
+>>
+>> Changes from v1:
+>> * Correct lock usage for SMP scenario
+>>
+>> Changes from RFC:
+>> * According to Jassi's review, totally remove the abstract common driver
+>>   layer and only commit driver dedicated for Hi6220
+>> * According to Paul Bolle's review, fix typo issue for Kconfig and remove
+>>   unnecessary dependency with OF and fix minor for mailbox driver
+>> * Refine a little for dts nodes
+>>
+>>
+>> Leo Yan (4):
+>>   dt-bindings: mailbox: Document Hi6220 mailbox driver
+>>   mailbox: Hi6220: add mailbox driver
+>>   arm64: dts: add mailbox node for Hi6220
+>>   arm64: dts: add Hi6220's stub clock node
+>>
+>>  .../bindings/mailbox/hisilicon,hi6220-mailbox.txt  |  74 ++++
+>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  64 ++++
+>>  drivers/mailbox/Kconfig                            |   8 +
+>>  drivers/mailbox/Makefile                           |   2 +
+>>  drivers/mailbox/hi6220-mailbox.c                   | 395 +++++++++++++++++++++
+>>
+> Applied 1 & 2 to mailbox-for-next.  Patch-3&4 should go via asoc tree.
 
-Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- .../input/touchscreen/brcm,iproc-touchscreen.txt    | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+Applied 3 and 4 to the hisilicon soc tree.
+Thanks!
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
-index 34e3382..25541f3 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/brcm,iproc-touchscreen.txt
-@@ -2,11 +2,17 @@
- 
- Required properties:
- - compatible: must be "brcm,iproc-touchscreen"
--- reg: physical base address of the controller and length of memory mapped
--  region.
-+- ts_syscon: handler of syscon node defining physical base
-+  address of the controller and length of memory mapped region.
-+  If this property is selected please make sure MFD_SYSCON config
-+  is enabled in the defconfig file.
- - clocks:  The clock provided by the SOC to driver the tsc
- - clock-name:  name for the clock
- - interrupts: The touchscreen controller's interrupt
-+- address-cells: Specify the number of u32 entries needed in child nodes.
-+  Should set to 1.
-+- size-cells: Specify number of u32 entries needed to specify child nodes size
-+  in reg property. Should set to 1.
- 
- Optional properties:
- - scanning_period: Time between scans. Each step is 1024 us.  Valid 1-256.
-@@ -53,13 +59,18 @@ Optional properties:
- - touchscreen-inverted-x: X axis is inverted (boolean)
- - touchscreen-inverted-y: Y axis is inverted (boolean)
- 
--Example:
-+Example: An example of touchscreen node
- 
--	touchscreen: tsc@0x180A6000 {
-+	ts_adc_syscon: ts_adc_syscon@180a6000 {
-+		compatible = "brcm,iproc-ts-adc-syscon","syscon";
-+		reg = <0x180a6000 0xc30>;
-+	};
-+
-+	touchscreen: touchscreen@180A6000 {
- 		compatible = "brcm,iproc-touchscreen";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--		reg = <0x180A6000 0x40>;
-+		ts_syscon = <&ts_adc_syscon>;
- 		clocks = <&adc_clk>;
- 		clock-names = "tsc_clk";
- 		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
--- 
-1.9.1
+Best Regards,
+Wei
+
+> 
+> Thanks
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
