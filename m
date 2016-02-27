@@ -1,59 +1,133 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH] ASoC: rt5640: add master clock handling for
- rt5640
-Date: Sat, 27 Feb 2016 10:51:43 +0900
-Message-ID: <20160227015143.GV18327@sirena.org.uk>
-References: <1456190782-18865-1-git-send-email-sugar.zhang@rock-chips.com>
- <56CC719C.1090901@linux.intel.com>
- <2199435.lA9iTvxnKV@phil>
- <20160224033259.GL18327@sirena.org.uk>
- <56CDD5DD.6040006@linux.intel.com>
- <20160226010818.GZ18327@sirena.org.uk>
- <56D07293.902@linux.intel.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC v2 00/11] ARM/arm64: renesas: Add SYSC PM Domain DT Support
+Date: Sat, 27 Feb 2016 03:53:16 +0200
+Message-ID: <8723964.uvbBYGm8Wz@avalon>
+References: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fyFqtIrDrUc8SGBF"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56D07293.902@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Oder Chiou <oder_chiou@realtek.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Bard Liao <bardliao@realtek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1455571020-18968-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
---fyFqtIrDrUc8SGBF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+After rebasing this series on top of Simon's latest devel branch, I'm 
+experiencing hard system freezes when using the VSP.
 
-On Fri, Feb 26, 2016 at 09:43:15AM -0600, Pierre-Louis Bossart wrote:
+What makes the problem curious is that PM runtime works fine when the VSP 
+instances are probed, the A3VP power domain is turned on and off correctly for 
+each instance. However, after booting the system, if I try to RPM resume the 
+device, the system hangs.
 
-> Yes there are documentation and helpers I looked into, but to the best of my
-> limited knowledge not for the gate + dual-rate case. Then you jump to
-> complicated configurations combining multiple base clocks that don't really
-> make sense here. After one frustrating day of trying to wrap 100 lines of
-> code into the clock framework I gave up and kept the simple custom driver.
-> There is a single client for this clock so I don't quite see the
-> benefits/ROI of mapping a simple piece of hardware with a complex model.
+I've traced this (using printk debugging) down to the SYSCISCR write in 
+rcar_sysc_power(). The value written is 0x00000200, which corresponds to the 
+A3VP power domain, and the resume request completion wait loop doesn't time 
+out.
 
-If the helpers aren't fitting your needs then surely just writing a
-simple driver with set rate and enable callbacks isn't going to be too
-hard?  The wm831x driver was pretty trivial to write and seems to be on
-a similar order of complexity to this.
+Does this ring any bell ? Do you have a more recent version of this patch 
+series that I could try ?
 
---fyFqtIrDrUc8SGBF
-Content-Type: application/pgp-signature; name="signature.asc"
+On Monday 15 February 2016 22:16:49 Geert Uytterhoeven wrote:
+> 	Hi all,
+> 
+> The Renesas R-Car System Controller, as found in various Renesas R-Car
+> SoCs, provides power management for the CPU cores and various
+> coprocessors.
+> 
+> This RFC patch series adds DT support for the R-Car SYSC, using the
+> generic PM Domain. It supports R-Car H1, R-Car Gen2, and R-Car H3.
+> 
+> Patches:
+>   - Patch 1 adds the DT binding documentation (alternatives I considered
+>     below the "---"-line),
+>   - Patch 2 moves the existing pm-rcar driver to drivers/soc/renesas, so
+>     it can be shared by arm32 and arm64,
+>   - Patches 3-5 contain the driver implementation,
+>   - Patches 6-11 add the SYSC PM domains themselves to the various dtsi
+>     files.
+> 
+> Known issues:
+>   - This needs better integration with the PM code in pm-rcar-gen2, the
+>     SMP code in smp-r8a7790, and Magnus' DT APMU series,
+>   - CPG/MSSR clock domain handling should share more code with the
+>     renesas-cpg-mssr driver.
+> 
+> Changes compared to v2 (more details in the individual patches):
+>   - Moved pm-rcar from arch/arm/mach-shmobile/ to drivers/soc/renesas/,
+>   - Added R-Car H3 (r8a7795) support, incl. support for devices part of
+>     a SYSC PM domain and the CPG/MSSR clock domain,
+>   - Use "renesas,<type>-sysc" instead of "renesas,sysc-<type>",
+>   - Added fallback compatibility strings for R-Car Gen2 and Gen3.
+>   - Changed one-line summary prefix to match current arm-soc practices,
+>   - The L2 cache-controller patches have been extracted into a separate
+>     series ("[PATCH v3 0/7] ARM/arm64: dts: renesas: Add/complete L2
+>     cache-controller nodes"),
+>   - Minor fixes.
+> 
+> This series is against renesas-devel-20160215-v4.5-rc4, with series
+> "[PATCH v3 0/7] ARM/arm64: dts: renesas: Add/complete L2
+> cache-controller nodes" applied. It is not yet meant to be applied!
+> It's published as-is to ease development of drivers for devices residing
+> in a SYSC PM domain on R-Car H3 (e.g. VSP, FCP_V).
+> 
+> This was tested on r8a7779/marzen, r8a7791/koelsch, r8a7794/alt, and
+> r8a7795/salvator-x.
+> 
+> For your convenience, I've also pushed this series to
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git#topi
+> c/rcar-sysc-pd-rfc-v2
+> 
+> Thanks for your comments!
+> 
+> Geert Uytterhoeven (11):
+>   PM / Domains: Add DT bindings for the R-Car System Controller
+>   soc: renesas: Move pm-rcar to drivers/soc/renesas/
+>   soc: renesas: Improve rcar_sysc_power() debug info
+>   soc: renesas: rcar: Add DT support for SYSC PM domains
+>   soc: renesas: rcar: Handle clock domain devices in SYSC PM domains
+>   ARM: dts: r8a7779: Add SYSC PM domains
+>   ARM: dts: r8a7790: Add SYSC PM domains
+>   ARM: dts: r8a7791: Add SYSC PM domains
+>   ARM: dts: r8a7793: Add SYSC PM domains
+>   ARM: dts: r8a7794: Add SYSC PM domains
+>   arm64: dts: r8a7795: Add SYSC PM domains
+> 
+>  .../bindings/power/renesas,sysc-rcar.txt           |  87 ++++
+>  arch/arm/boot/dts/r8a7779.dtsi                     |  48 ++
+>  arch/arm/boot/dts/r8a7790.dtsi                     |  89 ++++
+>  arch/arm/boot/dts/r8a7791.dtsi                     |  40 ++
+>  arch/arm/boot/dts/r8a7793.dtsi                     |  39 ++
+>  arch/arm/boot/dts/r8a7794.dtsi                     |  40 ++
+>  arch/arm/mach-shmobile/Kconfig                     |   8 +-
+>  arch/arm/mach-shmobile/Makefile                    |   1 -
+>  arch/arm/mach-shmobile/pm-r8a7779.c                |   3 +-
+>  arch/arm/mach-shmobile/pm-rcar-gen2.c              |   2 +-
+>  arch/arm/mach-shmobile/pm-rcar.c                   | 164 ------
+>  arch/arm/mach-shmobile/smp-r8a7779.c               |   2 +-
+>  arch/arm/mach-shmobile/smp-r8a7790.c               |   2 +-
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 142 ++++++
+>  drivers/soc/Kconfig                                |   1 +
+>  drivers/soc/Makefile                               |   3 +-
+>  drivers/soc/renesas/Kconfig                        |   8 +
+>  drivers/soc/renesas/Makefile                       |   1 +
+>  drivers/soc/renesas/pm-rcar.c                      | 559 ++++++++++++++++++
+>  .../linux/soc/renesas}/pm-rcar.h                   |   2 +
+>  20 files changed, 1065 insertions(+), 176 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/power/renesas,sysc-rcar.txt delete mode
+> 100644 arch/arm/mach-shmobile/pm-rcar.c
+>  create mode 100644 drivers/soc/renesas/Kconfig
+>  create mode 100644 drivers/soc/renesas/Makefile
+>  create mode 100644 drivers/soc/renesas/pm-rcar.c
+>  rename {arch/arm/mach-shmobile => include/linux/soc/renesas}/pm-rcar.h
+> (93%)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+-- 
+Regards,
 
-iQEcBAEBCAAGBQJW0QEsAAoJECTWi3JdVIfQRQUH+wWufcVgRXjkOgaFnVY07VAC
-Cy1icjgUb+Soj9uNg8ndpozN80mkqnPAsbH5IjjEU4gVu5kxyG0wwd9ei3NjP/YE
-GsoFtEITrZc04Rg3GSJzpMCtV4v4unEt5KCyb6kH0Qoxlk+OamyUWNYnguyTv0fT
-x6VjRZydGSE8blzY8BjODnqpC78254Yad8aPLJiw2CvafTU5tzvhDNxYS0TPdijX
-X8wm68UG/q7QjI/uhR5UYH7O2PZyp2cY/RPt2A7ZPzy///1vSo5JRfj3JP/rHFSw
-LXSevfaUAbne5PFXJ+v3t8WokmNTNf4+DfUkoSnPGUEO+8aqMQFjbrIpVKBVt6s=
-=HNHK
------END PGP SIGNATURE-----
+Laurent Pinchart
 
---fyFqtIrDrUc8SGBF--
