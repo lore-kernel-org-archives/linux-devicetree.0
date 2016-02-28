@@ -1,157 +1,357 @@
-From: Joseph <jmcna06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] hwmon: (ntc_thermistor) Add support for ncpXXxh103
-Date: Sun, 28 Feb 2016 22:31:23 +0000
-Message-ID: <1456698683-18502-1-git-send-email-jmcna06@gmail.com>
+From: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Subject: [PATCH v3 2/3] hwmon: Create an NSA320 hardware monitoring driver
+Date: Sun, 28 Feb 2016 22:30:13 +0000
+Message-ID: <1456698614-15176-3-git-send-email-linux@baker-net.org.uk>
+References: <1456698614-15176-1-git-send-email-linux@baker-net.org.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456698614-15176-1-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joseph McNally <jmcna06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Joseph McNally <jmcna06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Create a driver to support the hardware monitoring chip present in
+the Zyxel NSA320 and some of the other Zyxel NAS devices.
 
-This patch adds support for the Murata NCP15XH103 thermistor series.
+The driver reads fan speed and temperature from a suitably
+pre-programmed MCU on the device.
 
-Signed-off-by: Joseph McNally <jmcna06-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
 ---
- .../devicetree/bindings/hwmon/ntc_thermistor.txt   |  1 +
- Documentation/hwmon/ntc_thermistor                 |  4 +-
- drivers/hwmon/Kconfig                              |  2 +-
- drivers/hwmon/ntc_thermistor.c                     | 44 ++++++++++++++++++++++
- include/linux/platform_data/ntc_thermistor.h       |  1 +
- 5 files changed, 49 insertions(+), 3 deletions(-)
+Changes since v2
+Updated based on Guenter Roeck's review,
+- return a single value that is result or error from the update function
+- use separate show_value routimes for fan and temp
+- Added Documentation/hwmon/nsa320-hwmon
+---
+ Documentation/hwmon/nsa320   |  53 +++++++++++
+ drivers/hwmon/Kconfig        |  15 +++
+ drivers/hwmon/Makefile       |   1 +
+ drivers/hwmon/nsa320-hwmon.c | 215 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 284 insertions(+)
+ create mode 100644 Documentation/hwmon/nsa320
+ create mode 100644 drivers/hwmon/nsa320-hwmon.c
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
-index a04a80f..c3b9c4c 100644
---- a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
-+++ b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
-@@ -10,6 +10,7 @@ Requires node properties:
- 	"murata,ncp03wb473"
- 	"murata,ncp15wl333"
- 	"murata,ncp03wf104"
-+	"murata,ncp15xh103"
- 
- /* Usage of vendor name "ntc" is deprecated */
- <DEPRECATED>	"ntc,ncp15wb473"
-diff --git a/Documentation/hwmon/ntc_thermistor b/Documentation/hwmon/ntc_thermistor
-index 1d4cc84..8b9ff23 100644
---- a/Documentation/hwmon/ntc_thermistor
-+++ b/Documentation/hwmon/ntc_thermistor
-@@ -3,9 +3,9 @@ Kernel driver ntc_thermistor
- 
- Supported thermistors from Murata:
- * Murata NTC Thermistors NCP15WB473, NCP18WB473, NCP21WB473, NCP03WB473,
--  NCP15WL333, NCP03WF104
-+  NCP15WL333, NCP03WF104, NCP15XH103
-   Prefixes: 'ncp15wb473', 'ncp18wb473', 'ncp21wb473', 'ncp03wb473',
--  'ncp15wl333', 'ncp03wf104'
-+  'ncp15wl333', 'ncp03wf104', 'ncp15xh103'
-   Datasheet: Publicly available at Murata
- 
- Supported thermistors from EPCOS:
+diff --git a/Documentation/hwmon/nsa320 b/Documentation/hwmon/nsa320
+new file mode 100644
+index 0000000..fdbd694
+--- /dev/null
++++ b/Documentation/hwmon/nsa320
+@@ -0,0 +1,53 @@
++Kernel driver nsa320_hwmon
++==========================
++
++Supported chips:
++  * Holtek HT46R065 microcontroller with onboard firmware that configures
++	it to act as a hardware monitor.
++    Prefix: 'nsa320'
++    Addresses scanned: none
++    Datasheet: Not available, driver was reverse engineered based upon the
++	Zyxel kernel source
++
++Author:
++  Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
++
++Description
++-----------
++
++This chip is known to be used in the Zyxel NSA320 and NSA325 NAS Units and
++also in some variants of the NSA310 but the driver has only been tested
++on the NSA320. In all of these devices it is connected to the same 3 GPIO
++lines which are used to provide chip select, clock and data lines. The
++interface behaves similarly to SPI but at much lower speeds than are normally
++used for SPI.
++
++Following each chip select pulse the chip will generate a single 32 bit word
++that contains 0x55 as a marker to indicate that data is being read correctly,
++followed by an 8 bit fan speed in 100s of RPM and a 16 bit temperature in
++tenths of a degree.
++
++
++sysfs-Interface
++---------------
++
++temp1_input - temperature input
++fan1_input - fan speed
++
++Notes
++-----
++
++The access timings used in the driver are the same as used in the Zyxel
++provided kernel. Testing has shown that if the delay between chip select and
++the first clock pulse is reduced from 100 ms to just under 10ms then the chip
++will not produce any output. If the duration of either phase of the clock
++is reduced from 100 us to less than 15 us then data pulses are likely to be
++read twice corrupting the output. The above analysis is based upon a sample
++of one unit but suggests that the Zyxel provided delay values include a
++reasonable tolerance.
++
++The driver incorporates a limit that it will not check for updated values
++faster than once a second. This is because the hardware takes a relatively long
++time to read the data from the device and when it does it reads both temp and
++fan speed. As the most likely case for two accesses in quick succession is
++to read both of these values avoiding a second read delay is desirable.
 diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 60fb80b..f3f13c5 100644
+index 80a73bf..08fd7f5 100644
 --- a/drivers/hwmon/Kconfig
 +++ b/drivers/hwmon/Kconfig
-@@ -1127,7 +1127,7 @@ config SENSORS_NTC_THERMISTOR
- 
- 	  Currently, this driver supports
- 	  NCP15WB473, NCP18WB473, NCP21WB473, NCP03WB473, NCP15WL333,
--	  and NCP03WF104 from Murata and B57330V2103 from EPCOS.
-+	  NCP03WF104 and NCP15XH103 from Murata and B57330V2103 from EPCOS.
- 
+@@ -1186,6 +1186,21 @@ config SENSORS_NCT7904
  	  This driver can also be built as a module.  If so, the module
- 	  will be called ntc-thermistor.
-diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
-index feed306..faa6e8d 100644
---- a/drivers/hwmon/ntc_thermistor.c
-+++ b/drivers/hwmon/ntc_thermistor.c
-@@ -54,6 +54,7 @@ static const struct platform_device_id ntc_thermistor_id[] = {
- 	{ "ncp15wl333", TYPE_NCPXXWL333 },
- 	{ "b57330v2103", TYPE_B57330V2103},
- 	{ "ncp03wf104", TYPE_NCPXXWF104 },
-+	{ "ncp15xh103", TYPE_NCPXXXH103 },
- 	{ },
- };
+ 	  will be called nct7904.
  
-@@ -173,6 +174,43 @@ static const struct ntc_compensation ncpXXwf104[] = {
- 	{ .temp_c	= 125, .ohm	= 2522 },
- };
- 
-+static const struct ntc_compensation ncpXXxh103[] = {
-+	{ .temp_c	= -40, .ohm	= 247565 },
-+	{ .temp_c	= -35, .ohm	= 181742 },
-+	{ .temp_c	= -30, .ohm	= 135128 },
-+	{ .temp_c	= -25, .ohm	= 101678 },
-+	{ .temp_c	= -20, .ohm	= 77373 },
-+	{ .temp_c	= -15, .ohm	= 59504 },
-+	{ .temp_c	= -10, .ohm	= 46222 },
-+	{ .temp_c	= -5, .ohm	= 36244 },
-+	{ .temp_c	= 0, .ohm	= 28674 },
-+	{ .temp_c	= 5, .ohm	= 22878 },
-+	{ .temp_c	= 10, .ohm	= 18399 },
-+	{ .temp_c	= 15, .ohm	= 14910 },
-+	{ .temp_c	= 20, .ohm	= 12169 },
-+	{ .temp_c	= 25, .ohm	= 10000 },
-+	{ .temp_c	= 30, .ohm	= 8271 },
-+	{ .temp_c	= 35, .ohm	= 6883 },
-+	{ .temp_c	= 40, .ohm	= 5762 },
-+	{ .temp_c	= 45, .ohm	= 4851 },
-+	{ .temp_c	= 50, .ohm	= 4105 },
-+	{ .temp_c	= 55, .ohm	= 3492 },
-+	{ .temp_c	= 60, .ohm	= 2985 },
-+	{ .temp_c	= 65, .ohm	= 2563 },
-+	{ .temp_c	= 70, .ohm	= 2211 },
-+	{ .temp_c	= 75, .ohm	= 1915 },
-+	{ .temp_c	= 80, .ohm	= 1666 },
-+	{ .temp_c	= 85, .ohm	= 1454 },
-+	{ .temp_c	= 90, .ohm	= 1275 },
-+	{ .temp_c	= 95, .ohm	= 1121 },
-+	{ .temp_c	= 100, .ohm	= 990 },
-+	{ .temp_c	= 105, .ohm	= 876 },
-+	{ .temp_c	= 110, .ohm	= 779 },
-+	{ .temp_c	= 115, .ohm	= 694 },
-+	{ .temp_c	= 120, .ohm	= 620 },
-+	{ .temp_c	= 125, .ohm	= 556 },
++config SENSORS_NSA320
++	tristate "ZyXEL NSA320 and compatible fan speed and temperature sensors"
++	depends on GPIOLIB && OF
++	depends on MACH_KIRKWOOD || COMPILE_TEST
++	help
++	  If you say yes here you get support for hardware monitoring
++	  for the ZyXEL NSA320 Media Server and other compatible devices
++	  (probably the NSA325 and some NSA310 variants).
++
++	  The sensor data is taken from a Holtek HT46R065 microcontroller
++	  connected to GPIO lines.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called nsa320-hwmon.
++
+ config SENSORS_PCF8591
+ 	tristate "Philips PCF8591 ADC/DAC"
+ 	depends on I2C
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 12a3239..9e22cf7 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -124,6 +124,7 @@ obj-$(CONFIG_SENSORS_NCT6683)	+= nct6683.o
+ obj-$(CONFIG_SENSORS_NCT6775)	+= nct6775.o
+ obj-$(CONFIG_SENSORS_NCT7802)	+= nct7802.o
+ obj-$(CONFIG_SENSORS_NCT7904)	+= nct7904.o
++obj-$(CONFIG_SENSORS_NSA320)	+= nsa320-hwmon.o
+ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
+ obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
+ obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
+diff --git a/drivers/hwmon/nsa320-hwmon.c b/drivers/hwmon/nsa320-hwmon.c
+new file mode 100644
+index 0000000..e833550
+--- /dev/null
++++ b/drivers/hwmon/nsa320-hwmon.c
+@@ -0,0 +1,215 @@
++/*
++ * drivers/hwmon/nsa320-hwmon.c
++ *
++ * ZyXEL NSA320 Media Servers
++ * hardware monitoring
++ *
++ * Copyright (C) 2016 Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
++ * based on a board file driver
++ * Copyright (C) 2012 Peter Schildmann <linux-7ojh7neMhKcWe5+p9BQgIQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License v2 as published by the
++ * Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/bitops.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/jiffies.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++
++#define MAGIC_NUMBER 0x55
++
++/*
++ * The Zyxel hwmon MCU is a Holtek HT46R065 that is factory programmed
++ * to perform temperature and fan speed monitoring. It is read by taking
++ * the active pin low. The 32 bit output word is then clocked onto the
++ * data line. The MSB of the data word is a magic nuber to indicate it
++ * has been read correctly, the next byte is the fan speed (in hundreds
++ * of RPM) and the last two bytes are the temperature (in tenths of a
++ * degree)
++ */
++
++struct nsa320_hwmon {
++	struct mutex		update_lock;	/* lock GPIO operations */
++	unsigned long		last_updated;	/* jiffies */
++	unsigned long		mcu_data;
++	struct gpio_desc	*act;
++	struct gpio_desc	*clk;
++	struct gpio_desc	*data;
 +};
 +
- /*
-  * The following compensation table is from the specification of EPCOS NTC
-  * Thermistors Datasheet
-@@ -260,6 +298,8 @@ static const struct of_device_id ntc_match[] = {
- 		.data = &ntc_thermistor_id[5]},
- 	{ .compatible = "murata,ncp03wf104",
- 		.data = &ntc_thermistor_id[6] },
-+	{ .compatible = "murata,ncp15xh103",
-+		.data = &ntc_thermistor_id[7] },
- 
- 	/* Usage of vendor name "ntc" is deprecated */
- 	{ .compatible = "ntc,ncp15wb473",
-@@ -609,6 +649,10 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
- 		data->comp = ncpXXwf104;
- 		data->n_comp = ARRAY_SIZE(ncpXXwf104);
- 		break;
-+	case TYPE_NCPXXXH103:
-+		data->comp = ncpXXxh103;
-+		data->n_comp = ARRAY_SIZE(ncpXXxh103);
-+		break;
- 	default:
- 		dev_err(&pdev->dev, "Unknown device type: %lu(%s)\n",
- 				pdev_id->driver_data, pdev_id->name);
-diff --git a/include/linux/platform_data/ntc_thermistor.h b/include/linux/platform_data/ntc_thermistor.h
-index aed1705..698d0d5 100644
---- a/include/linux/platform_data/ntc_thermistor.h
-+++ b/include/linux/platform_data/ntc_thermistor.h
-@@ -28,6 +28,7 @@ enum ntc_thermistor_type {
- 	TYPE_NCPXXWL333,
- 	TYPE_B57330V2103,
- 	TYPE_NCPXXWF104,
-+	TYPE_NCPXXXH103,
- };
- 
- struct ntc_thermistor_platform_data {
++enum nsa320_inputs {
++	NSA3XX_TEMP = 0,
++	NSA3XX_FAN = 1,
++};
++
++static const char * const nsa320_input_names[] = {
++	[NSA3XX_TEMP] = "System Temperature",
++	[NSA3XX_FAN] = "Chassis Fan",
++};
++
++/*
++ * Although this protocol looks similar to SPI the long delay
++ * between the active (aka chip select) signal and the shorter
++ * delay between clock pulses are needed for reliable operation.
++ * The delays provided are taken from the manufacturer kernel,
++ * testing suggest they probably incorporate a reasonable safety
++ * margin. (The single device tested became unreliable if the
++ * delay was reduced to 1/10th of this value.)
++ */
++static unsigned long nsa320_hwmon_update(struct device *dev)
++{
++	u32 mcu_data;
++	u32 mask;
++	struct nsa320_hwmon *hwmon = dev_get_drvdata(dev);
++
++	mutex_lock(&hwmon->update_lock);
++
++	mcu_data = hwmon->mcu_data;
++
++	if (time_after(jiffies, hwmon->last_updated + HZ) || mcu_data == 0) {
++		gpiod_set_value(hwmon->act, 1);
++		msleep(100);
++
++		mcu_data = 0;
++		for (mask = BIT(31); mask; mask >>= 1) {
++			gpiod_set_value(hwmon->clk, 0);
++			usleep_range(100, 200);
++			gpiod_set_value(hwmon->clk, 1);
++			usleep_range(100, 200);
++			if (gpiod_get_value(hwmon->data))
++				mcu_data |= mask;
++		}
++
++		gpiod_set_value(hwmon->act, 0);
++		dev_dbg(dev, "Read raw MCU data %08x\n", mcu_data);
++
++		if ((mcu_data >> 24) != MAGIC_NUMBER) {
++			dev_dbg(dev, "Read invalid MCU data %08x\n", mcu_data);
++			mcu_data = -EIO;
++		} else {
++			hwmon->mcu_data = mcu_data;
++			hwmon->last_updated = jiffies;
++		}
++	}
++
++	mutex_unlock(&hwmon->update_lock);
++
++	return mcu_data;
++}
++
++static ssize_t show_label(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	int channel = to_sensor_dev_attr(attr)->index;
++
++	return sprintf(buf, "%s\n", nsa320_input_names[channel]);
++}
++
++static ssize_t show_temp(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	unsigned long mcu_data = nsa320_hwmon_update(dev);
++
++	if (IS_ERR_VALUE(mcu_data))
++		return mcu_data;
++
++	return sprintf(buf, "%lu\n", (mcu_data & 0xffff) * 100);
++}
++
++static ssize_t show_fan(struct device *dev, struct device_attribute *attr,
++			char *buf)
++{
++	unsigned long mcu_data = nsa320_hwmon_update(dev);
++
++	if (IS_ERR_VALUE(mcu_data))
++		return mcu_data;
++
++	return sprintf(buf, "%lu\n", ((mcu_data & 0xff0000) >> 16) * 100);
++}
++
++static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, show_label, NULL, NSA3XX_TEMP);
++static DEVICE_ATTR(temp1_input, S_IRUGO, show_temp, NULL);
++static SENSOR_DEVICE_ATTR(fan1_label, S_IRUGO, show_label, NULL, NSA3XX_FAN);
++static DEVICE_ATTR(fan1_input, S_IRUGO, show_fan, NULL);
++
++static struct attribute *nsa320_attrs[] = {
++	&sensor_dev_attr_temp1_label.dev_attr.attr,
++	&dev_attr_temp1_input.attr,
++	&sensor_dev_attr_fan1_label.dev_attr.attr,
++	&dev_attr_fan1_input.attr,
++	NULL
++};
++
++ATTRIBUTE_GROUPS(nsa320);
++
++static const struct of_device_id of_nsa320_hwmon_match[] = {
++	{ .compatible = "zyxel,nsa320-mcu", },
++	{ },
++};
++
++static int nsa320_hwmon_probe(struct platform_device *pdev)
++{
++	struct nsa320_hwmon	*hwmon;
++	struct device		*classdev;
++
++	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
++	if (!hwmon)
++		return -ENOMEM;
++
++	/* Look up the GPIO pins to use */
++	hwmon->act = devm_gpiod_get(&pdev->dev, "act", GPIOD_OUT_LOW);
++	if (IS_ERR(hwmon->act))
++		return PTR_ERR(hwmon->act);
++
++	hwmon->clk = devm_gpiod_get(&pdev->dev, "clk", GPIOD_OUT_HIGH);
++	if (IS_ERR(hwmon->clk))
++		return PTR_ERR(hwmon->clk);
++
++	hwmon->data = devm_gpiod_get(&pdev->dev, "data", GPIOD_IN);
++	if (IS_ERR(hwmon->data))
++		return PTR_ERR(hwmon->data);
++
++	mutex_init(&hwmon->update_lock);
++
++	classdev = devm_hwmon_device_register_with_groups(&pdev->dev,
++					"nsa320", hwmon, nsa320_groups);
++
++	return PTR_ERR_OR_ZERO(classdev);
++
++}
++
++/* All allocations use devres so remove() is not needed. */
++
++static struct platform_driver nsa320_hwmon_driver = {
++	.probe = nsa320_hwmon_probe,
++	.driver = {
++		.name = "nsa320-hwmon",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(of_nsa320_hwmon_match),
++	},
++};
++
++module_platform_driver(nsa320_hwmon_driver);
++
++MODULE_DEVICE_TABLE(of, of_nsa320_hwmon_match);
++MODULE_AUTHOR("Peter Schildmann <linux-7ojh7neMhKcWe5+p9BQgIQ@public.gmane.org>");
++MODULE_AUTHOR("Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>");
++MODULE_DESCRIPTION("NSA3XX Hardware Monitoring");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:nsa320-hwmon");
 -- 
-1.9.1
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
