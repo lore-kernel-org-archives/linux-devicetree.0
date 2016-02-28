@@ -1,48 +1,70 @@
-From: Florian Fainelli <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] arm64: Broadcom Vulcan support
-Date: Sat, 27 Feb 2016 12:03:01 -0800
-Message-ID: <56D200F5.7010505@broadcom.com>
-References: <56C8C38E.50007@gmail.com>
- <1456555925-11583-1-git-send-email-jchandra@broadcom.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM64: dts: add LS1043a-QDS board support
+Date: Sun, 28 Feb 2016 10:38:18 +0800
+Message-ID: <20160228023818.GB22051@tiger>
+References: <1450948298-33238-1-git-send-email-Zhiqiang.Hou@freescale.com>
+ <1450948298-33238-2-git-send-email-Zhiqiang.Hou@freescale.com>
+ <20160219032830.GG6756@tiger>
+ <HE1PR04MB0906707F686591B374AA364F84A00@HE1PR04MB0906.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456555925-11583-1-git-send-email-jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <HE1PR04MB0906707F686591B374AA364F84A00-6LN7OEpIatWBkn9woE/rDM9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Zhiqiang Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Cc: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/02/16 22:52, Jayachandran C wrote:
-> From: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> 
-> Add a configuration option and a device tree for Broadcom's Vulcan
-> ARM64 processor. vulcan.dtsi has the on-chip blocks like the PCIe
-> controller, GICv3 with ITS, PMU, system timer and the pl011 UART.
-> vulcan-eval.dts has definitions for a basic evaluation board.
-> 
-> Vulcan's processor cores support the ARMv8.1 instruction set and
-> will use "brcm,vulcan" as the compatible property. The firmware
-> has PSCI 0.2 support for cpu wakeup.
-> 
-> Signed-off-by: Zi Shen Lim <zlim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> [ updated and split dts - jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org ]
-> Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
-> 
-> There is a minor update to this patch.
-> 
-> After some discussions here, it looks like it is necessary to increase the
-> PCI mem and mem64 ranges to support all the use cases. We are updating the
-> firmware to use these ranges as well.
-> 
-> Hope it is not too late to fix this, sorry for the late churn.
+On Fri, Feb 19, 2016 at 10:10:04AM +0000, Zhiqiang Hou wrote:
 
-V2 got merged already into next/dt64 by the arm-soc maintainers, could
-you provide an incremental patch to your v2? Thanks!
---
-Florian
+<snip>
+
+> > > +	pca9547@77 {
+> > > +		compatible = "philips,pca9547";
+> > 
+> > I cannot find this compatible string in either binding docs or driver code.
+> > 
+> 
+> See the file below.
+> ./drivers/i2c/muxes/i2c-mux-pca954x.c:115:	{ "pca9547", pca_9547 },
+> Perhaps the vender name should be updated to nxp.
+
+Yes, if you look at Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt,
+"nxp,pca9547" is the one you should use here.
+
+<snip>
+
+> > > +			eeprom@56 {
+> > > +				compatible = "at24,24c512";
+> > 
+> > Unsupported/undocumented compatible?
+> 
+> Will change it to "atmel, 24c512".
+
+Yes, but without the space in the middle.
+
+> 
+> > 
+> > > +				reg = <0x56>;
+> > > +			};
+> > > +
+> > > +			eeprom@57 {
+> > > +				compatible = "at24,24c512";
+> > > +				reg = <0x57>;
+> > > +			};
+> > > +
+> > > +			adt7461a@4c {
+> > 
+> > temp-sensor should be a better node name, if I understand the device correctly.
+> > 
+> 
+> I didn't find a reference in kernel, so what name should be better, do you have any advice?
+
+"temp-sensor" is what I see from the example in
+Documentation/devicetree/bindings/hwmon/lm90.txt.
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
