@@ -1,43 +1,121 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
- 'ext-reset-output' dt prop
-Date: Sun, 28 Feb 2016 10:56:49 -0300
-Message-ID: <CAOMZO5DrTY3ho0Z_jXxeYMqbd6GmUKRwD1LB61vM1ZTGQAYOrg@mail.gmail.com>
-References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
-	<1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
-	<20151105222325.GA26159@roeck-us.net>
-	<CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
-	<20151106220249.GA19791@roeck-us.net>
-	<565F4244.7090502@timesys.com>
-	<CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com>
-	<CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
-	<20151228162923.GA31680@spo001.leaseweb.nl>
-	<56AA79DA.2010305@timesys.com>
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 4/4] Watchdog: introduce ARM SBSA watchdog driver
+Date: Sun, 28 Feb 2016 22:01:55 +0800
+Message-ID: <CADyBb7s9eX6mn6vkb3tn=m=TfD83d4R+U5=iLPADa+XHBE3kDw@mail.gmail.com>
+References: <1455611785-2407-1-git-send-email-fu.wei@linaro.org>
+	<1455611785-2407-5-git-send-email-fu.wei@linaro.org>
+	<56D0A72B.8020100@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56AA79DA.2010305-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D0A72B.8020100-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Richard Ruigrok <rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, G Gregory <graeme.gregory>
 List-Id: devicetree@vger.kernel.org
 
-Rob,
+Hi Timur,
 
-On Thu, Jan 28, 2016 at 6:28 PM, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
-
->> I have no objections against the idea and the code itself.
->> But as Guenter pointed out: it would be handy to get feedback from the
->> devicetree maintainers on the above discussion.
+On 27 February 2016 at 03:27, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org wrote:
 >>
->> Kind regards,
->> Wim.
->>
+>> +       if (action) {
+>> +               irq = platform_get_irq(pdev, 0);
+>> +               if (irq < 0) {
+>> +                       action = 0;
+>> +                       dev_warn(dev, "unable to get ws0 interrupt.\n");
+>> +               } else {
+>> +                       if (devm_request_irq(dev, irq,
+>> sbsa_gwdt_interrupt, 0,
+>> +                                            pdev->name, gwdt)) {
+>> +                               action = 0;
+>> +                               dev_warn(dev, "unable to request IRQ
+>> %d.\n",
+>> +                                        irq);
+>> +                       }
+>> +               }
+>> +               if (!action)
+>> +                       dev_warn(dev, "falling back to signle stage
+>> mode.\n");
+>> +       }
+>> +
+>> +       /*
+>> +        * Get the frequency of system counter from the cp15 interface of
+>> ARM
+>> +        * Generic timer. We don't need to check it, because if it returns
+>> "0",
+>> +        * system would panic in very early stage.
+>> +        */
+>> +       gwdt->clk = arch_timer_get_cntfrq();
+>> +       gwdt->refresh_base = rf_base;
+>> +       gwdt->control_base = cf_base;
 >
-> Any suggestions on whether a vendor specific prefix is necessary?
+>
+> I think you need to ping the watchdog before enabling the interrupt, in case
+> there is a pending interrupt.  This just happened to me in testing, so I
+> recommend this:
+>
+>>         /*
+>>          * Get the frequency of system counter from the cp15 interface of
+>> ARM
+>>          * Generic timer. We don't need to check it, because if it returns
+>> "0",
+>>          * system would panic in very early stage.
+>>          */
+>>         gwdt->clk = arch_timer_get_cntfrq();
+>>         gwdt->refresh_base = rf_base;
+>>         gwdt->control_base = cf_base;
+>>
+>>         if (action) {
+>>                 irq = platform_get_irq(pdev, 0);
+>>                 if (irq < 0) {
+>>                         action = 0;
+>>                         dev_warn(dev, "unable to get ws0 interrupt.\n");
+>>                 } else {
+>>                         sbsa_gwdt_keepalive(&gwdt->wdd);
+>>                         if (devm_request_irq(dev, irq,
+>> sbsa_gwdt_interrupt, 0,
+>>                                              pdev->name, gwdt)) {
+>>                                 action = 0;
+>>                                 dev_warn(dev, "unable to request IRQ
+>> %d.\n",
+>>                                          irq);
+>>                         }
+>>                 }
+>>                 if (!action)
+>>                         dev_warn(dev, "falling back to single stage
+>> mode.\n");
+>>         }
+>
+>
+> In fact, I think you need to move the "if (action) {" block near the end of
+> sbsa_gwdt_probe().  We don't want to enable the interrupt until the watchdog
+> is fully initialized.
+>
 
-Any comments?
+Good point! Thanks for your testing :-)
+
+Will post v14 for this change.
+
+> --
+> Qualcomm Innovation Center, Inc.
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+> Forum, a Linux Foundation collaborative project.
+
+
+
+-- 
+Best regards,
+
+Fu Wei
+Software Engineer
+Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
+Ph: +86 21 61221326(direct)
+Ph: +86 186 2020 4684 (mobile)
+Room 1512, Regus One Corporate Avenue,Level 15,
+One Corporate Avenue,222 Hubin Road,Huangpu District,
+Shanghai,China 200021
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
