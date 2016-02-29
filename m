@@ -1,71 +1,58 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH] ARM: dts: dra7: Support QSPI MODE-0 operation at 64MHz
-Date: Mon, 29 Feb 2016 17:22:45 +0530
-Message-ID: <56D4310D.5020608@ti.com>
-References: <1456375652-14071-1-git-send-email-vigneshr@ti.com>
- <20160226191342.GF13417@atomide.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V6 01/10] PM / Domains: Fix removal of a subdomain
+Date: Mon, 29 Feb 2016 13:13:40 +0100
+Message-ID: <CAPDyKFrPrKe1FsZA1-RP57njheBL5H2t8s49-ZvOJ+Madqw7bA@mail.gmail.com>
+References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+	<1456501724-28477-2-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160226191342.GF13417@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456501724-28477-2-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 26 February 2016 at 16:48, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Commit 30e7a65b3fdb ("PM / Domains: Ensure subdomain is not in use
+> before removing") added a test to ensure that a subdomain is not is not
+> a master to another subdomain or if any devices are using the subdomain
+> before removing. This change incorrectly used the "slave_links" list to
+> determine if the subdomain is a master to another subdomain, where it
+> should have been using the "master_links" list instead. The
+> "slave_links" list will never be empty for a subdomain and so a
+> subdomain can never be removed. Fix this by testing if the
+> "master_links" list is empty instead.
+>
+> Fixes: 30e7a65b3fdb ("PM / Domains: Ensure subdomain is not in use
+>        before removing")
+>
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-On 02/27/2016 12:43 AM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Vignesh R <vigneshr@ti.com> [160224 20:49]:
->> According to Data Manual(SPRS915P) of AM57x, TI QSPI controller on
->> DRA74(rev 1.1+) can support up to 64MHz in MODE-0, whereas MODE-3 is
->> limited to 48MHz. Hence, switch to MODE-0 for better throughput.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>  arch/arm/boot/dts/dra7-evm.dts | 6 ++----
->>  1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
->> index cfc24e52244e..15f10bdc8c31 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
->> @@ -653,15 +653,13 @@
->>  	pinctrl-names = "default";
->>  	pinctrl-0 = <&qspi1_pins>;
->>  
->> -	spi-max-frequency = <48000000>;
->> +	spi-max-frequency = <64000000>;
->>  	m25p80@0 {
->>  		compatible = "s25fl256s1";
->> -		spi-max-frequency = <48000000>;
->> +		spi-max-frequency = <64000000>;
->>  		reg = <0>;
->>  		spi-tx-bus-width = <1>;
->>  		spi-rx-bus-width = <4>;
->> -		spi-cpol;
->> -		spi-cpha;
->>  		#address-cells = <1>;
->>  		#size-cells = <1>;
->>  
-> 
-> Do we have any earlier pre DRA74(rev 1.1)versions in use too?
+When you addressed the comments from Thierry, this also looks good to me.
 
-Yes, there are pre 1.1 boards (production boards are all rev 1.1+), but
-QSPI is broken on them due to erratas (even w/o this patch).
+Acked-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> 
-> What about the spi-cpol and spi-cpha changes? Those should be
-> at least documented?
-> 
+Kind regards
+Uffe
 
-Ok, I will add a NOTE in the documentation saying "spi-cpol" and
-"spi-cpha" are not supported by ti-qspi in
-Documentation/devicetree/bindings/spi/ti_qspi.txt.
-
--- 
-Regards
-Vignesh
+> ---
+>  drivers/base/power/domain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index e8ca290dbf9d..ea9f2aa3fc33 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1382,7 +1382,7 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
+>         mutex_lock(&subdomain->lock);
+>         mutex_lock_nested(&genpd->lock, SINGLE_DEPTH_NESTING);
+>
+> -       if (!list_empty(&subdomain->slave_links) || subdomain->device_count) {
+> +       if (!list_empty(&subdomain->master_links) || subdomain->device_count) {
+>                 pr_warn("%s: unable to remove subdomain %s\n", genpd->name,
+>                         subdomain->name);
+>                 ret = -EBUSY;
+> --
+> 2.1.4
+>
