@@ -1,7 +1,7 @@
 From: kernel@martin.sperl.org
-Subject: [PATCH 2/8] clk: bcm2835: add missing PLL clock divider
-Date: Mon, 29 Feb 2016 15:43:56 +0000
-Message-ID: <1456760642-2412-3-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH 5/8] clk: bcm2835: add the dsi clocks
+Date: Mon, 29 Feb 2016 15:43:59 +0000
+Message-ID: <1456760642-2412-6-git-send-email-kernel@martin.sperl.org>
 References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
@@ -12,105 +12,144 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-Add the missing pll clock divider definitions.
+Add the missing dsi clocks using the currently "best known"
+parent-mux available for these clocks.
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       |   50 +++++++++++++++++++++++++++++++++++
- include/dt-bindings/clock/bcm2835.h |    8 ++++++
- 2 files changed, 58 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c       |   88 +++++++++++++++++++++++++++++++++++
+ include/dt-bindings/clock/bcm2835.h |    4 ++
+ 2 files changed, 92 insertions(+)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 01a48cb..710cf15 100644
+index aec9b22..91a6086 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1497,6 +1497,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.load_mask = CM_PLLA_LOADPER,
- 		.hold_mask = CM_PLLA_HOLDPER,
- 		.fixed_divider = 1),
-+	[BCM2835_PLLA_DSI0]	= REGISTER_PLL_DIV(
-+		.name = "plla_dsi0",
-+		.source_pll = "plla",
-+		.cm_reg = CM_PLLA,
-+		.a2w_reg = A2W_PLLA_DSI0,
-+		.load_mask = CM_PLLA_LOADDSI0,
-+		.hold_mask = CM_PLLA_HOLDDSI0,
-+		.fixed_divider = 1),
-+	[BCM2835_PLLA_CCP2]	= REGISTER_PLL_DIV(
-+		.name = "plla_ccp2",
-+		.source_pll = "plla",
-+		.cm_reg = CM_PLLA,
-+		.a2w_reg = A2W_PLLA_DSI0,
-+		.load_mask = CM_PLLA_LOADCCP2,
-+		.hold_mask = CM_PLLA_HOLDCCP2,
-+		.fixed_divider = 1),
-
- 	/* PLLB is used for the ARM's clock. */
- 	[BCM2835_PLLB]		= REGISTER_PLL(
-@@ -1521,6 +1537,24 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.load_mask = CM_PLLB_LOADARM,
- 		.hold_mask = CM_PLLB_HOLDARM,
- 		.fixed_divider = 1),
-+	[BCM2835_PLLB_SP0]	= REGISTER_PLL_DIV(
-+		.name = "pllb_sp0",
-+		.source_pll = "pllb",
-+		.cm_reg = CM_PLLB,
-+		.a2w_reg = A2W_PLLB_SP0,
-+		.fixed_divider = 1),
-+	[BCM2835_PLLB_SP1]	= REGISTER_PLL_DIV(
-+		.name = "pllb_sp1",
-+		.source_pll = "pllb",
-+		.cm_reg = CM_PLLB,
-+		.a2w_reg = A2W_PLLB_SP1,
-+		.fixed_divider = 1),
-+	[BCM2835_PLLB_SP2]	= REGISTER_PLL_DIV(
-+		.name = "pllb_sp2",
-+		.source_pll = "pllb",
-+		.cm_reg = CM_PLLB,
-+		.a2w_reg = A2W_PLLB_SP2,
-+		.fixed_divider = 1),
-
+@@ -199,6 +199,8 @@
+ # define CM_LOCK_FLOCKA			BIT(8)
+ 
+ #define CM_EVENT		0x118
++#define CM_DSI0HSCK		0x120
++# define CM_DSI0HSCK_SELPLLD		BIT(0)
+ #define CM_DSI1ECTL		0x158
+ #define CM_DSI1EDIV		0x15c
+ #define CM_DSI1PCTL		0x160
+@@ -1483,10 +1485,68 @@ static const char * const bcm2835_clock_ccp2_parents[] = {
+ 	.parents = bcm2835_clock_ccp2_parents,				\
+ 	__VA_ARGS__)
+ 
++/* dsi0 parent mux */
++static const char * const bcm2835_clock_dsi0_parents[] = {
++	"gnd",
++	"xosc",
++	"testdebug0",
++	"testdebug1",
++	/*
++	 * more parent clocks, but unknown at this time
++	 * the current definition follows the "common" pattern
++	 * that already applies to all the other parent mux
++	 * in so far as all the known mux contain gnd, xosc, testdebug0/1
++	 * as the first 3 entries.
++	 * The mux should contain "plla_dsi0/plld_dsi0" at one position.
++	 *   the selection which pll is used depends on CM_DSI0HSCK_SELPLLD
++	 * here some possible candidates for the next parents in the list.
++	 *   plla_core/per or plla_dsi0/plld_dsi0
++	 *   pllc_core/per
++	 *   plld_core/per
++	 *   pllh_aux/pix
++	 *   maybe plla_dsi0/plld_dsi0 (depends on CM_DSI0HSCK_SELPLLD)
++	 * up to 16 different parents
++	 */
++};
++
++#define REGISTER_DSI0_CLK(...)	REGISTER_CLK(				\
++	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_dsi0_parents),	\
++	.parents = bcm2835_clock_dsi0_parents,				\
++	__VA_ARGS__)
++
++/* dsi1 parent mux */
++static const char * const bcm2835_clock_dsi1_parents[] = {
++	"gnd",
++	"xosc",
++	"testdebug0",
++	"testdebug1",
++	/*
++	 * more parent clocks, but unknown at this time
++	 * the current definition follows the "common" pattern
++	 * that already applies to all the other parent mux
++	 * in so far as all the known mux contain gnd, xosc, testdebug0/1
++	 * as the first 3 entries.
++	 * The mux should contain "plld_dsi1" at one position.
++	 * here some possible candidates for the next parents in the list.
++	 *   plla_core/per
++	 *   pllc_core/per
++	 *   plld_core/per or plld_dsi1
++	 *   pllh_aux/pix
++	 *   maybe plld_dsi1
++	 * up to 16 different parents
++	 */
++};
++
++#define REGISTER_DSI1_CLK(...)	REGISTER_CLK(				\
++	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_dsi1_parents),	\
++	.parents = bcm2835_clock_dsi1_parents,				\
++	__VA_ARGS__)
++
+ /*
+  * the real definition of all the pll, pll_dividers and clocks
+  * these make use of the above REGISTER_* macros
+  */
++
+ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 	/* the PLL + PLL dividers */
+ 
+@@ -1950,6 +2010,34 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.int_bits = 1,
+ 		.frac_bits = 0),
+ 
++	/* dsi clocks */
++	[BCM2835_CLOCK_DSI0E]	= REGISTER_DSI0_CLK(
++		.name = "dsi0e",
++		.ctl_reg = CM_DSI0ECTL,
++		.div_reg = CM_DSI0EDIV,
++		.int_bits = 4,
++		.frac_bits = 8),
++	[BCM2835_CLOCK_DSI0_IMAGE] = REGISTER_DSI0_CLK(
++		/* this is in principle a gate with a 4 bit mux */
++		.name = "dsi0_image",
++		.ctl_reg = CM_DSI0PCTL,
++		.div_reg = CM_DSI0PDIV,
++		.int_bits = 1,
++		.frac_bits = 0),
++	[BCM2835_CLOCK_DSI1E]	= REGISTER_DSI1_CLK(
++		.name = "dsi1e",
++		.ctl_reg = CM_DSI1ECTL,
++		.div_reg = CM_DSI1EDIV,
++		.int_bits = 4,
++		.frac_bits = 8),
++	[BCM2835_CLOCK_DSI1_IMAGE] = REGISTER_DSI1_CLK(
++		/* this is in principle a gate with a 4 bit mux */
++		.name = "dsi1_image",
++		.ctl_reg = CM_DSI1PCTL,
++		.div_reg = CM_DSI1PDIV,
++		.int_bits = 1,
++		.frac_bits = 0),
++
+ 	/* the gates */
+ 
  	/*
- 	 * PLLC is the core PLL, used to drive the core VPU clock.
-@@ -1611,6 +1645,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.load_mask = CM_PLLD_LOADPER,
- 		.hold_mask = CM_PLLD_HOLDPER,
- 		.fixed_divider = 1),
-+	[BCM2835_PLLD_DSI0]	= REGISTER_PLL_DIV(
-+		.name = "plld_dsi0",
-+		.source_pll = "plld",
-+		.cm_reg = CM_PLLD,
-+		.a2w_reg = A2W_PLLD_DSI0,
-+		.load_mask = CM_PLLD_LOADDSI0,
-+		.hold_mask = CM_PLLD_HOLDDSI0,
-+		.fixed_divider = 1),
-+	[BCM2835_PLLD_DSI1]	= REGISTER_PLL_DIV(
-+		.name = "plld_dsi1",
-+		.source_pll = "plld",
-+		.cm_reg = CM_PLLD,
-+		.a2w_reg = A2W_PLLD_DSI1,
-+		.load_mask = CM_PLLD_LOADDSI1,
-+		.hold_mask = CM_PLLD_HOLDDSI1,
-+		.fixed_divider = 1),
-
- 	/*
- 	 * PLLH is used to supply the pixel clock or the AUX clock for the
 diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index 9a7b4a5..9689812 100644
+index 1d70088..9254c78 100644
 --- a/include/dt-bindings/clock/bcm2835.h
 +++ b/include/dt-bindings/clock/bcm2835.h
-@@ -45,3 +45,11 @@
- #define BCM2835_CLOCK_PERI_IMAGE	29
- #define BCM2835_CLOCK_PWM		30
- #define BCM2835_CLOCK_PCM		31
-+
-+#define BCM2835_PLLA_DSI0		32
-+#define BCM2835_PLLA_CCP2		33
-+#define BCM2835_PLLB_SP0		34
-+#define BCM2835_PLLB_SP1		35
-+#define BCM2835_PLLB_SP2		36
-+#define BCM2835_PLLD_DSI0		37
-+#define BCM2835_PLLD_DSI1		38
---
+@@ -66,3 +66,7 @@
+ #define BCM2835_CLOCK_CAM0		48
+ #define BCM2835_CLOCK_CAM1		49
+ #define BCM2835_CLOCK_CCP2		50
++#define BCM2835_CLOCK_DSI0E		51
++#define BCM2835_CLOCK_DSI0_IMAGE	52
++#define BCM2835_CLOCK_DSI1E		53
++#define BCM2835_CLOCK_DSI1_IMAGE	54
+-- 
 1.7.10.4
 
