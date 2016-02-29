@@ -1,77 +1,105 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Mon, 29 Feb 2016 09:47:51 -0800
-Message-ID: <20160229174751.GQ21240@tuxbot>
-References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com>
+From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Subject: Re: [PATCH RFC 3/3] leds: Add driver for the ISSI IS31FL32xx family
+ of LED drivers
+Date: Mon, 29 Feb 2016 13:02:02 -0500
+Message-ID: <20160229130202.1a5bad0d.drivshin.allworx@gmail.com>
+References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
+	<1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
+	<56CDD4AA.5030801@samsung.com>
+	<20160224212450.195330ed.drivshin.allworx@gmail.com>
+	<56CEDDBE.2080601@samsung.com>
+	<20160225141215.2ef2707e.drivshin.allworx@gmail.com>
+	<56D01F42.70409@samsung.com>
+	<20160226165823.2ff62b21.drivshin.allworx@gmail.com>
+	<2050552945.311154.eb44c2f6-8870-42b4-ada5-1ccea76f532b.open-xchange@email.1und1.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456756829-2277-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <2050552945.311154.eb44c2f6-8870-42b4-ada5-1ccea76f532b.open-xchange@email.1und1.de>
+Sender: linux-leds-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 29 Feb 06:40 PST 2016, Laxman Dewangan wrote:
+On Sat, 27 Feb 2016 11:48:45 +0100 (CET)
+Stefan Wahren <stefan.wahren@i2se.com> wrote:
 
-> It is observed that voltage change in given rail affected by the load
-> and the capacitor in the rail. This may cause the slow ramp in voltage
-> against what PMIC has programmed.
+> Hi David,
 > 
-> The property regulator-ramp-delay provides the ramp delay configuration
-> for PMIC but actual voltage settling time may change based on platform.
+> > "David Rivshin (Allworx)" <drivshin.allworx@gmail.com> hat am 26. Februar 2016
+> > um 22:58 geschrieben:
+> >
+> >
+> > On Fri, 26 Feb 2016 10:47:46 +0100
+> > Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+> >  
+> > > On 02/25/2016 08:12 PM, David Rivshin (Allworx) wrote:  
+> > > > On Thu, 25 Feb 2016 11:55:58 +0100
+> > > > Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+> > > >  
+> > > >> On 02/25/2016 03:24 AM, David Rivshin (Allworx) wrote:  
+> > > >>> On Wed, 24 Feb 2016 17:04:58 +0100
+> > > >>> Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+> > > >>>  
+> > > >>>> Hi David,
+> > > >>>>
+> > > >>>> Thanks for the patch. Very nice driver. I have few comments
+> > > >>>> below.  
+> > > >>>
+> > > >>> Thanks Jacek, I have responded the comments inline. I also wanted to
+> > > >>> double check whether you noticed some questions I had in the cover
+> > > >>> letter [1]. As I mentioned in another email to Rob, in hindsight I'm
+> > > >>> guessing I should have included them in the patch comments as well (or
+> > > >>> instead of).  
+> > > >>
+> > > >> I saw them. I assumed that the review itself will address those
+> > > >> questions.  
+> > > >
+> > > > Fair enough, thanks for the confirmation.
+> > > >  
+> > > >>> Your review comments here effectively answered some of the questions,
+> > > >>> but
+> > > >>> the big one I'm still unsure of is whether it actually makes sense to
+> > > >>> have all 4 of these devices supported by a single driver.  
+> > > >>
+> > > >> It's perfectly fine. Many drivers implement this pattern.  
+> > > >
+> > > > OK, then I'll assume you think this driver is not yet too complicated
+> > > > for it's own good. Out of curiosity, might that view change if the
+> > > > 3216 specific features were ever implemented, especially GPIO and HW
+> > > > animation support? Gut feel is that would make 3216 specific code
+> > > > bigger than the rest of the code combined.  
+> > >
+> > > I don't think so.  
+> >
+> > Thanks, that helps calibrate my intuition for the future.
+> >  
+> > > > Bigger question is what should be done in terms of the overlap in device
+> > > > support between this driver and leds-sn3218? If you think I should leave
+> > > > the *3218 support in this driver, then I would propose:
+> > > > - remove leds-sn3218 and its separate binding doc
+> > > > - add the "si-en,sn3218" compatible string to this driver and binding doc
+> > > > Note that while I expect this driver to work with the 3218 chips, I do
+> > > > not have one to test against. If we go down this route I would definitely
+> > > > want Stefan to test so that I don't accidentally break him.  
+> > >
+> > > I'd prefer to have a single driver for the same hardware. Stefan, would
+> > > it be possible for you to test David's driver with the hardware you
+> > > have an access to?  
+> >
+> > Stefan, one thing to note: the existing sn3218 driver/binding uses 0-based
+> > 'reg' values, and this driver/binding uses 1-based 'reg' values. So your
+> > devicetree(s) would need to be updated for that (as well as the compatible
+> > string).
+> >
+> > I didn't see a final answer from Rob as to which way is most appropriate
+> > for these devices yet, so I don't know which way this will end up in the
+> > final patch.  
 > 
-> Add new property "regulator-ramp-delay-scale" for platform specific scaling
-> in final ramp delay calculation. On this case, final wait delay time
-> for voltage change is calculated as the
->    DIV_ROUND_UP(ramp_delay * ramp_delay_scale, 100)
+> unfortunately i'm very busy. Yes, i will test it, but i can't promise when.
 > 
-> The value is provided in the term of percentage i.e. 300% means it will
-> do the 3x delay of calculated value.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
+> Should i apply this version or wait for the next?
 
-The regulator-ramp-delay is a variable you can tweak on a board basis,
-so I'm not sure what benefit it gives to be able to add a scaling
-factor to this.
-
-In my experience your HW engineer will say "you have to wait X ms", not
-"you have to wait 125% of X ms".
-
-
-Can you please elaborate on why the original knob isn't sufficient?
-
-Regards,
-Bjorn
-
->  Documentation/devicetree/bindings/regulator/regulator.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-> index 1d112fc..f2e8360 100644
-> --- a/Documentation/devicetree/bindings/regulator/regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-> @@ -16,6 +16,13 @@ Optional properties:
->  - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
->    For hardware which supports disabling ramp rate, it should be explicitly
->    initialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
-> +- regulator-ramp-delay-scale: Platform specific scaling in ramp delay to
-> +  provide extra guard time to settle down voltage after its change. This will
-> +  help to wait for extra time for voltage settling based on platform behavior.
-> +  This is provided in terms of percentage scaling like 300% means final delay
-> +  will become 3x of calculated ramp delay for voltage change.
-> +  The final delay is calculated as:
-> +	delay = DIV_ROUND_UP(ramp-delay * ramp-delay-scale, 100)
->  - regulator-enable-ramp-delay: The time taken, in microseconds, for the supply
->    rail to reach the target voltage, plus/minus whatever tolerance the board
->    design requires. This property describes the total system ramp time
-> -- 
-> 2.1.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks Stefan. I am hoping to have the next version ready in the next day or 
+so. To better use your time, it's probably best to wait for that. 
