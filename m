@@ -1,73 +1,129 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V6 10/10] ARM64: tegra: Add audio PM domain device node
- for Tegra210
-Date: Mon, 29 Feb 2016 08:30:09 +0100
-Message-ID: <20160229073009.GJ23745@ulmo>
-References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
- <1456501724-28477-11-git-send-email-jonathanh@nvidia.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6] arm: pxa: support ICP DAS LP-8x4x FPGA irq
+Date: Mon, 29 Feb 2016 08:29:47 +0000
+Message-ID: <56D4017B.9010106@arm.com>
+References: <1450207582-17957-1-git-send-email-ynvich@gmail.com>
+ <1456588562-24715-1-git-send-email-ynvich@gmail.com>
+ <20160227174100.GG7219@io.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tKy6e3LXpfmanBFM"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456501724-28477-11-git-send-email-jonathanh@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160227174100.GG7219-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 27/02/16 17:41, Jason Cooper wrote:
+> Hi Sergei,
+> 
+> Marc, Rob, please see below.
+> 
+> On Sat, Feb 27, 2016 at 06:56:01PM +0300, Sergei Ianovich wrote:
+>>
+> 
+> nit: Subject line of the patch should match 'irqchip/lp8841: [A-Z].*'
+> 
+>> ICP DAS LP-8x4x contains FPGA chip. The chip functions as an interrupt
+>> source providing 16 additional interrupts among other things. The
+>> interrupt lines are muxed to a GPIO pin of a 2nd level PXA-GPIO
+>> interrupt controller. GPIO pins of the 2nd level controller are in turn
+>> muxed to a CPU interrupt line.
+>>
+>> Until pxa is completely converted to device tree, it is impossible
+>> to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
+>> Drivers for the on-CPU IRQs and GPIO-IRQs are loaded using
+>> postcore_initcall(). We need to have all irq domain drivers loaded prior
+>> to DT parsing in order to allow normal initialization of IRQ resources
+>> with DT.
+>>
+>> Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> nit:  From here, down should be below the '---' so that it isn't a part
+> of the commit log.  We add a link to the commit log that points to the
+> patch submission in the mailinglist archives.  So curious folks have
+> quick access to this info.
+> 
+>> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> CC: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>>
+>>    v5..v6
+>>    fixes according to Rob Herring review comments:
+>>    * drop wildcards in binding and file names
+>>    * rename alias 'fpga'->'fpga_irq'
+>>
+>>    fixes according to Marc Zyngier review comments:
+>>    * use writeb/readb not iowrite8/ioread8
+>>    * redefine 2nd mask using inversion on 1st
+>>    * add comments
+>>
+>>    v4..v5
+>>    * constify struct of_device_id
+>>    * drop irq number from handler signature
+>>
+>>    v3.2..v4
+>>    * move DTS binding to a different patch (8/21)
+>>
+>>    v3.1..v3.2
+>>    fixes to apply Linus Walleij's "Reviewed-by":
+>>    * add kerneldoc comment for state container struct
+>>    * rename irq -> hwirq for clarity
+>>    * drop overzealous error checks from the hotpaths
+>>
+>>    v3..v3.1
+>>    fixes according to Linus Walleij review comments:
+>>    * update commit message
+>>    * use state container instead of global variables
+>>    * get hardware irq nums from irq_data, don't calculate them
+>>    * use BIT() macro
+>>    * add defines for system irq register masks
+>>    * replace cycle control variable with break
+>>    * use better names for resource variables
+>>    * add a linear domain instead of a legacy one
+>>    * use irq_create_mapping() instead of irq_alloc_desc()
+>>
+>>    v2..v3
+>>    * no changes (except number 09/16 -> 11/21)
+>>
+>>    v0..v2
+>>    * extract irqchip and move to drivers/irqchip/
+>>    * use device tree
+>>    * use devm helpers where possible
+> 
+> 
+>> ---
+> 
+> iow, it should be moved here.
+> 
+>>  .../interrupt-controller/icpdas-lp8x4x-irq.txt     |  49 ++++
+>>  drivers/irqchip/Kconfig                            |   5 +
+>>  drivers/irqchip/Makefile                           |   1 +
+>>  drivers/irqchip/irq-lp8841.c                       | 246 +++++++++++++++++++++
+>>  4 files changed, 301 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/icpdas-lp8x4x-irq.txt
+>>  create mode 100644 drivers/irqchip/irq-lp8841.c
+> 
+> I don't seem to have the previous versions, and their threads, in my
+> email archive.  From the changelog, it looks like Marc and Rob have been
+> reviewing this most recently.
+> 
+> If you guys could give me an Acked-by/Reviewed-by, I'll go ahead and
+> queue this up for v4.6.
+> 
+> I'll fix up the Subject line and the commit log when I bring it in.
+> I'll be adding the tags anyway.  No need to resubmit.
 
---tKy6e3LXpfmanBFM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks OK to me:
 
-On Fri, Feb 26, 2016 at 03:48:44PM +0000, Jon Hunter wrote:
-> Add the audio power-domain for tegra210. Note that this also removes the
-> existing "#power-domain-cells" which was incorrectly included by
-> commit e53095857166 ("arm64: tegra: Add Tegra210 support").
->=20
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->=20
-> ---
->=20
-> So far I have only added the audio power-domain for tegra210 as this is
-> what I have been testing with to date. However, once this series is
-> accepted then we can begin to add more.
->=20
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
 
-I'm slightly reluctant to apply this, since the domain isn't used
-anywhere. I'm assuming it will be used by the audio driver that you've
-been working on, but if that's not going to be merged this cycle, we'd
-end up with an unused label. Not that that's invalid in any way, but my
-rule of thumb has been not to introduce labels until they are used.
-
-Therefore I suggest we postpone this to the series that adds audio
-support.
-
-Thierry
-
---tKy6e3LXpfmanBFM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJW0/OBAAoJEN0jrNd/PrOhIe8P/2JF2h+IvQ0KK1HTEIHVifjU
-PXdDwwUTexXdeeKjSUVtQLuDrUuXG2wS0yOC8bq0Wx8DaiLTvi6tmpADDNm5vUWx
-F66saIskmbl5GEo4ihDl/UgYYP2QOmcHOeMuLQeL6AfXUjWNwWoBZi811PtjSs73
-gZhJN6Va2+Dl14CnE4yvlk4oGVvtMOsfLW/mxJO0mZSrvOis4hOIqw4nNSKI2tMv
-hY6FjtFV+UawkljYxapiV3z5jAm9L4GQFt/yEbUnY7QQcjJkvbtJYyPmXZEi12ED
-Fe3A7hOOaenyTQ/ARN5QM32HXeAmV3h4Ng/E864wNuH1O4AET9mK3qp1vICea3p2
-bpGZxGWmn7wu3sOqyYLHweDsBh9ibuCshqaj++QefoWC6WcrWa1an3Kj7FIpCOzG
-Wi6CrfGX5CNgmXz7YfrH72+itQK6oDg+eeUsfV/Xsl6GXqEV1tqXnXOcEKXtmqDV
-IK6H+aUOHT/r0LTTrbczQVNKe5ens5Cs5kWNGIB2QknoDJ4FKJLwj89oSoSc8pY3
-8gfiLrg6RPW6w9uJF1rATHFB+V9CP6HDCbONy+AlOVjLhCJvYX7gJsMPZj4XquFy
-oamx3PqKaQv9uj/QHYHR9VT1HIcmYzRiq+M4Y54cIXIbvoNuVFkyz1PPwYMgrZM6
-YzImLA6nSRBqoUETUXLu
-=kQyj
------END PGP SIGNATURE-----
-
---tKy6e3LXpfmanBFM--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
