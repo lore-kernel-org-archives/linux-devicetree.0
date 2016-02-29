@@ -1,32 +1,34 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 05/12] arm64/dma-mapping: Remove default domain workaround
-Date: Mon, 29 Feb 2016 16:51:53 +0000
-Message-ID: <20160229165153.GB15650@localhost.localdomain>
-References: <cover.1456514380.git.robin.murphy@arm.com>
- <698ecf1450da8b56a8f297b83815d2fe866ca0e1.1456514380.git.robin.murphy@arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 0/9] ARM: dts: omap2+: GPMC NAND node fixes
+Date: Mon, 29 Feb 2016 09:17:20 -0800
+Message-ID: <20160229171719.GL13417@atomide.com>
+References: <1456245445-31824-1-git-send-email-rogerq@ti.com>
+ <20160226184431.GB13417@atomide.com>
+ <56D46E3C.5000908@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <698ecf1450da8b56a8f297b83815d2fe866ca0e1.1456514380.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <56D46E3C.5000908-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org, anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org, tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 29, 2016 at 01:46:14PM +0000, Robin Murphy wrote:
-> With the IOMMU core now taking care of default domains for groups
-> regardless of bus type, we can gleefully rip out this stop-gap, as
-> slight recompense for having to expand the other one.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [160229 08:14]:
+> On 26/02/16 20:44, Tony Lindgren wrote:
+> > And please let me know what additional patches I may need to
+> > apply into omap-for-v4.6/dt for new files that are not in
+> > omap-for-v4.6/dt-gpmc.
 > 
-> CC: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> CC: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> We need to fix the following
+> gpmc node in dm814x.dtsi + nand node in dra62x-j5eco-evm.dts + nand node in dm8148-evm.
 
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+OK can you send that separately and I'll apply it?
 
--- 
-Catalin
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
