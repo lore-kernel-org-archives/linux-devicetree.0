@@ -1,70 +1,59 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
-Date: Mon, 29 Feb 2016 22:38:50 +0100
-Message-ID: <20160229213850.GS2613@pengutronix.de>
-References: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
- <1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
- <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] ARM: dts: LG Optimus Black codename sniper basic
+ support
+Date: Mon, 29 Feb 2016 13:51:37 -0800
+Message-ID: <20160229215136.GO13417@atomide.com>
+References: <1456663185-14170-1-git-send-email-contact@paulk.fr>
+ <1456663185-14170-2-git-send-email-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Matt Mackall <mpm@selenic.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1456663185-14170-2-git-send-email-contact-W9ppeneeCTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 29, 2016 at 06:16:50PM -0300, Fabio Estevam wrote:
-> On Mon, Feb 29, 2016 at 12:52 PM, Steffen Trumtrar
-> <s.trumtrar@pengutronix.de> wrote:
->=20
-> > +       ret =3D clk_prepare_enable(rngc->clk);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       rngc->irq =3D platform_get_irq(pdev, 0);
-> > +       if (!rngc->irq) {
-> > +               dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
-> > +               clk_disable_unprepare(rngc->clk);
-> > +
-> > +               return ret;
->=20
-> You are returning the wrong error code here:
->=20
-> Better do like this:
->=20
->        rngc->irq =3D platform_get_irq(pdev, 0);
->        if (rngc->irq < 0) {
+Hi,
 
-rngc->irq is unsigned, so this is never true.
+* Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> [160228 04:40]:
+> The LG Optimus Black codename sniper is a smartphone that was designed and
+> manufactured by LG Electronics (LGE) and released back in 2011.
+> It is using an OMAP3630 SoC, GP version.
+> 
+> This adds devicetree support for the device, with only a few basic features
+> supported, such as debug uart, i2c, internal emmc and external mmc.
+...
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins>;
+> +
+> +	clock-frequency = <2600000>;
+> +
+> +	twl: twl@48 {
+> +		reg = <0x48>;
+> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> +		interrupt-parent = <&intc>;
+> +
+> +		power {
+> +			compatible = "ti,twl4030-power";
+> +			ti,use_poweroff;
+> +		};
+> +	};
+> +};
 
->                dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
->                clk_disable_unprepare(rngc->clk);
->                return rngc->irq;
->        }
+Chances are this devices supports cutting off the voltages and
+the high frequency oscillator during idle. So you may want to
+at some point set compatible = "ti,twl4030-power-idle-osc-off"
+here.
 
-So here comes my better approach:
+Anyways, applying the dts changes into omap-for-v4.6/dt thanks.
 
-	ret =3D platform_get_irq(pdev, 0);
-	if (ret <=3D 0) {
-		if (ret =3D=3D 0)
-			ret =3D -EINVAL;
-		dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
-		clk_disable_unprepare(rngc->clk);
+Regards,
 
-		return ret;
-	}
-
-	rngc->irq =3D ret;
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
