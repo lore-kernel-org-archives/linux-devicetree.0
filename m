@@ -1,40 +1,57 @@
-From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
-Subject: Re: [PATCH v6] serial: support for 16550A serial ports on LP-8x4x
-Date: Mon, 29 Feb 2016 14:45:28 +0000
-Message-ID: <20160229144528.0c0b8371@lxorguk.ukuu.org.uk>
-References: <1450213494-21884-1-git-send-email-ynvich@gmail.com>
-	<1456589675-25377-1-git-send-email-ynvich@gmail.com>
-	<1456741786.13244.167.camel@linux.intel.com>
-	<1456750995.23036.87.camel@gmail.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based on platform behavior
+Date: Mon, 29 Feb 2016 20:10:28 +0530
+Message-ID: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456750995.23036.87.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>"open list:SERIAL DRIVERS" <lin>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> I haven't tested this mode. I am pretty sure it will fail. There is
-> also no support for speeds higher than 115200.
->=20
-> CS7 and CS8 at speeds up to 115200 work well.
->=20
-> However, there is no way to report errors from=C2=A0set_termios(). Sh=
-ould
-> anything be done about those limitations?
+It is observed that voltage change in given rail affected by the load
+and the capacitor in the rail. This may cause the slow ramp in voltage
+against what PMIC has programmed.
 
-You report back by setting the termios fields to the values actually
-selected. Eg if you can't do CS5/CS6 you'd pick CS7 or CS8 and write th=
-at
-back into tty->termios so the caller knows what they actually got. Ditt=
-o
-for speed (see the 16550A core driver for the speed write backs).
+The property regulator-ramp-delay provides the ramp delay configuration
+for PMIC but actual voltage settling time may change based on platform.
 
-Alan
+Add new property "regulator-ramp-delay-scale" for platform specific scaling
+in final ramp delay calculation. On this case, final wait delay time
+for voltage change is calculated as the
+   DIV_ROUND_UP(ramp_delay * ramp_delay_scale, 100)
+
+The value is provided in the term of percentage i.e. 300% means it will
+do the 3x delay of calculated value.
+
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/regulator/regulator.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
+index 1d112fc..f2e8360 100644
+--- a/Documentation/devicetree/bindings/regulator/regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/regulator.txt
+@@ -16,6 +16,13 @@ Optional properties:
+ - regulator-ramp-delay: ramp delay for regulator(in uV/uS)
+   For hardware which supports disabling ramp rate, it should be explicitly
+   initialised to zero (regulator-ramp-delay = <0>) for disabling ramp delay.
++- regulator-ramp-delay-scale: Platform specific scaling in ramp delay to
++  provide extra guard time to settle down voltage after its change. This will
++  help to wait for extra time for voltage settling based on platform behavior.
++  This is provided in terms of percentage scaling like 300% means final delay
++  will become 3x of calculated ramp delay for voltage change.
++  The final delay is calculated as:
++	delay = DIV_ROUND_UP(ramp-delay * ramp-delay-scale, 100)
+ - regulator-enable-ramp-delay: The time taken, in microseconds, for the supply
+   rail to reach the target voltage, plus/minus whatever tolerance the board
+   design requires. This property describes the total system ramp time
+-- 
+2.1.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
