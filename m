@@ -1,35 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: change address-cells and size-cells
-Date: Mon, 29 Feb 2016 21:45:09 +0100
-Message-ID: <17470332.nnZZr9fh67@wuerfel>
-References: <1456308664-28308-1-git-send-email-lokeshvutla@ti.com> <56D40505.8020702@ti.com> <20160229181606.GM13417@atomide.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
+Date: Mon, 29 Feb 2016 18:16:50 -0300
+Message-ID: <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
+References: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
+	<1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160229181606.GM13417-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-crypto@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 29 February 2016 10:16:07 Tony Lindgren wrote:
-> Yes I understand that if we need to set it at the top level. But what
-> happens if you only set it for the memory node?
-> 
-> With just something like:
-> 
-> memory {
->        #address-cells = <2>;
->        #size-cells = <2>;
->        ...
-> };
+On Mon, Feb 29, 2016 at 12:52 PM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
 
-Nothing happens there: the memory node has no children, and no
-ranges property, so the two properties are never referenced.
+> +       ret = clk_prepare_enable(rngc->clk);
+> +       if (ret)
+> +               return ret;
+> +
+> +       rngc->irq = platform_get_irq(pdev, 0);
+> +       if (!rngc->irq) {
+> +               dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+> +               clk_disable_unprepare(rngc->clk);
+> +
+> +               return ret;
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You are returning the wrong error code here:
+
+Better do like this:
+
+       rngc->irq = platform_get_irq(pdev, 0);
+       if (rngc->irq < 0) {
+               dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+               clk_disable_unprepare(rngc->clk);
+               return rngc->irq;
+       }
