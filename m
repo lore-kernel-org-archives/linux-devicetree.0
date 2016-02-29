@@ -1,38 +1,100 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: [PATCH Resend] Input: ads7846: Add description how to use internal reference (ADS7846)
-Date: Mon, 29 Feb 2016 08:06:35 +0100
-Message-ID: <1456729595-32023-1-git-send-email-alexander.stein@systec-electronic.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel-ihh4Xogjf8b2iF0jqypphg/WZsTnP+MUkuwNSG5dpIY@public.gmane.org, "Moll <pawel.moll"@arm.c, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V6 03/10] PM / Domains: Add function to remove a pm-domain
+Date: Mon, 29 Feb 2016 08:15:21 +0100
+Message-ID: <20160229071521.GG23745@ulmo>
+References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+ <1456501724-28477-4-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="GdbWtwDHkcXqP16f"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456501724-28477-4-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-By simply setting vref-mv to 0 the internal reference will be used.
-Document that!
 
-Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
----
- Documentation/devicetree/bindings/input/ads7846.txt | 2 ++
- 1 file changed, 2 insertions(+)
+--GdbWtwDHkcXqP16f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/input/ads7846.txt b/Documentation/devicetree/bindings/input/ads7846.txt
-index 33a1638..c6cfe2e 100644
---- a/Documentation/devicetree/bindings/input/ads7846.txt
-+++ b/Documentation/devicetree/bindings/input/ads7846.txt
-@@ -29,6 +29,8 @@ Optional properties:
- 	ti,vref-delay-usecs		vref supply delay in usecs, 0 for
- 					external vref (u16).
- 	ti,vref-mv			The VREF voltage, in millivolts (u16).
-+					Set to 0 to use internal refernce
-+					(ADS7846).
- 	ti,keep-vref-on			set to keep vref on for differential
- 					measurements as well
- 	ti,swap-xy			swap x and y axis
--- 
-2.4.10
+On Fri, Feb 26, 2016 at 03:48:37PM +0000, Jon Hunter wrote:
+> The genpd framework allows users to add power-domains via the
+> pm_genpd_init() function, however, there is no corresponding function
+> to remove a power-domain. For most devices this may be fine as the power
+> domains are never removed, however, for devices that wish to populate
+> the power-domains from within a driver, having the ability to remove a
+> power domain if the probing of the device fails or the driver is unloaded
+> is necessary. Therefore, add a function to remove a power-domain. Please
+> note that the power domain can only be removed if there are no devices
+> using the power-domain and it is not linked to another domain.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So I guess this introduces a problem not uncommon to other types of
+resources. If you remove the driver, even if you fail ->remove() the
+module may still go away along with any code associated with it. So
+even if the PM domains can't be removed, you can't prevent the module
+=66rom going away. That could be somewhat mitigated if we were holding a
+module reference count, because then the only way to unload the driver
+would be via sysfs (we could prevent that too, which might be the best
+way to do this today).
+
+There is work underway to solve this generically, Rafael was working on
+this, so I'm not sure we need to add additional infrastructure to the PM
+domain code as part of this series. But we may want to mark the Tegra
+PMC driver as .suppress_bind_attrs =3D true, to make sure it can't be
+removed.
+
+> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+>  drivers/base/power/domain.c | 31 +++++++++++++++++++++++++++++++
+>  include/linux/pm_domain.h   |  5 +++++
+>  2 files changed, 36 insertions(+)
+>=20
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 608bc00655ee..22f6e9d738bf 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1557,6 +1557,37 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
+>  }
+>  EXPORT_SYMBOL_GPL(pm_genpd_init);
+> =20
+> +/**
+> + * pm_genpd_remove - Remove a generic I/O PM domain object.
+> + * @genpd: PM domain object to remove.
+> + */
+
+Would it be worth noting here that the object is only removed from the
+list of domains, but that users are still responsible for freeing any
+resources (such as memory) associated with it? It seems like this might
+be obvious enough given the usage model of pm_genpd_init(), but it's
+something that I noticed missing from the function.
+
+Otherwise this looks fine:
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--GdbWtwDHkcXqP16f
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJW0/ADAAoJEN0jrNd/PrOh2NUP/25RqAgF2c0W88VGCKxD0dKE
+1/AK73iF5KKdnGKJ4Rsu86wi1yAH3qV5IBVsNUFU6hRBjZw/HW6qnNKTIb5TZCBE
+anxQek+2MjdVvB4x6uI5k2fvBG/FUiAvM9v1TmutT9eCmSMfsiN+x8uM9CBMg000
+IjsQt0fNa/k6JKJsAF+NPluiUV/4ZPBhvZG7ZIrxEJp1FHWglwtFogcdVm3tY7lI
+XA1aTzv2pWGALCv2Zj4gAS4chrFhMreTc5Pr9OVK4OmyS8RmQeU47YTBc+/LvWJE
+ZQ2y/pA7c0EeRq4FHBjTpVf6q9dy/nAbhwIdQ1FFBjDvunUysA3x9V2nYKeeEiUq
+w3o/yPT8YXHuunQd/qKeqvq/oxVcepArDhPAFJ2nrjbABvuHUVlk3BHHNaxNMr6b
+59iAm+LdhdE3R+mkIQjVCAVX7kgpHpOLVlG8bIeKWxc+eVABcZ9EmmZmYVwIg9Ey
+ny9Fxd6xVkud2o76XUbIVwFkyW66UtJb5O/XqkW4+jWn7N2mq0O5SlDNTe8nGYmN
+W4Y7XV03diq0pOPDH9m+drMKcCAyW/bzW/d7n7tUwW/pCe5lExzGwU5djtryHBzT
+QTiUbcmjs3oMAtdeMXvShKGIXmgOCHzrlydXNmJHSMQwnmaI+fX8WHjSkwbNQmos
+j4AxtstNos4z38DrFx0C
+=+kt+
+-----END PGP SIGNATURE-----
+
+--GdbWtwDHkcXqP16f--
