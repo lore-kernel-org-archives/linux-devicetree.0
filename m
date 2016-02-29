@@ -1,57 +1,56 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 1/2] can: rcar_can: Add r8a7795 support
-Date: Mon, 29 Feb 2016 11:02:22 +0100
-Message-ID: <56D4172E.4050407@pengutronix.de>
-References: <1456737661-20538-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1456737661-20538-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56D411A5.9070706@pengutronix.de>
- <SG2PR06MB10380FC567E038EA92D5401EC3BA0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on device tree
+Date: Mon, 29 Feb 2016 11:05:37 +0100
+Message-ID: <8056913.EWiGLtcdOV@wuerfel>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com> <1456531704.5360.53.camel@buserror.net> <CADRPPNQhmb3bET9fV072ad5FEHAPrjuXSze1HwnRnKMRmFi8cg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="91c4EuRkOnW0mIoP9axSHeADILd2MUGcP"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB10380FC567E038EA92D5401EC3BA0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "wg@grandegger.com" <wg@grandegger.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNQhmb3bET9fV072ad5FEHAPrjuXSze1HwnRnKMRmFi8cg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Li Yang <leoli@freescale.com>
+Cc: Scott Wood <oss@buserror.net>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jia Hongtao <hongtao.jia@freescale.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---91c4EuRkOnW0mIoP9axSHeADILd2MUGcP
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Friday 26 February 2016 18:41:06 Li Yang wrote:
+> >> >
+> >> > It would be perfect if this it true.  But I tried with the following
+> >> > change, it just makes QORIQ_CPUFREQ non-selectable if THERMAL=m.
+> >> >
+> >> > diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+> >> > index dcb972a38fbc..ca05037dd565 100644
+> >> > --- a/drivers/cpufreq/Kconfig
+> >> > +++ b/drivers/cpufreq/Kconfig
+> >> > @@ -297,6 +297,7 @@ endif
+> >> >  config QORIQ_CPUFREQ
+> >> >         tristate "CPU frequency scaling driver for Freescale QorIQ SoCs"
+> >> >         depends on OF && COMMON_CLK && (PPC_E500MC || ARM)
+> >> > +       depends on !CPU_THERMAL || THERMAL=y
+> >> >         select CLK_QORIQ
+> >> >         help
+> >> >           This adds the CPUFreq driver support for Freescale QorIQ SoCs
+> >>
 
-On 02/29/2016 10:56 AM, Ramesh Shanmugasundaram wrote:
-> root@salvator-x:~# can-calc-bit-timing -c 39999998 rcar_can =20
+Oops.
 
-Can you send me the patches to support the rcar_can. On the linux-can ML
-or github pull request.
-
-Thanks,
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+> >> I find we can achieve your desired result with the following change instead:
+> >>
+> >> +       depends on (THERMAL=m && m) || THERMAL=y || THERMAL=n
+> >
+> > "depends on THERMAL || !THERMAL" should also work.
+> 
+> Right.  And this is more simpler.
 
 
---91c4EuRkOnW0mIoP9axSHeADILd2MUGcP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Note the check on !CPU_THERMAL rather than !THERMAL in my patch, that
+part was correct. I think the line should be
 
------BEGIN PGP SIGNATURE-----
+	depends on !CPU_THERMAL || THERMAL
 
-iQEcBAEBCgAGBQJW1BcuAAoJED07qiWsqSVqZLoH/0b812uFBjQenKKxA6LeTN20
-z7pev5rXBYS8uBd1/RJ5aAZRqnEmEIoVKxSOa1PPRYLTqoUog5Ev9QlS+UQdVdBr
-tw5jPlI7btvT7NraWA7ZaOFIVCp6lvpPC7dfY4JX5oXvcLmRLEOUP0KAP9rSgupw
-RjKxTSuAPk5uRuv8nI9ua85cCMhLu+ojjx4SGY2hWVP/6VkGiMc/agBfhfzHDX6G
-S822ZTTKwRSpCHx8jimyhHAz6aLDYVdbKWwaV+M/V9K6Cpo4y1bp2c6GSmgZr52R
-mycX8naTomBCsMG7pvTyQp3uGuAzdy4h1VTErXH/yKxwzAwAsgg25Mb9K9jXM7o=
-=ahJr
------END PGP SIGNATURE-----
+as some other drivers do. I must have copied the line
+from ARM_MT8173_CPUFREQ, which is a 'bool' symbol, when
+it should have been the same as ARM_BIG_LITTLE_CPUFREQ and
+CPUFREQ_DT.
 
---91c4EuRkOnW0mIoP9axSHeADILd2MUGcP--
+	Arnd
