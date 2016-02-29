@@ -1,102 +1,175 @@
 From: kernel@martin.sperl.org
-Subject: [PATCH 6/8] clk: bcm2835: add arm clock
-Date: Mon, 29 Feb 2016 15:44:00 +0000
-Message-ID: <1456760642-2412-7-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH 3/8] clk: bcm2835: add missing osc and per clocks
+Date: Mon, 29 Feb 2016 15:43:57 +0000
+Message-ID: <1456760642-2412-4-git-send-email-kernel@martin.sperl.org>
 References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Jonathan Corbet <corbet@lwn.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-Add the missing "ARM" clock to the clock framework.
-This clock is essentially a gate clock but with a
-16 channel mux.
-
-We assume this is a mux that uses PLLB_ARM, so a dedicated
-mux for arm was created.
+Add definitions for the following clocks:
+* AVE0
+* DFT
+* GP0
+* GP1
+* GP2
+* PULSE
+* SLIM
+* SMI
+* TEC
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       |   34 +++++++++++++++++++++++++++++++++-
- include/dt-bindings/clock/bcm2835.h |    1 +
- 2 files changed, 34 insertions(+), 1 deletion(-)
+ drivers/clk/bcm/clk-bcm2835.c       |   71 +++++++++++++++++++++++++++++++++++
+ include/dt-bindings/clock/bcm2835.h |   10 +++++
+ 2 files changed, 81 insertions(+)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 91a6086..12ce209 100644
+index 710cf15..f43e1ca 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -118,6 +118,7 @@
+@@ -118,6 +118,8 @@
  #define CM_SDCCTL		0x1a8
  #define CM_SDCDIV		0x1ac
  #define CM_ARMCTL		0x1b0
-+#define CM_ARMDIV		0x1b4
- #define CM_AVEOCTL		0x1b8
- #define CM_AVEODIV		0x1bc
++#define CM_AVEOCTL		0x1b8
++#define CM_AVEODIV		0x1bc
  #define CM_EMMCCTL		0x1c0
-@@ -1542,11 +1543,33 @@ static const char * const bcm2835_clock_dsi1_parents[] = {
- 	.parents = bcm2835_clock_dsi1_parents,				\
- 	__VA_ARGS__)
+ #define CM_EMMCDIV		0x1c4
  
-+/* arm parent mux */
-+static const char * const bcm2835_clock_arm_parents[] = {
-+	"gnd",
-+	"xosc",
-+	"testdebug0",
-+	"testdebug1",
-+	/*
-+	 * see comments for dsi0 for possible candidates
-+	 * should contain "pllb_arm" at one position
-+	 *   plla_core/per
-+	 *   pllb_arm or pllb_core/per
-+	 *   pllc_core/per
-+	 *   plld_core/per
-+	 *   pllh_aux/pix
-+	 * up to 16 different parents
-+	 */
-+};
-+
-+#define REGISTER_ARM_CLK(...)	REGISTER_CLK(				\
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_arm_parents),	\
-+	.parents = bcm2835_clock_arm_parents,				\
-+	__VA_ARGS__)
-+
- /*
-  * the real definition of all the pll, pll_dividers and clocks
-  * these make use of the above REGISTER_* macros
-  */
--
- static const struct bcm2835_clk_desc clk_desc_array[] = {
- 	/* the PLL + PLL dividers */
- 
-@@ -2038,6 +2061,15 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.int_bits = 1,
+@@ -1738,6 +1740,18 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.div_reg = CM_TSENSDIV,
+ 		.int_bits = 5,
  		.frac_bits = 0),
- 
-+	/* arm clocks */
-+	[BCM2835_CLOCK_DSI1_IMAGE] = REGISTER_ARM_CLK(
-+		/* this is in principle a gate with a 4 bit mux */
-+		.name = "arm",
-+		.ctl_reg = CM_ARMCTL,
-+		.div_reg = CM_ARMDIV,
-+		.int_bits = 1,
++	[BCM2835_CLOCK_PULSE]	= REGISTER_OSC_CLK(
++		.name = "pulse",
++		.ctl_reg = CM_PULSECTL,
++		.div_reg = CM_PULSEDIV,
++		.int_bits = 12,
 +		.frac_bits = 0),
-+
- 	/* the gates */
++	[BCM2835_CLOCK_TEC]	= REGISTER_OSC_CLK(
++		.name = "tec",
++		.ctl_reg = CM_TECCTL,
++		.div_reg = CM_TECDIV,
++		.int_bits = 6,
++		.frac_bits = 0),
  
+ 	/* clocks with vpu parent mux */
+ 	[BCM2835_CLOCK_H264]	= REGISTER_VPU_CLK(
+@@ -1752,6 +1766,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.div_reg = CM_ISPDIV,
+ 		.int_bits = 4,
+ 		.frac_bits = 8),
++
  	/*
+ 	 * Secondary SDRAM clock.  Used for low-voltage modes when the PLL
+ 	 * in the SDRAM controller can't be used.
+@@ -1783,6 +1798,24 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.is_vpu_clock = true),
+ 
+ 	/* clocks with per parent mux */
++	[BCM2835_CLOCK_AVEO]	= REGISTER_PER_CLK(
++		.name = "aveo",
++		.ctl_reg = CM_AVEOCTL,
++		.div_reg = CM_AVEODIV,
++		.int_bits = 4,
++		.frac_bits = 0),
++	[BCM2835_CLOCK_DFT]	= REGISTER_PER_CLK(
++		.name = "dft",
++		.ctl_reg = CM_DFTCTL,
++		.div_reg = CM_DFTDIV,
++		.int_bits = 5,
++		.frac_bits = 0),
++	[BCM2835_CLOCK_DFT]	= REGISTER_PER_CLK(
++		.name = "dpi",
++		.ctl_reg = CM_DPICTL,
++		.div_reg = CM_DPIDIV,
++		.int_bits = 4,
++		.frac_bits = 8),
+ 
+ 	/* Arasan EMMC clock */
+ 	[BCM2835_CLOCK_EMMC]	= REGISTER_PER_CLK(
+@@ -1791,6 +1824,30 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.div_reg = CM_EMMCDIV,
+ 		.int_bits = 4,
+ 		.frac_bits = 8),
++
++	/* General purpose (GPIO) clocks */
++	[BCM2835_CLOCK_GP0]	= REGISTER_PER_CLK(
++		.name = "gp0",
++		.ctl_reg = CM_GP0CTL,
++		.div_reg = CM_GP0DIV,
++		.int_bits = 12,
++		.frac_bits = 12,
++		.is_mash_clock = true),
++	[BCM2835_CLOCK_GP1]	= REGISTER_PER_CLK(
++		.name = "gp1",
++		.ctl_reg = CM_GP1CTL,
++		.div_reg = CM_GP1DIV,
++		.int_bits = 12,
++		.frac_bits = 12,
++		.is_mash_clock = true),
++	[BCM2835_CLOCK_GP2]	= REGISTER_PER_CLK(
++		.name = "gp2",
++		.ctl_reg = CM_GP2CTL,
++		.div_reg = CM_GP2DIV,
++		.int_bits = 12,
++		.frac_bits = 12,
++		.is_mash_clock = true),
++
+ 	/* HDMI state machine */
+ 	[BCM2835_CLOCK_HSM]	= REGISTER_PER_CLK(
+ 		.name = "hsm",
+@@ -1812,12 +1869,26 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.int_bits = 12,
+ 		.frac_bits = 12,
+ 		.is_mash_clock = true),
++	[BCM2835_CLOCK_SLIM]	= REGISTER_PER_CLK(
++		.name = "slim",
++		.ctl_reg = CM_SLIMCTL,
++		.div_reg = CM_SLIMDIV,
++		.int_bits = 12,
++		.frac_bits = 12,
++		.is_mash_clock = true),
++	[BCM2835_CLOCK_SMI]	= REGISTER_PER_CLK(
++		.name = "smi",
++		.ctl_reg = CM_SMICTL,
++		.div_reg = CM_SMIDIV,
++		.int_bits = 4,
++		.frac_bits = 8),
+ 	[BCM2835_CLOCK_UART]	= REGISTER_PER_CLK(
+ 		.name = "uart",
+ 		.ctl_reg = CM_UARTCTL,
+ 		.div_reg = CM_UARTDIV,
+ 		.int_bits = 10,
+ 		.frac_bits = 12),
++
+ 	/* TV encoder clock.  Only operating frequency is 108Mhz.  */
+ 	[BCM2835_CLOCK_VEC]	= REGISTER_PER_CLK(
+ 		.name = "vec",
 diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index 9254c78..109086e 100644
+index 9689812..f2e72e7 100644
 --- a/include/dt-bindings/clock/bcm2835.h
 +++ b/include/dt-bindings/clock/bcm2835.h
-@@ -70,3 +70,4 @@
- #define BCM2835_CLOCK_DSI0_IMAGE	52
- #define BCM2835_CLOCK_DSI1E		53
- #define BCM2835_CLOCK_DSI1_IMAGE	54
-+#define BCM2835_CLOCK_ARM		55
+@@ -53,3 +53,13 @@
+ #define BCM2835_PLLB_SP2		36
+ #define BCM2835_PLLD_DSI0		37
+ #define BCM2835_PLLD_DSI1		38
++
++#define BCM2835_CLOCK_AVEO		39
++#define BCM2835_CLOCK_DFT		40
++#define BCM2835_CLOCK_GP0		41
++#define BCM2835_CLOCK_GP1		42
++#define BCM2835_CLOCK_GP2		43
++#define BCM2835_CLOCK_PULSE		44
++#define BCM2835_CLOCK_SLIM		45
++#define BCM2835_CLOCK_SMI		46
++#define BCM2835_CLOCK_TEC		47
 -- 
 1.7.10.4
 
