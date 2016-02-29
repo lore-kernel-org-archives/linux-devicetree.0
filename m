@@ -1,106 +1,78 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/5] Modularize PCI_DW related drivers.
-Date: Mon, 29 Feb 2016 14:59:35 +0530
-Message-ID: <56D40F7F.5060204@ti.com>
-References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
- <6350001.oOdGGcH81x@wuerfel> <56CEB7BC.7010803@ti.com>
- <2837386.VTD89bjPJz@wuerfel>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 0/2] Add CAN support to r8a7795 SoC
+Date: Mon, 29 Feb 2016 10:34:59 +0100
+Message-ID: <56D410C3.7020106@pengutronix.de>
+References: <1456737661-20538-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2837386.VTD89bjPJz@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="msI5Cm51HadH9LhC9meAmI3NifBS8fj7i"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456737661-20538-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, wg@grandegger.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, chris.paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--msI5Cm51HadH9LhC9meAmI3NifBS8fj7i
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday 25 February 2016 02:05 PM, Arnd Bergmann wrote:
-> On Thursday 25 February 2016 13:43:48 Kishon Vijay Abraham I wrote:
->> Hi Arnd,
->>
->> On Wednesday 24 February 2016 02:34 PM, Arnd Bergmann wrote:
->>> On Wednesday 24 February 2016 11:39:26 Kishon Vijay Abraham I wrote:
->>>> Hi,
->>>>
->>>> On Monday 08 February 2016 05:30 AM, Paul Gortmaker wrote:
->>>>> In a recent patch series that aimed to remove code related to module
->>>>> unload for PCI support that was simply non modular, the discussion
->>>>> led to people wanting to keep the code and push towards taking the
->>>>> steps needed to support moving it towards tristate instead[1].
->>>>>
->>>>> Here, we take step one, which is simply making the Kconfig change
->>>>> and then dealing with any build fallout or modpost fallout.  What
->>>>> amounts to essentially a sanity build test.  To be clear, these
->>>>> have not been runtime validated; that will need to be done by those
->>>>> with access to real hardware.  However, the changes are not anything
->>>>> that should disrupt any existing built-in validation, so real world
->>>>> users should not be impacted by this change.
->>>>>
->>>>> We start with a smaller family of drivers; those that actively select
->>>>> PCI_DW, as a nice self contained group to test the waters and see if
->>>>> everyone is still good with this approach before investing more time
->>>>> on a wider scale to other pci/host/ code blocks.
->>>>>
->>>>> As such the drivers here share a dependency on having the same group
->>>>> of functions exported in order to successfully complete modpost.
->>>>>
->>>>> In addition, we have to stray outside drivers/pci to add exports
->>>>> in two places; once for an ARM fault handler, and once for an OF
->>>>> variable.
->>>>>
->>>>> The pci-keystone-dw.c instance was handled separately because it
->>>>> consists of two source files that need their own group of driver
->>>>> specific exports above and beyond the "shared" ones.
->>>>>
->>>>> Then we convert the Kconfig for all remaining at once; we could have
->>>>> done it on a per driver basis for ease of revert if anyone really
->>>>> objects, but since it would be a one line change, that seemed like
->>>>> not a real concern.
->>>>>
->>>>> Build testing was done on the linux-next tree for arm allmodconfig.
->>>>
->>>> I took these patches and gave a test with DRA7xx board. As expected there was
->>>> no issues when the driver was built-in. However when I tried to rmmod/modprobe
->>>> I got this error [2].
->>>
->>> Thanks for testing this!
->>>
->>>> [2] -> http://pastebin.ubuntu.com/15185894/
->>>
->>> It looks like you are hitting the BUG_ON() in ioremap_pte_range()
->>> that checks if a virtual address already has a page table entry,
->>> which in turn is probably a result of dw_pcie_host_init()
->>> calling pci_remap_iospace() again for the same memory area
->>> it has called the last time, and no cleanup done inbetween.
->>>
->>> Could you try adding a pci_unmap_iospace() and calling that
->>> in the device remove function? Let me know if you need help
->>> implementing it.
->>
->> That didn't look straight forward to me :-( I'll try to see this next week. Any
->> help from you will make it simpler for me.
-> 
-> I tried writing the function now, and I think it's actually quite easy:
-> 
-> void pci_unmap_iospace(const struct resource *res)
-> {
-> #if defined(PCI_IOBASE) && defined(CONFIG_MMU)
->         return iounmap(PCI_IOBASE + res->start);
-> #endif
-> }
-> 
-> You just need to pass the same resource in here htat you pass into
-> pci_remap_iospace().
+On 02/29/2016 10:20 AM, Ramesh Shanmugasundaram wrote:
+> This patch set adds CAN support to r8a7795 SoC.
+>=20
+> This is based on linux-next (tag: next-20160225).
 
-I still seem to get the abort in ioremap_page_range().
+Please rebase to tags/linux-can-next-for-4.6-20160226 of
+git://git.kernel.org/pub/scm/linux/kernel/git/mkl/linux-can-next.git
 
-Here's the patch I used [3] and here's the kernel log [4].
+> Pinctrl & Clock related to the controller are already submitted as belo=
+w:
+>=20
+> https://lkml.org/lkml/2016/2/25/546
+> https://lkml.org/lkml/2016/2/26/452
+> http://www.spinics.net/lists/arm-kernel/msg487238.html
+>=20
+> The compatibility string used follows the same format as in this patch:=
 
-[3] -> http://pastebin.ubuntu.com/15241614/
-[4] -> http://pastebin.ubuntu.com/15241637/
+> http://www.spinics.net/lists/netdev/msg365756.html
+>=20
+> Ramesh Shanmugasundaram (2):
+>   can: rcar_can: Add r8a7795 support
+>   arm64: dts: r8a7795: Add CAN support
+>=20
+>  .../devicetree/bindings/net/can/rcar_can.txt       | 12 +++++++++
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi           | 30 ++++++++++++++=
+++++++++
+>  drivers/net/can/Kconfig                            |  2 +-
+>  drivers/net/can/rcar_can.c                         |  7 ++++-
+>  4 files changed, 49 insertions(+), 2 deletions(-)
+>=20
 
-Thanks
-Kishon
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--msI5Cm51HadH9LhC9meAmI3NifBS8fj7i
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJW1BDDAAoJED07qiWsqSVq028H/imPQ5sbo1KPNCizsCSmlbwS
+3IQBwHcKUTUnYzyUnuHIohWDyChdvB5QybKAtXa7dKByNfINgRBjaI7rX4qSoLS2
+x5/rxbvCd/4g3RftJxa+9y73MD6JmSIXjGrLIii/Zjt8qd4MEO0jI0Md1aH1WiCm
+II0EGnTh3x+tkwTaPm0ztC5C88gWmqlfg+oRbZ2/C37TfEW1VXabzsDME22DoMYk
+K4CW2ACzNuJkuR3YgD/6F/BpniOyDts0vaR4P5Q/WY/md14svKKtCkdBaApZOa/d
+ylV55w4QXQ+IxB+zmLnZeK7fp1mLACjcfPTGGhjpcm7v59DtJEyq3DJUxADokbs=
+=ektL
+-----END PGP SIGNATURE-----
+
+--msI5Cm51HadH9LhC9meAmI3NifBS8fj7i--
