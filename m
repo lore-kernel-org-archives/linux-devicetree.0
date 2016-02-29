@@ -1,126 +1,89 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 3/3] leds: Add driver for the ISSI IS31FL32xx family
- of LED drivers
-Date: Mon, 29 Feb 2016 20:40:49 +0100 (CET)
-Message-ID: <782672963.371975.aca66df2-e579-423c-98e1-72ca1dffc547.open-xchange@email.1und1.de>
-References: <1456251445-23970-1-git-send-email-drivshin.allworx@gmail.com>
- <1456251445-23970-4-git-send-email-drivshin.allworx@gmail.com>
- <56CDD4AA.5030801@samsung.com>
- <20160224212450.195330ed.drivshin.allworx@gmail.com>
- <56CEDDBE.2080601@samsung.com>
- <20160225141215.2ef2707e.drivshin.allworx@gmail.com>
- <56D01F42.70409@samsung.com>
- <20160226165823.2ff62b21.drivshin.allworx@gmail.com>
- <2050552945.311154.eb44c2f6-8870-42b4-ada5-1ccea76f532b.open-xchange@email.1und1.de>
- <20160229130202.1a5bad0d.drivshin.allworx@gmail.com>
+From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 3/5] dt, numa: Add NUMA dt binding implementation.
+Date: Mon, 29 Feb 2016 20:45:22 +0100
+Message-ID: <20160229194522.GH31343@rric.localdomain>
+References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
+ <1456192703-2274-4-git-send-email-ddaney.cavm@gmail.com>
+ <20160229172956.GF31343@rric.localdomain>
+ <56D48A5C.6040709@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20160229130202.1a5bad0d.drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-leds@vger.kernel.org, Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56D48A5C.6040709-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-> "David Rivshin (Allworx)" <drivshin.allworx@gmail.com> hat am 29. Februar 2016
-> um 19:02 geschrieben:
->
->
-> On Sat, 27 Feb 2016 11:48:45 +0100 (CET)
-> Stefan Wahren <stefan.wahren@i2se.com> wrote:
->
-> > Hi David,
+On 29.02.16 10:13:48, David Daney wrote:
+> On 02/29/2016 09:29 AM, Robert Richter wrote:
+> >On 22.02.16 17:58:21, David Daney wrote:
+> >>From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> >>
+> >>ADD device tree node parsing for NUMA topology using device
+> >>"numa-node-id" property distance-map.
+> >>
+> >>Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >>Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> >>Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> >>---
+> >>  drivers/of/Kconfig   |   3 +
+> >>  drivers/of/Makefile  |   1 +
+> >>  drivers/of/of_numa.c | 211 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> >>  include/linux/of.h   |   9 +++
+> >>  4 files changed, 224 insertions(+)
+> >>  create mode 100644 drivers/of/of_numa.c
+> >>
+> >>diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> >>index e2a4841..b3bec3a 100644
+> >>--- a/drivers/of/Kconfig
+> >>+++ b/drivers/of/Kconfig
+> >>@@ -112,4 +112,7 @@ config OF_OVERLAY
+> >>  	  While this option is selected automatically when needed, you can
+> >>  	  enable it manually to improve device tree unit test coverage.
+> >>
+> >>+config OF_NUMA
 > >
-> > > "David Rivshin (Allworx)" <drivshin.allworx@gmail.com> hat am 26. Februar
-> > > 2016
-> > > um 22:58 geschrieben:
-> > >
-> > >
-> > > On Fri, 26 Feb 2016 10:47:46 +0100
-> > > Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
-> > >
-> > > > On 02/25/2016 08:12 PM, David Rivshin (Allworx) wrote:
-> > > > > On Thu, 25 Feb 2016 11:55:58 +0100
-> > > > > Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
-> > > > >
-> > > > >> On 02/25/2016 03:24 AM, David Rivshin (Allworx) wrote:
-> > > > >>> On Wed, 24 Feb 2016 17:04:58 +0100
-> > > > >>> Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
-> > > > >>>
-> > > > >>>> Hi David,
-> > > > >>>>
-> > > > >>>> Thanks for the patch. Very nice driver. I have few comments
-> > > > >>>> below.
-> > > > >>>
-> > > > >>> Thanks Jacek, I have responded the comments inline. I also wanted to
-> > > > >>> double check whether you noticed some questions I had in the cover
-> > > > >>> letter [1]. As I mentioned in another email to Rob, in hindsight I'm
-> > > > >>> guessing I should have included them in the patch comments as well
-> > > > >>> (or
-> > > > >>> instead of).
-> > > > >>
-> > > > >> I saw them. I assumed that the review itself will address those
-> > > > >> questions.
-> > > > >
-> > > > > Fair enough, thanks for the confirmation.
-> > > > >
-> > > > >>> Your review comments here effectively answered some of the
-> > > > >>> questions,
-> > > > >>> but
-> > > > >>> the big one I'm still unsure of is whether it actually makes sense
-> > > > >>> to
-> > > > >>> have all 4 of these devices supported by a single driver.
-> > > > >>
-> > > > >> It's perfectly fine. Many drivers implement this pattern.
-> > > > >
-> > > > > OK, then I'll assume you think this driver is not yet too complicated
-> > > > > for it's own good. Out of curiosity, might that view change if the
-> > > > > 3216 specific features were ever implemented, especially GPIO and HW
-> > > > > animation support? Gut feel is that would make 3216 specific code
-> > > > > bigger than the rest of the code combined.
-> > > >
-> > > > I don't think so.
-> > >
-> > > Thanks, that helps calibrate my intuition for the future.
-> > >
-> > > > > Bigger question is what should be done in terms of the overlap in
-> > > > > device
-> > > > > support between this driver and leds-sn3218? If you think I should
-> > > > > leave
-> > > > > the *3218 support in this driver, then I would propose:
-> > > > > - remove leds-sn3218 and its separate binding doc
-> > > > > - add the "si-en,sn3218" compatible string to this driver and binding
-> > > > > doc
-> > > > > Note that while I expect this driver to work with the 3218 chips, I do
-> > > > > not have one to test against. If we go down this route I would
-> > > > > definitely
-> > > > > want Stefan to test so that I don't accidentally break him.
-> > > >
-> > > > I'd prefer to have a single driver for the same hardware. Stefan, would
-> > > > it be possible for you to test David's driver with the hardware you
-> > > > have an access to?
-> > >
-> > > Stefan, one thing to note: the existing sn3218 driver/binding uses 0-based
-> > > 'reg' values, and this driver/binding uses 1-based 'reg' values. So your
-> > > devicetree(s) would need to be updated for that (as well as the compatible
-> > > string).
-> > >
-> > > I didn't see a final answer from Rob as to which way is most appropriate
-> > > for these devices yet, so I don't know which way this will end up in the
-> > > final patch.
+> >In arch/arm64/Kconfig you now need to:
 > >
-> > unfortunately i'm very busy. Yes, i will test it, but i can't promise when.
+> >	select OF_NUMA if NUMA && OF
 > >
-> > Should i apply this version or wait for the next?
->
-> Thanks Stefan. I am hoping to have the next version ready in the next day or
-> so. To better use your time, it's probably best to wait for that.
+> >This should depend here on OF and NUMA and enabled in that case. Why
+> >moving that to arch code?
+> 
+> The dependency on of_numa.o is in the architecture specific code, so that is
+> where the Kconfig select should be too.
 
-i'm okay with replacing leds-sn3218. The pins of the SN3218 in the datasheet [1]
-are 1-based.
-Sorry, my fault.
+If you grep for select in Kconfig files you will see that dependency
+checkers in the form of select ... if ... are very rare. Since select
+does not check for depends-on at all, defbool y is commonly used to
+enable a config in case all dependencies match. If OF_NUMA only
+supports ARM64, why not state this there? It is common to enable
+certain configs in drivers/ only for a some archs.
 
-[1] - http://www.si-en.com/uploadpdf/s2011517171720.pdf
+> For new code, we try to avoid putting architecture specific things into the
+> core Kconfig files.
+
+But to avoid arch configs in generic Kconfigs, define HAVE_OF_NUMA,
+add it as dependency to OF_NUMA and select it in arch/arm64/Kconfig.
+OF_NUMA is then enabled with defbool y if all requirements are met.
+
+This also addresses your concerns below.
+
+-Robert
+
+> Since arm64 is the only architecture that is currently using this, we don't
+> want to select it for non-arm64 kernels that happen to select NUMA && OF.
+> 
+> I will restore the depends, as it is guard against errors in the
+> architecture specific Kconfig select statements, but I am going to leave the
+> NUMA && OF in the arm64/Kconfig for clarity.
+> 
+> >This duplicates code as the same needs to be
+> >implemented for every arch.
+> >
+> 
+> Better to duplicate a single Kconfig select statement a few times in
+> architecture specific Kconfig files, than force people to continuously
+> modify the depends in  drivers/of/Kconfig
