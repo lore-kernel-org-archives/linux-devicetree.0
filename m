@@ -1,119 +1,116 @@
 From: kernel@martin.sperl.org
-Subject: [PATCH 4/8] clk: bcm2835: add the camera related clocks cam0, cam1 and ccp2
-Date: Mon, 29 Feb 2016 15:43:58 +0000
-Message-ID: <1456760642-2412-5-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH 2/8] clk: bcm2835: add missing PLL clock divider
+Date: Mon, 29 Feb 2016 15:43:56 +0000
+Message-ID: <1456760642-2412-3-git-send-email-kernel@martin.sperl.org>
 References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: Jonathan Corbet <corbet@lwn.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Martin Sperl <kernel@martin.sperl.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel@martin.sperl.org>
 
-Add the camera related clocks: cam0, cam1 and ccp2
-and the corresponding ccp2 clock mux definition.
-
-Note that the mux definition is incomplete and essentially
-is identical to the osc mux right now. But it should contain
-at least plla_ccp2 in one location.
+Add the missing pll clock divider definitions.
 
 Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       |   53 +++++++++++++++++++++++++++++++++++
- include/dt-bindings/clock/bcm2835.h |    3 ++
- 2 files changed, 56 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c       |   50 +++++++++++++++++++++++++++++++++++
+ include/dt-bindings/clock/bcm2835.h |    8 ++++++
+ 2 files changed, 58 insertions(+)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index f43e1ca..aec9b22 100644
+index 01a48cb..710cf15 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1455,6 +1455,34 @@ static const char *const bcm2835_clock_vpu_parents[] = {
- 	.parents = bcm2835_clock_vpu_parents,				\
- 	__VA_ARGS__)
- 
-+/* ccp2 (camera) parent mux */
-+static const char * const bcm2835_clock_ccp2_parents[] = {
-+	"gnd",
-+	"xosc",
-+	"testdebug0",
-+	"testdebug1",
-+	/*
-+	 * more parent clocks, but unknown at this time
-+	 * the current definition follows the "common" pattern
-+	 * that already applies to all the other parent mux
-+	 * in so far as all the known mux contain gnd, xosc, testdebug0/1
-+	 * as the first 3 entries.
-+	 * The mux should contain "plla_ccp2" at one position.
-+	 * here some possible candidates for the next parents in the list.
-+	 *   plla_ccp2 or ppla_core/per
-+	 *   pllb_core/per
-+	 *   pllc_core/per
-+	 *   plld_core/per
-+	 *   pllh_aux/pix
-+	 * up to 16 different parents
-+	 */
-+};
-+
-+#define REGISTER_CCP2_CLK(...)	REGISTER_CLK(				\
-+	.num_mux_parents = ARRAY_SIZE(bcm2835_clock_ccp2_parents),	\
-+	.parents = bcm2835_clock_ccp2_parents,				\
-+	__VA_ARGS__)
-+
- /*
-  * the real definition of all the pll, pll_dividers and clocks
-  * these make use of the above REGISTER_* macros
-@@ -1804,6 +1832,18 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.div_reg = CM_AVEODIV,
- 		.int_bits = 4,
- 		.frac_bits = 0),
-+	[BCM2835_CLOCK_CAM0]	= REGISTER_PER_CLK(
-+		.name = "cam0",
-+		.ctl_reg = CM_CAM0CTL,
-+		.div_reg = CM_CAM0DIV,
-+		.int_bits = 4,
-+		.frac_bits = 8),
-+	[BCM2835_CLOCK_CAM1]	= REGISTER_PER_CLK(
-+		.name = "cam1",
-+		.ctl_reg = CM_CAM1CTL,
-+		.div_reg = CM_CAM1DIV,
-+		.int_bits = 4,
-+		.frac_bits = 8),
- 	[BCM2835_CLOCK_DFT]	= REGISTER_PER_CLK(
- 		.name = "dft",
- 		.ctl_reg = CM_DFTCTL,
-@@ -1897,6 +1937,19 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.int_bits = 4,
- 		.frac_bits = 0),
- 
-+	/* clocks with ccp2 parent mux */
-+	[BCM2835_CLOCK_CCP2]	= REGISTER_CCP2_CLK(
-+		/*
-+		 * this is possibly a gate of the plla_ccp2 divider
-+		 * but as CTL contains 4 bits for mux selection
-+		 * it must be a mux
-+		 */
-+		.name = "ccp2",
-+		.ctl_reg = CM_CCP2CTL,
-+		.div_reg = CM_CCP2DIV,
-+		.int_bits = 1,
-+		.frac_bits = 0),
-+
- 	/* the gates */
- 
+@@ -1497,6 +1497,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.load_mask = CM_PLLA_LOADPER,
+ 		.hold_mask = CM_PLLA_HOLDPER,
+ 		.fixed_divider = 1),
++	[BCM2835_PLLA_DSI0]	= REGISTER_PLL_DIV(
++		.name = "plla_dsi0",
++		.source_pll = "plla",
++		.cm_reg = CM_PLLA,
++		.a2w_reg = A2W_PLLA_DSI0,
++		.load_mask = CM_PLLA_LOADDSI0,
++		.hold_mask = CM_PLLA_HOLDDSI0,
++		.fixed_divider = 1),
++	[BCM2835_PLLA_CCP2]	= REGISTER_PLL_DIV(
++		.name = "plla_ccp2",
++		.source_pll = "plla",
++		.cm_reg = CM_PLLA,
++		.a2w_reg = A2W_PLLA_DSI0,
++		.load_mask = CM_PLLA_LOADCCP2,
++		.hold_mask = CM_PLLA_HOLDCCP2,
++		.fixed_divider = 1),
+
+ 	/* PLLB is used for the ARM's clock. */
+ 	[BCM2835_PLLB]		= REGISTER_PLL(
+@@ -1521,6 +1537,24 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.load_mask = CM_PLLB_LOADARM,
+ 		.hold_mask = CM_PLLB_HOLDARM,
+ 		.fixed_divider = 1),
++	[BCM2835_PLLB_SP0]	= REGISTER_PLL_DIV(
++		.name = "pllb_sp0",
++		.source_pll = "pllb",
++		.cm_reg = CM_PLLB,
++		.a2w_reg = A2W_PLLB_SP0,
++		.fixed_divider = 1),
++	[BCM2835_PLLB_SP1]	= REGISTER_PLL_DIV(
++		.name = "pllb_sp1",
++		.source_pll = "pllb",
++		.cm_reg = CM_PLLB,
++		.a2w_reg = A2W_PLLB_SP1,
++		.fixed_divider = 1),
++	[BCM2835_PLLB_SP2]	= REGISTER_PLL_DIV(
++		.name = "pllb_sp2",
++		.source_pll = "pllb",
++		.cm_reg = CM_PLLB,
++		.a2w_reg = A2W_PLLB_SP2,
++		.fixed_divider = 1),
+
  	/*
+ 	 * PLLC is the core PLL, used to drive the core VPU clock.
+@@ -1611,6 +1645,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 		.load_mask = CM_PLLD_LOADPER,
+ 		.hold_mask = CM_PLLD_HOLDPER,
+ 		.fixed_divider = 1),
++	[BCM2835_PLLD_DSI0]	= REGISTER_PLL_DIV(
++		.name = "plld_dsi0",
++		.source_pll = "plld",
++		.cm_reg = CM_PLLD,
++		.a2w_reg = A2W_PLLD_DSI0,
++		.load_mask = CM_PLLD_LOADDSI0,
++		.hold_mask = CM_PLLD_HOLDDSI0,
++		.fixed_divider = 1),
++	[BCM2835_PLLD_DSI1]	= REGISTER_PLL_DIV(
++		.name = "plld_dsi1",
++		.source_pll = "plld",
++		.cm_reg = CM_PLLD,
++		.a2w_reg = A2W_PLLD_DSI1,
++		.load_mask = CM_PLLD_LOADDSI1,
++		.hold_mask = CM_PLLD_HOLDDSI1,
++		.fixed_divider = 1),
+
+ 	/*
+ 	 * PLLH is used to supply the pixel clock or the AUX clock for the
 diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index f2e72e7..1d70088 100644
+index 9a7b4a5..9689812 100644
 --- a/include/dt-bindings/clock/bcm2835.h
 +++ b/include/dt-bindings/clock/bcm2835.h
-@@ -63,3 +63,6 @@
- #define BCM2835_CLOCK_SLIM		45
- #define BCM2835_CLOCK_SMI		46
- #define BCM2835_CLOCK_TEC		47
-+#define BCM2835_CLOCK_CAM0		48
-+#define BCM2835_CLOCK_CAM1		49
-+#define BCM2835_CLOCK_CCP2		50
--- 
+@@ -45,3 +45,11 @@
+ #define BCM2835_CLOCK_PERI_IMAGE	29
+ #define BCM2835_CLOCK_PWM		30
+ #define BCM2835_CLOCK_PCM		31
++
++#define BCM2835_PLLA_DSI0		32
++#define BCM2835_PLLA_CCP2		33
++#define BCM2835_PLLB_SP0		34
++#define BCM2835_PLLB_SP1		35
++#define BCM2835_PLLB_SP2		36
++#define BCM2835_PLLD_DSI0		37
++#define BCM2835_PLLD_DSI1		38
+--
 1.7.10.4
 
