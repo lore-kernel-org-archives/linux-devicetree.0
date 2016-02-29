@@ -1,53 +1,49 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 1/3] mwifiex: register platform specific driver
-Date: Mon, 29 Feb 2016 14:04:44 +0000
-Message-ID: <6e3955140c3d46e0ab3094432ae941ec@SC-EXCH04.marvell.com>
-References: <1455614079-4263-1-git-send-email-akarwar@marvell.com>
- <20160218143803.GX9654@rob-hp-laptop>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH 1/2] can: rcar_can: Add r8a7795 support
+Date: Mon, 29 Feb 2016 14:06:21 +0000
+Message-ID: <SG2PR06MB1038B0596DFE68AFE1B7E83BC3BA0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1456737661-20538-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1456737661-20538-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <56D411A5.9070706@pengutronix.de>
+ <SG2PR06MB10380FC567E038EA92D5401EC3BA0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <56D416A9.6080608@pengutronix.de> <56D43DC8.8010409@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160218143803.GX9654@rob-hp-laptop>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <56D43DC8.8010409@pengutronix.de>
 Content-Language: en-US
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org" <wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, February 18, 2016 8:08 PM
-> To: Amitkumar Karwar
-> Cc: linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nishant Sarmukadam;
-> wnhuang-F7+t8E8rja9Wk0Htik3J/w@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Cathy Luo; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xinming Hu
-> Subject: Re: [PATCH v4 1/3] mwifiex: register platform specific driver
-> 
-> On Tue, Feb 16, 2016 at 01:14:37AM -0800, Amitkumar Karwar wrote:
-> > From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >
-> > Platform device and driver provides easy way to interact with
-> > device-tree-enabled system.
-> >
-> > This patch registers platform driver and reorganise existing device
-> > tree specific code. Corresponding device tree binding file is also
-> > created.
-> >
-> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> > v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
-> > v4: Corrected the 'name' and 'compatible' property names.(Arnd
-> Bergmann and Rob
-> >     Herring)
-> >     Patch description wraped in 72 columns(Rob Herring)
-> >     Moved DT binding file to bindings/net/wireless/(Rob Herring)
-> > ---
-
-Thanks for reviewing mwifiex and btmrvl patch series.
-We are working on a updated version which will address your review comments.
-
-Regards,
-Amitkumar
+SGkgTWFyYywNCg0KPiBPbiAwMi8yOS8yMDE2IDExOjAwIEFNLCBNYXJjIEtsZWluZS1CdWRkZSB3
+cm90ZToNCj4gPiBJIHRoaW5rIGl0J3MgYmV0dGVyIHRvIGZpeCB0aGUgYWxnb3JpdGhtLiBJJ2xs
+IGxvb2sgaW50byBpdC4NCj4gDQo+IFdoYXQgYWJvdXQ6DQo+IA0KPiA+IC4vY2FuLWNhbGMtYml0
+LXRpbWluZyAtYyAzOTk5OTk5OCByY2FyX2Nhbg0KPiA+IEJpdCB0aW1pbmcgcGFyYW1ldGVycyBm
+b3IgcmNhcl9jYW4gd2l0aCAzOS45OTk5OTggTUh6IHJlZiBjbG9jaw0KPiA+IG5vbWluYWwgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWFsIEJpdHJ0ICAgbm9tICByZWFsIFNhbXBQ
+DQo+ID4gQml0cmF0ZSBUUVtuc10gUHJTIFBoUzEgUGhTMiBTSlcgQlJQIEJpdHJhdGUgRXJyb3Ig
+U2FtcFAgU2FtcFAgRXJyb3INCj4gQ2lCQ1INCj4gPiAxMDAwMDAwICAgIDEyNSAgIDIgICAgMyAg
+ICAyICAgMSAgIDUgIDk5OTk5OSAgMC4wJSA3NS4wJSA3NS4wJSAgMC4wJQ0KPiAweDQwMDQwMTAw
+DQo+ID4gIDgwMDAwMCAgICAxMjUgICAzICAgIDQgICAgMiAgIDEgICA1ICA3OTk5OTkgIDAuMCUg
+ODAuMCUgODAuMCUgIDAuMCUNCj4gMHg2MDA0MDEwMA0KPiA+ICA1MDAwMDAgICAgMTI1ICAgNiAg
+ICA3ICAgIDIgICAxICAgNSAgNDk5OTk5ICAwLjAlIDg3LjUlIDg3LjUlICAwLjAlDQo+IDB4YzAw
+NDAxMDANCj4gPiAgMjUwMDAwICAgIDI1MCAgIDYgICAgNyAgICAyICAgMSAgMTAgIDI0OTk5OSAg
+MC4wJSA4Ny41JSA4Ny41JSAgMC4wJQ0KPiAweGMwMDkwMTAwDQo+ID4gIDEyNTAwMCAgICA1MDAg
+ICA2ICAgIDcgICAgMiAgIDEgIDIwICAxMjQ5OTkgIDAuMCUgODcuNSUgODcuNSUgIDAuMCUNCj4g
+MHhjMDEzMDEwMA0KPiA+ICAxMDAwMDAgICAgNjI1ICAgNiAgICA3ICAgIDIgICAxICAyNSAgIDk5
+OTk5ICAwLjAlIDg3LjUlIDg3LjUlICAwLjAlDQo+IDB4YzAxODAxMDANCj4gPiAgIDUwMDAwICAg
+MTI1MCAgIDYgICAgNyAgICAyICAgMSAgNTAgICA0OTk5OSAgMC4wJSA4Ny41JSA4Ny41JSAgMC4w
+JQ0KPiAweGMwMzEwMTAwDQo+ID4gICAyMDAwMCAgIDMxMjUgICA2ICAgIDcgICAgMiAgIDEgMTI1
+ICAgMTk5OTkgIDAuMCUgODcuNSUgODcuNSUgIDAuMCUNCj4gMHhjMDdjMDEwMA0KPiA+ICAgMTAw
+MDAgICA2MjUwICAgNiAgICA3ICAgIDIgICAxIDI1MCAgICA5OTk5ICAwLjAlIDg3LjUlIDg3LjUl
+ICAwLjAlDQo+IDB4YzBmOTAxMDANCj4gDQoNCkkgdGhpbmssIGl0IHNob3VsZCBiZSBjb3JyZWN0
+LiBDYW4gSSBoYXZlIHRoZSBwYXRjaCBwbGVhc2UoY2FuLXV0aWxzIG9yIGtlcm5lbCk/IEknbGwg
+Z2l2ZSBpdCBhIGdvLg0KDQpNYW51YWwgZS5nLiBzaG93cywgZm9yIDFNYnBzIGFuZCA0ME1IeiBj
+bG9jaywgdHdvIHNldHRpbmdzIGFyZSBwb3NzaWJsZQ0KMTBUcSAtPiBCUlAgNA0KMjBUcSAtPiBC
+UlAgMg0KDQpDb25kaXRpb24gaXMgVFNFRzEgPiBUU0VHMiA+PSBTSlcgJiBiaXRyYXRlID0gY2xv
+Y2sgZnJlcS8oYnJwICogbnVtYmVyIG9mIFRxKQ0KDQpZb3VyIGUuZy4gc2F0aXNmaWVzIHRoZSBj
+b25kaXRpb24gYW5kIGhvcGVmdWxseSBpdCBzaG91bGQgYmUgT0suDQoNClRoYW5rcywNClJhbWVz
+aA0K
