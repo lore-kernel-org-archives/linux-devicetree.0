@@ -1,42 +1,68 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 2/8] Documentation: devicetree: amlogic: Document Meson GXBaby
-Date: Tue,  1 Mar 2016 00:44:19 +0100
-Message-ID: <1456789465-2962-3-git-send-email-afaerber@suse.de>
-References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
+Date: Mon, 29 Feb 2016 20:54:19 -0300
+Message-ID: <CAOMZO5BLYumOrBuoB5-RgzLAJ=o4zp9ocv4jcZRy=p6Pky1SyQ@mail.gmail.com>
+References: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
+	<1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
+	<CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
+	<20160229213850.GS2613@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1456789465-2962-1-git-send-email-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-meson@googlegroups.com
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Matthias Brugger <mbrugger@suse.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Saenz <nicolassaenzj@gmail.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160229213850.GS2613-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VXNlICJhbWxvZ2ljLG1lc29uLWd4YmIiIGNvbXBhdGlibGUgc3RyaW5nLgoKU2lnbmVkLW9mZi1i
-eTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYW1sb2dpYy50eHQgfCA0ICsrKysKIDEgZmlsZSBjaGFu
-Z2VkLCA0IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvYXJtL2FtbG9naWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2FybS9hbWxvZ2ljLnR4dAppbmRleCAxZGZlZTIwZWVlNzQuLjc3NmYwOGNhMjE1ZiAx
-MDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hbWxvZ2lj
-LnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FtbG9naWMu
-dHh0CkBAIC0xMyw2ICsxMywxMCBAQCBCb2FyZHMgd2l0aCB0aGUgQW1sb2dpYyBNZXNvbjhiIFNv
-QyBzaGFsbCBoYXZlIHRoZSBmb2xsb3dpbmcgcHJvcGVydGllczoKICAgUmVxdWlyZWQgcm9vdCBu
-b2RlIHByb3BlcnR5OgogICAgIGNvbXBhdGlibGU6ICJhbWxvZ2ljLG1lc29uOGIiOwogCitCb2Fy
-ZHMgd2l0aCB0aGUgQW1sb2dpYyBNZXNvbiBHWEJhYnkgU29DIHNoYWxsIGhhdmUgdGhlIGZvbGxv
-d2luZyBwcm9wZXJ0aWVzOgorICBSZXF1aXJlZCByb290IG5vZGUgcHJvcGVydHk6CisgICAgY29t
-cGF0aWJsZTogImFtbG9naWMsbWVzb24tZ3hiYiI7CisKIEJvYXJkIGNvbXBhdGlibGUgdmFsdWVz
-OgogICAtICJnZW5pYXRlY2gsYXR2MTIwMCIgKE1lc29uNikKICAgLSAibWluaXgsbmVvLXg4IiAo
-TWVzb244KQotLSAKMi42LjIKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, Feb 29, 2016 at 6:38 PM, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Mon, Feb 29, 2016 at 06:16:50PM -0300, Fabio Estevam wrote:
+>> On Mon, Feb 29, 2016 at 12:52 PM, Steffen Trumtrar
+>> <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>>
+>> > +       ret =3D clk_prepare_enable(rngc->clk);
+>> > +       if (ret)
+>> > +               return ret;
+>> > +
+>> > +       rngc->irq =3D platform_get_irq(pdev, 0);
+>> > +       if (!rngc->irq) {
+>> > +               dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n")=
+;
+>> > +               clk_disable_unprepare(rngc->clk);
+>> > +
+>> > +               return ret;
+>>
+>> You are returning the wrong error code here:
+>>
+>> Better do like this:
+>>
+>>        rngc->irq =3D platform_get_irq(pdev, 0);
+>>        if (rngc->irq < 0) {
+>
+> rngc->irq is unsigned, so this is never true.
+>
+>>                dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+>>                clk_disable_unprepare(rngc->clk);
+>>                return rngc->irq;
+>>        }
+>
+> So here comes my better approach:
+
+As irq is only used inside probe it can be removed from struct mxc_rngc=
+=2E
+
+Or maybe like this:
+
+         ret =3D platform_get_irq(pdev, 0);
+         if (ret < 0) {
+                 dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+                 clk_disable_unprepare(rngc->clk);
+                 return ret;
+         }
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
