@@ -1,89 +1,35 @@
-From: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 3/5] dt, numa: Add NUMA dt binding implementation.
-Date: Mon, 29 Feb 2016 20:45:22 +0100
-Message-ID: <20160229194522.GH31343@rric.localdomain>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
- <1456192703-2274-4-git-send-email-ddaney.cavm@gmail.com>
- <20160229172956.GF31343@rric.localdomain>
- <56D48A5C.6040709@caviumnetworks.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: DRA7: change address-cells and size-cells
+Date: Mon, 29 Feb 2016 21:45:09 +0100
+Message-ID: <17470332.nnZZr9fh67@wuerfel>
+References: <1456308664-28308-1-git-send-email-lokeshvutla@ti.com> <56D40505.8020702@ti.com> <20160229181606.GM13417@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56D48A5C.6040709-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160229181606.GM13417-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29.02.16 10:13:48, David Daney wrote:
-> On 02/29/2016 09:29 AM, Robert Richter wrote:
-> >On 22.02.16 17:58:21, David Daney wrote:
-> >>From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> >>
-> >>ADD device tree node parsing for NUMA topology using device
-> >>"numa-node-id" property distance-map.
-> >>
-> >>Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> >>Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> >>---
-> >>  drivers/of/Kconfig   |   3 +
-> >>  drivers/of/Makefile  |   1 +
-> >>  drivers/of/of_numa.c | 211 +++++++++++++++++++++++++++++++++++++++++++++++++++
-> >>  include/linux/of.h   |   9 +++
-> >>  4 files changed, 224 insertions(+)
-> >>  create mode 100644 drivers/of/of_numa.c
-> >>
-> >>diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> >>index e2a4841..b3bec3a 100644
-> >>--- a/drivers/of/Kconfig
-> >>+++ b/drivers/of/Kconfig
-> >>@@ -112,4 +112,7 @@ config OF_OVERLAY
-> >>  	  While this option is selected automatically when needed, you can
-> >>  	  enable it manually to improve device tree unit test coverage.
-> >>
-> >>+config OF_NUMA
-> >
-> >In arch/arm64/Kconfig you now need to:
-> >
-> >	select OF_NUMA if NUMA && OF
-> >
-> >This should depend here on OF and NUMA and enabled in that case. Why
-> >moving that to arch code?
+On Monday 29 February 2016 10:16:07 Tony Lindgren wrote:
+> Yes I understand that if we need to set it at the top level. But what
+> happens if you only set it for the memory node?
 > 
-> The dependency on of_numa.o is in the architecture specific code, so that is
-> where the Kconfig select should be too.
-
-If you grep for select in Kconfig files you will see that dependency
-checkers in the form of select ... if ... are very rare. Since select
-does not check for depends-on at all, defbool y is commonly used to
-enable a config in case all dependencies match. If OF_NUMA only
-supports ARM64, why not state this there? It is common to enable
-certain configs in drivers/ only for a some archs.
-
-> For new code, we try to avoid putting architecture specific things into the
-> core Kconfig files.
-
-But to avoid arch configs in generic Kconfigs, define HAVE_OF_NUMA,
-add it as dependency to OF_NUMA and select it in arch/arm64/Kconfig.
-OF_NUMA is then enabled with defbool y if all requirements are met.
-
-This also addresses your concerns below.
-
--Robert
-
-> Since arm64 is the only architecture that is currently using this, we don't
-> want to select it for non-arm64 kernels that happen to select NUMA && OF.
+> With just something like:
 > 
-> I will restore the depends, as it is guard against errors in the
-> architecture specific Kconfig select statements, but I am going to leave the
-> NUMA && OF in the arm64/Kconfig for clarity.
-> 
-> >This duplicates code as the same needs to be
-> >implemented for every arch.
-> >
-> 
-> Better to duplicate a single Kconfig select statement a few times in
-> architecture specific Kconfig files, than force people to continuously
-> modify the depends in  drivers/of/Kconfig
+> memory {
+>        #address-cells = <2>;
+>        #size-cells = <2>;
+>        ...
+> };
+
+Nothing happens there: the memory node has no children, and no
+ranges property, so the two properties are never referenced.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
