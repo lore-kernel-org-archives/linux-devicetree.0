@@ -1,72 +1,92 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 06/10] soc: tegra: pmc: Wait for powergate state to
- change
-Date: Mon, 29 Feb 2016 13:14:33 +0100
-Message-ID: <20160229121433.GA1383@ulmo>
-References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
- <1456501724-28477-7-git-send-email-jonathanh@nvidia.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456501724-28477-7-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH] can: rcar_can: Add r8a7795 support
+Date: Mon, 29 Feb 2016 12:37:25 +0000
+Message-ID: <1456749445-50766-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: mkl@pengutronix.de, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, chris.paterson2@renesas.com, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Added r8a7795 SoC support.
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+---
+Hi All,
 
-On Fri, Feb 26, 2016 at 03:48:40PM +0000, Jon Hunter wrote:
-> Currently, the function tegra_powergate_set() simply sets the desired
-> powergate state but does not wait for the state to change. In most cases
-> we should wait for the state to change before proceeding. Currently, there
-> is a case for tegra114 and tegra124 devices where we do not wait when
-> starting the secondary CPU as this is not necessary. However, this is only
-> done at boot time and so waiting here will only have a small impact on
-> boot time. Therefore, update tegra_powergate_set() to wait when setting
-> the powergate.
->=20
-> By adding this feature, we can also eliminate the polling loop from
-> tegra30_boot_secondary().
->=20
-> A function has been added for checking the status of the powergate and
-> so update the tegra_powergate_is_powered() to use this macro as well.
->=20
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/mach-tegra/platsmp.c | 16 +++-------------
->  drivers/soc/tegra/pmc.c       |  9 ++++++++-
->  2 files changed, 11 insertions(+), 14 deletions(-)
+   This patch is based on linux-can-next (tag:linux-can-next-for-4.6-20160226)
 
-Applied, thanks.
+   Pinctrl & Clock related to the controller are already submitted as below:
 
-Thierry
+   https://lkml.org/lkml/2016/2/25/546
+   https://lkml.org/lkml/2016/2/26/452
+   http://www.spinics.net/lists/arm-kernel/msg487238.html
 
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature; name="signature.asc"
+   Changes since v1:
+   * Rebased from linux-next to linux-can-next
+   * Removed clock rounding hack (http://www.spinics.net/lists/netdev/msg366611.html)
+   * CAN dtsi changes will be submitted separately based on linux-next (http://marc.info/?l=linux-can&m=145674764815430&w=2)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+ Documentation/devicetree/bindings/net/can/rcar_can.txt | 11 +++++++++++
+ drivers/net/can/Kconfig                                |  2 +-
+ drivers/net/can/rcar_can.c                             |  1 +
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
-iQIcBAABCAAGBQJW1DYmAAoJEN0jrNd/PrOhtgwP/0fkP20whj0n26f55vx10A4u
-LDubiBwUig7oSIJF8WjfA+hCUS97LzeH253Hm4r8j7z/XLrNe2JwvZj+SiTc+hRF
-g+INo41LT30TCZOJIwDxEyViaHV+34SuSJg92DSdvaOMgZtkWd4diEqSk8n5N8uB
-V0clw3/aRWW+Ns7jpSNRP8lQLG+CBqS1g1JsU2mtEZpE7fq8LKIKOVu+a/UgbO65
-hffh4e0p/n5lYAY8uiwlzqn+CtUaO9wsk8uR8pqCaV67GF9z25yXrCaaAD3k/LGF
-jmc6Gz1MtD53tGDLxGRtJ/p3Rlxv1GZhAtAsbmtzDw53L6HiuPzd1VcmQVmGGkT1
-cdlGAmF7v/9YGZYyRrHOKuBbNNpTaMtFQJx0g27ZuRHkos7J/KJX0J/kN02IK6R4
-/4l847/HIpFHvJMd7P+f/wJuu/B255iRkaMoWobsg136bcjlqsBo5jQyDLJOm8Wq
-5iDNJ0wUIxbdDjzWewQSNvGnayvnyV3UfSO5a/ypmUYqb0mlVtTxjZfG90bt9kKn
-0j1Tni4y0x+3v8akr5LS7SHOK4SHykf1B9pnbdfDNkUqhucbHmG9lkaySZ6rSh1S
-PTcXuB2ed4ndn+NUyE3st4tU0GOcyXmg7WmAj9duPCIDCmCcI7kcr0TXbMlofRPT
-eMhG+YhooeNX+f1mdGK0
-=ek+G
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+index 65edc05..8d40ab2 100644
+--- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
++++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
+@@ -9,8 +9,10 @@ Required properties:
+ 	      "renesas,can-r8a7792" if CAN controller is a part of R8A7792 SoC.
+ 	      "renesas,can-r8a7793" if CAN controller is a part of R8A7793 SoC.
+ 	      "renesas,can-r8a7794" if CAN controller is a part of R8A7794 SoC.
++	      "renesas,can-r8a7795" if CAN controller is a part of R8A7795 SoC.
+ 	      "renesas,rcar-gen1-can" for a generic R-Car Gen1 compatible device.
+ 	      "renesas,rcar-gen2-can" for a generic R-Car Gen2 compatible device.
++	      "renesas,rcar-gen3-can" for a generic R-Car Gen3 compatible device.
+ 	      When compatible with the generic version, nodes must list the
+ 	      SoC-specific version corresponding to the platform first
+ 	      followed by the generic version.
+@@ -22,6 +24,15 @@ Required properties:
+ - pinctrl-0: pin control group to be used for this controller.
+ - pinctrl-names: must be "default".
+ 
++Required properties for "renesas,can-r8a7795" compatible:
++In R8A7795 SoC, "clkp2" can be CANFD clock. This is a div6 clock and can be
++used by both CAN and CAN FD controller at the same time. It needs to be scaled
++to maximum frequency if any of these controllers use it. This is done using
++the below properties.
++
++- assigned-clocks: phandle of clkp2(CANFD) clock.
++- assigned-clock-rates: maximum frequency of this clock.
++
+ Optional properties:
+ - renesas,can-clock-select: R-Car CAN Clock Source Select. Valid values are:
+ 			    <0x0> (default) : Peripheral clock (clkp1)
+diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+index 164ccde..0d40aef 100644
+--- a/drivers/net/can/Kconfig
++++ b/drivers/net/can/Kconfig
+@@ -106,7 +106,7 @@ config CAN_JANZ_ICAN3
+ 
+ config CAN_RCAR
+ 	tristate "Renesas R-Car CAN controller"
+-	depends on ARM
++	depends on ARCH_RENESAS || ARM
+ 	---help---
+ 	  Say Y here if you want to use CAN controller found on Renesas R-Car
+ 	  SoCs.
+diff --git a/drivers/net/can/rcar_can.c b/drivers/net/can/rcar_can.c
+index ad3d2e0..788459f 100644
+--- a/drivers/net/can/rcar_can.c
++++ b/drivers/net/can/rcar_can.c
+@@ -906,6 +906,7 @@ static const struct of_device_id rcar_can_of_table[] __maybe_unused = {
+ 	{ .compatible = "renesas,can-r8a7791" },
+ 	{ .compatible = "renesas,rcar-gen1-can" },
+ 	{ .compatible = "renesas,rcar-gen2-can" },
++	{ .compatible = "renesas,rcar-gen3-can" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rcar_can_of_table);
+-- 
+1.9.1
