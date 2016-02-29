@@ -1,175 +1,78 @@
-From: kernel@martin.sperl.org
-Subject: [PATCH 3/8] clk: bcm2835: add missing osc and per clocks
-Date: Mon, 29 Feb 2016 15:43:57 +0000
-Message-ID: <1456760642-2412-4-git-send-email-kernel@martin.sperl.org>
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH 7/8] clk: bcm2835: add gates that require PM_DEBUG to be set
+Date: Mon, 29 Feb 2016 15:44:01 +0000
+Message-ID: <1456760642-2412-8-git-send-email-kernel@martin.sperl.org>
 References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456760642-2412-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-Add definitions for the following clocks:
-* AVE0
-* DFT
-* GP0
-* GP1
-* GP2
-* PULSE
-* SLIM
-* SMI
-* TEC
+Add clocks that require PM_DEBUG to be set and mark this
+fact in the gate_data structure, so that this fact can get
+referred to if needed.
 
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       |   71 +++++++++++++++++++++++++++++++++++
- include/dt-bindings/clock/bcm2835.h |   10 +++++
- 2 files changed, 81 insertions(+)
+ drivers/clk/bcm/clk-bcm2835.c       |   16 +++++++++++++++-
+ include/dt-bindings/clock/bcm2835.h |    2 ++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 710cf15..f43e1ca 100644
+index 12ce209..2ddff8f 100644
 --- a/drivers/clk/bcm/clk-bcm2835.c
 +++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -118,6 +118,8 @@
- #define CM_SDCCTL		0x1a8
- #define CM_SDCDIV		0x1ac
- #define CM_ARMCTL		0x1b0
-+#define CM_AVEOCTL		0x1b8
-+#define CM_AVEODIV		0x1bc
- #define CM_EMMCCTL		0x1c0
- #define CM_EMMCDIV		0x1c4
+@@ -463,6 +463,8 @@ struct bcm2835_gate_data {
+ 	const char *parent;
  
-@@ -1738,6 +1740,18 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.div_reg = CM_TSENSDIV,
- 		.int_bits = 5,
- 		.frac_bits = 0),
-+	[BCM2835_CLOCK_PULSE]	= REGISTER_OSC_CLK(
-+		.name = "pulse",
-+		.ctl_reg = CM_PULSECTL,
-+		.div_reg = CM_PULSEDIV,
-+		.int_bits = 12,
-+		.frac_bits = 0),
-+	[BCM2835_CLOCK_TEC]	= REGISTER_OSC_CLK(
-+		.name = "tec",
-+		.ctl_reg = CM_TECCTL,
-+		.div_reg = CM_TECDIV,
-+		.int_bits = 6,
-+		.frac_bits = 0),
+ 	u32 ctl_reg;
++
++	bool requires_pm_debug;
+ };
  
- 	/* clocks with vpu parent mux */
- 	[BCM2835_CLOCK_H264]	= REGISTER_VPU_CLK(
-@@ -1752,6 +1766,7 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.div_reg = CM_ISPDIV,
- 		.int_bits = 4,
- 		.frac_bits = 8),
+ struct bcm2835_pll {
+@@ -2078,10 +2080,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
+ 	 * don't bother exposing) are individual gates off of the
+ 	 * non-stop vpu clock.
+ 	 */
++	[BCM2835_CLOCK_PERA] = REGISTER_GATE(
++		.name = "pera",
++		.parent = "vpu",
++		.ctl_reg = CM_PERIACTL,
++		.requires_pm_debug = true),
+ 	[BCM2835_CLOCK_PERI_IMAGE] = REGISTER_GATE(
+ 		.name = "peri_image",
+ 		.parent = "vpu",
+-		.ctl_reg = CM_PERIICTL),
++		.ctl_reg = CM_PERIICTL,
++		.requires_pm_debug = true),
++	[BCM2835_CLOCK_SYS] = REGISTER_GATE(
++		.name = "sys",
++		.parent = "vpu",
++		.ctl_reg = CM_SYSCTL,
++		.requires_pm_debug = true),
 +
- 	/*
- 	 * Secondary SDRAM clock.  Used for low-voltage modes when the PLL
- 	 * in the SDRAM controller can't be used.
-@@ -1783,6 +1798,24 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.is_vpu_clock = true),
+ };
  
- 	/* clocks with per parent mux */
-+	[BCM2835_CLOCK_AVEO]	= REGISTER_PER_CLK(
-+		.name = "aveo",
-+		.ctl_reg = CM_AVEOCTL,
-+		.div_reg = CM_AVEODIV,
-+		.int_bits = 4,
-+		.frac_bits = 0),
-+	[BCM2835_CLOCK_DFT]	= REGISTER_PER_CLK(
-+		.name = "dft",
-+		.ctl_reg = CM_DFTCTL,
-+		.div_reg = CM_DFTDIV,
-+		.int_bits = 5,
-+		.frac_bits = 0),
-+	[BCM2835_CLOCK_DFT]	= REGISTER_PER_CLK(
-+		.name = "dpi",
-+		.ctl_reg = CM_DPICTL,
-+		.div_reg = CM_DPIDIV,
-+		.int_bits = 4,
-+		.frac_bits = 8),
- 
- 	/* Arasan EMMC clock */
- 	[BCM2835_CLOCK_EMMC]	= REGISTER_PER_CLK(
-@@ -1791,6 +1824,30 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.div_reg = CM_EMMCDIV,
- 		.int_bits = 4,
- 		.frac_bits = 8),
-+
-+	/* General purpose (GPIO) clocks */
-+	[BCM2835_CLOCK_GP0]	= REGISTER_PER_CLK(
-+		.name = "gp0",
-+		.ctl_reg = CM_GP0CTL,
-+		.div_reg = CM_GP0DIV,
-+		.int_bits = 12,
-+		.frac_bits = 12,
-+		.is_mash_clock = true),
-+	[BCM2835_CLOCK_GP1]	= REGISTER_PER_CLK(
-+		.name = "gp1",
-+		.ctl_reg = CM_GP1CTL,
-+		.div_reg = CM_GP1DIV,
-+		.int_bits = 12,
-+		.frac_bits = 12,
-+		.is_mash_clock = true),
-+	[BCM2835_CLOCK_GP2]	= REGISTER_PER_CLK(
-+		.name = "gp2",
-+		.ctl_reg = CM_GP2CTL,
-+		.div_reg = CM_GP2DIV,
-+		.int_bits = 12,
-+		.frac_bits = 12,
-+		.is_mash_clock = true),
-+
- 	/* HDMI state machine */
- 	[BCM2835_CLOCK_HSM]	= REGISTER_PER_CLK(
- 		.name = "hsm",
-@@ -1812,12 +1869,26 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.int_bits = 12,
- 		.frac_bits = 12,
- 		.is_mash_clock = true),
-+	[BCM2835_CLOCK_SLIM]	= REGISTER_PER_CLK(
-+		.name = "slim",
-+		.ctl_reg = CM_SLIMCTL,
-+		.div_reg = CM_SLIMDIV,
-+		.int_bits = 12,
-+		.frac_bits = 12,
-+		.is_mash_clock = true),
-+	[BCM2835_CLOCK_SMI]	= REGISTER_PER_CLK(
-+		.name = "smi",
-+		.ctl_reg = CM_SMICTL,
-+		.div_reg = CM_SMIDIV,
-+		.int_bits = 4,
-+		.frac_bits = 8),
- 	[BCM2835_CLOCK_UART]	= REGISTER_PER_CLK(
- 		.name = "uart",
- 		.ctl_reg = CM_UARTCTL,
- 		.div_reg = CM_UARTDIV,
- 		.int_bits = 10,
- 		.frac_bits = 12),
-+
- 	/* TV encoder clock.  Only operating frequency is 108Mhz.  */
- 	[BCM2835_CLOCK_VEC]	= REGISTER_PER_CLK(
- 		.name = "vec",
+ static int bcm2835_clk_probe(struct platform_device *pdev)
 diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index 9689812..f2e72e7 100644
+index 109086e..7bc03cd 100644
 --- a/include/dt-bindings/clock/bcm2835.h
 +++ b/include/dt-bindings/clock/bcm2835.h
-@@ -53,3 +53,13 @@
- #define BCM2835_PLLB_SP2		36
- #define BCM2835_PLLD_DSI0		37
- #define BCM2835_PLLD_DSI1		38
-+
-+#define BCM2835_CLOCK_AVEO		39
-+#define BCM2835_CLOCK_DFT		40
-+#define BCM2835_CLOCK_GP0		41
-+#define BCM2835_CLOCK_GP1		42
-+#define BCM2835_CLOCK_GP2		43
-+#define BCM2835_CLOCK_PULSE		44
-+#define BCM2835_CLOCK_SLIM		45
-+#define BCM2835_CLOCK_SMI		46
-+#define BCM2835_CLOCK_TEC		47
+@@ -71,3 +71,5 @@
+ #define BCM2835_CLOCK_DSI1E		53
+ #define BCM2835_CLOCK_DSI1_IMAGE	54
+ #define BCM2835_CLOCK_ARM		55
++#define BCM2835_CLOCK_PERA		56
++#define BCM2835_CLOCK_SYS		57
 -- 
 1.7.10.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
