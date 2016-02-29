@@ -1,34 +1,58 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH 1/2] can: rcar_can: Add r8a7795 support
-Date: Mon, 29 Feb 2016 11:06:34 +0000
-Message-ID: <SG2PR06MB10389D8C1D30451EC2AE8FF0C3BA0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1456737661-20538-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-	<1456737661-20538-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <CAMuHMdV3EsvN=sqiB2npB=cH8Bz4D6UVcQj-BKqfdHerKSDowQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV3EsvN=sqiB2npB=cH8Bz4D6UVcQj-BKqfdHerKSDowQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marc Kleine-Budde <mkl@pengutronix.de>, Wolfgang Grandegger <wg@grandegger.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 1/3] Documentation: devicetree: add Freescale SCC bindings
+Date: Mon, 29 Feb 2016 12:12:25 +0100
+Message-ID: <1456744347-4176-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCj4gT24gTW9uLCBGZWIgMjksIDIwMTYgYXQgMTA6MjEgQU0sIFJhbWVzaCBT
-aGFubXVnYXN1bmRhcmFtDQo+IDxyYW1lc2guc2hhbm11Z2FzdW5kYXJhbUBicC5yZW5lc2FzLmNv
-bT4gd3JvdGU6DQo+ID4gLS0tIGEvZHJpdmVycy9uZXQvY2FuL3JjYXJfY2FuLmMNCj4gPiArKysg
-Yi9kcml2ZXJzL25ldC9jYW4vcmNhcl9jYW4uYw0KPiA+IEBAIC04MDgsNiArODA4LDEwIEBAIHN0
-YXRpYyBpbnQgcmNhcl9jYW5fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZQ0KPiAqcGRldikN
-Cj4gPiAgICAgICAgIHByaXYtPnJlZ3MgPSBhZGRyOw0KPiA+ICAgICAgICAgcHJpdi0+Y2xvY2tf
-c2VsZWN0ID0gY2xvY2tfc2VsZWN0Ow0KPiA+ICAgICAgICAgcHJpdi0+Y2FuLmNsb2NrLmZyZXEg
-PSBjbGtfZ2V0X3JhdGUocHJpdi0+Y2FuX2Nsayk7DQo+ID4gKw0KPiA+ICsgICAgICAgLyogVXNl
-IHRoZSByb3VuZGVkIGNsb2NrIHZhbHVlIChuZWFyZXN0IGtIeikgKi8NCj4gPiArICAgICAgIHBy
-aXYtPmNhbi5jbG9jay5mcmVxID0gMTAwMCAqDQo+ID4gKyBESVZfUk9VTkRfVVAocHJpdi0+Y2Fu
-LmNsb2NrLmZyZXEsIDEwMDApOw0KPiANCj4gVGhlIGNvbW1lbnQgYW5kIHRoZSBpbXBsZW1lbnRh
-dGlvbiBkb24ndCBtYXRjaC4NCj4gVG8gZ2V0IHRoZSBuZWFyZXN0IGtIeiwgeW91IGhhdmUgdG8g
-dXNlRElWX1JPVU5EX0NMT1NFU1QoKS4NCg0KVGhhbmtzIEdlZXJ0LiBZZXMsIERJVl9ST1VORF9D
-TE9TRVNUKCkgd291bGQgYmUgYXB0IGFzIHlvdSBwb2ludGVkIG91dC4NCkknbGwgYmUgcmVtb3Zp
-bmcgdGhpcyBoYWNrIHdoZW4gSSByZWJhc2UsIGFzIE1hcmMgaXMgZml4aW5nIHRoZSBhbGdvcml0
-aG0uDQoNClRoYW5rcywNClJhbWVzaA0K
+Add documentation for the Freescale Security Controller (SCC)
+found on i.MX25 SoCs.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Changes since v1:
+  - add clocks to required properties
+  - add Acked-by
+
+ .../devicetree/bindings/crypto/fsl-imx-scc.txt      | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+new file mode 100644
+index 000000000000..7aad448e8a36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/fsl-imx-scc.txt
+@@ -0,0 +1,21 @@
++Freescale Security Controller (SCC)
++
++Required properties:
++- compatible : Should be "fsl,imx25-scc".
++- reg : Should contain register location and length.
++- interrupts : Should contain interrupt numbers for SCM IRQ and SMN IRQ.
++- interrupt-names : Should specify the names "scm" and "smn" for the
++		    SCM IRQ and SMN IRQ.
++- clocks: Should contain the clock driving the SCC core.
++- clock-names: Should be set to "ipg".
++
++Example:
++
++	scc: crypto@53fac000 {
++		compatible = "fsl,imx25-scc";
++		reg = <0x53fac000 0x4000>;
++		clocks = <&clks 111>;
++		clock-names = "ipg";
++		interrupts = <49>, <50>;
++		interrupt-names = "scm", "smn";
++	};
+-- 
+2.7.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
