@@ -1,91 +1,59 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v6] serial: support for 16550A serial ports on LP-8x4x
-Date: Mon, 29 Feb 2016 16:03:15 +0300
-Message-ID: <1456750995.23036.87.camel@gmail.com>
-References: <1450213494-21884-1-git-send-email-ynvich@gmail.com>
-	 <1456589675-25377-1-git-send-email-ynvich@gmail.com>
-	 <1456741786.13244.167.camel@linux.intel.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V6 03/10] PM / Domains: Add function to remove a pm-domain
+Date: Mon, 29 Feb 2016 13:10:48 +0000
+Message-ID: <56D44358.5050606@nvidia.com>
+References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+ <1456501724-28477-4-git-send-email-jonathanh@nvidia.com>
+ <20160229071521.GG23745@ulmo> <56D41A17.20008@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456741786.13244.167.camel@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org
-Cc: Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Burton <paul.burton@imgtec.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Mans Rullgard <mans@mansr.com>, Scott Wood <scottwood@freescale.com>, Joachim Eastwood <manabian@gmail.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Peter Hurley <peter@hurleysoftware.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D41A17.20008-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-02-29 at 12:29 +0200, Andy Shevchenko wrote:
-> On Sat, 2016-02-27 at 19:14 +0300, Sergei Ianovich wrote:
-> > +struct lp8841_serial_data {
-> > +	int			line;
-> > +	void			*ios_mem;
->=20
-> __iomem
 
-OK
+On 29/02/16 10:14, Jon Hunter wrote:
+> 
+> On 29/02/16 07:15, Thierry Reding wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Fri, Feb 26, 2016 at 03:48:37PM +0000, Jon Hunter wrote:
+>>> The genpd framework allows users to add power-domains via the
+>>> pm_genpd_init() function, however, there is no corresponding function
+>>> to remove a power-domain. For most devices this may be fine as the power
+>>> domains are never removed, however, for devices that wish to populate
+>>> the power-domains from within a driver, having the ability to remove a
+>>> power domain if the probing of the device fails or the driver is unloaded
+>>> is necessary. Therefore, add a function to remove a power-domain. Please
+>>> note that the power domain can only be removed if there are no devices
+>>> using the power-domain and it is not linked to another domain.
+>>
+>> So I guess this introduces a problem not uncommon to other types of
+>> resources. If you remove the driver, even if you fail ->remove() the
+>> module may still go away along with any code associated with it. So
+>> even if the PM domains can't be removed, you can't prevent the module
+>> from going away. That could be somewhat mitigated if we were holding a
+>> module reference count, because then the only way to unload the driver
+>> would be via sysfs (we could prevent that too, which might be the best
+>> way to do this today).
+>>
+>> There is work underway to solve this generically, Rafael was working on
+>> this, so I'm not sure we need to add additional infrastructure to the PM
+>> domain code as part of this series. But we may want to mark the Tegra
+>> PMC driver as .suppress_bind_attrs = true, to make sure it can't be
+>> removed.
+> 
+> I see what you are saying. It nearly seemed to me that I should use
+> BUG_ON() if we fail to remove a genpd in the PMC driver, however, I know
+> that using BUG_ON should be avoided. I will add the suppress_bind_attrs
+> = true for the PMC driver as that does make sense for now.
 
-> > +};
->=20
-> > +	if (termios->c_cflag & CSTOPB)
-> > +		len++;
-> > +	if (termios->c_cflag & PARENB)
-> > +		len++;
-> > +	if (!(termios->c_cflag & PARODD))
-> > +		len++;
-> > +#ifdef CMSPAR
-> > +	if (termios->c_cflag & CMSPAR)
-> > +		len++;
-> > +#endif
-> > +
-> > +	len -=3D 9;
->=20
-> If you have 5 bit mode, no parity, 1/1.5 stop bits, you may end up
-> with
-> negative value here. Am I right? If so, is it expected?
->=20
-> > +	len &=3D 3;
-> > +	len <<=3D 3;
+Just to let you know, the PMC driver already has suppress_bind_attrs =
+true.
 
-I haven't tested this mode. I am pretty sure it will fail. There is
-also no support for speeds higher than 115200.
-
-CS7 and CS8 at speeds up to 115200 work well.
-
-However, there is no way to report errors from=C2=A0set_termios(). Shou=
-ld
-anything be done about those limitations?
-
-> +	mmres =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	mires =3D platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +	if (!mmres || !mires)
-> > +		return -ENODEV;
->=20
-> No need to check mires here, devm_ioremap_resource() will take care
-> about.
-
-OK
-
-> > +	data->ios_mem =3D devm_ioremap_resource(&pdev->dev,
-> > > > mires);
-> > +	if (!data->ios_mem)
-> > +		return -EFAULT;
->=20
-> You have to propagate the actual error code from
-> devm_ioremap_resource().
-
-OK
-
-> > +
-> > +	uart.port.iotype =3D UPIO_MEM;
-> >=20
->=20
-> > +	uart.port.mapbase =3D mmres->start;
-> > +	uart.port.iobase =3D mmres->start;
->=20
-> I'm not sure about this. If you ask for UPIO_MEM why do you need to
-> fill iobase?
-> And I suppose iobase can't hold (at the end inb/outb calls) big port
-> numbers anyway (16 bit on x86, for example).
-
-There is no need for iobase. I'll remove that line.
+Cheers
+Jon
