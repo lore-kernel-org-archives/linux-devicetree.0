@@ -1,68 +1,48 @@
-From: kernel@martin.sperl.org
-Subject: [PATCH 8/8] clk: bcm2835: add the testdebug clock generators
-Date: Mon, 29 Feb 2016 15:44:02 +0000
-Message-ID: <1456760642-2412-9-git-send-email-kernel@martin.sperl.org>
-References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/3] Documentation: devicetree: add Freescale RNGC binding
+Date: Mon, 29 Feb 2016 16:52:34 +0100
+Message-ID: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel@martin.sperl.org>
+Add binding documentation for the Freescale RNGC found on
+some i.MX2/3/5 SoCs.
 
-Add the testdebug0/1 clock generators using the osc parent mux.
-
-These may also require PM_DEBUG to work propperly.
-Also the parents are - for now - unclear, so we assume osc parents.
-
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/clk/bcm/clk-bcm2835.c       |   19 +++++++++++++++++++
- include/dt-bindings/clock/bcm2835.h |    2 ++
- 2 files changed, 21 insertions(+)
+ Documentation/devicetree/bindings/rng/mxc_rngc.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/mxc_rngc.txt
 
-diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-index 2ddff8f..926fdf5 100644
---- a/drivers/clk/bcm/clk-bcm2835.c
-+++ b/drivers/clk/bcm/clk-bcm2835.c
-@@ -1865,6 +1865,25 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
- 		.div_reg = CM_TECDIV,
- 		.int_bits = 6,
- 		.frac_bits = 0),
-+	/*
-+	 * testdebug clocks
-+	 * these may possibly require PM_DEBUG to be set as well
-+	 * for now we assume these are using the osc parent mux
-+	 * (note that testdebugX is in this mux as well,
-+	 * so it may produce issues)
-+	 */
-+	[BCM2835_CLOCK_TESTDEBUG0] = REGISTER_OSC_CLK(
-+		.name = "testdebug0",
-+		.ctl_reg = CM_TD0CTL,
-+		.div_reg = CM_TD0DIV,
-+		.int_bits = 12,
-+		.frac_bits = 12),
-+	[BCM2835_CLOCK_TESTDEBUG0] = REGISTER_OSC_CLK(
-+		.name = "testdebug1",
-+		.ctl_reg = CM_TD1CTL,
-+		.div_reg = CM_TD1DIV,
-+		.int_bits = 12,
-+		.frac_bits = 12),
+diff --git a/Documentation/devicetree/bindings/rng/mxc_rngc.txt b/Documentation/devicetree/bindings/rng/mxc_rngc.txt
+new file mode 100644
+index 000000000000..e147a6dde40a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/mxc_rngc.txt
+@@ -0,0 +1,16 @@
++Freescale RNGC (Random Number Generator Version C)
++
++Required properties:
++- compatible : Should be "fsl,imx25-rng"
++- reg : Offset and length of the register set of this block
++- interrupts : the interrupt number for the RNG block
++- clocks: should contain the RNG clk source
++
++Example:
++
++rng@53fb0000 {
++	compatible = "fsl,imx25-rng";
++	reg = <0x53fb0000 0x4000>;
++	interrupts = <22>;
++	clocks = <&clks 109>;
++};
+-- 
+2.7.0
 
- 	/* clocks with vpu parent mux */
- 	[BCM2835_CLOCK_H264]	= REGISTER_VPU_CLK(
-diff --git a/include/dt-bindings/clock/bcm2835.h b/include/dt-bindings/clock/bcm2835.h
-index 7bc03cd..c752392 100644
---- a/include/dt-bindings/clock/bcm2835.h
-+++ b/include/dt-bindings/clock/bcm2835.h
-@@ -73,3 +73,5 @@
- #define BCM2835_CLOCK_ARM		55
- #define BCM2835_CLOCK_PERA		56
- #define BCM2835_CLOCK_SYS		57
-+#define BCM2835_CLOCK_TESTDEBUG0	58
-+#define BCM2835_CLOCK_TESTDEBUG1	59
 --
-1.7.10.4
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
