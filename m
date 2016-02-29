@@ -1,128 +1,176 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6] arm: pxa: support ICP DAS LP-8x4x FPGA irq
-Date: Mon, 29 Feb 2016 08:29:47 +0000
-Message-ID: <56D4017B.9010106@arm.com>
-References: <1450207582-17957-1-git-send-email-ynvich@gmail.com>
- <1456588562-24715-1-git-send-email-ynvich@gmail.com>
- <20160227174100.GG7219@io.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Subject: [PATCH v14 0/4] Watchdog: introduce ARM SBSA watchdog driver
+Date: Mon, 29 Feb 2016 16:46:46 +0800
+Message-ID: <1456735610-22012-1-git-send-email-fu.wei@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160227174100.GG7219-fahSIxCzskDQ+YiMSub0/l6hYfS7NtTn@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27/02/16 17:41, Jason Cooper wrote:
-> Hi Sergei,
-> 
-> Marc, Rob, please see below.
-> 
-> On Sat, Feb 27, 2016 at 06:56:01PM +0300, Sergei Ianovich wrote:
->>
-> 
-> nit: Subject line of the patch should match 'irqchip/lp8841: [A-Z].*'
-> 
->> ICP DAS LP-8x4x contains FPGA chip. The chip functions as an interrupt
->> source providing 16 additional interrupts among other things. The
->> interrupt lines are muxed to a GPIO pin of a 2nd level PXA-GPIO
->> interrupt controller. GPIO pins of the 2nd level controller are in turn
->> muxed to a CPU interrupt line.
->>
->> Until pxa is completely converted to device tree, it is impossible
->> to use IRQCHIP_DECLARE() and the irqdomain needs to added manually.
->> Drivers for the on-CPU IRQs and GPIO-IRQs are loaded using
->> postcore_initcall(). We need to have all irq domain drivers loaded prior
->> to DT parsing in order to allow normal initialization of IRQ resources
->> with DT.
->>
->> Signed-off-by: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> nit:  From here, down should be below the '---' so that it isn't a part
-> of the commit log.  We add a link to the commit log that points to the
-> patch submission in the mailinglist archives.  So curious folks have
-> quick access to this info.
-> 
->> CC: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->> CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> CC: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
->>
->>    v5..v6
->>    fixes according to Rob Herring review comments:
->>    * drop wildcards in binding and file names
->>    * rename alias 'fpga'->'fpga_irq'
->>
->>    fixes according to Marc Zyngier review comments:
->>    * use writeb/readb not iowrite8/ioread8
->>    * redefine 2nd mask using inversion on 1st
->>    * add comments
->>
->>    v4..v5
->>    * constify struct of_device_id
->>    * drop irq number from handler signature
->>
->>    v3.2..v4
->>    * move DTS binding to a different patch (8/21)
->>
->>    v3.1..v3.2
->>    fixes to apply Linus Walleij's "Reviewed-by":
->>    * add kerneldoc comment for state container struct
->>    * rename irq -> hwirq for clarity
->>    * drop overzealous error checks from the hotpaths
->>
->>    v3..v3.1
->>    fixes according to Linus Walleij review comments:
->>    * update commit message
->>    * use state container instead of global variables
->>    * get hardware irq nums from irq_data, don't calculate them
->>    * use BIT() macro
->>    * add defines for system irq register masks
->>    * replace cycle control variable with break
->>    * use better names for resource variables
->>    * add a linear domain instead of a legacy one
->>    * use irq_create_mapping() instead of irq_alloc_desc()
->>
->>    v2..v3
->>    * no changes (except number 09/16 -> 11/21)
->>
->>    v0..v2
->>    * extract irqchip and move to drivers/irqchip/
->>    * use device tree
->>    * use devm helpers where possible
-> 
-> 
->> ---
-> 
-> iow, it should be moved here.
-> 
->>  .../interrupt-controller/icpdas-lp8x4x-irq.txt     |  49 ++++
->>  drivers/irqchip/Kconfig                            |   5 +
->>  drivers/irqchip/Makefile                           |   1 +
->>  drivers/irqchip/irq-lp8841.c                       | 246 +++++++++++++++++++++
->>  4 files changed, 301 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/icpdas-lp8x4x-irq.txt
->>  create mode 100644 drivers/irqchip/irq-lp8841.c
-> 
-> I don't seem to have the previous versions, and their threads, in my
-> email archive.  From the changelog, it looks like Marc and Rob have been
-> reviewing this most recently.
-> 
-> If you guys could give me an Acked-by/Reviewed-by, I'll go ahead and
-> queue this up for v4.6.
-> 
-> I'll fix up the Subject line and the commit log when I bring it in.
-> I'll be adding the tags anyway.  No need to resubmit.
+From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Looks OK to me:
+This patchset:
+    (1)Introduce Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+    for FDT info of SBSA Generic Watchdog, and give two examples of
+    adding SBSA Generic Watchdog device node into the dts files:
+    foundation-v8.dts and amd-seattle-soc.dtsi.
 
-Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+    (2)Introduce ARM SBSA watchdog driver:
+        a.Use linux kernel watchdog framework;
+        b.Work with FDT on ARM64;
+        c.Support getting timeout from parameter and FDT at the driver
+          init stage.
+        d.The driver works in two modes:
+          (1) single stage timeout (ignore WS0 interrupt)
+          (2) two stages timeout (register WS0 interrupt, do panic in routine)
+        e.User can config working mode by module parameter "action".
 
-	M.
+This patchset has been tested with watchdog daemon
+(ACPI/FDT, module/build-in) on the following platforms:
+    (1)ARM Foundation v8 model
+    (2)AMD Seattle platform
+
+This patchset has been tested with kdump successfully.
+
+Changelog:
+v14:Fix a bug of registering interrupt routine: do a ping before
+    registering interrupt routine, in case where is a pending interrupt.
+    Reorder the initialization code to postpone registering interrupt routine.
+    Improve some code style:
+        (1)add some macro of string
+        (2)use watchdog_get_drvdata instead of to_sbsa_gwdt,
+           delete to_sbsa_gwdt.
+
+v13:https://lkml.org/lkml/2016/2/16/713
+    Fix a dev_warn message typo"signle"-->"single"
+    Add MODULE_ALIAS
+    Add more *ed-by in commit message.
+
+v12:https://lkml.org/lkml/2016/2/16/154
+    Fix a dev_warn message typo"fall"--"falling"
+    Remove unnecessary "status" in dts
+    Add more *ed-by in commit message.
+
+v11:https://lkml.org/lkml/2016/2/9/577
+    Merge patch 4 and 5.
+    Improve some comments.
+    The driver works in two modes, it's configured by "action"(instead of
+    panic_enabled).
+    Improve the initialization of the timeout limits.
+    Feeding dog by writing "0" to WRR.
+
+v10:https://lkml.org/lkml/2016/2/3/817
+    Delete pretimeout support.
+    Separate the driver to two parts:
+        (1) single stage timeout driver(ignore WS0 interrupt);
+        (2) register WS0 interrupt for the half timeout panic.
+    timeout == (enable --> WS1).
+
+v9: https://lkml.org/lkml/2015/11/9/57
+    Rebase to latest kernel version(4.3).
+    Update the Documentation of sbsa-gwdt device node info of FDT:
+        (1) move some introduction to pretimeout patch
+        (2) delete WS1 value from "interrupts" of binding documentation,
+            since WS1 won't be handled by Linux.
+
+v8: https://lkml.org/lkml/2015/10/27/466
+    Rebase to latest kernel version(4.3-rc7).
+    Separate the patches of GTDT support and arm_arch_timer. This
+    clocksource relevant patch will upstreamed in a individual patchset.
+    Update all the default timeout and pretimeout to 30s and 60s.
+    Improve documentation and inline comments.
+    Fix a bug in pretimeout support which makes timeout and pretimeout
+    parameters initialization fail.
+
+v7: https://lkml.org/lkml/2015/8/24/611
+    Rebase to latest kernel version(4.2-rc7).
+    Improve FDT support: geting resource by order, instead of name.
+    According to the FDT support, Update the example dts file, gtdt.c
+    and sbsa_gwdt.c.
+    Pass the sparse test, and fix the warning.
+    Fix the max_pretimeout and max_timeout value overflow bug.
+    Delete the WCV output value.
+    
+
+v6: https://lkml.org/lkml/2015/6/23/359
+    Improve the dtb example files: reduce the register frame size to 4K.
+    Improve pretimeout support:
+        (1) improve watchdog_init_timeouts function
+	(2) rename watchdog_check_min_max_timeouts back to the original name
+        (1) improve watchdog_timeout_invalid/watchdog_pretimeout_invalid
+    Add the new features in the sbsa_gwdt driver:
+	(1) In the second stage, user can feed the dog without cleaning WS0.
+	(2) In the second stage, user can trigger WS1 by setting pretimeout = 0.
+	(3) expand the max value of pretimeout, in case 10 second is not enough
+	    for a kdump kernel reboot in panic.
+
+v5: https://lkml.org/lkml/2015/6/10/357
+    Improve pretimeout support:
+        (1)fix typo in documentation and comments.
+	(2)fix the timeout limits validation bug.
+    Simplify sbsa_gwdt driver:
+	(1)integrate all the registers access functions into caller.
+
+v4: https://lkml.org/lkml/2015/6/2/4
+    Refactor GTDT support code: remove it from arch/arm64/kernel/acpi.c,
+    put it into drivers/acpi/gtdt.c file.
+    Integrate the GTDT code of drivers/clocksource/arm_arch_timer.c into
+    drivers/acpi/gtdt.c.
+    Improve pretimeout support, fix "pretimeout == 0" problem.
+    Simplify sbsa_gwdt driver:
+        (1)timeout/pretimeout limits setup;
+        (2)keepalive function;
+        (3)delete "clk == 0" check;
+        (4)delete WS0 status bit check in interrupt routine;
+        (5)sbsa_gwdt_set_wcv function.
+
+v3: https://lkml.org/lkml/2015/5/25/111
+    Delete "export arch_timer_get_rate" patch.
+    Driver back to use arch_timer_get_cntfrq.
+    Improve watchdog_init_timeouts function and update relevant documentation.
+    Improve watchdog_timeout_invalid and watchdog_pretimeout_invalid.
+    Improve foundation-v8.dts: delete the unnecessary tag of device node.
+    Remove "ARM64 || COMPILE_TEST" from Kconfig.
+    Add comments in arch/arm64/kernel/acpi.c
+    Fix typoes and incorrect comments.
+
+v2: https://lkml.org/lkml/2015/5/21/172
+    Improve watchdog-kernel-api.txt documentation for pretimeout support.
+    Export "arch_timer_get_rate" in arm_arch_timer.c.
+    Add watchdog_init_timeouts API for pretimeout support in framework.
+    Improve suspend and resume foundation in driver
+    Improve timeout/pretimeout values init code in driver.
+    Delete unnecessary items of the sbsa_gwdt struct and #define.
+    Delete all unnecessary debug info in driver.
+    Fix 64bit division bug.
+    Use the arch_timer interface to get watchdog clock rate.
+    Add MODULE_DEVICE_TABLE for platform device id.
+    Fix typoes.
+
+v1: https://lkml.org/lkml/2015/5/15/279
+    The first version upstream patchset to linux mailing list.
+
+Fu Wei (4):
+  Documentation: add sbsa-gwdt driver documentation
+  ARM64: add SBSA Generic Watchdog device node in foundation-v8.dts
+  ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
+  Watchdog: introduce ARM SBSA watchdog driver
+
+ .../devicetree/bindings/watchdog/sbsa-gwdt.txt     |  31 ++
+ Documentation/watchdog/watchdog-parameters.txt     |   7 +
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi       |   8 +
+ arch/arm64/boot/dts/arm/foundation-v8.dts          |   7 +
+ drivers/watchdog/Kconfig                           |  20 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/sbsa_gwdt.c                       | 408 +++++++++++++++++++++
+ 7 files changed, 482 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/sbsa-gwdt.txt
+ create mode 100644 drivers/watchdog/sbsa_gwdt.c
+
 -- 
-Jazz is not dead. It just smells funny...
+2.5.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
