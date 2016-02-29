@@ -1,41 +1,70 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: DRA7: change address-cells and size-cells
-Date: Mon, 29 Feb 2016 13:32:25 -0800
-Message-ID: <20160229213225.GN13417@atomide.com>
-References: <1456308664-28308-1-git-send-email-lokeshvutla@ti.com>
- <56D40505.8020702@ti.com>
- <20160229181606.GM13417@atomide.com>
- <17470332.nnZZr9fh67@wuerfel>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
+Date: Mon, 29 Feb 2016 22:38:50 +0100
+Message-ID: <20160229213850.GS2613@pengutronix.de>
+References: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
+ <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <17470332.nnZZr9fh67@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Matt Mackall <mpm@selenic.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> [160229 12:46]:
-> On Monday 29 February 2016 10:16:07 Tony Lindgren wrote:
-> > Yes I understand that if we need to set it at the top level. But what
-> > happens if you only set it for the memory node?
-> > 
-> > With just something like:
-> > 
-> > memory {
-> >        #address-cells = <2>;
-> >        #size-cells = <2>;
-> >        ...
-> > };
-> 
-> Nothing happens there: the memory node has no children, and no
-> ranges property, so the two properties are never referenced.
+On Mon, Feb 29, 2016 at 06:16:50PM -0300, Fabio Estevam wrote:
+> On Mon, Feb 29, 2016 at 12:52 PM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+>=20
+> > +       ret =3D clk_prepare_enable(rngc->clk);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       rngc->irq =3D platform_get_irq(pdev, 0);
+> > +       if (!rngc->irq) {
+> > +               dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+> > +               clk_disable_unprepare(rngc->clk);
+> > +
+> > +               return ret;
+>=20
+> You are returning the wrong error code here:
+>=20
+> Better do like this:
+>=20
+>        rngc->irq =3D platform_get_irq(pdev, 0);
+>        if (rngc->irq < 0) {
 
-OK thanks.
+rngc->irq is unsigned, so this is never true.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>                dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+>                clk_disable_unprepare(rngc->clk);
+>                return rngc->irq;
+>        }
+
+So here comes my better approach:
+
+	ret =3D platform_get_irq(pdev, 0);
+	if (ret <=3D 0) {
+		if (ret =3D=3D 0)
+			ret =3D -EINVAL;
+		dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+		clk_disable_unprepare(rngc->clk);
+
+		return ret;
+	}
+
+	rngc->irq =3D ret;
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
