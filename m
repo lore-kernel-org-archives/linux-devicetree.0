@@ -1,64 +1,63 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
-Date: Mon, 29 Feb 2016 23:33:09 +0900
-Message-ID: <20160229143309.28517.77269.sendpatchset@little-apple>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, galak@codeaurora.org, horms+renesas@verge.net.au, Magnus Damm <magnus.damm@gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH V3] cpufreq: qoriq: Register cooling device based on
+ device tree
+Date: Mon, 29 Feb 2016 15:33:37 +0100
+Message-ID: <CAJZ5v0joCpaPNxPzW2xpJ5Vt4MYgWdCvXE0PZb90S46pFhJH8w@mail.gmail.com>
+References: <1448529671-48216-1-git-send-email-hongtao.jia@freescale.com>
+	<1456531704.5360.53.camel@buserror.net>
+	<CADRPPNQhmb3bET9fV072ad5FEHAPrjuXSze1HwnRnKMRmFi8cg@mail.gmail.com>
+	<8056913.EWiGLtcdOV@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <8056913.EWiGLtcdOV@wuerfel>
+Sender: linux-pm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Li Yang <leoli@freescale.com>, Scott Wood <oss@buserror.net>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jia Hongtao <hongtao.jia@freescale.com>, Eduardo Valentin <edubezval@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Magnus Damm <damm+renesas@opensource.se>
+On Mon, Feb 29, 2016 at 11:05 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Friday 26 February 2016 18:41:06 Li Yang wrote:
+>> >> >
+>> >> > It would be perfect if this it true.  But I tried with the following
+>> >> > change, it just makes QORIQ_CPUFREQ non-selectable if THERMAL=m.
+>> >> >
+>> >> > diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
+>> >> > index dcb972a38fbc..ca05037dd565 100644
+>> >> > --- a/drivers/cpufreq/Kconfig
+>> >> > +++ b/drivers/cpufreq/Kconfig
+>> >> > @@ -297,6 +297,7 @@ endif
+>> >> >  config QORIQ_CPUFREQ
+>> >> >         tristate "CPU frequency scaling driver for Freescale QorIQ SoCs"
+>> >> >         depends on OF && COMMON_CLK && (PPC_E500MC || ARM)
+>> >> > +       depends on !CPU_THERMAL || THERMAL=y
+>> >> >         select CLK_QORIQ
+>> >> >         help
+>> >> >           This adds the CPUFreq driver support for Freescale QorIQ SoCs
+>> >>
+>
+> Oops.
+>
+>> >> I find we can achieve your desired result with the following change instead:
+>> >>
+>> >> +       depends on (THERMAL=m && m) || THERMAL=y || THERMAL=n
+>> >
+>> > "depends on THERMAL || !THERMAL" should also work.
+>>
+>> Right.  And this is more simpler.
+>
+>
+> Note the check on !CPU_THERMAL rather than !THERMAL in my patch, that
+> part was correct. I think the line should be
+>
+>         depends on !CPU_THERMAL || THERMAL
+>
+> as some other drivers do. I must have copied the line
+> from ARM_MT8173_CPUFREQ, which is a 'bool' symbol, when
+> it should have been the same as ARM_BIG_LITTLE_CPUFREQ and
+> CPUFREQ_DT.
 
-Update the IPMMU DT binding documentation to include the r8a7795 compat
-string as well as the "renesas,ipmmu-main" property that on r8a7795 will
-be used to describe the topology and the relationship between the various
-cache IPMMU instances and the main IPMMU.
+OK, so any chance to update the patch?
 
-Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
----
-
- Written against linux-next tag next-20160229
-
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
-
---- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	2016-02-29 23:25:15.540513000 +0900
-@@ -7,23 +7,34 @@ connected to the IPMMU through a port ca
- 
- Required Properties:
- 
--  - compatible: Must contain SoC-specific and generic entries from below.
-+  - compatible: Must contain SoC-specific and generic entry below in case
-+    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
- 
-     - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
-     - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
-     - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
-     - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
-     - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-+    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
-     - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
- 
-   - reg: Base address and size of the IPMMU registers.
-   - interrupts: Specifiers for the MMU fault interrupts. For instances that
-     support secure mode two interrupts must be specified, for non-secure and
-     secure mode, in that order. For instances that don't support secure mode a
--    single interrupt must be specified.
-+    single interrupt must be specified. Not required for cache IPMMUs.
- 
-   - #iommu-cells: Must be 1.
- 
-+Optional properties:
-+
-+  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
-+    The first cell is a phandle to the main IPMMU and the second cell is
-+    the interrupt bit number associated with the particular cache IPMMU device.
-+    The interrupt bit number needs to match the main IPMMU IMSSTR register.
-+    Only used by cache IPMMU instances.
-+
-+
- Each bus master connected to an IPMMU must reference the IPMMU in its device
- node with the following property:
- 
+Thanks,
+Rafael
