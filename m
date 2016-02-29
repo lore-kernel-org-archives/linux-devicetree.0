@@ -1,232 +1,102 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] hwmon: Create an NSA320 hardware monitoring driver
-Date: Sun, 28 Feb 2016 16:45:01 -0800
-Message-ID: <56D3948D.6000805@roeck-us.net>
-References: <1456698614-15176-1-git-send-email-linux@baker-net.org.uk>
- <1456698614-15176-3-git-send-email-linux@baker-net.org.uk>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v4 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Mon, 29 Feb 2016 10:02:36 +0800
+Message-ID: <56D3A6BC.8020005@huawei.com>
+References: <1454641552-12576-1-git-send-email-zhaoshenglong@huawei.com> <44113385.2QnPtvxQx0@vostro.rjw.lan> <alpine.DEB.2.02.1602111557430.27008@kaball.uk.xensource.com> <1667812.hY9vsC2epc@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456698614-15176-3-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1667812.hY9vsC2epc-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, julien.grall-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, ACPI <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2016 02:30 PM, Adam Baker wrote:
-> Create a driver to support the hardware monitoring chip present in
-> the Zyxel NSA320 and some of the other Zyxel NAS devices.
->
-> The driver reads fan speed and temperature from a suitably
-> pre-programmed MCU on the device.
->
-> Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-> ---
-> Changes since v2
-> Updated based on Guenter Roeck's review,
-> - return a single value that is result or error from the update function
-> - use separate show_value routimes for fan and temp
-> - Added Documentation/hwmon/nsa320-hwmon
-> ---
->   Documentation/hwmon/nsa320   |  53 +++++++++++
->   drivers/hwmon/Kconfig        |  15 +++
->   drivers/hwmon/Makefile       |   1 +
->   drivers/hwmon/nsa320-hwmon.c | 215 +++++++++++++++++++++++++++++++++++++++++++
->   4 files changed, 284 insertions(+)
->   create mode 100644 Documentation/hwmon/nsa320
->   create mode 100644 drivers/hwmon/nsa320-hwmon.c
->
-> diff --git a/Documentation/hwmon/nsa320 b/Documentation/hwmon/nsa320
-> new file mode 100644
-> index 0000000..fdbd694
-> --- /dev/null
-> +++ b/Documentation/hwmon/nsa320
-> @@ -0,0 +1,53 @@
-> +Kernel driver nsa320_hwmon
-> +==========================
-> +
-> +Supported chips:
-> +  * Holtek HT46R065 microcontroller with onboard firmware that configures
-> +	it to act as a hardware monitor.
-> +    Prefix: 'nsa320'
-> +    Addresses scanned: none
-> +    Datasheet: Not available, driver was reverse engineered based upon the
-> +	Zyxel kernel source
-> +
-> +Author:
-> +  Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-> +
-> +Description
-> +-----------
-> +
-> +This chip is known to be used in the Zyxel NSA320 and NSA325 NAS Units and
-> +also in some variants of the NSA310 but the driver has only been tested
-> +on the NSA320. In all of these devices it is connected to the same 3 GPIO
-> +lines which are used to provide chip select, clock and data lines. The
-> +interface behaves similarly to SPI but at much lower speeds than are normally
-> +used for SPI.
-> +
-> +Following each chip select pulse the chip will generate a single 32 bit word
-> +that contains 0x55 as a marker to indicate that data is being read correctly,
-> +followed by an 8 bit fan speed in 100s of RPM and a 16 bit temperature in
-> +tenths of a degree.
-> +
-> +
-> +sysfs-Interface
-> +---------------
-> +
-> +temp1_input - temperature input
-> +fan1_input - fan speed
-> +
-> +Notes
-> +-----
-> +
-> +The access timings used in the driver are the same as used in the Zyxel
-> +provided kernel. Testing has shown that if the delay between chip select and
-> +the first clock pulse is reduced from 100 ms to just under 10ms then the chip
-> +will not produce any output. If the duration of either phase of the clock
-> +is reduced from 100 us to less than 15 us then data pulses are likely to be
-> +read twice corrupting the output. The above analysis is based upon a sample
-> +of one unit but suggests that the Zyxel provided delay values include a
-> +reasonable tolerance.
-> +
-> +The driver incorporates a limit that it will not check for updated values
-> +faster than once a second. This is because the hardware takes a relatively long
-> +time to read the data from the device and when it does it reads both temp and
-> +fan speed. As the most likely case for two accesses in quick succession is
-> +to read both of these values avoiding a second read delay is desirable.
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 80a73bf..08fd7f5 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1186,6 +1186,21 @@ config SENSORS_NCT7904
->   	  This driver can also be built as a module.  If so, the module
->   	  will be called nct7904.
->
-> +config SENSORS_NSA320
-> +	tristate "ZyXEL NSA320 and compatible fan speed and temperature sensors"
-> +	depends on GPIOLIB && OF
-> +	depends on MACH_KIRKWOOD || COMPILE_TEST
-> +	help
-> +	  If you say yes here you get support for hardware monitoring
-> +	  for the ZyXEL NSA320 Media Server and other compatible devices
-> +	  (probably the NSA325 and some NSA310 variants).
-> +
-> +	  The sensor data is taken from a Holtek HT46R065 microcontroller
-> +	  connected to GPIO lines.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nsa320-hwmon.
-> +
->   config SENSORS_PCF8591
->   	tristate "Philips PCF8591 ADC/DAC"
->   	depends on I2C
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 12a3239..9e22cf7 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -124,6 +124,7 @@ obj-$(CONFIG_SENSORS_NCT6683)	+= nct6683.o
->   obj-$(CONFIG_SENSORS_NCT6775)	+= nct6775.o
->   obj-$(CONFIG_SENSORS_NCT7802)	+= nct7802.o
->   obj-$(CONFIG_SENSORS_NCT7904)	+= nct7904.o
-> +obj-$(CONFIG_SENSORS_NSA320)	+= nsa320-hwmon.o
->   obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
->   obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
->   obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
-> diff --git a/drivers/hwmon/nsa320-hwmon.c b/drivers/hwmon/nsa320-hwmon.c
-> new file mode 100644
-> index 0000000..e833550
-> --- /dev/null
-> +++ b/drivers/hwmon/nsa320-hwmon.c
-> @@ -0,0 +1,215 @@
-> +/*
-> + * drivers/hwmon/nsa320-hwmon.c
-> + *
-> + * ZyXEL NSA320 Media Servers
-> + * hardware monitoring
-> + *
-> + * Copyright (C) 2016 Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-> + * based on a board file driver
-> + * Copyright (C) 2012 Peter Schildmann <linux-7ojh7neMhKcWe5+p9BQgIQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License v2 as published by the
-> + * Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/hwmon-sysfs.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define MAGIC_NUMBER 0x55
-> +
-> +/*
-> + * The Zyxel hwmon MCU is a Holtek HT46R065 that is factory programmed
-> + * to perform temperature and fan speed monitoring. It is read by taking
-> + * the active pin low. The 32 bit output word is then clocked onto the
-> + * data line. The MSB of the data word is a magic nuber to indicate it
-> + * has been read correctly, the next byte is the fan speed (in hundreds
-> + * of RPM) and the last two bytes are the temperature (in tenths of a
-> + * degree)
-> + */
-> +
-> +struct nsa320_hwmon {
-> +	struct mutex		update_lock;	/* lock GPIO operations */
-> +	unsigned long		last_updated;	/* jiffies */
-> +	unsigned long		mcu_data;
-> +	struct gpio_desc	*act;
-> +	struct gpio_desc	*clk;
-> +	struct gpio_desc	*data;
-> +};
-> +
-> +enum nsa320_inputs {
-> +	NSA3XX_TEMP = 0,
-> +	NSA3XX_FAN = 1,
-> +};
-> +
-> +static const char * const nsa320_input_names[] = {
-> +	[NSA3XX_TEMP] = "System Temperature",
-> +	[NSA3XX_FAN] = "Chassis Fan",
-> +};
-> +
-> +/*
-> + * Although this protocol looks similar to SPI the long delay
-> + * between the active (aka chip select) signal and the shorter
-> + * delay between clock pulses are needed for reliable operation.
-> + * The delays provided are taken from the manufacturer kernel,
-> + * testing suggest they probably incorporate a reasonable safety
-> + * margin. (The single device tested became unreliable if the
-> + * delay was reduced to 1/10th of this value.)
-> + */
-> +static unsigned long nsa320_hwmon_update(struct device *dev)
 
-Please make this either int or s32.
 
-> +{
-> +	u32 mcu_data;
+On 2016/2/12 6:22, Rafael J. Wysocki wrote:
+> On Thursday, February 11, 2016 04:04:14 PM Stefano Stabellini wrote:
+>> > On Wed, 10 Feb 2016, Rafael J. Wysocki wrote:
+>>> > > On Tuesday, February 09, 2016 11:19:02 AM Stefano Stabellini wrote:
+>>>> > > > On Mon, 8 Feb 2016, Rafael J. Wysocki wrote:
+>>>>> > > > > On Monday, February 08, 2016 10:57:01 AM Stefano Stabellini wrote:
+>>>>>> > > > > > On Sat, 6 Feb 2016, Rafael J. Wysocki wrote:
+>>>>>>> > > > > > > On Fri, Feb 5, 2016 at 4:05 AM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>>>> > > > > > > > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>>> > > > > > > >
+>>>>>>>> > > > > > > > ACPI 6.0 introduces a new table STAO to list the devices which are used
+>>>>>>>> > > > > > > > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+>>>>>>>> > > > > > > > UART is used by Xen. So here it hides UART from Dom0.
+>>>>>>>> > > > > > > >
+>>>>>>>> > > > > > > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>>>>> > > > > > > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+>>>>>>> > > > > > > 
+>>>>>>> > > > > > > Well, this doesn't look right to me.
+>>>>>>> > > > > > > 
+>>>>>>> > > > > > > We need to find a nicer way to achieve what you want.
+>>>>>> > > > > > 
+>>>>>> > > > > > I take that you are talking about how to honor the STAO table in Linux.
+>>>>>> > > > > > Do you have any concrete suggestions?
+>>>>> > > > > 
+>>>>> > > > > I do.
+>>>>> > > > > 
+>>>>> > > > > The last hunk of the patch is likely what it needs to be, although I'm
+>>>>> > > > > not sure if the place it is added to is the right one.  That's a minor thing,
+>>>>> > > > > though.
+>>>>> > > > > 
+>>>>> > > > > The other part is problematic.  Not that as it doesn't work, but because of
+>>>>> > > > > how it works.  With these changes the device will be visible to the OS (in
+>>>>> > > > > fact to user space even), but will never be "present".  I'm not sure if
+>>>>> > > > > that's what you want?
+>>>>> > > > > 
+>>>>> > > > > It might be better to add a check to acpi_bus_type_and_status() that will
+>>>>> > > > > evaluate the "should ignore?" thing and return -ENODEV if this is true.  This
+>>>>> > > > > way the device won't be visible at all.
+>>>> > > > 
+>>>> > > > Something like below?  Actually your suggestion is better, thank you!
+>>>> > > > 
+>>>> > > > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+>>>> > > > index 78d5f02..4778c51 100644
+>>>> > > > --- a/drivers/acpi/scan.c
+>>>> > > > +++ b/drivers/acpi/scan.c
+>>>> > > > @@ -1455,6 +1455,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+>>>> > > >  	if (ACPI_FAILURE(status))
+>>>> > > >  		return -ENODEV;
+>>>> > > >  
+>>>> > > > +	if (acpi_check_device_is_ignored(handle))
+>>>> > > > +		return -ENODEV;
+>>>> > > > +
+>>>> > > >  	switch (acpi_type) {
+>>>> > > >  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+>>>> > > >  	case ACPI_TYPE_DEVICE:
+>>>> > > > 
+>>> > > 
+>>> > > I thought about doing that under ACPI_TYPE_DEVICE, because it shouldn't be
+>>> > > applicable to the other types.  But generally, yes.
+>> > 
+>> > I was pondering about it myself. Maybe an ACPI_TYPE_PROCESSOR object
+>> > could theoretically be hidden with the STAO?
+> But this patch won't check for it anyway, will it?
+> 
+> It seems to be only checking against the UART address or have I missed
+> anything?
+> 
+>> > I added the check before
+>> > the switch because I thought that there would be no harm in being
+>> > caution about it.
+>> > 
+>> > 
+>>> > > Plus I'd move the table checks to acpi_scan_init(), so the UART address can
+>>> > > be a static variable in scan.c.
+>>> > >
+>>> > > Also maybe rename acpi_check_device_is_ignored() to something like
+>>> > > acpi_device_should_be_hidden().
+>> > 
+>> > Both make sense. Shannon, are you happy to make these changes?
+> Plus maybe make acpi_device_should_be_hidden() print a (KERN_INFO) message
+> when it decides to hide something?
+Ok, will update this patch. Thanks a lot!
 
-You can (and should) still use u32 here.
-
-Thanks,
-Guenter
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Shannon
