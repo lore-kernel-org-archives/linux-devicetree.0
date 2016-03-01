@@ -1,132 +1,95 @@
 From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v6 08/11] drm/hisilicon: Add designware dsi host driver
-Date: Tue, 1 Mar 2016 18:34:32 +0800
-Message-ID: <CAGd==05WYu7hW3KfgmvsZyb_PYrniYxtMcrNiz+99mCaw-27bQ@mail.gmail.com>
+Subject: Re: [PATCH v6 09/11] drm/hisilicon: Add support for external bridge
+Date: Tue, 1 Mar 2016 18:34:59 +0800
+Message-ID: <CAGd==043yRA0s3rwLOZyjuRjty3k=Zh8=faMdv6Nudv-iTWJKg@mail.gmail.com>
 References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
-	<1456476028-36880-9-git-send-email-xinliang.liu@linaro.org>
-	<56D4932B.9080500@codeaurora.org>
+ <1456476028-36880-10-git-send-email-xinliang.liu@linaro.org>
+ <56D49391.1070500@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <56D4932B.9080500@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <56D49391.1070500@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Archit Taneja <architt@codeaurora.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@his>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 1 March 2016 at 02:51, Archit Taneja <architt@codeaurora.org> wrote:
->
->
-> On 2/26/2016 2:10 PM, Xinliang Liu wrote:
->>
->> Add DesignWare dsi host driver for hi6220 SoC.
->>
->> v6: None.
->> v5: None.
->> v4: None.
->> v3: None.
->> v2:
->> - Remove abtraction layer.
->
->
-> Reviewed-by: Archit Taneja <architt@codeaurora.org>
-
-Thanks :-)
-
-Best,
--xinliang
-
->
->
->>
->> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
->> ---
->>   drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c | 50
->> ++++++++++++++++++++++++++++
->>   1 file changed, 50 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
->> b/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
->> index 8329148cc89d..f15798b61451 100644
->> --- a/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
->> +++ b/drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c
->> @@ -79,6 +79,7 @@ struct dsi_hw_ctx {
->>
->>   struct dw_dsi {
->>         struct drm_encoder encoder;
->> +       struct mipi_dsi_host host;
->>         struct drm_display_mode cur_mode;
->>         struct dsi_hw_ctx *ctx;
->>         struct mipi_phy_params phy;
->> @@ -642,6 +643,51 @@ static int dw_drm_encoder_init(struct device *dev,
->>         return 0;
->>   }
->>
->> +static int dsi_host_attach(struct mipi_dsi_host *host,
->> +                          struct mipi_dsi_device *mdsi)
->> +{
->> +       struct dw_dsi *dsi = host_to_dsi(host);
->> +
->> +       if (mdsi->lanes < 1 || mdsi->lanes > 4) {
->> +               DRM_ERROR("dsi device params invalid\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       dsi->lanes = mdsi->lanes;
->> +       dsi->format = mdsi->format;
->> +       dsi->mode_flags = mdsi->mode_flags;
->> +
->> +       return 0;
->> +}
->> +
->> +static int dsi_host_detach(struct mipi_dsi_host *host,
->> +                          struct mipi_dsi_device *mdsi)
->> +{
->> +       /* do nothing */
->> +       return 0;
->> +}
->> +
->> +static const struct mipi_dsi_host_ops dsi_host_ops = {
->> +       .attach = dsi_host_attach,
->> +       .detach = dsi_host_detach,
->> +};
->> +
->> +static int dsi_host_init(struct device *dev, struct dw_dsi *dsi)
->> +{
->> +       struct mipi_dsi_host *host = &dsi->host;
->> +       int ret;
->> +
->> +       host->dev = dev;
->> +       host->ops = &dsi_host_ops;
->> +       ret = mipi_dsi_host_register(host);
->> +       if (ret) {
->> +               DRM_ERROR("failed to register dsi host\n");
->> +               return ret;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->>   static int dsi_bind(struct device *dev, struct device *master, void
->> *data)
->>   {
->>         struct dsi_data *ddata = dev_get_drvdata(dev);
->> @@ -653,6 +699,10 @@ static int dsi_bind(struct device *dev, struct device
->> *master, void *data)
->>         if (ret)
->>                 return ret;
->>
->> +       ret = dsi_host_init(dev, dsi);
->> +       if (ret)
->> +               return ret;
->> +
->>         return 0;
->>   }
->>
->>
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+T24gMSBNYXJjaCAyMDE2IGF0IDAyOjUzLCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJv
+cmEub3JnPiB3cm90ZToKPgo+Cj4gT24gMi8yNi8yMDE2IDI6MTAgUE0sIFhpbmxpYW5nIExpdSB3
+cm90ZToKPj4KPj4gQWRkIHN1cHBvcnQgZm9yIGV4dGVybmFsIEhETUkgYnJpZGdlLgo+Pgo+PiB2
+NjogTm9uZS4KPj4gdjU6IE5vbmUuCj4+IHY0OiBOb25lLgo+PiB2MzoKPj4gLSBGaXggYSB0eXBv
+OiBzL2V4dGVyYW5sL2V4dGVybmFsLgo+PiB2MjoKPj4gLSBSZW1vdmUgYWJ0cmFjdGlvbiBsYXll
+ci4KPj4KPgo+IFJldmlld2VkLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEu
+b3JnPgoKVGhhbmtzIDotKQoKQmVzdCwKLXhpbmxpYW5nCgo+Cj4KPj4gU2lnbmVkLW9mZi1ieTog
+WGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4KPj4gLS0tCj4+ICAgZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1fZHNpLmMgfCA1Mgo+PiArKysrKysrKysr
+KysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKykK
+Pj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJt
+X2RzaS5jCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1fZHNpLmMK
+Pj4gaW5kZXggZjE1Nzk4YjYxNDUxLi5jMmM0MDY0NDY1MTMgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2RzaS5jCj4+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2RzaS5jCj4+IEBAIC03OSw2ICs3OSw3IEBA
+IHN0cnVjdCBkc2lfaHdfY3R4IHsKPj4KPj4gICBzdHJ1Y3QgZHdfZHNpIHsKPj4gICAgICAgICBz
+dHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsKPj4gKyAgICAgICBzdHJ1Y3QgZHJtX2JyaWRnZSAq
+YnJpZGdlOwo+PiAgICAgICAgIHN0cnVjdCBtaXBpX2RzaV9ob3N0IGhvc3Q7Cj4+ICAgICAgICAg
+c3RydWN0IGRybV9kaXNwbGF5X21vZGUgY3VyX21vZGU7Cj4+ICAgICAgICAgc3RydWN0IGRzaV9o
+d19jdHggKmN0eDsKPj4gQEAgLTY4OCw2ICs2ODksMjUgQEAgc3RhdGljIGludCBkc2lfaG9zdF9p
+bml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0Cj4+IGR3X2RzaSAqZHNpKQo+PiAgICAgICAg
+IHJldHVybiAwOwo+PiAgIH0KPj4KPj4gK3N0YXRpYyBpbnQgZHNpX2JyaWRnZV9pbml0KHN0cnVj
+dCBkcm1fZGV2aWNlICpkZXYsIHN0cnVjdCBkd19kc2kgKmRzaSkKPj4gK3sKPj4gKyAgICAgICBz
+dHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIgPSAmZHNpLT5lbmNvZGVyOwo+PiArICAgICAgIHN0
+cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UgPSBkc2ktPmJyaWRnZTsKPj4gKyAgICAgICBpbnQgcmV0
+Owo+PiArCj4+ICsgICAgICAgLyogYXNzb2NpYXRlIHRoZSBicmlkZ2UgdG8gZHNpIGVuY29kZXIg
+Ki8KPj4gKyAgICAgICBlbmNvZGVyLT5icmlkZ2UgPSBicmlkZ2U7Cj4+ICsgICAgICAgYnJpZGdl
+LT5lbmNvZGVyID0gZW5jb2RlcjsKPj4gKwo+PiArICAgICAgIHJldCA9IGRybV9icmlkZ2VfYXR0
+YWNoKGRldiwgYnJpZGdlKTsKPj4gKyAgICAgICBpZiAocmV0KSB7Cj4+ICsgICAgICAgICAgICAg
+ICBEUk1fRVJST1IoImZhaWxlZCB0byBhdHRhY2ggZXh0ZXJuYWwgYnJpZGdlXG4iKTsKPj4gKyAg
+ICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgcmV0
+dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gICBzdGF0aWMgaW50IGRzaV9iaW5kKHN0cnVjdCBkZXZpY2Ug
+KmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkCj4+ICpkYXRhKQo+PiAgIHsKPj4gICAg
+ICAgICBzdHJ1Y3QgZHNpX2RhdGEgKmRkYXRhID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+IEBA
+IC03MDMsNiArNzIzLDEwIEBAIHN0YXRpYyBpbnQgZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2
+LCBzdHJ1Y3QgZGV2aWNlCj4+ICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4+ICAgICAgICAgaWYgKHJl
+dCkKPj4gICAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+Cj4+ICsgICAgICAgcmV0ID0gZHNp
+X2JyaWRnZV9pbml0KGRybV9kZXYsIGRzaSk7Cj4+ICsgICAgICAgaWYgKHJldCkKPj4gKyAgICAg
+ICAgICAgICAgIHJldHVybiByZXQ7Cj4+ICsKPj4gICAgICAgICByZXR1cm4gMDsKPj4gICB9Cj4+
+Cj4+IEBAIC03MTksOCArNzQzLDM2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgY29tcG9uZW50X29w
+cyBkc2lfb3BzID0gewo+PiAgIHN0YXRpYyBpbnQgZHNpX3BhcnNlX2R0KHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXYsIHN0cnVjdCBkd19kc2kKPj4gKmRzaSkKPj4gICB7Cj4+ICAgICAgICAg
+c3RydWN0IGRzaV9od19jdHggKmN0eCA9IGRzaS0+Y3R4Owo+PiArICAgICAgIHN0cnVjdCBkZXZp
+Y2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsKPj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNl
+X25vZGUgKmVuZHBvaW50LCAqYnJpZGdlX25vZGU7Cj4+ICsgICAgICAgc3RydWN0IGRybV9icmlk
+Z2UgKmJyaWRnZTsKPj4gICAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPj4KPj4gKyAgICAg
+ICAvKgo+PiArICAgICAgICAqIEdldCB0aGUgZW5kcG9pbnQgbm9kZS4gSW4gb3VyIGNhc2UsIGRz
+aSBoYXMgb25lIG91dHB1dCBwb3J0MQo+PiArICAgICAgICAqIHRvIHdoaWNoIHRoZSBleHRlcm5h
+bCBIRE1JIGJyaWRnZSBpcyBjb25uZWN0ZWQuCj4+ICsgICAgICAgICovCj4+ICsgICAgICAgZW5k
+cG9pbnQgPSBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyhucCwgMSwgLTEpOwo+PiArICAg
+ICAgIGlmICghZW5kcG9pbnQpIHsKPj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigibm8gdmFs
+aWQgZW5kcG9pbnQgbm9kZVxuIik7Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsK
+Pj4gKyAgICAgICB9Cj4+ICsgICAgICAgb2Zfbm9kZV9wdXQoZW5kcG9pbnQpOwo+PiArCj4+ICsg
+ICAgICAgYnJpZGdlX25vZGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVuZHBv
+aW50KTsKPj4gKyAgICAgICBpZiAoIWJyaWRnZV9ub2RlKSB7Cj4+ICsgICAgICAgICAgICAgICBE
+Uk1fRVJST1IoIm5vIHZhbGlkIGJyaWRnZSBub2RlXG4iKTsKPj4gKyAgICAgICAgICAgICAgIHJl
+dHVybiAtRU5PREVWOwo+PiArICAgICAgIH0KPj4gKyAgICAgICBvZl9ub2RlX3B1dChicmlkZ2Vf
+bm9kZSk7Cj4+ICsKPj4gKyAgICAgICBicmlkZ2UgPSBvZl9kcm1fZmluZF9icmlkZ2UoYnJpZGdl
+X25vZGUpOwo+PiArICAgICAgIGlmICghYnJpZGdlKSB7Cj4+ICsgICAgICAgICAgICAgICBEUk1f
+SU5GTygid2FpdCBmb3IgZXh0ZXJuYWwgSERNSSBicmlkZ2UgZHJpdmVyLlxuIik7Cj4+ICsgICAg
+ICAgICAgICAgICByZXR1cm4gLUVQUk9CRV9ERUZFUjsKPj4gKyAgICAgICB9Cj4+ICsgICAgICAg
+ZHNpLT5icmlkZ2UgPSBicmlkZ2U7Cj4+ICsKPj4gICAgICAgICBjdHgtPnBjbGsgPSBkZXZtX2Ns
+a19nZXQoJnBkZXYtPmRldiwgInBjbGsiKTsKPj4gICAgICAgICBpZiAoSVNfRVJSKGN0eC0+cGNs
+aykpIHsKPj4gICAgICAgICAgICAgICAgIERSTV9FUlJPUigiZmFpbGVkIHRvIGdldCBwY2xrIGNs
+b2NrXG4iKTsKPj4KPgo+IC0tCj4gUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
+YSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxh
+Ym9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
