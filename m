@@ -1,128 +1,55 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2] PCI: imx6: add dt prop for link gen, default to gen1
-Date: Tue, 1 Mar 2016 09:02:11 -0600
-Message-ID: <20160301150211.GA12752@localhost>
-References: <1446735481-27326-1-git-send-email-tharvey@gateworks.com>
- <1447942365-11662-1-git-send-email-tharvey@gateworks.com>
- <20151125231435.GI8869@localhost>
- <CAJ+vNU0ar_d=2n4Yz3QX4qidSkH6PBLyfB8-w-ErLOYzwqj7rw@mail.gmail.com>
- <20160224200357.GB31108@localhost>
- <CAL_Jsq+O1vr6sVZeJ10GXLpEuhb5-kJVYrQe2EY7XB814FuF0Q@mail.gmail.com>
- <CAJ+vNU3gG=vdL__hpUa7D1OUMZcmPKqU1_hw5nGoJ3zxp6HO0A@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 3/8] ARM64: dts: Prepare configs for Amlogic Meson GXBaby
+Date: Tue, 1 Mar 2016 16:18:45 +0100
+Message-ID: <56D5B2D5.9010405@suse.de>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+ <1456789465-2962-4-git-send-email-afaerber@suse.de>
+ <56D5AA87.7020401@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJ+vNU3gG=vdL__hpUa7D1OUMZcmPKqU1_hw5nGoJ3zxp6HO0A@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D5AA87.7020401-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 29, 2016 at 06:41:29AM -0800, Tim Harvey wrote:
-> On Wed, Feb 24, 2016 at 12:35 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> > On Wed, Feb 24, 2016 at 2:03 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >> [+cc Rob, devicetree list]
-> >>
-> >> On Wed, Dec 02, 2015 at 08:35:06AM -0800, Tim Harvey wrote:
-> >>> On Wed, Nov 25, 2015 at 3:14 PM, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >>> > On Thu, Nov 19, 2015 at 06:12:45AM -0800, Tim Harvey wrote:
-> >>> >> Freescale has stated [1] that the LVDS clock source of the IMX6 does not pass
-> >>> >> the PCI Gen2 clock jitter test, therefore unless an external Gen2 compliant
-> >>> >> external clock source is present and supplied back to the IMX6 PCIe core
-> >>> >> via LVDS CLK1/CLK2 you can not claim Gen2 compliance.
-> >>> >>
-> >>> >> Add a dt property to specify gen1 vs gen2 and check this before allowing
-> >>> >> a Gen2 link.
-> >>> >>
-> >>> >> We default to Gen1 if the property is not present because at this time there
-> >>> >> are no IMX6 boards in mainline that 'input' a clock on LVDS CLK1/CLK2.
-> >>> >>
-> >>> >> In order to be Gen2 compliant on IMX6 you need to:
-> >>> >>  - have a Gen2 compliant external clock generator and route that clock back
-> >>> >>    to either LVDS CLK1 or LVDS CLK2 as an input.
-> >>> >>    (see IMX6SX-SabreSD reference design)
-> >>> >>  - specify this clock in the pcie node in the dt
-> >>> >>    (ie IMX6QDL_CLK_LVDS1_IN or IMX6QDL_CLK_LVDS2_IN instead of
-> >>> >>     IMX6QDL_CLK_LVDS1_GATE which configures it as a CLK output)
-> >>> >>
-> >>> >> [1] https://community.freescale.com/message/453209
-> >>> >>
-> >>> >> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-> >>> >> ---
-> >>> >> v2:
-> >>> >>  - moved dt property to designware core
-> >>> >>
-> >>> >>  .../devicetree/bindings/pci/designware-pcie.txt          |  1 +
-> >>> >>  drivers/pci/host/pci-imx6.c                              | 16 ++++++++++------
-> >>> >>  drivers/pci/host/pcie-designware.c                       |  4 ++++
-> >>> >>  drivers/pci/host/pcie-designware.h                       |  1 +
-> >>> >>  4 files changed, 16 insertions(+), 6 deletions(-)
-> >>> >>
-> >>> >> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> >>> >> index 9f4faa8..a9a94b9 100644
-> >>> >> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> >>> >> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> >>> >> @@ -26,3 +26,4 @@ Optional properties:
-> >>> >>  - bus-range: PCI bus numbers covered (it is recommended for new devicetrees to
-> >>> >>    specify this property, to keep backwards compatibility a range of 0x00-0xff
-> >>> >>    is assumed if not present)
-> >>> >> +- max-link-speed: Specify PCI gen for link capability (ie 2 for gen2)
-> >>> >
-> >>> > Is there some sort of DT or OF spec that lists "max-link-speed" as a
-> >>> > generic property?  I see Lucas' desire to have this be common across
-> >>> > DesignWare PCIe cores.  Should it be moved up a level even from there,
-> >>> > i.e., to bindings/pci/pci.txt?
-> >>>
-> >>> I don't know what the general consensus is here. As your the PCI
-> >>> maintainer I would leave that up to you. Are there other platforms
-> >>> that need to link at a lesser capability than the host controller is
-> >>> capable of? I am only aware of the IMX6 and SPEAr13XX [1]
-> >>
-> >> This is really a devicetree question, not a PCI one, so I added Rob
-> >> and the devicetree list in case they have any comments on this.
-> >
-> > Seems generally useful to me. You could want to limit the speed for a
-> > variety of reasons. There's no standard property that I'm aware of.
-> >
-> > Shouldn't this be a property of the phy though?
-> >
-> >>> > It might be worth mentioning in pci/fsl,imx6q-pcie.txt that we limit
-> >>> > the link to gen1 unless max-link-speed is present and has the value
-> >>> > "2".
-> >>
-> >> This default seems backwards.  It seems like we'd want to configure
-> >> the link to go as fast as possible unless we have a quirk, e.g.,
-> >> "max-link-speed", that imposes a device-specific link.  In other
-> >> words, why don't we penalize the broken board instead of penalizing
-> >> all the working ones?
-> >
-> > I agree. It could be argued that this way doesn't require a DT update
-> > to fix broken boards. However, this problem should really be found
-> > before production and DT updates are normal for enabling new features
-> > (such as compliant PCIe).
-> >
-> > Rob
-> 
-> Rob,
-> 
-> In this case I feel that every IMX6 based board with PCIe likely has
-> this issue because the original reference schematics from Freescale
-> did not mention that the LVDS clock source from the IMX6 did not meet
-> PCIe gen2 requirements so everyone blindly followed the reference
-> design. Only later did they seem to come out with this information and
-> if you did use an external clock you would have to setup the IMX6 pcie
-> clocks differently in the device-tree (configuring the IMX6 to use a
-> clock input instead of output), which I see no current boards doing.
-> 
-> There are several SoC's that use the designware core that likely are
-> not in this same boat, so it would be unfair to penalize them by
-> defaulting a gen1 speed tied to the mac. So yes, perhaps a property of
-> the imx6 pcie phy and defaulting it to gen1 because no current
-> device-tree's set the phy's clock as an external input makes the most
-> sense?
+Am 01.03.2016 um 15:43 schrieb Sudeep Holla:
+> On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
+>> +    psci {
+>> +        compatible =3D "arm,psci";
+>=20
+> Any particular reason why PSCI v0.2 or above is not supported on this
+> platform. PSCI v0.1 is very old now and I assume this platform is
+> relatively new.
 
-I'm not an IMX6 expert, but this sounds good to me, so I'll look for a
-new rev that does this.
+I am not affiliated with Amlogic or Tronsmart, so I cannot answer why.
 
-Bjorn
+>> +        method =3D "smc";
+>> +        cpu_suspend =3D <0xc4000001>;
+>> +        cpu_off =3D <0x84000002>;
+>> +        cpu_on =3D <0xc4000003>;
+>> +        migrate =3D <0xc4000005>;
+>=20
+> Atleast the functions ids look like v0.2 or above. So check if it's
+> actually v0.2 or above
+
+If you let me know how! Just change the compatible string to -0.2 and
+wait for some big boom or watch out for any misbehavior in particular?
+Are there any memory locations to check the version or something visibl=
+e
+in U-Boot source code indicating it?
+
+Regards,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
