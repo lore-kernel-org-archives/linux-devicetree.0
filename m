@@ -1,43 +1,75 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V8 3/8] pinctrl: add DT binding doc for pincontrol of
- PMIC max77620/max20024
-Date: Tue, 1 Mar 2016 15:07:31 +0530
-Message-ID: <56D562DB.6020008@nvidia.com>
-References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com>	<1455191794-6065-4-git-send-email-ldewangan@nvidia.com> <CACRpkdZGNRJK4okMFdVS0JFyWC+Rnwpi8ms06oXrbtAe1MjR=g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH] arm64: dts: r8a7795: Add CAN FD support
+Date: Tue,  1 Mar 2016 10:04:00 +0000
+Message-ID: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZGNRJK4okMFdVS0JFyWC+Rnwpi8ms06oXrbtAe1MjR=g@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?S3J6eXN6dG9mIEtvesWCb3dzaw==?= =?UTF-8?B?aQ==?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Adds CAN FD controller node for r8a7795.
 
-On Tuesday 16 February 2016 04:46 AM, Linus Walleij wrote:
-> On Thu, Feb 11, 2016 at 12:56 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->
->> Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
->> which act as GPIO as well as special function mode.
->>
->> Add DT binding document to configure pins in function mode as
->> well as pin configuration parameters.
->>
->> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
->
-I saw that regulator driver is merged in regulator subsystem by Mark 
-Brown. So I think  patches can go on their individual subsystem. The 
-config for these driver depends on the MFD and hence it will not build.
+Note: CAN FD controller register base address specified in R-Car Gen3
+Hardware User Manual v0.5E is incorrect. The correct address is:
 
-Also the common header file is part of mfd subsystem and other patches 
-will not touch this so no conflict on the drivers.
+CAN FD - 0xe66c0000
 
-Same for max77620 GPIO patch also.
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+---
+Hi All,
+
+   This patch is based on linux-next (tag:next-20160225) with the following
+   patches applied on top.
+
+   [PATCH v2] arm64: dts: r8a7795: Add CAN external clock support
+   [PATCH] arm64: dts: r8a7795: Add CAN support
+
+   The respective CAN subsystem changes are submitted separately here (https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg01388.html)
+
+Thanks,
+Ramesh
+---
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index a88f8d8..5049ba6 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -553,6 +553,30 @@
+ 			status = "disabled";
+ 		};
+ 
++		canfd: canfd@e66c0000 {
++			compatible = "renesas,r8a7795-canfd",
++				     "renesas,rcar-gen3-canfd";
++			reg = <0 0xe66c0000 0 0x8000>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				   <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 914>,
++			       <&cpg CPG_CORE R8A7795_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "fck", "canfd", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A7795_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&cpg>;
++			status = "disabled";
++
++			channel0 {
++				status = "disabled";
++			};
++
++			channel1 {
++				status = "disabled";
++			};
++		};
++
+ 		hscif0: serial@e6540000 {
+ 			compatible = "renesas,hscif-r8a7795",
+ 				     "renesas,rcar-gen3-hscif",
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
