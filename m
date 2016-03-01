@@ -1,53 +1,62 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Alternative binding proposal for tda998x audio (Was: Re: [PATCH RFC
- v5 4/8] drm/i2c: tda998x: Add support of a DT graph of ports)
-Date: Tue, 1 Mar 2016 16:26:50 +0200
-Message-ID: <56D5A6AA.2030907@ti.com>
-References: <cover.1455720381.git.jsarha@ti.com>
- <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
- <20160218143530.GB9654@rob-hp-laptop> <56CF04DA.8080905@ti.com>
- <20160226004311.GM5783@n2100.arm.linux.org.uk> <56D02594.4020407@ti.com>
- <20160226112159.GO5783@n2100.arm.linux.org.uk> <56D41F1A.2030100@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 1/2] arm64: tegra: Add DT entry for keys used in
+ Jetson-TX1
+Date: Tue, 1 Mar 2016 15:28:12 +0100
+Message-ID: <20160301142812.GB26201@ulmo>
+References: <1456751211-14341-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56D41F1A.2030100@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456751211-14341-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: swarren@wwwdotorg.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T2ssIGhlcmUgaXMganVzdCBvbmUgbW9yZSBzaW1wbGUgYWx0ZXJuYXRpdmUgZm9yIHRkYTk5OHgg
-YXVkaW8gYmluZGluZy4gCkkgZmVlbCB0aGF0IHRoZSBncmFwaCBwb3J0cyBiaW5kaW5nIGZvciBh
-dWRpbyBkb2VzIG5vdCBtYWtlIHNlbnNlIAp3aXRob3V0IGEgZ3JhcGggYmFzZWQgQVNvQyBtYWNo
-aW5lIGRyaXZlciBpbXBsZW1lbnRhdGlvbi4gVGhlIEFTb0MgCnNpbXBsZS1jYXJkIGlzIGFscmVh
-ZHkgaGVyZSBhbmQgaXQgc28gd2lkZWx5IHVzZWQgdGhhdCB0aGVyZSBpcyBubyAKZ2V0dGluZyBy
-aWQgb2YgdGhhdCBhbnkgdGltZSBzb29uLiBUaGlzIHByb3Bvc2FsIHByb3ZpZGVzIHRoZSBzYW1l
-IApmdW5jdGlvbmFsaXR5IGFzIHRoZSBwYXRjaCBpbiB0aGUgcm9vdCBvZiB0aGlzIHRocmVhZCwg
-YnV0IGluIGEgc2ltcGxlciAKd2F5IGFuZCBpcyBlcXVhbGx5IGNvbXBhdGlibGUgd2l0aCBzaW1w
-bGUtY2FyZC4KClRoZSBleGFtcGxlIGFzc3VtZXMgYSBkdC1pbmNsdWRlIGZpbGUgd2l0aCBpbnRl
-Z2VyIGRlZmluaXRpb25zIGZvciAKVERBOTk4eF9TUERJRiBhbmQgVERBOTk4eF9JMlMuCgoKCXRk
-YTE5OTg4IHsKCQljb21wYXRpYmxlID0gIm54cCx0ZGE5OTh4IjsKCQlyZWcgPSA8MHg3MD47CgkJ
-cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IiwgIm9mZiI7CgkJcGluY3RybC0wID0gPCZueHBfaGRt
-aV9ib25lbHRfcGlucz47CgkJcGluY3RybC0xID0gPCZueHBfaGRtaV9ib25lbHRfb2ZmX3BpbnM+
-OwoJCXZpZGVvLXBvcnRzID0gPDB4MjMwMTQ1PjsKCgkJLyogUmVxdWlyZWQgYnkgc2ltcGxlLWNh
-cmQuIFRoZSBudW1iZXIgb2Ygc291bmQtZGFpCgkJICAgY2VsbHMgbXVzdCBhZ3JlZSB3aXRoIHRo
-ZSBudW1iZXIgb2YgYXVkaW8gcG9ydHMKCQkgICBkZXNjcmliZWQgaW4gYXVkaW8tcG9ydHMgcHJv
-cGVydHkuICovCgkJI3NvdW5kLWRhaS1jZWxscyA9IDwyPjsKCgkJCSAgICAgLyoJREFJLWZvcm1h
-dAlBUF9FTkEgcmVnIHZhbHVlICovCgkJYXVkaW8tcG9ydHMgPSA8CVREQTk5OHhfU1BESUYJMHgw
-NAoJCQkJVERBOTk4eF9JMlMJMHgwMz47CgoJCXBvcnQgewoJCQloZG1pXzA6IGVuZHBvaW50QDAg
-ewoJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsY2RjXzA+OwoJCQl9OwoJCX07Cgl9OwoKUnVzc2Vs
-bCwgUm9iPyBXaGljaCBvbmUgd291bGQgeW91IHByZWZlciwgdGhlIG9sZCBncmFwaCBwb3J0cyBi
-aW5kaW5nIG9yIAp0aGlzIHNpbXBsZXIgdmVyc2lvbj8KCkJlc3QgcmVnYXJkcywKSnlyaQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--24zk1gE8NUlDmwG9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 29, 2016 at 06:36:50PM +0530, Laxman Dewangan wrote:
+> Add DT entry for keys used in Jetson-TX p2371-2180. This has
+> three keys, POWER, VOLUME-UP and VOLUME-DOWN.
+>=20
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 25 ++++++++++++++++=
+++++++
+>  1 file changed, 25 insertions(+)
+
+I've applied this with a slightly modified commit message and moved the
+gpio-keys node into the tegra210-p2597.dtsi file, because the GPIO keys
+are part of the P2597 I/O board.
+
+Thanks,
+Thierry
+
+--24zk1gE8NUlDmwG9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJW1ab8AAoJEN0jrNd/PrOh4+sP/jsKzjsGBO8hjt2O3SOOeeMu
+dwBdFHfnle6S2N+8nwGjraY3tgv05dQRPBlROEqe8/nAeu+bAGNY4Ez4HnMNsO6H
+zMw3ZMUWSLIwM48+XQvuLPIQzmNc23ccLL0yp3VYxcHsn7ThwAKLU0a2RcoMaQ1A
+1Hv1HPK8/YPEUzTarfPmPozF7ESxNpAE+r77iUyfOUGTG1MVx7kMNGuPN5mdMA8+
+H+t08hqdOzwSXvpnonOLyDR8NzhQVt3SXCuORfmy0Np2Bsbyy+Jj2pY4oTVZdrRB
+Y3ZocFuJgx5q8CKLH04//xyDI67CAdqmeK0ncRs91IYT3z0r0Ur3sV7ippTpAYEd
+P3AlYC7tW73KmBa02EmkCJ00v8idZP5az+AizxZX8gDj7MITxn+h1cSeJopHnmkz
+mH9GP/ykgxBbrUGdYRStbeNJXl3C98B1XYSE7kvfymEsL+TeW9MDwpEE35u52mML
+s4OOzvuE7ecEvHBOTTCn9kJlXJsvIGKBGTpLvEDuxYXF/d2RX3BC7t5tRKGa9ec5
+/XZ/X5EMSHgxK5iMcH/GYUynt5KCCP8bjqe48U3OKpLoIq1u+pgW+py1XuHT8Bxt
+GQLnqerpPDkOIMkRolbzDwB/zSlkcRIcZUxFMswOcW7OX8C7o5yInF1kyhZLQJ3Y
+hxV7mHMM4emeBrJfbdM+
+=d2gL
+-----END PGP SIGNATURE-----
+
+--24zk1gE8NUlDmwG9--
