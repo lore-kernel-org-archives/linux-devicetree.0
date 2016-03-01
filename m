@@ -1,62 +1,133 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] arm64: tegra: Add DT entry for keys used in
- Jetson-TX1
-Date: Tue, 1 Mar 2016 15:28:12 +0100
-Message-ID: <20160301142812.GB26201@ulmo>
-References: <1456751211-14341-1-git-send-email-ldewangan@nvidia.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/8] ARM64: dts: Prepare configs for Amlogic Meson GXBaby
+Date: Tue, 1 Mar 2016 14:43:19 +0000
+Message-ID: <56D5AA87.7020401@arm.com>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+ <1456789465-2962-4-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="24zk1gE8NUlDmwG9"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456751211-14341-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: swarren@wwwdotorg.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456789465-2962-4-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---24zk1gE8NUlDmwG9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 29, 2016 at 06:36:50PM +0530, Laxman Dewangan wrote:
-> Add DT entry for keys used in Jetson-TX p2371-2180. This has
-> three keys, POWER, VOLUME-UP and VOLUME-DOWN.
->=20
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 25 ++++++++++++++++=
-++++++
->  1 file changed, 25 insertions(+)
+>   arch/arm64/boot/dts/Makefile                |   1 +
+>   arch/arm64/boot/dts/amlogic/Makefile        |   3 +
+>   arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 128 +++++++++++++++++=
++++++++++++
+>   3 files changed, 132 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/amlogic/Makefile
+>   create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makef=
+ile
+> index fd80617a9c6f..330fae966cf3 100644
+> --- a/arch/arm64/boot/dts/Makefile
+> +++ b/arch/arm64/boot/dts/Makefile
+> @@ -1,6 +1,7 @@
+>   dts-dirs +=3D al
+>   dts-dirs +=3D altera
+>   dts-dirs +=3D amd
+> +dts-dirs +=3D amlogic
+>   dts-dirs +=3D apm
+>   dts-dirs +=3D arm
+>   dts-dirs +=3D broadcom
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/d=
+ts/amlogic/Makefile
+> new file mode 100644
+> index 000000000000..1b06c28c67eb
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -0,0 +1,3 @@
+> +always		:=3D $(dtb-y)
+> +subdir-y	:=3D $(dts-dirs)
+> +clean-files	:=3D *.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64=
+/boot/dts/amlogic/meson-gxbb.dtsi
+> new file mode 100644
+> index 000000000000..0ae089bd1806
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -0,0 +1,128 @@
 
-I've applied this with a slightly modified commit message and moved the
-gpio-keys node into the tegra210-p2597.dtsi file, because the GPIO keys
-are part of the P2597 I/O board.
+[...]
 
-Thanks,
-Thierry
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible =3D "amlogic,meson-gxbb";
+> +	interrupt-parent =3D <&gic>;
+> +	#address-cells =3D <2>;
+> +	#size-cells =3D <2>;
+> +
+> +	cpus {
+> +		#address-cells =3D <0x2>;
+> +		#size-cells =3D <0x0>;
+> +
 
---24zk1gE8NUlDmwG9
-Content-Type: application/pgp-signature; name="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> +	};
+> +
+> +	arm-pmu {
+> +		compatible =3D "arm,armv8-pmuv3";
 
-iQIcBAABCAAGBQJW1ab8AAoJEN0jrNd/PrOh4+sP/jsKzjsGBO8hjt2O3SOOeeMu
-dwBdFHfnle6S2N+8nwGjraY3tgv05dQRPBlROEqe8/nAeu+bAGNY4Ez4HnMNsO6H
-zMw3ZMUWSLIwM48+XQvuLPIQzmNc23ccLL0yp3VYxcHsn7ThwAKLU0a2RcoMaQ1A
-1Hv1HPK8/YPEUzTarfPmPozF7ESxNpAE+r77iUyfOUGTG1MVx7kMNGuPN5mdMA8+
-H+t08hqdOzwSXvpnonOLyDR8NzhQVt3SXCuORfmy0Np2Bsbyy+Jj2pY4oTVZdrRB
-Y3ZocFuJgx5q8CKLH04//xyDI67CAdqmeK0ncRs91IYT3z0r0Ur3sV7ippTpAYEd
-P3AlYC7tW73KmBa02EmkCJ00v8idZP5az+AizxZX8gDj7MITxn+h1cSeJopHnmkz
-mH9GP/ykgxBbrUGdYRStbeNJXl3C98B1XYSE7kvfymEsL+TeW9MDwpEE35u52mML
-s4OOzvuE7ecEvHBOTTCn9kJlXJsvIGKBGTpLvEDuxYXF/d2RX3BC7t5tRKGa9ec5
-/XZ/X5EMSHgxK5iMcH/GYUynt5KCCP8bjqe48U3OKpLoIq1u+pgW+py1XuHT8Bxt
-GQLnqerpPDkOIMkRolbzDwB/zSlkcRIcZUxFMswOcW7OX8C7o5yInF1kyhZLQJ3Y
-hxV7mHMM4emeBrJfbdM+
-=d2gL
------END PGP SIGNATURE-----
+Please use "arm,cortex-a53-pmu" instead
 
---24zk1gE8NUlDmwG9--
+> +		interrupts =3D <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-affinity =3D <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+> +	};
+> +
+> +	psci {
+> +		compatible =3D "arm,psci";
+
+Any particular reason why PSCI v0.2 or above is not supported on this
+platform. PSCI v0.1 is very old now and I assume this platform is
+relatively new.
+
+> +		method =3D "smc";
+> +		cpu_suspend =3D <0xc4000001>;
+> +		cpu_off =3D <0x84000002>;
+> +		cpu_on =3D <0xc4000003>;
+> +		migrate =3D <0xc4000005>;
+
+Atleast the functions ids look like v0.2 or above. So check if it's=20
+actually v0.2 or above in which case you can drop all the function ids =
+above
+
+[...]
+
+> +	soc {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <2>;
+> +		ranges;
+> +
+> +		gic: interrupt-controller@c4301000 {
+> +			compatible =3D "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+
+Preferably "arm,gic-400" ?
+
+--=20
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
