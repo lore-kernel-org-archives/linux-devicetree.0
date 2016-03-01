@@ -1,296 +1,82 @@
-From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH v4 3/4] iio: ad5755: added full support for devicetree
-Date: Tue, 1 Mar 2016 12:56:15 +0100
-Message-ID: <1456833376-29758-3-git-send-email-sean.nyekjaer@prevas.dk>
-References: <1456833376-29758-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1456833376-29758-2-git-send-email-sean.nyekjaer@prevas.dk>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v4 0/4] add reboot mode driver
+Date: Tue,  1 Mar 2016 20:09:32 +0800
+Message-ID: <1456834172-5425-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456833376-29758-2-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Devicetree can provide platform data
 
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
----
-These large switch cases make the driver hard to read? Does someone have any
-ideas to make this more readable?
+This driver parse the reboot commands like "reboot loader"
+and "reboot recovery" to get a boot mode described in the
+device tree , then call the corresponding  write interfae
+to store the boot mode in some place like special register
+or ram , which can be read by the bootloader after system
+reboot.
 
-The dc-dc-phase and channel mode i rather hard to do without defines? Will it
-be okay to use them here?
-Example:
-adi,mode = CURRENT_4mA_20mA or adi,mode = VOLTAGE_PLUSMINUS_10V
-They are generic DAC/ADC properties...
+This is commonly done on Android based devices, in order to
+reboot the device into fastboot or recovery mode.
 
-Changes since v3:
-- replaced '_' with '-'
-- Now used actual values instead of register values.
 
-Changes since v2:
-- removed defines from DT
+Changes in v4:
+- remove mode-maskrom
+- rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
+- make this driver depends on OF to avoid kbuild test error
 
- drivers/iio/dac/ad5755.c | 227 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 226 insertions(+), 1 deletion(-)
+Changes in v3:
+- descirbe all reboot mode as properity instead of subnode
+- scan multi properities
+- add mask value for some platform which only use some bits of the register
+  to store boot mode magic value
+- descirbe all reboot mode as property instead of subnode
+- add rk3036 support
+- descirbe all reboot mode as properity instead of subnode
 
-diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
-index e1b6e78..4a2866e 100644
---- a/drivers/iio/dac/ad5755.c
-+++ b/drivers/iio/dac/ad5755.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/delay.h>
-+#include <linux/of.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- #include <linux/platform_data/ad5755.h>
-@@ -556,6 +557,223 @@ static const struct ad5755_platform_data ad5755_default_pdata = {
- 	},
- };
- 
-+#ifdef CONFIG_OF
-+static struct ad5755_platform_data *ad5755_parse_dt(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct device_node *pp;
-+	struct ad5755_platform_data *pdata;
-+	unsigned int tmp;
-+	unsigned int tmparray[3];
-+	int devnr;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->ext_dc_dc_compenstation_resistor =
-+	    of_property_read_bool(np, "adi,ext-dc-dc-compenstation-resistor");
-+
-+	if (!of_property_read_u32(np, "adi,dc-dc-phase", &tmp))
-+		pdata->dc_dc_phase = tmp;
-+	else
-+		pdata->dc_dc_phase = AD5755_DC_DC_PHASE_ALL_SAME_EDGE;
-+
-+	if (!of_property_read_u32(np, "adi,dc-dc-freq", &tmp))
-+		switch (tmp) {
-+		case 250000:
-+			pdata->dc_dc_freq = AD5755_DC_DC_FREQ_250kHZ;
-+			break;
-+		case 410000:
-+			pdata->dc_dc_freq = AD5755_DC_DC_FREQ_410kHZ;
-+			break;
-+		case 650000:
-+			pdata->dc_dc_freq = AD5755_DC_DC_FREQ_650kHZ;
-+			break;
-+		default:
-+			dev_err(dev,
-+				"adi,dc-dc-freq out of range selecting 410kHz");
-+			pdata->dc_dc_freq = AD5755_DC_DC_FREQ_410kHZ;
-+	} else
-+		pdata->dc_dc_freq = AD5755_DC_DC_FREQ_410kHZ;
-+
-+	if (!of_property_read_u32(np, "adi,dc-dc-maxv", &tmp))
-+		switch (tmp) {
-+		case 23000:
-+			pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_23V;
-+			break;
-+		case 24500:
-+			pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_24V5;
-+			break;
-+		case 27000:
-+			pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_27V;
-+			break;
-+		case 29500:
-+			pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_29V5;
-+			break;
-+		default:
-+			dev_err(dev,
-+				"adi,dc-dc-maxv out of range selecting 23V");
-+			pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_23V;
-+	} else
-+		pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_23V;
-+
-+	devnr = 0;
-+	for_each_child_of_node(np, pp) {
-+		if (devnr > AD5755_NUM_CHANNELS) {
-+			dev_err(dev,
-+				"There is to many channels defined in DT\n");
-+			goto error_out;
-+		}
-+
-+		if (!of_property_read_u32(pp, "adi,mode", &tmp))
-+			pdata->dac[devnr].mode = tmp;
-+		else
-+			pdata->dac[devnr].mode = AD5755_MODE_CURRENT_4mA_20mA;
-+
-+		pdata->dac[devnr].ext_current_sense_resistor =
-+		    of_property_read_bool(pp, "adi,ext-current-sense-resistor");
-+
-+		pdata->dac[devnr].enable_voltage_overrange =
-+		    of_property_read_bool(pp, "adi,enable-voltage-overrange");
-+
-+		if (!of_property_read_u32_array(pp, "adi,slew", tmparray, 3)) {
-+			pdata->dac[devnr].slew.enable = tmparray[0];
-+			switch (tmparray[1]) {
-+			case 64000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_64k;
-+				break;
-+			case 32000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_32k;
-+				break;
-+			case 16000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_16k;
-+				break;
-+			case 8000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_8k;
-+				break;
-+			case 4000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_4k;
-+				break;
-+			case 2000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_2k;
-+				break;
-+			case 1000:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_1k;
-+				break;
-+			case 500:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_500;
-+				break;
-+			case 250:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_250;
-+				break;
-+			case 125:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_125;
-+				break;
-+			case 64:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_64;
-+				break;
-+			case 32:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_32;
-+				break;
-+			case 16:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_16;
-+				break;
-+			case 8:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_8;
-+				break;
-+			case 4:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_4;
-+				break;
-+			case 0:
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_0_5;
-+				break;
-+			default:
-+				dev_err(dev,
-+					"channel %d slew rate out of range selecting 64kHz",
-+					devnr);
-+				pdata->dac[devnr].slew.rate =
-+				    AD5755_SLEW_RATE_64k;
-+			}
-+			switch (tmparray[2]) {
-+			case 1:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_1;
-+				break;
-+			case 2:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_2;
-+				break;
-+			case 4:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_4;
-+				break;
-+			case 16:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_16;
-+				break;
-+			case 32:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_32;
-+				break;
-+			case 64:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_64;
-+				break;
-+			case 128:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_128;
-+				break;
-+			case 256:
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_256;
-+				break;
-+			default:
-+				dev_err(dev,
-+					"channel %d slew step size out of range selecting 1 LSB",
-+					devnr);
-+				pdata->dac[devnr].slew.step_size =
-+				    AD5755_SLEW_STEP_SIZE_1;
-+			}
-+		} else {
-+			pdata->dac[devnr].slew.enable = false;
-+			pdata->dac[devnr].slew.rate = AD5755_SLEW_RATE_64k;
-+			pdata->dac[devnr].slew.step_size =
-+			    AD5755_SLEW_STEP_SIZE_1;
-+		}
-+		devnr++;
-+	}
-+
-+	return pdata;
-+
-+ error_out:
-+	devm_kfree(dev, pdata);
-+	return NULL;
-+}
-+#else
-+static
-+struct adf4350_platform_data *adf4350_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int ad5755_probe(struct spi_device *spi)
- {
- 	enum ad5755_type type = spi_get_device_id(spi)->driver_data;
-@@ -583,8 +801,15 @@ static int ad5755_probe(struct spi_device *spi)
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->num_channels = AD5755_NUM_CHANNELS;
- 
--	if (!pdata)
-+	if (spi->dev.of_node)
-+		pdata = ad5755_parse_dt(&spi->dev);
-+	else
-+		pdata = spi->dev.platform_data;
-+
-+	if (!pdata) {
-+		dev_warn(&spi->dev, "no platform data? using default\n");
- 		pdata = &ad5755_default_pdata;
-+	}
- 
- 	ret = ad5755_init_channels(indio_dev, pdata);
- 	if (ret)
+Changes in v2:
+- move to dir drivers/power/reset/
+- make syscon-reboot-mode a generic driver
+- make this node as a subnode of PMU
+- make this node as a subnode of pmugrf
+
+Changes in v1:
+- fix the embarrassed compile warning
+- correct the maskrom magic number
+- check for the normal reboot
+- correct the maskrom magic number
+- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
+
+Andy Yan (4):
+  dt-bindings: power: reset: add document for reboot-mode driver
+  power: reset: add reboot mode driver
+  ARM: dts: rockchip: add syscon-reboot-mode DT node
+  ARM64: dts: rockchip: add syscon-reboot-mode DT node
+
+ .../bindings/power/reset/reboot-mode.txt           |  24 +++++
+ .../bindings/power/reset/syscon-reboot-mode.txt    |  35 +++++++
+ arch/arm/boot/dts/rk3036.dtsi                      |  11 ++-
+ arch/arm/boot/dts/rk3288.dtsi                      |  10 ++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |  12 ++-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  13 ++-
+ drivers/power/reset/Kconfig                        |  16 ++++
+ drivers/power/reset/Makefile                       |   2 +
+ drivers/power/reset/reboot-mode.c                  | 105 +++++++++++++++++++++
+ drivers/power/reset/reboot-mode.h                  |   6 ++
+ drivers/power/reset/syscon-reboot-mode.c           |  64 +++++++++++++
+ include/dt-bindings/soc/rockchip_boot-mode.h       |  30 ++++++
+ 12 files changed, 325 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+ create mode 100644 drivers/power/reset/reboot-mode.c
+ create mode 100644 drivers/power/reset/reboot-mode.h
+ create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
+
 -- 
-2.7.2
+1.9.1
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
