@@ -1,57 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Add CAN FD support
-Date: Tue, 1 Mar 2016 16:12:24 +0300
-Message-ID: <56D59538.2060100@cogentembedded.com>
-References: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+Subject: Re: [PATCH 4/8] Documentation: devicetree: Document Tronsmart vendor
+ prefix
+Date: Tue, 1 Mar 2016 14:29:04 +0100
+Message-ID: <56D59920.6050803@suse.com>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+ <1456789465-2962-5-git-send-email-afaerber@suse.de>
+ <56D57EED.1090901@suse.com> <56D582D3.3040902@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, mkl@pengutronix.de, wg@grandegger.com, horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, chris.paterson2@renesas.com
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D582D3.3040902-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 3/1/2016 1:04 PM, Ramesh Shanmugasundaram wrote:
 
-> Adds CAN FD controller node for r8a7795.
+On 01/03/16 12:53, Andreas F=C3=A4rber wrote:
+> Am 01.03.2016 um 12:37 schrieb Matthias Brugger:
+>> On 01/03/16 00:44, Andreas F=C3=A4rber wrote:
+>>> Choose the obvious prefix, "tronsmart".
+>>>
+>>> Cc: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>> ---
+>>
+>> Same as a older patch I send some month ago. So also this is a trivi=
+al
+>> one, for the record:
+>>
+>> Singed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
 >
-> Note: CAN FD controller register base address specified in R-Car Gen3
-> Hardware User Manual v0.5E is incorrect. The correct address is:
+> Hm, I see yours got an Acked-by from Rob on Jan 17. Through whose que=
+ue
+> is this supposed to go?
 >
-> CAN FD - 0xe66c0000
->
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> ---
-> Hi All,
->
->     This patch is based on linux-next (tag:next-20160225) with the following
->     patches applied on top.
->
->     [PATCH v2] arm64: dts: r8a7795: Add CAN external clock support
->     [PATCH] arm64: dts: r8a7795: Add CAN support
->
->     The respective CAN subsystem changes are submitted separately here (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg01388.html)
->
-> Thanks,
-> Ramesh
-> ---
->   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> index a88f8d8..5049ba6 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-> @@ -553,6 +553,30 @@
->   			status = "disabled";
->   		};
->
-> +		canfd: canfd@e66c0000 {
 
-    The node name should still be "can@e66c0000", I think.
+With the ack from Rob, this will be merged through the arm-soc tree.
 
-MBR, Sergei
+> Searching for it, I even found a similar 2014 patch from Beniamino
+> Galvani (CC'ed), without any review replies.
+>
+> I'll happily pick up one of the previous patches instead. Sorry, was =
+in
+> a hurry to clean this series up for Nicolas (Mini Mx) and to avoid an=
+y
+> Odroid-C2 users duplicating my work.
+>
+
+No worries :)
+
+Cheers,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
