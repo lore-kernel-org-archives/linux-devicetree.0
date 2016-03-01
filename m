@@ -1,314 +1,320 @@
-From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 3/3] iio:pressure:ms5611: oversampling rate support
-Date: Tue, 1 Mar 2016 11:31:38 +0100
-Message-ID: <968dd61e1b2cf2fa6ba936509594d71c799226c4.1456828051.git.gregor.boirie@parrot.com>
-References: <cover.1456828051.git.gregor.boirie@parrot.com>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v6 07/11] drm/hisilicon: Add designware dsi encoder driver
+Date: Tue, 1 Mar 2016 18:33:20 +0800
+Message-ID: <CAGd==04UCZUNcysdAAkurWadQtd5QTPtVUwrEzfMa99XtsH53g@mail.gmail.com>
+References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
+ <1456476028-36880-8-git-send-email-xinliang.liu@linaro.org>
+ <56D492CC.2090901@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1456828051.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <56D492CC.2090901@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for setting and retrieving OverSampling Rate independently for
-each of the temperature and pressure channels. This allows userspace to
-fine tune hardware sampling process according to the following tradeoffs :
-* the higher the OSR, the finer the resolution ;
-* the higher the OSR, the lower the noise ;
-BUT:
-* the higher the OSR, the larger the drift ;
-* the higher the OSR, the longer the response time, i.e. less samples per
-  unit of time.
-
-Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
----
- drivers/iio/pressure/ms5611.h      |  20 ++++---
- drivers/iio/pressure/ms5611_core.c | 105 ++++++++++++++++++++++++++++++++++++-
- drivers/iio/pressure/ms5611_i2c.c  |  12 ++---
- drivers/iio/pressure/ms5611_spi.c  |  19 +++----
- 4 files changed, 133 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/iio/pressure/ms5611.h b/drivers/iio/pressure/ms5611.h
-index 8b08e4b..d725a307 100644
---- a/drivers/iio/pressure/ms5611.h
-+++ b/drivers/iio/pressure/ms5611.h
-@@ -19,12 +19,6 @@
- #define MS5611_RESET			0x1e
- #define MS5611_READ_ADC			0x00
- #define MS5611_READ_PROM_WORD		0xA0
--#define MS5611_START_TEMP_CONV		0x58
--#define MS5611_START_PRESSURE_CONV	0x48
--
--#define MS5611_CONV_TIME_MIN		9040
--#define MS5611_CONV_TIME_MAX		10000
--
- #define MS5611_PROM_WORDS_NB		8
- 
- enum {
-@@ -39,10 +33,24 @@ struct ms5611_chip_info {
- 					    s32 *temp, s32 *pressure);
- };
- 
-+/*
-+ * OverSampling Rate descriptor.
-+ * Warning: cmd MUST be kept aligned on a word boundary (see
-+ * m5611_spi_read_adc_temp_and_pressure in ms5611_spi.c).
-+ */
-+struct ms5611_osr {
-+	unsigned long conv_usec;
-+	u8 cmd;
-+	unsigned short rate;
-+};
-+
- struct ms5611_state {
- 	void *client;
- 	struct mutex lock;
- 
-+	const struct ms5611_osr *pressure_osr;
-+	const struct ms5611_osr *temp_osr;
-+
- 	int (*reset)(struct device *dev);
- 	int (*read_prom_word)(struct device *dev, int index, u16 *word);
- 	int (*read_adc_temp_and_pressure)(struct device *dev,
-diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/ms5611_core.c
-index a9c4d49..a2a871b 100644
---- a/drivers/iio/pressure/ms5611_core.c
-+++ b/drivers/iio/pressure/ms5611_core.c
-@@ -18,11 +18,44 @@
- #include <linux/delay.h>
- #include <linux/regulator/consumer.h>
- 
-+#include <linux/iio/sysfs.h>
- #include <linux/iio/buffer.h>
- #include <linux/iio/triggered_buffer.h>
- #include <linux/iio/trigger_consumer.h>
- #include "ms5611.h"
- 
-+#define MS5611_INIT_OSR(_cmd, _conv_usec, _rate) \
-+	{ .cmd = _cmd, .conv_usec = _conv_usec, .rate = _rate }
-+
-+static const struct ms5611_osr ms5611_avail_pressure_osr[] = {
-+	MS5611_INIT_OSR(0x40, 600,  256),
-+	MS5611_INIT_OSR(0x42, 1170, 512),
-+	MS5611_INIT_OSR(0x44, 2280, 1024),
-+	MS5611_INIT_OSR(0x46, 4540, 2048),
-+	MS5611_INIT_OSR(0x48, 9040, 4096)
-+};
-+
-+static const struct ms5611_osr ms5611_avail_temp_osr[] = {
-+	MS5611_INIT_OSR(0x50, 600,  256),
-+	MS5611_INIT_OSR(0x52, 1170, 512),
-+	MS5611_INIT_OSR(0x54, 2280, 1024),
-+	MS5611_INIT_OSR(0x56, 4540, 2048),
-+	MS5611_INIT_OSR(0x58, 9040, 4096)
-+};
-+
-+static const char ms5611_show_osr[] = "256 512 1024 2048 4096";
-+
-+static IIO_CONST_ATTR(oversampling_ratio_available, ms5611_show_osr);
-+
-+static struct attribute *ms5611_attributes[] = {
-+	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group ms5611_attribute_group = {
-+	.attrs = ms5611_attributes,
-+};
-+
- static bool ms5611_prom_is_valid(u16 *prom, size_t len)
- {
- 	int i, j;
-@@ -239,11 +272,70 @@ static int ms5611_read_raw(struct iio_dev *indio_dev,
- 		default:
- 			return -EINVAL;
- 		}
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		if (chan->type != IIO_TEMP && chan->type != IIO_PRESSURE)
-+			break;
-+		mutex_lock(&st->lock);
-+		if (chan->type == IIO_TEMP)
-+			*val = (int)st->temp_osr->rate;
-+		else
-+			*val = (int)st->pressure_osr->rate;
-+		mutex_unlock(&st->lock);
-+		return IIO_VAL_INT;
- 	}
- 
- 	return -EINVAL;
- }
- 
-+static const struct ms5611_osr *ms5611_find_osr(int rate,
-+						const struct ms5611_osr *osr,
-+						size_t count)
-+{
-+	unsigned int r;
-+
-+	for (r = 0; r < count; r++)
-+		if ((unsigned short)rate == osr[r].rate)
-+			break;
-+	if (r >= count)
-+		return NULL;
-+	return &osr[r];
-+}
-+
-+static int ms5611_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	struct ms5611_state *st = iio_priv(indio_dev);
-+	const struct ms5611_osr *osr = NULL;
-+
-+	if (mask != IIO_CHAN_INFO_OVERSAMPLING_RATIO)
-+		return -EINVAL;
-+
-+	if (chan->type == IIO_TEMP)
-+		osr = ms5611_find_osr(val, ms5611_avail_temp_osr,
-+				      ARRAY_SIZE(ms5611_avail_temp_osr));
-+	else if (chan->type == IIO_PRESSURE)
-+		osr = ms5611_find_osr(val, ms5611_avail_pressure_osr,
-+				      ARRAY_SIZE(ms5611_avail_pressure_osr));
-+	if (!osr)
-+		return -EINVAL;
-+
-+	mutex_lock(&st->lock);
-+
-+	if (iio_buffer_enabled(indio_dev)) {
-+		mutex_unlock(&st->lock);
-+		return -EBUSY;
-+	}
-+
-+	if (chan->type == IIO_TEMP)
-+		st->temp_osr = osr;
-+	else
-+		st->pressure_osr = osr;
-+
-+	mutex_unlock(&st->lock);
-+	return 0;
-+}
-+
- static const unsigned long ms5611_scan_masks[] = {0x3, 0};
- 
- static struct ms5611_chip_info chip_info_tbl[] = {
-@@ -259,7 +351,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
- 	{
- 		.type = IIO_PRESSURE,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
--			BIT(IIO_CHAN_INFO_SCALE),
-+			BIT(IIO_CHAN_INFO_SCALE) |
-+			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.scan_index = 0,
- 		.scan_type = {
- 			.sign = 's',
-@@ -271,7 +364,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
- 	{
- 		.type = IIO_TEMP,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
--			BIT(IIO_CHAN_INFO_SCALE),
-+			BIT(IIO_CHAN_INFO_SCALE) |
-+			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
- 		.scan_index = 1,
- 		.scan_type = {
- 			.sign = 's',
-@@ -285,6 +379,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
- 
- static const struct iio_info ms5611_info = {
- 	.read_raw = &ms5611_read_raw,
-+	.write_raw = &ms5611_write_raw,
-+	.attrs = &ms5611_attribute_group,
- 	.driver_module = THIS_MODULE,
- };
- 
-@@ -323,6 +419,11 @@ int ms5611_probe(struct iio_dev *indio_dev, struct device *dev,
- 
- 	mutex_init(&st->lock);
- 	st->chip_info = &chip_info_tbl[type];
-+	st->temp_osr =
-+		&ms5611_avail_temp_osr[ARRAY_SIZE(ms5611_avail_temp_osr) - 1];
-+	st->pressure_osr =
-+		&ms5611_avail_pressure_osr[ARRAY_SIZE(ms5611_avail_pressure_osr)
-+					   - 1];
- 	indio_dev->dev.parent = dev;
- 	indio_dev->name = name;
- 	indio_dev->info = &ms5611_info;
-diff --git a/drivers/iio/pressure/ms5611_i2c.c b/drivers/iio/pressure/ms5611_i2c.c
-index 57a8f2c..55fb5fc 100644
---- a/drivers/iio/pressure/ms5611_i2c.c
-+++ b/drivers/iio/pressure/ms5611_i2c.c
-@@ -63,23 +63,23 @@ static int ms5611_i2c_read_adc_temp_and_pressure(struct device *dev,
- {
- 	int ret;
- 	struct ms5611_state *st = iio_priv(dev_to_iio_dev(dev));
-+	const struct ms5611_osr *osr = st->temp_osr;
- 
--	ret = i2c_smbus_write_byte(st->client, MS5611_START_TEMP_CONV);
-+	ret = i2c_smbus_write_byte(st->client, osr->cmd);
- 	if (ret < 0)
- 		return ret;
- 
--	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
--
-+	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
- 	ret = ms5611_i2c_read_adc(st, temp);
- 	if (ret < 0)
- 		return ret;
- 
--	ret = i2c_smbus_write_byte(st->client, MS5611_START_PRESSURE_CONV);
-+	osr = st->pressure_osr;
-+	ret = i2c_smbus_write_byte(st->client, osr->cmd);
- 	if (ret < 0)
- 		return ret;
- 
--	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
--
-+	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
- 	return ms5611_i2c_read_adc(st, pressure);
- }
- 
-diff --git a/drivers/iio/pressure/ms5611_spi.c b/drivers/iio/pressure/ms5611_spi.c
-index 7ec0c64..7600483 100644
---- a/drivers/iio/pressure/ms5611_spi.c
-+++ b/drivers/iio/pressure/ms5611_spi.c
-@@ -56,28 +56,29 @@ static int ms5611_spi_read_adc(struct device *dev, s32 *val)
- static int ms5611_spi_read_adc_temp_and_pressure(struct device *dev,
- 						 s32 *temp, s32 *pressure)
- {
--	u8 cmd;
- 	int ret;
- 	struct ms5611_state *st = iio_priv(dev_to_iio_dev(dev));
-+	const struct ms5611_osr *osr = st->temp_osr;
- 
--	cmd = MS5611_START_TEMP_CONV;
--	ret = spi_write_then_read(st->client, &cmd, 1, NULL, 0);
-+	/*
-+	 * Warning: &osr->cmd MUST be aligned on a word boundary since used as
-+	 * 2nd argument (void*) of spi_write_then_read.
-+	 */
-+	ret = spi_write_then_read(st->client, &osr->cmd, 1, NULL, 0);
- 	if (ret < 0)
- 		return ret;
- 
--	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
--
-+	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
- 	ret = ms5611_spi_read_adc(dev, temp);
- 	if (ret < 0)
- 		return ret;
- 
--	cmd = MS5611_START_PRESSURE_CONV;
--	ret = spi_write_then_read(st->client, &cmd, 1, NULL, 0);
-+	osr = st->pressure_osr;
-+	ret = spi_write_then_read(st->client, &osr->cmd, 1, NULL, 0);
- 	if (ret < 0)
- 		return ret;
- 
--	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
--
-+	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
- 	return ms5611_spi_read_adc(dev, pressure);
- }
- 
--- 
-2.1.4
+SGksCgpPbiAxIE1hcmNoIDIwMTYgYXQgMDI6NDksIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29k
+ZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4KPiBPbiAyLzI2LzIwMTYgMjoxMCBQTSwgWGlubGlhbmcg
+TGl1IHdyb3RlOgo+Pgo+PiBBZGQgRGVzaWduV2FyZSBNSVBJIERTSSBIb3N0IENvbnRyb2xsZXIg
+djEuMDIgZW5jb2RlciBkcml2ZXIKPj4gZm9yIGhpNjIyMCBTb0MuCj4+Cj4+IHY2Ogo+PiAtIENo
+YW5nZSAicGNsa19kc2kiIHRvICJwY2xrIi4KPj4gdjU6IE5vbmUuCj4+IHY0OiBOb25lLgo+PiB2
+MzoKPj4gLSBSZW5hbWUgZmlsZSBuYW1lIHRvIGR3X2RybV9kc2kuYwo+PiAtIE1ha2UgZW5jb2Rl
+ciB0eXBlIGFzIERSTV9NT0RFX0VOQ09ERVJfRFNJLgo+PiAtIEEgZmV3IGNsZWFudXAuCj4+IHYy
+Ogo+PiAtIFJlbW92ZSBhYnRyYWN0aW9uIGxheWVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBYaW5s
+aWFuZyBMaXUgPHhpbmxpYW5nLmxpdUBsaW5hcm8ub3JnPgo+PiBTaWduZWQtb2ZmLWJ5OiBYaW53
+ZWkgS29uZyA8a29uZy5rb25neGlud2VpQGhpc2lsaWNvbi5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6
+IEFuZHkgR3JlZW4gPGFuZHkuZ3JlZW5AbGluYXJvLm9yZz4KPj4gLS0tCj4+ICAgZHJpdmVycy9n
+cHUvZHJtL2hpc2lsaWNvbi9raXJpbi9LY29uZmlnICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMv
+Z3B1L2RybS9oaXNpbGljb24va2lyaW4vTWFrZWZpbGUgICAgIHwgICAzICstCj4+ICAgZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1fZHNpLmMgfCA3NDMKPj4gKysrKysrKysr
+KysrKysrKysrKysrKysrKysrCj4+ICAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9k
+d19kc2lfcmVnLmggfCAgODMgKysrCj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCA4MjkgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9k
+cm0vaGlzaWxpY29uL2tpcmluL2R3X2RybV9kc2kuYwo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2R3X2RzaV9yZWcuaAo+Pgo+PiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9LY29uZmlnCj4+IGIvZHJpdmVy
+cy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9LY29uZmlnCj4+IGluZGV4IDNhYzRiOGVkZWFjMS4u
+ZGUwZDQ1NGM1YzEzIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tp
+cmluL0tjb25maWcKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9LY29u
+ZmlnCj4+IEBAIC00LDYgKzQsNyBAQCBjb25maWcgRFJNX0hJU0lfS0lSSU4KPj4gICAgICAgICBz
+ZWxlY3QgRFJNX0tNU19IRUxQRVIKPj4gICAgICAgICBzZWxlY3QgRFJNX0dFTV9DTUFfSEVMUEVS
+Cj4+ICAgICAgICAgc2VsZWN0IERSTV9LTVNfQ01BX0hFTFBFUgo+PiArICAgICAgIHNlbGVjdCBE
+Uk1fTUlQSV9EU0kKPj4gICAgICAgICBoZWxwCj4+ICAgICAgICAgICBDaG9vc2UgdGhpcyBvcHRp
+b24gaWYgeW91IGhhdmUgYSBoaXNpbGljb24gS2lyaW4KPj4gY2hpcHNldHMoaGk2MjIwKS4KPj4g
+ICAgICAgICAgIElmIE0gaXMgc2VsZWN0ZWQgdGhlIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBraXJp
+bi1kcm0uCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL01h
+a2VmaWxlCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9NYWtlZmlsZQo+PiBp
+bmRleCAyYTYxYWIwMDZkZGIuLjVkY2QwZDQzMjhiNiAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL2hpc2lsaWNvbi9raXJpbi9NYWtlZmlsZQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
+aGlzaWxpY29uL2tpcmluL01ha2VmaWxlCj4+IEBAIC0xLDQgKzEsNSBAQAo+PiAgIGtpcmluLWRy
+bS15IDo9IGtpcmluX2RybV9kcnYubyBcCj4+IC0gICAgICAgICAgICAgIGtpcmluX2RybV9hZGUu
+bwo+PiArICAgICAgICAgICAgICBraXJpbl9kcm1fYWRlLm8gXAo+PiArICAgICAgICAgICAgICBk
+d19kcm1fZHNpLm8KPj4KPj4gICBvYmotJChDT05GSUdfRFJNX0hJU0lfS0lSSU4pICs9IGtpcmlu
+LWRybS5vCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2R3
+X2RybV9kc2kuYwo+PiBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2Rz
+aS5jCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uODMyOTE0
+OGNjODlkCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
+bi9raXJpbi9kd19kcm1fZHNpLmMKPj4gQEAgLTAsMCArMSw3NDMgQEAKPj4gKy8qCj4+ICsgKiBE
+ZXNpZ25XYXJlIE1JUEkgRFNJIEhvc3QgQ29udHJvbGxlciB2MS4wMiBkcml2ZXIKPj4gKyAqCj4+
+ICsgKiBDb3B5cmlnaHQgKGMpIDIwMTYgTGluYXJvIExpbWl0ZWQuCj4+ICsgKiBDb3B5cmlnaHQg
+KGMpIDIwMTQtMjAxNiBIaXNpbGljb24gTGltaXRlZC4KPj4gKyAqCj4+ICsgKiBBdXRob3I6Cj4+
+ICsgKiAgICAgWGlubGlhbmcgTGl1IDx6LmxpdXhpbmxpYW5nQGhpc2lsaWNvbi5jb20+Cj4+ICsg
+KiAgICAgWGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4KPj4gKyAqICAgICBY
+aW53ZWkgS29uZyA8a29uZy5rb25neGlud2VpQGhpc2lsaWNvbi5jb20+Cj4+ICsgKgo+PiArICog
+VGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFu
+ZC9vciBtb2RpZnkKPj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwg
+UHVibGljIExpY2Vuc2UgdmVyc2lvbiAyIGFzCj4+ICsgKiBwdWJsaXNoZWQgYnkgdGhlIEZyZWUg
+U29mdHdhcmUgRm91bmRhdGlvbi4KPj4gKyAqCj4+ICsgKi8KPj4gKwo+PiArI2luY2x1ZGUgPGxp
+bnV4L2Nsay5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+PiArI2luY2x1ZGUg
+PGxpbnV4L29mX2dyYXBoLmg+Cj4+ICsKPj4gKyNpbmNsdWRlIDxkcm0vZHJtX29mLmg+Cj4+ICsj
+aW5jbHVkZSA8ZHJtL2RybV9jcnRjX2hlbHBlci5oPgo+PiArI2luY2x1ZGUgPGRybS9kcm1fbWlw
+aV9kc2kuaD4KPj4gKyNpbmNsdWRlIDxkcm0vZHJtX2VuY29kZXJfc2xhdmUuaD4KPj4gKyNpbmNs
+dWRlIDxkcm0vZHJtX2F0b21pY19oZWxwZXIuaD4KPj4gKwo+PiArI2luY2x1ZGUgImR3X2RzaV9y
+ZWcuaCIKPj4gKwo+PiArI2RlZmluZSBNQVhfVFhfRVNDX0NMSyAgICAgICAgICAgICgxMCkKPj4g
+KyNkZWZpbmUgUk9VTkQoeCwgeSkgKCh4KSAvICh5KSArICgoeCkgJSAoeSkgKiAxMCAvICh5KSA+
+PSA1ID8gMSA6IDApKQo+PiArI2RlZmluZSBQSFlfUkVGX0NMS19SQVRFICAgMTkyMDAwMDAKPj4g
+KyNkZWZpbmUgUEhZX1JFRl9DTEtfUEVSSU9EX1BTICgxMDAwMDAwMDAwIC8gKFBIWV9SRUZfQ0xL
+X1JBVEUgLyAxMDAwKSkKPj4gKwo+PiArI2RlZmluZSBlbmNvZGVyX3RvX2RzaShlbmNvZGVyKSBc
+Cj4+ICsgICAgICAgY29udGFpbmVyX29mKGVuY29kZXIsIHN0cnVjdCBkd19kc2ksIGVuY29kZXIp
+Cj4+ICsjZGVmaW5lIGhvc3RfdG9fZHNpKGhvc3QpIFwKPj4gKyAgICAgICBjb250YWluZXJfb2Yo
+aG9zdCwgc3RydWN0IGR3X2RzaSwgaG9zdCkKPj4gKwo+PiArc3RydWN0IG1pcGlfcGh5X3BhcmFt
+cyB7Cj4+ICsgICAgICAgdTMyIGNsa190X2xweDsKPj4gKyAgICAgICB1MzIgY2xrX3RfaHNfcHJl
+cGFyZTsKPj4gKyAgICAgICB1MzIgY2xrX3RfaHNfemVybzsKPj4gKyAgICAgICB1MzIgY2xrX3Rf
+aHNfdHJpYWw7Cj4+ICsgICAgICAgdTMyIGNsa190X3dha2V1cDsKPj4gKyAgICAgICB1MzIgZGF0
+YV90X2xweDsKPj4gKyAgICAgICB1MzIgZGF0YV90X2hzX3ByZXBhcmU7Cj4+ICsgICAgICAgdTMy
+IGRhdGFfdF9oc196ZXJvOwo+PiArICAgICAgIHUzMiBkYXRhX3RfaHNfdHJpYWw7Cj4+ICsgICAg
+ICAgdTMyIGRhdGFfdF90YV9nbzsKPj4gKyAgICAgICB1MzIgZGF0YV90X3RhX2dldDsKPj4gKyAg
+ICAgICB1MzIgZGF0YV90X3dha2V1cDsKPj4gKyAgICAgICB1MzIgaHN0eF9ja2dfc2VsOwo+PiAr
+ICAgICAgIHUzMiBwbGxfZmJkX2RpdjVmOwo+PiArICAgICAgIHUzMiBwbGxfZmJkX2RpdjFmOwo+
+PiArICAgICAgIHUzMiBwbGxfZmJkXzJwOwo+PiArICAgICAgIHUzMiBwbGxfZW5id3Q7Cj4+ICsg
+ICAgICAgdTMyIHBsbF9mYmRfcDsKPj4gKyAgICAgICB1MzIgcGxsX2ZiZF9zOwo+PiArICAgICAg
+IHUzMiBwbGxfcHJlX2RpdjFwOwo+PiArICAgICAgIHUzMiBwbGxfcHJlX3A7Cj4+ICsgICAgICAg
+dTMyIHBsbF92Y29fNzUwTTsKPj4gKyAgICAgICB1MzIgcGxsX2xwZl9yczsKPj4gKyAgICAgICB1
+MzIgcGxsX2xwZl9jczsKPj4gKyAgICAgICB1MzIgY2xrbHAyaHNfdGltZTsKPj4gKyAgICAgICB1
+MzIgY2xraHMybHBfdGltZTsKPj4gKyAgICAgICB1MzIgbHAyaHNfdGltZTsKPj4gKyAgICAgICB1
+MzIgaHMybHBfdGltZTsKPj4gKyAgICAgICB1MzIgY2xrX3RvX2RhdGFfZGVsYXk7Cj4+ICsgICAg
+ICAgdTMyIGRhdGFfdG9fY2xrX2RlbGF5Owo+PiArICAgICAgIHUzMiBsYW5lX2J5dGVfY2xrX2tI
+ejsKPj4gKyAgICAgICB1MzIgY2xrX2RpdmlzaW9uOwo+PiArfTsKPj4gKwo+PiArc3RydWN0IGRz
+aV9od19jdHggewo+PiArICAgICAgIHZvaWQgX19pb21lbSAqYmFzZTsKPj4gKyAgICAgICBzdHJ1
+Y3QgY2xrICpwY2xrOwo+PiArfTsKPj4gKwo+PiArc3RydWN0IGR3X2RzaSB7Cj4+ICsgICAgICAg
+c3RydWN0IGRybV9lbmNvZGVyIGVuY29kZXI7Cj4+ICsgICAgICAgc3RydWN0IGRybV9kaXNwbGF5
+X21vZGUgY3VyX21vZGU7Cj4+ICsgICAgICAgc3RydWN0IGRzaV9od19jdHggKmN0eDsKPj4gKyAg
+ICAgICBzdHJ1Y3QgbWlwaV9waHlfcGFyYW1zIHBoeTsKPj4gKwo+PiArICAgICAgIHUzMiBsYW5l
+czsKPj4gKyAgICAgICBlbnVtIG1pcGlfZHNpX3BpeGVsX2Zvcm1hdCBmb3JtYXQ7Cj4+ICsgICAg
+ICAgdW5zaWduZWQgbG9uZyBtb2RlX2ZsYWdzOwo+PiArICAgICAgIGJvb2wgZW5hYmxlOwo+PiAr
+fTsKPj4gKwo+PiArc3RydWN0IGRzaV9kYXRhIHsKPj4gKyAgICAgICBzdHJ1Y3QgZHdfZHNpIGRz
+aTsKPj4gKyAgICAgICBzdHJ1Y3QgZHNpX2h3X2N0eCBjdHg7Cj4+ICt9Owo+PiArCj4+ICtzdHJ1
+Y3QgZHNpX3BoeV9yYW5nZSB7Cj4+ICsgICAgICAgdTMyIG1pbl9yYW5nZV9rSHo7Cj4+ICsgICAg
+ICAgdTMyIG1heF9yYW5nZV9rSHo7Cj4+ICsgICAgICAgdTMyIHBsbF92Y29fNzUwTTsKPj4gKyAg
+ICAgICB1MzIgaHN0eF9ja2dfc2VsOwo+PiArfTsKPj4gKwo+PiArc3RhdGljIGNvbnN0IHN0cnVj
+dCBkc2lfcGh5X3JhbmdlIGRwaHlfcmFuZ2VfaW5mb1tdID0gewo+PiArICAgICAgIHsgICA0Njg3
+NSwgICAgNjI1MDAsICAgMSwgICAgNyB9LAo+PiArICAgICAgIHsgICA2MjUwMCwgICAgOTM3NTAs
+ICAgMCwgICAgNyB9LAo+PiArICAgICAgIHsgICA5Mzc1MCwgICAxMjUwMDAsICAgMSwgICAgNiB9
+LAo+PiArICAgICAgIHsgIDEyNTAwMCwgICAxODc1MDAsICAgMCwgICAgNiB9LAo+PiArICAgICAg
+IHsgIDE4NzUwMCwgICAyNTAwMDAsICAgMSwgICAgNSB9LAo+PiArICAgICAgIHsgIDI1MDAwMCwg
+ICAzNzUwMDAsICAgMCwgICAgNSB9LAo+PiArICAgICAgIHsgIDM3NTAwMCwgICA1MDAwMDAsICAg
+MSwgICAgNCB9LAo+PiArICAgICAgIHsgIDUwMDAwMCwgICA3NTAwMDAsICAgMCwgICAgNCB9LAo+
+PiArICAgICAgIHsgIDc1MDAwMCwgIDEwMDAwMDAsICAgMSwgICAgMCB9LAo+PiArICAgICAgIHsg
+MTAwMDAwMCwgIDE1MDAwMDAsICAgMCwgICAgMCB9Cj4+ICt9Owo+PiArCj4+ICtzdGF0aWMgdm9p
+ZCBkc2lfZ2V0X3BoeV9wYXJhbXModTMyIHBoeV9mcmVxX2tIeiwKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHN0cnVjdCBtaXBpX3BoeV9wYXJhbXMgKnBoeSkKPj4gK3sKPj4gKyAg
+ICAgICB1MzIgdWkgPSAwOwo+PiArICAgICAgIHUzMiBjZmdfY2xrX3BzID0gUEhZX1JFRl9DTEtf
+UEVSSU9EX1BTOwo+PiArICAgICAgIHUzMiBpID0gMDsKPj4gKyAgICAgICB1MzIgcV9wbGwgPSAx
+Owo+PiArICAgICAgIHUzMiBtX3BsbCA9IDA7Cj4+ICsgICAgICAgdTMyIG5fcGxsID0gMDsKPj4g
+KyAgICAgICB1MzIgcl9wbGwgPSAxOwo+PiArICAgICAgIHUzMiBtX24gPSAwOwo+PiArICAgICAg
+IHUzMiBtX25faW50ID0gMDsKPj4gKyAgICAgICB1NjQgZl9rSHo7Cj4+ICsgICAgICAgdTY0IHRl
+bXA7Cj4+ICsgICAgICAgdTY0IHRtcF9rSHogPSBwaHlfZnJlcV9rSHo7Cj4+ICsKPj4gKyAgICAg
+ICBkbyB7Cj4+ICsgICAgICAgICAgICAgICBmX2tIeiA9IHRtcF9rSHo7Cj4+ICsKPj4gKyAgICAg
+ICAgICAgICAgIC8qIEZpbmQgdGhlIFBMTCBjbG9jayByYW5nZSBmcm9tIHRoZSB0YWJsZSAqLwo+
+PiArICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8IEFSUkFZX1NJWkUoZHBoeV9yYW5nZV9p
+bmZvKTsgaSsrKQo+PiArICAgICAgICAgICAgICAgICAgICAgICBpZiAoZl9rSHogPj0gZHBoeV9y
+YW5nZV9pbmZvW2ldLm1pbl9yYW5nZV9rSHogJiYKPj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGZfa0h6IDw9IGRwaHlfcmFuZ2VfaW5mb1tpXS5tYXhfcmFuZ2Vfa0h6KQo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOwo+PiArCj4+ICsgICAgICAgICAgICAgICBp
+ZiAoaSA9PSBBUlJBWV9TSVpFKGRwaHlfcmFuZ2VfaW5mbykpIHsKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgRFJNX0VSUk9SKCIlbGxka0h6IG91dCBvZiByYW5nZVxuIiwgZl9rSHopOwo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICByZXR1cm47Cj4+ICsgICAgICAgICAgICAgICB9Cj4+ICsK
+Pj4gKyAgICAgICAgICAgICAgIHBoeS0+cGxsX3Zjb183NTBNID0gZHBoeV9yYW5nZV9pbmZvW2ld
+LnBsbF92Y29fNzUwTTsKPj4gKyAgICAgICAgICAgICAgIHBoeS0+aHN0eF9ja2dfc2VsID0gZHBo
+eV9yYW5nZV9pbmZvW2ldLmhzdHhfY2tnX3NlbDsKPj4gKwo+PiArICAgICAgICAgICAgICAgaWYg
+KHBoeS0+aHN0eF9ja2dfc2VsIDw9IDcgJiYKPj4gKyAgICAgICAgICAgICAgICAgICBwaHktPmhz
+dHhfY2tnX3NlbCA+PSA0KQo+PiArICAgICAgICAgICAgICAgICAgICAgICBxX3BsbCA9IDB4MTAg
+Pj4gKDcgLSBwaHktPmhzdHhfY2tnX3NlbCk7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIHRlbXAg
+PSBmX2tIeiAqICh1NjQpcV9wbGwgKiAodTY0KWNmZ19jbGtfcHM7Cj4+ICsgICAgICAgICAgICAg
+ICBtX25faW50ID0gdGVtcCAvICh1NjQpMTAwMDAwMDAwMDsKPj4gKyAgICAgICAgICAgICAgIG1f
+biA9ICh0ZW1wICUgKHU2NCkxMDAwMDAwMDAwKSAvICh1NjQpMTAwMDAwMDAwOwo+PiArCj4+ICsg
+ICAgICAgICAgICAgICBpZiAobV9uX2ludCAlIDIgPT0gMCkgewo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICBpZiAobV9uICogNiA+PSA1MCkgewo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIG5fcGxsID0gMjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtX3Bs
+bCA9IChtX25faW50ICsgMSkgKiBuX3BsbDsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgfSBl
+bHNlIGlmIChtX24gKiA2ID49IDMwKSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgbl9wbGwgPSAzOwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1fcGxsID0g
+bV9uX2ludCAqIG5fcGxsICsgMjsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgfSBlbHNlIHsK
+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuX3BsbCA9IDE7Cj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgbV9wbGwgPSBtX25faW50ICogbl9wbGw7Cj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIH0KPj4gKyAgICAgICAgICAgICAgIH0gZWxzZSB7Cj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgIGlmIChtX24gKiA2ID49IDUwKSB7Cj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgbl9wbGwgPSAxOwo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIG1fcGxsID0gKG1fbl9pbnQgKyAxKSAqIG5fcGxsOwo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICB9IGVsc2UgaWYgKG1fbiAqIDYgPj0gMzApIHsKPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBuX3BsbCA9IDE7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgbV9wbGwgPSAobV9uX2ludCArIDEpICogbl9wbGw7Cj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIH0gZWxzZSBpZiAobV9uICogNiA+PSAxMCkgewo+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIG5fcGxsID0gMzsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBt
+X3BsbCA9IG1fbl9pbnQgKiBuX3BsbCArIDE7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIH0g
+ZWxzZSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbl9wbGwgPSAyOwo+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG1fcGxsID0gbV9uX2ludCAqIG5fcGxsOwo+
+PiArICAgICAgICAgICAgICAgICAgICAgICB9Cj4+ICsgICAgICAgICAgICAgICB9Cj4+ICsKPj4g
+KyAgICAgICAgICAgICAgIGlmIChuX3BsbCA9PSAxKSB7Cj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgIHBoeS0+cGxsX2ZiZF9wID0gMDsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGh5LT5w
+bGxfcHJlX2RpdjFwID0gMTsKPj4gKyAgICAgICAgICAgICAgIH0gZWxzZSB7Cj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHBoeS0+cGxsX2ZiZF9wID0gbl9wbGw7Cj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIHBoeS0+cGxsX3ByZV9kaXYxcCA9IDA7Cj4+ICsgICAgICAgICAgICAgICB9Cj4+
+ICsKPj4gKyAgICAgICAgICAgICAgIGlmIChwaHktPnBsbF9mYmRfMnAgPD0gNyAmJiBwaHktPnBs
+bF9mYmRfMnAgPj0gNCkKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcl9wbGwgPSAweDEwID4+
+ICg3IC0gcGh5LT5wbGxfZmJkXzJwKTsKPj4gKwo+PiArICAgICAgICAgICAgICAgaWYgKG1fcGxs
+ID09IDIpIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGh5LT5wbGxfcHJlX3AgPSAwOwo+
+PiArICAgICAgICAgICAgICAgICAgICAgICBwaHktPnBsbF9mYmRfcyA9IDA7Cj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgIHBoeS0+cGxsX2ZiZF9kaXYxZiA9IDA7Cj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIHBoeS0+cGxsX2ZiZF9kaXY1ZiA9IDE7Cj4+ICsgICAgICAgICAgICAgICB9IGVs
+c2UgaWYgKG1fcGxsID49IDIgKiAyICogcl9wbGwgJiYgbV9wbGwgPD0gMiAqIDQgKgo+PiByX3Bs
+bCkgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBwaHktPnBsbF9wcmVfcCA9IG1fcGxsIC8g
+KDIgKiByX3BsbCk7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBoeS0+cGxsX2ZiZF9zID0g
+MDsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGh5LT5wbGxfZmJkX2RpdjFmID0gMTsKPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgcGh5LT5wbGxfZmJkX2RpdjVmID0gMDsKPj4gKyAgICAg
+ICAgICAgICAgIH0gZWxzZSBpZiAobV9wbGwgPj0gMiAqIDUgKiByX3BsbCAmJiBtX3BsbCA8PSAy
+ICogMTUwICoKPj4gcl9wbGwpIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKCgobV9w
+bGwgLyAoMiAqIHJfcGxsKSkgJSAyKSA9PSAwKSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgcGh5LT5wbGxfcHJlX3AgPQo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgKG1fcGxsIC8gKDIgKiByX3BsbCkpIC8gMiAtIDE7Cj4+ICsgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcGh5LT5wbGxfZmJkX3MgPQo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgKG1fcGxsIC8gKDIgKiByX3BsbCkpICUgMiArIDI7Cj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7Cj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcGh5LT5wbGxfcHJlX3AgPQo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgKG1fcGxsIC8gKDIgKiByX3BsbCkpIC8gMjsKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBwaHktPnBsbF9mYmRfcyA9Cj4+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAobV9wbGwgLyAoMiAqIHJfcGxsKSkgJSAyOwo+PiArICAg
+ICAgICAgICAgICAgICAgICAgICB9Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBoeS0+cGxs
+X2ZiZF9kaXYxZiA9IDA7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBoeS0+cGxsX2ZiZF9k
+aXY1ZiA9IDA7Cj4+ICsgICAgICAgICAgICAgICB9IGVsc2Ugewo+PiArICAgICAgICAgICAgICAg
+ICAgICAgICBwaHktPnBsbF9wcmVfcCA9IDA7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHBo
+eS0+cGxsX2ZiZF9zID0gMDsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGh5LT5wbGxfZmJk
+X2RpdjFmID0gMDsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgcGh5LT5wbGxfZmJkX2RpdjVm
+ID0gMTsKPj4gKyAgICAgICAgICAgICAgIH0KPj4gKwo+PiArICAgICAgICAgICAgICAgZl9rSHog
+PSAodTY0KTEwMDAwMDAwMDAgKiAodTY0KW1fcGxsIC8KPj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgKCh1NjQpY2ZnX2Nsa19wcyAqICh1NjQpbl9wbGwgKiAodTY0KXFfcGxsKTsKPj4gKwo+PiAr
+ICAgICAgICAgICAgICAgaWYgKGZfa0h6ID49IHBoeV9mcmVxX2tIeikKPj4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgYnJlYWs7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIHRtcF9rSHogKz0gMTA7
+Cj4+ICsKPj4gKyAgICAgICB9IHdoaWxlICgxKTsKPj4gKwo+PiArICAgICAgIHVpID0gMTAwMDAw
+MCAvIGZfa0h6Owo+PiArCj4+ICsgICAgICAgcGh5LT5jbGtfdF9scHggPSBST1VORCg1MCwgOCAq
+IHVpKTsKPj4gKyAgICAgICBwaHktPmNsa190X2hzX3ByZXBhcmUgPSBST1VORCgxMzMsIDE2ICog
+dWkpIC0gMTsKPj4gKwo+PiArICAgICAgIHBoeS0+Y2xrX3RfaHNfemVybyA9IFJPVU5EKDI2Miwg
+OCAqIHVpKTsKPj4gKyAgICAgICBwaHktPmNsa190X2hzX3RyaWFsID0gMiAqIChST1VORCg2MCwg
+OCAqIHVpKSAtIDEpOwo+PiArICAgICAgIHBoeS0+Y2xrX3Rfd2FrZXVwID0gUk9VTkQoMTAwMDAw
+MCwgKGNmZ19jbGtfcHMgLyAxMDAwKSAtIDEpOwo+PiArICAgICAgIGlmIChwaHktPmNsa190X3dh
+a2V1cCA+IDB4ZmYpCj4+ICsgICAgICAgICAgICAgICBwaHktPmNsa190X3dha2V1cCA9IDB4ZmY7
+Cj4+ICsgICAgICAgcGh5LT5kYXRhX3Rfd2FrZXVwID0gcGh5LT5jbGtfdF93YWtldXA7Cj4+ICsg
+ICAgICAgcGh5LT5kYXRhX3RfbHB4ID0gcGh5LT5jbGtfdF9scHg7Cj4+ICsgICAgICAgcGh5LT5k
+YXRhX3RfaHNfcHJlcGFyZSA9IFJPVU5EKDEyNSArIDEwICogdWksIDE2ICogdWkpIC0gMTsKPj4g
+KyAgICAgICBwaHktPmRhdGFfdF9oc196ZXJvID0gUk9VTkQoMTA1ICsgNiAqIHVpLCA4ICogdWkp
+Owo+PiArICAgICAgIHBoeS0+ZGF0YV90X2hzX3RyaWFsID0gMiAqIChST1VORCg2MCArIDQgKiB1
+aSwgOCAqIHVpKSAtIDEpOwo+PiArICAgICAgIHBoeS0+ZGF0YV90X3RhX2dvID0gMzsKPj4gKyAg
+ICAgICBwaHktPmRhdGFfdF90YV9nZXQgPSA0Owo+PiArCj4+ICsgICAgICAgcGh5LT5wbGxfZW5i
+d3QgPSAxOwo+PiArICAgICAgIHBoeS0+Y2xrbHAyaHNfdGltZSA9IFJPVU5EKDQwNywgOCAqIHVp
+KSArIDEyOwo+PiArICAgICAgIHBoeS0+Y2xraHMybHBfdGltZSA9IFJPVU5EKDEwNSArIDEyICog
+dWksIDggKiB1aSk7Cj4+ICsgICAgICAgcGh5LT5scDJoc190aW1lID0gUk9VTkQoMjQwICsgMTIg
+KiB1aSwgOCAqIHVpKSArIDE7Cj4+ICsgICAgICAgcGh5LT5oczJscF90aW1lID0gcGh5LT5jbGto
+czJscF90aW1lOwo+PiArICAgICAgIHBoeS0+Y2xrX3RvX2RhdGFfZGVsYXkgPSAxICsgcGh5LT5j
+bGtscDJoc190aW1lOwo+PiArICAgICAgIHBoeS0+ZGF0YV90b19jbGtfZGVsYXkgPSBST1VORCg2
+MCArIDUyICogdWksIDggKiB1aSkgKwo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHBoeS0+Y2xraHMybHBfdGltZTsKPj4gKwo+PiArICAgICAgIHBoeS0+bGFuZV9ieXRlX2Nsa19r
+SHogPSBmX2tIeiAvIDg7Cj4+ICsgICAgICAgcGh5LT5jbGtfZGl2aXNpb24gPSBwaHktPmxhbmVf
+Ynl0ZV9jbGtfa0h6IC8gTUFYX1RYX0VTQ19DTEs7Cj4+ICsgICAgICAgaWYgKHBoeS0+bGFuZV9i
+eXRlX2Nsa19rSHogJSBNQVhfVFhfRVNDX0NMSykKPj4gKyAgICAgICAgICAgICAgIHBoeS0+Y2xr
+X2RpdmlzaW9uKys7Cj4+ICt9Cj4+ICsKPj4gK3N0YXRpYyB1MzIgZHNpX2dldF9kcGlfY29sb3Jf
+Y29kaW5nKGVudW0gbWlwaV9kc2lfcGl4ZWxfZm9ybWF0IGZvcm1hdCkKPj4gK3sKPj4gKyAgICAg
+ICB1MzIgdmFsOwo+PiArCj4+ICsgICAgICAgLyogVE9ETzogb25seSBzdXBwb3J0IFJHQjg4OCBu
+b3csIHRvIHN1cHBvcnQgbW9yZSAqLwo+PiArICAgICAgIHN3aXRjaCAoZm9ybWF0KSB7Cj4+ICsg
+ICAgICAgY2FzZSBNSVBJX0RTSV9GTVRfUkdCODg4Ogo+PiArICAgICAgICAgICAgICAgdmFsID0g
+RFNJXzI0QklUU18xOwo+PiArICAgICAgICAgICAgICAgYnJlYWs7Cj4+ICsgICAgICAgZGVmYXVs
+dDoKPj4gKyAgICAgICAgICAgICAgIHZhbCA9IERTSV8yNEJJVFNfMTsKPj4gKyAgICAgICAgICAg
+ICAgIGJyZWFrOwo+PiArICAgICAgIH0KPj4gKwo+PiArICAgICAgIHJldHVybiB2YWw7Cj4+ICt9
+Cj4+ICsKPj4gKy8qCj4+ICsgKiBkc2kgcGh5IHJlZyB3cml0ZSBmdW5jdGlvbgo+PiArICovCj4+
+ICtzdGF0aWMgdm9pZCBkc2lfcGh5X3RzdF9zZXQodm9pZCBfX2lvbWVtICpiYXNlLCB1MzIgcmVn
+LCB1MzIgdmFsKQo+PiArewo+PiArICAgICAgIHdyaXRlbChyZWcsIGJhc2UgKyBQSFlfVFNUX0NU
+UkwxKTsKPj4gKyAgICAgICAvKiByZWcgYWRkciB3cml0dGVuIGF0IGZpcnN0ICovCj4+ICsgICAg
+ICAgd21iKCk7Cj4+ICsgICAgICAgd3JpdGVsKDB4MDIsIGJhc2UgKyBQSFlfVFNUX0NUUkwwKTsK
+Pj4gKyAgICAgICAvKiBjbWQxIHNlbnQgZm9yIHdyaXRlICovCj4+ICsgICAgICAgd21iKCk7Cj4+
+ICsgICAgICAgd3JpdGVsKDB4MDAsIGJhc2UgKyBQSFlfVFNUX0NUUkwwKTsKPj4gKyAgICAgICAv
+KiBjbWQyIHNlbnQgZm9yIHdyaXRlICovCj4+ICsgICAgICAgd21iKCk7Cj4+ICsgICAgICAgd3Jp
+dGVsKHZhbCwgYmFzZSArIFBIWV9UU1RfQ1RSTDEpOwo+PiArICAgICAgIC8qIFRoZW4gd3JpdGUg
+ZGF0YSAqLwo+PiArICAgICAgIHdtYigpOwo+PiArICAgICAgIHdyaXRlbCgweDAyLCBiYXNlICsg
+UEhZX1RTVF9DVFJMMCk7Cj4+ICsgICAgICAgLyogY21kMiBzZW50IGZvciB3cml0ZSAqLwo+PiAr
+ICAgICAgIHdtYigpOwo+PiArICAgICAgIHdyaXRlbCgweDAwLCBiYXNlICsgUEhZX1RTVF9DVFJM
+MCk7Cj4KPgo+IFlvdSBjYW4gdXNlIGlvd3JpdGUzMiBoZXJlIHRvIHByZXZlbnQgY2FsbGluZyB3
+bWIgYmVmb3JlIGVhY2gKPiB3cml0ZS4KPgoKVGhpcyBjaGlwIGlzIGFybTY0LiBJIGZpbmQgdGhh
+dCBmb3IgYXJtNjQsICBpdCBqdXN0IHdyYXAgaW93cml0ZTMyIGlzCnRoZSBzYW1lIHRvIHdyaXRl
+bC4gQW0gSSB3cm9uZz8KCj4KPj4gK30KPj4gKwo+PiArc3RhdGljIHZvaWQgZHNpX3NldF9taXBp
+X3BoeSh2b2lkIF9faW9tZW0gKmJhc2UsCj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+c3RydWN0IG1pcGlfcGh5X3BhcmFtcyAqcGh5LAo+PiArICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHUzMiBsYW5lcykKPj4gK3sKPj4gKyAgICAgICB1MzIgZGVsYXlfY291bnQ7Cj4+ICsgICAg
+ICAgdTMyIHZhbDsKPj4gKyAgICAgICB1MzIgaTsKPj4gKwo+PiArICAgICAgIC8qIHNldCBsYW5l
+cyB2YWx1ZSAqLwo+PiArICAgICAgIHZhbCA9IChsYW5lcyAtIDEpIHwgKFBIWV9TVE9QX1dBSVRf
+VElNRSA8PCA4KTsKPj4gKyAgICAgICB3cml0ZWwodmFsLCBiYXNlICsgUEhZX0lGX0NGRyk7Cj4+
+ICsKPj4gKyAgICAgICAvKiBzZXQgcGh5IGNsayBkaXZpc2lvbiAqLwo+PiArICAgICAgIHZhbCA9
+IHJlYWRsKGJhc2UgKyBDTEtNR1JfQ0ZHKSB8IHBoeS0+Y2xrX2RpdmlzaW9uOwo+PiArICAgICAg
+IHdyaXRlbCh2YWwsIGJhc2UgKyBDTEtNR1JfQ0ZHKTsKPj4gKwo+PiArICAgICAgIC8qIGNsZWFu
+IHVwIHBoeSBzZXQgcGFyYW0gKi8KPj4gKyAgICAgICB3cml0ZWwoMCwgYmFzZSArIFBIWV9SU1Ra
+KTsKPj4gKyAgICAgICB3cml0ZWwoMCwgYmFzZSArIFBIWV9UU1RfQ1RSTDApOwo+PiArICAgICAg
+IHdyaXRlbCgxLCBiYXNlICsgUEhZX1RTVF9DVFJMMCk7Cj4+ICsgICAgICAgd3JpdGVsKDAsIGJh
+c2UgKyBQSFlfVFNUX0NUUkwwKTsKPj4gKwo+PiArICAgICAgIC8qIGNsb2NrIGxhbmUgVGltaW5n
+IGNvbnRyb2wgLSBUTFBYICovCj4+ICsgICAgICAgZHNpX3BoeV90c3Rfc2V0KGJhc2UsIDB4MTAw
+MTAsIHBoeS0+Y2xrX3RfbHB4KTsKPj4gKwo+PiArICAgICAgIC8qIGNsb2NrIGxhbmUgVGltaW5n
+IGNvbnRyb2wgLSBUSFMtUFJFUEFSRSAqLwo+PiArICAgICAgIGRzaV9waHlfdHN0X3NldChiYXNl
+LCAweDEwMDExLCBwaHktPmNsa190X2hzX3ByZXBhcmUpOwo+PiArCj4+ICsgICAgICAgLyogY2xv
+Y2sgbGFuZSBUaW1pbmcgY29udHJvbCAtIFRIUy1aRVJPICovCj4+ICsgICAgICAgZHNpX3BoeV90
+c3Rfc2V0KGJhc2UsIDB4MTAwMTIsIHBoeS0+Y2xrX3RfaHNfemVybyk7Cj4+ICsKPj4gKyAgICAg
+ICAvKiBjbG9jayBsYW5lIFRpbWluZyBjb250cm9sIC0gVEhTLVRSQUlMICovCj4+ICsgICAgICAg
+ZHNpX3BoeV90c3Rfc2V0KGJhc2UsIDB4MTAwMTMsIHBoeS0+Y2xrX3RfaHNfdHJpYWwpOwo+PiAr
+Cj4+ICsgICAgICAgLyogY2xvY2sgbGFuZSBUaW1pbmcgY29udHJvbCAtIFRXQUtFVVAgKi8KPj4g
+KyAgICAgICBkc2lfcGh5X3RzdF9zZXQoYmFzZSwgMHgxMDAxNCwgcGh5LT5jbGtfdF93YWtldXAp
+Owo+PiArCj4+ICsgICAgICAgLyogZGF0YSBsYW5lICovCj4+ICsgICAgICAgZm9yIChpID0gMDsg
+aSA8IGxhbmVzOyBpKyspIHsKPj4gKyAgICAgICAgICAgICAgIC8qIFRpbWluZyBjb250cm9sIC0g
+VExQWCAqLwo+PiArICAgICAgICAgICAgICAgZHNpX3BoeV90c3Rfc2V0KGJhc2UsIDB4MTAwMjAg
+KyAoaSA8PCA0KSwKPj4gcGh5LT5kYXRhX3RfbHB4KTsKPgo+Cj4gU29tZSBtYWNyb3MgaGVyZSBm
+b3IgdGhlc2UgUEhZIHJlZ2lzdGVycyB3b3VsZCBiZSBuaWNlLgoKQWdyZWUsIHdpbGwgZml4IGlu
+IG5leHQgdmVyc2lvbi4KCj4KPj4gKwo+PiArICAgICAgICAgICAgICAgLyogVGltaW5nIGNvbnRy
+b2wgLSBUSFMtUFJFUEFSRSAqLwo+PiArICAgICAgICAgICAgICAgZHNpX3BoeV90c3Rfc2V0KGJh
+c2UsIDB4MTAwMjEgKyAoaSA8PCA0KSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBwaHktPmRhdGFfdF9oc19wcmVwYXJlKTsKPj4gKwo+PiArICAgICAgICAgICAgICAgLyogVGlt
+aW5nIGNvbnRyb2wgLSBUSFMtWkVSTyAqLwo+PiArICAgICAgICAgICAgICAgZHNpX3BoeV90c3Rf
+c2V0KGJhc2UsIDB4MTAwMjIgKyAoaSA8PCA0KSwKPj4gcGh5LT5kYXRhX3RfaHNfemVybyk7Cj4+
+ICsKPj4gKyAgICAgICAgICAgICAgIC8qIFRpbWluZyBjb250cm9sIC0gVEhTLVRSQUlMICovCj4+
+ICsgICAgICAgICAgICAgICBkc2lfcGh5X3RzdF9zZXQoYmFzZSwgMHgxMDAyMyArIChpIDw8IDQp
+LAo+PiBwaHktPmRhdGFfdF9oc190cmlhbCk7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIC8qIFRp
+bWluZyBjb250cm9sIC0gVFRBLUdPICovCj4+ICsgICAgICAgICAgICAgICBkc2lfcGh5X3RzdF9z
+ZXQoYmFzZSwgMHgxMDAyNCArIChpIDw8IDQpLAo+PiBwaHktPmRhdGFfdF90YV9nbyk7Cj4+ICsK
+Pj4gKyAgICAgICAgICAgICAgIC8qIFRpbWluZyBjb250cm9sIC0gVFRBLUdFVCAqLwo+PiArICAg
+ICAgICAgICAgICAgZHNpX3BoeV90c3Rfc2V0KGJhc2UsIDB4MTAwMjUgKyAoaSA8PCA0KSwKPj4g
+cGh5LT5kYXRhX3RfdGFfZ2V0KTsKPj4gKwo+PiArICAgICAgICAgICAgICAgLyogVGltaW5nIGNv
+bnRyb2wgLSBUV0FLRVVQICovCj4+ICsgICAgICAgICAgICAgICBkc2lfcGh5X3RzdF9zZXQoYmFz
+ZSwgMHgxMDAyNiArIChpIDw8IDQpLAo+PiBwaHktPmRhdGFfdF93YWtldXApOwo+Cj4KPiBTb21l
+dGhpbmcgbGlrZSB0aGUgbWFjcm8gYmVsb3cgd291bGQgYmUgbW9yZSByZWFkYWJsZSBoZXJlOgo+
+Cj4gI2RlZmluZSBQSFlfVFdBS0VVUChpKSAoMHgxMDAyNiArIChpIDw8IDQpKQoKQWdyZWUsIHdp
+bGwgZml4IGluIG5leHQgdmVyc2lvbi4KClRoYW5rcywKLXhpbmxpYW5nCgo+Cj4gTG9va3MgZ29v
+ZCBvdGhlcndpc2UuCj4KPiBBcmNoaXQKPgo+IC0tCj4gUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50
+ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3Vu
+ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
