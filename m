@@ -1,61 +1,70 @@
-From: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v12 4/5] arm64, numa: Add NUMA support for arm64
- platforms.
-Date: Tue, 1 Mar 2016 13:21:12 +0100
-Message-ID: <20160301122112.GU24726@rric.localdomain>
-References: <1456192703-2274-1-git-send-email-ddaney.cavm@gmail.com>
- <1456192703-2274-5-git-send-email-ddaney.cavm@gmail.com>
- <20160229173446.GG31343@rric.localdomain>
- <56D4D782.3010503@gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on
+ SAMA5D2
+Date: Tue, 1 Mar 2016 13:27:35 +0100
+Message-ID: <56D58AB7.4000305@atmel.com>
+References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com>
+ <56D56E95.4030204@atmel.com>
+ <CAGkQfmP5p3ezZwEub2RDW-y--aeJHDBN_oT9K4Wga=YYfBCLqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56D4D782.3010503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Robert Richter <rric-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGkQfmP5p3ezZwEub2RDW-y--aeJHDBN_oT9K4Wga=YYfBCLqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29.02.16 15:42:58, David Daney wrote:
-> On 02/29/2016 09:34 AM, Robert Richter wrote:
-> >On 22.02.16 17:58:22, David Daney wrote:
-> >>From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Le 01/03/2016 12:29, Romain Izard a =C3=A9crit :
+> Hi Nicolas,
+>=20
+> 2016-03-01 11:27 GMT+01:00 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>:
+>> Le 01/02/2016 11:25, Romain Izard a =C3=A9crit :
+>>> The NAND Flash controller for SAMA5D2 has small differences that ma=
+ke
+>>> it impossible to use the existing driver for SAMA5D3. This patchset
+>>> uses the device tree's compatible string to get those differences,
+>>> and the code is slightly modified to handle them.
+>>>
+>>> Base on linux-mtd-next, commit
+>>> 15c0be7bec002f9a529dd0966d0db96dde176fd0
+>>>
+>>> See previous revisions to apply on the Atmel Linux 4.1 branch.
+>>>
+>>> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as the=
+re
+>>> is no existing SAMA5D2 board with NAND Flash memory (yet).
+>>
+>> Brian,
+>>
+>> Hi, do we need to resend this series with all the tags collected (ak=
+a
+>> ping ;-)) ?
+>>
+>=20
+> A v4 has already been sent, and Brian has picked patches 1-4, as seen
+> in: http://article.gmane.org/gmane.linux.drivers.devicetree/155864/
 
-> >>+static int __init numa_init(int (*init_func)(void))
-> >>+{
-> >>+	int ret;
-> >>+
-> >>+	nodes_clear(numa_nodes_parsed);
-> >>+	nodes_clear(node_possible_map);
-> >>+	nodes_clear(node_online_map);
-> >>+	numa_free_distance();
-> 
->         ^^^^^^^^^^^^^
->      Cleanup for any previous numa_alloc_distance()
-> 
-> >>+
-> >>+	ret = numa_alloc_distance();
-> >>+	if (ret < 0)
-> >>+		return ret;
-> >
-> >If you move this before the remaining initializers, you will need to
-> >clean this up on error.
-> 
-> Yes, we do this.  See above.
-> 
-> >So better move it back after
-> >numa_register_nodes() as it was in v10. This should work since
-> >distances are used not earlier than numa is enabled.
-> 
-> I moved it here for a reason.
-> 
-> The init_func (of_numa_init() in this case) makes callbacks that use the
-> numa_distance object.  We need to allocate it before using it. Allocating it
-> after calling the init_func() is too late.
+Ok, I forget it and it was in another mailbox on my side: sorry for the
+noise...
 
-Sounds reasonable and looks sane now.
+> For patch #5, it is the update for the sama5d2.dtsi to describe the
+> NAND controller. Perhaps you can take it on your tree for 4.6, it
+> won't change anything until a board needs it, either Atmel's SAMA5D2 =
+PTC
+> or another one.
 
-Thanks,
+Absolutely. As I am collecting this material, it makes perfect sense to
+add it to our at91-4.6-dt branch.
 
--Robert
+Thanks for the help Romain!
+
+Bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
