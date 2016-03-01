@@ -1,57 +1,45 @@
-From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
-Date: Tue, 1 Mar 2016 12:29:15 +0100
-Message-ID: <CAGkQfmP5p3ezZwEub2RDW-y--aeJHDBN_oT9K4Wga=YYfBCLqA@mail.gmail.com>
-References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com> <56D56E95.4030204@atmel.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V6 05/10] Documentation: DT: bindings: Add power domain
+ info for NVIDIA PMC
+Date: Tue, 1 Mar 2016 11:36:48 +0000
+Message-ID: <56D57ED0.10305@nvidia.com>
+References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+ <1456501724-28477-6-git-send-email-jonathanh@nvidia.com>
+ <20160229072221.GH23745@ulmo> <56D41F60.6010504@nvidia.com>
+ <20160229110100.GB674@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D56E95.4030204-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160229110100.GB674@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
 
-2016-03-01 11:27 GMT+01:00 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>:
-> Le 01/02/2016 11:25, Romain Izard a =C3=A9crit :
->> The NAND Flash controller for SAMA5D2 has small differences that mak=
-e
->> it impossible to use the existing driver for SAMA5D3. This patchset
->> uses the device tree's compatible string to get those differences,
->> and the code is slightly modified to handle them.
->>
->> Base on linux-mtd-next, commit
->> 15c0be7bec002f9a529dd0966d0db96dde176fd0
->>
->> See previous revisions to apply on the Atmel Linux 4.1 branch.
->>
->> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as ther=
-e
->> is no existing SAMA5D2 board with NAND Flash memory (yet).
->
-> Brian,
->
-> Hi, do we need to resend this series with all the tags collected (aka
-> ping ;-)) ?
->
+On 29/02/16 11:01, Thierry Reding wrote:
 
-A v4 has already been sent, and Brian has picked patches 1-4, as seen
-in: http://article.gmane.org/gmane.linux.drivers.devicetree/155864/
+[snip]
 
-=46or patch #5, it is the update for the sama5d2.dtsi to describe the
-NAND controller. Perhaps you can take it on your tree for 4.6, it
-won't change anything until a board needs it, either Atmel's SAMA5D2 PT=
-C
-or another one.
+> I've always considered per-SoC invariant data to not belong into
+> bindings. That is, constants such as power partition IDs or SMMU client
+> IDs should be defined via tables in drivers, and DT should be used to
+> hook them up to devices.
+> 
+> Defining the existing power domains in DT seems rather brittle to me. A
+> compatible string would imply the set of supported power domains anyway
+> and having that set specified in DT would technically require us to add
+> code in the driver to validate that the DT is sane, which would entail
+> the addition of a very similar table anyway.
+> 
+> One further reason why I prefer not to have these things specified (as
+> opposed to "glued" together) in DT is that the DT is ABI, so if we ever
+> happen to ship a broken DT we won't be able to easily fix it. Driver
+> code, on the other hand, can always easily be fixed.
 
-Best regards,
---=20
-Romain Izard
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, I guess that is consistent with other Tegra drivers too. Ok, I will
+drop the reg property and just use the name.
+
+Cheers
+Jon
