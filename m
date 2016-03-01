@@ -1,99 +1,71 @@
-From: Paul Kocialkowski <contact@paulk.fr>
-Subject: Re: [PATCH v4 1/5] ARM: dts: LG Optimus Black codename sniper basic
- support
-Date: Tue, 01 Mar 2016 09:05:06 +0100
-Message-ID: <1456819506.1157.0.camel@paulk.fr>
-References: <1456663185-14170-1-git-send-email-contact@paulk.fr>
-	 <1456663185-14170-2-git-send-email-contact@paulk.fr>
-	 <20160229215136.GO13417@atomide.com>
+From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Add CAN support
+Date: Tue, 1 Mar 2016 09:12:42 +0100
+Message-ID: <56D54EFA.6020105@pengutronix.de>
+References: <1456755759-51288-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-Jatx2w5AKiSHm054EvsA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160229215136.GO13417@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Liam Girdwood <lgirdwood@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="DOQWuwIh0k0v96ThfUQwlcUoabwTsKnCv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456755759-51288-1-git-send-email-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---=-Jatx2w5AKiSHm054EvsA
-Content-Type: text/plain; charset="UTF-8"
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--DOQWuwIh0k0v96ThfUQwlcUoabwTsKnCv
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Le lundi 29 f=C3=A9vrier 2016 =C3=A0 13:51 -0800, Tony Lindgren a =C3=A9cri=
-t=C2=A0:
-> Hi,
+On 02/29/2016 03:22 PM, Ramesh Shanmugasundaram wrote:
+> Adds CAN controller nodes for r8a7795.
 >=20
-> * Paul Kocialkowski <contact@paulk.fr> [160228 04:40]:
-> > The LG Optimus Black codename sniper is a smartphone that was designed =
-and
-> > manufactured by LG Electronics (LGE) and released back in 2011.
-> > It is using an OMAP3630 SoC, GP version.
-> >=20
-> > This adds devicetree support for the device, with only a few basic feat=
-ures
-> > supported, such as debug uart, i2c, internal emmc and external mmc.
-> ...
-> > +&i2c1 {
-> > +	pinctrl-names =3D "default";
-> > +	pinctrl-0 =3D <&i2c1_pins>;
-> > +
-> > +	clock-frequency =3D <2600000>;
-> > +
-> > +	twl: twl@48 {
-> > +		reg =3D <0x48>;
-> > +		interrupts =3D <7>; /* SYS_NIRQ cascaded to intc */
-> > +		interrupt-parent =3D <&intc>;
-> > +
-> > +		power {
-> > +			compatible =3D "ti,twl4030-power";
-> > +			ti,use_poweroff;
-> > +		};
-> > +	};
-> > +};
+> Note: CAN channel register base address mentioned in R-Car Gen3 Hardwar=
+e
+> User Manual v0.5E is incorrect. The corrected base addresses are:
 >=20
-> Chances are this devices supports cutting off the voltages and
-> the high frequency oscillator during idle. So you may want to
-> at some point set compatible =3D "ti,twl4030-power-idle-osc-off"
-> here.
+> CAN Channel 0 - 0xe6c30000
+> CAN Channel 1 - 0xe6c38000
+>=20
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-+3GIUL1IS+U@public.gmane.org=
+sas.com>
+> ---
+> Hi All,
+>=20
+>    This patch is based on linux-next (tag:next-20160225) with following=
+ patch
+>    applied on top
 
-Thanks for the pointer, I'll consider adding this in the future!
+Who should take this patch?
 
-> Anyways, applying the dts changes into omap-for-v4.6/dt thanks.
-
-Nice, thanks!
-
-Cheers,
-
+Marc
 --=20
-Paul Kocialkowski, low-level free software developer on embedded devices
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
 
---=-Jatx2w5AKiSHm054EvsA
+--DOQWuwIh0k0v96ThfUQwlcUoabwTsKnCv
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQIcBAABCAAGBQJW1U0yAAoJEIT9weqP7pUMOR4P/j3B43xL6jJQ+lXImO3Tbjuj
-MeqrE5GLPaSYjma1eZNq+aVUrh72fTG6m1PKTimLOCxQ7C294oJ6wCPgy/OfoV2L
-HdZ7mVOHFJ503D+YgNfzyDYryuGe2AIKyr4jn+Bn0NIma9nrRNklVeSmMPcqW9jk
-EB3kUAGkx2jKceyfTlmLMXiM9Aj7tQ3DqYYkywP/cQ8x8m2yQgCLD0uIoV8S2Z5H
-vcmpwy6QvVIEyTyau5wv+2ZJQRXcaw6+uOKYiGpkMBhtm34ZRuCYQtQDD7X5ckHI
-8eGtk8DN6j7OALgBsBLIt4ggNJctMLPL5wuqdgoHGbFIGNMMYTRty4RqbR56KVs8
-Ai76ouR24xUvelZ1TttSDdlbR9GRYcT+Fc40sQ6jXwEIya5OK1wxR5mDm/puqf5B
-5SH8sV2gwxWoElhc+QKdNcYMHfSGTfrX2KIR3Q9sd60QziG+BjTrvKRhms3DrHa1
-oU/eW2bpBpOiueHpgCwvZX2CgK67ZHgopPTqwm06LzYDEfymZdj1H0kqExU4VVy9
-7/7nK81YvgxGto1URavQ6AR3wg4qZhiHL5tG+l3qD9fndMH4mNZG7dsvl+R+KG13
-aR999d94SJ7CZqZHouj8phIi7qAbXXhHnWFBbux8HWGuceZUGfrbqrdlwQ0EJ5hp
-V1bTxPiy9YLPahg38CjZ
-=IqQg
+iQEcBAEBCgAGBQJW1U76AAoJED07qiWsqSVqZjsIAJZ5yDVFXnOTWA35uVymCA1V
+1/i1TYpVusL7sU4tKtjuLQPRmisHl2laa8YIOyjZlyl4nnkb4cCN1bHeTRmpAgYf
+BHQgv6uy4z18OBaphEf2+TK5gIfMaubeCBlSnyZqMnD/0DKnnjl4k3QircIN9Ql4
+f2rPr7IlGZk1EujHutyLkAKp5SPJammRLVYTqaIC4hG7CU8JGs9OkZoJfGC+Iuse
+GOezap083EsMymmKTs/InmHft4JIoyCbPYdzAaRIYcUHEan9JmkPOKZlbnRkmbR9
+TSEPNeqgqJA0It5njzSM0Lizoavw5ASWscODW8lPXZlc04Ltc0smR9JZqATlt6Q=
+=NQGV
 -----END PGP SIGNATURE-----
 
---=-Jatx2w5AKiSHm054EvsA--
+--DOQWuwIh0k0v96ThfUQwlcUoabwTsKnCv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
