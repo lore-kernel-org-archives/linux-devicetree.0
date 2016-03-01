@@ -1,103 +1,97 @@
-From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7] serial: support for 16550A serial ports on LP-8x4x
-Date: Tue, 01 Mar 2016 20:14:32 +0300
-Message-ID: <1456852472.23036.124.camel@gmail.com>
-References: <1456589675-25377-1-git-send-email-ynvich@gmail.com>
-	 <1456781209-11390-1-git-send-email-ynvich@gmail.com>
-	 <1456830401.13244.189.camel@linux.intel.com>
-	 <1456849504.23036.108.camel@gmail.com>
-	 <1456850782.13244.208.camel@linux.intel.com>
+From: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: stm32f429: Add Ethernet support
+Date: Tue, 1 Mar 2016 18:24:01 +0100
+Message-ID: <56D5D031.9080609@gmail.com>
+References: <1456763376-21457-1-git-send-email-alexandre.torgue@gmail.com>
+ <1456763376-21457-3-git-send-email-alexandre.torgue@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456850782.13244.208.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <1456763376-21457-3-git-send-email-alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SERIAL DRIVERS" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kamil Lulko <rev13-5tc4TXWwyLM@public.gmane.org>, afaerber-l3A5Bk7waGM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-03-01 at 18:46 +0200, Andy Shevchenko wrote:
-> On Tue, 2016-03-01 at 19:25 +0300, Sergei Ianovich wrote:
-> > On Tue, 2016-03-01 at 13:06 +0200, Andy Shevchenko wrote:
-> > > On Tue, 2016-03-01 at 00:26 +0300, Sergei Ianovich wrote:
->=20
-> > > > +	len &=3D 3;
->=20
-> Mask as well to be defined.
+Hi Alex,
 
-Sure.
+     I have made a handful of changes on your patch, let me know if this 
+is ok for you.
+     If ok, it will be part of the PR I'll send tomorrow.
 
-> So, but if you support only fixed rates, why do you care about BOTHER
-> at all?
+On 02/29/2016 05:29 PM, Alexandre TORGUE wrote:
+> Add Ethernet support (Synopsys MAC IP 3.50a) on stm32f429 SOC.
+>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+> index bb7a736..af0367c 100644
+> --- a/arch/arm/boot/dts/stm32f429.dtsi
+> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+> @@ -283,6 +283,26 @@
+>   					bias-disable;
+>   				};
+>   			};
+> +
+> +			ethernet0_mii: mii@0 {
+> +				mii {
+> +					slew-rate = <2>;
+I moved slew-rate property below the pinmux one for consistency with 
+other pin configs in the file.
+> +					pinmux = <STM32F429_PG13_FUNC_ETH_MII_TXD0_ETH_RMII_TXD0>,
+> +						 <STM32F429_PG14_FUNC_ETH_MII_TXD1_ETH_RMII_TXD1>,
+> +						 <STM32F429_PC2_FUNC_ETH_MII_TXD2>,
+> +						 <STM32F429_PB8_FUNC_ETH_MII_TXD3>,
+> +						 <STM32F429_PC3_FUNC_ETH_MII_TX_CLK>,
+> +						 <STM32F429_PG11_FUNC_ETH_MII_TX_EN_ETH_RMII_TX_EN>,
+> +						 <STM32F429_PA2_FUNC_ETH_MDIO>,
+> +						 <STM32F429_PC1_FUNC_ETH_MDC>,
+> +						 <STM32F429_PA1_FUNC_ETH_MII_RX_CLK_ETH_RMII_REF_CLK>,
+> +						 <STM32F429_PA7_FUNC_ETH_MII_RX_DV_ETH_RMII_CRS_DV>,
+> +						 <STM32F429_PC4_FUNC_ETH_MII_RXD0_ETH_RMII_RXD0>,
+> +						 <STM32F429_PC5_FUNC_ETH_MII_RXD1_ETH_RMII_RXD1>,
+> +						 <STM32F429_PH6_FUNC_ETH_MII_RXD2>,
+> +						 <STM32F429_PH7_FUNC_ETH_MII_RXD3>;
+> +				};
+> +			};
+>   		};
+>   
+>   		rcc: rcc@40023810 {
+> @@ -323,6 +343,21 @@
+>   			st,mem2mem;
+>   		};
+>   
+> +		ethernet0: dwmac@40028000 {
+> +			compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> +			status = "disabled";
+I moved status property at the end of the node for consistency
+> +			reg = <0x40028000 0x8000>;
+> +			reg-names = "stmmaceth";
+> +			interrupts = <0 61 0>, <0 62 0>;
+#interrupt-cells is set to 1 in the nvic node, meaning that a single 
+cell is expected here:
 
-If BOTHER is defined,=C2=A0tty_termios_baud_rate()
-and=C2=A0tty_termios_encode_baud_rate() allow non-standard baud rates. =
-I
-should clear it from=C2=A0c_cflag to indicate I don't support it.
+interrupts = <61>, <62>;
 
-> > > > =C2=A0
-> > > I think you can call this unconditionally together with case >
-> > > 115200.
-> >=20
-> > The calls are orthogonal. This one deals with the case when BOTHER
-> > is
-> > defined and set, and we have non-zero rate with BOTHER, but we have
-> > zero rate after BOTHER is cleared. So we set 9600 as a sane default
-> > speed.
+> +			interrupt-names = "macirq", "eth_wake_irq";
+> +			clock-names = "stmmaceth", "tx-clk", "rx-clk";
+> +			clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> +			st,syscon = <&syscfg 0x4>;
+> +			snps,pbl = <8>;
+> +			snps,mixed-burst;
+> +			dma-ranges;
+> +		};
+> +
+>   		rng: rng@50060800 {
+>   			compatible = "st,stm32-rng";
+>   			reg = <0x50060800 0x400>;
 
-> >=20
-> > This one deals with the case when the rate is over 115200. If the
-> > previous case has been triggered, this one won't be.
->=20
-> Yeah, but I meant to unconditionally call it just once here every
-> time.
+Regards,
+Maxime
 
-I see. It saves a few lines.
 
-> > ---
-> > drivers/tty/serial/8250/8250_lp8841.c: In function
-> > 'lp8841_serial_probe':
-> > drivers/tty/serial/8250/8250_lp8841.c:124:32: warning: excess
-> > elements in struct initializer
-> > =C2=A0 struct uart_8250_port uart =3D {0};
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0^
-> > drivers/tty/serial/8250/8250_lp8841.c:124:32: note: (near
-> > initialization for 'uart.port.lock.<anonymous>.rlock.raw_lock')
->=20
-> Do you have any warning verbosity enabled? I see a lot of stuff like
-> this in the code
-
-Plain `make`.
-
-The warning seems to be the result of initializing a spinlock with
-zero. Spinlocks are intentionally obfuscated, but I didn't investigate
-further.
-
-> $ git grep -n 'struct .* =3D {0};' | wc -l
-> 338
->=20
-> $ git grep -n 'struct .* =3D { \?0 \?};' | wc -l
-> 550
->=20
-> ( '=E2=80=A6 =3D { 0 };' included)
-
-The first structure member is most likely not a spinlock in those
-cases.
-
-> > ---
-> >=20
-> > Zero triggers a warning. I'll use memset().
->=20
-> Either will work.
-
-OK
-
-The only remaining open point is BOTHER handling.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
