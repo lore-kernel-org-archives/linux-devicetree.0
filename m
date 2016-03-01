@@ -1,45 +1,97 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH 0/3] pwm support for Broadcom iProc SoC's
-Date: Tue,  1 Mar 2016 12:42:46 -0500
-Message-ID: <1456854169-9788-1-git-send-email-yendapally.reddy@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v11 08/10] dt, numa: Add NUMA dt binding implementation.
+Date: Tue, 1 Mar 2016 11:43:42 -0600
+Message-ID: <CAL_JsqKQP6hLKZ3ja9RtFQdcnibFSwfdb_BhXp9DqnCFyb0r6g@mail.gmail.com>
+References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com>
+ <1455930799-5371-9-git-send-email-ddaney.cavm@gmail.com> <20160223193651.GA8491@rob-hp-laptop>
+ <56CFA9CA.6090803@caviumnetworks.com> <CAL_JsqLoTh_ZTUT26g4wz=6sofuRpFDCc_Aw+Oq66p8cGMp19g@mail.gmail.com>
+ <56D5C9FF.8020500@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56D5C9FF.8020500@caviumnetworks.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Daney <ddaney@caviumnetworks.com>
+Cc: David Daney <ddaney.cavm@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Matt Fleming <matt@codeblueprint.co.uk>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset contains the pwm support for the Broadcom's iProc SoC's.
+On Tue, Mar 1, 2016 at 10:57 AM, David Daney <ddaney@caviumnetworks.com> wrote:
+> On 03/01/2016 08:47 AM, Rob Herring wrote:
+>>
+>> On Thu, Feb 25, 2016 at 7:26 PM, David Daney <ddaney@caviumnetworks.com>
+>> wrote:
+>>>
+>>> On 02/23/2016 11:36 AM, Rob Herring wrote:
+>>>>
+>>>>
+>>>> On Fri, Feb 19, 2016 at 05:13:17PM -0800, David Daney wrote:
+>>>>>
+>>>>>
+>>>>> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+>>>>>
+>>>>> ADD device tree node parsing for NUMA topology using device
+>>>>> "numa-node-id" property distance-map.
+>>>>
+>>>>
+>>>>
+>>>> I still want an adequate explanation why NUMA setup cannot be done with
+>>>> an unflattened tree. PowerPC manages to do that and should have a
+>>>> similar init flow being memblock based, so I would expect arm64 can too.
+>>>
+>>>
+>>>
+>>> Many things could be done.  Really, we want to know what *should* be
+>>> done.
+>>>
+>>> In the context of the current arm64 memory initialization we (more or
+>>> less)
+>>> do:
+>>>
+>>>   1) early_init_fdt_scan_reserved_mem();
+>>>   2) memory_present()
+>>>   3) sparse_init()
+>>>   4) other things
+>>>   5) unflatten_device_tree()
+>>>
+>>> We are already reading information out of the FDT at #1.
+>>>
+>>> This patch set adds a step between 1 and 2 where we read NUMA information
+>>> out of the FDT.
+>>
+>>
+>> The dependency on unflattening is that memblock is up and we can
+>> allocate a chunk from it. Isn't that dependency met by step 1
+>
+>
+> No.
 
-The first patch provides the documentation details and the
-second patch contains the controller support details. The third patch
-contains the enable method for Northstar Plus SoC.
+Really, because it seems that numa_alloc_distance is essentially doing
+a memblock alloc and that happens before memory_present.
 
-This patchset has been tested on NSP bcm958625HR board.
-This patchset is based on v4.5.0-rc1 and is available from github
-repo: https://github.com/Broadcom/cygnus-linux.git
-branch: iproc-pwm-v1
+>
+>> or is
+>> there a dependency on sparsemem (or something else)?
+>
+>
+> Will Deacon talked about this over here:
+>
+> https://lkml.org/lkml/2016/2/26/782
 
-Yendapally Reddy Dhananjaya Reddy (3):
-  Documentation: dt: Add Broadcom iproc pwm controller binding
-  pwm: kona: Add support for Broadcom iproc pwm controller
-  ARM: dts: NSP: Add PWM Support to DT
+I'm not saying to move memblock setup earlier nor before the MMU is
+on, so I don't see how Will's reply is relevant other than PPC doesn't
+serve as an example. Maybe PPC should be ignored because I think maybe
+NUMA is only used on non-FDT systems.
 
- .../devicetree/bindings/pwm/brcm,kona-pwm.txt      |   2 +-
- arch/arm/boot/dts/bcm-nsp.dtsi                     |   8 +
- drivers/pwm/Kconfig                                |   6 +-
- drivers/pwm/pwm-bcm-kona.c                         | 183 ++++++++++++++++++---
- 4 files changed, 172 insertions(+), 27 deletions(-)
+In any case, no one has clearly explained what the dependencies are or
+what happens if you moved the unflattening up sooner. You told me what
+the current order is which doesn't equate to dependencies. For
+example, step 4 may or may not be a dependency of step 5. These are
+the dependencies I'm aware of:
 
--- 
-2.1.0
+memblock dependent on DT memory and reserved-memory parsing
+unflattening dependent on memblock_alloc()
+sparsemem dependent on NUMA parsing and memblock
+
+What am I missing from here?
+
+Rob
