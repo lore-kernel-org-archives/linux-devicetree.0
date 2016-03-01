@@ -1,81 +1,48 @@
-From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v3 7/7] T104xQDS: Add qe node to t104xqds
-Date: Tue, 1 Mar 2016 15:09:43 +0800
-Message-ID: <1456816183-22340-7-git-send-email-qiang.zhao@nxp.com>
+From: Zhao Qiang <qiang.zhao@nxp.com>
+Subject: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+Date: Tue, 1 Mar 2016 15:09:39 +0800
+Message-ID: <1456816183-22340-3-git-send-email-qiang.zhao@nxp.com>
 References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456816183-22340-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, oss@buserror.net, leoyang.li@nxp.com, linuxppc-dev@lists.ozlabs.org, Zhao Qiang <qiang.zhao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-add qe node to t104xqds.dtsi
-
-Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
----
-Changes for v2
-	- rebase
-Changes for v3
-	- rebase
-
- arch/powerpc/boot/dts/fsl/t104xqds.dtsi | 39 +++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-index 1498d1e..ab5f081 100644
---- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-@@ -190,4 +190,43 @@
- 				  0 0x00010000>;
- 		};
- 	};
-+
-+	qe: qe@ffe140000 {
-+		ranges = <0x0 0xf 0xfe140000 0x40000>;
-+		reg = <0xf 0xfe140000 0 0x480>;
-+		brg-frequency = <0>;
-+		bus-frequency = <0>;
-+
-+		si1: si@700 {
-+			compatible = "fsl,t1040-qe-si";
-+			reg = <0x700 0x80>;
-+		};
-+
-+		siram1: siram@1000 {
-+			compatible = "fsl,t1040-qe-siram";
-+			reg = <0x1000 0x800>;
-+		};
-+
-+		ucc_hdlc: ucc@2000 {
-+			compatible = "fsl,ucc-hdlc";
-+			rx-clock-name = "clk8";
-+			tx-clock-name = "clk9";
-+			fsl,rx-sync-clock = "rsync_pin";
-+			fsl,tx-sync-clock = "tsync_pin";
-+			fsl,tx-timeslot-mask = <0xfffffffe>;
-+			fsl,rx-timeslot-mask = <0xfffffffe>;
-+			fsl,tdm-framer-type = "e1";
-+			fsl,tdm-id = <0>;
-+			fsl,siram-entry-id = <0>;
-+			fsl,tdm-interface;
-+		};
-+
-+		ucc_serial: ucc@2200 {
-+			device_type = "serial";
-+			compatible = "ucc_uart";
-+			port-number = <1>;
-+			rx-clock-name = "brg2";
-+			tx-clock-name = "brg2";
-+		};
-+	};
- };
--- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QWRkIHVxZV9zZXJpYWwgZG9jdW1lbnQgdG8KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3Bvd2VycGMvZnNsL2NwbV9xZS91cWVfc2VyaWFsLnR4dAoKU2lnbmVkLW9mZi1ieTogWmhh
+byBRaWFuZyA8cWlhbmcuemhhb0BueHAuY29tPgotLS0KQ2hhbmdlcyBmb3IgdjIKCS0gbW9kaWZ5
+IHR4L3J4LWNsb2NrLW5hbWUgc3BlY2lmaWNhdGlvbgpDaGFuZ2VzIGZvciB2MgoJLSBOQSAKCiAu
+Li4vYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwudHh0ICAgICAgICB8IDE5
+ICsrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
+cGMvZnNsL2NwbV9xZS91cWVfc2VyaWFsLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvdXFlX3NlcmlhbC50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9z
+ZXJpYWwudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjQzNmM3MWMKLS0t
+IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJw
+Yy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwudHh0CkBAIC0wLDAgKzEsMTkgQEAKKyogU2VyaWFsCisK
+K0N1cnJlbnRseSBkZWZpbmVkIGNvbXBhdGlibGVzOgorLSB1Y2NfdWFydAorCitQcm9wZXJ0aWVz
+IGZvciB1Y2NfdWFydDoKK3BvcnQtbnVtYmVyIDogcG9ydCBudW1iZXIgb2YgVUNDLVVBUlQKK3R4
+L3J4LWNsb2NrLW5hbWUgOiBzaG91bGQgYmUgImJyZzEiLSJicmcxNiIgZm9yIGludGVybmFsIGNs
+b2NrIHNvdXJjZSwKKwkJICAgc2hvdWxkIGJlICJjbGsxIi0iY2xrMjgiIGZvciBleHRlcm5hbCBj
+bG9jayBzb3VyY2UuCisKK0V4YW1wbGU6CisKKwl1Y2Nfc2VyaWFsOiB1Y2NAMjIwMCB7CisJCWRl
+dmljZV90eXBlID0gInNlcmlhbCI7CisJCWNvbXBhdGlibGUgPSAidWNjX3VhcnQiOworCQlwb3J0
+LW51bWJlciA9IDwxPjsKKwkJcngtY2xvY2stbmFtZSA9ICJicmcyIjsKKwkJdHgtY2xvY2stbmFt
+ZSA9ICJicmcyIjsKKwl9OwotLSAKMi4xLjAuMjcuZzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QK
+TGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
+c3RpbmZvL2xpbnV4cHBjLWRldg==
