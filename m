@@ -1,34 +1,34 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH v3 6/7] T104xRDB: Add qe node to t104xrdb
-Date: Tue, 1 Mar 2016 15:09:42 +0800
-Message-ID: <1456816183-22340-6-git-send-email-qiang.zhao@nxp.com>
+From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 7/7] T104xQDS: Add qe node to t104xqds
+Date: Tue, 1 Mar 2016 15:09:43 +0800
+Message-ID: <1456816183-22340-7-git-send-email-qiang.zhao@nxp.com>
 References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: oss@buserror.net, leoyang.li@nxp.com, xiaobo.xie@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhao Qiang <qiang.zhao@nxp.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456816183-22340-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add qe node to t104xrdb.dtsi
+add qe node to t104xqds.dtsi
 
-Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes for v2
 	- rebase
 Changes for v3
 	- rebase
 
- arch/powerpc/boot/dts/fsl/t104xrdb.dtsi | 39 +++++++++++++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/t104xqds.dtsi | 39 +++++++++++++++++++++++++++++++++
  1 file changed, 39 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-index 830ea48..79d923e 100644
---- a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-@@ -186,4 +186,43 @@
+diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+index 1498d1e..ab5f081 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+@@ -190,4 +190,43 @@
  				  0 0x00010000>;
  		};
  	};
@@ -74,3 +74,8 @@ index 830ea48..79d923e 100644
  };
 -- 
 2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
