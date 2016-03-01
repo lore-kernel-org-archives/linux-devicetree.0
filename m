@@ -1,109 +1,77 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 2/4] regulator: core: Add support for active-discharge configuration
-Date: Tue, 1 Mar 2016 18:08:13 +0530
-Message-ID: <1456835895-16503-3-git-send-email-ldewangan@nvidia.com>
-References: <1456835895-16503-1-git-send-email-ldewangan@nvidia.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/8] ARM64: dts: amlogic: Extend GXBaby GIC node
+Date: Tue, 1 Mar 2016 13:53:42 +0100
+Message-ID: <CAOQ7t2aev5fycZxNEkChWkYYVAV3pn9qnsXnO56V6J7Z3Mi-Rg@mail.gmail.com>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+	<1456789465-2962-8-git-send-email-afaerber@suse.de>
+	<56D57673.8030702@arm.com>
+	<56D57A7F.5020806@suse.de>
+	<56D58E88.2080700@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456835895-16503-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, lgirdwood@gmail.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D58E88.2080700-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to enable/disable active discharge of regulator via
-machine constraints. This configuration is done when setting
-machine constraint during regulator register and if regulator
-driver implemented the callback ops.
+On Tue, Mar 1, 2016 at 1:43 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>=
+ wrote:
+> Hi,
+>
+> On 01/03/16 11:18, Andreas F=C3=A4rber wrote:
+>> Hi Andre,
+>>
+>> Am 01.03.2016 um 12:01 schrieb Andre Przywara:
+>>> On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
+>>>> Add GICH and GICV resources for HYP mode - guess based on other ve=
+ndors.
+>>>
+>>> Do you know if the firmware allows the kernel to be entered in EL2
+>>> (which is the arm64 name for HYP)?
+>>> So can we run kvm?
+>>> If you have a booted kernel, can you grep for "EL2" and "kvm" in th=
+e dmesg?
+>>
+>> I do not have a rootfs yet (MMC v5 patches by Carlo are still waitin=
+g
+>> for review), but with this change the KVM driver initializes okay - =
+the
+>> purpose of this patch!
+>>
+>>> Also you should merge this patch into 3/8, same for 8/8.
+>>
+>> If people confirm this is generally or specifically for this SoC cor=
+rect
+>> then sure. So far 3/8 seems a safe subset for lack of public documen=
+tation.
+>
+> The GIC is an integral part of the SoC, so this clearly belongs in th=
+ere.
+>
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>>> ---
+>>>>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 +++-
+>
+> In general I was wondering if this naming is correct?
+> Shouldn't it be something with "s905" in it? Because this the SoC tha=
+t
+> is driving all those hardware and the peripherals that you describe i=
+n
+> there are clearly within the SoC.
+> So something like meson-s905.dtsi or the like?
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
----
- drivers/regulator/core.c          | 10 ++++++++++
- drivers/regulator/of_regulator.c  |  5 +++++
- include/linux/regulator/driver.h  |  3 +++
- include/linux/regulator/machine.h |  4 ++++
- 4 files changed, 22 insertions(+)
+When I first submitted support for the meson8 and meson8b I picked up
+the names according to the Amlogic SDK.
+In the latest Amlogic drop this SoC is identified as meson-gxbb so
+probably we should stick to this name.
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 055f8c1..3e865b0 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1139,6 +1139,16 @@ static int set_machine_constraints(struct regulator_dev *rdev,
- 		}
- 	}
- 
-+	if ((rdev->constraints->active_discharge >= 0)
-+		&& ops->set_active_discharge) {
-+		ret = ops->set_active_discharge(rdev,
-+				rdev->constraints->active_discharge);
-+		if (ret < 0) {
-+			rdev_err(rdev, "failed to set active discharge\n");
-+			return ret;
-+		}
-+	}
-+
- 	print_constraints(rdev);
- 	return 0;
- }
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 499e437..d1e0c03 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -93,6 +93,11 @@ static void of_get_regulation_constraints(struct device_node *np,
- 
- 	constraints->soft_start = of_property_read_bool(np,
- 					"regulator-soft-start");
-+	ret = of_property_read_u32(np, "regulator-active-discharge", &pval);
-+	if (!ret)
-+		constraints->active_discharge = pval;
-+	else
-+		constraints->active_discharge = -1;
- 
- 	if (!of_property_read_u32(np, "regulator-initial-mode", &pval)) {
- 		if (desc && desc->of_map_mode) {
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 16ac9e1..59dbaf7 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -93,6 +93,8 @@ struct regulator_linear_range {
-  * @get_current_limit: Get the configured limit for a current-limited regulator.
-  * @set_input_current_limit: Configure an input limit.
-  *
-+ * @set_active_discharge: Set active discharge enable/disable of regulators.
-+ *
-  * @set_mode: Set the configured operating mode for the regulator.
-  * @get_mode: Get the configured operating mode for the regulator.
-  * @get_status: Return actual (not as-configured) status of regulator, as a
-@@ -149,6 +151,7 @@ struct regulator_ops {
- 
- 	int (*set_input_current_limit) (struct regulator_dev *, int lim_uA);
- 	int (*set_over_current_protection) (struct regulator_dev *);
-+	int (*set_active_discharge) (struct regulator_dev *, bool enable);
- 
- 	/* enable/disable regulator */
- 	int (*enable) (struct regulator_dev *);
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index a1067d0..408cde7 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -100,6 +100,8 @@ struct regulator_state {
-  * @initial_state: Suspend state to set by default.
-  * @initial_mode: Mode to set at startup.
-  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
-+ * @active_discharge: Enable/disable active discharge. The values are:
-+ *		      -1: Default, 0: Disable, 1: Enable.
-  * @enable_time: Turn-on time of the rails (unit: microseconds)
-  */
- struct regulation_constraints {
-@@ -140,6 +142,8 @@ struct regulation_constraints {
- 	unsigned int ramp_delay;
- 	unsigned int enable_time;
- 
-+	int active_discharge;
-+
- 	/* constraint flags */
- 	unsigned always_on:1;	/* regulator never off when system is on */
- 	unsigned boot_on:1;	/* bootloader/firmware enabled regulator */
--- 
-2.1.4
+--=20
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
