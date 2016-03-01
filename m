@@ -1,97 +1,93 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v11 08/10] dt, numa: Add NUMA dt binding implementation.
-Date: Tue, 1 Mar 2016 11:43:42 -0600
-Message-ID: <CAL_JsqKQP6hLKZ3ja9RtFQdcnibFSwfdb_BhXp9DqnCFyb0r6g@mail.gmail.com>
-References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com>
- <1455930799-5371-9-git-send-email-ddaney.cavm@gmail.com> <20160223193651.GA8491@rob-hp-laptop>
- <56CFA9CA.6090803@caviumnetworks.com> <CAL_JsqLoTh_ZTUT26g4wz=6sofuRpFDCc_Aw+Oq66p8cGMp19g@mail.gmail.com>
- <56D5C9FF.8020500@caviumnetworks.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v7] serial: support for 16550A serial ports on LP-8x4x
+Date: Tue, 01 Mar 2016 19:48:52 +0200
+Message-ID: <1456854532.13244.215.camel@linux.intel.com>
+References: <1456589675-25377-1-git-send-email-ynvich@gmail.com>
+	 <1456781209-11390-1-git-send-email-ynvich@gmail.com>
+	 <1456830401.13244.189.camel@linux.intel.com>
+	 <1456849504.23036.108.camel@gmail.com>
+	 <1456850782.13244.208.camel@linux.intel.com>
+	 <1456852472.23036.124.camel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D5C9FF.8020500@caviumnetworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Daney <ddaney@caviumnetworks.com>
-Cc: David Daney <ddaney.cavm@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Matt Fleming <matt@codeblueprint.co.uk>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456852472.23036.124.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SERIAL DRIVERS" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 1, 2016 at 10:57 AM, David Daney <ddaney@caviumnetworks.com> wrote:
-> On 03/01/2016 08:47 AM, Rob Herring wrote:
->>
->> On Thu, Feb 25, 2016 at 7:26 PM, David Daney <ddaney@caviumnetworks.com>
->> wrote:
->>>
->>> On 02/23/2016 11:36 AM, Rob Herring wrote:
->>>>
->>>>
->>>> On Fri, Feb 19, 2016 at 05:13:17PM -0800, David Daney wrote:
->>>>>
->>>>>
->>>>> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
->>>>>
->>>>> ADD device tree node parsing for NUMA topology using device
->>>>> "numa-node-id" property distance-map.
->>>>
->>>>
->>>>
->>>> I still want an adequate explanation why NUMA setup cannot be done with
->>>> an unflattened tree. PowerPC manages to do that and should have a
->>>> similar init flow being memblock based, so I would expect arm64 can too.
->>>
->>>
->>>
->>> Many things could be done.  Really, we want to know what *should* be
->>> done.
->>>
->>> In the context of the current arm64 memory initialization we (more or
->>> less)
->>> do:
->>>
->>>   1) early_init_fdt_scan_reserved_mem();
->>>   2) memory_present()
->>>   3) sparse_init()
->>>   4) other things
->>>   5) unflatten_device_tree()
->>>
->>> We are already reading information out of the FDT at #1.
->>>
->>> This patch set adds a step between 1 and 2 where we read NUMA information
->>> out of the FDT.
->>
->>
->> The dependency on unflattening is that memblock is up and we can
->> allocate a chunk from it. Isn't that dependency met by step 1
->
->
-> No.
+On Tue, 2016-03-01 at 20:14 +0300, Sergei Ianovich wrote:
+> On Tue, 2016-03-01 at 18:46 +0200, Andy Shevchenko wrote:
+> > On Tue, 2016-03-01 at 19:25 +0300, Sergei Ianovich wrote:
+> > > On Tue, 2016-03-01 at 13:06 +0200, Andy Shevchenko wrote:
+> > > > On Tue, 2016-03-01 at 00:26 +0300, Sergei Ianovich wrote:
 
-Really, because it seems that numa_alloc_distance is essentially doing
-a memblock alloc and that happens before memory_present.
+> > So, but if you support only fixed rates, why do you care about
+> > BOTHER
+> > at all?
+>=20
+> If BOTHER is defined,=C2=A0tty_termios_baud_rate()
+> and=C2=A0tty_termios_encode_baud_rate() allow non-standard baud rates=
+=2E I
+> should clear it from=C2=A0c_cflag to indicate I don't support it.
+>=20
+> > > > > =C2=A0
+> > > > I think you can call this unconditionally together with case >
+> > > > 115200.
+> > >=20
+> > > The calls are orthogonal. This one deals with the case when
+> > > BOTHER
+> > > is
+> > > defined and set, and we have non-zero rate with BOTHER, but we
+> > > have
+> > > zero rate after BOTHER is cleared. So we set 9600 as a sane
+> > > default
+> > > speed.
 
->
->> or is
->> there a dependency on sparsemem (or something else)?
->
->
-> Will Deacon talked about this over here:
->
-> https://lkml.org/lkml/2016/2/26/782
+Maybe you just set a baud rate nearest to the one from the table in
+case of BOTHER?
 
-I'm not saying to move memblock setup earlier nor before the MMU is
-on, so I don't see how Will's reply is relevant other than PPC doesn't
-serve as an example. Maybe PPC should be ignored because I think maybe
-NUMA is only used on non-FDT systems.
+In that case perhaps you have to supply +-1 to the range. That's why I
+asked about=C2=A0uart_get_baud_rate().=C2=A0
 
-In any case, no one has clearly explained what the dependencies are or
-what happens if you moved the unflattening up sooner. You told me what
-the current order is which doesn't equate to dependencies. For
-example, step 4 may or may not be a dependency of step 5. These are
-the dependencies I'm aware of:
+Maybe this flow will work for you
 
-memblock dependent on DT memory and reserved-memory parsing
-unflattening dependent on memblock_alloc()
-sparsemem dependent on NUMA parsing and memblock
+if (BOTHER)
+=C2=A0clear BOTHER
+=C2=A0call=C2=A0uart_get_baud_rate()
 
-What am I missing from here?
+?
 
-Rob
+> The warning seems to be the result of initializing a spinlock with
+> zero. Spinlocks are intentionally obfuscated, but I didn't
+> investigate
+> further.
+>=20
+> > $ git grep -n 'struct .* =3D {0};' | wc -l
+> > 338
+> >=20
+> > $ git grep -n 'struct .* =3D { \?0 \?};' | wc -l
+> > 550
+> >=20
+> > ( '=E2=80=A6 =3D { 0 };' included)
+>=20
+> The first structure member is most likely not a spinlock in those
+> cases.
+
+Hmm... Interesting. On one hand the poison is reasonable, on the other
+we often do a memset() or {0} on structures, i.o.w. assign 0 as initial
+value until spinlock_init().
+
+Arnd, what do you think about this (and similar) case(s)?
+
+--=20
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
