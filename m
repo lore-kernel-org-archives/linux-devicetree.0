@@ -1,64 +1,88 @@
-From: David Daney <ddaney@caviumnetworks.com>
-Subject: Re: [PATCH v11 08/10] dt, numa: Add NUMA dt binding implementation.
-Date: Tue, 1 Mar 2016 08:57:35 -0800
-Message-ID: <56D5C9FF.8020500@caviumnetworks.com>
-References: <1455930799-5371-1-git-send-email-ddaney.cavm@gmail.com> <1455930799-5371-9-git-send-email-ddaney.cavm@gmail.com> <20160223193651.GA8491@rob-hp-laptop> <56CFA9CA.6090803@caviumnetworks.com> <CAL_JsqLoTh_ZTUT26g4wz=6sofuRpFDCc_Aw+Oq66p8cGMp19g@mail.gmail.com>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 10/11] ARM: DRA7: hwmod: Add data for
+ McASP1/2/4/5/6/7/8
+Date: Tue, 1 Mar 2016 17:01:25 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1603011657260.14948@utopia.booyaka.com>
+References: <1456411827-23962-1-git-send-email-peter.ujfalusi@ti.com> <1456411827-23962-11-git-send-email-peter.ujfalusi@ti.com> <alpine.DEB.2.02.1603010900590.14948@utopia.booyaka.com> <56D5C6B1.6040005@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: MULTIPART/MIXED; BOUNDARY="843723315-543039208-1456851538=:14948"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLoTh_ZTUT26g4wz=6sofuRpFDCc_Aw+Oq66p8cGMp19g@mail.gmail.com>
+In-Reply-To: <56D5C6B1.6040005@ti.com>
+Content-ID: <alpine.DEB.2.02.1603011659040.14948@utopia.booyaka.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: David Daney <ddaney.cavm@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Matt Fleming <matt@codeblueprint.co.uk>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Daney <david.daney@cavium.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2016 08:47 AM, Rob Herring wrote:
-> On Thu, Feb 25, 2016 at 7:26 PM, David Daney <ddaney@caviumnetworks.com> wrote:
->> On 02/23/2016 11:36 AM, Rob Herring wrote:
->>>
->>> On Fri, Feb 19, 2016 at 05:13:17PM -0800, David Daney wrote:
->>>>
->>>> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
->>>>
->>>> ADD device tree node parsing for NUMA topology using device
->>>> "numa-node-id" property distance-map.
->>>
->>>
->>> I still want an adequate explanation why NUMA setup cannot be done with
->>> an unflattened tree. PowerPC manages to do that and should have a
->>> similar init flow being memblock based, so I would expect arm64 can too.
->>
->>
->> Many things could be done.  Really, we want to know what *should* be done.
->>
->> In the context of the current arm64 memory initialization we (more or less)
->> do:
->>
->>   1) early_init_fdt_scan_reserved_mem();
->>   2) memory_present()
->>   3) sparse_init()
->>   4) other things
->>   5) unflatten_device_tree()
->>
->> We are already reading information out of the FDT at #1.
->>
->> This patch set adds a step between 1 and 2 where we read NUMA information
->> out of the FDT.
->
-> The dependency on unflattening is that memblock is up and we can
-> allocate a chunk from it. Isn't that dependency met by step 1
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-No.
+--843723315-543039208-1456851538=:14948
+Content-Type: TEXT/PLAIN; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <alpine.DEB.2.02.1603011659041.14948@utopia.booyaka.com>
 
-> or is
-> there a dependency on sparsemem (or something else)?
+Hi P=E9ter,
 
-Will Deacon talked about this over here:
+On Tue, 1 Mar 2016, Peter Ujfalusi wrote:
 
-https://lkml.org/lkml/2016/2/26/782
+> Hi Paul,
+>=20
+> On 03/01/2016 11:11 AM, Paul Walmsley wrote:
+> > Hi P=E9ter
+> >=20
+> > A few questions:
+> >=20
+> > On Thu, 25 Feb 2016, Peter Ujfalusi wrote:
+> >=20
+> >> Add missing data for all McASP ports for the dra7 family
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >=20
+> > 1. The patch doesn't set the HWMOD_OPT_CLKS_NEEDED flag for McASP1 and =
+2,=20
+> > but does set it for McASP4-8.  Could you please confirm that this is=20
+> > intentional, and if so, why?
+>=20
+> All should have the HWMOD_OPT_CLKS_NEEDED as both fclk and ahclkx is trea=
+ted
+> as functional clock and needs to be available in order to be able to acce=
+ss
+> McASP registers.
+> Sorry, I can only test McASP3 and somehow I overlooked this when copy-pas=
+ting
+> the data.
 
-I am happy to modify the patch set, but I don't want to get stuck as an 
-intermediary between two opposing blocs.
+OK
 
-David Daney
+> > 2. The patch sets HWMOD_SWSUP_SIDLE for McASP1 and 2, but doesn't set i=
+t=20
+> > for McASP4-8.  Could you please confirm that this is intentional, and i=
+f=20
+> > so, why?  The descriptions of the MODULEMODE fields in SPRUHZ6 look=20
+> > identical.
+>=20
+> I need to confirm this, but all McASP should have the same set of flags.
+
+OK.  Looking at McASP3 data this morning, they probably shouldn't need=20
+HWMOD_SWSUP_SIDLE, but probably all need=20
+
+                        .modulemode   =3D MODULEMODE_SWCTRL,
+
+> > 3. Can McASP1,2,3 bus-master onto the L3?  If so, then there should be=
+=20
+> > "dra7xx_mcasp1__l3_main_1"-style links to indicate this.
+>=20
+> I need to check this, but I don't think McASP1,2,3 can be bus-master onto=
+ L3.
+
+OK.  When you get back, maybe doublecheck this - it looks to me from=20
+SPRUHZ6 that McASP1-3 have built-in DMA controllers.
+
+> I can resend the series next week as I'm out of office this week.
+
+That's fine.  It's most likely v4.7 material at this point.
+
+
+- Paul
+--843723315-543039208-1456851538=:14948--
