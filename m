@@ -1,69 +1,71 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: Alternative binding proposal for tda998x audio (Was: Re: [PATCH
- RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph of ports)
-Date: Tue, 1 Mar 2016 20:26:19 +0100
-Message-ID: <20160301202619.011013effd265fdee93d4d8e@free.fr>
-References: <cover.1455720381.git.jsarha@ti.com>
-	<842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
-	<20160218143530.GB9654@rob-hp-laptop>
-	<56CF04DA.8080905@ti.com>
-	<20160226004311.GM5783@n2100.arm.linux.org.uk>
-	<56D02594.4020407@ti.com>
-	<20160226112159.GO5783@n2100.arm.linux.org.uk>
-	<56D41F1A.2030100@ti.com>
-	<56D5A6AA.2030907@ti.com>
-	<20160301163553.3ef298fb2c0bb25ef662a41d@free.fr>
-	<56D5BA6D.8090904@ti.com>
-	<20160301171630.630a47dc00060645f89bb8ab@free.fr>
-	<56D5DF7D.7090608@ti.com>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7] serial: support for 16550A serial ports on LP-8x4x
+Date: Tue, 01 Mar 2016 22:28:13 +0300
+Message-ID: <1456860493.23036.133.camel@gmail.com>
+References: <1456589675-25377-1-git-send-email-ynvich@gmail.com>
+	 <1456781209-11390-1-git-send-email-ynvich@gmail.com>
+	 <1456830401.13244.189.camel@linux.intel.com>
+	 <1456849504.23036.108.camel@gmail.com>
+	 <1456850782.13244.208.camel@linux.intel.com>
+	 <1456852472.23036.124.camel@gmail.com>
+	 <1456854532.13244.215.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D5DF7D.7090608-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1456854532.13244.215.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SERIAL DRIVERS" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 1 Mar 2016 20:29:17 +0200
-Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org> wrote:
+On Tue, 2016-03-01 at 19:48 +0200, Andy Shevchenko wrote:
+> On Tue, 2016-03-01 at 20:14 +0300, Sergei Ianovich wrote:
+> > On Tue, 2016-03-01 at 18:46 +0200, Andy Shevchenko wrote:
+> > > On Tue, 2016-03-01 at 19:25 +0300, Sergei Ianovich wrote:
+> > > > On Tue, 2016-03-01 at 13:06 +0200, Andy Shevchenko wrote:
+> > > > > On Tue, 2016-03-01 at 00:26 +0300, Sergei Ianovich wrote:
+>=20
+> > > So, but if you support only fixed rates, why do you care about
+> > > BOTHER
+> > > at all?
+> >=20
+> > If BOTHER is defined,=C2=A0tty_termios_baud_rate()
+> > and=C2=A0tty_termios_encode_baud_rate() allow non-standard baud rat=
+es. I
+> > should clear it from=C2=A0c_cflag to indicate I don't support it.
+> >=20
+> > > > > > =C2=A0
+> > > > > I think you can call this unconditionally together with case
+> > > > > >
+> > > > > 115200.
+> > > >=20
+> > > > The calls are orthogonal. This one deals with the case when
+> > > > BOTHER
+> > > > is
+> > > > defined and set, and we have non-zero rate with BOTHER, but we
+> > > > have
+> > > > zero rate after BOTHER is cleared. So we set 9600 as a sane
+> > > > default
+> > > > speed.
+>=20
+> Maybe you just set a baud rate nearest to the one from the table in
+> case of BOTHER?
+>=20
+> In that case perhaps you have to supply +-1 to the range. That's why
+> I
+> asked about=C2=A0uart_get_baud_rate().=C2=A0
+>=20
+> Maybe this flow will work for you
+>=20
+> if (BOTHER)
+> =C2=A0clear BOTHER
+> =C2=A0call=C2=A0uart_get_baud_rate()
+>=20
+> ?
 
-> I understand the short comings of simple-card and it's binding. Howev=
-er,=20
-> the binding is documented and it is feasible to extract the audio=20
-> connections from a simple-card binding too. In fact it models the I2S=
-=20
-> connections better than straight out of the box graph binding. Actual=
-ly=20
-> a graph is not the best way describe an i2s-bus with multiple DAIs=20
-> (codec or CPU) connected to it.
-
-I still don't understand your problem. You want something like:
-
-	audio-ports =3D <	TDA998x_SPDIF	0x04
-			TDA998x_I2S	0x03>;
-
-and the graph definition would be:
-
-	port@03 {
-		reg =3D <0x03>;
-		port-type =3D "audio-i2s";
-		...
-	};
-
-	port@04 {
-		reg =3D <0x04>;
-		port-type =3D "audio-spdif";
-		...
-	};
-
-Apart the syntax, I don't really see the difference.
-
---=20
-Ken ar c'henta=F1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
-
+It works well for standard rates, let it be so. If there ever is a
+problem, we can fix it.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
