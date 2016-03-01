@@ -1,84 +1,94 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 13/13] ARM: sunxi: Introduce
- MACH_SUN8I_A83T option
-Date: Mon, 29 Feb 2016 23:12:53 -0800
-Message-ID: <20160301071253.GI8418@lukather>
-References: <1456672738-4993-1-git-send-email-vishnupatekar0510@gmail.com>
- <1456672738-4993-14-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v3 1/7] QE: Add IC, SI and SIRAM document to device tree bindings.
+Date: Tue, 1 Mar 2016 15:09:37 +0800
+Message-ID: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nEsDIrWrg+hrB7l1"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6EB2W3AKGQE34WKULA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456672738-4993-14-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org, jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---nEsDIrWrg+hrB7l1
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Add IC, SI and SIRAM document of QE to
+Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
 
-Hi,
+Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2
+	- Add interrupt-controller in Required properties
+	- delete address-cells and size-cells for qe-si and qe-siram
+Changes for v3
+	- Add SoC specific caompatible strings to qe-si and qe-siram
 
-On Sun, Feb 28, 2016 at 11:18:58PM +0800, Vishnu Patekar wrote:
-> A83T has CPUS clock similar to A80's. currently, a80 cpus clock only
-> compiled for A80. So, Introduce MACH_SUN8I_A83T to compile it for
-> A83T as well.
-> 
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/mach-sunxi/Kconfig | 5 +++++
->  drivers/clk/sunxi/Makefile  | 3 +++
->  2 files changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-> index c124d65..424b76d 100644
-> --- a/arch/arm/mach-sunxi/Kconfig
-> +++ b/arch/arm/mach-sunxi/Kconfig
-> @@ -41,6 +41,11 @@ config MACH_SUN8I
->  	select ARM_GIC
->  	select MFD_SUN6I_PRCM
->  
-> +config MACH_SUN8I_A83T
-> +	bool "Allwinner A83T (sun8i) SoCs support"
-> +	default ARCH_SUNXI
-> +	select ARM_GIC
-> +
->  config MACH_SUN9I
->  	bool "Allwinner (sun9i) SoCs support"
->  	default ARCH_SUNXI
-> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> index 3fd7901..2aabfc4 100644
-> --- a/drivers/clk/sunxi/Makefile
-> +++ b/drivers/clk/sunxi/Makefile
-> @@ -20,6 +20,9 @@ obj-y += clk-usb.o
->  obj-$(CONFIG_MACH_SUN9I) += clk-sun8i-apb0.o
->  obj-$(CONFIG_MACH_SUN9I) += clk-sun9i-cpus.o
->  
-> +obj-$(CONFIG_MACH_SUN8I_A83T) += clk-sun8i-apb0.o
-> +obj-$(CONFIG_MACH_SUN8I_A83T) += clk-sun9i-cpus.o
-> +
+ .../devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt  | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-This is not how it should be done. You should rather create a Kconfig
-option for these clocks, and use def_bool CONFIG_MACH_SUN8I || CONFIG_MACH_SUN9I
-
-Switching to Kconfig for the clocks has been on my todo-list for quite
-some time, I guess these two clocks would be a good start.
-
-Thanks!
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+index 4f89302..7ab21cb 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
+@@ -69,6 +69,56 @@ Example:
+ 	};
+      };
+ 
++* Interrupt Controller (IC)
++
++Required properties:
++- compatible : should be "fsl,qe-ic".
++- reg : Address range of IC register set.
++- interrupts : interrupts generated by the device.
++- interrupt-controller : this device is a interrupt controller.
++
++Example:
++
++	qeic: interrupt-controller@80 {
++		interrupt-controller;
++		compatible = "fsl,qe-ic";
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		reg = <0x80 0x80>;
++		interrupts = <95 2 0 0  94 2 0 0>; //high:79 low:78
++	};
++
++* Serial Interface Block (SI)
++
++The SI manages the routing of eight TDM lines to the QE block serial drivers
++, the MCC and the UCCs, for receive and transmit.
++
++Required properties:
++- compatible : should be "fsl,t1040-qe-si".
++- reg : Address range of SI register set.
++
++Example:
++
++	si1: si@700 {
++		compatible = "fsl,t1040-qe-si";
++		reg = <0x700 0x80>;
++	};
++
++* Serial Interface Block RAM(SIRAM)
++
++store the routing entries of SI
++
++Required properties:
++- compatible : should be "fsl,t1040-qe-siram".
++- reg : Address range of SI RAM.
++
++Example:
++
++	siram1: siram@1000 {
++		compatible = "fsl,t1040-qe-siram";
++		reg = <0x1000 0x800>;
++	};
++
+ * QE Firmware Node
+ 
+ This node defines a firmware binary that is embedded in the device tree, for
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---nEsDIrWrg+hrB7l1--
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
