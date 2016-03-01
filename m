@@ -1,48 +1,83 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
-Date: Tue, 1 Mar 2016 15:09:39 +0800
-Message-ID: <1456816183-22340-3-git-send-email-qiang.zhao@nxp.com>
-References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+	<u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
+Date: Tue, 1 Mar 2016 08:49:37 +0100
+Message-ID: <20160301074937.GU2613@pengutronix.de>
+References: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
+ <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
+ <20160229213850.GS2613@pengutronix.de>
+ <CAOMZO5BLYumOrBuoB5-RgzLAJ=o4zp9ocv4jcZRy=p6Pky1SyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, xiaobo.xie@nxp.com, oss@buserror.net, leoyang.li@nxp.com, linuxppc-dev@lists.ozlabs.org, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5BLYumOrBuoB5-RgzLAJ=o4zp9ocv4jcZRy=p6Pky1SyQ@mail.gmail.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Matt Mackall <mpm@selenic.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHVxZV9zZXJpYWwgZG9jdW1lbnQgdG8KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Bvd2VycGMvZnNsL2NwbV9xZS91cWVfc2VyaWFsLnR4dAoKU2lnbmVkLW9mZi1ieTogWmhh
-byBRaWFuZyA8cWlhbmcuemhhb0BueHAuY29tPgotLS0KQ2hhbmdlcyBmb3IgdjIKCS0gbW9kaWZ5
-IHR4L3J4LWNsb2NrLW5hbWUgc3BlY2lmaWNhdGlvbgpDaGFuZ2VzIGZvciB2MgoJLSBOQSAKCiAu
-Li4vYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwudHh0ICAgICAgICB8IDE5
-ICsrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspCiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
-cGMvZnNsL2NwbV9xZS91cWVfc2VyaWFsLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvdXFlX3NlcmlhbC50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9z
-ZXJpYWwudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAuLjQzNmM3MWMKLS0t
-IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJw
-Yy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwudHh0CkBAIC0wLDAgKzEsMTkgQEAKKyogU2VyaWFsCisK
-K0N1cnJlbnRseSBkZWZpbmVkIGNvbXBhdGlibGVzOgorLSB1Y2NfdWFydAorCitQcm9wZXJ0aWVz
-IGZvciB1Y2NfdWFydDoKK3BvcnQtbnVtYmVyIDogcG9ydCBudW1iZXIgb2YgVUNDLVVBUlQKK3R4
-L3J4LWNsb2NrLW5hbWUgOiBzaG91bGQgYmUgImJyZzEiLSJicmcxNiIgZm9yIGludGVybmFsIGNs
-b2NrIHNvdXJjZSwKKwkJICAgc2hvdWxkIGJlICJjbGsxIi0iY2xrMjgiIGZvciBleHRlcm5hbCBj
-bG9jayBzb3VyY2UuCisKK0V4YW1wbGU6CisKKwl1Y2Nfc2VyaWFsOiB1Y2NAMjIwMCB7CisJCWRl
-dmljZV90eXBlID0gInNlcmlhbCI7CisJCWNvbXBhdGlibGUgPSAidWNjX3VhcnQiOworCQlwb3J0
-LW51bWJlciA9IDwxPjsKKwkJcngtY2xvY2stbmFtZSA9ICJicmcyIjsKKwkJdHgtY2xvY2stbmFt
-ZSA9ICJicmcyIjsKKwl9OwotLSAKMi4xLjAuMjcuZzk2ZGIzMjQKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QK
-TGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
-c3RpbmZvL2xpbnV4cHBjLWRldg==
+Hello Fabio,
+
+On Mon, Feb 29, 2016 at 08:54:19PM -0300, Fabio Estevam wrote:
+> On Mon, Feb 29, 2016 at 6:38 PM, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Mon, Feb 29, 2016 at 06:16:50PM -0300, Fabio Estevam wrote:
+> >> On Mon, Feb 29, 2016 at 12:52 PM, Steffen Trumtrar
+> >> <s.trumtrar@pengutronix.de> wrote:
+> >>
+> >> > +       ret =3D clk_prepare_enable(rngc->clk);
+> >> > +       if (ret)
+> >> > +               return ret;
+> >> > +
+> >> > +       rngc->irq =3D platform_get_irq(pdev, 0);
+> >> > +       if (!rngc->irq) {
+> >> > +               dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n=
+");
+> >> > +               clk_disable_unprepare(rngc->clk);
+> >> > +
+> >> > +               return ret;
+> >>
+> >> You are returning the wrong error code here:
+> >>
+> >> Better do like this:
+> >>
+> >>        rngc->irq =3D platform_get_irq(pdev, 0);
+> >>        if (rngc->irq < 0) {
+> >
+> > rngc->irq is unsigned, so this is never true.
+> >
+> >>                dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+> >>                clk_disable_unprepare(rngc->clk);
+> >>                return rngc->irq;
+> >>        }
+> >
+> > So here comes my better approach:
+>=20
+> As irq is only used inside probe it can be removed from struct mxc_rn=
+gc.
+
+Good idea.
+
+> Or maybe like this:
+>=20
+>          ret =3D platform_get_irq(pdev, 0);
+>          if (ret < 0) {
+>                  dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n");
+>                  clk_disable_unprepare(rngc->clk);
+>                  return ret;
+>          }
+
+Some people think platform_get_irq returning 0 should be handled as
+error.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
+    |
+Industrial Linux Solutions                 | http://www.pengutronix.de/=
+  |
