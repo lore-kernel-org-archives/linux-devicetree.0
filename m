@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/4] regulator: DT: Add DT property for active-discharge configuration
-Date: Tue, 1 Mar 2016 18:08:12 +0530
-Message-ID: <1456835895-16503-2-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 4/4] regulator: max77620: Add support to configure active-discharge
+Date: Tue, 1 Mar 2016 18:08:15 +0530
+Message-ID: <1456835895-16503-5-git-send-email-ldewangan@nvidia.com>
 References: <1456835895-16503-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,29 +12,47 @@ To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add common DT property for regulator node to support of
-active discharge enable/disable configuration of regulator.
+Add regulator ops callback for configuration of active-discharge
+and provide necessarily information via regulator descriptor.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
- Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/regulator/max77620-regulator.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 1d112fc..ecfc593 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -44,6 +44,11 @@ Optional properties:
-   any consumer request.
- - regulator-pull-down: Enable pull down resistor when the regulator is disabled.
- - regulator-over-current-protection: Enable over current protection.
-+- regulator-active-discharge: tristate, enable/disable active discharge of
-+  regulators. The values are:
-+	0: Disable active discharge.
-+	1: Enable active discharge.
-+	Absence of this property will leave configuration to default.
+diff --git a/drivers/regulator/max77620-regulator.c b/drivers/regulator/max77620-regulator.c
+index 259e7e1..73a3356 100644
+--- a/drivers/regulator/max77620-regulator.c
++++ b/drivers/regulator/max77620-regulator.c
+@@ -578,6 +578,7 @@ static struct regulator_ops max77620_regulator_ops = {
+ 	.get_mode = max77620_regulator_get_mode,
+ 	.set_ramp_delay = max77620_regulator_set_ramp_delay,
+ 	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.set_active_discharge = regulator_set_active_discharge_regmap,
+ };
  
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
+ #define MAX77620_SD_CNF2_ROVS_EN_NONE	0
+@@ -606,6 +607,10 @@ static struct regulator_ops max77620_regulator_ops = {
+ 			.enable_time = 500,				\
+ 			.vsel_mask = MAX77620_##_volt_mask##_VOLT_MASK,	\
+ 			.vsel_reg = MAX77620_REG_##_id,			\
++			.active_discharge_off = 0,			\
++			.active_discharge_on = MAX77620_SD_CFG1_ADE_ENABLE, \
++			.active_discharge_mask = MAX77620_SD_CFG1_ADE_MASK, \
++			.active_discharge_reg = MAX77620_REG_##_id##_CFG, \
+ 			.type = REGULATOR_VOLTAGE,			\
+ 		},							\
+ 	}
+@@ -633,6 +638,10 @@ static struct regulator_ops max77620_regulator_ops = {
+ 			.enable_time = 500,				\
+ 			.vsel_mask = MAX77620_LDO_VOLT_MASK,		\
+ 			.vsel_reg = MAX77620_REG_##_id##_CFG,		\
++			.active_discharge_off = 0,			\
++			.active_discharge_on = MAX77620_LDO_CFG2_ADE_ENABLE, \
++			.active_discharge_mask = MAX77620_LDO_CFG2_ADE_MASK, \
++			.active_discharge_reg = MAX77620_REG_##_id##_CFG2, \
+ 			.type = REGULATOR_VOLTAGE,			\
+ 		},							\
+ 	}
 -- 
 2.1.4
