@@ -1,36 +1,36 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH v3 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
-Date: Tue, 1 Mar 2016 18:59:35 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1603011858510.14948@utopia.booyaka.com>
-References: <1456439796-28546-1-git-send-email-fcooper@ti.com> <1456439796-28546-3-git-send-email-fcooper@ti.com> <20160301181109.GB13417@atomide.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v12 10/14] clk: mediatek: make dpi0_sel propagate rate
+ changes
+Date: Tue, 1 Mar 2016 11:15:35 -0800
+Message-ID: <20160301191535.GC24999@codeaurora.org>
+References: <1456845630-2786-1-git-send-email-p.zabel@pengutronix.de>
+ <1456845630-2786-11-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160301181109.GB13417@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Franklin S Cooper Jr <fcooper@ti.com>, t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1456845630-2786-11-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, dri-devel@lists.freedesktop.org, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 1 Mar 2016, Tony Lindgren wrote:
-
-> * Franklin S Cooper Jr <fcooper@ti.com> [160225 14:37]:
-> > From: Vignesh R <vigneshr@ti.com>
-> > 
-> > Add hwmod entries for the PWMSS on DRA7.
-> > 
-> > Set l4_root_clk_div as the main_clk of PWMSS. It is fixed-factored clock
-> > equal to L4PER2_L3_GICLK/2(l3_iclk_div/2).
-> > As per AM57x TRM SPRUHZ6[1], October 2014, Section 29.1.3 Table 29-4,
-> > clock source to PWMSS is L4PER2_L3_GICLK. But it is actually
-> > L4PER2_L3_GICLK/2. The TRM does not show the division by 2.
-> > 
-> > [1] www.ti.com/lit/ug/spruhz6/spruhz6.pdf
-> 
-> Looks OK to me, assuming Paul will pick this one or ack it.
-
-Well I've already sent comments on it, it doesn't look quite ready for me 
-yet.  I would hold off on the whole series because the hwmod comments also 
-impact the DT files.
-
-- Paul
+T24gMDMvMDEsIFBoaWxpcHAgWmFiZWwgd3JvdGU6Cj4gVGhpcyBtdXggaXMgc3VwcG9zZWQgdG8g
+c2VsZWN0IGEgZml0dGluZyBkaXZpZGVyIGFmdGVyIHRoZSBQTEwKPiBpcyBhbHJlYWR5IHNldCB0
+byB0aGUgY29ycmVjdCByYXRlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwgPHAu
+emFiZWxAcGVuZ3V0cm9uaXguZGU+Cj4gQWNrZWQtYnk6IEphbWVzIExpYW8gPGphbWVzamoubGlh
+b0BtZWRpYXRlay5jb20+Cj4gLS0tCgpBY2tlZC1ieTogU3RlcGhlbiBCb3lkIDxzYm95ZEBjb2Rl
+YXVyb3JhLm9yZz4KCi0tIApRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1l
+bWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRp
+dmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
