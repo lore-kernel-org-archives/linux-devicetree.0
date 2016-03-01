@@ -1,96 +1,55 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 7/8] ARM64: dts: amlogic: Extend GXBaby GIC node
-Date: Tue, 1 Mar 2016 12:18:23 +0100
-Message-ID: <56D57A7F.5020806@suse.de>
-References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
- <1456789465-2962-8-git-send-email-afaerber@suse.de>
- <56D57673.8030702@arm.com>
+From: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on SAMA5D2
+Date: Tue, 1 Mar 2016 12:29:15 +0100
+Message-ID: <CAGkQfmP5p3ezZwEub2RDW-y--aeJHDBN_oT9K4Wga=YYfBCLqA@mail.gmail.com>
+References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com> <56D56E95.4030204@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D57673.8030702-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <56D56E95.4030204-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andre,
+Hi Nicolas,
 
-Am 01.03.2016 um 12:01 schrieb Andre Przywara:
-> On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
->> Add GICH and GICV resources for HYP mode - guess based on other vend=
-ors.
->=20
-> Do you know if the firmware allows the kernel to be entered in EL2
-> (which is the arm64 name for HYP)?
-> So can we run kvm?
-> If you have a booted kernel, can you grep for "EL2" and "kvm" in the =
-dmesg?
-
-I do not have a rootfs yet (MMC v5 patches by Carlo are still waiting
-for review), but with this change the KVM driver initializes okay - the
-purpose of this patch!
-
-> Also you should merge this patch into 3/8, same for 8/8.
-
-If people confirm this is generally or specifically for this SoC correc=
-t
-then sure. So far 3/8 seems a safe subset for lack of public documentat=
-ion.
-
->> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
+2016-03-01 11:27 GMT+01:00 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>:
+> Le 01/02/2016 11:25, Romain Izard a =C3=A9crit :
+>> The NAND Flash controller for SAMA5D2 has small differences that mak=
+e
+>> it impossible to use the existing driver for SAMA5D3. This patchset
+>> uses the device tree's compatible string to get those differences,
+>> and the code is slightly modified to handle them.
 >>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm6=
-4/boot/dts/amlogic/meson-gxbb.dtsi
->> index 0ae089bd1806..5088ae3ff653 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->> @@ -117,7 +117,9 @@
->>  		gic: interrupt-controller@c4301000 {
->>  			compatible =3D "arm,cortex-a15-gic", "arm,cortex-a9-gic";
->=20
-> I think "arm,gic-400" is the name to use here these days, especially =
-for
-> arm64.
+>> Base on linux-mtd-next, commit
+>> 15c0be7bec002f9a529dd0966d0db96dde176fd0
+>>
+>> See previous revisions to apply on the Atmel Linux 4.1 branch.
+>>
+>> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as ther=
+e
+>> is no existing SAMA5D2 board with NAND Flash memory (yet).
+>
+> Brian,
+>
+> Hi, do we need to resend this series with all the tags collected (aka
+> ping ;-)) ?
+>
 
-I took what /proc/device-tree showed on Android and verified that this
-compatible is in use in mainline.
+A v4 has already been sent, and Brian has picked patches 1-4, as seen
+in: http://article.gmane.org/gmane.linux.drivers.devicetree/155864/
 
->>  			reg =3D <0x0 0xc4301000 0 0x1000>,
->> -			      <0x0 0xc4302000 0 0x0100>;
->> +			      <0x0 0xc4302000 0 0x0100>,
->=20
-> Please use 0x2000 for the size here. I guess this is really the GIC-4=
-00
-> from ARM, and in this case this is the right size, [1] is the referen=
-ce
-> here. This will enable EOI mode 1 for KVM.
+=46or patch #5, it is the update for the sama5d2.dtsi to describe the
+NAND controller. Perhaps you can take it on your tree for 4.6, it
+won't change anything until a board needs it, either Atmel's SAMA5D2 PT=
+C
+or another one.
 
-Will test later.
-
-Is there any easy way to find out whether or not this is that GIC-400?
-
-Thanks,
-Andreas
-
-> [1]
-> http://infocenter.arm.com/help/index.jsp?topic=3D/com.arm.doc.ddi0471=
-b/CHDIFAEE.html
->=20
->> +			      <0x0 0xc4304000 0 0x2000>,
->> +			      <0x0 0xc4306000 0 0x2000>;
->>  			interrupt-controller;
->>  			interrupts =3D <GIC_PPI 9
->>  				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
-
+Best regards,
 --=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
+Romain Izard
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
