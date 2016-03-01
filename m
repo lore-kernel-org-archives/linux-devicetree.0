@@ -1,34 +1,52 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 5/5] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Tue, 1 Mar 2016 13:00:58 -0800
-Message-ID: <20160301210057.GC4469@atomide.com>
-References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
- <1456439796-28546-6-git-send-email-fcooper@ti.com>
- <20160229232443.GW13417@atomide.com>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
+Subject: Re: [PATCH] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Tue, 1 Mar 2016 22:07:18 +0100
+Message-ID: <56D60486.1000102@hartkopp.net>
+References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160229232443.GW13417@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: paul@pwsan.com, t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, mkl@pengutronix.de, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, corbet@lwn.net
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, geert+renesas@glider.be, chris.paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [160229 15:25]:
-> * Franklin S Cooper Jr <fcooper@ti.com> [160225 14:37]:
-> > From: Vignesh R <vigneshr@ti.com>
-> > 
-> > Add PWMSS device tree nodes for DRA7 SoC family and add documentation
-> > for dt bindings.
-> 
-> Seems to be all standard so applying this one into omap-for-v4.6/dt
-> thanks.
 
-Except this may still need to change depending on the hwmod
-related patch as pointed out by Paul. So I've reverted this
-in omap-for-v4.6/dt.
+
+On 03/01/2016 10:34 AM, Ramesh Shanmugasundaram wrote:
+> This patch adds support for the CAN FD controller found in Renesas R-Car
+> SoCs. The controller operates in CAN FD mode by default. Two test modes
+> are available and can be enabled by the "rcar_canfd.testmode" module
+> parameter. Refer to Documentation/kernel-parameters.txt.
+
+(..)
+
+> +#ifdef CONFIG_DEBUG_FS
+> +#include <linux/debugfs.h>
+> +
+> +static int rcar_canfd_showregs(struct seq_file *s, void *data)
+> +{
+> +	struct rcar_canfd_channel *priv = s->private;
+> +	u32 ch = priv->channel;
+> +	u32 rf = ch + RCANFD_RFFIFO_IDX;
+> +	u32 cf = RCANFD_CFFIFO_IDX;
+> +	u32 val, offset, i;
+> +
+> +	if (testmode)
+> +		seq_printf(s, "RCANFD : testmode = %d\n", testmode);
+> +	seq_printf(s, "RCANFD register dump: channel %u\n", ch);
+> +	seq_printf(s, "%-40s: %x\n", "g: cfg",
+> +		   rcar_canfd_read(priv, RCANFD_GCFG));
+
+Why do you think you would need this kind of register dumps in debugfs?
+
+This could be interesting for development purposes - but in production drivers
+this is pretty unusual and needless.
+
+I would sugest to remove either the testmode (already suggested by Marc) and
+this register dump stuff.
 
 Regards,
-
-Tony
+Oliver
