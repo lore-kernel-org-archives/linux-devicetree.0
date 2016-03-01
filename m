@@ -1,45 +1,54 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V6 05/10] Documentation: DT: bindings: Add power domain
- info for NVIDIA PMC
-Date: Tue, 1 Mar 2016 11:36:48 +0000
-Message-ID: <56D57ED0.10305@nvidia.com>
-References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
- <1456501724-28477-6-git-send-email-jonathanh@nvidia.com>
- <20160229072221.GH23745@ulmo> <56D41F60.6010504@nvidia.com>
- <20160229110100.GB674@ulmo>
+From: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+Subject: Re: [PATCH 4/8] Documentation: devicetree: Document Tronsmart vendor
+ prefix
+Date: Tue, 1 Mar 2016 12:37:17 +0100
+Message-ID: <56D57EED.1090901@suse.com>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+ <1456789465-2962-5-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160229110100.GB674@ulmo>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456789465-2962-5-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 29/02/16 11:01, Thierry Reding wrote:
 
-[snip]
+On 01/03/16 00:44, Andreas F=C3=A4rber wrote:
+> Choose the obvious prefix, "tronsmart".
+>
+> Cc: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
 
-> I've always considered per-SoC invariant data to not belong into
-> bindings. That is, constants such as power partition IDs or SMMU client
-> IDs should be defined via tables in drivers, and DT should be used to
-> hook them up to devices.
-> 
-> Defining the existing power domains in DT seems rather brittle to me. A
-> compatible string would imply the set of supported power domains anyway
-> and having that set specified in DT would technically require us to add
-> code in the driver to validate that the DT is sane, which would entail
-> the addition of a very similar table anyway.
-> 
-> One further reason why I prefer not to have these things specified (as
-> opposed to "glued" together) in DT is that the DT is ABI, so if we ever
-> happen to ship a broken DT we won't be able to easily fix it. Driver
-> code, on the other hand, can always easily be fixed.
+Same as a older patch I send some month ago. So also this is a trivial=20
+one, for the record:
 
-Yes, I guess that is consistent with other Tegra drivers too. Ok, I will
-drop the reg property and just use the name.
+Singed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
 
-Cheers
-Jon
+>   Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>   1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
+Documentation/devicetree/bindings/vendor-prefixes.txt
+> index f871e8e7e98f..662edc7bce04 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -243,6 +243,7 @@ toshiba	Toshiba Corporation
+>   toumaz	Toumaz
+>   tplink	TP-LINK Technologies Co., Ltd.
+>   tronfy	Tronfy
+> +tronsmart	Tronsmart
+>   truly	Truly Semiconductors Limited
+>   upisemi	uPI Semiconductor Corp.
+>   urt	United Radiant Technology Corporation
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
