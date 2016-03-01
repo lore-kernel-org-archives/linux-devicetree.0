@@ -1,40 +1,93 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCH 2/5] Documentation: dt: socfpga: Add Altera Arri10 L2 cache binding
-Date: Tue, 1 Mar 2016 10:38:18 -0600
-Message-ID: <1456850301-22066-2-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCH 4/5] ARM: socfpga: Enable Arria10 L2 cache ECC on startup
+Date: Tue, 1 Mar 2016 10:38:20 -0600
+Message-ID: <1456850301-22066-4-git-send-email-tthayer@opensource.altera.com>
 References: <1456850301-22066-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1456850301-22066-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree binding string needed to support the Altera L2
-cache on the Arria10 chip.
+Enable ECC for Arria10 L2 cache on machine startup. The ECC has to be
+enabled before data is stored in memory otherwise the ECC will fail
+on reads.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
- .../bindings/arm/altera/socfpga-eccmgr.txt         |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-socfpga/l2_cache.c |   42 ++++++++++++++++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-index 885f93d..4cea386 100644
---- a/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-eccmgr.txt
-@@ -13,7 +13,8 @@ Subcomponents:
+diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
+index e3907ab..b197218 100644
+--- a/arch/arm/mach-socfpga/l2_cache.c
++++ b/arch/arm/mach-socfpga/l2_cache.c
+@@ -17,14 +17,31 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_address.h>
  
- L2 Cache ECC
- Required Properties:
--- compatible : Should be "altr,socfpga-l2-ecc"
-+- compatible : Should be "altr,socfpga-l2-ecc" or
-+	       "altr,socfpga-a10-l2-ecc"
- - reg : Address and size for ECC error interrupt clear registers.
- - interrupts : Should be single bit error interrupt, then double bit error
- 	interrupt. Note the rising edge type.
++#include "core.h"
++
++/* A10 System Manager ECC interrupt mask control registers */
++#define A10_L2_ECC_CTRL_OFST            0x0
++
++#define A10_SYSMGR_ECC_INTMASK_CLR_OFST 0x98
++#define A10_L2_ECC_INT_CLR_OFST         0xA8
++
++#define A10_MPU_CTRL_L2_ECC_EN          BIT(0)
++#define A10_ECC_INTMASK_CLR_EN          BIT(0)
++#define A10_ECC_INT_CLR                 (BIT(31) | BIT(15))
++
+ void socfpga_init_l2_ecc(void)
+ {
+ 	struct device_node *np;
+ 	void __iomem *mapped_l2_edac_addr;
++	const char *compat = "altr,socfpga-l2-ecc";
+ 
+-	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-l2-ecc");
++	if (of_machine_is_compatible("altr,socfpga-arria10"))
++		compat = "altr,socfpga-a10-l2-ecc";
++
++	/* Find the L2 EDAC device tree node */
++	np = of_find_compatible_node(NULL, NULL, compat);
+ 	if (!np) {
+-		pr_err("Unable to find socfpga-l2-ecc in dtb\n");
++		pr_err("Unable to find %s in dtb\n", compat);
+ 		return;
+ 	}
+ 
+@@ -35,7 +52,24 @@ void socfpga_init_l2_ecc(void)
+ 		return;
+ 	}
+ 
+-	/* Enable ECC */
+-	writel(0x01, mapped_l2_edac_addr);
++	if (of_machine_is_compatible("altr,socfpga-arria10")) {
++		if (!sys_manager_base_addr) {
++			pr_err("System Mananger not mapped for L2 ECC\n");
++			goto exit;
++		}
++		/* Clear any pending IRQs */
++		writel(A10_ECC_INT_CLR, (sys_manager_base_addr +
++					 A10_L2_ECC_INT_CLR_OFST));
++		/* Enable ECC */
++		writel(A10_ECC_INTMASK_CLR_EN, sys_manager_base_addr +
++		       A10_SYSMGR_ECC_INTMASK_CLR_OFST);
++		writel(A10_MPU_CTRL_L2_ECC_EN, mapped_l2_edac_addr +
++		       A10_L2_ECC_CTRL_OFST);
++	} else {
++		/* Enable ECC */
++		writel(0x01, mapped_l2_edac_addr);
++	}
++
++exit:
+ 	iounmap(mapped_l2_edac_addr);
+ }
 -- 
 1.7.9.5
+
