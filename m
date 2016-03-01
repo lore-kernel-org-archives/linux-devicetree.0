@@ -1,107 +1,389 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v7] serial: support for 16550A serial ports on LP-8x4x
-Date: Tue, 01 Mar 2016 18:46:22 +0200
-Message-ID: <1456850782.13244.208.camel@linux.intel.com>
-References: <1456589675-25377-1-git-send-email-ynvich@gmail.com>
-	 <1456781209-11390-1-git-send-email-ynvich@gmail.com>
-	 <1456830401.13244.189.camel@linux.intel.com>
-	 <1456849504.23036.108.camel@gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 10/11] ARM: DRA7: hwmod: Add data for McASP1/2/4/5/6/7/8
+Date: Tue, 1 Mar 2016 18:43:29 +0200
+Message-ID: <56D5C6B1.6040005@ti.com>
+References: <1456411827-23962-1-git-send-email-peter.ujfalusi@ti.com>
+ <1456411827-23962-11-git-send-email-peter.ujfalusi@ti.com>
+ <alpine.DEB.2.02.1603010900590.14948@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456849504.23036.108.camel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Peter Hurley <peter@hurleysoftware.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Burton <paul.burton@imgtec.com>, Mans Rullgard <mans@mansr.com>, Joachim Eastwood <manabian@gmail.com>, Scott Wood <scottwood@freescale.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <alpine.DEB.2.02.1603010900590.14948@utopia.booyaka.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-03-01 at 19:25 +0300, Sergei Ianovich wrote:
-> On Tue, 2016-03-01 at 13:06 +0200, Andy Shevchenko wrote:
-> > On Tue, 2016-03-01 at 00:26 +0300, Sergei Ianovich wrote:
+Hi Paul,
 
-> > > +	len &=3D 3;
+On 03/01/2016 11:11 AM, Paul Walmsley wrote:
+> Hi P=E9ter
+> =
 
-Mask as well to be defined.
+> A few questions:
+> =
 
-> > > +	len <<=3D 3;
-> >=20
-> > Perhaps to define magic number (e.g. LP8841_DATA_LEN_SHIFT).
->=20
-> OK
+> On Thu, 25 Feb 2016, Peter Ujfalusi wrote:
+> =
 
+>> Add missing data for all McASP ports for the dra7 family
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> =
 
-> +	baud =3D tty_termios_baud_rate(termios);
-> > > +
-> > > +#ifdef BOTHER
-> > > +	/* We only support fixed rates */
+> 1. The patch doesn't set the HWMOD_OPT_CLKS_NEEDED flag for McASP1 and 2, =
 
-So, but if you support only fixed rates, why do you care about BOTHER
-at all?
+> but does set it for McASP4-8.  Could you please confirm that this is =
 
-> > >=C2=A0
-> > I think you can call this unconditionally together with case >
-> > 115200.
->=20
-> The calls are orthogonal. This one deals with the case when BOTHER is
-> defined and set, and we have non-zero rate with BOTHER, but we have
-> zero rate after BOTHER is cleared. So we set 9600 as a sane default
-> speed.
+> intentional, and if so, why?
 
-> +
-> > > +	/* We only support up to 115200 */
-> > > +	if (baud > 115200) {
-> > > +		baud =3D 115200;
-> > > +		tty_termios_encode_baud_rate(termios, baud,
-> > > baud);
-> > > +	}
->=20
-> This one deals with the case when the rate is over 115200. If the
-> previous case has been triggered, this one won't be.
+All should have the HWMOD_OPT_CLKS_NEEDED as both fclk and ahclkx is treated
+as functional clock and needs to be available in order to be able to access
+McASP registers.
+Sorry, I can only test McASP3 and somehow I overlooked this when copy-pasti=
+ng
+the data.
 
-Yeah, but I meant to unconditionally call it just once here every time.
-=C2=A0tty_termios_encode_baud_rate(termios, baud, baud);
+> 2. The patch sets HWMOD_SWSUP_SIDLE for McASP1 and 2, but doesn't set it =
 
-> +static int lp8841_serial_probe(struct platform_device *pdev)
-> > > +{
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct uart_8250_port uart =3D {};
-> >=20
-> > {0}
->=20
-> ---
-> drivers/tty/serial/8250/8250_lp8841.c: In function
-> 'lp8841_serial_probe':
-> drivers/tty/serial/8250/8250_lp8841.c:124:32: warning: excess
-> elements in struct initializer
-> =C2=A0 struct uart_8250_port uart =3D {0};
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0^
-> drivers/tty/serial/8250/8250_lp8841.c:124:32: note: (near
-> initialization for 'uart.port.lock.<anonymous>.rlock.raw_lock')
+> for McASP4-8.  Could you please confirm that this is intentional, and if =
 
-Do you have any warning verbosity enabled? I see a lot of stuff like
-this in the code
+> so, why?  The descriptions of the MODULEMODE fields in SPRUHZ6 look =
 
-$ git grep -n 'struct .* =3D {0};' | wc -l
-338
+> identical.
 
-$ git grep -n 'struct .* =3D { \?0 \?};' | wc -l
-550
+I need to confirm this, but all McASP should have the same set of flags.
 
-( '=E2=80=A6 =3D { 0 };' included)
+> =
 
-> ---
->=20
-> Zero triggers a warning. I'll use memset().
+> 3. Can McASP1,2,3 bus-master onto the L3?  If so, then there should be =
 
-Either will work.
+> "dra7xx_mcasp1__l3_main_1"-style links to indicate this.
 
-> Thanks for lightning fast reviews. I'll resubmit v8 if there is no
-> objections to the points above.
+I need to check this, but I don't think McASP1,2,3 can be bus-master onto L=
+3.
 
-See above.
+> =
 
---=20
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+> =
+
+> - Paul
+
+I can resend the series next week as I'm out of office this week.
+
+-- =
+
+P=E9ter
+
+> =
+
+>> ---
+>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 235 +++++++++++++++++++++++=
++++++++
+>>  1 file changed, 235 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-o=
+map2/omap_hwmod_7xx_data.c
+>> index 3953ad031c43..3bd067afa702 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -1374,6 +1374,50 @@ static struct omap_hwmod_class dra7xx_mcasp_hwmod=
+_class =3D {
+>>  	.sysc	=3D &dra7xx_mcasp_sysc,
+>>  };
+>>  =
+
+>> +/* mcasp1 */
+>> +static struct omap_hwmod_opt_clk mcasp1_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp1_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp1_hwmod =3D {
+>> +	.name		=3D "mcasp1",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "ipu_clkdm",
+>> +	.main_clk	=3D "mcasp1_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_SWSUP_SIDLE,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_IPU_MCASP1_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_IPU_MCASP1_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp1_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp1_opt_clks),
+>> +};
+>> +
+>> +/* mcasp2 */
+>> +static struct omap_hwmod_opt_clk mcasp2_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp2_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp2_hwmod =3D {
+>> +	.name		=3D "mcasp2",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "l4per2_clkdm",
+>> +	.main_clk	=3D "mcasp2_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_SWSUP_SIDLE,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_L4PER2_MCASP2_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_L4PER2_MCASP2_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp2_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp2_opt_clks),
+>> +};
+>> +
+>>  /* mcasp3 */
+>>  static struct omap_hwmod_opt_clk mcasp3_opt_clks[] =3D {
+>>  	{ .role =3D "ahclkx", .clk =3D "mcasp3_ahclkx_mux" },
+>> @@ -1396,6 +1440,116 @@ static struct omap_hwmod dra7xx_mcasp3_hwmod =3D=
+ {
+>>  	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp3_opt_clks),
+>>  };
+>>  =
+
+>> +/* mcasp4 */
+>> +static struct omap_hwmod_opt_clk mcasp4_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp4_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp4_hwmod =3D {
+>> +	.name		=3D "mcasp4",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "l4per2_clkdm",
+>> +	.main_clk	=3D "mcasp4_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_OPT_CLKS_NEEDED,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_L4PER2_MCASP4_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_L4PER2_MCASP4_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp4_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp4_opt_clks),
+>> +};
+>> +
+>> +/* mcasp5 */
+>> +static struct omap_hwmod_opt_clk mcasp5_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp5_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp5_hwmod =3D {
+>> +	.name		=3D "mcasp5",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "l4per2_clkdm",
+>> +	.main_clk	=3D "mcasp5_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_OPT_CLKS_NEEDED,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_L4PER2_MCASP5_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_L4PER2_MCASP5_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp5_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp5_opt_clks),
+>> +};
+>> +
+>> +/* mcasp6 */
+>> +static struct omap_hwmod_opt_clk mcasp6_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp6_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp6_hwmod =3D {
+>> +	.name		=3D "mcasp6",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "l4per2_clkdm",
+>> +	.main_clk	=3D "mcasp6_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_OPT_CLKS_NEEDED,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_L4PER2_MCASP6_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_L4PER2_MCASP6_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp6_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp6_opt_clks),
+>> +};
+>> +
+>> +/* mcasp7 */
+>> +static struct omap_hwmod_opt_clk mcasp7_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp7_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp7_hwmod =3D {
+>> +	.name		=3D "mcasp7",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "l4per2_clkdm",
+>> +	.main_clk	=3D "mcasp7_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_OPT_CLKS_NEEDED,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_L4PER2_MCASP7_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_L4PER2_MCASP7_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp7_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp7_opt_clks),
+>> +};
+>> +
+>> +/* mcasp8 */
+>> +static struct omap_hwmod_opt_clk mcasp8_opt_clks[] =3D {
+>> +	{ .role =3D "ahclkx", .clk =3D "mcasp8_ahclkx_mux" },
+>> +};
+>> +
+>> +static struct omap_hwmod dra7xx_mcasp8_hwmod =3D {
+>> +	.name		=3D "mcasp8",
+>> +	.class		=3D &dra7xx_mcasp_hwmod_class,
+>> +	.clkdm_name	=3D "l4per2_clkdm",
+>> +	.main_clk	=3D "mcasp8_aux_gfclk_mux",
+>> +	.flags		=3D HWMOD_OPT_CLKS_NEEDED,
+>> +	.prcm =3D {
+>> +		.omap4 =3D {
+>> +			.clkctrl_offs =3D DRA7XX_CM_L4PER2_MCASP8_CLKCTRL_OFFSET,
+>> +			.context_offs =3D DRA7XX_RM_L4PER2_MCASP8_CONTEXT_OFFSET,
+>> +			.modulemode   =3D MODULEMODE_SWCTRL,
+>> +		},
+>> +	},
+>> +	.opt_clks	=3D mcasp8_opt_clks,
+>> +	.opt_clks_cnt	=3D ARRAY_SIZE(mcasp8_opt_clks),
+>> +};
+>> +
+>>  /*
+>>   * 'mmc' class
+>>   *
+>> @@ -2703,6 +2857,38 @@ static struct omap_hwmod_ocp_if dra7xx_l3_main_1_=
+_hdmi =3D {
+>>  	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>>  };
+>>  =
+
+>> +/* l4_per2 -> mcasp1 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp1 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp1_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l3_main_1 -> mcasp1 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l3_main_1__mcasp1 =3D {
+>> +	.master		=3D &dra7xx_l3_main_1_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp1_hwmod,
+>> +	.clk		=3D "l3_iclk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_per2 -> mcasp2 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp2 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp2_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l3_main_1 -> mcasp2 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l3_main_1__mcasp2 =3D {
+>> +	.master		=3D &dra7xx_l3_main_1_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp2_hwmod,
+>> +	.clk		=3D "l3_iclk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>>  /* l4_per2 -> mcasp3 */
+>>  static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp3 =3D {
+>>  	.master		=3D &dra7xx_l4_per2_hwmod,
+>> @@ -2719,6 +2905,46 @@ static struct omap_hwmod_ocp_if dra7xx_l3_main_1_=
+_mcasp3 =3D {
+>>  	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>>  };
+>>  =
+
+>> +/* l4_per2 -> mcasp4 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp4 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp4_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_per2 -> mcasp5 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp5 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp5_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_per2 -> mcasp6 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp6 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp6_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_per2 -> mcasp7 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp7 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp7_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>> +/* l4_per2 -> mcasp8 */
+>> +static struct omap_hwmod_ocp_if dra7xx_l4_per2__mcasp8 =3D {
+>> +	.master		=3D &dra7xx_l4_per2_hwmod,
+>> +	.slave		=3D &dra7xx_mcasp8_hwmod,
+>> +	.clk		=3D "l4_root_clk_div",
+>> +	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+>> +};
+>> +
+>>  /* l4_per1 -> elm */
+>>  static struct omap_hwmod_ocp_if dra7xx_l4_per1__elm =3D {
+>>  	.master		=3D &dra7xx_l4_per1_hwmod,
+>> @@ -3461,8 +3687,17 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp=
+_ifs[] __initdata =3D {
+>>  	&dra7xx_l4_wkup__dcan1,
+>>  	&dra7xx_l4_per2__dcan2,
+>>  	&dra7xx_l4_per2__cpgmac0,
+>> +	&dra7xx_l4_per2__mcasp1,
+>> +	&dra7xx_l3_main_1__mcasp1,
+>> +	&dra7xx_l4_per2__mcasp2,
+>> +	&dra7xx_l3_main_1__mcasp2,
+>>  	&dra7xx_l4_per2__mcasp3,
+>>  	&dra7xx_l3_main_1__mcasp3,
+>> +	&dra7xx_l4_per2__mcasp4,
+>> +	&dra7xx_l4_per2__mcasp5,
+>> +	&dra7xx_l4_per2__mcasp6,
+>> +	&dra7xx_l4_per2__mcasp7,
+>> +	&dra7xx_l4_per2__mcasp8,
+>>  	&dra7xx_gmac__mdio,
+>>  	&dra7xx_l4_cfg__dma_system,
+>>  	&dra7xx_l3_main_1__tpcc,
+>> -- =
+
+>> 2.7.1
+>>
+> =
+
+> =
+
+> - Paul
+> =
