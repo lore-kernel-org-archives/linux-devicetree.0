@@ -1,88 +1,103 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: Re: [PATCH 10/11] ARM: DRA7: hwmod: Add data for
- McASP1/2/4/5/6/7/8
-Date: Tue, 1 Mar 2016 17:01:25 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1603011657260.14948@utopia.booyaka.com>
-References: <1456411827-23962-1-git-send-email-peter.ujfalusi@ti.com> <1456411827-23962-11-git-send-email-peter.ujfalusi@ti.com> <alpine.DEB.2.02.1603010900590.14948@utopia.booyaka.com> <56D5C6B1.6040005@ti.com>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7] serial: support for 16550A serial ports on LP-8x4x
+Date: Tue, 01 Mar 2016 20:14:32 +0300
+Message-ID: <1456852472.23036.124.camel@gmail.com>
+References: <1456589675-25377-1-git-send-email-ynvich@gmail.com>
+	 <1456781209-11390-1-git-send-email-ynvich@gmail.com>
+	 <1456830401.13244.189.camel@linux.intel.com>
+	 <1456849504.23036.108.camel@gmail.com>
+	 <1456850782.13244.208.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="843723315-543039208-1456851538=:14948"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D5C6B1.6040005@ti.com>
-Content-ID: <alpine.DEB.2.02.1603011659040.14948@utopia.booyaka.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456850782.13244.208.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alan Cox <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mans Rullgard <mans-2StjZFpD7GcAvxtiuMwx3w@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:SERIAL DRIVERS" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---843723315-543039208-1456851538=:14948
-Content-Type: TEXT/PLAIN; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <alpine.DEB.2.02.1603011659041.14948@utopia.booyaka.com>
-
-Hi P=E9ter,
-
-On Tue, 1 Mar 2016, Peter Ujfalusi wrote:
-
-> Hi Paul,
+On Tue, 2016-03-01 at 18:46 +0200, Andy Shevchenko wrote:
+> On Tue, 2016-03-01 at 19:25 +0300, Sergei Ianovich wrote:
+> > On Tue, 2016-03-01 at 13:06 +0200, Andy Shevchenko wrote:
+> > > On Tue, 2016-03-01 at 00:26 +0300, Sergei Ianovich wrote:
 >=20
-> On 03/01/2016 11:11 AM, Paul Walmsley wrote:
-> > Hi P=E9ter
-> >=20
-> > A few questions:
-> >=20
-> > On Thu, 25 Feb 2016, Peter Ujfalusi wrote:
-> >=20
-> >> Add missing data for all McASP ports for the dra7 family
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> >=20
-> > 1. The patch doesn't set the HWMOD_OPT_CLKS_NEEDED flag for McASP1 and =
-2,=20
-> > but does set it for McASP4-8.  Could you please confirm that this is=20
-> > intentional, and if so, why?
+> > > > +	len &=3D 3;
 >=20
-> All should have the HWMOD_OPT_CLKS_NEEDED as both fclk and ahclkx is trea=
-ted
-> as functional clock and needs to be available in order to be able to acce=
-ss
-> McASP registers.
-> Sorry, I can only test McASP3 and somehow I overlooked this when copy-pas=
-ting
-> the data.
+> Mask as well to be defined.
+
+Sure.
+
+> So, but if you support only fixed rates, why do you care about BOTHER
+> at all?
+
+If BOTHER is defined,=C2=A0tty_termios_baud_rate()
+and=C2=A0tty_termios_encode_baud_rate() allow non-standard baud rates. =
+I
+should clear it from=C2=A0c_cflag to indicate I don't support it.
+
+> > > > =C2=A0
+> > > I think you can call this unconditionally together with case >
+> > > 115200.
+> >=20
+> > The calls are orthogonal. This one deals with the case when BOTHER
+> > is
+> > defined and set, and we have non-zero rate with BOTHER, but we have
+> > zero rate after BOTHER is cleared. So we set 9600 as a sane default
+> > speed.
+
+> >=20
+> > This one deals with the case when the rate is over 115200. If the
+> > previous case has been triggered, this one won't be.
+>=20
+> Yeah, but I meant to unconditionally call it just once here every
+> time.
+
+I see. It saves a few lines.
+
+> > ---
+> > drivers/tty/serial/8250/8250_lp8841.c: In function
+> > 'lp8841_serial_probe':
+> > drivers/tty/serial/8250/8250_lp8841.c:124:32: warning: excess
+> > elements in struct initializer
+> > =C2=A0 struct uart_8250_port uart =3D {0};
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0^
+> > drivers/tty/serial/8250/8250_lp8841.c:124:32: note: (near
+> > initialization for 'uart.port.lock.<anonymous>.rlock.raw_lock')
+>=20
+> Do you have any warning verbosity enabled? I see a lot of stuff like
+> this in the code
+
+Plain `make`.
+
+The warning seems to be the result of initializing a spinlock with
+zero. Spinlocks are intentionally obfuscated, but I didn't investigate
+further.
+
+> $ git grep -n 'struct .* =3D {0};' | wc -l
+> 338
+>=20
+> $ git grep -n 'struct .* =3D { \?0 \?};' | wc -l
+> 550
+>=20
+> ( '=E2=80=A6 =3D { 0 };' included)
+
+The first structure member is most likely not a spinlock in those
+cases.
+
+> > ---
+> >=20
+> > Zero triggers a warning. I'll use memset().
+>=20
+> Either will work.
 
 OK
 
-> > 2. The patch sets HWMOD_SWSUP_SIDLE for McASP1 and 2, but doesn't set i=
-t=20
-> > for McASP4-8.  Could you please confirm that this is intentional, and i=
-f=20
-> > so, why?  The descriptions of the MODULEMODE fields in SPRUHZ6 look=20
-> > identical.
->=20
-> I need to confirm this, but all McASP should have the same set of flags.
-
-OK.  Looking at McASP3 data this morning, they probably shouldn't need=20
-HWMOD_SWSUP_SIDLE, but probably all need=20
-
-                        .modulemode   =3D MODULEMODE_SWCTRL,
-
-> > 3. Can McASP1,2,3 bus-master onto the L3?  If so, then there should be=
-=20
-> > "dra7xx_mcasp1__l3_main_1"-style links to indicate this.
->=20
-> I need to check this, but I don't think McASP1,2,3 can be bus-master onto=
- L3.
-
-OK.  When you get back, maybe doublecheck this - it looks to me from=20
-SPRUHZ6 that McASP1-3 have built-in DMA controllers.
-
-> I can resend the series next week as I'm out of office this week.
-
-That's fine.  It's most likely v4.7 material at this point.
-
-
-- Paul
---843723315-543039208-1456851538=:14948--
+The only remaining open point is BOTHER handling.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
