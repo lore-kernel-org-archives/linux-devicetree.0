@@ -1,977 +1,2130 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v6 03/11] drm/hisilicon: Add crtc driver for ADE
-Date: Tue, 1 Mar 2016 17:20:44 +0800
-Message-ID: <CAGd==04H1iuvFR_GDDAQj7h7bQo4+muW5mMN7s_jrum_eamOJw@mail.gmail.com>
-References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
-	<1456476028-36880-4-git-send-email-xinliang.liu@linaro.org>
-	<56D49262.5030106@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <56D49262.5030106@codeaurora.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh@kernel.org>, Daniel Stone <daniel@fooishbar.org>, David Airlie <airlied@linux.ie>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Emil Velikov <emil.l.velikov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, Andy Green <andy.green@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Xu Wei <xuwei5@hisilicon.com>, Wang Fei <w.f@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, Bintian Wang <bintian.wang@huawei.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yiping Xu <xuyiping@hisilicon.com>, XinWei Kong <kong.kongxinwei@his>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Tue,  1 Mar 2016 09:34:09 +0000
+Message-ID: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: mkl@pengutronix.de, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, corbet@lwn.net
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, geert+renesas@glider.be, chris.paterson2@renesas.com, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds support for the CAN FD controller found in Renesas R-Car
+SoCs. The controller operates in CAN FD mode by default. Two test modes
+are available and can be enabled by the "rcar_canfd.testmode" module
+parameter. Refer to Documentation/kernel-parameters.txt.
 
-On 1 March 2016 at 02:48, Archit Taneja <architt@codeaurora.org> wrote:
->
->
-> On 2/26/2016 2:10 PM, Xinliang Liu wrote:
->>
->> Add crtc funcs and helper funcs for ADE.
->>
->> v6:
->> - Cleanup reg-names dt parsing.
->> v5:
->> - Use syscon to access ADE media NOC QoS registers instread of directly
->>    writing registers.
->> - Use reset controller to reset ADE instead of directly writing registers.
->> v4: None.
->> v3:
->> - Make ade as the master driver.
->> - Use port to connect with encoder.
->> - A few cleanup.
->> v2:
->> - Remove abtraction layer.
->>
->> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
->> ---
->>   drivers/gpu/drm/hisilicon/kirin/Makefile        |   3 +-
->>   drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h | 290 +++++++++++++++
->>   drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c | 452
->> ++++++++++++++++++++++++
->>   drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c |  15 +
->>   drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h |   8 +
->>   5 files changed, 767 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
->>   create mode 100644 drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
->>
->> diff --git a/drivers/gpu/drm/hisilicon/kirin/Makefile
->> b/drivers/gpu/drm/hisilicon/kirin/Makefile
->> index cb346de47d48..2a61ab006ddb 100644
->> --- a/drivers/gpu/drm/hisilicon/kirin/Makefile
->> +++ b/drivers/gpu/drm/hisilicon/kirin/Makefile
->> @@ -1,3 +1,4 @@
->> -kirin-drm-y := kirin_drm_drv.o
->> +kirin-drm-y := kirin_drm_drv.o \
->> +              kirin_drm_ade.o
->>
->>   obj-$(CONFIG_DRM_HISI_KIRIN) += kirin-drm.o
->> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
->> b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
->> new file mode 100644
->> index 000000000000..eb444b899c7b
->> --- /dev/null
->> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
->> @@ -0,0 +1,290 @@
->> +/*
->> + * Copyright (c) 2016 Linaro Limited.
->> + * Copyright (c) 2014-2016 Hisilicon Limited.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + */
->> +
->> +#ifndef __KIRIN_ADE_REG_H__
->> +#define __KIRIN_ADE_REG_H__
->> +
->> +/*
->> + * ADE Registers
->> + */
->> +#define MASK(x)                                (BIT(x) - 1)
->> +
->> +#define ADE_CTRL                       0x0004
->> +#define FRM_END_START_OFST             0
->> +#define FRM_END_START_MASK             MASK(2)
->> +#define ADE_CTRL1                      0x008C
->> +#define AUTO_CLK_GATE_EN_OFST          0
->> +#define AUTO_CLK_GATE_EN               BIT(0)
->> +#define ADE_ROT_SRC_CFG                        0x0010
->> +#define ADE_DISP_SRC_CFG               0x0018
->> +#define ADE_WDMA2_SRC_CFG              0x001C
->> +#define ADE_SEC_OVLY_SRC_CFG           0x0020
->> +#define ADE_WDMA3_SRC_CFG              0x0024
->> +#define ADE_OVLY1_TRANS_CFG            0x002C
->> +#define ADE_EN                         0x0100
->> +#define ADE_DISABLE                    0
->> +#define ADE_ENABLE                     1
->> +#define INTR_MASK_CPU(x)               (0x0C10 + (x) * 0x4)
->> +#define ADE_FRM_DISGARD_CTRL           0x00A4
->> +/* reset and reload regs */
->> +#define ADE_SOFT_RST_SEL(x)            (0x0078 + (x) * 0x4)
->> +#define ADE_RELOAD_DIS(x)              (0x00AC + (x) * 0x4)
->> +#define RDMA_OFST                      0
->> +#define CLIP_OFST                      15
->> +#define SCL_OFST                       21
->> +#define CTRAN_OFST                     24
->> +#define OVLY_OFST                      37 /* 32+5 */
->> +/* channel regs */
->> +#define RD_CH_PE(x)                    (0x1000 + (x) * 0x80)
->> +#define RD_CH_CTRL(x)                  (0x1004 + (x) * 0x80)
->> +#define RD_CH_ADDR(x)                  (0x1008 + (x) * 0x80)
->> +#define RD_CH_SIZE(x)                  (0x100C + (x) * 0x80)
->> +#define RD_CH_STRIDE(x)                        (0x1010 + (x) * 0x80)
->> +#define RD_CH_SPACE(x)                 (0x1014 + (x) * 0x80)
->> +#define RD_CH_PARTIAL_SIZE(x)          (0x1018 + (x) * 0x80)
->> +#define RD_CH_PARTIAL_SPACE(x)         (0x101C + (x) * 0x80)
->> +#define RD_CH_EN(x)                    (0x1020 + (x) * 0x80)
->> +#define RD_CH_STATUS(x)                        (0x1024 + (x) * 0x80)
->> +#define RD_CH_DISP_CTRL                        0x1404
->> +#define RD_CH_DISP_ADDR                        0x1408
->> +#define RD_CH_DISP_SIZE                        0x140C
->> +#define RD_CH_DISP_STRIDE              0x1410
->> +#define RD_CH_DISP_SPACE               0x1414
->> +#define RD_CH_DISP_EN                  0x142C
->> +/* clip regs */
->> +#define ADE_CLIP_DISABLE(x)            (0x6800 + (x) * 0x100)
->> +#define ADE_CLIP_SIZE0(x)              (0x6804 + (x) * 0x100)
->> +#define ADE_CLIP_SIZE1(x)              (0x6808 + (x) * 0x100)
->> +#define ADE_CLIP_SIZE2(x)              (0x680C + (x) * 0x100)
->> +#define ADE_CLIP_CFG_OK(x)             (0x6810 + (x) * 0x100)
->> +/* scale regs */
->> +#define ADE_SCL1_MUX_CFG               0x000C
->> +#define ADE_SCL2_SRC_CFG               0x0014
->> +#define ADE_SCL3_MUX_CFG               0x0008
->> +#define ADE_SCL_CTRL(x)                        (0x3000 + (x) * 0x800)
->> +#define ADE_SCL_HSP(x)                 (0x3004 + (x) * 0x800)
->> +#define ADE_SCL_UV_HSP(x)              (0x3008 + (x) * 0x800)
->> +#define ADE_SCL_VSP(x)                 (0x300C + (x) * 0x800)
->> +#define ADE_SCL_UV_VSP(x)              (0x3010 + (x) * 0x800)
->> +#define ADE_SCL_ORES(x)                        (0x3014 + (x) * 0x800)
->> +#define ADE_SCL_IRES(x)                        (0x3018 + (x) * 0x800)
->> +#define ADE_SCL_START(x)               (0x301C + (x) * 0x800)
->> +#define ADE_SCL_ERR(x)                 (0x3020 + (x) * 0x800)
->> +#define ADE_SCL_PIX_OFST(x)            (0x3024 + (x) * 0x800)
->> +#define ADE_SCL_UV_PIX_OFST(x)         (0x3028 + (x) * 0x800)
->> +#define ADE_SCL_COEF_CLR(x)            (0x3030 + (x) * 0x800)
->> +#define ADE_SCL_HCOEF(x, m, n)         (0x3100 + (x) * 0x800 + \
->> +                                       12 * (m) + 4 * (n))
->> +#define ADE_SCL_VCOEF(x, i, j)         (0x340C + (x) * 0x800 + \
->> +                                       12 * (i) + 4 * (j))
->> +/* ctran regs */
->> +#define ADE_CTRAN5_TRANS_CFG           0x0040
->> +#define ADE_CTRAN_DIS(x)               (0x5004 + (x) * 0x100)
->> +#define CTRAN_BYPASS_ON                        1
->> +#define CTRAN_BYPASS_OFF               0
->> +#define ADE_CTRAN_MODE_CHOOSE(x)       (0x5008 + (x) * 0x100)
->> +#define ADE_CTRAN_STAT(x)              (0x500C + (x) * 0x100)
->> +#define ADE_CTRAN_CHDC0(x)             (0x5010 + (x) * 0x100)
->> +#define ADE_CTRAN_CHDC1(x)             (0x5014 + (x) * 0x100)
->> +#define ADE_CTRAN_CHDC2(x)             (0x5018 + (x) * 0x100)
->> +#define ADE_CTRAN_CHDC3(x)             (0x501C + (x) * 0x100)
->> +#define ADE_CTRAN_CHDC4(x)             (0x5020 + (x) * 0x100)
->> +#define ADE_CTRAN_CHDC5(x)             (0x5024 + (x) * 0x100)
->> +#define ADE_CTRAN_CSC0(x)              (0x5028 + (x) * 0x100)
->> +#define ADE_CTRAN_CSC1(x)              (0x502C + (x) * 0x100)
->> +#define ADE_CTRAN_CSC2(x)              (0x5030 + (x) * 0x100)
->> +#define ADE_CTRAN_CSC3(x)              (0x5034 + (x) * 0x100)
->> +#define ADE_CTRAN_CSC4(x)              (0x5038 + (x) * 0x100)
->> +#define ADE_CTRAN_IMAGE_SIZE(x)                (0x503C + (x) * 0x100)
->> +#define ADE_CTRAN_CFG_OK(x)            (0x5040 + (x) * 0x100)
->> +/* overlay regs */
->> +#define ADE_OVLY_ALPHA_ST              0x2000
->> +#define ADE_OVLY_CH_XY0(x)             (0x2004 + (x) * 4)
->> +#define ADE_OVLY_CH_XY1(x)             (0x2024 + (x) * 4)
->> +#define ADE_OVLY_CH_CTL(x)             (0x204C + (x) * 4)
->> +#define ADE_OVLY_OUTPUT_SIZE(x)                (0x2070 + (x) * 8)
->> +#define OUTPUT_XSIZE_OFST              16
->> +#define ADE_OVLY_BASE_COLOR(x)         (0x2074 + (x) * 8)
->> +#define ADE_OVLYX_CTL(x)               (0x209C + (x) * 4)
->> +#define ADE_OVLY_CTL                   0x0098
->> +#define CH_OVLY_SEL_OFST(x)            ((x) * 4)
->> +#define CH_OVLY_SEL_MASK               MASK(2)
->> +#define CH_OVLY_SEL_VAL(x)             ((x) + 1)
->> +#define CH_ALP_MODE_OFST               0
->> +#define CH_ALP_SEL_OFST                        2
->> +#define CH_UNDER_ALP_SEL_OFST          4
->> +#define CH_EN_OFST                     6
->> +#define CH_ALP_GBL_OFST                        15
->> +#define CH_SEL_OFST                    28
->> +
->> +/*
->> + * LDI Registers
->> + */
->> +#define LDI_HRZ_CTRL0                  0x7400
->> +#define HBP_OFST                       20
->> +#define LDI_HRZ_CTRL1                  0x7404
->> +#define LDI_VRT_CTRL0                  0x7408
->> +#define VBP_OFST                       20
->> +#define LDI_VRT_CTRL1                  0x740C
->> +#define LDI_PLR_CTRL                   0x7410
->> +#define FLAG_NVSYNC                    BIT(0)
->> +#define FLAG_NHSYNC                    BIT(1)
->> +#define FLAG_NPIXCLK                   BIT(2)
->> +#define FLAG_NDE                       BIT(3)
->> +#define LDI_DSP_SIZE                   0x7414
->> +#define VSIZE_OFST                     20
->> +#define LDI_INT_EN                     0x741C
->> +#define FRAME_END_INT_EN_OFST          1
->> +#define LDI_CTRL                       0x7420
->> +#define BPP_OFST                       3
->> +#define DATA_GATE_EN                   BIT(2)
->> +#define LDI_EN                         BIT(0)
->> +#define LDI_ORG_INT                    0x7424
->> +#define LDI_MSK_INT                    0x7428
->> +#define LDI_INT_CLR                    0x742C
->> +#define LDI_WORK_MODE                  0x7430
->> +#define LDI_DE_SPACE_LOW               0x7438
->> +#define LDI_MCU_INTS                   0x7450
->> +#define LDI_MCU_INTE                   0x7454
->> +#define LDI_MCU_INTC                   0x7458
->> +#define LDI_HDMI_DSI_GT                        0x7434
->
->
-> Maybe place this one after LDI_WORK_MODE to maintain
-> the increasing order?
+CAN FD mode supports both Classical CAN & CAN FD frame formats. The
+controller supports ISO 11898-1:2015 CAN FD format only.
 
-Agree, will fix in next version.
+This controller supports two channels and the driver can enable either
+or both of the channels.
 
->
->> +
->> +/*
->> + * ADE media bus service regs
->> + */
->> +#define ADE0_QOSGENERATOR_MODE         0x010C
->> +#define QOSGENERATOR_MODE_MASK         MASK(2)
->> +#define ADE0_QOSGENERATOR_EXTCONTROL   0x0118
->> +#define SOCKET_QOS_EN                  BIT(0)
->> +#define ADE1_QOSGENERATOR_MODE         0x020C
->> +#define ADE1_QOSGENERATOR_EXTCONTROL   0x0218
->> +
->> +/*
->> + * ADE regs relevant enums
->> + */
->> +enum frame_end_start {
->> +       /* regs take effective in every vsync */
->
->
-> s/effective/effect
+Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs (one
+per channel) for transmission. Rx filter rules are configured to the
+minimum (one per channel) and it accepts Standard, Extended, Data &
+Remote Frame combinations.
 
-will fix in next version.
+Note: There are few documentation errors in R-Car Gen3 Hardware User
+Manual v0.5E with respect to CAN FD controller. They are listed below:
 
->
->> +       REG_EFFECTIVE_IN_VSYNC = 0,
->> +       /* regs take effective in fist ade en and every frame end */
->> +       REG_EFFECTIVE_IN_ADEEN_FRMEND,
->> +       /* regs take effective in ade en immediately */
->> +       REG_EFFECTIVE_IN_ADEEN,
->> +       /* regs take effective in first vsync and every frame end */
->> +       REG_EFFECTIVE_IN_VSYNC_FRMEND
->> +};
->> +
->> +enum ade_fb_format {
->> +       ADE_RGB_565 = 0,
->> +       ADE_BGR_565,
->> +       ADE_XRGB_8888,
->> +       ADE_XBGR_8888,
->> +       ADE_ARGB_8888,
->> +       ADE_ABGR_8888,
->> +       ADE_RGBA_8888,
->> +       ADE_BGRA_8888,
->> +       ADE_RGB_888,
->> +       ADE_BGR_888 = 9,
->> +       ADE_FORMAT_NOT_SUPPORT = 800
->
->
-> ADE_FORMAT_UNSUPPORTED would be better here.
+1. CAN FD interrupt numbers 29 & 30 are listed as per channel
+interrupts. However, they are common to both channels (i.e.) they are
+global and channel interrupts respectively.
 
-Agree, will fix in next version.
+2. CANFD clock is derived from PLL1. This is not documented.
 
->
->
->> +};
->> +
->> +enum ade_channel {
->> +       ADE_CH1 = 0,    /* channel 1 for primary plane */
->> +       ADE_CH_NUM
->> +};
->> +
->> +enum ade_scale {
->> +       ADE_SCL1 = 0,
->> +       ADE_SCL2,
->> +       ADE_SCL3,
->> +       ADE_SCL_NUM
->> +};
->> +
->> +enum ade_ctran {
->> +       ADE_CTRAN1 = 0,
->> +       ADE_CTRAN2,
->> +       ADE_CTRAN3,
->> +       ADE_CTRAN4,
->> +       ADE_CTRAN5,
->> +       ADE_CTRAN6,
->> +       ADE_CTRAN_NUM
->> +};
->> +
->> +enum ade_overlay {
->> +       ADE_OVLY1 = 0,
->> +       ADE_OVLY2,
->> +       ADE_OVLY3,
->> +       ADE_OVLY_NUM
->> +};
->> +
->> +enum ade_alpha_mode {
->> +       ADE_ALP_GLOBAL = 0,
->> +       ADE_ALP_PIXEL,
->> +       ADE_ALP_PIXEL_AND_GLB
->> +};
->> +
->> +enum ade_alpha_blending_mode {
->> +       ADE_ALP_MUL_COEFF_0 = 0,        /* alpha */
->> +       ADE_ALP_MUL_COEFF_1,            /* 1-alpha */
->> +       ADE_ALP_MUL_COEFF_2,            /* 0 */
->> +       ADE_ALP_MUL_COEFF_3             /* 1 */
->> +};
->> +
->> +/*
->> + * LDI regs relevant enums
->> + */
->> +enum dsi_pclk_en {
->> +       DSI_PCLK_ON = 0,
->> +       DSI_PCLK_OFF
->> +};
->> +
->> +enum ldi_output_format {
->> +       LDI_OUT_RGB_565 = 0,
->> +       LDI_OUT_RGB_666,
->> +       LDI_OUT_RGB_888
->> +};
->> +
->> +enum ldi_work_mode {
->> +       TEST_MODE = 0,
->> +       NORMAL_MODE
->> +};
->> +
->> +enum ldi_input_source {
->> +       DISP_SRC_NONE = 0,
->> +       DISP_SRC_OVLY2,
->> +       DISP_SRC_DISP,
->> +       DISP_SRC_ROT,
->> +       DISP_SRC_SCL2
->> +};
->> +
->> +/*
->> + * ADE media bus service relevant enums
->> + */
->> +enum qos_generator_mode {
->> +       FIXED_MODE = 0,
->> +       LIMITER_MODE,
->> +       BYPASS_MODE,
->> +       REGULATOR_MODE
->> +};
->> +
->> +/*
->> + * Register Write/Read Helper functions
->> + */
->> +static inline void ade_update_bits(void __iomem *addr, u32 bit_start,
->> +                                  u32 mask, u32 val)
->> +{
->> +       u32 tmp, orig;
->> +
->> +       orig = readl(addr);
->> +       tmp = orig & ~(mask << bit_start);
->> +       tmp |= (val & mask) << bit_start;
->> +       writel(tmp, addr);
->> +}
->> +
->> +#endif
->> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
->> b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
->> new file mode 100644
->> index 000000000000..bb93616dcf3d
->> --- /dev/null
->> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
->> @@ -0,0 +1,452 @@
->> +/*
->> + * Hisilicon Hi6220 SoC ADE(Advanced Display Engine)'s crtc&plane driver
->> + *
->> + * Copyright (c) 2016 Linaro Limited.
->> + * Copyright (c) 2014-2016 Hisilicon Limited.
->> + *
->> + * Author:
->> + *     Xinliang Liu <z.liuxinliang@hisilicon.com>
->> + *     Xinliang Liu <xinliang.liu@linaro.org>
->> + *     Xinwei Kong <kong.kongxinwei@hisilicon.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + */
->> +
->> +#include <linux/bitops.h>
->> +#include <linux/clk.h>
->> +#include <video/display_timing.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reset.h>
->> +
->> +#include <drm/drmP.h>
->> +#include <drm/drm_crtc.h>
->> +#include <drm/drm_crtc_helper.h>
->> +#include <drm/drm_atomic.h>
->> +#include <drm/drm_atomic_helper.h>
->> +
->> +#include "kirin_drm_drv.h"
->> +#include "kirin_ade_reg.h"
->> +
->> +#define to_ade_crtc(crtc) \
->> +       container_of(crtc, struct ade_crtc, base)
->> +
->> +struct ade_hw_ctx {
->> +       void __iomem  *base;
->> +       struct regmap *noc_regmap;
->> +       struct clk *ade_core_clk;
->> +       struct clk *media_noc_clk;
->> +       struct clk *ade_pix_clk;
->> +       struct reset_control *reset;
->> +       bool power_on;
->> +       int irq;
->> +};
->> +
->> +struct ade_crtc {
->> +       struct drm_crtc base;
->> +       struct ade_hw_ctx *ctx;
->> +       bool enable;
->> +       u32 out_format;
->> +};
->> +
->> +struct ade_data {
->> +       struct ade_crtc acrtc;
->> +       struct ade_hw_ctx ctx;
->> +};
->> +
->> +static void ade_update_reload_bit(void __iomem *base, u32 bit_num, u32
->> val)
->> +{
->> +       u32 bit_ofst, reg_num;
->> +
->> +       bit_ofst = bit_num % 32;
->> +       reg_num = bit_num / 32;
->> +
->> +       ade_update_bits(base + ADE_RELOAD_DIS(reg_num), bit_ofst,
->> +                       MASK(1), !!val);
->> +}
->> +
->> +static u32 ade_read_reload_bit(void __iomem *base, u32 bit_num)
->> +{
->> +       u32 tmp, bit_ofst, reg_num;
->> +
->> +       bit_ofst = bit_num % 32;
->> +       reg_num = bit_num / 32;
->> +
->> +       tmp = readl(base + ADE_RELOAD_DIS(reg_num));
->> +       return !!(BIT(bit_ofst) & tmp);
->> +}
->> +
->> +static void ade_init(struct ade_hw_ctx *ctx)
->> +{
->> +       void __iomem *base = ctx->base;
->> +
->> +       /* enable clk gate */
->> +       ade_update_bits(base + ADE_CTRL1, AUTO_CLK_GATE_EN_OFST,
->> +                       AUTO_CLK_GATE_EN, ADE_ENABLE);
->> +       /* clear overlay */
->> +       writel(0, base + ADE_OVLY1_TRANS_CFG);
->> +       writel(0, base + ADE_OVLY_CTL);
->> +       writel(0, base + ADE_OVLYX_CTL(ADE_OVLY2));
->> +       /* clear reset and reload regs */
->> +       writel(MASK(32), base + ADE_SOFT_RST_SEL(0));
->> +       writel(MASK(32), base + ADE_SOFT_RST_SEL(1));
->> +       writel(MASK(32), base + ADE_RELOAD_DIS(0));
->> +       writel(MASK(32), base + ADE_RELOAD_DIS(1));
->> +       /* for video mode, that ade registers
->> +        * became effective at frame end
->
->
-> s/became/become
->
-> Consider re-writing this comment
+3. CANFD clock is further divided by (1/2) within the CAN FD controller.
+This is not documented.
 
-Agree, will fix in next version.
+4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
+is mentioned 4 Tq in the manual.
 
->
->
->> +        */
->> +       ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
->> +                       FRM_END_START_MASK,
->> REG_EFFECTIVE_IN_ADEEN_FRMEND);
->> +}
->> +
->> +static void ade_ldi_set_mode(struct ade_crtc *acrtc,
->> +                            struct drm_display_mode *mode,
->> +                            struct drm_display_mode *adj_mode)
->> +{
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +       void __iomem *base = ctx->base;
->> +       u32 width = mode->hdisplay;
->> +       u32 height = mode->vdisplay;
->> +       u32 hfp, hbp, hsw, vfp, vbp, vsw;
->> +       u32 plr_flags;
->> +       int ret;
->> +
->> +       plr_flags = (mode->flags & DRM_MODE_FLAG_NVSYNC) ? FLAG_NVSYNC :
->> 0;
->> +       plr_flags |= (mode->flags & DRM_MODE_FLAG_NHSYNC) ? FLAG_NHSYNC :
->> 0;
->> +       hfp = mode->hsync_start - mode->hdisplay;
->> +       hbp = mode->htotal - mode->hsync_end;
->> +       hsw = mode->hsync_end - mode->hsync_start;
->> +       vfp = mode->vsync_start - mode->vdisplay;
->> +       vbp = mode->vtotal - mode->vsync_end;
->> +       vsw = mode->vsync_end - mode->vsync_start;
->> +       if (vsw > 15) {
->> +               DRM_DEBUG_DRIVER("vsw exceeded 15\n");
->> +               vsw = 15;
->> +       }
->> +
->> +       writel((hbp << HBP_OFST) | hfp, base + LDI_HRZ_CTRL0);
->> +        /* the configured value is actual value - 1 */
->> +       writel(hsw - 1, base + LDI_HRZ_CTRL1);
->> +       writel((vbp << VBP_OFST) | vfp, base + LDI_VRT_CTRL0);
->> +        /* the configured value is actual value - 1 */
->> +       writel(vsw - 1, base + LDI_VRT_CTRL1);
->> +        /* the configured value is actual value - 1 */
->> +       writel(((height - 1) << VSIZE_OFST) | (width - 1),
->> +              base + LDI_DSP_SIZE);
->> +       writel(plr_flags, base + LDI_PLR_CTRL);
->> +
->> +       /* Success should be guaranteed in mode_valid call back,
->> +        * so failer shouldn't happen here
->
->
-> s/failer/failure
->
-> Also, please use the standard way of writing multiple lines of
-> comments here and elsewhere in the driver.
+5. The maximum number of message RAM area the controller can use is 3584
+bytes. It is mentioned 10752 bytes in the manual.
 
-The standard way should be:
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+---
+Hi All,
 
-/*
- * Some comments.
- */
+   This work is based on linux-can-next (tag:linux-can-next-for-4.6-20160226) with
+   the following patch applied on top
 
-right?
+   [PATCH] can: rcar_can: Add r8a7795 support
 
->
->
->
->> +        */
->> +       ret = clk_set_rate(ctx->ade_pix_clk, mode->clock * 1000);
->> +       if (ret)
->> +               DRM_ERROR("failed to set pixel clk %dHz (%d)\n",
->> +                         mode->clock * 1000, ret);
->> +       adj_mode->clock = clk_get_rate(ctx->ade_pix_clk) / 1000;
->> +
->> +       /* ctran6 setting */
->> +       writel(CTRAN_BYPASS_ON, base + ADE_CTRAN_DIS(ADE_CTRAN6));
->> +        /* the configured value is actual value - 1 */
->> +       writel(width * height - 1, base +
->> ADE_CTRAN_IMAGE_SIZE(ADE_CTRAN6));
->> +       ade_update_reload_bit(base, CTRAN_OFST + ADE_CTRAN6, 0);
->> +
->> +       DRM_DEBUG_DRIVER("set mode: %dx%d\n", width, height);
->> +}
->> +
->> +static int ade_power_up(struct ade_hw_ctx *ctx)
->> +{
->> +       int ret;
->> +
->> +       ret = clk_prepare_enable(ctx->media_noc_clk);
->> +       if (ret) {
->> +               DRM_ERROR("failed to enable media_noc_clk (%d)\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       ret = reset_control_deassert(ctx->reset);
->> +       if (ret) {
->> +               DRM_ERROR("failed to deassert reset\n");
->> +               return ret;
->> +       }
->> +
->> +       ret = clk_prepare_enable(ctx->ade_core_clk);
->> +       if (ret) {
->> +               DRM_ERROR("failed to enable ade_core_clk (%d)\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       ade_init(ctx);
->> +       ctx->power_on = true;
->> +       return 0;
->> +}
->> +
->> +static void ade_power_down(struct ade_hw_ctx *ctx)
->> +{
->> +       void __iomem *base = ctx->base;
->> +
->> +       writel(ADE_DISABLE, base + LDI_CTRL);
->> +       /* dsi pixel off */
->> +       writel(DSI_PCLK_OFF, base + LDI_HDMI_DSI_GT);
->> +
->> +       clk_disable_unprepare(ctx->ade_core_clk);
->> +       reset_control_assert(ctx->reset);
->> +       clk_disable_unprepare(ctx->media_noc_clk);
->> +       ctx->power_on = false;
->> +}
->> +
->> +static void ade_set_medianoc_qos(struct ade_crtc *acrtc)
->> +{
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +       struct regmap *map = ctx->noc_regmap;
->> +
->> +       regmap_update_bits(map, ADE0_QOSGENERATOR_MODE,
->> +                          QOSGENERATOR_MODE_MASK, BYPASS_MODE);
->> +       regmap_update_bits(map, ADE0_QOSGENERATOR_EXTCONTROL,
->> +                          SOCKET_QOS_EN, SOCKET_QOS_EN);
->> +
->> +       regmap_update_bits(map, ADE1_QOSGENERATOR_MODE,
->> +                          QOSGENERATOR_MODE_MASK, BYPASS_MODE);
->> +       regmap_update_bits(map, ADE1_QOSGENERATOR_EXTCONTROL,
->> +                          SOCKET_QOS_EN, SOCKET_QOS_EN);
->> +}
->> +
->> +static void ade_display_enable(struct ade_crtc *acrtc)
->> +{
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +       void __iomem *base = ctx->base;
->> +       u32 out_fmt = acrtc->out_format;
->> +
->> +       /* display source setting */
->> +       writel(DISP_SRC_OVLY2, base + ADE_DISP_SRC_CFG);
->> +
->> +       /* enable ade */
->> +       writel(ADE_ENABLE, base + ADE_EN);
->> +       /* enable ldi */
->> +       writel(NORMAL_MODE, base + LDI_WORK_MODE);
->> +       writel((out_fmt << BPP_OFST) | DATA_GATE_EN | LDI_EN,
->> +              base + LDI_CTRL);
->> +       /* dsi pixel on */
->> +       writel(DSI_PCLK_ON, base + LDI_HDMI_DSI_GT);
->> +}
->> +
->> +static void ade_crtc_enable(struct drm_crtc *crtc)
->> +{
->> +       struct ade_crtc *acrtc = to_ade_crtc(crtc);
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +       int ret;
->> +
->> +       if (acrtc->enable)
->> +               return;
->> +
->> +       if (!ctx->power_on) {
->> +               ret = ade_power_up(ctx);
->> +               if (ret)
->> +                       return;
->> +       }
->> +
->> +       ade_set_medianoc_qos(acrtc);
->> +       ade_display_enable(acrtc);
->> +       acrtc->enable = true;
->> +}
->> +
->> +static void ade_crtc_disable(struct drm_crtc *crtc)
->> +{
->> +       struct ade_crtc *acrtc = to_ade_crtc(crtc);
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +
->> +       if (!acrtc->enable)
->> +               return;
->> +
->> +       ade_power_down(ctx);
->> +       acrtc->enable = false;
->> +}
->> +
->> +static int ade_crtc_atomic_check(struct drm_crtc *crtc,
->> +                                struct drm_crtc_state *state)
->> +{
->> +       /* do nothing */
->> +       return 0;
->> +}
->> +
->> +static void ade_crtc_mode_set_nofb(struct drm_crtc *crtc)
->> +{
->> +       struct ade_crtc *acrtc = to_ade_crtc(crtc);
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +       struct drm_display_mode *mode = &crtc->state->mode;
->> +       struct drm_display_mode *adj_mode = &crtc->state->adjusted_mode;
->> +
->> +       if (!ctx->power_on)
->> +               (void)ade_power_up(ctx);
->> +       ade_ldi_set_mode(acrtc, mode, adj_mode);
->> +}
->> +
->> +static void ade_crtc_atomic_begin(struct drm_crtc *crtc,
->> +                                 struct drm_crtc_state *old_state)
->> +{
->> +       struct ade_crtc *acrtc = to_ade_crtc(crtc);
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +
->> +       if (!ctx->power_on)
->> +               (void)ade_power_up(ctx);
->> +}
->> +
->> +static void ade_crtc_atomic_flush(struct drm_crtc *crtc,
->> +                                 struct drm_crtc_state *old_state)
->> +
->> +{
->> +       struct ade_crtc *acrtc = to_ade_crtc(crtc);
->> +       struct ade_hw_ctx *ctx = acrtc->ctx;
->> +       void __iomem *base = ctx->base;
->> +
->> +       /* only crtc is eanbled regs take effect */
->
->
-> s/eanbled/enabled
+   Pinctrl & Clock related to the controller are already submitted as below:
 
-will fix in next version.
+   https://lkml.org/lkml/2016/2/25/546
+   https://lkml.org/lkml/2016/2/26/452
+   http://www.spinics.net/lists/arm-kernel/msg487238.html
 
->
->> +       if (acrtc->enable) {
->> +               /* flush ade regitsters */
->
-> s/regitsters/registers
->
-> Other than the minor comments:
->
-> Reviewed-by: Archit Taneja <architt@codeaurora.org>
->
+   DT submission will be done separately based on linux-next
 
-Thanks -:)
+Thanks,
+Ramesh
+---
+ .../devicetree/bindings/net/can/rcar_canfd.txt     |   86 +
+ Documentation/kernel-parameters.txt                |    8 +
+ drivers/net/can/Kconfig                            |   10 +
+ drivers/net/can/Makefile                           |    1 +
+ drivers/net/can/rcar_canfd.c                       | 1905 ++++++++++++++++++++
+ 5 files changed, 2010 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+ create mode 100644 drivers/net/can/rcar_canfd.c
 
->
->> +               writel(ADE_ENABLE, base + ADE_EN);
->> +       }
->> +}
->> +
->> +static const struct drm_crtc_helper_funcs ade_crtc_helper_funcs = {
->> +       .enable         = ade_crtc_enable,
->> +       .disable        = ade_crtc_disable,
->> +       .atomic_check   = ade_crtc_atomic_check,
->> +       .mode_set_nofb  = ade_crtc_mode_set_nofb,
->> +       .atomic_begin   = ade_crtc_atomic_begin,
->> +       .atomic_flush   = ade_crtc_atomic_flush,
->> +};
->> +
->> +static const struct drm_crtc_funcs ade_crtc_funcs = {
->> +       .destroy        = drm_crtc_cleanup,
->> +       .set_config     = drm_atomic_helper_set_config,
->> +       .page_flip      = drm_atomic_helper_page_flip,
->> +       .reset          = drm_atomic_helper_crtc_reset,
->> +       .set_property = drm_atomic_helper_crtc_set_property,
->> +       .atomic_duplicate_state = drm_atomic_helper_crtc_duplicate_state,
->> +       .atomic_destroy_state   = drm_atomic_helper_crtc_destroy_state,
->> +};
->> +
->> +static int ade_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
->> +                        struct drm_plane *plane)
->> +{
->> +       struct kirin_drm_private *priv = dev->dev_private;
->> +       struct device_node *port;
->> +       int ret;
->> +
->> +       /* set crtc port so that
->> +        * drm_of_find_possible_crtcs call works
->> +        */
->> +       port = of_get_child_by_name(dev->dev->of_node, "port");
->> +       if (!port) {
->> +               DRM_ERROR("no port node found in %s\n",
->> +                         dev->dev->of_node->full_name);
->> +               return -EINVAL;
->> +       }
->> +       of_node_put(port);
->> +       crtc->port = port;
->> +
->> +       ret = drm_crtc_init_with_planes(dev, crtc, plane, NULL,
->> +                                       &ade_crtc_funcs, NULL);
->> +       if (ret) {
->> +               DRM_ERROR("failed to init crtc.\n");
->> +               return ret;
->> +       }
->> +
->> +       drm_crtc_helper_add(crtc, &ade_crtc_helper_funcs);
->> +       priv->crtc[drm_crtc_index(crtc)] = crtc;
->> +
->> +       return 0;
->> +}
->> +
->> +static int ade_dts_parse(struct platform_device *pdev, struct ade_hw_ctx
->> *ctx)
->> +{
->> +       struct resource *res;
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *np = pdev->dev.of_node;
->> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       ctx->base = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(ctx->base)) {
->> +               DRM_ERROR("failed to remap ade io base\n");
->> +               return  PTR_ERR(ctx->base);
->> +       }
->> +
->> +       ctx->reset = devm_reset_control_get(dev, NULL);
->> +       if (IS_ERR(ctx->reset))
->> +               return PTR_ERR(ctx->reset);
->> +
->> +       ctx->noc_regmap =
->> +               syscon_regmap_lookup_by_phandle(np,
->> "hisilicon,noc-syscon");
->> +       if (IS_ERR(ctx->noc_regmap)) {
->> +               DRM_ERROR("failed to get noc regmap\n");
->> +               return PTR_ERR(ctx->noc_regmap);
->> +       }
->> +
->> +       ctx->irq = platform_get_irq(pdev, 0);
->> +       if (ctx->irq < 0) {
->> +               DRM_ERROR("failed to get irq\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       ctx->ade_core_clk = devm_clk_get(dev, "clk_ade_core");
->> +       if (!ctx->ade_core_clk) {
->> +               DRM_ERROR("failed to parse clk ADE_CORE\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       ctx->media_noc_clk = devm_clk_get(dev, "clk_codec_jpeg");
->> +       if (!ctx->media_noc_clk) {
->> +               DRM_ERROR("failed to parse clk CODEC_JPEG\n");
->> +           return -ENODEV;
->> +       }
->> +
->> +       ctx->ade_pix_clk = devm_clk_get(dev, "clk_ade_pix");
->> +       if (!ctx->ade_pix_clk) {
->> +               DRM_ERROR("failed to parse clk ADE_PIX\n");
->> +           return -ENODEV;
->> +       }
->> +
->> +       return 0;
->> +}
->> +
->> +int ade_drm_init(struct drm_device *dev)
->> +{
->> +       struct platform_device *pdev = dev->platformdev;
->> +       struct ade_data *ade;
->> +       struct ade_hw_ctx *ctx;
->> +       struct ade_crtc *acrtc;
->> +       int ret;
->> +
->> +       ade = devm_kzalloc(dev->dev, sizeof(*ade), GFP_KERNEL);
->> +       if (!ade) {
->> +               DRM_ERROR("failed to alloc ade_data\n");
->> +               return -ENOMEM;
->> +       }
->> +       platform_set_drvdata(pdev, ade);
->> +
->> +       ctx = &ade->ctx;
->> +       acrtc = &ade->acrtc;
->> +       acrtc->ctx = ctx;
->> +       acrtc->out_format = LDI_OUT_RGB_888;
->> +
->> +       ret = ade_dts_parse(pdev, ctx);
->> +       if (ret)
->> +               return ret;
->> +
->> +       return 0;
->> +}
->> +
->> +void ade_drm_cleanup(struct drm_device *dev)
->> +{
->> +       struct platform_device *pdev = dev->platformdev;
->> +       struct ade_data *ade = platform_get_drvdata(pdev);
->> +       struct drm_crtc *crtc = &ade->acrtc.base;
->> +
->> +       drm_crtc_cleanup(crtc);
->> +}
->> +
->> +const struct kirin_dc_ops ade_dc_ops = {
->> +       .init = ade_drm_init,
->> +       .cleanup = ade_drm_cleanup
->> +};
->> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
->> b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
->> index 789ebd1f5922..055729c1889c 100644
->> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
->> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c
->> @@ -30,8 +30,12 @@ static struct kirin_dc_ops *dc_ops;
->>
->>   static int kirin_drm_kms_cleanup(struct drm_device *dev)
->>   {
->> +       struct kirin_drm_private *priv = dev->dev_private;
->> +
->>         dc_ops->cleanup(dev);
->>         drm_mode_config_cleanup(dev);
->> +       devm_kfree(dev->dev, priv);
->> +       dev->dev_private = NULL;
->>
->>         return 0;
->>   }
->> @@ -55,8 +59,14 @@ static void kirin_drm_mode_config_init(struct
->> drm_device *dev)
->>
->>   static int kirin_drm_kms_init(struct drm_device *dev)
->>   {
->> +       struct kirin_drm_private *priv;
->>         int ret;
->>
->> +       priv = devm_kzalloc(dev->dev, sizeof(*priv), GFP_KERNEL);
->> +       if (!priv)
->> +               return -ENOMEM;
->> +
->> +       dev->dev_private = priv;
->>         dev_set_drvdata(dev->dev, dev);
->>
->>         /* dev->mode_config initialization */
->> @@ -84,6 +94,8 @@ err_dc_cleanup:
->>         dc_ops->cleanup(dev);
->>   err_mode_config_cleanup:
->>         drm_mode_config_cleanup(dev);
->> +       devm_kfree(dev->dev, priv);
->> +       dev->dev_private = NULL;
->>
->>         return ret;
->>   }
->> @@ -221,6 +233,9 @@ static const struct component_master_ops kirin_drm_ops
->> = {
->>   };
->>
->>   static const struct of_device_id kirin_drm_dt_ids[] = {
->> +       { .compatible = "hisilicon,hi6220-ade",
->> +         .data = &ade_dc_ops,
->> +       },
->>         { /* end node */ },
->>   };
->>   MODULE_DEVICE_TABLE(of, kirin_drm_dt_ids);
->> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
->> b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
->> index 75e9d82356d4..5a05ad6a81db 100644
->> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
->> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.h
->> @@ -11,10 +11,18 @@
->>   #ifndef __KIRIN_DRM_DRV_H__
->>   #define __KIRIN_DRM_DRV_H__
->>
->> +#define MAX_CRTC       2
->> +
->>   /* display controller init/cleanup ops */
->>   struct kirin_dc_ops {
->>         int (*init)(struct drm_device *dev);
->>         void (*cleanup)(struct drm_device *dev);
->>   };
->>
->> +struct kirin_drm_private {
->> +       struct drm_crtc *crtc[MAX_CRTC];
->> +};
->> +
->> +extern const struct kirin_dc_ops ade_dc_ops;
->> +
->>   #endif /* __KIRIN_DRM_DRV_H__ */
->>
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+new file mode 100644
+index 0000000..4299bd8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+@@ -0,0 +1,86 @@
++Renesas R-Car CAN FD controller Device Tree Bindings
++----------------------------------------------------
++
++Required properties:
++- compatible: Must contain one or more of the following:
++  - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
++  - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
++
++  When compatible with the generic version, nodes must list the
++  SoC-specific version corresponding to the platform first, followed by the
++  family-specific and/or generic versions.
++
++- reg: physical base address and size of the R-Car CAN FD register map.
++- interrupts: interrupt specifier for the Global & Channel interrupts
++- clocks: phandles and clock specifiers for 3 clock inputs.
++- clock-names: 3 clock input name strings: "fck", "canfd", "can_clk".
++- pinctrl-0: pin control group to be used for this controller.
++- pinctrl-names: must be "default".
++
++Required properties for "renesas,r8a7795-canfd" compatible:
++In R8A7795 SoC, canfd clock is a div6 clock and can be used by both CAN
++and CAN FD controller at the same time. It needs to be scaled to maximum
++frequency if any of these controllers use it. This is done using the
++below properties.
++
++- assigned-clocks: phandle of canfd clock.
++- assigned-clock-rates: maximum frequency of this clock.
++
++Each channel is represented as a child node. They can be enabled/disabled
++using "status" property.
++
++Example
++-------
++
++SoC common .dtsi file:
++
++		canfd: canfd@e66c0000 {
++			compatible = "renesas,r8a7795-canfd",
++				     "renesas,rcar-gen3-canfd";
++			reg = <0 0xe66c0000 0 0x8000>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				   <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 914>,
++			       <&cpg CPG_CORE R8A7795_CLK_CANFD>,
++			       <&can_clk>;
++			clock-names = "fck", "canfd", "can_clk";
++			assigned-clocks = <&cpg CPG_CORE R8A7795_CLK_CANFD>;
++			assigned-clock-rates = <40000000>;
++			power-domains = <&cpg>;
++			status = "disabled";
++
++			channel0 {
++				status = "disabled";
++			};
++
++			channel1 {
++				status = "disabled";
++			};
++		};
++
++Board specific .dts file:
++
++E.g. below enables Channel 1 alone in the board.
++
++&canfd {
++        pinctrl-0 = <&canfd1_pins>;
++        pinctrl-names = "default";
++        status = "okay";
++
++	channel1 {
++		status = "okay";
++	};
++};
++
++E.g. below enables Channel 0 alone in the board using External clock
++as fCAN clock.
++
++&canfd {
++        pinctrl-0 = <&canfd0_pins &can_clk_pins>;
++        pinctrl-names = "default";
++        status = "okay";
++
++	channel0 {
++		status = "okay";
++	};
++};
+diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
+index 9a53c92..afbb5cd 100644
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -3121,6 +3121,14 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
+ 	ramdisk_size=	[RAM] Sizes of RAM disks in kilobytes
+ 			See Documentation/blockdev/ramdisk.txt.
+ 
++	rcar_canfd.testmode=
++			[HW] Selects the Controller test mode
++			Format: {0|1|2}
++			0	Test modes disabled (default)
++			1	Self-test internal loopback mode
++			2	Inter-channel test mode
++			Default: 0
++
+ 	rcu_nocbs=	[KNL]
+ 			In kernels built with CONFIG_RCU_NOCB_CPU=y, set
+ 			the specified list of CPUs to be no-callback CPUs.
+diff --git a/drivers/net/can/Kconfig b/drivers/net/can/Kconfig
+index 0d40aef..0ecb4fe 100644
+--- a/drivers/net/can/Kconfig
++++ b/drivers/net/can/Kconfig
+@@ -114,6 +114,16 @@ config CAN_RCAR
+ 	  To compile this driver as a module, choose M here: the module will
+ 	  be called rcar_can.
+ 
++config CANFD_RCAR
++	tristate "Renesas R-Car CAN FD controller"
++	depends on ARCH_RENESAS || ARM
++	---help---
++	  Say Y here if you want to use CAN FD controller found on
++	  Renesas R-Car SoCs.
++
++	  To compile this driver as a module, choose M here: the module will
++	  be called rcar_canfd.
++
+ config CAN_SUN4I
+ 	tristate "Allwinner A10 CAN controller"
+ 	depends on MACH_SUN4I || MACH_SUN7I || COMPILE_TEST
+diff --git a/drivers/net/can/Makefile b/drivers/net/can/Makefile
+index e3db0c8..401b150 100644
+--- a/drivers/net/can/Makefile
++++ b/drivers/net/can/Makefile
+@@ -25,6 +25,7 @@ obj-$(CONFIG_CAN_JANZ_ICAN3)	+= janz-ican3.o
+ obj-$(CONFIG_CAN_MSCAN)		+= mscan/
+ obj-$(CONFIG_CAN_M_CAN)		+= m_can/
+ obj-$(CONFIG_CAN_RCAR)		+= rcar_can.o
++obj-$(CONFIG_CANFD_RCAR)	+= rcar_canfd.o
+ obj-$(CONFIG_CAN_SJA1000)	+= sja1000/
+ obj-$(CONFIG_CAN_SUN4I)		+= sun4i_can.o
+ obj-$(CONFIG_CAN_TI_HECC)	+= ti_hecc.o
+diff --git a/drivers/net/can/rcar_canfd.c b/drivers/net/can/rcar_canfd.c
+new file mode 100644
+index 0000000..6f85e25
+--- /dev/null
++++ b/drivers/net/can/rcar_canfd.c
+@@ -0,0 +1,1905 @@
++/* Renesas R-Car CAN FD device driver
++ *
++ * Copyright (C) 2015 Renesas Electronics Corp.
++ *
++ * This program is free software; you can redistribute  it and/or modify it
++ * under  the terms of  the GNU General  Public License as published by the
++ * Free Software Foundation;  either version 2 of the  License, or (at your
++ * option) any later version.
++ */
++
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/interrupt.h>
++#include <linux/errno.h>
++#include <linux/netdevice.h>
++#include <linux/platform_device.h>
++#include <linux/can/led.h>
++#include <linux/can/dev.h>
++#include <linux/clk.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/bitmap.h>
++#include <linux/bitops.h>
++#include <linux/iopoll.h>
++
++#define RCANFD_DRV_NAME			"rcar_canfd"
++
++#define RCANFD_FIFO_DEPTH		8	/* Tx FIFO depth */
++#define RCANFD_NAPI_WEIGHT		8	/* Rx poll quota */
++
++#define RCANFD_NUM_CHANNELS		2
++#define RCANFD_CHANNELS_MASK		0x3	/* Two channels max */
++
++/* Rx FIFO is a global resource of the controller. There are 8 such FIFOs
++ * available. Each channel gets a dedicated Rx FIFO (i.e.) the channel
++ * number is added to RFFIFO index.
++ */
++#define RCANFD_RFFIFO_IDX		0
++
++/* Tx/Rx or Common FIFO is a per channel resource. Each channel has 3 Common
++ * FIFOs dedicated to them. Use the first (index 0) FIFO out of the 3 for Tx.
++ */
++#define RCANFD_CFFIFO_IDX		0
++
++/* Global register bits */
++#define RCANFD_GINTF_CANFD		BIT(0)
++
++#define RCANFD_GCFG_TPRI		BIT(0)
++#define RCANFD_GCFG_DCE			BIT(1)
++#define RCANFD_GCFG_DCS			BIT(4)
++#define RCANFD_GCFG_CMPOC		BIT(5)
++#define RCANFD_GCFG_EEFE		BIT(6)
++
++#define RCANFD_GCTR_SLPR		BIT(2)
++#define RCANFD_GCTR_MODEMASK		(0x3)
++#define RCANFD_GCTR_GOPM		(0x0)
++#define RCANFD_GCTR_GRESET		(0x1)
++#define RCANFD_GCTR_GHLT		(0x2)
++
++#define RCANFD_GCTR_DEIE		BIT(8)
++#define RCANFD_GCTR_MEIE		BIT(9)
++#define RCANFD_GCTR_THLEIE		BIT(10)
++#define RCANFD_GCTR_CFMPOFIE		BIT(11)
++#define RCANFD_GCTR_TSRST		BIT(16)
++
++#define RCANFD_GSTS_RAMINIT		BIT(3)
++#define RCANFD_GSTS_SLP			BIT(2)
++#define RCANFD_GSTS_HLT			BIT(1)
++#define RCANFD_GSTS_RESET		BIT(0)
++
++#define RCANFD_GSTS_GNOPM		(BIT(0) | BIT(1) | BIT(2) | BIT(3))
++
++/* Channel register bits */
++#define RCANFD_CCTR_CSLPR		BIT(2)
++#define RCANFD_CCTR_MODEMASK		(0x3)
++#define RCANFD_CCTR_COPM		(0x0)
++#define RCANFD_CCTR_CRESET		(0x1)
++#define RCANFD_CCTR_CHLT		(0x2)
++#define RCANFD_CCTR_CTMASK		(0x3 << 25)
++#define RCANFD_CCTR_CTMS_ILB		(0x3 << 25)
++#define RCANFD_CCTR_CTME		BIT(24)
++#define RCANFD_CCTR_ERRD		BIT(23)
++#define RCANFD_CCTR_BOMMASK		(0x3 << 21)
++#define RCANFD_CCTR_BOM_ENTRY		(0x1 << 21)
++#define RCANFD_CCTR_TDCVFIE		BIT(19)
++#define RCANFD_CCTR_SOCOIE		BIT(18)
++#define RCANFD_CCTR_EOCOIE		BIT(17)
++#define RCANFD_CCTR_TAIE		BIT(16)
++#define RCANFD_CCTR_ALIE		BIT(15)
++#define RCANFD_CCTR_BLIE		BIT(14)
++#define RCANFD_CCTR_OLIE		BIT(13)
++#define RCANFD_CCTR_BORIE		BIT(12)
++#define RCANFD_CCTR_BOEIE		BIT(11)
++#define RCANFD_CCTR_EPIE		BIT(10)
++#define RCANFD_CCTR_EWIE		BIT(9)
++#define RCANFD_CCTR_BEIE		BIT(8)
++
++#define RCANFD_CSTS_COM			BIT(7)
++#define RCANFD_CSTS_REC			BIT(6)
++#define RCANFD_CSTS_TRM			BIT(5)
++#define RCANFD_CSTS_BO			BIT(4)
++#define RCANFD_CSTS_EP			BIT(3)
++#define RCANFD_CSTS_SLP			BIT(2)
++#define RCANFD_CSTS_HALT		BIT(1)
++#define RCANFD_CSTS_RESET		BIT(0)
++
++#define RCANFD_CSTS_TECCNT(x)		(((x) >> 24) & 0xff)
++#define RCANFD_CSTS_RECCNT(x)		(((x) >> 16) & 0xff)
++
++/* Bit Configuration register */
++#define RCANFD_BRP(x)			(((x) & 0x3ff) << 0)
++#define RCANFD_SJW(x)			(((x) & 0x3) << 24)
++#define RCANFD_TSEG1(x)			(((x) & 0xf) << 16)
++#define RCANFD_TSEG2(x)			(((x) & 0x7) << 20)
++
++#define RCANFD_NR_BRP(x)		(((x) & 0x3ff) << 0)
++#define RCANFD_NR_SJW(x)		(((x) & 0x1f) << 11)
++#define RCANFD_NR_TSEG1(x)		(((x) & 0x7f) << 16)
++#define RCANFD_NR_TSEG2(x)		(((x) & 0x1f) << 24)
++
++#define RCANFD_DR_BRP(x)		(((x) & 0xff) << 0)
++#define RCANFD_DR_SJW(x)		(((x) & 0x7) << 24)
++#define RCANFD_DR_TSEG1(x)		(((x) & 0xf) << 16)
++#define RCANFD_DR_TSEG2(x)		(((x) & 0x7) << 20)
++
++/* Global Error flag bits */
++#define RCANFD_GERFL_EEF1		BIT(17)
++#define RCANFD_GERFL_EEF0		BIT(16)
++#define RCANFD_GERFL_CMPOF		BIT(3)
++#define RCANFD_GERFL_THLES		BIT(2)
++#define RCANFD_GERFL_MES		BIT(1)
++#define RCANFD_GERFL_DEF		BIT(0)
++
++#define RCANFD_GERFL_ERR(x)		((x) & (RCANFD_GERFL_EEF1 |\
++						RCANFD_GERFL_EEF0 |\
++						RCANFD_GERFL_MES |\
++						RCANFD_GERFL_CMPOF))
++
++/* Channel Error flag bits */
++#define RCANFD_CERFL_ADEF		BIT(14)
++#define RCANFD_CERFL_B0EF		BIT(13)
++#define RCANFD_CERFL_B1EF		BIT(12)
++#define RCANFD_CERFL_CEF		BIT(11)
++#define RCANFD_CERFL_AEF		BIT(10)
++#define RCANFD_CERFL_FEF		BIT(9)
++#define RCANFD_CERFL_SEF		BIT(8)
++#define RCANFD_CERFL_ALEF		BIT(7)
++#define RCANFD_CERFL_BLEF		BIT(6)
++#define RCANFD_CERFL_OLEF		BIT(5)
++#define RCANFD_CERFL_BOREF		BIT(4)
++#define RCANFD_CERFL_BOEEF		BIT(3)
++#define RCANFD_CERFL_EPEF		BIT(2)
++#define RCANFD_CERFL_EWEF		BIT(1)
++#define RCANFD_CERFL_BEF		BIT(0)
++
++#define RCANFD_CERFL_ERR(x)		((x) & (0x7fff)) /* above bits 14:0 */
++
++/* CAN FD specific registers */
++#define RCANFD_DCFG_TDCE		BIT(9)
++#define RCANFD_DCFG_TDCOC		BIT(8)
++#define RCANFD_DCFG_TDCO(x)		(((x) & 0x7f) >> 16)
++
++#define RCANFD_DCSTS_TDCR(x)		(((x) >> 0) & 0x7f)
++#define RCANFD_DCSTS_SOCCNT(x)		(((x) >> 24) & 0xff)
++#define RCANFD_DCSTS_EOCCNT(x)		(((x) >> 16) & 0xff)
++
++#define RCANFD_DCSTS_TDCVF		BIT(7)
++#define RCANFD_DCSTS_EOCO		BIT(8)
++#define RCANFD_DCSTS_SOCO		BIT(9)
++
++/* Rx FIFO bits */
++#define RCANFD_RFFIFO_RFIF		BIT(3)
++#define RCANFD_RFFIFO_RFMLT		BIT(2)
++#define RCANFD_RFFIFO_RFFLL		BIT(1)
++#define RCANFD_RFFIFO_RFEMP		BIT(0)
++
++#define RCANFD_RFFIFO_RFESI		BIT(0)
++#define RCANFD_RFFIFO_RFBRS		BIT(1)
++#define RCANFD_RFFIFO_RFFDF		BIT(2)
++
++#define RCANFD_RFFIFO_RFIDE		BIT(31)
++#define RCANFD_RFFIFO_RFRTR		BIT(30)
++
++#define RCANFD_RFFIFO_RFDLC(x)		(((x) >> 28) & 0xf)
++#define RCANFD_RFFIFO_RFPTR(x)		(((x) >> 16) & 0xfff)
++#define RCANFD_RFFIFO_RFTS(x)		(((x) >> 0) & 0xff)
++
++#define RCANFD_RFFIFO_RFIM		BIT(12)
++#define RCANFD_RFFIFO_RFDC(x)		(((x) & 0x7) << 8)
++#define RCANFD_RFFIFO_RFPLS(x)		(((x) & 0x7) << 4)
++#define RCANFD_RFFIFO_RFIE		BIT(1)
++#define RCANFD_RFFIFO_RFE		BIT(0)
++
++/* Common FIFO bits */
++#define RCANFD_CMFIFO_TML(x)		(((x) & 0xf) << 20)
++#define RCANFD_CMFIFO_M(x)		(((x) & 0x3) << 16)
++#define RCANFD_CMFIFO_CFIM		BIT(12)
++#define RCANFD_CMFIFO_DC(x)		(((x) & 0x7) << 8)
++#define RCANFD_CMFIFO_PLS(x)		(((x) & 0x7) << 4)
++#define RCANFD_CMFIFO_CFTXIE		BIT(2)
++#define RCANFD_CMFIFO_CFE		BIT(0)
++
++#define RCANFD_CMFIFO_CFTXIF		BIT(4)
++#define RCANFD_CMFIFO_CFMLT		BIT(2)
++#define RCANFD_CMFIFO_CFFLL		BIT(1)
++#define RCANFD_CMFIFO_CFEMP		BIT(0)
++#define RCANFD_CMFIFO_CFMC(x)		(((x) >> 8) & 0xff)
++
++#define RCANFD_CMFIFO_CFESI		BIT(0)
++#define RCANFD_CMFIFO_CFBRS		BIT(1)
++#define RCANFD_CMFIFO_CFFDF		BIT(2)
++
++#define RCANFD_CMFIFO_CFIDE		BIT(31)
++#define RCANFD_CMFIFO_CFRTR		BIT(30)
++#define RCANFD_CMFIFO_CFID(x)		((x) & 0x1fffffff)
++
++#define RCANFD_CMFIFO_CFDLC(x)		(((x) & 0xf) << 28)
++#define RCANFD_CMFIFO_CFPTR(x)		(((x) & 0xfff) << 16)
++#define RCANFD_CMFIFO_CFTS(x)		(((x) & 0xff) << 0)
++
++/* Global Test Config register */
++#define RCANFD_GTSTCFG_C0CBCE		BIT(0)
++#define RCANFD_GTSTCFG_C1CBCE		BIT(1)
++
++#define RCANFD_GTSTCTR_ICBCTME		BIT(0)
++
++/* AFL Rx rules registers */
++#define RCANFD_AFLCFG_SETRNC0(x)	(((x) & 0xff) << 24)
++#define RCANFD_AFLCFG_SETRNC1(x)	(((x) & 0xff) << 16)
++#define RCANFD_AFLCFG_GETRNC0(x)	(((x) >> 24) & 0xff)
++#define RCANFD_AFLCFG_GETRNC1(x)	(((x) >> 16) & 0xff)
++
++#define RCANFD_AFL_PAGENUM(entry)	((entry) / 16)
++
++#define RCANFD_AFLCTR_AFLDAE		BIT(8)
++#define RCANFD_AFLCTR_AFLPN(x)		((x) & 0x1f)
++#define RCANFD_CHANNEL_NUMRULES		1	/* only one rule per channel */
++#define RCANFD_AFLID_GAFLLB		BIT(29)
++#define RCANFD_AFLPTR1_RFFIFO(x)	(1 << (x))
++
++/* Common register map offsets */
++
++/* Nominal rate registers */
++#define RCANFD_CCFG(m)			(0x0000 + (0x10 * (m)))
++#define RCANFD_CCTR(m)			(0x0004 + (0x10 * (m)))
++#define RCANFD_CSTS(m)			(0x0008 + (0x10 * (m)))
++#define RCANFD_CERFL(m)			(0x000C + (0x10 * (m)))
++
++/* Global registers */
++#define RCANFD_GCFG			(0x0084)
++#define RCANFD_GCTR			(0x0088)
++#define RCANFD_GSTS			(0x008c)
++#define RCANFD_GERFL			(0x0090)
++#define RCANFD_GTSC			(0x0094)
++#define RCANFD_GAFLECTR			(0x0098)
++#define RCANFD_GAFLCFG0			(0x009c)
++#define RCANFD_GAFLCFG1			(0x00a0)
++#define RCANFD_RMNB			(0x00a4)
++
++#define RCANFD_RMND(y)			(0x00a8 + (0x04 * (y)))
++
++/* Rx FIFO Control registers */
++#define RCANFD_RFCC(x)			(0x00b8 + (0x04 * (x)))
++#define RCANFD_RFSTS(x)			(0x00d8 + (0x04 * (x)))
++#define RCANFD_RFPCTR(x)		(0x00f8 + (0x04 * (x)))
++
++/* Common FIFO Control registers */
++#define RCANFD_CFCC(ch, idx)		(0x0118 + (0x0c * (ch)) + \
++					 (0x04 * (idx)))
++#define RCANFD_CFSTS(ch, idx)		(0x0178 + (0x0c * (ch)) + \
++					 (0x04 * (idx)))
++#define RCANFD_CFPCTR(ch, idx)		(0x01d8 + (0x0c * (ch)) + \
++					 (0x04 * (idx)))
++
++#define RCANFD_FESTS			(0x0238)
++#define RCANFD_FFSTS			(0x023c)
++#define RCANFD_FMSTS			(0x0240)
++#define RCANFD_RFISTS			(0x0244)
++#define RCANFD_CFRISTS			(0x0248)
++#define RCANFD_CFTISTS			(0x024c)
++
++#define RCANFD_TMC(p)			(0x0250 + (0x01 * (p)))
++#define RCANFD_TMSTS(p)			(0x02d0 + (0x01 * (p)))
++
++#define RCANFD_TMTRSTS(y)		(0x0350 + (0x04 * (y)))
++#define RCANFD_TMTARSTS(y)		(0x0360 + (0x04 * (y)))
++#define RCANFD_TMTCSTS(y)		(0x0370 + (0x04 * (y)))
++#define RCANFD_TMTASTS(y)		(0x0380 + (0x04 * (y)))
++#define RCANFD_TMIEC(y)			(0x0390 + (0x04 * (y)))
++
++#define RCANFD_TXQCC(m)			(0x03a0 + (0x04 * (m)))
++#define RCANFD_TXQSTS(m)		(0x03c0 + (0x04 * (m)))
++#define RCANFD_TXQPCTR(m)		(0x03e0 + (0x04 * (m)))
++
++#define RCANFD_THLCC(m)			(0x0400 + (0x04 * (m)))
++#define RCANFD_THLSTS(m)		(0x0420 + (0x04 * (m)))
++#define RCANFD_THLPCTR(m)		(0x0440 + (0x04 * (m)))
++
++#define RCANFD_GTINTSTS0		(0x0460)
++#define RCANFD_GTINTSTS1		(0x0464)
++#define RCANFD_GTSTCFG			(0x0468)
++#define RCANFD_GTSTCTR			(0x046c)
++#define RCANFD_GLOCKK			(0x047c)
++#define RCANFD_GRMCFG			(0x04fc)
++
++/* Receive rule registers */
++#define RCANFD_GAFLID(offset, j)	((offset) + (0x10 * (j)))
++#define RCANFD_GAFLM(offset, j)		((offset) + 0x04 + (0x10 * (j)))
++#define RCANFD_GAFLP0(offset, j)	((offset) + 0x08 + (0x10 * (j)))
++#define RCANFD_GAFLP1(offset, j)	((offset) + 0x0c + (0x10 * (j)))
++
++/* CAN FD mode specific regsiter map */
++
++/* Data bitrate registers */
++#define RCANFD_F_CDFG(m)		(0x0500 + (0x20 * (m)))
++#define RCANFD_F_CFDCFG(m)		(0x0504 + (0x20 * (m)))
++#define RCANFD_F_CFDCTR(m)		(0x0508 + (0x20 * (m)))
++#define RCANFD_F_CFDSTS(m)		(0x050c + (0x20 * (m)))
++#define RCANFD_F_CFDCRC(m)		(0x0510 + (0x20 * (m)))
++
++#define RCANFD_F_GAFL_OFFSET		(0x1000)
++
++#define RCANFD_F_RMID(q)		(0x2000 + (0x10 * (q)))
++#define RCANFD_F_RMPTR(q)		(0x2004 + (0x10 * (q)))
++#define RCANFD_F_RMFDSTS(q)		(0x2008 + (0x10 * (q)))
++#define RCANFD_F_RMDF(q, b)		(0x200c + (0x04 * (b)) + (0x20 * (q)))
++
++/* Rx FIFO data registers */
++#define RCANFD_F_RFOFFSET		(0x3000)
++#define RCANFD_F_RFID(x)		(RCANFD_F_RFOFFSET + (0x80 * (x)))
++#define RCANFD_F_RFPTR(x)		(RCANFD_F_RFOFFSET + 0x04 + \
++					 (0x80 * (x)))
++#define RCANFD_F_RFFDSTS(x)		(RCANFD_F_RFOFFSET + 0x08 + \
++					 (0x80 * (x)))
++#define RCANFD_F_RFDF(x, df)		(RCANFD_F_RFOFFSET + 0x0c + \
++					 (0x80 * (x)) + (0x04 * (df)))
++
++/* Common FIFO data registers */
++#define RCANFD_F_CFOFFSET		(0x3400)
++#define RCANFD_F_CFID(ch, idx)		(RCANFD_F_CFOFFSET + (0x180 * (ch)) + \
++					 (0x80 * (idx)))
++#define RCANFD_F_CFPTR(ch, idx)		(RCANFD_F_CFOFFSET + 0x04 + \
++					 (0x180 * (ch)) + (0x80 * (idx)))
++#define RCANFD_F_CFFDCSTS(ch, idx)	(RCANFD_F_CFOFFSET + 0x08 + \
++					 (0x180 * (ch)) + (0x80 * (idx)))
++#define RCANFD_F_CFDF(ch, idx, df)	(RCANFD_F_CFOFFSET + 0x0c + \
++					 (0x180 * (ch)) + (0x80 * (idx)) + \
++					 (0x04 * (df)))
++
++#define RCANFD_F_TMID(p)		(0x4000 + (0x20 * (p)))
++#define RCANFD_F_TMPTR(p)		(0x4004 + (0x20 * (p)))
++#define RCANFD_F_TMFDCTR(p)		(0x4008 + (0x20 * (p)))
++#define RCANFD_F_TMDF(p, b)		(0x400c + (0x20 * (p)) + (0x04 * (b)))
++
++#define RCANFD_F_THLACC(m)		(0x6000 + (0x04 * (m)))
++#define RCANFD_F_RPGACC(r)		(0x6400 + (0x04 * (r)))
++
++struct rcar_canfd_global;
++
++/* Channel priv data */
++struct rcar_canfd_channel {
++	struct can_priv can;			/* Must be the first member */
++	struct net_device *ndev;
++	struct rcar_canfd_global *gpriv;	/* Controller reference */
++	void __iomem *base;			/* Register base address */
++#ifdef CONFIG_DEBUG_FS
++	struct dentry *dev_root;
++#endif /* CONFIG_DEBUG_FS */
++	struct napi_struct napi;
++	u8  tx_len[RCANFD_FIFO_DEPTH];		/* For net stats */
++	u32 tx_head;				/* Incremented on xmit */
++	u32 tx_tail;				/* Incremented on xmit done */
++	u32 channel;				/* Channel number */
++};
++
++/* Global priv data */
++struct rcar_canfd_global {
++	struct rcar_canfd_channel *ch[RCANFD_NUM_CHANNELS];
++	void __iomem *base;		/* Register base address */
++	struct platform_device *pdev;	/* Respective platform device */
++	struct clk *clkp;		/* Peripheral clock */
++	struct clk *can_clk;		/* fCAN clock */
++	int clock_select;		/* CANFD or Ext clock */
++	unsigned long channels_mask;	/* Enabled channels mask */
++	u32 freq;			/* fCAN clock frequency in Hz */
++};
++
++/* CAN FD mode nominal rate constants */
++static const struct can_bittiming_const rcar_canfd_nom_bittiming_const = {
++	.name = RCANFD_DRV_NAME,
++	.tseg1_min = 2,
++	.tseg1_max = 128,
++	.tseg2_min = 2,
++	.tseg2_max = 32,
++	.sjw_max = 32,
++	.brp_min = 1,
++	.brp_max = 1024,
++	.brp_inc = 1,
++};
++
++/* CAN FD mode data rate constants */
++static const struct can_bittiming_const rcar_canfd_data_bittiming_const = {
++	.name = RCANFD_DRV_NAME,
++	.tseg1_min = 2,
++	.tseg1_max = 16,
++	.tseg2_min = 2,
++	.tseg2_max = 8,
++	.sjw_max = 8,
++	.brp_min = 1,
++	.brp_max = 256,
++	.brp_inc = 1,
++};
++
++/* Test modes */
++enum {
++	RCANFD_TESTMODE_NONE = 0,
++	RCANFD_TESTMODE_INTERNAL_LOOPBACK,
++	RCANFD_TESTMODE_INTERCHANNEL,
++};
++
++static int testmode = RCANFD_TESTMODE_NONE;
++module_param(testmode, int, 0644);
++
++/* fCAN clock select register settings */
++enum {
++	RCANFD_CANFDCLK = 0,	/* CANFD clock */
++	RCANFD_EXTCLK,		/* Externally input clock */
++};
++
++/* Helper functions */
++static inline void rcar_canfd_update(u32 mask, u32 val, u32 __iomem *reg)
++{
++	u32 data = readl(reg);
++
++	data &= ~mask;
++	data |= (val & mask);
++	writel(data, reg);
++}
++
++#define rcar_canfd_read(priv, offset)			\
++	readl(priv->base + (offset))
++#define rcar_canfd_write(priv, offset, val)		\
++	writel(val, priv->base + (offset))
++#define rcar_canfd_set_bit(priv, reg, val)		\
++	rcar_canfd_update(val, val, priv->base + (reg))
++#define rcar_canfd_clear_bit(priv, reg, val)		\
++	rcar_canfd_update(val, 0, priv->base + (reg))
++#define rcar_canfd_update_bit(priv, reg, mask, val)	\
++	rcar_canfd_update(mask, val, priv->base + (reg))
++
++static void rcar_canfd_get_data(struct canfd_frame *cf,
++				struct rcar_canfd_channel *priv, u32 off)
++{
++	u32 i, lwords;
++
++	lwords = cf->len / sizeof(u32);
++	if (cf->len % sizeof(u32))
++		lwords++;
++	for (i = 0; i < lwords; i++)
++		*((u32 *)cf->data + i) =
++			rcar_canfd_read(priv, off + (i * sizeof(u32)));
++}
++
++static void rcar_canfd_put_data(struct canfd_frame *cf,
++				struct rcar_canfd_channel *priv, u32 off)
++{
++	u32 i, j, lwords, leftover;
++	u32 data = 0;
++
++	lwords = cf->len / sizeof(u32);
++	leftover = cf->len % sizeof(u32);
++	for (i = 0; i < lwords; i++)
++		rcar_canfd_write(priv, off + (i * sizeof(u32)),
++				 *((u32 *)cf->data + i));
++
++	if (leftover) {
++		u8 *p = (u8 *)((u32 *)cf->data + i);
++
++		for (j = 0; j < leftover; j++)
++			data |= p[j] << (j * 8);
++		rcar_canfd_write(priv, off + (i * sizeof(u32)), data);
++	}
++}
++
++#ifdef CONFIG_DEBUG_FS
++#include <linux/debugfs.h>
++
++static int rcar_canfd_showregs(struct seq_file *s, void *data)
++{
++	struct rcar_canfd_channel *priv = s->private;
++	u32 ch = priv->channel;
++	u32 rf = ch + RCANFD_RFFIFO_IDX;
++	u32 cf = RCANFD_CFFIFO_IDX;
++	u32 val, offset, i;
++
++	if (testmode)
++		seq_printf(s, "RCANFD : testmode = %d\n", testmode);
++	seq_printf(s, "RCANFD register dump: channel %u\n", ch);
++	seq_printf(s, "%-40s: %x\n", "g: cfg",
++		   rcar_canfd_read(priv, RCANFD_GCFG));
++	seq_printf(s, "%-40s: %x\n", "g: ctr",
++		   rcar_canfd_read(priv, RCANFD_GCTR));
++	seq_printf(s, "%-40s: %x\n", "g: sts",
++		   rcar_canfd_read(priv, RCANFD_GSTS));
++	seq_printf(s, "%-40s: %x\n", "afl: ectr",
++		   rcar_canfd_read(priv, RCANFD_GAFLECTR));
++	seq_printf(s, "%-40s: %x\n", "afl: cfg0",
++		   rcar_canfd_read(priv, RCANFD_GAFLCFG0));
++	seq_printf(s, "%-40s: %x\n", "afl: cfg1",
++		   rcar_canfd_read(priv, RCANFD_GAFLCFG1));
++
++	offset = RCANFD_F_GAFL_OFFSET;
++	val = rcar_canfd_read(priv, RCANFD_GAFLCFG0);
++	if (ch == 0) /* Channel */
++		i = 0;	/* Start with 0th rule always */
++	else
++		i = RCANFD_AFLCFG_GETRNC0(val);
++
++	seq_printf(s, "%-40s: %x\n", "afl: id",
++		   rcar_canfd_read(priv, RCANFD_GAFLID(offset, i)));
++	seq_printf(s, "%-40s: %x\n", "afl: mask",
++		   rcar_canfd_read(priv, RCANFD_GAFLM(offset, i)));
++	seq_printf(s, "%-40s: %x\n", "afl: ptr0",
++		   rcar_canfd_read(priv, RCANFD_GAFLP0(offset, i)));
++	seq_printf(s, "%-40s: %x\n", "afl: ptr1",
++		   rcar_canfd_read(priv, RCANFD_GAFLP1(offset, i)));
++
++	seq_puts(s, "RCANFD Global and Channel error flags:\n");
++	val = rcar_canfd_read(priv, RCANFD_GERFL);
++	seq_printf(s, "%-40s: %x\n", "g: erfl", val);
++	if (val & RCANFD_GERFL_DEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "dlc error");
++	if (val & RCANFD_GERFL_MES)
++		seq_printf(s, "%-40s: %s\n", " --> ", "fifo msg lost");
++	if (val & RCANFD_GERFL_THLES)
++		seq_printf(s, "%-40s: %s\n", " --> ", "tx history lost");
++	if (val & RCANFD_GERFL_CMPOF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "payload overflow");
++	if (val & RCANFD_GERFL_EEF0)
++		seq_printf(s, "%-40s: %s\n", " --> ", "ecc ch0 error");
++	if (val & RCANFD_GERFL_EEF1)
++		seq_printf(s, "%-40s: %s\n", " --> ", "ecc ch1 error");
++	val = rcar_canfd_read(priv, RCANFD_CERFL(ch));
++	seq_printf(s, "%-40s: %x\n", "nr: erfl", val);
++	if (val & RCANFD_CERFL_ADEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "ack delimiter error");
++	if (val & RCANFD_CERFL_B0EF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "dominant bit error");
++	if (val & RCANFD_CERFL_B1EF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "recessive bit error");
++	if (val & RCANFD_CERFL_CEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "crc error");
++	if (val & RCANFD_CERFL_AEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "ack error");
++	if (val & RCANFD_CERFL_FEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "form error");
++	if (val & RCANFD_CERFL_SEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "stuff error");
++	if (val & RCANFD_CERFL_ALEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "arb lost");
++	if (val & RCANFD_CERFL_BLEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "bus lock");
++	if (val & RCANFD_CERFL_OLEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "overload");
++	if (val & RCANFD_CERFL_BOREF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "bus off recov");
++	if (val & RCANFD_CERFL_BOEEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "bus off entry");
++	if (val & RCANFD_CERFL_EPEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "error passive");
++	if (val & RCANFD_CERFL_EWEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "error warning");
++	if (val & RCANFD_CERFL_BEF)
++		seq_printf(s, "%-40s: %s\n", " --> ", "bus error");
++	seq_puts(s, "RCANFD Normal Control & Status Register:\n");
++	seq_printf(s, "%-40s: %x\n", "nr: ncfg",
++		   rcar_canfd_read(priv, RCANFD_CCFG(ch)));
++	seq_printf(s, "%-40s: %x\n", "nr: ctr",
++		   rcar_canfd_read(priv, RCANFD_CCTR(ch)));
++	val = rcar_canfd_read(priv, RCANFD_CSTS(ch));
++	seq_printf(s, "%-40s: %x\n", "nr: sts", val);
++	if (RCANFD_CSTS_TECCNT(val))
++		seq_printf(s, "%-40s: %x\n", " teccnt ",
++			   RCANFD_CSTS_TECCNT(val));
++	if (RCANFD_CSTS_RECCNT(val))
++		seq_printf(s, "%-40s: %x\n", " reccnt ",
++			   RCANFD_CSTS_RECCNT(val));
++	if (val & RCANFD_CSTS_BO)
++		seq_printf(s, "%-40s: %s\n", " --> ", "bus off status");
++	if (val & RCANFD_CSTS_EP)
++		seq_printf(s, "%-40s: %s\n", " --> ", "error passive status");
++	seq_puts(s, "RCANFD Data Status Register:\n");
++	seq_printf(s, "%-40s: %x\n", "dr: dcfg",
++		   rcar_canfd_read(priv, RCANFD_F_CDFG(ch)));
++	seq_printf(s, "%-40s: %x\n", "dr: fdcfg",
++		   rcar_canfd_read(priv, RCANFD_F_CFDCFG(ch)));
++	seq_printf(s, "%-40s: %x\n", "dr: fdctr",
++		   rcar_canfd_read(priv, RCANFD_F_CFDCTR(ch)));
++	val = rcar_canfd_read(priv, RCANFD_F_CFDSTS(ch));
++	seq_printf(s, "%-40s: %x\n", "dr: sts", val);
++	if (RCANFD_DCSTS_TDCR(val))
++		seq_printf(s, "%-40s: %x\n", " tdcr ",
++			   RCANFD_DCSTS_TDCR(val));
++	if (RCANFD_DCSTS_SOCCNT(val))
++		seq_printf(s, "%-40s: %x\n", " soccnt ",
++			   RCANFD_DCSTS_SOCCNT(val));
++	if (RCANFD_DCSTS_EOCCNT(val))
++		seq_printf(s, "%-40s: %x\n", " eoccnt ",
++			   RCANFD_DCSTS_EOCCNT(val));
++	if (val & RCANFD_DCSTS_EOCO)
++		seq_printf(s, "%-40s: %s\n", " --> ",
++			   "error occurrence overflow");
++	if (val & RCANFD_DCSTS_TDCVF)
++		seq_printf(s, "%-40s: %s\n", " --> ",
++			   "transmit delay correction violation");
++	seq_puts(s, "RCANFD FIFO Registers:\n");
++	seq_printf(s, "%-40s: %x\n", "rxfc: cc",
++		   rcar_canfd_read(priv, RCANFD_RFCC(rf)));
++	seq_printf(s, "%-40s: %x\n", "rxfc: bsts",
++		   rcar_canfd_read(priv, RCANFD_RFSTS(rf)));
++	seq_printf(s, "%-40s: %x\n", "rxfc: pctr",
++		   rcar_canfd_read(priv, RCANFD_RFPCTR(rf)));
++	seq_printf(s, "%-40s: %x\n", "rxfifo: sts",
++		   rcar_canfd_read(priv, RCANFD_F_RFFDSTS(rf)));
++	seq_printf(s, "%-40s: %x\n", "cmfc: cc",
++		   rcar_canfd_read(priv, RCANFD_CFCC(ch, cf)));
++	seq_printf(s, "%-40s: %x\n", "cmfc: bsts",
++		   rcar_canfd_read(priv, RCANFD_CFSTS(ch, cf)));
++	seq_printf(s, "%-40s: %x\n", "cmfc: pctr",
++		   rcar_canfd_read(priv, RCANFD_CFPCTR(ch, cf)));
++	seq_printf(s, "%-40s: %x\n", "cmfifo: sts",
++		   rcar_canfd_read(priv, RCANFD_F_CFFDCSTS(ch, cf)));
++	seq_printf(s, "%-40s: %x\n", "gtxintsts0",
++		   rcar_canfd_read(priv, RCANFD_GTINTSTS0));
++
++	seq_puts(s, "done\n");
++	return 0;
++}
++
++static int rcar_canfd_regs_open(struct inode *inode, struct file *file)
++{
++	return single_open(file, rcar_canfd_showregs, inode->i_private);
++}
++
++static const struct file_operations rcar_canfd_regs_ops = {
++	.open = rcar_canfd_regs_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = single_release,
++};
++
++void rcar_canfd_init_debugfs(struct rcar_canfd_channel *priv)
++{
++	struct dentry *dev_root;
++	struct net_device *ndev = priv->ndev;
++
++	dev_root = debugfs_create_dir(dev_name(&ndev->dev), NULL);
++	priv->dev_root = dev_root;
++
++	if (IS_ERR(dev_root) || !dev_root) {
++		netdev_warn(ndev,
++			    "failed to create debugfs dir for %s (ch %u)\n",
++			    dev_name(&ndev->dev), priv->channel);
++		return;
++	}
++	debugfs_create_file("dumpregs", S_IFREG | S_IRUGO, dev_root, priv,
++			    &rcar_canfd_regs_ops);
++}
++
++void rcar_canfd_remove_debugfs(struct rcar_canfd_channel *priv)
++{
++	debugfs_remove_recursive(priv->dev_root);
++}
++#else
++void rcar_canfd_init_debugfs(struct rcar_canfd_channel *priv)
++{
++}
++
++void rcar_canfd_remove_debugfs(struct rcar_canfd_channel *priv)
++{
++}
++#endif /* CONFIG_DEBUG_FS */
++
++static void rcar_canfd_tx_failure_cleanup(struct net_device *ndev)
++{
++	u32 i;
++
++	for (i = 0; i < RCANFD_FIFO_DEPTH; i++)
++		can_free_echo_skb(ndev, i);
++}
++
++static int rcar_canfd_reset_controller(struct rcar_canfd_global *gpriv)
++{
++	u32 sts, ch;
++	int err;
++
++	/* Check RAMINIT flag as CAN RAM initialization takes place
++	 * after the MCU reset
++	 */
++	err = readl_poll_timeout((gpriv->base + RCANFD_GSTS), sts,
++				 !(sts & RCANFD_GSTS_RAMINIT), 2, 500000);
++	if (err) {
++		dev_dbg(&gpriv->pdev->dev, "global raminit failed\n");
++		return err;
++	}
++
++	/* Transition to Global Reset mode */
++	rcar_canfd_clear_bit(gpriv, RCANFD_GCTR, RCANFD_GCTR_SLPR);
++	rcar_canfd_update_bit(gpriv, RCANFD_GCTR,
++			      RCANFD_GCTR_MODEMASK, RCANFD_GCTR_GRESET);
++
++	/* Ensure Global reset mode */
++	err = readl_poll_timeout((gpriv->base + RCANFD_GSTS), sts,
++				 (sts & RCANFD_GSTS_RESET), 2, 500000);
++	if (err) {
++		dev_dbg(&gpriv->pdev->dev, "global reset failed\n");
++		return err;
++	}
++
++	/* Reset Global error flags */
++	rcar_canfd_write(gpriv, RCANFD_GERFL, 0x0);
++
++	/* Set the controller into FD mode */
++	rcar_canfd_set_bit(gpriv, RCANFD_GRMCFG, RCANFD_GINTF_CANFD);
++
++	/* Transition all Channels to reset mode */
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		rcar_canfd_clear_bit(gpriv, RCANFD_CCTR(ch), RCANFD_CCTR_CSLPR);
++
++		rcar_canfd_update_bit(gpriv, RCANFD_CCTR(ch),
++				      RCANFD_CCTR_MODEMASK,
++				      RCANFD_CCTR_CRESET);
++
++		/* Ensure Channel reset mode */
++		err = readl_poll_timeout((gpriv->base + RCANFD_CSTS(ch)), sts,
++					 (sts & RCANFD_CSTS_RESET), 2, 500000);
++		if (err) {
++			dev_dbg(&gpriv->pdev->dev,
++				"channel %u reset failed\n", ch);
++			return err;
++		}
++	}
++	return 0;
++}
++
++static void rcar_canfd_configure_controller(struct rcar_canfd_global *gpriv)
++{
++	u32 cfg, ch;
++
++	/* Global Configuration settings */
++	cfg = RCANFD_GCFG_EEFE;		/* ECC error flag enabled */
++
++	/* Set External Clock if selected */
++	if (gpriv->clock_select != RCANFD_CANFDCLK)
++		cfg |= RCANFD_GCFG_DCS;
++
++	/* Truncate payload to configured message size RFPLS */
++	cfg |= RCANFD_GCFG_CMPOC;
++
++	rcar_canfd_set_bit(gpriv, RCANFD_GCFG, cfg);
++
++	/* Channel configuration settings */
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		rcar_canfd_set_bit(gpriv, RCANFD_CCTR(ch), RCANFD_CCTR_ERRD);
++		rcar_canfd_update_bit(gpriv, RCANFD_CCTR(ch),
++				      RCANFD_CCTR_BOMMASK,
++				      RCANFD_CCTR_BOM_ENTRY);
++	}
++}
++
++static int rcar_canfd_configure_selftest_mode(struct rcar_canfd_channel *priv)
++{
++	u32 sts, err;
++	u32 ch = priv->channel;
++
++	rcar_canfd_update_bit(priv, RCANFD_CCTR(ch),
++			      RCANFD_CCTR_MODEMASK, RCANFD_CCTR_CHLT);
++
++	/* Verify channel mode change */
++	err = readl_poll_timeout((priv->base + RCANFD_CSTS(ch)), sts,
++				 (sts & RCANFD_CSTS_HALT), 2, 500000);
++	if (err) {
++		netdev_dbg(priv->ndev, "channel halt failed\n");
++		return err;
++	}
++
++	/* Internal Selt Test mode */
++	rcar_canfd_update_bit(priv, RCANFD_CCTR(ch), RCANFD_CCTR_CTMASK,
++			      RCANFD_CCTR_CTMS_ILB);
++	rcar_canfd_set_bit(priv, RCANFD_CCTR(ch), RCANFD_CCTR_CTME);
++	return 0;
++}
++
++static int rcar_canfd_configure_interch_mode(struct rcar_canfd_global *gpriv)
++{
++	u32 sts;
++	int err;
++
++	rcar_canfd_update_bit(gpriv, RCANFD_GCTR,
++			      RCANFD_GCTR_MODEMASK, RCANFD_GCTR_GHLT);
++
++	/* Ensure Global Halt mode */
++	err = readl_poll_timeout((gpriv->base + RCANFD_GSTS), sts,
++				 (sts & RCANFD_GSTS_HLT), 2, 500000);
++	if (err) {
++		dev_dbg(&gpriv->pdev->dev, "global halt mode failed\n");
++		return err;
++	}
++
++	rcar_canfd_set_bit(gpriv, RCANFD_GTSTCFG,
++			   (RCANFD_GTSTCFG_C0CBCE | RCANFD_GTSTCFG_C1CBCE));
++	rcar_canfd_set_bit(gpriv, RCANFD_GTSTCTR, RCANFD_GTSTCTR_ICBCTME);
++
++	/* Verify inter-channel mode enabled */
++	err = readl_poll_timeout((gpriv->base + RCANFD_GTSTCTR), sts,
++				 (sts & RCANFD_GTSTCTR_ICBCTME), 2, 500000);
++	if (err) {
++		dev_dbg(&gpriv->pdev->dev,
++			"global inter-channel test mode failed\n");
++		return err;
++	}
++	return 0;
++}
++
++static void rcar_canfd_configure_afl_rules(struct rcar_canfd_global *gpriv,
++					   u32 ch)
++{
++	u32 cfg;
++	int start, page, num_rules = RCANFD_CHANNEL_NUMRULES;
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	if (ch == 0) {
++		start = 0; /* Start from 0th rule */
++	} else {
++		/* Get number of existing rules and adjust */
++		cfg = rcar_canfd_read(gpriv, RCANFD_GAFLCFG0);
++		start = RCANFD_AFLCFG_GETRNC0(cfg);
++	}
++
++	/* Enable write access to entry */
++	page = RCANFD_AFL_PAGENUM(start);
++	rcar_canfd_set_bit(gpriv, RCANFD_GAFLECTR,
++			   (RCANFD_AFLCTR_AFLPN(page) | RCANFD_AFLCTR_AFLDAE));
++
++	/* Write number of rules for channel */
++	if (ch == 0)
++		rcar_canfd_set_bit(gpriv, RCANFD_GAFLCFG0,
++				   RCANFD_AFLCFG_SETRNC0(num_rules));
++	else
++		rcar_canfd_set_bit(gpriv, RCANFD_GAFLCFG0,
++				   RCANFD_AFLCFG_SETRNC1(num_rules));
++
++	/* Set the rule of that page */
++	if (testmode == RCANFD_TESTMODE_INTERNAL_LOOPBACK)
++		rcar_canfd_write(gpriv,
++				 RCANFD_GAFLID(RCANFD_F_GAFL_OFFSET, start),
++				 RCANFD_AFLID_GAFLLB);
++	else
++		/* Accept all IDs */
++		rcar_canfd_write(gpriv,
++				 RCANFD_GAFLID(RCANFD_F_GAFL_OFFSET, start), 0);
++
++	/* IDE or RTR is not considered for matching */
++	rcar_canfd_write(gpriv, RCANFD_GAFLM(RCANFD_F_GAFL_OFFSET, start), 0);
++	/* Any data length accepted */
++	rcar_canfd_write(gpriv, RCANFD_GAFLP0(RCANFD_F_GAFL_OFFSET, start), 0);
++	/* Place the msg in corresponding Rx FIFO entry */
++	rcar_canfd_write(gpriv, RCANFD_GAFLP1(RCANFD_F_GAFL_OFFSET, start),
++			 RCANFD_AFLPTR1_RFFIFO(ridx));
++
++	/* Disable write access to page */
++	rcar_canfd_clear_bit(gpriv, RCANFD_GAFLECTR, RCANFD_AFLCTR_AFLDAE);
++}
++
++static void rcar_canfd_configure_rx(struct rcar_canfd_global *gpriv, u32 ch)
++{
++	/* Rx FIFO is used for reception */
++	u32 cfg;
++	u16 rfdc, rfpls;
++
++	/* Select Rx FIFO based on channel */
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	rfdc = 2;		/* b010 - 8 messages Rx FIFO depth */
++	rfpls = 7;		/* b111 - Max 64 bytes payload */
++
++	cfg = (RCANFD_RFFIFO_RFIM | RCANFD_RFFIFO_RFDC(rfdc) |
++		RCANFD_RFFIFO_RFPLS(rfpls) | RCANFD_RFFIFO_RFIE);
++	rcar_canfd_write(gpriv, RCANFD_RFCC(ridx), cfg);
++}
++
++static void rcar_canfd_configure_tx(struct rcar_canfd_global *gpriv, u32 ch)
++{
++	/* Tx/Rx(Common) FIFO configured in Tx mode is
++	 * used for transmission
++	 *
++	 * Each channel has 3 Common FIFO dedicated to them.
++	 * Use the 1st (index 0) out of 3
++	 */
++	u32 cfg;
++	u16 cftml, cfm, cfdc, cfpls;
++
++	cftml = 0;		/* 0th buffer */
++	cfm = 1;		/* b01 - Transmit mode */
++	cfdc = 2;		/* b010 - 8 messages Tx FIFO depth */
++	cfpls = 7;		/* b111 - Max 64 bytes payload */
++
++	cfg = (RCANFD_CMFIFO_TML(cftml) | RCANFD_CMFIFO_M(cfm) |
++		RCANFD_CMFIFO_CFIM | RCANFD_CMFIFO_DC(cfdc) |
++		RCANFD_CMFIFO_PLS(cfpls) | RCANFD_CMFIFO_CFTXIE);
++	rcar_canfd_write(gpriv, RCANFD_CFCC(ch, RCANFD_CFFIFO_IDX), cfg);
++
++	/* Clear FD mode specific control/status register */
++	rcar_canfd_write(gpriv, RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX), 0);
++}
++
++static void rcar_canfd_enable_global_interrupts(struct rcar_canfd_global *gpriv)
++{
++	u32 ctr;
++
++	/* Clear any stray error interrupt flags */
++	rcar_canfd_write(gpriv, RCANFD_GERFL, 0);
++
++	/* Global interrupts setup */
++	ctr = RCANFD_GCTR_MEIE;
++	ctr |= RCANFD_GCTR_CFMPOFIE;
++
++	rcar_canfd_set_bit(gpriv, RCANFD_GCTR, ctr);
++}
++
++static void rcar_canfd_disable_global_interrupts(struct rcar_canfd_global
++						 *gpriv)
++{
++	/* Disable all interrupts */
++	rcar_canfd_write(gpriv, RCANFD_GCTR, 0);
++
++	/* Clear any stray error interrupt flags */
++	rcar_canfd_write(gpriv, RCANFD_GERFL, 0);
++}
++
++static void rcar_canfd_enable_channel_interrupts(struct rcar_canfd_channel
++						 *priv)
++{
++	u32 ctr, ch = priv->channel;
++
++	/* Clear any stray error flags */
++	rcar_canfd_write(priv, RCANFD_CERFL(ch), 0);
++
++	/* Channel interrupts setup */
++	ctr = (RCANFD_CCTR_TAIE |
++	       RCANFD_CCTR_ALIE | RCANFD_CCTR_BLIE |
++	       RCANFD_CCTR_OLIE | RCANFD_CCTR_BORIE |
++	       RCANFD_CCTR_BOEIE | RCANFD_CCTR_EPIE |
++	       RCANFD_CCTR_EWIE | RCANFD_CCTR_BEIE);
++	rcar_canfd_set_bit(priv, RCANFD_CCTR(ch), ctr);
++}
++
++static void rcar_canfd_disable_channel_interrupts(struct rcar_canfd_channel
++						  *priv)
++{
++	u32 ctr, ch = priv->channel;
++
++	ctr = (RCANFD_CCTR_TAIE |
++	       RCANFD_CCTR_ALIE | RCANFD_CCTR_BLIE |
++	       RCANFD_CCTR_OLIE | RCANFD_CCTR_BORIE |
++	       RCANFD_CCTR_BOEIE | RCANFD_CCTR_EPIE |
++	       RCANFD_CCTR_EWIE | RCANFD_CCTR_BEIE);
++	rcar_canfd_clear_bit(priv, RCANFD_CCTR(ch), ctr);
++
++	/* Clear any stray error flags */
++	rcar_canfd_write(priv, RCANFD_CERFL(ch), 0);
++}
++
++static void rcar_canfd_global_error(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct net_device_stats *stats = &ndev->stats;
++	u32 ch = priv->channel;
++	u32 gerfl, sts;
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	gerfl = rcar_canfd_read(priv, RCANFD_GERFL);
++	if ((gerfl & RCANFD_GERFL_EEF0) && (ch == 0)) {
++		netdev_dbg(ndev, "Ch0: ECC Error flag\n");
++		stats->tx_dropped++;
++	}
++	if ((gerfl & RCANFD_GERFL_EEF1) && (ch == 1)) {
++		netdev_dbg(ndev, "Ch1: ECC Error flag\n");
++		stats->tx_dropped++;
++	}
++	if (gerfl & RCANFD_GERFL_MES) {
++		sts = rcar_canfd_read(priv,
++				      RCANFD_CFSTS(ch, RCANFD_CFFIFO_IDX));
++		if (sts & RCANFD_CMFIFO_CFMLT) {
++			netdev_dbg(ndev, "Tx Message Lost flag\n");
++			stats->tx_dropped++;
++			rcar_canfd_write(priv,
++					 RCANFD_CFSTS(ch, RCANFD_CFFIFO_IDX),
++					 sts & ~RCANFD_CMFIFO_CFMLT);
++		}
++
++		sts = rcar_canfd_read(priv, RCANFD_RFSTS(ridx));
++		if (sts & RCANFD_RFFIFO_RFMLT) {
++			netdev_dbg(ndev, "Rx Message Lost flag\n");
++			stats->rx_dropped++;
++			rcar_canfd_write(priv, RCANFD_RFSTS(ridx),
++					 sts & ~RCANFD_RFFIFO_RFMLT);
++		}
++	}
++	if (gerfl & RCANFD_GERFL_CMPOF) {
++		/* Message Lost flag will be set for respective channel
++		 * when this condition happens with counters and flags
++		 * already updated.
++		 */
++		netdev_dbg(ndev, "global payload overflow interrupt\n");
++	}
++
++	/* Clear all global error interrupts. Only affected channels bits
++	 * get cleared
++	 */
++	rcar_canfd_write(priv, RCANFD_GERFL, 0);
++}
++
++static void rcar_canfd_error(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct net_device_stats *stats = &ndev->stats;
++	struct can_frame *cf;
++	struct sk_buff *skb;
++	u32 cerfl, csts;
++	u32 txerr = 0, rxerr = 0;
++	u32 ch = priv->channel;
++
++	/* Propagate the error condition to the CAN stack */
++	skb = alloc_can_err_skb(ndev, &cf);
++	if (!skb) {
++		stats->rx_dropped++;
++		return;
++	}
++
++	/* Channel error interrupt */
++	cerfl = rcar_canfd_read(priv, RCANFD_CERFL(ch));
++	csts = rcar_canfd_read(priv, RCANFD_CSTS(ch));
++	txerr = RCANFD_CSTS_TECCNT(csts);
++	rxerr = RCANFD_CSTS_RECCNT(csts);
++
++	netdev_dbg(ndev, "ch erfl %x sts %x txerr %u rxerr %u\n",
++		   cerfl, csts, txerr, rxerr);
++
++	if (cerfl & RCANFD_CERFL_BEF) {
++		netdev_dbg(ndev, "Bus error\n");
++		cf->can_id |= CAN_ERR_BUSERROR | CAN_ERR_PROT;
++		cf->data[2] = CAN_ERR_PROT_UNSPEC;
++		priv->can.can_stats.bus_error++;
++	}
++	if (cerfl & RCANFD_CERFL_ADEF) {
++		netdev_dbg(ndev, "ACK Delimiter Error\n");
++		stats->tx_errors++;
++		cf->data[3] |= CAN_ERR_PROT_LOC_ACK_DEL;
++	}
++	if (cerfl & RCANFD_CERFL_B0EF) {
++		netdev_dbg(ndev, "Bit Error (dominant)\n");
++		stats->tx_errors++;
++		cf->data[2] |= CAN_ERR_PROT_BIT0;
++	}
++	if (cerfl & RCANFD_CERFL_B1EF) {
++		netdev_dbg(ndev, "Bit Error (recessive)\n");
++		stats->tx_errors++;
++		cf->data[2] |= CAN_ERR_PROT_BIT1;
++	}
++	if (cerfl & RCANFD_CERFL_CEF) {
++		netdev_dbg(ndev, "CRC Error\n");
++		stats->rx_errors++;
++		cf->data[3] |= CAN_ERR_PROT_LOC_CRC_SEQ;
++	}
++	if (cerfl & RCANFD_CERFL_AEF) {
++		netdev_dbg(ndev, "ACK Error\n");
++		stats->tx_errors++;
++		cf->can_id |= CAN_ERR_ACK;
++		cf->data[3] |= CAN_ERR_PROT_LOC_ACK;
++	}
++	if (cerfl & RCANFD_CERFL_FEF) {
++		netdev_dbg(ndev, "Form Error\n");
++		stats->rx_errors++;
++		cf->data[2] |= CAN_ERR_PROT_FORM;
++	}
++	if (cerfl & RCANFD_CERFL_SEF) {
++		netdev_dbg(ndev, "Stuff Error\n");
++		stats->rx_errors++;
++		cf->data[2] |= CAN_ERR_PROT_STUFF;
++	}
++	if (cerfl & RCANFD_CERFL_ALEF) {
++		netdev_dbg(ndev, "Arbitration lost Error\n");
++		priv->can.can_stats.arbitration_lost++;
++		cf->can_id |= CAN_ERR_LOSTARB;
++		cf->data[0] |= CAN_ERR_LOSTARB_UNSPEC;
++	}
++	if (cerfl & RCANFD_CERFL_BLEF) {
++		netdev_dbg(ndev, "Bus Lock Error\n");
++		stats->rx_errors++;
++		cf->can_id |= CAN_ERR_BUSERROR;
++	}
++	if (cerfl & RCANFD_CERFL_EWEF) {
++		netdev_dbg(ndev, "Error warning interrupt\n");
++		priv->can.state = CAN_STATE_ERROR_WARNING;
++		priv->can.can_stats.error_warning++;
++		cf->can_id |= CAN_ERR_CRTL;
++		cf->data[1] = txerr > rxerr ? CAN_ERR_CRTL_TX_WARNING :
++			CAN_ERR_CRTL_RX_WARNING;
++		cf->data[6] = txerr;
++		cf->data[7] = rxerr;
++	}
++	if (cerfl & RCANFD_CERFL_EPEF) {
++		netdev_dbg(ndev, "Error passive interrupt\n");
++		priv->can.state = CAN_STATE_ERROR_PASSIVE;
++		priv->can.can_stats.error_passive++;
++		cf->can_id |= CAN_ERR_CRTL;
++		cf->data[1] = txerr > rxerr ? CAN_ERR_CRTL_TX_PASSIVE :
++			CAN_ERR_CRTL_RX_PASSIVE;
++		cf->data[6] = txerr;
++		cf->data[7] = rxerr;
++	}
++	if (cerfl & RCANFD_CERFL_BOEEF) {
++		netdev_dbg(ndev, "Bus-off entry interrupt\n");
++		rcar_canfd_tx_failure_cleanup(ndev);
++		priv->can.state = CAN_STATE_BUS_OFF;
++		priv->can.can_stats.bus_off++;
++		can_bus_off(ndev);
++		cf->can_id |= CAN_ERR_BUSOFF;
++	}
++	if (cerfl & RCANFD_CERFL_OLEF) {
++		netdev_dbg(ndev,
++			   "Overload Frame Transmission error interrupt\n");
++		stats->tx_errors++;
++		cf->can_id |= CAN_ERR_PROT;
++		cf->data[2] |= CAN_ERR_PROT_OVERLOAD;
++	}
++
++	/* Clear all channel error interrupts */
++	rcar_canfd_write(priv, RCANFD_CERFL(ch), 0);
++	stats->rx_packets++;
++	stats->rx_bytes += cf->can_dlc;
++	netif_rx(skb);
++}
++
++static void rcar_canfd_tx_done(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct net_device_stats *stats = &ndev->stats;
++	u32 sts;
++	u32 ch = priv->channel;
++
++	while (1) {
++		u8 unsent;
++
++		sts = rcar_canfd_read(priv,
++				      RCANFD_CFSTS(ch, RCANFD_CFFIFO_IDX));
++		unsent = RCANFD_CMFIFO_CFMC(sts);
++
++		if (priv->tx_head - priv->tx_tail <= unsent)
++			break;
++
++		stats->tx_packets++;
++		stats->tx_bytes += priv->tx_len[priv->tx_tail %
++						RCANFD_FIFO_DEPTH];
++		priv->tx_len[priv->tx_tail % RCANFD_FIFO_DEPTH] = 0;
++		can_get_echo_skb(ndev, priv->tx_tail % RCANFD_FIFO_DEPTH);
++		priv->tx_tail++;
++		netif_wake_queue(ndev);
++	}
++
++	/* Clear interrupt */
++	rcar_canfd_write(priv, RCANFD_CFSTS(ch, RCANFD_CFFIFO_IDX),
++			 sts & ~RCANFD_CMFIFO_CFTXIF);
++	can_led_event(ndev, CAN_LED_EVENT_TX);
++}
++
++static irqreturn_t rcar_canfd_global_interrupt(int irq, void *dev_id)
++{
++	struct rcar_canfd_global *gpriv = dev_id;
++	struct net_device *ndev;
++	struct rcar_canfd_channel *priv;
++	u32 sts, gerfl;
++	u32 ch, ridx;
++
++	/* Global error interrupts still indicate a condition specific
++	 * to a channel. RxFIFO interrupt is a global interrupt.
++	 */
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		priv = gpriv->ch[ch];
++		ndev = priv->ndev;
++		ridx = ch + RCANFD_RFFIFO_IDX;
++
++		/* Global error interrupts */
++		gerfl = rcar_canfd_read(priv, RCANFD_GERFL);
++		if (RCANFD_GERFL_ERR(gerfl))
++			rcar_canfd_global_error(ndev);
++
++		/* Handle Rx interrupts */
++		sts = rcar_canfd_read(priv, RCANFD_RFSTS(ridx));
++		if (sts & RCANFD_RFFIFO_RFIF) {
++			if (napi_schedule_prep(&priv->napi)) {
++				/* Disable Rx FIFO interrupts */
++				rcar_canfd_clear_bit(priv,
++						     RCANFD_RFCC(ridx),
++						     RCANFD_RFFIFO_RFIE);
++				__napi_schedule(&priv->napi);
++			}
++		}
++	}
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t rcar_canfd_channel_interrupt(int irq, void *dev_id)
++{
++	struct rcar_canfd_global *gpriv = dev_id;
++	struct net_device *ndev;
++	struct rcar_canfd_channel *priv;
++	u32 sts, cerfl, ch;
++
++	/* Common FIFO is a per channel resource */
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		priv = gpriv->ch[ch];
++		ndev = priv->ndev;
++
++		/* Channel error interrupts */
++		cerfl = rcar_canfd_read(priv, RCANFD_CERFL(ch));
++		if (RCANFD_CERFL_ERR(cerfl))
++			rcar_canfd_error(ndev);
++
++		/* Handle Tx interrupts */
++		sts = rcar_canfd_read(priv,
++				      RCANFD_CFSTS(ch, RCANFD_CFFIFO_IDX));
++		if (sts & RCANFD_CMFIFO_CFTXIF)
++			rcar_canfd_tx_done(ndev);
++	}
++	return IRQ_HANDLED;
++}
++
++static void rcar_canfd_set_bittiming(struct net_device *dev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(dev);
++	const struct can_bittiming *bt = &priv->can.bittiming;
++	const struct can_bittiming *dbt = &priv->can.data_bittiming;
++	u16 brp, sjw, tseg1, tseg2;
++	u32 cfg;
++	u32 ch = priv->channel;
++
++	/* Nominal bit timing settings */
++	brp = bt->brp - 1;
++	sjw = bt->sjw - 1;
++	tseg1 = bt->prop_seg + bt->phase_seg1 - 1;
++	tseg2 = bt->phase_seg2 - 1;
++
++	cfg = (RCANFD_NR_TSEG1(tseg1) | RCANFD_NR_BRP(brp) |
++	       RCANFD_NR_SJW(sjw) | RCANFD_NR_TSEG2(tseg2));
++
++	rcar_canfd_write(priv, RCANFD_CCFG(ch), cfg);
++	netdev_dbg(priv->ndev, "nrate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
++		   brp, sjw, tseg1, tseg2);
++
++	/* Data bit timing settings */
++	brp = dbt->brp - 1;
++	sjw = dbt->sjw - 1;
++	tseg1 = dbt->prop_seg + dbt->phase_seg1 - 1;
++	tseg2 = dbt->phase_seg2 - 1;
++
++	cfg = (RCANFD_DR_TSEG1(tseg1) | RCANFD_DR_BRP(brp) |
++	       RCANFD_DR_SJW(sjw) | RCANFD_DR_TSEG2(tseg2));
++
++	rcar_canfd_write(priv, RCANFD_F_CDFG(ch), cfg);
++	netdev_dbg(priv->ndev, "drate: brp %u, sjw %u, tseg1 %u, tseg2 %u\n",
++		   brp, sjw, tseg1, tseg2);
++}
++
++static int rcar_canfd_start(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	int err = -EOPNOTSUPP;
++	u32 sts, ch = priv->channel;
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	/* Ensure channel starts in FD mode */
++	if (!(priv->can.ctrlmode & CAN_CTRLMODE_FD)) {
++		netdev_err(ndev, "enable can fd mode for channel %d\n", ch);
++		goto fail_mode;
++	}
++
++	rcar_canfd_set_bittiming(ndev);
++
++	rcar_canfd_enable_channel_interrupts(priv);
++
++	if (testmode == RCANFD_TESTMODE_INTERNAL_LOOPBACK) {
++		/* Enable self test mode */
++		err = rcar_canfd_configure_selftest_mode(priv);
++		if (err) {
++			netdev_err(ndev,
++				   "channel %u self-test mode failed\n", ch);
++			goto fail_mode_change;
++		}
++	}
++
++	/* Set channel to Operational mode */
++	rcar_canfd_update_bit(priv, RCANFD_CCTR(ch),
++			      RCANFD_CCTR_MODEMASK, RCANFD_CCTR_COPM);
++
++	/* Verify channel mode change */
++	err = readl_poll_timeout((priv->base + RCANFD_CSTS(ch)), sts,
++				 (sts & RCANFD_CSTS_COM), 2, 500000);
++	if (err) {
++		netdev_err(ndev, "channel %u communication state failed\n", ch);
++		goto fail_mode_change;
++	}
++
++	/* Enable Common & Rx FIFO */
++	rcar_canfd_set_bit(priv, RCANFD_CFCC(ch, RCANFD_CFFIFO_IDX),
++			   RCANFD_CMFIFO_CFE);
++	rcar_canfd_set_bit(priv, RCANFD_RFCC(ridx), RCANFD_RFFIFO_RFE);
++
++	priv->can.state = CAN_STATE_ERROR_ACTIVE;
++	return 0;
++
++fail_mode_change:
++	rcar_canfd_disable_channel_interrupts(priv);
++fail_mode:
++	return err;
++}
++
++static int rcar_canfd_open(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct rcar_canfd_global *gpriv = priv->gpriv;
++	int err;
++
++	/* Peripheral clock is already enabled in probe */
++	err = clk_prepare_enable(gpriv->can_clk);
++	if (err) {
++		netdev_err(ndev, "failed to enable CAN clock, error %d\n", err);
++		goto out_clock;
++	}
++
++	err = open_candev(ndev);
++	if (err) {
++		netdev_err(ndev, "open_candev() failed, error %d\n", err);
++		goto out_can_clock;
++	}
++
++	napi_enable(&priv->napi);
++	err = rcar_canfd_start(ndev);
++	if (err)
++		goto out_close;
++	netif_start_queue(ndev);
++	can_led_event(ndev, CAN_LED_EVENT_OPEN);
++	return 0;
++out_close:
++	napi_disable(&priv->napi);
++	close_candev(ndev);
++out_can_clock:
++	clk_disable_unprepare(gpriv->can_clk);
++out_clock:
++	return err;
++}
++
++static void rcar_canfd_stop(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	int err;
++	u32 sts, ch = priv->channel;
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	/* Transition to channel reset mode  */
++	rcar_canfd_update_bit(priv, RCANFD_CCTR(ch),
++			      RCANFD_CCTR_MODEMASK, RCANFD_CCTR_CRESET);
++
++	/* Check Channel reset mode */
++	err = readl_poll_timeout((priv->base + RCANFD_CSTS(ch)), sts,
++				 (sts & RCANFD_CSTS_RESET), 2, 500000);
++	if (err)
++		netdev_err(ndev, "channel %u reset failed\n", ch);
++
++	rcar_canfd_disable_channel_interrupts(priv);
++
++	/* Disable Common & Rx FIFO */
++	rcar_canfd_clear_bit(priv, RCANFD_CFCC(ch, RCANFD_CFFIFO_IDX),
++			     RCANFD_CMFIFO_CFE);
++	rcar_canfd_clear_bit(priv, RCANFD_RFCC(ridx), RCANFD_RFFIFO_RFE);
++
++	/* Set the state as STOPPED */
++	priv->can.state = CAN_STATE_STOPPED;
++}
++
++static int rcar_canfd_close(struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct rcar_canfd_global *gpriv = priv->gpriv;
++
++	netif_stop_queue(ndev);
++	rcar_canfd_stop(ndev);
++	napi_disable(&priv->napi);
++	clk_disable_unprepare(gpriv->can_clk);
++	close_candev(ndev);
++	can_led_event(ndev, CAN_LED_EVENT_STOP);
++	return 0;
++}
++
++static netdev_tx_t rcar_canfd_start_xmit(struct sk_buff *skb,
++					 struct net_device *ndev)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(ndev);
++	struct canfd_frame *cf = (struct canfd_frame *)skb->data;
++	u32 sts, id, ptr;
++	u32 ch = priv->channel;
++
++	if (can_dropped_invalid_skb(ndev, skb))
++		return NETDEV_TX_OK;
++
++	if (cf->can_id & CAN_EFF_FLAG) {
++		id = cf->can_id & CAN_EFF_MASK;
++		id |= RCANFD_CMFIFO_CFIDE;
++	} else {
++		id = cf->can_id & CAN_SFF_MASK;
++	}
++
++	if (cf->can_id & CAN_RTR_FLAG)
++		id |= RCANFD_CMFIFO_CFRTR;
++
++	rcar_canfd_write(priv, RCANFD_F_CFID(ch, RCANFD_CFFIFO_IDX),
++			 id);
++	ptr = RCANFD_CMFIFO_CFDLC(can_len2dlc(cf->len));
++	rcar_canfd_write(priv, RCANFD_F_CFPTR(ch, RCANFD_CFFIFO_IDX),
++			 ptr);
++
++	rcar_canfd_put_data(cf, priv,
++			    RCANFD_F_CFDF(ch, RCANFD_CFFIFO_IDX, 0));
++
++	priv->tx_len[priv->tx_head % RCANFD_FIFO_DEPTH] = cf->len;
++	can_put_echo_skb(skb, ndev, priv->tx_head % RCANFD_FIFO_DEPTH);
++	priv->tx_head++;
++
++	sts = rcar_canfd_read(priv, RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX));
++	if (can_is_canfd_skb(skb)) {
++		/* CAN FD frame format */
++		sts |= RCANFD_CMFIFO_CFFDF;
++		if (cf->flags & CANFD_BRS)
++			sts |= RCANFD_CMFIFO_CFBRS;
++		else
++			sts &= ~RCANFD_CMFIFO_CFBRS;
++	} else {
++		sts &= ~RCANFD_CMFIFO_CFFDF;
++	}
++	rcar_canfd_write(priv, RCANFD_F_CFFDCSTS(ch, RCANFD_CFFIFO_IDX), sts);
++
++	/* Start Tx: Write 0xff to CFPC to increment the CPU-side
++	 * pointer for the Common FIFO
++	 */
++	rcar_canfd_write(priv, RCANFD_CFPCTR(ch, RCANFD_CFFIFO_IDX), 0xff);
++
++	/* Stop the queue if we've filled all FIFO entries */
++	if (priv->tx_head - priv->tx_tail >= RCANFD_FIFO_DEPTH)
++		netif_stop_queue(ndev);
++	return NETDEV_TX_OK;
++}
++
++static void rcar_canfd_rx_pkt(struct rcar_canfd_channel *priv)
++{
++	struct net_device_stats *stats = &priv->ndev->stats;
++	struct canfd_frame *cf;
++	struct sk_buff *skb;
++	u32 sts = 0, id, ptr;
++	u32 ch = priv->channel;
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	id = rcar_canfd_read(priv, RCANFD_F_RFID(ridx));
++	ptr = rcar_canfd_read(priv, RCANFD_F_RFPTR(ridx));
++
++	sts = rcar_canfd_read(priv, RCANFD_F_RFFDSTS(ridx));
++	if (sts & RCANFD_RFFIFO_RFFDF)
++		skb = alloc_canfd_skb(priv->ndev, &cf);
++	else
++		skb = alloc_can_skb(priv->ndev,
++				    (struct can_frame **)&cf);
++
++	if (!skb) {
++		stats->rx_dropped++;
++		return;
++	}
++
++	if (sts & RCANFD_RFFIFO_RFFDF)
++		cf->len = can_dlc2len(RCANFD_RFFIFO_RFDLC(ptr));
++	else
++		cf->len = get_can_dlc(RCANFD_RFFIFO_RFDLC(ptr));
++
++	if (sts & RCANFD_RFFIFO_RFESI) {
++		cf->flags |= CANFD_ESI;
++		netdev_dbg(priv->ndev, "ESI Error\n");
++	}
++
++	if (id & RCANFD_RFFIFO_RFIDE)
++		cf->can_id = (id & CAN_EFF_MASK) | CAN_EFF_FLAG;
++	else
++		cf->can_id = id & CAN_SFF_MASK;
++
++	if (!(sts & RCANFD_RFFIFO_RFFDF) && (id & RCANFD_RFFIFO_RFRTR)) {
++		cf->can_id |= CAN_RTR_FLAG;
++	} else {
++		if (sts & RCANFD_RFFIFO_RFBRS)
++			cf->flags |= CANFD_BRS;
++
++		rcar_canfd_get_data(cf, priv, RCANFD_F_RFDF(ridx, 0));
++	}
++
++	/* Write 0xff to RFPC to increment the CPU-side
++	 * pointer of the Rx FIFO
++	 */
++	rcar_canfd_write(priv, RCANFD_RFPCTR(ridx), 0xff);
++
++	can_led_event(priv->ndev, CAN_LED_EVENT_RX);
++
++	stats->rx_bytes += cf->len;
++	stats->rx_packets++;
++	netif_receive_skb(skb);
++}
++
++static int rcar_canfd_rx_poll(struct napi_struct *napi, int quota)
++{
++	struct rcar_canfd_channel *priv =
++		container_of(napi, struct rcar_canfd_channel, napi);
++	int num_pkts;
++	u32 sts;
++	u32 ch = priv->channel;
++	u32 ridx = ch + RCANFD_RFFIFO_IDX;
++
++	for (num_pkts = 0; num_pkts < quota; num_pkts++) {
++		sts = rcar_canfd_read(priv, RCANFD_RFSTS(ridx));
++		/* Clear interrupt bit */
++		if (sts & RCANFD_RFFIFO_RFIF)
++			rcar_canfd_write(priv, RCANFD_RFSTS(ridx),
++					 sts & ~RCANFD_RFFIFO_RFIF);
++
++		/* Check FIFO empty condition */
++		if (sts & RCANFD_RFFIFO_RFEMP)
++			break;
++
++		rcar_canfd_rx_pkt(priv);
++	}
++
++	/* All packets processed */
++	if (num_pkts < quota) {
++		napi_complete(napi);
++		/* Enable Rx FIFO interrupts */
++		rcar_canfd_set_bit(priv, RCANFD_RFCC(ridx), RCANFD_RFFIFO_RFIE);
++	}
++	return num_pkts;
++}
++
++static int rcar_canfd_do_set_mode(struct net_device *ndev, enum can_mode mode)
++{
++	int err;
++
++	switch (mode) {
++	case CAN_MODE_START:
++		err = rcar_canfd_start(ndev);
++		if (err)
++			return err;
++		netif_wake_queue(ndev);
++		return 0;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
++static int rcar_canfd_get_berr_counter(const struct net_device *dev,
++				       struct can_berr_counter *bec)
++{
++	struct rcar_canfd_channel *priv = netdev_priv(dev);
++	u32 val, ch = priv->channel;
++
++	/* Peripheral clock is already enabled in probe */
++	val = rcar_canfd_read(priv, RCANFD_CSTS(ch));
++	bec->txerr = RCANFD_CSTS_TECCNT(val);
++	bec->rxerr = RCANFD_CSTS_RECCNT(val);
++	return 0;
++}
++
++static const struct net_device_ops rcar_canfd_netdev_ops = {
++	.ndo_open = rcar_canfd_open,
++	.ndo_stop = rcar_canfd_close,
++	.ndo_start_xmit = rcar_canfd_start_xmit,
++	.ndo_change_mtu = can_change_mtu,
++};
++
++static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch)
++{
++	struct platform_device *pdev = gpriv->pdev;
++	struct rcar_canfd_channel *priv;
++	struct net_device *ndev;
++	int err = -ENODEV;
++
++	ndev = alloc_candev(sizeof(*priv), RCANFD_FIFO_DEPTH);
++	if (!ndev) {
++		dev_err(&pdev->dev, "alloc_candev() failed\n");
++		err = -ENOMEM;
++		goto fail;
++	}
++	priv = netdev_priv(ndev);
++
++	ndev->netdev_ops = &rcar_canfd_netdev_ops;
++	ndev->flags |= IFF_ECHO;
++	priv->ndev = ndev;
++	priv->base = gpriv->base;
++	priv->channel = ch;
++	priv->can.clock.freq = gpriv->freq;
++	dev_info(&pdev->dev, "can_clk rate is %u\n", priv->can.clock.freq);
++
++	priv->can.bittiming_const = &rcar_canfd_nom_bittiming_const;
++	priv->can.data_bittiming_const =
++		&rcar_canfd_data_bittiming_const;
++
++	/* Controller starts in CAN FD mode, which supports classical CAN and
++	 * CAN FD frames. For classical CAN frames only configurations, data
++	 * bitrate should be configured the same as nominal bitrate.
++	 */
++	priv->can.ctrlmode_supported = CAN_CTRLMODE_BERR_REPORTING |
++		CAN_CTRLMODE_FD;
++
++	priv->can.do_set_mode = rcar_canfd_do_set_mode;
++	priv->can.do_get_berr_counter = rcar_canfd_get_berr_counter;
++	priv->gpriv = gpriv;
++	SET_NETDEV_DEV(ndev, &pdev->dev);
++
++	netif_napi_add(ndev, &priv->napi, rcar_canfd_rx_poll,
++		       RCANFD_NAPI_WEIGHT);
++	err = register_candev(ndev);
++	if (err) {
++		dev_err(&pdev->dev,
++			"register_candev() failed, error %d\n", err);
++		goto fail_candev;
++	}
++
++	rcar_canfd_init_debugfs(priv);
++	devm_can_led_init(ndev);
++	gpriv->ch[priv->channel] = priv;
++	dev_info(&pdev->dev, "device registered (channel %u)\n", priv->channel);
++	return 0;
++
++fail_candev:
++	netif_napi_del(&priv->napi);
++	free_candev(ndev);
++fail:
++	return err;
++}
++
++static void rcar_canfd_channel_remove(struct rcar_canfd_global *gpriv, u32 ch)
++{
++	struct rcar_canfd_channel *priv = gpriv->ch[ch];
++
++	if (priv) {
++		unregister_candev(priv->ndev);
++		netif_napi_del(&priv->napi);
++		free_candev(priv->ndev);
++	}
++}
++
++static int rcar_canfd_probe(struct platform_device *pdev)
++{
++	struct resource *mem;
++	void __iomem *addr;
++	u32 sts, ch;
++	struct rcar_canfd_global *gpriv;
++	struct device_node *of_child;
++	unsigned long channels_mask = 0;
++	int err, ch_irq, g_irq;
++
++	of_child = of_get_child_by_name(pdev->dev.of_node, "channel0");
++	if (of_child && of_device_is_available(of_child))
++		channels_mask |= BIT(0);	/* Channel 0 */
++
++	of_child = of_get_child_by_name(pdev->dev.of_node, "channel1");
++	if (of_child && of_device_is_available(of_child))
++		channels_mask |= BIT(1);	/* Channel 1 */
++
++	ch_irq = platform_get_irq(pdev, 0);
++	if (ch_irq < 0) {
++		dev_err(&pdev->dev, "no Channel IRQ resource\n");
++		err = ch_irq;
++		goto fail_dev;
++	}
++
++	g_irq = platform_get_irq(pdev, 1);
++	if (g_irq < 0) {
++		dev_err(&pdev->dev, "no Global IRQ resource\n");
++		err = g_irq;
++		goto fail_dev;
++	}
++
++	/* Global controller context */
++	gpriv = devm_kzalloc(&pdev->dev, sizeof(*gpriv), GFP_KERNEL);
++	if (!gpriv) {
++		err = -ENOMEM;
++		goto fail_dev;
++	}
++	gpriv->pdev = pdev;
++	gpriv->channels_mask = channels_mask;
++
++	/* Peripheral clock */
++	gpriv->clkp = devm_clk_get(&pdev->dev, "fck");
++	if (IS_ERR(gpriv->clkp)) {
++		err = PTR_ERR(gpriv->clkp);
++		dev_err(&pdev->dev, "cannot get peripheral clock, error %d\n",
++			err);
++		goto fail_dev;
++	}
++
++	/* fCAN clock: Pick External clock. If not available fallback to
++	 * CANFD clock
++	 */
++	gpriv->can_clk = devm_clk_get(&pdev->dev, "can_clk");
++	if (IS_ERR(gpriv->can_clk)) {
++		gpriv->can_clk = devm_clk_get(&pdev->dev, "canfd");
++		if (IS_ERR(gpriv->can_clk)) {
++			err = PTR_ERR(gpriv->can_clk);
++			dev_err(&pdev->dev,
++				"cannot get canfd clock, error %d\n", err);
++			goto fail_dev;
++		}
++		gpriv->clock_select = RCANFD_CANFDCLK;
++
++	} else {
++		gpriv->clock_select = RCANFD_EXTCLK;
++	}
++	gpriv->freq = clk_get_rate(gpriv->can_clk);
++
++	if (gpriv->clock_select == RCANFD_CANFDCLK)
++		/* CANFD clock is further divided by (1/2) within the IP */
++		gpriv->freq /= 2;
++
++	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	addr = devm_ioremap_resource(&pdev->dev, mem);
++	if (IS_ERR(addr)) {
++		err = PTR_ERR(addr);
++		goto fail_dev;
++	}
++	gpriv->base = addr;
++
++	/* Request IRQ that's common for both channels */
++	err = devm_request_irq(&pdev->dev, ch_irq,
++			       rcar_canfd_channel_interrupt, 0,
++			       "canfd.chn", gpriv);
++	if (err) {
++		dev_err(&pdev->dev, "devm_request_irq(%d) failed, error %d\n",
++			ch_irq, err);
++		goto fail_dev;
++	}
++	err = devm_request_irq(&pdev->dev, g_irq,
++			       rcar_canfd_global_interrupt, 0,
++			       "canfd.gbl", gpriv);
++	if (err) {
++		dev_err(&pdev->dev, "devm_request_irq(%d) failed, error %d\n",
++			g_irq, err);
++		goto fail_dev;
++	}
++
++	/* Enable peripheral clock for register access */
++	err = clk_prepare_enable(gpriv->clkp);
++	if (err) {
++		dev_err(&pdev->dev,
++			"failed to enable peripheral clock, error %d\n", err);
++		goto fail_dev;
++	}
++
++	err = rcar_canfd_reset_controller(gpriv);
++	if (err) {
++		dev_err(&pdev->dev, "reset controller failed\n");
++		goto fail_clk;
++	}
++
++	/* Controller in Global reset & Channel reset mode */
++	rcar_canfd_configure_controller(gpriv);
++
++	/* Configure per channel attributes */
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		/* Configure Channel's Rx fifo */
++		rcar_canfd_configure_rx(gpriv, ch);
++
++		/* Configure Channel's Tx (Common) fifo */
++		rcar_canfd_configure_tx(gpriv, ch);
++
++		/* Configure receive rules */
++		rcar_canfd_configure_afl_rules(gpriv, ch);
++	}
++
++	/* Configure inter-channel test mode when both channels enabled */
++	if ((testmode == RCANFD_TESTMODE_INTERCHANNEL) &&
++	    (gpriv->channels_mask == RCANFD_CHANNELS_MASK)) {
++		err = rcar_canfd_configure_interch_mode(gpriv);
++		if (err)
++			goto fail_clk;
++	}
++
++	/* Configure common interrupts */
++	rcar_canfd_enable_global_interrupts(gpriv);
++
++	/* Start Global operation mode */
++	rcar_canfd_update_bit(gpriv, RCANFD_GCTR, RCANFD_GCTR_MODEMASK,
++			      RCANFD_GCTR_GOPM);
++
++	/* Verify mode change */
++	err = readl_poll_timeout((gpriv->base + RCANFD_GSTS), sts,
++				 !(sts & RCANFD_GSTS_GNOPM), 2, 500000);
++	if (err) {
++		dev_err(&pdev->dev, "global operational mode failed\n");
++		goto fail_mode;
++	}
++
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		err = rcar_canfd_channel_probe(gpriv, ch);
++		if (err)
++			goto fail_channel;
++	}
++
++	platform_set_drvdata(pdev, gpriv);
++	if (testmode)
++		dev_info(&pdev->dev, "in %s test mode\n",
++			 (testmode == RCANFD_TESTMODE_INTERNAL_LOOPBACK) ?
++			 "internal loopback" : "inter-channel");
++
++	dev_info(&pdev->dev, "global operational state (clk %d)\n",
++		 gpriv->clock_select);
++	return 0;
++
++fail_channel:
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS)
++		rcar_canfd_channel_remove(gpriv, ch);
++fail_mode:
++	rcar_canfd_disable_global_interrupts(gpriv);
++fail_clk:
++	clk_disable_unprepare(gpriv->clkp);
++fail_dev:
++	return err;
++}
++
++static int rcar_canfd_remove(struct platform_device *pdev)
++{
++	struct rcar_canfd_global *gpriv = platform_get_drvdata(pdev);
++	struct rcar_canfd_channel *priv;
++	u32 ch;
++
++	rcar_canfd_reset_controller(gpriv);
++	rcar_canfd_disable_global_interrupts(gpriv);
++
++	for_each_set_bit(ch, &gpriv->channels_mask, RCANFD_NUM_CHANNELS) {
++		priv = gpriv->ch[ch];
++		if (priv) {
++			rcar_canfd_disable_channel_interrupts(priv);
++			rcar_canfd_remove_debugfs(priv);
++			unregister_candev(priv->ndev);
++			netif_napi_del(&priv->napi);
++			free_candev(priv->ndev);
++		}
++	}
++
++	/* Enter global sleep mode */
++	rcar_canfd_set_bit(gpriv, RCANFD_GCTR, RCANFD_GCTR_SLPR);
++	clk_disable_unprepare(gpriv->clkp);
++	return 0;
++}
++
++static int __maybe_unused rcar_canfd_suspend(struct device *dev)
++{
++	return 0;
++}
++
++static int __maybe_unused rcar_canfd_resume(struct device *dev)
++{
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(rcar_canfd_pm_ops, rcar_canfd_suspend,
++			 rcar_canfd_resume);
++
++static const struct of_device_id rcar_canfd_of_table[] __maybe_unused = {
++	{ .compatible = "renesas,rcar-gen3-canfd" },
++	{ }
++};
++
++MODULE_DEVICE_TABLE(of, rcar_canfd_of_table);
++
++static struct platform_driver rcar_canfd_driver = {
++	.driver = {
++		.name = RCANFD_DRV_NAME,
++		.of_match_table = of_match_ptr(rcar_canfd_of_table),
++		.pm = &rcar_canfd_pm_ops,
++	},
++	.probe = rcar_canfd_probe,
++	.remove = rcar_canfd_remove,
++};
++
++module_platform_driver(rcar_canfd_driver);
++
++MODULE_AUTHOR("Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>");
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("CAN FD driver for Renesas R-Car SoC");
++MODULE_ALIAS("platform:" RCANFD_DRV_NAME);
+-- 
+1.9.1
