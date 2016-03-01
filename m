@@ -1,95 +1,74 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v6 09/11] drm/hisilicon: Add support for external bridge
-Date: Tue, 1 Mar 2016 18:34:59 +0800
-Message-ID: <CAGd==043yRA0s3rwLOZyjuRjty3k=Zh8=faMdv6Nudv-iTWJKg@mail.gmail.com>
-References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
- <1456476028-36880-10-git-send-email-xinliang.liu@linaro.org>
- <56D49391.1070500@codeaurora.org>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 7/8] ARM64: dts: amlogic: Extend GXBaby GIC node
+Date: Tue, 1 Mar 2016 11:01:07 +0000
+Message-ID: <56D57673.8030702@arm.com>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+ <1456789465-2962-8-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56D49391.1070500@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456789465-2962-8-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMSBNYXJjaCAyMDE2IGF0IDAyOjUzLCBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJv
-cmEub3JnPiB3cm90ZToKPgo+Cj4gT24gMi8yNi8yMDE2IDI6MTAgUE0sIFhpbmxpYW5nIExpdSB3
-cm90ZToKPj4KPj4gQWRkIHN1cHBvcnQgZm9yIGV4dGVybmFsIEhETUkgYnJpZGdlLgo+Pgo+PiB2
-NjogTm9uZS4KPj4gdjU6IE5vbmUuCj4+IHY0OiBOb25lLgo+PiB2MzoKPj4gLSBGaXggYSB0eXBv
-OiBzL2V4dGVyYW5sL2V4dGVybmFsLgo+PiB2MjoKPj4gLSBSZW1vdmUgYWJ0cmFjdGlvbiBsYXll
-ci4KPj4KPgo+IFJldmlld2VkLWJ5OiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEu
-b3JnPgoKVGhhbmtzIDotKQoKQmVzdCwKLXhpbmxpYW5nCgo+Cj4KPj4gU2lnbmVkLW9mZi1ieTog
-WGlubGlhbmcgTGl1IDx4aW5saWFuZy5saXVAbGluYXJvLm9yZz4KPj4gLS0tCj4+ICAgZHJpdmVy
-cy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1fZHNpLmMgfCA1Mgo+PiArKysrKysrKysr
-KysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKykK
-Pj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJt
-X2RzaS5jCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9kd19kcm1fZHNpLmMK
-Pj4gaW5kZXggZjE1Nzk4YjYxNDUxLi5jMmM0MDY0NDY1MTMgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2RzaS5jCj4+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9oaXNpbGljb24va2lyaW4vZHdfZHJtX2RzaS5jCj4+IEBAIC03OSw2ICs3OSw3IEBA
-IHN0cnVjdCBkc2lfaHdfY3R4IHsKPj4KPj4gICBzdHJ1Y3QgZHdfZHNpIHsKPj4gICAgICAgICBz
-dHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsKPj4gKyAgICAgICBzdHJ1Y3QgZHJtX2JyaWRnZSAq
-YnJpZGdlOwo+PiAgICAgICAgIHN0cnVjdCBtaXBpX2RzaV9ob3N0IGhvc3Q7Cj4+ICAgICAgICAg
-c3RydWN0IGRybV9kaXNwbGF5X21vZGUgY3VyX21vZGU7Cj4+ICAgICAgICAgc3RydWN0IGRzaV9o
-d19jdHggKmN0eDsKPj4gQEAgLTY4OCw2ICs2ODksMjUgQEAgc3RhdGljIGludCBkc2lfaG9zdF9p
-bml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0Cj4+IGR3X2RzaSAqZHNpKQo+PiAgICAgICAg
-IHJldHVybiAwOwo+PiAgIH0KPj4KPj4gK3N0YXRpYyBpbnQgZHNpX2JyaWRnZV9pbml0KHN0cnVj
-dCBkcm1fZGV2aWNlICpkZXYsIHN0cnVjdCBkd19kc2kgKmRzaSkKPj4gK3sKPj4gKyAgICAgICBz
-dHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIgPSAmZHNpLT5lbmNvZGVyOwo+PiArICAgICAgIHN0
-cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UgPSBkc2ktPmJyaWRnZTsKPj4gKyAgICAgICBpbnQgcmV0
-Owo+PiArCj4+ICsgICAgICAgLyogYXNzb2NpYXRlIHRoZSBicmlkZ2UgdG8gZHNpIGVuY29kZXIg
-Ki8KPj4gKyAgICAgICBlbmNvZGVyLT5icmlkZ2UgPSBicmlkZ2U7Cj4+ICsgICAgICAgYnJpZGdl
-LT5lbmNvZGVyID0gZW5jb2RlcjsKPj4gKwo+PiArICAgICAgIHJldCA9IGRybV9icmlkZ2VfYXR0
-YWNoKGRldiwgYnJpZGdlKTsKPj4gKyAgICAgICBpZiAocmV0KSB7Cj4+ICsgICAgICAgICAgICAg
-ICBEUk1fRVJST1IoImZhaWxlZCB0byBhdHRhY2ggZXh0ZXJuYWwgYnJpZGdlXG4iKTsKPj4gKyAg
-ICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgcmV0
-dXJuIDA7Cj4+ICt9Cj4+ICsKPj4gICBzdGF0aWMgaW50IGRzaV9iaW5kKHN0cnVjdCBkZXZpY2Ug
-KmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkCj4+ICpkYXRhKQo+PiAgIHsKPj4gICAg
-ICAgICBzdHJ1Y3QgZHNpX2RhdGEgKmRkYXRhID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+IEBA
-IC03MDMsNiArNzIzLDEwIEBAIHN0YXRpYyBpbnQgZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2
-LCBzdHJ1Y3QgZGV2aWNlCj4+ICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4+ICAgICAgICAgaWYgKHJl
-dCkKPj4gICAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+Cj4+ICsgICAgICAgcmV0ID0gZHNp
-X2JyaWRnZV9pbml0KGRybV9kZXYsIGRzaSk7Cj4+ICsgICAgICAgaWYgKHJldCkKPj4gKyAgICAg
-ICAgICAgICAgIHJldHVybiByZXQ7Cj4+ICsKPj4gICAgICAgICByZXR1cm4gMDsKPj4gICB9Cj4+
-Cj4+IEBAIC03MTksOCArNzQzLDM2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgY29tcG9uZW50X29w
-cyBkc2lfb3BzID0gewo+PiAgIHN0YXRpYyBpbnQgZHNpX3BhcnNlX2R0KHN0cnVjdCBwbGF0Zm9y
-bV9kZXZpY2UgKnBkZXYsIHN0cnVjdCBkd19kc2kKPj4gKmRzaSkKPj4gICB7Cj4+ICAgICAgICAg
-c3RydWN0IGRzaV9od19jdHggKmN0eCA9IGRzaS0+Y3R4Owo+PiArICAgICAgIHN0cnVjdCBkZXZp
-Y2Vfbm9kZSAqbnAgPSBwZGV2LT5kZXYub2Zfbm9kZTsKPj4gKyAgICAgICBzdHJ1Y3QgZGV2aWNl
-X25vZGUgKmVuZHBvaW50LCAqYnJpZGdlX25vZGU7Cj4+ICsgICAgICAgc3RydWN0IGRybV9icmlk
-Z2UgKmJyaWRnZTsKPj4gICAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgKnJlczsKPj4KPj4gKyAgICAg
-ICAvKgo+PiArICAgICAgICAqIEdldCB0aGUgZW5kcG9pbnQgbm9kZS4gSW4gb3VyIGNhc2UsIGRz
-aSBoYXMgb25lIG91dHB1dCBwb3J0MQo+PiArICAgICAgICAqIHRvIHdoaWNoIHRoZSBleHRlcm5h
-bCBIRE1JIGJyaWRnZSBpcyBjb25uZWN0ZWQuCj4+ICsgICAgICAgICovCj4+ICsgICAgICAgZW5k
-cG9pbnQgPSBvZl9ncmFwaF9nZXRfZW5kcG9pbnRfYnlfcmVncyhucCwgMSwgLTEpOwo+PiArICAg
-ICAgIGlmICghZW5kcG9pbnQpIHsKPj4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigibm8gdmFs
-aWQgZW5kcG9pbnQgbm9kZVxuIik7Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsK
-Pj4gKyAgICAgICB9Cj4+ICsgICAgICAgb2Zfbm9kZV9wdXQoZW5kcG9pbnQpOwo+PiArCj4+ICsg
-ICAgICAgYnJpZGdlX25vZGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVuZHBv
-aW50KTsKPj4gKyAgICAgICBpZiAoIWJyaWRnZV9ub2RlKSB7Cj4+ICsgICAgICAgICAgICAgICBE
-Uk1fRVJST1IoIm5vIHZhbGlkIGJyaWRnZSBub2RlXG4iKTsKPj4gKyAgICAgICAgICAgICAgIHJl
-dHVybiAtRU5PREVWOwo+PiArICAgICAgIH0KPj4gKyAgICAgICBvZl9ub2RlX3B1dChicmlkZ2Vf
-bm9kZSk7Cj4+ICsKPj4gKyAgICAgICBicmlkZ2UgPSBvZl9kcm1fZmluZF9icmlkZ2UoYnJpZGdl
-X25vZGUpOwo+PiArICAgICAgIGlmICghYnJpZGdlKSB7Cj4+ICsgICAgICAgICAgICAgICBEUk1f
-SU5GTygid2FpdCBmb3IgZXh0ZXJuYWwgSERNSSBicmlkZ2UgZHJpdmVyLlxuIik7Cj4+ICsgICAg
-ICAgICAgICAgICByZXR1cm4gLUVQUk9CRV9ERUZFUjsKPj4gKyAgICAgICB9Cj4+ICsgICAgICAg
-ZHNpLT5icmlkZ2UgPSBicmlkZ2U7Cj4+ICsKPj4gICAgICAgICBjdHgtPnBjbGsgPSBkZXZtX2Ns
-a19nZXQoJnBkZXYtPmRldiwgInBjbGsiKTsKPj4gICAgICAgICBpZiAoSVNfRVJSKGN0eC0+cGNs
-aykpIHsKPj4gICAgICAgICAgICAgICAgIERSTV9FUlJPUigiZmFpbGVkIHRvIGdldCBwY2xrIGNs
-b2NrXG4iKTsKPj4KPgo+IC0tCj4gUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMg
-YSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxh
-Ym9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi Andreas,
+
+On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
+> Add GICH and GICV resources for HYP mode - guess based on other vendo=
+rs.
+
+Do you know if the firmware allows the kernel to be entered in EL2
+(which is the arm64 name for HYP)?
+So can we run kvm?
+If you have a booted kernel, can you grep for "EL2" and "kvm" in the dm=
+esg?
+
+Also you should merge this patch into 3/8, same for 8/8.
+
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64=
+/boot/dts/amlogic/meson-gxbb.dtsi
+> index 0ae089bd1806..5088ae3ff653 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -117,7 +117,9 @@
+>  		gic: interrupt-controller@c4301000 {
+>  			compatible =3D "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+
+I think "arm,gic-400" is the name to use here these days, especially fo=
+r
+arm64.
+
+>  			reg =3D <0x0 0xc4301000 0 0x1000>,
+> -			      <0x0 0xc4302000 0 0x0100>;
+> +			      <0x0 0xc4302000 0 0x0100>,
+
+Please use 0x2000 for the size here. I guess this is really the GIC-400
+from ARM, and in this case this is the right size, [1] is the reference
+here. This will enable EOI mode 1 for KVM.
+
+Cheers,
+Andre.
+
+[1]
+http://infocenter.arm.com/help/index.jsp?topic=3D/com.arm.doc.ddi0471b/=
+CHDIFAEE.html
+
+> +			      <0x0 0xc4304000 0 0x2000>,
+> +			      <0x0 0xc4306000 0 0x2000>;
+>  			interrupt-controller;
+>  			interrupts =3D <GIC_PPI 9
+>  				(GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
+>=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
