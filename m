@@ -1,115 +1,59 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc2: Add support for Lantiq ARX and XRX SoCs
-Date: Mon, 29 Feb 2016 18:32:40 -0800
-Message-ID: <56D4FF48.2090205@synopsys.com>
-References: <1456569084-31292-1-git-send-email-a.seppala@gmail.com>
+From: Zhiqiang Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] ARM64: dts: add LS1043a-QDS board support
+Date: Tue, 1 Mar 2016 02:42:02 +0000
+Message-ID: <AM4PR04MB2148867ED34556A79AC0EB1584BB0@AM4PR04MB2148.eurprd04.prod.outlook.com>
+References: <1450948298-33238-1-git-send-email-Zhiqiang.Hou@freescale.com>
+ <1450948298-33238-2-git-send-email-Zhiqiang.Hou@freescale.com>
+ <20160219032830.GG6756@tiger>
+ <HE1PR04MB0906707F686591B374AA364F84A00@HE1PR04MB0906.eurprd04.prod.outlook.com>
+ <20160228023818.GB22051@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456569084-31292-1-git-send-email-a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20160228023818.GB22051@tiger>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?QW50dGkgU2VwcMOkbMOk?= <a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/27/2016 2:32 AM, Antti Sepp=C3=A4l=C3=A4 wrote:
-> Add support for Lantiq ARX and XRX SoC families to the dwc2 driver.
->=20
-> Signed-off-by: Antti Sepp=C3=A4l=C3=A4 <a.seppala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
->  drivers/usb/dwc2/platform.c                    | 34 ++++++++++++++++=
-++++++++++
->  2 files changed, 36 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documen=
-tation/devicetree/bindings/usb/dwc2.txt
-> index 2213682..20a68bf 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -8,6 +8,8 @@ Required properties:
->    - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3=
-066 Soc;
->    - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for r=
-k3188 Soc;
->    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for r=
-k3288 Soc;
-> +  - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq =
-ARX SoCs;
-> +  - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq =
-XRX SoCs;
->    - snps,dwc2: A generic DWC2 USB controller with default parameters=
-=2E
->  - reg : Should contain 1 register range (address and length)
->  - interrupts : Should contain 1 interrupt
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.=
-c
-> index 690b9fd..0e9e4d3 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -149,6 +149,38 @@ static const struct dwc2_core_params params_rk30=
-66 =3D {
->  	.hibernation			=3D -1,
->  };
-> =20
-> +static const struct dwc2_core_params params_ltq =3D {
-> +	.otg_cap			=3D 2,	/* non-HNP/non-SRP */
-> +	.otg_ver			=3D -1,
-> +	.dma_enable			=3D -1,
-> +	.dma_desc_enable		=3D -1,
-> +	.dma_desc_fs_enable		=3D -1,
-> +	.speed				=3D -1,
-> +	.enable_dynamic_fifo		=3D -1,
-> +	.en_multiple_tx_fifo		=3D -1,
-> +	.host_rx_fifo_size		=3D 288,	/* 288 DWORDs */
-> +	.host_nperio_tx_fifo_size	=3D 128,	/* 128 DWORDs */
-> +	.host_perio_tx_fifo_size	=3D 96,	/* 96 DWORDs */
-> +	.max_transfer_size		=3D 65535,
-> +	.max_packet_count		=3D 511,
-> +	.host_channels			=3D -1,
-> +	.phy_type			=3D -1,
-> +	.phy_utmi_width			=3D -1,
-> +	.phy_ulpi_ddr			=3D -1,
-> +	.phy_ulpi_ext_vbus		=3D -1,
-> +	.i2c_enable			=3D -1,
-> +	.ulpi_fs_ls			=3D -1,
-> +	.host_support_fs_ls_low_power	=3D -1,
-> +	.host_ls_low_power_phy_clk	=3D -1,
-> +	.ts_dline			=3D -1,
-> +	.reload_ctl			=3D -1,
-> +	.ahbcfg				=3D GAHBCFG_HBSTLEN_INCR16 <<
-> +					  GAHBCFG_HBSTLEN_SHIFT,
-> +	.uframe_sched			=3D -1,
-> +	.external_id_pin_ctl		=3D -1,
-> +	.hibernation			=3D -1,
-> +};
-> +
->  /*
->   * Check the dr_mode against the module configuration and hardware
->   * capabilities.
-> @@ -428,6 +460,8 @@ static const struct of_device_id dwc2_of_match_ta=
-ble[] =3D {
->  	{ .compatible =3D "brcm,bcm2835-usb", .data =3D &params_bcm2835 },
->  	{ .compatible =3D "hisilicon,hi6220-usb", .data =3D &params_hi6220 =
-},
->  	{ .compatible =3D "rockchip,rk3066-usb", .data =3D &params_rk3066 }=
-,
-> +	{ .compatible =3D "lantiq,arx100-usb", .data =3D &params_ltq },
-> +	{ .compatible =3D "lantiq,xrx200-usb", .data =3D &params_ltq },
->  	{ .compatible =3D "snps,dwc2", .data =3D NULL },
->  	{ .compatible =3D "samsung,s3c6400-hsotg", .data =3D NULL},
->  	{},
->=20
-
-
-Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
-
-John
-
+SGkgU2hhd24sDQoNClRoYW5rcyBmb3IgeW91ciBhZHZpY2UhDQoNCj4gLS0tLS1PcmlnaW5hbCBN
+ZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd25ndW9Aa2VybmVsLm9y
+Z10NCj4gU2VudDogMjAxNsTqMtTCMjjI1SAxMDozOA0KPiBUbzogWmhpcWlhbmcgSG91IDx6aGlx
+aWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IFpoaXFpYW5nIEhvdSA8WmhpcWlhbmcuSG91QGZyZWVz
+Y2FsZS5jb20+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmc7IFNoYW9odWkuWGllQGZyZWVzY2FsZS5jb207IHBhd2VsLm1vbGxAYXJtLmNvbTsNCj4g
+aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs7IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3
+aWxsLmRlYWNvbkBhcm0uY29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IGdhbGFrQGNvZGVhdXJv
+cmEub3JnOyBzY290dHdvb2RAZnJlZXNjYWxlLmNvbTsNCj4gTWluZ2thaS5IdUBmcmVlc2NhbGUu
+Y29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCB2MiAyLzJdIEFSTTY0OiBkdHM6IGFkZCBMUzEwNDNhLVFEUyBib2FyZCBzdXBwb3J0
+DQo+IA0KPiBPbiBGcmksIEZlYiAxOSwgMjAxNiBhdCAxMDoxMDowNEFNICswMDAwLCBaaGlxaWFu
+ZyBIb3Ugd3JvdGU6DQo+IA0KPiA8c25pcD4NCj4gDQo+ID4gPiA+ICsJcGNhOTU0N0A3NyB7DQo+
+ID4gPiA+ICsJCWNvbXBhdGlibGUgPSAicGhpbGlwcyxwY2E5NTQ3IjsNCj4gPiA+DQo+ID4gPiBJ
+IGNhbm5vdCBmaW5kIHRoaXMgY29tcGF0aWJsZSBzdHJpbmcgaW4gZWl0aGVyIGJpbmRpbmcgZG9j
+cyBvciBkcml2ZXIgY29kZS4NCj4gPiA+DQo+ID4NCj4gPiBTZWUgdGhlIGZpbGUgYmVsb3cuDQo+
+ID4gLi9kcml2ZXJzL2kyYy9tdXhlcy9pMmMtbXV4LXBjYTk1NHguYzoxMTU6CXsgInBjYTk1NDci
+LCBwY2FfOTU0NyB9LA0KPiA+IFBlcmhhcHMgdGhlIHZlbmRlciBuYW1lIHNob3VsZCBiZSB1cGRh
+dGVkIHRvIG54cC4NCj4gDQo+IFllcywgaWYgeW91IGxvb2sgYXQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2kyYy9pMmMtbXV4LXBjYTk1NHgudHh0LA0KPiAibnhwLHBjYTk1NDci
+IGlzIHRoZSBvbmUgeW91IHNob3VsZCB1c2UgaGVyZS4NCj4gDQo+IDxzbmlwPg0KPiANCj4gPiA+
+ID4gKwkJCWVlcHJvbUA1NiB7DQo+ID4gPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJhdDI0LDI0YzUx
+MiI7DQo+ID4gPg0KPiA+ID4gVW5zdXBwb3J0ZWQvdW5kb2N1bWVudGVkIGNvbXBhdGlibGU/DQo+
+ID4NCj4gPiBXaWxsIGNoYW5nZSBpdCB0byAiYXRtZWwsIDI0YzUxMiIuDQo+IA0KPiBZZXMsIGJ1
+dCB3aXRob3V0IHRoZSBzcGFjZSBpbiB0aGUgbWlkZGxlLg0KPiANCj4gPg0KPiA+ID4NCj4gPiA+
+ID4gKwkJCQlyZWcgPSA8MHg1Nj47DQo+ID4gPiA+ICsJCQl9Ow0KPiA+ID4gPiArDQo+ID4gPiA+
+ICsJCQllZXByb21ANTcgew0KPiA+ID4gPiArCQkJCWNvbXBhdGlibGUgPSAiYXQyNCwyNGM1MTIi
+Ow0KPiA+ID4gPiArCQkJCXJlZyA9IDwweDU3PjsNCj4gPiA+ID4gKwkJCX07DQo+ID4gPiA+ICsN
+Cj4gPiA+ID4gKwkJCWFkdDc0NjFhQDRjIHsNCj4gPiA+DQo+ID4gPiB0ZW1wLXNlbnNvciBzaG91
+bGQgYmUgYSBiZXR0ZXIgbm9kZSBuYW1lLCBpZiBJIHVuZGVyc3RhbmQgdGhlIGRldmljZSBjb3Jy
+ZWN0bHkuDQo+ID4gPg0KPiA+DQo+ID4gSSBkaWRuJ3QgZmluZCBhIHJlZmVyZW5jZSBpbiBrZXJu
+ZWwsIHNvIHdoYXQgbmFtZSBzaG91bGQgYmUgYmV0dGVyLCBkbyB5b3UgaGF2ZQ0KPiBhbnkgYWR2
+aWNlPw0KPiANCj4gInRlbXAtc2Vuc29yIiBpcyB3aGF0IEkgc2VlIGZyb20gdGhlIGV4YW1wbGUg
+aW4NCj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2h3bW9uL2xtOTAudHh0Lg0K
+PiANCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
