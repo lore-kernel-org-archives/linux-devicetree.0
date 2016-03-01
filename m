@@ -1,55 +1,84 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 3/8] ARM64: dts: Prepare configs for Amlogic Meson GXBaby
-Date: Tue, 1 Mar 2016 16:18:45 +0100
-Message-ID: <56D5B2D5.9010405@suse.de>
-References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
- <1456789465-2962-4-git-send-email-afaerber@suse.de>
- <56D5AA87.7020401@arm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v12 09/14] arm64: dts: mt8173: Add HDMI related nodes
+Date: Tue,  1 Mar 2016 16:20:25 +0100
+Message-ID: <1456845630-2786-10-git-send-email-p.zabel@pengutronix.de>
+References: <1456845630-2786-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D5AA87.7020401-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1456845630-2786-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 01.03.2016 um 15:43 schrieb Sudeep Holla:
-> On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
->> +    psci {
->> +        compatible =3D "arm,psci";
->=20
-> Any particular reason why PSCI v0.2 or above is not supported on this
-> platform. PSCI v0.1 is very old now and I assume this platform is
-> relatively new.
-
-I am not affiliated with Amlogic or Tronsmart, so I cannot answer why.
-
->> +        method =3D "smc";
->> +        cpu_suspend =3D <0xc4000001>;
->> +        cpu_off =3D <0x84000002>;
->> +        cpu_on =3D <0xc4000003>;
->> +        migrate =3D <0xc4000005>;
->=20
-> Atleast the functions ids look like v0.2 or above. So check if it's
-> actually v0.2 or above
-
-If you let me know how! Just change the compatible string to -0.2 and
-wait for some big boom or watch out for any misbehavior in particular?
-Are there any memory locations to check the version or something visibl=
-e
-in U-Boot source code indicating it?
-
-Regards,
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KClRoaXMgcGF0Y2ggYWRkcyB0aGUgZGV2
+aWNlIG5vZGVzIGZvciB0aGUgSERNSSBlbmNvZGVyLCBIRE1JIFBIWSwKYW5kIEhETUkgQ0VDIG1v
+ZHVsZXMuCgpTaWduZWQtb2ZmLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgpTaWduZWQt
+b2ZmLWJ5OiBDYXdhIENoZW5nIDxjYXdhLmNoZW5nQG1lZGlhdGVrLmNvbT4KU2lnbmVkLW9mZi1i
+eTogSmllIFFpdSA8amllLnFpdUBtZWRpYXRlay5jb20+ClNpZ25lZC1vZmYtYnk6IERhbmllbCBL
+dXJ0eiA8ZGprdXJ0ekBjaHJvbWl1bS5vcmc+ClNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFiZWwg
+PHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Ci0tLQogYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRl
+ay9tdDgxNzMuZHRzaSB8IDY5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZp
+bGUgY2hhbmdlZCwgNjkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9v
+dC9kdHMvbWVkaWF0ZWsvbXQ4MTczLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVr
+L210ODE3My5kdHNpCmluZGV4IDRmZjY2NmQuLjlmYjMyYTEgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ4MTczLmR0c2kKKysrIGIvYXJjaC9hcm02NC9ib290L2R0
+cy9tZWRpYXRlay9tdDgxNzMuZHRzaQpAQCAtMTk5LDYgKzE5OSwxNiBAQAogCQkJCSAgICAgPEdJ
+Q19TUEkgMTQ2IElSUV9UWVBFX0xFVkVMX0hJR0g+LAogCQkJCSAgICAgPEdJQ19TUEkgMTQ3IElS
+UV9UWVBFX0xFVkVMX0hJR0g+OwogCisJCQloZG1pX3BpbjogeHh4IHsKKworCQkJCS8qaGRtaSBo
+dHBsZyBwaW4qLworCQkJCXBpbnMxIHsKKwkJCQkJcGlubXV4ID0gPE1UODE3M19QSU5fMjFfSFRQ
+TEdfX0ZVTkNfSFRQTEc+OworCQkJCQlpbnB1dC1lbmFibGU7CisJCQkJCWJpYXMtcHVsbC1kb3du
+OworCQkJCX07CisJCQl9OworCiAJCQlpMmMwX3BpbnNfYTogaTJjMCB7CiAJCQkJcGluczEgewog
+CQkJCQlwaW5tdXggPSA8TVQ4MTczX1BJTl80NV9TREEwX19GVU5DX1NEQTA+LApAQCAtMjg2LDYg
+KzI5NiwxNCBAQAogCQkJY2xvY2stbmFtZXMgPSAic3BpIiwgIndyYXAiOwogCQl9OwogCisJCWNl
+YzogY2VjQDEwMDEzMDAwIHsKKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWNlYyI7
+CisJCQlyZWcgPSA8MCAweDEwMDEzMDAwIDAgMHhiYz47CisJCQlpbnRlcnJ1cHRzID0gPEdJQ19T
+UEkgMTY3IElSUV9UWVBFX0xFVkVMX0xPVz47CisJCQljbG9ja3MgPSA8JmluZnJhY2ZnIENMS19J
+TkZSQV9DRUM+OworCQkJc3RhdHVzID0gImRpc2FibGVkIjsKKwkJfTsKKwogCQlzeXNpcnE6IGlu
+dHBvbC1jb250cm9sbGVyQDEwMjAwNjIwIHsKIAkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4
+MTczLXN5c2lycSIsCiAJCQkJICAgICAibWVkaWF0ZWssbXQ2NTc3LXN5c2lycSI7CkBAIC0zMTIs
+NiArMzMwLDE5IEBACiAJCQkjY2xvY2stY2VsbHMgPSA8MT47CiAJCX07CiAKKwkJaGRtaV9waHk6
+IGhkbWktcGh5QDEwMjA5MTAwIHsKKwkJCWNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWhk
+bWktcGh5IjsKKwkJCXJlZyA9IDwwIDB4MTAyMDkxMDAgMCAweDI0PjsKKwkJCWNsb2NrcyA9IDwm
+YXBtaXhlZHN5cyBDTEtfQVBNSVhFRF9IRE1JX1JFRj47CisJCQljbG9jay1uYW1lcyA9ICJwbGxf
+cmVmIjsKKwkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJoZG1pdHhfZGlnX2N0cyI7CisJCQltZWRp
+YXRlayxpYmlhcyA9IDwweGE+OworCQkJbWVkaWF0ZWssaWJpYXNfdXAgPSA8MHgxYz47CisJCQkj
+Y2xvY2stY2VsbHMgPSA8MD47CisJCQkjcGh5LWNlbGxzID0gPDA+OworCQkJc3RhdHVzID0gImRp
+c2FibGVkIjsKKwkJfTsKKwogCQltaXBpX3R4MDogbWlwaS1kcGh5QDEwMjE1MDAwIHsKIAkJCWNv
+bXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLW1pcGktdHgiOwogCQkJcmVnID0gPDAgMHgxMDIx
+NTAwMCAwIDB4MTAwMD47CkBAIC03OTgsNiArODI5LDEyIEBACiAJCQkJIDwmYXBtaXhlZHN5cyBD
+TEtfQVBNSVhFRF9UVkRQTEw+OwogCQkJY2xvY2stbmFtZXMgPSAicGl4ZWwiLCAiZW5naW5lIiwg
+InBsbCI7CiAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCisJCQlwb3J0IHsKKwkJCQlkcGkwX291
+dDogZW5kcG9pbnQgeworCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmhkbWkwX2luPjsKKwkJCQl9
+OworCQkJfTsKIAkJfTsKIAogCQlwd20wOiBwd21AMTQwMWUwMDAgewpAQCAtODU1LDYgKzg5Miwz
+OCBAQAogCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtfTU1fRElTUF9PRD47CiAJCX07CiAKKwkJaGRt
+aTA6IGhkbWlAMTQwMjUwMDAgeworCQkJY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDgxNzMtaGRt
+aSI7CisJCQlyZWcgPSA8MCAweDE0MDI1MDAwIDAgMHg0MDA+OworCQkJaW50ZXJydXB0cyA9IDxH
+SUNfU1BJIDIwNiBJUlFfVFlQRV9MRVZFTF9MT1c+OworCQkJY2xvY2tzID0gPCZtbXN5cyBDTEtf
+TU1fSERNSV9QSVhFTD4sCisJCQkJIDwmbW1zeXMgQ0xLX01NX0hETUlfUExMQ0s+LAorCQkJCSA8
+Jm1tc3lzIENMS19NTV9IRE1JX0FVRElPPiwKKwkJCQkgPCZtbXN5cyBDTEtfTU1fSERNSV9TUERJ
+Rj47CisJCQljbG9jay1uYW1lcyA9ICJwaXhlbCIsICJwbGwiLCAiYmNsayIsICJzcGRpZiI7CisJ
+CQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOworCQkJcGluY3RybC0wID0gPCZoZG1pX3Bpbj47
+CisJCQlwaHlzID0gPCZoZG1pX3BoeT47CisJCQlwaHktbmFtZXMgPSAiaGRtaSI7CisJCQltZWRp
+YXRlayxzeXNjb24taGRtaSA9IDwmbW1zeXMgMHg5MDA+OworCQkJYXNzaWduZWQtY2xvY2tzID0g
+PCZ0b3Bja2dlbiBDTEtfVE9QX0hETUlfU0VMPjsKKwkJCWFzc2lnbmVkLWNsb2NrLXBhcmVudHMg
+PSA8JmhkbWlfcGh5PjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisKKwkJCXBvcnRzIHsKKwkJ
+CQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQkJCXBv
+cnRAMCB7CisJCQkJCXJlZyA9IDwwPjsKKworCQkJCQloZG1pMF9pbjogZW5kcG9pbnQgeworCQkJ
+CQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkcGkwX291dD47CisJCQkJCX07CisJCQkJfTsKKwkJCX07
+CisJCX07CisKIAkJbGFyYjQ6IGxhcmJAMTQwMjcwMDAgewogCQkJY29tcGF0aWJsZSA9ICJtZWRp
+YXRlayxtdDgxNzMtc21pLWxhcmIiOwogCQkJcmVnID0gPDAgMHgxNDAyNzAwMCAwIDB4MTAwMD47
+Ci0tIAoyLjcuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
