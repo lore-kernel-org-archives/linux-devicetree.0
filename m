@@ -1,82 +1,62 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: Alternative binding proposal for tda998x audio
- (Was: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph of
- ports)
-Date: Tue, 1 Mar 2016 20:29:17 +0200
-Message-ID: <56D5DF7D.7090608@ti.com>
-References: <cover.1455720381.git.jsarha@ti.com>
- <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
- <20160218143530.GB9654@rob-hp-laptop> <56CF04DA.8080905@ti.com>
- <20160226004311.GM5783@n2100.arm.linux.org.uk> <56D02594.4020407@ti.com>
- <20160226112159.GO5783@n2100.arm.linux.org.uk> <56D41F1A.2030100@ti.com>
- <56D5A6AA.2030907@ti.com> <20160301163553.3ef298fb2c0bb25ef662a41d@free.fr>
- <56D5BA6D.8090904@ti.com> <20160301171630.630a47dc00060645f89bb8ab@free.fr>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] i2c: xiic: Implement Power management
+Date: Tue, 1 Mar 2016 19:29:47 +0100
+Message-ID: <20160301182947.GB1488@katana>
+References: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160301171630.630a47dc00060645f89bb8ab@free.fr>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Shubhrajyoti Datta <shubhraj@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/16 18:16, Jean-Francois Moine wrote:
-> On Tue, 1 Mar 2016 17:51:09 +0200
-> Jyri Sarha <jsarha@ti.com> wrote:
->
->> I know that it works, I have used it myself until now, but it is not
->> needed and there is no driver that parses audio port endpoints. I see no
->> point specifying something in the binding that is not used and there no
->> specific plan to ever use it.
->>
->> AFAIU my proposed binding should work equally well with simple-card,
->> with or without multi-codec support.
->
-> As told many times, the simple card is a pure Linux specific entity.
-> It does not describe any hardware. It should not appear in a DT, or,
-> if it does, its compatible should be "linux, simple-audio-card".
-> Then, how can the other OSs know the links between the audio
-> devices and the audio encoders/connectors?
->
 
-I understand the short comings of simple-card and it's binding. However, 
-the binding is documented and it is feasible to extract the audio 
-connections from a simple-card binding too. In fact it models the I2S 
-connections better than straight out of the box graph binding. Actually 
-a graph is not the best way describe an i2s-bus with multiple DAIs 
-(codec or CPU) connected to it.
+--0eh6TmSyL6TZE2Uz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On the other way, the audio graph does not impose any particular
-> software design. It just describes the links between the different
-> hardware components and each OS is free to implement its own layout.
->
 
-That is true. In the most narrow sense the i2s protocol details, or even 
-TDM time-slot selections should not be in the dtb. However, is not 
-feasible to write a generic machine driver that would deduce the ideal 
-audio configuration just based on the i2s wiring between the audio 
-components simply because that is not enough information*. So to put it 
-simply the simple-card is not the perfect solution for the problem, but 
-even with its flaws it is better than straight out of the box graph 
-binding, and it is still entirely feasible to extract all needed 
-information for any audio implementation from that binding.
+> +	ret = clk_prepare_enable(i2c->clk);
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Unable to enable clock.\n");
 
-Still even with my proposed binding there is nothing that prevents 
-adding the graph binding on top of that if it is ever needed.
+Don't you want to bail out here? The clk refcounting will be messed up
+if you continue.
 
-Best regards,
-Jyri
+> +err_clk_dis:
+> +	clk_disable_unprepare(i2c->clk);
+> +	pm_runtime_set_suspended(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +	return ret;
 
-* With a complete set of information of all audio wiring and component 
-capabilities, including the analog only components, it would probably be 
-possible to deduce a generic configuration that would work in the most 
-common - simple cases, but let's not go there now.
+To match the inverse of the activation order, I'd put the
+clk_disable_unprepare after the pm_* calls. Couldn't it happen that
+those calls need to change the clk state?
+
+
+--0eh6TmSyL6TZE2Uz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJW1d+bAAoJEBQN5MwUoCm2G8AP/AzIsPNkCRsXuq37aMjKv5Qs
+SOTAOd+ITz8jRq6Su1TyiFY+izJsse0gKv4QZx+97fx32yee+Iy6YyxjO/4/AcTZ
+RL2UHgtUr0XTaZrQ3YCdvM8/s6DxsBllB4kYtiKE1f/PZKYvbd2A/hameR/ELlYo
+FOyTmEioqsGhgtAAyywsh5O9iC/4mgLS506A4HiwG9CgUKt7FMuq37fKv03Kq9pV
+rM1L2AzLqHWrwg2SenzeoZZHil4U48XM6fNTaFw8drrS85Ug2fw/qka9xJ5H8KwF
+thjMi7DJ7v0tDr+3k9wGR0e62ue37Wb0QeVtaw2RJE8qN0QpwISnxuMEpD+6njDF
+W8UIWWZZB7RRF6ERwVsB/rtwwjTT7lANPc5ZkWw6kPFg9wgJpxXeaQpiPy9Lhx2d
+xoa+Kn1rseVptwtswFz6o0ArqpDcKHS6GDrzPqb5+eRFK+z1++p5WK4P+Dp8Wurm
+kgzcnZsm+uzEQPZAJMCIos6tfBmDKymuXBbOWa8B9uThOXwWs6v9MJduaahyUo3I
+Gei3xhMjd81Z9TWhs2sQIXUqa451eseXi3RK+mztUn+8PuNk6r/hMEgRGJEFkhjN
+EdWHw59icWLW6g/CZi54rn8bA0PKXBf0Xciw42L/ESed/Rd+bhBwTdbOt69ffuTZ
+Kd5xz7Uk4R98CC+GhF7/
+=NbB2
+-----END PGP SIGNATURE-----
+
+--0eh6TmSyL6TZE2Uz--
