@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 3/4] regulator: helper: Add helper to configure active-discharge using regmap
-Date: Tue, 1 Mar 2016 18:08:14 +0530
-Message-ID: <1456835895-16503-4-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 2/4] regulator: core: Add support for active-discharge configuration
+Date: Tue, 1 Mar 2016 18:08:13 +0530
+Message-ID: <1456835895-16503-3-git-send-email-ldewangan@nvidia.com>
 References: <1456835895-16503-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,86 +12,98 @@ To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add helper function to set the state of active-discharge of
-regulator using regmap. The HW regulator driver can directly
-use this by providing the necessary information in the regulator
-descriptor.
+Add support to enable/disable active discharge of regulator via
+machine constraints. This configuration is done when setting
+machine constraint during regulator register and if regulator
+driver implemented the callback ops.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
- drivers/regulator/helpers.c      | 23 +++++++++++++++++++++++
- include/linux/regulator/driver.h | 14 ++++++++++++++
- 2 files changed, 37 insertions(+)
+ drivers/regulator/core.c          | 10 ++++++++++
+ drivers/regulator/of_regulator.c  |  5 +++++
+ include/linux/regulator/driver.h  |  3 +++
+ include/linux/regulator/machine.h |  4 ++++
+ 4 files changed, 22 insertions(+)
 
-diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
-index 3bbb326..b1e32e7 100644
---- a/drivers/regulator/helpers.c
-+++ b/drivers/regulator/helpers.c
-@@ -465,3 +465,26 @@ int regulator_get_bypass_regmap(struct regulator_dev *rdev, bool *enable)
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 055f8c1..3e865b0 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -1139,6 +1139,16 @@ static int set_machine_constraints(struct regulator_dev *rdev,
+ 		}
+ 	}
+ 
++	if ((rdev->constraints->active_discharge >= 0)
++		&& ops->set_active_discharge) {
++		ret = ops->set_active_discharge(rdev,
++				rdev->constraints->active_discharge);
++		if (ret < 0) {
++			rdev_err(rdev, "failed to set active discharge\n");
++			return ret;
++		}
++	}
++
+ 	print_constraints(rdev);
  	return 0;
  }
- EXPORT_SYMBOL_GPL(regulator_get_bypass_regmap);
-+
-+/**
-+ * regulator_set_active_discharge_regmap - Default set_active_discharge()
-+ *					   using regmap
-+ *
-+ * @rdev: device to operate on.
-+ * @enable: state to set, 0 to disable and 1 to enable.
-+ */
-+int regulator_set_active_discharge_regmap(struct regulator_dev *rdev,
-+					  bool enable)
-+{
-+	unsigned int val;
-+
-+	if (enable)
-+		val = rdev->desc->active_discharge_on;
+diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
+index 499e437..d1e0c03 100644
+--- a/drivers/regulator/of_regulator.c
++++ b/drivers/regulator/of_regulator.c
+@@ -93,6 +93,11 @@ static void of_get_regulation_constraints(struct device_node *np,
+ 
+ 	constraints->soft_start = of_property_read_bool(np,
+ 					"regulator-soft-start");
++	ret = of_property_read_u32(np, "regulator-active-discharge", &pval);
++	if (!ret)
++		constraints->active_discharge = pval;
 +	else
-+		val = rdev->desc->active_discharge_off;
-+
-+	return regmap_update_bits(rdev->regmap,
-+				  rdev->desc->active_discharge_reg,
-+				  rdev->desc->active_discharge_mask, val);
-+}
-+EXPORT_SYMBOL_GPL(regulator_set_active_discharge_regmap);
++		constraints->active_discharge = -1;
+ 
+ 	if (!of_property_read_u32(np, "regulator-initial-mode", &pval)) {
+ 		if (desc && desc->of_map_mode) {
 diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 59dbaf7..cd271e8 100644
+index 16ac9e1..59dbaf7 100644
 --- a/include/linux/regulator/driver.h
 +++ b/include/linux/regulator/driver.h
-@@ -269,6 +269,14 @@ enum regulator_type {
-  * @bypass_mask: Mask for control when using regmap set_bypass
-  * @bypass_val_on: Enabling value for control when using regmap set_bypass
-  * @bypass_val_off: Disabling value for control when using regmap set_bypass
-+ * @active_discharge_off: Enabling value for control when using regmap
-+ *			  set_active_discharge
-+ * @active_discharge_on: Disabling value for control when using regmap
-+ *			 set_active_discharge
-+ * @active_discharge_mask: Mask for control when using regmap
-+ *			   set_active_discharge
-+ * @active_discharge_reg: Register for control when using regmap
-+ *			  set_active_discharge
+@@ -93,6 +93,8 @@ struct regulator_linear_range {
+  * @get_current_limit: Get the configured limit for a current-limited regulator.
+  * @set_input_current_limit: Configure an input limit.
   *
-  * @enable_time: Time taken for initial enable of regulator (in uS).
-  * @off_on_delay: guard time (in uS), before re-enabling a regulator
-@@ -318,6 +326,10 @@ struct regulator_desc {
- 	unsigned int bypass_mask;
- 	unsigned int bypass_val_on;
- 	unsigned int bypass_val_off;
-+	unsigned int active_discharge_on;
-+	unsigned int active_discharge_off;
-+	unsigned int active_discharge_mask;
-+	unsigned int active_discharge_reg;
++ * @set_active_discharge: Set active discharge enable/disable of regulators.
++ *
+  * @set_mode: Set the configured operating mode for the regulator.
+  * @get_mode: Get the configured operating mode for the regulator.
+  * @get_status: Return actual (not as-configured) status of regulator, as a
+@@ -149,6 +151,7 @@ struct regulator_ops {
  
+ 	int (*set_input_current_limit) (struct regulator_dev *, int lim_uA);
+ 	int (*set_over_current_protection) (struct regulator_dev *);
++	int (*set_active_discharge) (struct regulator_dev *, bool enable);
+ 
+ 	/* enable/disable regulator */
+ 	int (*enable) (struct regulator_dev *);
+diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
+index a1067d0..408cde7 100644
+--- a/include/linux/regulator/machine.h
++++ b/include/linux/regulator/machine.h
+@@ -100,6 +100,8 @@ struct regulator_state {
+  * @initial_state: Suspend state to set by default.
+  * @initial_mode: Mode to set at startup.
+  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
++ * @active_discharge: Enable/disable active discharge. The values are:
++ *		      -1: Default, 0: Disable, 1: Enable.
+  * @enable_time: Turn-on time of the rails (unit: microseconds)
+  */
+ struct regulation_constraints {
+@@ -140,6 +142,8 @@ struct regulation_constraints {
+ 	unsigned int ramp_delay;
  	unsigned int enable_time;
  
-@@ -450,6 +462,8 @@ int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
- int regulator_set_bypass_regmap(struct regulator_dev *rdev, bool enable);
- int regulator_get_bypass_regmap(struct regulator_dev *rdev, bool *enable);
- 
-+int regulator_set_active_discharge_regmap(struct regulator_dev *rdev,
-+					  bool enable);
- void *regulator_get_init_drvdata(struct regulator_init_data *reg_init_data);
- 
- #endif
++	int active_discharge;
++
+ 	/* constraint flags */
+ 	unsigned always_on:1;	/* regulator never off when system is on */
+ 	unsigned boot_on:1;	/* bootloader/firmware enabled regulator */
 -- 
 2.1.4
