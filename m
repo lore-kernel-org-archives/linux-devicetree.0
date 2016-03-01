@@ -1,52 +1,89 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Tue, 1 Mar 2016 22:07:18 +0100
-Message-ID: <56D60486.1000102@hartkopp.net>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, mkl@pengutronix.de, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, corbet@lwn.net
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, geert+renesas@glider.be, chris.paterson2@renesas.com
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [RFC v3 12/12] ARM64: dts: Define CPU power domain for MSM8916
+Date: Tue,  1 Mar 2016 14:15:31 -0700
+Message-ID: <1456866931-37851-14-git-send-email-lina.iyer@linaro.org>
+References: <1456866931-37851-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1456866931-37851-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: geert@linux-m68k.org, k.kozlowski@samsung.com, msivasub@codeaurora.org, agross@codeaurora.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, lorenzo.pieralisi@arm.com, ahaslam@baylibre.com, mtitinger@baylibre.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Define power domain and the power states for the domain as defined by
+the PSCI firmware. The 8916 firmware supports OS initiated method of
+powering off the CPU clusters.
 
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-On 03/01/2016 10:34 AM, Ramesh Shanmugasundaram wrote:
-> This patch adds support for the CAN FD controller found in Renesas R-Car
-> SoCs. The controller operates in CAN FD mode by default. Two test modes
-> are available and can be enabled by the "rcar_canfd.testmode" module
-> parameter. Refer to Documentation/kernel-parameters.txt.
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index b7839a8..62dade8 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -63,6 +63,7 @@
+ 			reg = <0x0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
++			power-domains = <&CPU_PD>;
+ 		};
+ 
+ 		CPU1: cpu@1 {
+@@ -71,6 +72,7 @@
+ 			reg = <0x1>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
++			power-domains = <&CPU_PD>;
+ 		};
+ 
+ 		CPU2: cpu@2 {
+@@ -79,6 +81,7 @@
+ 			reg = <0x2>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
++			power-domains = <&CPU_PD>;
+ 		};
+ 
+ 		CPU3: cpu@3 {
+@@ -87,6 +90,7 @@
+ 			reg = <0x3>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
++			power-domains = <&CPU_PD>;
+ 		};
+ 
+ 		idle-states {
+@@ -101,6 +105,27 @@
+ 		};
+ 	};
+ 
++	CPU_PD: cpu-pd@0 {
++		#power-domain-cells = <0>;
++		power-states = <&CLUSTER_RET>, <&CLUSTER_PWR_DWN>;
++	};
++
++	pd-power-states {
++		CLUSTER_RET: power-state@1 {
++			state-param = <0x1000010>;
++			entry-latency-us = <500>;
++			exit-latency-us = <500>;
++			residency-us = <2000>;
++		 };
++
++		CLUSTER_PWR_DWN: power-state@2 {
++			state-param = <0x1000030>;
++			entry-latency-us = <2000>;
++			exit-latency-us = <2000>;
++			residency-us = <6000>;
++		};
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
+-- 
+2.1.4
 
-(..)
-
-> +#ifdef CONFIG_DEBUG_FS
-> +#include <linux/debugfs.h>
-> +
-> +static int rcar_canfd_showregs(struct seq_file *s, void *data)
-> +{
-> +	struct rcar_canfd_channel *priv = s->private;
-> +	u32 ch = priv->channel;
-> +	u32 rf = ch + RCANFD_RFFIFO_IDX;
-> +	u32 cf = RCANFD_CFFIFO_IDX;
-> +	u32 val, offset, i;
-> +
-> +	if (testmode)
-> +		seq_printf(s, "RCANFD : testmode = %d\n", testmode);
-> +	seq_printf(s, "RCANFD register dump: channel %u\n", ch);
-> +	seq_printf(s, "%-40s: %x\n", "g: cfg",
-> +		   rcar_canfd_read(priv, RCANFD_GCFG));
-
-Why do you think you would need this kind of register dumps in debugfs?
-
-This could be interesting for development purposes - but in production drivers
-this is pretty unusual and needless.
-
-I would sugest to remove either the testmode (already suggested by Marc) and
-this register dump stuff.
-
-Regards,
-Oliver
