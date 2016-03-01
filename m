@@ -1,77 +1,138 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH] arm64: dts: r8a7795: Add CAN FD support
-Date: Tue,  1 Mar 2016 10:04:00 +0000
-Message-ID: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: Re: [PATCH v6 05/11] drm/hisilicon: Add vblank driver for ADE
+Date: Tue, 1 Mar 2016 18:14:24 +0800
+Message-ID: <CAGd==07Rkx4Kb8EVJs5X513XpOhzrpRAXWs0mN85wrMQ5oWaqw@mail.gmail.com>
+References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
+ <1456476028-36880-6-git-send-email-xinliang.liu@linaro.org>
+ <56D4928A.1070501@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <56D4928A.1070501@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds CAN FD controller node for r8a7795.
-
-Note: CAN FD controller register base address specified in R-Car Gen3
-Hardware User Manual v0.5E is incorrect. The correct address is:
-
-CAN FD - 0xe66c0000
-
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
-Hi All,
-
-   This patch is based on linux-next (tag:next-20160225) with the following
-   patches applied on top.
-
-   [PATCH v2] arm64: dts: r8a7795: Add CAN external clock support
-   [PATCH] arm64: dts: r8a7795: Add CAN support
-
-   The respective CAN subsystem changes are submitted separately here (https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg01388.html)
-
-Thanks,
-Ramesh
----
- arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index a88f8d8..5049ba6 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -553,6 +553,30 @@
- 			status = "disabled";
- 		};
- 
-+		canfd: canfd@e66c0000 {
-+			compatible = "renesas,r8a7795-canfd",
-+				     "renesas,rcar-gen3-canfd";
-+			reg = <0 0xe66c0000 0 0x8000>;
-+			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-+				   <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 914>,
-+			       <&cpg CPG_CORE R8A7795_CLK_CANFD>,
-+			       <&can_clk>;
-+			clock-names = "fck", "canfd", "can_clk";
-+			assigned-clocks = <&cpg CPG_CORE R8A7795_CLK_CANFD>;
-+			assigned-clock-rates = <40000000>;
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+
-+			channel0 {
-+				status = "disabled";
-+			};
-+
-+			channel1 {
-+				status = "disabled";
-+			};
-+		};
-+
- 		hscif0: serial@e6540000 {
- 			compatible = "renesas,hscif-r8a7795",
- 				     "renesas,rcar-gen3-hscif",
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpPbiAxIE1hcmNoIDIwMTYgYXQgMDI6NDgsIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29k
+ZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4KPiBPbiAyLzI2LzIwMTYgMjoxMCBQTSwgWGlubGlhbmcg
+TGl1IHdyb3RlOgo+Pgo+PiBBZGQgdmJsYW5rIGlycSBoYW5kbGUuCj4+Cj4+IHY2OiBOb25lLgo+
+PiB2NTogTm9uZS4KPj4gdjQ6IE5vbmUuCj4+IHYzOgo+PiAtIFJlbW92ZSBoaXNpX2dldF9jcnRj
+X2Zyb21faW5kZXggZnVuYy4KPj4gLSBBIGZldyBjbGVhbnVwLgo+PiB2MjoKPj4gLSBSZW1vdmUg
+YWJ0cmFjdGlvbiBsYXllci4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5s
+aWFuZy5saXVAbGluYXJvLm9yZz4KPj4gLS0tCj4+ICAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
+bi9raXJpbi9raXJpbl9kcm1fYWRlLmMgfCA2Mgo+PiArKysrKysrKysrKysrKysrKysrKysrKysr
+Cj4+ICAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmMgfCAx
+NCArKysrKy0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDc1IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4v
+a2lyaW5fZHJtX2FkZS5jCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJp
+bl9kcm1fYWRlLmMKPj4gaW5kZXggYWEyY2Y3NWNhYjM5Li43NDkzODI5NTJhYjcgMTAwNjQ0Cj4+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jCj4+
+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jCj4+
+IEBAIC0yOTIsNiArMjkyLDU5IEBAIHN0YXRpYyB2b2lkIGFkZV9zZXRfbWVkaWFub2NfcW9zKHN0
+cnVjdCBhZGVfY3J0Ywo+PiAqYWNydGMpCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNP
+Q0tFVF9RT1NfRU4sIFNPQ0tFVF9RT1NfRU4pOwo+PiAgIH0KPj4KPj4gK3N0YXRpYyBpbnQgYWRl
+X2VuYWJsZV92Ymxhbmsoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHBpcGUp
+Cj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IGtpcmluX2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5k
+ZXZfcHJpdmF0ZTsKPj4gKyAgICAgICBzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjID0gdG9fYWRlX2Ny
+dGMocHJpdi0+Y3J0Y1twaXBlXSk7Cj4+ICsgICAgICAgc3RydWN0IGFkZV9od19jdHggKmN0eCA9
+IGFjcnRjLT5jdHg7Cj4+ICsgICAgICAgdm9pZCBfX2lvbWVtICpiYXNlID0gY3R4LT5iYXNlOwo+
+PiArCj4+ICsgICAgICAgaWYgKCFjdHgtPnBvd2VyX29uKQo+PiArICAgICAgICAgICAgICAgKHZv
+aWQpYWRlX3Bvd2VyX3VwKGN0eCk7Cj4+ICsKPj4gKyAgICAgICBhZGVfdXBkYXRlX2JpdHMoYmFz
+ZSArIExESV9JTlRfRU4sIEZSQU1FX0VORF9JTlRfRU5fT0ZTVCwKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgTUFTSygxKSwgMSk7Cj4+ICsKPj4gKyAgICAgICByZXR1cm4gMDsKPj4gK30KPj4g
+Kwo+PiArc3RhdGljIHZvaWQgYWRlX2Rpc2FibGVfdmJsYW5rKHN0cnVjdCBkcm1fZGV2aWNlICpk
+ZXYsIHVuc2lnbmVkIGludCBwaXBlKQo+PiArewo+PiArICAgICAgIHN0cnVjdCBraXJpbl9kcm1f
+cHJpdmF0ZSAqcHJpdiA9IGRldi0+ZGV2X3ByaXZhdGU7Cj4+ICsgICAgICAgc3RydWN0IGFkZV9j
+cnRjICphY3J0YyA9IHRvX2FkZV9jcnRjKHByaXYtPmNydGNbcGlwZV0pOwo+PiArICAgICAgIHN0
+cnVjdCBhZGVfaHdfY3R4ICpjdHggPSBhY3J0Yy0+Y3R4Owo+PiArICAgICAgIHZvaWQgX19pb21l
+bSAqYmFzZSA9IGN0eC0+YmFzZTsKPj4gKwo+PiArICAgICAgIGlmICghY3R4LT5wb3dlcl9vbikg
+ewo+PiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJwb3dlciBpcyBkb3duISB2YmxhbmsgZGlz
+YWJsZSBmYWlsXG4iKTsKPj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPj4gKyAgICAgICB9Cj4+
+ICsKPj4gKyAgICAgICBhZGVfdXBkYXRlX2JpdHMoYmFzZSArIExESV9JTlRfRU4sIEZSQU1FX0VO
+RF9JTlRfRU5fT0ZTVCwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgTUFTSygxKSwgMCk7Cj4+
+ICt9Cj4+ICsKPj4gK3N0YXRpYyBpcnFyZXR1cm5fdCBhZGVfaXJxX2hhbmRsZXIoaW50IGlycSwg
+dm9pZCAqZGF0YSkKPj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjID0gZGF0
+YTsKPj4gKyAgICAgICBzdHJ1Y3QgYWRlX2h3X2N0eCAqY3R4ID0gYWNydGMtPmN0eDsKPj4gKyAg
+ICAgICBzdHJ1Y3QgZHJtX2NydGMgKmNydGMgPSAmYWNydGMtPmJhc2U7Cj4+ICsgICAgICAgdm9p
+ZCBfX2lvbWVtICpiYXNlID0gY3R4LT5iYXNlOwo+PiArICAgICAgIHUzMiBzdGF0dXM7Cj4+ICsK
+Pj4gKyAgICAgICBzdGF0dXMgPSByZWFkbChiYXNlICsgTERJX01TS19JTlQpOwo+PiArICAgICAg
+IERSTV9ERUJVR19WQkwoIkxESSBJUlE6IHN0YXR1cz0weCVYXG4iLCBzdGF0dXMpOwo+PiArCj4+
+ICsgICAgICAgLyogdmJsYW5rIGlycSAqLwo+PiArICAgICAgIGlmIChzdGF0dXMgJiBCSVQoRlJB
+TUVfRU5EX0lOVF9FTl9PRlNUKSkgewo+PiArICAgICAgICAgICAgICAgYWRlX3VwZGF0ZV9iaXRz
+KGJhc2UgKyBMRElfSU5UX0NMUiwgRlJBTUVfRU5EX0lOVF9FTl9PRlNULAo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIE1BU0soMSksIDEpOwo+PiArICAgICAgICAgICAgICAgZHJt
+X2NydGNfaGFuZGxlX3ZibGFuayhjcnRjKTsKPj4gKyAgICAgICB9Cj4+ICsKPj4gKyAgICAgICBy
+ZXR1cm4gSVJRX0hBTkRMRUQ7Cj4+ICt9Cj4+ICsKPj4gICBzdGF0aWMgdm9pZCBhZGVfZGlzcGxh
+eV9lbmFibGUoc3RydWN0IGFkZV9jcnRjICphY3J0YykKPj4gICB7Cj4+ICAgICAgICAgc3RydWN0
+IGFkZV9od19jdHggKmN0eCA9IGFjcnRjLT5jdHg7Cj4+IEBAIC05NjcsNiArMTAyMCwxNSBAQCBp
+bnQgYWRlX2RybV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4+ICAgICAgICAgaWYgKHJl
+dCkKPj4gICAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+Cj4+ICsgICAgICAgLyogdmJsYW5r
+IGlycSBpbml0ICovCj4+ICsgICAgICAgcmV0ID0gZGV2bV9yZXF1ZXN0X2lycShkZXYtPmRldiwg
+Y3R4LT5pcnEsIGFkZV9pcnFfaGFuZGxlciwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIERSSVZFUl9JUlFfU0hBUkVELCBkZXYtPmRyaXZlci0+bmFtZSwKPj4gYWNydGMpOwo+Cj4K
+PiBUaGlzIGlzbid0IHRoZSB3YXkgd2Ugc2V0IHVwIGludGVycnVwdHMgZm9yIGttcyBkcml2ZXJz
+LiBXZSBuZWVkIHRvCj4gcHJvdmlkZSB0aGUgaGFuZGxlciBpbiBkcm1fZHJpdmVyIGFuZCBjYWxs
+IGRybV9pcnFfaW5zdGFsbC4KCkkgcHJlZmVyIHRvIHNldCB1cCBpbnRlcnJ1cHRzIGhlcmUgZm9y
+IHR3byByZWFzb25zLgpPbmUgaXMgdGhhdCBpdCBpcyBlYXN5IHRvIHBhc3MgYW55IGludGVycnVw
+dCBwcml2YXRlICJ2b2lkICogZGF0YSIgdG8KdGhlIGludGVycnVwdCBoYW5kbGVyIGhlcmUuCkFz
+IEkgZGlzY3Vzc2VkIHdpdGggRGFuaWVsIFZldHRlciBiZWZvcmU6IGh0dHBzOi8vbGttbC5vcmcv
+bGttbC8yMDE1LzkvMTAvMjA0LgoKU2Vjb25kIGlzIHNldHRpbmcgdXAgaW50ZXJydXB0IGhlcmUg
+aW4gdGhlIHNwZWNpZmljIFNvQyBkaXNwbGF5CmNvbnRyb2xsZXIgZHJpdmVyLCBtYWtlIG90aGVy
+IFNvQyByZXVzZSB0aGUga2lyaW5fZHJtX2Rydi5jIGNvZGUKZWFzaWx5LgpEaWZmZXJlbnQgSGlz
+aWxpY29uIFNvQyBtYXkgaGFzIGRpZmZlcmVudCBkaXNwbGF5IGNvbnRyb2xsZXIgaW50ZXJydXB0
+cy4KCj4KPgo+PiArICAgICAgIGlmIChyZXQpCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0
+Owo+PiArICAgICAgIGRldi0+ZHJpdmVyLT5nZXRfdmJsYW5rX2NvdW50ZXIgPSBkcm1fdmJsYW5r
+X25vX2h3X2NvdW50ZXI7Cj4+ICsgICAgICAgZGV2LT5kcml2ZXItPmVuYWJsZV92YmxhbmsgPSBh
+ZGVfZW5hYmxlX3ZibGFuazsKPj4gKyAgICAgICBkZXYtPmRyaXZlci0+ZGlzYWJsZV92Ymxhbmsg
+PSBhZGVfZGlzYWJsZV92Ymxhbms7Cj4+ICsKPj4gICAgICAgICByZXR1cm4gMDsKPj4gICB9Cj4+
+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2Ry
+bV9kcnYuYwo+PiBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Ry
+di5jCj4+IGluZGV4IDA1NTcyOWMxODg5Yy4uNzIzODg4ZmViNzYwIDEwMDY0NAo+PiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2RybV9kcnYuYwo+PiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2RybV9kcnYuYwo+PiBAQCAtMzIs
+NiArMzIsNyBAQCBzdGF0aWMgaW50IGtpcmluX2RybV9rbXNfY2xlYW51cChzdHJ1Y3QgZHJtX2Rl
+dmljZSAqZGV2KQo+PiAgIHsKPj4gICAgICAgICBzdHJ1Y3Qga2lyaW5fZHJtX3ByaXZhdGUgKnBy
+aXYgPSBkZXYtPmRldl9wcml2YXRlOwo+Pgo+PiArICAgICAgIGRybV92YmxhbmtfY2xlYW51cChk
+ZXYpOwo+PiAgICAgICAgIGRjX29wcy0+Y2xlYW51cChkZXYpOwo+PiAgICAgICAgIGRybV9tb2Rl
+X2NvbmZpZ19jbGVhbnVwKGRldik7Cj4+ICAgICAgICAgZGV2bV9rZnJlZShkZXYtPmRldiwgcHJp
+dik7Cj4+IEBAIC04NSwxMSArODYsMjIgQEAgc3RhdGljIGludCBraXJpbl9kcm1fa21zX2luaXQo
+c3RydWN0IGRybV9kZXZpY2UgKmRldikKPj4gICAgICAgICAgICAgICAgIGdvdG8gZXJyX2RjX2Ns
+ZWFudXA7Cj4+ICAgICAgICAgfQo+Pgo+PiArICAgICAgIC8qIHZibGFuayBpbml0ICovCj4+ICsg
+ICAgICAgcmV0ID0gZHJtX3ZibGFua19pbml0KGRldiwgZGV2LT5tb2RlX2NvbmZpZy5udW1fY3J0
+Yyk7Cj4+ICsgICAgICAgaWYgKHJldCkgewo+PiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJm
+YWlsZWQgdG8gaW5pdGlhbGl6ZSB2YmxhbmsuXG4iKTsKPj4gKyAgICAgICAgICAgICAgIGdvdG8g
+ZXJyX3VuYmluZF9hbGw7Cj4+ICsgICAgICAgfQo+PiArICAgICAgIC8qIHdpdGggaXJxX2VuYWJs
+ZWQgPSB0cnVlLCB3ZSBjYW4gdXNlIHRoZSB2YmxhbmsgZmVhdHVyZS4gKi8KPj4gKyAgICAgICBk
+ZXYtPmlycV9lbmFibGVkID0gdHJ1ZTsKPj4gKwo+PiAgICAgICAgIC8qIHJlc2V0IGFsbCB0aGUg
+c3RhdGVzIG9mIGNydGMvcGxhbmUvZW5jb2Rlci9jb25uZWN0b3IgKi8KPj4gICAgICAgICBkcm1f
+bW9kZV9jb25maWdfcmVzZXQoZGV2KTsKPj4KPj4gICAgICAgICByZXR1cm4gMDsKPj4KPj4gK2Vy
+cl91bmJpbmRfYWxsOgo+PiArICAgICAgIGNvbXBvbmVudF91bmJpbmRfYWxsKGRldi0+ZGV2LCBk
+ZXYpOwo+PiAgIGVycl9kY19jbGVhbnVwOgo+PiAgICAgICAgIGRjX29wcy0+Y2xlYW51cChkZXYp
+Owo+PiAgIGVycl9tb2RlX2NvbmZpZ19jbGVhbnVwOgo+PiBAQCAtMTIzLDcgKzEzNSw3IEBAIHN0
+YXRpYyBpbnQga2lyaW5fZ2VtX2NtYV9kdW1iX2NyZWF0ZShzdHJ1Y3QgZHJtX2ZpbGUKPj4gKmZp
+bGUsCj4+Cj4+ICAgc3RhdGljIHN0cnVjdCBkcm1fZHJpdmVyIGtpcmluX2RybV9kcml2ZXIgPSB7
+Cj4+ICAgICAgICAgLmRyaXZlcl9mZWF0dXJlcyAgICAgICAgPSBEUklWRVJfR0VNIHwgRFJJVkVS
+X01PREVTRVQgfAo+PiBEUklWRVJfUFJJTUUgfAo+PiAtICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgRFJJVkVSX0FUT01JQywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIERSSVZFUl9BVE9NSUMgfCBEUklWRVJfSEFWRV9JUlEsCj4KPgo+IERSSVZFUl9JUlFfU0hB
+UkVEIHNob3VsZCBiZSBhZGRlZCBoZXJlIGlmIHlvdSB3YW50IElSUUZfU0hBUkVEIGZsYWcgc2V0
+Cj4gd2hlbiByZXF1ZXN0aW5nIHRoZSBoYW5kbGVyLgoKSWYgbm90IHVzaW5nIHRoZSBkcm1faXJx
+X2luc3RhbGwgdG8gc2V0IHVwIGludGVycnVwdHMsCkRSSVZFUl9JUlFfU0hBUkVEIG1heSBub3Qg
+YmUgcmVxdWlyZWQgdG8gc2V0LgoKVGhhbmtzLAoteGlubGlhbmcKCj4KPiBBcmNoaXQKPgo+PiAg
+ICAgICAgIC5mb3BzICAgICAgICAgICAgICAgICAgID0gJmtpcmluX2RybV9mb3BzLAo+PiAgICAg
+ICAgIC5zZXRfYnVzaWQgICAgICAgICAgICAgID0gZHJtX3BsYXRmb3JtX3NldF9idXNpZCwKPj4K
+Pj4KPgo+IC0tCj4gUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
+b2YgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUg
+UHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
