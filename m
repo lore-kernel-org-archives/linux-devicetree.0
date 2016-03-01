@@ -1,138 +1,81 @@
-From: Xinliang Liu <xinliang.liu@linaro.org>
-Subject: Re: [PATCH v6 05/11] drm/hisilicon: Add vblank driver for ADE
-Date: Tue, 1 Mar 2016 18:14:24 +0800
-Message-ID: <CAGd==07Rkx4Kb8EVJs5X513XpOhzrpRAXWs0mN85wrMQ5oWaqw@mail.gmail.com>
-References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
- <1456476028-36880-6-git-send-email-xinliang.liu@linaro.org>
- <56D4928A.1070501@codeaurora.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] mtd: atmel_nand: Add support for NAND Flash on
+ SAMA5D2
+Date: Tue, 1 Mar 2016 11:27:33 +0100
+Message-ID: <56D56E95.4030204@atmel.com>
+References: <1454322360-8666-1-git-send-email-romain.izard.pro@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56D4928A.1070501@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linuxarm <linuxarm@huawei.com>, dri-devel <dri-devel@lists.freedesktop.org>, Xu Wei <xuwei5@hisilicon.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, zourongrong@huawei.com, Yiping Xu <xuyiping@hisilicon.com>, Jon Corbet <corbet@lwn.net>, Wang Fei <w.f@huawei.com>, devicetree@vger.kernel.org, Bintian Wang <bintian.wang@huawei.com>, Feng Chen <puck.chen@hisilicon.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Andy Green <andy.green@linaro.org>, Guodong Xu <guodong.xu@linaro.org>, Emil Velikov <emil.l.velikov@gmail.com>, "Liguozhu (Kenneth)" <liguozhu@hisilicon.com>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1454322360-8666-1-git-send-email-romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Romain Izard <romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Yang Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAxIE1hcmNoIDIwMTYgYXQgMDI6NDgsIEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29k
-ZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4KPiBPbiAyLzI2LzIwMTYgMjoxMCBQTSwgWGlubGlhbmcg
-TGl1IHdyb3RlOgo+Pgo+PiBBZGQgdmJsYW5rIGlycSBoYW5kbGUuCj4+Cj4+IHY2OiBOb25lLgo+
-PiB2NTogTm9uZS4KPj4gdjQ6IE5vbmUuCj4+IHYzOgo+PiAtIFJlbW92ZSBoaXNpX2dldF9jcnRj
-X2Zyb21faW5kZXggZnVuYy4KPj4gLSBBIGZldyBjbGVhbnVwLgo+PiB2MjoKPj4gLSBSZW1vdmUg
-YWJ0cmFjdGlvbiBsYXllci4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWGlubGlhbmcgTGl1IDx4aW5s
-aWFuZy5saXVAbGluYXJvLm9yZz4KPj4gLS0tCj4+ICAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNv
-bi9raXJpbi9raXJpbl9kcm1fYWRlLmMgfCA2Mgo+PiArKysrKysrKysrKysrKysrKysrKysrKysr
-Cj4+ICAgZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1fZHJ2LmMgfCAx
-NCArKysrKy0KPj4gICAyIGZpbGVzIGNoYW5nZWQsIDc1IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
-b24oLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4v
-a2lyaW5fZHJtX2FkZS5jCj4+IGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJp
-bl9kcm1fYWRlLmMKPj4gaW5kZXggYWEyY2Y3NWNhYjM5Li43NDkzODI5NTJhYjcgMTAwNjQ0Cj4+
-IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jCj4+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jCj4+
-IEBAIC0yOTIsNiArMjkyLDU5IEBAIHN0YXRpYyB2b2lkIGFkZV9zZXRfbWVkaWFub2NfcW9zKHN0
-cnVjdCBhZGVfY3J0Ywo+PiAqYWNydGMpCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIFNP
-Q0tFVF9RT1NfRU4sIFNPQ0tFVF9RT1NfRU4pOwo+PiAgIH0KPj4KPj4gK3N0YXRpYyBpbnQgYWRl
-X2VuYWJsZV92Ymxhbmsoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHBpcGUp
-Cj4+ICt7Cj4+ICsgICAgICAgc3RydWN0IGtpcmluX2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5k
-ZXZfcHJpdmF0ZTsKPj4gKyAgICAgICBzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjID0gdG9fYWRlX2Ny
-dGMocHJpdi0+Y3J0Y1twaXBlXSk7Cj4+ICsgICAgICAgc3RydWN0IGFkZV9od19jdHggKmN0eCA9
-IGFjcnRjLT5jdHg7Cj4+ICsgICAgICAgdm9pZCBfX2lvbWVtICpiYXNlID0gY3R4LT5iYXNlOwo+
-PiArCj4+ICsgICAgICAgaWYgKCFjdHgtPnBvd2VyX29uKQo+PiArICAgICAgICAgICAgICAgKHZv
-aWQpYWRlX3Bvd2VyX3VwKGN0eCk7Cj4+ICsKPj4gKyAgICAgICBhZGVfdXBkYXRlX2JpdHMoYmFz
-ZSArIExESV9JTlRfRU4sIEZSQU1FX0VORF9JTlRfRU5fT0ZTVCwKPj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgTUFTSygxKSwgMSk7Cj4+ICsKPj4gKyAgICAgICByZXR1cm4gMDsKPj4gK30KPj4g
-Kwo+PiArc3RhdGljIHZvaWQgYWRlX2Rpc2FibGVfdmJsYW5rKHN0cnVjdCBkcm1fZGV2aWNlICpk
-ZXYsIHVuc2lnbmVkIGludCBwaXBlKQo+PiArewo+PiArICAgICAgIHN0cnVjdCBraXJpbl9kcm1f
-cHJpdmF0ZSAqcHJpdiA9IGRldi0+ZGV2X3ByaXZhdGU7Cj4+ICsgICAgICAgc3RydWN0IGFkZV9j
-cnRjICphY3J0YyA9IHRvX2FkZV9jcnRjKHByaXYtPmNydGNbcGlwZV0pOwo+PiArICAgICAgIHN0
-cnVjdCBhZGVfaHdfY3R4ICpjdHggPSBhY3J0Yy0+Y3R4Owo+PiArICAgICAgIHZvaWQgX19pb21l
-bSAqYmFzZSA9IGN0eC0+YmFzZTsKPj4gKwo+PiArICAgICAgIGlmICghY3R4LT5wb3dlcl9vbikg
-ewo+PiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJwb3dlciBpcyBkb3duISB2YmxhbmsgZGlz
-YWJsZSBmYWlsXG4iKTsKPj4gKyAgICAgICAgICAgICAgIHJldHVybjsKPj4gKyAgICAgICB9Cj4+
-ICsKPj4gKyAgICAgICBhZGVfdXBkYXRlX2JpdHMoYmFzZSArIExESV9JTlRfRU4sIEZSQU1FX0VO
-RF9JTlRfRU5fT0ZTVCwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgTUFTSygxKSwgMCk7Cj4+
-ICt9Cj4+ICsKPj4gK3N0YXRpYyBpcnFyZXR1cm5fdCBhZGVfaXJxX2hhbmRsZXIoaW50IGlycSwg
-dm9pZCAqZGF0YSkKPj4gK3sKPj4gKyAgICAgICBzdHJ1Y3QgYWRlX2NydGMgKmFjcnRjID0gZGF0
-YTsKPj4gKyAgICAgICBzdHJ1Y3QgYWRlX2h3X2N0eCAqY3R4ID0gYWNydGMtPmN0eDsKPj4gKyAg
-ICAgICBzdHJ1Y3QgZHJtX2NydGMgKmNydGMgPSAmYWNydGMtPmJhc2U7Cj4+ICsgICAgICAgdm9p
-ZCBfX2lvbWVtICpiYXNlID0gY3R4LT5iYXNlOwo+PiArICAgICAgIHUzMiBzdGF0dXM7Cj4+ICsK
-Pj4gKyAgICAgICBzdGF0dXMgPSByZWFkbChiYXNlICsgTERJX01TS19JTlQpOwo+PiArICAgICAg
-IERSTV9ERUJVR19WQkwoIkxESSBJUlE6IHN0YXR1cz0weCVYXG4iLCBzdGF0dXMpOwo+PiArCj4+
-ICsgICAgICAgLyogdmJsYW5rIGlycSAqLwo+PiArICAgICAgIGlmIChzdGF0dXMgJiBCSVQoRlJB
-TUVfRU5EX0lOVF9FTl9PRlNUKSkgewo+PiArICAgICAgICAgICAgICAgYWRlX3VwZGF0ZV9iaXRz
-KGJhc2UgKyBMRElfSU5UX0NMUiwgRlJBTUVfRU5EX0lOVF9FTl9PRlNULAo+PiArICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIE1BU0soMSksIDEpOwo+PiArICAgICAgICAgICAgICAgZHJt
-X2NydGNfaGFuZGxlX3ZibGFuayhjcnRjKTsKPj4gKyAgICAgICB9Cj4+ICsKPj4gKyAgICAgICBy
-ZXR1cm4gSVJRX0hBTkRMRUQ7Cj4+ICt9Cj4+ICsKPj4gICBzdGF0aWMgdm9pZCBhZGVfZGlzcGxh
-eV9lbmFibGUoc3RydWN0IGFkZV9jcnRjICphY3J0YykKPj4gICB7Cj4+ICAgICAgICAgc3RydWN0
-IGFkZV9od19jdHggKmN0eCA9IGFjcnRjLT5jdHg7Cj4+IEBAIC05NjcsNiArMTAyMCwxNSBAQCBp
-bnQgYWRlX2RybV9pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4+ICAgICAgICAgaWYgKHJl
-dCkKPj4gICAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+Cj4+ICsgICAgICAgLyogdmJsYW5r
-IGlycSBpbml0ICovCj4+ICsgICAgICAgcmV0ID0gZGV2bV9yZXF1ZXN0X2lycShkZXYtPmRldiwg
-Y3R4LT5pcnEsIGFkZV9pcnFfaGFuZGxlciwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIERSSVZFUl9JUlFfU0hBUkVELCBkZXYtPmRyaXZlci0+bmFtZSwKPj4gYWNydGMpOwo+Cj4K
-PiBUaGlzIGlzbid0IHRoZSB3YXkgd2Ugc2V0IHVwIGludGVycnVwdHMgZm9yIGttcyBkcml2ZXJz
-LiBXZSBuZWVkIHRvCj4gcHJvdmlkZSB0aGUgaGFuZGxlciBpbiBkcm1fZHJpdmVyIGFuZCBjYWxs
-IGRybV9pcnFfaW5zdGFsbC4KCkkgcHJlZmVyIHRvIHNldCB1cCBpbnRlcnJ1cHRzIGhlcmUgZm9y
-IHR3byByZWFzb25zLgpPbmUgaXMgdGhhdCBpdCBpcyBlYXN5IHRvIHBhc3MgYW55IGludGVycnVw
-dCBwcml2YXRlICJ2b2lkICogZGF0YSIgdG8KdGhlIGludGVycnVwdCBoYW5kbGVyIGhlcmUuCkFz
-IEkgZGlzY3Vzc2VkIHdpdGggRGFuaWVsIFZldHRlciBiZWZvcmU6IGh0dHBzOi8vbGttbC5vcmcv
-bGttbC8yMDE1LzkvMTAvMjA0LgoKU2Vjb25kIGlzIHNldHRpbmcgdXAgaW50ZXJydXB0IGhlcmUg
-aW4gdGhlIHNwZWNpZmljIFNvQyBkaXNwbGF5CmNvbnRyb2xsZXIgZHJpdmVyLCBtYWtlIG90aGVy
-IFNvQyByZXVzZSB0aGUga2lyaW5fZHJtX2Rydi5jIGNvZGUKZWFzaWx5LgpEaWZmZXJlbnQgSGlz
-aWxpY29uIFNvQyBtYXkgaGFzIGRpZmZlcmVudCBkaXNwbGF5IGNvbnRyb2xsZXIgaW50ZXJydXB0
-cy4KCj4KPgo+PiArICAgICAgIGlmIChyZXQpCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0
-Owo+PiArICAgICAgIGRldi0+ZHJpdmVyLT5nZXRfdmJsYW5rX2NvdW50ZXIgPSBkcm1fdmJsYW5r
-X25vX2h3X2NvdW50ZXI7Cj4+ICsgICAgICAgZGV2LT5kcml2ZXItPmVuYWJsZV92YmxhbmsgPSBh
-ZGVfZW5hYmxlX3ZibGFuazsKPj4gKyAgICAgICBkZXYtPmRyaXZlci0+ZGlzYWJsZV92Ymxhbmsg
-PSBhZGVfZGlzYWJsZV92Ymxhbms7Cj4+ICsKPj4gICAgICAgICByZXR1cm4gMDsKPj4gICB9Cj4+
-Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2Ry
-bV9kcnYuYwo+PiBiL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2Ry
-di5jCj4+IGluZGV4IDA1NTcyOWMxODg5Yy4uNzIzODg4ZmViNzYwIDEwMDY0NAo+PiAtLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2RybV9kcnYuYwo+PiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2RybV9kcnYuYwo+PiBAQCAtMzIs
-NiArMzIsNyBAQCBzdGF0aWMgaW50IGtpcmluX2RybV9rbXNfY2xlYW51cChzdHJ1Y3QgZHJtX2Rl
-dmljZSAqZGV2KQo+PiAgIHsKPj4gICAgICAgICBzdHJ1Y3Qga2lyaW5fZHJtX3ByaXZhdGUgKnBy
-aXYgPSBkZXYtPmRldl9wcml2YXRlOwo+Pgo+PiArICAgICAgIGRybV92YmxhbmtfY2xlYW51cChk
-ZXYpOwo+PiAgICAgICAgIGRjX29wcy0+Y2xlYW51cChkZXYpOwo+PiAgICAgICAgIGRybV9tb2Rl
-X2NvbmZpZ19jbGVhbnVwKGRldik7Cj4+ICAgICAgICAgZGV2bV9rZnJlZShkZXYtPmRldiwgcHJp
-dik7Cj4+IEBAIC04NSwxMSArODYsMjIgQEAgc3RhdGljIGludCBraXJpbl9kcm1fa21zX2luaXQo
-c3RydWN0IGRybV9kZXZpY2UgKmRldikKPj4gICAgICAgICAgICAgICAgIGdvdG8gZXJyX2RjX2Ns
-ZWFudXA7Cj4+ICAgICAgICAgfQo+Pgo+PiArICAgICAgIC8qIHZibGFuayBpbml0ICovCj4+ICsg
-ICAgICAgcmV0ID0gZHJtX3ZibGFua19pbml0KGRldiwgZGV2LT5tb2RlX2NvbmZpZy5udW1fY3J0
-Yyk7Cj4+ICsgICAgICAgaWYgKHJldCkgewo+PiArICAgICAgICAgICAgICAgRFJNX0VSUk9SKCJm
-YWlsZWQgdG8gaW5pdGlhbGl6ZSB2YmxhbmsuXG4iKTsKPj4gKyAgICAgICAgICAgICAgIGdvdG8g
-ZXJyX3VuYmluZF9hbGw7Cj4+ICsgICAgICAgfQo+PiArICAgICAgIC8qIHdpdGggaXJxX2VuYWJs
-ZWQgPSB0cnVlLCB3ZSBjYW4gdXNlIHRoZSB2YmxhbmsgZmVhdHVyZS4gKi8KPj4gKyAgICAgICBk
-ZXYtPmlycV9lbmFibGVkID0gdHJ1ZTsKPj4gKwo+PiAgICAgICAgIC8qIHJlc2V0IGFsbCB0aGUg
-c3RhdGVzIG9mIGNydGMvcGxhbmUvZW5jb2Rlci9jb25uZWN0b3IgKi8KPj4gICAgICAgICBkcm1f
-bW9kZV9jb25maWdfcmVzZXQoZGV2KTsKPj4KPj4gICAgICAgICByZXR1cm4gMDsKPj4KPj4gK2Vy
-cl91bmJpbmRfYWxsOgo+PiArICAgICAgIGNvbXBvbmVudF91bmJpbmRfYWxsKGRldi0+ZGV2LCBk
-ZXYpOwo+PiAgIGVycl9kY19jbGVhbnVwOgo+PiAgICAgICAgIGRjX29wcy0+Y2xlYW51cChkZXYp
-Owo+PiAgIGVycl9tb2RlX2NvbmZpZ19jbGVhbnVwOgo+PiBAQCAtMTIzLDcgKzEzNSw3IEBAIHN0
-YXRpYyBpbnQga2lyaW5fZ2VtX2NtYV9kdW1iX2NyZWF0ZShzdHJ1Y3QgZHJtX2ZpbGUKPj4gKmZp
-bGUsCj4+Cj4+ICAgc3RhdGljIHN0cnVjdCBkcm1fZHJpdmVyIGtpcmluX2RybV9kcml2ZXIgPSB7
-Cj4+ICAgICAgICAgLmRyaXZlcl9mZWF0dXJlcyAgICAgICAgPSBEUklWRVJfR0VNIHwgRFJJVkVS
-X01PREVTRVQgfAo+PiBEUklWRVJfUFJJTUUgfAo+PiAtICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgRFJJVkVSX0FUT01JQywKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIERSSVZFUl9BVE9NSUMgfCBEUklWRVJfSEFWRV9JUlEsCj4KPgo+IERSSVZFUl9JUlFfU0hB
-UkVEIHNob3VsZCBiZSBhZGRlZCBoZXJlIGlmIHlvdSB3YW50IElSUUZfU0hBUkVEIGZsYWcgc2V0
-Cj4gd2hlbiByZXF1ZXN0aW5nIHRoZSBoYW5kbGVyLgoKSWYgbm90IHVzaW5nIHRoZSBkcm1faXJx
-X2luc3RhbGwgdG8gc2V0IHVwIGludGVycnVwdHMsCkRSSVZFUl9JUlFfU0hBUkVEIG1heSBub3Qg
-YmUgcmVxdWlyZWQgdG8gc2V0LgoKVGhhbmtzLAoteGlubGlhbmcKCj4KPiBBcmNoaXQKPgo+PiAg
-ICAgICAgIC5mb3BzICAgICAgICAgICAgICAgICAgID0gJmtpcmluX2RybV9mb3BzLAo+PiAgICAg
-ICAgIC5zZXRfYnVzaWQgICAgICAgICAgICAgID0gZHJtX3BsYXRmb3JtX3NldF9idXNpZCwKPj4K
-Pj4KPgo+IC0tCj4gUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
-b2YgQ29kZSBBdXJvcmEgRm9ydW0sCj4gYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUg
-UHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Le 01/02/2016 11:25, Romain Izard a =E9crit :
+> The NAND Flash controller for SAMA5D2 has small differences that make=
+ it
+> impossible to use the existing driver for SAMA5D3. This patchset uses=
+ the
+> device tree's compatible string to get those differences, and the cod=
+e is
+> slightly modified to handle them.
+>=20
+> Base on linux-mtd-next, commit 15c0be7bec002f9a529dd0966d0db96dde176f=
+d0
+>=20
+> See previous revisions to apply on the Atmel Linux 4.1 branch.
+>=20
+> Compile tested for sama5_defconfig, and tested on SAMA5D3xek as there=
+ is no
+> existing SAMA5D2 board with NAND Flash memory (yet).
+
+Brian,
+
+Hi, do we need to resend this series with all the tags collected (aka
+ping ;-)) ?
+
+Bye,
+
+
+> V3 -> V2:
+> - Rebase on linux-mtd-next
+> - Skip patches already in the tree
+>=20
+> V2 -> V1:
+> - Rebase on v4.4
+> - Use of_device_get_match_data
+> - Split message cleanup
+> - Reword a small part of the atmel_nand device tree binding
+> - Use 'caps' for all private data structures
+>=20
+> RFC -> V1:
+> - Split the support of 32-bit ECC on SAMA5D2 in two commits
+> - Fix the missing ECC strength configuration code
+>=20
+> Romain Izard (5):
+>   mtd: atmel_nand: Support variable RB_EDGE interrupts
+>   dt-bindings: atmel_nand: Reword the documenation
+>   mtd: atmel_nand: Support PMECC on SAMA5D2
+>   mtd: atmel_nand: Support 32-bit ECC strength
+>   ARM: at91/dt: sama5d2: add nand0 and nfc0 nodes
+>=20
+>  .../devicetree/bindings/mtd/atmel-nand.txt         | 31 +++++----
+>  arch/arm/boot/dts/sama5d2.dtsi                     | 38 +++++++++++
+>  drivers/mtd/nand/atmel_nand.c                      | 77 ++++++++++++=
+++++++----
+>  drivers/mtd/nand/atmel_nand_ecc.h                  |  9 ++-
+>  drivers/mtd/nand/atmel_nand_nfc.h                  |  3 +-
+>  5 files changed, 131 insertions(+), 27 deletions(-)
+>=20
+
+
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
