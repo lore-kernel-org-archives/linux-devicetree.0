@@ -1,7 +1,7 @@
 From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v3 5/7] T104xD4RDB: Add qe node to t104xd4rdb
-Date: Tue, 1 Mar 2016 15:09:41 +0800
-Message-ID: <1456816183-22340-5-git-send-email-qiang.zhao@nxp.com>
+Subject: [PATCH v3 2/7] QE: Add ucc hdlc document to bindings
+Date: Tue, 1 Mar 2016 15:09:38 +0800
+Message-ID: <1456816183-22340-2-git-send-email-qiang.zhao@nxp.com>
 References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,120 +12,111 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-add qe node to t104xd4rdb.dtsi and t1040si-post.dtsi.
+Add ucc hdlc document to
+Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
 
 Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 ---
 Changes for v2
-	- rebase
+	- use ucc-hdlc instead of ucc_hdlc
+	- add more information to properties.
 Changes for v3
-	- rebase
+	- use fsl,tx-timeslot-mask instead of fsl,tx-timeslot 
+	- use fsl,rx-timeslot-mask instead of fsl,rx-timeslot 
+	- add more info
 
- arch/powerpc/boot/dts/fsl/t1040si-post.dtsi | 45 +++++++++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi   | 39 +++++++++++++++++++++++++
- 2 files changed, 84 insertions(+)
+ .../bindings/powerpc/fsl/cpm_qe/network.txt        | 81 ++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-index e0f4da5..012f813 100644
---- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-@@ -673,3 +673,48 @@
- 		};
+diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+index 29b28b8..03c7416 100644
+--- a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
++++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
+@@ -41,3 +41,84 @@ Example:
+ 		fsl,mdio-pin = <12>;
+ 		fsl,mdc-pin = <13>;
  	};
- };
 +
-+&qe {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	device_type = "qe";
-+	compatible = "fsl,qe";
-+	fsl,qe-num-riscs = <1>;
-+	fsl,qe-num-snums = <28>;
++* HDLC
 +
-+	qeic: interrupt-controller@80 {
-+		interrupt-controller;
-+		compatible = "fsl,qe-ic";
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		reg = <0x80 0x80>;
-+		interrupts = <95 2 0 0  94 2 0 0>; //high:79 low:78
-+	};
++Currently defined compatibles:
++- fsl,ucc-hdlc
++
++Properties for fsl,ucc-hdlc:
++- rx-clock-name
++- tx-clock-name
++	Usage: required
++	Value type: <string>
++	Definition : Must be "brg1"-"brg16" for internal clock source,
++		     Must be "clk1"-"clk24" for external clock source.
++
++- fsl,tdm-interface
++	Usage: optional
++	Value type: <empty>
++	Definition : Specify that hdlc is based on tdm-interface
++
++The property below is dependent on fsl,tdm-interface:
++- fsl,rx-sync-clock
++	Usage: required
++	Value type: <string>
++	Definition : Must be "none", "rsync_pin", "brg9-11" and "brg13-15".
++
++- fsl,tx-sync-clock
++	Usage: required
++	Value type: <string>
++	Definition : Must be "none", "tsync_pin", "brg9-11" and "brg13-15".
++
++- fsl,tdm-framer-type
++	Usage: required for tdm interface
++	Value type: <string>
++	Definition : "e1" or "t1".Now e1 and t1 are used, other framer types
++		     are not supported.
++
++- fsl,tdm-id
++	Usage: required for tdm interface
++	Value type: <u32>
++	Definition : number of TDM ID
++
++- fsl,tx-timeslot-mask
++- fsl,rx-timeslot-mask
++	Usage: required for tdm interface
++	Value type: <u32>
++	Definition : time slot mask for TDM operation. Indicates which time
++		     slots used for transmitting and receiving.
++
++- fsl,siram-entry-id
++	Usage: required for tdm interface
++	Value type: <u32>
++	Definition : Must be 0,2,4...64. the number of TDM entry.
++
++- fsl,tdm-internal-loopback
++	usage: optional for tdm interface
++	value type: <empty>
++	Definition : Internal loopback connecting on TDM layer.
++
++Example for tdm interface:
 +
 +	ucc@2000 {
-+		cell-index = <1>;
-+		reg = <0x2000 0x200>;
-+		interrupts = <32>;
-+		interrupt-parent = <&qeic>;
++		compatible = "fsl,ucc-hdlc";
++		rx-clock-name = "clk8";
++		tx-clock-name = "clk9";
++		fsl,rx-sync-clock = "rsync_pin";
++		fsl,tx-sync-clock = "tsync_pin";
++		fsl,tx-timeslot-mask = <0xfffffffe>;
++		fsl,rx-timeslot-mask = <0xfffffffe>;
++		fsl,tdm-framer-type = "e1";
++		fsl,tdm-id = <0>;
++		fsl,siram-entry-id = <0>;
++		fsl,tdm-interface;
 +	};
 +
-+	ucc@2200 {
-+		cell-index = <3>;
-+		reg = <0x2200 0x200>;
-+		interrupts = <34>;
-+		interrupt-parent = <&qeic>;
++Example for hdlc without tdm interface:
++
++	ucc@2000 {
++		compatible = "fsl,ucc-hdlc";
++		rx-clock-name = "brg1";
++		tx-clock-name = "brg1";
 +	};
-+
-+	muram@10000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "fsl,qe-muram", "fsl,cpm-muram";
-+		ranges = <0x0 0x10000 0x6000>;
-+
-+		data-only@0 {
-+			compatible = "fsl,qe-muram-data",
-+			"fsl,cpm-muram-data";
-+			reg = <0x0 0x6000>;
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-index 3f6d7c6..d9e89d5 100644
---- a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-@@ -212,4 +212,43 @@
- 				  0 0x00010000>;
- 		};
- 	};
-+
-+	qe: qe@ffe140000 {
-+		ranges = <0x0 0xf 0xfe140000 0x40000>;
-+		reg = <0xf 0xfe140000 0 0x480>;
-+		brg-frequency = <0>;
-+		bus-frequency = <0>;
-+
-+		si1: si@700 {
-+			compatible = "fsl,t1040-qe-si";
-+			reg = <0x700 0x80>;
-+		};
-+
-+		siram1: siram@1000 {
-+			compatible = "fsl,t1040-qe-siram";
-+			reg = <0x1000 0x800>;
-+		};
-+
-+		ucc_hdlc: ucc@2000 {
-+			compatible = "fsl,ucc-hdlc";
-+			rx-clock-name = "clk8";
-+			tx-clock-name = "clk9";
-+			fsl,rx-sync-clock = "rsync_pin";
-+			fsl,tx-sync-clock = "tsync_pin";
-+			fsl,tx-timeslot-mask = <0xfffffffe>;
-+			fsl,rx-timeslot-mask = <0xfffffffe>;
-+			fsl,tdm-framer-type = "e1";
-+			fsl,tdm-id = <0>;
-+			fsl,siram-entry-id = <0>;
-+			fsl,tdm-interface;
-+		};
-+
-+		ucc_serial: ucc@2200 {
-+			device_type = "serial";
-+			compatible = "ucc_uart";
-+			port-number = <1>;
-+			rx-clock-name = "brg2";
-+			tx-clock-name = "brg2";
-+		};
-+	};
- };
 -- 
 2.1.0.27.g96db324
 
