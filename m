@@ -1,135 +1,77 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: amlogic: Split pinctrl device for Meson8 / Meson8b
-Date: Tue,  1 Mar 2016 23:04:35 +0100
-Message-ID: <1456869876-19320-4-git-send-email-carlo@caione.org>
-References: <1456869876-19320-1-git-send-email-carlo@caione.org>
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH v4 3/5] ARM: dts: omap3-sniper: TWL4030 keypad support
+Date: Tue, 01 Mar 2016 23:04:45 +0100
+Message-ID: <1456869885.1031.40.camel@paulk.fr>
+References: <1456663185-14170-1-git-send-email-contact@paulk.fr>
+	 <1456663185-14170-4-git-send-email-contact@paulk.fr>
+	 <1456859956.1031.39.camel@paulk.fr> <20160301205928.GB4469@atomide.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-9kWpNU5e1aUBb9XZlwRW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456869876-19320-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20160301205928.GB4469-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/meson8.dtsi  | 57 ++++++++++++++++++++++++------------------
- arch/arm/boot/dts/meson8b.dtsi | 12 +++++++--
- 2 files changed, 42 insertions(+), 27 deletions(-)
+--=-9kWpNU5e1aUBb9XZlwRW
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index a2ddcb8..45619f6 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -91,8 +91,8 @@
- 		clock-frequency = <141666666>;
- 	};
- 
--	pinctrl: pinctrl@c1109880 {
--		compatible = "amlogic,meson8-pinctrl";
-+	pinctrl_cbus: pinctrl@c1109880 {
-+		compatible = "amlogic,meson8-cbus-pinctrl";
- 		reg = <0xc1109880 0x10>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -108,29 +108,6 @@
- 			#gpio-cells = <2>;
- 		};
- 
--		gpio_ao: ao-bank@c1108030 {
--			reg = <0xc8100014 0x4>,
--			      <0xc810002c 0x4>,
--			      <0xc8100024 0x8>;
--			reg-names = "mux", "pull", "gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--		};
--
--		uart_ao_a_pins: uart_ao_a {
--			mux {
--				groups = "uart_tx_ao_a", "uart_rx_ao_a";
--				function = "uart_ao";
--			};
--		};
--
--		i2c_ao_pins: i2c_mst_ao {
--			mux {
--				groups = "i2c_mst_sck_ao", "i2c_mst_sda_ao";
--				function = "i2c_mst_ao";
--			};
--		};
--
- 		spi_nor_pins: nor {
- 			mux {
- 				groups = "nor_d", "nor_q", "nor_c", "nor_cs";
-@@ -157,4 +134,34 @@
- 		};
- 	};
- 
-+	pinctrl_aobus: pinctrl@c8100084 {
-+		compatible = "amlogic,meson8-aobus-pinctrl";
-+		reg = <0xc8100084 0xc>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		gpio_ao: ao-bank@c1108030 {
-+			reg = <0xc8100014 0x4>,
-+			      <0xc810002c 0x4>,
-+			      <0xc8100024 0x8>;
-+			reg-names = "mux", "pull", "gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+
-+		uart_ao_a_pins: uart_ao_a {
-+			mux {
-+				groups = "uart_tx_ao_a", "uart_rx_ao_a";
-+				function = "uart_ao";
-+			};
-+		};
-+
-+		i2c_ao_pins: i2c_mst_ao {
-+			mux {
-+				groups = "i2c_mst_sck_ao", "i2c_mst_sda_ao";
-+				function = "i2c_mst_ao";
-+			};
-+		};
-+	};
- }; /* end of / */
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 8bad557..2bfe401 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -155,8 +155,8 @@
- 			reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
- 		};
- 
--		pinctrl: pinctrl@c1109880 {
--			compatible = "amlogic,meson8b-pinctrl";
-+		pinctrl_cbus: pinctrl@c1109880 {
-+			compatible = "amlogic,meson8b-cbus-pinctrl";
- 			reg = <0xc1109880 0x10>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -171,6 +171,14 @@
- 				gpio-controller;
- 				#gpio-cells = <2>;
- 			};
-+		};
-+
-+		pinctrl_aobus: pinctrl@c8100084 {
-+			compatible = "amlogic,meson8b-aobus-pinctrl";
-+			reg = <0xc8100084 0xc>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
- 
- 			gpio_ao: ao-bank@c1108030 {
- 				reg = <0xc8100014 0x4>,
--- 
-1.9.1
+Le mardi 01 mars 2016 =C3=A0 12:59 -0800, Tony Lindgren a =C3=A9crit=C2=A0:
+> * Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> [160301 11:19]:
+> > Hi,
+> >=20
+> > Le dimanche 28 f=C3=A9vrier 2016 =C3=A0 13:39 +0100, Paul Kocialkowski =
+a =C3=A9crit=C2=A0:
+> > > This adds support for the volume and gesture keys, using TWL4030 keyp=
+ad.
+> >=20
+> > I noticed this patch hadn't been picked up in:=C2=A0https://git.kernel.=
+org/cgit/l
+> > inux
+> > /kernel/git/tmlind/linux-omap.git/log/?h=3Domap-for-v4.6/dt
+> >=20
+> > Should I submit it somewhere else instead?
+>=20
+> No sorry I missed it. I've now applied it to omap-for-v4.6/dt
+> and pushed out.
+
+Great, thanks a lot!
+
+--=20
+Paul Kocialkowski, low-level free software developer on embedded devices
+
+Website: https://www.paulk.fr/
+Coding blog: https://code.paulk.fr/
+Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+
+--=-9kWpNU5e1aUBb9XZlwRW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJW1hH9AAoJEIT9weqP7pUMChwP/26jFGnwQZ/ummD+86Dqay6B
++zUYLURGE57PJZ57UsoVbZJwKhomHo6uPIhOg7IOXBvd6MAxOcfP07l8UWbuMJFw
+VvxVMywWjyjLrH9gxedz58bBC7u+2UBVlwb84GIPbuQb/g3A5X+Rks59qQ7W9RYU
+9wMLcrqZrSEHbhkRIoqjVRdp7sFXSKM97yAeK2CkhxM4gaYD7sp/9NeBlqRR1CZS
+x5m0tgNs7Fw0w0oR7UsEn/TQveSO71DpAnD03JROHBSMacW4a2xlW+9V5dIIvbGO
+k1CLZ2KOuoyzowbrXuTasSV1JUG4oFOfT9Wj2I6YcQWLo3E++h49VPt3Cbg0KeB3
+SG0Yo1MfzOTlwGn/TXZjb7LA2PCq4aPh7+FXdEPSRWVjJKw1hCJg5qZdSlVT/REb
+7cnsC5pdPRnnNcD4KSPuibj1cXt2zgQlHFYFzXqI5J+Uup+Zf6VDxd/NmjUIUlUI
+9Ml2L6y7A+Zs8poTtNrT5POR1xsYN74KHO0TglMXpeuPDIXdBuXj6P4RygXDT9XQ
+AF4PY7KtxhdBq1h96wPpIuTXmuAvGUIYhVMxD73qS3JM+kD4p7jI9a2xvBy3y7wc
+SIDzczTnupeVCc2OW8tsfS2eunc//7EBumP9pkzMyREeMOGHi+yPUYIdx9BC6xV/
+f31XeIxlE9cLAq0NG0KB
+=dvCr
+-----END PGP SIGNATURE-----
+
+--=-9kWpNU5e1aUBb9XZlwRW--
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
