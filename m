@@ -1,58 +1,71 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V8 0/8] Add support for MAXIM MAX77620/MAX20024 PMIC
-Date: Tue, 1 Mar 2016 17:04:16 +0530
-Message-ID: <56D57E38.2060804@nvidia.com>
-References: <1455191794-6065-1-git-send-email-ldewangan@nvidia.com> <20160216160029.GC11400@ulmo.nvidia.com> <56C7EE58.8000905@nvidia.com> <20160225161510.GB1903@ulmo.nvidia.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 4/8] Documentation: devicetree: Document Tronsmart vendor
+ prefix
+Date: Tue, 1 Mar 2016 12:53:55 +0100
+Message-ID: <56D582D3.3040902@suse.de>
+References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
+ <1456789465-2962-5-git-send-email-afaerber@suse.de>
+ <56D57EED.1090901@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160225161510.GB1903@ulmo.nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thierry Reding <treding@nvidia.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com, lee.jones@linaro.org, broonie@kernel.org, a.zummo@towertech.it, alexandre.belloni@free-electrons.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, rtc-linux@googlegroups.com, swarren@nvidia.com, k.kozlowski@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D57EED.1090901-IBi9RG/b67k@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am 01.03.2016 um 12:37 schrieb Matthias Brugger:
+> On 01/03/16 00:44, Andreas F=C3=A4rber wrote:
+>> Choose the obvious prefix, "tronsmart".
+>>
+>> Cc: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>> ---
+>=20
+> Same as a older patch I send some month ago. So also this is a trivia=
+l
+> one, for the record:
+>=20
+> Singed-off-by: Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>
 
-On Thursday 25 February 2016 09:45 PM, Thierry Reding wrote:
-> On Sat, Feb 20, 2016 at 10:10:56AM +0530, Laxman Dewangan wrote:
->> On Tuesday 16 February 2016 09:30 PM, Thierry Reding wrote:
->>> On Thu, Feb 11, 2016 at 05:26:26PM +0530, Laxman Dewangan wrote:
->>>> Add SW support for MAXIM Semiconductor's Power Management
->>>> IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
->>>> RTC, watchdog, clocks etc.
->>> Hi Laxman,
->>>
->>> This series is starting to look pretty good. Do you have patches in the
->>> works to add the corresponding DT content for the various boards that we
->>> support? I think the Jetson TX1 patch would be most interesting since
->>> that's what people can get their hands on.
->>>
->> Yes, I am just waiting for this series to be concluded and applied. Once it
->> is done, I will immediately post the patches to enable this driver in config
->> and dt entry for the Jetson-TX1.
-> Why hold back on the patches? I'm currently having trouble testing
-> your stash here on Jetson TX1 and I suspect that I'm using the wrong
-> device tree content (it was derived from downstream many moons ago).
-> There's nothing wrong with posting patches that depend on patches on
-> the list. Typically you'd note the dependency in the cover letter to
-> make it easier for people to find what belongs together.
->
+Hm, I see yours got an Acked-by from Rob on Jan 17. Through whose queue
+is this supposed to go?
 
-OK, posted patches as:
+Searching for it, I even found a similar 2014 patch from Beniamino
+Galvani (CC'ed), without any review replies.
 
-[PATCH 2/2] arm64: tegra: Jetson-TX1: Add DT entry for system PMIC MAX77620
-[PATCH 1/2] arm64: tegra: Add DT entry for keys used in Jetson-TX1
-[PATCH 1/1] arm64: defconfig: Enable Maxim PMIC max77620 config
+I'll happily pick up one of the previous patches instead. Sorry, was in
+a hurry to clean this series up for Nicolas (Mini Mx) and to avoid any
+Odroid-C2 users duplicating my work.
 
-Currently, the execution is crashing with this series + above patches as 
-MFD_CELLS are not correctly defined.
-Discussion is going on with patch from Rhyland Klein
-[PATCH] mfd: Fix MACRO for commonly declared MFD cell attributes
+Cheers,
+Andreas
 
-Once MFD_CELL defines get fixed, either series need to be revisit or 
-automatically fix the issue.
+>>   Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index f871e8e7e98f..662edc7bce04 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -243,6 +243,7 @@ toshiba    Toshiba Corporation
+>>   toumaz    Toumaz
+>>   tplink    TP-LINK Technologies Co., Ltd.
+>>   tronfy    Tronfy
+>> +tronsmart    Tronsmart
+>>   truly    Truly Semiconductors Limited
+>>   upisemi    uPI Semiconductor Corp.
+>>   urt    United Radiant Technology Corporation
 
-
-
-
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
