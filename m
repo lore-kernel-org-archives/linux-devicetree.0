@@ -1,41 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 7/7] drm/msm/dsi: Parse DSI lanes via DT
-Date: Wed, 2 Mar 2016 11:37:08 -0600
-Message-ID: <20160302173708.GA5541@rob-hp-laptop>
-References: <1456379388-14767-1-git-send-email-architt@codeaurora.org>
- <1456379388-14767-8-git-send-email-architt@codeaurora.org>
+Subject: Re: [PATCH 2/6] ASoC: rsrc-card: add convert channels support
+Date: Wed, 2 Mar 2016 11:39:21 -0600
+Message-ID: <20160302173921.GA6580@rob-hp-laptop>
+References: <877fht7376.wl%kuninori.morimoto.gx@renesas.com>
+ <874mcx734l.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456379388-14767-8-git-send-email-architt@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: robdclark@gmail.com, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
+In-Reply-To: <874mcx734l.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Simon <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux-DT <devicetree@vger.kernel.org>, Linux-ALSA <alsa-devel@alsa-project.org>, Liam Girdwood <lgirdwood@gmail.com>, Laurent <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 25, 2016 at 11:19:48AM +0530, Archit Taneja wrote:
-> The DSI driver is currently unaware of how the DSI physical data lanes
-> are mapped to the logical lanes provided by the DSI controller.
+On Thu, Feb 25, 2016 at 05:51:44AM +0000, Kuninori Morimoto wrote:
 > 
-> Create a DT binding "qcom,data-lane-map" that provides this information
-> on a given platform.
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
-> The MSM DSI controller is restricted in terms of what all mappings
-> it can support. The lane polarity is fixed for all the lanes, the clock
-> lanes are fixed, and the data lanes can be swapped among each other only
-> for a few combinations. Apply these restrictions when we parse the DT
-> data.
+> Renesas sound device has CTU (= Channel Transfer Unit), and
+> sound card needs its support.
 > 
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> 
-> Signed-off-by: Archit Taneja <architt@codeaurora.org>
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > ---
->  .../devicetree/bindings/display/msm/dsi.txt        |  32 +++++-
+>  .../bindings/sound/renesas,rsrc-card.txt           |  1 +
+>  sound/soc/sh/rcar/rsrc-card.c                      | 22 ++++++++++++++++------
+>  2 files changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt b/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt
+> index 2b2caa2..5abebf7 100644
+> --- a/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt
+> +++ b/Documentation/devicetree/bindings/sound/renesas,rsrc-card.txt
+> @@ -30,6 +30,7 @@ Optional subnode properties:
+>  - frame-inversion			: bool property. Add this if the
+>  					  dai-link uses frame clock inversion.
+>  - convert-rate				: platform specified sampling rate convert
+> +- convert-channels			: platform specified channel size convert
 
-Acked-by: Rob Herring <robh@kernel.org>
+This needs a better description (as did convert-rate). What is the type?
+What are valid values?
 
->  drivers/gpu/drm/msm/dsi/dsi_host.c                 | 116 +++++++++++++++++----
->  2 files changed, 125 insertions(+), 23 deletions(-)
+>  - audio-prefix				: see audio-routing
+>  - audio-routing				: A list of the connections between audio components.
+>  					  Each entry is a pair of strings, the first being the connection's sink,
