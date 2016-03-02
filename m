@@ -1,38 +1,71 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 2/4] regulator: core: Add support for active-discharge
- configuration
-Date: Wed, 2 Mar 2016 07:31:40 +0530
-Message-ID: <56D64984.8080405@nvidia.com>
-References: <1456835895-16503-1-git-send-email-ldewangan@nvidia.com> <1456835895-16503-3-git-send-email-ldewangan@nvidia.com> <20160302014421.GM18327@sirena.org.uk>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] mmc: meson: Add driver for the SD/MMC host found
+ on Amlogic Meson SoCs
+Date: Wed, 2 Mar 2016 03:14:50 +0100
+Message-ID: <56D64C9A.3030004@suse.de>
+References: <1456596108-1406-1-git-send-email-carlo@caione.org>
+ <1456596108-1406-3-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160302014421.GM18327@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456596108-1406-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Carlo,
 
-On Wednesday 02 March 2016 07:14 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Tue, Mar 01, 2016 at 06:08:13PM +0530, Laxman Dewangan wrote:
->
->> + * @active_discharge: Enable/disable active discharge. The values are:
->> + *		      -1: Default, 0: Disable, 1: Enable.
-> This isn't a good interface, it means that 0 (which is the default value
-> for static constrants or kzalloc()ed constraints) means to actively
-> discharge rather than leave the settings unchanged but our general
-> policy is to not touch anything unless explicitly told to do so.
->
-Yaah, I agree.
-I had other option to use 0 as default, 1 as disable and 2 as enable. 
-but generally for disable, we use 0 and for enable 1 and that's why I 
-went to -1,0,1 approach.
+Am 27.02.2016 um 19:01 schrieb Carlo Caione:
+> Add a driver for the SD/MMC host found on the Amlogic Meson SoCs. Thi=
+s
+> is an MMC controller which provides an interface between the applicat=
+ion
+> processor and various memory cards. It supports the SD specification
+> v2.0 and the eMMC specification v4.41.
+>=20
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Will it be fine to have this as
-   0: Default i..e do not change.
-   1: disable.
-   2: Enable.
+Enabling this driver on top of my v2 arm64 gxbb series, I get:
+
+  CC      drivers/mmc/host/meson-mmc.o
+drivers/mmc/host/meson-mmc.c: In function 'meson_mmc_probe':
+drivers/mmc/host/meson-mmc.c:471:12: error: implicit declaration of
+function 'devm_pinctrl_get' [-Werror=3Dimplicit-function-declaration]
+  pinctrl =3D devm_pinctrl_get(&pdev->dev);
+            ^
+drivers/mmc/host/meson-mmc.c:471:10: warning: assignment makes pointer
+from integer without a cast [-Wint-conversion]
+  pinctrl =3D devm_pinctrl_get(&pdev->dev);
+          ^
+cc1: some warnings being treated as errors
+scripts/Makefile.build:258: recipe for target
+'drivers/mmc/host/meson-mmc.o' failed
+make[3]: *** [drivers/mmc/host/meson-mmc.o] Error 1
+scripts/Makefile.build:407: recipe for target 'drivers/mmc/host' failed
+make[2]: *** [drivers/mmc/host] Error 2
+scripts/Makefile.build:407: recipe for target 'drivers/mmc' failed
+make[1]: *** [drivers/mmc] Error 2
+Makefile:959: recipe for target 'drivers' failed
+make: *** [drivers] Error 2
+
+Either this is missing a Kconfig dependency on PINCTRL, or should be
+using #ifdef CONFIG_PINCTRL or some other guard.
+
+=46or gxbb we could just ignore this in the hopes that Nicolas will hav=
+e a
+working pinctrl driver soon, but it might reappear for COMPILE_TEST.
+
+Regards,
+Andreas
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
