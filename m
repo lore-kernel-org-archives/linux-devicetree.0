@@ -2,152 +2,108 @@ Return-Path: <fixed-term.Oleksij.Rempel@de.bosch.com>
 Subject: Re: [PATCH 1/6] spi: add flow controll support
 References: <56D448E1.6090006@de.bosch.com>
  <1456843400-20696-1-git-send-email-linux@rempel-privat.de>
- <56D6DC04.30803@martin.sperl.org>
+ <20160302024656.GR18327@sirena.org.uk> <56D68CD7.8000203@de.bosch.com>
+ <20160302105530.GK18327@sirena.org.uk>
 From: fixed-term.Oleksij.Rempel <fixed-term.Oleksij.Rempel@de.bosch.com>
-Message-ID: <56D6F808.1080009@de.bosch.com>
-Date: Wed, 2 Mar 2016 15:26:16 +0100
+Message-ID: <56D6CCCE.107@de.bosch.com>
+Date: Wed, 2 Mar 2016 12:21:50 +0100
 MIME-Version: 1.0
-In-Reply-To: <56D6DC04.30803@martin.sperl.org>
+In-Reply-To: <20160302105530.GK18327@sirena.org.uk>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-To: Martin Sperl <kernel@martin.sperl.org>, Oleksij Rempel <linux@rempel-privat.de>, geert@linux-m68k.org, dirk.behme@de.bosch.com, broonie@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Content-Transfer-Encoding: 8bit
+To: Mark Brown <broonie@kernel.org>
+Cc: Oleksij Rempel <linux@rempel-privat.de>, geert@linux-m68k.org, dirk.behme@de.bosch.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
 
 
-On 02.03.2016 13:26, Martin Sperl wrote:
+On 02.03.2016 11:55, Mark Brown wrote:
+> On Wed, Mar 02, 2016 at 07:48:55AM +0100, fixed-term.Oleksij.Rempel
+> wrote:
+>> On 02.03.2016 03:46, Mark Brown wrote:
+>>> On Tue, Mar 01, 2016 at 03:43:15PM +0100, Oleksij Rempel
+>>> wrote:
 > 
+>>> In the case above this looks like a normal interrupt from a
+>>> device, I'm not clear what is different here or why this is in
+>>> the core?
 > 
-> On 01.03.2016 15:43, Oleksij Rempel wrote:
->> Different HW implement different variants of SPI based flow control (FC).
->> To flexible FC implementation a spited it to fallowing common parts:
->> Flow control: Request Sequence
->> Master CS   |-------2\_____________________|
->> Slave  FC   |-----1\_______________________|
->> DATA        |-----------3\_________________|
->>
->> Flow control: Ready Sequence
->> Master CS   |-----1\_______________________|
->> Slave  FC   |--------2\____________________|
->> DATA        |-----------3\_________________|
->>
->> Flow control: ACK End of Data
->> Master CS   |______________________/2------|
->> Slave  FC   |________________________/3----|
->> DATA        |__________________/1----------|
->>
->> Flow control: Pause
->> Master CS   |_______________________/------|
->> Slave  FC   |_______1/-----\3______/-------|
->> DATA        |________2/------\4___/--------|
->>
->> Flow control: Ready signal on MISO
->> Master CS   |-----1\_______________________|
->> MISO/DATA   |------2\____3/----------------|
->> CONV START  |       ^                      |
->> DATA READY  |             ^                |
+>> At least our HW use tree different signals for flow control. One
+>> of it is Request Signal.
 > 
-> One alternative idea:
+> That's still an interrupt, just on a different line to the main 
+> interrupt.
 > 
-> I guess all of the above could also get implemented
-> without a single framework change like this only in
-> the spi_device driver that requires this:
+>>>> Flow control: ACK End of Data Master CS
+>>>> |______________________/2------| Slave  FC
+>>>> |________________________/3----| DATA
+>>>> |__________________/1----------|
 > 
-> * spi_bus_lock
-> * spi_sync_lock (but with cs_change = 1 on the last transfer,
->    so that cs does not get de-asserted - maybe a 0 byte transfer)
-> * check for your gpio to be of the "expected" level
->    (maybe via interrupt or polling)
-> * spi_sync_lock (continue your transfer)
-> * spi_bus_unlock
+>>> Why would anything care about this case and why is it part of
+>>> the SPI protocol rather than something that the device driver
+>>> would do?
 > 
-> This could also get wrapped in a generic spi_* method.
+>> This case covers real bugs and in our case we need to detect if
+>> master or slave stalls under one second. If communication problem
+>> is detected, some of recovery scenarios is initiated. Like i
+>> said, this protocol is used for automotive industry.
 > 
-> Maybe another alternative to this approach could be a generic
-> callback after having finished the processing a specific spi_transfer.
-> (not the specific version that you propose)
+> That doesn't answer the second part of my question.  This doesn't
+> seem to be something that's anything to do with SPI, it's just your
+> device signalling things out of band.
 
-Thank you, it sounds match more cleaner then my variant. I'll try it.
+Because there are more devices using this protocol, not only this
+company. Because implementing ACK signal will cost a lot more code
+then it is needed. Because timing for the driver do explode. Because
+implementing it for two device on one bus it is horror just to satisfy
+spi framework.
+This is why we needed to reimplement almost complete spi stack insight
+of our driver.
+So, do you feel safe if you know that this shit is implemented in your
+car? :)
 
-> E.g:
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -1001,6 +1001,9 @@ static int spi_transfer_one_message(struct
-> spi_master *master,
->                 if (msg->status != -EINPROGRESS)
->                         goto out;
+>> Please see two attached screen shots of Master and Slave
+>> initiated transfers.
 > 
-> +               if (xfer->complete)
-> +                       xfer->complete(xfer->context);
-> +
->                 if (xfer->delay_usecs)
->                         udelay(xfer->delay_usecs);
+> Those tell me nothing.
 > 
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 520a23d..d2b53c4 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -753,6 +753,9 @@ struct spi_transfer {
->         u16             delay_usecs;
->         u32             speed_hz;
+>>> Atomic operations are very hard to use safely, you need to
+>>> really spell out what you think this is doing from a
+>>> synchronization point of view and why it's safe.
 > 
-> +       void                    (*complete)(void *context);
-> +       void                    *context;
-> +
->         struct list_head transfer_list;
->  };
+>> I'm trying to detect if we are on Master or Slave initiated
+>> transfer, which was detected by spi_fc_rq. Normally there should
+>> be no other interrupts on FC line and active_rq should not be
+>> changed until this transfer was processed. The "if
+>> (!spi_fc_equal_cs(spi))" check is in case my assumption is wrong
+>> or there is some HW issue. Do you have other suggestions?
 > 
-> Then all that is left is implementing that gpio logic as this
-> callback.
+> Among other things it really needs to be crystal clear how this
+> update gets propagated to all CPUs in the system with no race
+> conditions.
 > 
-> The complete_code could be just waiting for an GPIO-interrupt to wake up
-> the thread - so it could be as simple as:
+>>>> +	if (spi->mode | SPI_FC_REQUEST && +			!spi->cs_enabled &&
+>>>> fc_enabled) { +		atomic_set(&spi->active_rq, 1); +		if
+>>>> (spi->request_cb) +			spi->request_cb(spi);
 > 
-> void spi_transfer_complete_wait_for_completion(void *context)
-> {
->     /* possibly enable interrupt */
->     /* wait for interrupt to wake us up*/
->     wait_for_completion(context);
->     /* possibly disable interrupt */
->     reinit_completion(context);
-> }
+>>> This logic is all too complicated for me to follow.  Why are we
+>>> oring things with spi->mode?
 > 
-> The creation of the GPIO interrupt and such could also be spi_* helper
-> methods which then could take some of the required info from the
-> device tree.
+>> I'm trying to checking here if fallowing case is actually
+>> expected by slave device. Other suggestions?
 > 
-> This way the whole thing would be orthogonal to the SPI_READY,
-> for which there is no spi_device driver besides spidev.
-> So there would be also no impact to out of tree/userland drivers.
+> In what way are we checking what?  The code is incomprehensible.
 > 
-> Such an interface actually would allow for other (ab)uses -
-> e.g: read len, then read len bytes becomes easy:
+> Again, you're ignoring my specific question about the or.
 > 
-> void spi_transfer_complete_read_length_then_read(void *context)
-> {
->    struct spi_transfer *xfer = context;
->    struct spi_transfer *next =
->         list_first_entry(list, typeof(*next), transfer_list);
+>>> We can't support things only for DT, we need a way for things
+>>> to be used on other systemms.
 > 
->    /* saturate on length given in original transfer */
->    if (xfer->rx_buf && (xfer->len>0))
->        /* this may require unmapping the dma-buffer */
->        next->len = min_t(unsigned, len, ((char*)xfer->rx_buf)[0]);
+>> I have nothing against it, but i even do not have other HW to
+>> test if my assumptions are correct. Would you accept untested
+>> code? :)
 > 
->     /* note that if we wanted the ability to abort a transfer,
->       * then the complete method would need to return a status
->       */
-> }
+> In general the way we do DT code is that the DT parses into some
+> data structure and then we work with that data structure.  This
+> means that everyone's code path is tested.
 > 
-> All that is required is that a spi_message is created with 2 transfers,
-> where the first has:
-> * len = 1
-> * complete = spi_transfer_complete_read_length_then_read;
-> * context = xfer[0]
-> and the second contains:
-> * len = 16;
-> 
-> Just some ideas of how it could be implemented in a more generic way
-> that would also allow other uses.
-> 
-> Martin
