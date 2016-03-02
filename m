@@ -1,91 +1,66 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 13/13] ARM: sunxi: Introduce
- MACH_SUN8I_A83T option
-Date: Thu, 3 Mar 2016 00:04:22 +0800
-Message-ID: <CAEzqOZt2khVambkoCcBNwvQU2pQiWzbEs5cKZJBaAqD0p3T++g@mail.gmail.com>
-References: <1456672738-4993-1-git-send-email-vishnupatekar0510@gmail.com>
- <1456672738-4993-14-git-send-email-vishnupatekar0510@gmail.com> <20160301071253.GI8418@lukather>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add LG lp120up1 panel bindings
+Date: Wed, 2 Mar 2016 17:12:22 +0100
+Message-ID: <20160302161222.GB23204@ulmo.nvidia.com>
+References: <1456138904-15258-1-git-send-email-jitao.shi@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBGU63S3AKGQEM5CHOLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160301071253.GI8418@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rein
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="f2QGlHpHGjS2mn6Y"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456138904-15258-1-git-send-email-jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huan
 List-Id: devicetree@vger.kernel.org
 
-Hello Maxime,
 
-On Tue, Mar 1, 2016 at 3:12 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Sun, Feb 28, 2016 at 11:18:58PM +0800, Vishnu Patekar wrote:
->> A83T has CPUS clock similar to A80's. currently, a80 cpus clock only
->> compiled for A80. So, Introduce MACH_SUN8I_A83T to compile it for
->> A83T as well.
->>
->> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/mach-sunxi/Kconfig | 5 +++++
->>  drivers/clk/sunxi/Makefile  | 3 +++
->>  2 files changed, 8 insertions(+)
->>
->> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
->> index c124d65..424b76d 100644
->> --- a/arch/arm/mach-sunxi/Kconfig
->> +++ b/arch/arm/mach-sunxi/Kconfig
->> @@ -41,6 +41,11 @@ config MACH_SUN8I
->>       select ARM_GIC
->>       select MFD_SUN6I_PRCM
->>
->> +config MACH_SUN8I_A83T
->> +     bool "Allwinner A83T (sun8i) SoCs support"
->> +     default ARCH_SUNXI
->> +     select ARM_GIC
->> +
->>  config MACH_SUN9I
->>       bool "Allwinner (sun9i) SoCs support"
->>       default ARCH_SUNXI
->> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->> index 3fd7901..2aabfc4 100644
->> --- a/drivers/clk/sunxi/Makefile
->> +++ b/drivers/clk/sunxi/Makefile
->> @@ -20,6 +20,9 @@ obj-y += clk-usb.o
->>  obj-$(CONFIG_MACH_SUN9I) += clk-sun8i-apb0.o
->>  obj-$(CONFIG_MACH_SUN9I) += clk-sun9i-cpus.o
->>
->> +obj-$(CONFIG_MACH_SUN8I_A83T) += clk-sun8i-apb0.o
->> +obj-$(CONFIG_MACH_SUN8I_A83T) += clk-sun9i-cpus.o
->> +
->
-> This is not how it should be done. You should rather create a Kconfig
-> option for these clocks, and use def_bool CONFIG_MACH_SUN8I || CONFIG_MACH_SUN9I
->
-> Switching to Kconfig for the clocks has been on my todo-list for quite
-> some time, I guess these two clocks would be a good start.
-Okie, I'll create Kconfig in clk/sunxi as below:
-config CLK_SUN8I_APB0
-def_bool MACH_SUN9I || MACH_SUN8I_A83T
+--f2QGlHpHGjS2mn6Y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-config CLK_SUN9I_CPUS
-def_bool MACH_SUN9I || MACH_SUN8I_A83T
+On Mon, Feb 22, 2016 at 07:01:43PM +0800, Jitao Shi wrote:
+> Add documentation for lp120up1 panel
+>=20
+> Signed-off-by: Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Changes since v1:
+>  - add Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  .../bindings/display/panel/lg,lp120up1.txt         |    7 +++++++
+>  1 file changed, 7 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/lg,lp=
+120up1.txt
 
-We still need to have MACH_SUN8I_A83T to differentiate between
-MFD_SUN6I_PRCM which is used by other sun8i platforms.
+Applied, thanks.
 
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+Thierry
+
+--f2QGlHpHGjS2mn6Y
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJW1xDmAAoJEN0jrNd/PrOhdZwP/iXTwNcAC0OeoE/Gy0VtyuWz
+pvNyGBHSDPz9Tqzs8l8EBTyMvvO4DTbDsFjOC5cV9rsc7Tk4j4KVz2yO86tYB0gi
+eokLvAwR3etgqbaIZ+bNsFHlAn7YhrUFZbq8WNzdItGb4UK4v2y545xfGMyQvqr2
+BRZSkCyozUSNQPlre5peTwg7YBdsMaKeiidV+g6bQKj9hOB6WfrHr1mdWbK6AjJZ
+sflKG8IG58AgZsHUmq4RwSgiv1wox0oNjmBSnOLy0gG7Nql6glbkYaXuE3rGfynw
+Iwr+oMv8xLPX0N+3W4ufQAbgE1Jec3+HrbUAGVRWU0gC4fnpez9UMdJKRlYygNlB
+yy0pTTuSdQOXlqH9v83BvNoEZvZDsY8n0p/MR3w3GNiL5FHw7jDHLfCG7ilKgc/g
+GbpQDujIA5IDgr04kbD9YEFSzBxMYmMsS9w3bNg8oWIuPEZraItOp7/fGr371dxa
+vP5urjT8fMOBuDzYmiXCsdJSV55HEEc/pIzOKPsvVJCjMCK0w4dCsVi3+kSQaffk
+hP+Mq1OtARyHtD6c6ZhQVBs8T6eSVZvUpWqJbUceMHjtlEhUpyetZSkWvGfFWCcQ
+yl9S7NMHZxvpo3rBXK5fNiP9rbasBzVW8+WBK1sC0CzSF20FBljRmZiDySId62N2
+CZ1XHSWVp1YEWaT7h9PT
+=9WJ2
+-----END PGP SIGNATURE-----
+
+--f2QGlHpHGjS2mn6Y--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
