@@ -1,37 +1,55 @@
-From: Shubhrajyoti Datta <omaplinuxkernel@gmail.com>
-Subject: Re: [PATCH 1/2] i2c: xiic: Implement Power management
-Date: Wed, 2 Mar 2016 10:57:42 +0530
-Message-ID: <CAM=Q2cvx9y2oiSop2-je2P0b5osQOL+t2w8y76WabHa2DTLayQ@mail.gmail.com>
-References: <1451893834-1066-1-git-send-email-shubhraj@xilinx.com>
-	<20160301182947.GB1488@katana>
+From: Yunhui Cui <B56489@freescale.com>
+Subject: [PATCH] dts/ls1043a-rdb: add the DTS for DSPI support
+Date: Wed, 2 Mar 2016 13:52:15 +0800
+Message-ID: <1456897935-40507-1-git-send-email-B56489@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160301182947.GB1488@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, Linux-I2C <linux-i2c@vger.kernel.org>, devicetree@vger.kernel.org, Shubhrajyoti Datta <shubhraj@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, yao.yuan@nxp.com, leoli@freescale.com
+Cc: B56489@freescale.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 1, 2016 at 11:59 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
->
->> +     ret = clk_prepare_enable(i2c->clk);
->> +     if (ret)
->> +             dev_err(&pdev->dev, "Unable to enable clock.\n");
->
-> Don't you want to bail out here? The clk refcounting will be messed up
-> if you continue.
+This patch adds dts nodes for DSPI on LS1043A-RDB.
 
-Agree missed it will fix it.
->
->> +err_clk_dis:
->> +     clk_disable_unprepare(i2c->clk);
->> +     pm_runtime_set_suspended(&pdev->dev);
->> +     pm_runtime_disable(&pdev->dev);
->> +     return ret;
->
-> To match the inverse of the activation order, I'd put the
-> clk_disable_unprepare after the pm_* calls. Couldn't it happen that
-> those calls need to change the clk state?
->
-makes sense will change in the next version
+Signed-off-by: Yunhui Cui <B56489@freescale.com>
+Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+index ce23557..f895fc0 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
+@@ -107,6 +107,19 @@
+ 		};
+ };
+ 
++&dspi0 {
++	bus-num = <0>;
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "n25q128a13", "jedec,spi-nor";  /* 16MB */
++		reg = <0>;
++		spi-max-frequency = <1000000>; /* input clock */
++	};
++};
++
+ &duart0 {
+ 	status = "okay";
+ };
+-- 
+2.1.0.27.g96db324
