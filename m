@@ -1,106 +1,35 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v2] clk: lpc32xx: add HCLK PLL output configuration
-Date: Wed, 2 Mar 2016 08:19:34 +0200
-Message-ID: <56D685F6.5060400@mleia.com>
-References: <1455130352-25860-1-git-send-email-slemieux.tyco@gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Wed, 2 Mar 2016 11:42:35 +0530
+Message-ID: <56D68453.4070401@nvidia.com>
+References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com> <20160229174751.GQ21240@tuxbot> <20160301022326.GC18327@sirena.org.uk> <56D5111E.6090606@nvidia.com> <20160302033833.GV18327@sirena.org.uk> <56D65F7E.3090907@nvidia.com> <20160302043506.GC18327@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1455130352-25860-1-git-send-email-slemieux.tyco@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: slemieux.tyco@gmail.com, sboyd@codeaurora.org, mturquette@baylibre.com
-Cc: robh+dt@kernel.org, stigge@antcom.de, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160302043506.GC18327@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, bjorn.andersson@sonymobile.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylvain,
 
-On 10.02.2016 20:52, slemieux.tyco@gmail.com wrote:
-> From: Sylvain Lemieux <slemieux@tycoint.com>
-> 
-> This patch add the support to setup the HCLK PLL output
-> using the "assigned-clock-rates" parameter in the device tree.
-> 
-> If the option is not use, the clock setup by the kickstart
-> and/or bootloader remain unchanged.
-> 
-> The previous kernel version did not change the clock frequency
-> output setup by the kickstart and/or bootloader;
-> this version always setup the clock frequency output to 208MHz.
-> 
-> Signed-off-by: Sylvain Lemieux <slemieux@tycoint.com>
+On Wednesday 02 March 2016 10:05 AM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Wed, Mar 02, 2016 at 09:05:26AM +0530, Laxman Dewangan wrote:
+>> On Wednesday 02 March 2016 09:08 AM, Mark Brown wrote:
+>>> You're not trying to scale the value here, you're trying to replace the
+>>> value because the PMIC is incapable of delivering the advertised ramp
+>>> rate.  Trying to express this as a multiple of the advertised ramp rate
+>>> is just adding complexity.
+>> So should we provide absolute ramp value here for platform specific?
+> Yes, otherwise if the PMIC vendor respecifies their ramp rates to
+> reflect reality and the driver is updated then your DT will be broken.
 
-I've found enough time to test the change and it looks good, so
-
-
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
-
-
-
-Do you have any objections, if 208MHz clock is set by default
-in the shared DTSI file i.e.
-
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index c58d8da..ecbace8 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -294,6 +294,9 @@
- 
- 					clocks = <&xtal_32k>, <&xtal>;
- 					clock-names = "xtal_32k", "xtal";
-+
-+					assigned-clocks = <&clk LPC32XX_CLK_HCLK_PLL>;
-+					assigned-clock-rates = <208000000>;
- 				};
- 			};
- 
-?
-
-In particular board files the value can be overwritten, however I think
-it is important to have some well defined clock value here to mitigate
-a risk of possible clock rate change done by a bootloader, for example
-the rate may be set to a lower value by a bootloader.
-
-> ---
-> Changes from v1 to v2:
-> - Rename patch title;
->   was "clk: lpc32xx: add clock frequency output configuration"
-> - Update the patch as per the feedback received from:
->   Stephen: http://permalink.gmane.org/gmane.linux.kernel.clk/3913
->   Vladimir: http://permalink.gmane.org/gmane.linux.kernel.clk/3921 
-> 
-> Note:
-> - There is currently an issue in the current driver;
->   if the HCLK PLL output, configured by the kickstart and/or
->   bootloader, is change by the kernel (ex. 266.5MHz to 208MHz),
->   the serial console is no longer outputing properly.
-
-yep, I'm aware of this issue too, however it is not obvious that
-the rootcause is in the clock driver, so we can discuss this topic
-somewhere else, but let me present a short intro about what I
-see on my end.
-
-In case if PCLK is 266 MHz / 16 ~ 16520833 Hz, UART pre-divider is
-bypassed (X = 1, Y = 1), baudrate is 115200, then I observe corrupted
-I/O but correctly set divisor latch registers (DLM = 0, DLL = 9):
-
-  16520833 / 16 / 9 ~ 114728
-
-But if I change DLL to 7 as I should do in assumption
-that PCLK is 13 MHz, then UART I/O is *not* corrupted.
-
-The same happens if I modify UART pre-divider, for example UART
-clock rate is 16520833, baudrate is 115200, X = 27, Y = 242,
-DLM = 0, DLL = 1:
-
-  16520833 / 16 * 27 / 242 ~ 115202 -- but I/O is corrupted
-
-And if I change to X = 19, Y = 134 as I should do in case of 
-PCLK = 13 MHz, then console UART is working fine.
-
-It looks like UART clock is always pinned to 13 MHz (how is it
-possible technically?), but this contradicts to the datasheet IMHO.
-
---
-With best wishes,
-Vladimir
+Then can we have other member for pmic ramp time register configuration 
+via DT.
+So measured value on platform will be existing ramp-delay and the value 
+which will be configured in PMIC will be via pmic-ramp-delay if provided 
+otherwise use ramp-delay.
