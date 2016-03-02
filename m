@@ -1,90 +1,44 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 7/8] ARM64: dts: amlogic: Extend GXBaby GIC node
-Date: Wed, 2 Mar 2016 01:07:29 +0100
-Message-ID: <56D62EC1.7040100@suse.de>
-References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
- <1456789465-2962-8-git-send-email-afaerber@suse.de>
- <56D57673.8030702@arm.com> <56D57A7F.5020806@suse.de>
- <56D58E88.2080700@arm.com> <56D6264B.2090507@suse.de>
- <56D62DB8.2080301@arm.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH V6 07/10] soc: tegra: pmc: Add generic PM domain support
+Date: Tue, 01 Mar 2016 16:18:20 -0800
+Message-ID: <7hfuw968c3.fsf@baylibre.com>
+References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+	<1456501724-28477-8-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D62DB8.2080301@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>, linux-meson@googlegroups.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Matthias Brugger <mbrugger@suse.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Nicolas Saenz <nicolassaenzj@gmail.com>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456501724-28477-8-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> (Jon
+	Hunter's message of "Fri, 26 Feb 2016 15:48:41 +0000")
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 02.03.2016 um 01:03 schrieb Andr=C3=A9 Przywara:
-> On 01/03/16 23:31, Andreas F=C3=A4rber wrote:
->> Am 01.03.2016 um 13:43 schrieb Andre Przywara:
->>> On 01/03/16 11:18, Andreas F=C3=A4rber wrote:
->>>> Am 01.03.2016 um 12:01 schrieb Andre Przywara:
->>>>> On 29/02/16 23:44, Andreas F=C3=A4rber wrote:
->>>>>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/=
-arm64/boot/dts/amlogic/meson-gxbb.dtsi
->>>>>> index 0ae089bd1806..5088ae3ff653 100644
->>>>>> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->>>>>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
->>>>>> @@ -117,7 +117,9 @@
->>>>>>  		gic: interrupt-controller@c4301000 {
->>>>>>  			compatible =3D "arm,cortex-a15-gic", "arm,cortex-a9-gic";
->>>>>
->>>>> I think "arm,gic-400" is the name to use here these days, especia=
-lly for
->>>>> arm64.
->>>>
->>>> I took what /proc/device-tree showed on Android and verified that =
-this
->>>> compatible is in use in mainline.
->>>
->>> Some vendor Android kernel is not a good reference for mainline wor=
-k ;-)
->>> Better look at other DTs in arch/arm64/boot/dts.
->>
->> Yes, that's what "in use in mainline" refers to:
->>
->> $ git grep "cortex-a15-gic" -- arch/arm64/boot/dts/ | grep -v gic-40=
-0
->> arch/arm64/boot/dts/apm/apm-shadowcat.dtsi: compatible =3D
->> "arm,cortex-a15-gic";
->> arch/arm64/boot/dts/apm/apm-storm.dtsi: compatible =3D "arm,cortex-a=
-15-gic";
->> arch/arm64/boot/dts/arm/foundation-v8.dts: compatible =3D
->> "arm,cortex-a15-gic", "arm,cortex-a9-gic";
->> arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts: compatible =3D
->> "arm,cortex-a15-gic", "arm,cortex-a9-gic";
->> arch/arm64/boot/dts/nvidia/tegra132.dtsi: compatible =3D "arm,cortex=
--a15-gic";
->=20
-> Which is mainly because those DTs predate the introduction of
-> "arm,gic-400". Other DTs kept the cortex strings in additionally to s=
-tay
-> compatible with older kernels.
+Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> writes:
 
-Sure, but shouldn't we update them to have arm,gic-400 first then?
+> Adds generic PM support to the PMC driver where the PM domains are
+> populated from device-tree and the PM domain consumer devices are
+> bound to their relevant PM domains via device-tree as well.
+>
+> Update the tegra_powergate_sequence_power_up() API so that internally
+> it calls the same tegra_powergate_xxx functions that are used by the
+> tegra generic power domain code for consistency.
+>
+> To ensure that the Tegra power domains (a.k.a powergates) cannot be
+> controlled via both the legacy tegra_powergate_xxx functions as well
+> as the generic PM domain framework, add a bit map for available
+> powergates that can be controlled via the legacy powergate functions.
+>
+> Move the majority of the tegra_powergate_remove_clamping() function
+> to a sub-function, so that this can be used by both the legacy and
+> generic power domain code.
+>
+> This is based upon work by Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> and Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+>
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
->>> You could keep "arm,cortex-a15-gic" in there if you care about
->>> compatibility with older (vendor) kernels, but I guess there are ot=
-her
->>> issues which prevent this anyway, so you could drop this as well.
->>
->> Yeah, I don't care about backwards compatibility with downstream
->> kernels, they use weird compatible strings with spaces anyway.
->=20
-> So please drop it and use only "arm,gic-400" to be in line with all t=
-he
-> other more recent SoCs.
+I didn't look in great detail at the SoC specifics, but for the for the
+general genpd approach:
 
-Already done, still inserting cbus/aobus nodes and moving uart nodes,
-then need to re-test.
-
-Cheers,
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
+Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
