@@ -1,35 +1,54 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Wed, 2 Mar 2016 11:42:35 +0530
-Message-ID: <56D68453.4070401@nvidia.com>
-References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com> <20160229174751.GQ21240@tuxbot> <20160301022326.GC18327@sirena.org.uk> <56D5111E.6090606@nvidia.com> <20160302033833.GV18327@sirena.org.uk> <56D65F7E.3090907@nvidia.com> <20160302043506.GC18327@sirena.org.uk>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 0/4] regulator: Add support for configuration of active-discharge
+Date: Wed, 2 Mar 2016 12:26:33 +0530
+Message-ID: <1456901797-21340-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160302043506.GC18327@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, bjorn.andersson@sonymobile.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series add the common regulator DT property  for configuration
+of active discharge and implementing this in regulator core.
+Also implementing the regulator ops for MAX77620 to configure
+active discharge.
 
-On Wednesday 02 March 2016 10:05 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Wed, Mar 02, 2016 at 09:05:26AM +0530, Laxman Dewangan wrote:
->> On Wednesday 02 March 2016 09:08 AM, Mark Brown wrote:
->>> You're not trying to scale the value here, you're trying to replace the
->>> value because the PMIC is incapable of delivering the advertised ramp
->>> rate.  Trying to express this as a multiple of the advertised ramp rate
->>> is just adding complexity.
->> So should we provide absolute ramp value here for platform specific?
-> Yes, otherwise if the PMIC vendor respecifies their ramp rates to
-> reflect reality and the driver is updated then your DT will be broken.
+This is based on discussion on patch and comment from Mark Brown:
+[PATCH V6 7/8] DT: regulator: add DT binding doc for regulator of PMIC max77620/max20024
 
-Then can we have other member for pmic ramp time register configuration 
-via DT.
-So measured value on platform will be existing ramp-delay and the value 
-which will be configured in PMIC will be via pmic-ramp-delay if provided 
-otherwise use ramp-delay.
+> +- maxim,disable-active-discharge:    boolean, Disable active discharge.
+
+That's something I've seen other regulators do, can we make it a standard property with an op?
+
+---
+Changes from V1: 
+ Make the interface like 0 (non-init member) will be treated as default,
+ 1 for disable and 2 for enable. Created enum for active discharge
+ default/enable/disable
+
+
+Laxman Dewangan (4):
+  regulator: DT: Add DT property for active-discharge configuration
+  regulator: core: Add support for active-discharge configuration
+  regulator: helper: Add helper to configure active-discharge using
+    regmap
+  regulator: max77620: Add support to configure active-discharge
+
+ .../devicetree/bindings/regulator/regulator.txt    |  5 +++++
+ drivers/regulator/core.c                           | 10 ++++++++++
+ drivers/regulator/helpers.c                        | 23 ++++++++++++++++++++++
+ drivers/regulator/max77620-regulator.c             |  9 +++++++++
+ drivers/regulator/of_regulator.c                   |  5 +++++
+ include/linux/regulator/driver.h                   | 17 ++++++++++++++++
+ include/linux/regulator/machine.h                  |  4 ++++
+ 7 files changed, 73 insertions(+)
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
