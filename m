@@ -1,197 +1,157 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v9 3/3] add support for DWC UFS Host Controller
-Date: Wed, 02 Mar 2016 20:55:28 +0100
-Message-ID: <5606371.ipFvUUmgV9@wuerfel>
-References: <cover.1455549221.git.jpinto@synopsys.com> <2698029.eKNCoG3LWy@wuerfel> <56D718F7.9060200@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D718F7.9060200@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, mark.rutland@arm.com, robh@kernel.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+From: "David Rivshin (Allworx)" <drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: add 'const' for of_property_*_string*() parameter '*np'
+Date: Wed,  2 Mar 2016 16:35:51 -0500
+Message-ID: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 March 2016 16:46:47 Joao Pinto wrote:
-> On 2/19/2016 3:03 PM, Arnd Bergmann wrote:
-> > On Thursday 18 February 2016 17:20:27 Joao Pinto wrote:
-> >> diff --git a/Documentation/devicetree/bindings/ufs/ufs-dwc.txt b/Documentation/devicetree/bindings/ufs/ufs-dwc.txt
+From: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
 
-> > Please for the last time (!) add a proper version number of the
-> > specific IP block to the compatible strings so you can identify
-> > what hardware you are talking to.
-> > 
-> > You earlier confused the version number of the UFS standard with
-> > the version number of the controller, and that has been clarified
-> > now, but you really still need to use a version for the hardware
-> > as well.
-> 
-> Ok, we can have a "snps,ufshcd-dwc-1.1" and a "snps,ufshcd-dwc-2.0". Agree?
+The of_property_{read,count,match}_string* family of functions never
+modify the struct device_node pointer that is passed in, so there is no
+reason for it to be non-const. Equivalent functions for all other types
+already take a 'const struct device_node *np'.
 
-I have no idea what versions of the dwc hardware block exist, but
-I find it highly suspicious that the numbers happen to be the
-same as the UFS protocol numbers, so I'd say that is probably
-not the version of the IP block.
+Signed-off-by: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+---
 
-There are a few things you could try to find out the actual
-version:
+MAINTAINTERS says that the appropriate tree is
+    git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
+but it looks like that hasn't been updated in a while. So this patch
+is based off the "for-next" branch of
+    git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+instead. Let me know if you need me to respin from another tree/branch.
 
-* If you are able to contact the team that worked on the test chip,
-  please ask them what hardware revision you have.
+ drivers/of/base.c  | 15 ++++++++-------
+ include/linux/of.h | 18 +++++++++---------
+ 2 files changed, 17 insertions(+), 16 deletions(-)
 
-* if you have some form of documentation of the hardware, look
-  on the first few pages of the manual that describes the registers
-  to see if the document has a revision history.
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 017dd94..b299de2 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1341,10 +1341,10 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_array);
+  *
+  * The out_string pointer is modified only if a valid string can be decoded.
+  */
+-int of_property_read_string(struct device_node *np, const char *propname,
++int of_property_read_string(const struct device_node *np, const char *propname,
+ 				const char **out_string)
+ {
+-	struct property *prop = of_find_property(np, propname, NULL);
++	const struct property *prop = of_find_property(np, propname, NULL);
+ 	if (!prop)
+ 		return -EINVAL;
+ 	if (!prop->value)
+@@ -1365,10 +1365,10 @@ EXPORT_SYMBOL_GPL(of_property_read_string);
+  * This function searches a string list property and returns the index
+  * of a specific string value.
+  */
+-int of_property_match_string(struct device_node *np, const char *propname,
++int of_property_match_string(const struct device_node *np, const char *propname,
+ 			     const char *string)
+ {
+-	struct property *prop = of_find_property(np, propname, NULL);
++	const struct property *prop = of_find_property(np, propname, NULL);
+ 	size_t l;
+ 	int i;
+ 	const char *p, *end;
+@@ -1404,10 +1404,11 @@ EXPORT_SYMBOL_GPL(of_property_match_string);
+  * Don't call this function directly. It is a utility helper for the
+  * of_property_read_string*() family of functions.
+  */
+-int of_property_read_string_helper(struct device_node *np, const char *propname,
+-				   const char **out_strs, size_t sz, int skip)
++int of_property_read_string_helper(const struct device_node *np,
++				   const char *propname, const char **out_strs,
++				   size_t sz, int skip)
+ {
+-	struct property *prop = of_find_property(np, propname, NULL);
++	const struct property *prop = of_find_property(np, propname, NULL);
+ 	int l = 0, i = 0;
+ 	const char *p, *end;
+ 
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dc6e396..7fcb681 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -296,13 +296,13 @@ extern int of_property_read_u64_array(const struct device_node *np,
+ 				      u64 *out_values,
+ 				      size_t sz);
+ 
+-extern int of_property_read_string(struct device_node *np,
++extern int of_property_read_string(const struct device_node *np,
+ 				   const char *propname,
+ 				   const char **out_string);
+-extern int of_property_match_string(struct device_node *np,
++extern int of_property_match_string(const struct device_node *np,
+ 				    const char *propname,
+ 				    const char *string);
+-extern int of_property_read_string_helper(struct device_node *np,
++extern int of_property_read_string_helper(const struct device_node *np,
+ 					      const char *propname,
+ 					      const char **out_strs, size_t sz, int index);
+ extern int of_device_is_compatible(const struct device_node *device,
+@@ -538,14 +538,14 @@ static inline int of_property_read_u64_array(const struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_read_string(struct device_node *np,
++static inline int of_property_read_string(const struct device_node *np,
+ 					  const char *propname,
+ 					  const char **out_string)
+ {
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_read_string_helper(struct device_node *np,
++static inline int of_property_read_string_helper(const struct device_node *np,
+ 						 const char *propname,
+ 						 const char **out_strs, size_t sz, int index)
+ {
+@@ -571,7 +571,7 @@ static inline int of_property_read_u64(const struct device_node *np,
+ 	return -ENOSYS;
+ }
+ 
+-static inline int of_property_match_string(struct device_node *np,
++static inline int of_property_match_string(const struct device_node *np,
+ 					   const char *propname,
+ 					   const char *string)
+ {
+@@ -773,7 +773,7 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
+  *
+  * If @out_strs is NULL, the number of strings in the property is returned.
+  */
+-static inline int of_property_read_string_array(struct device_node *np,
++static inline int of_property_read_string_array(const struct device_node *np,
+ 						const char *propname, const char **out_strs,
+ 						size_t sz)
+ {
+@@ -792,7 +792,7 @@ static inline int of_property_read_string_array(struct device_node *np,
+  * does not have a value, and -EILSEQ if the string is not null-terminated
+  * within the length of the property data.
+  */
+-static inline int of_property_count_strings(struct device_node *np,
++static inline int of_property_count_strings(const struct device_node *np,
+ 					    const char *propname)
+ {
+ 	return of_property_read_string_helper(np, propname, NULL, 0, 0);
+@@ -816,7 +816,7 @@ static inline int of_property_count_strings(struct device_node *np,
+  *
+  * The out_string pointer is modified only if a valid string can be decoded.
+  */
+-static inline int of_property_read_string_index(struct device_node *np,
++static inline int of_property_read_string_index(const struct device_node *np,
+ 						const char *propname,
+ 						int index, const char **output)
+ {
+-- 
+2.5.0
 
-* If you have access to the hardware design files, look at the
-  file names.
-
-On https://www.synopsys.com/dw/ipdir.php?ds=ufs, I see a
-version "1.30a" listed, which follows the typical numbering
-scheme that your employer uses, a single digit followed by
-a dot and a two-digit number and then a letter.
-
-There is also a test chip with version 1.10a listed on the
-same page, and that follows the same numbering system.
-
-See if you can find a version number that fits into that scheme
-in the documents you have available.
-
-> >> +config SCSI_UFS_DWC_TC
-> >> +	bool "Support for the Synopsys Test Chip"
-> >> +	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
-> >> +	---help---
-> >> +	  Synopsys Test Chip is a Phy for prototyping purposes.
-> >> +	  This selects the support for the Synopsys Test Chip.
-> >> +
-> >> +	  Select this if you have a Synopsys Test Chip.
-> >> +	  If unsure, say N.
-> >> +
-> >> +config SCSI_UFS_DWC_20BIT_RMMI
-> >> +	bool "20-bit RMMI support"
-> >> +	depends on SCSI_UFS_DWC_TC
-> >> +	---help---
-> >> +	  This specifies that the Synopsys Test Chip supports 20-bit RMMI.
-> >> +
-> >> +	  Select this if you are using a 20-bit RMMI Synopsys Test Chip.
-> >> +	  If unsure, say N.
-> >> +
-> >> +config SCSI_UFS_DWC_40BIT_RMMI
-> >> +	bool "40-bit RMMI support"
-> >> +	depends on SCSI_UFS_DWC_TC
-> >> +	---help---
-> >> +	  Synopsys Test Chip is a Phy for prototyping purposes.
-> >> +
-> >> +	  Select this if you are using a 40-bit RMMI Synopsys Test Chip.
-> >> +	  If unsure, say N.
-> > 
-> > I think it would be better to remove the SCSI_UFS_DWC_20BIT_RMMI
-> > and SCSI_UFS_DWC_40BIT_RMMI configuration options now, and always
-> > support both. There is not really much need for the options
-> > as this is just a test chip, and nobody is going to care much
-> > about saving a few bytes of object code.
-> 
-> We need to know if we are dealing with a 20-bit test chip or a 40-bit test chip
-> because the initialization is different. That can be made in the device tree as
-> you say bellow, but we can also use a setup in which the host is a PC (so no
-> device tree) connected by pci bus to an fpga containing the UFS controller.
-> Having this, I think that the only way is to choose the 20/40bit stuff in the
-> menuconfig.
-
-NAK.
-
-Mutually exclusive compile-time configuration options are always wrong.
-
-If the PCI hosts both have the same PCI device ID and there is no other
-identification register that lets you find out which one you have,
-maybe you can use a module parameter that defaults to invalid and that
-has to be set explicitly when loading the PCI driver?
-
-Are both test chips the same way? I see that the driver supports two
-distinct PCI device IDs, so please check of they both come in variations
-for the two PHYs, or if at least one of them always uses the same PHY
-so you don't need the module parameter for that.
-
-> >> diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
-> >> index 8303bcc..bab8c05 100644
-> >> --- a/drivers/scsi/ufs/Makefile
-> >> +++ b/drivers/scsi/ufs/Makefile
-> >> @@ -1,4 +1,7 @@
-> >>  # UFSHCD makefile
-> >> +obj-$(CONFIG_SCSI_UFS_DWC_HOOKS) += ufshcd-dwc.o
-> >> +obj-$(CONFIG_SCSI_UFS_DWC_PLAT) += ufs-dwc.o
-> >> +obj-$(CONFIG_SCSI_UFS_DWC_PCI) += ufs-dwc-pci.o
-> >>  obj-$(CONFIG_SCSI_UFS_QCOM) += ufs-qcom.o
-> >>  obj-$(CONFIG_SCSI_UFSHCD) += ufshcd.o
-> >>  obj-$(CONFIG_SCSI_UFSHCD_PCI) += ufshcd-pci.o
-> > 
-> > However, please split out the SCSI_UFS_DWC_TC specific bits into
-> > a separate file, and put the module_platform_driver() bits into
-> > that file, to get the right abstraction where the most specific
-> > driver calls into the next driver, like
-> > 
-> > dwc-test-chip -> dwc-platform -> dwc -> ufs
-> 
-> I think that it is a good idea and we isolate the test chip logic. If in the
-> future anyone uses DWC core with a real PHY then they can have a phy driver
-> calling dwc-platform. Agree?
-
-Yes, that would be good. It's likely that such a system would use
-some licensed IP block for the PHY, which can then have a separate
-PHY driver.
-
-> > It's possible you can leave out the dwc-platform level here, as there
-> > are no other users for now, we can add others later as needed.
-> > 
-> >> +/**
-> >> + * ufshcd_dwc_setup_tc()
-> >> + * This function configures Local (host) Synopsys TC specific attributes
-> >> + *
-> >> + * @hba: Pointer to drivers structure
-> >> + *
-> >> + * Returns 0 on success non-zero value on failure
-> >> + */
-> >> +static int ufshcd_dwc_setup_tc(struct ufs_hba *hba)
-> >> +{
-> >> +	int ret = 0;
-> >> +
-> >> +#ifdef CONFIG_SCSI_UFS_DWC_40BIT_RMMI
-> >> +	dev_info(hba->dev, "Configuring Test Chip 40-bit RMMI\n");
-> >> +	ret = ufshcd_dwc_setup_40bit_rmmi(hba);
-> >> +	if (ret) {
-> >> +		dev_err(hba->dev, "Configuration failed\n");
-> >> +		goto out;
-> >> +	}
-> >> +#endif
-> >> +
-> >> +#ifdef CONFIG_SCSI_UFS_DWC_20BIT_RMMI
-> >> +	dev_info(hba->dev, "Configuring Test Chip 20-bit RMMI\n");
-> >> +	ret = ufshcd_dwc_setup_20bit_rmmi(hba);
-> >> +	if (ret) {
-> >> +		dev_err(hba->dev, "Configuration failed\n");
-> >> +		goto out;
-> >> +	}
-> >> +#endif
-> > 
-> > You have changed the #if/#else into two #if sections, but this
-> > still seems broken when both are enabled, it just cannot work
-> > unless you have some runtime detection in place.
-> > 
-> 
-> Please check my comments upstream.
-> 
-> > Depending on whether this is actually the same hardware with
-> > different settings, or different variants of the test chip,
-> > please use either a boolean DT property to determine which
-> > one you need, or use a separate "compatible" string in DT
-> > for each version of the test chip.
-> 
-> As I say upstream, we can have a setup with the kernel running in a PC connected
-> to the UFS controller by PCI, so the DT scenario is no good.
-
-The DT scenario can work out of the box, that is fine, you just
-need a hack in the PCI driver to work around the lack of identification
-there.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
