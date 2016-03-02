@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 1/4] regulator: DT: Add DT property for active-discharge configuration
-Date: Wed, 2 Mar 2016 12:26:34 +0530
-Message-ID: <1456901797-21340-2-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V2 3/4] regulator: helper: Add helper to configure active-discharge using regmap
+Date: Wed, 2 Mar 2016 12:26:36 +0530
+Message-ID: <1456901797-21340-4-git-send-email-ldewangan@nvidia.com>
 References: <1456901797-21340-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,32 +12,89 @@ To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add common DT property for regulator node to support of
-active discharge enable/disable configuration of regulator.
+Add helper function to set the state of active-discharge of
+regulator using regmap. The HW regulator driver can directly
+use this by providing the necessary information in the regulator
+descriptor.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
 Changes from V1:
  None
 
- Documentation/devicetree/bindings/regulator/regulator.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/regulator/helpers.c      | 23 +++++++++++++++++++++++
+ include/linux/regulator/driver.h | 14 ++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/regulator/regulator.txt b/Documentation/devicetree/bindings/regulator/regulator.txt
-index 1d112fc..ecfc593 100644
---- a/Documentation/devicetree/bindings/regulator/regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/regulator.txt
-@@ -44,6 +44,11 @@ Optional properties:
-   any consumer request.
- - regulator-pull-down: Enable pull down resistor when the regulator is disabled.
- - regulator-over-current-protection: Enable over current protection.
-+- regulator-active-discharge: tristate, enable/disable active discharge of
-+  regulators. The values are:
-+	0: Disable active discharge.
-+	1: Enable active discharge.
-+	Absence of this property will leave configuration to default.
+diff --git a/drivers/regulator/helpers.c b/drivers/regulator/helpers.c
+index 3bbb326..b1e32e7 100644
+--- a/drivers/regulator/helpers.c
++++ b/drivers/regulator/helpers.c
+@@ -465,3 +465,26 @@ int regulator_get_bypass_regmap(struct regulator_dev *rdev, bool *enable)
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(regulator_get_bypass_regmap);
++
++/**
++ * regulator_set_active_discharge_regmap - Default set_active_discharge()
++ *					   using regmap
++ *
++ * @rdev: device to operate on.
++ * @enable: state to set, 0 to disable and 1 to enable.
++ */
++int regulator_set_active_discharge_regmap(struct regulator_dev *rdev,
++					  bool enable)
++{
++	unsigned int val;
++
++	if (enable)
++		val = rdev->desc->active_discharge_on;
++	else
++		val = rdev->desc->active_discharge_off;
++
++	return regmap_update_bits(rdev->regmap,
++				  rdev->desc->active_discharge_reg,
++				  rdev->desc->active_discharge_mask, val);
++}
++EXPORT_SYMBOL_GPL(regulator_set_active_discharge_regmap);
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index 59dbaf7..cd271e8 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -269,6 +269,14 @@ enum regulator_type {
+  * @bypass_mask: Mask for control when using regmap set_bypass
+  * @bypass_val_on: Enabling value for control when using regmap set_bypass
+  * @bypass_val_off: Disabling value for control when using regmap set_bypass
++ * @active_discharge_off: Enabling value for control when using regmap
++ *			  set_active_discharge
++ * @active_discharge_on: Disabling value for control when using regmap
++ *			 set_active_discharge
++ * @active_discharge_mask: Mask for control when using regmap
++ *			   set_active_discharge
++ * @active_discharge_reg: Register for control when using regmap
++ *			  set_active_discharge
+  *
+  * @enable_time: Time taken for initial enable of regulator (in uS).
+  * @off_on_delay: guard time (in uS), before re-enabling a regulator
+@@ -318,6 +326,10 @@ struct regulator_desc {
+ 	unsigned int bypass_mask;
+ 	unsigned int bypass_val_on;
+ 	unsigned int bypass_val_off;
++	unsigned int active_discharge_on;
++	unsigned int active_discharge_off;
++	unsigned int active_discharge_mask;
++	unsigned int active_discharge_reg;
  
- Deprecated properties:
- - regulator-compatible: If a regulator chip contains multiple
+ 	unsigned int enable_time;
+ 
+@@ -450,6 +462,8 @@ int regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+ int regulator_set_bypass_regmap(struct regulator_dev *rdev, bool enable);
+ int regulator_get_bypass_regmap(struct regulator_dev *rdev, bool *enable);
+ 
++int regulator_set_active_discharge_regmap(struct regulator_dev *rdev,
++					  bool enable);
+ void *regulator_get_init_drvdata(struct regulator_init_data *reg_init_data);
+ 
+ #endif
 -- 
 2.1.4
