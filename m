@@ -1,81 +1,48 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: Alternative binding proposal for tda998x audio
- (Was: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph of
- ports)
-Date: Wed, 2 Mar 2016 10:34:22 +0200
-Message-ID: <56D6A58E.4020606@ti.com>
-References: <cover.1455720381.git.jsarha@ti.com>
- <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
- <20160218143530.GB9654@rob-hp-laptop> <56CF04DA.8080905@ti.com>
- <20160226004311.GM5783@n2100.arm.linux.org.uk> <56D02594.4020407@ti.com>
- <20160226112159.GO5783@n2100.arm.linux.org.uk> <56D41F1A.2030100@ti.com>
- <56D5A6AA.2030907@ti.com> <20160301163553.3ef298fb2c0bb25ef662a41d@free.fr>
- <56D5BA6D.8090904@ti.com> <20160301171630.630a47dc00060645f89bb8ab@free.fr>
- <56D5DF7D.7090608@ti.com> <20160301202619.011013effd265fdee93d4d8e@free.fr>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Wed, 2 Mar 2016 08:41:40 +0000
+Message-ID: <SG2PR06MB1038AC389CDB35916408A5D6C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <56D5FE8E.1090400@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160301202619.011013effd265fdee93d4d8e@free.fr>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <56D5FE8E.1090400@pengutronix.de>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/16 21:26, Jean-Francois Moine wrote:
-> On Tue, 1 Mar 2016 20:29:17 +0200
-> Jyri Sarha <jsarha@ti.com> wrote:
->
->> I understand the short comings of simple-card and it's binding. However,
->> the binding is documented and it is feasible to extract the audio
->> connections from a simple-card binding too. In fact it models the I2S
->> connections better than straight out of tehe box graph binding. Actually
->> a graph is not the best way describe an i2s-bus with multiple DAIs
->> (codec or CPU) connected to it.
->
-> I still don't understand your problem. You want something like:
->
-
-The problem is adding redundant unused details into binding without any 
-plan of ever using them.
-
-Fundamentally my problem is finding some consensus on the tda998x ASoC 
-implementation. I've been reusing your binding for couple of review 
-rounds and there has been some well justified critique towards it. I 
-feel stupid in pushing forward something that I do not completely agree 
-myself, so I decided to try something else.
-
-> 	audio-ports = <	TDA998x_SPDIF	0x04
-> 			TDA998x_I2S	0x03>;
->
-> and the graph definition would be:
->
-> 	port@03 {
-> 		reg = <0x03>;
-> 		port-type = "audio-i2s";
-> 		...
-> 	};
->
-> 	port@04 {
-> 		reg = <0x04>;
-> 		port-type = "audio-spdif";
-> 		...
-> 	};
->
-> Apart the syntax, I don't really see the difference.
->
-
-Yes, the necessary information is contained in both bindings. I can live 
-with either one of them, but I would prefer my version. Essentially I 
-would just like to move forward.
-
-Best regards,
-Jyri
+SGkgTWFyYywNCg0KVGhhbmtzIGZvciB0aGUgcmV2aWV3Lg0KDQo+IE9uIDAzLzAxLzIwMTYgMTA6
+MzQgQU0sIFJhbWVzaCBTaGFubXVnYXN1bmRhcmFtIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRk
+cyBzdXBwb3J0IGZvciB0aGUgQ0FOIEZEIGNvbnRyb2xsZXIgZm91bmQgaW4gUmVuZXNhcw0KPiA+
+IFItQ2FyIFNvQ3MuIFRoZSBjb250cm9sbGVyIG9wZXJhdGVzIGluIENBTiBGRCBtb2RlIGJ5IGRl
+ZmF1bHQuIFR3bw0KPiA+IHRlc3QgbW9kZXMgYXJlIGF2YWlsYWJsZSBhbmQgY2FuIGJlIGVuYWJs
+ZWQgYnkgdGhlDQo+ID4gInJjYXJfY2FuZmQudGVzdG1vZGUiIG1vZHVsZSBwYXJhbWV0ZXIuIFJl
+ZmVyIHRvIERvY3VtZW50YXRpb24va2VybmVsLQ0KPiBwYXJhbWV0ZXJzLnR4dC4NCj4gDQo+IElz
+IHRoZSBjaGFubmVsIGxvb3BiYWNrIG1vZGUgY29uZmlndXJhYmxlIHBlciBjaGFubmVsPyBJZiBz
+bywgcGxlYXNlDQo+IHJlbW92ZSB0aGUgbW9kdWxlIHBhcmFtZXRlciBhbmQgbWFrZSB1c2Ugb2Yg
+Q0FOX0NUUkxNT0RFX0xPT1BCQUNLIHRvDQo+IGNvbmZpZ3VyZSBpdC4NCg0KVGhlIGxvb3BiYWNr
+IHNldHRpbmcgaXMgbm90IHRydWx5IGEgcGVyIGNoYW5uZWwgYXR0cmlidXRlLiBJdCByZXF1aXJl
+cyB0b3VjaGluZyBSeCBydWxlcyB3aGljaCBjYW4gYmUgZG9uZSBvbmx5IHdoZW4gdGhlIGNvbnRy
+b2xsZXIncyBnbG9iYWwgc3RhdGUgaXMgcmVzZXQgKGR1cmluZyBwcm9iZSkuIENBTl9DVFJMTU9E
+RV9MT09QQkFDSyBjb25maWcgb3B0aW9uIGlzIHBvc3NpYmxlIG9ubHkgdGhyb3VnaCAubmRvX29w
+ZW4gb2YgdGhhdCBjaGFubmVsIGJ1dCB0aGUgZ2xvYmFsIGNvbnRyb2xsZXIgc3RhdGUgbmVlZHMg
+dG8gYmUgb3BlcmF0aW9uYWwgYnkgdGhpcyB0aW1lLiBBcyBpdCBpcyBhIGdsb2JhbCBhdHRyaWJ1
+dGUgJiBmb3IgdGhlIGFib3ZlIHJlYXNvbiwgSSBjaG9vc2UgdGhlIG1vZHVsZSBvcHRpb24uDQoN
+Cj4gDQo+ID4gQ0FOIEZEIG1vZGUgc3VwcG9ydHMgYm90aCBDbGFzc2ljYWwgQ0FOICYgQ0FOIEZE
+IGZyYW1lIGZvcm1hdHMuIFRoZQ0KPiA+IGNvbnRyb2xsZXIgc3VwcG9ydHMgSVNPIDExODk4LTE6
+MjAxNSBDQU4gRkQgZm9ybWF0IG9ubHkuDQo+ID4NCj4gPiBUaGlzIGNvbnRyb2xsZXIgc3VwcG9y
+dHMgdHdvIGNoYW5uZWxzIGFuZCB0aGUgZHJpdmVyIGNhbiBlbmFibGUgZWl0aGVyDQo+ID4gb3Ig
+Ym90aCBvZiB0aGUgY2hhbm5lbHMuDQo+ID4NCj4gPiBEcml2ZXIgdXNlcyBSeCBGSUZPcyAob25l
+IHBlciBjaGFubmVsKSBmb3IgcmVjZXB0aW9uICYgQ29tbW9uIEZJRk9zDQo+ID4gKG9uZSBwZXIg
+Y2hhbm5lbCkgZm9yIHRyYW5zbWlzc2lvbi4gUnggZmlsdGVyIHJ1bGVzIGFyZSBjb25maWd1cmVk
+IHRvDQo+ID4gdGhlIG1pbmltdW0gKG9uZSBwZXIgY2hhbm5lbCkgYW5kIGl0IGFjY2VwdHMgU3Rh
+bmRhcmQsIEV4dGVuZGVkLCBEYXRhDQo+ID4gJiBSZW1vdGUgRnJhbWUgY29tYmluYXRpb25zLg0K
+PiANCj4gSSBzZWUgbm8gbG9ja2luZyBmb3IgdGhlIHR4LXBhdGguDQogDQpJIGFtIG5vdCBzdXJl
+IHdoeSBsb2NraW5nIGlzIG5lZWRlZCBpbiB0eC1wYXRoPyANCkhvd2V2ZXIsIGxvb2tpbmcgYXQg
+aXQgYWdhaW4sIEkgc2hvdWxkIG1vdmUgdGhlIGluY3JlbWVudGluZyBvZiBoZWFkIGFmdGVyIHRo
+ZSAic3RzIiBoYW5kaW5nIHRvIGJlIGFwdC4gV2hhdCBkbyB5b3UgdGhpbms/DQoNClRoYW5rcywN
+ClJhbWVzaA0K
