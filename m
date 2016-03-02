@@ -1,61 +1,53 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Wed, 2 Mar 2016 08:45:47 +0000
-Message-ID: <SG2PR06MB103886E07FD5D8D217E91E09C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56D60486.1000102@hartkopp.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-tree
+Date: Wed, 02 Mar 2016 10:11:06 +0100
+Message-ID: <3012728.7zDNPtQ7kR@wuerfel>
+References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com> <3802E9A6666DF54886E2B9CBF743BA9825E025F6@XAP-PVEXMBX01.xlnx.xilinx.com> <56D69EDD.40400@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56D60486.1000102@hartkopp.net>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56D69EDD.40400@xilinx.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Anurag Kumar Vulisha <anuragku@xilinx.com>, Rob Herring <robh@kernel.org>, =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oliver,
-
-Thanks for the review.
-
-> On 03/01/2016 10:34 AM, Ramesh Shanmugasundaram wrote:
-> > This patch adds support for the CAN FD controller found in Renesas
-> > R-Car SoCs. The controller operates in CAN FD mode by default. Two
-> > test modes are available and can be enabled by the
-> > "rcar_canfd.testmode" module parameter. Refer to Documentation/kernel-
-> parameters.txt.
+On Wednesday 02 March 2016 09:05:49 Michal Simek wrote:
+> On 2.3.2016 06:53, Anurag Kumar Vulisha wrote:
+> >>>>>
+> >>>>> I would probably make this dependent on the compatible string
+> >>>>> instead, and have a table in the device driver that uses a
+> >>>>> specific value for each variant of the device, but either way should be
+> >> fine.
+> >>>>>
+> >>>>> Having a separate property is most appropriate if for each
+> >>>>> hardware revision there is exactly one ideal value, while a table
+> >>>>> in the driver makes more sense if this takes a bit of tuning and
+> >>>>> the driver might choose to optimize it differently based on other
+> >>>>> constraints, such as its own interrupt handler implementation.
 > 
-> (..)
+> that 0x40 is value choose based on testing that it is not causing any
+> visible problem and this is used as default value in the driver
+> (PTC_RX_WM_VAL - ahci_ceva.c)
 > 
-> > +#ifdef CONFIG_DEBUG_FS
-> > +#include <linux/debugfs.h>
-> > +
-> > +static int rcar_canfd_showregs(struct seq_file *s, void *data) {
-> > +	struct rcar_canfd_channel *priv = s->private;
-> > +	u32 ch = priv->channel;
-> > +	u32 rf = ch + RCANFD_RFFIFO_IDX;
-> > +	u32 cf = RCANFD_CFFIFO_IDX;
-> > +	u32 val, offset, i;
-> > +
-> > +	if (testmode)
-> > +		seq_printf(s, "RCANFD : testmode = %d\n", testmode);
-> > +	seq_printf(s, "RCANFD register dump: channel %u\n", ch);
-> > +	seq_printf(s, "%-40s: %x\n", "g: cfg",
-> > +		   rcar_canfd_read(priv, RCANFD_GCFG));
+> Values which you can setup are in range 0x0 - 0x7f (7bits). It means
+> hardware fifo size is probably 0x80.
 > 
-> Why do you think you would need this kind of register dumps in debugfs?
+> And this dt/module parameter is IMHO just sw setting setup by user.
+> It means I am not quite sure that this is DT parameter because it is
+> just SW setting.
+> I expect this range will be valid for all silicon revisions.
+> If happen that any silicon revision can't setup certain level because of
+> HW bug we can handle it via DT parameter or specific compatible string.
+> But setting up watermark SW level via DT doesn't look correct to me.
 > 
-> This could be interesting for development purposes - but in production
-> drivers this is pretty unusual and needless.
+> Please let me know what you think.
 
-I thought it would be useful when we add more features to the driver (e.g. Gateway mode).
- 
-> 
-> I would sugest to remove either the testmode (already suggested by Marc)
-> and this register dump stuff.
+Ok, thanks for the background. I think we should just leave it to be
+set by the driver then. Please make sure that each SoC specific .dtsi
+file has a unique "compatible" string for the device though, so that
+the driver can later override it based on the specific variant if
+that ends up being necessary for performance or bug-avoidance.
 
-OK. I'll remove both.
-
-Thanks,
-Ramesh
+	Arnd
