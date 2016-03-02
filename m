@@ -1,123 +1,81 @@
-From: Alexandre Torgue <alexandre.torgue@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: stm32f429: Add Ethernet support
-Date: Wed, 2 Mar 2016 09:23:31 +0100
-Message-ID: <CAJgp7zz6+7=ZKsvvL5b1sK_EjJ81ZDLrN1YinSYBHUgJiGS-ZQ@mail.gmail.com>
-References: <1456763376-21457-1-git-send-email-alexandre.torgue@gmail.com>
-	<1456763376-21457-3-git-send-email-alexandre.torgue@gmail.com>
-	<56D5D031.9080609@gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: Alternative binding proposal for tda998x audio
+ (Was: Re: [PATCH RFC v5 4/8] drm/i2c: tda998x: Add support of a DT graph of
+ ports)
+Date: Wed, 2 Mar 2016 10:34:22 +0200
+Message-ID: <56D6A58E.4020606@ti.com>
+References: <cover.1455720381.git.jsarha@ti.com>
+ <842e221030a0b14bc862790eb2f5bc97bb29c012.1455720381.git.jsarha@ti.com>
+ <20160218143530.GB9654@rob-hp-laptop> <56CF04DA.8080905@ti.com>
+ <20160226004311.GM5783@n2100.arm.linux.org.uk> <56D02594.4020407@ti.com>
+ <20160226112159.GO5783@n2100.arm.linux.org.uk> <56D41F1A.2030100@ti.com>
+ <56D5A6AA.2030907@ti.com> <20160301163553.3ef298fb2c0bb25ef662a41d@free.fr>
+ <56D5BA6D.8090904@ti.com> <20160301171630.630a47dc00060645f89bb8ab@free.fr>
+ <56D5DF7D.7090608@ti.com> <20160301202619.011013effd265fdee93d4d8e@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D5D031.9080609@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, olof@lixom.net, khilman@kernel.org, linux-arm-kernel@lists.infradead.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org, Kamil Lulko <rev13@wp.pl>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20160301202619.011013effd265fdee93d4d8e@free.fr>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, peter.ujfalusi@ti.com, devicetree@vger.kernel.org, airlied@linux.ie, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On 03/01/16 21:26, Jean-Francois Moine wrote:
+> On Tue, 1 Mar 2016 20:29:17 +0200
+> Jyri Sarha <jsarha@ti.com> wrote:
+>
+>> I understand the short comings of simple-card and it's binding. However,
+>> the binding is documented and it is feasible to extract the audio
+>> connections from a simple-card binding too. In fact it models the I2S
+>> connections better than straight out of tehe box graph binding. Actually
+>> a graph is not the best way describe an i2s-bus with multiple DAIs
+>> (codec or CPU) connected to it.
+>
+> I still don't understand your problem. You want something like:
+>
 
-2016-03-01 18:24 GMT+01:00 Maxime Coquelin <mcoquelin.stm32@gmail.com>:
-> Hi Alex,
->
->     I have made a handful of changes on your patch, let me know if this is
-> ok for you.
->     If ok, it will be part of the PR I'll send tomorrow.
+The problem is adding redundant unused details into binding without any 
+plan of ever using them.
 
-I agree with modifications.
+Fundamentally my problem is finding some consensus on the tda998x ASoC 
+implementation. I've been reusing your binding for couple of review 
+rounds and there has been some well justified critique towards it. I 
+feel stupid in pushing forward something that I do not completely agree 
+myself, so I decided to try something else.
 
-Regards
+> 	audio-ports = <	TDA998x_SPDIF	0x04
+> 			TDA998x_I2S	0x03>;
+>
+> and the graph definition would be:
+>
+> 	port@03 {
+> 		reg = <0x03>;
+> 		port-type = "audio-i2s";
+> 		...
+> 	};
+>
+> 	port@04 {
+> 		reg = <0x04>;
+> 		port-type = "audio-spdif";
+> 		...
+> 	};
+>
+> Apart the syntax, I don't really see the difference.
+>
 
-alex
+Yes, the necessary information is contained in both bindings. I can live 
+with either one of them, but I would prefer my version. Essentially I 
+would just like to move forward.
 
->
-> On 02/29/2016 05:29 PM, Alexandre TORGUE wrote:
->>
->> Add Ethernet support (Synopsys MAC IP 3.50a) on stm32f429 SOC.
->>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
->>
->> diff --git a/arch/arm/boot/dts/stm32f429.dtsi
->> b/arch/arm/boot/dts/stm32f429.dtsi
->> index bb7a736..af0367c 100644
->> --- a/arch/arm/boot/dts/stm32f429.dtsi
->> +++ b/arch/arm/boot/dts/stm32f429.dtsi
->> @@ -283,6 +283,26 @@
->>                                         bias-disable;
->>                                 };
->>                         };
->> +
->> +                       ethernet0_mii: mii@0 {
->> +                               mii {
->> +                                       slew-rate = <2>;
->
-> I moved slew-rate property below the pinmux one for consistency with other
-> pin configs in the file.
->>
->> +                                       pinmux =
->> <STM32F429_PG13_FUNC_ETH_MII_TXD0_ETH_RMII_TXD0>,
->> +
->> <STM32F429_PG14_FUNC_ETH_MII_TXD1_ETH_RMII_TXD1>,
->> +
->> <STM32F429_PC2_FUNC_ETH_MII_TXD2>,
->> +
->> <STM32F429_PB8_FUNC_ETH_MII_TXD3>,
->> +
->> <STM32F429_PC3_FUNC_ETH_MII_TX_CLK>,
->> +
->> <STM32F429_PG11_FUNC_ETH_MII_TX_EN_ETH_RMII_TX_EN>,
->> +
->> <STM32F429_PA2_FUNC_ETH_MDIO>,
->> +
->> <STM32F429_PC1_FUNC_ETH_MDC>,
->> +
->> <STM32F429_PA1_FUNC_ETH_MII_RX_CLK_ETH_RMII_REF_CLK>,
->> +
->> <STM32F429_PA7_FUNC_ETH_MII_RX_DV_ETH_RMII_CRS_DV>,
->> +
->> <STM32F429_PC4_FUNC_ETH_MII_RXD0_ETH_RMII_RXD0>,
->> +
->> <STM32F429_PC5_FUNC_ETH_MII_RXD1_ETH_RMII_RXD1>,
->> +
->> <STM32F429_PH6_FUNC_ETH_MII_RXD2>,
->> +
->> <STM32F429_PH7_FUNC_ETH_MII_RXD3>;
->> +                               };
->> +                       };
->>                 };
->>                 rcc: rcc@40023810 {
->> @@ -323,6 +343,21 @@
->>                         st,mem2mem;
->>                 };
->>   +             ethernet0: dwmac@40028000 {
->> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
->> +                       status = "disabled";
->
-> I moved status property at the end of the node for consistency
->>
->> +                       reg = <0x40028000 0x8000>;
->> +                       reg-names = "stmmaceth";
->> +                       interrupts = <0 61 0>, <0 62 0>;
->
-> #interrupt-cells is set to 1 in the nvic node, meaning that a single cell is
-> expected here:
->
-> interrupts = <61>, <62>;
->
->> +                       interrupt-names = "macirq", "eth_wake_irq";
->> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
->> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
->> +                       st,syscon = <&syscfg 0x4>;
->> +                       snps,pbl = <8>;
->> +                       snps,mixed-burst;
->> +                       dma-ranges;
->> +               };
->> +
->>                 rng: rng@50060800 {
->>                         compatible = "st,stm32-rng";
->>                         reg = <0x50060800 0x400>;
->
->
-> Regards,
-> Maxime
->
->
+Best regards,
+Jyri
