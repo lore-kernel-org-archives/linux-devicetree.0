@@ -1,49 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v10 0/5] MT8173 IOMMU SUPPORT
-Date: Wed, 02 Mar 2016 12:26:35 +0100
-Message-ID: <15221728.nr4S7fgC2l@wuerfel>
-References: <1456161651-6136-1-git-send-email-yong.wu@mediatek.com>
-	<20160226110633.GE22747@8bytes.org> <56D6C50B.3040108@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from device-tree
+Date: Wed, 02 Mar 2016 12:42:12 +0100
+Message-ID: <1798710.nJonRpmlxx@wuerfel>
+References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com> <3012728.7zDNPtQ7kR@wuerfel> <56D6B217.2000701@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <56D6C50B.3040108-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <56D6B217.2000701@xilinx.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Anurag Kumar Vulisha <anuragku@xilinx.com>, Rob Herring <robh@kernel.org>, =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "tj@kernel.org" <tj@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 March 2016 11:48:43 Matthias Brugger wrote:
+On Wednesday 02 March 2016 10:27:51 Michal Simek wrote:
 > 
-> On 26/02/16 12:06, Joerg Roedel wrote:
-> > Hi Philipp,
-> >
-> > On Fri, Feb 26, 2016 at 09:55:55AM +0100, Philipp Zabel wrote:
-> >> Do you have a stable branch that I could base the mediatek-drm patches
-> >> on and that I may include in a pull request to be merged via drm-next?
-> >
-> > You can base it on the arm/mediatek branch of the iommu tree. I'll push
-> > it out in the next minutes.
-> >
-> 
-> I realized that Joerg accidentally merged the dts parts as well through 
-> his branch.
-> 
-> As expected this patches conflict when merging the arm-soc tree.
-> 
-> Shall Joerg drops the patches and you take it through your branch, or
-> I queue them for the next release cycle?
+> No problem with default value in driver. Something has to be setup.
+> Reset value based on reg spec I was checking is 0x20. Based on our
+> testing we saw some issues that's why 0x40 was setup as default value.
+> There is a need to be able to configure this value for example for
+> testing different values that's why I think module parameter should be
+> the right way to go.
 
-I think this time, we can live with the conflict, it's easy enough
-to resolve when Linus pulls both branches.
+I don't object to the module parameter, but I don't understand how important
+that kind of testing is to normal users. Who would set it, aside from
+the person writing that driver to come up with the correct default?
+
+> If this should be DT parameters there should be different ceva IP which
+> allows different fifo size and different watermark level to be setup by
+> user.
+> 
+> What do you think? Does it sound reasonable.
+
+Having a property for the actual hardware fifo size once you get
+different implementations seems like the correct approach, but it's
+moot as long as all implementations are hardwired to 128 entries.
 
 	Arnd
