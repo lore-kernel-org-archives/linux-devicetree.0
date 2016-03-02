@@ -1,45 +1,104 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: NSP: Add PWM Support to DT
-Date: Wed, 02 Mar 2016 16:28:54 +0100
-Message-ID: <4015342.1TJkp5X8uB@wuerfel>
-References: <CAL2FKYkoXFm_pG6inxJqwkRqEK-TsMT2ndy4fgvQG1wT6AZ03Q@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V6 00/10] Add generic PM domain support for Tegra
+Date: Wed, 2 Mar 2016 16:35:56 +0100
+Message-ID: <20160302153556.GB21035@ulmo.nvidia.com>
+References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL2FKYkoXFm_pG6inxJqwkRqEK-TsMT2ndy4fgvQG1wT6AZ03Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Jon Hunter <jonathanh@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 March 2016 20:22:01 Yendapally Reddy Dhananjaya Reddy wrote:
-> On Wed, Mar 2, 2016 at 1:55 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Tuesday 01 March 2016 12:42:49 Yendapally Reddy Dhananjaya Reddy wrote:
-> >>                 };
-> >>
-> >> +               pwm: pwm@31000 {
-> >> +                       compatible = "brcm,iproc-pwm";
-> >> +                       reg = <0x31000 0x28>;
-> >> +                       clocks = <&osc>;
-> >> +                       #pwm-cells = >;
-> >> +                       status = "disabled";
-> >> +               };
-> >>
-> >
-> > Should this also list "brcm,kona-pwm" as compatible? From patch
-> > 1, it sounds like that was the original one.
-> 
-> Arnd,
-> 
-> The NSP is a iProc based SoC and the pwm controller register offsets are
-> slightly differ with the kona pwm controller. The compatible will be either
-> "brcm,kona-pwm" or "brcm,iproc-pwm".
 
-Ok, got it, thanks for the explanation.
+--IrhDeMKUP4DT/M7F
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Feb 26, 2016 at 03:48:34PM +0000, Jon Hunter wrote:
+> Adds generic PM domain support for Tegra SoCs but this series only
+> enables support for it on Tegra 64-bit devices. There is no reason why
+> this cannot be enable for Tegra 32-bit devices, but to keep the patch
+> series to a minimum only 64-bit devices are enabled so far.
+>=20
+> This series has been boot tested on Tegra210 as well as various 32-bit
+> Tegra platforms.
+>=20
+> Summary of changes since V5 [2]:
+> - Split series into 2 series, separating PMC fixes [3] from genpd changes
+> - This series is based upon fixes series (which is now in -next)
+> - Added patch to fix removal of genpd subdomain
+> - Added patch to get last genpd that was added
+> - Fixed locking in function to remove genpd
+> - Updated Tegra PMC driver to ensure power-domains cannot be controlled
+>   by both legacy Tegra APIs and generic PM domain framework
+> - Removed powergate list from Tegra PMC driver and updated removal of
+>   power domains to use new genpd APIs.
+>=20
+> Summary of changes since V4 [1]:
+> - Re-worked fix to handle base address on probe failure
+> - Added patch to lock around simultaneuous accesses to PMC registers
+> - Added patch to change powergate and rail IDs to unsigned type
+> - Added patch to fix testing of powergate state
+> - Updated patch to check for valid powergates to use a bitmap
+> - Updated Tegra DT PMC bindings per Rob H's feedback
+> - Updated Tegra power domains binding per Thierry's feedback
+> - Updated Tegra generic power domain support per Thierry's feedback
+>=20
+> Summary of changes since V3 [0]:
+> - Dropped tegra124 support for now
+> - Removed MC flush support per feedback from Thierry
+> - Cleaned up the PMC changes per feedback from Thierry
+> - Added support for tegra210
+>=20
+> [0] http://comments.gmane.org/gmane.linux.ports.tegra/22944
+> [1] http://marc.info/?l=3Dlinux-tegra&m=3D144924153600529&w=3D2
+> [2] http://marc.info/?l=3Dlinux-tegra&m=3D145399885003830&w=3D2
+> [3] http://marc.info/?l=3Dlinux-tegra&m=3D145521381331144&w=3D2
+>=20
+> Jon Hunter (10):
+>   PM / Domains: Fix removal of a subdomain
+>   PM / Domains: Add function to get the last domain added
+>   PM / Domains: Add function to remove a pm-domain
+
+Ulf, Kevin, Rafael,
+
+It's too late to take these patches through the Tegra tree for v4.6, but
+if Jon can get the above three patches ready before the merge window,
+would you be willing to pick them up into your trees for v4.6? Doing so
+might make it easier to deal with the dependencies. The prerequisites
+would already be in Linus' tree when I apply the Tegra bits for v4.7.
+
+I don't mind taking all of it through the Tegra tree for v4.7, though. I
+can provide a stable branch with the PM / Domains patches for you to
+pull in, in case there are any conflicts.
+
+Thierry
+
+--IrhDeMKUP4DT/M7F
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJW1whaAAoJEN0jrNd/PrOh5CYP/3mV/pjBqUJXxbPSXsJltGy6
+VbbpGS3qvLr0swfTBOJ9vpqistchZayQBJUSlE0DOcIaeqGb9BHRjejJRi01qPz3
++/XZ98V8FkLX3+zN1J21Zdpt1Bg+X+/4+qbezt703tc9TaMsypeTOfqUqUFLEc7R
+y+bmwyLUAxQquy0XIBZhYX1c6rtw7f/tKVdZNSEGpSPdB6YxkCQUgzf41PHbVpan
+0Z5EBCBm4GNwe8pDhqcidaM/rQ3vxhg367GIWy9EegBb55W4zoHk5YGC3zq1Cl1U
+Ua5WikeDLh2dSo5c9NvOPA2Gq9mp9zZ6zG9glubf6etaW/0BtlExXd2RP+hV4KZ3
+lWpEBag6a3BXMp5z3qGnvCe9eXGBXgXagQnqfn3fXxuvhrZrLYUbFUq8sabVQnLW
+yENxugB5nsvInj3SeDsg07iUqfKk49ClR1CMTS3UubusZSC/VxOm49opgpZ6MAJ9
+Cb+Lwd3RVaupc23Szmr26XlipivSJt+DdIJuFkm9DzNedaCmqZQl5SIP5xxPcEaK
+L5coVaejYQNZKPFxWzwsnqYxfmcWVd7SQdptxCln9wBSuYbj4oMM2vk9FxUoZMkG
+HwT5HF5eiDMuHrmMP1Xv2AF6kAnqxVMRgrpTQBmr8KW3wDFQm0X6KPezv8oexk21
+Q9RAPqqIyyd9TAmljNih
+=LrDH
+-----END PGP SIGNATURE-----
+
+--IrhDeMKUP4DT/M7F--
