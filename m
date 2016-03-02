@@ -1,69 +1,49 @@
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [lkp] [printk] 34578dc67f: EIP is at vprintk_emit+0x1ea/0x600
-Date: Wed, 2 Mar 2016 19:41:59 +0900
-Message-ID: <20160302104159.GA646@swordfish>
-References: <87fuwk1c0o.fsf@yhuang-dev.intel.com>
- <20160223131538.GA2048@swordfish>
- <20160223155331.GA448@swordfish>
- <20160224011941.GA7683@swordfish>
- <20160224114614.GY3305@pathway.suse.cz>
- <20160224125022.GA516@swordfish>
- <20160224151242.GA2254@swordfish>
- <20160225051005.GA884@swordfish>
- <20160302103006.GB3166@pathway.suse.cz>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v10 0/5] MT8173 IOMMU SUPPORT
+Date: Wed, 2 Mar 2016 11:48:43 +0100
+Message-ID: <56D6C50B.3040108@gmail.com>
+References: <1456161651-6136-1-git-send-email-yong.wu@mediatek.com>
+	<20160225155007.GA19092@8bytes.org>
+	<1456476955.3383.21.camel@pengutronix.de>
+	<20160226110633.GE22747@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160302103006.GB3166@pathway.suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, kernel test robot <ying.huang@linux.intel.com>, lkp@01.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Calvin Owens <calvinowens@fb.com>, Dave Jones <davej@codemonkey.org.uk>, Kyle McMartin <kyle@kernel.org>, Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20160226110633.GE22747-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On (03/02/16 11:30), Petr Mladek wrote:
-> On Thu 2016-02-25 14:10:05, Sergey Senozhatsky wrote:
-> > CONFIG_PREEMPT_NONE=y
-> > # CONFIG_PREEMPT_VOLUNTARY is not set
-> > # CONFIG_PREEMPT is not set
-> > CONFIG_PREEMPT_COUNT=y
-> 
-> I was curious why your patch actually did not help to avoid the
-> softlockup. The infinite printk loop was called in a safe context,
-> CONFIG_PREEMPT_COUNT=y, so it did set console_may_schedule = 1.
-> 
-> But it never got console_sem, never called console_unlock()
-> and never called cond_resched() there. So, it never got preempted
-> in the PREEMPT_NONE kernel. The console_sem was owned by
-> another process that was busy handling the flood of messages.
-> 
-> Note that the infinite cycle calling printk() might be interrupted anywhere
-> by the NMI watchdog. It explains why the original report pointed
-> at the beginning of the printk. It was not a deadlock.
-> I got the softlockup on random locations here.
-> 
-> Also it is not the classic softlockup in console_unlock().
-> The process handling the console actually could sleep if it
-> has console_may_schedule = 1. This is why console_unlock()
-> did not appeared in the softlockup backtrace.
-> 
-> 
-> Conclusion:
-> 
-> Sergey is correct and his patches are innocent here.
+Hi Arnd and Olof,
 
-thank you, Petr!
+On 26/02/16 12:06, Joerg Roedel wrote:
+> Hi Philipp,
+>
+> On Fri, Feb 26, 2016 at 09:55:55AM +0100, Philipp Zabel wrote:
+>> Do you have a stable branch that I could base the mediatek-drm patches
+>> on and that I may include in a pull request to be merged via drm-next?
+>
+> You can base it on the arm/mediatek branch of the iommu tree. I'll push
+> it out in the next minutes.
+>
 
+I realized that Joerg accidentally merged the dts parts as well through 
+his branch.
 
-> Sergey, if you send the fix for
-> of_unittest_destroy_tracked_overlays(), please add me into CC.
+As expected this patches conflict when merging the arm-soc tree.
 
-of course, will try to send it out tonight.
+Shall Joerg drops the patches and you take it through your branch, or
+I queue them for the next release cycle?
 
-
-> PS: I am sorry for the noise and that it took me so long to shake my
-> head around this problem. Thanks a lot for patience.
-
-no problem at all. thank you. the more we double check it - the better.
-
-	-ss
+Regards,
+Matthias
