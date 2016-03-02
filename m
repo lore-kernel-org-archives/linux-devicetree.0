@@ -1,49 +1,61 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v10 0/5] MT8173 IOMMU SUPPORT
-Date: Wed, 2 Mar 2016 11:48:43 +0100
-Message-ID: <56D6C50B.3040108@gmail.com>
-References: <1456161651-6136-1-git-send-email-yong.wu@mediatek.com>
-	<20160225155007.GA19092@8bytes.org>
-	<1456476955.3383.21.camel@pengutronix.de>
-	<20160226110633.GE22747@8bytes.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] spi: davinci: set new SPI_FC_* flags
+Date: Wed, 2 Mar 2016 19:48:51 +0900
+Message-ID: <20160302104851.GJ18327@sirena.org.uk>
+References: <56D448E1.6090006@de.bosch.com>
+ <1456843400-20696-1-git-send-email-linux@rempel-privat.de>
+ <1456843400-20696-4-git-send-email-linux@rempel-privat.de>
+ <20160302021616.GP18327@sirena.org.uk>
+ <56D68754.3090405@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20160226110633.GE22747-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, youhua.li-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Daniel Kurtz <djkurtz-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Sasha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="aca4q5SZ1DcD6eE6"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56D68754.3090405-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "fixed-term.Oleksij.Rempel" <fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd and Olof,
 
-On 26/02/16 12:06, Joerg Roedel wrote:
-> Hi Philipp,
->
-> On Fri, Feb 26, 2016 at 09:55:55AM +0100, Philipp Zabel wrote:
->> Do you have a stable branch that I could base the mediatek-drm patches
->> on and that I may include in a pull request to be merged via drm-next?
->
-> You can base it on the arm/mediatek branch of the iommu tree. I'll push
-> it out in the next minutes.
->
+--aca4q5SZ1DcD6eE6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I realized that Joerg accidentally merged the dts parts as well through 
-his branch.
+On Wed, Mar 02, 2016 at 07:25:24AM +0100, fixed-term.Oleksij.Rempel wrote:
+> On 02.03.2016 03:16, Mark Brown wrote:
+> > On Tue, Mar 01, 2016 at 03:43:18PM +0100, Oleksij Rempel wrote:
 
-As expected this patches conflict when merging the arm-soc tree.
+> >> -		if (spi->mode & SPI_READY) { +		if (spi->mode & SPI_FC_READY)
+> >> {
 
-Shall Joerg drops the patches and you take it through your branch, or
-I queue them for the next release cycle?
+> > This isn't setting new flags, this is replacing old flags with new
+> > ones which suggests that the patch renaming the flag needs to
+> > rename the flag in all the drivers...
 
-Regards,
-Matthias
+> Only this driver was using this flag SPI_READY. So i assume, i will
+> need only to reword patch comment. Right?
+
+No, if this is a rename you need to do it as a rename.
+
+--aca4q5SZ1DcD6eE6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW1sUTAAoJECTWi3JdVIfQJ0gH/2JCAbG6hZZp5L8tPr3/0FWv
+8ZePQriKnF+mA9xPszGEU/D52rkLSn2BhuY0uySQSBzVi6v6yhjCPGrOf/DkxRD3
+n8u/x1HSOhIo2IR9n6V89N00C7n7CzcxMUI/phR5PXS/8Hui843l5M46wvwcCJrh
+wwHzhyUw6P4Jul4uqO5GnM6u/07U1I5I+9wjSsqbTox2CiuqhsORl9jl9ukWQhps
+OrbvOTUCNM7BkErCeGSK9KRJdfoke2QSmZErWoudqvgHonkMk6YAXa+K4kb9nvlO
+XDS4AbOV0UjLBPCCJyiTF1qUynjcGg+kViroQXV40nJLTgbvji3k7lhEPbiG6wk=
+=UQrh
+-----END PGP SIGNATURE-----
+
+--aca4q5SZ1DcD6eE6--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
