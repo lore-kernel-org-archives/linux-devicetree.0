@@ -1,109 +1,66 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/6] dt-bindings: arm/marvell: add DT bindings for
- AP806 DFX Server
-Date: Wed, 2 Mar 2016 11:09:35 -0600
-Message-ID: <20160302170935.GA11407@rob-hp-laptop>
-References: <1456326866-30854-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1456326866-30854-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20160225233710.GJ28849@codeaurora.org>
- <20160226093227.5d4dc1a7@free-electrons.com>
- <20160226235549.GB28849@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: interrupt-controller: add SoC-specific
+ compatible string to Marvell ODMI
+Date: Wed, 2 Mar 2016 11:12:45 -0600
+Message-ID: <20160302171245.GA25012@rob-hp-laptop>
+References: <1456327494-31358-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160226235549.GB28849@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1456327494-31358-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 03:55:49PM -0800, Stephen Boyd wrote:
-> On 02/26, Thomas Petazzoni wrote:
-> > I would entirely agree with you if this DFX Server was some sort of
-> > "system control" IP block that provided clocks, resets, and all sort of
-> > other features.
-> > 
-> > But this DFX server thing is just a bunch of registers with absolutely
-> > no relation to clocks. Due to this, it would be completely awkward to
-> > have clock references like:
-> > 
-> > 	serial {
-> > 		clocks = <&dfxserver 42>;
-> > 	};
-> > 
-> > One will wonder "why the heck this UART controller is using a clock
-> > from this really odd dfxserver thing" ? Currently we have:
-> > 
-> > 	serial {
-> > 		clocks = <&coreclk 4>;
-> > 	};
-> > 
-> > which makes a *lot* more sense.
-
-Really, this is your argument?
-
-> Sorry I don't see the difference and I don't agree with this
-> argument. dfxserver is just a phandle and possibly a poorly named
-> one at that. So is coreclk. The second example doesn't make a
-> *lot* more sense or really any more sense than the first example.
-> Maybe some #define should be used to make things readable:
-> &dfxserver CORE_CLK_X or something. Why someone would care what
-> the name of the phandle is for where the clk is coming from makes
-> no sense to me.
+On Wed, Feb 24, 2016 at 04:24:54PM +0100, Thomas Petazzoni wrote:
+> As requested by Rob Herring, this commit adds a SoC-specific
+> compatible string to the Marvell ODMI DT binding.
 > 
-> The miscellaneous register dumping ground, i.e. dfxserver, is a
-> total mess in hardware, agreed, but it doesn't mean we need to
-> pick it apart and describe the bits and pieces of it so that our
-> DT can be read as &coreclk 4 instead of &dfxserver 42.
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> ---
+> This commit applies on top of the Marvell ODMI driver patch, which has
+> already been merged.
+> ---
+>  .../bindings/interrupt-controller/marvell,odmi-controller.txt      | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+
+I see this is already merged, but for the record:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+There is a typo in the example though.
+
 > 
-> Somebody delivered this dfxserver hardware block into the SoC.
-> They decided to put random clk control in there. In terms of
-> hardware blocks, I would guess that dfxserver has a couple clk
-> wires coming out and some SoC integration engineer had to wire
-> those up to the places like the uart that actually use them.
-> Embrace these hardware design decisions. Represent the hardware
-> in DT as it is represented in hardware by making one node for the
-> dfxserver because dfxserver is a hardware block.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+> index 252d5c9..8af0a8e 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
+> @@ -6,7 +6,9 @@ which can be used by on-board peripheral for MSI interrupts.
+>  
+>  Required properties:
+>  
+> -- compatible           : The value here should contain "marvell,odmi-controller".
+> +- compatible           : The value here should contain:
+> +
+> +    "marvell,ap806-odmi-controller", "marvell,odmi-controller".
+>  
+>  - interrupt,controller : Identifies the node as an interrupt controller.
+>  
+> @@ -29,7 +31,8 @@ Required properties:
+>  Example:
+>  
+>  	odmi: odmi@300000 {
+> -		compatible = "marvell,odmi-controller";
+> +		compatible = "marvell,ap806-odm-controller",
 
-Agreed.
+s/odm/odmi/
 
-> > Also, your idea of just hiding everything behind a MFD bothers me quite
-> > a bit. If I push this idea further, then why shouldn't I replace my
-> > entire DT with a single node, that covers the entire register space of
-> > my SoC, and then handle *everything* as a huge MFD. In a way, it would
-> > be quite useful for me, as it would resolve the on-going dispute over
-> > DT binding stability with Rob and Mark.
+> +			     "marvell,odmi-controller";
+>  		interrupt-controller;
+>  		msi-controller;
+>  		marvell,odmi-frames = <4>;
+> -- 
+> 2.6.4
 > 
-> That's a straw man fallacy. Nobody is asking for this. DT is
-> about describing relations between hardware blocks and the
-> resources they use. It is *not* about describing register level
-> details of hardware blocks and providing some data heavy format
-> so that drivers are nothing besides DT data driven husks of code.
-> Nor is it about grouping clk subtypes into different DT subnodes
-> to make writing drivers easier. That's what gets us into the mess
-> of DT backward compatibility when the data that should have been
-> in the driver has been put into DT.
-> 
-> > 
-> > For sure, I wouldn't have any DT backward compatibility issue, because
-> > everything is hidden in my big MFD. But in terms of the DT as a
-> > representation of the different HW blocks and the relations between
-> > then, such a choice would be quite a failure.
-
-What other functions do you have? You previously said the block was DFT 
-registers which I would not expect s/w to ever touch.
-
-> I don't see any failure. The dfxserver is a hardware block and
-> that happens to be a clk provider, plain and simple. Consumers of
-> those clks are related to the dfxserver and we've properly
-> expressed the relations between them.
-
-And you could have other types of consumers. Nothing requires nodes and 
-providers to be 1-1.
-
-You're being told to do it this way by multiple maintainers both because 
-it is the preferred way to describe clocks and it gives a better chance 
-for stable bindings. 
-
-Rob
