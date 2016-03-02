@@ -1,135 +1,71 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 2/4] regulator: core: Add support for active-discharge configuration
-Date: Wed, 2 Mar 2016 12:32:10 +0530
-Message-ID: <1456902130-22406-1-git-send-email-ldewangan@nvidia.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: r8a7795: Add CAN FD support
+Date: Wed, 2 Mar 2016 07:29:04 +0000
+Message-ID: <SG2PR06MB1038FBA247777C89F70E2633C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <56D59538.2060100@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <56D59538.2060100@cogentembedded.com>
+Content-Language: en-US
+Sender: linux-can-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support to enable/disable active discharge of regulator via
-machine constraints. This configuration is done when setting
-machine constraint during regulator register and if regulator
-driver implemented the callback ops.
+Hi Sergei,
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes from V1:
- Make the interface like 0 (non-init member) will be treated as default,
- 1 for disable and 2 for enable. Created enum for active discharge
- default/enable/disable
+> On 3/1/2016 1:04 PM, Ramesh Shanmugasundaram wrote:
+> 
+> > Adds CAN FD controller node for r8a7795.
+> >
+> > Note: CAN FD controller register base address specified in R-Car Gen3
+> > Hardware User Manual v0.5E is incorrect. The correct address is:
+> >
+> > CAN FD - 0xe66c0000
+> >
+> > Signed-off-by: Ramesh Shanmugasundaram
+> > <ramesh.shanmugasundaram@bp.renesas.com>
+> > ---
+> > Hi All,
+> >
+> >     This patch is based on linux-next (tag:next-20160225) with the
+> following
+> >     patches applied on top.
+> >
+> >     [PATCH v2] arm64: dts: r8a7795: Add CAN external clock support
+> >     [PATCH] arm64: dts: r8a7795: Add CAN support
+> >
+> >     The respective CAN subsystem changes are submitted separately here
+> > (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg013
+> > 88.html)
+> >
+> > Thanks,
+> > Ramesh
+> > ---
+> >   arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
+> >   1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > index a88f8d8..5049ba6 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> > @@ -553,6 +553,30 @@
+> >   			status = "disabled";
+> >   		};
+> >
+> > +		canfd: canfd@e66c0000 {
+> 
+>     The node name should still be "can@e66c0000", I think.
 
+Thanks for the review.
 
- drivers/regulator/core.c          | 11 +++++++++++
- drivers/regulator/of_regulator.c  |  6 ++++++
- include/linux/regulator/driver.h  |  3 +++
- include/linux/regulator/machine.h | 12 ++++++++++++
- 4 files changed, 32 insertions(+)
+The SoC has CAN controller too and hence I chose this node name to differentiate. A grep of canfd on sysfs would tell if the controller is enabled. The channels on "net" would still be named "canx".
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 055f8c1..095de51 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -1139,6 +1139,17 @@ static int set_machine_constraints(struct regulator_dev *rdev,
- 		}
- 	}
- 
-+	if (rdev->constraints->active_discharge && ops->set_active_discharge) {
-+		bool ad_state = (rdev->constraints->active_discharge ==
-+			      REGULATOR_ACTIVE_DISCHARGE_ENABLE) ? true : false;
-+
-+		ret = ops->set_active_discharge(rdev, ad_state);
-+		if (ret < 0) {
-+			rdev_err(rdev, "failed to set active discharge\n");
-+			return ret;
-+		}
-+	}
-+
- 	print_constraints(rdev);
- 	return 0;
- }
-diff --git a/drivers/regulator/of_regulator.c b/drivers/regulator/of_regulator.c
-index 499e437..fe2e3344 100644
---- a/drivers/regulator/of_regulator.c
-+++ b/drivers/regulator/of_regulator.c
-@@ -93,6 +93,12 @@ static void of_get_regulation_constraints(struct device_node *np,
- 
- 	constraints->soft_start = of_property_read_bool(np,
- 					"regulator-soft-start");
-+	ret = of_property_read_u32(np, "regulator-active-discharge", &pval);
-+	if (!ret) {
-+		constraints->active_discharge =
-+				(pval) ? REGULATOR_ACTIVE_DISCHARGE_ENABLE :
-+					REGULATOR_ACTIVE_DISCHARGE_DISABLE;
-+	}
- 
- 	if (!of_property_read_u32(np, "regulator-initial-mode", &pval)) {
- 		if (desc && desc->of_map_mode) {
-diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
-index 16ac9e1..59dbaf7 100644
---- a/include/linux/regulator/driver.h
-+++ b/include/linux/regulator/driver.h
-@@ -93,6 +93,8 @@ struct regulator_linear_range {
-  * @get_current_limit: Get the configured limit for a current-limited regulator.
-  * @set_input_current_limit: Configure an input limit.
-  *
-+ * @set_active_discharge: Set active discharge enable/disable of regulators.
-+ *
-  * @set_mode: Set the configured operating mode for the regulator.
-  * @get_mode: Get the configured operating mode for the regulator.
-  * @get_status: Return actual (not as-configured) status of regulator, as a
-@@ -149,6 +151,7 @@ struct regulator_ops {
- 
- 	int (*set_input_current_limit) (struct regulator_dev *, int lim_uA);
- 	int (*set_over_current_protection) (struct regulator_dev *);
-+	int (*set_active_discharge) (struct regulator_dev *, bool enable);
- 
- 	/* enable/disable regulator */
- 	int (*enable) (struct regulator_dev *);
-diff --git a/include/linux/regulator/machine.h b/include/linux/regulator/machine.h
-index a1067d0..5d627c8 100644
---- a/include/linux/regulator/machine.h
-+++ b/include/linux/regulator/machine.h
-@@ -42,6 +42,13 @@ struct regulator;
- #define REGULATOR_CHANGE_DRMS		0x10
- #define REGULATOR_CHANGE_BYPASS		0x20
- 
-+/* Regulator active discharge flags */
-+enum regulator_active_discharge {
-+	REGULATOR_ACTIVE_DISCHARGE_DEFAULT,
-+	REGULATOR_ACTIVE_DISCHARGE_DISABLE,
-+	REGULATOR_ACTIVE_DISCHARGE_ENABLE,
-+};
-+
- /**
-  * struct regulator_state - regulator state during low power system states
-  *
-@@ -100,6 +107,9 @@ struct regulator_state {
-  * @initial_state: Suspend state to set by default.
-  * @initial_mode: Mode to set at startup.
-  * @ramp_delay: Time to settle down after voltage change (unit: uV/us)
-+ * @active_discharge: Enable/disable active discharge. The enum
-+ *		      regulator_active_discharge values are used for
-+ *		      initialisation.
-  * @enable_time: Turn-on time of the rails (unit: microseconds)
-  */
- struct regulation_constraints {
-@@ -140,6 +150,8 @@ struct regulation_constraints {
- 	unsigned int ramp_delay;
- 	unsigned int enable_time;
- 
-+	unsigned int active_discharge;
-+
- 	/* constraint flags */
- 	unsigned always_on:1;	/* regulator never off when system is on */
- 	unsigned boot_on:1;	/* bootloader/firmware enabled regulator */
--- 
-2.1.4
+I'll change it if you still feel "can@e66c0000" is more appropriate.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Ramesh
