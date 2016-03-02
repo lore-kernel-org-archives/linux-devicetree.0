@@ -1,152 +1,95 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH 1/6] spi: add flow controll support
-Date: Wed, 2 Mar 2016 13:26:44 +0100
-Message-ID: <56D6DC04.30803@martin.sperl.org>
-References: <56D448E1.6090006@de.bosch.com>
- <1456843400-20696-1-git-send-email-linux@rempel-privat.de>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 11/12] iommu/arm-smmu: Generic IOMMU DT bindings support
+Date: Wed, 2 Mar 2016 13:30:43 +0000
+Message-ID: <56D6EB03.403@arm.com>
+References: <cover.1456514380.git.robin.murphy@arm.com>
+	<a3edd4225fe8b39440fb9b6a70a70883d3cb103b.1456514380.git.robin.murphy@arm.com>
+	<004c01d1731c$968ebb30$c3ac3190$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456843400-20696-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>, fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <004c01d1731c$968ebb30$c3ac3190$@codeaurora.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thomas.Lendacky-5C7GfCeVMHo@public.gmane.org, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, tchalamarla-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01.03.2016 15:43, Oleksij Rempel wrote:
-> Different HW implement different variants of SPI based flow control (FC).
-> To flexible FC implementation a spited it to fallowing common parts:
-> Flow control: Request Sequence
-> Master CS   |-------2\_____________________|
-> Slave  FC   |-----1\_______________________|
-> DATA        |-----------3\_________________|
+On 29/02/16 18:09, Sricharan wrote:
+> Hi Robin,
 >
-> Flow control: Ready Sequence
-> Master CS   |-----1\_______________________|
-> Slave  FC   |--------2\____________________|
-> DATA        |-----------3\_________________|
+>> -----Original Message-----
+
+[...]
+
+>> +static int __init arm_smmu_of_init(struct device_node *np) {
+>> +	struct arm_smmu_device *smmu;
+>> +	struct platform_device *pdev;
+>> +	int ret = arm_smmu_init();
+>> +
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	pdev = of_platform_device_create(np, NULL,
+>> platform_bus_type.dev_root);
+>> +	if (!pdev)
+>> +		return -ENODEV;
+>> +
+>> +	smmu = platform_get_drvdata(pdev);
+>> +	of_iommu_set_ops(np, &arm_smmu_ops);
+>> +
+>> +	return 0;
+>> +}
+>> +IOMMU_OF_DECLARE(arm_smmuv1, "arm,smmu-v1",
+>> arm_smmu_of_init);
+>> +IOMMU_OF_DECLARE(arm_smmuv2, "arm,smmu-v2",
+>> arm_smmu_of_init);
+>> +IOMMU_OF_DECLARE(arm_mmu400, "arm,mmu-400",
+>> arm_smmu_of_init);
+>> +IOMMU_OF_DECLARE(arm_mmu401, "arm,mmu-401",
+>> arm_smmu_of_init);
+>> +IOMMU_OF_DECLARE(arm_mmu500, "arm,mmu-500",
+>> arm_smmu_of_init);
+>> +
+>   Thanks for this series. I am going to use and test this. Also I wanted to
+>   ask about the iommu probe deferral series [1] to avoid early device
+> registration and wanted know the direction on that ?
+
+It's certainly on my near-term to-do list to revisit. I recall running 
+into problems with that series if the IOMMU was ready but the device 
+itself then requested probe deferral, and I have vague memories of 
+thinking more needed to be done generally around the failure/device 
+teardown path too. I also had high hopes for the on-demand device 
+probing series from around the same time[2], which would have helped 
+simplify things quite a bit, but that also seems to have died after a 
+brief stint breaking things in -next.
+
+Anyway, Marc reckons that we also have the exact same probe-dependency 
+problem for things like IRQ-MSI bridges, so I'll be looking into a more 
+general solution at some point unless anyone wants to beat me to it ;)
+
+Thanks,
+Robin.
+
+[2]:http://thread.gmane.org/gmane.linux.acpi.devel/78833
+
 >
-> Flow control: ACK End of Data
-> Master CS   |______________________/2------|
-> Slave  FC   |________________________/3----|
-> DATA        |__________________/1----------|
+> [1] http://lkml.iu.edu/hypermail/linux/kernel/1505.3/03280.html
 >
-> Flow control: Pause
-> Master CS   |_______________________/------|
-> Slave  FC   |_______1/-----\3______/-------|
-> DATA        |________2/------\4___/--------|
+> Regards,
+>   Sricharan
 >
-> Flow control: Ready signal on MISO
-> Master CS   |-----1\_______________________|
-> MISO/DATA   |------2\____3/----------------|
-> CONV START  |       ^                      |
-> DATA READY  |             ^                |
-
-One alternative idea:
-
-I guess all of the above could also get implemented
-without a single framework change like this only in
-the spi_device driver that requires this:
-
-* spi_bus_lock
-* spi_sync_lock (but with cs_change = 1 on the last transfer,
-    so that cs does not get de-asserted - maybe a 0 byte transfer)
-* check for your gpio to be of the "expected" level
-    (maybe via interrupt or polling)
-* spi_sync_lock (continue your transfer)
-* spi_bus_unlock
-
-This could also get wrapped in a generic spi_* method.
-
-Maybe another alternative to this approach could be a generic
-callback after having finished the processing a specific spi_transfer.
-(not the specific version that you propose)
-
-E.g:
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1001,6 +1001,9 @@ static int spi_transfer_one_message(struct 
-spi_master *master,
-                 if (msg->status != -EINPROGRESS)
-                         goto out;
-
-+               if (xfer->complete)
-+                       xfer->complete(xfer->context);
-+
-                 if (xfer->delay_usecs)
-                         udelay(xfer->delay_usecs);
-
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 520a23d..d2b53c4 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -753,6 +753,9 @@ struct spi_transfer {
-         u16             delay_usecs;
-         u32             speed_hz;
-
-+       void                    (*complete)(void *context);
-+       void                    *context;
-+
-         struct list_head transfer_list;
-  };
-
-Then all that is left is implementing that gpio logic as this
-callback.
-
-The complete_code could be just waiting for an GPIO-interrupt to wake up
-the thread - so it could be as simple as:
-
-void spi_transfer_complete_wait_for_completion(void *context)
-{
-     /* possibly enable interrupt */
-     /* wait for interrupt to wake us up*/
-     wait_for_completion(context);
-     /* possibly disable interrupt */
-     reinit_completion(context);
-}
-
-The creation of the GPIO interrupt and such could also be spi_* helper
-methods which then could take some of the required info from the
-device tree.
-
-This way the whole thing would be orthogonal to the SPI_READY,
-for which there is no spi_device driver besides spidev.
-So there would be also no impact to out of tree/userland drivers.
-
-Such an interface actually would allow for other (ab)uses -
-e.g: read len, then read len bytes becomes easy:
-
-void spi_transfer_complete_read_length_then_read(void *context)
-{
-    struct spi_transfer *xfer = context;
-    struct spi_transfer *next =
-         list_first_entry(list, typeof(*next), transfer_list);
-
-    /* saturate on length given in original transfer */
-    if (xfer->rx_buf && (xfer->len>0))
-        /* this may require unmapping the dma-buffer */
-        next->len = min_t(unsigned, len, ((char*)xfer->rx_buf)[0]);
-
-     /* note that if we wanted the ability to abort a transfer,
-       * then the complete method would need to return a status
-       */
-}
-
-All that is required is that a spi_message is created with 2 transfers,
-where the first has:
-* len = 1
-* complete = spi_transfer_complete_read_length_then_read;
-* context = xfer[0]
-and the second contains:
-* len = 16;
-
-Just some ideas of how it could be implemented in a more generic way
-that would also allow other uses.
-
-Martin
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
