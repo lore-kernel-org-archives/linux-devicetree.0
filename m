@@ -1,55 +1,81 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH] drivers: ata: Read Rx water mark value from
- device-tree
-Date: Wed, 2 Mar 2016 12:51:44 +0100
-Message-ID: <56D6D3D0.9030408@xilinx.com>
-References: <1455974302-7082-1-git-send-email-anuragku@xilinx.com>
- <3012728.7zDNPtQ7kR@wuerfel> <56D6B217.2000701@xilinx.com>
- <1798710.nJonRpmlxx@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Add CAN FD support
+Date: Wed, 2 Mar 2016 15:03:57 +0300
+Message-ID: <56D6D6AD.7080207@cogentembedded.com>
+References: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <56D59538.2060100@cogentembedded.com>
+ <SG2PR06MB1038FBA247777C89F70E2633C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1798710.nJonRpmlxx@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Anurag Kumar Vulisha <anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1038FBA247777C89F70E2633C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2.3.2016 12:42, Arnd Bergmann wrote:
-> On Wednesday 02 March 2016 10:27:51 Michal Simek wrote:
+Hello.
+
+On 3/2/2016 10:29 AM, Ramesh Shanmugasundaram wrote:
+
+>>> Adds CAN FD controller node for r8a7795.
+>>>
+>>> Note: CAN FD controller register base address specified in R-Car Gen3
+>>> Hardware User Manual v0.5E is incorrect. The correct address is:
+>>>
+>>> CAN FD - 0xe66c0000
+>>>
+>>> Signed-off-by: Ramesh Shanmugasundaram
+>>> <ramesh.shanmugasundaram@bp.renesas.com>
+>>> ---
+>>> Hi All,
+>>>
+>>>      This patch is based on linux-next (tag:next-20160225) with the
+>> following
+>>>      patches applied on top.
+>>>
+>>>      [PATCH v2] arm64: dts: r8a7795: Add CAN external clock support
+>>>      [PATCH] arm64: dts: r8a7795: Add CAN support
+>>>
+>>>      The respective CAN subsystem changes are submitted separately here
+>>> (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg013
+>>> 88.html)
+>>>
+>>> Thanks,
+>>> Ramesh
+>>> ---
+>>>    arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
+>>>    1 file changed, 24 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> index a88f8d8..5049ba6 100644
+>>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+>>> @@ -553,6 +553,30 @@
+>>>    			status = "disabled";
+>>>    		};
+>>>
+>>> +		canfd: canfd@e66c0000 {
 >>
->> No problem with default value in driver. Something has to be setup.
->> Reset value based on reg spec I was checking is 0x20. Based on our
->> testing we saw some issues that's why 0x40 was setup as default value.
->> There is a need to be able to configure this value for example for
->> testing different values that's why I think module parameter should be
->> the right way to go.
-> 
-> I don't object to the module parameter, but I don't understand how important
-> that kind of testing is to normal users. Who would set it, aside from
-> the person writing that driver to come up with the correct default?
-> 
->> If this should be DT parameters there should be different ceva IP which
->> allows different fifo size and different watermark level to be setup by
->> user.
->>
->> What do you think? Does it sound reasonable.
-> 
-> Having a property for the actual hardware fifo size once you get
-> different implementations seems like the correct approach, but it's
-> moot as long as all implementations are hardwired to 128 entries.
+>>      The node name should still be "can@e66c0000", I think.
+>
+> Thanks for the review.
+>
+> The SoC has CAN controller too
 
-yep right now and we don't know what can happen in future. I just wanted
-to point to example where this property can be specified or wired to
-particular compatible string.
+    Yes, I figured. BTW, is the CAN-FD identical to the older CAN on the 
+hardware level? I haven't see you posting the CAN-FD driver yet...
 
-Anurag: Please make it as module parameter instead of DT parameter.
+> and hence I chose this node name to differentiate. A grep of canfd on sysfs would tell if the controller is enabled. The channels on "net" would still be named "canx".
+>
+> I'll change it if you still feel "can@e66c0000" is more appropriate.
 
-Thanks,
-Michal
+    It is -- the node names should be generic and ePAPR even has the "can" 
+name listed explicitly in the section 2.2.2.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks,
+> Ramesh
+
+MBR, Sergei
