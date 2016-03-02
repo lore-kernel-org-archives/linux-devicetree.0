@@ -1,14 +1,15 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Add URT UMSH-8596MD-xT panel bindings
-Date: Wed, 2 Mar 2016 17:17:35 +0100
-Message-ID: <20160302161735.GE23204@ulmo.nvidia.com>
+Subject: Re: [PATCH 2/2] drm/panel: simple: Add URT UMSH-8596MD-xT panels
+ support
+Date: Wed, 2 Mar 2016 17:17:52 +0100
+Message-ID: <20160302161752.GF23204@ulmo.nvidia.com>
 References: <5615885C.5050505@maciej.szmigiero.name>
  <20151008082444.GC3820@ulmo>
- <56BFA520.3090302@maciej.szmigiero.name>
+ <56BFA583.4040902@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2144988133=="
+Content-Type: multipart/mixed; boundary="===============0673422793=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56BFA520.3090302@maciej.szmigiero.name>
+In-Reply-To: <56BFA583.4040902@maciej.szmigiero.name>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -23,60 +24,59 @@ Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetre
 List-Id: devicetree@vger.kernel.org
 
 
---===============2144988133==
+--===============0673422793==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="FEz7ebHBGB6b2e8X"
+	protocol="application/pgp-signature"; boundary="p8PhoBjPxaQXD0vg"
 Content-Disposition: inline
 
 
---FEz7ebHBGB6b2e8X
+--p8PhoBjPxaQXD0vg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 13, 2016 at 10:50:24PM +0100, Maciej S. Szmigiero wrote:
-> Add DT bindings for United Radiant Technology
-> UMSH-8596MD-xT 7.0" WVGA TFT LCD panels.
+On Sat, Feb 13, 2016 at 10:52:03PM +0100, Maciej S. Szmigiero wrote:
+> Add support for United Radiant Technology UMSH-8596MD-xT
+> 7.0" WVGA TFT LCD panels in DRM panel-simple driver.
 >=20
 > Signed-off-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
 > ---
-> This replaces "of: add URT UMSH-8596MD-xT panel DT bindings"
+> This replaces "drm: panel-simple: implement URT UMSH-8596MD-xT panel supp=
+ort"
 > submission.
 >=20
->  .../bindings/display/panel/urt,umsh-8596md.txt           | 16 ++++++++++=
+>  drivers/gpu/drm/panel/panel-simple.c | 54 ++++++++++++++++++++++++++++++=
 ++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/urt,u=
-msh-8596md.txt
+>  1 file changed, 54 insertions(+)
 
 Applied, thanks.
 
 Thierry
 
---FEz7ebHBGB6b2e8X
+--p8PhoBjPxaQXD0vg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJW1xIfAAoJEN0jrNd/PrOhrPMP/jFLHEKWwj7eTgKfT6n7ZFVT
-UlCRIjhkuvitiN2/7KTcJPyqaB1Ix4LhzATaRrjj9JAHstF91puIxom+AzjrbOLk
-SydKCbXK1eoECscE4AfnFWzbiRp58oi2M4pJtug9MhIRLYNldSxvjsjYku6X+tKu
-nEL8CwG//SthrMYDuwhWGO1hfTE1z7Oi6Ym7xVvvu3VXdSh/+ftky/bnArxZAUrk
-fLQiZfPBiW802Si5i9uqhpmALd0R9Bga1zNjO3vkBIIxjzPVo+2X7pidcvtdLmP/
-NXyI47yt2KD7nst42L/AFr3azCzQPUSEhCeuHZnma3qMLOyoqTwjJlyq8H/9ULdS
-N9sBWJpg9isfBbpa4Eis8hvt3A4ktxMDF4KI6EXmQn6EIs2WGxsdW68IzHOBMTu1
-pfa5BvYtIswbsPMPGqyLlvwbYime2/6V+djnw+gQ8joDR+dVtoACk3oGaYp90veE
-ezPAkLRvKdtUxyFupn/V8n3Ozgu6U9GxR6P4KLSNNAFlDhvI+gLtCwbbuLL2MXFx
-JJ4qr9A6ZNLurILKtYqWy0KBFE09n8v+mBH21q62eGrtLBpz0whXUrks05tdPtDZ
-RqPQFGvBHsyKYoxF8h9xxnEx0CoYXSvgmFTkjwiw3eJyfqsNoewhqeOEzG2du2ZZ
-mLdFDcOnnj81cW8TZXjN
-=Sto1
+iQIcBAABCAAGBQJW1xIvAAoJEN0jrNd/PrOhBxcQAIC7BQDqhOSsp7io0CHM1/h2
+I9wDrdbMXWzp/N9qvM08FmOxxSEmeU4kX7hpPCBbhQApDeRQPAy+OmWTBwn8DNU5
+jYW6CiEEqTJihhezsJaOfNRfq62bVTSH+Cj4PGdoIbkcklWA8twPMs56HoXxT83L
++/xFt03Vodomf7/JLppROxCU+Baip/fccnIuHGxv0GMYU0meBpj1FdjFNvU8t6aw
+zcGZCzZ04kK3ZmTS2Hmq7Orfn8zWn4+kW7ZH/uNRujm+YJtWkQQC+Zt6BnoSHWqi
+kyQSKnwOfjhFrsNXLw0pzSCFeLFjMZy+eph1HldY5heVAN1USBXQ9Tv0Wj9zvp97
+ABMYSnVKUEI0iKIqZlHNiZ+GbIYNVqAg+cLFBZlCCtdSXHRs8VlKeniERk1ZXyl9
+tD+72H2YiHK1gYl5xanckZRt4dDe2cuS5uO87soNgp6wzfLkKO9E4JUf6Q7ZNidr
+2ssTrgA8YKka9eNdXwY1e/6D2qWpPCa02GzNHu1swsa8D+eadjbin8XYVid8aRhw
+HWesZ1O17eRooKujc1Nmcn+SKLsCddWkc0xRnkuzY8mkX/Q5/hD9TCshp+Y9cEoS
+Z24Rekr0JSzbgGg+d4FacV41t+SzJTKxRAAC/GiIY7hsk14SqJKhGDCCw8hMP1gU
+SxInaQvoljUwA7AeUeB2
+=J9OY
 -----END PGP SIGNATURE-----
 
---FEz7ebHBGB6b2e8X--
+--p8PhoBjPxaQXD0vg--
 
---===============2144988133==
+--===============0673422793==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -86,4 +86,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============2144988133==--
+--===============0673422793==--
