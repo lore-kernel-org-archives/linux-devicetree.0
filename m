@@ -1,49 +1,49 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] spi: add flow controll support
-Date: Wed, 2 Mar 2016 10:32:33 +0900
-Message-ID: <20160302013233.GK18327@sirena.org.uk>
-References: <56D448E1.6090006@de.bosch.com>
- <1456843400-20696-1-git-send-email-linux@rempel-privat.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/4] regulator: core: Add support for active-discharge
+ configuration
+Date: Wed, 2 Mar 2016 10:44:21 +0900
+Message-ID: <20160302014421.GM18327@sirena.org.uk>
+References: <1456835895-16503-1-git-send-email-ldewangan@nvidia.com>
+ <1456835895-16503-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TbqbGUYwJfHHaS/d"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rQfmhCPYrIx9zeBl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456843400-20696-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Cc: fixed-term.Oleksij.Rempel-V5te9oGctAVWk0Htik3J/w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1456835895-16503-3-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---TbqbGUYwJfHHaS/d
+--rQfmhCPYrIx9zeBl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Mar 01, 2016 at 03:43:15PM +0100, Oleksij Rempel wrote:
-> Different HW implement different variants of SPI based flow control (FC).
-> To flexible FC implementation a spited it to fallowing common parts:
+On Tue, Mar 01, 2016 at 06:08:13PM +0530, Laxman Dewangan wrote:
 
-Please don't bury new patches in reply to the middle of some other
-thread, it makes it really hard to follow what's going on.
+> + * @active_discharge: Enable/disable active discharge. The values are:
+> + *		      -1: Default, 0: Disable, 1: Enable.
 
---TbqbGUYwJfHHaS/d
+This isn't a good interface, it means that 0 (which is the default value
+for static constrants or kzalloc()ed constraints) means to actively
+discharge rather than leave the settings unchanged but our general
+policy is to not touch anything unless explicitly told to do so.
+
+--rQfmhCPYrIx9zeBl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJW1kKwAAoJECTWi3JdVIfQUl8H/jlGEhFFbt3osepFKo6tgpAY
-rNWTYftIjHuS5zp8ACPyVPNlCwCgeyx6aI6rOZ1CpxPFNxxQdCyyDsZtOSwtxeMN
-cE4PG6mIjLX74pPsrpvnv4VVVdmNBhEWtX1cev7cBYxbenv33tBYf6RlcP6FeBLa
-O6D0SLkefp3TVp9VwZLK8KTs+eDAhpwG0H3/dWOSd5WvSlIDc4J80njI1o4XsS0l
-AJZ1irHZngVPOcXfQthw5jhWooFevjdhGeeq7r25t5ZmJXfLBdj4yGyZetAiHkj8
-/4l/m9lCX+oGFAsSJveIRKGuNzKm0jIYIQlhBkqPEZoRNuUVfE3j6bdOwZwCVXo=
-=Yn32
+iQEcBAEBCAAGBQJW1kV0AAoJECTWi3JdVIfQQMgH/0m+WSz3HjcNwCcD5N/G1tzW
+a3sshhLraU3E4rfa+9t/gji5j3wFJQRot2oIJaZ7OEAiFHflj3AEUPKLFGCSVLZK
+yv4eLdRrHaMnY+Pex9g0Czj7FMu1Bwbua88nhgK+j6xDw1hUTmdvettJr0hZ680i
+IS1L24cV6lZ5dI8hvmPLfAaAiGbSPFQhKcx4pLccgCdkI3NZziMCgPQiM8yHPB+t
+kmy22aHxD0pEM+n+OB4Vzw2tqSn6y+Pf4bSqEPaI3ugFyq7Hi4oOlr6GiXKYcM65
+bSKJoxXvM4UbjJVp764wkDAWiuIkYmaW8ceelDWKQZu6vmtJqfQwAnMxaYWlx9k=
+=WIob
 -----END PGP SIGNATURE-----
 
---TbqbGUYwJfHHaS/d--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--rQfmhCPYrIx9zeBl--
