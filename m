@@ -1,55 +1,67 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH v4 1/2] clk: add lpc18xx creg clk driver
-Date: Thu, 3 Mar 2016 00:27:10 +0100
-Message-ID: <CAGhQ9VzmTrDmKF+_8CRFgioyrXUOR9uOk-KADw2seEa16OP78A@mail.gmail.com>
-References: <1456351460-15483-1-git-send-email-manabian@gmail.com>
-	<1456351460-15483-2-git-send-email-manabian@gmail.com>
-	<20160302230159.12762.59247@quark.deferred.io>
+From: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] hwmon: Create an NSA320 hardware monitoring driver
+Date: Wed, 2 Mar 2016 23:43:32 +0000
+Message-ID: <56D77AA4.2080908@baker-net.org.uk>
+References: <1456698614-15176-1-git-send-email-linux@baker-net.org.uk>
+ <1456698614-15176-3-git-send-email-linux@baker-net.org.uk>
+ <56D3948D.6000805@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160302230159.12762.59247@quark.deferred.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D3948D.6000805-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3 March 2016 at 00:01, Michael Turquette <mturquette@baylibre.com> wrote:
-> Hi Joachim,
+On 29/02/16 00:45, Guenter Roeck wrote:
+
+>> +
+>> +/*
+>> + * Although this protocol looks similar to SPI the long delay
+>> + * between the active (aka chip select) signal and the shorter
+>> + * delay between clock pulses are needed for reliable operation.
+>> + * The delays provided are taken from the manufacturer kernel,
+>> + * testing suggest they probably incorporate a reasonable safety
+>> + * margin. (The single device tested became unreliable if the
+>> + * delay was reduced to 1/10th of this value.)
+>> + */
+>> +static unsigned long nsa320_hwmon_update(struct device *dev)
 >
-> Quoting Joachim Eastwood (2016-02-24 14:04:19)
->> +static struct clk *clk_register_creg_clk(struct clk_creg_data *creg_clk,
->> +                                        const char **parent_name,
->> +                                        struct regmap *syscon)
+> Please make this either int or s32.
+>
 >> +{
->> +       struct clk_init_data init;
->> +
->> +       init.ops = creg_clk->ops;
->> +       init.name = creg_clk->name;
->> +       init.parent_names = parent_name;
->> +       init.num_parents = 1;
->> +
->> +       creg_clk->reg = syscon;
->> +       creg_clk->hw.init = &init;
->> +
->> +       return clk_register(NULL, &creg_clk->hw);
+>> +    u32 mcu_data;
 >
-> This should be devm_clk_register with your struct device *dev passed
-> into it.
-
-Since clk_register_creg_clk() is used both from early init and probe
-I'll need to change the function a bit.
-
-I'll pass dev in as a parameter and either do clk_register() or
-devm_clk_register() depending on dev being NULL or not.
-Doesn't look like devm_clk_register() would like to be passed NULL for dev.
+> You can (and should) still use u32 here.
+>
 
 
-I send out a new version tomorrow.
+I'm a bit puzzled by your reasoning for preferring a signed value for 
+the return value. The only reason I can think of is that the error 
+return value is negative, however the macro to test if it is an error 
+value is not looking at whether the value is negative
 
-btw, this driver is a builtin_platform_driver. So is there a point in
-using devm_clk_register?
+#define IS_ERR_VALUE(x) unlikely((x) >= (unsigned long)-MAX_ERRNO)
 
+Functionally using any of s32, int or unsigned long will make no 
+difference, the mask operations ensure that the top bit can't possibly 
+be set so using a signed type doesn't, in this circumstance, risk an 
+undefined result from the shift operation. The choice of type is 
+therefore a matter of readability rather than function so if you still 
+prefer s32 I'll respin it to use that.
 
-regards,
-Joachim Eastwood
+The length does need to be at least 32 bits (to represent the returned 
+data range) and no longer than unsigned long (to avoid breaking 
+IS_ERR_VALUE). Whilst int is 32 bits on the only processor that is 
+expected to use this device that doesn't feel like a good thing to 
+depend upon so s32 seems preferable to int.
+
+Regards
+
+Adam
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
