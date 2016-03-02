@@ -1,65 +1,128 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Wed, 2 Mar 2016 10:08:16 +0000
-Message-ID: <SG2PR06MB1038DD32D284801452BA633EC3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56D5FE8E.1090400@pengutronix.de>
- <SG2PR06MB1038AC389CDB35916408A5D6C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56D6B067.306@pengutronix.de>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12 08/14] arm64: dts: mt8173: Add display subsystem
+ related nodes
+Date: Wed, 2 Mar 2016 11:21:22 +0100
+Message-ID: <56D6BEA2.3050001@gmail.com>
+References: <1456845630-2786-1-git-send-email-p.zabel@pengutronix.de>
+ <1456845630-2786-9-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56D6B067.306@pengutronix.de>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456845630-2786-9-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jitao Shi <jitao.shi-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywNCg0KPiBPbiAwMy8wMi8yMDE2IDA5OjQxIEFNLCBSYW1lc2ggU2hhbm11Z2FzdW5k
-YXJhbSB3cm90ZToNCj4gPj4gSXMgdGhlIGNoYW5uZWwgbG9vcGJhY2sgbW9kZSBjb25maWd1cmFi
-bGUgcGVyIGNoYW5uZWw/IElmIHNvLCBwbGVhc2UNCj4gPj4gcmVtb3ZlIHRoZSBtb2R1bGUgcGFy
-YW1ldGVyIGFuZCBtYWtlIHVzZSBvZiBDQU5fQ1RSTE1PREVfTE9PUEJBQ0sgdG8NCj4gPj4gY29u
-ZmlndXJlIGl0Lg0KPiA+DQo+ID4gVGhlIGxvb3BiYWNrIHNldHRpbmcgaXMgbm90IHRydWx5IGEg
-cGVyIGNoYW5uZWwgYXR0cmlidXRlLiBJdCByZXF1aXJlcw0KPiA+IHRvdWNoaW5nIFJ4IHJ1bGVz
-IHdoaWNoIGNhbiBiZSBkb25lIG9ubHkgd2hlbiB0aGUgY29udHJvbGxlcidzIGdsb2JhbA0KPiA+
-IHN0YXRlIGlzIHJlc2V0IChkdXJpbmcgcHJvYmUpLg0KPiA+IENBTl9DVFJMTU9ERV9MT09QQkFD
-SyBjb25maWcgb3B0aW9uIGlzIHBvc3NpYmxlIG9ubHkgdGhyb3VnaCAubmRvX29wZW4NCj4gPiBv
-ZiB0aGF0IGNoYW5uZWwgYnV0IHRoZSBnbG9iYWwgY29udHJvbGxlciBzdGF0ZSBuZWVkcyB0byBi
-ZQ0KPiA+IG9wZXJhdGlvbmFsIGJ5IHRoaXMgdGltZS4gQXMgaXQgaXMgYSBnbG9iYWwgYXR0cmli
-dXRlICYgZm9yIHRoZSBhYm92ZQ0KPiA+IHJlYXNvbiwgSSBjaG9vc2UgdGhlIG1vZHVsZSBvcHRp
-b24uDQo+IA0KPiBJIHNlZSwgb2sgdGhlbi4NCj4gDQo+ID4+PiBDQU4gRkQgbW9kZSBzdXBwb3J0
-cyBib3RoIENsYXNzaWNhbCBDQU4gJiBDQU4gRkQgZnJhbWUgZm9ybWF0cy4gVGhlDQo+ID4+PiBj
-b250cm9sbGVyIHN1cHBvcnRzIElTTyAxMTg5OC0xOjIwMTUgQ0FOIEZEIGZvcm1hdCBvbmx5Lg0K
-PiA+Pj4NCj4gPj4+IFRoaXMgY29udHJvbGxlciBzdXBwb3J0cyB0d28gY2hhbm5lbHMgYW5kIHRo
-ZSBkcml2ZXIgY2FuIGVuYWJsZQ0KPiA+Pj4gZWl0aGVyIG9yIGJvdGggb2YgdGhlIGNoYW5uZWxz
-Lg0KPiA+Pj4NCj4gPj4+IERyaXZlciB1c2VzIFJ4IEZJRk9zIChvbmUgcGVyIGNoYW5uZWwpIGZv
-ciByZWNlcHRpb24gJiBDb21tb24gRklGT3MNCj4gPj4+IChvbmUgcGVyIGNoYW5uZWwpIGZvciB0
-cmFuc21pc3Npb24uIFJ4IGZpbHRlciBydWxlcyBhcmUgY29uZmlndXJlZA0KPiA+Pj4gdG8gdGhl
-IG1pbmltdW0gKG9uZSBwZXIgY2hhbm5lbCkgYW5kIGl0IGFjY2VwdHMgU3RhbmRhcmQsIEV4dGVu
-ZGVkLA0KPiA+Pj4gRGF0YSAmIFJlbW90ZSBGcmFtZSBjb21iaW5hdGlvbnMuDQo+ID4+DQo+ID4+
-IEkgc2VlIG5vIGxvY2tpbmcgZm9yIHRoZSB0eC1wYXRoLg0KPiA+DQo+ID4gSSBhbSBub3Qgc3Vy
-ZSB3aHkgbG9ja2luZyBpcyBuZWVkZWQgaW4gdHgtcGF0aD8NCj4gDQo+IElmIHRoZSB0eC1wYXRo
-IGlzIHNoYXJlZCBiZXR3ZWVuIGJvdGggY2hhbm5lbHMgeW91IG5lZWQgbG9ja2luZyBhcyB0aGUN
-Cj4gbmV0d29ya2luZyBzdWJzeXN0ZW0gbWF5IHNlbmQgb25lIGZyYW1lIHRvIGVhY2ggY29udHJv
-bGxlciBhdCB0aGUgc2FtZQ0KPiB0aW1lLg0KDQpZZXMuIFR4IGNvbXBsZXRpb24gaW50ZXJydXB0
-IGlzIHNoYXJlZCBieSBib3RoIGNoYW5uZWxzIGJ1dCB0aGUgVHggRklGTywgZWNobyBza2JzLCBo
-ZWFkLCB0YWlsIGFyZSBtYWludGFpbmVkIG9uIGEgcGVyIGNoYW5uZWwgYmFzaXMuIA0KWWVzLCBu
-ZXQgc3Vic3lzdGVtIGNhbiBzZW5kIG9uZSBmcmFtZSB0byBlYWNoIGNoYW5uZWwgYXQgdGhlIHNh
-bWUgdGltZSBhbmQgdGhlIHR4IGNvbXBsZXRpb24gaW50ZXJydXB0IGhhbmRsZXIgd2lsbCB0cmF2
-ZXJzZSBlYWNoIGNoYW5uZWwgJiB1cGRhdGUgcGVyIGNoYW5uZWwgY29udGV4dCBhY2NvcmRpbmds
-eS4NCg0KPiA+IEhvd2V2ZXIsIGxvb2tpbmcgYXQgaXQgYWdhaW4sIEkgc2hvdWxkIG1vdmUgdGhl
-IGluY3JlbWVudGluZyBvZiBoZWFkDQo+ID4gYWZ0ZXIgdGhlICJzdHMiIGhhbmRpbmcgdG8gYmUg
-YXB0LiBXaGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+IFdpdGggb25lIHByb2R1Y2VyIChvbmUgU1cg
-aW5zdGFuY2UpIGFuZCBvbmUgY29uc3VtZXIgKHRoZSBIVykgeW91IGNhbg0KPiB3cml0ZSBsb2Nr
-bGVzcyBjb2RlIChpZiB0aGUgSFcgYWxsb3dzIGl0KSwgYnV0IHdpdGggdHdvIHByb2R1Y2VycyBp
-dCdzIG5vdA0KPiBwb3NzaWJsZS4NCg0KRm9yIGEgY2hhbm5lbCByZXByZXNlbnRlZCBhcyBuZXRk
-ZXYsIHRoZXJlIGlzIHN0aWxsIG9uZSBwcm9kdWNlciAob25lIFNXIGluc3RhbmNlKSBpc24ndCBp
-dD8gbmV0IGFjcXVpcmVzIGxvY2sgYmVmb3JlIGNhbGxpbmcgeG1pdC4gVGhlIGNvbnN1bWVyIGlz
-IHR4IGNvbXBsZXRpb24gaW50ZXJydXB0IGhhbmRsZXIgd2hpY2ggdXBkYXRlcyBwZXIgY2hhbm5l
-bCBhdHRyaWJ1dGVzIG9ubHkuDQoNClNvcnJ5IGlmIEkgYW0gYW5ub3lpbmcuIEkgaGF2ZSB0ZXN0
-ZWQgdGhpcyB3aXRoIHR3byBjaGFubmVscyB0cmFuc21pdHRpbmcgJiByZWNlaXZpbmcgYXQgdGhl
-IHNhbWUgdGltZSBhbmQgaXQgd29ya3MgZmluZS4gSWYgSSBhbSBtaXNzaW5nIGxvY2ssIEkgd291
-bGQgbGlrZSB0byB1bmRlcnN0YW5kIGl0IHRob3JvdWdobHkgYmVmb3JlIG1ha2luZyB0aGUgY2hh
-bmdlLg0KDQpUaGFua3MgZm9yIHRoZSBoZWxwLA0KUmFtZXNoLg0K
+
+
+On 01/03/16 16:20, Philipp Zabel wrote:
+> From: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>
+> This patch adds the device nodes for the DISP function blocks
+> comprising the display subsystem.
+>
+> Signed-off-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Cawa Cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jie Qiu <jie.qiu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> Changes since v10:
+>   - reordered nodes by address
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8173.dtsi | 235 +++++++++++++++++++++++++++++++
+>   1 file changed, 235 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> index 8048811..4ff666d 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+> @@ -26,6 +26,23 @@
+>   	#address-cells = <2>;
+>   	#size-cells = <2>;
+>
+> +	aliases {
+> +		ovl0 = &ovl0;
+> +		ovl1 = &ovl1;
+> +		rdma0 = &rdma0;
+> +		rdma1 = &rdma1;
+> +		rdma2 = &rdma2;
+> +		wdma0 = &wdma0;
+> +		wdma1 = &wdma1;
+> +		color0 = &color0;
+> +		color1 = &color1;
+> +		split0 = &split0;
+> +		split1 = &split1;
+> +		dpi0 = &dpi0;
+> +		dsi0 = &dsi0;
+> +		dsi1 = &dsi1;
+> +	};
+> +
+>   	cpus {
+>   		#address-cells = <1>;
+>   		#size-cells = <0>;
+> @@ -295,6 +312,26 @@
+>   			#clock-cells = <1>;
+>   		};
+>
+> +		mipi_tx0: mipi-dphy@10215000 {
+> +			compatible = "mediatek,mt8173-mipi-tx";
+> +			reg = <0 0x10215000 0 0x1000>;
+> +			clocks = <&clk26m>;
+> +			clock-output-names = "mipi_tx0_pll";
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		mipi_tx1: mipi-dphy@10216000 {
+> +			compatible = "mediatek,mt8173-mipi-tx";
+> +			reg = <0 0x10216000 0 0x1000>;
+> +			clocks = <&clk26m>;
+> +			clock-output-names = "mipi_tx1_pll";
+> +			#clock-cells = <0>;
+> +			#phy-cells = <0>;
+> +			status = "disabled";
+> +		};
+> +
+>   		gic: interrupt-controller@10220000 {
+>   			compatible = "arm,gic-400";
+>   			#interrupt-cells = <3>;
+> @@ -441,6 +478,14 @@
+>   			status = "disabled";
+>   		};
+>
+> +		hdmiddc0: i2c@11012000 {
+> +			compatible = "mediatek,mt8173-hdmi-ddc";
+> +			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
+> +			reg = <0 0x11012000 0 0x1C>;
+> +			clocks = <&pericfg CLK_PERI_I2C5>;
+> +			clock-names = "ddc-i2c";
+> +		};
+> +
+>   		i2c6: i2c@11013000 {
+>   			compatible = "mediatek,mt8173-i2c";
+>   			reg = <0 0x11013000 0 0x70>,
+> @@ -576,7 +621,183 @@
+>   		mmsys: clock-controller@14000000 {
+>   			compatible = "mediatek,mt8173-mmsys", "syscon";
+>   			reg = <0 0x14000000 0 0x1000>;
+> +			power-domains = <&scpsys MT8173_POWER_DOMAIN_MM>;
+>   			#clock-cells = <1>;
+> +
+> +			/* FIXME - remove iommus here */
+> +			iommus = <&iommu M4U_PORT_DISP_OVL0>,
+> +				 <&iommu M4U_PORT_DISP_OVL1>;
+> +		};
+
+Do we need this iommus?
+Sorry I wasn't able to follow this series, but it looks suspicious here :)
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
