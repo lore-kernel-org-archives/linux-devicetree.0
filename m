@@ -1,36 +1,145 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 1/5] pwms: pwm-ti*: Remove support for local clock
- gating
-Date: Wed, 2 Mar 2016 14:54:13 -0800
-Message-ID: <20160302225413.GF4469@atomide.com>
-References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
- <1456439796-28546-2-git-send-email-fcooper@ti.com>
- <20160229220444.GQ13417@atomide.com>
- <56D4C69D.1090100@ti.com>
- <20160229225536.GR13417@atomide.com>
- <56D4D032.7040801@ti.com>
- <20160229232011.GU13417@atomide.com>
- <56D741E6.3000708@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56D741E6.3000708@ti.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: "Franklin S Cooper Jr." <fcooper@ti.com>
-Cc: paul@pwsan.com, t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>
+From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v13 0/6] arm64, numa: Add numa support for arm64 platforms
+Date: Wed,  2 Mar 2016 14:55:56 -0800
+Message-ID: <1456959362-2036-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Franklin S Cooper Jr. <fcooper@ti.com> [160302 11:41]:
-> I know there are some comments regarding other patches in
-> this patchset but this patch is unrelated and can be pulled
-> in separately. Any objections to this or should I just
-> resubmit this patch by itself?
+From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 
-No objections from me at least. If something needs to
-change at the driver level, it sounds like a different
-set of patches then.
+v13:
+	- Added patch to unflatten the device tree earlier.
 
-Regards,
+	- Rewrote of_numa.c to work on unflattened the device tree.
 
-Tony
+	- Cleanup of EXPORTs in arch/arm64/mm/numa.c as suggested by
+          Will Deacon.
+
+v12:
+
+	- Replaced 6 patches from Ard Biesheuvel with new simpler, and
+          more correct, single patch, also from Ard.
+
+v11:
+	- Dropped cleanup patches for other architectures, they will be
+          submitted as a separate set after more testing.
+
+	- Added patch set from Ard Biesheuvel that are needed to make
+          the whole thing actually work.  Previously this was a
+          separate set.
+
+	- Kconfig and other fixes and simplifications as suggested by
+          Rob Herring.
+
+	- Rearranged, refactored and reordered so that we don't patch
+          new files multiple times.
+
+	- Summary:
+
+		o 6 patches from Ard Biesheuvel to allow use of
+		  "memory" nodes with efi stub.
+
+		o 2 patches to document and add of_numa.c
+
+		o 1 patch to add arm64 NUMA support.
+
+		o 1 patch to add NUMA balancing support for arm64.
+
+v10:
+	- Incorporated review comments from Rob Herring.
+	- Moved numa binding and implementation to devicetree core.
+	- Added cleanup patch to remove redundant NODE_DATA macro from asm header files
+	- Include numa balancing support for arm64 patch in this series.
+	- Fix tile build issue reported by the kbuild robot(patch 7)
+
+v9:	- Added cleanup patch to reuse and avoid redefinition of cpumask_of_pcibus
+	  as suggested from Will Deacon and Bjorn Helgaas.
+	  - Including patch to Make pci-host-generic driver numa aware.
+	  - Incorporated comment from Shannon Zhao.
+
+v8:
+	- Incorporated review comments of Mark Rutland and Will Deacon.
+	- Added pci helper function and macro for numa.
+
+v7:
+	- managing numa memory mapping using memblock.
+	- Incorporated review comments of Mark Rutland.
+
+v6:
+	- defined and implemented the numa dt binding using
+	node property proximity and device node distance-map.
+	- renamed dt_numa to of_numa
+
+v5:
+        - created base verion of numa.c which creates dummy numa without using dt
+          on single socket platforms. Then added patches for dt support.
+        - Incorporated review comments from Hanjun Guo.
+
+v4:
+done changes as per Arnd review comments.
+
+v3:
+Added changes to support numa on arm64 based platforms.
+Tested these patches on cavium's multinode(2 node topology) platform.
+In this patchset, defined and implemented dt bindings for numa mapping
+for core and memory using device node property arm,associativity.
+
+v2:
+Defined and implemented numa map for memory, cores to node and
+proximity distance matrix of nodes.
+
+v1:
+Initial patchset to support numa on arm64 platforms.
+
+Note: 1. This patchset is tested for NUMA and without NUMA with dt
+        (both with and without NUMA bindings) on thunderx single
+        socket and dual socket boards.
+
+Ard Biesheuvel (1):
+  efi: ARM/arm64: ignore DT memory nodes instead of removing them
+
+David Daney (2):
+  of, numa: Add NUMA of binding implementation.
+  arm64: Move unflatten_device_tree() call earlier.
+
+Ganapatrao Kulkarni (3):
+  Documentation, dt, numa: dt bindings for NUMA.
+  arm64, numa: Add NUMA support for arm64 platforms.
+  arm64, mm, numa: Add NUMA balancing support for arm64.
+
+ Documentation/devicetree/bindings/numa.txt | 272 ++++++++++++++++++++
+ arch/arm64/Kconfig                         |  27 ++
+ arch/arm64/include/asm/mmzone.h            |  12 +
+ arch/arm64/include/asm/numa.h              |  45 ++++
+ arch/arm64/include/asm/pgtable.h           |  15 ++
+ arch/arm64/include/asm/topology.h          |  10 +
+ arch/arm64/kernel/pci.c                    |  10 +
+ arch/arm64/kernel/setup.c                  |  11 +-
+ arch/arm64/kernel/smp.c                    |   4 +
+ arch/arm64/mm/Makefile                     |   1 +
+ arch/arm64/mm/init.c                       |  34 ++-
+ arch/arm64/mm/mmu.c                        |   6 +
+ arch/arm64/mm/numa.c                       | 396 +++++++++++++++++++++++++++++
+ drivers/firmware/efi/arm-init.c            |   8 +
+ drivers/firmware/efi/libstub/fdt.c         |  24 +-
+ drivers/of/Kconfig                         |   3 +
+ drivers/of/Makefile                        |   1 +
+ drivers/of/of_numa.c                       | 200 +++++++++++++++
+ include/linux/of.h                         |   9 +
+ 19 files changed, 1056 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/numa.txt
+ create mode 100644 arch/arm64/include/asm/mmzone.h
+ create mode 100644 arch/arm64/include/asm/numa.h
+ create mode 100644 arch/arm64/mm/numa.c
+ create mode 100644 drivers/of/of_numa.c
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
