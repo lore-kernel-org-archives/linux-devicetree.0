@@ -1,66 +1,93 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: interrupt-controller: add SoC-specific
- compatible string to Marvell ODMI
-Date: Wed, 2 Mar 2016 11:12:45 -0600
-Message-ID: <20160302171245.GA25012@rob-hp-laptop>
-References: <1456327494-31358-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5 v7] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Wed, 2 Mar 2016 11:26:51 -0600
+Message-ID: <20160302172651.GA26594@rob-hp-laptop>
+References: <1456327573-16421-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456327494-31358-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1456327573-16421-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 24, 2016 at 04:24:54PM +0100, Thomas Petazzoni wrote:
-> As requested by Rob Herring, this commit adds a SoC-specific
-> compatible string to the Marvell ODMI DT binding.
+On Wed, Feb 24, 2016 at 04:26:13PM +0100, Petr Kulhavy wrote:
+> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
 > 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 > ---
-> This commit applies on top of the Marvell ODMI driver patch, which has
-> already been merged.
-> ---
->  .../bindings/interrupt-controller/marvell,odmi-controller.txt      | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
-
-I see this is already merged, but for the record:
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-There is a typo in the example though.
-
+> v1: <initial>
 > 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
-> index 252d5c9..8af0a8e 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,odmi-controller.txt
-> @@ -6,7 +6,9 @@ which can be used by on-board peripheral for MSI interrupts.
->  
->  Required properties:
->  
-> -- compatible           : The value here should contain "marvell,odmi-controller".
-> +- compatible           : The value here should contain:
+> v2:
+>  - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
+>  - using "ti," prefix instead of "da8xx," for specific property names
+>  - no wildcards in compatibility string
+> 
+> v3:
+>  - added "reg", "interrupts" and "interrupt-names" properties
+>  - wildcards in compatibility string
+> 
+> v4:
+>  - compatibility string set to "ti,da830-musb"
+>  - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
+>  - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
+>  - removed "ti,hwmods"
+> 
+> v5:
+>  - "ti,phy20-refclock-frequency" property made mandatory
+> 
+> v6:
+>  - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
+> 
+> v7:
+>  - removed the "mentor,power" property; hard coded to 500mA in the code
+> 
+>  .../devicetree/bindings/usb/da8xx-usb.txt          | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> new file mode 100644
+> index 0000000..e281829
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> @@ -0,0 +1,43 @@
+> +TI DA8xx MUSB
+> +~~~~~~~~~~~~~
+> +For DA8xx/OMAP-L1x/AM17xx/AM18xx platforms.
 > +
-> +    "marvell,ap806-odmi-controller", "marvell,odmi-controller".
->  
->  - interrupt,controller : Identifies the node as an interrupt controller.
->  
-> @@ -29,7 +31,8 @@ Required properties:
->  Example:
->  
->  	odmi: odmi@300000 {
-> -		compatible = "marvell,odmi-controller";
-> +		compatible = "marvell,ap806-odm-controller",
+> +Required properties:
+> +~~~~~~~~~~~~~~~~~~~~
+> + - compatible : Should be set to "ti,da830-musb".
+> +
+> + - reg: Offset and length of the USB controller register set.
+> +
+> + - interrupts: The USB interrupt number.
+> +
+> + - interrupt-names: Should be set to "mc".
+> +
+> + - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
+> +
+> + - ti,usb2-phy-refclock-frequency : Integer. Defines the USB 2.0 PHY reference clock input
+> +     frequency in Hz in case the clock is generated by the internal PLL.
+> +     Supported values are 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz
 
-s/odm/odmi/
+Shouldn't this be optional if it only applies for the internal PLL? I'd 
+prefer "ti,usb2-phy-refclock-hz" so the units are clear.
 
-> +			     "marvell,odmi-controller";
->  		interrupt-controller;
->  		msi-controller;
->  		marvell,odmi-frames = <4>;
-> -- 
-> 2.6.4
-> 
+> +Optional properties:
+> +~~~~~~~~~~~~~~~~~~~~
+> + - ti,usb2-phy-clkmux-pll: Boolean. Defines the USB 2.0 PHY reference clock source.
+> +     If present the internal PLL is used as a clock source, otherwise the external
+> +     USB_REFCLKIN pin is used.
+
+External is the more common case? The property should be present for the 
+less common case.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
