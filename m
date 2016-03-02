@@ -1,58 +1,39 @@
-From: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>
-Subject: Re: [PATCH] of/unittest: fix infinite loop in
- of_unittest_destroy_tracked_overlays()
-Date: Wed, 2 Mar 2016 15:44:05 +0100
-Message-ID: <20160302144405.GC22171@pathway.suse.cz>
-References: <1456917889-4416-1-git-send-email-sergey.senozhatsky@gmail.com>
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: Re: [PATCH 3/3] ARM: dts: NSP: Add PWM Support to DT
+Date: Wed, 2 Mar 2016 20:22:01 +0530
+Message-ID: <CAL2FKYkoXFm_pG6inxJqwkRqEK-TsMT2ndy4fgvQG1wT6AZ03Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456917889-4416-1-git-send-email-sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergey Senozhatsky <sergey.senozhatsky.work-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2016-03-02 20:24:49, Sergey Senozhatsky wrote:
-> of_overlay_destroy() can return `-ENODEV' error code once it
-> failed to find the requested overlay in `ov_idr'. However,
-> of_unittest_destroy_tracked_overlays() does not handle this
-> error code correctly and continues to call of_overlay_destroy()
-> on the 'missing' overlay over and over again. This results in
-> a printk flood
-> 
-> [..]
-> [   33.497583] of_overlay_destroy: Could not find overlay #6
-> [   33.497583] of_overlay_destroy: Could not find overlay #6
-> [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [   33.497586] of_overlay_destroy: Could not find overlay #6
-> [   33.497586] of_overlay_destroy: Could not find overlay #6
-> [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [..]
-> 
-> which is not really good due to printk design, and can lead to soft
-> lockups, hard lockups, etc. (depending on the context console_unlock()
-> is being called from). The problem has bee observed in real life
-> and reported by Ying Huang.
-> 
-> This patch does not address the root cause of missing overlay in
-> `ov_idr', it fixes the endless loop only.
-> 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reported-by: kernel test robot <ying.huang-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Link: lkml.kernel.org/r/87fuwk1c0o.fsf-5/hDr2MS57EDqwDYnZuMFFaTQe2KTcn/@public.gmane.org
+On Wed, Mar 2, 2016 at 1:55 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 01 March 2016 12:42:49 Yendapally Reddy Dhananjaya Reddy wrote:
+>>                 };
+>>
+>> +               pwm: pwm@31000 {
+>> +                       compatible = "brcm,iproc-pwm";
+>> +                       reg = <0x31000 0x28>;
+>> +                       clocks = <&osc>;
+>> +                       #pwm-cells = >;
+>> +                       status = "disabled";
+>> +               };
+>>
+>
+> Should this also list "brcm,kona-pwm" as compatible? From patch
+> 1, it sounds like that was the original one.
 
-I am not sure why the overlay did not exist but this patch avoids
-a possible infinite loop and makes sense on its own.
+Arnd,
 
-Reviewed-by: Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>
+The NSP is a iProc based SoC and the pwm controller register offsets are
+slightly differ with the kona pwm controller. The compatible will be either
+"brcm,kona-pwm" or "brcm,iproc-pwm".
 
-Best Regards,
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>         Arnd
+
+Regards
+Dhananjay
