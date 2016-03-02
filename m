@@ -1,51 +1,61 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/4] regulator: core: Add support for active-discharge
- configuration
-Date: Wed, 2 Mar 2016 19:25:21 +0900
-Message-ID: <20160302102521.GE18327@sirena.org.uk>
-References: <1456902130-22406-1-git-send-email-ldewangan@nvidia.com>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [lkp] [printk] 34578dc67f: EIP is at vprintk_emit+0x1ea/0x600
+Date: Wed, 2 Mar 2016 11:30:06 +0100
+Message-ID: <20160302103006.GB3166@pathway.suse.cz>
+References: <87fuwk1c0o.fsf@yhuang-dev.intel.com>
+ <20160223131538.GA2048@swordfish>
+ <20160223155331.GA448@swordfish>
+ <20160224011941.GA7683@swordfish>
+ <20160224114614.GY3305@pathway.suse.cz>
+ <20160224125022.GA516@swordfish>
+ <20160224151242.GA2254@swordfish>
+ <20160225051005.GA884@swordfish>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LoEz1ZW1dAUVDMY6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456902130-22406-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160225051005.GA884@swordfish>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, kernel test robot <ying.huang@linux.intel.com>, lkp@01.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Calvin Owens <calvinowens@fb.com>, Dave Jones <davej@codemonkey.org.uk>, Kyle McMartin <kyle@kernel.org>, Tejun Heo <tj@kernel.org>, Jan Kara <jack@suse.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
+On Thu 2016-02-25 14:10:05, Sergey Senozhatsky wrote:
+> CONFIG_PREEMPT_NONE=y
+> # CONFIG_PREEMPT_VOLUNTARY is not set
+> # CONFIG_PREEMPT is not set
+> CONFIG_PREEMPT_COUNT=y
 
---LoEz1ZW1dAUVDMY6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I was curious why your patch actually did not help to avoid the
+softlockup. The infinite printk loop was called in a safe context,
+CONFIG_PREEMPT_COUNT=y, so it did set console_may_schedule = 1.
 
-On Wed, Mar 02, 2016 at 12:32:10PM +0530, Laxman Dewangan wrote:
-> Add support to enable/disable active discharge of regulator via
-> machine constraints. This configuration is done when setting
-> machine constraint during regulator register and if regulator
-> driver implemented the callback ops.
+But it never got console_sem, never called console_unlock()
+and never called cond_resched() there. So, it never got preempted
+in the PREEMPT_NONE kernel. The console_sem was owned by
+another process that was busy handling the flood of messages.
 
-I'm missing patches 1, 3 and 4 here.  Please don't send patches numbered
-as part of a series outside of the series, it makes things confusing.
+Note that the infinite cycle calling printk() might be interrupted anywhere
+by the NMI watchdog. It explains why the original report pointed
+at the beginning of the printk. It was not a deadlock.
+I got the softlockup on random locations here.
 
---LoEz1ZW1dAUVDMY6
-Content-Type: application/pgp-signature; name="signature.asc"
+Also it is not the classic softlockup in console_unlock().
+The process handling the console actually could sleep if it
+has console_may_schedule = 1. This is why console_unlock()
+did not appeared in the softlockup backtrace.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
 
-iQEcBAEBCAAGBQJW1r9sAAoJECTWi3JdVIfQ+qsH/0/OMPtoIV9CGqeY7zImMqu8
-dyeePur6TGGmHJHoGUMOcAuP4sjCXqo2M6Vw7ZwJgSqcYaGxfkE2JiLmvgXVsFOJ
-EqRCqewG9gydkQUcKzJDBR0pcp0ayKjj5TATnL90IxFvMwlXhYge+OzN6VJX0hc9
-rLGy8lqaflzBQJIjK9K+Gv5Jm8H0wI9VhG/yIrBSu4uxZMZx1lax72DaLKObraFE
-pVaa4CgVCm6gKA26YS05q8UXXDvAWpHX4BcWQ3ckjdUdFet5UK3uzbIVnHUd88JQ
-7H1gdkN7rWXj6XqlIazWWwOuw9cXCi+ZByl/50NCSwGKCUTE2B76tKaFx6/baIs=
-=EonS
------END PGP SIGNATURE-----
+Conclusion:
 
---LoEz1ZW1dAUVDMY6--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sergey is correct and his patches are innocent here.
+
+Sergey, if you send the fix for
+of_unittest_destroy_tracked_overlays(), please add me into CC.
+
+
+Best Regards,
+Petr
+
+PS: I am sorry for the noise and that it took me so long to shake my
+head around this problem. Thanks a lot for patience.
