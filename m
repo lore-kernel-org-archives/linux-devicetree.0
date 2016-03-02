@@ -1,58 +1,95 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH V6 00/10] Add generic PM domain support for Tegra
-Date: Wed, 02 Mar 2016 11:36:55 -0800
-Message-ID: <7h7fhk3c4o.fsf@baylibre.com>
-References: <1456501724-28477-1-git-send-email-jonathanh@nvidia.com>
-	<20160302153556.GB21035@ulmo.nvidia.com>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH v3 1/5] pwms: pwm-ti*: Remove support for local clock
+ gating
+Date: Wed, 2 Mar 2016 13:41:26 -0600
+Message-ID: <56D741E6.3000708@ti.com>
+References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
+ <1456439796-28546-2-git-send-email-fcooper@ti.com>
+ <20160229220444.GQ13417@atomide.com> <56D4C69D.1090100@ti.com>
+ <20160229225536.GR13417@atomide.com> <56D4D032.7040801@ti.com>
+ <20160229232011.GU13417@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160302153556.GB21035-AwZRO8vwLAwmlAP/+Wk3EA@public.gmane.org> (Thierry Reding's
-	message of "Wed, 2 Mar 2016 16:35:56 +0100")
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20160229232011.GU13417@atomide.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: paul@pwsan.com, t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-> On Fri, Feb 26, 2016 at 03:48:34PM +0000, Jon Hunter wrote:
->> Adds generic PM domain support for Tegra SoCs but this series only
->> enables support for it on Tegra 64-bit devices. There is no reason why
->> this cannot be enable for Tegra 32-bit devices, but to keep the patch
->> series to a minimum only 64-bit devices are enabled so far.
->> 
->> This series has been boot tested on Tegra210 as well as various 32-bit
->> Tegra platforms.
 
-[...]
-
->> Jon Hunter (10):
->>   PM / Domains: Fix removal of a subdomain
->>   PM / Domains: Add function to get the last domain added
->>   PM / Domains: Add function to remove a pm-domain
+On 02/29/2016 05:20 PM, Tony Lindgren wrote:
+> * Franklin S Cooper Jr. <fcooper@ti.com> [160229 15:12]:
+>>
+>> On 02/29/2016 04:55 PM, Tony Lindgren wrote:
+>>> * Franklin S Cooper Jr. <fcooper@ti.com> [160229 14:31]:
+>>>> On 02/29/2016 04:04 PM, Tony Lindgren wrote:
+>>>>> Hmm but why are you also removing the pm_runtime calls? Those
+>>>>> actually do take care of gating the clocks via the interconnect
+>>>>> level code that is hwmod in this case.
+>>>> I removed all PM runtime calls that revolved around
+>>>> pwmss_submodule_state_change. Originally the driver would do
+>>>> a pm_runtime_get_sync then call pwmss_submodule_state_change
+>>>> and then immediately call pm_runtime_put_sync. Without
+>>>> pwmss_submodule_state_change those calls would be
+>>>> meaningless.  I also removed pm_runtime calls in error paths
+>>>> that no longer existed.
+>>> Typically the interconnect level code can gate the clkctrl bit
+>>> for the module with PM runtime even with no other driver specific
+>>> registers. If you remove the pm_runtime calls, that does not
+>>> happen.
+>> So the clocks should be unlocked when ever the IP registers are
+>> being read/written or if the peripheral is being used for
+>> example
+>> the pwm signal is being generated. All these cases are already
+>> being handled.
+>>
+>> Using ecap driver as an example.
+>>
+>> Pm_runtime_get_sync is called within ecap_pwm_enable when
+>> the pwm signal is to be generated. Pm_runtime_put_sync is called
+>> when the pwm signal is to be stopped.
+>>
+>> When either the pwm signal polarity is set or pwm
+>> configuration is made
+>> then a pm_runtime_get_sync and pm_runtime_put_sync are
+>> called within
+>> the same function surrounding calls to the IP's registers.
+>>
+>> Probe is calling pm_runtime_enable while remove is calling
+>> pm_runtime_disable.
+> OK good to hear you have considered this. The above answers
+> my questions then thanks.
 >
-> Ulf, Kevin, Rafael,
+>> So the correct pm_runtime calls are being made from what I
+>> can see.
+>> I'm not sure I understand the concern since removing those
+>> calls aren't
+>> creating any kind of imbalance.
+> OK thanks for checking.
 >
-> It's too late to take these patches through the Tegra tree for v4.6, but
-> if Jon can get the above three patches ready before the merge window,
-> would you be willing to pick them up into your trees for v4.6?
+>> If I'm not addressing your concern please give me an example
+>> of where
+>> you see a possible issue.
+> No that's fine. I thought you're ripping out all of the the
+> pm_runtime based on just looking at the patch :)
+>
+>>> Also, how do you know this change does not affect the other
+>>> SoC variants using the same driver?
+>> I've tested these changes on AM335x GP and AM437x GP evms.
+>> AM335x
+>> and AM437x were the only other users of this driver. Sorry 
+>> I should of
+>> documented this in my cover-letter.
+> OK good to hear.
+>
+> Thanks,
+>
+> Tony
 
-It's a bit late in the cycle, but since one is a fix and the other two
-add functions that aren't (yet) used, I think it would be fine to get
-them in for v4.6.  But, the final decision is with Rafael.
-
-> Doing so
-> might make it easier to deal with the dependencies. The prerequisites
-> would already be in Linus' tree when I apply the Tegra bits for v4.7.
-
-Yeah, makes sense.
-
-> I don't mind taking all of it through the Tegra tree for v4.7, though. I
-> can provide a stable branch with the PM / Domains patches for you to
-> pull in, in case there are any conflicts.
-
-I think it makes the most sense for these prereqs to merge through
-linux-pm.  Let's see what Rafael thinks about the timing.
-
-Kevin
+I know there are some comments regarding other patches in
+this patchset but this patch is unrelated and can be pulled
+in separately. Any objections to this or should I just
+resubmit this patch by itself?
