@@ -1,136 +1,82 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v12 08/14] arm64: dts: mt8173: Add display subsystem
- related nodes
-Date: Wed, 02 Mar 2016 14:52:02 +0100
-Message-ID: <1456926722.4175.29.camel@pengutronix.de>
-References: <1456845630-2786-1-git-send-email-p.zabel@pengutronix.de>
- <1456845630-2786-9-git-send-email-p.zabel@pengutronix.de>
- <56D6BEA2.3050001@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] ARM64: meson: GXBaby (S905) and Vega S95
+ enablement
+Date: Wed, 2 Mar 2016 13:52:16 +0000
+Message-ID: <20160302135216.GB11670@leverpostej>
+References: <1456886101-22967-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56D6BEA2.3050001@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, kernel@pengutronix.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, dri-devel@lists.freedesktop.org, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456886101-22967-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?QW5kcsOp?= Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWF0dGhpYXMsCgpBbSBNaXR0d29jaCwgZGVuIDAyLjAzLjIwMTYsIDExOjIxICswMTAwIHNj
-aHJpZWIgTWF0dGhpYXMgQnJ1Z2dlcjoKPiA+IEBAIC01NzYsNyArNjIxLDE4MyBAQAo+ID4gICAJ
-CW1tc3lzOiBjbG9jay1jb250cm9sbGVyQDE0MDAwMDAwIHsKPiA+ICAgCQkJY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxtdDgxNzMtbW1zeXMiLCAic3lzY29uIjsKPiA+ICAgCQkJcmVnID0gPDAgMHgx
-NDAwMDAwMCAwIDB4MTAwMD47Cj4gPiArCQkJcG93ZXItZG9tYWlucyA9IDwmc2Nwc3lzIE1UODE3
-M19QT1dFUl9ET01BSU5fTU0+Owo+ID4gICAJCQkjY2xvY2stY2VsbHMgPSA8MT47Cj4gPiArCj4g
-PiArCQkJLyogRklYTUUgLSByZW1vdmUgaW9tbXVzIGhlcmUgKi8KPiA+ICsJCQlpb21tdXMgPSA8
-JmlvbW11IE00VV9QT1JUX0RJU1BfT1ZMMD4sCj4gPiArCQkJCSA8JmlvbW11IE00VV9QT1JUX0RJ
-U1BfT1ZMMT47Cj4gPiArCQl9Owo+IAo+IERvIHdlIG5lZWQgdGhpcyBpb21tdXM/Cj4gU29ycnkg
-SSB3YXNuJ3QgYWJsZSB0byBmb2xsb3cgdGhpcyBzZXJpZXMsIGJ1dCBpdCBsb29rcyBzdXNwaWNp
-b3VzIGhlcmUgOikKPiAKPiBSZWdhcmRzLAo+IE1hdHRoaWFzCgpUaGFua3MgZm9yIHRoZSBwb2lu
-dGVyLCBJIGNvbXBsZXRlbHkgZm9yZ290IGFib3V0IHRoYXQgaXNzdWUuIFllcywgSSdkCmxpa2Ug
-dG8gZ2V0IHJpZCBvZiB0aGUgaW9tbXVzIHByb3BlcnR5IGluIHRoZSBtbXN5cyBub2RlLiBJZiBJ
-IGp1c3QgZHJvcAppdCB0aG91Z2gsIGN1cnJlbnRseSBhbGwgdGhlIERNQSBidWZmZXIgYWxsb2Nh
-dGlvbnMgZnJvbSB0aGUgbW1zeXMKZGV2aWNlIGZhaWwuIEl0IHdvcmtzIGlmIEkgdXNlIGFueSBv
-ZiB0aGUgT1ZMIGRldmljZXMgKHdoaWNoIGhhdmUgdGhlCmlvbW11cyBwcm9wZXJ0eSkgdG8gZG8g
-dGhlIERNQSBhbGxvY2F0aW9ucyBpbnN0ZWFkOgoKLS0tLS04PC0tLS0tCkZyb20gOGNmZDU5ZGYy
-MjY1OWExZmI1YmI0MzU1Y2VjYTE4YmZlNTcyNTM2MSBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDEK
-RnJvbTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KRGF0ZTogV2VkLCAy
-IE1hciAyMDE2IDE0OjMzOjQxICswMTAwClN1YmplY3Q6IFtQQVRDSF0gZHJtL21lZGlhdGVrOiB1
-c2UgT1ZMIGRldmljZSBmb3IgRE1BIGFsbG9jYXRpb25zCgpDaGFuZ2UtSWQ6IEljODA5YTlkNTQ0
-ZTg0YzRmMTUyYTJhOGRjMjgwY2I3OTU1MjNlMTgwClNpZ25lZC1vZmYtYnk6IFBoaWxpcHAgWmFi
-ZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Ci0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZHJ2LmMgfCAxMyArKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0
-ZWsvbXRrX2RybV9kcnYuaCB8ICAxICsKIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2dlbS5jIHwgMTcgKysrKysrKysrKy0tLS0tLS0KIDMgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0
-aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Ry
-di5jCmluZGV4IGUyMTIwNTIuLjgwMDU2ZDEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2Rydi5jCkBAIC0xMzIsNiArMTMyLDcgQEAgc3RhdGljIGludCBtdGtfZHJtX2ttc19pbml0
-KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0pCiB7CiAJc3RydWN0IG10a19kcm1fcHJpdmF0ZSAqcHJp
-dmF0ZSA9IGRybS0+ZGV2X3ByaXZhdGU7CiAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldjsK
-KwlzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wOwogCWludCByZXQ7CiAKIAlpZiAoIWlvbW11X3ByZXNl
-bnQoJnBsYXRmb3JtX2J1c190eXBlKSkKQEAgLTE3Nyw2ICsxNzgsMTggQEAgc3RhdGljIGludCBt
-dGtfZHJtX2ttc19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0pCiAJaWYgKHJldCA8IDApCiAJ
-CWdvdG8gZXJyX2NvbXBvbmVudF91bmJpbmQ7CiAKKwkvKiBVc2UgT1ZMIGRldmljZSBmb3IgYWxs
-IERNQSBtZW1vcnkgYWxsb2NhdGlvbnMgKi8KKwlucCA9IHByaXZhdGUtPmNvbXBfbm9kZVttdGtf
-ZGRwX21haW5bMF1dID86CisJICAgICBwcml2YXRlLT5jb21wX25vZGVbbXRrX2RkcF9leHRbMF1d
-OworCXBkZXYgPSBvZl9maW5kX2RldmljZV9ieV9ub2RlKG5wKTsKKwlpZiAoIXBkZXYpIHsKKwkJ
-cmV0ID0gLUVOT0RFVjsKKwkJZGV2X2Vycihkcm0tPmRldiwgIk5lZWQgYXQgbGVhc3Qgb25lIE9W
-TCBkZXZpY2VcbiIpOworCQlnb3RvIGVycl9jb21wb25lbnRfdW5iaW5kOworCX0KKworCXByaXZh
-dGUtPmRtYV9kZXYgPSAmcGRldi0+ZGV2OworCiAJLyoKIAkgKiBXZSBkb24ndCB1c2UgdGhlIGRy
-bV9pcnFfaW5zdGFsbCgpIGhlbHBlcnMgcHJvdmlkZWQgYnkgdGhlIERSTQogCSAqIGNvcmUsIHNv
-IHdlIG5lZWQgdG8gc2V0IHRoaXMgbWFudWFsbHkgaW4gb3JkZXIgdG8gYWxsb3cgdGhlCmRpZmYg
-LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCBiL2RyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oCmluZGV4IGIxMzQwZDMuLmUwZmZmMmMgMTAw
-NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oCisrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oCkBAIC0zMCw2ICszMCw3IEBAIHN0
-cnVjdCByZWdtYXA7CiAKIHN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgewogCXN0cnVjdCBkcm1fZGV2
-aWNlICpkcm07CisJc3RydWN0IGRldmljZSAqZG1hX2RldjsKIAogCXN0cnVjdCBkcm1fY3J0YyAq
-Y3J0Y1tNQVhfQ1JUQ107CiAJdW5zaWduZWQgaW50IG51bV9waXBlczsKZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2dlbS5jIGIvZHJpdmVycy9ncHUvZHJtL21l
-ZGlhdGVrL210a19kcm1fZ2VtLmMKaW5kZXggNmJjNDk0ZS4uYTc3M2JmYSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMKKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZ2VtLmMKQEAgLTE1LDYgKzE1LDcgQEAKICNpbmNsdWRlIDxk
-cm0vZHJtX2dlbS5oPgogI2luY2x1ZGUgPGxpbnV4L2RtYS1idWYuaD4KIAorI2luY2x1ZGUgIm10
-a19kcm1fZHJ2LmgiCiAjaW5jbHVkZSAibXRrX2RybV9nZW0uaCIKIAogc3RhdGljIHN0cnVjdCBt
-dGtfZHJtX2dlbV9vYmogKm10a19kcm1fZ2VtX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwK
-QEAgLTQyLDYgKzQzLDcgQEAgc3RhdGljIHN0cnVjdCBtdGtfZHJtX2dlbV9vYmogKm10a19kcm1f
-Z2VtX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRldiwKIHN0cnVjdCBtdGtfZHJtX2dlbV9vYmog
-Km10a19kcm1fZ2VtX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAogCQkJCQkgICBzaXpl
-X3Qgc2l6ZSwgYm9vbCBhbGxvY19rbWFwKQogeworCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnBy
-aXYgPSBkZXYtPmRldl9wcml2YXRlOwogCXN0cnVjdCBtdGtfZHJtX2dlbV9vYmogKm10a19nZW07
-CiAJc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmo7CiAJaW50IHJldDsKQEAgLTU4LDcgKzYwLDcg
-QEAgc3RydWN0IG10a19kcm1fZ2VtX29iaiAqbXRrX2RybV9nZW1fY3JlYXRlKHN0cnVjdCBkcm1f
-ZGV2aWNlICpkZXYsCiAJaWYgKCFhbGxvY19rbWFwKQogCQlkbWFfc2V0X2F0dHIoRE1BX0FUVFJf
-Tk9fS0VSTkVMX01BUFBJTkcsICZtdGtfZ2VtLT5kbWFfYXR0cnMpOwogCi0JbXRrX2dlbS0+Y29v
-a2llID0gZG1hX2FsbG9jX2F0dHJzKGRldi0+ZGV2LCBvYmotPnNpemUsCisJbXRrX2dlbS0+Y29v
-a2llID0gZG1hX2FsbG9jX2F0dHJzKHByaXYtPmRtYV9kZXYsIG9iai0+c2l6ZSwKIAkJCQkJICAm
-bXRrX2dlbS0+ZG1hX2FkZHIsIEdGUF9LRVJORUwsCiAJCQkJCSAgJm10a19nZW0tPmRtYV9hdHRy
-cyk7CiAJaWYgKCFtdGtfZ2VtLT5jb29raWUpIHsKQEAgLTg1LDExICs4NywxMiBAQCBlcnJfZ2Vt
-X2ZyZWU6CiB2b2lkIG10a19kcm1fZ2VtX2ZyZWVfb2JqZWN0KHN0cnVjdCBkcm1fZ2VtX29iamVj
-dCAqb2JqKQogewogCXN0cnVjdCBtdGtfZHJtX2dlbV9vYmogKm10a19nZW0gPSB0b19tdGtfZ2Vt
-X29iaihvYmopOworCXN0cnVjdCBtdGtfZHJtX3ByaXZhdGUgKnByaXYgPSBvYmotPmRldi0+ZGV2
-X3ByaXZhdGU7CiAKIAlpZiAobXRrX2dlbS0+c2cpCiAJCWRybV9wcmltZV9nZW1fZGVzdHJveShv
-YmosIG10a19nZW0tPnNnKTsKIAllbHNlCi0JCWRtYV9mcmVlX2F0dHJzKG9iai0+ZGV2LT5kZXYs
-IG9iai0+c2l6ZSwgbXRrX2dlbS0+Y29va2llLAorCQlkbWFfZnJlZV9hdHRycyhwcml2LT5kbWFf
-ZGV2LCBvYmotPnNpemUsIG10a19nZW0tPmNvb2tpZSwKIAkJCSAgICAgICBtdGtfZ2VtLT5kbWFf
-YWRkciwgJm10a19nZW0tPmRtYV9hdHRycyk7CiAKIAkvKiByZWxlYXNlIGZpbGUgcG9pbnRlciB0
-byBnZW0gb2JqZWN0LiAqLwpAQCAtMTYwLDcgKzE2Myw3IEBAIHN0YXRpYyBpbnQgbXRrX2RybV9n
-ZW1fb2JqZWN0X21tYXAoc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmosCiB7CiAJaW50IHJldDsK
-IAlzdHJ1Y3QgbXRrX2RybV9nZW1fb2JqICptdGtfZ2VtID0gdG9fbXRrX2dlbV9vYmoob2JqKTsK
-LQlzdHJ1Y3QgZHJtX2RldmljZSAqZHJtID0gb2JqLT5kZXY7CisJc3RydWN0IG10a19kcm1fcHJp
-dmF0ZSAqcHJpdiA9IG9iai0+ZGV2LT5kZXZfcHJpdmF0ZTsKIAogCS8qCiAJICogZG1hX2FsbG9j
-X2F0dHJzKCkgYWxsb2NhdGVkIGEgc3RydWN0IHBhZ2UgdGFibGUgZm9yIG10a19nZW0sIHNvIGNs
-ZWFyCkBAIC0xNjksOCArMTcyLDggQEAgc3RhdGljIGludCBtdGtfZHJtX2dlbV9vYmplY3RfbW1h
-cChzdHJ1Y3QgZHJtX2dlbV9vYmplY3QgKm9iaiwKIAl2bWEtPnZtX2ZsYWdzICY9IH5WTV9QRk5N
-QVA7CiAJdm1hLT52bV9wZ29mZiA9IDA7CiAKLQlyZXQgPSBkbWFfbW1hcF9hdHRycyhkcm0tPmRl
-diwgdm1hLCBtdGtfZ2VtLT5jb29raWUsIG10a19nZW0tPmRtYV9hZGRyLAotCQkJICAgICBvYmot
-PnNpemUsICZtdGtfZ2VtLT5kbWFfYXR0cnMpOworCXJldCA9IGRtYV9tbWFwX2F0dHJzKHByaXYt
-PmRtYV9kZXYsIHZtYSwgbXRrX2dlbS0+Y29va2llLAorCQkJICAgICBtdGtfZ2VtLT5kbWFfYWRk
-ciwgb2JqLT5zaXplLCAmbXRrX2dlbS0+ZG1hX2F0dHJzKTsKIAlpZiAocmV0KQogCQlkcm1fZ2Vt
-X3ZtX2Nsb3NlKHZtYSk7CiAKQEAgLTIxMSw3ICsyMTQsNyBAQCBpbnQgbXRrX2RybV9nZW1fbW1h
-cChzdHJ1Y3QgZmlsZSAqZmlscCwgc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEpCiBzdHJ1Y3Qg
-c2dfdGFibGUgKm10a19nZW1fcHJpbWVfZ2V0X3NnX3RhYmxlKHN0cnVjdCBkcm1fZ2VtX29iamVj
-dCAqb2JqKQogewogCXN0cnVjdCBtdGtfZHJtX2dlbV9vYmogKm10a19nZW0gPSB0b19tdGtfZ2Vt
-X29iaihvYmopOwotCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBvYmotPmRldjsKKwlzdHJ1Y3Qg
-bXRrX2RybV9wcml2YXRlICpwcml2ID0gb2JqLT5kZXYtPmRldl9wcml2YXRlOwogCXN0cnVjdCBz
-Z190YWJsZSAqc2d0OwogCWludCByZXQ7CiAKQEAgLTIxOSw3ICsyMjIsNyBAQCBzdHJ1Y3Qgc2df
-dGFibGUgKm10a19nZW1fcHJpbWVfZ2V0X3NnX3RhYmxlKHN0cnVjdCBkcm1fZ2VtX29iamVjdCAq
-b2JqKQogCWlmICghc2d0KQogCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKIAotCXJldCA9IGRt
-YV9nZXRfc2d0YWJsZV9hdHRycyhkcm0tPmRldiwgc2d0LCBtdGtfZ2VtLT5jb29raWUsCisJcmV0
-ID0gZG1hX2dldF9zZ3RhYmxlX2F0dHJzKHByaXYtPmRtYV9kZXYsIHNndCwgbXRrX2dlbS0+Y29v
-a2llLAogCQkJCSAgICBtdGtfZ2VtLT5kbWFfYWRkciwgb2JqLT5zaXplLAogCQkJCSAgICAmbXRr
-X2dlbS0+ZG1hX2F0dHJzKTsKIAlpZiAocmV0KSB7Ci0tIAoyLjcuMAotLS0tLT44LS0tLS0KCklz
-IHRoZXJlIGEgYmV0dGVyIHdheT8KCnJlZ2FyZHMKUGhpbGlwcAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Mar 02, 2016 at 03:34:55AM +0100, Andreas F=C3=A4rber wrote:
+> Hello,
+>=20
+> This series adds initial support for the Amlogic S905 based
+> Tronsmart Vega S95 Pro, Meta and Telos TV boxes.
+>=20
+> v2:
+> * Pick up previously acked "tronsmart" patch instead (Matthias)
+> * Drop ARM_GIC selection (Sudeep)
+> * Change some compatible strings (Sudeep, Andr=C3=A9)
+> * Squash some node changes/additions
+>=20
+> Note: On the Vega S95 I need to change TEXT_OFFSET as follows,
+> in order to avoid the vendor U-Boot overwriting itself (fwiu);
+> for the Mini Mx that's reportedly not necessary.
+>=20
+> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+> index 354d75402ace..b7cebdb8b1ce 100644
+> --- a/arch/arm64/Makefile
+> +++ b/arch/arm64/Makefile
+> @@ -62,7 +62,7 @@ head-y                :=3D arch/arm64/kernel/head.o
+>  ifeq ($(CONFIG_ARM64_RANDOMIZE_TEXT_OFFSET), y)
+>  TEXT_OFFSET :=3D $(shell awk 'BEGIN {srand(); printf "0x%03x000\n", =
+int(512 * rand())}')
+>  else
+> -TEXT_OFFSET :=3D 0x00080000
+> +TEXT_OFFSET :=3D 0x01080000
+>  endif
+> =20
+>  # KASAN_SHADOW_OFFSET =3D VA_START + (1 << (VA_BITS - 3)) - (1 << 61=
+)
+
+Absolute NAK to this. TEXT_OFFSET is not open for platform-specific
+modification.
+
+Why can you not just load the Image 2MB higher regardless? Does the
+U-Boot on this platform actually read TEXT_OFFSET and take it into
+account?
+
+> This in turn runs into an apparent regression introduced with the
+> text offset randomization:
+>=20
+> diff --git a/arch/arm64/kernel/head.S b/arch/arm64/kernel/head.S
+> index 6ebd204da16a..afdec27c8871 100644
+> --- a/arch/arm64/kernel/head.S
+> +++ b/arch/arm64/kernel/head.S
+> @@ -48,7 +48,7 @@
+>  #elif (PAGE_OFFSET & 0x1fffff) !=3D 0
+>  #error PAGE_OFFSET must be at least 2MB aligned
+>  #elif TEXT_OFFSET > 0x1fffff
+> -#error TEXT_OFFSET must be less than 2MB
+> +//#error TEXT_OFFSET must be less than 2MB
+>  #endif
+> =20
+>  #define KERNEL_START   _text
+
+This is not a regression. As above, TEXT_OFFSET is not supposed to be
+modified in a platform-specific manner.
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
