@@ -1,47 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 01/11] drm/hisilicon: Add device tree binding for
- hi6220 display subsystem
-Date: Wed, 2 Mar 2016 12:29:52 -0600
-Message-ID: <20160302182952.GA1184@rob-hp-laptop>
-References: <1456476028-36880-1-git-send-email-xinliang.liu@linaro.org>
- <1456476028-36880-2-git-send-email-xinliang.liu@linaro.org>
+Subject: Re: [PATCH v3 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Wed, 2 Mar 2016 12:33:09 -0600
+Message-ID: <20160302183309.GA2449@rob-hp-laptop>
+References: <1456483912-32090-1-git-send-email-alexandre.torgue@gmail.com>
+ <1456483912-32090-3-git-send-email-alexandre.torgue@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456476028-36880-2-git-send-email-xinliang.liu@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org
+In-Reply-To: <1456483912-32090-3-git-send-email-alexandre.torgue@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@gmail.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 04:40:18PM +0800, Xinliang Liu wrote:
-> Add ADE display controller binding doc.
-> Add DesignWare DSI Host Controller v1.20a binding doc.
+On Fri, Feb 26, 2016 at 11:51:50AM +0100, Alexandre TORGUE wrote:
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
 > 
-> v6:
-> - Cleanup values part of reg and clocks properties.
-> - Change "pclk_dsi" clock name to "pclk".
-> v5:
-> - Remove endpoint unit address of dsi output port.
-> - Add "hisilicon,noc-syscon" property for ADE NOC QoS syscon.
-> - Add "resets" property for ADE reset.
-> v4:
-> - Describe more specific of clocks and ports.
-> - Fix indentation.
-> v3:
-> - Make ade as the drm master node.
-> - Use assigned-clocks to set clock rate.
-> - Use ports to connect display relavant nodes.
-> v2:
-> - Move dt binding docs to bindings/display/hisilicon directory.
-> 
-> Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
-> ---
->  .../bindings/display/hisilicon/dw-dsi.txt          | 72 ++++++++++++++++++++++
->  .../bindings/display/hisilicon/hisi-ade.txt        | 64 +++++++++++++++++++
->  2 files changed, 136 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
->  create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> new file mode 100644
+> index 0000000..67fceda
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> @@ -0,0 +1,40 @@
+> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+> +
+> +This file documents platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
+> +
+> +The device node has following properties.
+> +
+> +Required properties:
+> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+> +	       "snps,dwmac-3.50a" to select IP vesrion.
+> +- clocks: Should contain the GMAC main clock, and tx clock
+> +- compatible:  Should be "st,stm32-dwmac" to select glue and
+> +	       "snps,dwmac-3.50a" to select IP version.
+> +- clocks: Should contain the MAC main clock
+> +- clock-names: Should contain the clock names "stmmaceth".
+> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> +	      encompases the glue register, and the offset of the control register.
+> +
+> +Optional properties:
+> +- clocks: Could contain:
+> +	- the tx clock,
+> +	- the rx clock
+> +- clock-names: Could contain the clock names "tx-clk", "rx-clk"
 
-Acked-by: Rob Herring <robh@kernel.org>
+Either the IP block has 3 clocks or it has 1. If you have a case where 1 
+clock feeds all 3 inputs, then list the clock 3 times.
+
+Rob
