@@ -1,81 +1,214 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Add CAN FD support
-Date: Wed, 2 Mar 2016 15:03:57 +0300
-Message-ID: <56D6D6AD.7080207@cogentembedded.com>
-References: <1456826640-23237-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56D59538.2060100@cogentembedded.com>
- <SG2PR06MB1038FBA247777C89F70E2633C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
+From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+Subject: [PATCHv2 2/2] i2c: xiic: Implement Power management
+Date: Wed, 2 Mar 2016 17:34:07 +0530
+Message-ID: <1456920247-37291-2-git-send-email-shubhraj@xilinx.com>
+References: <1456920247-37291-1-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1038FBA247777C89F70E2633C3BC0@SG2PR06MB1038.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "horms@verge.net.au" <horms@verge.net.au>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1456920247-37291-1-git-send-email-shubhraj@xilinx.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: devicetree@vger.kernel.org, wsa@the-dreams.de, Shubhrajyoti Datta <shubhraj@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Enable power management. This patch enables the clocks
+before transfer and disables after the transfer.
 
-On 3/2/2016 10:29 AM, Ramesh Shanmugasundaram wrote:
+Signed-off-by: Shubhrajyoti Datta <shubhraj@xilinx.com>
+---
+ drivers/i2c/busses/i2c-xiic.c |   88 +++++++++++++++++++++++++++++++++++++---
+ 1 files changed, 81 insertions(+), 7 deletions(-)
 
->>> Adds CAN FD controller node for r8a7795.
->>>
->>> Note: CAN FD controller register base address specified in R-Car Gen3
->>> Hardware User Manual v0.5E is incorrect. The correct address is:
->>>
->>> CAN FD - 0xe66c0000
->>>
->>> Signed-off-by: Ramesh Shanmugasundaram
->>> <ramesh.shanmugasundaram@bp.renesas.com>
->>> ---
->>> Hi All,
->>>
->>>      This patch is based on linux-next (tag:next-20160225) with the
->> following
->>>      patches applied on top.
->>>
->>>      [PATCH v2] arm64: dts: r8a7795: Add CAN external clock support
->>>      [PATCH] arm64: dts: r8a7795: Add CAN support
->>>
->>>      The respective CAN subsystem changes are submitted separately here
->>> (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg013
->>> 88.html)
->>>
->>> Thanks,
->>> Ramesh
->>> ---
->>>    arch/arm64/boot/dts/renesas/r8a7795.dtsi | 24 ++++++++++++++++++++++++
->>>    1 file changed, 24 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>> b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>> index a88f8d8..5049ba6 100644
->>> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
->>> @@ -553,6 +553,30 @@
->>>    			status = "disabled";
->>>    		};
->>>
->>> +		canfd: canfd@e66c0000 {
->>
->>      The node name should still be "can@e66c0000", I think.
->
-> Thanks for the review.
->
-> The SoC has CAN controller too
-
-    Yes, I figured. BTW, is the CAN-FD identical to the older CAN on the 
-hardware level? I haven't see you posting the CAN-FD driver yet...
-
-> and hence I chose this node name to differentiate. A grep of canfd on sysfs would tell if the controller is enabled. The channels on "net" would still be named "canx".
->
-> I'll change it if you still feel "can@e66c0000" is more appropriate.
-
-    It is -- the node names should be generic and ePAPR even has the "can" 
-name listed explicitly in the section 2.2.2.
-
-> Thanks,
-> Ramesh
-
-MBR, Sergei
+diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
+index 6efd200..74f54f2 100644
+--- a/drivers/i2c/busses/i2c-xiic.c
++++ b/drivers/i2c/busses/i2c-xiic.c
+@@ -37,6 +37,8 @@
+ #include <linux/io.h>
+ #include <linux/slab.h>
+ #include <linux/of.h>
++#include <linux/clk.h>
++#include <linux/pm_runtime.h>
+ 
+ #define DRIVER_NAME "xiic-i2c"
+ 
+@@ -66,6 +68,7 @@ enum xiic_endian {
+  * @endianness: big/little-endian byte order
+  */
+ struct xiic_i2c {
++	struct device		*dev;
+ 	void __iomem		*base;
+ 	wait_queue_head_t	wait;
+ 	struct i2c_adapter	adap;
+@@ -77,6 +80,7 @@ struct xiic_i2c {
+ 	struct i2c_msg		*rx_msg;
+ 	int			rx_pos;
+ 	enum xiic_endian	endianness;
++	struct clk *clk;
+ };
+ 
+ 
+@@ -164,6 +168,7 @@ struct xiic_i2c {
+ 
+ #define XIIC_RESET_MASK             0xAUL
+ 
++#define XIIC_PM_TIMEOUT		1000	/* ms */
+ /*
+  * The following constant is used for the device global interrupt enable
+  * register, to enable all interrupts for the device, this is the only bit
+@@ -676,9 +681,13 @@ static int xiic_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+ 	dev_dbg(adap->dev.parent, "%s entry SR: 0x%x\n", __func__,
+ 		xiic_getreg8(i2c, XIIC_SR_REG_OFFSET));
+ 
++	err = pm_runtime_get_sync(i2c->dev);
++	if (err < 0)
++		return err;
++
+ 	err = xiic_busy(i2c);
+ 	if (err)
+-		return err;
++		goto out;
+ 
+ 	i2c->tx_msg = msgs;
+ 	i2c->nmsgs = num;
+@@ -686,14 +695,20 @@ static int xiic_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+ 	xiic_start_xfer(i2c);
+ 
+ 	if (wait_event_timeout(i2c->wait, (i2c->state == STATE_ERROR) ||
+-		(i2c->state == STATE_DONE), HZ))
+-		return (i2c->state == STATE_DONE) ? num : -EIO;
+-	else {
++		(i2c->state == STATE_DONE), HZ)) {
++		err = (i2c->state == STATE_DONE) ? num : -EIO;
++		goto out;
++	} else {
+ 		i2c->tx_msg = NULL;
+ 		i2c->rx_msg = NULL;
+ 		i2c->nmsgs = 0;
+-		return -ETIMEDOUT;
++		err = -ETIMEDOUT;
++		goto out;
+ 	}
++out:
++	pm_runtime_mark_last_busy(i2c->dev);
++	pm_runtime_put_autosuspend(i2c->dev);
++	return err;
+ }
+ 
+ static u32 xiic_func(struct i2c_adapter *adap)
+@@ -748,13 +763,28 @@ static int xiic_i2c_probe(struct platform_device *pdev)
+ 	mutex_init(&i2c->lock);
+ 	init_waitqueue_head(&i2c->wait);
+ 
++	i2c->clk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(i2c->clk)) {
++		dev_err(&pdev->dev, "input clock not found.\n");
++		return PTR_ERR(i2c->clk);
++	}
++	ret = clk_prepare_enable(i2c->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "Unable to enable clock.\n");
++		return ret;
++	}
++	i2c->dev = &pdev->dev;
++	pm_runtime_enable(i2c->dev);
++	pm_runtime_set_autosuspend_delay(i2c->dev, XIIC_PM_TIMEOUT);
++	pm_runtime_use_autosuspend(i2c->dev);
++	pm_runtime_set_active(i2c->dev);
+ 	ret = devm_request_threaded_irq(&pdev->dev, irq, xiic_isr,
+ 					xiic_process, IRQF_ONESHOT,
+ 					pdev->name, i2c);
+ 
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Cannot claim IRQ\n");
+-		return ret;
++		goto err_clk_dis;
+ 	}
+ 
+ 	/*
+@@ -776,7 +806,7 @@ static int xiic_i2c_probe(struct platform_device *pdev)
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to add adapter\n");
+ 		xiic_deinit(i2c);
+-		return ret;
++		goto err_clk_dis;
+ 	}
+ 
+ 	if (pdata) {
+@@ -786,16 +816,30 @@ static int xiic_i2c_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	return 0;
++
++err_clk_dis:
++	pm_runtime_set_suspended(&pdev->dev);
++	pm_runtime_disable(&pdev->dev);
++	clk_disable_unprepare(i2c->clk);
++	return ret;
+ }
+ 
+ static int xiic_i2c_remove(struct platform_device *pdev)
+ {
+ 	struct xiic_i2c *i2c = platform_get_drvdata(pdev);
++	int ret;
+ 
+ 	/* remove adapter & data */
+ 	i2c_del_adapter(&i2c->adap);
+ 
++	ret = clk_prepare_enable(i2c->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "Unable to enable clock.\n");
++		return ret;
++	}
+ 	xiic_deinit(i2c);
++	clk_disable_unprepare(i2c->clk);
++	pm_runtime_disable(&pdev->dev);
+ 
+ 	return 0;
+ }
+@@ -808,12 +852,42 @@ static const struct of_device_id xiic_of_match[] = {
+ MODULE_DEVICE_TABLE(of, xiic_of_match);
+ #endif
+ 
++static int __maybe_unused cdns_i2c_runtime_suspend(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct xiic_i2c *i2c = platform_get_drvdata(pdev);
++
++	clk_disable(i2c->clk);
++
++	return 0;
++}
++
++static int __maybe_unused cdns_i2c_runtime_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct xiic_i2c *i2c = platform_get_drvdata(pdev);
++	int ret;
++
++	ret = clk_enable(i2c->clk);
++	if (ret) {
++		dev_err(dev, "Cannot enable clock.\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops xiic_dev_pm_ops = {
++	SET_RUNTIME_PM_OPS(cdns_i2c_runtime_suspend,
++			   cdns_i2c_runtime_resume, NULL)
++};
+ static struct platform_driver xiic_i2c_driver = {
+ 	.probe   = xiic_i2c_probe,
+ 	.remove  = xiic_i2c_remove,
+ 	.driver  = {
+ 		.name = DRIVER_NAME,
+ 		.of_match_table = of_match_ptr(xiic_of_match),
++		.pm = &xiic_dev_pm_ops,
+ 	},
+ };
+ 
+-- 
+1.7.1
