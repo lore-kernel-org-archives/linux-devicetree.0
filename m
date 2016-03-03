@@ -1,82 +1,91 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH v5 2/2] doc: dt: add documentation for lpc1850-creg-clk driver
-Date: Thu,  3 Mar 2016 22:47:05 +0100
-Message-ID: <1457041625-21163-3-git-send-email-manabian@gmail.com>
-References: <1457041625-21163-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457041625-21163-1-git-send-email-manabian@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: Joachim Eastwood <manabian@gmail.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] arm64: tegra210-smaug: Add gpio-key nodes
+Date: Thu, 3 Mar 2016 14:00:28 -0800
+Message-ID: <CAL1qeaF-kpjtWExRo0KQK9bY5yyX_WG-p4W86zc-FL7uLRxWCQ@mail.gmail.com>
+References: <1457034865-17826-1-git-send-email-rklein@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457034865-17826-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for lpc1850-creg-clk driver.
+Rhyland,
 
-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/clock/lpc1850-creg-clk.txt | 52 ++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
+On Thu, Mar 3, 2016 at 11:54 AM, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> Add gpio-key nodes for the volumn controls, lid switch,
+> tablet mode and power button.
+>
+> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
-new file mode 100644
-index 000000000000..6f1c7b4e4d2c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/lpc1850-creg-clk.txt
-@@ -0,0 +1,52 @@
-+* NXP LPC1850 CREG clocks
-+
-+The NXP LPC18xx/43xx CREG (Configuration Registers) block contains
-+control registers for two low speed clocks. One of the clocks is a
-+32 kHz oscillator driver with power up/down and clock gating. Next
-+is a fixed divider that creates a 1 kHz clock from the 32 kHz osc.
-+
-+These clocks are used by the RTC and the Event Router peripherials.
-+The 32 kHz can also be routed to other peripherials to enable low
-+power modes.
-+
-+This binding uses the common clock binding:
-+    Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible:
-+	Should be "nxp,lpc1850-creg-clk"
-+- #clock-cells:
-+	Shall have value <1>.
-+- clocks:
-+	Shall contain a phandle to the fixed 32 kHz crystal.
-+
-+The creg-clk node must be a child of the creg syscon node.
-+
-+The following clocks are available from the clock node.
-+
-+Clock ID	Name
-+   0		 1 kHz clock
-+   1		32 kHz Oscillator
-+
-+Example:
-+soc {
-+	creg: syscon@40043000 {
-+		compatible = "nxp,lpc1850-creg", "syscon", "simple-mfd";
-+		reg = <0x40043000 0x1000>;
-+
-+		creg_clk: clock-controller {
-+			compatible = "nxp,lpc1850-creg-clk";
-+			clocks = <&xtal32>;
-+			#clock-cells = <1>;
-+		};
-+
-+		...
-+	};
-+
-+	rtc: rtc@40046000 {
-+		...
-+		clocks = <&creg_clk 0>, <&ccu1 CLK_CPU_BUS>;
-+		clock-names = "rtc", "reg";
-+		...
-+	};
-+};
--- 
-1.8.0
+Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
+> ---
+>  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 43 +++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+> index 750e85c45135..9c0ec3031e98 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+> +++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+> @@ -1,5 +1,7 @@
+>  /dts-v1/;
+>
+> +#include <dt-bindings/input/input.h>
+> +
+>  #include "tegra210.dtsi"
+>
+>  / {
+> @@ -76,6 +78,47 @@
+>                 };
+>         };
+>
+> +       gpio-keys {
+> +               compatible = "gpio-keys";
+> +               gpio-keys,name = "gpio-keys";
+> +
+> +               power {
+> +                       label = "Power";
+> +                       gpios = <&gpio TEGRA_GPIO(X, 5) GPIO_ACTIVE_LOW>;
+> +                       linux,code = <KEY_POWER>;
+> +                       debounce-interval = <30>;
+> +                       gpio-key,wakeup;
+> +               };
+> +
+> +               lid {
+> +                       label = "Lid";
+> +                       gpios = <&gpio TEGRA_GPIO(B, 4) GPIO_ACTIVE_LOW>;
+> +                       linux,input-type = <5>; /* EV_SW */
+> +                       linux,code = <0>; /* SW_LID */
+> +                       gpio-key,wakeup;
+> +               };
+> +
+> +               tablet_mode {
+> +                       label = "Tablet Mode";
+> +                       gpios = <&gpio TEGRA_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
+> +                       linux,input-type = <5>; /* EV_SW */
+> +                       linux,code = <1>; /* SW_TABLET_MODE */
+> +                       gpio-key,wakeup;
+> +               };
+> +
+> +               volume_down {
+> +                       label = "Volume Down";
+> +                       gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
+> +                       linux,code = <KEY_VOLUMEDOWN>;
+> +               };
+> +
+> +               volume_up {
+> +                       label = "Volume Up";
+> +                       gpios = <&gpio TEGRA_GPIO(M, 4) GPIO_ACTIVE_LOW>;
+> +                       linux,code = <KEY_VOLUMEUP>;
+> +               };
+> +       };
+> +
+>         psci {
+>                 compatible = "arm,psci-1.0";
+>                 method = "smc";
+> --
+> 1.9.1
+>
