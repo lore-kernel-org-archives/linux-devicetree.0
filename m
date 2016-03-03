@@ -1,92 +1,63 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: [PATCH 2/4] DT: leds: Add binding for the ISSI IS31FL32xx family of LED controllers
-Date: Wed,  2 Mar 2016 22:01:33 -0500
-Message-ID: <1456974095-1867-3-git-send-email-drivshin.allworx@gmail.com>
-References: <1456974095-1867-1-git-send-email-drivshin.allworx@gmail.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1456974095-1867-1-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] ARM: dts: add "simple-bus" to "arm,amba-bus" compatible nodes
+Date: Thu, 3 Mar 2016 12:07:32 +0900
+Message-ID: <CAK7LNAQzkg5F8wUeF+p30jf9CrpNxi7UTNfqXQgybP2XbEKJag@mail.gmail.com>
+References: <1456804620-8750-1-git-send-email-yamada.masahiro@socionext.com>
+	<20160301114610.GB30602@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160301114610.GB30602@leverpostej>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: arm@kernel.org, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, David Brown <david.brown@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-soc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Rivshin <drivshin@allworx.com>
+Hi Mark,
 
-This adds a binding description for the is31fl3236/35/18/16 I2C LED
-controllers.
 
-Signed-off-by: David Rivshin <drivshin@allworx.com>
----
+2016-03-01 20:46 GMT+09:00 Mark Rutland <mark.rutland@arm.com>:
+> On Tue, Mar 01, 2016 at 12:57:00PM +0900, Masahiro Yamada wrote:
+>> The "arm,amba-bus" string in the of_default_bus_match_table is
+>> ambiguous.  This prepares for killing it off in a long run.
+>
+> I don't follow the purpose of this patch.
+>
+> There's no way we can remove kernel-side support for "arm,amba-bus", as
+> there are DTBs that rely on it.
+>
+> If we're going to merge "arm,amba-bus" in the kernel with "simple-bus",
+> such that there is no distinction between the two, then that doesn't
+> require any DTBs to be updated.
+>
+> The only reason I would see for changing dts files would be a subsequent
+> clean-up for consistency, but at that point "arm,amba-bus" could be
+> dropped entirely.
+>
+> So this patch makes no sense to me.
+>
+> Thanks,
+> Mark.
+>
 
-Rob,
- I went with the 1-based 'reg' property here. I inferred that that
-would be your preference based on the previous thread [1]. Let me
-know if that's not the case.
+This patch is derived from Rob Herring' comment
+"BTW, we should also kill off "amba-bus" which is an ambiguous term"
+in the following thread:
+http://lkml.iu.edu/hypermail/linux/kernel/1601.0/01822.html
 
-Changes from RFC:
- - Removed max-brightness property.
- - Added #address-cells and #size-cells properties to the example.
 
-[1] http://www.spinics.net/lists/linux-leds/msg05589.html
+So, the plan would be like this:
 
- .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
+[1] Make device trees not depend on "arm,amba-bus"   (this commit)
+[2] New device trees should no longer use "arm,amba-bus" alone.
+[3] Go though some releases until we do not care about the backward
+compatibility
+[4] Drop "arm,amba-bus" from of_default_bus_match_table
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-new file mode 100644
-index 0000000..539df2e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-@@ -0,0 +1,49 @@
-+Binding for ISSI IS31FL32xx LED Drivers
-+
-+The IS31FL32xx family of LED drivers are I2C devices with multiple
-+constant-current channels, each with independent 256-level PWM control.
-+Each LED is represented as a sub-node of the device.
-+
-+Required properties:
-+- compatible: one of
-+	issi,is31fl3236
-+	issi,is31fl3235
-+	issi,is31fl3218
-+	issi,is31fl3216
-+- reg: I2C slave address
-+- address-cells : must be 1
-+- size-cells : must be 0
-+
-+LED sub-node properties:
-+- reg : LED channel number (1..N)
-+- label :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+- linux,default-trigger :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+
-+
-+Example:
-+
-+leds: is31fl3236@3c {
-+	compatible = "issi,is31fl3236";
-+	reg = <0x3c>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	led@1 {
-+		reg = <1>;
-+		label = "EB:blue:usr0";
-+	};
-+	led@2 {
-+		reg = <2>;
-+		label = "EB:blue:usr1";
-+	};
-+	...
-+	led@36 {
-+		reg = <36>;
-+		label = "EB:blue:usr35";
-+	};
-+};
-+
-+For more product information please see the link below:
-+http://www.issi.com/US/product-analog-fxled-driver.shtml
+
+No?
+
+
 -- 
-2.5.0
+Best Regards
+Masahiro Yamada
