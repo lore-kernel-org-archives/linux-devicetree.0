@@ -1,29 +1,64 @@
-From: Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM64: dts: add LS1043a-QDS board support
-Date: Thu, 3 Mar 2016 14:28:12 -0600
-Message-ID: <CADRPPNQLifp1SsZZ+7W8FBWQ=m-nE0DqMWv+6C0uR7+ot9odEg@mail.gmail.com>
-References: <1450948298-33238-1-git-send-email-Zhiqiang.Hou@freescale.com>
-	<1450948298-33238-2-git-send-email-Zhiqiang.Hou@freescale.com>
-	<20160219032830.GG6756@tiger>
-	<HE1PR04MB0906707F686591B374AA364F84A00@HE1PR04MB0906.eurprd04.prod.outlook.com>
-	<20160228023818.GB22051@tiger>
-	<AM4PR04MB2148867ED34556A79AC0EB1584BB0@AM4PR04MB2148.eurprd04.prod.outlook.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] ARM: dts: add "simple-bus" to "arm,amba-bus" compatible nodes
+Date: Thu, 3 Mar 2016 14:44:22 -0600
+Message-ID: <CAL_Jsq+sYG3UNvQ0k4cZQ0JcenObsmo7R=0qgLtUqdOJXWO-nQ@mail.gmail.com>
+References: <1456804620-8750-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <AM4PR04MB2148867ED34556A79AC0EB1584BB0-WOempg8NbQQGtNtCsH41Bs9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiqiang Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhiqiang Hou <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1456804620-8750-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "arm@kernel.org" <arm@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, David Brown <david.brown@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org"linux-arm-kernel@lists.infradead.org" <linux-ar>
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhiqiang,
+On Mon, Feb 29, 2016 at 9:57 PM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> The "arm,amba-bus" string in the of_default_bus_match_table is
+> ambiguous.  This prepares for killing it off in a long run.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  arch/arm/boot/dts/axm55xx.dtsi             | 2 +-
+>  arch/arm/boot/dts/exynos3250.dtsi          | 2 +-
+>  arch/arm/boot/dts/exynos4.dtsi             | 2 +-
+>  arch/arm/boot/dts/exynos4415.dtsi          | 2 +-
+>  arch/arm/boot/dts/exynos5250.dtsi          | 2 +-
+>  arch/arm/boot/dts/exynos5420.dtsi          | 2 +-
+>  arch/arm/boot/dts/exynos5440.dtsi          | 2 +-
+>  arch/arm/boot/dts/hi3620.dtsi              | 2 +-
+>  arch/arm/boot/dts/hip01.dtsi               | 2 +-
+>  arch/arm/boot/dts/hisi-x5hd2.dtsi          | 2 +-
+>  arch/arm/boot/dts/qcom-apq8064.dtsi        | 2 +-
+>  arch/arm/boot/dts/qcom-msm8660.dtsi        | 2 +-
+>  arch/arm/boot/dts/qcom-msm8960.dtsi        | 2 +-
+>  arch/arm/boot/dts/rk3036.dtsi              | 2 +-
+>  arch/arm/boot/dts/rk3228.dtsi              | 2 +-
+>  arch/arm/boot/dts/rk3288.dtsi              | 2 +-
+>  arch/arm/boot/dts/rk3xxx.dtsi              | 2 +-
+>  arch/arm/boot/dts/s5pv210.dtsi             | 2 +-
+>  arch/arm/boot/dts/socfpga.dtsi             | 2 +-
+>  arch/arm/boot/dts/socfpga_arria10.dtsi     | 2 +-
+>  arch/arm/boot/dts/ste-nomadik-stn8815.dtsi | 2 +-
+>  arch/arm/boot/dts/ste-u300.dts             | 2 +-
+>  arch/arm/boot/dts/versatile-ab.dts         | 2 +-
+>  23 files changed, 23 insertions(+), 23 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/axm55xx.dtsi b/arch/arm/boot/dts/axm55xx.dtsi
+> index ea288f0..8da4582 100644
+> --- a/arch/arm/boot/dts/axm55xx.dtsi
+> +++ b/arch/arm/boot/dts/axm55xx.dtsi
+> @@ -107,7 +107,7 @@
+>                 };
+>
+>                 amba {
+> -                       compatible = "arm,amba-bus";
+> +                       compatible = "arm,amba-bus", "simple-bus";
 
-Will there be a v3 coming out before the 4.6 merge windows?
+Actually, I would remove arm,amba-bus completely to prevent its
+spread. Both have been matched since ARM DT support began in the
+kernel. AFAICT, FreeBSD only uses simple-bus. If so, then this patch
+fixes FreeBSD on these systems (if that was the only issue).
 
-Regards,
-Leo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
