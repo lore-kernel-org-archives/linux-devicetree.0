@@ -1,14 +1,14 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/2] phy: rcar-gen2: add fallback binding
-Date: Thu, 3 Mar 2016 09:12:08 +0100
-Message-ID: <CAMuHMdXzbTNhbBHd2pxSQyPGNgvQ4MThqyJ75uvd+TMo4Ss-Kw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] phy: rcar-gen3-usb2: add fallback binding
+Date: Thu, 3 Mar 2016 09:13:06 +0100
+Message-ID: <CAMuHMdW24p_nx19232LADRMHY8-976YX-S41zEGQhmoe+3_AxQ@mail.gmail.com>
 References: <1456965518-13615-1-git-send-email-horms+renesas@verge.net.au>
-	<1456965518-13615-2-git-send-email-horms+renesas@verge.net.au>
+	<1456965518-13615-3-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1456965518-13615-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456965518-13615-3-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Simon Horman <horms+renesas@verge.net.au>
 Cc: Kishon Vijay Abraham I <kishon@ti.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
@@ -32,13 +32,12 @@ On Thu, Mar 3, 2016 at 1:38 AM, Simon Horman <horms+renesas@verge.net.au> wrote:
 
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+> ---
+> v2
+> * Use renesas,rcar-gen3-usb-phy rather than renesas,usb-phy-gen3 as
+
+FWIW, "renesas,rcar-gen3-usb2-phy" ;-)
+
 Gr{oetje,eeting}s,
 
                         Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
