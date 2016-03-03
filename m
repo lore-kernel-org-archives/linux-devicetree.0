@@ -1,130 +1,62 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH 1/3] pinctrl: Broadcom Northstar2 pinctrl device tree bindings
-Date: Thu,  3 Mar 2016 06:41:41 -0500
-Message-ID: <1457005303-26829-2-git-send-email-yendapally.reddy@broadcom.com>
-References: <1457005303-26829-1-git-send-email-yendapally.reddy@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457005303-26829-1-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 09/17] dt-bindings: Add PLX Technology OXNAS Standard Clocks
+ bindings
+Date: Thu,  3 Mar 2016 12:40:02 +0100
+Message-ID: <1457005210-18485-10-git-send-email-narmstrong@baylibre.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Device tree binding documentation for Broadcom NS2 IOMUX
-
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../bindings/pinctrl/brcm,ns2-pinmux.txt           | 102 +++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
+ .../devicetree/bindings/clock/plxtech,stdclk.txt   | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
+diff --git a/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
 new file mode 100644
-index 0000000..e295dda
+index 0000000..46465c6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
-@@ -0,0 +1,102 @@
-+Broadcom Northstar2 IOMUX Controller
++++ b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
+@@ -0,0 +1,24 @@
++PLX Technology OXNAS SoC Family Standard Clocks
++================================================
 +
-+The Northstar2 IOMUX controller supports group based mux configuration. There
-+are some individual pins that support modifying the pinconf parameters.
++Please also refer to clock-bindings.txt in this directory for common clock
++bindings usage.
 +
 +Required properties:
++- compatible: Should be "plxtech,ox810se-stdclk" or "plxtech,nas782x-stdclk"
++- #clock-cells: 1, see below
 +
-+- compatible:
-+    Must be "brcm,ns2-pinmux"
++Parent node should have the following properties :
++- compatible: Should be "plxtech,ox810se-sys-ctrl", "syscon", "simple-mfd"
 +
-+- reg:
-+    Define the base and range of the I/O address space that contains the
-+    Northstar2 IOMUX and pin configuration registers.
++example:
 +
-+Properties in sub nodes:
++sys: sys-ctrl@000000 {
++	compatible = "plxtech,ox810se-sys-ctrl", "syscon", "simple-mfd";
++	reg = <0x000000 0x100000>;
 +
-+- function:
-+    The mux function to select
-+
-+- groups:
-+    The list of groups to select with a given function
-+
-+- pins:
-+    List of pin names to change configuration
-+
-+The generic properties bias-disable, bias-pull-down, bias-pull-up,
-+drive-strength, slew-rate, input-enable, input-disable are supported
-+for some individual pins listed at the end.
-+
-+For more details, refer to
-+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+For example:
-+
-+	pinctrl: pinctrl@6501d130 {
-+		compatible = "brcm,ns2-pinmux";
-+		reg = <0x6501d130 0x08>,
-+		      <0x660a0028 0x04>,
-+		      <0x660009b0 0x40>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&nand_sel &uart3_rx &sdio0_d4>;
-+
-+		/* Select nand function */
-+		nand_sel: nand_sel {
-+			function = "nand";
-+			groups = "nand_grp";
-+		};
-+
-+		/* Pull up the uart3 rx pin */
-+		uart3_rx: uart3_rx {
-+			pins = "uart3_sin";
-+			bias-pull-up;
-+		};
-+
-+		/* Set the drive strength of sdio d4 pin */
-+		sdio0_d4: sdio0_d4 {
-+			pins = "sdio0_data4";
-+			drive-strength = <8>;
-+		};
++	stdclk: stdclk {
++		compatible = "plxtech,ox810se-stdclk", "plxtech,nas782x-stdclk";
++		#reset-cells = <1>;
 +	};
-+
-+List of supported functions and groups in Northstar2:
-+
-+"nand": "nand_grp"
-+
-+"nor": "nor_data_grp", "nor_adv_grp", "nor_addr_0_3_grp", "nor_addr_4_5_grp",
-+	"nor_addr_6_7_grp", "nor_addr_8_9_grp", "nor_addr_10_11_grp",
-+	"nor_addr_12_15_grp"
-+
-+"gpio": "gpio_0_1_grp", "gpio_2_5_grp", "gpio_6_7_grp", "gpio_8_9_grp",
-+	"gpio_10_11_grp", "gpio_12_13_grp", "gpio_14_17_grp", "gpio_18_19_grp",
-+	"gpio_20_21_grp", "gpio_22_23_grp", "gpio_24_25_grp", "gpio_26_27_grp",
-+	"gpio_28_29_grp", "gpio_30_31_grp"
-+
-+"pcie": "pcie_ab1_clk_wak_grp", "pcie_a3_clk_wak_grp", "pcie_b3_clk_wak_grp",
-+	"pcie_b2_clk_wak_grp", "pcie_a2_clk_wak_grp"
-+
-+"uart0": "uart0_modem_grp", "uart0_rts_cts_grp", "uart0_in_out_grp"
-+
-+"uart1": "uart1_ext_clk_grp", "uart1_dcd_dsr_grp", "uart1_ri_dtr_grp",
-+	"uart1_rts_cts_grp", "uart1_in_out_grp"
-+
-+"uart2": "uart2_rts_cts_grp"
-+
-+"pwm": "pwm_0_grp", "pwm_1_grp", "pwm_2_grp", "pwm_3_grp"
-+
-+
-+List of pins that support pinconf parameters:
-+
-+"qspi_wp", "qspi_hold", "qspi_cs", "qspi_sck", "uart3_sin", "uart3_sout",
-+"qspi_mosi", "qspi_miso", "spi0_fss", "spi0_rxd", "spi0_txd", "spi0_sck",
-+"spi1_fss", "spi1_rxd", "spi1_txd", "spi1_sck", "sdio0_data7",
-+"sdio0_emmc_rst", "sdio0_led_on", "sdio0_wp", "sdio0_data3", "sdio0_data4",
-+"sdio0_data5", "sdio0_data6", "sdio0_cmd", "sdio0_data0", "sdio0_data1",
-+"sdio0_data2", "sdio1_led_on", "sdio1_wp", "sdio0_cd_l", "sdio0_clk",
-+"sdio1_data5", "sdio1_data6", "sdio1_data7", "sdio1_emmc_rst", "sdio1_data1",
-+"sdio1_data2", "sdio1_data3", "sdio1_data4", "sdio1_cd_l", "sdio1_clk",
-+"sdio1_cmd", "sdio1_data0", "ext_mdio_0", "ext_mdc_0", "usb3_p1_vbus_ppc",
-+"usb3_p1_overcurrent", "usb3_p0_vbus_ppc", "usb3_p0_overcurrent",
-+"usb2_presence_indication", "usb2_vbus_present", "usb2_vbus_ppc",
-+"usb2_overcurrent", "sata_led1", "sata_led0"
++};
 -- 
-2.1.0
+1.9.1
