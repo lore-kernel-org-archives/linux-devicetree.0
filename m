@@ -1,102 +1,42 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/2] ARM: OMAP2+: hwmod: Introduce ti,no-idle dt property
-Date: Thu, 3 Mar 2016 14:12:04 +0530
-Message-ID: <1456994525-20573-2-git-send-email-lokeshvutla@ti.com>
-References: <1456994525-20573-1-git-send-email-lokeshvutla@ti.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] phy: rcar-gen3-usb2: add fallback binding
+Date: Thu, 3 Mar 2016 09:23:22 +0000
+Message-ID: <SG2PR06MB0919A78EC9E41C0188A4B119D8BD0@SG2PR06MB0919.apcprd06.prod.outlook.com>
+References: <1456965518-13615-1-git-send-email-horms+renesas@verge.net.au>
+	<1456965518-13615-3-git-send-email-horms+renesas@verge.net.au>
+ <CAMuHMdW24p_nx19232LADRMHY8-976YX-S41zEGQhmoe+3_AxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456994525-20573-1-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAMuHMdW24p_nx19232LADRMHY8-976YX-S41zEGQhmoe+3_AxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: ja-JP
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce a dt property, ti,no-idle, that prevents an IP to idle at any
-point. This is to handle Errata i877, which tells that GMAC clocks
-cannot be disabled.
-
-Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Tested-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/omap/omap.txt | 1 +
- arch/arm/mach-omap2/omap_hwmod.c                    | 9 ++++++++-
- arch/arm/mach-omap2/omap_hwmod.h                    | 3 +++
- 3 files changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-index 739bc48..21e71a5 100644
---- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-@@ -23,6 +23,7 @@ Optional properties:
-   during suspend.
- - ti,no-reset-on-init: When present, the module should not be reset at init
- - ti,no-idle-on-init: When present, the module should not be idled at init
-+- ti,no-idle: When present, the module is never allowed to idle.
- 
- Example:
- 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index e9f65fe..b6d62e4 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -2200,6 +2200,11 @@ static int _enable(struct omap_hwmod *oh)
-  */
- static int _idle(struct omap_hwmod *oh)
- {
-+	if (oh->flags & HWMOD_NO_IDLE) {
-+		oh->_int_flags |= _HWMOD_SKIP_ENABLE;
-+		return 0;
-+	}
-+
- 	pr_debug("omap_hwmod: %s: idling\n", oh->name);
- 
- 	if (oh->_state != _HWMOD_STATE_ENABLED) {
-@@ -2504,6 +2509,8 @@ static int __init _init(struct omap_hwmod *oh, void *data)
- 			oh->flags |= HWMOD_INIT_NO_RESET;
- 		if (of_find_property(np, "ti,no-idle-on-init", NULL))
- 			oh->flags |= HWMOD_INIT_NO_IDLE;
-+		if (of_find_property(np, "ti,no-idle", NULL))
-+			oh->flags |= HWMOD_NO_IDLE;
- 	}
- 
- 	oh->_state = _HWMOD_STATE_INITIALIZED;
-@@ -2630,7 +2637,7 @@ static void __init _setup_postsetup(struct omap_hwmod *oh)
- 	 * XXX HWMOD_INIT_NO_IDLE does not belong in hwmod data -
- 	 * it should be set by the core code as a runtime flag during startup
- 	 */
--	if ((oh->flags & HWMOD_INIT_NO_IDLE) &&
-+	if ((oh->flags & (HWMOD_INIT_NO_IDLE | HWMOD_NO_IDLE)) &&
- 	    (postsetup_state == _HWMOD_STATE_IDLE)) {
- 		oh->_int_flags |= _HWMOD_SKIP_ENABLE;
- 		postsetup_state = _HWMOD_STATE_ENABLED;
-diff --git a/arch/arm/mach-omap2/omap_hwmod.h b/arch/arm/mach-omap2/omap_hwmod.h
-index 76bce11..7c7a311 100644
---- a/arch/arm/mach-omap2/omap_hwmod.h
-+++ b/arch/arm/mach-omap2/omap_hwmod.h
-@@ -525,6 +525,8 @@ struct omap_hwmod_omap4_prcm {
-  *     or idled.
-  * HWMOD_OPT_CLKS_NEEDED: The optional clocks are needed for the module to
-  *     operate and they need to be handled at the same time as the main_clk.
-+ * HWMOD_NO_IDLE: Do not idle the hwmod at all. Useful to handle certain
-+ *     IPs like CPSW on DRA7, where clocks to this module cannot be disabled.
-  */
- #define HWMOD_SWSUP_SIDLE			(1 << 0)
- #define HWMOD_SWSUP_MSTANDBY			(1 << 1)
-@@ -541,6 +543,7 @@ struct omap_hwmod_omap4_prcm {
- #define HWMOD_SWSUP_SIDLE_ACT			(1 << 12)
- #define HWMOD_RECONFIG_IO_CHAIN			(1 << 13)
- #define HWMOD_OPT_CLKS_NEEDED			(1 << 14)
-+#define HWMOD_NO_IDLE				(1 << 15)
- 
- /*
-  * omap_hwmod._int_flags definitions
--- 
-2.1.4
-
+SGkgU2ltb24tc2FuLA0KDQo+IFNlbnQ6IFRodXJzZGF5LCBNYXJjaCAwMywgMjAxNiA1OjEzIFBN
+DQo+IA0KPiBPbiBUaHUsIE1hciAzLCAyMDE2IGF0IDE6MzggQU0sIFNpbW9uIEhvcm1hbiA8aG9y
+bXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU+IHdyb3RlOg0KPiA+IEluIHRoZSBjYXNlIG9mIFJlbmVz
+YXMgUi1DYXIgaGFyZHdhcmUgd2Uga25vdyB0aGF0IHRoZXJlIGFyZSBnZW5lcmF0aW9ucyBvZg0K
+PiA+IFNvQ3MsIGUuZy4gR2VuIDIgYW5kIEdlbiAzLiBCdXQgYmV5b25kIHRoYXQgaXRzIG5vdCBj
+bGVhciB3aGF0IHRoZQ0KPiA+IHJlbGF0aW9uc2hpcCBiZXR3ZWVuIElQIGJsb2NrcyBtaWdodCBi
+ZS4gRm9yIGV4YW1wbGUsIEkgYmVsaWV2ZSB0aGF0DQo+ID4gcjhhNzc5MCBpcyBvbGRlciB0aGFu
+IHI4YTc3OTEgYnV0IHRoYXQgZG9lc24ndCBpbXBseSB0aGF0IHRoZSBsYXR0ZXIgaXMgYQ0KPiA+
+IGRlc2NlbmRhbnQgb2YgdGhlIGZvcm1lciBvciB2aWNlIHZlcnNhLg0KPiA+DQo+ID4gV2UgY2Fu
+LCBob3dldmVyLCBieSBleGFtaW5pbmcgdGhlIGRvY3VtZW50YXRpb24gYW5kIGJlaGF2aW91ciBv
+ZiB0aGUNCj4gPiBoYXJkd2FyZSBhdCBydW4tdGltZSBvYnNlcnZlIHRoYXQgdGhlIGN1cnJlbnQg
+ZHJpdmVyIGltcGxlbWVudGF0aW9uIGFwcGVhcnMNCj4gPiB0byBiZSBjb21wYXRpYmxlIHdpdGgg
+dGhlIElQIGJsb2NrcyBvbiBTb0NzIHdpdGhpbiBhIGdpdmVuIGdlbmVyYXRpb24uDQo+ID4NCj4g
+PiBGb3IgdGhlIGFib3ZlIHJlYXNvbnMgYW5kIGNvbnZlbmllbmNlIHdoZW4gZW5hYmxpbmcgbmV3
+IFNvQ3MgYQ0KPiA+IHBlci1nZW5lcmF0aW9uIGZhbGxiYWNrIGNvbXBhdGliaWxpdHkgc3RyaW5n
+IHNjaGVtZSBiZWluZyBhZG9wdGVkIGZvcg0KPiA+IGRyaXZlcnMgZm9yIFJlbmVzYXMgU29Dcy4N
+Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNpbW9uIEhvcm1hbiA8aG9ybXMrcmVuZXNhc0B2ZXJn
+ZS5uZXQuYXU+DQo+IA0KPiBBY2tlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5l
+c2FzQGdsaWRlci5iZT4NCg0KQWNrZWQtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8u
+c2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1v
+ZGENCg0K
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
