@@ -1,91 +1,23 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] arm64: tegra210-smaug: Add gpio-key nodes
-Date: Thu, 3 Mar 2016 14:00:28 -0800
-Message-ID: <CAL1qeaF-kpjtWExRo0KQK9bY5yyX_WG-p4W86zc-FL7uLRxWCQ@mail.gmail.com>
-References: <1457034865-17826-1-git-send-email-rklein@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: Add binding for brcm,bcm2835-sdhost.
+Date: Thu, 3 Mar 2016 16:02:13 -0600
+Message-ID: <20160303220213.GA26008@rob-hp-laptop>
+References: <1456527942-3045-1-git-send-email-eric@anholt.net>
+ <1456527942-3045-2-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457034865-17826-1-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olof-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456527942-3045-2-git-send-email-eric@anholt.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rhyland,
+On Fri, Feb 26, 2016 at 03:05:39PM -0800, Eric Anholt wrote:
+> This is the other SD controller on the platform, which can be swapped
+> to the role of SD card host using pin muxing.
+> 
+> Signed-off-by: Eric Anholt <eric@anholt.net>
 
-On Thu, Mar 3, 2016 at 11:54 AM, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Add gpio-key nodes for the volumn controls, lid switch,
-> tablet mode and power button.
->
-> Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
-Reviewed-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-
-> ---
->  arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 43 +++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> index 750e85c45135..9c0ec3031e98 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
-> @@ -1,5 +1,7 @@
->  /dts-v1/;
->
-> +#include <dt-bindings/input/input.h>
-> +
->  #include "tegra210.dtsi"
->
->  / {
-> @@ -76,6 +78,47 @@
->                 };
->         };
->
-> +       gpio-keys {
-> +               compatible = "gpio-keys";
-> +               gpio-keys,name = "gpio-keys";
-> +
-> +               power {
-> +                       label = "Power";
-> +                       gpios = <&gpio TEGRA_GPIO(X, 5) GPIO_ACTIVE_LOW>;
-> +                       linux,code = <KEY_POWER>;
-> +                       debounce-interval = <30>;
-> +                       gpio-key,wakeup;
-> +               };
-> +
-> +               lid {
-> +                       label = "Lid";
-> +                       gpios = <&gpio TEGRA_GPIO(B, 4) GPIO_ACTIVE_LOW>;
-> +                       linux,input-type = <5>; /* EV_SW */
-> +                       linux,code = <0>; /* SW_LID */
-> +                       gpio-key,wakeup;
-> +               };
-> +
-> +               tablet_mode {
-> +                       label = "Tablet Mode";
-> +                       gpios = <&gpio TEGRA_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
-> +                       linux,input-type = <5>; /* EV_SW */
-> +                       linux,code = <1>; /* SW_TABLET_MODE */
-> +                       gpio-key,wakeup;
-> +               };
-> +
-> +               volume_down {
-> +                       label = "Volume Down";
-> +                       gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
-> +                       linux,code = <KEY_VOLUMEDOWN>;
-> +               };
-> +
-> +               volume_up {
-> +                       label = "Volume Up";
-> +                       gpios = <&gpio TEGRA_GPIO(M, 4) GPIO_ACTIVE_LOW>;
-> +                       linux,code = <KEY_VOLUMEUP>;
-> +               };
-> +       };
-> +
->         psci {
->                 compatible = "arm,psci-1.0";
->                 method = "smc";
-> --
-> 1.9.1
->
+Acked-by: Rob Herring <robh@kernel.org>
