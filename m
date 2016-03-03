@@ -1,310 +1,57 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 14/17] arm: boot: dts: Add PLX Technology OX810SE dtsi
-Date: Thu,  3 Mar 2016 12:40:07 +0100
-Message-ID: <1457005210-18485-15-git-send-email-narmstrong@baylibre.com>
-References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH 3/3] ARM: dts: enable pinctrl for Broadcom NS2 SoC
+Date: Thu,  3 Mar 2016 06:41:43 -0500
+Message-ID: <1457005303-26829-4-git-send-email-yendapally.reddy@broadcom.com>
+References: <1457005303-26829-1-git-send-email-yendapally.reddy@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457005303-26829-1-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/ox810se.dtsi | 279 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 279 insertions(+)
- create mode 100644 arch/arm/boot/dts/ox810se.dtsi
+This enables the pinctrl support for Broadcom NS2 SoC
 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
-new file mode 100644
-index 0000000..a86d7f0
---- /dev/null
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -0,0 +1,279 @@
-+/*
-+ * ox810se.dtsi - Device tree file for PLX Technology OX810SE SoC
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+---
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts | 9 +++++++++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi    | 7 +++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+index 6bb3d4d..d1c8ccc 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
++++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
+@@ -75,3 +75,12 @@
+ 		#size-cells = <1>;
+ 	};
+ };
 +
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "plxtech,ox810se";
-+
-+	cpus {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			device_type = "cpu";
-+			compatible = "arm,arm926ej-s";
-+			clocks = <&armclk>;
-+		};
-+	};
-+
-+	memory {
-+		/* Max 256MB @ 0x48000000 */
-+		reg = <0x48000000 0x10000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+	};
-+
-+	clocks {
-+		osc: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		gmacclk: gmacclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <125000000>;
-+		};
-+
-+		rpsclk: rspclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <1>;
-+			clock-mult = <1>;
-+			clocks = <&osc>;
-+		};
-+
-+		pll400: pll400 {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <733333333>;
-+		};
-+
-+		sysclk: sysclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+			clocks = <&pll400>;
-+		};
-+
-+		armclk: armclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+			clocks = <&pll400>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+		interrupt-parent = <&intc>;
-+
-+		apb-bridge@44000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x44000000 0x1000000>;
-+
-+			pinctrl: pinctrl {
-+				compatible = "plxtech,nas782x-pinctrl", "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges;
-+
-+				/* Regmap for sys registers */
-+				plxtech,sys-ctrl = <&sys>;
-+
-+				/* Default, all-open mux-map */
-+				plxtech,mux-mask = <
-+					0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
-+					0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
-+					>;
-+
-+				gpio0: gpio@000000 {
-+					compatible = "plxtech,nas782x-gpio";
-+					reg = <0x000000 0x100000>;
-+					interrupts = <21>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					#gpio-lines = <32>;
-+				};
-+
-+				gpio1: gpio@100000 {
-+					compatible = "plxtech,nas782x-gpio";
-+					reg = <0x100000 0x100000>;
-+					interrupts = <22>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					#gpio-lines = <3>;
-+				};
-+
-+				uart0 {
-+					pinctrl_uart0: uart0 {
-+						plxtech,pins = <0 31 3 0
-+								0 32 3 0>;
-+					};
-+					pinctrl_uart0_modem: uart0_modem {
-+						plxtech,pins = <0 27 3 0
-+								0 28 3 0
-+								0 29 3 0
-+								0 30 3 0
-+								0 33 3 0
-+								0 34 3 0>;
-+					};
-+				};
-+
-+				uart1 {
-+					pinctrl_uart1: uart1 {
-+						plxtech,pins = <0 20 3 0
-+								0 22 3 0>;
-+					};
-+					pinctrl_uart1_modem: uart1_modem {
-+						plxtech,pins = <0 8 3 0
-+								0 9 3 0
-+								0 23 3 0
-+								0 24 3 0
-+								0 25 3 0
-+								0 26 3 0>;
-+					};
-+				};
-+
-+				uart2 {
-+					pinctrl_uart2: uart2 {
-+						plxtech,pins = <0 6 3 0
-+								0 7 3 0>;
-+					};
-+					pinctrl_uart2_modem: uart2_modem {
-+						plxtech,pins = <0 0 3 0
-+								0 1 3 0
-+								0 2 3 0
-+								0 3 3 0
-+								0 4 3 0
-+								0 5 3 0>;
-+					};
-+				};
-+			};
-+
-+			uart0: uart@200000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <23>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 17>;
-+			};
-+
-+			uart1: uart@300000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x300000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <24>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 18>;
-+			};
-+
-+			uart2: uart@900000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x900000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <29>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 22>;
-+			};
-+
-+			uart3: uart@a00000 {
-+			       compatible = "ns16550a";
-+			       reg = <0xa00000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <30>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 23>;
-+			};
-+		};
-+
-+		apb-bridge@45000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x45000000 0x1000000>;
-+
-+			sys: sys-ctrl@000000 {
-+				compatible = "plxtech,ox810se-sys-ctrl", "syscon", "simple-mfd";
-+				reg = <0x000000 0x100000>;
-+
-+				reset: reset-controller {
-+					compatible = "plxtech,nas782x-reset";
-+					#reset-cells = <1>;
-+				};
-+
-+				stdclk: stdclk {
-+					compatible = "plxtech,ox810se-stdclk", "plxtech,nas782x-stdclk";
-+					#clock-cells = <1>;
-+				};
-+			};
-+
-+			rps@300000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "simple-bus";
-+				ranges = <0 0x300000 0x100000>;
-+
-+				intc: interrupt-controller@0 {
-+					compatible = "plxtech,nas782x-rps";
-+					interrupt-controller;
-+					reg = <0 0x200>;
-+					#interrupt-cells = <1>;
-+				};
-+
-+				timer0: timer@200 {
-+					compatible = "plxtech,nas782x-rps-timer";
-+					reg = <0x200 0x40>;
-+					clocks = <&rpsclk>;
-+					interrupts = <4 5>;
-+				};
-+			};
-+		};
++&pinctrl {
++	pinctrl-names = "default";
++	pinctrl-0 = <&nand_sel>;
++	nand_sel: nand_sel {
++		function = "nand";
++		groups = "nand_grp";
 +	};
 +};
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index a510d3a..a3b267c 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -234,6 +234,13 @@
+ 					     "chimp", "port", "sdio";
+ 		};
+ 
++		pinctrl: pinctrl@6501d130 {
++			compatible = "brcm,ns2-pinmux";
++			reg = <0x6501d130 0x08>,
++			      <0x660a0028 0x04>,
++			      <0x660009b0 0x40>;
++		};
++
+ 		crmu: crmu@65024000 {
+ 			compatible = "syscon";
+ 			reg = <0x65024000 0x100>;
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.0
