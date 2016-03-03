@@ -1,88 +1,92 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/5] ARM: bcm2835: Define standard pinctrl groups in the
- gpio node.
-Date: Thu, 3 Mar 2016 15:32:21 -0700
-Message-ID: <56D8BB75.7040002@wwwdotorg.org>
-References: <1456510756-15337-1-git-send-email-eric@anholt.net>
- <1456510756-15337-2-git-send-email-eric@anholt.net>
- <56D8AAA2.60907@wwwdotorg.org> <87fuw76w14.fsf@eliezer.anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: [PATCH v4 09/18] [media] m88ds3103: convert to use an explicit i2c mux core
+Date: Thu,  3 Mar 2016 23:27:21 +0100
+Message-ID: <1457044050-15230-10-git-send-email-peda@lysator.liu.se>
+References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87fuw76w14.fsf@eliezer.anholt.net>
+In-Reply-To: <1457044050-15230-1-git-send-email-peda@lysator.liu.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Adriana Reus <adriana.reus@intel.com>, Viorel Suman <viorel.suman@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Terry Heo <terryheo@google.com>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Tommi Rantala <tt.rantala@gmail.com>, linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2016 03:23 PM, Eric Anholt wrote:
-> Stephen Warren <swarren@wwwdotorg.org> writes:
->
->> On 02/26/2016 11:19 AM, Eric Anholt wrote:
->>> The BCM2835-ARM-Peripherals.pdf documentation specifies what the
->>> function selects do for the pins, and there are a bunch of obvious
->>> groupings to be made.  With these created, we'll be able to replace
->>> bcm2835-rpi.dtsi's main "set all of these pins to alt0" with
->>> references to specific groups we want enabled.
->>
->>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
->>
->>> +			spi0_gpio7: spi0_gpio7 {
->>> +				brcm,pins = <7 8 9 10 11>;
->>> +				brcm,function = <BCM2835_FSEL_ALT0>;
->>> +			};
->>
->> This is too many pins.
->>
->> - It includes both MOSI and MISO, although a particular use-case may
->> only use 1 of those.
->>
->> - It includes both chip-select signals, whereas a particular use-case
->> may use 0, 1, or 2 of those. This is especially true since IIRC the
->> mainline bcm283x SPI driver wants to only use GPIOs for chip-selects,
->> not SPI-controller-generated chip-select signals, to avoid some issues
->> with the HW generation of these signals.
->>
->>
->> I believe a similar comment applies to other SPI nodes too.
->>
->>> +			pcm_gpio18: pcm_gpio18 {
->>> +				brcm,pins = <18 19 20 21>;
->>> +				brcm,function = <BCM2835_FSEL_ALT0>;
->>> +			};
->>
->> Here too, I wonder if some people might want only one of DIN/DOUT and
->> not both?
->>
->>> +			uart1_gpio36: uart1_gpio36 {
->>> +				brcm,pins = <36 37 38 39>;
->>> +				brcm,function = <BCM2835_FSEL_ALT2>;
->>> +			};
->>
->> Similarly, I think for UARTS, TX/RX and RTS/CTS should always be in
->> different nodes so people can choose 2- or 4-wire mode. Most of the UART
->> nodes are already split like this, but this one isn't.
->>
->>> +			emmc_gpio22: emmc_gpio22 {
->>> +				brcm,pins = <22 23 24 25 26 27>;
->>> +				brcm,function = <BCM2835_FSEL_ALT3>;
->>> +			};
->>
->> 1-wire (1 data wire, plus CLK/CMD) eMMC is possible in theory, although
->> I don't know whether it makes sense to support this?
->
-> Nothing here precludes making alternative pin groups for special
-> situations like you're bringing up here.  I'm just trying to bring
-> sanity to the giant lists of pins we have currently, that happen to
-> correspond to these.
->
-> Of your suggestions, making uart1_gpio36 split out cts/rts like the rest
-> makes a lot of sense to me.  Of the others, they seem like speculation
-> more than "we should fix this because it's not what people want."  Can
-> you provide specific feedback of what you'd like changed to get an Ack?
+From: Peter Rosin <peda@axentia.se>
 
-All of the points I raised should be fixed. I don't believe any of the 
-groups that affect more than minimal sets of pins are useful. Indeed, 
-using groups at all is rather tenuous; it'd be far better to list the 
-precise sets of pins only as and when they're used.
+Allocate an explicit i2c mux core to handle parent and child adapters
+etc. Update the select op to be in terms of the i2c mux core instead
+of the child adapter.
+
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ drivers/media/dvb-frontends/m88ds3103.c      | 18 +++++++++---------
+ drivers/media/dvb-frontends/m88ds3103_priv.h |  2 +-
+ 2 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/media/dvb-frontends/m88ds3103.c b/drivers/media/dvb-frontends/m88ds3103.c
+index ce73a5ec6036..845d206eb70f 100644
+--- a/drivers/media/dvb-frontends/m88ds3103.c
++++ b/drivers/media/dvb-frontends/m88ds3103.c
+@@ -1251,9 +1251,9 @@ static void m88ds3103_release(struct dvb_frontend *fe)
+ 	i2c_unregister_device(client);
+ }
+ 
+-static int m88ds3103_select(struct i2c_adapter *adap, void *mux_priv, u32 chan)
++static int m88ds3103_select(struct i2c_mux_core *muxc, u32 chan)
+ {
+-	struct m88ds3103_dev *dev = mux_priv;
++	struct m88ds3103_dev *dev = i2c_mux_priv(muxc);
+ 	struct i2c_client *client = dev->client;
+ 	int ret;
+ 	struct i2c_msg msg = {
+@@ -1374,7 +1374,7 @@ static struct i2c_adapter *m88ds3103_get_i2c_adapter(struct i2c_client *client)
+ 
+ 	dev_dbg(&client->dev, "\n");
+ 
+-	return dev->i2c_adapter;
++	return dev->muxc->adapter[0];
+ }
+ 
+ static int m88ds3103_probe(struct i2c_client *client,
+@@ -1467,13 +1467,13 @@ static int m88ds3103_probe(struct i2c_client *client,
+ 		goto err_kfree;
+ 
+ 	/* create mux i2c adapter for tuner */
+-	dev->i2c_adapter = i2c_add_mux_adapter(client->adapter, &client->dev,
+-					       dev, 0, 0, 0, m88ds3103_select,
+-					       NULL);
+-	if (dev->i2c_adapter == NULL) {
+-		ret = -ENOMEM;
++	dev->muxc = i2c_mux_one_adapter(client->adapter, &client->dev, 0, 0,
++					0, 0, 0, m88ds3103_select, NULL);
++	if (IS_ERR(dev->muxc)) {
++		ret = PTR_ERR(dev->muxc);
+ 		goto err_kfree;
+ 	}
++	dev->muxc->priv = dev;
+ 
+ 	/* create dvb_frontend */
+ 	memcpy(&dev->fe.ops, &m88ds3103_ops, sizeof(struct dvb_frontend_ops));
+@@ -1502,7 +1502,7 @@ static int m88ds3103_remove(struct i2c_client *client)
+ 
+ 	dev_dbg(&client->dev, "\n");
+ 
+-	i2c_del_mux_adapter(dev->i2c_adapter);
++	i2c_mux_del_adapters(dev->muxc);
+ 
+ 	kfree(dev);
+ 	return 0;
+diff --git a/drivers/media/dvb-frontends/m88ds3103_priv.h b/drivers/media/dvb-frontends/m88ds3103_priv.h
+index eee8c22c51ec..c5b4e177c6ea 100644
+--- a/drivers/media/dvb-frontends/m88ds3103_priv.h
++++ b/drivers/media/dvb-frontends/m88ds3103_priv.h
+@@ -42,7 +42,7 @@ struct m88ds3103_dev {
+ 	enum fe_status fe_status;
+ 	u32 dvbv3_ber; /* for old DVBv3 API read_ber */
+ 	bool warm; /* FW running */
+-	struct i2c_adapter *i2c_adapter;
++	struct i2c_mux_core *muxc;
+ 	/* auto detect chip id to do different config */
+ 	u8 chip_id;
+ 	/* main mclk is calculated for M88RS6000 dynamically */
+-- 
+2.1.4
