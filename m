@@ -1,166 +1,100 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] of: add 'const' for of_property_*_string*() parameter '*np'
-Date: Thu, 3 Mar 2016 07:52:51 -0600
-Message-ID: <CAL_JsqJgOa7wzYCrQFwko-HXQVTkWf+=rwGkimS1n6qucH=jbw@mail.gmail.com>
-References: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/4] drm: Add DT bindings documentation for ARC PGU
+ display controller
+Date: Thu, 3 Mar 2016 13:58:18 +0000
+Message-ID: <1457013497.3005.99.camel@synopsys.com>
+References: <1455887034-7739-1-git-send-email-abrodkin@synopsys.com>
+	 <1455887034-7739-3-git-send-email-abrodkin@synopsys.com>
+	 <20160223203841.GA15744@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160223203841.GA15744@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <93A90BFEBB9B7C47B46B9724BDBF47C8-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 2, 2016 at 3:35 PM, David Rivshin (Allworx)
-<drivshin.allworx@gmail.com> wrote:
-> From: David Rivshin <drivshin@allworx.com>
->
-> The of_property_{read,count,match}_string* family of functions never
-> modify the struct device_node pointer that is passed in, so there is no
-> reason for it to be non-const. Equivalent functions for all other types
-> already take a 'const struct device_node *np'.
->
-> Signed-off-by: David Rivshin <drivshin@allworx.com>
-> ---
->
-> MAINTAINTERS says that the appropriate tree is
->     git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
+Hi Rob,
 
-Yes, we probably need to update that.
+On Tue, 2016-02-23 at 14:38 -0600, Rob Herring wrote:
++AD4- On Fri, Feb 19, 2016 at 04:03:52PM +-0300, Alexey Brodkin wrote:
++AD4- +AD4- 
++AD4- +AD4- This add DT bindings documentation for ARC PGU display controller.
++AD4- +AD4- 
++AD4- +AD4- Signed-off-by: Alexey Brodkin +ADw-abrodkin+AEA-synopsys.com+AD4-
++AD4- +AD4- Cc: Rob Herring +ADw-robh+-dt+AEA-kernel.org+AD4-
++AD4- +AD4- Cc: Pawel Moll +ADw-pawel.moll+AEA-arm.com+AD4-
++AD4- +AD4- Cc: Mark Rutland +ADw-mark.rutland+AEA-arm.com+AD4-
++AD4- +AD4- Cc: Ian Campbell +ADw-ijc+-devicetree+AEA-hellion.org.uk+AD4-
++AD4- +AD4- Cc: Kumar Gala +ADw-galak+AEA-codeaurora.org+AD4-
++AD4- +AD4- Cc: devicetree+AEA-vger.kernel.org
++AD4- +AD4- Cc: linux-snps-arc+AEA-lists.infradead.org
++AD4- +AD4- ---
++AD4- +AD4- +AKA-.../devicetree/bindings/display/snps,arcpgu.txt+AKAAoACgAKAAfA- 74 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
++AD4- +AD4- +AKA-1 file changed, 74 insertions(+-)
++AD4- +AD4- +AKA-create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- 
++AD4- +AD4- diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- new file mode 100644
++AD4- +AD4- index 0000000..c8382fb
++AD4- +AD4- --- /dev/null
++AD4- +AD4- +-+-+- b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- +AEAAQA- -0,0 +-1,74 +AEAAQA-
++AD4- +AD4- +-ARC PGU
++AD4- +AD4- +-
++AD4- +AD4- +-This is a display controller found on several development boards produced
++AD4- +AD4- +-by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
++AD4- +AD4- +-framebuffer and sends it to a single digital encoder (usually HDMI).
++AD4- +AD4- +-
++AD4- +AD4- +-Required properties:
++AD4- +AD4- +-+AKAAoA-- compatible: +ACI-snps,arcpgu+ACI-
++AD4- Seems like this should be more specific. Is there some sort or+AKA-
++AD4- versioning with ARC blocks?
 
-> but it looks like that hasn't been updated in a while. So this patch
-> is based off the "for-next" branch of
->     git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-> instead. Let me know if you need me to respin from another tree/branch.
+Well as of today there's only one and only version of PGU.
+So is there a real need for +ACI-snps,arcpgu-1.0+ACI-?
 
-You should base off of Linus' tree unless you have some dependency. I
-doubt it matters in this case, so no need to resend.
++AD4- +AD4- 
++AD4- +AD4- +-+AKAAoA-- reg: Physical base address and length of the controller's registers.
++AD4- +AD4- +-+AKAAoA-- clocks: A list of phandle +- clock-specifier pairs, one for each
++AD4- +AD4- +-+AKAAoACgAKA-entry in 'clock-names'.
++AD4- +AD4- +-+AKAAoA-- clock-names: A list of clock names. For ARC PGU it should contain:
++AD4- +AD4- +-+AKAAoACgAKAAoACg-- +ACI-pxlclk+ACI- for the clock feeding the output PLL of the controller.
++AD4- +AD4- +-+AKAAoA-- encoder-slave: Phandle of encoder chip.
++AD4- This is unnecessary with the OF graph.
 
->
->  drivers/of/base.c  | 15 ++++++++-------
->  include/linux/of.h | 18 +++++++++---------
->  2 files changed, 17 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 017dd94..b299de2 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1341,10 +1341,10 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_array);
->   *
->   * The out_string pointer is modified only if a valid string can be decoded.
->   */
-> -int of_property_read_string(struct device_node *np, const char *propname,
-> +int of_property_read_string(const struct device_node *np, const char *propname,
->                                 const char **out_string)
->  {
-> -       struct property *prop = of_find_property(np, propname, NULL);
-> +       const struct property *prop = of_find_property(np, propname, NULL);
->         if (!prop)
->                 return -EINVAL;
->         if (!prop->value)
-> @@ -1365,10 +1365,10 @@ EXPORT_SYMBOL_GPL(of_property_read_string);
->   * This function searches a string list property and returns the index
->   * of a specific string value.
->   */
-> -int of_property_match_string(struct device_node *np, const char *propname,
-> +int of_property_match_string(const struct device_node *np, const char *propname,
->                              const char *string)
->  {
-> -       struct property *prop = of_find_property(np, propname, NULL);
-> +       const struct property *prop = of_find_property(np, propname, NULL);
->         size_t l;
->         int i;
->         const char *p, *end;
-> @@ -1404,10 +1404,11 @@ EXPORT_SYMBOL_GPL(of_property_match_string);
->   * Don't call this function directly. It is a utility helper for the
->   * of_property_read_string*() family of functions.
->   */
-> -int of_property_read_string_helper(struct device_node *np, const char *propname,
-> -                                  const char **out_strs, size_t sz, int skip)
-> +int of_property_read_string_helper(const struct device_node *np,
-> +                                  const char *propname, const char **out_strs,
-> +                                  size_t sz, int skip)
->  {
-> -       struct property *prop = of_find_property(np, propname, NULL);
-> +       const struct property *prop = of_find_property(np, propname, NULL);
->         int l = 0, i = 0;
->         const char *p, *end;
->
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index dc6e396..7fcb681 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -296,13 +296,13 @@ extern int of_property_read_u64_array(const struct device_node *np,
->                                       u64 *out_values,
->                                       size_t sz);
->
-> -extern int of_property_read_string(struct device_node *np,
-> +extern int of_property_read_string(const struct device_node *np,
->                                    const char *propname,
->                                    const char **out_string);
-> -extern int of_property_match_string(struct device_node *np,
-> +extern int of_property_match_string(const struct device_node *np,
->                                     const char *propname,
->                                     const char *string);
-> -extern int of_property_read_string_helper(struct device_node *np,
-> +extern int of_property_read_string_helper(const struct device_node *np,
->                                               const char *propname,
->                                               const char **out_strs, size_t sz, int index);
->  extern int of_device_is_compatible(const struct device_node *device,
-> @@ -538,14 +538,14 @@ static inline int of_property_read_u64_array(const struct device_node *np,
->         return -ENOSYS;
->  }
->
-> -static inline int of_property_read_string(struct device_node *np,
-> +static inline int of_property_read_string(const struct device_node *np,
->                                           const char *propname,
->                                           const char **out_string)
->  {
->         return -ENOSYS;
->  }
->
-> -static inline int of_property_read_string_helper(struct device_node *np,
-> +static inline int of_property_read_string_helper(const struct device_node *np,
->                                                  const char *propname,
->                                                  const char **out_strs, size_t sz, int index)
->  {
-> @@ -571,7 +571,7 @@ static inline int of_property_read_u64(const struct device_node *np,
->         return -ENOSYS;
->  }
->
-> -static inline int of_property_match_string(struct device_node *np,
-> +static inline int of_property_match_string(const struct device_node *np,
->                                            const char *propname,
->                                            const char *string)
->  {
-> @@ -773,7 +773,7 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
->   *
->   * If @out_strs is NULL, the number of strings in the property is returned.
->   */
-> -static inline int of_property_read_string_array(struct device_node *np,
-> +static inline int of_property_read_string_array(const struct device_node *np,
->                                                 const char *propname, const char **out_strs,
->                                                 size_t sz)
->  {
-> @@ -792,7 +792,7 @@ static inline int of_property_read_string_array(struct device_node *np,
->   * does not have a value, and -EILSEQ if the string is not null-terminated
->   * within the length of the property data.
->   */
-> -static inline int of_property_count_strings(struct device_node *np,
-> +static inline int of_property_count_strings(const struct device_node *np,
->                                             const char *propname)
->  {
->         return of_property_read_string_helper(np, propname, NULL, 0, 0);
-> @@ -816,7 +816,7 @@ static inline int of_property_count_strings(struct device_node *np,
->   *
->   * The out_string pointer is modified only if a valid string can be decoded.
->   */
-> -static inline int of_property_read_string_index(struct device_node *np,
-> +static inline int of_property_read_string_index(const struct device_node *np,
->                                                 const char *propname,
->                                                 int index, const char **output)
->  {
-> --
-> 2.5.0
->
+Do you mean I may drop +ACI-encoder-slave+ACI- from bindings description?
+I actually thought about that because in case of simulation platform where
+this device is also used there's no encoder as well as no connector - we're
+dealing with memory area which is read by host and then displayed on host's
+display.
+
++AD4- +AD4- +-
++AD4- +AD4- +-/ +AHs-
++AD4- +AD4- +-	...
++AD4- +AD4- +-
++AD4- +AD4- +-	pgu+AEA-0xXXXXXXXX +AHs-
++AD4- Unit address should not have '0x'
+
+Correct, let me fix it.
+
++AD4- +AD4- +-
++AD4- +AD4- +-	/+ACo- HDMI encoder on I2C bus +ACo-/
++AD4- +AD4- +-	i2c+AEA-0xXXXXXXXX +AHs-
++AD4- +AD4- +-		compatible +AD0- +ACI-...+ACIAOw-
++AD4- +AD4- +-
++AD4- +AD4- +-		encoder+AF8-node:encoder+AF8-node+AEA-0xXXXXXXXX+AHs-
++AD4- I2C addresses would be 8-bit only.
+
+Indeed - copy-paste is evil :)
+
+-Alexey
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
