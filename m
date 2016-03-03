@@ -1,66 +1,140 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/4 v2] drm: Add support of ARC PGU display controller
-Date: Thu,  3 Mar 2016 17:39:12 +0300
-Message-ID: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH 3/4 v2] arc: axs10x - add support of ARC PGU
+Date: Thu,  3 Mar 2016 17:39:15 +0300
+Message-ID: <1457015956-30708-4-git-send-email-abrodkin@synopsys.com>
+References: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This series add support of ARC PGU display controller.
-ARC PGU is a quite simple byte streamer that gets data from the framebuffer
-and pushes it to hte connected encoder (DP or HDMI).
+Synopsys DesignWare ARC SDP boards sport ARC SDP display
+controller attached to ADV7511 HDMI encoder.
 
-It was tested on ARC SDP boards (axs101 in particular).
+That change adds desctiption of both ARC PGU and ADV7511 in
+ARC SDP'd base-board Device Tree.
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+---
 
 Changes v1 -> v2:
- * Clean-up of DT bindings documentation
  * Added missing "pxlclk" clock in axs10x_mb.dtsi
 
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+ arch/arc/boot/dts/axs10x_mb.dtsi | 61 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-Alexey Brodkin (4):
-  drm: Add support of ARC PGU display controller
-  drm: Add DT bindings documentation for ARC PGU display controller
-  arc: axs10x - add support of ARC PGU
-  MAINTAINERS: Add maintainer for ARC PGU display controller
-
- .../devicetree/bindings/display/snps,arcpgu.txt    |  33 +++
- MAINTAINERS                                        |   6 +
- arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/arc/Kconfig                        |  10 +
- drivers/gpu/drm/arc/Makefile                       |   2 +
- drivers/gpu/drm/arc/arcpgu.h                       |  47 ++++
- drivers/gpu/drm/arc/arcpgu_crtc.c                  | 274 +++++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_drv.c                   | 239 ++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 204 +++++++++++++++
- drivers/gpu/drm/arc/arcpgu_regs.h                  |  36 +++
- 12 files changed, 915 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
- create mode 100644 drivers/gpu/drm/arc/Kconfig
- create mode 100644 drivers/gpu/drm/arc/Makefile
- create mode 100644 drivers/gpu/drm/arc/arcpgu.h
- create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
-
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 44a578c..6e639c9 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -34,6 +34,12 @@
+ 				clock-frequency = <50000000>;
+ 				#clock-cells = <0>;
+ 			};
++
++			pguclk: pguclk {
++				#clock-cells = <0>;
++				compatible = "fixed-clock";
++				clock-frequency = <74440000>;
++			};
+ 		};
+ 
+ 		ethernet@0x18000 {
+@@ -147,6 +153,37 @@
+ 			clocks = <&i2cclk>;
+ 			interrupts = <16>;
+ 
++			adv7511:adv7511@0x39{
++				compatible="adi,adv7511";
++				reg = <0x39>;
++				interrupts = <23>;
++				adi,input-depth = <8>;
++				adi,input-colorspace = "rgb";
++				adi,input-clock = "1x";
++				adi,clock-delay = <0x03>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++
++					/* RGB/YUV input */
++					port@0 {
++						reg = <0>;
++						adv7511_input:endpoint {
++						remote-endpoint = <&pgu_output>;
++						};
++					};
++
++					/* HDMI output */
++					port@1 {
++						reg = <1>;
++						adv7511_output: endpoint {
++							remote-endpoint = <&hdmi_connector_in>;
++						};
++					};
++				};
++			};
++
+ 			eeprom@0x54{
+ 				compatible = "24c01";
+ 				reg = <0x54>;
+@@ -160,6 +197,16 @@
+ 			};
+ 		};
+ 
++		hdmi0: connector {
++			compatible = "hdmi-connector";
++			type = "a";
++			port {
++				hdmi_connector_in: endpoint {
++					remote-endpoint = <&adv7511_output>;
++				};
++			};
++		};
++
+ 		gpio0:gpio@13000 {
+ 			compatible = "snps,dw-apb-gpio";
+ 			reg = <0x13000 0x1000>;
+@@ -221,5 +268,19 @@
+ 				reg = <2>;
+ 			};
+ 		};
++
++		pgu@0x17000 {
++			compatible = "snps,arcpgu";
++			reg = <0x17000 0x400>;
++			encoder-slave = <&adv7511>;
++			clocks = <&pguclk>;
++			clock-names = "pxlclk";
++
++			port {
++				pgu_output: endpoint {
++					remote-endpoint = <&adv7511_input>;
++				};
++			};
++		};
+ 	};
+ };
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
