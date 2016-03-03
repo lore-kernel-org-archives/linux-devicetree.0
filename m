@@ -1,49 +1,51 @@
-From: Eric Auger <eric.auger@linaro.org>
-Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Fri, 4 Mar 2016 00:14:01 +0100
-Message-ID: <56D8C539.9000203@linaro.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
- <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] serial: fsl-imx-uart: Fix typo in fsl,dte-mode
+ description
+Date: Thu, 3 Mar 2016 17:38:49 -0600
+Message-ID: <20160303233849.GA14288@rob-hp-laptop>
+References: <1454701462-4859-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D7323B.4040100@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1454701462-4859-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
-On 03/02/2016 07:34 PM, Sinan Kaya wrote:
-> On 2/26/2016 12:15 PM, Eric Auger wrote:
->>> -module_init(reset ## _module_init);				\
->>>> +#define module_vfio_reset_handler(compat, acpihid, reset)		\
->>>> +MODULE_ALIAS("vfio-reset:" compat);					\
->> Here you need to handle alias for hid case I think
+On Fri, Feb 05, 2016 at 05:44:22PM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 > 
-> I'm wondering what happens when Compat or ACPI string is NULL.
+> We should say "The uart works in DCE mode".
 > 
-> MODULE_ALIAS("vfio-reset:" NULL)
-> 
-> Would the kernel like it? 
+> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
 
-> 
-> I'd rather create an alias only when the string is not NULL. Given
-> this is a macro, I believe it won't work. 
+Applied, thanks.
 
-Indeed I think we should create an alias only for the supported case or
-2 aliases if both are supported.
-> 
-> Can you think of any other way in the code to create the alias?
-> 
-To be honest I did not find any elegant solution either. Personally I
-would move the MODULE_ALIAS for compat/acpihid outside of
-module_vfio_reset_handler macro, directly in the reset module. But maybe
-someone will propose a better solution?
+Rob
 
-Best Regards
-
-Eric
+> ---
+>  Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> index 35ae1fb..ed94c21 100644
+> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> @@ -9,7 +9,7 @@ Optional properties:
+>  - fsl,uart-has-rtscts : Indicate the uart has rts and cts
+>  - fsl,irda-mode : Indicate the uart supports irda mode
+>  - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+> -                  is DCE mode by default.
+> +                  in DCE mode by default.
+>  
+>  Note: Each uart controller should have an alias correctly numbered
+>  in "aliases" node.
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
