@@ -1,39 +1,54 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH 0/3] pinmux support for Broadcom NS2 SoC
-Date: Thu,  3 Mar 2016 06:41:40 -0500
-Message-ID: <1457005303-26829-1-git-send-email-yendapally.reddy@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 05/17] dt-bindings: Add PLX Technology RPS Timer bindings
+Date: Thu,  3 Mar 2016 12:39:58 +0100
+Message-ID: <1457005210-18485-6-git-send-email-narmstrong@baylibre.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset contains the pinmux support for the Broadcom's
-Northstar 2 (NS2) SoC.
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/timer/plxtech,rps-timer.txt     | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/plxtech,rps-timer.txt
 
-The first patch provides the documentation details and the
-second patch contains the driver details. The third patch contains
-the enable method.
-
-This patchset has been tested on NS2 bcm958712K board.
-This patchset is based on v4.5.0-rc3 and is available from github
-repo: https://github.com/Broadcom/arm64-linux.git
-branch: ns2-pinmux-v1
-
-Yendapally Reddy Dhananjaya Reddy (3):
-  pinctrl: Broadcom Northstar2 pinctrl device tree bindings
-  pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC
-  ARM: dts: enable pinctrl for Broadcom NS2 SoC
-
- .../bindings/pinctrl/brcm,ns2-pinmux.txt           |  102 ++
- arch/arm64/boot/dts/broadcom/ns2-svk.dts           |    9 +
- arch/arm64/boot/dts/broadcom/ns2.dtsi              |    7 +
- drivers/pinctrl/bcm/Kconfig                        |   13 +
- drivers/pinctrl/bcm/Makefile                       |    1 +
- drivers/pinctrl/bcm/pinctrl-ns2-mux.c              | 1122 ++++++++++++++++++++
- 6 files changed, 1254 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/brcm,ns2-pinmux.txt
- create mode 100644 drivers/pinctrl/bcm/pinctrl-ns2-mux.c
-
+diff --git a/Documentation/devicetree/bindings/timer/plxtech,rps-timer.txt b/Documentation/devicetree/bindings/timer/plxtech,rps-timer.txt
+new file mode 100644
+index 0000000..bc7cb33
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/plxtech,rps-timer.txt
+@@ -0,0 +1,17 @@
++PLX Technology OXNAS SoCs Family RPS Timer
++==========================================
++
++Required properties:
++- compatible: Should be "plxtech,nas782x-rps-timer"
++- reg : Specifies base physical address and size of the registers.
++- interrupts : The interrupt of the first timer
++- clocks : The phandle of the timer clock source
++
++example:
++
++timer0: timer@200 {
++	compatible = "plxtech,nas782x-rps-timer";
++	reg = <0x200 0x40>;
++	clocks = <&rpsclk>;
++	interrupts = <4 5>;
++};
 -- 
-2.1.0
+1.9.1
