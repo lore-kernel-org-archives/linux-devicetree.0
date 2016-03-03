@@ -1,109 +1,100 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: [PATCH v4 14/18] of/unittest: convert to use an explicit i2c mux core
-Date: Thu,  3 Mar 2016 23:27:26 +0100
-Message-ID: <1457044050-15230-15-git-send-email-peda@lysator.liu.se>
-References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457044050-15230-1-git-send-email-peda@lysator.liu.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Adriana Reus <adriana.reus@intel.com>, Viorel Suman <viorel.suman@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Terry Heo <terryheo@google.com>, Hans Verkuil <hans.verkuil@cisco.com>, Arnd Bergmann <arnd@arndb.de>, Tommi Rantala <tt.rantala@gmail.com>, linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+From: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB
+ property
+Date: Thu, 03 Mar 2016 23:30:53 +0100
+Message-ID: <56D8BB1D.6040108@maciej.szmigiero.name>
+References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com> <1456999276-6315-4-git-send-email-peter.chen@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456999276-6315-4-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+Hi Peter,
 
-Allocate an explicit i2c mux core to handle parent and child adapters
-etc. Update the select op to be in terms of the i2c mux core instead
-of the child adapter.
+On 03.03.2016 11:01, Peter Chen wrote:
+> From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> The current dts describes USB HUB's property at USB controller's
+> entry, it is improper. The USB HUB should be the child node
+> under USB controller.
+> 
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/of/unittest.c | 40 +++++++++++++++-------------------------
- 1 file changed, 15 insertions(+), 25 deletions(-)
+Thanks for patches!
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 979b6e415cea..a6dc4b18047e 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1687,13 +1687,7 @@ static struct i2c_driver unittest_i2c_dev_driver = {
+VID:PID for hub on UDOO board is 0424:2514.
+
+I've tested these patches on this board and was able to make USB work
+again with following DT changes:
+diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+index d3e54e4..4956de7 100644
+--- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+@@ -9,6 +9,8 @@
+  *
+  */
  
- #if IS_BUILTIN(CONFIG_I2C_MUX)
++#include <dt-bindings/gpio/gpio.h>
++
+ / {
+ 	chosen {
+ 		stdout-path = &uart2;
+@@ -18,21 +27,11 @@
+ 		reg = <0x10000000 0x40000000>;
+ 	};
  
--struct unittest_i2c_mux_data {
--	int nchans;
--	struct i2c_adapter *adap[];
--};
+-	regulators {
+-		compatible = "simple-bus";
+-		#address-cells = <1>;
+-		#size-cells = <0>;
 -
--static int unittest_i2c_mux_select_chan(struct i2c_adapter *adap,
--			       void *client, u32 chan)
-+static int unittest_i2c_mux_select_chan(struct i2c_mux_core *muxc, u32 chan)
- {
- 	return 0;
- }
-@@ -1701,11 +1695,11 @@ static int unittest_i2c_mux_select_chan(struct i2c_adapter *adap,
- static int unittest_i2c_mux_probe(struct i2c_client *client,
- 		const struct i2c_device_id *id)
- {
--	int ret, i, nchans, size;
-+	int ret, i, nchans;
- 	struct device *dev = &client->dev;
- 	struct i2c_adapter *adap = to_i2c_adapter(dev->parent);
- 	struct device_node *np = client->dev.of_node, *child;
--	struct unittest_i2c_mux_data *stm;
-+	struct i2c_mux_core *muxc;
- 	u32 reg, max_reg;
+-		reg_usb_h1_vbus: regulator@0 {
+-			compatible = "regulator-fixed";
+-			reg = <0>;
+-			regulator-name = "usb_h1_vbus";
+-			regulator-min-microvolt = <5000000>;
+-			regulator-max-microvolt = <5000000>;
+-			enable-active-high;
+-			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
+-			gpio = <&gpio7 12 0>;
+-		};
++	usb2415_pwrseq: usb2415_pwrseq {
++		compatible = "usb-pwrseq";
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
++		reset-duration-us = <3000>;
+ 	};
  
- 	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
-@@ -1729,25 +1723,23 @@ static int unittest_i2c_mux_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	size = offsetof(struct unittest_i2c_mux_data, adap[nchans]);
--	stm = devm_kzalloc(dev, size, GFP_KERNEL);
--	if (!stm) {
--		dev_err(dev, "Out of memory\n");
-+	muxc = i2c_mux_alloc(adap, dev, 0, 0,
-+			     unittest_i2c_mux_select_chan, NULL);
-+	if (!muxc)
- 		return -ENOMEM;
--	}
--	stm->nchans = nchans;
-+	ret = i2c_mux_reserve_adapters(muxc, nchans);
-+	if (ret)
-+		return ret;
- 	for (i = 0; i < nchans; i++) {
--		stm->adap[i] = i2c_add_mux_adapter(adap, dev, client,
--				0, i, 0, unittest_i2c_mux_select_chan, NULL);
--		if (!stm->adap[i]) {
-+		ret = i2c_mux_add_adapter(muxc, 0, i, 0);
-+		if (ret) {
- 			dev_err(dev, "Failed to register mux #%d\n", i);
--			for (i--; i >= 0; i--)
--				i2c_del_mux_adapter(stm->adap[i]);
-+			i2c_mux_del_adapters(muxc);
- 			return -ENODEV;
- 		}
- 	}
- 
--	i2c_set_clientdata(client, stm);
-+	i2c_set_clientdata(client, muxc);
- 
- 	return 0;
+ 	sound {
+@@ -163,9 +218,16 @@
+ &usbh1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usbh>;
+-	vbus-supply = <&reg_usb_h1_vbus>;
+-	clocks = <&clks 201>;
+ 	status = "okay";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	hub: usb2415@01 {
++		compatible = "usb424,2514";
++		reg = <1>;
++		usb-pwrseq = <&usb2415_pwrseq>;
++	};
  };
-@@ -1756,12 +1748,10 @@ static int unittest_i2c_mux_remove(struct i2c_client *client)
- {
- 	struct device *dev = &client->dev;
- 	struct device_node *np = client->dev.of_node;
--	struct unittest_i2c_mux_data *stm = i2c_get_clientdata(client);
--	int i;
-+	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
  
- 	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
--	for (i = stm->nchans - 1; i >= 0; i--)
--		i2c_del_mux_adapter(stm->adap[i]);
-+	i2c_mux_del_adapters(muxc);
- 	return 0;
- }
- 
--- 
-2.1.4
+ &usdhc3 {
+
+
+Maciej
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
