@@ -1,55 +1,76 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] rtc: add driver for RX6110SA real time clock
-Date: Thu, 3 Mar 2016 13:57:38 +0100
-Message-ID: <20160303125738.GD2567@piout.net>
-References: <1451927075-8656-1-git-send-email-s.trumtrar@pengutronix.de>
- <1451927075-8656-2-git-send-email-s.trumtrar@pengutronix.de>
- <20160131115457.GL20165@piout.net>
- <20160131140418.GD11885@pengutronix.de>
- <6c5c65d7-2cee-4e3f-a91c-c9fbd4c006c7@googlegroups.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 14/17] arm: boot: dts: Add PLX Technology OX810SE dtsi
+Date: Thu, 3 Mar 2016 14:39:02 +0100
+Message-ID: <56D83E76.3020705@baylibre.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+ <1457005210-18485-15-git-send-email-narmstrong@baylibre.com>
+ <2983013.zAxmIfv4bz@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6c5c65d7-2cee-4e3f-a91c-c9fbd4c006c7-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <2983013.zAxmIfv4bz@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cvs268-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: rtc-linux <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03/03/2016 01:15 PM, Arnd Bergmann wrote:
+> On Thursday 03 March 2016 12:40:07 Neil Armstrong wrote:
+>> +
+>> +	aliases {
+>> +		serial0 = &uart0;
+>> +		serial1 = &uart1;
+>> +		serial2 = &uart2;
+>> +		serial3 = &uart3;
+>> +		gpio0 = &gpio0;
+>> +		gpio1 = &gpio1;
+>> +	};
+>>
+> Please put the aliases in the per-board file and list only the
+> devices that are actually connected (in case of uart)
+Done.
 
-On 03/03/2016 at 03:58:45 -0800, cvs268-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote :
->  
 > 
-> > > > If the need ever arises to also support the I2C variant, this driver 
-> > > > could easily be refactored to support both cases. 
-> >
-> I will soon be getting an embedded board with this RX6110 RTC on it 
-> connected via I2C.
-> So i would like to take-up the task of adding I2C support in a few weeks.
+>> +			uart0: uart@200000 {
 > 
-> A quick search shows drivers/rtc/rtc-rx4581.c was similarly written based 
-> on drivers/rtc/rtc-rx8581.c
+> Make this serial@200000, to follow the standard naming convention
+Done.
+
 > 
-> Q. Should i proceed to create drivers/rtc/rtc-rx6110-i2c.c or whats the 
-> recommended approach?
-> I did not find any RTC driver that supports both i2c and spi (eg. depending 
-> upon some config option)
+>> +
+>> +				reset: reset-controller {
+>> +					compatible = "plxtech,nas782x-reset";
+>> +					#reset-cells = <1>;
+>> +				};
+>> +
+>> +				stdclk: stdclk {
+>> +					compatible = "plxtech,ox810se-stdclk", "plxtech,nas782x-stdclk";
+>> +					#clock-cells = <1>;
+>> +				};
+>> +			};
+> 
+> Please change the compatible strings to have no 'x' wildcards in them, but
+> instead use a specific model.
+Ok, I switched to only oxsemi,ox810se-* strings.
+> 
+> Regarding the vendor prefixes, my understanding is that "ox810se" was the name
+> of the chip from Oxford Semiconductor, while nas7820 is a product name from
+> PLX. I think it would be logical to use "oxford" as the vendor prefix
+> for anything with a ox810se or ox820 ID in it rather than plxtech.
+Ok, I switched to oxsemi but keeped plxtech and added oxsemi in the vendor prefixes.
+
+> 
+> Note that both of them are now historic, as PLX itself got bought by
+> Avago and they seem to be discontinuing both the PLX and Oxfor brand
+> names.
+Yes, it's kind of a mess. The ox820 has been rebranded to plx7821, but not the ox810...
+> 
+> 	Arnd
 > 
 
-You can have a look at sound/soc/codecs/wm8750.c which register one
-driver for both i2c and spi. It is simple enough and you should be able
-to do the same.
-
-Obviously, a new category will be needed in the Kconfig to handle RTC
-that are both spi and i2c with the same part number.
-
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Thanks,
+Neil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
