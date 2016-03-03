@@ -1,119 +1,36 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH V3 1/4] net-next: mediatek: document MediaTek SoC ethernet
- binding
-Date: Thu,  3 Mar 2016 21:02:38 +0100
-Message-ID: <1457035361-57669-2-git-send-email-blogic@openwrt.org>
-References: <1457035361-57669-1-git-send-email-blogic@openwrt.org>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] bmips: add device tree example for BCM6358
+Date: Thu, 3 Mar 2016 12:07:32 -0800
+Message-ID: <56D89984.8020805@gmail.com>
+References: <1456054881-26787-2-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1457035361-57669-1-git-send-email-blogic@openwrt.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: devicetree@vger.kernel.org, Felix Fietkau <nbd@openwrt.org>, =?UTF-8?q?Steven=20Liu=20=28=E5=8A=89=E4=BA=BA=E8=B1=AA=29?= <steven.liu@mediatek.com>, netdev@vger.kernel.org, =?UTF-8?q?Carlos=20Huang=20=28=E9=BB=83=E5=A3=AB=E5=BD=B0=29?= <Carlos.Huang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Michael Lee <igvtee@gmail.com>, linux-arm-kernel@lists.infradead.org, John Crispin <blogic@openwrt.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456054881-26787-2-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding documentation for the MediaTek Ethernet
-controller.
+On 21/02/16 03:41, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> This adds a device tree example for SFR Neufbox4 (Sercomm version), w=
+hich
+> also serves as a real example for brcm,bcm6358-leds.
+>=20
+> Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+[snip]
+> +		periph_intc: periph_intc@fffe000c {
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/net/mediatek-net.txt       |   77 ++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mediatek-net.txt
+Other examples are not doing this, but this should be: periph_intc:
+interrupt-controller@fffe000c to follow the ePAPR recommendations on
+naming nodes by function types.
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-new file mode 100644
-index 0000000..5ca7929
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -0,0 +1,77 @@
-+MediaTek Frame Engine Ethernet controller
-+=========================================
-+
-+The frame engine ethernet controller can be found on MediaTek SoCs. These SoCs
-+have dual GMAC each represented by a child node..
-+
-+* Ethernet controller node
-+
-+Required properties:
-+- compatible: Should be "mediatek,mt7623-eth"
-+- reg: Address and length of the register set for the device
-+- interrupts: Should contain the frame engines interrupt
-+- clocks: the clock used by the core
-+- clock-names: the names of the clock listed in the clocks property. These are
-+	"ethif", "esw", "gp2", "gp1"
-+- power-domains: phandle to the power domain that the ethernet is part of
-+- resets: Should contain a phandle to the ethsys reset signal
-+- reset-names: Should contain the reset signal name "eth"
-+- mediatek,ethsys: phandle to the syscon node that handles the port setup
-+- mediatek,pctl: phandle to the syscon node that handles the ports slew rate
-+	and driver current
-+
-+Optional properties:
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+
-+
-+* Ethernet MAC node
-+
-+Required properties:
-+- compatible: Should be "mediatek,eth-mac"
-+- reg: The number of the MAC
-+- phy-handle: see ethernet.txt file in the same directory.
-+
-+Example:
-+
-+eth: ethernet@1b100000 {
-+	compatible = "mediatek,mt7623-eth";
-+	reg = <0 0x1b100000 0 0x20000>;
-+	clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+		 <&ethsys CLK_ETHSYS_ESW>,
-+		 <&ethsys CLK_ETHSYS_GP2>,
-+		 <&ethsys CLK_ETHSYS_GP1>;
-+	clock-names = "ethif", "esw", "gp2", "gp1";
-+	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
-+	reset-names = "eth";
-+	mediatek,ethsys = <&ethsys>;
-+	mediatek,pctl = <&syscfg_pctl_a>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	gmac1: mac@0 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <0>;
-+		phy-handle = <&phy0>;
-+	};
-+
-+	gmac2: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-handle = <&phy1>;
-+	};
-+
-+	mdio-bus {
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+			phy-mode = "rgmii";
-+		};
-+
-+		phy1: ethernet-phy@1 {
-+			reg = <1>;
-+			phy-mode = "rgmii";
-+		};
-+	};
-+};
--- 
-1.7.10.4
+Everything else looks good, thanks!
+--=20
+=46lorian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
