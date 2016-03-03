@@ -1,368 +1,143 @@
-From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 1/3] usb: core: add power sequence for USB devices
-Date: Thu, 3 Mar 2016 18:01:14 +0800
-Message-ID: <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
-References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 1/3] phy: rcar-gen3-usb2: remove unnecesary struct rcar_gen3_data
+Date: Thu, 3 Mar 2016 19:09:04 +0900
+Message-ID: <1456999746-2800-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1456999746-2800-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456999276-6315-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1456999746-2800-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Some hard-wired USB devices need to do power sequence to let the
-device work normally, the typical power sequence like: enable USB
-PHY clock, toggle reset pin, etc. But current Linux USB driver
-lacks of such code to do it, it may cause some hard-wired USB devices
-works abnormal or can't be recognized by controller at all.
+Since this driver uses the struct rcar_gen3_data in struct rcar_gen3_chan
+only, we can remove the rcar_gen3_data.
 
-In this patch, it will do power on sequence at hub's probe for all
-devices under this hub (includes root hub) if this device is described
-at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
-it will do power off sequence.
-
-Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- .../devicetree/bindings/usb/usb-device.txt         |  41 +++++-
- drivers/usb/core/Makefile                          |   2 +-
- drivers/usb/core/hub.c                             |  32 +++++
- drivers/usb/core/pwrseq.c                          | 149 +++++++++++++++++++++
- include/linux/usb/of.h                             |  10 ++
- 5 files changed, 232 insertions(+), 2 deletions(-)
- create mode 100644 drivers/usb/core/pwrseq.c
+ drivers/phy/phy-rcar-gen3-usb2.c | 33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-index 1c35e7b..c7a298c 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -13,8 +13,37 @@ Required properties:
- - reg: the port number which this device is connecting to, the range
-   is 1-31.
+diff --git a/drivers/phy/phy-rcar-gen3-usb2.c b/drivers/phy/phy-rcar-gen3-usb2.c
+index 257be74..3c647cd 100644
+--- a/drivers/phy/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/phy-rcar-gen3-usb2.c
+@@ -74,20 +74,15 @@
+ #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+ #define USB2_ADPCTRL_DRVVBUS		BIT(4)
  
-+Optional properties:
-+- usb-pwrseq: the power sequence handler which need to do before this USB
-+  device can work.
-+- clocks: the input clock for USB device.
-+- clock-frequency: the frequency for device's clock.
-+- reset-gpios: Should specify the GPIO for reset.
-+- reset-duration-us: the duration in microsecond for assert reset signal.
-+
- Example:
+-struct rcar_gen3_data {
+-	void __iomem *base;
+-	struct clk *clk;
+-};
+-
+ struct rcar_gen3_chan {
+-	struct rcar_gen3_data usb2;
++	void __iomem *base;
+ 	struct phy *phy;
+ 	bool has_otg;
+ };
  
-+/ {
-+	...
-+
-+	hub_genesys_1_pwrseq: hub_genesys_1_pwrseq {
-+		compatible = "usb-pwrseq";
-+		reset-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>; /* hub reset pin */
-+		reset-duration-us = <10>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+	};
-+
-+	ethernet_asix_2_pwrseq: ethernet_asix_2_pwrseq {
-+		compatible = "usb-pwrseq";
-+		reset-gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>; /* ethernet_rst */
-+		reset-duration-us = <20>;
-+		clock-frequency = <24000000>;
-+		clocks = <&clks IMX6QDL_CLK_CKO1>;
-+	};
-+
-+	...
-+};
-+
- &usb1 {
- 	status = "okay";
- 
-@@ -24,5 +53,15 @@ Example:
- 	hub: genesys@1 {
- 		compatible = "usb5e3,608";
- 		reg = <1>;
-+		usb-pwrseq = <&hub_genesys_1_pwrseq>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethernet: asix@1 {
-+			compatible = "usbb95,1708";
-+			reg = <1>;
-+			usb-pwrseq = <&ethernet_asix_1_pwrseq>;
-+		};
- 	};
--}
-+};
-diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-index 9780877..9cdc548 100644
---- a/drivers/usb/core/Makefile
-+++ b/drivers/usb/core/Makefile
-@@ -5,7 +5,7 @@
- usbcore-y := usb.o hub.o hcd.o urb.o message.o driver.o
- usbcore-y += config.o file.o buffer.o sysfs.o endpoint.o
- usbcore-y += devio.o notify.o generic.o quirks.o devices.o
--usbcore-y += port.o of.o
-+usbcore-y += port.o of.o pwrseq.o
- 
- usbcore-$(CONFIG_PCI)		+= hcd-pci.o
- usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 0f82db4..0091428 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -26,6 +26,8 @@
- #include <linux/mutex.h>
- #include <linux/random.h>
- #include <linux/pm_qos.h>
-+#include <linux/of.h>
-+#include <linux/usb/of.h>
- 
- #include <asm/uaccess.h>
- #include <asm/byteorder.h>
-@@ -1680,6 +1682,27 @@ static void hub_release(struct kref *kref)
- 	kfree(hub);
- }
- 
-+static int hub_of_pwrseq(struct usb_device *hdev, bool on)
-+{
-+	struct device *parent;
-+	struct device_node *node;
-+	int ret = 0;
-+
-+	if (hdev->parent)
-+		parent = &hdev->dev;
-+	else
-+		parent = bus_to_hcd(hdev->bus)->self.controller;
-+
-+	for_each_child_of_node(parent->of_node, node) {
-+		ret = on ? usb_child_pwrseq_on(node)
-+			: usb_child_pwrseq_off(node);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static unsigned highspeed_hubs;
- 
- static void hub_disconnect(struct usb_interface *intf)
-@@ -1722,6 +1745,10 @@ static void hub_disconnect(struct usb_interface *intf)
- 	kfree(hub->buffer);
- 
- 	pm_suspend_ignore_children(&intf->dev, false);
-+
-+	if (hub_of_pwrseq(hdev, false))
-+		dev_err(&hdev->dev, "failed to do power operations off\n");
-+
- 	kref_put(&hub->kref, hub_release);
- }
- 
-@@ -1731,6 +1758,7 @@ static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)
- 	struct usb_endpoint_descriptor *endpoint;
- 	struct usb_device *hdev;
- 	struct usb_hub *hub;
-+	int ret;
- 
- 	desc = intf->cur_altsetting;
- 	hdev = interface_to_usbdev(intf);
-@@ -1850,6 +1878,10 @@ descriptor_error:
- 	if (id->driver_info & HUB_QUIRK_CHECK_PORT_AUTOSUSPEND)
- 		hub->quirk_check_port_auto_suspend = 1;
- 
-+	ret = hub_of_pwrseq(hdev, true);
-+	if (ret)
-+		dev_err(&hdev->dev, "failed to do power operations on\n");
-+
- 	if (hub_configure(hub, endpoint) >= 0)
- 		return 0;
- 
-diff --git a/drivers/usb/core/pwrseq.c b/drivers/usb/core/pwrseq.c
-new file mode 100644
-index 0000000..eeb231d
---- /dev/null
-+++ b/drivers/usb/core/pwrseq.c
-@@ -0,0 +1,149 @@
-+/*
-+ * pwrseq.c	USB device power sequence management
-+ *
-+ * Copyright (C) 2016 Freescale Semiconductor, Inc.
-+ * Author: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-+ *
-+ * This program is free software: you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2  of
-+ * the License as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
-+
-+struct usb_pwrseq_data {
-+	struct clk *clk;
-+};
-+
-+static int  __usb_child_pwrseq_on(struct device *dev)
-+{
-+	struct usb_pwrseq_data *pwrseq;
-+	int ret = -EINVAL;
-+	struct gpio_desc *gpiod_reset = NULL;
-+	struct device_node *node = dev->of_node;
-+	u32 duration_us = 50, clk_rate = 0;
-+
-+	pwrseq = devm_kzalloc(dev, sizeof(*pwrseq), GFP_KERNEL);
-+	if (!pwrseq)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, pwrseq);
-+
-+	pwrseq->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pwrseq->clk)) {
-+		dev_dbg(dev, "Can't get clock: %ld\n",
-+			PTR_ERR(pwrseq->clk));
-+		pwrseq->clk = NULL;
-+	} else {
-+		ret = clk_prepare_enable(pwrseq->clk);
-+		if (ret) {
-+			dev_err(dev,
-+				"Can't enable external clock: %d\n",
-+				ret);
-+			return ret;
-+		}
-+
-+		of_property_read_u32(node, "clock-frequency", &clk_rate);
-+		if (clk_rate) {
-+			ret = clk_set_rate(pwrseq->clk, clk_rate);
-+			if (ret) {
-+				dev_err(dev, "Error setting clock rate\n");
-+				goto disable_clk;
-+			}
-+		}
-+	}
-+
-+	gpiod_reset = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-+	ret = PTR_ERR_OR_ZERO(gpiod_reset);
-+	if (ret) {
-+		dev_err(dev, "Failed to get reset gpio, err = %d\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	of_property_read_u32(node, "reset-duration-us", &duration_us);
-+
-+	if (gpiod_reset) {
-+		gpiod_direction_output(gpiod_reset, 1);
-+
-+		gpiod_set_value(gpiod_reset, 1);
-+		usleep_range(duration_us, duration_us + 10);
-+		gpiod_set_value(gpiod_reset, 0);
-+	}
-+
-+	return ret;
-+
-+disable_clk:
-+	clk_disable_unprepare(pwrseq->clk);
-+	return ret;
-+}
-+
-+static struct device *usb_get_pwrseq_device(struct device_node *node)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	int ret;
-+
-+	np = of_parse_phandle(node, "usb-pwrseq", 0);
-+	if (!np)
-+		return ERR_PTR(-ENOENT);
-+
-+	pdev = of_find_device_by_node(np);
-+	if (!pdev) {
-+		ret = -ENODEV;
-+		goto err;
-+	}
-+
-+	return &pdev->dev;
-+err:
-+	of_node_put(np);
-+	return ERR_PTR(ret);
-+}
-+
-+int usb_child_pwrseq_on(struct device_node *node)
-+{
-+	struct device *dev;
-+
-+	dev = usb_get_pwrseq_device(node);
-+	if (dev == ERR_PTR(-ENOENT))
-+		return 0;
-+	else if (IS_ERR(dev))
-+		return PTR_ERR(dev);
-+
-+	return __usb_child_pwrseq_on(dev);
-+}
-+
-+int usb_child_pwrseq_off(struct device_node *node)
-+{
-+	struct device *dev;
-+	struct usb_pwrseq_data *pwrseq;
-+
-+	dev = usb_get_pwrseq_device(node);
-+	if (dev == ERR_PTR(-ENOENT))
-+		return 0;
-+	else if (IS_ERR(dev))
-+		return PTR_ERR(dev);
-+
-+	pwrseq = dev_get_drvdata(dev);
-+	clk_disable_unprepare(pwrseq->clk);
-+
-+	return 0;
-+}
-diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-index de3237f..1adf065 100644
---- a/include/linux/usb/of.h
-+++ b/include/linux/usb/of.h
-@@ -18,6 +18,8 @@ int of_usb_update_otg_caps(struct device_node *np,
- 			struct usb_otg_caps *otg_caps);
- struct device_node *usb_of_get_child_node(struct device_node *parent,
- 			int portnum);
-+int usb_child_pwrseq_on(struct device_node *node);
-+int usb_child_pwrseq_off(struct device_node *node);
- #else
- static inline enum usb_dr_mode
- of_usb_get_dr_mode_by_phy(struct device_node *phy_np)
-@@ -38,6 +40,14 @@ static inline struct device_node *usb_of_get_child_node
+ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
  {
- 	return NULL;
- }
-+static inline int usb_child_pwrseq_on(struct device_node *node)
-+{
-+	return 0;
-+}
-+static inline int usb_child_pwrseq_off(struct device_node *node)
-+{
-+	return 0;
-+}
- #endif
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_COMMCTRL);
  
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_USB_SUPPORT)
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, host);
+@@ -100,7 +95,7 @@ static void rcar_gen3_set_host_mode(struct rcar_gen3_chan *ch, int host)
+ 
+ static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_LINECTRL1);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d, %d\n", __func__, val, dp, dm);
+@@ -114,7 +109,7 @@ static void rcar_gen3_set_linectrl(struct rcar_gen3_chan *ch, int dp, int dm)
+ 
+ static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val = readl(usb2_base + USB2_ADPCTRL);
+ 
+ 	dev_vdbg(&ch->phy->dev, "%s: %08x, %d\n", __func__, val, vbus);
+@@ -141,13 +136,13 @@ static void rcar_gen3_init_for_peri(struct rcar_gen3_chan *ch)
+ 
+ static bool rcar_gen3_check_vbus(struct rcar_gen3_chan *ch)
+ {
+-	return !!(readl(ch->usb2.base + USB2_ADPCTRL) &
++	return !!(readl(ch->base + USB2_ADPCTRL) &
+ 		  USB2_ADPCTRL_OTGSESSVLD);
+ }
+ 
+ static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
+ {
+-	return !!(readl(ch->usb2.base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
++	return !!(readl(ch->base + USB2_ADPCTRL) & USB2_ADPCTRL_IDDIG);
+ }
+ 
+ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+@@ -166,7 +161,7 @@ static void rcar_gen3_device_recognition(struct rcar_gen3_chan *ch)
+ 
+ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ {
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_VBCTRL);
+@@ -187,7 +182,7 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ static int rcar_gen3_phy_usb2_init(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+-	void __iomem *usb2_base = channel->usb2.base;
++	void __iomem *usb2_base = channel->base;
+ 
+ 	/* Initialize USB2 part */
+ 	writel(USB2_INT_ENABLE_INIT, usb2_base + USB2_INT_ENABLE);
+@@ -205,7 +200,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+ 
+-	writel(0, channel->usb2.base + USB2_INT_ENABLE);
++	writel(0, channel->base + USB2_INT_ENABLE);
+ 
+ 	return 0;
+ }
+@@ -213,7 +208,7 @@ static int rcar_gen3_phy_usb2_exit(struct phy *p)
+ static int rcar_gen3_phy_usb2_power_on(struct phy *p)
+ {
+ 	struct rcar_gen3_chan *channel = phy_get_drvdata(p);
+-	void __iomem *usb2_base = channel->usb2.base;
++	void __iomem *usb2_base = channel->base;
+ 	u32 val;
+ 
+ 	val = readl(usb2_base + USB2_USBCTR);
+@@ -235,7 +230,7 @@ static struct phy_ops rcar_gen3_phy_usb2_ops = {
+ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+ {
+ 	struct rcar_gen3_chan *ch = _ch;
+-	void __iomem *usb2_base = ch->usb2.base;
++	void __iomem *usb2_base = ch->base;
+ 	u32 status = readl(usb2_base + USB2_OBINTSTA);
+ 	irqreturn_t ret = IRQ_NONE;
+ 
+@@ -274,9 +269,9 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	channel->usb2.base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(channel->usb2.base))
+-		return PTR_ERR(channel->usb2.base);
++	channel->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(channel->base))
++		return PTR_ERR(channel->base);
+ 
+ 	/* call request_irq for OTG */
+ 	irq = platform_get_irq(pdev, 0);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
