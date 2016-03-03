@@ -1,50 +1,50 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V14 0/9] dma: add Qualcomm Technologies HIDMA driver
-Date: Thu, 3 Mar 2016 10:22:33 -0500
-Message-ID: <56D856B9.4070301@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <56D07B71.4080209@codeaurora.org> <56D082D7.1050002@codeaurora.org>
- <56D733BA.6030203@codeaurora.org> <20160303034451.GH11154@localhost>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 10/11] ARM: DRA7: hwmod: Add data for
+ McASP1/2/4/5/6/7/8
+Date: Thu, 3 Mar 2016 15:38:28 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1603031532130.32459@utopia.booyaka.com>
+References: <1456411827-23962-1-git-send-email-peter.ujfalusi@ti.com> <1456411827-23962-11-git-send-email-peter.ujfalusi@ti.com> <alpine.DEB.2.02.1603010900590.14948@utopia.booyaka.com> <56D5C6B1.6040005@ti.com> <alpine.DEB.2.02.1603011657260.14948@utopia.booyaka.com>
+ <56D81C49.6030706@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160303034451.GH11154@localhost>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Timur Tabi <timur@codeaurora.org>, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: MULTIPART/MIXED; BOUNDARY="843723315-953007988-1457019508=:32459"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D81C49.6030706-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/2/2016 10:44 PM, Vinod Koul wrote:
-> On Wed, Mar 02, 2016 at 01:40:58PM -0500, Sinan Kaya wrote:
->> On 2/26/2016 11:52 AM, Timur Tabi wrote:
->>> Sinan Kaya wrote:
->>>> Hi Marc Zyngier, Mark Rutland;
->>>>
->>>> I'm looking forward to hear your feedback on this series.
->>>
->>> Would it be possible to get this patchset into 4.6?  We're already at v14, and there have been no review comments since this patch was posted on the fourth (over three weeks ago).
->>
->> Vinod?
->>
->> I have my DT ACK from Rob Herring as you initially asked. I responded to 
->> Mark Rutland and Marc Zyngier's comments by improving the cover letter 
->> and adding IOMMU binding. 
->>
->> I pinged both Mark and Marc twice with no response.
->>
->> I don't know what else it takes besides waiting.
-> 
-> I did check first couple of patches last week, things seemed fine to me.
-> I will do details review in next couple of days and decide.
-> 
-> At least I will merge dmaengine patches for this cycle if all is good.
-> 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks, let me know if you have questions. The VFIO patches (8/9) need to 
-be submitted separately anyhow. I have some follow up work on them too. 
+--843723315-953007988-1457019508=:32459
+Content-Type: TEXT/PLAIN; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+Hi P=C3=A9ter,
+
+On Thu, 3 Mar 2016, Peter Ujfalusi wrote:
+
+> On 03/01/2016 07:01 PM, Paul Walmsley wrote:
+> >>> 3. Can McASP1,2,3 bus-master onto the L3?  If so, then there should b=
+e=20
+> >>> "dra7xx_mcasp1__l3_main_1"-style links to indicate this.
+> >>
+> >> I need to check this, but I don't think McASP1,2,3 can be bus-master o=
+nto L3.
+> >=20
+> > OK.  When you get back, maybe doublecheck this - it looks to me from=20
+> > SPRUHZ6 that McASP1-3 have built-in DMA controllers.
+>=20
+> They are only targets on L3. Not sure about the built-in DMA controller
+
+OK thanks.  I took a closer look at SPRUHZ6E and I think I was mistaken=20
+about those blocks having DMA controllers.  So you can ignore this part
+of my comments :-)
+
+- Paul
+--843723315-953007988-1457019508=:32459--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
