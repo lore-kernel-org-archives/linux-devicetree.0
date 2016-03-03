@@ -1,43 +1,44 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] phy: rcar-gen3-usb2: add fallback binding
-Date: Thu, 3 Mar 2016 09:23:22 +0000
-Message-ID: <SG2PR06MB0919A78EC9E41C0188A4B119D8BD0@SG2PR06MB0919.apcprd06.prod.outlook.com>
-References: <1456965518-13615-1-git-send-email-horms+renesas@verge.net.au>
-	<1456965518-13615-3-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdW24p_nx19232LADRMHY8-976YX-S41zEGQhmoe+3_AxQ@mail.gmail.com>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
+Date: Thu, 3 Mar 2016 10:59:34 +0100
+Message-ID: <20160303095934.GA27379@8bytes.org>
+References: <20160229143309.28517.77269.sendpatchset@little-apple>
+ <20160302145559.GU22747@8bytes.org>
+ <CANqRtoQQzav-kweM80NnVUqtr2xxaA95XV88U1Ye7yoYHzSUsA@mail.gmail.com>
+ <20160303000539.GB23040@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdW24p_nx19232LADRMHY8-976YX-S41zEGQhmoe+3_AxQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja-JP
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160303000539.GB23040@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2ltb24tc2FuLA0KDQo+IFNlbnQ6IFRodXJzZGF5LCBNYXJjaCAwMywgMjAxNiA1OjEzIFBN
-DQo+IA0KPiBPbiBUaHUsIE1hciAzLCAyMDE2IGF0IDE6MzggQU0sIFNpbW9uIEhvcm1hbiA8aG9y
-bXMrcmVuZXNhc0B2ZXJnZS5uZXQuYXU+IHdyb3RlOg0KPiA+IEluIHRoZSBjYXNlIG9mIFJlbmVz
-YXMgUi1DYXIgaGFyZHdhcmUgd2Uga25vdyB0aGF0IHRoZXJlIGFyZSBnZW5lcmF0aW9ucyBvZg0K
-PiA+IFNvQ3MsIGUuZy4gR2VuIDIgYW5kIEdlbiAzLiBCdXQgYmV5b25kIHRoYXQgaXRzIG5vdCBj
-bGVhciB3aGF0IHRoZQ0KPiA+IHJlbGF0aW9uc2hpcCBiZXR3ZWVuIElQIGJsb2NrcyBtaWdodCBi
-ZS4gRm9yIGV4YW1wbGUsIEkgYmVsaWV2ZSB0aGF0DQo+ID4gcjhhNzc5MCBpcyBvbGRlciB0aGFu
-IHI4YTc3OTEgYnV0IHRoYXQgZG9lc24ndCBpbXBseSB0aGF0IHRoZSBsYXR0ZXIgaXMgYQ0KPiA+
-IGRlc2NlbmRhbnQgb2YgdGhlIGZvcm1lciBvciB2aWNlIHZlcnNhLg0KPiA+DQo+ID4gV2UgY2Fu
-LCBob3dldmVyLCBieSBleGFtaW5pbmcgdGhlIGRvY3VtZW50YXRpb24gYW5kIGJlaGF2aW91ciBv
-ZiB0aGUNCj4gPiBoYXJkd2FyZSBhdCBydW4tdGltZSBvYnNlcnZlIHRoYXQgdGhlIGN1cnJlbnQg
-ZHJpdmVyIGltcGxlbWVudGF0aW9uIGFwcGVhcnMNCj4gPiB0byBiZSBjb21wYXRpYmxlIHdpdGgg
-dGhlIElQIGJsb2NrcyBvbiBTb0NzIHdpdGhpbiBhIGdpdmVuIGdlbmVyYXRpb24uDQo+ID4NCj4g
-PiBGb3IgdGhlIGFib3ZlIHJlYXNvbnMgYW5kIGNvbnZlbmllbmNlIHdoZW4gZW5hYmxpbmcgbmV3
-IFNvQ3MgYQ0KPiA+IHBlci1nZW5lcmF0aW9uIGZhbGxiYWNrIGNvbXBhdGliaWxpdHkgc3RyaW5n
-IHNjaGVtZSBiZWluZyBhZG9wdGVkIGZvcg0KPiA+IGRyaXZlcnMgZm9yIFJlbmVzYXMgU29Dcy4N
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFNpbW9uIEhvcm1hbiA8aG9ybXMrcmVuZXNhc0B2ZXJn
-ZS5uZXQuYXU+DQo+IA0KPiBBY2tlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5l
-c2FzQGdsaWRlci5iZT4NCg0KQWNrZWQtYnk6IFlvc2hpaGlybyBTaGltb2RhIDx5b3NoaWhpcm8u
-c2hpbW9kYS51aEByZW5lc2FzLmNvbT4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJvIFNoaW1v
-ZGENCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Mar 03, 2016 at 09:05:39AM +0900, Simon Horman wrote:
+> On Thu, Mar 03, 2016 at 12:46:30AM +0900, Magnus Damm wrote:
+> > On Wed, Mar 2, 2016 at 11:55 PM, Joerg Roedel <joro@8bytes.org> wrote:
+> > > On Mon, Feb 29, 2016 at 11:33:09PM +0900, Magnus Damm wrote:
+> > >> From: Magnus Damm <damm+renesas@opensource.se>
+> > >>
+> > >> Update the IPMMU DT binding documentation to include the r8a7795 compat
+> > >> string as well as the "renesas,ipmmu-main" property that on r8a7795 will
+> > >> be used to describe the topology and the relationship between the various
+> > >> cache IPMMU instances and the main IPMMU.
+> > >>
+> > >> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> > >> ---
+> > >>
+> > >>  Written against linux-next tag next-20160229
+> > >>
+> > >>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++++++--
+> > >>  1 file changed, 13 insertions(+), 2 deletions(-)
+> > >
+> > > Through which tree should this go?
+> > 
+> > Unless anyone objects may I suggest going through your tree please!
+> 
+> FWIW that would be my preferred option.
+
+Okay, applied.
