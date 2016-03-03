@@ -1,43 +1,38 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 03/17] dt-bindings: Add PLX Technology RPS IRQ Controller bindings
-Date: Thu,  3 Mar 2016 12:39:56 +0100
-Message-ID: <1457005210-18485-4-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 01/17] dt-bindings: vendor-prefixes: Add PLX Technology
+Date: Thu,  3 Mar 2016 12:39:54 +0100
+Message-ID: <1457005210-18485-2-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../bindings/interrupt-controller/plxtech,rps-irq.txt   | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt
+Add PLX Technology vendor prefix.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt
-new file mode 100644
-index 0000000..db117a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt
-@@ -0,0 +1,17 @@
-+PLX Technology OXNAS SoCs Family RPS Interrupt Controller
-+=========================================================
-+
-+Required properties:
-+- compatible: Should be "plxtech,nas782x-rps"
-+- reg : Specifies base physical address and size of the registers.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Should be 1
-+
-+example:
-+
-+intc: interrupt-controller@0 {
-+	compatible = "plxtech,nas782x-rps";
-+	interrupt-controller;
-+	reg = <0 0x200>;
-+	#interrupt-cells = <1>;
-+};
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 72e2c5a..03970fb 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -178,6 +178,7 @@ picochip	Picochip Ltd
+ plathome	Plat'Home Co., Ltd.
+ plda	PLDA
+ pixcir  PIXCIR MICROELECTRONICS Co., Ltd
++plxtech	PLX Technology, Inc.
+ pulsedlight	PulsedLight, Inc
+ powervr	PowerVR (deprecated, use img)
+ qca	Qualcomm Atheros, Inc.
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
