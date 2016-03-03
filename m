@@ -1,94 +1,43 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v9 3/3] add support for DWC UFS Host Controller
-Date: Thu, 3 Mar 2016 11:39:05 +0000
-Message-ID: <56D82259.3020907@synopsys.com>
-References: <cover.1455549221.git.jpinto@synopsys.com>
- <2698029.eKNCoG3LWy@wuerfel> <56D718F7.9060200@synopsys.com>
- <5606371.ipFvUUmgV9@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 03/17] dt-bindings: Add PLX Technology RPS IRQ Controller bindings
+Date: Thu,  3 Mar 2016 12:39:56 +0100
+Message-ID: <1457005210-18485-4-git-send-email-narmstrong@baylibre.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5606371.ipFvUUmgV9@wuerfel>
+In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, mark.rutland@arm.com, robh@kernel.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/interrupt-controller/plxtech,rps-irq.txt   | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt
 
-On 3/2/2016 7:55 PM, Arnd Bergmann wrote:
-> On Wednesday 02 March 2016 16:46:47 Joao Pinto wrote:
->> On 2/19/2016 3:03 PM, Arnd Bergmann wrote:
->>> On Thursday 18 February 2016 17:20:27 Joao Pinto wrote:
-
-Facts:
-
-- Test Chip type are currently not detectable in runtime through the controller
-- In the future the Test Chip version will be available in the controller
-- Test Chip initialization is different for each type
-- The IP Core version is 1.40a
-- Test Chip version is 6.00
-- Teh UFS version is 2.0
-
-Suggested driver architecture:
-
-Platform setup:
- tc-dwc-g210-pltfrm --> tc-dwc-g210 --> ufshcd-dwc-pltfrm --> ufshcd-dwc --> ufs
-
-The test chip platform driver could be called through 2 compatibility strings.
-indicating the chip's version and bit type:
- "snps, g210-tc-6.00-20bit"
- "snps, g210-tc-6.00-40bit"
-
-The device tree node would have additional info compatibility strings as the DWC
-IP core version and UFS version:
- "snps, dwc-ufshcd-1.40a"
- "jedec, ufs-2.0"
-
-PCI based setup:
- tc-dwc-g210-pci --> tc-dwc-g210 --> ufshcd-dwc-pci --> ufshcd-dwc --> ufs
-
-The test chip type would be configured by a parameter to be passed in the kernel
-boot args: tc_type = 20 (20-bit) or tc_type = 40 (40-bit)
-
-Having this in mind the KConfig would be:
-
-"config SCSI_UFS_DWC_HOOKS
-	bool
-
-config SCSI_UFS_DWC_PLAT
-	tristate "DesignWare UFS controller platform glue driver"
-	depends on SCSI_UFSHCD_PLATFORM
-	select SCSI_UFS_DWC_HOOKS
-	help
-	  This selects the DesignWare UFS host controller platform glue driver.
-
-	  Select this if you have a DesignWare UFS controller on Platform bus.
-	  If unsure, say N.
-
-config SCSI_UFS_DWC_PCI
-	tristate "DesignWare UFS controller pci glue driver"
-	depends on SCSI_UFSHCD_PCI
-	select SCSI_UFS_DWC_HOOKS
-	help
-	  This selects the DesignWare UFS host controller pci glue driver.
-
-	  Select this if you have a DesignWare UFS controller on pci bus.
-	  If unsure, say N.
-
-config SCSI_UFS_DWC_TC
-	bool "Support for the Synopsys Test Chip"
-	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
-	---help---
-	  Synopsys Test Chip is a Phy for prototyping purposes.
-	  This selects the support for the Synopsys Test Chip.
-
-	  Select this if you have a Synopsys Test Chip.
-	  If unsure, say N."
-
-Agree with the approach?
-
-Thanks for the help.
-
-Joao
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt
+new file mode 100644
+index 0000000..db117a0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/plxtech,rps-irq.txt
+@@ -0,0 +1,17 @@
++PLX Technology OXNAS SoCs Family RPS Interrupt Controller
++=========================================================
++
++Required properties:
++- compatible: Should be "plxtech,nas782x-rps"
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Should be 1
++
++example:
++
++intc: interrupt-controller@0 {
++	compatible = "plxtech,nas782x-rps";
++	interrupt-controller;
++	reg = <0 0x200>;
++	#interrupt-cells = <1>;
++};
+-- 
+1.9.1
