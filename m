@@ -1,84 +1,66 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: [PATCH 2/4 v2] drm: Add DT bindings documentation for ARC PGU display
- controller
-Date: Thu,  3 Mar 2016 17:39:14 +0300
-Message-ID: <1457015956-30708-3-git-send-email-abrodkin@synopsys.com>
-References: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/3] usb: chipidea: host: let the hcd know's parent
+ device node
+Date: Thu, 3 Mar 2016 15:42:47 +0100
+Message-ID: <20160303144247.GH15541@lunn.ch>
+References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
+ <1456999276-6315-3-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456999276-6315-3-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This add DT bindings documentation for ARC PGU display controller.
+On Thu, Mar 03, 2016 at 06:01:15PM +0800, Peter Chen wrote:
+> From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Since the hcd (chipidea core device) has no device node, so
+> if we want to describe the child node under the hcd, we had
+> to put it under its parent's node (glue layer device), and
+> in the code, we need to let the hcd knows glue layer's code,
+> then the USB core can handle this node.
+> 
+> Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/host.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> index 053bac9..55120ef 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
+>  	struct ehci_hcd *ehci;
+>  	struct ehci_ci_priv *priv;
+>  	int ret;
+> +	struct device *dev = ci->dev;
+>  
+> -	if (usb_disabled())
+> +	if (usb_disabled() || !dev)
+>  		return -ENODEV;
+>  
+> -	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
+> +	/*
+> +	 * USB Core will try to get child node under roothub,
+> +	 * but chipidea core has no of_node, and the child node
+> +	 * for controller is located at glue layer's node which
+> +	 * is chipidea core's parent.
+> +	 */
+> +	if (dev->parent && dev->parent->of_node)
+> +		dev->of_node = dev->parent->of_node;
 
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-snps-arc@lists.infradead.org
----
+Is this a good idea? Two devices with the same of_node?
 
-Changes v1 -> v2:
- * Clean-up
+I know the networking code assumes of_node values are unique, and uses
+it to find a device. Are you 100% sure the USB code does not make this
+assumption.
 
- .../devicetree/bindings/display/snps,arcpgu.txt    | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
-
-diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
-new file mode 100644
-index 0000000..57f3bc8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
-@@ -0,0 +1,33 @@
-+ARC PGU
-+
-+This is a display controller found on several development boards produced
-+by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
-+framebuffer and sends it to a single digital encoder (usually HDMI).
-+
-+Required properties:
-+  - compatible: "snps,arcpgu"
-+  - reg: Physical base address and length of the controller's registers.
-+  - clocks: A list of phandle + clock-specifier pairs, one for each
-+    entry in 'clock-names'.
-+  - clock-names: A list of clock names. For ARC PGU it should contain:
-+      - "pxlclk" for the clock feeding the output PLL of the controller.
-+
-+Required sub-nodes:
-+  - port: The PGU connection to an encoder chip. The connection is modelled
-+    using the OF graph bindings specified in
-+    Documentation/devicetree/bindings/graph.txt.
-+
-+Example:
-+
-+/ {
-+	...
-+
-+	pgu@XXXXXXXX {
-+		compatible = "snps,arcpgu";
-+		reg = <0xXXXXXXXX 0x400>;
-+		clocks = <&clock_node>;
-+		clock-names = "pxlclk";
-+	};
-+
-+	...
-+};
--- 
-2.5.0
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
