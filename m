@@ -1,41 +1,92 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch
- driver
-Date: Wed, 02 Mar 2016 19:55:28 -0800
-Message-ID: <1456977328.4044.99.camel@perches.com>
-References: <1456972150-32303-1-git-send-email-jeffrey.lin@rad-ic.com>
-	 <1456973050.4044.81.camel@perches.com>
-	 <9BE4B49389AB2F41A64A32DFC844F1DF73EF8627@RADHCMS5.corp.rad-ic.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] mtd: denali: fix property name for Denali DT binding
+Date: Thu, 3 Mar 2016 12:56:59 +0900
+Message-ID: <CAK7LNAT4qvp0DcevLXtGyGUn2kDjHWOH42Yn5yR9xGZkJ8Qdvw@mail.gmail.com>
+References: <1454916702-20982-1-git-send-email-yamada.masahiro@socionext.com>
+	<5298318.0qJ9fLYbSx@wuerfel>
+	<CAK7LNAS2r=_RL6dmj1xhCzGtvMP=emC=_bW4Ot5SMe6ij-WpBQ@mail.gmail.com>
+	<20160208213757.GA3223@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9BE4B49389AB2F41A64A32DFC844F1DF73EF8627@RADHCMS5.corp.rad-ic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffrey Lin =?UTF-8?Q?=28=E6=9E=97=E7=BE=A9=E7=AB=A0=29?= <Jeffrey.Lin@rad-ic.com>, "jeffrey.lin" <yajohn@gmail.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>
-Cc: Roger Yang =?UTF-8?Q?=28=E6=A5=8A=E9=8E=AE=E7=91=8B=29?= <Roger.Yang@rad-ic.com>, KP Li =?UTF-8?Q?=28=E6=9D=8E=E6=98=86=E5=80=8D=29?= <KP.Li@rad-ic.com>, Albert Shieh =?UTF-8?Q?=28=E8=AC=9D=E6=AC=A3=E7=91=8B=29?= <Albert.Shieh@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160208213757.GA3223@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-03-03 at 03:14 +0000, Jeffrey Lin (=E6=9E=97=E7=BE=A9=E7=AB=
-=A0) wrote:
-> Hi Joe:
-> Thank you for your response. I'll follow your comments in next versio=
-n.
+Hi Rob,
 
-OK, btw: the below looks very odd
 
-> > +static int raydium_i2c_send_message(struct i2c_client *client,
-> > +	size_t len, void *data)
-> > +{
-> > +	int error;
-> > +	u8 buf[HEADER_SIZE], ii;
-> > +
-> > +	for (ii =3D 0; ii < HEADER_SIZE; ii++)
-> > +		buf[ii] =3D ((u8 *)data)[3 - ii];
+2016-02-09 6:37 GMT+09:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> On Mon, Feb 08, 2016 at 05:41:33PM +0900, Masahiro Yamada wrote:
+>> Hi Arnd,
+>>
+>>
+>> 2016-02-08 17:29 GMT+09:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+>> > On Monday 08 February 2016 16:31:42 Masahiro Yamada wrote:
+>> >> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> >> index b04d03a..785b825 100644
+>> >> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> >> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> >> @@ -5,7 +5,7 @@ Required properties:
+>> >>    - reg : should contain registers location and length for data and reg.
+>> >>    - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+>> >>    - interrupts : The interrupt number.
+>> >> -  - dm-mask : DMA bit mask
+>> >> +  - dma-mask : DMA bit mask
+>> >>
+>> >>  The device tree may optionally contain sub-nodes describing partitions of the
+>> >>  address space. See partition.txt for more detail.
+>> >>
+>> >
+>> > It looks like this binding is wrong in multiple ways, and it doesn't seem to
+>> > be used in any .dts files. Is this actually being shipped anywhere or
+>> > could we try to fix the binding properly?
+>> >
+>>
+>> Looks like it is locally used in Altera's Rocketboard tree now.
+>>
+>> See this:
+>>
+>> https://github.com/altera-opensource/linux-socfpga/blob/socfpga-4.3/arch/arm/boot/dts/socfpga.dtsi
+>>
+>>
+>> I hope Dinh can comment on the status.
+>
+> From the looks of it, this property should be dropped and the driver
+> should be updated to not touch dev->dma_mask. The core sets it up
+> correctly now.
 
-It intermixes a #define of 4 with a hard declaration of 3
-to reverse copy a byte array of length HEADER_SIZE.
 
-Maybe use:
-	for (ii =3D 0; ii < HEADER_SIZE; ii++)
-		buf[ii] =3D ((u8 *)data)[HEADER_SIZE - 1 - ii]
+I am still a newbie as for DMA.
+Could you help me to understand what we should do and/or what we should not do
+for the DMA mask.
+
+
+Documentation/DMA-API-HOWTO.txt says as follows:
+
+-------------------->8-----------------------
+For correct operation, you must interrogate the kernel in your device
+probe routine to see if the DMA controller on the machine can properly
+support the DMA addressing limitation your device has.  It is good
+style to do this even if your device holds the default setting,
+because this shows that you did think about these issues wrt. your
+device.
+--------------------<8----------------------
+
+
+>From your statement, low-level drivers should no longer touch dma-mask
+(i.e., the quoted paragraph above no longer applies to the latest
+driver implementation),
+is this correct?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
