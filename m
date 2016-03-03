@@ -1,54 +1,47 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/unittest: fix infinite loop in
- of_unittest_destroy_tracked_overlays()
-Date: Thu, 3 Mar 2016 16:53:23 -0600
-Message-ID: <20160303225323.GB17541@rob-hp-laptop>
-References: <1456917889-4416-1-git-send-email-sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH] of: add 'const' for of_property_*_string*() parameter
+ '*np'
+Date: Thu, 3 Mar 2016 16:53:59 -0600
+Message-ID: <20160303225359.GC17541@rob-hp-laptop>
+References: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
+ <CAL_JsqJgOa7wzYCrQFwko-HXQVTkWf+=rwGkimS1n6qucH=jbw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456917889-4416-1-git-send-email-sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAL_JsqJgOa7wzYCrQFwko-HXQVTkWf+=rwGkimS1n6qucH=jbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Petr Mladek <pmladek-IBi9RG/b67k@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergey Senozhatsky <sergey.senozhatsky.work-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: "David Rivshin (Allworx)" <drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 02, 2016 at 08:24:49PM +0900, Sergey Senozhatsky wrote:
-> of_overlay_destroy() can return `-ENODEV' error code once it
-> failed to find the requested overlay in `ov_idr'. However,
-> of_unittest_destroy_tracked_overlays() does not handle this
-> error code correctly and continues to call of_overlay_destroy()
-> on the 'missing' overlay over and over again. This results in
-> a printk flood
+On Thu, Mar 03, 2016 at 07:52:51AM -0600, Rob Herring wrote:
+> On Wed, Mar 2, 2016 at 3:35 PM, David Rivshin (Allworx)
+> <drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+> >
+> > The of_property_{read,count,match}_string* family of functions never
+> > modify the struct device_node pointer that is passed in, so there is no
+> > reason for it to be non-const. Equivalent functions for all other types
+> > already take a 'const struct device_node *np'.
+> >
+> > Signed-off-by: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+> > ---
+> >
+> > MAINTAINTERS says that the appropriate tree is
+> >     git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
 > 
-> [..]
-> [   33.497583] of_overlay_destroy: Could not find overlay #6
-> [   33.497583] of_overlay_destroy: Could not find overlay #6
-> [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [   33.497586] of_overlay_destroy: Could not find overlay #6
-> [   33.497586] of_overlay_destroy: Could not find overlay #6
-> [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
-> [..]
+> Yes, we probably need to update that.
 > 
-> which is not really good due to printk design, and can lead to soft
-> lockups, hard lockups, etc. (depending on the context console_unlock()
-> is being called from). The problem has bee observed in real life
-> and reported by Ying Huang.
+> > but it looks like that hasn't been updated in a while. So this patch
+> > is based off the "for-next" branch of
+> >     git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> > instead. Let me know if you need me to respin from another tree/branch.
 > 
-> This patch does not address the root cause of missing overlay in
-> `ov_idr', it fixes the endless loop only.
-> 
-> Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reported-by: kernel test robot <ying.huang-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Link: lkml.kernel.org/r/87fuwk1c0o.fsf-5/hDr2MS57EDqwDYnZuMFFaTQe2KTcn/@public.gmane.org
-> ---
->  drivers/of/unittest.c | 5 +++++
->  1 file changed, 5 insertions(+)
+> You should base off of Linus' tree unless you have some dependency. I
+> doubt it matters in this case, so no need to resend.
 
-Applied, thanks.
+And now applied.
 
 Rob
 --
