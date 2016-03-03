@@ -1,80 +1,48 @@
-From: =?utf-8?B?SmVmZnJleSBMaW4gKOael+e+qeeroCk=?=
-	<Jeffrey.Lin@rad-ic.com>
-Subject: RE: [PATCH] driver: input :touchscreen : add Raydium I2C touch
- driver
-Date: Thu, 3 Mar 2016 03:14:42 +0000
-Message-ID: <9BE4B49389AB2F41A64A32DFC844F1DF73EF8627@RADHCMS5.corp.rad-ic.com>
-References: <1456972150-32303-1-git-send-email-jeffrey.lin@rad-ic.com>
- <1456973050.4044.81.camel@perches.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V14 0/9] dma: add Qualcomm Technologies HIDMA driver
+Date: Thu, 3 Mar 2016 09:14:52 +0530
+Message-ID: <20160303034451.GH11154@localhost>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <56D07B71.4080209@codeaurora.org>
+ <56D082D7.1050002@codeaurora.org>
+ <56D733BA.6030203@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1456973050.4044.81.camel@perches.com>
-Content-Language: zh-TW
-Sender: linux-input-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>, "jeffrey.lin" <yajohn@gmail.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>
-Cc: =?utf-8?B?Um9nZXIgWWFuZyAo5qWK6Y6u55GLKQ==?= <Roger.Yang@rad-ic.com>, =?utf-8?B?S1AgTGkgKOadjuaYhuWAjSk=?= <KP.Li@rad-ic.com>, =?utf-8?B?QWxiZXJ0IFNoaWVoICjorJ3mrKPnkYsp?= <Albert.Shieh@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56D733BA.6030203-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9lOg0KVGhhbmsgeW91IGZvciB5b3VyIHJlc3BvbnNlLiBJJ2xsIGZvbGxvdyB5b3VyIGNv
-bW1lbnRzIGluIG5leHQgdmVyc2lvbi4NCg0KQmVzdCBSZWdhcmRzDQotLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpK
-ZWZmcmV5IExpbizmnpfnvqnnq6ANCueRnum8juenkeaKgA0KUmF5ZGl1bSBTZW1pY29uZHVjdG9y
-IENvcnBvcmF0aW9uDQpUZWw6KDAzKTY2Ni0xODE4IEV4dC40MTYzDQpGYXg6KDAzKTY2Ni0xOTE5
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKb2UgUGVyY2hlcyBbbWFpbHRv
-OmpvZUBwZXJjaGVzLmNvbV0gDQpTZW50OiBUaHVyc2RheSwgTWFyY2ggMDMsIDIwMTYgMTA6NDQg
-QU0NClRvOiBqZWZmcmV5LmxpbjsgZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsgcnlkYmVyZ0Bl
-dXJvbWFpbC5zZTsgZ3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsg
-amVlc3dAbWVsZmFzLmNvbTsgYmxldW5nQGNocm9taXVtLm9yZzsgc2NvdHQubGl1QGVtYy5jb20u
-dHcNCkNjOiBKZWZmcmV5IExpbiAo5p6X576p56ugKTsgUm9nZXIgWWFuZyAo5qWK6Y6u55GLKTsg
-S1AgTGkgKOadjuaYhuWAjSk7IEFsYmVydCBTaGllaCAo6Kyd5qyj55GLKTsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVl
-QHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSF0gZHJpdmVyOiBpbnB1dCA6dG91
-Y2hzY3JlZW4gOiBhZGQgUmF5ZGl1bSBJMkMgdG91Y2ggZHJpdmVyDQoNCk9uIFRodSwgMjAxNi0w
-My0wMyBhdCAxMDoyOSArMDgwMCwgamVmZnJleS5saW4gd3JvdGU6DQo+IFRoaXMgcGF0Y2ggaXMg
-cG9ydGluZyBSYXlkaXVtIEkyQyB0b3VjaCBkcml2ZXIuIERldmVsb3BlciBjYW4gZW5hYmxlIHJh
-eWRpdW0gdG91Y2ggZHJpdmVyIGJ5IG1vZGlmeWluZyBkZWZpbmUgIkNPTkZJR19UT1VDSFNDUkVF
-Tl9STV9UUyIuDQoNCnRyaXZpYWwgY29tbWVudHM6DQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-aW5wdXQvdG91Y2hzY3JlZW4vcmF5ZGl1bV9pMmNfdHMuYyBiL2RyaXZlcnMvaW5wdXQvdG91Y2hz
-Y3JlZW4vcmF5ZGl1bV9pMmNfdHMuYw0KW10NCj4gK3N0YXRpYyBpbnQgcmF5ZGl1bV9pMmNfc2Vu
-ZChzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiArCXU4IGFkZHIsIHU4ICpkYXRhLCBzaXpl
-X3QgbGVuKQ0KPiArew0KPiArCXU4IGJ1ZltNQVhfUEFDS0VUX1NJWkUgKyAxXTsNCj4gKwlpbnQg
-aSwgdHJpZXMgPSAwOw0KPiArDQo+ICsJaWYgKGxlbiA+IE1BWF9QQUNLRVRfU0laRSkNCj4gKwkJ
-cmV0dXJuIC1FSU5WQUw7DQo+ICsNCj4gKwlidWZbMF0gPSBhZGRyICYgMHhmZjsNCg0KU2VlbXMg
-cG9pbnRsZXNzIHRvIHVzZSAmIDB4ZmYgd2hlbiBib3RoDQpidWYgYW5kIGFkZHIgYXJlIHU4DQoN
-Cj4gKwlmb3IgKGkgPSAwOyBpIDwgbGVuOyBpKyspDQo+ICsJCWJ1ZltpICsgMV0gPSAqZGF0YSsr
-Ow0KDQptZW1jcHkuIMKgTWF5YmU6DQoNCglidWZbMF0gPSBhZGRyOw0KCW1lbWNweSgmYnVmWzFd
-LCBkYXRhLCBsZW4pOw0KDQo+ICtzdGF0aWMgaW50IHJheWRpdW1faTJjX3NlbmRfbWVzc2FnZShz
-dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiArCXNpemVfdCBsZW4sIHZvaWQgKmRhdGEpDQo+
-ICt7DQo+ICsJaW50IGVycm9yOw0KPiArCXU4IGJ1ZltIRUFERVJfU0laRV0sIGlpOw0KPiArDQo+
-ICsJZm9yIChpaSA9IDA7IGlpIDwgSEVBREVSX1NJWkU7IGlpKyspDQo+ICsJCWJ1ZltpaV0gPSAo
-KHU4ICopZGF0YSlbMyAtIGlpXTsNCj4gKwkvKnNldCBkYXRhIGJhbmsqLw0KPiArCWVycm9yID0g
-cmF5ZGl1bV9pMmNfc2VuZChjbGllbnQsIENNRF9CQU5LX1NXSVRDSCwNCj4gKwkJKHU4ICopYnVm
-LCBIRUFERVJfU0laRSk7DQo+ICsNCj4gKwkvKnNlbmQgbWVzc2FuZ2UqLw0KDQp0eXBvLCBtZXNz
-YWdlDQoNCj4gKwlpZiAoIWVycm9yKQ0KPiArCQllcnJvciA9IHJheWRpdW1faTJjX3NlbmQoY2xp
-ZW50LCBidWZbQUREUl9JTkRFWF0sIGJ1ZiwgbGVuKTsNCj4gKw0KPiArCXJldHVybiBlcnJvcjsN
-Cj4gK30NCj4gKw0KPiArc3RhdGljIGludCByYXlkaXVtX2kyY19zd19yZXNldChzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50KQ0KPiArew0KPiArCWNvbnN0IHU4IHNvZnRfcnN0X2NtZFtdID0geyAw
-eDAxLCAweDA0LCAweDAwLCAweDAwLCAweDQwfTsNCg0Kc3RhdGljDQoNCj4gKwlpbnQgZXJyb3I7
-DQo+ICsNCj4gKwllcnJvciA9IHJheWRpdW1faTJjX3NlbmRfbWVzc2FnZShjbGllbnQsDQo+ICsJ
-CQkxLCAodm9pZCAqKXNvZnRfcnN0X2NtZCk7DQoNCmNvdWxkIGJlIGJldHRlciBvbiBhIHNpbmds
-ZSBsaW5lDQoNCj4gK3N0YXRpYyBpbnQgcmF5ZGl1bV9pMmNfZmFzdGJvb3Qoc3RydWN0IGkyY19j
-bGllbnQgKmNsaWVudCkNCj4gK3sNCj4gKwljb25zdCB1OCBib290X2NtZFtdID0geyAweDIwLCAw
-eDA2LCAweDAwLCAweDUwIH07DQo+ICsJdTggYnVmW0hFQURFUl9TSVpFXTsNCj4gKwlpbnQgZXJy
-b3I7DQo+ICsNCj4gKwllcnJvciA9IHJheWRpdW1faTJjX3JlYWRfbWVzc2FnZShjbGllbnQsDQo+
-ICsJCWdldF91bmFsaWduZWRfYmUzMihib290X2NtZCksDQo+ICsJCXNpemVvZihib290X2NtZCks
-DQo+ICsJCWJ1Zik7DQo+ICsNCj4gKwlpZiAoZXJyb3IpIHsNCj4gKwkJZGV2X2VycigmY2xpZW50
-LT5kZXYsICJib290IGZhaWxlZDogJWRcbiIsIGVycm9yKTsNCj4gKwkJcmV0dXJuIGVycm9yOw0K
-PiArCX0gZWxzZSBpZiAoYnVmWzBdID09IFJNX0JPT1RfQkxEUikgew0KDQp1bm5lY2Vzc2FyeSBl
-bHNlDQoNCj4gKwkJZGV2X2RiZygmY2xpZW50LT5kZXYsICJib290IGluIGZhc3Rib290IG1vZGVc
-biIpOw0KPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gKwl9DQo+ICsNCj4gKwlkZXZfZGJnKCZjbGll
-bnQtPmRldiwgImJvb3Qgc3VjY2VzcyAtLSAweCV4XG4iLCBjbGllbnQtPmFkZHIpOw0KPiArCXJl
-dHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IHJheWRpdW1faTJjX2luaXRpYWxpemUo
-c3RydWN0IHJheWRpdW1fZGF0YSAqdHMpDQo+ICt7DQo+ICsJc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCA9IHRzLT5jbGllbnQ7DQo+ICsJaW50IGVycm9yLCByZXRyeV9jbnQ7DQo+ICsJY29uc3Qg
-dTggcmVjb3ZfcGFja2V0W10gPSB7IDB4MDQsIDB4ODEgfTsNCg0Kc3RhdGljIGFuZCBldGMuLi4N
-Cg0KZ2VuZXJhbGx5LCBpdCdkIGJlIG5pY2UgdG8gYWxpZ24gdG8gb3BlbiBwYXJlbnRoZXNpcyBh
-bmQNCnRvIG1vcmUgbWF4aW1hbGx5IGZpbGwgbGluZXMgdG8gODAgY2hhcnMgaW5zdGVhZCBvZiB1
-c2luZw0KcmVsYXRpdmVseSBzaG9ydCBsaW5lIGxlbmd0aHMgYW5kIG11bHRpcGxlIGxpbmUgc3Rh
-dGVtZW50cy4NCg==
+On Wed, Mar 02, 2016 at 01:40:58PM -0500, Sinan Kaya wrote:
+> On 2/26/2016 11:52 AM, Timur Tabi wrote:
+> > Sinan Kaya wrote:
+> >> Hi Marc Zyngier, Mark Rutland;
+> >>
+> >> I'm looking forward to hear your feedback on this series.
+> > 
+> > Would it be possible to get this patchset into 4.6?  We're already at v14, and there have been no review comments since this patch was posted on the fourth (over three weeks ago).
+> 
+> Vinod?
+> 
+> I have my DT ACK from Rob Herring as you initially asked. I responded to 
+> Mark Rutland and Marc Zyngier's comments by improving the cover letter 
+> and adding IOMMU binding. 
+> 
+> I pinged both Mark and Marc twice with no response.
+> 
+> I don't know what else it takes besides waiting.
+
+I did check first couple of patches last week, things seemed fine to me.
+I will do details review in next couple of days and decide.
+
+At least I will merge dmaengine patches for this cycle if all is good.
+
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
