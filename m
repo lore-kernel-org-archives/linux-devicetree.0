@@ -1,46 +1,37 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] Documentation: dt: mailbox: Add TI Message Manager
-Date: Thu, 3 Mar 2016 15:09:47 -0600
-Message-ID: <20160303210947.GA9057@rob-hp-laptop>
-References: <1456525452-30638-1-git-send-email-nm@ti.com>
- <1456525452-30638-2-git-send-email-nm@ti.com>
+Subject: Re: [PATCH v3 1/2] dt/bindings: Add bindings for PIC32 watchdog peripheral
+Date: Thu, 3 Mar 2016 15:15:35 -0600
+Message-ID: <CAL_JsqL7Ez9uXFU1+9pRmpmXihffHyXFHMccJ3Zj9oTy9jQLVQ@mail.gmail.com>
+References: <1456507177-5502-1-git-send-email-joshua.henderson@microchip.com> <20160303210712.GA7692@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456525452-30638-2-git-send-email-nm-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, fcooper-l0cyMroinI0@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160303210712.GA7692@rob-hp-laptop>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 26, 2016 at 04:24:11PM -0600, Nishanth Menon wrote:
-> Message Manager is a hardware block used to communicate with various
-> processor systems within certain Texas Instrument's Keystone
-> generation SoCs.
-> 
-> This hardware engine is used to transfer messages from various compute
-> entities(or processors) within the SoC. It is designed to be self
-> contained without needing software initialization for operation.
-> 
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
-> Changes in V2: major refactor of binding - Thanks for all the review from Rob and Jassi
-> 	- Generic compatible property is dropped
-> 	- no more child nodes, instead interrupt information is provided as part
-> 	  of the the message manager node it self - part of data moved into
-> 	  driver based on compatible property.
-> 	- mbox-cells is 2 (passes queue_id and proxy_id) -added elaboration as well
-> 	- change in interrupt names
-> 
-> V1: https://patchwork.kernel.org/patch/8237111/
-> 
->  .../bindings/mailbox/ti,message-manager.txt        | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
+On Thu, Mar 3, 2016 at 3:07 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Feb 26, 2016 at 10:19:27AM -0700, Joshua Henderson wrote:
+>> Document the devicetree bindings for the watchdog peripheral found on
+>> Microchip PIC32 SoC class devices.
+>>
+>> Signed-off-by: Joshua Henderson <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>> Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+>> ---
+>> Note: Please merge this patch series through the MIPS tree.
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+My mail to Joshua bounced, so I wouldn't merge until that is sorted:
+
+<joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>: host mx.microchip.com[198.175.253.14] said:
+    550 Mailbox unavailable or access denied - <joshua.henderson-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+    (in reply to RCPT TO command)
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
