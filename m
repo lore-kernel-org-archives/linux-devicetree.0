@@ -1,40 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
-Date: Thu, 3 Mar 2016 09:05:39 +0900
-Message-ID: <20160303000539.GB23040@verge.net.au>
-References: <20160229143309.28517.77269.sendpatchset@little-apple>
- <20160302145559.GU22747@8bytes.org>
- <CANqRtoQQzav-kweM80NnVUqtr2xxaA95XV88U1Ye7yoYHzSUsA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2 0/2] phy: rcar-gen2, rcar-gen3-usb2: add fallback binding
+Date: Thu,  3 Mar 2016 09:38:36 +0900
+Message-ID: <1456965518-13615-1-git-send-email-horms+renesas@verge.net.au>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANqRtoQQzav-kweM80NnVUqtr2xxaA95XV88U1Ye7yoYHzSUsA@mail.gmail.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Joerg Roedel <joro@8bytes.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 03, 2016 at 12:46:30AM +0900, Magnus Damm wrote:
-> On Wed, Mar 2, 2016 at 11:55 PM, Joerg Roedel <joro@8bytes.org> wrote:
-> > On Mon, Feb 29, 2016 at 11:33:09PM +0900, Magnus Damm wrote:
-> >> From: Magnus Damm <damm+renesas@opensource.se>
-> >>
-> >> Update the IPMMU DT binding documentation to include the r8a7795 compat
-> >> string as well as the "renesas,ipmmu-main" property that on r8a7795 will
-> >> be used to describe the topology and the relationship between the various
-> >> cache IPMMU instances and the main IPMMU.
-> >>
-> >> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> >> ---
-> >>
-> >>  Written against linux-next tag next-20160229
-> >>
-> >>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++++++--
-> >>  1 file changed, 13 insertions(+), 2 deletions(-)
-> >
-> > Through which tree should this go?
-> 
-> Unless anyone objects may I suggest going through your tree please!
+Add fallback compatibility strings for rcar phy drivers.
 
-FWIW that would be my preferred option.
+In the case of Renesas R-Car hardware we know that there are generations of
+SoCs, e.g. Gen 2 and Gen 3. But beyond that its not clear what the
+relationship between IP blocks might be. For example, I believe that
+r8a7790 is older than r8a7791 but that doesn't imply that the latter is a
+descendant of the former or vice versa.
+
+We can, however, by examining the documentation and behaviour of the
+hardware at run-time observe that the current driver implementation appears
+to be compatible with the IP blocks on SoCs within a given generation.
+
+For the above reasons and convenience when enabling new SoCs a
+per-generation fallback compatibility string scheme being adopted for
+drivers for Renesas SoCs.
+
+Changes since v1:
+* Update new compatibility strings to match the preferred scheme for
+  ordering elements
+* Rebase
+
+Based on linux-phy/next
+
+Simon Horman (2):
+  phy: rcar-gen2: add fallback binding
+  phy: rcar-gen3-usb2: add fallback binding
+
+ Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt      |  8 +++++++-
+ Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt | 10 ++++++++--
+ drivers/phy/phy-rcar-gen2.c                                  |  1 +
+ drivers/phy/phy-rcar-gen3-usb2.c                             |  1 +
+ 4 files changed, 17 insertions(+), 3 deletions(-)
+
+-- 
+2.1.4
