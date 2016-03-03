@@ -1,63 +1,94 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 10/11] ARM: DRA7: hwmod: Add data for McASP1/2/4/5/6/7/8
-Date: Thu, 3 Mar 2016 13:13:13 +0200
-Message-ID: <56D81C49.6030706@ti.com>
-References: <1456411827-23962-1-git-send-email-peter.ujfalusi@ti.com>
- <1456411827-23962-11-git-send-email-peter.ujfalusi@ti.com>
- <alpine.DEB.2.02.1603010900590.14948@utopia.booyaka.com>
- <56D5C6B1.6040005@ti.com>
- <alpine.DEB.2.02.1603011657260.14948@utopia.booyaka.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v9 3/3] add support for DWC UFS Host Controller
+Date: Thu, 3 Mar 2016 11:39:05 +0000
+Message-ID: <56D82259.3020907@synopsys.com>
+References: <cover.1455549221.git.jpinto@synopsys.com>
+ <2698029.eKNCoG3LWy@wuerfel> <56D718F7.9060200@synopsys.com>
+ <5606371.ipFvUUmgV9@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1603011657260.14948@utopia.booyaka.com>
+In-Reply-To: <5606371.ipFvUUmgV9@wuerfel>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: Tony Lindgren <tony@atomide.com>, robh+dt@kernel.org, Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, mark.rutland@arm.com, robh@kernel.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Arnd,
 
-On 03/01/2016 07:01 PM, Paul Walmsley wrote:
->>> 2. The patch sets HWMOD_SWSUP_SIDLE for McASP1 and 2, but doesn't s=
-et it=20
->>> for McASP4-8.  Could you please confirm that this is intentional, a=
-nd if=20
->>> so, why?  The descriptions of the MODULEMODE fields in SPRUHZ6 look=
-=20
->>> identical.
->>
->> I need to confirm this, but all McASP should have the same set of fl=
-ags.
->=20
-> OK.  Looking at McASP3 data this morning, they probably shouldn't nee=
-d=20
-> HWMOD_SWSUP_SIDLE, but probably all need=20
->=20
->                         .modulemode   =3D MODULEMODE_SWCTRL,
->=20
->>> 3. Can McASP1,2,3 bus-master onto the L3?  If so, then there should=
- be=20
->>> "dra7xx_mcasp1__l3_main_1"-style links to indicate this.
->>
->> I need to check this, but I don't think McASP1,2,3 can be bus-master=
- onto L3.
->=20
-> OK.  When you get back, maybe doublecheck this - it looks to me from=20
-> SPRUHZ6 that McASP1-3 have built-in DMA controllers.
+On 3/2/2016 7:55 PM, Arnd Bergmann wrote:
+> On Wednesday 02 March 2016 16:46:47 Joao Pinto wrote:
+>> On 2/19/2016 3:03 PM, Arnd Bergmann wrote:
+>>> On Thursday 18 February 2016 17:20:27 Joao Pinto wrote:
 
-They are only targets on L3. Not sure about the built-in DMA controller
+Facts:
 
->=20
->> I can resend the series next week as I'm out of office this week.
->=20
-> That's fine.  It's most likely v4.7 material at this point.
->=20
->=20
-> - Paul
->=20
+- Test Chip type are currently not detectable in runtime through the controller
+- In the future the Test Chip version will be available in the controller
+- Test Chip initialization is different for each type
+- The IP Core version is 1.40a
+- Test Chip version is 6.00
+- Teh UFS version is 2.0
 
+Suggested driver architecture:
 
---=20
-P=C3=A9ter
+Platform setup:
+ tc-dwc-g210-pltfrm --> tc-dwc-g210 --> ufshcd-dwc-pltfrm --> ufshcd-dwc --> ufs
+
+The test chip platform driver could be called through 2 compatibility strings.
+indicating the chip's version and bit type:
+ "snps, g210-tc-6.00-20bit"
+ "snps, g210-tc-6.00-40bit"
+
+The device tree node would have additional info compatibility strings as the DWC
+IP core version and UFS version:
+ "snps, dwc-ufshcd-1.40a"
+ "jedec, ufs-2.0"
+
+PCI based setup:
+ tc-dwc-g210-pci --> tc-dwc-g210 --> ufshcd-dwc-pci --> ufshcd-dwc --> ufs
+
+The test chip type would be configured by a parameter to be passed in the kernel
+boot args: tc_type = 20 (20-bit) or tc_type = 40 (40-bit)
+
+Having this in mind the KConfig would be:
+
+"config SCSI_UFS_DWC_HOOKS
+	bool
+
+config SCSI_UFS_DWC_PLAT
+	tristate "DesignWare UFS controller platform glue driver"
+	depends on SCSI_UFSHCD_PLATFORM
+	select SCSI_UFS_DWC_HOOKS
+	help
+	  This selects the DesignWare UFS host controller platform glue driver.
+
+	  Select this if you have a DesignWare UFS controller on Platform bus.
+	  If unsure, say N.
+
+config SCSI_UFS_DWC_PCI
+	tristate "DesignWare UFS controller pci glue driver"
+	depends on SCSI_UFSHCD_PCI
+	select SCSI_UFS_DWC_HOOKS
+	help
+	  This selects the DesignWare UFS host controller pci glue driver.
+
+	  Select this if you have a DesignWare UFS controller on pci bus.
+	  If unsure, say N.
+
+config SCSI_UFS_DWC_TC
+	bool "Support for the Synopsys Test Chip"
+	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
+	---help---
+	  Synopsys Test Chip is a Phy for prototyping purposes.
+	  This selects the support for the Synopsys Test Chip.
+
+	  Select this if you have a Synopsys Test Chip.
+	  If unsure, say N."
+
+Agree with the approach?
+
+Thanks for the help.
+
+Joao
