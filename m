@@ -1,326 +1,80 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 3/6] of, numa: Add NUMA of binding implementation.
-Date: Wed, 2 Mar 2016 21:34:37 -0600
-Message-ID: <CAL_JsqLRP6tmpY7cJ61Ybrrai4ctA7ezyUGmYwdbywe+-qBG5A@mail.gmail.com>
-References: <1456959362-2036-1-git-send-email-ddaney.cavm@gmail.com> <1456959362-2036-4-git-send-email-ddaney.cavm@gmail.com>
+From: =?utf-8?B?SmVmZnJleSBMaW4gKOael+e+qeeroCk=?=
+	<Jeffrey.Lin@rad-ic.com>
+Subject: RE: [PATCH] driver: input :touchscreen : add Raydium I2C touch
+ driver
+Date: Thu, 3 Mar 2016 03:14:42 +0000
+Message-ID: <9BE4B49389AB2F41A64A32DFC844F1DF73EF8627@RADHCMS5.corp.rad-ic.com>
+References: <1456972150-32303-1-git-send-email-jeffrey.lin@rad-ic.com>
+ <1456973050.4044.81.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456959362-2036-4-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1456973050.4044.81.camel@perches.com>
+Content-Language: zh-TW
+Sender: linux-input-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>, "jeffrey.lin" <yajohn@gmail.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "rydberg@euromail.se" <rydberg@euromail.se>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jeesw@melfas.com" <jeesw@melfas.com>, "bleung@chromium.org" <bleung@chromium.org>, "scott.liu@emc.com.tw" <scott.liu@emc.com.tw>
+Cc: =?utf-8?B?Um9nZXIgWWFuZyAo5qWK6Y6u55GLKQ==?= <Roger.Yang@rad-ic.com>, =?utf-8?B?S1AgTGkgKOadjuaYhuWAjSk=?= <KP.Li@rad-ic.com>, =?utf-8?B?QWxiZXJ0IFNoaWVoICjorJ3mrKPnkYsp?= <Albert.Shieh@rad-ic.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 2, 2016 at 4:55 PM, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->
-> Add device tree parsing for NUMA topology using device
-> "numa-node-id" property in distance-map and cpu nodes.
->
-> This is a complete rewrite of a previous patch by:
->    Ganapatrao Kulkarni<gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->
-> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/of/Kconfig   |   3 +
->  drivers/of/Makefile  |   1 +
->  drivers/of/of_numa.c | 200 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h   |   9 +++
->  4 files changed, 213 insertions(+)
->  create mode 100644 drivers/of/of_numa.c
->
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index e2a4841..b3bec3a 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -112,4 +112,7 @@ config OF_OVERLAY
->           While this option is selected automatically when needed, you can
->           enable it manually to improve device tree unit test coverage.
->
-> +config OF_NUMA
-> +       bool
-> +
->  endif # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index 156c072..bee3fa9 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -14,5 +14,6 @@ obj-$(CONFIG_OF_MTD)  += of_mtd.o
->  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
->  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
->  obj-$(CONFIG_OF_OVERLAY) += overlay.o
-> +obj-$(CONFIG_OF_NUMA) += of_numa.o
->
->  obj-$(CONFIG_OF_UNITTEST) += unittest-data/
-> diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
-> new file mode 100644
-> index 0000000..9727b60
-> --- /dev/null
-> +++ b/drivers/of/of_numa.c
-> @@ -0,0 +1,200 @@
-> +/*
-> + * OF NUMA Parsing support.
-> + *
-> + * Copyright (C) 2015 - 2016 Cavium Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-
-This can be dropped now.
-
-> +#include <linux/nodemask.h>
-> +
-> +#include <asm/numa.h>
-> +
-> +/* define default numa node to 0 */
-> +#define DEFAULT_NODE 0
-> +
-> +/*
-> + * Even though we connect cpus to numa domains later in SMP
-> + * init, we need to know the node ids now for all cpus.
-> +*/
-> +static void __init of_find_cpu_nodes(void)
-
-Perhaps of_parse_cpu_nodes for consistency.
-
-Actually, if all the functions were prefixed with "of_numa_" that
-would be better.
-
-> +{
-> +       u32 nid;
-> +       int r;
-> +       struct device_node *np = NULL;
-> +
-> +       for (;;) {
-> +               np = of_find_node_by_type(np, "cpu");
-> +               if (!np)
-> +                       break;
-
-Can't we use the child node iterator for /cpus here?
-
-> +
-> +               r = of_property_read_u32(np, "numa-node-id", &nid);
-> +               if (r)
-> +                       continue;
-> +
-> +               pr_debug("NUMA: CPU on %u\n", nid);
-> +               if (nid >= MAX_NUMNODES)
-> +                       pr_warn("NUMA: Node id %u exceeds maximum value\n",
-> +                               nid);
-> +               else
-> +                       node_set(nid, numa_nodes_parsed);
-
-I'm not sure how this works, but don't you need to match this up with
-MPIDR of the cpu here?
-
-> +       }
-> +}
-> +
-> +static void __init of_parse_memory_nodes(void)
-> +{
-> +       struct device_node *np = NULL;
-> +       int na, ns;
-> +       const __be32 *prop;
-> +       unsigned int psize;
-> +       u32 nid;
-> +       u64 base, size;
-> +       int r;
-> +
-> +       for (;;) {
-> +               np = of_find_node_by_type(np, "memory");
-> +               if (!np)
-> +                       break;
-> +
-> +               r = of_property_read_u32(np, "numa-node-id", &nid);
-> +               if (r)
-> +                       continue;
-> +
-
-> +               prop = of_get_property(np, "reg", &psize);
-> +               if (!prop)
-> +                       continue;
-> +
-> +               psize /= sizeof(__be32);
-> +               na = of_n_addr_cells(np);
-> +               ns = of_n_size_cells(np);
-> +
-> +               if (psize < na + ns) {
-> +                       pr_err("NUMA: memory reg property too small\n");
-> +                       continue;
-> +               }
-> +               base = of_read_number(prop, na);
-> +               size = of_read_number(prop + na, ns);
-
-You should be able to use of_address_to_resource for all this.
-
-> +
-> +               pr_debug("NUMA:  base = %llx len = %llx, node = %u\n",
-> +                        base, size, nid);
-> +
-> +               if (numa_add_memblk(nid, base, size) < 0)
-> +                       break;
-> +       }
-> +
-> +       of_node_put(np);
-> +}
-> +
-> +static int __init parse_distance_map_v1(struct device_node *map)
-> +{
-> +       const __be32 *matrix;
-> +       unsigned int matrix_size;
-> +       int entry_count;
-> +       int i;
-> +       int nr_size_cells = OF_ROOT_NODE_SIZE_CELLS_DEFAULT;
-
-I believe the defaults are for some old DT files. As this is new, it
-should rely on explicit #size-cells in the DT.
-
-OTOH, what is point of using #size-cells at all versus fixing the
-sizes to 1 cell. The documentation doesn't indicate that it uses
-#size-cells. That also means that the sizes basically follow the cell
-size for the memory given that this is at the top-level.
-
-> +
-> +       pr_info("NUMA: parsing numa-distance-map-v1\n");
-> +
-> +       matrix = of_get_property(map, "distance-matrix", &matrix_size);
-> +       if (!matrix) {
-> +               pr_err("NUMA: No distance-matrix property in distance-map\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       entry_count = matrix_size / (sizeof(__be32) * 3 * nr_size_cells);
-> +
-> +       for (i = 0; i < entry_count; i++) {
-> +               u32 nodea, nodeb, distance;
-> +
-> +               nodea = of_read_number(matrix, nr_size_cells);
-> +               matrix += nr_size_cells;
-> +               nodeb = of_read_number(matrix, nr_size_cells);
-> +               matrix += nr_size_cells;
-> +               distance = of_read_number(matrix, nr_size_cells);
-> +               matrix += nr_size_cells;
-
-Assuming you fix this to 1 cell, you can use
-of_property_count_u32_elems and of_property_read_u32_array.
-
-> +
-> +               numa_set_distance(nodea, nodeb, distance);
-> +               pr_debug("NUMA:  distance[node%d -> node%d] = %d\n",
-> +                        nodea, nodeb, distance);
-> +
-> +               /* Set default distance of node B->A same as A->B */
-> +               if (nodeb > nodea)
-> +                       numa_set_distance(nodeb, nodea, distance);
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int __init of_parse_distance_map(void)
-> +{
-> +       int ret = -EINVAL;
-> +       struct device_node *np = of_find_node_by_name(NULL, "distance-map");
-> +
-> +       if (!np)
-> +               return ret;
-> +
-> +       if (of_device_is_compatible(np, "numa-distance-map-v1")) {
-
-You can use of_find_compatible_node() instead of these 2 calls.
-
-> +               ret = parse_distance_map_v1(np);
-> +               goto out;
-> +       }
-> +
-> +       pr_err("NUMA: invalid distance-map device node\n");
-> +out:
-> +       of_node_put(np);
-> +       return ret;
-> +}
-> +
-> +int of_node_to_nid(struct device_node *device)
-> +{
-> +       struct device_node *np;
-> +       u32 nid;
-> +       int r = -ENODATA;
-> +
-> +       np = of_node_get(device);
-> +
-> +       while (np) {
-> +               struct device_node *parent;
-> +
-> +               r = of_property_read_u32(np, "numa-node-id", &nid);
-> +               if (r != -EINVAL)
-
-You want to break for other err values?
-
-> +                       break;
-> +
-> +               /* property doesn't exist in this node, look in parent */
-> +               parent = of_get_parent(np);
-> +               of_node_put(np);
-> +               np = parent;
-> +       }
-> +       if (np && r)
-> +               pr_warn("NUMA: Invalid \"numa-node-id\" property in node %s\n",
-> +                       np->name);
-> +       of_node_put(np);
-> +
-> +       if (!r) {
-> +               if (nid >= MAX_NUMNODES)
-> +                       pr_warn("NUMA: Node id %u exceeds maximum value\n",
-> +                               nid);
-> +               else
-> +                       return nid;
-> +       }
-> +
-> +       return NUMA_NO_NODE;
-> +}
-
-Needs to be exported?
-
-> +
-> +int __init of_numa_init(void)
-> +{
-> +       of_find_cpu_nodes();
-> +       of_parse_memory_nodes();
-> +       return of_parse_distance_map();
-> +}
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index dc6e396..fe67a4c 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -685,6 +685,15 @@ static inline int of_node_to_nid(struct device_node *device)
->  }
->  #endif
->
-> +#ifdef CONFIG_OF_NUMA
-> +extern int of_numa_init(void);
-> +#else
-> +static inline int of_numa_init(void)
-> +{
-> +       return -ENOSYS;
-> +}
-> +#endif
-> +
->  static inline struct device_node *of_find_matching_node(
->         struct device_node *from,
->         const struct of_device_id *matches)
-> --
-> 1.8.3.1
->
+SGkgSm9lOg0KVGhhbmsgeW91IGZvciB5b3VyIHJlc3BvbnNlLiBJJ2xsIGZvbGxvdyB5b3VyIGNv
+bW1lbnRzIGluIG5leHQgdmVyc2lvbi4NCg0KQmVzdCBSZWdhcmRzDQotLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpK
+ZWZmcmV5IExpbizmnpfnvqnnq6ANCueRnum8juenkeaKgA0KUmF5ZGl1bSBTZW1pY29uZHVjdG9y
+IENvcnBvcmF0aW9uDQpUZWw6KDAzKTY2Ni0xODE4IEV4dC40MTYzDQpGYXg6KDAzKTY2Ni0xOTE5
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBKb2UgUGVyY2hlcyBbbWFpbHRv
+OmpvZUBwZXJjaGVzLmNvbV0gDQpTZW50OiBUaHVyc2RheSwgTWFyY2ggMDMsIDIwMTYgMTA6NDQg
+QU0NClRvOiBqZWZmcmV5LmxpbjsgZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbTsgcnlkYmVyZ0Bl
+dXJvbWFpbC5zZTsgZ3JhbnQubGlrZWx5QGxpbmFyby5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsg
+amVlc3dAbWVsZmFzLmNvbTsgYmxldW5nQGNocm9taXVtLm9yZzsgc2NvdHQubGl1QGVtYy5jb20u
+dHcNCkNjOiBKZWZmcmV5IExpbiAo5p6X576p56ugKTsgUm9nZXIgWWFuZyAo5qWK6Y6u55GLKTsg
+S1AgTGkgKOadjuaYhuWAjSk7IEFsYmVydCBTaGllaCAo6Kyd5qyj55GLKTsgbGludXgta2VybmVs
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtaW5wdXRAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVl
+QHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDogUmU6IFtQQVRDSF0gZHJpdmVyOiBpbnB1dCA6dG91
+Y2hzY3JlZW4gOiBhZGQgUmF5ZGl1bSBJMkMgdG91Y2ggZHJpdmVyDQoNCk9uIFRodSwgMjAxNi0w
+My0wMyBhdCAxMDoyOSArMDgwMCwgamVmZnJleS5saW4gd3JvdGU6DQo+IFRoaXMgcGF0Y2ggaXMg
+cG9ydGluZyBSYXlkaXVtIEkyQyB0b3VjaCBkcml2ZXIuIERldmVsb3BlciBjYW4gZW5hYmxlIHJh
+eWRpdW0gdG91Y2ggZHJpdmVyIGJ5IG1vZGlmeWluZyBkZWZpbmUgIkNPTkZJR19UT1VDSFNDUkVF
+Tl9STV9UUyIuDQoNCnRyaXZpYWwgY29tbWVudHM6DQoNCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+aW5wdXQvdG91Y2hzY3JlZW4vcmF5ZGl1bV9pMmNfdHMuYyBiL2RyaXZlcnMvaW5wdXQvdG91Y2hz
+Y3JlZW4vcmF5ZGl1bV9pMmNfdHMuYw0KW10NCj4gK3N0YXRpYyBpbnQgcmF5ZGl1bV9pMmNfc2Vu
+ZChzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiArCXU4IGFkZHIsIHU4ICpkYXRhLCBzaXpl
+X3QgbGVuKQ0KPiArew0KPiArCXU4IGJ1ZltNQVhfUEFDS0VUX1NJWkUgKyAxXTsNCj4gKwlpbnQg
+aSwgdHJpZXMgPSAwOw0KPiArDQo+ICsJaWYgKGxlbiA+IE1BWF9QQUNLRVRfU0laRSkNCj4gKwkJ
+cmV0dXJuIC1FSU5WQUw7DQo+ICsNCj4gKwlidWZbMF0gPSBhZGRyICYgMHhmZjsNCg0KU2VlbXMg
+cG9pbnRsZXNzIHRvIHVzZSAmIDB4ZmYgd2hlbiBib3RoDQpidWYgYW5kIGFkZHIgYXJlIHU4DQoN
+Cj4gKwlmb3IgKGkgPSAwOyBpIDwgbGVuOyBpKyspDQo+ICsJCWJ1ZltpICsgMV0gPSAqZGF0YSsr
+Ow0KDQptZW1jcHkuIMKgTWF5YmU6DQoNCglidWZbMF0gPSBhZGRyOw0KCW1lbWNweSgmYnVmWzFd
+LCBkYXRhLCBsZW4pOw0KDQo+ICtzdGF0aWMgaW50IHJheWRpdW1faTJjX3NlbmRfbWVzc2FnZShz
+dHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPiArCXNpemVfdCBsZW4sIHZvaWQgKmRhdGEpDQo+
+ICt7DQo+ICsJaW50IGVycm9yOw0KPiArCXU4IGJ1ZltIRUFERVJfU0laRV0sIGlpOw0KPiArDQo+
+ICsJZm9yIChpaSA9IDA7IGlpIDwgSEVBREVSX1NJWkU7IGlpKyspDQo+ICsJCWJ1ZltpaV0gPSAo
+KHU4ICopZGF0YSlbMyAtIGlpXTsNCj4gKwkvKnNldCBkYXRhIGJhbmsqLw0KPiArCWVycm9yID0g
+cmF5ZGl1bV9pMmNfc2VuZChjbGllbnQsIENNRF9CQU5LX1NXSVRDSCwNCj4gKwkJKHU4ICopYnVm
+LCBIRUFERVJfU0laRSk7DQo+ICsNCj4gKwkvKnNlbmQgbWVzc2FuZ2UqLw0KDQp0eXBvLCBtZXNz
+YWdlDQoNCj4gKwlpZiAoIWVycm9yKQ0KPiArCQllcnJvciA9IHJheWRpdW1faTJjX3NlbmQoY2xp
+ZW50LCBidWZbQUREUl9JTkRFWF0sIGJ1ZiwgbGVuKTsNCj4gKw0KPiArCXJldHVybiBlcnJvcjsN
+Cj4gK30NCj4gKw0KPiArc3RhdGljIGludCByYXlkaXVtX2kyY19zd19yZXNldChzdHJ1Y3QgaTJj
+X2NsaWVudCAqY2xpZW50KQ0KPiArew0KPiArCWNvbnN0IHU4IHNvZnRfcnN0X2NtZFtdID0geyAw
+eDAxLCAweDA0LCAweDAwLCAweDAwLCAweDQwfTsNCg0Kc3RhdGljDQoNCj4gKwlpbnQgZXJyb3I7
+DQo+ICsNCj4gKwllcnJvciA9IHJheWRpdW1faTJjX3NlbmRfbWVzc2FnZShjbGllbnQsDQo+ICsJ
+CQkxLCAodm9pZCAqKXNvZnRfcnN0X2NtZCk7DQoNCmNvdWxkIGJlIGJldHRlciBvbiBhIHNpbmds
+ZSBsaW5lDQoNCj4gK3N0YXRpYyBpbnQgcmF5ZGl1bV9pMmNfZmFzdGJvb3Qoc3RydWN0IGkyY19j
+bGllbnQgKmNsaWVudCkNCj4gK3sNCj4gKwljb25zdCB1OCBib290X2NtZFtdID0geyAweDIwLCAw
+eDA2LCAweDAwLCAweDUwIH07DQo+ICsJdTggYnVmW0hFQURFUl9TSVpFXTsNCj4gKwlpbnQgZXJy
+b3I7DQo+ICsNCj4gKwllcnJvciA9IHJheWRpdW1faTJjX3JlYWRfbWVzc2FnZShjbGllbnQsDQo+
+ICsJCWdldF91bmFsaWduZWRfYmUzMihib290X2NtZCksDQo+ICsJCXNpemVvZihib290X2NtZCks
+DQo+ICsJCWJ1Zik7DQo+ICsNCj4gKwlpZiAoZXJyb3IpIHsNCj4gKwkJZGV2X2VycigmY2xpZW50
+LT5kZXYsICJib290IGZhaWxlZDogJWRcbiIsIGVycm9yKTsNCj4gKwkJcmV0dXJuIGVycm9yOw0K
+PiArCX0gZWxzZSBpZiAoYnVmWzBdID09IFJNX0JPT1RfQkxEUikgew0KDQp1bm5lY2Vzc2FyeSBl
+bHNlDQoNCj4gKwkJZGV2X2RiZygmY2xpZW50LT5kZXYsICJib290IGluIGZhc3Rib290IG1vZGVc
+biIpOw0KPiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gKwl9DQo+ICsNCj4gKwlkZXZfZGJnKCZjbGll
+bnQtPmRldiwgImJvb3Qgc3VjY2VzcyAtLSAweCV4XG4iLCBjbGllbnQtPmFkZHIpOw0KPiArCXJl
+dHVybiAwOw0KPiArfQ0KPiArDQo+ICtzdGF0aWMgaW50IHJheWRpdW1faTJjX2luaXRpYWxpemUo
+c3RydWN0IHJheWRpdW1fZGF0YSAqdHMpDQo+ICt7DQo+ICsJc3RydWN0IGkyY19jbGllbnQgKmNs
+aWVudCA9IHRzLT5jbGllbnQ7DQo+ICsJaW50IGVycm9yLCByZXRyeV9jbnQ7DQo+ICsJY29uc3Qg
+dTggcmVjb3ZfcGFja2V0W10gPSB7IDB4MDQsIDB4ODEgfTsNCg0Kc3RhdGljIGFuZCBldGMuLi4N
+Cg0KZ2VuZXJhbGx5LCBpdCdkIGJlIG5pY2UgdG8gYWxpZ24gdG8gb3BlbiBwYXJlbnRoZXNpcyBh
+bmQNCnRvIG1vcmUgbWF4aW1hbGx5IGZpbGwgbGluZXMgdG8gODAgY2hhcnMgaW5zdGVhZCBvZiB1
+c2luZw0KcmVsYXRpdmVseSBzaG9ydCBsaW5lIGxlbmd0aHMgYW5kIG11bHRpcGxlIGxpbmUgc3Rh
+dGVtZW50cy4NCg==
