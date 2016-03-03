@@ -1,44 +1,76 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
-Date: Thu, 3 Mar 2016 10:59:34 +0100
-Message-ID: <20160303095934.GA27379@8bytes.org>
-References: <20160229143309.28517.77269.sendpatchset@little-apple>
- <20160302145559.GU22747@8bytes.org>
- <CANqRtoQQzav-kweM80NnVUqtr2xxaA95XV88U1Ye7yoYHzSUsA@mail.gmail.com>
- <20160303000539.GB23040@verge.net.au>
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 2/3] usb: chipidea: host: let the hcd know's parent device node
+Date: Thu, 3 Mar 2016 18:01:15 +0800
+Message-ID: <1456999276-6315-3-git-send-email-peter.chen@nxp.com>
+References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160303000539.GB23040@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456999276-6315-1-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 03, 2016 at 09:05:39AM +0900, Simon Horman wrote:
-> On Thu, Mar 03, 2016 at 12:46:30AM +0900, Magnus Damm wrote:
-> > On Wed, Mar 2, 2016 at 11:55 PM, Joerg Roedel <joro@8bytes.org> wrote:
-> > > On Mon, Feb 29, 2016 at 11:33:09PM +0900, Magnus Damm wrote:
-> > >> From: Magnus Damm <damm+renesas@opensource.se>
-> > >>
-> > >> Update the IPMMU DT binding documentation to include the r8a7795 compat
-> > >> string as well as the "renesas,ipmmu-main" property that on r8a7795 will
-> > >> be used to describe the topology and the relationship between the various
-> > >> cache IPMMU instances and the main IPMMU.
-> > >>
-> > >> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
-> > >> ---
-> > >>
-> > >>  Written against linux-next tag next-20160229
-> > >>
-> > >>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++++++--
-> > >>  1 file changed, 13 insertions(+), 2 deletions(-)
-> > >
-> > > Through which tree should this go?
-> > 
-> > Unless anyone objects may I suggest going through your tree please!
-> 
-> FWIW that would be my preferred option.
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Okay, applied.
+Since the hcd (chipidea core device) has no device node, so
+if we want to describe the child node under the hcd, we had
+to put it under its parent's node (glue layer device), and
+in the code, we need to let the hcd knows glue layer's code,
+then the USB core can handle this node.
+
+Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ drivers/usb/chipidea/host.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+index 053bac9..55120ef 100644
+--- a/drivers/usb/chipidea/host.c
++++ b/drivers/usb/chipidea/host.c
+@@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
+ 	struct ehci_hcd *ehci;
+ 	struct ehci_ci_priv *priv;
+ 	int ret;
++	struct device *dev = ci->dev;
+ 
+-	if (usb_disabled())
++	if (usb_disabled() || !dev)
+ 		return -ENODEV;
+ 
+-	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
++	/*
++	 * USB Core will try to get child node under roothub,
++	 * but chipidea core has no of_node, and the child node
++	 * for controller is located at glue layer's node which
++	 * is chipidea core's parent.
++	 */
++	if (dev->parent && dev->parent->of_node)
++		dev->of_node = dev->parent->of_node;
++
++	hcd = usb_create_hcd(&ci_ehci_hc_driver, dev, dev_name(dev));
+ 	if (!hcd)
+ 		return -ENOMEM;
+ 
+-	dev_set_drvdata(ci->dev, ci);
++	dev_set_drvdata(dev, ci);
+ 	hcd->rsrc_start = ci->hw_bank.phys;
+ 	hcd->rsrc_len = ci->hw_bank.size;
+ 	hcd->regs = ci->hw_bank.abs;
+@@ -143,7 +153,7 @@ static int host_start(struct ci_hdrc *ci)
+ 		if (ci->platdata->flags & CI_HDRC_TURN_VBUS_EARLY_ON) {
+ 			ret = regulator_enable(ci->platdata->reg_vbus);
+ 			if (ret) {
+-				dev_err(ci->dev,
++				dev_err(dev,
+ 				"Failed to enable vbus regulator, ret=%d\n",
+ 									ret);
+ 				goto put_hcd;
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
