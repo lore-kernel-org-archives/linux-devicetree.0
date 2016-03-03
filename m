@@ -1,36 +1,66 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 07/17] dt-bindings: Add PLX Technology Reset Controller
- bindings
-Date: Thu, 03 Mar 2016 15:31:07 +0100
-Message-ID: <1457015467.3425.58.camel@pengutronix.de>
-References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
-	 <1457005210-18485-8-git-send-email-narmstrong@baylibre.com>
-	 <1457014907.3425.56.camel@pengutronix.de> <56D8492B.8060706@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D8492B.8060706@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4 v2] drm: Add support of ARC PGU display controller
+Date: Thu,  3 Mar 2016 17:39:12 +0300
+Message-ID: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 03.03.2016, 15:24 +0100 schrieb Neil Armstrong:
-> On 03/03/2016 03:21 PM, Philipp Zabel wrote:
-> > Am Donnerstag, den 03.03.2016, 12:40 +0100 schrieb Neil Armstrong:
-> >> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> > 
-> > Is there a list of the reset bits in this register?
-> > 
-> > regards
-> > Philipp
-> > 
-> 
-> Yes, should I add it to the bindings ?
+This series add support of ARC PGU display controller.
+ARC PGU is a quite simple byte streamer that gets data from the framebuffer
+and pushes it to hte connected encoder (DP or HDMI).
 
-Yes, please. Either that or add a header file with #defines to
-include/dt-bindings/reset and use it in the dtsi.
+It was tested on ARC SDP boards (axs101 in particular).
 
-regards
-Philipp
+Changes v1 -> v2:
+ * Clean-up of DT bindings documentation
+ * Added missing "pxlclk" clock in axs10x_mb.dtsi
+
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Alexey Brodkin (4):
+  drm: Add support of ARC PGU display controller
+  drm: Add DT bindings documentation for ARC PGU display controller
+  arc: axs10x - add support of ARC PGU
+  MAINTAINERS: Add maintainer for ARC PGU display controller
+
+ .../devicetree/bindings/display/snps,arcpgu.txt    |  33 +++
+ MAINTAINERS                                        |   6 +
+ arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/arc/Kconfig                        |  10 +
+ drivers/gpu/drm/arc/Makefile                       |   2 +
+ drivers/gpu/drm/arc/arcpgu.h                       |  47 ++++
+ drivers/gpu/drm/arc/arcpgu_crtc.c                  | 274 +++++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_drv.c                   | 239 ++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 204 +++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_regs.h                  |  36 +++
+ 12 files changed, 915 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+ create mode 100644 drivers/gpu/drm/arc/Kconfig
+ create mode 100644 drivers/gpu/drm/arc/Makefile
+ create mode 100644 drivers/gpu/drm/arc/arcpgu.h
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
+
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
