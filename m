@@ -1,36 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 01/15] scsi: ufs-qcom: add number of lanes per
- direction
-Date: Thu, 3 Mar 2016 16:18:36 -0600
-Message-ID: <20160303221836.GA3510@rob-hp-laptop>
-References: <1456666367-11418-1-git-send-email-ygardi@codeaurora.org>
- <1456666367-11418-2-git-send-email-ygardi@codeaurora.org>
+Subject: Re: [PATCH] can: rcar_can: Add r8a7795 support
+Date: Thu, 3 Mar 2016 16:22:57 -0600
+Message-ID: <20160303222257.GA5346@rob-hp-laptop>
+References: <1456749445-50766-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456666367-11418-2-git-send-email-ygardi@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Yaniv Gardi <ygardi@codeaurora.org>
-Cc: James.Bottomley@HansenPartnership.com, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, Gilad Broner <gbroner@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+In-Reply-To: <1456749445-50766-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: mkl@pengutronix.de, wg@grandegger.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, geert+renesas@glider.be, horms+renesas@verge.net.au, chris.paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 28, 2016 at 03:32:33PM +0200, Yaniv Gardi wrote:
-> Different platform may have different number of lanes
-> for the UFS link.
-> Add parameter to device tree specifying how many lanes
-> should be configured for the UFS link.
+On Mon, Feb 29, 2016 at 12:37:25PM +0000, Ramesh Shanmugasundaram wrote:
+> Added r8a7795 SoC support.
 > 
-> Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-> Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
-> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 > ---
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  3 ++
+> Hi All,
+> 
+>    This patch is based on linux-can-next (tag:linux-can-next-for-4.6-20160226)
+> 
+>    Pinctrl & Clock related to the controller are already submitted as below:
+> 
+>    https://lkml.org/lkml/2016/2/25/546
+>    https://lkml.org/lkml/2016/2/26/452
+>    http://www.spinics.net/lists/arm-kernel/msg487238.html
+> 
+>    Changes since v1:
+>    * Rebased from linux-next to linux-can-next
+>    * Removed clock rounding hack (http://www.spinics.net/lists/netdev/msg366611.html)
+>    * CAN dtsi changes will be submitted separately based on linux-next (http://marc.info/?l=linux-can&m=145674764815430&w=2)
+> 
+>  Documentation/devicetree/bindings/net/can/rcar_can.txt | 11 +++++++++++
+>  drivers/net/can/Kconfig                                |  2 +-
+>  drivers/net/can/rcar_can.c                             |  1 +
+>  3 files changed, 13 insertions(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/scsi/ufs/ufs-qcom.c                        | 39 ++++++++++++----------
->  drivers/scsi/ufs/ufshcd-pltfrm.c                   | 19 +++++++++++
->  drivers/scsi/ufs/ufshcd.c                          |  1 +
->  drivers/scsi/ufs/ufshcd.h                          |  2 ++
->  5 files changed, 47 insertions(+), 17 deletions(-)
