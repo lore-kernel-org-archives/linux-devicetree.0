@@ -1,164 +1,166 @@
-From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] add support for DWC UFS Host Controller
-Date: Thu, 3 Mar 2016 13:52:39 +0000
-Message-ID: <56D841A7.7050008@synopsys.com>
-References: <cover.1455549221.git.jpinto@synopsys.com>
- <5606371.ipFvUUmgV9@wuerfel> <56D82259.3020907@synopsys.com>
- <10452689.JXS9XIs74z@wuerfel>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: add 'const' for of_property_*_string*() parameter '*np'
+Date: Thu, 3 Mar 2016 07:52:51 -0600
+Message-ID: <CAL_JsqJgOa7wzYCrQFwko-HXQVTkWf+=rwGkimS1n6qucH=jbw@mail.gmail.com>
+References: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <10452689.JXS9XIs74z@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Mar 2, 2016 at 3:35 PM, David Rivshin (Allworx)
+<drivshin.allworx@gmail.com> wrote:
+> From: David Rivshin <drivshin@allworx.com>
+>
+> The of_property_{read,count,match}_string* family of functions never
+> modify the struct device_node pointer that is passed in, so there is no
+> reason for it to be non-const. Equivalent functions for all other types
+> already take a 'const struct device_node *np'.
+>
+> Signed-off-by: David Rivshin <drivshin@allworx.com>
+> ---
+>
+> MAINTAINTERS says that the appropriate tree is
+>     git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
 
-On 3/3/2016 12:04 PM, Arnd Bergmann wrote:
-> On Thursday 03 March 2016 11:39:05 Joao Pinto wrote:
->> Hi Arnd,
->>
->> On 3/2/2016 7:55 PM, Arnd Bergmann wrote:
->>> On Wednesday 02 March 2016 16:46:47 Joao Pinto wrote:
->>>> On 2/19/2016 3:03 PM, Arnd Bergmann wrote:
->>>>> On Thursday 18 February 2016 17:20:27 Joao Pinto wrote:
->>
->> Facts:
->>
->> - Test Chip type are currently not detectable in runtime through the controller
->> - In the future the Test Chip version will be available in the controller
->> - Test Chip initialization is different for each type
->> - The IP Core version is 1.40a
->> - Test Chip version is 6.00
->> - Teh UFS version is 2.0
-> 
-> Ok.
-> 
->> Suggested driver architecture:
->>
->> Platform setup:
->>  tc-dwc-g210-pltfrm --> tc-dwc-g210 --> ufshcd-dwc-pltfrm --> ufshcd-dwc --> ufs
->>
->> The test chip platform driver could be called through 2 compatibility strings.
->> indicating the chip's version and bit type:
->>  "snps, g210-tc-6.00-20bit"
->>  "snps, g210-tc-6.00-40bit"
-> 
-> Yes, this sounds good. We can probably skip one of the middle layers,
-> but basically that is what I was looking for.
-> 
->> The device tree node would have additional info compatibility strings as the DWC
->> IP core version and UFS version:
->>  "snps, dwc-ufshcd-1.40a"
->>  "jedec, ufs-2.0"
->>
->> PCI based setup:
->>  tc-dwc-g210-pci --> tc-dwc-g210 --> ufshcd-dwc-pci --> ufshcd-dwc --> ufs
-> 
-> The tc-dwc-g210 portion probably shouldn't depend on both
-> ufshcd-dwc-pltfrm and ufshcd-dwc-pci here, so how about leaving
-> those two out?
-> 
-> 
-> Then it becomes
-> 
->    tc-dwc-g210-pci ---> tc-dwc-g210 --> ufshcd-dwc --> ufs
-> tc-dwc-g210-pltfrm --/
+Yes, we probably need to update that.
 
-Ok, understood. It becomes simpler without the pltfm and pci "middle layer".
+> but it looks like that hasn't been updated in a while. So this patch
+> is based off the "for-next" branch of
+>     git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> instead. Let me know if you need me to respin from another tree/branch.
 
-> 
->> The test chip type would be configured by a parameter to be passed in the kernel
->> boot args: tc_type = 20 (20-bit) or tc_type = 40 (40-bit)
-> 
-> Right. With module_param() helper, this will be either a boot command
-> line option, or a module load option, depending on whether the driver
-> is built-on or not.
-> 
-> modprobe tc-dwc-g210-pci tc_type=20
-> 
-> command line: tc-dwc-g210-pci.tc_type=20
->  
+You should base off of Linus' tree unless you have some dependency. I
+doubt it matters in this case, so no need to resend.
 
-Right, that was the idea.
-
->> Having this in mind the KConfig would be:
->>
->> "config SCSI_UFS_DWC_HOOKS
->> 	bool
-> 
-> I think we can now remove the config option for the hooks as well.
-> 
->> config SCSI_UFS_DWC_PLAT
->> 	tristate "DesignWare UFS controller platform glue driver"
->> 	depends on SCSI_UFSHCD_PLATFORM
->> 	select SCSI_UFS_DWC_HOOKS
->> 	help
->> 	  This selects the DesignWare UFS host controller platform glue driver.
->>
->> 	  Select this if you have a DesignWare UFS controller on Platform bus.
->> 	  If unsure, say N.
->>
->> config SCSI_UFS_DWC_PCI
->> 	tristate "DesignWare UFS controller pci glue driver"
->> 	depends on SCSI_UFSHCD_PCI
->> 	select SCSI_UFS_DWC_HOOKS
->> 	help
->> 	  This selects the DesignWare UFS host controller pci glue driver.
->>
->> 	  Select this if you have a DesignWare UFS controller on pci bus.
->> 	  If unsure, say N.
->>
->> config SCSI_UFS_DWC_TC
->> 	bool "Support for the Synopsys Test Chip"
->> 	depends on SCSI_UFS_DWC_HOOKS && (SCSI_UFSHCD_PCI || SCSI_UFS_DWC_PLAT)
->> 	---help---
->> 	  Synopsys Test Chip is a Phy for prototyping purposes.
->> 	  This selects the support for the Synopsys Test Chip.
->>
->> 	  Select this if you have a Synopsys Test Chip.
->> 	  If unsure, say N."
->>
->> Agree with the approach?
-> 
-> This would work, but I think it's better to define the options in terms
-> of the top-level drivers, i.e. SCSI_UFS_DWC_TC_PCI and SCSI_UFS_DWC_TC_PLATFORM,
-> and then make the other options hidden and implicitly turned out by them.
-> 
-
-config SCSI_UFS_DWC
-	bool
-
-config SCSI_UFS_DWC_TC_PLATFORM
- 	tristate "DesignWare platform support using a G210 Test Chip"
- 	depends on SCSI_UFSHCD_PLATFORM
-	select SCSI_UFS_DWC
- 	---help---
- 	  Synopsys Test Chip is a PHY for prototyping purposes.
-
- 	  If unsure, say N."
-
-config SCSI_UFS_DWC_TC_PCI
-	tristate "DesignWare pci support using a G210 Test Chip"
-	depends on SCSI_UFSHCD_PCI
-	select SCSI_UFS_DWC
-	---help---
-	  Synopsys Test Chip is a PHY for prototyping purposes.
-
-	  If unsure, say N."
-
-I would keep SCSI_UFS_DWC to avoid building DWC specific source everytime.
-
-Agree?
-
-> 	Arnd
-> 
-
-Joao
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>  drivers/of/base.c  | 15 ++++++++-------
+>  include/linux/of.h | 18 +++++++++---------
+>  2 files changed, 17 insertions(+), 16 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 017dd94..b299de2 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1341,10 +1341,10 @@ EXPORT_SYMBOL_GPL(of_property_read_u64_array);
+>   *
+>   * The out_string pointer is modified only if a valid string can be decoded.
+>   */
+> -int of_property_read_string(struct device_node *np, const char *propname,
+> +int of_property_read_string(const struct device_node *np, const char *propname,
+>                                 const char **out_string)
+>  {
+> -       struct property *prop = of_find_property(np, propname, NULL);
+> +       const struct property *prop = of_find_property(np, propname, NULL);
+>         if (!prop)
+>                 return -EINVAL;
+>         if (!prop->value)
+> @@ -1365,10 +1365,10 @@ EXPORT_SYMBOL_GPL(of_property_read_string);
+>   * This function searches a string list property and returns the index
+>   * of a specific string value.
+>   */
+> -int of_property_match_string(struct device_node *np, const char *propname,
+> +int of_property_match_string(const struct device_node *np, const char *propname,
+>                              const char *string)
+>  {
+> -       struct property *prop = of_find_property(np, propname, NULL);
+> +       const struct property *prop = of_find_property(np, propname, NULL);
+>         size_t l;
+>         int i;
+>         const char *p, *end;
+> @@ -1404,10 +1404,11 @@ EXPORT_SYMBOL_GPL(of_property_match_string);
+>   * Don't call this function directly. It is a utility helper for the
+>   * of_property_read_string*() family of functions.
+>   */
+> -int of_property_read_string_helper(struct device_node *np, const char *propname,
+> -                                  const char **out_strs, size_t sz, int skip)
+> +int of_property_read_string_helper(const struct device_node *np,
+> +                                  const char *propname, const char **out_strs,
+> +                                  size_t sz, int skip)
+>  {
+> -       struct property *prop = of_find_property(np, propname, NULL);
+> +       const struct property *prop = of_find_property(np, propname, NULL);
+>         int l = 0, i = 0;
+>         const char *p, *end;
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index dc6e396..7fcb681 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -296,13 +296,13 @@ extern int of_property_read_u64_array(const struct device_node *np,
+>                                       u64 *out_values,
+>                                       size_t sz);
+>
+> -extern int of_property_read_string(struct device_node *np,
+> +extern int of_property_read_string(const struct device_node *np,
+>                                    const char *propname,
+>                                    const char **out_string);
+> -extern int of_property_match_string(struct device_node *np,
+> +extern int of_property_match_string(const struct device_node *np,
+>                                     const char *propname,
+>                                     const char *string);
+> -extern int of_property_read_string_helper(struct device_node *np,
+> +extern int of_property_read_string_helper(const struct device_node *np,
+>                                               const char *propname,
+>                                               const char **out_strs, size_t sz, int index);
+>  extern int of_device_is_compatible(const struct device_node *device,
+> @@ -538,14 +538,14 @@ static inline int of_property_read_u64_array(const struct device_node *np,
+>         return -ENOSYS;
+>  }
+>
+> -static inline int of_property_read_string(struct device_node *np,
+> +static inline int of_property_read_string(const struct device_node *np,
+>                                           const char *propname,
+>                                           const char **out_string)
+>  {
+>         return -ENOSYS;
+>  }
+>
+> -static inline int of_property_read_string_helper(struct device_node *np,
+> +static inline int of_property_read_string_helper(const struct device_node *np,
+>                                                  const char *propname,
+>                                                  const char **out_strs, size_t sz, int index)
+>  {
+> @@ -571,7 +571,7 @@ static inline int of_property_read_u64(const struct device_node *np,
+>         return -ENOSYS;
+>  }
+>
+> -static inline int of_property_match_string(struct device_node *np,
+> +static inline int of_property_match_string(const struct device_node *np,
+>                                            const char *propname,
+>                                            const char *string)
+>  {
+> @@ -773,7 +773,7 @@ static inline int of_property_count_u64_elems(const struct device_node *np,
+>   *
+>   * If @out_strs is NULL, the number of strings in the property is returned.
+>   */
+> -static inline int of_property_read_string_array(struct device_node *np,
+> +static inline int of_property_read_string_array(const struct device_node *np,
+>                                                 const char *propname, const char **out_strs,
+>                                                 size_t sz)
+>  {
+> @@ -792,7 +792,7 @@ static inline int of_property_read_string_array(struct device_node *np,
+>   * does not have a value, and -EILSEQ if the string is not null-terminated
+>   * within the length of the property data.
+>   */
+> -static inline int of_property_count_strings(struct device_node *np,
+> +static inline int of_property_count_strings(const struct device_node *np,
+>                                             const char *propname)
+>  {
+>         return of_property_read_string_helper(np, propname, NULL, 0, 0);
+> @@ -816,7 +816,7 @@ static inline int of_property_count_strings(struct device_node *np,
+>   *
+>   * The out_string pointer is modified only if a valid string can be decoded.
+>   */
+> -static inline int of_property_read_string_index(struct device_node *np,
+> +static inline int of_property_read_string_index(const struct device_node *np,
+>                                                 const char *propname,
+>                                                 int index, const char **output)
+>  {
+> --
+> 2.5.0
+>
