@@ -1,62 +1,82 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: core: add power sequence for USB devices
-Date: Thu, 3 Mar 2016 13:31:56 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1603031326310.1380-100000@iolanthe.rowland.org>
-References: <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] arm64: tegra210-smaug: Add gpio-key nodes
+Date: Thu, 3 Mar 2016 14:54:25 -0500
+Message-ID: <1457034865-17826-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456999276-6315-2-git-send-email-peter.chen-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Olof Johansson <olof-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 3 Mar 2016, Peter Chen wrote:
+Add gpio-key nodes for the volumn controls, lid switch,
+tablet mode and power button.
 
-> Some hard-wired USB devices need to do power sequence to let the
-> device work normally, the typical power sequence like: enable USB
-> PHY clock, toggle reset pin, etc. But current Linux USB driver
-> lacks of such code to do it, it may cause some hard-wired USB devices
-> works abnormal or can't be recognized by controller at all.
-> 
-> In this patch, it will do power on sequence at hub's probe for all
-> devices under this hub (includes root hub) if this device is described
-> at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
-> it will do power off sequence.
-> 
-> Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra210-smaug.dts | 43 +++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-
-> +static int hub_of_pwrseq(struct usb_device *hdev, bool on)
-> +{
-> +	struct device *parent;
-> +	struct device_node *node;
-> +	int ret = 0;
-> +
-> +	if (hdev->parent)
-> +		parent = &hdev->dev;
-> +	else
-> +		parent = bus_to_hcd(hdev->bus)->self.controller;
-> +
-> +	for_each_child_of_node(parent->of_node, node) {
-> +		ret = on ? usb_child_pwrseq_on(node)
-> +			: usb_child_pwrseq_off(node);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-
-If you get a failure, do you want to leave the power to all the
-preceding devices turned on?  It seems to me you should either turn all 
-of them back off, or else continue trying to turn on power for the 
-remaining children.
-
-Alan Stern
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+index 750e85c45135..9c0ec3031e98 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
++++ b/arch/arm64/boot/dts/nvidia/tegra210-smaug.dts
+@@ -1,5 +1,7 @@
+ /dts-v1/;
+ 
++#include <dt-bindings/input/input.h>
++
+ #include "tegra210.dtsi"
+ 
+ / {
+@@ -76,6 +78,47 @@
+ 		};
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		gpio-keys,name = "gpio-keys";
++
++		power {
++			label = "Power";
++			gpios = <&gpio TEGRA_GPIO(X, 5) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			debounce-interval = <30>;
++			gpio-key,wakeup;
++		};
++
++		lid {
++			label = "Lid";
++			gpios = <&gpio TEGRA_GPIO(B, 4) GPIO_ACTIVE_LOW>;
++			linux,input-type = <5>; /* EV_SW */
++			linux,code = <0>; /* SW_LID */
++			gpio-key,wakeup;
++		};
++
++		tablet_mode {
++			label = "Tablet Mode";
++			gpios = <&gpio TEGRA_GPIO(Z, 2) GPIO_ACTIVE_HIGH>;
++			linux,input-type = <5>; /* EV_SW */
++			linux,code = <1>; /* SW_TABLET_MODE */
++			gpio-key,wakeup;
++		};
++
++		volume_down {
++			label = "Volume Down";
++			gpios = <&gpio TEGRA_GPIO(X, 7) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEDOWN>;
++		};
++
++		volume_up {
++			label = "Volume Up";
++			gpios = <&gpio TEGRA_GPIO(M, 4) GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++		};
++	};
++
+ 	psci {
+ 		compatible = "arm,psci-1.0";
+ 		method = "smc";
+-- 
+1.9.1
