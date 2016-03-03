@@ -1,59 +1,60 @@
-From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] add support for DWC UFS Host Controller
-Date: Thu, 3 Mar 2016 14:17:28 +0000
-Message-ID: <56D84778.50509@synopsys.com>
-References: <cover.1455549221.git.jpinto@synopsys.com>
- <10452689.JXS9XIs74z@wuerfel> <56D841A7.7050008@synopsys.com>
- <12939431.liKZREJb7L@wuerfel>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 07/17] dt-bindings: Add PLX Technology Reset Controller
+ bindings
+Date: Thu, 03 Mar 2016 15:21:47 +0100
+Message-ID: <1457014907.3425.56.camel@pengutronix.de>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+	 <1457005210-18485-8-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12939431.liKZREJb7L@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457005210-18485-8-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 3/3/2016 2:12 PM, Arnd Bergmann wrote:
-> On Thursday 03 March 2016 13:52:39 Joao Pinto wrote:
->>
->> config SCSI_UFS_DWC
->>         bool
->>
->> config SCSI_UFS_DWC_TC_PLATFORM
->>         tristate "DesignWare platform support using a G210 Test Chip"
->>         depends on SCSI_UFSHCD_PLATFORM
->>         select SCSI_UFS_DWC
->>         ---help---
->>           Synopsys Test Chip is a PHY for prototyping purposes.
->>
->>           If unsure, say N."
->>
->> config SCSI_UFS_DWC_TC_PCI
->>         tristate "DesignWare pci support using a G210 Test Chip"
->>         depends on SCSI_UFSHCD_PCI
->>         select SCSI_UFS_DWC
->>         ---help---
->>           Synopsys Test Chip is a PHY for prototyping purposes.
->>
->>           If unsure, say N."
->>
->> I would keep SCSI_UFS_DWC to avoid building DWC specific source everytime.
->>
->> Agree?
->>
+Am Donnerstag, den 03.03.2016, 12:40 +0100 schrieb Neil Armstrong:
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../devicetree/bindings/reset/plxtech,reset.txt    | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/plxtech,reset.txt
 > 
-> Yes, looks good to me.
-> 
-> 	Arnd
-> 
+> diff --git a/Documentation/devicetree/bindings/reset/plxtech,reset.txt b/Documentation/devicetree/bindings/reset/plxtech,reset.txt
+> new file mode 100644
+> index 0000000..e99648d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/plxtech,reset.txt
+> @@ -0,0 +1,25 @@
+> +PLX Technology OXNAS SoC Family RESET Controller
+> +================================================
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible: Should be "plxtech,nas782x-reset"
+> +- #reset-cells: 1, see below
+> +
+> +Parent node should have the following properties :
+> +- compatible: Should be "plxtech,ox810se-sys-ctrl", "syscon", "simple-mfd"
+> +
+> +example:
+> +
+> +sys: sys-ctrl@000000 {
+> +	compatible = "plxtech,ox810se-sys-ctrl", "syscon", "simple-mfd";
+> +	reg = <0x000000 0x100000>;
+> +
+> +	reset: reset-controller {
+> +		compatible = "plxtech,nas782x-reset";
+> +		#reset-cells = <1>;
+> +
+> +	};
+> +};
 
-Nice! Thanks for the inputs. I'm going to implement the changes and send a v10 soon.
+Is there a list of the reset bits in this register?
 
-Joao
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Philipp
