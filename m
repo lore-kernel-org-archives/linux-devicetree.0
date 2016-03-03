@@ -1,67 +1,40 @@
-From: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] hwmon: Create an NSA320 hardware monitoring driver
-Date: Wed, 2 Mar 2016 23:43:32 +0000
-Message-ID: <56D77AA4.2080908@baker-net.org.uk>
-References: <1456698614-15176-1-git-send-email-linux@baker-net.org.uk>
- <1456698614-15176-3-git-send-email-linux@baker-net.org.uk>
- <56D3948D.6000805@roeck-us.net>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
+Date: Thu, 3 Mar 2016 09:05:39 +0900
+Message-ID: <20160303000539.GB23040@verge.net.au>
+References: <20160229143309.28517.77269.sendpatchset@little-apple>
+ <20160302145559.GU22747@8bytes.org>
+ <CANqRtoQQzav-kweM80NnVUqtr2xxaA95XV88U1Ye7yoYHzSUsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D3948D.6000805-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANqRtoQQzav-kweM80NnVUqtr2xxaA95XV88U1Ye7yoYHzSUsA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Joerg Roedel <joro@8bytes.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29/02/16 00:45, Guenter Roeck wrote:
+On Thu, Mar 03, 2016 at 12:46:30AM +0900, Magnus Damm wrote:
+> On Wed, Mar 2, 2016 at 11:55 PM, Joerg Roedel <joro@8bytes.org> wrote:
+> > On Mon, Feb 29, 2016 at 11:33:09PM +0900, Magnus Damm wrote:
+> >> From: Magnus Damm <damm+renesas@opensource.se>
+> >>
+> >> Update the IPMMU DT binding documentation to include the r8a7795 compat
+> >> string as well as the "renesas,ipmmu-main" property that on r8a7795 will
+> >> be used to describe the topology and the relationship between the various
+> >> cache IPMMU instances and the main IPMMU.
+> >>
+> >> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> >> ---
+> >>
+> >>  Written against linux-next tag next-20160229
+> >>
+> >>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++++++--
+> >>  1 file changed, 13 insertions(+), 2 deletions(-)
+> >
+> > Through which tree should this go?
+> 
+> Unless anyone objects may I suggest going through your tree please!
 
->> +
->> +/*
->> + * Although this protocol looks similar to SPI the long delay
->> + * between the active (aka chip select) signal and the shorter
->> + * delay between clock pulses are needed for reliable operation.
->> + * The delays provided are taken from the manufacturer kernel,
->> + * testing suggest they probably incorporate a reasonable safety
->> + * margin. (The single device tested became unreliable if the
->> + * delay was reduced to 1/10th of this value.)
->> + */
->> +static unsigned long nsa320_hwmon_update(struct device *dev)
->
-> Please make this either int or s32.
->
->> +{
->> +    u32 mcu_data;
->
-> You can (and should) still use u32 here.
->
-
-
-I'm a bit puzzled by your reasoning for preferring a signed value for 
-the return value. The only reason I can think of is that the error 
-return value is negative, however the macro to test if it is an error 
-value is not looking at whether the value is negative
-
-#define IS_ERR_VALUE(x) unlikely((x) >= (unsigned long)-MAX_ERRNO)
-
-Functionally using any of s32, int or unsigned long will make no 
-difference, the mask operations ensure that the top bit can't possibly 
-be set so using a signed type doesn't, in this circumstance, risk an 
-undefined result from the shift operation. The choice of type is 
-therefore a matter of readability rather than function so if you still 
-prefer s32 I'll respin it to use that.
-
-The length does need to be at least 32 bits (to represent the returned 
-data range) and no longer than unsigned long (to avoid breaking 
-IS_ERR_VALUE). Whilst int is 32 bits on the only processor that is 
-expected to use this device that doesn't feel like a good thing to 
-depend upon so s32 seems preferable to int.
-
-Regards
-
-Adam
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FWIW that would be my preferred option.
