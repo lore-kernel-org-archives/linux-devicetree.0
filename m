@@ -1,34 +1,306 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 01/17] dt-bindings: vendor-prefixes: Add PLX Technology
-Date: Thu,  3 Mar 2016 12:39:54 +0100
-Message-ID: <1457005210-18485-2-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 14/17] arm: boot: dts: Add PLX Technology OX810SE dtsi
+Date: Thu,  3 Mar 2016 12:40:07 +0100
+Message-ID: <1457005210-18485-15-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1457005210-18485-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add PLX Technology vendor prefix.
-
 Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/ox810se.dtsi | 279 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 279 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ox810se.dtsi
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 72e2c5a..03970fb 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -178,6 +178,7 @@ picochip	Picochip Ltd
- plathome	Plat'Home Co., Ltd.
- plda	PLDA
- pixcir  PIXCIR MICROELECTRONICS Co., Ltd
-+plxtech	PLX Technology, Inc.
- pulsedlight	PulsedLight, Inc
- powervr	PowerVR (deprecated, use img)
- qca	Qualcomm Atheros, Inc.
+diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
+new file mode 100644
+index 0000000..a86d7f0
+--- /dev/null
++++ b/arch/arm/boot/dts/ox810se.dtsi
+@@ -0,0 +1,279 @@
++/*
++ * ox810se.dtsi - Device tree file for PLX Technology OX810SE SoC
++ *
++ * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
++ *
++ * Licensed under GPLv2 or later
++ */
++
++/include/ "skeleton.dtsi"
++
++/ {
++	compatible = "plxtech,ox810se";
++
++	cpus {
++		#address-cells = <0>;
++		#size-cells = <0>;
++
++		cpu {
++			device_type = "cpu";
++			compatible = "arm,arm926ej-s";
++			clocks = <&armclk>;
++		};
++	};
++
++	memory {
++		/* Max 256MB @ 0x48000000 */
++		reg = <0x48000000 0x10000000>;
++	};
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++		serial2 = &uart2;
++		serial3 = &uart3;
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++	};
++
++	clocks {
++		osc: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++
++		gmacclk: gmacclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <125000000>;
++		};
++
++		rpsclk: rspclk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <1>;
++			clocks = <&osc>;
++		};
++
++		pll400: pll400 {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <733333333>;
++		};
++
++		sysclk: sysclk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <4>;
++			clock-mult = <1>;
++			clocks = <&pll400>;
++		};
++
++		armclk: armclk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <2>;
++			clock-mult = <1>;
++			clocks = <&pll400>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++		interrupt-parent = <&intc>;
++
++		apb-bridge@44000000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "simple-bus";
++			ranges = <0 0x44000000 0x1000000>;
++
++			pinctrl: pinctrl {
++				compatible = "plxtech,nas782x-pinctrl", "simple-bus";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges;
++
++				/* Regmap for sys registers */
++				plxtech,sys-ctrl = <&sys>;
++
++				/* Default, all-open mux-map */
++				plxtech,mux-mask = <
++					0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
++					0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
++					>;
++
++				gpio0: gpio@000000 {
++					compatible = "plxtech,nas782x-gpio";
++					reg = <0x000000 0x100000>;
++					interrupts = <21>;
++					#gpio-cells = <2>;
++					gpio-controller;
++					interrupt-controller;
++					#interrupt-cells = <2>;
++					#gpio-lines = <32>;
++				};
++
++				gpio1: gpio@100000 {
++					compatible = "plxtech,nas782x-gpio";
++					reg = <0x100000 0x100000>;
++					interrupts = <22>;
++					#gpio-cells = <2>;
++					gpio-controller;
++					interrupt-controller;
++					#interrupt-cells = <2>;
++					#gpio-lines = <3>;
++				};
++
++				uart0 {
++					pinctrl_uart0: uart0 {
++						plxtech,pins = <0 31 3 0
++								0 32 3 0>;
++					};
++					pinctrl_uart0_modem: uart0_modem {
++						plxtech,pins = <0 27 3 0
++								0 28 3 0
++								0 29 3 0
++								0 30 3 0
++								0 33 3 0
++								0 34 3 0>;
++					};
++				};
++
++				uart1 {
++					pinctrl_uart1: uart1 {
++						plxtech,pins = <0 20 3 0
++								0 22 3 0>;
++					};
++					pinctrl_uart1_modem: uart1_modem {
++						plxtech,pins = <0 8 3 0
++								0 9 3 0
++								0 23 3 0
++								0 24 3 0
++								0 25 3 0
++								0 26 3 0>;
++					};
++				};
++
++				uart2 {
++					pinctrl_uart2: uart2 {
++						plxtech,pins = <0 6 3 0
++								0 7 3 0>;
++					};
++					pinctrl_uart2_modem: uart2_modem {
++						plxtech,pins = <0 0 3 0
++								0 1 3 0
++								0 2 3 0
++								0 3 3 0
++								0 4 3 0
++								0 5 3 0>;
++					};
++				};
++			};
++
++			uart0: uart@200000 {
++			       compatible = "ns16550a";
++			       reg = <0x200000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <23>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 17>;
++			};
++
++			uart1: uart@300000 {
++			       compatible = "ns16550a";
++			       reg = <0x300000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <24>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 18>;
++			};
++
++			uart2: uart@900000 {
++			       compatible = "ns16550a";
++			       reg = <0x900000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <29>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 22>;
++			};
++
++			uart3: uart@a00000 {
++			       compatible = "ns16550a";
++			       reg = <0xa00000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <30>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 23>;
++			};
++		};
++
++		apb-bridge@45000000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "simple-bus";
++			ranges = <0 0x45000000 0x1000000>;
++
++			sys: sys-ctrl@000000 {
++				compatible = "plxtech,ox810se-sys-ctrl", "syscon", "simple-mfd";
++				reg = <0x000000 0x100000>;
++
++				reset: reset-controller {
++					compatible = "plxtech,nas782x-reset";
++					#reset-cells = <1>;
++				};
++
++				stdclk: stdclk {
++					compatible = "plxtech,ox810se-stdclk", "plxtech,nas782x-stdclk";
++					#clock-cells = <1>;
++				};
++			};
++
++			rps@300000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "simple-bus";
++				ranges = <0 0x300000 0x100000>;
++
++				intc: interrupt-controller@0 {
++					compatible = "plxtech,nas782x-rps";
++					interrupt-controller;
++					reg = <0 0x200>;
++					#interrupt-cells = <1>;
++				};
++
++				timer0: timer@200 {
++					compatible = "plxtech,nas782x-rps-timer";
++					reg = <0x200 0x40>;
++					clocks = <&rpsclk>;
++					interrupts = <4 5>;
++				};
++			};
++		};
++	};
++};
 -- 
 1.9.1
 
