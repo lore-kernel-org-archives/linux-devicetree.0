@@ -1,210 +1,895 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 2/2] mailbox: Introduce TI message manager driver
-Date: Fri, 4 Mar 2016 07:05:03 -0600
-Message-ID: <56D987FF.1040607@ti.com>
-References: <1456525452-30638-1-git-send-email-nm@ti.com>
- <1456525452-30638-3-git-send-email-nm@ti.com>
- <CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 05/12] arm64: add mvebu architecture entry
+Date: Fri, 04 Mar 2016 14:23:18 +0100
+Message-ID: <87povajs1l.fsf@free-electrons.com>
+References: <1455646502-23834-1-git-send-email-gregory.clement@free-electrons.com>
+	<1455646502-23834-6-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Nishanth Menon <nm@ti.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <ssantosh@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455646502-23834-6-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+	(Gregory CLEMENT's message of "Tue, 16 Feb 2016 19:14:55 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi Greg and Jiri,
 
-Thanks for reviewing the patch.
-On 03/03/2016 11:18 PM, Jassi Brar wrote:
+this is a gentle ping about this patch.
+=20
+ On jeu., f=C3=A9vr. 18 2016, Gregory CLEMENT <gregory.clement@free-ele=
+ctrons.com> wrote:
 
-[...]
-
+> Hi Greg and Jiri
+> =20
+>  On mar., f=C3=A9vr. 16 2016, Gregory CLEMENT <gregory.clement@free-e=
+lectrons.com> wrote:
+>
+>> From: Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 >>
->>  drivers/mailbox/Kconfig     |  11 +
->>  drivers/mailbox/Makefile    |   2 +
->>  drivers/mailbox/ti-msgmgr.c | 657
+>> Armada-3700's uart is a simple serial port, which doesn't
+>> support. Configuring the modem control lines. The uart port has a 32
+>> bytes Tx FIFO and a 64 bytes Rx FIFO
+>>
+>> The uart driver implements the uart core operations. It also support=
+ the
+>> system (early) console based on Armada-3700's serial port.
+>>
+>> Known Issue:
+>>
+>> The uart driver currently doesn't support clock programming, which m=
+eans
+>> the baud-rate stays with the default value configured by the bootloa=
+der
+>> at boot time
+>>
+>> [gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org: Rewrite many part which are too=
+ long
+>> to enumerate]
+>>
+>> Signed-off-by: Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> I took care of the arm related part of the series, but I will let you
+> apply this patch in the serial subsystem once you have reviewed it. B=
+ut
+> if for any reason you preferred that I took it through mvebu just tel=
+l
+> me.
+>
 
-> Do you want to call it something more specific than 'msgmgr from TI'?
-> Maybe its about Keystone, like mailbox-keystone.c ?
+=46inally all the other part of the series have all been pulled in thei=
+r
+respective subsystem. The device tree binding for this driver have been
+acked by the device tree maintainer. And this patch is the last
+remaining piece for having a initial support for the Armada 3700
+platform.
 
-Here is the rationale for choosing the name:
-There are more than 1 IPC in TI SoCs and even within Keystone SoC.
-Further, it is indeed called message manager hardware block and used
-across multiple SoC families (even though it is originated by keystone
-architecture). we do have a reuse of the omap-mailbox in a future
-keystone device (in addition to message manager), so using ti-mailbox is
-more appropriate for omap-mailbox, but anyways.. further renaming this
-as keystone-mailbox will confuse poor users when the new SoC comes in..
+So I wondered what was the status of this patch? Do you plan to apply i=
+t
+or do you have some other comments ?
 
-We do have a lot of cross pollination of hardware blocks across TI
-architectures, and "keystone-" prefix does not really fit the usage.
-hence the usage of vendor-hardwareblock name.
+Thanks,
 
-> 
-> 
+Gregory
+
+>
+>> ---
+>>  .../devicetree/bindings/tty/serial/mvebu-uart.txt  |  13 +
+>>  Documentation/kernel-parameters.txt                |   6 +
+>>  drivers/tty/serial/Kconfig                         |  22 +
+>>  drivers/tty/serial/Makefile                        |   1 +
+>>  drivers/tty/serial/mvebu-uart.c                    | 650 ++++++++++=
++++++++++++
+>>  include/uapi/linux/serial_core.h                   |   3 +
+>>  6 files changed, 695 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/tty/serial/mve=
+bu-uart.txt
+>>  create mode 100644 drivers/tty/serial/mvebu-uart.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/tty/serial/mvebu-uart=
+=2Etxt b/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
+>> new file mode 100644
+>> index 000000000000..6087defd9f93
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/tty/serial/mvebu-uart.txt
+>> @@ -0,0 +1,13 @@
+>> +* Marvell UART : Non standard UART used in some of Marvell EBU SoCs=
+ (e.g., Armada-3700)
+>> +
+>> +Required properties:
+>> +- compatible: "marvell,armada-3700-uart"
+>> +- reg: offset and length of the register set for the device.
+>> +- interrupts: device interrupt
+>> +
+>> +Example:
+>> +	serial@12000 {
+>> +		compatible =3D "marvell,armada-3700-uart";
+>> +		reg =3D <0x12000 0x400>;
+>> +		interrupts =3D <43>;
+>> +	};
+>> diff --git a/Documentation/kernel-parameters.txt b/Documentation/ker=
+nel-parameters.txt
+>> index 87d40a72f6a1..ea0aba48d616 100644
+>> --- a/Documentation/kernel-parameters.txt
+>> +++ b/Documentation/kernel-parameters.txt
+>> @@ -1058,6 +1058,12 @@ bytes respectively. Such letter suffixes can =
+also be entirely omitted.
+>>  			A valid base address must be provided, and the serial
+>>  			port must already be setup and configured.
+>> =20
+>> +		armada3700_uart,<addr>
+>> +			Start an early, polled-mode console on the
+>> +			Armada 3700 serial port at the specified
+>> +			address. The serial port must already be setup
+>> +			and configured. Options are not yet supported.
+>> +
+>>  	earlyprintk=3D	[X86,SH,BLACKFIN,ARM,M68k]
+>>  			earlyprintk=3Dvga
+>>  			earlyprintk=3Defi
+>> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+>> index 39721ec4f415..b291f934d51b 100644
+>> --- a/drivers/tty/serial/Kconfig
+>> +++ b/drivers/tty/serial/Kconfig
+>> @@ -1606,6 +1606,28 @@ config SERIAL_STM32_CONSOLE
+>>  	depends on SERIAL_STM32=3Dy
+>>  	select SERIAL_CORE_CONSOLE
+>> =20
+>> +config SERIAL_MVEBU_UART
+>> +	bool "Marvell EBU serial port support"
+>> +	select SERIAL_CORE
+>> +	help
+>> +	  This driver is for Marvell EBU SoC's UART. If you have a machine
+>> +	  based on the Armada-3700 SoC and wish to use the on-board serial
+>> +	  port,
+>> +	  say 'Y' here.
+>> +	  Otherwise, say 'N'.
+>> +
+>> +config SERIAL_MVEBU_CONSOLE
+>> +	bool "Console on Marvell EBU serial port"
+>> +	depends on SERIAL_MVEBU_UART
+>> +	select SERIAL_CORE_CONSOLE
+>> +	select SERIAL_EARLYCON
+>> +	default y
+>> +	help
+>> +	  Say 'Y' here if you wish to use Armada-3700 UART as the system c=
+onsole.
+>> +	  (the system console is the device which receives all kernel mess=
+ages
+>> +	  and warnings and which allows logins in single user mode)
+>> +	  Otherwise, say 'N'.
+>> +
+>>  endmenu
+>> =20
+>>  config SERIAL_MCTRL_GPIO
+>> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefi=
+le
+>> index b391c9b31960..988167595330 100644
+>> --- a/drivers/tty/serial/Makefile
+>> +++ b/drivers/tty/serial/Makefile
+>> @@ -91,6 +91,7 @@ obj-$(CONFIG_SERIAL_CONEXANT_DIGICOLOR)	+=3D digic=
+olor-usart.o
+>>  obj-$(CONFIG_SERIAL_MEN_Z135)	+=3D men_z135_uart.o
+>>  obj-$(CONFIG_SERIAL_SPRD) +=3D sprd_serial.o
+>>  obj-$(CONFIG_SERIAL_STM32)	+=3D stm32-usart.o
+>> +obj-$(CONFIG_SERIAL_MVEBU_UART)	+=3D mvebu-uart.o
+>> =20
+>>  # GPIOLIB helpers for modem control lines
+>>  obj-$(CONFIG_SERIAL_MCTRL_GPIO)	+=3D serial_mctrl_gpio.o
+>> diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mv=
+ebu-uart.c
+>> new file mode 100644
+>> index 000000000000..0ff27818bb87
+>> --- /dev/null
+>> +++ b/drivers/tty/serial/mvebu-uart.c
+>> @@ -0,0 +1,650 @@
+>> +/*
+>> +* *****************************************************************=
+**********
+>> +* Copyright (C) 2015 Marvell International Ltd.
+>> +* *****************************************************************=
+**********
+>> +* This program is free software: you can redistribute it and/or mod=
+ify it
+>> +* under the terms of the GNU General Public License as published by=
+ the Free
+>> +* Software Foundation, either version 2 of the License, or any late=
+r version.
+>> +*
+>> +* This program is distributed in the hope that it will be useful,
+>> +* but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> +* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> +* GNU General Public License for more details.
+>> +*
+>> +* You should have received a copy of the GNU General Public License
+>> +* along with this program.  If not, see <http://www.gnu.org/license=
+s/>.
+>> +* *****************************************************************=
+**********
+>> +*/
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/console.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/iopoll.h>
 >> +#include <linux/module.h>
->> +#include <linux/of_device.h>
 >> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_device.h>
 >> +#include <linux/of_irq.h>
+>> +#include <linux/of_platform.h>
 >> +#include <linux/platform_device.h>
->> +#include <linux/ti-msgmgr.h>
->>
-> This seems a bit bold. I think  include/linux/soc/ti/ is the right place.
-
-Sure, I can. Since I followed include/linux/omap-mailbox.h, Would you
-suggest all files such as include/linux/omap* be moved to
-include/linux/soc/ti/ ? I guess that is not pertinent to this specific
-patch, but I am curious..
-
-
->> +       /* Do I actually have messages to read? */
->> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
->> +       if (!msg_count) {
->> +               /* Shared IRQ? */
->> +               dev_dbg(dev, "Spurious event - 0 pending data!\n");
->> +               return IRQ_NONE;
->> +       }
+>> +#include <linux/serial.h>
+>> +#include <linux/serial_core.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/tty.h>
+>> +#include <linux/tty_flip.h>
 >> +
->> +       /*
->> +        * I have no idea about the protocol being used to communicate with the
->> +        * remote producer - 0 could be valid data, so I wont make a judgement
->> +        * of how many bytes I should be reading. Let the client figure this
->> +        * out.. I just read the full message and pass it on..
->> +        */
-> Exactly. And similarly when you send data, you should not have more
-> than one message in transit. Now please see my note in
-> ti_msgmgr_send_data()
-> 
-> 
->> +static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
+>> +/* Register Map */
+>> +#define UART_RBR		0x00
+>> +#define  RBR_BRK_DET		BIT(15)
+>> +#define  RBR_FRM_ERR_DET	BIT(14)
+>> +#define  RBR_PAR_ERR_DET	BIT(13)
+>> +#define  RBR_OVR_ERR_DET	BIT(12)
+>> +
+>> +#define UART_TSH		0x04
+>> +
+>> +#define UART_CTRL		0x08
+>> +#define  CTRL_SOFT_RST		BIT(31)
+>> +#define  CTRL_TXFIFO_RST	BIT(15)
+>> +#define  CTRL_RXFIFO_RST	BIT(14)
+>> +#define  CTRL_ST_MIRR_EN	BIT(13)
+>> +#define  CTRL_LPBK_EN		BIT(12)
+>> +#define  CTRL_SND_BRK_SEQ	BIT(11)
+>> +#define  CTRL_PAR_EN		BIT(10)
+>> +#define  CTRL_TWO_STOP		BIT(9)
+>> +#define  CTRL_TX_HFL_INT	BIT(8)
+>> +#define  CTRL_RX_HFL_INT	BIT(7)
+>> +#define  CTRL_TX_EMP_INT	BIT(6)
+>> +#define  CTRL_TX_RDY_INT	BIT(5)
+>> +#define  CTRL_RX_RDY_INT	BIT(4)
+>> +#define  CTRL_BRK_DET_INT	BIT(3)
+>> +#define  CTRL_FRM_ERR_INT	BIT(2)
+>> +#define  CTRL_PAR_ERR_INT	BIT(1)
+>> +#define  CTRL_OVR_ERR_INT	BIT(0)
+>> +#define  CTRL_RX_INT			(CTRL_RX_RDY_INT | CTRL_BRK_DET_INT |\
+>> +	CTRL_FRM_ERR_INT | CTRL_PAR_ERR_INT | CTRL_OVR_ERR_INT)
+>> +
+>> +#define UART_STAT		0x0c
+>> +#define  STAT_TX_FIFO_EMP	BIT(13)
+>> +#define  STAT_RX_FIFO_EMP	BIT(12)
+>> +#define  STAT_TX_FIFO_FUL	BIT(11)
+>> +#define  STAT_TX_FIFO_HFL	BIT(10)
+>> +#define  STAT_RX_TOGL		BIT(9)
+>> +#define  STAT_RX_FIFO_FUL	BIT(8)
+>> +#define  STAT_RX_FIFO_HFL	BIT(7)
+>> +#define  STAT_TX_EMP		BIT(6)
+>> +#define  STAT_TX_RDY		BIT(5)
+>> +#define  STAT_RX_RDY		BIT(4)
+>> +#define  STAT_BRK_DET		BIT(3)
+>> +#define  STAT_FRM_ERR		BIT(2)
+>> +#define  STAT_PAR_ERR		BIT(1)
+>> +#define  STAT_OVR_ERR		BIT(0)
+>> +#define  STAT_BRK_ERR		(STAT_BRK_DET | STAT_FRM_ERR | STAT_FRM_ERR\
+>> +				 | STAT_PAR_ERR | STAT_OVR_ERR)
+>> +
+>> +#define UART_BRDV		0x10
+>> +
+>> +#define MVEBU_NR_UARTS		1
+>> +
+>> +#define MVEBU_UART_TYPE		"mvebu-uart"
+>> +
+>> +static struct uart_port mvebu_uart_ports[MVEBU_NR_UARTS];
+>> +
+>> +struct mvebu_uart_data {
+>> +	struct uart_port *port;
+>> +	struct clk       *clk;
+>> +};
+>> +
+>> +/* Core UART Driver Operations */
+>> +static unsigned int mvebu_uart_tx_empty(struct uart_port *port)
 >> +{
->> +       struct device *dev = chan->mbox->dev;
->> +       struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
->> +       const struct ti_msgmgr_desc *desc;
->> +       struct ti_queue_inst *qinst = chan->con_priv;
->> +       int msg_count, num_words, trail_bytes;
->> +       struct ti_msgmgr_message *message = data;
->> +       void __iomem *data_reg;
->> +       u32 *word_data;
+>> +	unsigned long flags;
+>> +	unsigned int st;
 >> +
->> +       if (WARN_ON(!inst)) {
->> +               dev_err(dev, "no platform drv data??\n");
->> +               return -EINVAL;
->> +       }
->> +       desc = inst->desc;
+>> +	spin_lock_irqsave(&port->lock, flags);
+>> +	st =3D readl(port->membase + UART_STAT);
+>> +	spin_unlock_irqrestore(&port->lock, flags);
 >> +
->> +       if (desc->max_message_size < message->len) {
->> +               dev_err(dev, "Queue %s message length %d > max %d\n",
->> +                       qinst->name, message->len, desc->max_message_size);
->> +               return -EINVAL;
->> +       }
+>> +	return (st & STAT_TX_FIFO_EMP) ? TIOCSER_TEMT : 0;
+>> +}
 >> +
->> +       /* Are we able to send this or not? */
->> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
->> +       if (msg_count >= desc->max_messages) {
->> +               dev_warn(dev, "Queue %s is full (%d messages)\n", qinst->name,
->> +                        msg_count);
->> +               return -EBUSY;
->> +       }
-> This seems fishy. mailbox api always submit 1 'complete' message to be
-> sent and checks for completion by last_tx_done() before calling
-> send_data() again. Controller drivers are not supposed to queue
-> messages - mailbox core does. So you should never be unable to send a
-> message.
-
-
-OK-> to explain this, few reasons: (queue messages check and usage of
-last_tx_done are kind of intertwined answer..
-a) we need to remember that the message manager has a shared RAM.
-multiple transmitter over other queues can be sharing the same.
-unfortunately, we dont get a threshold kind of interrupt or status that
-I am able to exploit in the current incarnation of the solution. The
-best we can do in the full system is to constrain the number of messages
-that are max pending simultaneously in each of the queue from various
-transmitters in the SoC.
-b) last_tx_done() is checked if TXDONE_BY_POLL, not if TXDONE_BY_ACK
-right? which is how this'd work since txdone_poll is false -> that is
-how we want this mechanism to work once the far end is ready for next
-message, it acks. I do see your point about being tied to protocol - I
-dont like it either.. in fact, I'd prefer that client registration
-mention what kind of handshaking is necessary, but: a) that is not how
-mailbox framework is constructed at the moment(we state txdone_poll at
-mailbox registration, not at client usage) and b) I have no real need
-for multiple clients to users of message manager who actually need
-non-ACK usage - even for the foreseeable future (at least 1 next
-generation of SoC) - if such a need does arise in the future, I will
-have to rework framework and make this capability at the registration
-time of the client - allowing each client path to use different
-mechanisms on hardware such as these that need it.
-c) message manager can actually queue more than one message(depending on
-client capability). Even though, at this point, we are not really
-capable of doing it(again from what I can see for immediate future),
-mailbox framework by checking last_tx_done forces a single message
-sequencing - which is not really exploiting the capability of the
-hardware - in theory, we should be able to queue max num messages, hit
-cpuidle and snooze away while the remote entity chomp away data at it's
-own pace and finally give us a notification back - but again, we can
-argue it is indeed protocol dependent, so setting txdone_poll to false
-actually enables that to be done in user. Again - i have no immediate
-need for any queued multiple transfer needs yet.. even if i need to, in
-the future, it can easily be done by the client by maintaining code as
-is - txdone_poll is false.
-
-> 
-> 
->> +       /*
->> +        * NOTE about register access involved here:
->> +        * the hardware block is implemented with 32bit access operations and no
->> +        * support for data splitting.  We don't want the hardware to misbehave
->> +        * with sub 32bit access - For example: if the last register write is
->> +        * split into byte wise access, it can result in the queue getting
->> +        * stuck or dummy messages being transmitted or indeterminate behavior.
->> +        * The same can occur if out of order operations take place.
->> +        * Hence, we do not use memcpy_toio or ___iowrite32_copy here, instead
->> +        * we use writel which ensures the sequencing we need.
->> +        */
-> .... deja-vu ?
-
-Tell me about it.. but then, surprises like these do pop in once in a
-while.. sigh..
-
+>> +static unsigned int mvebu_uart_get_mctrl(struct uart_port *port)
+>> +{
+>> +	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
+>> +}
 >> +
->> +/* Keystone K2G SoC integration details */
->> +static const struct ti_msgmgr_valid_queue_desc k2g_valid_queues[] = {
->> +       {.queue_id = 0, .proxy_id = 0, .is_tx = true,},
->> +       {.queue_id = 1, .proxy_id = 0, .is_tx = true,},
->> +       {.queue_id = 2, .proxy_id = 0, .is_tx = true,},
->> +       {.queue_id = 3, .proxy_id = 0, .is_tx = true,},
->> +       {.queue_id = 5, .proxy_id = 2, .is_tx = false,},
->> +       {.queue_id = 56, .proxy_id = 1, .is_tx = true,},
->> +       {.queue_id = 57, .proxy_id = 2, .is_tx = false,},
->> +       {.queue_id = 58, .proxy_id = 3, .is_tx = true,},
->> +       {.queue_id = 59, .proxy_id = 4, .is_tx = true,},
->> +       {.queue_id = 60, .proxy_id = 5, .is_tx = true,},
->> +       {.queue_id = 61, .proxy_id = 6, .is_tx = true,},
+>> +static void mvebu_uart_set_mctrl(struct uart_port *port,
+>> +				 unsigned int mctrl)
+>> +{
+>> +/*
+>> + * Even if we do not support configuring the modem control lines, t=
+his
+>> + * function must be proided to the serial core
+>> + */
+>> +}
+>> +
+>> +static void mvebu_uart_stop_tx(struct uart_port *port)
+>> +{
+>> +	unsigned int ctl =3D readl(port->membase + UART_CTRL);
+>> +
+>> +	ctl &=3D ~CTRL_TX_RDY_INT;
+>> +	writel(ctl, port->membase + UART_CTRL);
+>> +}
+>> +
+>> +static void mvebu_uart_start_tx(struct uart_port *port)
+>> +{
+>> +	unsigned int ctl =3D readl(port->membase + UART_CTRL);
+>> +
+>> +	ctl |=3D CTRL_TX_RDY_INT;
+>> +	writel(ctl, port->membase + UART_CTRL);
+>> +}
+>> +
+>> +static void mvebu_uart_stop_rx(struct uart_port *port)
+>> +{
+>> +	unsigned int ctl =3D readl(port->membase + UART_CTRL);
+>> +
+>> +	ctl &=3D ~CTRL_RX_INT;
+>> +	writel(ctl, port->membase + UART_CTRL);
+>> +}
+>> +
+>> +static void mvebu_uart_break_ctl(struct uart_port *port, int brk)
+>> +{
+>> +	unsigned int ctl;
+>> +	unsigned long flags;
+>> +
+>> +	spin_lock_irqsave(&port->lock, flags);
+>> +	ctl =3D readl(port->membase + UART_CTRL);
+>> +	if (brk =3D=3D -1)
+>> +		ctl |=3D CTRL_SND_BRK_SEQ;
+>> +	else
+>> +		ctl &=3D ~CTRL_SND_BRK_SEQ;
+>> +	writel(ctl, port->membase + UART_CTRL);
+>> +	spin_unlock_irqrestore(&port->lock, flags);
+>> +}
+>> +
+>> +static void mvebu_uart_rx_chars(struct uart_port *port, unsigned in=
+t status)
+>> +{
+>> +	struct tty_port *tport =3D &port->state->port;
+>> +	unsigned char ch =3D 0;
+>> +	char flag =3D 0;
+>> +
+>> +	do {
+>> +		if (status & STAT_RX_RDY) {
+>> +			ch =3D readl(port->membase + UART_RBR);
+>> +			ch &=3D 0xff;
+>> +			flag =3D TTY_NORMAL;
+>> +			port->icount.rx++;
+>> +
+>> +			if (status & STAT_PAR_ERR)
+>> +				port->icount.parity++;
+>> +		}
+>> +
+>> +		if (status & STAT_BRK_DET) {
+>> +			port->icount.brk++;
+>> +			status &=3D ~(STAT_FRM_ERR | STAT_PAR_ERR);
+>> +			if (uart_handle_break(port))
+>> +				goto ignore_char;
+>> +		}
+>> +
+>> +		if (status & STAT_OVR_ERR)
+>> +			port->icount.overrun++;
+>> +
+>> +		if (status & STAT_FRM_ERR)
+>> +			port->icount.frame++;
+>> +
+>> +		if (uart_handle_sysrq_char(port, ch))
+>> +			goto ignore_char;
+>> +
+>> +		if (status & port->ignore_status_mask & STAT_PAR_ERR)
+>> +			status &=3D ~STAT_RX_RDY;
+>> +
+>> +		status &=3D port->read_status_mask;
+>> +
+>> +		if (status & STAT_PAR_ERR)
+>> +			flag =3D TTY_PARITY;
+>> +
+>> +		status &=3D ~port->ignore_status_mask;
+>> +
+>> +		if (status & STAT_RX_RDY)
+>> +			tty_insert_flip_char(tport, ch, flag);
+>> +
+>> +		if (status & STAT_BRK_DET)
+>> +			tty_insert_flip_char(tport, 0, TTY_BREAK);
+>> +
+>> +		if (status & STAT_FRM_ERR)
+>> +			tty_insert_flip_char(tport, 0, TTY_FRAME);
+>> +
+>> +		if (status & STAT_OVR_ERR)
+>> +			tty_insert_flip_char(tport, 0, TTY_OVERRUN);
+>> +
+>> +ignore_char:
+>> +		status =3D readl(port->membase + UART_STAT);
+>> +	} while (status & (STAT_RX_RDY | STAT_BRK_DET));
+>> +
+>> +	tty_flip_buffer_push(tport);
+>> +}
+>> +
+>> +static void mvebu_uart_tx_chars(struct uart_port *port, unsigned in=
+t status)
+>> +{
+>> +	struct circ_buf *xmit =3D &port->state->xmit;
+>> +	unsigned int count;
+>> +	unsigned int st;
+>> +
+>> +	if (port->x_char) {
+>> +		writel(port->x_char, port->membase + UART_TSH);
+>> +		port->icount.tx++;
+>> +		port->x_char =3D 0;
+>> +		return;
+>> +	}
+>> +
+>> +	if (uart_circ_empty(xmit) || uart_tx_stopped(port)) {
+>> +		mvebu_uart_stop_tx(port);
+>> +		return;
+>> +	}
+>> +
+>> +	for (count =3D 0; count < port->fifosize; count++) {
+>> +		writel(xmit->buf[xmit->tail], port->membase + UART_TSH);
+>> +		xmit->tail =3D (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+>> +		port->icount.tx++;
+>> +
+>> +		if (uart_circ_empty(xmit))
+>> +			break;
+>> +
+>> +		st =3D readl(port->membase + UART_STAT);
+>> +		if (st & STAT_TX_FIFO_FUL)
+>> +			break;
+>> +	}
+>> +
+>> +	if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+>> +		uart_write_wakeup(port);
+>> +
+>> +	if (uart_circ_empty(xmit))
+>> +		mvebu_uart_stop_tx(port);
+>> +}
+>> +
+>> +static irqreturn_t mvebu_uart_isr(int irq, void *dev_id)
+>> +{
+>> +	struct uart_port *port =3D (struct uart_port *)dev_id;
+>> +	unsigned int st =3D readl(port->membase + UART_STAT);
+>> +
+>> +	if (st & (STAT_RX_RDY | STAT_OVR_ERR | STAT_FRM_ERR | STAT_BRK_DET=
+))
+>> +		mvebu_uart_rx_chars(port, st);
+>> +
+>> +	if (st & STAT_TX_RDY)
+>> +		mvebu_uart_tx_chars(port, st);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int mvebu_uart_startup(struct uart_port *port)
+>> +{
+>> +	int ret;
+>> +
+>> +	writel(CTRL_TXFIFO_RST | CTRL_RXFIFO_RST,
+>> +	       port->membase + UART_CTRL);
+>> +	udelay(1);
+>> +	writel(CTRL_RX_INT, port->membase + UART_CTRL);
+>> +
+>> +	ret =3D request_irq(port->irq, mvebu_uart_isr, port->irqflags, "se=
+rial",
+>> +			  port);
+>> +	if (ret) {
+>> +		dev_err(port->dev, "failed to request irq\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void mvebu_uart_shutdown(struct uart_port *port)
+>> +{
+>> +	writel(0, port->membase + UART_CTRL);
+>> +}
+>> +
+>> +static void mvebu_uart_set_termios(struct uart_port *port,
+>> +				   struct ktermios *termios,
+>> +				   struct ktermios *old)
+>> +{
+>> +	unsigned long flags;
+>> +	unsigned int baud;
+>> +
+>> +	spin_lock_irqsave(&port->lock, flags);
+>> +
+>> +	port->read_status_mask =3D STAT_RX_RDY | STAT_OVR_ERR |
+>> +		STAT_TX_RDY | STAT_TX_FIFO_FUL;
+>> +
+>> +	if (termios->c_iflag & INPCK)
+>> +		port->read_status_mask |=3D STAT_FRM_ERR | STAT_PAR_ERR;
+>> +
+>> +	port->ignore_status_mask =3D 0;
+>> +	if (termios->c_iflag & IGNPAR)
+>> +		port->ignore_status_mask |=3D
+>> +			STAT_FRM_ERR | STAT_PAR_ERR | STAT_OVR_ERR;
+>> +
+>> +	if ((termios->c_cflag & CREAD) =3D=3D 0)
+>> +		port->ignore_status_mask |=3D STAT_RX_RDY | STAT_BRK_ERR;
+>> +
+>> +	if (old)
+>> +		tty_termios_copy_hw(termios, old);
+>> +
+>> +	baud =3D uart_get_baud_rate(port, termios, old, 0, 460800);
+>> +	uart_update_timeout(port, termios->c_cflag, baud);
+>> +
+>> +	spin_unlock_irqrestore(&port->lock, flags);
+>> +}
+>> +
+>> +static const char *mvebu_uart_type(struct uart_port *port)
+>> +{
+>> +	return MVEBU_UART_TYPE;
+>> +}
+>> +
+>> +static void mvebu_uart_release_port(struct uart_port *port)
+>> +{
+>> +	/* Nothing to do here */
+>> +}
+>> +
+>> +static int mvebu_uart_request_port(struct uart_port *port)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_CONSOLE_POLL
+>> +static int mvebu_uart_get_poll_char(struct uart_port *port)
+>> +{
+>> +	unsigned int st =3D readl(port->membase + UART_STAT);
+>> +
+>> +	if (!(st & STAT_RX_RDY))
+>> +		return NO_POLL_CHAR;
+>> +
+>> +	return readl(port->membase + UART_RBR);
+>> +}
+>> +
+>> +static void mvebu_uart_put_poll_char(struct uart_port *port, unsign=
+ed char c)
+>> +{
+>> +	unsigned int st;
+>> +
+>> +	for (;;) {
+>> +		st =3D readl(port->membase + UART_STAT);
+>> +
+>> +		if (!(st & STAT_TX_FIFO_FUL))
+>> +			break;
+>> +
+>> +		udelay(1);
+>> +	}
+>> +
+>> +	writel(c, port->membase + UART_TSH);
+>> +}
+>> +#endif
+>> +
+>> +static const struct uart_ops mvebu_uart_ops =3D {
+>> +	.tx_empty	=3D mvebu_uart_tx_empty,
+>> +	.set_mctrl	=3D mvebu_uart_set_mctrl,
+>> +	.get_mctrl	=3D mvebu_uart_get_mctrl,
+>> +	.stop_tx	=3D mvebu_uart_stop_tx,
+>> +	.start_tx	=3D mvebu_uart_start_tx,
+>> +	.stop_rx	=3D mvebu_uart_stop_rx,
+>> +	.break_ctl	=3D mvebu_uart_break_ctl,
+>> +	.startup	=3D mvebu_uart_startup,
+>> +	.shutdown	=3D mvebu_uart_shutdown,
+>> +	.set_termios	=3D mvebu_uart_set_termios,
+>> +	.type		=3D mvebu_uart_type,
+>> +	.release_port	=3D mvebu_uart_release_port,
+>> +	.request_port	=3D mvebu_uart_request_port,
+>> +#ifdef CONFIG_CONSOLE_POLL
+>> +	.poll_get_char	=3D mvebu_uart_get_poll_char,
+>> +	.poll_put_char	=3D mvebu_uart_put_poll_char,
+>> +#endif
 >> +};
 >> +
->> +static const struct ti_msgmgr_desc k2g_desc = {
->> +       .queue_count = 64,
->> +       .max_message_size = 64,
->> +       .max_messages = 128,
->> +       .q_slices = 1,
->> +       .q_proxies = 1,
->> +       .data_first_reg = 16,
->> +       .data_last_reg = 31,
->> +       .tx_polled = false,
->> +       .valid_queues = k2g_valid_queues,
->> +       .num_valid_queues = ARRAY_SIZE(k2g_valid_queues),
+>> +/* Console Driver Operations  */
+>> +
+>> +#ifdef CONFIG_SERIAL_MVEBU_CONSOLE
+>> +/* Early Console */
+>> +static void mvebu_uart_putc(struct uart_port *port, int c)
+>> +{
+>> +	unsigned int st;
+>> +
+>> +	for (;;) {
+>> +		st =3D readl(port->membase + UART_STAT);
+>> +		if (!(st & STAT_TX_FIFO_FUL))
+>> +			break;
+>> +	}
+>> +
+>> +	writel(c, port->membase + UART_TSH);
+>> +
+>> +	for (;;) {
+>> +		st =3D readl(port->membase + UART_STAT);
+>> +		if (st & STAT_TX_FIFO_EMP)
+>> +			break;
+>> +	}
+>> +}
+>> +
+>> +static void mvebu_uart_putc_early_write(struct console *con,
+>> +					const char *s,
+>> +					unsigned n)
+>> +{
+>> +	struct earlycon_device *dev =3D con->data;
+>> +
+>> +	uart_console_write(&dev->port, s, n, mvebu_uart_putc);
+>> +}
+>> +
+>> +static int __init
+>> +mvebu_uart_early_console_setup(struct earlycon_device *device,
+>> +			       const char *opt)
+>> +{
+>> +	if (!device->port.membase)
+>> +		return -ENODEV;
+>> +
+>> +	device->con->write =3D mvebu_uart_putc_early_write;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +EARLYCON_DECLARE(ar3700_uart, mvebu_uart_early_console_setup);
+>> +OF_EARLYCON_DECLARE(ar3700_uart, "marvell,armada-3700-uart",
+>> +		    mvebu_uart_early_console_setup);
+>> +
+>> +static void wait_for_xmitr(struct uart_port *port)
+>> +{
+>> +	u32 val;
+>> +
+>> +	readl_poll_timeout_atomic(port->membase + UART_STAT, val,
+>> +				  (val & STAT_TX_EMP), 1, 10000);
+>> +}
+>> +
+>> +static void mvebu_uart_console_putchar(struct uart_port *port, int =
+ch)
+>> +{
+>> +	wait_for_xmitr(port);
+>> +	writel(ch, port->membase + UART_TSH);
+>> +}
+>> +
+>> +static void mvebu_uart_console_write(struct console *co, const char=
+ *s,
+>> +				     unsigned int count)
+>> +{
+>> +	struct uart_port *port =3D &mvebu_uart_ports[co->index];
+>> +	unsigned long flags;
+>> +	unsigned int ier;
+>> +	int locked =3D 1;
+>> +
+>> +	if (oops_in_progress)
+>> +		locked =3D spin_trylock_irqsave(&port->lock, flags);
+>> +	else
+>> +		spin_lock_irqsave(&port->lock, flags);
+>> +
+>> +	ier =3D readl(port->membase + UART_CTRL) &
+>> +		(CTRL_RX_INT | CTRL_TX_RDY_INT);
+>> +	writel(0, port->membase + UART_CTRL);
+>> +
+>> +	uart_console_write(port, s, count, mvebu_uart_console_putchar);
+>> +
+>> +	wait_for_xmitr(port);
+>> +
+>> +	if (ier)
+>> +		writel(ier, port->membase + UART_CTRL);
+>> +
+>> +	if (locked)
+>> +		spin_unlock_irqrestore(&port->lock, flags);
+>> +}
+>> +
+>> +static int mvebu_uart_console_setup(struct console *co, char *optio=
+ns)
+>> +{
+>> +	struct uart_port *port;
+>> +	int baud =3D 9600;
+>> +	int bits =3D 8;
+>> +	int parity =3D 'n';
+>> +	int flow =3D 'n';
+>> +
+>> +	if (co->index < 0 || co->index >=3D MVEBU_NR_UARTS)
+>> +		return -EINVAL;
+>> +
+>> +	port =3D &mvebu_uart_ports[co->index];
+>> +
+>> +	if (!port->mapbase || !port->membase) {
+>> +		pr_debug("console on ttyMV%i not present\n", co->index);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	if (options)
+>> +		uart_parse_options(options, &baud, &parity, &bits, &flow);
+>> +
+>> +	return uart_set_options(port, co, baud, parity, bits, flow);
+>> +}
+>> +
+>> +static struct uart_driver mvebu_uart_driver;
+>> +
+>> +static struct console mvebu_uart_console =3D {
+>> +	.name	=3D "ttyMV",
+>> +	.write	=3D mvebu_uart_console_write,
+>> +	.device	=3D uart_console_device,
+>> +	.setup	=3D mvebu_uart_console_setup,
+>> +	.flags	=3D CON_PRINTBUFFER,
+>> +	.index	=3D -1,
+>> +	.data	=3D &mvebu_uart_driver,
 >> +};
-> If these parameters are very configurable, maybe they should be in DT?
+>> +
+>> +static int __init mvebu_uart_console_init(void)
+>> +{
+>> +	register_console(&mvebu_uart_console);
+>> +	return 0;
+>> +}
+>> +
+>> +console_initcall(mvebu_uart_console_init);
+>> +
+>> +
+>> +#endif /* CONFIG_SERIAL_MVEBU_CONSOLE */
+>> +
+>> +static struct uart_driver mvebu_uart_driver =3D {
+>> +	.owner			=3D THIS_MODULE,
+>> +	.driver_name		=3D "mvebu_serial",
+>> +	.dev_name		=3D "ttyMV",
+>> +	.nr			=3D MVEBU_NR_UARTS,
+>> +#ifdef CONFIG_SERIAL_MVEBU_CONSOLE
+>> +	.cons			=3D &mvebu_uart_console,
+>> +#endif
+>> +};
+>> +
+>> +static int mvebu_uart_probe(struct platform_device *pdev)
+>> +{
+>> +	struct resource *reg =3D platform_get_resource(pdev, IORESOURCE_ME=
+M, 0);
+>> +	struct resource *irq =3D platform_get_resource(pdev, IORESOURCE_IR=
+Q, 0);
+>> +	struct uart_port *port;
+>> +	struct mvebu_uart_data *data;
+>> +	int ret;
+>> +
+>> +	if (!reg || !irq) {
+>> +		dev_err(&pdev->dev, "no registers/irq defined\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	port =3D &mvebu_uart_ports[0];
+>> +
+>> +	spin_lock_init(&port->lock);
+>> +
+>> +	port->dev        =3D &pdev->dev;
+>> +	port->type       =3D PORT_MVEBU;
+>> +	port->ops        =3D &mvebu_uart_ops;
+>> +	port->regshift   =3D 0;
+>> +
+>> +	port->fifosize   =3D 32;
+>> +	port->iotype     =3D UPIO_MEM32;
+>> +	port->flags      =3D UPF_FIXED_PORT;
+>> +	port->line       =3D 0; /* single port: force line number to  0 */
+>> +
+>> +	port->irq        =3D irq->start;
+>> +	port->irqflags   =3D 0;
+>> +	port->mapbase    =3D reg->start;
+>> +
+>> +	port->membase =3D devm_ioremap_resource(&pdev->dev, reg);
+>> +	if (IS_ERR(port->membase))
+>> +		return -PTR_ERR(port->membase);
+>> +
+>> +	data =3D devm_kzalloc(&pdev->dev, sizeof(struct mvebu_uart_data),
+>> +			    GFP_KERNEL);
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	data->port =3D port;
+>> +
+>> +	port->private_data =3D data;
+>> +	platform_set_drvdata(pdev, data);
+>> +
+>> +	ret =3D uart_add_one_port(&mvebu_uart_driver, port);
+>> +	if (ret)
+>> +		return ret;
+>> +	return 0;
+>> +}
+>> +
+>> +static int mvebu_uart_remove(struct platform_device *pdev)
+>> +{
+>> +	struct mvebu_uart_data *data =3D platform_get_drvdata(pdev);
+>> +
+>> +	uart_remove_one_port(&mvebu_uart_driver, data->port);
+>> +	data->port->private_data =3D NULL;
+>> +	data->port->mapbase      =3D 0;
+>> +	return 0;
+>> +}
+>> +
+>> +/* Match table for of_platform binding */
+>> +static const struct of_device_id mvebu_uart_of_match[] =3D {
+>> +	{ .compatible =3D "marvell,armada-3700-uart", },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, mvebu_uart_of_match);
+>> +
+>> +static struct platform_driver mvebu_uart_platform_driver =3D {
+>> +	.probe	=3D mvebu_uart_probe,
+>> +	.remove	=3D mvebu_uart_remove,
+>> +	.driver	=3D {
+>> +		.owner	=3D THIS_MODULE,
+>> +		.name  =3D "mvebu-uart",
+>> +		.of_match_table =3D of_match_ptr(mvebu_uart_of_match),
+>> +	},
+>> +};
+>> +
+>> +static int __init mvebu_uart_init(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret =3D uart_register_driver(&mvebu_uart_driver);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	ret =3D platform_driver_register(&mvebu_uart_platform_driver);
+>> +	if (ret)
+>> +		uart_unregister_driver(&mvebu_uart_driver);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void __exit mvebu_uart_exit(void)
+>> +{
+>> +	platform_driver_unregister(&mvebu_uart_platform_driver);
+>> +	uart_unregister_driver(&mvebu_uart_driver);
+>> +}
+>> +
+>> +arch_initcall(mvebu_uart_init);
+>> +module_exit(mvebu_uart_exit);
+>> +
+>> +MODULE_AUTHOR("Wilson Ding <dingwei-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>");
+>> +MODULE_DESCRIPTION("Marvell Armada-3700 Serial Driver");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/include/uapi/linux/serial_core.h b/include/uapi/linux/s=
+erial_core.h
+>> index 3e5d757407fb..e513a4ee369b 100644
+>> --- a/include/uapi/linux/serial_core.h
+>> +++ b/include/uapi/linux/serial_core.h
+>> @@ -261,4 +261,7 @@
+>>  /* STM32 USART */
+>>  #define PORT_STM32	113
+>> =20
+>> +/* MVEBU UART */
+>> +#define PORT_MVEBU	114
+>> +
+>>  #endif /* _UAPILINUX_SERIAL_CORE_H */
+>> --=20
+>> 2.5.0
+>>
+>
+> --=20
+> Gregory Clement, Free Electrons
+> Kernel, drivers, real-time and embedded Linux
+> development, consulting, training and support.
+> http://free-electrons.com
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-These are SoC integration specific data. based on DT, we will only have
-SoC specific compatible property in DT. Since  the data is tied to SoC
-integration, there is no benefit of keeping these in DT.
-
--- 
-Regards,
-Nishanth Menon
+--=20
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
