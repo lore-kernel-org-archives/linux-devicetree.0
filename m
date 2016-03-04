@@ -1,85 +1,194 @@
-From: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] ASoC: rockchip: add bindings for spdif controller
-Date: Fri,  4 Mar 2016 18:31:54 +0800
-Message-ID: <1457087514-1837-1-git-send-email-sugar.zhang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Xinliang Liu <xinliang.liu@linaro.org>
+Subject: [PATCH v7 01/11] drm/hisilicon: Add device tree binding for hi6220 display subsystem
+Date: Fri,  4 Mar 2016 18:54:27 +0800
+Message-ID: <1457088877-131022-2-git-send-email-xinliang.liu@linaro.org>
+References: <1457088877-131022-1-git-send-email-xinliang.liu@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1457088877-131022-1-git-send-email-xinliang.liu@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, daniel@ffwll.ch, robh@kernel.org, daniel@fooishbar.org, architt@codeaurora.org, airlied@linux.ie, corbet@lwn.net, catalin.marinas@arm.com, will.deacon@arm.com, emil.l.velikov@gmail.com, mark.rutland@arm.com
+Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, andy.green@linaro.org, haojian.zhuang@linaro.org, liguozhu@hisilicon.com, xuwei5@hisilicon.com, w.f@huawei.com, puck.chen@hisilicon.com, bintian.wang@huawei.com, benjamin.gaignard@linaro.org, xuyiping@hisilicon.com, kong.kongxinwei@hisilicon.com, zourongrong@huawei.com, lijianhua@huawei.com, sumit.semwal@linaro.org, guodong.xu@linaro.org, Xinliang Liu <xinliang.liu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-this patch add compatible for rk3366/rk3368/rk3399 spdif,
-these three spdifs share the same type.
+Add ADE display controller binding doc.
+Add DesignWare DSI Host Controller v1.20a binding doc.
 
-Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+v7: Acked by Rob Herring.
+v6:
+- Cleanup values part of reg and clocks properties.
+- Change "pclk_dsi" clock name to "pclk".
+v5:
+- Remove endpoint unit address of dsi output port.
+- Add "hisilicon,noc-syscon" property for ADE NOC QoS syscon.
+- Add "resets" property for ADE reset.
+v4:
+- Describe more specific of clocks and ports.
+- Fix indentation.
+v3:
+- Make ade as the drm master node.
+- Use assigned-clocks to set clock rate.
+- Use ports to connect display relavant nodes.
+v2:
+- Move dt binding docs to bindings/display/hisilicon directory.
+
+Signed-off-by: Xinliang Liu <xinliang.liu@linaro.org>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
+ .../bindings/display/hisilicon/dw-dsi.txt          | 72 ++++++++++++++++++++++
+ .../bindings/display/hisilicon/hisi-ade.txt        | 64 +++++++++++++++++++
+ 2 files changed, 136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+ create mode 100644 Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
 
- Documentation/devicetree/bindings/sound/rockchip-spdif.txt |  8 ++++++--
- sound/soc/rockchip/rockchip_spdif.c                        | 13 ++++++++++---
- 2 files changed, 16 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-index e64dbde..1104642 100644
---- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
-@@ -7,8 +7,12 @@ a fibre cable.
- Required properties:
- 
- - compatible: should be one of the following:
--   - "rockchip,rk3288-spdif", "rockchip,rk3188-spdif" or
--     "rockchip,rk3066-spdif"
-+   - "rockchip,rk3066-spdif"
-+   - "rockchip,rk3188-spdif"
-+   - "rockchip,rk3288-spdif"
-+   - "rockchip,rk3366-spdif"
-+   - "rockchip,rk3368-spdif"
-+   - "rockchip,rk3399-spdif"
- - reg: physical base address of the controller and length of memory mapped
-   region.
- - interrupts: should contain the SPDIF interrupt.
-diff --git a/sound/soc/rockchip/rockchip_spdif.c b/sound/soc/rockchip/rockchip_spdif.c
-index 5a806da..c589f6f 100644
---- a/sound/soc/rockchip/rockchip_spdif.c
-+++ b/sound/soc/rockchip/rockchip_spdif.c
-@@ -28,6 +28,7 @@ enum rk_spdif_type {
- 	RK_SPDIF_RK3066,
- 	RK_SPDIF_RK3188,
- 	RK_SPDIF_RK3288,
-+	RK_SPDIF_RK3366,
- };
- 
- #define RK3288_GRF_SOC_CON2 0x24c
-@@ -45,11 +46,17 @@ struct rk_spdif_dev {
- 
- static const struct of_device_id rk_spdif_match[] = {
- 	{ .compatible = "rockchip,rk3066-spdif",
--	  .data = (void *) RK_SPDIF_RK3066 },
-+	  .data = (void *)RK_SPDIF_RK3066 },
- 	{ .compatible = "rockchip,rk3188-spdif",
--	  .data = (void *) RK_SPDIF_RK3188 },
-+	  .data = (void *)RK_SPDIF_RK3188 },
- 	{ .compatible = "rockchip,rk3288-spdif",
--	  .data = (void *) RK_SPDIF_RK3288 },
-+	  .data = (void *)RK_SPDIF_RK3288 },
-+	{ .compatible = "rockchip,rk3366-spdif",
-+	  .data = (void *)RK_SPDIF_RK3366 },
-+	{ .compatible = "rockchip,rk3368-spdif",
-+	  .data = (void *)RK_SPDIF_RK3366 },
-+	{ .compatible = "rockchip,rk3399-spdif",
-+	  .data = (void *)RK_SPDIF_RK3366 },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, rk_spdif_match);
+diff --git a/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+new file mode 100644
+index 000000000000..d270bfe4e4e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/hisilicon/dw-dsi.txt
+@@ -0,0 +1,72 @@
++Device-Tree bindings for DesignWare DSI Host Controller v1.20a driver
++
++A DSI Host Controller resides in the middle of display controller and external
++HDMI converter or panel.
++
++Required properties:
++- compatible: value should be "hisilicon,hi6220-dsi".
++- reg: physical base address and length of dsi controller's registers.
++- clocks: contains APB clock phandle + clock-specifier pair.
++- clock-names: should be "pclk".
++- ports: contains DSI controller input and output sub port.
++  The input port connects to ADE output port with the reg value "0".
++  The output port with the reg value "1", it could connect to panel or
++  any other bridge endpoints.
++  See Documentation/devicetree/bindings/graph.txt for more device graph info.
++
++A example of HiKey board hi6220 SoC and board specific DT entry:
++Example:
++
++SoC specific:
++	dsi: dsi@f4107800 {
++		compatible = "hisilicon,hi6220-dsi";
++		reg = <0x0 0xf4107800 0x0 0x100>;
++		clocks = <&media_ctrl  HI6220_DSI_PCLK>;
++		clock-names = "pclk";
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* 0 for input port */
++			port@0 {
++				reg = <0>;
++				dsi_in: endpoint {
++					remote-endpoint = <&ade_out>;
++				};
++			};
++		};
++	};
++
++
++Board specific:
++	&dsi {
++		status = "ok";
++
++		ports {
++			/* 1 for output port */
++			port@1 {
++				reg = <1>;
++
++				dsi_out0: endpoint@0 {
++					remote-endpoint = <&adv7533_in>;
++				};
++			};
++		};
++	};
++
++	&i2c2 {
++		...
++
++		adv7533: adv7533@39 {
++			...
++
++			port {
++				adv7533_in: endpoint {
++					remote-endpoint = <&dsi_out0>;
++				};
++			};
++		};
++	};
++
+diff --git a/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+new file mode 100644
+index 000000000000..38dc9d60eef8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/hisilicon/hisi-ade.txt
+@@ -0,0 +1,64 @@
++Device-Tree bindings for hisilicon ADE display controller driver
++
++ADE (Advanced Display Engine) is the display controller which grab image
++data from memory, do composition, do post image processing, generate RGB
++timing stream and transfer to DSI.
++
++Required properties:
++- compatible: value should be "hisilicon,hi6220-ade".
++- reg: physical base address and length of the ADE controller's registers.
++- hisilicon,noc-syscon: ADE NOC QoS syscon.
++- resets: The ADE reset controller node.
++- interrupt: the ldi vblank interrupt number used.
++- clocks: a list of phandle + clock-specifier pairs, one for each entry
++  in clock-names.
++- clock-names: should contain:
++  "clk_ade_core" for the ADE core clock.
++  "clk_codec_jpeg" for the media NOC QoS clock, which use the same clock with
++  jpeg codec.
++  "clk_ade_pix" for the ADE pixel clok.
++- assigned-clocks: Should contain "clk_ade_core" and "clk_codec_jpeg" clocks'
++  phandle + clock-specifier pairs.
++- assigned-clock-rates: clock rates, one for each entry in assigned-clocks.
++  The rate of "clk_ade_core" could be "360000000" or "180000000";
++  The rate of "clk_codec_jpeg" could be or less than "1440000000".
++  These rate values could be configured according to performance and power
++  consumption.
++- port: the output port. This contains one endpoint subnode, with its
++  remote-endpoint set to the phandle of the connected DSI input endpoint.
++  See Documentation/devicetree/bindings/graph.txt for more device graph info.
++
++Optional properties:
++- dma-coherent: Present if dma operations are coherent.
++
++
++A example of HiKey board hi6220 SoC specific DT entry:
++Example:
++
++	ade: ade@f4100000 {
++		compatible = "hisilicon,hi6220-ade";
++		reg = <0x0 0xf4100000 0x0 0x7800>;
++		reg-names = "ade_base";
++		hisilicon,noc-syscon = <&medianoc_ade>;
++		resets = <&media_ctrl MEDIA_ADE>;
++		interrupts = <0 115 4>; /* ldi interrupt */
++
++		clocks = <&media_ctrl HI6220_ADE_CORE>,
++			 <&media_ctrl HI6220_CODEC_JPEG>,
++			 <&media_ctrl HI6220_ADE_PIX_SRC>;
++		/*clock name*/
++		clock-names  = "clk_ade_core",
++			       "clk_codec_jpeg",
++			       "clk_ade_pix";
++
++		assigned-clocks = <&media_ctrl HI6220_ADE_CORE>,
++			<&media_ctrl HI6220_CODEC_JPEG>;
++		assigned-clock-rates = <360000000>, <288000000>;
++		dma-coherent;
++
++		port {
++			ade_out: endpoint {
++				remote-endpoint = <&dsi_in>;
++			};
++		};
++	};
 -- 
-1.9.1
+2.7.1
+
