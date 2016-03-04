@@ -1,226 +1,73 @@
-From: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
-Subject: Re: [PATCH v4 00/18] i2c mux cleanup and locking update
-Date: Fri, 04 Mar 2016 15:49:30 +0100
-Message-ID: <56D9A07A.5040106@lysator.liu.se>
-References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se> <56D96B15.8090806@lysator.liu.se>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 5/5] ARM: dts: DRA7: Add dt nodes for PWMSS
+Date: Fri, 4 Mar 2016 08:52:09 -0600
+Message-ID: <CAL_JsqLYLwJ7fWGcG4h-obix8Pn9+rQ_5sD9B=mCeO1+-d+ijw@mail.gmail.com>
+References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
+ <1456439796-28546-6-git-send-email-fcooper@ti.com> <20160302182634.GA26055@rob-hp-laptop>
+ <56D8E74A.6090601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D96B15.8090806-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viorel Suman <viorel.suman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Terry Heo <terryheo-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tommi Rantala <tt.rantala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56D8E74A.6090601@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Franklin S Cooper Jr." <fcooper@ti.com>
+Cc: "paul@pwsan.com" <paul@pwsan.com>, Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>, Vignesh R <vigneshr@ti.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-I wrote:
-> I wrote:
->> Concerns:
->> - The locking is perhaps too complex?
-> 
-> Ok, to highlight the benefits of this series, I expect that patches such as
-> [1] and the one inlined below can follow up to clean up ad-hoc i2c locking
-> in drivers. Putting this locking in one place instead of having it spread
-> out in random drivers is a good thing.
-> 
-> PS. the inlined patch has not been tested as I have no hw, it's a proof of
-> concept. Maybe the simplifications can be extended into rtl2832_sdr.c as well?
-> Anyway, please do test this patch on top of the v4 series if you have the hw.
+On Thu, Mar 3, 2016 at 7:39 PM, Franklin S Cooper Jr. <fcooper@ti.com> wrote:
+> Hi Rob,
+>
+> On 03/02/2016 12:26 PM, Rob Herring wrote:
+>> On Thu, Feb 25, 2016 at 04:36:36PM -0600, Franklin S Cooper Jr wrote:
+>>> From: Vignesh R <vigneshr@ti.com>
+>>>
+>>> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
+>>> for dt bindings.
+>>>
+>>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>>> ---
+>>> Version 3 changes:
+>>> None
+>>>
+>>>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  8 +++
+>>>  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 17 +++++-
+>>>  arch/arm/boot/dts/dra7.dtsi                        | 64 ++++++++++++++++++++++
+>>>  3 files changed, 88 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>>> index 9c100b2..25d91ae 100644
+>>> --- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>>> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>>> @@ -4,6 +4,7 @@ Required properties:
+>>>  - compatible: Must be "ti,<soc>-ehrpwm".
+>>>    for am33xx - compatible = "ti,am33xx-ehrpwm";
+>>>    for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
+>>> +  for dra7xx - compatible = "ti,dra7xx-ehrpwm", "ti,am33xx-ehrpwm";
+>> We're starting to push back on wildcards in compatible strings. I guess
+>> this is okay...
+>>
+>>>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>>>    the cells format. The only third cell flag supported by this binding is
+>>>    PWM_POLARITY_INVERTED.
+>>> @@ -27,3 +28,10 @@ ehrpwm0: ehrpwm@0 { /* EHRPWM on da850 */
+>>>      #pwm-cells = <3>;
+>>>      reg = <0x300000 0x2000>;
+>>>  };
+>>> +
+>>> +ehrpwm0: ehrpwm@0 { /* EHRPWM on dra7xx */
+>> Should be pwm@48440200
+>
+> So the AM335x, AM437x  and DA850 all use ehrpwm0:
+> ehrpwm@<address>. Also the address of 0 simply follows the
+> pattern used in the other binding examples in that doc. I
+> can replace the 0 address in this patch and make another
+> patch that fixes it for the other examples in that file. But
+> in terms of switching from ehrpwm0:ehrpwm@<address> to
+> ehrpwm0:pwm@<address> that would also require making changes
+> to the various dtsis also. So is it worth making that
+> change? If so I have no problem doing it.
 
-The untested patch in the previous message indeed has some obvious problems, so
-I fixed that and folded some more removed code now that rtl2832_sdr does not
-need to do anything special to access device registers.
+Follow-up patches to fix are fine. Unit-address and reg mismatches are
+going to start warning in dtc soon.
 
-The result builds for me, that's all the testing I have done.
-
-diffstat for the two patches combined:
- drivers/media/dvb-frontends/rtl2832.c      | 216 ++++-------------------------
- drivers/media/dvb-frontends/rtl2832.h      |   4 +-
- drivers/media/dvb-frontends/rtl2832_priv.h |   1 -
- drivers/media/dvb-frontends/rtl2832_sdr.c  |  13 +-
- drivers/media/dvb-frontends/rtl2832_sdr.h  |   5 +-
- drivers/media/usb/dvb-usb-v2/rtl28xxu.c    |   5 +-
- 6 files changed, 34 insertions(+), 210 deletions(-)
-
-Cheers,
-Peter
-
-diff --git a/drivers/media/dvb-frontends/rtl2832.c b/drivers/media/dvb-frontends/rtl2832.c
-index fd1f05e9e79a..6ade321503f0 100644
---- a/drivers/media/dvb-frontends/rtl2832.c
-+++ b/drivers/media/dvb-frontends/rtl2832.c
-@@ -153,31 +153,6 @@ static const struct rtl2832_reg_entry registers[] = {
- 	[DVBT_REG_4MSEL]	= {0x013,  0, 0},
- };
- 
--/* Our regmap is bypassing I2C adapter lock, thus we do it! */
--static int rtl2832_bulk_write(struct i2c_client *client, unsigned int reg,
--			      const void *val, size_t val_count)
--{
--	struct rtl2832_dev *dev = i2c_get_clientdata(client);
--
--	return regmap_bulk_write(dev->regmap, reg, val, val_count);
--}
--
--static int rtl2832_update_bits(struct i2c_client *client, unsigned int reg,
--			       unsigned int mask, unsigned int val)
--{
--	struct rtl2832_dev *dev = i2c_get_clientdata(client);
--
--	return regmap_update_bits(dev->regmap, reg, mask, val);
--}
--
--static int rtl2832_bulk_read(struct i2c_client *client, unsigned int reg,
--			     void *val, size_t val_count)
--{
--	struct rtl2832_dev *dev = i2c_get_clientdata(client);
--
--	return regmap_bulk_read(dev->regmap, reg, val, val_count);
--}
--
- static int rtl2832_rd_demod_reg(struct rtl2832_dev *dev, int reg, u32 *val)
- {
- 	struct i2c_client *client = dev->client;
-@@ -1091,7 +1066,6 @@ static int rtl2832_probe(struct i2c_client *client,
- 	INIT_DELAYED_WORK(&dev->i2c_gate_work, rtl2832_i2c_gate_work);
- 	INIT_DELAYED_WORK(&dev->stat_work, rtl2832_stat_work);
- 	/* create regmap */
--	mutex_init(&dev->regmap_mutex);
- 	dev->regmap_config.reg_bits =  8,
- 	dev->regmap_config.val_bits =  8,
- 	dev->regmap_config.volatile_reg = rtl2832_volatile_reg,
-@@ -1099,8 +1073,7 @@ static int rtl2832_probe(struct i2c_client *client,
- 	dev->regmap_config.ranges = regmap_range_cfg,
- 	dev->regmap_config.num_ranges = ARRAY_SIZE(regmap_range_cfg),
- 	dev->regmap_config.cache_type = REGCACHE_NONE,
--	dev->regmap = regmap_init(&client->dev, NULL, client,
--				  &dev->regmap_config);
-+	dev->regmap = regmap_init_i2c(client, &dev->regmap_config);
- 	if (IS_ERR(dev->regmap)) {
- 		ret = PTR_ERR(dev->regmap);
- 		goto err_kfree;
-@@ -1131,9 +1104,7 @@ static int rtl2832_probe(struct i2c_client *client,
- 	pdata->enable_slave_ts = rtl2832_enable_slave_ts;
- 	pdata->pid_filter = rtl2832_pid_filter;
- 	pdata->pid_filter_ctrl = rtl2832_pid_filter_ctrl;
--	pdata->bulk_read = rtl2832_bulk_read;
--	pdata->bulk_write = rtl2832_bulk_write;
--	pdata->update_bits = rtl2832_update_bits;
-+	pdata->regmap = dev->regmap;
- 
- 	dev_info(&client->dev, "Realtek RTL2832 successfully attached\n");
- 	return 0;
-diff --git a/drivers/media/dvb-frontends/rtl2832.h b/drivers/media/dvb-frontends/rtl2832.h
-index c29a4c2bf71a..fab2f99672d6 100644
---- a/drivers/media/dvb-frontends/rtl2832.h
-+++ b/drivers/media/dvb-frontends/rtl2832.h
-@@ -57,9 +57,7 @@ struct rtl2832_platform_data {
- 	int (*pid_filter)(struct dvb_frontend *, u8, u16, int);
- 	int (*pid_filter_ctrl)(struct dvb_frontend *, int);
- /* private: Register access for SDR module use only */
--	int (*bulk_read)(struct i2c_client *, unsigned int, void *, size_t);
--	int (*bulk_write)(struct i2c_client *, unsigned int, const void *, size_t);
--	int (*update_bits)(struct i2c_client *, unsigned int, unsigned int, unsigned int);
-+	struct regmap *regmap;
- };
- 
- #endif /* RTL2832_H */
-diff --git a/drivers/media/dvb-frontends/rtl2832_priv.h b/drivers/media/dvb-frontends/rtl2832_priv.h
-index 6b3cd23a2c26..8657e0e578c5 100644
---- a/drivers/media/dvb-frontends/rtl2832_priv.h
-+++ b/drivers/media/dvb-frontends/rtl2832_priv.h
-@@ -33,7 +33,6 @@
- struct rtl2832_dev {
- 	struct rtl2832_platform_data *pdata;
- 	struct i2c_client *client;
--	struct mutex regmap_mutex;
- 	struct regmap_config regmap_config;
- 	struct regmap *regmap;
- 	struct i2c_mux_core *muxc;
-diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.c b/drivers/media/dvb-frontends/rtl2832_sdr.c
-index b860f02a4e55..6a6b1debe277 100644
---- a/drivers/media/dvb-frontends/rtl2832_sdr.c
-+++ b/drivers/media/dvb-frontends/rtl2832_sdr.c
-@@ -35,6 +35,7 @@
- #include <linux/platform_device.h>
- #include <linux/jiffies.h>
- #include <linux/math64.h>
-+#include <linux/regmap.h>
- 
- static bool rtl2832_sdr_emulated_fmt;
- module_param_named(emulated_formats, rtl2832_sdr_emulated_fmt, bool, 0644);
-@@ -169,9 +170,9 @@ static int rtl2832_sdr_wr_regs(struct rtl2832_sdr_dev *dev, u16 reg,
- {
- 	struct platform_device *pdev = dev->pdev;
- 	struct rtl2832_sdr_platform_data *pdata = pdev->dev.platform_data;
--	struct i2c_client *client = pdata->i2c_client;
-+	struct regmap *regmap = pdata->regmap;
- 
--	return pdata->bulk_write(client, reg, val, len);
-+	return regmap_bulk_write(regmap, reg, val, len);
- }
- 
- #if 0
-@@ -181,9 +182,9 @@ static int rtl2832_sdr_rd_regs(struct rtl2832_sdr_dev *dev, u16 reg, u8 *val,
- {
- 	struct platform_device *pdev = dev->pdev;
- 	struct rtl2832_sdr_platform_data *pdata = pdev->dev.platform_data;
--	struct i2c_client *client = pdata->i2c_client;
-+	struct regmap *regmap = pdata->regmap;
- 
--	return pdata->bulk_read(client, reg, val, len);
-+	return regmap_bulk_read(regmap, reg, val, len);
- }
- #endif
- 
-@@ -199,9 +200,9 @@ static int rtl2832_sdr_wr_reg_mask(struct rtl2832_sdr_dev *dev, u16 reg,
- {
- 	struct platform_device *pdev = dev->pdev;
- 	struct rtl2832_sdr_platform_data *pdata = pdev->dev.platform_data;
--	struct i2c_client *client = pdata->i2c_client;
-+	struct regmap *regmap = pdata->regmap;
- 
--	return pdata->update_bits(client, reg, mask, val);
-+	return regmap_update_bits(regmap, reg, mask, val);
- }
- 
- /* Private functions */
-diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.h b/drivers/media/dvb-frontends/rtl2832_sdr.h
-index 342ea84860df..d8fc7e7212e3 100644
---- a/drivers/media/dvb-frontends/rtl2832_sdr.h
-+++ b/drivers/media/dvb-frontends/rtl2832_sdr.h
-@@ -56,10 +56,7 @@ struct rtl2832_sdr_platform_data {
- #define RTL2832_SDR_TUNER_R828D     0x2b
- 	u8 tuner;
- 
--	struct i2c_client *i2c_client;
--	int (*bulk_read)(struct i2c_client *, unsigned int, void *, size_t);
--	int (*bulk_write)(struct i2c_client *, unsigned int, const void *, size_t);
--	int (*update_bits)(struct i2c_client *, unsigned int, unsigned int, unsigned int);
-+	struct regmap *regmap;
- 	struct dvb_frontend *dvb_frontend;
- 	struct v4l2_subdev *v4l2_subdev;
- 	struct dvb_usb_device *dvb_usb_device;
-diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
-index eb5787a3191e..799def499f67 100644
---- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
-+++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
-@@ -1325,10 +1325,7 @@ static int rtl2832u_tuner_attach(struct dvb_usb_adapter *adap)
- 	case TUNER_RTL2832_R828D:
- 		pdata.clk = dev->rtl2832_platform_data.clk;
- 		pdata.tuner = dev->tuner;
--		pdata.i2c_client = dev->i2c_client_demod;
--		pdata.bulk_read = dev->rtl2832_platform_data.bulk_read;
--		pdata.bulk_write = dev->rtl2832_platform_data.bulk_write;
--		pdata.update_bits = dev->rtl2832_platform_data.update_bits;
-+		pdata.regmap = dev->rtl2832_platform_data.regmap;
- 		pdata.dvb_frontend = adap->fe[0];
- 		pdata.dvb_usb_device = d;
- 		pdata.v4l2_subdev = subdev;
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
