@@ -1,46 +1,151 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] ARM: bcm2835: Add devicetree for the Raspberry Pi 3.
-Date: Fri, 4 Mar 2016 18:41:36 +0000
-Message-ID: <20160304184136.GB5033@leverpostej>
-References: <1457116769-8567-1-git-send-email-eric@anholt.net>
- <1457116769-8567-2-git-send-email-eric@anholt.net>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH] pinctrl: pistachio: fix mfio84-89 function description
+ and pinmux.
+Date: Fri, 4 Mar 2016 10:48:33 -0800
+Message-ID: <CAL1qeaHYgqCBSAJBEyrEW3d0ys4BGZ8tzFYbJGONPRSO2fGevA@mail.gmail.com>
+References: <1457105302-15070-1-git-send-email-Govindraj.Raja@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457116769-8567-2-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1457105302-15070-1-git-send-email-Govindraj.Raja@imgtec.com>
+Sender: stable-owner@vger.kernel.org
+To: Govindraj Raja <Govindraj.Raja@imgtec.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, James Hartley <James.Hartley@imgtec.com>, "Stable kernel (v4.1)" <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 10:39:29AM -0800, Eric Anholt wrote:
-> For now this doesn't support the new hardware present on the Pi 3 (BT,
-> wifi, GPIO expander).  Since the GPIO expander isn't supported, we
-> also don't have the LEDs like the other board files do.
-> 
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  arch/arm/boot/dts/Makefile            |  3 +-
->  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 22 ++++++++++++
->  arch/arm/boot/dts/bcm2837.dtsi        | 68 +++++++++++++++++++++++++++++++++++
->  3 files changed, 92 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->  create mode 100644 arch/arm/boot/dts/bcm2837.dtsi
+Govindraj,
 
-> +	timer {
-> +		compatible = "arm,armv7-timer";
-> +		interrupt-parent = <&local_intc>;
-> +		interrupts = <0>, // PHYS_SECURE_PPI
-> +			     <1>, // PHYS_NONSECURE_PPI
-> +			     <3>, // VIRT_PPI
-> +			     <2>; // HYP_PPI
-> +		always-on;
-> +	};
+On Fri, Mar 4, 2016 at 7:28 AM, Govindraj Raja
+<Govindraj.Raja@imgtec.com> wrote:
+> mfio 84 to 89 are described wrongly, fix it to describe
+> the right pin and add them to right pin-mux group.
+>
+> The correct order is:
+>         pll1_lock => mips_pll   -- MFIO_83
+>         pll2_lock => audio_pll  -- MFIO_84
+>         pll3_lock => rpu_v_pll  -- MFIO_85
+>         pll4_lock => rpu_l_pll  -- MFIO_86
+>         pll5_lock => sys_pll    -- MFIO_87
+>         pll6_lock => wifi_pll   -- MFIO_88
+>         pll7_lock => bt_pll     -- MFIO_89
+>
+> Fixes: cefc03e5995e("pinctrl: Add Pistachio SoC pin control driver")
+> Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Andrew Bresticker <abrestic@chromium.org>
+> Cc: linux-mips@linux-mips.org
+> Cc: James Hartley <James.Hartley@imgtec.com>
+> Cc: <stable@vger.kernel.org> # v4.2+
 
-Are the CPUs in an always-on power domain? Or is it jsut that the kernel
-doesn't perform power management of CPUs?
+Acked-by: Andrew Bresticker <abrestic@chromium.org>
 
-The always-on proeprty is only intended for the former.
+> Do I need to split this patch into dt & pinctrl?
+> Or can it be picked up through pinctrl subsystem with dt maintainers Ack?
 
-Mark.
+I would think that since this is a correction to the existing
+binding/driver that shouldn't be necessary, but that's up to Linus.
+
+>
+>  .../bindings/pinctrl/img,pistachio-pinctrl.txt     | 12 +++++------
+>  drivers/pinctrl/pinctrl-pistachio.c                | 24 +++++++++++-----------
+>  2 files changed, 18 insertions(+), 18 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
+> index 08a4a32..0326154 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
+> @@ -134,12 +134,12 @@ mfio80            ddr_debug, mips_trace_data, mips_debug
+>  mfio81         dreq0, mips_trace_data, eth_debug
+>  mfio82         dreq1, mips_trace_data, eth_debug
+>  mfio83         mips_pll_lock, mips_trace_data, usb_debug
+> -mfio84         sys_pll_lock, mips_trace_data, usb_debug
+> -mfio85         wifi_pll_lock, mips_trace_data, sdhost_debug
+> -mfio86         bt_pll_lock, mips_trace_data, sdhost_debug
+> -mfio87         rpu_v_pll_lock, dreq2, socif_debug
+> -mfio88         rpu_l_pll_lock, dreq3, socif_debug
+> -mfio89         audio_pll_lock, dreq4, dreq5
+> +mfio84         audio_pll_lock, mips_trace_data, usb_debug
+> +mfio85         rpu_v_pll_lock, mips_trace_data, sdhost_debug
+> +mfio86         rpu_l_pll_lock, mips_trace_data, sdhost_debug
+> +mfio87         sys_pll_lock, dreq2, socif_debug
+> +mfio88         wifi_pll_lock, dreq3, socif_debug
+> +mfio89         bt_pll_lock, dreq4, dreq5
+>  tck
+>  trstn
+>  tdi
+> diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+> index 856f736..2673cd9 100644
+> --- a/drivers/pinctrl/pinctrl-pistachio.c
+> +++ b/drivers/pinctrl/pinctrl-pistachio.c
+> @@ -469,27 +469,27 @@ static const char * const pistachio_mips_pll_lock_groups[] = {
+>         "mfio83",
+>  };
+>
+> -static const char * const pistachio_sys_pll_lock_groups[] = {
+> +static const char * const pistachio_audio_pll_lock_groups[] = {
+>         "mfio84",
+>  };
+>
+> -static const char * const pistachio_wifi_pll_lock_groups[] = {
+> +static const char * const pistachio_rpu_v_pll_lock_groups[] = {
+>         "mfio85",
+>  };
+>
+> -static const char * const pistachio_bt_pll_lock_groups[] = {
+> +static const char * const pistachio_rpu_l_pll_lock_groups[] = {
+>         "mfio86",
+>  };
+>
+> -static const char * const pistachio_rpu_v_pll_lock_groups[] = {
+> +static const char * const pistachio_sys_pll_lock_groups[] = {
+>         "mfio87",
+>  };
+>
+> -static const char * const pistachio_rpu_l_pll_lock_groups[] = {
+> +static const char * const pistachio_wifi_pll_lock_groups[] = {
+>         "mfio88",
+>  };
+>
+> -static const char * const pistachio_audio_pll_lock_groups[] = {
+> +static const char * const pistachio_bt_pll_lock_groups[] = {
+>         "mfio89",
+>  };
+>
+> @@ -559,12 +559,12 @@ enum pistachio_mux_option {
+>         PISTACHIO_FUNCTION_DREQ4,
+>         PISTACHIO_FUNCTION_DREQ5,
+>         PISTACHIO_FUNCTION_MIPS_PLL_LOCK,
+> +       PISTACHIO_FUNCTION_AUDIO_PLL_LOCK,
+> +       PISTACHIO_FUNCTION_RPU_V_PLL_LOCK,
+> +       PISTACHIO_FUNCTION_RPU_L_PLL_LOCK,
+>         PISTACHIO_FUNCTION_SYS_PLL_LOCK,
+>         PISTACHIO_FUNCTION_WIFI_PLL_LOCK,
+>         PISTACHIO_FUNCTION_BT_PLL_LOCK,
+> -       PISTACHIO_FUNCTION_RPU_V_PLL_LOCK,
+> -       PISTACHIO_FUNCTION_RPU_L_PLL_LOCK,
+> -       PISTACHIO_FUNCTION_AUDIO_PLL_LOCK,
+>         PISTACHIO_FUNCTION_DEBUG_RAW_CCA_IND,
+>         PISTACHIO_FUNCTION_DEBUG_ED_SEC20_CCA_IND,
+>         PISTACHIO_FUNCTION_DEBUG_ED_SEC40_CCA_IND,
+> @@ -620,12 +620,12 @@ static const struct pistachio_function pistachio_functions[] = {
+>         FUNCTION(dreq4),
+>         FUNCTION(dreq5),
+>         FUNCTION(mips_pll_lock),
+> +       FUNCTION(audio_pll_lock),
+> +       FUNCTION(rpu_v_pll_lock),
+> +       FUNCTION(rpu_l_pll_lock),
+>         FUNCTION(sys_pll_lock),
+>         FUNCTION(wifi_pll_lock),
+>         FUNCTION(bt_pll_lock),
+> -       FUNCTION(rpu_v_pll_lock),
+> -       FUNCTION(rpu_l_pll_lock),
+> -       FUNCTION(audio_pll_lock),
+>         FUNCTION(debug_raw_cca_ind),
+>         FUNCTION(debug_ed_sec20_cca_ind),
+>         FUNCTION(debug_ed_sec40_cca_ind),
+> --
+> 2.5.0
+>
