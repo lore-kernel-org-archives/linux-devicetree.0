@@ -1,77 +1,69 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [RESEND PATCH v5 0/2] Add phy support for arasan,sdhci-5.1
-Date: Fri, 4 Mar 2016 11:18:10 +0200
-Message-ID: <56D952D2.9070800@intel.com>
-References: <1455848322-2210-1-git-send-email-shawn.lin@rock-chips.com>
- <CAPDyKFojtZamH-xwM9UTyWdeW3SSSS3-uUyVr2R1t9NkwCXvYg@mail.gmail.com>
- <56D8E48B.1040604@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D8E48B.1040604@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+From: Martin Sperl <martin@sperl.org>
+Subject: Re: [PATCH 1/5] ARM: bcm2835: Define standard pinctrl groups in the
+ gpio node.
+Date: Fri, 4 Mar 2016 10:27:49 +0100
+Message-ID: <6D770203-ED53-413D-AC28-B89A5C48DA8C@sperl.org>
+References: <1456510756-15337-1-git-send-email-eric@anholt.net>
+ <1456510756-15337-2-git-send-email-eric@anholt.net>
+ <56D8AAA2.60907@wwwdotorg.org>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56D8AAA2.60907@wwwdotorg.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/16 03:27, Shawn Lin wrote:
-> =E5=9C=A8 2016/2/20 6:23, Ulf Hansson =E5=86=99=E9=81=93:
->>
->> Den 19 feb 2016 3:24 fm skrev "Shawn Lin" <shawn.lin@rock-chips.com
->> <mailto:shawn.lin@rock-chips.com>>:
->>  >
->>  >
->>  > Hello Ulf and Adrian,
->>  >
->>  > Sorry for delay the new version for this topic. Actually I have n=
-o
->>  > platform available to test phy stuff since v4. Now, I can rework =
-it.:)
->>  > I remove rpm support from v5 because this patchset just need to f=
-ocus
->>  > on phy stuff, which will make the changes more precise. Another r=
-eason
->>  > is that phy_power_on take too much time from rpm, however the pow=
-er
->> profit
->>  > gained from phy_power_off is little due to the low power mechanis=
-m
->> with the
->>  > phy itself observed from experiments.
->>  >
->>  > v4 can be found here:
->>  > https://patchwork.kernel.org/patch/7463251/
->>  >
->>  > Note:
->>  > Phy is mandatory requirement for arasan,sdhci-5.1, so we introduc=
-e
->>  > generic phy support for sdhci-of-arasan.
->>  >
->>  >
->>  > Shawn Lin (2):
->>  >   Documentation: bindings: add description of phy for sdhci-of-ar=
-asan
->>  >   mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
->>  >
->>  >  .../devicetree/bindings/mmc/arasan,sdhci.txt       | 20 ++++++-
->>  >  drivers/mmc/host/sdhci-of-arasan.c                 | 66
->> ++++++++++++++++++++--
->>  >  2 files changed, 80 insertions(+), 6 deletions(-)
->>  >
->>  > --
->>  > 2.3.7
->>  >
->>  >
->>
->> This looks good to me! When acks has been received I am ready to que=
-ue
->> it for next.
->>
->=20
-> Hi Adrian,
->=20
->     Any chance to look at this patch? I assume Ulf need your ack for
-> sdhci* patch. :)
-
-Just sent some comments.
+Cj4gT24gMDMuMDMuMjAxNiwgYXQgMjI6MjAsIFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQHd3d2Rv
+dG9yZy5vcmc+IHdyb3RlOgo+IAo+IE9uIDAyLzI2LzIwMTYgMTE6MTkgQU0sIEVyaWMgQW5ob2x0
+IHdyb3RlOgo+PiBUaGUgQkNNMjgzNS1BUk0tUGVyaXBoZXJhbHMucGRmIGRvY3VtZW50YXRpb24g
+c3BlY2lmaWVzIHdoYXQgdGhlCj4+IGZ1bmN0aW9uIHNlbGVjdHMgZG8gZm9yIHRoZSBwaW5zLCBh
+bmQgdGhlcmUgYXJlIGEgYnVuY2ggb2Ygb2J2aW91cwo+PiBncm91cGluZ3MgdG8gYmUgbWFkZS4g
+IFdpdGggdGhlc2UgY3JlYXRlZCwgd2UnbGwgYmUgYWJsZSB0byByZXBsYWNlCj4+IGJjbTI4MzUt
+cnBpLmR0c2kncyBtYWluICJzZXQgYWxsIG9mIHRoZXNlIHBpbnMgdG8gYWx0MCIgd2l0aAo+PiBy
+ZWZlcmVuY2VzIHRvIHNwZWNpZmljIGdyb3VwcyB3ZSB3YW50IGVuYWJsZWQuCj4gCj4+IGRpZmYg
+LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY20yODN4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0
+cy9iY20yODN4LmR0c2kKPiAKPj4gKwkJCXNwaTBfZ3Bpbzc6IHNwaTBfZ3Bpbzcgewo+PiArCQkJ
+CWJyY20scGlucyA9IDw3IDggOSAxMCAxMT47Cj4+ICsJCQkJYnJjbSxmdW5jdGlvbiA9IDxCQ00y
+ODM1X0ZTRUxfQUxUMD47Cj4+ICsJCQl9Owo+IAo+IFRoaXMgaXMgdG9vIG1hbnkgcGlucy4KPiAK
+PiAtIEl0IGluY2x1ZGVzIGJvdGggTU9TSSBhbmQgTUlTTywgYWx0aG91Z2ggYSBwYXJ0aWN1bGFy
+IHVzZS1jYXNlIG1heSBvbmx5IHVzZSAxIG9mIHRob3NlLgo+IAo+IC0gSXQgaW5jbHVkZXMgYm90
+aCBjaGlwLXNlbGVjdCBzaWduYWxzLCB3aGVyZWFzIGEgcGFydGljdWxhciB1c2UtY2FzZSBtYXkg
+dXNlIDAsIDEsIG9yIDIgb2YgdGhvc2UuIFRoaXMgaXMgZXNwZWNpYWxseSB0cnVlIHNpbmNlIElJ
+UkMgdGhlIG1haW5saW5lIGJjbTI4M3ggU1BJIGRyaXZlciB3YW50cyB0byBvbmx5IHVzZSBHUElP
+cyBmb3IgY2hpcC1zZWxlY3RzLCBub3QgU1BJLWNvbnRyb2xsZXItZ2VuZXJhdGVkIGNoaXAtc2Vs
+ZWN0IHNpZ25hbHMsIHRvIGF2b2lkIHNvbWUgaXNzdWVzIHdpdGggdGhlIEhXIGdlbmVyYXRpb24g
+b2YgdGhlc2Ugc2lnbmFscy4KVGhhdCBpcyB0cnVlOiB0aGUgc3BpLWJjbTI4MzUgZHJpdmVyIHJl
+cXVpcmVzIEdQSU8gdXNhZ2UgZm9yIGNoaXAtc2VsZWN0CnRvIG1ha2UgYWxsIHRob3NlIGxhdGVu
+Y3kgb3B0aW1pemF0aW9ucyB3b3JrIChidXQgYWxzbyB0byBhdm9pZCBzb21lCnNwaS1kbWEgaXNz
+dWVzKS4KVGhlIHJlYXNvbiBiZWhpbmQgaXQgaXMgdGhhdCB0aGVyZSBhcmUgb2JzZXJ2ZWQgc2hv
+cnQgdGVybSDigJxnbGl0Y2hlc+KAnQpvbiBuYXRpdmUgQ1Mgd2hlbmV2ZXIgdGhlIFNQSSBjb250
+cm9sIHJlZ2lzdGVyIGlzIHRvdWNoZWQgLSBldmVuIHdpdGggCmlkZW50aWNhbCB2YWx1ZXMuCkFu
+ZCBHUElPIGNvbnRyb2xsZWQgQ1Mgc29sdmVzIHRoaXMgaXNzdWUgKGFuZCBNYXJrIEJyb3duIHNh
+aWQgdGhhdAp0aGUgR1BJTy1jcyBpbnRlcmZhY2UgaXMgbm93IHByZWZlcnJlZCBhbnl3YXkgLSBo
+ZW5jZSB0aGUgYXV4aWxpYXJ5CnNwaSBvbmx5IGltcGxlbWVudCBncGlvLWNzIGFuZCByZXF1aXJl
+cyB0aGUgQ1Mgc2V0IGFzIE9VVFBVVCwgYnV0CnVubGlrZSB0aGUgbWFpbiBzcGkgdGhpcyBkb2Vz
+IG5vdCBoYXZlIOKAnHJlbWFwcGluZ+KAnSBzdXBwb3J0IGZvcgpsZWdhY3kgZGV2aWNlLXRyZWVz
+IChhcyB0aGVyZSBuZXZlciB3YXMgYSBkcml2ZXItdmVyc2lvbiB0aGF0IHN1cHBvcnRlZApuYXRp
+dmUtY3MpLgoKTWF5YmUgc3BsaXQgdGhlIFNQSS1wb3J0aW9uIGludG8gMiBzZWN0aW9uczoKKiB0
+aGUgU0NLLCBNT1NJLCBNSVNPIChwaW4gOSB0byAxMSkgd2l0aCBBTFRfMAoqIHRoZSBDUyBHUElP
+cyAoc3RhbmRhcmQgcGlucyBhcmUgNyBhbmQgOCkgd2l0aCBPVVRQVVQuCgpUaGF0IHdheSBpdCBp
+cyBlYXN5IHRvIG92ZXJyaWRlIG9ubHkgdGhpcyBzZWN0aW9uIChwbHVzIHRoZSBncGlvLWNzIHBy
+b3BlcnR5IGluc2lkZSB0aGUgc3BpIG5vZGUpIHRvIGV4dGVuZCB0aGUgbnVtYmVyIG9mIGNoaXAg
+c2VsZWN0cyBvciB1c2UgZGlmZmVyZW50IG1hcHBpbmdzLgoKPiAKPiBJIGJlbGlldmUgYSBzaW1p
+bGFyIGNvbW1lbnQgYXBwbGllcyB0byBvdGhlciBTUEkgbm9kZXMgdG9vLgpJIGd1ZXNzIHRoZSBz
+YW1lIOKAnHNwbGl0dGluZ+KAnSBhcHByb2FjaCBzaG91bGQgYmUgdGFrZW4gaGVyZSBhcyB3ZWxs
+Li4uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
