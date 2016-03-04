@@ -1,56 +1,62 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v2 1/5] thermal: change "hysteresis" as optional property
-Date: Fri, 4 Mar 2016 11:03:49 +0800
-Message-ID: <20160304030349.GA11012@leoy-linaro>
-References: <1456458227-12950-1-git-send-email-leo.yan@linaro.org>
- <1456458227-12950-2-git-send-email-leo.yan@linaro.org>
- <20160303162942.GA2445@localhost.localdomain>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mci_parse_dt()
+Date: Fri, 04 Mar 2016 11:27:36 +0800
+Message-ID: <56D900A8.9070204@linaro.org>
+References: <1456968818-22140-1-git-send-email-guodong.xu@linaro.org> <1456968818-22140-2-git-send-email-guodong.xu@linaro.org> <56D79AB4.7050809@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160303162942.GA2445@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Javi Merino <javi.merino@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56D79AB4.7050809@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Guodong Xu <guodong.xu@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jh80.chung@samsung.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: shawn.lin@kernel-upstream.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
 
-On Thu, Mar 03, 2016 at 08:29:44AM -0800, Eduardo Valentin wrote:
-> Hi Leo,
-> 
-> On Fri, Feb 26, 2016 at 11:43:43AM +0800, Leo Yan wrote:
-> > The property "hysteresis" is mandatory for trip points, so if without
-> > it the thermal zone cannot register successfully. But "hysteresis" is
-> > ignored in the thermal subsystem and only inquired by several thermal
-> > sensor drivers.
-> 
-> I am not sure this a good direction to go. Remember that Linux
-> implementation not necessarily has to be the implication of the DT
-> binding. Hysteresis is a property that plays a significant role on
-> thermal control systems, which in many cases avoid overshooting cooling
-> actions. Having the DT writer to explicitly set it to 0 means that zone
-> does not suffer of overshooting and does not need hysteresis.
 
-After review current code, the "hysteresis" is used to calculate
-temperature falling threshold with a more conservative value; so that
-finally avoid overshooting issue.
+On 03/03/2016 10:00 AM, Shawn Lin wrote:
+> Hi Guodong,
+>
+> On 2016/3/3 9:33, Guodong Xu wrote:
+>> With this, user can add a 'resets' property into dw_mmc dts
+>> node, and when driver probe and parse_dt, it will call
+>> reset APIs to reset dw_mmc host controller.
+>>
+>> Please also refer to Documentation/devicetree/bindings/reset/reset.txt
+>
+> I have no hard objection for this patch, but I'd rather not add it
+> unless we actually need it. Could you elaborate more about any futher
+> actions you will take if it's applied(i.e: deal with some unrecoverable
+> broken case)?  If we just reset the controller while probing, actually I
+> can't find any problems without it based on tons of my reboot test.
 
-Please confirm if is my understanding correct or not?
+mmc register maybe abnormal state, if mmc is used in uefi, like boot 
+from emmc.
+So we need reset mmc register when kernel boot up, instead of assuming 
+mmc is in clean state.
+Next step is adding reset node in dts for drivers/mmc/host/dw_mmc-k3.c 
+as reset driver is already there.
 
-> If the Linux thermal subsystem has a problem with handling hysteresis, I
-> would rather fix Linux code than relaxing the DT binding. Or if you
-> still believe hysteresis is really optional, I would prefer to see a
-> better justification than "Linux ignores it".
+>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>> index 242f9a0..d3a7376 100644
+>> --- a/drivers/mmc/host/dw_mmc.c
+>> +++ b/drivers/mmc/host/dw_mmc.c
+>> @@ -2878,6 +2878,13 @@ static struct dw_mci_board
+>> *dw_mci_parse_dt(struct dw_mci *host)
+>>       if (!pdata)
+>>           return ERR_PTR(-ENOMEM);
+>>
+>> +    /* find reset controller when exist */
+>> +    pdata->rstc = devm_reset_control_get_optional(dev, NULL);
+>> +    if (IS_ERR(pdata->rstc))
+>> +        pdata->rstc = NULL;
+>> +    else
+>> +        reset_control_deassert(pdata->rstc);
+>> +
+>
+> if the PTR_ERR(pdata->rstc) is -EPROBE_DEFER, should we defer probing
+> the driver?
+Yes, good catch.
 
-If we think about power allocator governor, PID's two parameters are
-also used to dismiss overshooting issue: one is k_po (proportional
-term), another is k_i (integral term). So that means after we apply
-power allocator governor, we don't need parameter "hysteresis" due PID
-algorithm can automatically dismiss potential errors.
-
-Does this make sense?
-
-Thanks,
-Leo Yan
+Thanks
