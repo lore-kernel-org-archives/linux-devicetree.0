@@ -1,74 +1,80 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v3 5/5] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Thu, 3 Mar 2016 19:39:22 -0600
-Message-ID: <56D8E74A.6090601@ti.com>
-References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
- <1456439796-28546-6-git-send-email-fcooper@ti.com>
- <20160302182634.GA26055@rob-hp-laptop>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] usb: chipidea: host: let the hcd know's parent
+ device node
+Date: Fri, 4 Mar 2016 09:53:26 +0800
+Message-ID: <20160304015326.GA30272@shlinux2.ap.freescale.net>
+References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
+ <1456999276-6315-3-git-send-email-peter.chen@nxp.com>
+ <20160303144247.GH15541@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160302182634.GA26055@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: paul@pwsan.com, t-kristo@ti.com, tony@atomide.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160303144247.GH15541-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Mar 03, 2016 at 03:42:47PM +0100, Andrew Lunn wrote:
+> On Thu, Mar 03, 2016 at 06:01:15PM +0800, Peter Chen wrote:
+> > From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > Since the hcd (chipidea core device) has no device node, so
+> > if we want to describe the child node under the hcd, we had
+> > to put it under its parent's node (glue layer device), and
+> > in the code, we need to let the hcd knows glue layer's code,
+> > then the USB core can handle this node.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> >  drivers/usb/chipidea/host.c | 18 ++++++++++++++----
+> >  1 file changed, 14 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> > index 053bac9..55120ef 100644
+> > --- a/drivers/usb/chipidea/host.c
+> > +++ b/drivers/usb/chipidea/host.c
+> > @@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
+> >  	struct ehci_hcd *ehci;
+> >  	struct ehci_ci_priv *priv;
+> >  	int ret;
+> > +	struct device *dev = ci->dev;
+> >  
+> > -	if (usb_disabled())
+> > +	if (usb_disabled() || !dev)
+> >  		return -ENODEV;
+> >  
+> > -	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
+> > +	/*
+> > +	 * USB Core will try to get child node under roothub,
+> > +	 * but chipidea core has no of_node, and the child node
+> > +	 * for controller is located at glue layer's node which
+> > +	 * is chipidea core's parent.
+> > +	 */
+> > +	if (dev->parent && dev->parent->of_node)
+> > +		dev->of_node = dev->parent->of_node;
+> 
+> Is this a good idea? Two devices with the same of_node?
+> 
 
-On 03/02/2016 12:26 PM, Rob Herring wrote:
-> On Thu, Feb 25, 2016 at 04:36:36PM -0600, Franklin S Cooper Jr wrote:
->> From: Vignesh R <vigneshr@ti.com>
->>
->> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
->> for dt bindings.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->> Version 3 changes:
->> None
->>
->>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  8 +++
->>  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 17 +++++-
->>  arch/arm/boot/dts/dra7.dtsi                        | 64 ++++++++++++++++++++++
->>  3 files changed, 88 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
->> index 9c100b2..25d91ae 100644
->> --- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
->> @@ -4,6 +4,7 @@ Required properties:
->>  - compatible: Must be "ti,<soc>-ehrpwm".
->>    for am33xx - compatible = "ti,am33xx-ehrpwm";
->>    for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
->> +  for dra7xx - compatible = "ti,dra7xx-ehrpwm", "ti,am33xx-ehrpwm";
-> We're starting to push back on wildcards in compatible strings. I guess 
-> this is okay...
->
->>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
->>    the cells format. The only third cell flag supported by this binding is
->>    PWM_POLARITY_INVERTED.
->> @@ -27,3 +28,10 @@ ehrpwm0: ehrpwm@0 { /* EHRPWM on da850 */
->>  	#pwm-cells = <3>;
->>  	reg = <0x300000 0x2000>;
->>  };
->> +
->> +ehrpwm0: ehrpwm@0 { /* EHRPWM on dra7xx */
-> Should be pwm@48440200
+This is only for chipidea driver whose host controller device
+doesn't have entry at dts, but other host controller driver which
+supports device tree should have its entry at dts.
 
-So the AM335x, AM437x  and DA850 all use ehrpwm0:
-ehrpwm@<address>. Also the address of 0 simply follows the
-pattern used in the other binding examples in that doc. I
-can replace the 0 address in this patch and make another
-patch that fixes it for the other examples in that file. But
-in terms of switching from ehrpwm0:ehrpwm@<address> to
-ehrpwm0:pwm@<address> that would also require making changes
-to the various dtsis also. So is it worth making that
-change? If so I have no problem doing it.
->
->> +	compatible = "ti,dra7xx-ehrpwm", "ti,am33xx-ehrpwm";
->> +	#pwm-cells = <3>;
->> +	reg = <0x48440200 0x80>;
->> +	ti,hwmods = "ehrpwm0";
->> +};
+> I know the networking code assumes of_node values are unique, and uses
+> it to find a device. Are you 100% sure the USB code does not make this
+> assumption.
+> 
+
+The controller device is the root for USB device, the common
+USB code will not touch its glue layer device (controller's parent).
+
+-- 
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
