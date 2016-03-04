@@ -1,786 +1,226 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: Re: [PATCH 3/4] leds: Add driver for the ISSI IS31FL32xx family of
- LED controllers
-Date: Fri, 4 Mar 2016 09:27:06 -0500
-Message-ID: <20160304092706.278ba7c3.drivshin.allworx@gmail.com>
-References: <1456974095-1867-1-git-send-email-drivshin.allworx@gmail.com>
-	<1456974095-1867-4-git-send-email-drivshin.allworx@gmail.com>
-	<682127661.49201.48a3a228-580f-4e1c-8c1d-bebac820f9fc.open-xchange@email.1und1.de>
+From: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Subject: Re: [PATCH v4 00/18] i2c mux cleanup and locking update
+Date: Fri, 04 Mar 2016 15:49:30 +0100
+Message-ID: <56D9A07A.5040106@lysator.liu.se>
+References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se> <56D96B15.8090806@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <682127661.49201.48a3a228-580f-4e1c-8c1d-bebac820f9fc.open-xchange@email.1und1.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D96B15.8090806-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viorel Suman <viorel.suman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Terry Heo <terryheo-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tommi Rantala <tt.rantala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-(Stefan, sorry for the duplicate, I just realized that I originally=20
-replied only to you by accident).
+I wrote:
+> I wrote:
+>> Concerns:
+>> - The locking is perhaps too complex?
+> 
+> Ok, to highlight the benefits of this series, I expect that patches such as
+> [1] and the one inlined below can follow up to clean up ad-hoc i2c locking
+> in drivers. Putting this locking in one place instead of having it spread
+> out in random drivers is a good thing.
+> 
+> PS. the inlined patch has not been tested as I have no hw, it's a proof of
+> concept. Maybe the simplifications can be extended into rtl2832_sdr.c as well?
+> Anyway, please do test this patch on top of the v4 series if you have the hw.
 
-On Thu, 3 Mar 2016 19:13:03 +0100 (CET)
-Stefan Wahren <stefan.wahren@i2se.com> wrote:
+The untested patch in the previous message indeed has some obvious problems, so
+I fixed that and folded some more removed code now that rtl2832_sdr does not
+need to do anything special to access device registers.
 
-> Hi David,
->=20
-> i will test the driver on weekend. Some comments below =20
+The result builds for me, that's all the testing I have done.
 
-Great, thanks very much.
+diffstat for the two patches combined:
+ drivers/media/dvb-frontends/rtl2832.c      | 216 ++++-------------------------
+ drivers/media/dvb-frontends/rtl2832.h      |   4 +-
+ drivers/media/dvb-frontends/rtl2832_priv.h |   1 -
+ drivers/media/dvb-frontends/rtl2832_sdr.c  |  13 +-
+ drivers/media/dvb-frontends/rtl2832_sdr.h  |   5 +-
+ drivers/media/usb/dvb-usb-v2/rtl28xxu.c    |   5 +-
+ 6 files changed, 34 insertions(+), 210 deletions(-)
 
-> > "David Rivshin (Allworx)" <drivshin.allworx@gmail.com> hat am 3. M=C3=
-=A4rz 2016 um
-> > 04:01 geschrieben:
-> >
-> >
-> > From: David Rivshin <drivshin@allworx.com>
-> >
-> > The IS31FL32xx family of LED controllers are I2C devices with multi=
-ple
-> > constant-current channels, each with independent 256-level PWM cont=
-rol.
-> >
-> > Datasheets: http://www.issi.com/US/product-analog-fxled-driver.shtm=
-l
-> >
-> > This has been tested on the IS31FL3236 and IS31FL3216, on an ARM
-> > (TI am335x) platform.
-> >
-> > The programming paradigm of these devices is similar in the followi=
-ng
-> > ways:
-> > - All registers are 8 bit
-> > - All LED control registers are write-only
-> > - Each LED channel has a PWM register (0-255)
-> > - PWM register writes are shadowed until an Update register is poke=
-d
-> > - All have a concept of Software Shutdown, which disables output
-> >
-> > However, there are some differences in devices:
-> > - 3236/3235 have a separate Control register for each LED,
-> > (3218/3216 pack the enable bits into fewer registers)
-> > - 3236/3235 have a per-channel current divisor setting
-> > - 3236/3235 have a Global Control register that can turn off all LE=
-Ds
-> > - 3216 is unique in a number of ways
-> > - OUT9-OUT16 can be configured as GPIOs instead of LED controls
-> > - LEDs can be programmed with an 8-frame animation, with
-> > programmable delay between frames
-> > - LEDs can be modulated by an input audio signal
-> > - Max output current can be adjusted from 1/4 to 2x globally
-> > - Has a Configuration register instead of a Shutdown register
-> >
-> > This driver currently only supports the base PWM control function
-> > of these devices. The following features of these devices are not
-> > implemented, although it should be possible to add them in the futu=
-re:
-> > - All devices are capable of going into a lower-power "software
-> > shutdown" mode.
-> > - The is31fl3236 and is31fl3235 can reduce the max output current
-> > per-channel with a divisor of 1, 2, 3, or 4.
-> > - The is31fl3216 can use some LED channels as GPIOs instead.
-> > - The is31fl3216 can animate LEDs in hardware.
-> > - The is31fl3216 can modulate LEDs according to an audio input.
-> > - The is31fl3216 can reduce/increase max output current globally.
-> >
-> > Signed-off-by: David Rivshin <drivshin@allworx.com>
-> > ---
-> >
-> > You may see two instances of this warning:
-> > "passing argument 1 of 'of_property_read_string' discards 'const'
-> > qualifier from pointer target type"
-> > That is a result of of_property_read_string() taking a non-const
-> > struct device_node pointer parameter. I have separately submitted a
-> > patch to fix that [1], and a few related functions which had the sa=
-me
-> > issue. I'm hoping that will get into linux-next before this does, s=
-o
-> > that the warnings never show up there.
-> >
-> > Changes from RFC:
-> > - Removed max-brightness DT property.
-> > - Refer to these devices as "LED controllers" in Kconfig.
-> > - Removed redundant last sentence from Kconfig entry
-> > - Removed unnecessary debug code.
-> > - Do not set led_classdev.brightness to 0 explicitly, as it is
-> > already initialized to 0 by devm_kzalloc().
-> > - Used of_property_read_string() instead of of_get_property().
-> > - Fail immediately on DT parsing error in a child node, rather than
-> > continuing on with the non-faulty ones.
-> > - Added additional comments for some things that might be non-obvio=
-us.
-> > - Added constants for the location of the SSD bit in the SHUTDOWN
-> > register, and the 3216's CONFIG register.
-> > - Added special sw_shutdown_func for the 3216 device, as that bit
-> > is in a different register, at a different position, and has revers=
-e
-> > polarity compared to all the other devices.
-> > - Refactored is31fl32xx_init_regs() to separate out some logic into
-> > is31fl32xx_reset_regs() and is31fl32xx_software_shutdown().
-> >
-> > [1] https://lkml.org/lkml/2016/3/2/746
-> >
-> > drivers/leds/Kconfig | 8 +
-> > drivers/leds/Makefile | 1 +
-> > drivers/leds/leds-is31fl32xx.c | 505 ++++++++++++++++++++++++++++++=
-+++++++++++
-> > 3 files changed, 514 insertions(+)
-> > create mode 100644 drivers/leds/leds-is31fl32xx.c
-> >
-> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> > index 1034696..9c63ba4 100644
-> > --- a/drivers/leds/Kconfig
-> > +++ b/drivers/leds/Kconfig
-> > @@ -580,6 +580,14 @@ config LEDS_SN3218
-> > This driver can also be built as a module. If so the module
-> > will be called leds-sn3218.
-> >
-> > +config LEDS_IS31FL32XX
-> > + tristate "LED support for ISSI IS31FL32XX I2C LED controller fami=
-ly"
-> > + depends on LEDS_CLASS && I2C && OF
-> > + help
-> > + Say Y here to include support for ISSI IS31FL32XX LED controllers=
-=2E
-> > + They are I2C devices with multiple constant-current channels, eac=
-h
-> > + with independent 256-level PWM control.   =20
->=20
-> Is it worth to mention the module name here? =20
+Cheers,
+Peter
 
-I noticed that some do and some don't. I don't mind adding it, but it
-also seemed like it would be obvious, and therefore unnecessary.=20
+diff --git a/drivers/media/dvb-frontends/rtl2832.c b/drivers/media/dvb-frontends/rtl2832.c
+index fd1f05e9e79a..6ade321503f0 100644
+--- a/drivers/media/dvb-frontends/rtl2832.c
++++ b/drivers/media/dvb-frontends/rtl2832.c
+@@ -153,31 +153,6 @@ static const struct rtl2832_reg_entry registers[] = {
+ 	[DVBT_REG_4MSEL]	= {0x013,  0, 0},
+ };
+ 
+-/* Our regmap is bypassing I2C adapter lock, thus we do it! */
+-static int rtl2832_bulk_write(struct i2c_client *client, unsigned int reg,
+-			      const void *val, size_t val_count)
+-{
+-	struct rtl2832_dev *dev = i2c_get_clientdata(client);
+-
+-	return regmap_bulk_write(dev->regmap, reg, val, val_count);
+-}
+-
+-static int rtl2832_update_bits(struct i2c_client *client, unsigned int reg,
+-			       unsigned int mask, unsigned int val)
+-{
+-	struct rtl2832_dev *dev = i2c_get_clientdata(client);
+-
+-	return regmap_update_bits(dev->regmap, reg, mask, val);
+-}
+-
+-static int rtl2832_bulk_read(struct i2c_client *client, unsigned int reg,
+-			     void *val, size_t val_count)
+-{
+-	struct rtl2832_dev *dev = i2c_get_clientdata(client);
+-
+-	return regmap_bulk_read(dev->regmap, reg, val, val_count);
+-}
+-
+ static int rtl2832_rd_demod_reg(struct rtl2832_dev *dev, int reg, u32 *val)
+ {
+ 	struct i2c_client *client = dev->client;
+@@ -1091,7 +1066,6 @@ static int rtl2832_probe(struct i2c_client *client,
+ 	INIT_DELAYED_WORK(&dev->i2c_gate_work, rtl2832_i2c_gate_work);
+ 	INIT_DELAYED_WORK(&dev->stat_work, rtl2832_stat_work);
+ 	/* create regmap */
+-	mutex_init(&dev->regmap_mutex);
+ 	dev->regmap_config.reg_bits =  8,
+ 	dev->regmap_config.val_bits =  8,
+ 	dev->regmap_config.volatile_reg = rtl2832_volatile_reg,
+@@ -1099,8 +1073,7 @@ static int rtl2832_probe(struct i2c_client *client,
+ 	dev->regmap_config.ranges = regmap_range_cfg,
+ 	dev->regmap_config.num_ranges = ARRAY_SIZE(regmap_range_cfg),
+ 	dev->regmap_config.cache_type = REGCACHE_NONE,
+-	dev->regmap = regmap_init(&client->dev, NULL, client,
+-				  &dev->regmap_config);
++	dev->regmap = regmap_init_i2c(client, &dev->regmap_config);
+ 	if (IS_ERR(dev->regmap)) {
+ 		ret = PTR_ERR(dev->regmap);
+ 		goto err_kfree;
+@@ -1131,9 +1104,7 @@ static int rtl2832_probe(struct i2c_client *client,
+ 	pdata->enable_slave_ts = rtl2832_enable_slave_ts;
+ 	pdata->pid_filter = rtl2832_pid_filter;
+ 	pdata->pid_filter_ctrl = rtl2832_pid_filter_ctrl;
+-	pdata->bulk_read = rtl2832_bulk_read;
+-	pdata->bulk_write = rtl2832_bulk_write;
+-	pdata->update_bits = rtl2832_update_bits;
++	pdata->regmap = dev->regmap;
+ 
+ 	dev_info(&client->dev, "Realtek RTL2832 successfully attached\n");
+ 	return 0;
+diff --git a/drivers/media/dvb-frontends/rtl2832.h b/drivers/media/dvb-frontends/rtl2832.h
+index c29a4c2bf71a..fab2f99672d6 100644
+--- a/drivers/media/dvb-frontends/rtl2832.h
++++ b/drivers/media/dvb-frontends/rtl2832.h
+@@ -57,9 +57,7 @@ struct rtl2832_platform_data {
+ 	int (*pid_filter)(struct dvb_frontend *, u8, u16, int);
+ 	int (*pid_filter_ctrl)(struct dvb_frontend *, int);
+ /* private: Register access for SDR module use only */
+-	int (*bulk_read)(struct i2c_client *, unsigned int, void *, size_t);
+-	int (*bulk_write)(struct i2c_client *, unsigned int, const void *, size_t);
+-	int (*update_bits)(struct i2c_client *, unsigned int, unsigned int, unsigned int);
++	struct regmap *regmap;
+ };
+ 
+ #endif /* RTL2832_H */
+diff --git a/drivers/media/dvb-frontends/rtl2832_priv.h b/drivers/media/dvb-frontends/rtl2832_priv.h
+index 6b3cd23a2c26..8657e0e578c5 100644
+--- a/drivers/media/dvb-frontends/rtl2832_priv.h
++++ b/drivers/media/dvb-frontends/rtl2832_priv.h
+@@ -33,7 +33,6 @@
+ struct rtl2832_dev {
+ 	struct rtl2832_platform_data *pdata;
+ 	struct i2c_client *client;
+-	struct mutex regmap_mutex;
+ 	struct regmap_config regmap_config;
+ 	struct regmap *regmap;
+ 	struct i2c_mux_core *muxc;
+diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.c b/drivers/media/dvb-frontends/rtl2832_sdr.c
+index b860f02a4e55..6a6b1debe277 100644
+--- a/drivers/media/dvb-frontends/rtl2832_sdr.c
++++ b/drivers/media/dvb-frontends/rtl2832_sdr.c
+@@ -35,6 +35,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/jiffies.h>
+ #include <linux/math64.h>
++#include <linux/regmap.h>
+ 
+ static bool rtl2832_sdr_emulated_fmt;
+ module_param_named(emulated_formats, rtl2832_sdr_emulated_fmt, bool, 0644);
+@@ -169,9 +170,9 @@ static int rtl2832_sdr_wr_regs(struct rtl2832_sdr_dev *dev, u16 reg,
+ {
+ 	struct platform_device *pdev = dev->pdev;
+ 	struct rtl2832_sdr_platform_data *pdata = pdev->dev.platform_data;
+-	struct i2c_client *client = pdata->i2c_client;
++	struct regmap *regmap = pdata->regmap;
+ 
+-	return pdata->bulk_write(client, reg, val, len);
++	return regmap_bulk_write(regmap, reg, val, len);
+ }
+ 
+ #if 0
+@@ -181,9 +182,9 @@ static int rtl2832_sdr_rd_regs(struct rtl2832_sdr_dev *dev, u16 reg, u8 *val,
+ {
+ 	struct platform_device *pdev = dev->pdev;
+ 	struct rtl2832_sdr_platform_data *pdata = pdev->dev.platform_data;
+-	struct i2c_client *client = pdata->i2c_client;
++	struct regmap *regmap = pdata->regmap;
+ 
+-	return pdata->bulk_read(client, reg, val, len);
++	return regmap_bulk_read(regmap, reg, val, len);
+ }
+ #endif
+ 
+@@ -199,9 +200,9 @@ static int rtl2832_sdr_wr_reg_mask(struct rtl2832_sdr_dev *dev, u16 reg,
+ {
+ 	struct platform_device *pdev = dev->pdev;
+ 	struct rtl2832_sdr_platform_data *pdata = pdev->dev.platform_data;
+-	struct i2c_client *client = pdata->i2c_client;
++	struct regmap *regmap = pdata->regmap;
+ 
+-	return pdata->update_bits(client, reg, mask, val);
++	return regmap_update_bits(regmap, reg, mask, val);
+ }
+ 
+ /* Private functions */
+diff --git a/drivers/media/dvb-frontends/rtl2832_sdr.h b/drivers/media/dvb-frontends/rtl2832_sdr.h
+index 342ea84860df..d8fc7e7212e3 100644
+--- a/drivers/media/dvb-frontends/rtl2832_sdr.h
++++ b/drivers/media/dvb-frontends/rtl2832_sdr.h
+@@ -56,10 +56,7 @@ struct rtl2832_sdr_platform_data {
+ #define RTL2832_SDR_TUNER_R828D     0x2b
+ 	u8 tuner;
+ 
+-	struct i2c_client *i2c_client;
+-	int (*bulk_read)(struct i2c_client *, unsigned int, void *, size_t);
+-	int (*bulk_write)(struct i2c_client *, unsigned int, const void *, size_t);
+-	int (*update_bits)(struct i2c_client *, unsigned int, unsigned int, unsigned int);
++	struct regmap *regmap;
+ 	struct dvb_frontend *dvb_frontend;
+ 	struct v4l2_subdev *v4l2_subdev;
+ 	struct dvb_usb_device *dvb_usb_device;
+diff --git a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+index eb5787a3191e..799def499f67 100644
+--- a/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
++++ b/drivers/media/usb/dvb-usb-v2/rtl28xxu.c
+@@ -1325,10 +1325,7 @@ static int rtl2832u_tuner_attach(struct dvb_usb_adapter *adap)
+ 	case TUNER_RTL2832_R828D:
+ 		pdata.clk = dev->rtl2832_platform_data.clk;
+ 		pdata.tuner = dev->tuner;
+-		pdata.i2c_client = dev->i2c_client_demod;
+-		pdata.bulk_read = dev->rtl2832_platform_data.bulk_read;
+-		pdata.bulk_write = dev->rtl2832_platform_data.bulk_write;
+-		pdata.update_bits = dev->rtl2832_platform_data.update_bits;
++		pdata.regmap = dev->rtl2832_platform_data.regmap;
+ 		pdata.dvb_frontend = adap->fe[0];
+ 		pdata.dvb_usb_device = d;
+ 		pdata.v4l2_subdev = subdev;
+-- 
+2.1.4
 
-Jacek, which do you prefer?
-
-> > +
-> > comment "LED driver for blink(1) USB RGB LED is under Special HID d=
-rivers
-> > (HID_THINGM)"
-> >
-> > config LEDS_BLINKM
-> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> > index 89c9b6f..3fdf313 100644
-> > --- a/drivers/leds/Makefile
-> > +++ b/drivers/leds/Makefile
-> > @@ -67,6 +67,7 @@ obj-$(CONFIG_LEDS_KTD2692) +=3D leds-ktd2692.o
-> > obj-$(CONFIG_LEDS_POWERNV) +=3D leds-powernv.o
-> > obj-$(CONFIG_LEDS_SEAD3) +=3D leds-sead3.o
-> > obj-$(CONFIG_LEDS_SN3218) +=3D leds-sn3218.o
-> > +obj-$(CONFIG_LEDS_IS31FL32XX) +=3D leds-is31fl32xx.o
-> >
-> > # LED SPI Drivers
-> > obj-$(CONFIG_LEDS_DAC124S085) +=3D leds-dac124s085.o
-> > diff --git a/drivers/leds/leds-is31fl32xx.c b/drivers/leds/leds-is3=
-1fl32xx.c
-> > new file mode 100644
-> > index 0000000..49818f0
-> > --- /dev/null
-> > +++ b/drivers/leds/leds-is31fl32xx.c
-> > @@ -0,0 +1,505 @@
-> > +/*
-> > + * linux/drivers/leds-is31fl32xx.c   =20
->=20
-> I think this is unnecessary. =20
-
-I tend to agree. I think I used leds-pwm.c as a template, and that had=20
-such a comment. I assumed it was coding-style and kept it, but now I se=
-e=20
-that only a minority of led drivers have it. If I do another spin for=20
-any reason I'll remove it.
-=20
-> > + *
-> > + * Driver for ISSI IS31FL32xx family of I2C LED controllers
-> > + *
-> > + * Copyright 2015 Allworx Corp.
-> > + *
-> > + *
-> > + * This program is free software; you can redistribute it and/or m=
-odify
-> > + * it under the terms of the GNU General Public License version 2 =
-as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * Datasheets: http://www.issi.com/US/product-analog-fxled-driver.=
-shtml
-> > + */
-> > +   =20
->=20
-> Shouldn't we include <linux/device.h> here? =20
-
-Good catch. I was getting that via i2c.h, but since struct device is
-referenced explicitly in a few places, device.h should probably be
-included directly.
-
-> > +#include <linux/err.h>
-> > +#include <linux/i2c.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/leds.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_platform.h>
-> > +
-> > +/* Used to indicate a device has no such register */
-> > +#define IS31FL32XX_REG_NONE 0xFF
-> > +
-> > +/* Software Shutdown bit in Shutdown Register */
-> > +#define IS31FL32XX_SHUTDOWN_SSD_ENABLE 0
-> > +#define IS31FL32XX_SHUTDOWN_SSD_DISABLE BIT(0)
-> > +
-> > +/* IS31FL3216 has a number of unique registers */
-> > +#define IS31FL3216_CONFIG_REG 0x00
-> > +#define IS31FL3216_LIGHTING_EFFECT_REG 0x03
-> > +#define IS31FL3216_CHANNEL_CONFIG_REG 0x04
-> > +
-> > +/* Software Shutdown bit in 3216 Config Register */
-> > +#define IS31FL3216_CONFIG_SSD_ENABLE BIT(7)
-> > +#define IS31FL3216_CONFIG_SSD_DISABLE 0
-> > +
-> > +struct is31fl32xx_priv;
-> > +struct is31fl32xx_led_data {
-> > + struct led_classdev cdev;
-> > + u8 channel; /* 1-based, max priv->cdef->channels */
-> > + struct is31fl32xx_priv *priv;
-> > +};
-> > +
-> > +struct is31fl32xx_priv {
-> > + const struct is31fl32xx_chipdef *cdef;
-> > + struct i2c_client *client;
-> > + unsigned int num_leds;
-> > + struct is31fl32xx_led_data leds[0];
-> > +};
-> > +
-> > +/**
-> > + * struct is31fl32xx_chipdef - chip-specific attributes
-> > + * @channels : Number of LED channels
-> > + * @shutdown_reg : address of Shutdown register (optional)
-> > + * @pwm_update_reg : address of PWM Update register
-> > + * @global_control_reg : address of Global Control register (optio=
-nal)
-> > + * @reset_reg : address of Reset register (optional)
-> > + * @pwm_register_base : address of first PWM register
-> > + * @pwm_registers_reversed: : true if PWM registers count down ins=
-tead of up
-> > + * @led_control_register_base : address of first LED control regis=
-ter
-> > (optional)
-> > + * @enable_bits_per_led_control_register: number of LEDs enable bi=
-ts in each
-> > + * @reset_func: : pointer to reset function
-> > + *
-> > + * For all optional register addresses, the sentinel value
-> > %IS31FL32XX_REG_NONE
-> > + * indicates that this chip has no such register.
-> > + *
-> > + * If non-NULL, @reset_func will be called during probing to set a=
-ll
-> > + * necessary registers to a known initialization state. This is ne=
-eded
-> > + * for chips that do not have a @reset_reg.
-> > + *
-> > + * @enable_bits_per_led_control_register must be >=3D1 if
-> > + * @led_control_register_base !=3D %IS31FL32XX_REG_NONE.
-> > + */
-> > +struct is31fl32xx_chipdef {
-> > + u8 channels;
-> > + u8 shutdown_reg;
-> > + u8 pwm_update_reg;
-> > + u8 global_control_reg;
-> > + u8 reset_reg;
-> > + u8 pwm_register_base;
-> > + bool pwm_registers_reversed;
-> > + u8 led_control_register_base;
-> > + u8 enable_bits_per_led_control_register;
-> > + int (*reset_func)(struct is31fl32xx_priv *priv);
-> > + int (*sw_shutdown_func)(struct is31fl32xx_priv *priv, bool enable=
-);
-> > +};
-> > +
-> > +static const struct is31fl32xx_chipdef is31fl3236_cdef =3D {
-> > + .channels =3D 36,
-> > + .shutdown_reg =3D 0x00,
-> > + .pwm_update_reg =3D 0x25,
-> > + .global_control_reg =3D 0x4a,
-> > + .reset_reg =3D 0x4f,
-> > + .pwm_register_base =3D 0x01,
-> > + .led_control_register_base =3D 0x26,
-> > + .enable_bits_per_led_control_register =3D 1,
-> > +};
-> > +
-> > +static const struct is31fl32xx_chipdef is31fl3235_cdef =3D {
-> > + .channels =3D 28,
-> > + .shutdown_reg =3D 0x00,
-> > + .pwm_update_reg =3D 0x25,
-> > + .global_control_reg =3D 0x4a,
-> > + .reset_reg =3D 0x4f,
-> > + .pwm_register_base =3D 0x05,
-> > + .led_control_register_base =3D 0x2a,
-> > + .enable_bits_per_led_control_register =3D 1,
-> > +};
-> > +
-> > +static const struct is31fl32xx_chipdef is31fl3218_cdef =3D {
-> > + .channels =3D 18,
-> > + .shutdown_reg =3D 0x00,
-> > + .pwm_update_reg =3D 0x16,
-> > + .global_control_reg =3D IS31FL32XX_REG_NONE,
-> > + .reset_reg =3D 0x17,
-> > + .pwm_register_base =3D 0x01,
-> > + .led_control_register_base =3D 0x13,
-> > + .enable_bits_per_led_control_register =3D 6,
-> > +};
-> > +
-> > +static int is31fl3216_reset(struct is31fl32xx_priv *priv);
-> > +static int is31fl3216_software_shutdown(struct is31fl32xx_priv *pr=
-iv,
-> > + bool enable);
-> > +static const struct is31fl32xx_chipdef is31fl3216_cdef =3D {
-> > + .channels =3D 16,
-> > + .shutdown_reg =3D IS31FL32XX_REG_NONE,
-> > + .pwm_update_reg =3D 0xB0,
-> > + .global_control_reg =3D IS31FL32XX_REG_NONE,
-> > + .reset_reg =3D IS31FL32XX_REG_NONE,
-> > + .pwm_register_base =3D 0x10,
-> > + .pwm_registers_reversed =3D true,
-> > + .led_control_register_base =3D 0x01,
-> > + .enable_bits_per_led_control_register =3D 8,
-> > + .reset_func =3D is31fl3216_reset,
-> > + .sw_shutdown_func =3D is31fl3216_software_shutdown,
-> > +};
-> > +
-> > +static int is31fl32xx_write(struct is31fl32xx_priv *priv, u8 reg, =
-u8 val)
-> > +{
-> > + int ret;
-> > +
-> > + dev_dbg(&priv->client->dev, "writing register 0x%02X=3D0x%02X", r=
-eg, val);
-> > +
-> > + ret =3D i2c_smbus_write_byte_data(priv->client, reg, val);
-> > + if (ret) {
-> > + dev_err(&priv->client->dev,
-> > + "register write to 0x%02X failed (error %d)",
-> > + reg, ret);
-> > + }   =20
->=20
-> In case somebody use this driver as heartbeat and writing fails perma=
-nently the
-> log will be flooded. =20
-
-Unless I'm mistaken that would require the device/bus to fail after=20
-successfully probing (probe code itself bails on the first write=20
-failure, so there would be no flooding as a result of that). So while=20
-not impossible, I imagine it would be unlikely, and I'd hate to remove=20
-an error message for such an important condition.=20
-
-I suppose I could use dev_err_ratelimited() to soften any potential=20
-flooding, but I second guess that because:
- - In led_core.c set_brightness_delayed() has a dev_err() that would co=
-me=20
-   out on each failed LED update anyways.
- - There is precedent in other led drivers of a similar error message.
- - Some userspace logging programs will compresses repeated messages an=
-yways.
-
-Jacek, what is your preference on this?=20
-
-> > + return ret;
-> > +}
-> > +
-> > +/*
-> > + * Custom reset function for IS31FL3216 because it does not have a=
- RESET
-> > + * register the way that the other IS31FL32xx chips do. We don't b=
-other
-> > + * writing the GPIO and animation registers, because the registers=
- we
-> > + * do write ensure those will have no effect.
-> > + */
-> > +static int is31fl3216_reset(struct is31fl32xx_priv *priv)
-> > +{
-> > + unsigned int i;
-> > + int ret;
-> > +
-> > + ret =3D is31fl32xx_write(priv, IS31FL3216_CONFIG_REG,
-> > + IS31FL3216_CONFIG_SSD_ENABLE);
-> > + if (ret)
-> > + return ret;
-> > + for (i =3D 0; i < priv->cdef->channels; i++) {
-> > + ret =3D is31fl32xx_write(priv, priv->cdef->pwm_register_base+i,
-> > + 0x00);
-> > + if (ret)
-> > + return ret;
-> > + }
-> > + ret =3D is31fl32xx_write(priv, priv->cdef->pwm_update_reg, 0);
-> > + if (ret)
-> > + return ret;
-> > + ret =3D is31fl32xx_write(priv, IS31FL3216_LIGHTING_EFFECT_REG, 0x=
-00);
-> > + if (ret)
-> > + return ret;
-> > + ret =3D is31fl32xx_write(priv, IS31FL3216_CHANNEL_CONFIG_REG, 0x0=
-0);
-> > + if (ret)
-> > + return ret;
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +/*
-> > + * Custom Software-Shutdown function for IS31FL3216 because it doe=
-s not have
-> > + * a SHUTDOWN register the way that the other IS31FL32xx chips do.
-> > + * We don't bother doing a read/modify/write on the CONFIG registe=
-r because
-> > + * we only ever use a value of '0' for the other fields in that re=
-gister.
-> > + */
-> > +static int is31fl3216_software_shutdown(struct is31fl32xx_priv *pr=
-iv,
-> > + bool enable)
-> > +{
-> > + u8 value =3D enable ? IS31FL3216_CONFIG_SSD_ENABLE :
-> > + IS31FL3216_CONFIG_SSD_DISABLE;
-> > +
-> > + return is31fl32xx_write(priv, IS31FL3216_CONFIG_REG, value);
-> > +}
-> > +
-> > +/*
-> > + * NOTE: A mutex is not needed in this function because:
-> > + * - All referenced data is read-only after probe()
-> > + * - The I2C core has a mutex on to protect the bus
-> > + * - There are no read/modify/write operations
-> > + * - Intervening operations between the write of the PWM register
-> > + * and the Update register are harmless.
-> > + *
-> > + * Example:
-> > + * PWM_REG_1 write 16
-> > + * UPDATE_REG write 0
-> > + * PWM_REG_2 write 128
-> > + * UPDATE_REG write 0
-> > + * vs:
-> > + * PWM_REG_1 write 16
-> > + * PWM_REG_2 write 128
-> > + * UPDATE_REG write 0
-> > + * UPDATE_REG write 0
-> > + * are equivalent. Poking the Update register merely applies all P=
-WM
-> > + * register writes up to that point.
-> > + */
-> > +static int is31fl32xx_brightness_set(struct led_classdev *led_cdev=
-,
-> > + enum led_brightness brightness)
-> > +{
-> > + const struct is31fl32xx_led_data *led_data =3D
-> > + container_of(led_cdev, struct is31fl32xx_led_data, cdev);
-> > + const struct is31fl32xx_chipdef *cdef =3D led_data->priv->cdef;
-> > + u8 pwm_register_offset;
-> > + int ret;
-> > +
-> > + dev_dbg(led_cdev->dev, "%s: %d\n", __func__, brightness);
-> > +
-> > + /* NOTE: led_data->channel is 1-based */
-> > + if (cdef->pwm_registers_reversed)
-> > + pwm_register_offset =3D cdef->channels - led_data->channel;
-> > + else
-> > + pwm_register_offset =3D led_data->channel - 1;
-> > +
-> > + ret =3D is31fl32xx_write(led_data->priv,
-> > + cdef->pwm_register_base + pwm_register_offset,
-> > + brightness);
-> > + if (ret)
-> > + return ret;
-> > +
-> > + return is31fl32xx_write(led_data->priv, cdef->pwm_update_reg, 0);
-> > +}
-> > +
-> > +static int is31fl32xx_reset_regs(struct is31fl32xx_priv *priv)
-> > +{
-> > + const struct is31fl32xx_chipdef *cdef =3D priv->cdef;
-> > + int ret;
-> > +
-> > + if (cdef->reset_reg !=3D IS31FL32XX_REG_NONE) {
-> > + ret =3D is31fl32xx_write(priv, cdef->reset_reg, 0);
-> > + if (ret)
-> > + return ret;
-> > + }
-> > +
-> > + if (cdef->reset_func)
-> > + return cdef->reset_func(priv);
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static int is31fl32xx_software_shutdown(struct is31fl32xx_priv *pr=
-iv,
-> > + bool enable)
-> > +{
-> > + const struct is31fl32xx_chipdef *cdef =3D priv->cdef;
-> > + int ret;
-> > +
-> > + if (cdef->shutdown_reg !=3D IS31FL32XX_REG_NONE) {
-> > + u8 value =3D enable ? IS31FL32XX_SHUTDOWN_SSD_ENABLE :
-> > + IS31FL32XX_SHUTDOWN_SSD_DISABLE;
-> > + ret =3D is31fl32xx_write(priv, cdef->shutdown_reg, value);
-> > + if (ret)
-> > + return ret;
-> > + }
-> > +
-> > + if (cdef->sw_shutdown_func)
-> > + return cdef->sw_shutdown_func(priv, enable);
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static int is31fl32xx_init_regs(struct is31fl32xx_priv *priv)
-> > +{
-> > + const struct is31fl32xx_chipdef *cdef =3D priv->cdef;
-> > + int ret;
-> > +
-> > + ret =3D is31fl32xx_reset_regs(priv);
-> > + if (ret)
-> > + return ret;
-> > +
-> > + /*
-> > + * Set enable bit for all channels.
-> > + * We will control state with PWM registers alone.
-> > + */
-> > + if (cdef->led_control_register_base !=3D IS31FL32XX_REG_NONE) {
-> > + u8 value =3D
-> > + GENMASK(cdef->enable_bits_per_led_control_register-1, 0);
-> > + u8 num_regs =3D cdef->channels /
-> > + cdef->enable_bits_per_led_control_register;
-> > + int i;
-> > +
-> > + for (i =3D 0; i < num_regs; i++) {
-> > + ret =3D is31fl32xx_write(priv,
-> > + cdef->led_control_register_base+i,
-> > + value);
-> > + if (ret)
-> > + return ret;
-> > + }
-> > + }
-> > +
-> > + ret =3D is31fl32xx_software_shutdown(priv, false);
-> > + if (ret)
-> > + return ret;
-> > +
-> > + if (cdef->global_control_reg !=3D IS31FL32XX_REG_NONE) {
-> > + ret =3D is31fl32xx_write(priv, cdef->global_control_reg, 0x00);
-> > + if (ret)
-> > + return ret;
-> > + }
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static inline size_t sizeof_is31fl32xx_priv(int num_leds)
-> > +{
-> > + return sizeof(struct is31fl32xx_priv) +
-> > + (sizeof(struct is31fl32xx_led_data) * num_leds);
-> > +}
-> > +
-> > +static int is31fl32xx_parse_child_dt(const struct device *dev,
-> > + const struct device_node *child,
-> > + struct is31fl32xx_led_data *led_data)
-> > +{
-> > + struct led_classdev *cdev =3D &led_data->cdev;
-> > + int ret =3D 0;
-> > + u32 reg;
-> > +
-> > + if (of_property_read_string(child, "label", &cdev->name))
-> > + cdev->name =3D child->name;
-> > +
-> > + ret =3D of_property_read_u32(child, "reg", &reg);
-> > + if (ret || reg < 1 || reg > led_data->priv->cdef->channels) {
-> > + dev_err(dev,
-> > + "Child node %s does not have a valid reg property\n",
-> > + child->full_name);
-> > + return -EINVAL;
-> > + }
-> > + led_data->channel =3D reg;
-> > +
-> > + of_property_read_string(child, "linux,default-trigger",
-> > + &cdev->default_trigger);
-> > +
-> > + cdev->brightness_set_blocking =3D is31fl32xx_brightness_set;
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static struct is31fl32xx_led_data *is31fl32xx_find_led_data(
-> > + struct is31fl32xx_priv *priv,
-> > + u8 channel)
-> > +{
-> > + size_t i;
-> > +
-> > + for (i =3D 0; i < priv->num_leds; i++) {
-> > + if (priv->leds[i].channel =3D=3D channel)
-> > + return &priv->leds[i];
-> > + }
-> > +
-> > + return NULL;
-> > +}
-> > +
-> > +static int is31fl32xx_parse_dt(struct device *dev,
-> > + struct is31fl32xx_priv *priv)
-> > +{
-> > + struct device_node *child;
-> > + int ret =3D 0;
-> > +
-> > + for_each_child_of_node(dev->of_node, child) {
-> > + struct is31fl32xx_led_data *led_data =3D
-> > + &priv->leds[priv->num_leds];   =20
->=20
-> Maybe i missed something, but is it really protected against out of i=
-ndex
-> access? =20
-
-The array is allocated with size equal to the number of child nodes,
-and num_leds is incremented once for each child node parsed. So in=20
-order for the index to be out of bounds, the number of child nodes
-would need to increase during the probe. I assumed that the DT is=20
-static during probing, but if that's not the case then you're right=20
-that this is a potential problem. Also, this equivalent logic is=20
-used in leds-pwm, leds-gpio, and leds-ns2, so that gives me=20
-confidence that its safe.=20
-Unless DT overlays change that assumption?=20
-
-> > + const struct is31fl32xx_led_data *other_led_data;
-> > +
-> > + led_data->priv =3D priv;
-> > +
-> > + ret =3D is31fl32xx_parse_child_dt(dev, child, led_data);
-> > + if (ret)
-> > + goto err;
-> > +
-> > + /* Detect if channel is already in use by another child */
-> > + other_led_data =3D is31fl32xx_find_led_data(priv,
-> > + led_data->channel);
-> > + if (other_led_data) {
-> > + dev_err(dev,
-> > + "%s and %s both attempting to use channel %d\n",
-> > + led_data->cdev.name,
-> > + other_led_data->cdev.name,
-> > + led_data->channel);
-> > + goto err;
-> > + }
-> > +
-> > + ret =3D devm_led_classdev_register(dev, &led_data->cdev);
-> > + if (ret) {
-> > + dev_err(dev, "failed to register PWM led for %s: %d\n",
-> > + led_data->cdev.name, ret);
-> > + goto err;
-> > + }
-> > +
-> > + priv->num_leds++;
-> > + }
-> > +
-> > + return 0;
-> > +
-> > +err:
-> > + of_node_put(child);
-> > + return ret;
-> > +}
-> > +
-> > +static const struct of_device_id of_is31fl31xx_match[] =3D {
-> > + { .compatible =3D "issi,is31fl3236", .data =3D &is31fl3236_cdef, =
-},
-> > + { .compatible =3D "issi,is31fl3235", .data =3D &is31fl3235_cdef, =
-},
-> > + { .compatible =3D "issi,is31fl3218", .data =3D &is31fl3218_cdef, =
-},
-> > + { .compatible =3D "issi,is31fl3216", .data =3D &is31fl3216_cdef, =
-},
-> > + {},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, of_is31fl31xx_match);
-> > +
-> > +static int is31fl32xx_probe(struct i2c_client *client,
-> > + const struct i2c_device_id *id)
-> > +{
-> > + const struct is31fl32xx_chipdef *cdef;
-> > + const struct of_device_id *of_dev_id;
-> > + struct device *dev =3D &client->dev;
-> > + struct is31fl32xx_priv *priv;
-> > + int count;
-> > + int ret =3D 0;
-> > +
-> > + of_dev_id =3D of_match_device(of_is31fl31xx_match, dev);
-> > + if (!of_dev_id)
-> > + return -EINVAL;
-> > +
-> > + cdef =3D of_dev_id->data;
-> > +
-> > + count =3D of_get_child_count(dev->of_node);
-> > + if (!count)
-> > + return -EINVAL;
-> > +
-> > + priv =3D devm_kzalloc(dev, sizeof_is31fl32xx_priv(count),
-> > + GFP_KERNEL);
-> > + if (!priv)
-> > + return -ENOMEM;
-> > +
-> > + priv->client =3D client;
-> > + priv->cdef =3D cdef;
-> > + i2c_set_clientdata(client, priv);
-> > +
-> > + ret =3D is31fl32xx_init_regs(priv);
-> > + if (ret)
-> > + return ret;
-> > +
-> > + ret =3D is31fl32xx_parse_dt(dev, priv);
-> > + if (ret)
-> > + return ret;
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +static int is31fl32xx_remove(struct i2c_client *client)
-> > +{
-> > + struct is31fl32xx_priv *priv =3D i2c_get_clientdata(client);
-> > +
-> > + return is31fl32xx_reset_regs(priv);
-> > +}
-> > +
-> > +/*
-> > + * i2c-core requires that id_table be non-NULL, even though
-> > + * it is not used for DeviceTree based instantiation.
-> > + */
-> > +static const struct i2c_device_id is31fl31xx_id[] =3D {
-> > + {},
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(i2c, is31fl31xx_id);
-> > +
-> > +static struct i2c_driver is31fl32xx_driver =3D {
-> > + .driver =3D {
-> > + .name =3D "is31fl32xx",
-> > + .of_match_table =3D of_is31fl31xx_match,
-> > + },
-> > + .probe =3D is31fl32xx_probe,
-> > + .remove =3D is31fl32xx_remove,   =20
->=20
-> Sorry, what was the reason to skip shutdown? =20
-
-If I understood Jacek's last email on the topic [1] correctly, he's now=
-=20
-of the opinion that the decision to turn LEDs off on reboot should be=20
-left to userspace, rather than done by the driver. For these devices,=20
-the only thing a shutdown callback would do is turn off the LEDs (throu=
-gh=20
-any of multiple methods). So, if we want to leave the state as-is on
-reboot there's no need for a shutdown callback.
-
-[1] http://www.spinics.net/lists/linux-leds/msg05644.html
-
-> > + .id_table =3D is31fl31xx_id,
-> > +};
-> > +
-> > +module_i2c_driver(is31fl32xx_driver);
-> > +
-> > +MODULE_AUTHOR("David Rivshin <drivshin@allworx.com>");
-> > +MODULE_DESCRIPTION("ISSI IS31FL32xx LED driver");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.5.0
-> >   =20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
