@@ -1,85 +1,56 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: core: add power sequence for USB devices
-Date: Fri, 4 Mar 2016 10:37:50 +0800
-Message-ID: <20160304023750.GF30272@shlinux2.ap.freescale.net>
-References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
- <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
- <CAL_JsqLYHzb0ABYN_P9ZOEorT6otvn_BPNzuCFhoqwa5M4y-hw@mail.gmail.com>
- <20160304020242.GB30272@shlinux2.ap.freescale.net>
- <20160304022305.GB20597@lunn.ch>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 1/5] thermal: change "hysteresis" as optional property
+Date: Fri, 4 Mar 2016 11:03:49 +0800
+Message-ID: <20160304030349.GA11012@leoy-linaro>
+References: <1456458227-12950-1-git-send-email-leo.yan@linaro.org>
+ <1456458227-12950-2-git-send-email-leo.yan@linaro.org>
+ <20160303162942.GA2445@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160304022305.GB20597-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20160303162942.GA2445@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Javi Merino <javi.merino@arm.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 03:23:05AM +0100, Andrew Lunn wrote:
-> On Fri, Mar 04, 2016 at 10:02:42AM +0800, Peter Chen wrote:
-> > On Thu, Mar 03, 2016 at 02:54:55PM -0600, Rob Herring wrote:
-> > > On Thu, Mar 3, 2016 at 4:01 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
-> > > > Some hard-wired USB devices need to do power sequence to let the
-> > > > device work normally, the typical power sequence like: enable USB
-> > > > PHY clock, toggle reset pin, etc. But current Linux USB driver
-> > > > lacks of such code to do it, it may cause some hard-wired USB devices
-> > > > works abnormal or can't be recognized by controller at all.
-> > > >
-> > > > In this patch, it will do power on sequence at hub's probe for all
-> > > > devices under this hub (includes root hub) if this device is described
-> > > > at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
-> > > > it will do power off sequence.
-> > > >
-> > > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > > > ---
-> > > >  .../devicetree/bindings/usb/usb-device.txt         |  41 +++++-
-> > > >  drivers/usb/core/Makefile                          |   2 +-
-> > > >  drivers/usb/core/hub.c                             |  32 +++++
-> > > >  drivers/usb/core/pwrseq.c                          | 149 +++++++++++++++++++++
-> > > >  include/linux/usb/of.h                             |  10 ++
-> > > >  5 files changed, 232 insertions(+), 2 deletions(-)
-> > > >  create mode 100644 drivers/usb/core/pwrseq.c
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > index 1c35e7b..c7a298c 100644
-> > > > --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > @@ -13,8 +13,37 @@ Required properties:
-> > > >  - reg: the port number which this device is connecting to, the range
-> > > >    is 1-31.
-> > > >
-> > > > +Optional properties:
-> > > > +- usb-pwrseq: the power sequence handler which need to do before this USB
-> > > > +  device can work.
-> > > > +- clocks: the input clock for USB device.
-> > > > +- clock-frequency: the frequency for device's clock.
-> > > > +- reset-gpios: Should specify the GPIO for reset.
-> > > > +- reset-duration-us: the duration in microsecond for assert reset signal.
-> > > 
-> > > So we sorted out how to describe USB devices in DT, but now we don't
-> > > use it?
-> > 
-> > We only know USB device after USB bus finds it, but without power
-> > on sequence, the USB bus can't find it.
+Hi Eduardo,
+
+On Thu, Mar 03, 2016 at 08:29:44AM -0800, Eduardo Valentin wrote:
+> Hi Leo,
 > 
-> Not really true. Device tree says it exists, you just cannot see it
-> yet. The fact it is in device tree means it is soldered on the board
-> and really is there. So when the host controller enumerates the bus,
-> it should run the power sequence of all child nodes to make them
-> appear.
+> On Fri, Feb 26, 2016 at 11:43:43AM +0800, Leo Yan wrote:
+> > The property "hysteresis" is mandatory for trip points, so if without
+> > it the thermal zone cannot register successfully. But "hysteresis" is
+> > ignored in the thermal subsystem and only inquired by several thermal
+> > sensor drivers.
 > 
+> I am not sure this a good direction to go. Remember that Linux
+> implementation not necessarily has to be the implication of the DT
+> binding. Hysteresis is a property that plays a significant role on
+> thermal control systems, which in many cases avoid overshooting cooling
+> actions. Having the DT writer to explicitly set it to 0 means that zone
+> does not suffer of overshooting and does not need hysteresis.
 
-Yes, it is my patch doing. My words "We only know USB device after USB
-bus finds it" means the USB common code only create the USB device, and
-assign its .of_node after USB bus finds it.
+After review current code, the "hysteresis" is used to calculate
+temperature falling threshold with a more conservative value; so that
+finally avoid overshooting issue.
 
--- 
+Please confirm if is my understanding correct or not?
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If the Linux thermal subsystem has a problem with handling hysteresis, I
+> would rather fix Linux code than relaxing the DT binding. Or if you
+> still believe hysteresis is really optional, I would prefer to see a
+> better justification than "Linux ignores it".
+
+If we think about power allocator governor, PID's two parameters are
+also used to dismiss overshooting issue: one is k_po (proportional
+term), another is k_i (integral term). So that means after we apply
+power allocator governor, we don't need parameter "hysteresis" due PID
+algorithm can automatically dismiss potential errors.
+
+Does this make sense?
+
+Thanks,
+Leo Yan
