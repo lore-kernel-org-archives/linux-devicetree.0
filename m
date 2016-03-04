@@ -1,33 +1,144 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: Add root properties for Raspberry Pi 3
-Date: Fri,  4 Mar 2016 10:39:28 -0800
-Message-ID: <1457116769-8567-1-git-send-email-eric@anholt.net>
+Subject: [PATCH 2/2] ARM: bcm2835: Add devicetree for the Raspberry Pi 3.
+Date: Fri,  4 Mar 2016 10:39:29 -0800
+Message-ID: <1457116769-8567-2-git-send-email-eric@anholt.net>
+References: <1457116769-8567-1-git-send-email-eric@anholt.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457116769-8567-1-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+For now this doesn't support the new hardware present on the Pi 3 (BT,
+wifi, GPIO expander).  Since the GPIO expander isn't supported, we
+also don't have the LEDs like the other board files do.
+
 Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/Makefile            |  3 +-
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 22 ++++++++++++
+ arch/arm/boot/dts/bcm2837.dtsi        | 68 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 92 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+ create mode 100644 arch/arm/boot/dts/bcm2837.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-index 11d3056..6ffe087 100644
---- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
-@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
- Required root node properties:
- compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
- 
-+Raspberry Pi 3 Model B
-+Required root node properties:
-+compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a4a6d70..71082a3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -63,7 +63,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b-rev2.dtb \
+ 	bcm2835-rpi-b-plus.dtb \
+ 	bcm2835-rpi-a-plus.dtb \
+-	bcm2836-rpi-2-b.dtb
++	bcm2836-rpi-2-b.dtb \
++	bcm2837-rpi-3-b.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4708-asus-rt-ac56u.dtb \
+ 	bcm4708-asus-rt-ac68u.dtb \
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+new file mode 100644
+index 0000000..5e8eafd
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -0,0 +1,22 @@
++/dts-v1/;
++#include "bcm2837.dtsi"
++#include "bcm2835-rpi.dtsi"
 +
- Raspberry Pi Compute Module
- Required root node properties:
- compatible = "raspberrypi,compute-module", "brcm,bcm2835";
++/ {
++	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
++	model = "Raspberry Pi 3 Model B";
++
++	memory {
++		reg = <0 0x40000000>;
++	};
++};
++
++&gpio {
++	pinctrl-0 = <&gpioout &alt0 &i2s_alt0 &alt3>;
++
++	/* I2S interface */
++	i2s_alt0: i2s_alt0 {
++		brcm,pins = <28 29 30 31>;
++		brcm,function = <BCM2835_FSEL_ALT2>;
++	};
++};
+diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+new file mode 100644
+index 0000000..2f36722
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2837.dtsi
+@@ -0,0 +1,68 @@
++#include "bcm283x.dtsi"
++
++/ {
++	compatible = "brcm,bcm2836";
++
++	soc {
++		ranges = <0x7e000000 0x3f000000 0x1000000>,
++			 <0x40000000 0x40000000 0x00001000>;
++		dma-ranges = <0xc0000000 0x00000000 0x3f000000>;
++
++		local_intc: local_intc {
++			compatible = "brcm,bcm2836-l1-intc";
++			reg = <0x40000000 0x100>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			interrupt-parent = <&local_intc>;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv7-timer";
++		interrupt-parent = <&local_intc>;
++		interrupts = <0>, // PHYS_SECURE_PPI
++			     <1>, // PHYS_NONSECURE_PPI
++			     <3>, // VIRT_PPI
++			     <2>; // HYP_PPI
++		always-on;
++	};
++
++	cpus: cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <0>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <1>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <2>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53";
++			reg = <3>;
++		};
++	};
++};
++
++/* Make the BCM2835-style global interrupt controller be a child of the
++ * CPU-local interrupt controller.
++ */
++&intc {
++	compatible = "brcm,bcm2836-armctrl-ic";
++	reg = <0x7e00b200 0x200>;
++	interrupt-parent = <&local_intc>;
++	interrupts = <8>;
++};
 -- 
 2.7.0
 
