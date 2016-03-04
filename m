@@ -1,69 +1,57 @@
-From: Martin Sperl <martin@sperl.org>
-Subject: Re: [PATCH 1/5] ARM: bcm2835: Define standard pinctrl groups in the
- gpio node.
-Date: Fri, 4 Mar 2016 10:27:49 +0100
-Message-ID: <6D770203-ED53-413D-AC28-B89A5C48DA8C@sperl.org>
-References: <1456510756-15337-1-git-send-email-eric@anholt.net>
- <1456510756-15337-2-git-send-email-eric@anholt.net>
- <56D8AAA2.60907@wwwdotorg.org>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <56D8AAA2.60907@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Subject: Re: [PATCH v4 16/18] i2c: allow adapter drivers to override the adapter
+ locking
+Date: Fri, 04 Mar 2016 10:33:14 +0100
+Message-ID: <56D9565A.4020201@lysator.liu.se>
+References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se> <1457044050-15230-17-git-send-email-peda@lysator.liu.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457044050-15230-17-git-send-email-peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Viorel Suman <viorel.suman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Terry Heo <terryheo-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tommi Rantala <tt.rantala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT24gMDMuMDMuMjAxNiwgYXQgMjI6MjAsIFN0ZXBoZW4gV2FycmVuIDxzd2FycmVuQHd3d2Rv
-dG9yZy5vcmc+IHdyb3RlOgo+IAo+IE9uIDAyLzI2LzIwMTYgMTE6MTkgQU0sIEVyaWMgQW5ob2x0
-IHdyb3RlOgo+PiBUaGUgQkNNMjgzNS1BUk0tUGVyaXBoZXJhbHMucGRmIGRvY3VtZW50YXRpb24g
-c3BlY2lmaWVzIHdoYXQgdGhlCj4+IGZ1bmN0aW9uIHNlbGVjdHMgZG8gZm9yIHRoZSBwaW5zLCBh
-bmQgdGhlcmUgYXJlIGEgYnVuY2ggb2Ygb2J2aW91cwo+PiBncm91cGluZ3MgdG8gYmUgbWFkZS4g
-IFdpdGggdGhlc2UgY3JlYXRlZCwgd2UnbGwgYmUgYWJsZSB0byByZXBsYWNlCj4+IGJjbTI4MzUt
-cnBpLmR0c2kncyBtYWluICJzZXQgYWxsIG9mIHRoZXNlIHBpbnMgdG8gYWx0MCIgd2l0aAo+PiBy
-ZWZlcmVuY2VzIHRvIHNwZWNpZmljIGdyb3VwcyB3ZSB3YW50IGVuYWJsZWQuCj4gCj4+IGRpZmYg
-LS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY20yODN4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0
-cy9iY20yODN4LmR0c2kKPiAKPj4gKwkJCXNwaTBfZ3Bpbzc6IHNwaTBfZ3Bpbzcgewo+PiArCQkJ
-CWJyY20scGlucyA9IDw3IDggOSAxMCAxMT47Cj4+ICsJCQkJYnJjbSxmdW5jdGlvbiA9IDxCQ00y
-ODM1X0ZTRUxfQUxUMD47Cj4+ICsJCQl9Owo+IAo+IFRoaXMgaXMgdG9vIG1hbnkgcGlucy4KPiAK
-PiAtIEl0IGluY2x1ZGVzIGJvdGggTU9TSSBhbmQgTUlTTywgYWx0aG91Z2ggYSBwYXJ0aWN1bGFy
-IHVzZS1jYXNlIG1heSBvbmx5IHVzZSAxIG9mIHRob3NlLgo+IAo+IC0gSXQgaW5jbHVkZXMgYm90
-aCBjaGlwLXNlbGVjdCBzaWduYWxzLCB3aGVyZWFzIGEgcGFydGljdWxhciB1c2UtY2FzZSBtYXkg
-dXNlIDAsIDEsIG9yIDIgb2YgdGhvc2UuIFRoaXMgaXMgZXNwZWNpYWxseSB0cnVlIHNpbmNlIElJ
-UkMgdGhlIG1haW5saW5lIGJjbTI4M3ggU1BJIGRyaXZlciB3YW50cyB0byBvbmx5IHVzZSBHUElP
-cyBmb3IgY2hpcC1zZWxlY3RzLCBub3QgU1BJLWNvbnRyb2xsZXItZ2VuZXJhdGVkIGNoaXAtc2Vs
-ZWN0IHNpZ25hbHMsIHRvIGF2b2lkIHNvbWUgaXNzdWVzIHdpdGggdGhlIEhXIGdlbmVyYXRpb24g
-b2YgdGhlc2Ugc2lnbmFscy4KVGhhdCBpcyB0cnVlOiB0aGUgc3BpLWJjbTI4MzUgZHJpdmVyIHJl
-cXVpcmVzIEdQSU8gdXNhZ2UgZm9yIGNoaXAtc2VsZWN0CnRvIG1ha2UgYWxsIHRob3NlIGxhdGVu
-Y3kgb3B0aW1pemF0aW9ucyB3b3JrIChidXQgYWxzbyB0byBhdm9pZCBzb21lCnNwaS1kbWEgaXNz
-dWVzKS4KVGhlIHJlYXNvbiBiZWhpbmQgaXQgaXMgdGhhdCB0aGVyZSBhcmUgb2JzZXJ2ZWQgc2hv
-cnQgdGVybSDigJxnbGl0Y2hlc+KAnQpvbiBuYXRpdmUgQ1Mgd2hlbmV2ZXIgdGhlIFNQSSBjb250
-cm9sIHJlZ2lzdGVyIGlzIHRvdWNoZWQgLSBldmVuIHdpdGggCmlkZW50aWNhbCB2YWx1ZXMuCkFu
-ZCBHUElPIGNvbnRyb2xsZWQgQ1Mgc29sdmVzIHRoaXMgaXNzdWUgKGFuZCBNYXJrIEJyb3duIHNh
-aWQgdGhhdAp0aGUgR1BJTy1jcyBpbnRlcmZhY2UgaXMgbm93IHByZWZlcnJlZCBhbnl3YXkgLSBo
-ZW5jZSB0aGUgYXV4aWxpYXJ5CnNwaSBvbmx5IGltcGxlbWVudCBncGlvLWNzIGFuZCByZXF1aXJl
-cyB0aGUgQ1Mgc2V0IGFzIE9VVFBVVCwgYnV0CnVubGlrZSB0aGUgbWFpbiBzcGkgdGhpcyBkb2Vz
-IG5vdCBoYXZlIOKAnHJlbWFwcGluZ+KAnSBzdXBwb3J0IGZvcgpsZWdhY3kgZGV2aWNlLXRyZWVz
-IChhcyB0aGVyZSBuZXZlciB3YXMgYSBkcml2ZXItdmVyc2lvbiB0aGF0IHN1cHBvcnRlZApuYXRp
-dmUtY3MpLgoKTWF5YmUgc3BsaXQgdGhlIFNQSS1wb3J0aW9uIGludG8gMiBzZWN0aW9uczoKKiB0
-aGUgU0NLLCBNT1NJLCBNSVNPIChwaW4gOSB0byAxMSkgd2l0aCBBTFRfMAoqIHRoZSBDUyBHUElP
-cyAoc3RhbmRhcmQgcGlucyBhcmUgNyBhbmQgOCkgd2l0aCBPVVRQVVQuCgpUaGF0IHdheSBpdCBp
-cyBlYXN5IHRvIG92ZXJyaWRlIG9ubHkgdGhpcyBzZWN0aW9uIChwbHVzIHRoZSBncGlvLWNzIHBy
-b3BlcnR5IGluc2lkZSB0aGUgc3BpIG5vZGUpIHRvIGV4dGVuZCB0aGUgbnVtYmVyIG9mIGNoaXAg
-c2VsZWN0cyBvciB1c2UgZGlmZmVyZW50IG1hcHBpbmdzLgoKPiAKPiBJIGJlbGlldmUgYSBzaW1p
-bGFyIGNvbW1lbnQgYXBwbGllcyB0byBvdGhlciBTUEkgbm9kZXMgdG9vLgpJIGd1ZXNzIHRoZSBz
-YW1lIOKAnHNwbGl0dGluZ+KAnSBhcHByb2FjaCBzaG91bGQgYmUgdGFrZW4gaGVyZSBhcyB3ZWxs
-Li4uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+Hi!
+
+Here's a fixup for a problem found by the test robot. Sorry for the
+inconvenience.
+
+Cheers,
+Peter
+
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 6be266c3d39b..5ecc6fc52ce0 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -961,6 +961,8 @@ static int i2c_check_addr_busy(struct i2c_adapter *adapter, int addr)
+ /**
+  * i2c_adapter_lock_bus - Get exclusive access to an I2C bus segment
+  * @adapter: Target I2C bus segment
++ * @flags: I2C_LOCK_ADAPTER locks the root i2c adapter, I2C_LOCK_SEGMENT
++ *	locks only this branch in the adapter tree
+  */
+ static void i2c_adapter_lock_bus(struct i2c_adapter *adapter, int flags)
+ {
+@@ -970,6 +972,8 @@ static void i2c_adapter_lock_bus(struct i2c_adapter *adapter, int flags)
+ /**
+  * i2c_adapter_trylock_bus - Try to get exclusive access to an I2C bus segment
+  * @adapter: Target I2C bus segment
++ * @flags: I2C_LOCK_ADAPTER trylocks the root i2c adapter, I2C_LOCK_SEGMENT
++ * 	trylocks only this branch in the adapter tree
+  */
+ static int i2c_adapter_trylock_bus(struct i2c_adapter *adapter, int flags)
+ {
+@@ -979,6 +983,8 @@ static int i2c_adapter_trylock_bus(struct i2c_adapter *adapter, int flags)
+ /**
+  * i2c_adapter_unlock_bus - Release exclusive access to an I2C bus segment
+  * @adapter: Target I2C bus segment
++ * @flags: I2C_LOCK_ADAPTER unlocks the root i2c adapter, I2C_LOCK_SEGMENT
++ * 	unlocks only this branch in the adapter tree
+  */
+ static void i2c_adapter_unlock_bus(struct i2c_adapter *adapter, int flags)
+ {
+-- 
+2.1.4
