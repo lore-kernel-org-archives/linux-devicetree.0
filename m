@@ -1,84 +1,108 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v3 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
-Date: Thu, 3 Mar 2016 20:07:48 -0600
-Message-ID: <56D8EDF4.9070904@ti.com>
-References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
- <1456439796-28546-3-git-send-email-fcooper@ti.com>
- <20160301181109.GB13417@atomide.com>
- <alpine.DEB.2.02.1603011858510.14948@utopia.booyaka.com>
- <20160301205043.GA4469@atomide.com> <56D71331.5020702@ti.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: imx6qdl-udoo.dtsi: fix onboard USB HUB
+ property
+Date: Fri, 4 Mar 2016 10:04:38 +0800
+Message-ID: <20160304020438.GC30272@shlinux2.ap.freescale.net>
+References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
+ <1456999276-6315-4-git-send-email-peter.chen@nxp.com>
+ <56D8BB1D.6040108@maciej.szmigiero.name>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D71331.5020702@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>
-Cc: t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56D8BB1D.6040108-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+On Thu, Mar 03, 2016 at 11:30:53PM +0100, Maciej S. Szmigiero wrote:
+> Hi Peter,
+> 
+> On 03.03.2016 11:01, Peter Chen wrote:
+> > From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > The current dts describes USB HUB's property at USB controller's
+> > entry, it is improper. The USB HUB should be the child node
+> > under USB controller.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Thanks for patches!
+> 
+> VID:PID for hub on UDOO board is 0424:2514.
+> 
+> I've tested these patches on this board and was able to make USB work
+> again with following DT changes:
+> diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> index d3e54e4..4956de7 100644
+> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> @@ -9,6 +9,8 @@
+>   *
+>   */
+>  
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+>  / {
+>  	chosen {
+>  		stdout-path = &uart2;
+> @@ -18,21 +27,11 @@
+>  		reg = <0x10000000 0x40000000>;
+>  	};
+>  
+> -	regulators {
+> -		compatible = "simple-bus";
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -
+> -		reg_usb_h1_vbus: regulator@0 {
+> -			compatible = "regulator-fixed";
+> -			reg = <0>;
+> -			regulator-name = "usb_h1_vbus";
+> -			regulator-min-microvolt = <5000000>;
+> -			regulator-max-microvolt = <5000000>;
+> -			enable-active-high;
+> -			startup-delay-us = <2>; /* USB2415 requires a POR of 1 us minimum */
+> -			gpio = <&gpio7 12 0>;
+> -		};
+> +	usb2415_pwrseq: usb2415_pwrseq {
+> +		compatible = "usb-pwrseq";
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		reset-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+> +		reset-duration-us = <3000>;
+>  	};
+>  
+>  	sound {
+> @@ -163,9 +218,16 @@
+>  &usbh1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usbh>;
+> -	vbus-supply = <&reg_usb_h1_vbus>;
+> -	clocks = <&clks 201>;
+>  	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	hub: usb2415@01 {
+> +		compatible = "usb424,2514";
+> +		reg = <1>;
+> +		usb-pwrseq = <&usb2415_pwrseq>;
+> +	};
+>  };
+>  
+>  &usdhc3 {
+> 
+> 
 
-On 03/02/2016 10:22 AM, Franklin S Cooper Jr. wrote:
-> Hi Paul
->
-> On 03/01/2016 02:50 PM, Tony Lindgren wrote:
->> * Paul Walmsley <paul@pwsan.com> [160301 10:59]:
->>> On Tue, 1 Mar 2016, Tony Lindgren wrote:
->>>
->>>> * Franklin S Cooper Jr <fcooper@ti.com> [160225 14:37]:
->>>>> From: Vignesh R <vigneshr@ti.com>
->>>>>
->>>>> Add hwmod entries for the PWMSS on DRA7.
->>>>>
->>>>> Set l4_root_clk_div as the main_clk of PWMSS. It is fixed-factored clock
->>>>> equal to L4PER2_L3_GICLK/2(l3_iclk_div/2).
->>>>> As per AM57x TRM SPRUHZ6[1], October 2014, Section 29.1.3 Table 29-4,
->>>>> clock source to PWMSS is L4PER2_L3_GICLK. But it is actually
->>>>> L4PER2_L3_GICLK/2. The TRM does not show the division by 2.
->>>>>
->>>>> [1] www.ti.com/lit/ug/spruhz6/spruhz6.pdf
->>>> Looks OK to me, assuming Paul will pick this one or ack it.
->>> Well I've already sent comments on it, it doesn't look quite ready for me 
->>> yet.  I would hold off on the whole series because the hwmod comments also 
->>> impact the DT files.
->> OK will drop the dt related patches then.
-> Sorry you previously asked this question about why hwmod is
-> used for eCap, ePWM and eQEP before and it wasn't addressed.
-> I'll take a look at this and I will get back to you.
+Thank you very much.
 
-So I looked into this more and verified that the eCAP and
-ePWM doesn't have their own unique clock. The PWMSS receives
-a clock L4PER2_L3_GICLK/2 which is passed through to its
-sub-devices (ePWM, eCAP and eQEP). The PWMSS is responsible
-for handling its clock internally while the subdevices have
-no role in managing this clock. So this explains why we have
-hwmod entries for PWMSS and why we are planning on removing
-it from the various subdevices.
+-- 
 
-Since ePWM, eCAP and eQEP are subdevices of PWMSS they
-shouldn't have their own concept of their "own" clock. The
-ePWM , eCAP and eQEP clocks are all shared and managed by
-their parent PWMSS. Once the PWMSS is enabled and has its
-clock running then ePWM, eCAP and eQEP from their main clock
-perspective have everything they need.
-
-So my plan is to strip all references of clocks (including
-hwmod entries) for ePWM, eCAP and eQEP. The devm_clk_get
-calls made in the ePWM and eCAP will simply point to their
-parent's dev (PWMSS). I did a couple of quick test using
-this approach and it works. I have more testing to do but if
-that checks out are you ok with the above approach?
-
-Also I'm not sure how simple-bus fits in this picture. The
-eCAP, eQEP and ePWM are all separate devices. The only thing
-that they share is a single clock from their parent. So it
-doesn't seem like the right approach. I'm basing this on the
-info in this thread
-https://www.mail-archive.com/linuxppc-dev@lists.ozlabs.org/msg27979.html
-that talks about the usage of simple-bus. So if its outdated
-or I"m misinterpreting it incorrectly please let me know.
->
->> Regards,
->>
->> Tony
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
