@@ -1,79 +1,56 @@
-From: Shannon Zhao <shannon.zhao@linaro.org>
-Subject: Re: [PATCH v5 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Fri, 04 Mar 2016 23:56:51 +0800
-Message-ID: <56D9B043.1090301@linaro.org>
-References: <1457073455-11516-1-git-send-email-zhaoshenglong@huawei.com>
- <1457073455-11516-2-git-send-email-zhaoshenglong@huawei.com>
- <alpine.DEB.2.02.1603041213400.17938@kaball.uk.xensource.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.02.1603041213400.17938@kaball.uk.xensource.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>, Shannon Zhao <zhaoshenglong@huawei.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, hangaohuai@huawei.com, linux-efi@vger.kernel.org, ard.biesheuvel@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, ACPI <linux-acpi@vger.kernel.org>, stefano.stabellini@citrix.com, david.vrabel@citrix.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, Len Brown <lenb@kernel.org>
+From: Alexandre TORGUE <alexandre.torgue@gmail.com>
+Subject: [PATCH v4 0/4] Add Ethernet support on STM32F429
+Date: Fri,  4 Mar 2016 16:58:02 +0100
+Message-ID: <1457107086-14764-1-git-send-email-alexandre.torgue@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, manabian@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
+This series:
+ -enhance current stmmac driver to control it (code already
+available) and adds basic glue for STM32F429 chip.
+ -Enable basic Net config in kernel.
 
+Note that DT patches are not present because STM32 pinctrl code is not
+yet avalaible.
 
-On 2016/3/4 20:24, Stefano Stabellini wrote:
-> On Fri, 4 Mar 2016, Shannon Zhao wrote:
->> >From: Shannon Zhao<shannon.zhao@linaro.org>
->> >
->> >ACPI 6.0 introduces a new table STAO to list the devices which are used
->> >by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
->> >UART is used by Xen. So here it hides UART from Dom0.
->> >
->> >Signed-off-by: Shannon Zhao<shannon.zhao@linaro.org>
->> >---
->> >CC: "Rafael J. Wysocki"<rjw@rjwysocki.net>  (supporter:ACPI)
->> >CC: Len Brown<lenb@kernel.org>  (supporter:ACPI)
->> >CC:linux-acpi@vger.kernel.org  (open list:ACPI)
->> >---
->> >  drivers/acpi/scan.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->> >  1 file changed, 68 insertions(+)
->> >
->> >diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->> >index 407a376..31d794c 100644
->> >--- a/drivers/acpi/scan.c
->> >+++ b/drivers/acpi/scan.c
->> >@@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
->> >  DEFINE_MUTEX(acpi_device_lock);
->> >  LIST_HEAD(acpi_wakeup_device_list);
->> >  static DEFINE_MUTEX(acpi_hp_context_lock);
->> >+static u64 spcr_uart_addr;
->> >
->> >  struct acpi_dep_data {
->> >  	struct list_head node;
->> >@@ -1453,6 +1454,47 @@ static int acpi_add_single_object(struct acpi_device **child,
->> >  	return 0;
->> >  }
->> >
->> >+static acpi_status acpi_get_resource_fixed_memory32(struct acpi_resource *res,
->> >+						    void *context)
->> >+{
->> >+	struct acpi_resource_fixed_memory32 *fixed_memory32;
->> >+
->> >+	if (res->type != ACPI_RESOURCE_TYPE_FIXED_MEMORY32)
->> >+		return AE_OK;
->> >+
->> >+	fixed_memory32 = &res->data.fixed_memory32;
-> Should we call acpi_resource_to_address64 instead?
-> Aside from this the rest looks good.
->
-You mean the resource type could be other types? like 
-ACPI_RESOURCE_TYPE_ADDRESS64 or ACPI_RESOURCE_TYPE_ADDRESS32? So it 
-needs to convert them to ACPI_RESOURCE_TYPE_ADDRESS64 firstly?
+Changes since v3:
+ -Fix "tx-clk" and "rx-clk" as required clocks. Driver and bindings are
+modified.
 
-Thanks,
+Changes since v2:
+ -Fix alphabetic order in Kconfig and Makefile.
+ -Improve code according to Joachim review.
+ -Binding: remove useless entry.
+
+Changes since v1:
+ -Fix Kbuild issue in Kconfig.
+ -Remove init/exit callbacks. Suspend/Resume and remove driver is no more
+driven in stmmac_pltfr but directly in dwmac-stm32 glue driver.
+ -Take into account Joachim review.
+
+Regards.
+
+Alexandre.
+
+Alexandre TORGUE (4):
+  net: ethernet: dwmac: add Ethernet glue logic for stm32 chip
+  Documentation: Bindings: Add STM32 DWMAC glue
+  net: ethernet: stmmac: add support of Synopsys 3.50a MAC IP
+  ARM: STM32: Enable Ethernet in stm32_defconfig
+
+ .../devicetree/bindings/net/stm32-dwmac.txt        |  35 ++++
+ arch/arm/configs/stm32_defconfig                   |   9 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 ++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 193 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   1 +
+ 6 files changed, 251 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+
 -- 
-Shannon
+1.9.1
