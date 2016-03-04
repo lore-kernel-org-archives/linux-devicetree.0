@@ -1,86 +1,74 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 0/2] Add phy support for arasan,sdhci-5.1
-Date: Fri, 4 Mar 2016 09:27:39 +0800
-Message-ID: <56D8E48B.1040604@rock-chips.com>
-References: <1455848322-2210-1-git-send-email-shawn.lin@rock-chips.com>
- <CAPDyKFojtZamH-xwM9UTyWdeW3SSSS3-uUyVr2R1t9NkwCXvYg@mail.gmail.com>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH v3 5/5] ARM: dts: DRA7: Add dt nodes for PWMSS
+Date: Thu, 3 Mar 2016 19:39:22 -0600
+Message-ID: <56D8E74A.6090601@ti.com>
+References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
+ <1456439796-28546-6-git-send-email-fcooper@ti.com>
+ <20160302182634.GA26055@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFojtZamH-xwM9UTyWdeW3SSSS3-uUyVr2R1t9NkwCXvYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160302182634.GA26055@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: paul@pwsan.com, t-kristo@ti.com, tony@atomide.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2016/2/20 6:23, Ulf Hansson =E5=86=99=E9=81=93:
+Hi Rob,
+
+On 03/02/2016 12:26 PM, Rob Herring wrote:
+> On Thu, Feb 25, 2016 at 04:36:36PM -0600, Franklin S Cooper Jr wrote:
+>> From: Vignesh R <vigneshr@ti.com>
+>>
+>> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
+>> for dt bindings.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>> Version 3 changes:
+>> None
+>>
+>>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  8 +++
+>>  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 17 +++++-
+>>  arch/arm/boot/dts/dra7.dtsi                        | 64 ++++++++++++++++++++++
+>>  3 files changed, 88 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> index 9c100b2..25d91ae 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+>> @@ -4,6 +4,7 @@ Required properties:
+>>  - compatible: Must be "ti,<soc>-ehrpwm".
+>>    for am33xx - compatible = "ti,am33xx-ehrpwm";
+>>    for da850  - compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
+>> +  for dra7xx - compatible = "ti,dra7xx-ehrpwm", "ti,am33xx-ehrpwm";
+> We're starting to push back on wildcards in compatible strings. I guess 
+> this is okay...
 >
-> Den 19 feb 2016 3:24 fm skrev "Shawn Lin" <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-> <mailto:shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>>:
->  >
->  >
->  > Hello Ulf and Adrian,
->  >
->  > Sorry for delay the new version for this topic. Actually I have no
->  > platform available to test phy stuff since v4. Now, I can rework i=
-t.:)
->  > I remove rpm support from v5 because this patchset just need to fo=
-cus
->  > on phy stuff, which will make the changes more precise. Another re=
-ason
->  > is that phy_power_on take too much time from rpm, however the powe=
-r
-> profit
->  > gained from phy_power_off is little due to the low power mechanism
-> with the
->  > phy itself observed from experiments.
->  >
->  > v4 can be found here:
->  > https://patchwork.kernel.org/patch/7463251/
->  >
->  > Note:
->  > Phy is mandatory requirement for arasan,sdhci-5.1, so we introduce
->  > generic phy support for sdhci-of-arasan.
->  >
->  >
->  > Shawn Lin (2):
->  >   Documentation: bindings: add description of phy for sdhci-of-ara=
-san
->  >   mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
->  >
->  >  .../devicetree/bindings/mmc/arasan,sdhci.txt       | 20 ++++++-
->  >  drivers/mmc/host/sdhci-of-arasan.c                 | 66
-> ++++++++++++++++++++--
->  >  2 files changed, 80 insertions(+), 6 deletions(-)
->  >
->  > --
->  > 2.3.7
->  >
->  >
+>>  - #pwm-cells: should be 3. See pwm.txt in this directory for a description of
+>>    the cells format. The only third cell flag supported by this binding is
+>>    PWM_POLARITY_INVERTED.
+>> @@ -27,3 +28,10 @@ ehrpwm0: ehrpwm@0 { /* EHRPWM on da850 */
+>>  	#pwm-cells = <3>;
+>>  	reg = <0x300000 0x2000>;
+>>  };
+>> +
+>> +ehrpwm0: ehrpwm@0 { /* EHRPWM on dra7xx */
+> Should be pwm@48440200
+
+So the AM335x, AM437x  and DA850 all use ehrpwm0:
+ehrpwm@<address>. Also the address of 0 simply follows the
+pattern used in the other binding examples in that doc. I
+can replace the 0 address in this patch and make another
+patch that fixes it for the other examples in that file. But
+in terms of switching from ehrpwm0:ehrpwm@<address> to
+ehrpwm0:pwm@<address> that would also require making changes
+to the various dtsis also. So is it worth making that
+change? If so I have no problem doing it.
 >
-> This looks good to me! When acks has been received I am ready to queu=
-e
-> it for next.
->
-
-Hi Adrian,
-
-	Any chance to look at this patch? I assume Ulf need your ack for
-sdhci* patch. :)
-
-> Kind regards
-> Uffe
->
-
-
---=20
-Best Regards
-Shawn Lin
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +	compatible = "ti,dra7xx-ehrpwm", "ti,am33xx-ehrpwm";
+>> +	#pwm-cells = <3>;
+>> +	reg = <0x48440200 0x80>;
+>> +	ti,hwmods = "ehrpwm0";
+>> +};
