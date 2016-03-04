@@ -1,48 +1,64 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 4/4] leds: Replace dedicated SN3218 driver with
- IS31FL32XX driver
-Date: Fri, 4 Mar 2016 22:14:27 +0100 (CET)
-Message-ID: <1872003451.86198.4bb16da4-d4d8-48af-950a-7442cddf2b4d.open-xchange@email.1und1.de>
-References: <1456974095-1867-1-git-send-email-drivshin.allworx@gmail.com>
- <1456974095-1867-5-git-send-email-drivshin.allworx@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v10 6/6] add TC G210 pci driver
+Date: Fri, 04 Mar 2016 22:17:34 +0100
+Message-ID: <1920822.ETZj8qFg72@wuerfel>
+References: <cover.1457111366.git.jpinto@synopsys.com> <3602f942ffc8673942f4944f77a8a9d2c805c847.1457111366.git.jpinto@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1456974095-1867-5-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>, devicetree@vger.kernel.org
-Cc: Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Jacek Anaszewski <j.anaszewski@samsung.com>, Richard Purdie <rpurdie@rpsys.net>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3602f942ffc8673942f4944f77a8a9d2c805c847.1457111366.git.jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Friday 04 March 2016 17:22:19 Joao Pinto wrote:
+> This patch adds a glue pci driver for the Synopsys G210 Test Chip.
+> 
+> Signed-off-by: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-> "David Rivshin (Allworx)" <drivshin.allworx@gmail.com> hat am 3. M=C3=
-=A4rz 2016 um
-> 04:01 geschrieben:
->
->
-> From: David Rivshin <drivshin@allworx.com>
->
-> Si-En Technology was acquired by ISSI in 2011, and it appears that
-> the IS31FL3218/IS31FL3216 are just rebranded SN3218/SN3216 devices.
-> As the IS31FL32XX driver already handles the *3218 devices, there
-> is no longer a need for the dedicated SN3218 driver.
->
-> Add the "sn,sn3218" and "sn,sn3216" compatible strings into the
-> IS31FL32XX driver and binding documentation, and remove the
-> leds-sn3218 driver.
->
-> Datasheets:
-> IS31FL3218: http://www.issi.com/WW/pdf/31FL3218.pdf
-> SN3218: http://www.si-en.com/uploadpdf/s2011517171720.pdf
->
-> IS31FL3216: http://www.issi.com/WW/pdf/31FL3216.pdf
-> SN3216; http://www.si-en.com/uploadpdf/SN3216201152410148.pdf
->
-> Signed-off-by: David Rivshin <drivshin@allworx.com>
+Mostly ok, just a few suggestions:
 
-i tested this patch successfully with a Raspberry Pi and a PiGlow (SN32=
-18).
+> +
+> +/* Test Chip type expected values */
+> +#define TC_G210_20BIT 20
+> +#define TC_G210_40BIT 40
+> +#define TC_G210_DEFAULTBIT 40
+> +
+> +static int tc_type = TC_G210_DEFAULTBIT;
+> +module_param(tc_type, int, 0);
+> +MODULE_PARM_DESC(tc_type, "Test Chip Type (20 = 20-bit, 40 = 40-bit)");
+>
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+What is the effect of setting the wrong one here? I was thinking
+it would be best to have the default be 'invalid' and then return
+an error from the probe() function when you neither value is
+set.
+
+> +
+> +	/* Check Test Chip type and set the specific setup routine */
+> +	if (tc_type == TC_G210_20BIT) {
+> +		tc_dwc_g210_pci_hba_vops.custom_phy_initialization =
+> +						tc_dwc_g210_config_20_bit;
+> +	} else if (tc_type == TC_G210_40BIT) {
+> +		tc_dwc_g210_pci_hba_vops.custom_phy_initialization =
+> +						tc_dwc_g210_config_40_bit;
+> +	}
+
+As for the platform driver, I would define two separate structures here,
+and then mark the operations as 'const'.
+
+> +static const struct pci_device_id tc_dwc_g210_pci_tbl[] = {
+> +	{ PCI_VENDOR_ID_SYNOPSYS, 0xB101, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
+> +	{ PCI_VENDOR_ID_SYNOPSYS, 0xB102, PCI_ANY_ID, PCI_ANY_ID, 0, 0, 0 },
+> +	{ }	/* terminate list */
+> +};
+
+Is there any difference between these two IDs?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
