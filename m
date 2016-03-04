@@ -1,49 +1,90 @@
-From: Zhiqiang Hou <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCH v2 2/2] ARM64: dts: add LS1043a-QDS board support
-Date: Fri, 4 Mar 2016 03:38:56 +0000
-Message-ID: <AM4PR04MB2148E7CB47720D13909B442884BE0@AM4PR04MB2148.eurprd04.prod.outlook.com>
-References: <1450948298-33238-1-git-send-email-Zhiqiang.Hou@freescale.com>
- <1450948298-33238-2-git-send-email-Zhiqiang.Hou@freescale.com>
- <20160219032830.GG6756@tiger>
- <HE1PR04MB0906707F686591B374AA364F84A00@HE1PR04MB0906.eurprd04.prod.outlook.com>
- <20160228023818.GB22051@tiger>
- <AM4PR04MB2148867ED34556A79AC0EB1584BB0@AM4PR04MB2148.eurprd04.prod.outlook.com>
- <CADRPPNQLifp1SsZZ+7W8FBWQ=m-nE0DqMWv+6C0uR7+ot9odEg@mail.gmail.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mci_parse_dt()
+Date: Fri, 4 Mar 2016 11:45:57 +0800
+Message-ID: <56D904F5.9020700@rock-chips.com>
+References: <1456968818-22140-1-git-send-email-guodong.xu@linaro.org>
+ <1456968818-22140-2-git-send-email-guodong.xu@linaro.org>
+ <56D79AB4.7050809@rock-chips.com> <56D900A8.9070204@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADRPPNQLifp1SsZZ+7W8FBWQ=m-nE0DqMWv+6C0uR7+ot9odEg@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Li Yang <leoli@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Shaohui.Xie@freescale.com" <Shaohui.Xie@freescale.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Zhiqiang Hou <Zhiqiang.Hou@freescale.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "scottwood@freescale.com" <scottwood@freescale.com>, "Mingkai.Hu@freescale.com" <Mingkai.Hu@freescale.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=gbk;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56D900A8.9070204-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-NgiFYW8Wbx6Ta72+1OMJgUB+6BGkLq7r@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVvLA0KDQpZZXMsIEkgYW0gYnVzeSB3aXRoIGxzMTA0NmEgZW11IGFuZCBzZGsgd29ya2lu
-ZyB0aG9zZSBkYXlzLCBhbmQgd2lsbCBzdWJtaXQgdjMgYmVmb3JlIG5leHQgVHVlc2RheS4NCg0K
-VGhhbmtzLA0KWmhpcWlhbmcNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9t
-OiBwa3UubGVvQGdtYWlsLmNvbSBbbWFpbHRvOnBrdS5sZW9AZ21haWwuY29tXSBPbiBCZWhhbGYg
-T2YgTGkgWWFuZw0KPiBTZW50OiAyMDE25bm0M+aciDTml6UgNDoyOA0KPiBUbzogWmhpcWlhbmcg
-SG91IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IFNoYXduIEd1byA8c2hhd25ndW9Aa2Vy
-bmVsLm9yZz47IFpoaXFpYW5nIEhvdQ0KPiA8WmhpcWlhbmcuSG91QGZyZWVzY2FsZS5jb20+OyBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFNoYW9o
-dWkuWGllQGZyZWVzY2FsZS5jb207IHBhd2VsLm1vbGxAYXJtLmNvbTsNCj4gaWpjK2RldmljZXRy
-ZWVAaGVsbGlvbi5vcmcudWs7IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOyB3aWxsLmRlYWNvbkBh
-cm0uY29tOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IGdhbGFrQGNvZGVhdXJvcmEub3JnOyBzY290
-dHdvb2RAZnJlZXNjYWxlLmNvbTsNCj4gTWluZ2thaS5IdUBmcmVlc2NhbGUuY29tOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAy
-LzJdIEFSTTY0OiBkdHM6IGFkZCBMUzEwNDNhLVFEUyBib2FyZCBzdXBwb3J0DQo+IA0KPiBIaSBa
-aGlxaWFuZywNCj4gDQo+IFdpbGwgdGhlcmUgYmUgYSB2MyBjb21pbmcgb3V0IGJlZm9yZSB0aGUg
-NC42IG1lcmdlIHdpbmRvd3M/DQo+IA0KPiBSZWdhcmRzLA0KPiBMZW8NCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+=D4=DA 2016/3/4 11:27, zhangfei =D0=B4=B5=C0:
+>
+>
+> On 03/03/2016 10:00 AM, Shawn Lin wrote:
+>> Hi Guodong,
+>>
+>> On 2016/3/3 9:33, Guodong Xu wrote:
+>>> With this, user can add a 'resets' property into dw_mmc dts
+>>> node, and when driver probe and parse_dt, it will call
+>>> reset APIs to reset dw_mmc host controller.
+>>>
+>>> Please also refer to Documentation/devicetree/bindings/reset/reset.=
+txt
+>>
+>> I have no hard objection for this patch, but I'd rather not add it
+>> unless we actually need it. Could you elaborate more about any futhe=
+r
+>> actions you will take if it's applied(i.e: deal with some unrecovera=
+ble
+>> broken case)?  If we just reset the controller while probing, actual=
+ly I
+>> can't find any problems without it based on tons of my reboot test.
+>
+> mmc register maybe abnormal state, if mmc is used in uefi, like boot
+> from emmc.
+> So we need reset mmc register when kernel boot up, instead of assumin=
+g
+> mmc is in clean state.
+> Next step is adding reset node in dts for drivers/mmc/host/dw_mmc-k3.=
+c
+> as reset driver is already there.
+
+=46air enough. Thanks for explaining.
+
+>
+>>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+>>> index 242f9a0..d3a7376 100644
+>>> --- a/drivers/mmc/host/dw_mmc.c
+>>> +++ b/drivers/mmc/host/dw_mmc.c
+>>> @@ -2878,6 +2878,13 @@ static struct dw_mci_board
+>>> *dw_mci_parse_dt(struct dw_mci *host)
+>>>       if (!pdata)
+>>>           return ERR_PTR(-ENOMEM);
+>>>
+>>> +    /* find reset controller when exist */
+>>> +    pdata->rstc =3D devm_reset_control_get_optional(dev, NULL);
+>>> +    if (IS_ERR(pdata->rstc))
+>>> +        pdata->rstc =3D NULL;
+>>> +    else
+>>> +        reset_control_deassert(pdata->rstc);
+>>> +
+>>
+>> if the PTR_ERR(pdata->rstc) is -EPROBE_DEFER, should we defer probin=
+g
+>> the driver?
+> Yes, good catch.
+>
+> Thanks
+>
+>
+>
+
+
+--=20
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
