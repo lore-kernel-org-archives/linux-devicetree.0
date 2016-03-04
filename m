@@ -1,80 +1,85 @@
 From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] usb: chipidea: host: let the hcd know's parent
- device node
-Date: Fri, 4 Mar 2016 10:32:33 +0800
-Message-ID: <20160304023233.GE30272@shlinux2.ap.freescale.net>
+Subject: Re: [PATCH 1/3] usb: core: add power sequence for USB devices
+Date: Fri, 4 Mar 2016 10:37:50 +0800
+Message-ID: <20160304023750.GF30272@shlinux2.ap.freescale.net>
 References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
- <1456999276-6315-3-git-send-email-peter.chen@nxp.com>
- <20160303144247.GH15541@lunn.ch>
- <20160304015326.GA30272@shlinux2.ap.freescale.net>
- <20160304021730.GA20597@lunn.ch>
+ <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
+ <CAL_JsqLYHzb0ABYN_P9ZOEorT6otvn_BPNzuCFhoqwa5M4y-hw@mail.gmail.com>
+ <20160304020242.GB30272@shlinux2.ap.freescale.net>
+ <20160304022305.GB20597@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160304021730.GA20597-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20160304022305.GB20597-g2DYL2Zd6BY@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 03:17:30AM +0100, Andrew Lunn wrote:
-> > > > diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-> > > > index 053bac9..55120ef 100644
-> > > > --- a/drivers/usb/chipidea/host.c
-> > > > +++ b/drivers/usb/chipidea/host.c
-> > > > @@ -109,15 +109,25 @@ static int host_start(struct ci_hdrc *ci)
-> > > >  	struct ehci_hcd *ehci;
-> > > >  	struct ehci_ci_priv *priv;
-> > > >  	int ret;
-> > > > +	struct device *dev = ci->dev;
-> > > >  
-> > > > -	if (usb_disabled())
-> > > > +	if (usb_disabled() || !dev)
-> > > >  		return -ENODEV;
-> > > >  
-> > > > -	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
-> > > > +	/*
-> > > > +	 * USB Core will try to get child node under roothub,
-> > > > +	 * but chipidea core has no of_node, and the child node
-> > > > +	 * for controller is located at glue layer's node which
-> > > > +	 * is chipidea core's parent.
-> > > > +	 */
-> > > > +	if (dev->parent && dev->parent->of_node)
-> > > > +		dev->of_node = dev->parent->of_node;
+On Fri, Mar 04, 2016 at 03:23:05AM +0100, Andrew Lunn wrote:
+> On Fri, Mar 04, 2016 at 10:02:42AM +0800, Peter Chen wrote:
+> > On Thu, Mar 03, 2016 at 02:54:55PM -0600, Rob Herring wrote:
+> > > On Thu, Mar 3, 2016 at 4:01 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
+> > > > Some hard-wired USB devices need to do power sequence to let the
+> > > > device work normally, the typical power sequence like: enable USB
+> > > > PHY clock, toggle reset pin, etc. But current Linux USB driver
+> > > > lacks of such code to do it, it may cause some hard-wired USB devices
+> > > > works abnormal or can't be recognized by controller at all.
+> > > >
+> > > > In this patch, it will do power on sequence at hub's probe for all
+> > > > devices under this hub (includes root hub) if this device is described
+> > > > at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
+> > > > it will do power off sequence.
+> > > >
+> > > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> > > > ---
+> > > >  .../devicetree/bindings/usb/usb-device.txt         |  41 +++++-
+> > > >  drivers/usb/core/Makefile                          |   2 +-
+> > > >  drivers/usb/core/hub.c                             |  32 +++++
+> > > >  drivers/usb/core/pwrseq.c                          | 149 +++++++++++++++++++++
+> > > >  include/linux/usb/of.h                             |  10 ++
+> > > >  5 files changed, 232 insertions(+), 2 deletions(-)
+> > > >  create mode 100644 drivers/usb/core/pwrseq.c
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > > index 1c35e7b..c7a298c 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > > @@ -13,8 +13,37 @@ Required properties:
+> > > >  - reg: the port number which this device is connecting to, the range
+> > > >    is 1-31.
+> > > >
+> > > > +Optional properties:
+> > > > +- usb-pwrseq: the power sequence handler which need to do before this USB
+> > > > +  device can work.
+> > > > +- clocks: the input clock for USB device.
+> > > > +- clock-frequency: the frequency for device's clock.
+> > > > +- reset-gpios: Should specify the GPIO for reset.
+> > > > +- reset-duration-us: the duration in microsecond for assert reset signal.
 > > > 
-> > > Is this a good idea? Two devices with the same of_node?
-> > > 
+> > > So we sorted out how to describe USB devices in DT, but now we don't
+> > > use it?
 > > 
-> > This is only for chipidea driver whose host controller device
-> > doesn't have entry at dts, but other host controller driver which
-> > supports device tree should have its entry at dts.
-> > 
-> > > I know the networking code assumes of_node values are unique, and uses
-> > > it to find a device. Are you 100% sure the USB code does not make this
-> > > assumption.
-> > > 
-> > 
-> > The controller device is the root for USB device, the common
-> > USB code will not touch its glue layer device (controller's parent).
+> > We only know USB device after USB bus finds it, but without power
+> > on sequence, the USB bus can't find it.
 > 
-> I'm just thinking about code like:
+> Not really true. Device tree says it exists, you just cannot see it
+> yet. The fact it is in device tree means it is soldered on the board
+> and really is there. So when the host controller enumerates the bus,
+> it should run the power sequence of all child nodes to make them
+> appear.
 > 
-> of_find_spi_master_by_node(), of_find_net_device_by_node(),
-> of_find_backlight_by_node(), etc.
-> 
-> If somebody was to implement an of_find_usb_host_by_node() are you
-> 100% sure the right node will be found? This seems like a bug waiting
-> to happen.
 
-Yes, almost 100% sure it is ok since the common USB code will never use
-its root's parent node to match or get something.
+Yes, it is my patch doing. My words "We only know USB device after USB
+bus finds it" means the USB common code only create the USB device, and
+assign its .of_node after USB bus finds it.
 
 -- 
 
 Best Regards,
 Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
