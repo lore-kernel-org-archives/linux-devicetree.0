@@ -1,61 +1,45 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH 3/5] EDAC, altera: Addition of Arria10 L2 Cache ECC
-Date: Fri, 4 Mar 2016 11:38:44 +0100
-Message-ID: <20160304103844.GC16291@pd.tnic>
-References: <1456850301-22066-1-git-send-email-tthayer@opensource.altera.com>
- <1456850301-22066-3-git-send-email-tthayer@opensource.altera.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 1/2] regulator: max8973: add DT binding details for junction warn temp
+Date: Fri, 4 Mar 2016 15:57:53 +0530
+Message-ID: <1457087274-15785-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456850301-22066-3-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+Cc: lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 01, 2016 at 10:38:19AM -0600, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Addition of the Arria10 L2 Cache ECC handling. The major
-> changes affect the L2 ECC registers not being grouped
-> together. The Arria10 IRQ status needs to be mapped into
-> a different region. The mapping occurs in the L2 specific
-> function.
-> Important changes include:
+The driver MAX8973 supports the driver for Maxim MAX77621.
+MAX77621 supports the junction temp warning at 120 degC and
+140 degC which is configurable. It generates alert signal when
+junction temperature crosses these threshold.
 
-> 1) Move private data structure definition to altera_edac.h
-> 2) Move Cyclone5 device defines to altera_edac.h
+Add DT properties and its binding details to make this
+configuration from DT.
 
-This should be a separate patch.
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ Documentation/devicetree/bindings/regulator/max8973-regulator.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-> 3) Split IRQ status and ECC enable/control into separate
->    memory areas.
-
-Ditto.
-
-> 4) Add IRQ status mapping in L2 ECC dependency checks
->    function.
-
-Ditto...
-
-> 5) Addition of register offsets in private data structure.
-> 6) Changes to code to use register offset define.
-> 7) Addition of Arria10 L2 cache private data.
-> 8) Add IRQ flags to indicate Exclusive/Shared.
-
-Do you see where I'm going with this?
-
-Each patch should countain one logical change: add defines and move
-struct, change functionality A, change functionality B, ...
-
-The fact that you have to make a list of 8 important changes should
-already give you a hint that it needs to be split.
-
-As always, I'm going to need ACKs for the ARM stuff.
-
+diff --git a/Documentation/devicetree/bindings/regulator/max8973-regulator.txt b/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
+index f80ea2f..c2c68fc 100644
+--- a/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/max8973-regulator.txt
+@@ -32,6 +32,13 @@ Optional properties:
+ 
+ Enhanced transient response (ETR) will affect the configuration of CKADV.
+ 
++-junction-warn-millicelsius: u32, junction warning temperature threshold
++		in millicelsius. If die temperature crosses this level then
++		device generates the warning interrupts.
++
++Please note that thermal functionality is only supported on MAX77621. The
++supported threshold warning temperature for MAX77621 are 120 degC and 140 degC.
++
+ Example:
+ 
+ 	max8973@1b {
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
+2.1.4
