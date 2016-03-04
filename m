@@ -1,79 +1,71 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: bcm2835: Add devicetree for the Raspberry Pi 3.
-Date: Fri, 04 Mar 2016 10:55:03 -0800
-Message-ID: <874mcm3wfs.fsf@eliezer.anholt.net>
-References: <1457116769-8567-1-git-send-email-eric@anholt.net> <1457116769-8567-2-git-send-email-eric@anholt.net> <20160304184136.GB5033@leverpostej>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3] dt-bindings: GPIO: Add generic serializer binding
+Date: Fri, 4 Mar 2016 12:58:44 -0600
+Message-ID: <1457117924-7014-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160304184136.GB5033@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Add binding for generic parallel-in/serial-out shift register devices
+used as GPIO.
 
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+The driver was taken but it looks like this might have been lost,
+anyway I've added a dual-string example as requested.
 
-> On Fri, Mar 04, 2016 at 10:39:29AM -0800, Eric Anholt wrote:
->> For now this doesn't support the new hardware present on the Pi 3 (BT,
->> wifi, GPIO expander).  Since the GPIO expander isn't supported, we
->> also don't have the LEDs like the other board files do.
->>=20
->> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile            |  3 +-
->>  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 22 ++++++++++++
->>  arch/arm/boot/dts/bcm2837.dtsi        | 68 ++++++++++++++++++++++++++++=
-+++++++
->>  3 files changed, 92 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->>  create mode 100644 arch/arm/boot/dts/bcm2837.dtsi
->
->> +	timer {
->> +		compatible =3D "arm,armv7-timer";
->> +		interrupt-parent =3D <&local_intc>;
->> +		interrupts =3D <0>, // PHYS_SECURE_PPI
->> +			     <1>, // PHYS_NONSECURE_PPI
->> +			     <3>, // VIRT_PPI
->> +			     <2>; // HYP_PPI
->> +		always-on;
->> +	};
->
-> Are the CPUs in an always-on power domain? Or is it jsut that the kernel
-> doesn't perform power management of CPUs?
->
-> The always-on proeprty is only intended for the former.
+ .../devicetree/bindings/gpio/gpio-pisosr.txt       | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
 
-The kernel doesn't get to do power management of CPUs.  We only have
-control of power domains through the firmware, and the firmware's
-keeping the CPU domain on.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+new file mode 100644
+index 0000000..dab8c9f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-pisosr.txt
+@@ -0,0 +1,34 @@
++Generic Parallel-in/Serial-out Shift Register GPIO Driver
++
++This binding describes generic parallel-in/serial-out shift register
++devices that can be used for GPI (General Purpose Input). This includes
++SN74165 serial-out shift registers and the SN65HVS88x series of
++industrial serializers.
++
++Required properties:
++ - compatible		: Should be "pisosr-gpio".
++ - gpio-controller	: Marks the device node as a GPIO controller.
++ - #gpio-cells		: Should be two. For consumer use see gpio.txt.
++
++Optional properties:
++ - ngpios		: Number of GPIO lines, default is 8.
++ - load-gpios		: GPIO pin specifier attached to load enable, this
++			  pin is pulsed before reading from the device to
++			  load input pin values into the the device.
++
++For other required and optional properties of SPI slave
++nodes please refer to ../spi/spi-bus.txt.
++
++Example:
++
++	gpio@0 {
++		compatible = "ti,sn65hvs882", "pisosr-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		load-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
++
++		reg = <0>;
++		spi-max-frequency = <1000000>;
++		spi-cpol;
++	};
+-- 
+2.7.2
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJW2doHAAoJELXWKTbR/J7oePsP/0/2O7qonmHyKSejusdkjhFN
-KumkvvgEh31LRtPAO035ntXd76EEcC7wl3lKX/5cKTJEx1KxlPP0L4oFQRvKiq1l
-FV4B/cMG3QbQAqbWpXKwV3qkAjFjNi2T2mKhRauL99ZndNaauZGIiZd0sfeS9uAR
-tl6Kr7IlW3AKxKXkRlx5h7NJ2uaP7YeTC6qp2VJdwS9xgd1DWkolhbHXrxxKkyL7
-lcEG5nvv6zt0pNI7cz5mK5+4c+KvxJK5CoRZf290qpsZ0nOp4ntNTcG85gNMuWre
-ESIeOu+/eB12IZbd08hX6TU+vz65cY7HeBXn1nUUsLCD3yUsAl0OkOm3Agtyo+yc
-PSOuk8vqPDArPcIiRJII3tKi6/iRI92wJLhYH4dR1fB1DeiJ1fvYFb/WNK8jznmJ
-p8BaSFA3AXD53DpNNDvVX72Ye9Vf+SVHpmGQuJL9fWfdn0UQHtLCYM3HTtChd11i
-jpGXHLyeeNUJoAqwAiTz3lEZ/DeNC+TcT12ztOYG6q8Sb0Zthw0KFLWsZZC0NaQh
-6oiZg7BRmUa9hbBfB2klXwZ4mupc9+XokouMMQr92e4Myc7t+g9VQRwR6ZIzSPZb
-D+4RO2CIPicNk14TkAqN7C5goR5Z7uXo8e2QUs92mI1KbmuqKbc80kiZXQ47UE8x
-hnsYcHop/QZHNJER+Xc5
-=JxV6
------END PGP SIGNATURE-----
---=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
