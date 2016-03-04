@@ -1,660 +1,140 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V7 3/4] soc: tegra: pmc: Add generic PM domain support
-Date: Fri, 4 Mar 2016 12:23:05 +0000
-Message-ID: <1457094186-15786-4-git-send-email-jonathanh@nvidia.com>
-References: <1457094186-15786-1-git-send-email-jonathanh@nvidia.com>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH v3 2/5] ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
+Date: Fri, 4 Mar 2016 06:23:45 -0600
+Message-ID: <56D97E51.5050602@ti.com>
+References: <1456439796-28546-1-git-send-email-fcooper@ti.com>
+ <1456439796-28546-3-git-send-email-fcooper@ti.com>
+ <20160301181109.GB13417@atomide.com>
+ <alpine.DEB.2.02.1603011858510.14948@utopia.booyaka.com>
+ <20160301205043.GA4469@atomide.com> <56D71331.5020702@ti.com>
+ <56D8EDF4.9070904@ti.com>
+ <alpine.DEB.2.02.1603040553010.3980@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457094186-15786-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1603040553010.3980@utopia.booyaka.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Tony Lindgren <tony@atomide.com>, t-kristo@ti.com, vigneshr@ti.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adds generic PM support to the PMC driver where the PM domains are
-populated from device-tree and the PM domain consumer devices are
-bound to their relevant PM domains via device-tree as well.
+Hi Paul,
 
-Update the tegra_powergate_sequence_power_up() API so that internally
-it calls the same tegra_powergate_xxx functions that are used by the
-tegra generic power domain code for consistency.
+On 03/04/2016 12:25 AM, Paul Walmsley wrote:
+> On Thu, 3 Mar 2016, Franklin S Cooper Jr. wrote:
+>
+>> So I looked into this more and verified that the eCAP and
+>> ePWM doesn't have their own unique clock. The PWMSS receives
+>> a clock L4PER2_L3_GICLK/2 which is passed through to its
+>> sub-devices (ePWM, eCAP and eQEP). The PWMSS is responsible
+>> for handling its clock internally while the subdevices have
+>> no role in managing this clock. So this explains why we have
+>> hwmod entries for PWMSS and why we are planning on removing
+>> it from the various subdevices.
+> It's not whether they have their own unique clock, but whether the 
+> submodules have OCP integration registers, speak the idle/standby 
+> protocols, have direct L3/L4 ports, etc.
 
-To ensure that the Tegra power domains (a.k.a powergates) cannot be
-controlled via both the legacy tegra_powergate_xxx functions as well
-as the generic PM domain framework, add a bit map for available
-powergates that can be controlled via the legacy powergate functions.
+Sorry from a hwmod perspective your right. I initially
+thought my response about the clocks were related to hwmod
+but I see why I was off after reading a bit more on hwmod.
+>> Since ePWM, eCAP and eQEP are subdevices of PWMSS they
+>> shouldn't have their own concept of their "own" clock. The
+>> ePWM , eCAP and eQEP clocks are all shared and managed by
+>> their parent PWMSS. Once the PWMSS is enabled and has its
+>> clock running then ePWM, eCAP and eQEP from their main clock
+>> perspective have everything they need.
+>>
+>> So my plan is to strip all references of clocks (including
+>> hwmod entries) for ePWM, eCAP and eQEP. The devm_clk_get
+>> calls made in the ePWM and eCAP will simply point to their
+>> parent's dev (PWMSS). I did a couple of quick test using
+>> this approach and it works. I have more testing to do but if
+>> that checks out are you ok with the above approach?
+> I don't know if that should be done or not.  I haven't stared at the code 
+> yet, but based on your description, it sounds to me that it probably 
+> shouldn't be done.  In any case, it's not what I meant...
 
-Move the majority of the tegra_powergate_remove_clamping() function
-to a sub-function, so that this can be used by both the legacy and
-generic power domain code.
+Your right my response did miss your initial point. But what
+I'm proposing sounds like exactly what you were suggesting.
+I think we both agree that hwmod entries for ePWM, eCAP and
+eQEP should be removed. Not just for dra7 but also for
+am335x and am437x as separate patches.
 
-Currently, the power domains are not removed once added because this
-is not yet supported by the PM domains framework. An error message
-will be displayed if we are unable to instantiate a power domain.
+My comment about devm_clk_get was based on the fact that I
+don't believe eCAP, ePWM and eQEP should have their own
+clock defined even within DT. Instead they can just
+reference the clk provided by pwmss (its parent) which in
+hardware is the clock that is directly passed to the
+sub-devices. The only reason those drivers need a reference
+to that clk is to get its rate once during probe.
 
-This is based upon work by Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-and Vince Hsu <vinceh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>.
+I plan on doing a bit more testing and I can shoot an
+updated v4. I believe it will address all of your comments
+and you will hopefully get a better understanding of the
+minor change I plan on making.
+>
+>> Also I'm not sure how simple-bus fits in this picture. The
+>> eCAP, eQEP and ePWM are all separate devices. The only thing
+>> that they share is a single clock from their parent. So it
+>> doesn't seem like the right approach. I'm basing this on the
+>> info in this thread
+>> https://www.mail-archive.com/linuxppc-dev@lists.ozlabs.org/msg27979.html
+>> that talks about the usage of simple-bus. So if its outdated
+>> or I"m misinterpreting it incorrectly please let me know.
+> What I meant is that the ECAP*, EQEP*, EHRPWM* devices don't need to be 
+> registered through the hwmod code, due to the fact that they don't have 
+> the integration mentioned above.  Instead, I think those three subdevices 
+> should be listed as child nodes of epwmss* in the DT.
+>
+> Looking at the DT data from Vignesh, it looks like he's already got 
+> ehrpwm1 as a child node of the epwmss1:
+>
+> +               epwmss1: epwmss@48440000 {
+> +                       compatible = "ti,dra7xx-pwmss", "ti,am33xx-pwmss";
+> +                       reg = <0x48440000 0x30>;
+> +                       ti,hwmods = "epwmss1";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       status = "disabled";
+> +                       ranges = <0x48440100  0x48440100  0x80   /* ECAP */
+> +                                 0x48440180  0x48440180  0x80   /* EQEP */
+> +                                 0x48440200  0x48440200  0x80>; /* EHRPWM */
+> +
+> +                       ehrpwm1: ehrpwm@48440200 {
+> +                               compatible = "ti,dra7xx-ehrpwm",
+> +                                            "ti,am33xx-ehrpwm";
+> +                               #pwm-cells = <3>;
+> +                               reg = <0x48440200 0x80>;
+> +                               ti,hwmods = "ehrpwm1";
+>
+> So, drop the above line, since the subdevices don't have corresponding 
+> hwmods any more.
 
-Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- drivers/soc/tegra/pmc.c | 485 ++++++++++++++++++++++++++++++++++++++++++------
- include/soc/tegra/pmc.h |   1 +
- 2 files changed, 425 insertions(+), 61 deletions(-)
+Right
+>
+> +                               status = "disabled";
+> +                       };
+>
+> Then, here, you'd add nodes similar to ehrpwm1 for ecap1 and eqep1.  I 
+> can't remember at the moment if adding "simple-bus" to the epwmss1 string 
+> would be sufficient to register the subdevices after the epwmss1 is 
+> probed.  If so, maybe that's all you need.
+>
+> +               };
+>
+> Then repeat for epwmss0, epwmss2.
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index 08966c26d65c..bb173456bbff 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -31,10 +31,13 @@
- #include <linux/iopoll.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
- #include <linux/reboot.h>
- #include <linux/reset.h>
- #include <linux/seq_file.h>
-+#include <linux/slab.h>
- #include <linux/spinlock.h>
- 
- #include <soc/tegra/common.h>
-@@ -102,6 +105,16 @@
- 
- #define GPU_RG_CNTRL			0x2d4
- 
-+struct tegra_powergate {
-+	struct generic_pm_domain genpd;
-+	struct tegra_pmc *pmc;
-+	unsigned int id;
-+	struct clk **clks;
-+	unsigned int num_clks;
-+	struct reset_control **resets;
-+	unsigned int num_resets;
-+};
-+
- struct tegra_pmc_soc {
- 	unsigned int num_powergates;
- 	const char *const *powergates;
-@@ -132,6 +145,7 @@ struct tegra_pmc_soc {
-  * @cpu_pwr_good_en: CPU power good signal is enabled
-  * @lp0_vec_phys: physical base address of the LP0 warm boot code
-  * @lp0_vec_size: size of the LP0 warm boot code
-+ * @powergates_available: Bitmap of available power gates
-  * @powergates_lock: mutex for power gate register access
-  */
- struct tegra_pmc {
-@@ -156,6 +170,7 @@ struct tegra_pmc {
- 	bool cpu_pwr_good_en;
- 	u32 lp0_vec_phys;
- 	u32 lp0_vec_size;
-+	DECLARE_BITMAP(powergates_available, TEGRA_POWERGATE_MAX);
- 
- 	struct mutex powergates_lock;
- };
-@@ -165,6 +180,12 @@ static struct tegra_pmc *pmc = &(struct tegra_pmc) {
- 	.suspend_mode = TEGRA_SUSPEND_NONE,
- };
- 
-+static inline struct tegra_powergate *
-+to_powergate(struct generic_pm_domain *domain)
-+{
-+	return container_of(domain, struct tegra_powergate, genpd);
-+}
-+
- static u32 tegra_pmc_readl(unsigned long offset)
- {
- 	return readl(pmc->base + offset);
-@@ -188,6 +209,31 @@ static inline bool tegra_powergate_is_valid(int id)
- 	return (pmc->soc && pmc->soc->powergates[id]);
- }
- 
-+static inline bool tegra_powergate_is_available(int id)
-+{
-+	return test_bit(id, pmc->powergates_available);
-+}
-+
-+static int tegra_powergate_lookup(struct tegra_pmc *pmc, const char *name)
-+{
-+	unsigned int i;
-+
-+	if (!pmc || !pmc->soc || !name)
-+		return -EINVAL;
-+
-+	for (i = 0; i < pmc->soc->num_powergates; i++) {
-+		if (!tegra_powergate_is_valid(i))
-+			continue;
-+
-+		if (!strcmp(name, pmc->soc->powergates[i]))
-+			return i;
-+	}
-+
-+	dev_err(pmc->dev, "powergate %s not found\n", name);
-+
-+	return -ENODEV;
-+}
-+
- /**
-  * tegra_powergate_set() - set the state of a partition
-  * @id: partition ID
-@@ -218,13 +264,219 @@ static int tegra_powergate_set(unsigned int id, bool new_state)
- 	return err;
- }
- 
-+static int __tegra_powergate_remove_clamping(unsigned int id)
-+{
-+	u32 mask;
-+
-+	mutex_lock(&pmc->powergates_lock);
-+
-+	/*
-+	 * On Tegra124 and later, the clamps for the GPU are controlled by a
-+	 * separate register (with different semantics).
-+	 */
-+	if (id == TEGRA_POWERGATE_3D) {
-+		if (pmc->soc->has_gpu_clamps) {
-+			tegra_pmc_writel(0, GPU_RG_CNTRL);
-+			goto out;
-+		}
-+	}
-+
-+	/*
-+	 * Tegra 2 has a bug where PCIE and VDE clamping masks are
-+	 * swapped relatively to the partition ids
-+	 */
-+	if (id == TEGRA_POWERGATE_VDEC)
-+		mask = (1 << TEGRA_POWERGATE_PCIE);
-+	else if (id == TEGRA_POWERGATE_PCIE)
-+		mask = (1 << TEGRA_POWERGATE_VDEC);
-+	else
-+		mask = (1 << id);
-+
-+	tegra_pmc_writel(mask, REMOVE_CLAMPING);
-+
-+out:
-+	mutex_unlock(&pmc->powergates_lock);
-+
-+	return 0;
-+}
-+
-+static void tegra_powergate_disable_clocks(struct tegra_powergate *pg)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < pg->num_clks; i++)
-+		clk_disable_unprepare(pg->clks[i]);
-+}
-+
-+static int tegra_powergate_enable_clocks(struct tegra_powergate *pg)
-+{
-+	unsigned int i;
-+	int err;
-+
-+	for (i = 0; i < pg->num_clks; i++) {
-+		err = clk_prepare_enable(pg->clks[i]);
-+		if (err)
-+			goto out;
-+	}
-+
-+	return 0;
-+
-+out:
-+	while (i--)
-+		clk_disable_unprepare(pg->clks[i]);
-+
-+	return err;
-+}
-+
-+static int tegra_powergate_reset_assert(struct tegra_powergate *pg)
-+{
-+	unsigned int i;
-+	int err;
-+
-+	for (i = 0; i < pg->num_resets; i++) {
-+		err = reset_control_assert(pg->resets[i]);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tegra_powergate_reset_deassert(struct tegra_powergate *pg)
-+{
-+	unsigned int i;
-+	int err;
-+
-+	for (i = 0; i < pg->num_resets; i++) {
-+		err = reset_control_deassert(pg->resets[i]);
-+		if (err)
-+			return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tegra_powergate_power_up(struct tegra_powergate *pg,
-+				    bool disable_clocks)
-+{
-+	int err;
-+
-+	err = tegra_powergate_reset_assert(pg);
-+	if (err)
-+		return err;
-+
-+	usleep_range(10, 20);
-+
-+	err = tegra_powergate_set(pg->id, true);
-+	if (err < 0)
-+		return err;
-+
-+	usleep_range(10, 20);
-+
-+	err = tegra_powergate_enable_clocks(pg);
-+	if (err)
-+		goto disable_clks;
-+
-+	usleep_range(10, 20);
-+
-+	err = __tegra_powergate_remove_clamping(pg->id);
-+	if (err)
-+		goto disable_clks;
-+
-+	usleep_range(10, 20);
-+
-+	err = tegra_powergate_reset_deassert(pg);
-+	if (err)
-+		goto powergate_off;
-+
-+	usleep_range(10, 20);
-+
-+	if (disable_clocks)
-+		tegra_powergate_disable_clocks(pg);
-+
-+	return 0;
-+
-+disable_clks:
-+	tegra_powergate_disable_clocks(pg);
-+	usleep_range(10, 20);
-+powergate_off:
-+	tegra_powergate_set(pg->id, false);
-+
-+	return err;
-+}
-+
-+static int tegra_powergate_power_down(struct tegra_powergate *pg)
-+{
-+	int err;
-+
-+	err = tegra_powergate_enable_clocks(pg);
-+	if (err)
-+		return err;
-+
-+	usleep_range(10, 20);
-+
-+	err = tegra_powergate_reset_assert(pg);
-+	if (err)
-+		goto disable_clks;
-+
-+	usleep_range(10, 20);
-+
-+	tegra_powergate_disable_clocks(pg);
-+
-+	usleep_range(10, 20);
-+
-+	err = tegra_powergate_set(pg->id, false);
-+	if (err)
-+		goto assert_resets;
-+
-+	return 0;
-+
-+assert_resets:
-+	tegra_powergate_enable_clocks(pg);
-+	usleep_range(10, 20);
-+	tegra_powergate_reset_deassert(pg);
-+	usleep_range(10, 20);
-+disable_clks:
-+	tegra_powergate_disable_clocks(pg);
-+
-+	return err;
-+}
-+
-+static int tegra_genpd_power_on(struct generic_pm_domain *domain)
-+{
-+	struct tegra_powergate *pg = to_powergate(domain);
-+	struct tegra_pmc *pmc = pg->pmc;
-+	int err;
-+
-+	err = tegra_powergate_power_up(pg, true);
-+	if (err)
-+		dev_err(pmc->dev, "failed to turn on PM domain %s: %d\n",
-+			pg->genpd.name, err);
-+
-+	return err;
-+}
-+
-+static int tegra_genpd_power_off(struct generic_pm_domain *domain)
-+{
-+	struct tegra_powergate *pg = to_powergate(domain);
-+	struct tegra_pmc *pmc = pg->pmc;
-+	int err;
-+
-+	err = tegra_powergate_power_down(pg);
-+	if (err)
-+		dev_err(pmc->dev, "failed to turn off PM domain %s: %d\n",
-+			pg->genpd.name, err);
-+
-+	return err;
-+}
-+
- /**
-  * tegra_powergate_power_on() - power on partition
-  * @id: partition ID
-  */
- int tegra_powergate_power_on(unsigned int id)
- {
--	if (!tegra_powergate_is_valid(id))
-+	if (!tegra_powergate_is_available(id))
- 		return -EINVAL;
- 
- 	return tegra_powergate_set(id, true);
-@@ -236,7 +488,7 @@ int tegra_powergate_power_on(unsigned int id)
-  */
- int tegra_powergate_power_off(unsigned int id)
- {
--	if (!tegra_powergate_is_valid(id))
-+	if (!tegra_powergate_is_available(id))
- 		return -EINVAL;
- 
- 	return tegra_powergate_set(id, false);
-@@ -267,41 +519,10 @@ int tegra_powergate_is_powered(unsigned int id)
-  */
- int tegra_powergate_remove_clamping(unsigned int id)
- {
--	u32 mask;
--
--	if (!tegra_powergate_is_valid(id))
-+	if (!tegra_powergate_is_available(id))
- 		return -EINVAL;
- 
--	mutex_lock(&pmc->powergates_lock);
--
--	/*
--	 * On Tegra124 and later, the clamps for the GPU are controlled by a
--	 * separate register (with different semantics).
--	 */
--	if (id == TEGRA_POWERGATE_3D) {
--		if (pmc->soc->has_gpu_clamps) {
--			tegra_pmc_writel(0, GPU_RG_CNTRL);
--			goto out;
--		}
--	}
--
--	/*
--	 * Tegra 2 has a bug where PCIE and VDE clamping masks are
--	 * swapped relatively to the partition ids
--	 */
--	if (id == TEGRA_POWERGATE_VDEC)
--		mask = (1 << TEGRA_POWERGATE_PCIE);
--	else if (id == TEGRA_POWERGATE_PCIE)
--		mask = (1 << TEGRA_POWERGATE_VDEC);
--	else
--		mask = (1 << id);
--
--	tegra_pmc_writel(mask, REMOVE_CLAMPING);
--
--out:
--	mutex_unlock(&pmc->powergates_lock);
--
--	return 0;
-+	return __tegra_powergate_remove_clamping(id);
- }
- EXPORT_SYMBOL(tegra_powergate_remove_clamping);
- 
-@@ -316,35 +537,20 @@ EXPORT_SYMBOL(tegra_powergate_remove_clamping);
- int tegra_powergate_sequence_power_up(unsigned int id, struct clk *clk,
- 				      struct reset_control *rst)
- {
--	int ret;
--
--	reset_control_assert(rst);
--
--	ret = tegra_powergate_power_on(id);
--	if (ret)
--		goto err_power;
--
--	ret = clk_prepare_enable(clk);
--	if (ret)
--		goto err_clk;
--
--	usleep_range(10, 20);
-+	struct tegra_powergate pg;
-+	int err;
- 
--	ret = tegra_powergate_remove_clamping(id);
--	if (ret)
--		goto err_clamp;
-+	pg.id = id;
-+	pg.clks = &clk;
-+	pg.num_clks = 1;
-+	pg.resets = &rst;
-+	pg.num_resets = 1;
- 
--	usleep_range(10, 20);
--	reset_control_deassert(rst);
--
--	return 0;
-+	err = tegra_powergate_power_up(&pg, false);
-+	if (err)
-+		pr_err("failed to turn on partition %d: %d\n", id, err);
- 
--err_clamp:
--	clk_disable_unprepare(clk);
--err_clk:
--	tegra_powergate_power_off(id);
--err_power:
--	return ret;
-+	return err;
- }
- EXPORT_SYMBOL(tegra_powergate_sequence_power_up);
- 
-@@ -486,6 +692,155 @@ static int tegra_powergate_debugfs_init(void)
- 	return 0;
- }
- 
-+static int tegra_powergate_of_get_clks(struct tegra_powergate *pg,
-+				       struct device_node *np)
-+{
-+	struct clk *clk;
-+	unsigned int i, count;
-+	int err;
-+
-+	count = of_count_phandle_with_args(np, "clocks", "#clock-cells");
-+	if (count == 0)
-+		return -ENODEV;
-+
-+	pg->clks = kcalloc(count, sizeof(clk), GFP_KERNEL);
-+	if (!pg->clks)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < count; i++) {
-+		pg->clks[i] = of_clk_get(np, i);
-+		if (IS_ERR(pg->clks[i])) {
-+			err = PTR_ERR(pg->clks[i]);
-+			goto err;
-+		}
-+	}
-+
-+	pg->num_clks = count;
-+
-+	return 0;
-+
-+err:
-+	while (i--)
-+		clk_put(pg->clks[i]);
-+	kfree(pg->clks);
-+
-+	return err;
-+}
-+
-+static int tegra_powergate_of_get_resets(struct tegra_powergate *pg,
-+					 struct device_node *np)
-+{
-+	struct reset_control *rst;
-+	unsigned int i, count;
-+	int err;
-+
-+	count = of_count_phandle_with_args(np, "resets", "#reset-cells");
-+	if (count == 0)
-+		return -ENODEV;
-+
-+	pg->resets = kcalloc(count, sizeof(rst), GFP_KERNEL);
-+	if (!pg->resets)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < count; i++) {
-+		pg->resets[i] = of_reset_control_get_by_index(np, i);
-+		if (IS_ERR(pg->resets[i])) {
-+			err = PTR_ERR(pg->resets[i]);
-+			goto error;
-+		}
-+	}
-+
-+	pg->num_resets = count;
-+
-+	return 0;
-+
-+error:
-+	while (i--)
-+		reset_control_put(pg->resets[i]);
-+	kfree(pg->resets);
-+
-+	return err;
-+}
-+
-+static void tegra_powergate_add(struct tegra_pmc *pmc, struct device_node *np)
-+{
-+	struct tegra_powergate *pg;
-+	bool off;
-+	int id;
-+
-+	pg = kzalloc(sizeof(*pg), GFP_KERNEL);
-+	if (!pg)
-+		goto error;
-+
-+	id = tegra_powergate_lookup(pmc, np->name);
-+	if (id < 0)
-+		goto free_mem;
-+
-+	/*
-+	 * Clear the bit for this powergate so it cannot be managed
-+	 * directly via the legacy APIs for controlling powergates.
-+	 */
-+	clear_bit(id, pmc->powergates_available);
-+
-+	pg->id = id;
-+	pg->genpd.name = np->name;
-+	pg->genpd.power_off = tegra_genpd_power_off;
-+	pg->genpd.power_on = tegra_genpd_power_on;
-+	pg->pmc = pmc;
-+
-+	if (tegra_powergate_of_get_clks(pg, np))
-+		goto set_available;
-+
-+	if (tegra_powergate_of_get_resets(pg, np))
-+		goto remove_clks;
-+
-+	off = !tegra_powergate_is_powered(pg->id);
-+
-+	pm_genpd_init(&pg->genpd, NULL, off);
-+
-+	if (of_genpd_add_provider_simple(np, &pg->genpd))
-+		goto remove_resets;
-+
-+	dev_dbg(pmc->dev, "added power domain %s\n", pg->genpd.name);
-+
-+	return;
-+
-+remove_resets:
-+	while (pg->num_resets--)
-+		reset_control_put(pg->resets[pg->num_resets]);
-+	kfree(pg->resets);
-+
-+remove_clks:
-+	while (pg->num_clks--)
-+		clk_put(pg->clks[pg->num_clks]);
-+	kfree(pg->clks);
-+
-+set_available:
-+	set_bit(id, pmc->powergates_available);
-+
-+free_mem:
-+	kfree(pg);
-+
-+error:
-+	dev_err(pmc->dev, "failed to create power domain for %s\n", np->name);
-+}
-+
-+static void tegra_powergate_init(struct tegra_pmc *pmc)
-+{
-+	struct device_node *np, *child;
-+
-+	np = of_get_child_by_name(pmc->dev->of_node, "powergates");
-+	if (!np)
-+		return;
-+
-+	for_each_child_of_node(np, child) {
-+		tegra_powergate_add(pmc, child);
-+		of_node_put(child);
-+	}
-+
-+	of_node_put(np);
-+}
-+
- static int tegra_io_rail_prepare(unsigned int id, unsigned long *request,
- 				 unsigned long *status, unsigned int *bit)
- {
-@@ -887,6 +1242,8 @@ static int tegra_pmc_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	tegra_powergate_init(pmc);
-+
- 	mutex_lock(&pmc->powergates_lock);
- 	iounmap(pmc->base);
- 	pmc->base = base;
-@@ -1120,6 +1477,7 @@ static int __init tegra_pmc_early_init(void)
- 	const struct of_device_id *match;
- 	struct device_node *np;
- 	struct resource regs;
-+	unsigned int i;
- 	bool invert;
- 	u32 value;
- 
-@@ -1169,6 +1527,11 @@ static int __init tegra_pmc_early_init(void)
- 		return -ENXIO;
- 	}
- 
-+	/* Create a bit-map of the available and valid partitions */
-+	for (i = 0; i < pmc->soc->num_powergates; i++)
-+		if (pmc->soc->powergates[i])
-+			set_bit(i, pmc->powergates_available);
-+
- 	mutex_init(&pmc->powergates_lock);
- 
- 	/*
-diff --git a/include/soc/tegra/pmc.h b/include/soc/tegra/pmc.h
-index 07e332dd44fb..e9e53473a63e 100644
---- a/include/soc/tegra/pmc.h
-+++ b/include/soc/tegra/pmc.h
-@@ -72,6 +72,7 @@ int tegra_pmc_cpu_remove_clamping(unsigned int cpuid);
- #define TEGRA_POWERGATE_AUD	27
- #define TEGRA_POWERGATE_DFD	28
- #define TEGRA_POWERGATE_VE2	29
-+#define TEGRA_POWERGATE_MAX	TEGRA_POWERGATE_VE2
- 
- #define TEGRA_POWERGATE_3D0	TEGRA_POWERGATE_3D
- 
--- 
-2.1.4
+As you mentioned pwmss is the parent node in the DT while
+ecap and epwm are child nodes. These child nodes must be
+probed only after their parent node has been probed and the
+parent clock is running. The pwm-tipwmss.c already calls
+of_platform_populate(node, NULL, NULL, &pdev->dev); as the
+very last step of its probe call. So what you want to happen
+is already happening in the driver. So I don't believe
+simple-bus is needed.
+>
+>
+> - Paul
+
