@@ -1,170 +1,52 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v3 3/3] clk: mvebu: new driver for Armada AP806 system controller
-Date: Fri,  4 Mar 2016 13:57:55 +0100
-Message-ID: <1457096275-7581-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v3 0/3] clk: clock driver for the Marvell Armada AP806
+Date: Fri,  4 Mar 2016 13:57:52 +0100
+Message-ID: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
 Cc: Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The Armada AP806 system controller, amongst other things, provides a
-number of clocks for the platform: the CPU cluster clocks, whose
-frequencies are found by reading the Sample At Reset register, one
-fixed clock, and another clock derived from the fixed clock, which is
-the one used by most peripherals in AP806.
+Michael, Stephen,
 
-The AP806 is one of the two core HW blocks used in the Marvell 7K/8K
-SoCs.
+Here is a new version of the clock driver and its DT binding for the
+Marvell Armada AP806. As you will see, there is no longer any
+reference to the DFX Server and changes in the clock tree compared to
+the v2. This is due to the fact that the HW has changed from this
+point of view between the test chips and the final revision, and this
+new version aims at supporting only the final revision.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- drivers/clk/mvebu/Kconfig                   |   3 +
- drivers/clk/mvebu/Makefile                  |   1 +
- drivers/clk/mvebu/ap806-system-controller.c | 106 ++++++++++++++++++++++++++++
- 3 files changed, 110 insertions(+)
+We therefore have a very simple DT binding, with one single node that
+covers the entire "system controller" registers, associated to one
+driver that provides the clocks. This system controller will later be
+used to support other features such as pin-muxing, but for now we only
+support the clocks aspects of it.
+
+Please let me know if this approach works for you.
+
+Note that this patch series is based on clk-net, because I wanted to
+avoid introducing a new use of CLK_IS_ROOT. To do this, I needed the
+patches currently in clk-next that remove the need for CLK_IS_ROOT.
+
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (3):
+  dt-bindings: arm: add DT binding for Marvell AP806 system controller
+  clk: unconditionally recurse into clk/mvebu/
+  clk: mvebu: new driver for Armada AP806 system controller
+
+ .../arm/marvell/ap806-system-controller.txt        |  34 +++++++
+ drivers/clk/Makefile                               |   2 +-
+ drivers/clk/mvebu/Kconfig                          |   3 +
+ drivers/clk/mvebu/Makefile                         |   1 +
+ drivers/clk/mvebu/ap806-system-controller.c        | 106 +++++++++++++++++++++
+ 5 files changed, 145 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
  create mode 100644 drivers/clk/mvebu/ap806-system-controller.c
 
-diff --git a/drivers/clk/mvebu/Kconfig b/drivers/clk/mvebu/Kconfig
-index eaee8f0..bf7ae00 100644
---- a/drivers/clk/mvebu/Kconfig
-+++ b/drivers/clk/mvebu/Kconfig
-@@ -29,6 +29,9 @@ config ARMADA_XP_CLK
- 	select MVEBU_CLK_COMMON
- 	select MVEBU_CLK_CPU
- 
-+config ARMADA_AP806_SYSCON
-+	bool
-+
- config DOVE_CLK
- 	bool
- 	select MVEBU_CLK_COMMON
-diff --git a/drivers/clk/mvebu/Makefile b/drivers/clk/mvebu/Makefile
-index 8866115..f4aa481 100644
---- a/drivers/clk/mvebu/Makefile
-+++ b/drivers/clk/mvebu/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_ARMADA_375_CLK)	+= armada-375.o
- obj-$(CONFIG_ARMADA_38X_CLK)	+= armada-38x.o
- obj-$(CONFIG_ARMADA_39X_CLK)	+= armada-39x.o
- obj-$(CONFIG_ARMADA_XP_CLK)	+= armada-xp.o
-+obj-$(CONFIG_ARMADA_AP806_SYSCON) += ap806-system-controller.o
- obj-$(CONFIG_DOVE_CLK)		+= dove.o dove-divider.o
- obj-$(CONFIG_KIRKWOOD_CLK)	+= kirkwood.o
- obj-$(CONFIG_ORION_CLK)		+= orion.o
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-new file mode 100644
-index 0000000..c33c209
---- /dev/null
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -0,0 +1,106 @@
-+/*
-+ * Marvell Armada AP806 System Controller
-+ *
-+ * Copyright (C) 2016 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#define pr_fmt(fmt) "ap806-system-controller: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+
-+#define AP806_SAR_REG			0x400
-+#define AP806_SAR_CLKFREQ_MODE_MASK	0x1f
-+
-+#define AP806_CLK_NUM 			4
-+
-+static struct clk *ap806_clks[AP806_CLK_NUM];
-+
-+static struct clk_onecell_data ap806_clk_data = {
-+	.clks = ap806_clks,
-+	.clk_num = AP806_CLK_NUM,
-+};
-+
-+static void __init ap806_syscon_clk_init(struct device_node *np)
-+{
-+	unsigned int freq_mode, cpuclk_freq;
-+	const char *name, *fixedclk_name;
-+	struct regmap *regmap;
-+	u32 reg;
-+
-+	regmap = syscon_node_to_regmap(np);
-+	if (IS_ERR(regmap)) {
-+		pr_err("cannot get regmap\n");
-+		return;
-+	}
-+
-+	if (regmap_read(regmap, AP806_SAR_REG, &reg)) {
-+		pr_err("cannot read from regmap\n");
-+		return;
-+	}
-+
-+	freq_mode = reg & AP806_SAR_CLKFREQ_MODE_MASK;
-+	switch(freq_mode) {
-+	case 0x0 ... 0x5:
-+		cpuclk_freq = 2000;
-+		break;
-+	case 0x6 ... 0xB:
-+		cpuclk_freq = 1800;
-+		break;
-+	case 0xC ... 0x11:
-+		cpuclk_freq = 1600;
-+		break;
-+	case 0x12 ... 0x16:
-+		cpuclk_freq = 1400;
-+		break;
-+	case 0x17 ... 0x19:
-+		cpuclk_freq = 1300;
-+		break;
-+	default:
-+		pr_err("invalid SAR value\n");
-+		return;
-+	}
-+
-+	/* Convert to hertz */
-+	cpuclk_freq *= 1000 * 1000;
-+
-+	/* CPU clocks depend on the Sample At Reset configuration */
-+	of_property_read_string_index(np, "clock-output-names",
-+				      0, &name);
-+	ap806_clks[0] = clk_register_fixed_rate(NULL, name, NULL,
-+						0, cpuclk_freq);
-+
-+	of_property_read_string_index(np, "clock-output-names",
-+				      1, &name);
-+	ap806_clks[1] = clk_register_fixed_rate(NULL, name, NULL, 0,
-+						cpuclk_freq);
-+
-+	/* Fixed clock is always 1200 Mhz */
-+	of_property_read_string_index(np, "clock-output-names",
-+				      2, &fixedclk_name);
-+	ap806_clks[2] = clk_register_fixed_rate(NULL, fixedclk_name, NULL, 0,
-+						1200 * 1000 * 1000);
-+
-+	/* MSS Clock is fixed clock divided by 6 */
-+	of_property_read_string_index(np, "clock-output-names",
-+				      3, &name);
-+	ap806_clks[3] = clk_register_fixed_factor(NULL, name, fixedclk_name,
-+						  0, 1, 6);
-+
-+	of_clk_add_provider(np, of_clk_src_onecell_get, &ap806_clk_data);
-+}
-+
-+CLK_OF_DECLARE(ap806_syscon_clk, "marvell,ap806-system-controller",
-+	       ap806_syscon_clk_init);
 -- 
 2.6.4
 
