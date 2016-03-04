@@ -1,151 +1,80 @@
-From: Andrew Bresticker <abrestic@chromium.org>
-Subject: Re: [PATCH] pinctrl: pistachio: fix mfio84-89 function description
- and pinmux.
-Date: Fri, 4 Mar 2016 10:48:33 -0800
-Message-ID: <CAL1qeaHYgqCBSAJBEyrEW3d0ys4BGZ8tzFYbJGONPRSO2fGevA@mail.gmail.com>
-References: <1457105302-15070-1-git-send-email-Govindraj.Raja@imgtec.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: bcm2835: Add devicetree for the Raspberry Pi 3.
+Date: Fri, 04 Mar 2016 10:55:03 -0800
+Message-ID: <874mcm3wfs.fsf@eliezer.anholt.net>
+References: <1457116769-8567-1-git-send-email-eric@anholt.net> <1457116769-8567-2-git-send-email-eric@anholt.net> <20160304184136.GB5033@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1457105302-15070-1-git-send-email-Govindraj.Raja@imgtec.com>
-Sender: stable-owner@vger.kernel.org
-To: Govindraj Raja <Govindraj.Raja@imgtec.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux-MIPS <linux-mips@linux-mips.org>, James Hartley <James.Hartley@imgtec.com>, "Stable kernel (v4.1)" <stable@vger.kernel.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160304184136.GB5033@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Govindraj,
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 4, 2016 at 7:28 AM, Govindraj Raja
-<Govindraj.Raja@imgtec.com> wrote:
-> mfio 84 to 89 are described wrongly, fix it to describe
-> the right pin and add them to right pin-mux group.
->
-> The correct order is:
->         pll1_lock => mips_pll   -- MFIO_83
->         pll2_lock => audio_pll  -- MFIO_84
->         pll3_lock => rpu_v_pll  -- MFIO_85
->         pll4_lock => rpu_l_pll  -- MFIO_86
->         pll5_lock => sys_pll    -- MFIO_87
->         pll6_lock => wifi_pll   -- MFIO_88
->         pll7_lock => bt_pll     -- MFIO_89
->
-> Fixes: cefc03e5995e("pinctrl: Add Pistachio SoC pin control driver")
-> Signed-off-by: Govindraj Raja <Govindraj.Raja@imgtec.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Andrew Bresticker <abrestic@chromium.org>
-> Cc: linux-mips@linux-mips.org
-> Cc: James Hartley <James.Hartley@imgtec.com>
-> Cc: <stable@vger.kernel.org> # v4.2+
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
 
-Acked-by: Andrew Bresticker <abrestic@chromium.org>
+> On Fri, Mar 04, 2016 at 10:39:29AM -0800, Eric Anholt wrote:
+>> For now this doesn't support the new hardware present on the Pi 3 (BT,
+>> wifi, GPIO expander).  Since the GPIO expander isn't supported, we
+>> also don't have the LEDs like the other board files do.
+>>=20
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile            |  3 +-
+>>  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 22 ++++++++++++
+>>  arch/arm/boot/dts/bcm2837.dtsi        | 68 ++++++++++++++++++++++++++++=
++++++++
+>>  3 files changed, 92 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>>  create mode 100644 arch/arm/boot/dts/bcm2837.dtsi
+>
+>> +	timer {
+>> +		compatible =3D "arm,armv7-timer";
+>> +		interrupt-parent =3D <&local_intc>;
+>> +		interrupts =3D <0>, // PHYS_SECURE_PPI
+>> +			     <1>, // PHYS_NONSECURE_PPI
+>> +			     <3>, // VIRT_PPI
+>> +			     <2>; // HYP_PPI
+>> +		always-on;
+>> +	};
+>
+> Are the CPUs in an always-on power domain? Or is it jsut that the kernel
+> doesn't perform power management of CPUs?
+>
+> The always-on proeprty is only intended for the former.
 
-> Do I need to split this patch into dt & pinctrl?
-> Or can it be picked up through pinctrl subsystem with dt maintainers Ack?
+The kernel doesn't get to do power management of CPUs.  We only have
+control of power domains through the firmware, and the firmware's
+keeping the CPU domain on.
 
-I would think that since this is a correction to the existing
-binding/driver that shouldn't be necessary, but that's up to Linus.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
->  .../bindings/pinctrl/img,pistachio-pinctrl.txt     | 12 +++++------
->  drivers/pinctrl/pinctrl-pistachio.c                | 24 +++++++++++-----------
->  2 files changed, 18 insertions(+), 18 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
-> index 08a4a32..0326154 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/img,pistachio-pinctrl.txt
-> @@ -134,12 +134,12 @@ mfio80            ddr_debug, mips_trace_data, mips_debug
->  mfio81         dreq0, mips_trace_data, eth_debug
->  mfio82         dreq1, mips_trace_data, eth_debug
->  mfio83         mips_pll_lock, mips_trace_data, usb_debug
-> -mfio84         sys_pll_lock, mips_trace_data, usb_debug
-> -mfio85         wifi_pll_lock, mips_trace_data, sdhost_debug
-> -mfio86         bt_pll_lock, mips_trace_data, sdhost_debug
-> -mfio87         rpu_v_pll_lock, dreq2, socif_debug
-> -mfio88         rpu_l_pll_lock, dreq3, socif_debug
-> -mfio89         audio_pll_lock, dreq4, dreq5
-> +mfio84         audio_pll_lock, mips_trace_data, usb_debug
-> +mfio85         rpu_v_pll_lock, mips_trace_data, sdhost_debug
-> +mfio86         rpu_l_pll_lock, mips_trace_data, sdhost_debug
-> +mfio87         sys_pll_lock, dreq2, socif_debug
-> +mfio88         wifi_pll_lock, dreq3, socif_debug
-> +mfio89         bt_pll_lock, dreq4, dreq5
->  tck
->  trstn
->  tdi
-> diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
-> index 856f736..2673cd9 100644
-> --- a/drivers/pinctrl/pinctrl-pistachio.c
-> +++ b/drivers/pinctrl/pinctrl-pistachio.c
-> @@ -469,27 +469,27 @@ static const char * const pistachio_mips_pll_lock_groups[] = {
->         "mfio83",
->  };
->
-> -static const char * const pistachio_sys_pll_lock_groups[] = {
-> +static const char * const pistachio_audio_pll_lock_groups[] = {
->         "mfio84",
->  };
->
-> -static const char * const pistachio_wifi_pll_lock_groups[] = {
-> +static const char * const pistachio_rpu_v_pll_lock_groups[] = {
->         "mfio85",
->  };
->
-> -static const char * const pistachio_bt_pll_lock_groups[] = {
-> +static const char * const pistachio_rpu_l_pll_lock_groups[] = {
->         "mfio86",
->  };
->
-> -static const char * const pistachio_rpu_v_pll_lock_groups[] = {
-> +static const char * const pistachio_sys_pll_lock_groups[] = {
->         "mfio87",
->  };
->
-> -static const char * const pistachio_rpu_l_pll_lock_groups[] = {
-> +static const char * const pistachio_wifi_pll_lock_groups[] = {
->         "mfio88",
->  };
->
-> -static const char * const pistachio_audio_pll_lock_groups[] = {
-> +static const char * const pistachio_bt_pll_lock_groups[] = {
->         "mfio89",
->  };
->
-> @@ -559,12 +559,12 @@ enum pistachio_mux_option {
->         PISTACHIO_FUNCTION_DREQ4,
->         PISTACHIO_FUNCTION_DREQ5,
->         PISTACHIO_FUNCTION_MIPS_PLL_LOCK,
-> +       PISTACHIO_FUNCTION_AUDIO_PLL_LOCK,
-> +       PISTACHIO_FUNCTION_RPU_V_PLL_LOCK,
-> +       PISTACHIO_FUNCTION_RPU_L_PLL_LOCK,
->         PISTACHIO_FUNCTION_SYS_PLL_LOCK,
->         PISTACHIO_FUNCTION_WIFI_PLL_LOCK,
->         PISTACHIO_FUNCTION_BT_PLL_LOCK,
-> -       PISTACHIO_FUNCTION_RPU_V_PLL_LOCK,
-> -       PISTACHIO_FUNCTION_RPU_L_PLL_LOCK,
-> -       PISTACHIO_FUNCTION_AUDIO_PLL_LOCK,
->         PISTACHIO_FUNCTION_DEBUG_RAW_CCA_IND,
->         PISTACHIO_FUNCTION_DEBUG_ED_SEC20_CCA_IND,
->         PISTACHIO_FUNCTION_DEBUG_ED_SEC40_CCA_IND,
-> @@ -620,12 +620,12 @@ static const struct pistachio_function pistachio_functions[] = {
->         FUNCTION(dreq4),
->         FUNCTION(dreq5),
->         FUNCTION(mips_pll_lock),
-> +       FUNCTION(audio_pll_lock),
-> +       FUNCTION(rpu_v_pll_lock),
-> +       FUNCTION(rpu_l_pll_lock),
->         FUNCTION(sys_pll_lock),
->         FUNCTION(wifi_pll_lock),
->         FUNCTION(bt_pll_lock),
-> -       FUNCTION(rpu_v_pll_lock),
-> -       FUNCTION(rpu_l_pll_lock),
-> -       FUNCTION(audio_pll_lock),
->         FUNCTION(debug_raw_cca_ind),
->         FUNCTION(debug_ed_sec20_cca_ind),
->         FUNCTION(debug_ed_sec40_cca_ind),
-> --
-> 2.5.0
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJW2doHAAoJELXWKTbR/J7oePsP/0/2O7qonmHyKSejusdkjhFN
+KumkvvgEh31LRtPAO035ntXd76EEcC7wl3lKX/5cKTJEx1KxlPP0L4oFQRvKiq1l
+FV4B/cMG3QbQAqbWpXKwV3qkAjFjNi2T2mKhRauL99ZndNaauZGIiZd0sfeS9uAR
+tl6Kr7IlW3AKxKXkRlx5h7NJ2uaP7YeTC6qp2VJdwS9xgd1DWkolhbHXrxxKkyL7
+lcEG5nvv6zt0pNI7cz5mK5+4c+KvxJK5CoRZf290qpsZ0nOp4ntNTcG85gNMuWre
+ESIeOu+/eB12IZbd08hX6TU+vz65cY7HeBXn1nUUsLCD3yUsAl0OkOm3Agtyo+yc
+PSOuk8vqPDArPcIiRJII3tKi6/iRI92wJLhYH4dR1fB1DeiJ1fvYFb/WNK8jznmJ
+p8BaSFA3AXD53DpNNDvVX72Ye9Vf+SVHpmGQuJL9fWfdn0UQHtLCYM3HTtChd11i
+jpGXHLyeeNUJoAqwAiTz3lEZ/DeNC+TcT12ztOYG6q8Sb0Zthw0KFLWsZZC0NaQh
+6oiZg7BRmUa9hbBfB2klXwZ4mupc9+XokouMMQr92e4Myc7t+g9VQRwR6ZIzSPZb
+D+4RO2CIPicNk14TkAqN7C5goR5Z7uXo8e2QUs92mI1KbmuqKbc80kiZXQ47UE8x
+hnsYcHop/QZHNJER+Xc5
+=JxV6
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
