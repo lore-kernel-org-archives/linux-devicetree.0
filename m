@@ -1,44 +1,154 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ehci-platform: Add support for controllers with
- multiple reset lines
-Date: Thu, 3 Mar 2016 20:35:59 -0800
-Message-ID: <20160304043559.GA21743@kroah.com>
-References: <1456592339-31767-1-git-send-email-hdegoede@redhat.com>
- <1456592339-31767-2-git-send-email-hdegoede@redhat.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH V2 2/2] mailbox: Introduce TI message manager driver
+Date: Fri, 4 Mar 2016 10:48:22 +0530
+Message-ID: <CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
+References: <1456525452-30638-1-git-send-email-nm@ti.com>
+	<1456525452-30638-3-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456592339-31767-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1456525452-30638-3-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <ssantosh@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 27, 2016 at 05:58:58PM +0100, Hans de Goede wrote:
-> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> 
-> At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
-> reset lines, the controller will not initialize while the reset for
-> its companion is still asserted, which means we need to de-assert
-> 2 resets for the controller to work.
-> 
-> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Sat, Feb 27, 2016 at 3:54 AM, Nishanth Menon <nm@ti.com> wrote:
+> Support for TI Message Manager Module. This hardware block manages a
+> bunch of hardware queues meant for communication between processor
+> entities.
+>
+> Clients sitting on top of this would manage the required protocol
+> for communicating with the counterpart entities.
+>
+> For more details on TI Message Manager hardware block, see documentation
+> that will is available here: http://www.ti.com/lit/ug/spruhy8/spruhy8.pdf
+> Chapter 8.1(Message Manager)
+>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
 > ---
-> Changes in v2:
-> -Use the new reset_control_[de]assert_shared reset-controller functions
-> Changes in v3:
-> -Adjust for changes to shared-reset reset-controller functions
-> Changes in v4:
-> -Fix Ugly continuation line
+> V2: Changes since V1:
+>         - Major refactoring of code for binding changes
+>         - moved list of valid K2G queueus into driver
+>         - split up probe into sub functions for easier maintenance
+>
+> V1: https://patchwork.kernel.org/patch/8237171/
+>
+>  drivers/mailbox/Kconfig     |  11 +
+>  drivers/mailbox/Makefile    |   2 +
+>  drivers/mailbox/ti-msgmgr.c | 657
+Do you want to call it something more specific than 'msgmgr from TI'?
+Maybe its about Keystone, like mailbox-keystone.c ?
 
-This breaks the build horribly :(
 
-As does patch 2/2, ugh.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/ti-msgmgr.h>
+>
+This seems a bit bold. I think  include/linux/soc/ti/ is the right place.
+
+
+> +       /* Do I actually have messages to read? */
+> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
+> +       if (!msg_count) {
+> +               /* Shared IRQ? */
+> +               dev_dbg(dev, "Spurious event - 0 pending data!\n");
+> +               return IRQ_NONE;
+> +       }
+> +
+> +       /*
+> +        * I have no idea about the protocol being used to communicate with the
+> +        * remote producer - 0 could be valid data, so I wont make a judgement
+> +        * of how many bytes I should be reading. Let the client figure this
+> +        * out.. I just read the full message and pass it on..
+> +        */
+Exactly. And similarly when you send data, you should not have more
+than one message in transit. Now please see my note in
+ti_msgmgr_send_data()
+
+
+> +static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
+> +{
+> +       struct device *dev = chan->mbox->dev;
+> +       struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
+> +       const struct ti_msgmgr_desc *desc;
+> +       struct ti_queue_inst *qinst = chan->con_priv;
+> +       int msg_count, num_words, trail_bytes;
+> +       struct ti_msgmgr_message *message = data;
+> +       void __iomem *data_reg;
+> +       u32 *word_data;
+> +
+> +       if (WARN_ON(!inst)) {
+> +               dev_err(dev, "no platform drv data??\n");
+> +               return -EINVAL;
+> +       }
+> +       desc = inst->desc;
+> +
+> +       if (desc->max_message_size < message->len) {
+> +               dev_err(dev, "Queue %s message length %d > max %d\n",
+> +                       qinst->name, message->len, desc->max_message_size);
+> +               return -EINVAL;
+> +       }
+> +
+> +       /* Are we able to send this or not? */
+> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
+> +       if (msg_count >= desc->max_messages) {
+> +               dev_warn(dev, "Queue %s is full (%d messages)\n", qinst->name,
+> +                        msg_count);
+> +               return -EBUSY;
+> +       }
+This seems fishy. mailbox api always submit 1 'complete' message to be
+sent and checks for completion by last_tx_done() before calling
+send_data() again. Controller drivers are not supposed to queue
+messages - mailbox core does. So you should never be unable to send a
+message.
+
+
+> +       /*
+> +        * NOTE about register access involved here:
+> +        * the hardware block is implemented with 32bit access operations and no
+> +        * support for data splitting.  We don't want the hardware to misbehave
+> +        * with sub 32bit access - For example: if the last register write is
+> +        * split into byte wise access, it can result in the queue getting
+> +        * stuck or dummy messages being transmitted or indeterminate behavior.
+> +        * The same can occur if out of order operations take place.
+> +        * Hence, we do not use memcpy_toio or ___iowrite32_copy here, instead
+> +        * we use writel which ensures the sequencing we need.
+> +        */
+.... deja-vu ?
+
+
+> +
+> +/* Keystone K2G SoC integration details */
+> +static const struct ti_msgmgr_valid_queue_desc k2g_valid_queues[] = {
+> +       {.queue_id = 0, .proxy_id = 0, .is_tx = true,},
+> +       {.queue_id = 1, .proxy_id = 0, .is_tx = true,},
+> +       {.queue_id = 2, .proxy_id = 0, .is_tx = true,},
+> +       {.queue_id = 3, .proxy_id = 0, .is_tx = true,},
+> +       {.queue_id = 5, .proxy_id = 2, .is_tx = false,},
+> +       {.queue_id = 56, .proxy_id = 1, .is_tx = true,},
+> +       {.queue_id = 57, .proxy_id = 2, .is_tx = false,},
+> +       {.queue_id = 58, .proxy_id = 3, .is_tx = true,},
+> +       {.queue_id = 59, .proxy_id = 4, .is_tx = true,},
+> +       {.queue_id = 60, .proxy_id = 5, .is_tx = true,},
+> +       {.queue_id = 61, .proxy_id = 6, .is_tx = true,},
+> +};
+> +
+> +static const struct ti_msgmgr_desc k2g_desc = {
+> +       .queue_count = 64,
+> +       .max_message_size = 64,
+> +       .max_messages = 128,
+> +       .q_slices = 1,
+> +       .q_proxies = 1,
+> +       .data_first_reg = 16,
+> +       .data_last_reg = 31,
+> +       .tx_polled = false,
+> +       .valid_queues = k2g_valid_queues,
+> +       .num_valid_queues = ARRAY_SIZE(k2g_valid_queues),
+> +};
+If these parameters are very configurable, maybe they should be in DT?
+
+Thanks.
