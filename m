@@ -1,202 +1,126 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [RESEND PATCH v5 2/2] mmc: sdhci-of-arasan: add phy support for
- sdhci-of-arasan
-Date: Fri, 4 Mar 2016 14:12:24 +0200
-Message-ID: <56D97BA8.7090302@intel.com>
-References: <1455848322-2210-1-git-send-email-shawn.lin@rock-chips.com>
- <1455848420-2293-1-git-send-email-shawn.lin@rock-chips.com>
- <56D951F9.6060602@intel.com> <56D96259.20207@rock-chips.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V7 2/4] Documentation: DT: bindings: Add power domain info for NVIDIA PMC
+Date: Fri, 4 Mar 2016 12:23:04 +0000
+Message-ID: <1457094186-15786-3-git-send-email-jonathanh@nvidia.com>
+References: <1457094186-15786-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56D96259.20207@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1457094186-15786-1-git-send-email-jonathanh@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/03/16 12:24, Shawn Lin wrote:
-> Hi Adrian,
-> 
-> On 2016/3/4 17:14, Adrian Hunter wrote:
->> On 19/02/16 04:20, Shawn Lin wrote:
->>> This patch adds Generic PHY access for sdhci-of-arasan. Driver
-> 
-> [...]
-> 
->>>   /**
->>>    * sdhci_arasan_suspend - Suspend method for the driver
->>>    * @dev:    Address of the device structure
->>> - * Returns 0 on success and error value on error
->>> + * Return: 0 on success and error value on error
->>
->> Really should be a separate patch for the comment fixes.
-> 
-> yep, I won't touch it when I rebase my patch for this topic.
-> 
->>
->>>    *
->>>    * Put the device in a low power state.
->>>    */
->>> @@ -88,6 +91,14 @@ static int sdhci_arasan_suspend(struct device *dev)
->>>       if (ret)
->>>           return ret;
->>>
->>> +    if (!IS_ERR(sdhci_arasan->phy)) {
->>> +        ret = phy_power_off(sdhci_arasan->phy);
->>> +        if (ret) {
->>> +            dev_err(dev, "Cannot power off phy.\n");
->>
->> I would expect you ought to call sdhci_resume_host() here.
-> 
-> oh, got it.
-> 
->>
->>> +            return ret;
->>> +        }
->>> +    }
->>> +
->>>       clk_disable(pltfm_host->clk);
->>>       clk_disable(sdhci_arasan->clk_ahb);
->>>
->>> @@ -97,7 +108,7 @@ static int sdhci_arasan_suspend(struct device *dev)
->>>   /**
->>>    * sdhci_arasan_resume - Resume method for the driver
->>>    * @dev:    Address of the device structure
->>> - * Returns 0 on success and error value on error
->>> + * Return: 0 on success and error value on error
->>>    *
->>>    * Resume operation after suspend
->>>    */
->>> @@ -118,11 +129,24 @@ static int sdhci_arasan_resume(struct device *dev)
->>>       ret = clk_enable(pltfm_host->clk);
->>>       if (ret) {
->>>           dev_err(dev, "Cannot enable SD clock.\n");
->>> -        clk_disable(sdhci_arasan->clk_ahb);
->>> -        return ret;
->>> +        goto err_clk_en;
->>> +    }
->>> +
->>> +    if (!IS_ERR(sdhci_arasan->phy)) {
->>> +        ret = phy_power_on(sdhci_arasan->phy);
->>> +        if (ret) {
->>> +            dev_err(dev, "Cannot power on phy.\n");
->>> +            goto err_phy_power;
->>> +        }
->>>       }
->>>
->>>       return sdhci_resume_host(host);
->>> +
->>> +err_phy_power:
->>> +    clk_disable(pltfm_host->clk);
->>> +err_clk_en:
->>> +    clk_disable(sdhci_arasan->clk_ahb);
->>
->> I don't know that disabling clocks is necessarily the right thing to do if
->> the resume fails.  You might want to consider what happens if the system
->> tries to use the device when it is in that state.  It's been a long time
->> since I did any ARM work but aren't you risking bus errors.  Might just as
->> well not bother and save a few lines of code.
->>
-> 
-> Firstly, I really just follow the orginal err handle.
-> It's risking bus errors if disabling ahb clk, but ahb clk is most very
-> likely to shared by many controllers. So regarding to the clk reference
-> count, the ahb_clk is not *really* disabled and just decrease the
-> reference count. How about keep these handles here?
+Add power-domain binding documentation for the NVIDIA PMC driver in
+order to support generic power-domains.
 
-I would remove the error handling on the grounds that it does not do
-anything useful.
+Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+---
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 80 ++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-> 
-> 
->>> +    return ret;
->>>   }
->>>   #endif /* ! CONFIG_PM_SLEEP */
->>>
->>> @@ -183,6 +207,30 @@ static int sdhci_arasan_probe(struct platform_device
->>> *pdev)
->>>           goto clk_disable_all;
->>>       }
->>>
->>> +    sdhci_arasan->phy = ERR_PTR(-ENODEV);
->>> +    if (of_device_is_compatible(pdev->dev.of_node,
->>> +                    "arasan,sdhci-5.1")) {
->>> +        sdhci_arasan->phy = devm_phy_get(&pdev->dev,
->>> +                         "phy_arasan");
->>> +        if (IS_ERR(sdhci_arasan->phy)) {
->>> +            ret = PTR_ERR(sdhci_arasan->phy);
->>> +            dev_err(&pdev->dev, "No phy for arasan,sdhci-5.1.\n");
->>> +            goto clk_disable_all;
->>> +        }
->>> +
->>> +        ret = phy_init(sdhci_arasan->phy);
->>> +        if (ret < 0) {
->>> +            dev_err(&pdev->dev, "phy_init err.\n");
->>> +            goto clk_disable_all;
->>> +        }
->>> +
->>> +        ret = phy_power_on(sdhci_arasan->phy);
->>> +        if (ret < 0) {
->>> +            dev_err(&pdev->dev, "phy_power_on err.\n");
->>> +            goto err_phy_power;
->>> +        }
->>> +    }
->>> +
->>>       ret = sdhci_add_host(host);
->>>       if (ret)
->>>           goto err_pltfm_free;
->>> @@ -190,7 +238,12 @@ static int sdhci_arasan_probe(struct platform_device
->>> *pdev)
->>>       return 0;
->>>
->>>   err_pltfm_free:
->>> +    if (!IS_ERR(sdhci_arasan->phy))
->>> +        phy_power_off(sdhci_arasan->phy);
->>>       sdhci_pltfm_free(pdev);
->>> +err_phy_power:
->>> +    if (!IS_ERR(sdhci_arasan->phy))
->>
->> Looks like you are using sdhci_arasan after it has been free'd by
->> sdhci_pltfm_free().
->>
->> Also there seem to be cases where sdhci_arasan_probe() can exit after
->> sdhci_pltfm_init() without calling sdhci_pltfm_free().
-> 
-> Good catch, will fix it.
-> 
->>
->>> +        phy_exit(sdhci_arasan->phy);
->>>   clk_disable_all:
->>>       clk_disable_unprepare(clk_xin);
->>>   clk_dis_ahb:
->>> @@ -205,6 +258,11 @@ static int sdhci_arasan_remove(struct
->>> platform_device *pdev)
->>>       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->>>       struct sdhci_arasan_data *sdhci_arasan = pltfm_host->priv;
->>>
->>> +    if (!IS_ERR(sdhci_arasan->phy)) {
->>> +        phy_power_off(sdhci_arasan->phy);
->>> +        phy_exit(sdhci_arasan->phy);
->>> +    }
->>> +
->>
->> When you re-base, take care to keep this chunk above
->> sdhci_pltfm_unregister().
-> 
-> sure.
-> 
-> Thanks for reviewing it.
-> 
->>
->>>       clk_disable_unprepare(sdhci_arasan->clk_ahb);
->>>
->>>       return sdhci_pltfm_unregister(pdev);
->>>
->>
->>
->>
->>
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+index 53aa5496c5cf..7d52bbe99709 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+@@ -1,5 +1,7 @@
+ NVIDIA Tegra Power Management Controller (PMC)
+ 
++== Power Management Controller Node ==
++
+ The PMC block interacts with an external Power Management Unit. The PMC
+ mostly controls the entry and exit of the system from different sleep
+ modes. It provides power-gating controllers for SoC and CPU power-islands.
+@@ -70,6 +72,11 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
+                      Defaults to 0. Valid values are described in section 12.5.2
+                      "Pinmux Support" of the Tegra4 Technical Reference Manual.
+ 
++Optional nodes:
++- powergates : This node contains a hierarchy of power domain nodes, which
++	       should match the powergates on the Tegra SoC. See "Powergate
++	       Nodes" below.
++
+ Example:
+ 
+ / SoC dts including file
+@@ -115,3 +122,76 @@ pmc@7000f400 {
+ 	};
+ 	...
+ };
++
++
++== Powergate Nodes ==
++
++Each of the powergate nodes represent a power-domain on the Tegra SoC
++that can be power-gated by the Tegra PMC. The name of the powergate node
++should be one of the below. Note that not every powergate is applicable
++to all Tegra devices and the following list shows which powergates are
++applicable to which devices. Please refer to the Tegra TRM for more
++details on the various powergates.
++
++ Name		Description			Devices Applicable
++ 3d		3D Graphics			Tegra20/114/124/210
++ 3d0		3D Graphics 0			Tegra30
++ 3d1		3D Graphics 1			Tegra30
++ aud		Audio				Tegra210
++ dfd		Debug				Tegra210
++ dis		Display A			Tegra114/124/210
++ disb		Display B			Tegra114/124/210
++ heg		2D Graphics			Tegra30/114/124/210
++ iram		Internal RAM			Tegra124/210
++ mpe		MPEG Encode			All
++ nvdec		NVIDIA Video Decode Engine	Tegra210
++ nvjpg		NVIDIA JPEG Engine		Tegra210
++ pcie		PCIE				Tegra20/30/124/210
++ sata		SATA				Tegra30/124/210
++ sor		Display interfaces		Tegra124/210
++ ve2		Video Encode Engine 2		Tegra210
++ venc		Video Encode Engine		All
++ vdec		Video Decode Engine		Tegra20/30/114/124
++ vic		Video Imaging Compositor	Tegra124/210
++ xusba		USB Partition A			Tegra114/124/210
++ xusbb		USB Partition B 		Tegra114/124/210
++ xusbc		USB Partition C			Tegra114/124/210
++
++Required properties:
++  - clocks: Must contain an entry for each clock required by the PMC for
++    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
++  - resets: Must contain an entry for each reset required by the PMC for
++    controlling a power-gate. See ../reset/reset.txt for details.
++  - #power-domain-cells: Must be 0.
++
++Example:
++
++	pmc: pmc@0,7000e400 {
++		compatible = "nvidia,tegra210-pmc";
++		reg = <0x0 0x7000e400 0x0 0x400>;
++		clocks = <&tegra_car TEGRA210_CLK_PCLK>, <&clk32k_in>;
++		clock-names = "pclk", "clk32k_in";
++
++		powergates {
++			pd_audio: aud {
++				clocks = <&tegra_car TEGRA210_CLK_APE>,
++					 <&tegra_car TEGRA210_CLK_APB2APE>;
++				resets = <&tegra_car 198>;
++				#power-domain-cells = <0>;
++			};
++		};
++	};
++
++
++== Powergate Clients ==
++
++Hardware blocks belonging to a power domain should contain a "power-domains"
++property that is a phandle pointing to the corresponding powergate node.
++
++Example:
++
++	adma: adma@702e2000 {
++		...
++		power-domains = <&pd_audio>;
++		...
++	};
+-- 
+2.1.4
+
