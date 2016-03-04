@@ -1,90 +1,44 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mci_parse_dt()
-Date: Fri, 4 Mar 2016 11:45:57 +0800
-Message-ID: <56D904F5.9020700@rock-chips.com>
-References: <1456968818-22140-1-git-send-email-guodong.xu@linaro.org>
- <1456968818-22140-2-git-send-email-guodong.xu@linaro.org>
- <56D79AB4.7050809@rock-chips.com> <56D900A8.9070204@linaro.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] ehci-platform: Add support for controllers with
+ multiple reset lines
+Date: Thu, 3 Mar 2016 20:35:59 -0800
+Message-ID: <20160304043559.GA21743@kroah.com>
+References: <1456592339-31767-1-git-send-email-hdegoede@redhat.com>
+ <1456592339-31767-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56D900A8.9070204-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-NgiFYW8Wbx6Ta72+1OMJgUB+6BGkLq7r@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1456592339-31767-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=D4=DA 2016/3/4 11:27, zhangfei =D0=B4=B5=C0:
->
->
-> On 03/03/2016 10:00 AM, Shawn Lin wrote:
->> Hi Guodong,
->>
->> On 2016/3/3 9:33, Guodong Xu wrote:
->>> With this, user can add a 'resets' property into dw_mmc dts
->>> node, and when driver probe and parse_dt, it will call
->>> reset APIs to reset dw_mmc host controller.
->>>
->>> Please also refer to Documentation/devicetree/bindings/reset/reset.=
-txt
->>
->> I have no hard objection for this patch, but I'd rather not add it
->> unless we actually need it. Could you elaborate more about any futhe=
-r
->> actions you will take if it's applied(i.e: deal with some unrecovera=
-ble
->> broken case)?  If we just reset the controller while probing, actual=
-ly I
->> can't find any problems without it based on tons of my reboot test.
->
-> mmc register maybe abnormal state, if mmc is used in uefi, like boot
-> from emmc.
-> So we need reset mmc register when kernel boot up, instead of assumin=
-g
-> mmc is in clean state.
-> Next step is adding reset node in dts for drivers/mmc/host/dw_mmc-k3.=
-c
-> as reset driver is already there.
+On Sat, Feb 27, 2016 at 05:58:58PM +0100, Hans de Goede wrote:
+> From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> 
+> At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
+> reset lines, the controller will not initialize while the reset for
+> its companion is still asserted, which means we need to de-assert
+> 2 resets for the controller to work.
+> 
+> Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> Changes in v2:
+> -Use the new reset_control_[de]assert_shared reset-controller functions
+> Changes in v3:
+> -Adjust for changes to shared-reset reset-controller functions
+> Changes in v4:
+> -Fix Ugly continuation line
 
-=46air enough. Thanks for explaining.
+This breaks the build horribly :(
 
->
->>> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
->>> index 242f9a0..d3a7376 100644
->>> --- a/drivers/mmc/host/dw_mmc.c
->>> +++ b/drivers/mmc/host/dw_mmc.c
->>> @@ -2878,6 +2878,13 @@ static struct dw_mci_board
->>> *dw_mci_parse_dt(struct dw_mci *host)
->>>       if (!pdata)
->>>           return ERR_PTR(-ENOMEM);
->>>
->>> +    /* find reset controller when exist */
->>> +    pdata->rstc =3D devm_reset_control_get_optional(dev, NULL);
->>> +    if (IS_ERR(pdata->rstc))
->>> +        pdata->rstc =3D NULL;
->>> +    else
->>> +        reset_control_deassert(pdata->rstc);
->>> +
->>
->> if the PTR_ERR(pdata->rstc) is -EPROBE_DEFER, should we defer probin=
-g
->> the driver?
-> Yes, good catch.
->
-> Thanks
->
->
->
-
-
---=20
-Best Regards
-Shawn Lin
-
+As does patch 2/2, ugh.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
