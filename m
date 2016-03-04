@@ -1,28 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/8] Documentation: devicetree: Document Tronsmart vendor
- prefix
-Date: Thu, 3 Mar 2016 17:57:08 -0600
-Message-ID: <20160303235708.GA24106@rob-hp-laptop>
-References: <1456789465-2962-1-git-send-email-afaerber@suse.de>
- <1456789465-2962-5-git-send-email-afaerber@suse.de>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: add 'const' for of_property_*_string*() parameter '*np'
+Date: Thu, 3 Mar 2016 18:14:37 -0600
+Message-ID: <CAL_JsqLzqnyYZvEuBGnCkEOzt5XGy95OAyS_r_coa2QWCFa29Q@mail.gmail.com>
+References: <1456954551-31742-1-git-send-email-drivshin.allworx@gmail.com>
+ <CAL_JsqJgOa7wzYCrQFwko-HXQVTkWf+=rwGkimS1n6qucH=jbw@mail.gmail.com> <20160303171640.6a156643.drivshin.allworx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1456789465-2962-5-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-meson@googlegroups.com, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>, Nicolas Saenz <nicolassaenzj@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160303171640.6a156643.drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "David Rivshin (Allworx)" <drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 01, 2016 at 12:44:21AM +0100, Andreas F=E4rber wrote:
-> Choose the obvious prefix, "tronsmart".
->=20
-> Cc: Matthias Brugger <mbrugger@suse.com>
-> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Thu, Mar 3, 2016 at 4:16 PM, David Rivshin (Allworx)
+<drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, 3 Mar 2016 07:52:51 -0600
+> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+>> On Wed, Mar 2, 2016 at 3:35 PM, David Rivshin (Allworx)
+>> <drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > From: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+>> >
+>> > The of_property_{read,count,match}_string* family of functions never
+>> > modify the struct device_node pointer that is passed in, so there is no
+>> > reason for it to be non-const. Equivalent functions for all other types
+>> > already take a 'const struct device_node *np'.
+>> >
+>> > Signed-off-by: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
+>> > ---
+>> >
+>> > MAINTAINTERS says that the appropriate tree is
+>> >     git://git.kernel.org/pub/scm/linux/kernel/git/glikely/linux.git
+>>
+>> Yes, we probably need to update that.
+>>
+>> > but it looks like that hasn't been updated in a while. So this patch
+>> > is based off the "for-next" branch of
+>> >     git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+>> > instead. Let me know if you need me to respin from another tree/branch.
+>>
+>> You should base off of Linus' tree unless you have some dependency. I
+>
+> I was under the impression that the general rule would be to base off
+> whichever tree it is likely to go through, to make it easier for the
+> maintainer if nothing else. Is that an incorrect impression, or do you
+> mean that just for OF/DT changes?
 
-Acked-by: Rob Herring <robh@kernel.org>
+This applies to all of the kernel. You should base your work off of
+Linus' tree unless you know you have a dependency. If you do, then the
+maintainer needs to know that. It is nice though to test your patches
+on a maintainer's tree and check if there are conflicts. If trivial,
+then it's okay to let the maintainer fix up the patch. If not trivial,
+then you should base on the maintainer's tree. All this matters less
+with patches than pull requests.
+
+Different maintainers have different rules for the stability of their
+branches also.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
