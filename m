@@ -1,51 +1,65 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 1/3] dt-bindings: Add binding docs for V3D.
-Date: Fri,  4 Mar 2016 12:32:06 -0800
-Message-ID: <1457123528-13482-2-git-send-email-eric@anholt.net>
-References: <1457123528-13482-1-git-send-email-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457123528-13482-1-git-send-email-eric@anholt.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Eric Anholt <eric@anholt.net>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH v5 1/2] clk: add lpc18xx creg clk driver
+Date: Fri, 4 Mar 2016 21:48:08 +0100
+Message-ID: <CAGhQ9VxYBRUbj+afsHUa21cwNFT4bdYRDNwxagdUwBXg4-x_3w@mail.gmail.com>
+References: <1457041625-21163-1-git-send-email-manabian@gmail.com>
+	<1457041625-21163-2-git-send-email-manabian@gmail.com>
+	<20160304174201.GH24999@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160304174201.GH24999@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This was missed in the upstreaming process.
+On 4 March 2016 at 18:42, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 03/03, Joachim Eastwood wrote:
+>> diff --git a/drivers/clk/nxp/clk-lpc18xx-creg.c b/drivers/clk/nxp/clk-lpc18xx-creg.c
+>> new file mode 100644
+>> index 000000000000..d44b61afa2dc
+>> --- /dev/null
+>> +++ b/drivers/clk/nxp/clk-lpc18xx-creg.c
+>> @@ -0,0 +1,226 @@
+>> +
+>> +static int clk_creg_32k_is_prepared(struct clk_hw *hw)
+>> +{
+>> +     struct clk_creg_data *creg = to_clk_creg(hw);
+>> +     u32 reg;
+>> +
+>> +     regmap_read(creg->reg, LPC18XX_CREG_CREG0, &reg);
+>> +
+>> +     return !(reg & LPC18XX_CREG_CREG0_PD32KHZ) &&
+>> +            !(reg & LPC18XX_CREG_CREG0_RESET32KHZ);
+>> +}
+>> +
+>> +static unsigned long clk_creg_1k_recalc_rate(struct clk_hw *hw,
+>> +                                          unsigned long parent_rate)
+>> +{
+>> +     return parent_rate / 32;
+>> +}
+>> +
+>> +static int clk_creg_enable(struct clk_hw *hw)
+>> +{
+>> +     struct clk_creg_data *creg = to_clk_creg(hw);
+>> +
+>> +     return regmap_update_bits(creg->reg, LPC18XX_CREG_CREG0,
+>> +                               creg->en_mask, creg->en_mask);
+>
+> Have you tested this with CONFIG_DEBUG_ATOMIC_SLEEP=y? I seem to
+> recall that syscon uses a regmap with regmap_config::fast_io set
+> to false, so all regmap operations take a mutex lock.
+> clk_ops::enable is called with a spinlock held, so that isn't
+> going to work well.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+The MMIO bus config sets fast io to true and __regmap_init() uses
+spinlocks if either bus or regmap config is set to true.
 
-diff --git a/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt b/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
-index 56a961a..9f97df4 100644
---- a/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
-+++ b/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
-@@ -35,6 +35,12 @@ Optional properties for HDMI:
- 		  as an interrupt/status bit in the HDMI controller
- 		  itself).  See bindings/pinctrl/brcm,bcm2835-gpio.txt
- 
-+Required properties for V3D:
-+- compatible:	Should be "brcm,bcm2835-v3d"
-+- reg:		Physical base address and length of the V3D's registers
-+- interrupts:	The interrupt number
-+		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+
- Example:
- pixelvalve@7e807000 {
- 	compatible = "brcm,bcm2835-pixelvalve2";
-@@ -60,6 +66,12 @@ hdmi: hdmi@7e902000 {
- 	clock-names = "pixel", "hdmi";
- };
- 
-+v3d: v3d@7ec00000 {
-+	compatible = "brcm,bcm2835-v3d";
-+	reg = <0x7ec00000 0x1000>;
-+	interrupts = <1 10>;
-+};
-+
- vc4: gpu {
- 	compatible = "brcm,bcm2835-vc4";
- };
--- 
-2.7.0
+http://lxr.free-electrons.com/source/drivers/base/regmap/regmap-mmio.c#L209
+http://lxr.free-electrons.com/source/drivers/base/regmap/regmap.c#L548
+
+or am I missing something?
+
+regards,
+Joachim Eastwood
