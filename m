@@ -1,11 +1,10 @@
 From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH v3 00/11] dmaengine: bcm2835: bugfix + enhancement of driver
-Date: Sat,  5 Mar 2016 10:52:11 +0000
-Message-ID: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v3 02/11] dmaengine: bcm2835: remove unnecessary masking of dma channels
+Date: Sat,  5 Mar 2016 10:52:13 +0000
+Message-ID: <1457175142-28665-3-git-send-email-kernel@martin.sperl.org>
+References: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457175142-28665-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
@@ -13,92 +12,59 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-This patchset fixes several issues:
-* missing residue_granularity to allow better support for I2S
-* dma-channels are no longer artificially restricted (channel 0 and 2)
-* added correct support for dma-channels 11-14 (changeable via
-  the device tree) by using the correct shared irq line with index
-  11 into the interrupts list (changeable via device tree)
+The original patch contained 3 dma channels that were masked out.
 
-With this now 11 DMA channels are available instead of 7 - the
-additional HW-DMA-channels are:
-* 0, 2 (masking of channels)
-* 13, 14 (shared interrupts - see also note on channel 12)
+These - as far as research and discussions show - are a
+artefacts remaining from the downstream legacy dma-api.
 
-It also adds several new features:
-* slave_sg support
-* dma_memcopy support
+Right now down-stream still includes a legacy api used only
+in a single (downstream only) driver (bcm2708_fb) that requires
+2D DMA for speedup (DMA-channel 0).
+Formerly the sd-card support driver also was using this legacy
+api (DMA-channel 2), but since has been moved over to use
+dmaengine directly.
 
-For these a consolidated method for creating standard control-block
-chains was created to share common between cyclic, slave_sg and
-memcopy.
+The DMA-channel 3 is already masked out in the devicetree in
+the default property "brcm,dma-channel-mask = <0x7f35>;"
 
-Testing:
-* slave_sg
-  * spi-bcm2835:
-    * fb_st7735r framebuffer
-      * tested using mplayer
-* cyclic
-  * bcm2835-i2s
-    * Audio output with a Hifiberry I2S card.
-      * tested using mplayer and aplay
-* memcopy
-  * dmatest
+So we can remove the whole masking of DMA channels.
 
-Tests using both slave_sg and cyclic concurrently were also conducted
-using mplayer to play BigBuckBunny.
+Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
+ drivers/dma/bcm2835-dma.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-Note that the bcm2835-i2s driver still requires the clock patch-set
-enabling the pcm clock.
-
-The last patches (expose registers via debugfs) is optional:
-  dmaengine: bcm2835: expose dma registers via debugfs
-
-Note: DMA channel 15 is still not supported because:
-* it sits in a separate IO range
-* it is used by the firmware
-So unless the firmware no longer uses DMA 15, it is not worth
-the effort.
-
-Possibly future improvements:
-* allow control over channel selection (Lite or normal)
-  as well as AXI priorities via the device-tree
-* support for memset, memset_sg and interleave
-* using DREQ-names instead of magic numbers (via include/dt-binding/...)
-
-Change-log:
-  V1 -> V2: * rewrite of the original patch avoiding code duplication
-            * splitting of changes into multiple patches
-  V2 -> V3: * allow configuration to dma mapping va device tree.
-            * adding names binging for DREQs to get used in device-trees
-	    * move lite channel detection (via debug register) and using
-	      limits of it into separate patch
-	    * add debugfs support to see what is actually happening in
-	      the dma registers.
-	    * incorporated feedback from various people improving
-	      code-readability (primarily Patch 7)
-
-Martin Sperl (11):
-  dmaengine: bcm2835: set residue_granularity field
-  dmaengine: bcm2835: remove unnecessary masking of dma channels
-  dmaengine: bcm2835: use shared interrupt for channel 11 to 14.
-  ARM: bcm2835: dt: add bindings for shared interrupt properties
-  dmaengine: bcm2835: add additional defines for DMA-registers
-  dmaengine: bcm2835: move cyclic member from bcm2835_chan into
-    bcm2835_desc
-  dmaengine: bcm2835: move controlblock chain generation into separate
-    method
-  dmaengine: bcm2835: limit max length based on channel type
-  dmaengine: bcm2835: add slave_sg support to bcm2835-dma
-  dmaengine: bcm2835: add dma_memcopy support to bcm2835-dma
-  dmaengine: bcm2835: expose dma registers via debugfs
-
- .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   |   6 +
- drivers/dma/bcm2835-dma.c                          | 740 +++++++++++++++++----
- 2 files changed, 623 insertions(+), 123 deletions(-)
-
---
+diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
+index 2d72fe8..e4ca980 100644
+--- a/drivers/dma/bcm2835-dma.c
++++ b/drivers/dma/bcm2835-dma.c
+@@ -123,9 +123,6 @@ struct bcm2835_desc {
+ #define BCM2835_DMA_DATA_TYPE_S32	4
+ #define BCM2835_DMA_DATA_TYPE_S128	16
+ 
+-#define BCM2835_DMA_BULK_MASK	BIT(0)
+-#define BCM2835_DMA_FIQ_MASK	(BIT(2) | BIT(3))
+-
+ /* Valid only for channels 0 - 14, 15 has its own base address */
+ #define BCM2835_DMA_CHAN(n)	((n) << 8) /* Base address */
+ #define BCM2835_DMA_CHANIO(base, n) ((base) + BCM2835_DMA_CHAN(n))
+@@ -641,12 +638,6 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 		goto err_no_dma;
+ 	}
+ 
+-	/*
+-	 * Do not use the FIQ and BULK channels,
+-	 * because they are used by the GPU.
+-	 */
+-	chans_available &= ~(BCM2835_DMA_FIQ_MASK | BCM2835_DMA_BULK_MASK);
+-
+ 	for (i = 0; i < pdev->num_resources; i++) {
+ 		irq = platform_get_irq(pdev, i);
+ 		if (irq < 0)
+-- 
 2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
