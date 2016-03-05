@@ -1,200 +1,49 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH v6 2/2] mmc: sdhci-of-arasan: add phy support for sdhci-of-arasan
-Date: Sat,  5 Mar 2016 10:24:36 +0800
-Message-ID: <1457144676-30697-1-git-send-email-shawn.lin@rock-chips.com>
-References: <1457144633-30615-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457144633-30615-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adrian Hunter <adrian.hunter@intel.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 00/26] memory: omap-gpmc: mtd: nand: Support GPMC NAND
+ on non-OMAP platforms
+Date: Fri, 4 Mar 2016 18:33:35 -0800
+Message-ID: <20160305023335.GP55664@google.com>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+ <56D470E8.4070106@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56D470E8.4070106-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Generic PHY access for sdhci-of-arasan. Driver
-can get PHY handler from dt-binding, and power-on/init the PHY.
-Currently, it's just mandatory for arasan,sdhci-5.1.
+On Mon, Feb 29, 2016 at 06:25:12PM +0200, Roger Quadros wrote:
+> On 19/02/16 23:15, Roger Quadros wrote:
+> > Hi,
+> > 
+> > @Tony
+> > Patches 15 and 24 are new and will need your review.
+> > I've modified patch 22 to include the new am335x boards introduced since v4.4.
+> > 
+> > Patches are based on top of omap-for-v4.6/dt so that the DT changes apply cleanly.
+> > 
+> > @Brian
+> > If you can Ack the MTD related changes we can push the series (excluding DT patches)
+> > to an immutable branch and you can then pull it into l2-mtd.git
+> 
+> Gentle ping on this. Thanks.
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+I think this series looks a lot better. I don't think I have any
+fundamental issues with the MTD stuff, aside from the one comment
+about the 'reg' property. If we get a satisfactory answer for that (and
+you fix the small stuff), then:
 
-Serise-changes: 6
-- rebase on Ulf's next
-- fix some preexisting problems of err handling suggested
-  by Adrian
+Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Serise-changes: 5
-- remove rpm support from this serise
-- fix some err case for handling phy
+(That's also presuming the relevant players are all on board with the DT
+"ABI" breakage. But I think your old binding really needed a fixup, so
+the warning might be sufficient.)
 
-Serise-changes: 4
-- remove suspend/resume_phy
-- add err handle label for system PM callback
-- fix comments of struct sdhci_arasan_data and system PM
-  callback suggested by Michal
-
-Serise-changes: 3
-- remove phy_init/exit for suspend/resume
-- adjust phy_int/power_on seq to make code more reasonable
-  simplify suspend/resume_phy
-
-Serise-changes: 2
-- Keep phy as a mandatory requirement for arasan,sdhci-5.1
-
----
-
-Changes in v6: None
-Changes in v2: None
-
- drivers/mmc/host/sdhci-of-arasan.c | 71 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 63 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index 1e4b5e0..2e482b1 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -21,6 +21,7 @@
- 
- #include <linux/module.h>
- #include <linux/of_device.h>
-+#include <linux/phy/phy.h>
- #include "sdhci-pltfm.h"
- 
- #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-@@ -32,9 +33,11 @@
- /**
-  * struct sdhci_arasan_data
-  * @clk_ahb:	Pointer to the AHB clock
-+ * @phy: Pointer to the generic phy
-  */
- struct sdhci_arasan_data {
- 	struct clk	*clk_ahb;
-+	struct phy	*phy;
- };
- 
- static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_host *host)
-@@ -88,6 +91,15 @@ static int sdhci_arasan_suspend(struct device *dev)
- 	if (ret)
- 		return ret;
- 
-+	if (!IS_ERR(sdhci_arasan->phy)) {
-+		ret = phy_power_off(sdhci_arasan->phy);
-+		if (ret) {
-+			dev_err(dev, "Cannot power off phy.\n");
-+			sdhci_resume_host(host);
-+			return ret;
-+		}
-+	}
-+
- 	clk_disable(pltfm_host->clk);
- 	clk_disable(sdhci_arasan->clk_ahb);
- 
-@@ -118,10 +130,17 @@ static int sdhci_arasan_resume(struct device *dev)
- 	ret = clk_enable(pltfm_host->clk);
- 	if (ret) {
- 		dev_err(dev, "Cannot enable SD clock.\n");
--		clk_disable(sdhci_arasan->clk_ahb);
- 		return ret;
- 	}
- 
-+	if (!IS_ERR(sdhci_arasan->phy)) {
-+		ret = phy_power_on(sdhci_arasan->phy);
-+		if (ret) {
-+			dev_err(dev, "Cannot power on phy.\n");
-+			return ret;
-+		}
-+	}
-+
- 	return sdhci_resume_host(host);
- }
- #endif /* ! CONFIG_PM_SLEEP */
-@@ -148,19 +167,21 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 	sdhci_arasan->clk_ahb = devm_clk_get(&pdev->dev, "clk_ahb");
- 	if (IS_ERR(sdhci_arasan->clk_ahb)) {
- 		dev_err(&pdev->dev, "clk_ahb clock not found.\n");
--		return PTR_ERR(sdhci_arasan->clk_ahb);
-+		ret = PTR_ERR(sdhci_arasan->clk_ahb);
-+		goto err_pltfm_free;
- 	}
- 
- 	clk_xin = devm_clk_get(&pdev->dev, "clk_xin");
- 	if (IS_ERR(clk_xin)) {
- 		dev_err(&pdev->dev, "clk_xin clock not found.\n");
--		return PTR_ERR(clk_xin);
-+		ret = PTR_ERR(clk_xin);
-+		goto err_pltfm_free;
- 	}
- 
- 	ret = clk_prepare_enable(sdhci_arasan->clk_ahb);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Unable to enable AHB clock.\n");
--		return ret;
-+		goto err_pltfm_free;
- 	}
- 
- 	ret = clk_prepare_enable(clk_xin);
-@@ -178,19 +199,48 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
- 		goto clk_disable_all;
- 	}
- 
-+	sdhci_arasan->phy = ERR_PTR(-ENODEV);
-+	if (of_device_is_compatible(pdev->dev.of_node,
-+				    "arasan,sdhci-5.1")) {
-+		sdhci_arasan->phy = devm_phy_get(&pdev->dev,
-+						 "phy_arasan");
-+		if (IS_ERR(sdhci_arasan->phy)) {
-+			ret = PTR_ERR(sdhci_arasan->phy);
-+			dev_err(&pdev->dev, "No phy for arasan,sdhci-5.1.\n");
-+			goto clk_disable_all;
-+		}
-+
-+		ret = phy_init(sdhci_arasan->phy);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "phy_init err.\n");
-+			goto clk_disable_all;
-+		}
-+
-+		ret = phy_power_on(sdhci_arasan->phy);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "phy_power_on err.\n");
-+			goto err_phy_power;
-+		}
-+	}
-+
- 	ret = sdhci_add_host(host);
- 	if (ret)
--		goto err_pltfm_free;
-+		goto err_add_host;
- 
- 	return 0;
- 
--err_pltfm_free:
--	sdhci_pltfm_free(pdev);
-+err_add_host:
-+	if (!IS_ERR(sdhci_arasan->phy))
-+		phy_power_off(sdhci_arasan->phy);
-+err_phy_power:
-+	if (!IS_ERR(sdhci_arasan->phy))
-+		phy_exit(sdhci_arasan->phy);
- clk_disable_all:
- 	clk_disable_unprepare(clk_xin);
- clk_dis_ahb:
- 	clk_disable_unprepare(sdhci_arasan->clk_ahb);
--
-+err_pltfm_free:
-+	sdhci_pltfm_free(pdev);
- 	return ret;
- }
- 
-@@ -202,6 +252,11 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
- 	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
- 	struct clk *clk_ahb = sdhci_arasan->clk_ahb;
- 
-+	if (!IS_ERR(sdhci_arasan->phy)) {
-+		phy_power_off(sdhci_arasan->phy);
-+		phy_exit(sdhci_arasan->phy);
-+	}
-+
- 	ret = sdhci_pltfm_unregister(pdev);
- 
- 	clk_disable_unprepare(clk_ahb);
--- 
-2.3.7
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
