@@ -1,65 +1,97 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] leds: Replace dedicated SN3218 driver with
- IS31FL32XX driver
-Date: Fri, 4 Mar 2016 22:28:40 -0600
-Message-ID: <20160305042840.GU13525@rob-hp-laptop>
-References: <1456974095-1867-1-git-send-email-drivshin.allworx@gmail.com>
- <1456974095-1867-5-git-send-email-drivshin.allworx@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] usb: core: add power sequence for USB devices
+Date: Fri, 4 Mar 2016 22:28:54 -0600
+Message-ID: <20160305042854.GW13525@rob-hp-laptop>
+References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
+ <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
+ <CAL_JsqLYHzb0ABYN_P9ZOEorT6otvn_BPNzuCFhoqwa5M4y-hw@mail.gmail.com>
+ <20160304020242.GB30272@shlinux2.ap.freescale.net>
+ <20160304022305.GB20597@lunn.ch>
+ <20160304023750.GF30272@shlinux2.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456974095-1867-5-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org
+In-Reply-To: <20160304023750.GF30272-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 02, 2016 at 10:01:35PM -0500, David Rivshin (Allworx) wrote:
-> From: David Rivshin <drivshin@allworx.com>
-> 
-> Si-En Technology was acquired by ISSI in 2011, and it appears that
-> the IS31FL3218/IS31FL3216 are just rebranded SN3218/SN3216 devices.
-> As the IS31FL32XX driver already handles the *3218 devices, there
-> is no longer a need for the dedicated SN3218 driver.
-> 
-> Add the "sn,sn3218" and "sn,sn3216" compatible strings into the
-> IS31FL32XX driver and binding documentation, and remove the
-> leds-sn3218 driver.
-> 
-> Datasheets:
->     IS31FL3218: http://www.issi.com/WW/pdf/31FL3218.pdf
->     SN3218:     http://www.si-en.com/uploadpdf/s2011517171720.pdf
-> 
->     IS31FL3216: http://www.issi.com/WW/pdf/31FL3216.pdf
->     SN3216;     http://www.si-en.com/uploadpdf/SN3216201152410148.pdf
-> 
-> Signed-off-by: David Rivshin <drivshin@allworx.com>
-> ---
-> 
-> Note that the leds-sn3218 binding use a 0-based 'reg' property, while
-> the leds-is31fl32xx binding uses a 1-based 'reg' property. This seemed
-> to be the preferred binding based on [1]. Since leds-sn3216 has not been
-> in a released kernel, there is are no backwards-compatibility concerns.
+On Fri, Mar 04, 2016 at 10:37:50AM +0800, Peter Chen wrote:
+> On Fri, Mar 04, 2016 at 03:23:05AM +0100, Andrew Lunn wrote:
+> > On Fri, Mar 04, 2016 at 10:02:42AM +0800, Peter Chen wrote:
+> > > On Thu, Mar 03, 2016 at 02:54:55PM -0600, Rob Herring wrote:
+> > > > On Thu, Mar 3, 2016 at 4:01 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
+> > > > > Some hard-wired USB devices need to do power sequence to let the
+> > > > > device work normally, the typical power sequence like: enable USB
+> > > > > PHY clock, toggle reset pin, etc. But current Linux USB driver
+> > > > > lacks of such code to do it, it may cause some hard-wired USB devices
+> > > > > works abnormal or can't be recognized by controller at all.
+> > > > >
+> > > > > In this patch, it will do power on sequence at hub's probe for all
+> > > > > devices under this hub (includes root hub) if this device is described
+> > > > > at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
+> > > > > it will do power off sequence.
+> > > > >
+> > > > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> > > > > ---
+> > > > >  .../devicetree/bindings/usb/usb-device.txt         |  41 +++++-
+> > > > >  drivers/usb/core/Makefile                          |   2 +-
+> > > > >  drivers/usb/core/hub.c                             |  32 +++++
+> > > > >  drivers/usb/core/pwrseq.c                          | 149 +++++++++++++++++++++
+> > > > >  include/linux/usb/of.h                             |  10 ++
+> > > > >  5 files changed, 232 insertions(+), 2 deletions(-)
+> > > > >  create mode 100644 drivers/usb/core/pwrseq.c
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > > > index 1c35e7b..c7a298c 100644
+> > > > > --- a/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > > > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
+> > > > > @@ -13,8 +13,37 @@ Required properties:
+> > > > >  - reg: the port number which this device is connecting to, the range
+> > > > >    is 1-31.
+> > > > >
+> > > > > +Optional properties:
+> > > > > +- usb-pwrseq: the power sequence handler which need to do before this USB
+> > > > > +  device can work.
+> > > > > +- clocks: the input clock for USB device.
+> > > > > +- clock-frequency: the frequency for device's clock.
+> > > > > +- reset-gpios: Should specify the GPIO for reset.
+> > > > > +- reset-duration-us: the duration in microsecond for assert reset signal.
+> > > > 
+> > > > So we sorted out how to describe USB devices in DT, but now we don't
+> > > > use it?
+> > > 
+> > > We only know USB device after USB bus finds it, but without power
+> > > on sequence, the USB bus can't find it.
+> > 
+> > Not really true. Device tree says it exists, you just cannot see it
+> > yet. The fact it is in device tree means it is soldered on the board
+> > and really is there. So when the host controller enumerates the bus,
+> > it should run the power sequence of all child nodes to make them
+> > appear.
+> > 
 
-It would probably make more sense to revert the sn3216 driver/binding 
-and add the additions to the previous patches. Doesn't matter to me 
-though.
+Exactly.
 
-Acked-by: Rob Herring <robh@kernel.org>
+> Yes, it is my patch doing. My words "We only know USB device after USB
+> bus finds it" means the USB common code only create the USB device, and
+> assign its .of_node after USB bus finds it.
 
-> 
-> Changes from RFC:
->  new
-> 
-> [1] http://www.spinics.net/lists/linux-leds/msg05589.html
-> 
->  .../devicetree/bindings/leds/leds-is31fl32xx.txt   |   9 +-
->  .../devicetree/bindings/leds/leds-sn3218.txt       |  41 ---
->  drivers/leds/Kconfig                               |  18 +-
->  drivers/leds/Makefile                              |   1 -
->  drivers/leds/leds-is31fl32xx.c                     |   6 +-
->  drivers/leds/leds-sn3218.c                         | 306 ---------------------
->  6 files changed, 14 insertions(+), 367 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/leds/leds-sn3218.txt
->  delete mode 100644 drivers/leds/leds-sn3218.c
+I understand the problem. It is just as easy for you to search power 
+sequence child nodes as searching the *actual* child nodes for devices. 
+The main difference is that a power sequence node indicates that power 
+sequencing can be handled generically. With the device nodes, you have 
+to assume that the presence of standard properties like reset-gpios 
+means you can handle it generically. 
+
+Either solution suffers from not handling cases that can't be handled 
+generically. No doubt, we'll just see continued extensions to keep 
+things generic when they really shouldn't be.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
