@@ -1,322 +1,365 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] iio:pressure:ms5611: oversampling rate support
-Date: Sat, 5 Mar 2016 14:45:25 +0000
-Message-ID: <56DAF105.3010503@kernel.org>
-References: <cover.1456828051.git.gregor.boirie@parrot.com>
- <968dd61e1b2cf2fa6ba936509594d71c799226c4.1456828051.git.gregor.boirie@parrot.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <968dd61e1b2cf2fa6ba936509594d71c799226c4.1456828051.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Subject: [PATCH v4 2/3] hwmon: Create an NSA320 hardware monitoring driver
+Date: Sat,  5 Mar 2016 15:34:56 +0000
+Message-ID: <1457192097-32538-3-git-send-email-linux@baker-net.org.uk>
+References: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457192097-32538-1-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/16 10:31, Gregor Boirie wrote:
-> Add support for setting and retrieving OverSampling Rate independently for
-> each of the temperature and pressure channels. This allows userspace to
-> fine tune hardware sampling process according to the following tradeoffs :
-> * the higher the OSR, the finer the resolution ;
-> * the higher the OSR, the lower the noise ;
-> BUT:
-> * the higher the OSR, the larger the drift ;
-> * the higher the OSR, the longer the response time, i.e. less samples per
->   unit of time.
-> 
-> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Applied to the togreg branch of iio.git - initially pushed out as testing
-for the autobuilders to play with it.
+Create a driver to support the hardware monitoring chip present in
+the Zyxel NSA320 and some of the other Zyxel NAS devices.
 
-Thanks,
+The driver reads fan speed and temperature from a suitably
+pre-programmed MCU on the device.
 
-Jonathan
-> ---
->  drivers/iio/pressure/ms5611.h      |  20 ++++---
->  drivers/iio/pressure/ms5611_core.c | 105 ++++++++++++++++++++++++++++++++++++-
->  drivers/iio/pressure/ms5611_i2c.c  |  12 ++---
->  drivers/iio/pressure/ms5611_spi.c  |  19 +++----
->  4 files changed, 133 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/iio/pressure/ms5611.h b/drivers/iio/pressure/ms5611.h
-> index 8b08e4b..d725a307 100644
-> --- a/drivers/iio/pressure/ms5611.h
-> +++ b/drivers/iio/pressure/ms5611.h
-> @@ -19,12 +19,6 @@
->  #define MS5611_RESET			0x1e
->  #define MS5611_READ_ADC			0x00
->  #define MS5611_READ_PROM_WORD		0xA0
-> -#define MS5611_START_TEMP_CONV		0x58
-> -#define MS5611_START_PRESSURE_CONV	0x48
-> -
-> -#define MS5611_CONV_TIME_MIN		9040
-> -#define MS5611_CONV_TIME_MAX		10000
-> -
->  #define MS5611_PROM_WORDS_NB		8
->  
->  enum {
-> @@ -39,10 +33,24 @@ struct ms5611_chip_info {
->  					    s32 *temp, s32 *pressure);
->  };
->  
-> +/*
-> + * OverSampling Rate descriptor.
-> + * Warning: cmd MUST be kept aligned on a word boundary (see
-> + * m5611_spi_read_adc_temp_and_pressure in ms5611_spi.c).
-> + */
-> +struct ms5611_osr {
-> +	unsigned long conv_usec;
-> +	u8 cmd;
-> +	unsigned short rate;
-> +};
-> +
->  struct ms5611_state {
->  	void *client;
->  	struct mutex lock;
->  
-> +	const struct ms5611_osr *pressure_osr;
-> +	const struct ms5611_osr *temp_osr;
-> +
->  	int (*reset)(struct device *dev);
->  	int (*read_prom_word)(struct device *dev, int index, u16 *word);
->  	int (*read_adc_temp_and_pressure)(struct device *dev,
-> diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/ms5611_core.c
-> index a9c4d49..a2a871b 100644
-> --- a/drivers/iio/pressure/ms5611_core.c
-> +++ b/drivers/iio/pressure/ms5611_core.c
-> @@ -18,11 +18,44 @@
->  #include <linux/delay.h>
->  #include <linux/regulator/consumer.h>
->  
-> +#include <linux/iio/sysfs.h>
->  #include <linux/iio/buffer.h>
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/trigger_consumer.h>
->  #include "ms5611.h"
->  
-> +#define MS5611_INIT_OSR(_cmd, _conv_usec, _rate) \
-> +	{ .cmd = _cmd, .conv_usec = _conv_usec, .rate = _rate }
-> +
-> +static const struct ms5611_osr ms5611_avail_pressure_osr[] = {
-> +	MS5611_INIT_OSR(0x40, 600,  256),
-> +	MS5611_INIT_OSR(0x42, 1170, 512),
-> +	MS5611_INIT_OSR(0x44, 2280, 1024),
-> +	MS5611_INIT_OSR(0x46, 4540, 2048),
-> +	MS5611_INIT_OSR(0x48, 9040, 4096)
-> +};
-> +
-> +static const struct ms5611_osr ms5611_avail_temp_osr[] = {
-> +	MS5611_INIT_OSR(0x50, 600,  256),
-> +	MS5611_INIT_OSR(0x52, 1170, 512),
-> +	MS5611_INIT_OSR(0x54, 2280, 1024),
-> +	MS5611_INIT_OSR(0x56, 4540, 2048),
-> +	MS5611_INIT_OSR(0x58, 9040, 4096)
-> +};
-> +
-> +static const char ms5611_show_osr[] = "256 512 1024 2048 4096";
-> +
-> +static IIO_CONST_ATTR(oversampling_ratio_available, ms5611_show_osr);
-> +
-> +static struct attribute *ms5611_attributes[] = {
-> +	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group ms5611_attribute_group = {
-> +	.attrs = ms5611_attributes,
-> +};
-> +
->  static bool ms5611_prom_is_valid(u16 *prom, size_t len)
->  {
->  	int i, j;
-> @@ -239,11 +272,70 @@ static int ms5611_read_raw(struct iio_dev *indio_dev,
->  		default:
->  			return -EINVAL;
->  		}
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		if (chan->type != IIO_TEMP && chan->type != IIO_PRESSURE)
-> +			break;
-> +		mutex_lock(&st->lock);
-> +		if (chan->type == IIO_TEMP)
-> +			*val = (int)st->temp_osr->rate;
-> +		else
-> +			*val = (int)st->pressure_osr->rate;
-> +		mutex_unlock(&st->lock);
-> +		return IIO_VAL_INT;
->  	}
->  
->  	return -EINVAL;
->  }
->  
-> +static const struct ms5611_osr *ms5611_find_osr(int rate,
-> +						const struct ms5611_osr *osr,
-> +						size_t count)
-> +{
-> +	unsigned int r;
-> +
-> +	for (r = 0; r < count; r++)
-> +		if ((unsigned short)rate == osr[r].rate)
-> +			break;
-> +	if (r >= count)
-> +		return NULL;
-> +	return &osr[r];
-> +}
-> +
-> +static int ms5611_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan,
-> +			    int val, int val2, long mask)
-> +{
-> +	struct ms5611_state *st = iio_priv(indio_dev);
-> +	const struct ms5611_osr *osr = NULL;
-> +
-> +	if (mask != IIO_CHAN_INFO_OVERSAMPLING_RATIO)
-> +		return -EINVAL;
-> +
-> +	if (chan->type == IIO_TEMP)
-> +		osr = ms5611_find_osr(val, ms5611_avail_temp_osr,
-> +				      ARRAY_SIZE(ms5611_avail_temp_osr));
-> +	else if (chan->type == IIO_PRESSURE)
-> +		osr = ms5611_find_osr(val, ms5611_avail_pressure_osr,
-> +				      ARRAY_SIZE(ms5611_avail_pressure_osr));
-> +	if (!osr)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&st->lock);
-> +
-> +	if (iio_buffer_enabled(indio_dev)) {
-> +		mutex_unlock(&st->lock);
-> +		return -EBUSY;
-> +	}
-> +
-> +	if (chan->type == IIO_TEMP)
-> +		st->temp_osr = osr;
-> +	else
-> +		st->pressure_osr = osr;
-> +
-> +	mutex_unlock(&st->lock);
-> +	return 0;
-> +}
-> +
->  static const unsigned long ms5611_scan_masks[] = {0x3, 0};
->  
->  static struct ms5611_chip_info chip_info_tbl[] = {
-> @@ -259,7 +351,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
->  	{
->  		.type = IIO_PRESSURE,
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
-> -			BIT(IIO_CHAN_INFO_SCALE),
-> +			BIT(IIO_CHAN_INFO_SCALE) |
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
->  		.scan_index = 0,
->  		.scan_type = {
->  			.sign = 's',
-> @@ -271,7 +364,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
->  	{
->  		.type = IIO_TEMP,
->  		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
-> -			BIT(IIO_CHAN_INFO_SCALE),
-> +			BIT(IIO_CHAN_INFO_SCALE) |
-> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
->  		.scan_index = 1,
->  		.scan_type = {
->  			.sign = 's',
-> @@ -285,6 +379,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
->  
->  static const struct iio_info ms5611_info = {
->  	.read_raw = &ms5611_read_raw,
-> +	.write_raw = &ms5611_write_raw,
-> +	.attrs = &ms5611_attribute_group,
->  	.driver_module = THIS_MODULE,
->  };
->  
-> @@ -323,6 +419,11 @@ int ms5611_probe(struct iio_dev *indio_dev, struct device *dev,
->  
->  	mutex_init(&st->lock);
->  	st->chip_info = &chip_info_tbl[type];
-> +	st->temp_osr =
-> +		&ms5611_avail_temp_osr[ARRAY_SIZE(ms5611_avail_temp_osr) - 1];
-> +	st->pressure_osr =
-> +		&ms5611_avail_pressure_osr[ARRAY_SIZE(ms5611_avail_pressure_osr)
-> +					   - 1];
->  	indio_dev->dev.parent = dev;
->  	indio_dev->name = name;
->  	indio_dev->info = &ms5611_info;
-> diff --git a/drivers/iio/pressure/ms5611_i2c.c b/drivers/iio/pressure/ms5611_i2c.c
-> index 57a8f2c..55fb5fc 100644
-> --- a/drivers/iio/pressure/ms5611_i2c.c
-> +++ b/drivers/iio/pressure/ms5611_i2c.c
-> @@ -63,23 +63,23 @@ static int ms5611_i2c_read_adc_temp_and_pressure(struct device *dev,
->  {
->  	int ret;
->  	struct ms5611_state *st = iio_priv(dev_to_iio_dev(dev));
-> +	const struct ms5611_osr *osr = st->temp_osr;
->  
-> -	ret = i2c_smbus_write_byte(st->client, MS5611_START_TEMP_CONV);
-> +	ret = i2c_smbus_write_byte(st->client, osr->cmd);
->  	if (ret < 0)
->  		return ret;
->  
-> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
-> -
-> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
->  	ret = ms5611_i2c_read_adc(st, temp);
->  	if (ret < 0)
->  		return ret;
->  
-> -	ret = i2c_smbus_write_byte(st->client, MS5611_START_PRESSURE_CONV);
-> +	osr = st->pressure_osr;
-> +	ret = i2c_smbus_write_byte(st->client, osr->cmd);
->  	if (ret < 0)
->  		return ret;
->  
-> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
-> -
-> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
->  	return ms5611_i2c_read_adc(st, pressure);
->  }
->  
-> diff --git a/drivers/iio/pressure/ms5611_spi.c b/drivers/iio/pressure/ms5611_spi.c
-> index 7ec0c64..7600483 100644
-> --- a/drivers/iio/pressure/ms5611_spi.c
-> +++ b/drivers/iio/pressure/ms5611_spi.c
-> @@ -56,28 +56,29 @@ static int ms5611_spi_read_adc(struct device *dev, s32 *val)
->  static int ms5611_spi_read_adc_temp_and_pressure(struct device *dev,
->  						 s32 *temp, s32 *pressure)
->  {
-> -	u8 cmd;
->  	int ret;
->  	struct ms5611_state *st = iio_priv(dev_to_iio_dev(dev));
-> +	const struct ms5611_osr *osr = st->temp_osr;
->  
-> -	cmd = MS5611_START_TEMP_CONV;
-> -	ret = spi_write_then_read(st->client, &cmd, 1, NULL, 0);
-> +	/*
-> +	 * Warning: &osr->cmd MUST be aligned on a word boundary since used as
-> +	 * 2nd argument (void*) of spi_write_then_read.
-> +	 */
-> +	ret = spi_write_then_read(st->client, &osr->cmd, 1, NULL, 0);
->  	if (ret < 0)
->  		return ret;
->  
-> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
-> -
-> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
->  	ret = ms5611_spi_read_adc(dev, temp);
->  	if (ret < 0)
->  		return ret;
->  
-> -	cmd = MS5611_START_PRESSURE_CONV;
-> -	ret = spi_write_then_read(st->client, &cmd, 1, NULL, 0);
-> +	osr = st->pressure_osr;
-> +	ret = spi_write_then_read(st->client, &osr->cmd, 1, NULL, 0);
->  	if (ret < 0)
->  		return ret;
->  
-> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
-> -
-> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
->  	return ms5611_spi_read_adc(dev, pressure);
->  }
->  
-> 
+Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+---
+Changes since v3
+- change return type of nsa320_hwmon_update to s32
+- eliminate use of IS_ERR_VALUE()
+- fix some remaining refernces to NSA3XX rather than NSA320
+
+Changes since v2
+Updated based on Guenter Roeck's review,
+- return a single value that is result or error from the update function
+- use separate show_value routimes for fan and temp
+- Added Documentation/hwmon/nsa320-hwmon
+---
+ Documentation/hwmon/nsa320   |  53 +++++++++++
+ drivers/hwmon/Kconfig        |  15 +++
+ drivers/hwmon/Makefile       |   1 +
+ drivers/hwmon/nsa320-hwmon.c | 216 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 285 insertions(+)
+ create mode 100644 Documentation/hwmon/nsa320
+ create mode 100644 drivers/hwmon/nsa320-hwmon.c
+
+diff --git a/Documentation/hwmon/nsa320 b/Documentation/hwmon/nsa320
+new file mode 100644
+index 0000000..fdbd694
+--- /dev/null
++++ b/Documentation/hwmon/nsa320
+@@ -0,0 +1,53 @@
++Kernel driver nsa320_hwmon
++==========================
++
++Supported chips:
++  * Holtek HT46R065 microcontroller with onboard firmware that configures
++	it to act as a hardware monitor.
++    Prefix: 'nsa320'
++    Addresses scanned: none
++    Datasheet: Not available, driver was reverse engineered based upon the
++	Zyxel kernel source
++
++Author:
++  Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
++
++Description
++-----------
++
++This chip is known to be used in the Zyxel NSA320 and NSA325 NAS Units and
++also in some variants of the NSA310 but the driver has only been tested
++on the NSA320. In all of these devices it is connected to the same 3 GPIO
++lines which are used to provide chip select, clock and data lines. The
++interface behaves similarly to SPI but at much lower speeds than are normally
++used for SPI.
++
++Following each chip select pulse the chip will generate a single 32 bit word
++that contains 0x55 as a marker to indicate that data is being read correctly,
++followed by an 8 bit fan speed in 100s of RPM and a 16 bit temperature in
++tenths of a degree.
++
++
++sysfs-Interface
++---------------
++
++temp1_input - temperature input
++fan1_input - fan speed
++
++Notes
++-----
++
++The access timings used in the driver are the same as used in the Zyxel
++provided kernel. Testing has shown that if the delay between chip select and
++the first clock pulse is reduced from 100 ms to just under 10ms then the chip
++will not produce any output. If the duration of either phase of the clock
++is reduced from 100 us to less than 15 us then data pulses are likely to be
++read twice corrupting the output. The above analysis is based upon a sample
++of one unit but suggests that the Zyxel provided delay values include a
++reasonable tolerance.
++
++The driver incorporates a limit that it will not check for updated values
++faster than once a second. This is because the hardware takes a relatively long
++time to read the data from the device and when it does it reads both temp and
++fan speed. As the most likely case for two accesses in quick succession is
++to read both of these values avoiding a second read delay is desirable.
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 80a73bf..08fd7f5 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1186,6 +1186,21 @@ config SENSORS_NCT7904
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called nct7904.
+ 
++config SENSORS_NSA320
++	tristate "ZyXEL NSA320 and compatible fan speed and temperature sensors"
++	depends on GPIOLIB && OF
++	depends on MACH_KIRKWOOD || COMPILE_TEST
++	help
++	  If you say yes here you get support for hardware monitoring
++	  for the ZyXEL NSA320 Media Server and other compatible devices
++	  (probably the NSA325 and some NSA310 variants).
++
++	  The sensor data is taken from a Holtek HT46R065 microcontroller
++	  connected to GPIO lines.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called nsa320-hwmon.
++
+ config SENSORS_PCF8591
+ 	tristate "Philips PCF8591 ADC/DAC"
+ 	depends on I2C
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 12a3239..9e22cf7 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -124,6 +124,7 @@ obj-$(CONFIG_SENSORS_NCT6683)	+= nct6683.o
+ obj-$(CONFIG_SENSORS_NCT6775)	+= nct6775.o
+ obj-$(CONFIG_SENSORS_NCT7802)	+= nct7802.o
+ obj-$(CONFIG_SENSORS_NCT7904)	+= nct7904.o
++obj-$(CONFIG_SENSORS_NSA320)	+= nsa320-hwmon.o
+ obj-$(CONFIG_SENSORS_NTC_THERMISTOR)	+= ntc_thermistor.o
+ obj-$(CONFIG_SENSORS_PC87360)	+= pc87360.o
+ obj-$(CONFIG_SENSORS_PC87427)	+= pc87427.o
+diff --git a/drivers/hwmon/nsa320-hwmon.c b/drivers/hwmon/nsa320-hwmon.c
+new file mode 100644
+index 0000000..456a9f2
+--- /dev/null
++++ b/drivers/hwmon/nsa320-hwmon.c
+@@ -0,0 +1,216 @@
++/*
++ * drivers/hwmon/nsa320-hwmon.c
++ *
++ * ZyXEL NSA320 Media Servers
++ * hardware monitoring
++ *
++ * Copyright (C) 2016 Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
++ * based on a board file driver
++ * Copyright (C) 2012 Peter Schildmann <linux-7ojh7neMhKcWe5+p9BQgIQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License v2 as published by the
++ * Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#include <linux/bitops.h>
++#include <linux/delay.h>
++#include <linux/err.h>
++#include <linux/gpio/consumer.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/jiffies.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/platform_device.h>
++
++/* Tests for error return values rely upon this value being < 0x80 */
++#define MAGIC_NUMBER 0x55
++
++/*
++ * The Zyxel hwmon MCU is a Holtek HT46R065 that is factory programmed
++ * to perform temperature and fan speed monitoring. It is read by taking
++ * the active pin low. The 32 bit output word is then clocked onto the
++ * data line. The MSB of the data word is a magic nuber to indicate it
++ * has been read correctly, the next byte is the fan speed (in hundreds
++ * of RPM) and the last two bytes are the temperature (in tenths of a
++ * degree)
++ */
++
++struct nsa320_hwmon {
++	struct mutex		update_lock;	/* lock GPIO operations */
++	unsigned long		last_updated;	/* jiffies */
++	unsigned long		mcu_data;
++	struct gpio_desc	*act;
++	struct gpio_desc	*clk;
++	struct gpio_desc	*data;
++};
++
++enum nsa320_inputs {
++	NSA320_TEMP = 0,
++	NSA320_FAN = 1,
++};
++
++static const char * const nsa320_input_names[] = {
++	[NSA320_TEMP] = "System Temperature",
++	[NSA320_FAN] = "Chassis Fan",
++};
++
++/*
++ * Although this protocol looks similar to SPI the long delay
++ * between the active (aka chip select) signal and the shorter
++ * delay between clock pulses are needed for reliable operation.
++ * The delays provided are taken from the manufacturer kernel,
++ * testing suggest they probably incorporate a reasonable safety
++ * margin. (The single device tested became unreliable if the
++ * delay was reduced to 1/10th of this value.)
++ */
++static s32 nsa320_hwmon_update(struct device *dev)
++{
++	u32 mcu_data;
++	u32 mask;
++	struct nsa320_hwmon *hwmon = dev_get_drvdata(dev);
++
++	mutex_lock(&hwmon->update_lock);
++
++	mcu_data = hwmon->mcu_data;
++
++	if (time_after(jiffies, hwmon->last_updated + HZ) || mcu_data == 0) {
++		gpiod_set_value(hwmon->act, 1);
++		msleep(100);
++
++		mcu_data = 0;
++		for (mask = BIT(31); mask; mask >>= 1) {
++			gpiod_set_value(hwmon->clk, 0);
++			usleep_range(100, 200);
++			gpiod_set_value(hwmon->clk, 1);
++			usleep_range(100, 200);
++			if (gpiod_get_value(hwmon->data))
++				mcu_data |= mask;
++		}
++
++		gpiod_set_value(hwmon->act, 0);
++		dev_dbg(dev, "Read raw MCU data %08x\n", mcu_data);
++
++		if ((mcu_data >> 24) != MAGIC_NUMBER) {
++			dev_dbg(dev, "Read invalid MCU data %08x\n", mcu_data);
++			mcu_data = -EIO;
++		} else {
++			hwmon->mcu_data = mcu_data;
++			hwmon->last_updated = jiffies;
++		}
++	}
++
++	mutex_unlock(&hwmon->update_lock);
++
++	return mcu_data;
++}
++
++static ssize_t show_label(struct device *dev,
++			  struct device_attribute *attr, char *buf)
++{
++	int channel = to_sensor_dev_attr(attr)->index;
++
++	return sprintf(buf, "%s\n", nsa320_input_names[channel]);
++}
++
++static ssize_t show_temp(struct device *dev, struct device_attribute *attr,
++			 char *buf)
++{
++	s32 mcu_data = nsa320_hwmon_update(dev);
++
++	if (mcu_data < 0)
++		return mcu_data;
++
++	return sprintf(buf, "%d\n", (mcu_data & 0xffff) * 100);
++}
++
++static ssize_t show_fan(struct device *dev, struct device_attribute *attr,
++			char *buf)
++{
++	s32 mcu_data = nsa320_hwmon_update(dev);
++
++	if (mcu_data < 0)
++		return mcu_data;
++
++	return sprintf(buf, "%d\n", ((mcu_data & 0xff0000) >> 16) * 100);
++}
++
++static SENSOR_DEVICE_ATTR(temp1_label, S_IRUGO, show_label, NULL, NSA320_TEMP);
++static DEVICE_ATTR(temp1_input, S_IRUGO, show_temp, NULL);
++static SENSOR_DEVICE_ATTR(fan1_label, S_IRUGO, show_label, NULL, NSA320_FAN);
++static DEVICE_ATTR(fan1_input, S_IRUGO, show_fan, NULL);
++
++static struct attribute *nsa320_attrs[] = {
++	&sensor_dev_attr_temp1_label.dev_attr.attr,
++	&dev_attr_temp1_input.attr,
++	&sensor_dev_attr_fan1_label.dev_attr.attr,
++	&dev_attr_fan1_input.attr,
++	NULL
++};
++
++ATTRIBUTE_GROUPS(nsa320);
++
++static const struct of_device_id of_nsa320_hwmon_match[] = {
++	{ .compatible = "zyxel,nsa320-mcu", },
++	{ },
++};
++
++static int nsa320_hwmon_probe(struct platform_device *pdev)
++{
++	struct nsa320_hwmon	*hwmon;
++	struct device		*classdev;
++
++	hwmon = devm_kzalloc(&pdev->dev, sizeof(*hwmon), GFP_KERNEL);
++	if (!hwmon)
++		return -ENOMEM;
++
++	/* Look up the GPIO pins to use */
++	hwmon->act = devm_gpiod_get(&pdev->dev, "act", GPIOD_OUT_LOW);
++	if (IS_ERR(hwmon->act))
++		return PTR_ERR(hwmon->act);
++
++	hwmon->clk = devm_gpiod_get(&pdev->dev, "clk", GPIOD_OUT_HIGH);
++	if (IS_ERR(hwmon->clk))
++		return PTR_ERR(hwmon->clk);
++
++	hwmon->data = devm_gpiod_get(&pdev->dev, "data", GPIOD_IN);
++	if (IS_ERR(hwmon->data))
++		return PTR_ERR(hwmon->data);
++
++	mutex_init(&hwmon->update_lock);
++
++	classdev = devm_hwmon_device_register_with_groups(&pdev->dev,
++					"nsa320", hwmon, nsa320_groups);
++
++	return PTR_ERR_OR_ZERO(classdev);
++
++}
++
++/* All allocations use devres so remove() is not needed. */
++
++static struct platform_driver nsa320_hwmon_driver = {
++	.probe = nsa320_hwmon_probe,
++	.driver = {
++		.name = "nsa320-hwmon",
++		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(of_nsa320_hwmon_match),
++	},
++};
++
++module_platform_driver(nsa320_hwmon_driver);
++
++MODULE_DEVICE_TABLE(of, of_nsa320_hwmon_match);
++MODULE_AUTHOR("Peter Schildmann <linux-7ojh7neMhKcWe5+p9BQgIQ@public.gmane.org>");
++MODULE_AUTHOR("Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>");
++MODULE_DESCRIPTION("NSA320 Hardware Monitoring");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:nsa320-hwmon");
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
