@@ -1,7 +1,7 @@
 From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH v3 09/11] dmaengine: bcm2835: add slave_sg support to bcm2835-dma
-Date: Sat,  5 Mar 2016 10:52:20 +0000
-Message-ID: <1457175142-28665-10-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH v3 11/11] dmaengine: bcm2835: expose dma registers via debugfs
+Date: Sat,  5 Mar 2016 10:52:22 +0000
+Message-ID: <1457175142-28665-12-git-send-email-kernel@martin.sperl.org>
 References: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1457175142-28665-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
@@ -12,182 +12,201 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-Add slave_sg support to bcm2835-dma using shared allocation
-code for bcm2835_desc and DMA-control blocks already used by
-dma_cyclic.
-
-Note that bcm2835_dma_callback had to get modified to support
-both modes of operation (cyclic and non-cyclic).
-
-Tested using:
-* Hifiberry I2S card (using cyclic DMA)
-* fb_st7735r SPI-framebuffer (using slave_sg DMA via spi-bcm2835)
-playing BigBuckBunny for audio and video.
+Expose all the dma registers via debugfs.
+The mapping between linux channels and HW-dma channels is
+also exposed via a softlink in debugfs.
 
 Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- drivers/dma/bcm2835-dma.c | 113 ++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 108 insertions(+), 5 deletions(-)
+ drivers/dma/bcm2835-dma.c | 147 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 147 insertions(+)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index 024c949..6c4b4e2 100644
+index 2884285..e2aea4a 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -276,6 +276,23 @@ static void bcm2835_dma_create_cb_set_length(
- 	control_block->info |= finalextrainfo;
+@@ -29,6 +29,7 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  */
++#include <linux/debugfs.h>
+ #include <linux/dmaengine.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dmapool.h>
+@@ -51,6 +52,7 @@ struct bcm2835_dmadev {
+ 	spinlock_t lock;
+ 	void __iomem *base;
+ 	struct device_dma_parameters dma_parms;
++	struct dentry *debugfs_node;
+ };
+ 
+ struct bcm2835_dma_cb {
+@@ -904,6 +906,147 @@ static struct dma_chan *bcm2835_dma_xlate(struct of_phandle_args *spec,
+ 	return chan;
  }
  
-+static inline size_t bcm2835_dma_count_frames_for_sg(
-+	struct bcm2835_chan *c,
-+	struct scatterlist *sgl,
-+	unsigned int sg_len)
++#ifdef CONFIG_DEBUG_FS
++static struct debugfs_reg32 bcm2835_dma_debugfs_common_reg32[] = {
++	{
++		.name = "int_status",
++		.offset = BCM2835_DMA_INT_STATUS,
++	},
++	{
++		.name = "enable",
++		.offset = BCM2835_DMA_ENABLE,
++	},
++};
++
++static void bcm2835_dma_debugfs_register_common(struct bcm2835_dmadev *od)
 +{
-+	size_t frames = 0;
-+	struct scatterlist *sgent;
-+	unsigned int i;
-+	size_t plength = bcm2835_dma_max_frame_length(c);
++	struct debugfs_regset32 *regset;
 +
-+	for_each_sg(sgl, sgent, sg_len, i)
-+		frames += bcm2835_dma_frames_for_length(
-+			sg_dma_len(sgent), plength);
++	regset = devm_kzalloc(od->ddev.dev, sizeof(*regset), GFP_KERNEL);
++	if (!regset)
++		return;
 +
-+	return frames;
++	regset->regs  = bcm2835_dma_debugfs_common_reg32;
++	regset->nregs = ARRAY_SIZE(bcm2835_dma_debugfs_common_reg32);
++	regset->base  = od->base;
++
++	debugfs_create_regset32("common", S_IRUGO, od->debugfs_node, regset);
 +}
 +
- /**
-  * bcm2835_dma_create_cb_chain - create a control block and fills data in
-  *
-@@ -377,6 +394,32 @@ error_cb:
- 	return NULL;
- }
- 
-+static void bcm2835_dma_fill_cb_chain_with_sg(
-+	struct dma_chan *chan,
-+	enum dma_transfer_direction direction,
-+	struct bcm2835_cb_entry *cb,
-+	struct scatterlist *sgl,
-+	unsigned int sg_len)
++static struct debugfs_reg32 bcm2835_dma_debugfs_channel_reg32[] = {
++	{
++		.name = "cs         ",
++		.offset = BCM2835_DMA_CS,
++	},
++	{
++		.name = "addr       ",
++		.offset = BCM2835_DMA_ADDR,
++	},
++	{
++		.name = "ti         ",
++		.offset = BCM2835_DMA_TI,
++	},
++	{
++		.name = "source     ",
++		.offset = BCM2835_DMA_SOURCE_AD,
++	},
++	{
++		.name = "destination",
++		.offset = BCM2835_DMA_DEST_AD,
++	},
++	{
++		.name = "length     ",
++		.offset = BCM2835_DMA_LEN,
++	},
++	{
++		.name = "stride     ",
++		.offset = BCM2835_DMA_STRIDE,
++	},
++	{
++		.name = "next       ",
++		.offset = BCM2835_DMA_NEXTCB,
++	},
++	{
++		.name = "debug      ",
++		.offset = BCM2835_DMA_DEBUG,
++	},
++};
++
++static void bcm2835_dma_debugfs_register_channel(struct bcm2835_dmadev *od,
++						 int channel)
++{
++	struct debugfs_regset32 *regset;
++	char *name;
++
++	regset = devm_kzalloc(od->ddev.dev, sizeof(*regset), GFP_KERNEL);
++	if (!regset)
++		return;
++
++	name = devm_kasprintf(od->ddev.dev, GFP_KERNEL, "%02d", channel);
++	if (!name)
++		return;
++
++	regset->regs  = bcm2835_dma_debugfs_channel_reg32;
++	regset->nregs = ARRAY_SIZE(bcm2835_dma_debugfs_channel_reg32);
++	regset->base  = BCM2835_DMA_CHANIO(od->base, channel);
++
++	/*
++	 * expose, but only for the owner (=root)
++	 * contains pointers that should not leak
++	 */
++	debugfs_create_regset32(name, S_IRUSR, od->debugfs_node, regset);
++}
++
++static void bcm2835_dma_debugfs_register_link(struct bcm2835_dmadev *od,
++					      struct dma_chan *chan)
 +{
 +	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
-+	size_t max_len = bcm2835_dma_max_frame_length(c);
-+	unsigned int i, len;
-+	dma_addr_t addr;
-+	struct scatterlist *sgent;
++	char *name;
 +
-+	for_each_sg(sgl, sgent, sg_len, i) {
-+		for (addr = sg_dma_address(sgent), len = sg_dma_len(sgent);
-+		     len > 0;
-+		     addr += cb->cb->length, len -= cb->cb->length, cb++) {
-+			if (direction == DMA_DEV_TO_MEM)
-+				cb->cb->dst = addr;
-+			else
-+				cb->cb->src = addr;
-+			cb->cb->length = min(len, max_len);
-+		}
++	name = devm_kasprintf(od->ddev.dev, GFP_KERNEL, "%02d", c->ch);
++	if (!name)
++		return;
++
++	debugfs_create_symlink(dev_name(&chan->dev->device),
++			       od->debugfs_node, name);
++}
++
++static void bcm2835_dma_debugfs_register(struct bcm2835_dmadev *od)
++{
++	struct dma_chan *chan;
++	int i;
++
++	od->debugfs_node = debugfs_create_dir(dev_name(od->ddev.dev), NULL);
++	if (!od->debugfs_node)
++		return;
++
++	/* expose the common registers */
++	bcm2835_dma_debugfs_register_common(od);
++
++	/* register all the real channels - not only the mapped ones */
++	for (i = 0; i <= BCM2835_DMA_MAX_CHANNEL_NUMBER; i++)
++		bcm2835_dma_debugfs_register_channel(od, i);
++
++	/* create the softlinks */
++	list_for_each_entry(chan, &od->ddev.channels, device_node) {
++		bcm2835_dma_debugfs_register_link(od, chan);
 +	}
 +}
 +
- static int bcm2835_dma_abort(void __iomem *chan_base)
++static void bcm2835_dma_debugfs_remove(struct bcm2835_dmadev *od)
++{
++	debugfs_remove_recursive(od->debugfs_node);
++
++	od->debugfs_node = NULL;
++}
++
++#else
++static void bcm2835_dma_debugfs_register(struct bcm2835_dmadev *od)
++{ }
++static void bcm2835_dma_debugfs_remove(struct bcm2835_dmadev *od)
++{ }
++#endif
++
+ static int bcm2835_dma_probe(struct platform_device *pdev)
  {
- 	unsigned long cs;
-@@ -453,12 +496,18 @@ static irqreturn_t bcm2835_dma_callback(int irq, void *data)
- 	d = c->desc;
+ 	struct bcm2835_dmadev *od;
+@@ -1022,6 +1165,8 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
+ 		goto err_no_dma;
+ 	}
  
- 	if (d) {
--		/* TODO Only works for cyclic DMA */
--		vchan_cyclic_callback(&d->vd);
--	}
-+		if (d->cyclic) {
-+			/* call the cyclic callback */
-+			vchan_cyclic_callback(&d->vd);
++	bcm2835_dma_debugfs_register(od);
++
+ 	dev_dbg(&pdev->dev, "Load BCM2835 DMA engine driver\n");
  
--	/* Keep the DMA engine running */
--	writel(BCM2835_DMA_ACTIVE, c->chan_base + BCM2835_DMA_CS);
-+			/* Keep the DMA engine running */
-+			writel(BCM2835_DMA_ACTIVE,
-+			       c->chan_base + BCM2835_DMA_CS);
-+		} else {
-+			vchan_cookie_complete(&c->desc->vd);
-+			bcm2835_dma_start_desc(c);
-+		}
-+	}
+ 	return 0;
+@@ -1035,6 +1180,8 @@ static int bcm2835_dma_remove(struct platform_device *pdev)
+ {
+ 	struct bcm2835_dmadev *od = platform_get_drvdata(pdev);
  
- 	spin_unlock_irqrestore(&c->vc.lock, flags);
++	bcm2835_dma_debugfs_remove(od);
++
+ 	dma_async_device_unregister(&od->ddev);
+ 	bcm2835_dma_free(od);
  
-@@ -574,6 +623,58 @@ static void bcm2835_dma_issue_pending(struct dma_chan *chan)
- 	spin_unlock_irqrestore(&c->vc.lock, flags);
- }
- 
-+static struct dma_async_tx_descriptor *bcm2835_dma_prep_slave_sg(
-+	struct dma_chan *chan,
-+	struct scatterlist *sgl, unsigned int sg_len,
-+	enum dma_transfer_direction direction,
-+	unsigned long flags, void *context)
-+{
-+	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
-+	struct bcm2835_desc *d;
-+	dma_addr_t src = 0, dst = 0;
-+	u32 info = BCM2835_DMA_WAIT_RESP;
-+	u32 extra = BCM2835_DMA_INT_EN;
-+	size_t frames;
-+
-+	if (!is_slave_direction(direction)) {
-+		dev_err(chan->device->dev,
-+			"%s: bad direction?\n", __func__);
-+		return NULL;
-+	}
-+
-+	if (c->dreq != 0)
-+		info |= BCM2835_DMA_PER_MAP(c->dreq);
-+
-+	if (direction == DMA_DEV_TO_MEM) {
-+		if (c->cfg.src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
-+			return NULL;
-+		src = c->cfg.src_addr;
-+		info |= BCM2835_DMA_S_DREQ | BCM2835_DMA_D_INC;
-+	} else {
-+		if (c->cfg.dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
-+			return NULL;
-+		dst = c->cfg.dst_addr;
-+		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
-+	}
-+
-+	/* count frames in sg list */
-+	frames = bcm2835_dma_count_frames_for_sg(c, sgl, sg_len);
-+
-+	/* allocate the CB chain */
-+	d = bcm2835_dma_create_cb_chain(chan, direction, false,
-+					info, extra,
-+					frames, src, dst, 0, 0,
-+					GFP_KERNEL);
-+	if (!d)
-+		return NULL;
-+
-+	/* fill in frames with scatterlist pointers */
-+	bcm2835_dma_fill_cb_chain_with_sg(chan, direction, d->cb_list,
-+					  sgl, sg_len);
-+
-+	return vchan_tx_prep(&c->vc, &d->vd, flags);
-+}
-+
- static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
- 	struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
- 	size_t period_len, enum dma_transfer_direction direction,
-@@ -807,11 +908,13 @@ static int bcm2835_dma_probe(struct platform_device *pdev)
- 	dma_cap_set(DMA_SLAVE, od->ddev.cap_mask);
- 	dma_cap_set(DMA_PRIVATE, od->ddev.cap_mask);
- 	dma_cap_set(DMA_CYCLIC, od->ddev.cap_mask);
-+	dma_cap_set(DMA_SLAVE, od->ddev.cap_mask);
- 	od->ddev.device_alloc_chan_resources = bcm2835_dma_alloc_chan_resources;
- 	od->ddev.device_free_chan_resources = bcm2835_dma_free_chan_resources;
- 	od->ddev.device_tx_status = bcm2835_dma_tx_status;
- 	od->ddev.device_issue_pending = bcm2835_dma_issue_pending;
- 	od->ddev.device_prep_dma_cyclic = bcm2835_dma_prep_dma_cyclic;
-+	od->ddev.device_prep_slave_sg = bcm2835_dma_prep_slave_sg;
- 	od->ddev.device_config = bcm2835_dma_slave_config;
- 	od->ddev.device_terminate_all = bcm2835_dma_terminate_all;
- 	od->ddev.src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
 -- 
 2.1.4
 
