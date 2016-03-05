@@ -1,15 +1,15 @@
 From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] ehci-platform: Add support for
+Subject: Re: [PATCH v4 2/2] ohci-platform: Add support for
  controllers with multiple reset lines
-Date: Sun, 6 Mar 2016 06:45:54 +0800
-Message-ID: <201603060656.JPQ60k7d%fengguang.wu@intel.com>
-References: <1456592339-31767-2-git-send-email-hdegoede@redhat.com>
+Date: Sun, 6 Mar 2016 06:58:59 +0800
+Message-ID: <201603060606.kfJkDbP9%fengguang.wu@intel.com>
+References: <1456592339-31767-3-git-send-email-hdegoede@redhat.com>
 Reply-To: fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-sunxi+bncBDJ4N37Q6EERB4GD5W3AKGQERGXH4CA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="J2SCkAp4GZ/dPZZf"
+Return-path: <linux-sunxi+bncBDJ4N37Q6EERBX6J5W3AKGQEG3HKNXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456592339-31767-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1456592339-31767-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,14 +17,14 @@ Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---r5Pyd7+fXNt84Ff3
+--J2SCkAp4GZ/dPZZf
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi Reinder,
+Hi Hans,
 
 [auto build test ERROR on robh/for-next]
 [also build test ERROR on v4.5-rc6 next-20160304]
@@ -39,27 +39,27 @@ reproduce:
 
 All errors (new ones prefixed by >>):
 
-   drivers/usb/host/ehci-platform.c: In function 'ehci_platform_probe':
->> drivers/usb/host/ehci-platform.c:239:5: error: implicit declaration of function 'devm_reset_control_get_shared_by_index' [-Werror=implicit-function-declaration]
+   drivers/usb/host/ohci-platform.c: In function 'ohci_platform_probe':
+>> drivers/usb/host/ohci-platform.c:201:5: error: implicit declaration of function 'devm_reset_control_get_shared_by_index' [-Werror=implicit-function-declaration]
         devm_reset_control_get_shared_by_index(
         ^
-   drivers/usb/host/ehci-platform.c:238:22: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+   drivers/usb/host/ohci-platform.c:200:22: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
        priv->resets[rst] =
                          ^
    cc1: some warnings being treated as errors
 
-vim +/devm_reset_control_get_shared_by_index +239 drivers/usb/host/ehci-platform.c
+vim +/devm_reset_control_get_shared_by_index +201 drivers/usb/host/ohci-platform.c
 
-   233					break;
-   234				}
-   235			}
-   236	
-   237			for (rst = 0; rst < EHCI_MAX_RESETS; rst++) {
-   238				priv->resets[rst] =
- > 239					devm_reset_control_get_shared_by_index(
-   240							&dev->dev, rst);
-   241				if (IS_ERR(priv->resets[rst])) {
-   242					err = PTR_ERR(priv->resets[rst]);
+   195					priv->clks[clk] = NULL;
+   196					break;
+   197				}
+   198			}
+   199			for (rst = 0; rst < OHCI_MAX_RESETS; rst++) {
+   200				priv->resets[rst] =
+ > 201					devm_reset_control_get_shared_by_index(
+   202							&dev->dev, rst);
+   203				if (IS_ERR(priv->resets[rst])) {
+   204					err = PTR_ERR(priv->resets[rst]);
 
 ---
 0-DAY kernel test infrastructure                Open Source Technology Center
@@ -70,12 +70,12 @@ You received this message because you are subscribed to the Google Groups "linux
 To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---r5Pyd7+fXNt84Ff3
+--J2SCkAp4GZ/dPZZf
 Content-Type: application/octet-stream
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICI5g21YAAy5jb25maWcAjDxdc9u2su/9FZr0PpzzkMZ2EjedO36ASFBCRRIMAMqSXziK
+H4sICO9j21YAAy5jb25maWcAjDxdc9u2su/9FZr0PpzzkMZ2EjedO36ASFBCRRIMAMqSXziK
 raSeOlaOJPck//7uAqQIgEvl9qET7S4WwGK/AfrXX36dsJfj7uvm+Hi/eXr6Mfmyfd7uN8ft
 w+Tz49P2fyepnJTSTHgqzG9AnD8+v3x/8/3DdXP9bvLut/e/Xbze37+dLLb75+3TJNk9f378
 8gLjH3fPv/z6SyLLTMyAdCrMzY/u58qODn73P0SpjaoTI2TZpDyRKVc9suIqa/iSl0YDoeF5
@@ -623,4 +623,4 @@ kYkTjio6PiENQzI6lN3gcx7W+i7rOGV9e2MzW2x9RU9ZTJC8Si0BqY0w/LOxz4ykRNl0vGmZ
 Lr4BzuZNQPqzH2dODWc/5pYiodD9KUsP3s4pnH6RFsw8YQYiW/gYUfRODV0xAfL/V4ZKp1bE
 AQA=
 
---r5Pyd7+fXNt84Ff3--
+--J2SCkAp4GZ/dPZZf--
