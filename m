@@ -1,152 +1,120 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10] serial: support for 16550A serial ports on LP-8x4x
-Date: Fri, 4 Mar 2016 22:26:39 -0600
-Message-ID: <20160305042639.GK13525@rob-hp-laptop>
-References: <1456862903-12392-1-git-send-email-ynvich@gmail.com>
- <1456867544-19302-1-git-send-email-ynvich@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] documentation: Fix pinctrl documentation for Meson8
+ / Meson8b
+Date: Fri, 4 Mar 2016 22:26:46 -0600
+Message-ID: <20160305042646.GL13525@rob-hp-laptop>
+References: <1456869876-19320-1-git-send-email-carlo@caione.org>
+ <1456869876-19320-5-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1456867544-19302-1-git-send-email-ynvich@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Peter Hurley <peter@hurleysoftware.com>, Paul Burton <paul.burton@imgtec.com>, Mans Rullgard <mans@mansr.com>, Scott Wood <scottwood@freescale.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Joachim Eastwood <manabian@gmail.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list:SERIAL DRIVERS
+In-Reply-To: <1456869876-19320-5-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 02, 2016 at 12:25:35AM +0300, Sergei Ianovich wrote:
-> The patch adds support for 3 additional LP-8x4x built-in serial
-> ports.
+On Tue, Mar 01, 2016 at 11:04:36PM +0100, Carlo Caione wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > 
-> The device can also host up to 8 extension cards with 4 serial ports
-> on each card for a total of 35 ports. However, I don't have
-> the hardware to test extension cards, so they are not supported, yet.
+> Fix pin controller documentation with the new compatibles.
 
-That's a lot of serial ports...
+What was wrong with it? (answer in the commit msg)
 
-[...]
-
-> diff --git a/Documentation/devicetree/bindings/serial/icpdas-lp8841-uart.txt b/Documentation/devicetree/bindings/serial/icpdas-lp8841-uart.txt
-> new file mode 100644
-> index 0000000..d6acd22
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/icpdas-lp8841-uart.txt
-> @@ -0,0 +1,41 @@
-> +* UART ports on ICP DAS LP-8841
-> +
-> +LP-8441, LP-8141 and LP-8041 are fully compatible.
-> +
-> +ICP DAS LP-8841 contains three additional serial ports interfaced via
-> +Analog Devices ADM213EA chips in addition to 3 serial ports on PXA CPU.
-> +
-> +The chips themselves are standard, they would work with 8250_core if
-
-Describe in h/w terms how they are different, not what Linux driver 
-won't work.
-
-> +properly connected. However, they are not connected normally. Al least
-
-s/Al/At/
-
-> +some of their config pins are wired to a different address region. So
-> +the driver is board-specific.
-> +
-> +Required properties:
-> +- compatible : should be "icpdas,uart-lp8841"
-> +
-> +- reg : should provide 16 byte man IO memory region and 1 byte region for
-
-What is "man IO"?
-
-> +	termios
-
-termios is a Linux term.
-
-> +
-> +- interrupts : should provide interrupt
-
-Perhaps you should include other properties standard for 8250 such as 
-access size or shift. Possibly if the non-standard bits are already 
-configured, the UART could be used for earlycon?
-
-> +
-> +Optional property:
-> +- interrupt-parent : should provide a link to interrupt controller either
-> +		     explicitly or implicitly from a parent node
-> +
-> +Examples (from pxa27x-lp8x4x.dts):
-> +
-> +		serial@9050 {
-> +			compatible = "icpdas,uart-lp8841";
-> +			reg = <0x9050 0x10
-> +			       0x9030 0x02>;
-> +			interrupts = <13>;
-> +			status = "okay";
-> +		};
-> +
-> +		serial@9060 {
-> +			compatible = "icpdas,uart-lp8841";
-> +			reg = <0x9060 0x10
-> +			       0x9032 0x02>;
-> +			interrupts = <14>;
-> +			status = "okay";
-> +		};
-
-[...]
-
-> diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-> index 3b5cf9c..68640c1 100644
-> --- a/drivers/tty/serial/8250/Kconfig
-> +++ b/drivers/tty/serial/8250/Kconfig
-> @@ -394,3 +394,17 @@ config SERIAL_8250_PXA
->  	help
->  	  If you have a machine based on an Intel XScale PXA2xx CPU you
->  	  can enable its onboard serial ports by enabling this option.
-> +
-> +	  If you choose M here, the module name will be 8250_pxa.
-> +
-> +config SERIAL_8250_LP8841
-> +	tristate "Support 16550A ports on ICP DAS LP-8841"
-> +	depends on SERIAL_8250 && MACH_PXA27X_DT
-> +	select LP8841_IRQ
-
-Generally, drivers don't select their interrupt controller.
-
-> +	help
-> +	  In addition to serial ports on PXA270 SoC, LP-8841 has 1 dual
-> +	  RS232/RS485 port, 1 RS485 port and 1 RS232 port.
-> +
-> +	  Say N here, unless you plan to run this kernel on a LP-8841 system.
-> +
-> +	  If you choose M here, the module name will be 8250_lp8841.
-
-> diff --git a/drivers/tty/serial/8250/Makefile b/drivers/tty/serial/8250/Makefile
-> index d1e2f2d..10b4bf0 100644
-> --- a/drivers/tty/serial/8250/Makefile
-> +++ b/drivers/tty/serial/8250/Makefile
-> @@ -18,6 +18,7 @@ obj-$(CONFIG_SERIAL_8250_ACCENT)	+= 8250_accent.o
-
->  obj-$(CONFIG_SERIAL_8250_BOCA)		+= 8250_boca.o
->  obj-$(CONFIG_SERIAL_8250_EXAR_ST16C554)	+= 8250_exar_st16c554.o
->  obj-$(CONFIG_SERIAL_8250_HUB6)		+= 8250_hub6.o
-> +obj-$(CONFIG_SERIAL_8250_LP8X4X)	+= 8250_lp8x4x.o
-
-This should be dropped.
-
->  obj-$(CONFIG_SERIAL_8250_FSL)		+= 8250_fsl.o
->  obj-$(CONFIG_SERIAL_8250_DW)		+= 8250_dw.o
->  obj-$(CONFIG_SERIAL_8250_EM)		+= 8250_em.o
-> @@ -30,5 +31,6 @@ obj-$(CONFIG_SERIAL_8250_INGENIC)	+= 8250_ingenic.o
->  obj-$(CONFIG_SERIAL_8250_MID)		+= 8250_mid.o
->  obj-$(CONFIG_SERIAL_OF_PLATFORM)	+= 8250_of.o
->  obj-$(CONFIG_SERIAL_8250_PXA)		+= 8250_pxa.o
-> +obj-$(CONFIG_SERIAL_8250_LP8841)	+= 8250_lp8841.o
-
-This should be in alphabetical order. OF_PLATFORM is not for legacy 
-reasons I think.
-
+> 
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  | 36 +++-------------------
+>  1 file changed, 5 insertions(+), 31 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> index 3f6a524..51a8ebb 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+> @@ -1,13 +1,14 @@
+>  == Amlogic Meson pinmux controller ==
 >  
->  CFLAGS_8250_ingenic.o += -I$(srctree)/scripts/dtc/libfdt
+>  Required properties for the root node:
+> - - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
+> + - compatible: "amlogic,meson8-cbus-pinctrl", "amlogic,meson8b-cbus-pinctrl",
+> +   "amlogic,meson8-aobus-pinctrl" or "amlogic,meson8b-aobus-pinctrl"
+
+Reformat with 1 per line (assuming each are mutually exclusive).
+
+>   - reg: address and size of registers controlling irq functionality
+>  
+>  === GPIO sub-nodes ===
+>  
+> -The 2 power domains of the controller (regular and always-on) are
+> -represented as sub-nodes and each of them acts as a GPIO controller.
+> +Each power domain of the controller (regular and always-on) is
+> +represented as a sub-node and it acts as a GPIO controller.
+>  
+>  Required properties for sub-nodes are:
+>   - reg: should contain address and size for mux, pull-enable, pull and
+> @@ -18,10 +19,6 @@ Required properties for sub-nodes are:
+>   - gpio-controller: identifies the node as a gpio controller
+>   - #gpio-cells: must be 2
+>  
+> -Valid sub-node names are:
+> - - "banks" for the regular domain
+> - - "ao-bank" for the always-on domain
+> -
+
+Why are these being removed?
+
+>  === Other sub-nodes ===
+>  
+>  Child nodes without the "gpio-controller" represent some desired
+> @@ -45,7 +42,7 @@ pinctrl-bindings.txt
+>  === Example ===
+>  
+>  	pinctrl: pinctrl@c1109880 {
+> -		compatible = "amlogic,meson8-pinctrl";
+> +		compatible = "amlogic,meson8-cbus-pinctrl";
+>  		reg = <0xc1109880 0x10>;
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> @@ -61,15 +58,6 @@ pinctrl-bindings.txt
+>  			#gpio-cells = <2>;
+>                 };
+>  
+> -		gpio_ao: ao-bank@c1108030 {
+> -			reg = <0xc8100014 0x4>,
+> -			      <0xc810002c 0x4>,
+> -			      <0xc8100024 0x8>;
+> -			reg-names = "mux", "pull", "gpio";
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -		};
+> -
+>  		nand {
+>  			mux {
+>  				groups = "nand_io", "nand_io_ce0", "nand_io_ce1",
+> @@ -79,18 +67,4 @@ pinctrl-bindings.txt
+>  				function = "nand";
+>  			};
+>  		};
+> -
+> -		uart_ao_a {
+> -			mux {
+> -				groups = "uart_tx_ao_a", "uart_rx_ao_a",
+> -					 "uart_cts_ao_a", "uart_rts_ao_a";
+> -				function = "uart_ao";
+> -			};
+> -
+> -			conf {
+> -				pins = "GPIOAO_0", "GPIOAO_1",
+> -				       "GPIOAO_2", "GPIOAO_3";
+> -				bias-disable;
+> -			};
+> -		};
+>  	};
 > -- 
-> 2.7.0
+> 1.9.1
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
