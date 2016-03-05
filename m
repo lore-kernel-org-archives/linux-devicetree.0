@@ -1,107 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V7 2/4] Documentation: DT: bindings: Add power domain
- info for NVIDIA PMC
-Date: Fri, 4 Mar 2016 22:31:04 -0600
-Message-ID: <20160305043104.GG13525@rob-hp-laptop>
-References: <1457094186-15786-1-git-send-email-jonathanh@nvidia.com>
- <1457094186-15786-3-git-send-email-jonathanh@nvidia.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: add DT binding for Marvell
+ AP806 system controller
+Date: Fri, 4 Mar 2016 22:31:29 -0600
+Message-ID: <20160305043129.GH13525@rob-hp-laptop>
+References: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1457096275-7581-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457094186-15786-3-git-send-email-jonathanh@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <1457096275-7581-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 12:23:04PM +0000, Jon Hunter wrote:
-> Add power-domain binding documentation for the NVIDIA PMC driver in
-> order to support generic power-domains.
-> 
-> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+On Fri, Mar 04, 2016 at 01:57:53PM +0100, Thomas Petazzoni wrote:
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 80 ++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-> index 53aa5496c5cf..7d52bbe99709 100644
-> --- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-> @@ -1,5 +1,7 @@
->  NVIDIA Tegra Power Management Controller (PMC)
->  
-> +== Power Management Controller Node ==
-> +
->  The PMC block interacts with an external Power Management Unit. The PMC
->  mostly controls the entry and exit of the system from different sleep
->  modes. It provides power-gating controllers for SoC and CPU power-islands.
-> @@ -70,6 +72,11 @@ Optional properties for hardware-triggered thermal reset (inside 'i2c-thermtrip'
->                       Defaults to 0. Valid values are described in section 12.5.2
->                       "Pinmux Support" of the Tegra4 Technical Reference Manual.
->  
-> +Optional nodes:
-> +- powergates : This node contains a hierarchy of power domain nodes, which
-> +	       should match the powergates on the Tegra SoC. See "Powergate
-> +	       Nodes" below.
-> +
->  Example:
->  
->  / SoC dts including file
-> @@ -115,3 +122,76 @@ pmc@7000f400 {
->  	};
->  	...
->  };
-> +
-> +
-> +== Powergate Nodes ==
-> +
-> +Each of the powergate nodes represent a power-domain on the Tegra SoC
-> +that can be power-gated by the Tegra PMC. The name of the powergate node
-> +should be one of the below. Note that not every powergate is applicable
-> +to all Tegra devices and the following list shows which powergates are
-> +applicable to which devices. Please refer to the Tegra TRM for more
-> +details on the various powergates.
-> +
-> + Name		Description			Devices Applicable
-> + 3d		3D Graphics			Tegra20/114/124/210
-> + 3d0		3D Graphics 0			Tegra30
-> + 3d1		3D Graphics 1			Tegra30
-> + aud		Audio				Tegra210
-> + dfd		Debug				Tegra210
-> + dis		Display A			Tegra114/124/210
-> + disb		Display B			Tegra114/124/210
-> + heg		2D Graphics			Tegra30/114/124/210
-> + iram		Internal RAM			Tegra124/210
-> + mpe		MPEG Encode			All
-> + nvdec		NVIDIA Video Decode Engine	Tegra210
-> + nvjpg		NVIDIA JPEG Engine		Tegra210
-> + pcie		PCIE				Tegra20/30/124/210
-> + sata		SATA				Tegra30/124/210
-> + sor		Display interfaces		Tegra124/210
-> + ve2		Video Encode Engine 2		Tegra210
-> + venc		Video Encode Engine		All
-> + vdec		Video Decode Engine		Tegra20/30/114/124
-> + vic		Video Imaging Compositor	Tegra124/210
-> + xusba		USB Partition A			Tegra114/124/210
-> + xusbb		USB Partition B 		Tegra114/124/210
-> + xusbc		USB Partition C			Tegra114/124/210
-> +
-> +Required properties:
-> +  - clocks: Must contain an entry for each clock required by the PMC for
-> +    controlling a power-gate. See ../clocks/clock-bindings.txt for details.
-> +  - resets: Must contain an entry for each reset required by the PMC for
-> +    controlling a power-gate. See ../reset/reset.txt for details.
-> +  - #power-domain-cells: Must be 0.
-> +
-> +Example:
-> +
-> +	pmc: pmc@0,7000e400 {
+>  .../arm/marvell/ap806-system-controller.txt        | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
 
-Just pmc@7000e400. We were erronously using commas for 64-bit addresses 
-briefly, but the correct usage is when there are distinct fields in reg 
-like PCI bus,dev,func.
+That was fun. ;)
 
-Otherwise:
-
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
