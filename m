@@ -1,12 +1,12 @@
 From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 03/13] clk: sunxi: Add APB1 clock for A83T
-Date: Sat,  5 Mar 2016 23:42:56 +0800
-Message-ID: <1457192586-25596-4-git-send-email-vishnupatekar0510@gmail.com>
+Subject: [PATCH v3 05/13] ARM: dts: sun8i-a83t: add mmc clock nodes
+Date: Sat,  5 Mar 2016 23:42:58 +0800
+Message-ID: <1457192586-25596-6-git-send-email-vishnupatekar0510@gmail.com>
 References: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com>
 Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBLH55O3AKGQEQCOTEFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBN755O3AKGQET6ZAQ2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1457192586-25596-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,59 +19,55 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.g
 Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-APB1 is similar to sun4i-a10-apb0-clk, except different dividers.
-
-This adds support for apb1 on A83T.
+mmc clocks are compatible with that of earlier sun8i socs.
+This adds mmc0, mmc1, and mmc2 clock nodes for A83T.
 
 Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
- drivers/clk/sunxi/clk-sunxi.c                     | 13 +++++++++++++
- 2 files changed, 14 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index 2ee7841..dd24772 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -49,6 +49,7 @@ Required properties:
- 	"allwinner,sun8i-a23-apb0-gates-clk" - for the APB0 gates on A23
- 	"allwinner,sun9i-a80-apb0-gates-clk" - for the APB0 gates on A80
- 	"allwinner,sun4i-a10-apb1-clk" - for the APB1 clock
-+	"allwinner,sun8i-a83t-apb1-clk" - for the APB1 clock on A83T
- 	"allwinner,sun9i-a80-apb1-clk" - for the APB1 bus clock on A80
- 	"allwinner,sun4i-a10-apb1-gates-clk" - for the APB1 gates on A10
- 	"allwinner,sun5i-a13-apb1-gates-clk" - for the APB1 gates on A13
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 0ae1f09..987a12d 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -863,6 +863,12 @@ static const struct div_data sun4i_apb0_data __initconst = {
- 	.table	= sun4i_apb0_table,
- };
- 
-+static const struct div_data sun8i_a83t_apb1_data __initconst = {
-+	.shift	= 8,
-+	.pow	= 0,
-+	.width	= 2,
-+};
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 2689af4..943d8a8 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -237,6 +237,36 @@
+ 					     "bus_uart2", "bus_uart3",
+ 					     "bus_uart4";
+ 		};
 +
- static void __init sunxi_divider_clk_setup(struct device_node *node,
- 					   const struct div_data *data)
- {
-@@ -899,6 +905,13 @@ static void __init sun4i_apb0_clk_setup(struct device_node *node)
- CLK_OF_DECLARE(sun4i_apb0, "allwinner,sun4i-a10-apb0-clk",
- 	       sun4i_apb0_clk_setup);
- 
-+static void __init sun8i_a83t_apb1_clk_setup(struct device_node *node)
-+{
-+	sunxi_divider_clk_setup(node, &sun8i_a83t_apb1_data);
-+}
-+CLK_OF_DECLARE(sun8i_a83t_apb1, "allwinner,sun8i-a83t-apb1-clk",
-+	       sun8i_a83t_apb1_clk_setup);
++		mmc0_clk: clk@01c20088 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-mmc-clk";
++			reg = <0x01c20088 0x4>;
++			clocks = <&osc24M>, <&pll6>;
++			clock-output-names = "mmc0",
++					     "mmc0_output",
++					     "mmc0_sample";
++		};
 +
- static void __init sun4i_axi_clk_setup(struct device_node *node)
- {
- 	sunxi_divider_clk_setup(node, &sun4i_axi_data);
++		mmc1_clk: clk@01c2008c {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-mmc-clk";
++			reg = <0x01c2008c 0x4>;
++			clocks = <&osc24M>, <&pll6>;
++			clock-output-names = "mmc1",
++					     "mmc1_output",
++					     "mmc1_sample";
++		};
++
++		mmc2_clk: clk@01c20090 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun4i-a10-mmc-clk";
++			reg = <0x01c20090 0x4>;
++			clocks = <&osc24M>, <&pll6>;
++			clock-output-names = "mmc2",
++					     "mmc2_output",
++					     "mmc2_sample";
++		};
+ 	};
+ 
+ 	soc {
 -- 
 1.9.1
