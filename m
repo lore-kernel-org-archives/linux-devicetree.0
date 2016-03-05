@@ -1,7 +1,7 @@
 From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH v3 05/11] dmaengine: bcm2835: add additional defines for DMA-registers
-Date: Sat,  5 Mar 2016 10:52:16 +0000
-Message-ID: <1457175142-28665-6-git-send-email-kernel@martin.sperl.org>
+Subject: [PATCH v3 07/11] dmaengine: bcm2835: move controlblock chain generation into separate method
+Date: Sat,  5 Mar 2016 10:52:18 +0000
+Message-ID: <1457175142-28665-8-git-send-email-kernel@martin.sperl.org>
 References: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1457175142-28665-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
@@ -12,95 +12,376 @@ List-Id: devicetree@vger.kernel.org
 
 From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-Add additional defines describing the DMA registers
-as well as adding some more documentation to those registers.
+In preparation of adding slave_sg functionality this patch moves the
+generation/allocation of bcm2835_desc and the building of
+the corresponding DMA-control-block chain from bcm2835_dma_prep_dma_cyclic
+into the newly created method bcm2835_dma_create_cb_chain.
 
 Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 ---
- drivers/dma/bcm2835-dma.c | 57 ++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 49 insertions(+), 8 deletions(-)
+ drivers/dma/bcm2835-dma.c | 294 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 198 insertions(+), 96 deletions(-)
 
 diff --git a/drivers/dma/bcm2835-dma.c b/drivers/dma/bcm2835-dma.c
-index fe7d5a6..2cdc256 100644
+index 23b01c5..1ae53b8 100644
 --- a/drivers/dma/bcm2835-dma.c
 +++ b/drivers/dma/bcm2835-dma.c
-@@ -99,26 +99,67 @@ struct bcm2835_desc {
+@@ -90,12 +90,12 @@ struct bcm2835_desc {
+ 	struct virt_dma_desc vd;
+ 	enum dma_transfer_direction dir;
+ 
+-	struct bcm2835_cb_entry *cb_list;
+-
+ 	unsigned int frames;
+ 	size_t size;
+ 
+ 	bool cyclic;
++
++	struct bcm2835_cb_entry cb_list[];
+ };
  
  #define BCM2835_DMA_CS		0x00
- #define BCM2835_DMA_ADDR	0x04
-+#define BCM2835_DMA_TI		0x08
- #define BCM2835_DMA_SOURCE_AD	0x0c
- #define BCM2835_DMA_DEST_AD	0x10
--#define BCM2835_DMA_NEXTCB	0x1C
-+#define BCM2835_DMA_LEN		0x14
-+#define BCM2835_DMA_STRIDE	0x18
-+#define BCM2835_DMA_NEXTCB	0x1c
-+#define BCM2835_DMA_DEBUG	0x20
+@@ -185,6 +185,13 @@ struct bcm2835_desc {
+ #define BCM2835_DMA_IRQ_SHARED_DEFAULT	11
+ #define BCM2835_DMA_IRQ_ALL_DEFAULT	12
  
- /* DMA CS Control and Status bits */
--#define BCM2835_DMA_ACTIVE	BIT(0)
--#define BCM2835_DMA_INT	BIT(2)
-+#define BCM2835_DMA_ACTIVE	BIT(0)  /* activate the DMA */
-+#define BCM2835_DMA_END		BIT(1)  /* current CB has ended */
-+#define BCM2835_DMA_INT		BIT(2)  /* interrupt status */
-+#define BCM2835_DMA_DREQ	BIT(3)  /* DREQ state */
- #define BCM2835_DMA_ISPAUSED	BIT(4)  /* Pause requested or not active */
- #define BCM2835_DMA_ISHELD	BIT(5)  /* Is held by DREQ flow control */
--#define BCM2835_DMA_ERR	BIT(8)
-+#define BCM2835_DMA_WAITING_FOR_WRITES BIT(6) /* waiting for last
-+					       * AXI-write to ack
-+					       */
-+#define BCM2835_DMA_ERR		BIT(8)
-+#define BCM2835_DMA_PRIORITY(x) ((x & 15) << 16) /* AXI priority */
-+#define BCM2835_DMA_PANIC_PRIORITY(x) ((x & 15) << 20) /* panic priority */
-+/* current value of TI.BCM2835_DMA_WAIT_RESP */
-+#define BCM2835_DMA_WAIT_FOR_WRITES BIT(28)
-+#define BCM2835_DMA_DIS_DEBUG	BIT(29) /* disable debug pause signal */
- #define BCM2835_DMA_ABORT	BIT(30) /* Stop current CB, go to next, WO */
- #define BCM2835_DMA_RESET	BIT(31) /* WO, self clearing */
++/* how many frames of max_len size do we need to transfer len bytes */
++static inline size_t bcm2835_dma_frames_for_length(size_t len,
++						   size_t max_len)
++{
++	return DIV_ROUND_UP(len, max_len);
++}
++
+ static inline struct bcm2835_dmadev *to_bcm2835_dma_dev(struct dma_device *d)
+ {
+ 	return container_of(d, struct bcm2835_dmadev, ddev);
+@@ -201,19 +208,161 @@ static inline struct bcm2835_desc *to_bcm2835_dma_desc(
+ 	return container_of(t, struct bcm2835_desc, vd.tx);
+ }
  
-+/* Transfer information bits - also bcm2835_cb.info field */
- #define BCM2835_DMA_INT_EN	BIT(0)
-+#define BCM2835_DMA_TDMODE	BIT(1) /* 2D-Mode */
-+#define BCM2835_DMA_WAIT_RESP	BIT(3) /* wait for AXI-write to be acked */
- #define BCM2835_DMA_D_INC	BIT(4)
--#define BCM2835_DMA_D_DREQ	BIT(6)
-+#define BCM2835_DMA_D_WIDTH	BIT(5) /* 128bit writes if set */
-+#define BCM2835_DMA_D_DREQ	BIT(6) /* enable DREQ for destination */
-+#define BCM2835_DMA_D_IGNORE	BIT(7) /* ignore destination writes */
- #define BCM2835_DMA_S_INC	BIT(8)
--#define BCM2835_DMA_S_DREQ	BIT(10)
+-static void bcm2835_dma_desc_free(struct virt_dma_desc *vd)
++static void bcm2835_dma_free_cb_chain(struct bcm2835_desc *desc)
+ {
+-	struct bcm2835_desc *desc = container_of(vd, struct bcm2835_desc, vd);
+-	int i;
++	size_t i;
+ 
+ 	for (i = 0; i < desc->frames; i++)
+ 		dma_pool_free(desc->c->cb_pool, desc->cb_list[i].cb,
+ 			      desc->cb_list[i].paddr);
+ 
+-	kfree(desc->cb_list);
+ 	kfree(desc);
+ }
+ 
++static void bcm2835_dma_desc_free(struct virt_dma_desc *vd)
++{
++	bcm2835_dma_free_cb_chain(
++		container_of(vd, struct bcm2835_desc, vd));
++}
++
++static void bcm2835_dma_create_cb_set_length(
++	struct bcm2835_chan *chan,
++	struct bcm2835_dma_cb *control_block,
++	size_t len,
++	size_t period_len,
++	size_t *total_len,
++	u32 finalextrainfo)
++{
++	/* set the length */
++	control_block->length = len;
++
++	/* finished if we have no period_length */
++	if (!period_len)
++		return;
++
++	/*
++	 * period_len means: that we need to generate
++	 * transfers that are terminating at every
++	 * multiple of period_len - this is typically
++	 * used to set the interrupt flag in info
++	 * which is required during cyclic transfers
++	 */
++
++	/* have we filled in period_length yet? */
++	if (*total_len + control_block->length < period_len)
++		return;
++
++	/* calculate the length that remains to reach period_length */
++	control_block->length = period_len - *total_len;
++
++	/* reset total_length for next period */
++	*total_len = 0;
++
++	/* add extrainfo bits in info */
++	control_block->info |= finalextrainfo;
++}
++
++/**
++ * bcm2835_dma_create_cb_chain - create a control block and fills data in
++ *
++ * @chan:           the @dma_chan for which we run this
++ * @direction:      the direction in which we transfer
++ * @cyclic:         it is a cyclic transfer
++ * @info:           the default info bits to apply per controlblock
++ * @frames:         number of controlblocks to allocate
++ * @src:            the src address to assign (if the S_INC bit is set
++ *                  in @info, then it gets incremented)
++ * @dst:            the dst address to assign (if the D_INC bit is set
++ *                  in @info, then it gets incremented)
++ * @buf_len:        the full buffer length (may also be 0)
++ * @period_len:     the period length when to apply @finalextrainfo
++ *                  in addition to the last transfer
++ *                  this will also break some control-blocks early
++ * @finalextrainfo: additional bits in last controlblock
++ *                  (or when period_len is reached in case of cyclic)
++ * @gfp:            the GFP flag to use for allocation
++ */
++static struct bcm2835_desc *bcm2835_dma_create_cb_chain(
++	struct dma_chan *chan, enum dma_transfer_direction direction,
++	bool cyclic, u32 info, u32 finalextrainfo, size_t frames,
++	dma_addr_t src, dma_addr_t dst, size_t buf_len,
++	size_t period_len, gfp_t gfp)
++{
++	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
++	size_t len = buf_len, total_len;
++	size_t frame;
++	struct bcm2835_desc *d;
++	struct bcm2835_cb_entry *cb_entry;
++	struct bcm2835_dma_cb *control_block;
++
++	/* allocate and setup the descriptor. */
++	d = kzalloc(sizeof(*d) + frames * sizeof(struct bcm2835_cb_entry),
++		    gfp);
++	if (!d)
++		return NULL;
++
++	d->c = c;
++	d->dir = direction;
++	d->cyclic = cyclic;
++
++	/*
++	 * Iterate over all frames, create a control block
++	 * for each frame and link them together.
++	 */
++	for (frame = 0, total_len = 0; frame < frames; d->frames++, frame++) {
++		cb_entry = &d->cb_list[frame];
++		cb_entry->cb = dma_pool_alloc(c->cb_pool, gfp,
++					      &cb_entry->paddr);
++		if (!cb_entry->cb)
++			goto error_cb;
++
++		/* fill in the control block */
++		control_block = cb_entry->cb;
++		control_block->info = info;
++		control_block->src = src;
++		control_block->dst = dst;
++		control_block->stride = 0;
++		control_block->next = 0;
++		/* set up length in control_block if requested */
++		if (buf_len) {
++			/* calculate length honoring period_length */
++			bcm2835_dma_create_cb_set_length(
++				c, control_block,
++				len, period_len, &total_len,
++				cyclic ? finalextrainfo : 0);
++
++			/* calculate new remaining length */
++			len -= control_block->length;
++		}
++
++		/* link this the last controlblock */
++		if (frame)
++			d->cb_list[frame - 1].cb->next = cb_entry->paddr;
++
++		/* update src and dst and length */
++		if (src && (info & BCM2835_DMA_S_INC))
++			src += control_block->length;
++		if (dst && (info & BCM2835_DMA_D_INC))
++			dst += control_block->length;
++
++		/* Length of total transfer */
++		d->size += control_block->length;
++	}
++
++	/* the last frame requires extra flags */
++	d->cb_list[d->frames - 1].cb->info |= finalextrainfo;
++
++	/* detect a size missmatch */
++	if (buf_len && (d->size != buf_len))
++		goto error_cb;
++
++	return d;
++error_cb:
++	bcm2835_dma_free_cb_chain(d);
++
++	return NULL;
++}
++
+ static int bcm2835_dma_abort(void __iomem *chan_base)
+ {
+ 	unsigned long cs;
+@@ -417,12 +566,11 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+ 	unsigned long flags)
+ {
+ 	struct bcm2835_chan *c = to_bcm2835_dma_chan(chan);
+-	enum dma_slave_buswidth dev_width;
+ 	struct bcm2835_desc *d;
+-	dma_addr_t dev_addr;
+-	unsigned int es, sync_type;
+-	unsigned int frame;
+-	int i;
++	dma_addr_t src, dst;
++	u32 info = BCM2835_DMA_WAIT_RESP;
++	u32 extra = BCM2835_DMA_INT_EN;
++	size_t frames;
+ 
+ 	/* Grab configuration */
+ 	if (!is_slave_direction(direction)) {
+@@ -430,104 +578,58 @@ static struct dma_async_tx_descriptor *bcm2835_dma_prep_dma_cyclic(
+ 		return NULL;
+ 	}
+ 
+-	if (direction == DMA_DEV_TO_MEM) {
+-		dev_addr = c->cfg.src_addr;
+-		dev_width = c->cfg.src_addr_width;
+-		sync_type = BCM2835_DMA_S_DREQ;
+-	} else {
+-		dev_addr = c->cfg.dst_addr;
+-		dev_width = c->cfg.dst_addr_width;
+-		sync_type = BCM2835_DMA_D_DREQ;
+-	}
 -
--#define BCM2835_DMA_PER_MAP(x)	((x) << 16)
-+#define BCM2835_DMA_S_WIDTH	BIT(9) /* 128bit writes if set */
-+#define BCM2835_DMA_S_DREQ	BIT(10) /* enable SREQ for source */
-+#define BCM2835_DMA_S_IGNORE	BIT(11) /* ignore source reads - read 0 */
-+#define BCM2835_DMA_BURST_LENGTH(x) ((x & 15) << 12)
-+#define BCM2835_DMA_PER_MAP(x)	((x & 31) << 16) /* REQ source */
-+#define BCM2835_DMA_WAIT(x)	((x & 31) << 21) /* add DMA-wait cycles */
-+#define BCM2835_DMA_NO_WIDE_BURSTS BIT(26) /* no 2 beat write bursts */
-+
-+/* debug register bits */
-+#define BCM2835_DMA_DEBUG_LAST_NOT_SET_ERR	BIT(0)
-+#define BCM2835_DMA_DEBUG_FIFO_ERR		BIT(1)
-+#define BCM2835_DMA_DEBUG_READ_ERR		BIT(2)
-+#define BCM2835_DMA_DEBUG_OUTSTANDING_WRITES_SHIFT 4
-+#define BCM2835_DMA_DEBUG_OUTSTANDING_WRITES_BITS 4
-+#define BCM2835_DMA_DEBUG_ID_SHIFT		16
-+#define BCM2835_DMA_DEBUG_ID_BITS		9
-+#define BCM2835_DMA_DEBUG_STATE_SHIFT		16
-+#define BCM2835_DMA_DEBUG_STATE_BITS		9
-+#define BCM2835_DMA_DEBUG_VERSION_SHIFT		25
-+#define BCM2835_DMA_DEBUG_VERSION_BITS		3
-+#define BCM2835_DMA_DEBUG_LITE			BIT(28)
-+
-+/* shared registers for all dma channels */
-+#define BCM2835_DMA_INT_STATUS         0xfe0
-+#define BCM2835_DMA_ENABLE             0xff0
+-	/* Bus width translates to the element size (ES) */
+-	switch (dev_width) {
+-	case DMA_SLAVE_BUSWIDTH_4_BYTES:
+-		es = BCM2835_DMA_DATA_TYPE_S32;
+-		break;
+-	default:
++	if (!buf_len) {
++		dev_err(chan->device->dev,
++			"%s: bad buffer length (= 0)\n", __func__);
+ 		return NULL;
+ 	}
  
- #define BCM2835_DMA_DATA_TYPE_S8	1
- #define BCM2835_DMA_DATA_TYPE_S16	2
+-	/* Now allocate and setup the descriptor. */
+-	d = kzalloc(sizeof(*d), GFP_NOWAIT);
+-	if (!d)
+-		return NULL;
++	/*
++	 * warn if buf_len is not a multiple of period_len - this may leed
++	 * to unexpected latencies for interrupts and thus audiable clicks
++	 */
++	if (buf_len % period_len)
++		dev_warn_once(chan->device->dev,
++			      "%s: buffer_length (%zd) is not a multiple of period_len (%zd)\n",
++			      __func__, buf_len, period_len);
+ 
+-	d->c = c;
+-	d->dir = direction;
+-	d->frames = buf_len / period_len;
+-	d->cyclic = true;
++	/* Setup DREQ channel */
++	if (c->dreq != 0)
++		info |= BCM2835_DMA_PER_MAP(c->dreq);
+ 
+-	d->cb_list = kcalloc(d->frames, sizeof(*d->cb_list), GFP_KERNEL);
+-	if (!d->cb_list) {
+-		kfree(d);
+-		return NULL;
++	if (direction == DMA_DEV_TO_MEM) {
++		if (c->cfg.src_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
++			return NULL;
++		src = c->cfg.src_addr;
++		dst = buf_addr;
++		info |= BCM2835_DMA_S_DREQ | BCM2835_DMA_D_INC;
++	} else {
++		if (c->cfg.dst_addr_width != DMA_SLAVE_BUSWIDTH_4_BYTES)
++			return NULL;
++		dst = c->cfg.dst_addr;
++		src = buf_addr;
++		info |= BCM2835_DMA_D_DREQ | BCM2835_DMA_S_INC;
+ 	}
+-	/* Allocate memory for control blocks */
+-	for (i = 0; i < d->frames; i++) {
+-		struct bcm2835_cb_entry *cb_entry = &d->cb_list[i];
+ 
+-		cb_entry->cb = dma_pool_zalloc(c->cb_pool, GFP_ATOMIC,
+-					       &cb_entry->paddr);
+-		if (!cb_entry->cb)
+-			goto error_cb;
+-	}
++	/* calculate number of frames */
++	frames = DIV_ROUND_UP(buf_len, period_len);
+ 
+ 	/*
+-	 * Iterate over all frames, create a control block
+-	 * for each frame and link them together.
++	 * allocate the CB chain
++	 * note that we need to use GFP_NOWAIT, as the ALSA i2s dmaengine
++	 * implementation calls prep_dma_cyclic with interrupts disabled.
+ 	 */
+-	for (frame = 0; frame < d->frames; frame++) {
+-		struct bcm2835_dma_cb *control_block = d->cb_list[frame].cb;
+-
+-		/* Setup adresses */
+-		if (d->dir == DMA_DEV_TO_MEM) {
+-			control_block->info = BCM2835_DMA_D_INC;
+-			control_block->src = dev_addr;
+-			control_block->dst = buf_addr + frame * period_len;
+-		} else {
+-			control_block->info = BCM2835_DMA_S_INC;
+-			control_block->src = buf_addr + frame * period_len;
+-			control_block->dst = dev_addr;
+-		}
+-
+-		/* Enable interrupt */
+-		control_block->info |= BCM2835_DMA_INT_EN;
+-
+-		/* Setup synchronization */
+-		if (sync_type != 0)
+-			control_block->info |= sync_type;
+-
+-		/* Setup DREQ channel */
+-		if (c->dreq != 0)
+-			control_block->info |=
+-				BCM2835_DMA_PER_MAP(c->dreq);
+-
+-		/* Length of a frame */
+-		control_block->length = period_len;
+-		d->size += control_block->length;
++	d = bcm2835_dma_create_cb_chain(chan, direction, true,
++					info, extra,
++					frames, src, dst, buf_len,
++					period_len, GFP_NOWAIT);
++	if (!d)
++		return NULL;
+ 
+-		/*
+-		 * Next block is the next frame.
+-		 * This DMA engine driver currently only supports cyclic DMA.
+-		 * Therefore, wrap around at number of frames.
+-		 */
+-		control_block->next = d->cb_list[((frame + 1) % d->frames)].paddr;
+-	}
++	/* wrap around into a loop */
++	d->cb_list[d->frames - 1].cb->next = d->cb_list[0].paddr;
+ 
+ 	return vchan_tx_prep(&c->vc, &d->vd, flags);
+-error_cb:
+-	i--;
+-	for (; i >= 0; i--) {
+-		struct bcm2835_cb_entry *cb_entry = &d->cb_list[i];
+-
+-		dma_pool_free(c->cb_pool, cb_entry->cb, cb_entry->paddr);
+-	}
+-
+-	kfree(d->cb_list);
+-	kfree(d);
+-	return NULL;
+ }
+ 
+ static int bcm2835_dma_slave_config(struct dma_chan *chan,
 -- 
 2.1.4
 
