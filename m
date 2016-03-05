@@ -1,31 +1,139 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v10 2/9] dt-bindings: pinctrl: Deprecate Tegra XUSB pad
- controller binding
-Date: Fri, 4 Mar 2016 22:32:14 -0600
-Message-ID: <20160305043214.GM13525@rob-hp-laptop>
-References: <1457108379-20794-1-git-send-email-thierry.reding@gmail.com>
- <1457108379-20794-2-git-send-email-thierry.reding@gmail.com>
+Subject: Re: [PATCH v17 2/6] ARM: socfpga: add bindings document for fpga
+ bridge drivers
+Date: Fri, 4 Mar 2016 22:34:55 -0600
+Message-ID: <20160305043455.GA19011@rob-hp-laptop>
+References: <1456442711-29138-1-git-send-email-atull@opensource.altera.com>
+ <1456442711-29138-3-git-send-email-atull@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1457108379-20794-2-git-send-email-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Andrew Bresticker <abrestic@chromium.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+In-Reply-To: <1456442711-29138-3-git-send-email-atull@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>
+Cc: pantelis.antoniou@konsulko.com, Moritz Fischer <moritz.fischer@ettus.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 05:19:32PM +0100, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
+On Thu, Feb 25, 2016 at 05:25:07PM -0600, Alan Tull wrote:
+> Add bindings documentation for Altera SOCFPGA bridges:
+>  * fpga2sdram
+>  * fpga2hps
+>  * hps2fpga
+>  * lwhps2fpga
 > 
-> This is an old version of the binding that isn't flexible enough to
-> describe all aspects of the XUSB pad controller. Specifically with the
-> addition of XUSB support (for SuperSpeed USB) the existing binding is
-> no longer suitable.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+> Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
 > ---
->  .../devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt          | 1 +
->  1 file changed, 1 insertion(+)
+> v2:  separate into 2 documents for the 2 drivers
+> v12: bump version to line up with simple-fpga-bus version
+>      remove Linux specific notes such as references to sysfs
+>      move non-DT specific documentation elsewhere
+>      remove bindings that would have been used to pass configuration
+>      clean up formatting
+> v13: Remove 'label' property
+>      Change property from init-val to bridge-enable
+>      Fix email address
+> v14: Add resets
+>      Change order of bridges to put lw bridge (controlling bridge) first
+> v15: No change in this patch for v15 of this patch set
+> v16: Added regs property, cleaned up unit addresses
+> v17: No change to this patch in v17 of patch set
+> ---
+>  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +++++++
+>  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   47 ++++++++++++++++++++
+>  2 files changed, 62 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Just a few minor things.
+
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> new file mode 100644
+> index 0000000..4479a79
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> @@ -0,0 +1,15 @@
+> +Altera FPGA To SDRAM Bridge Driver
+> +
+> +Required properties:
+> +- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
+> +
+> +Optional properties:
+> +- bridge-enable		: 0 if driver should disable bridge at startup
+> +			  1 if driver should enable bridge at startup
+> +			  Default is to leave bridge in current state.
+> +
+> +Example:
+> +	fpga2sdram_br {
+
+fpga-bridge@??
+
+> +		compatible = "altr,socfpga-fpga2sdram-bridge";
+> +		bridge-enable = <0>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> new file mode 100644
+> index 0000000..e6b7474
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> @@ -0,0 +1,47 @@
+> +Altera FPGA/HPS Bridge Driver
+> +
+> +Required properties:
+> +- regs		: base address and size for AXI bridge module
+> +- compatible	: Should contain one of:
+> +		  "altr,socfpga-lwhps2fpga-bridge",
+> +		  "altr,socfpga-hps2fpga-bridge", or
+> +		  "altr,socfpga-fpga2hps-bridge"
+> +- reset-names	: Should contain one of:
+> +		  "lwhps2fpga",
+> +		  "hps2fpga", or
+> +		  "fpga2hps"
+
+Names should be the input signal names. Do you need names with only one?
+
+> +- resets	: Phandle and reset specifier for the reset listed in
+> +		  reset-names
+> +- clocks	: Clocks used by this module.
+> +
+> +Optional properties:
+> +- bridge-enable	: 0 if driver should disable bridge at startup.
+> +		  1 if driver should enable bridge at startup.
+> +		  Default is to leave bridge in its current state.
+> +
+> +Example:
+> +	hps_fpgabridge0: fpgabridge@ff400000 {
+
+No underscores.
+
+fpga-bridge@...
+
+> +		compatible = "altr,socfpga-lwhps2fpga-bridge";
+> +		reg = <0xff400000 0x100000>;
+> +		resets = <&rst LWHPS2FPGA_RESET>;
+> +		reset-names = "lwhps2fpga";
+> +		clocks = <&l4_main_clk>;
+> +		bridge-enable = <0>;
+> +	};
+> +
+> +	hps_fpgabridge1: fpgabridge@ff500000 {
+> +		compatible = "altr,socfpga-hps2fpga-bridge";
+> +		reg = <0xff500000 0x10000>;
+> +		resets = <&rst HPS2FPGA_RESET>;
+> +		reset-names = "hps2fpga";
+> +		clocks = <&l4_main_clk>;
+> +		bridge-enable = <1>;
+> +	};
+> +
+> +	hps_fpgabridge2: fpgabridge@ff600000 {
+> +		compatible = "altr,socfpga-fpga2hps-bridge";
+> +		reg = <0xff600000 0x100000>;
+> +		resets = <&rst FPGA2HPS_RESET>;
+> +		reset-names = "fpga2hps";
+> +		clocks = <&l4_main_clk>;
+> +	};
+> -- 
+> 1.7.9.5
+> 
