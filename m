@@ -1,196 +1,95 @@
-From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
-Subject: [PATCH 3/5] ARM: bcm2835: use defined INT names instead of magic numbers
-Date: Sat,  5 Mar 2016 18:02:51 +0000
-Message-ID: <1457200973-11662-3-git-send-email-kernel@martin.sperl.org>
-References: <1457200973-11662-1-git-send-email-kernel@martin.sperl.org>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] i2c mux cleanup and locking update
+Date: Sat, 5 Mar 2016 19:29:35 +0100
+Message-ID: <20160305182934.GA1394@katana>
+References: <1452265496-22475-1-git-send-email-peda@lysator.liu.se>
+ <20160302172904.GC5439@katana>
+ <56DB1C07.4040008@kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bg08WKrSYDhXBjb5"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457200973-11662-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56DB1C07.4040008-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Nicholas Mc Guire <hofrat-Q945KHDl0DbYtjvyW6yDsg@public.gmane.org>, Olli Salonen <olli.salonen-X3B1VOXEql0@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-Change the device tree source so that instead of magic numbers
-the corresponding BCM2835_INT_* names are used to ease readability.
+--bg08WKrSYDhXBjb5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 59 +++++++++++++++++++++++-------------------
- 1 file changed, 33 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index 8aaf193..084eda7 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -1,6 +1,7 @@
- #include <dt-bindings/pinctrl/bcm2835.h>
- #include <dt-bindings/clock/bcm2835.h>
- #include <dt-bindings/clock/bcm2835-aux.h>
-+#include <dt-bindings/interrupt-controller/bcm2835.h>
- #include "skeleton.dtsi"
- 
- /* This include file covers the common peripherals and configuration between
-@@ -25,7 +26,10 @@
- 		timer@7e003000 {
- 			compatible = "brcm,bcm2835-system-timer";
- 			reg = <0x7e003000 0x1000>;
--			interrupts = <1 0>, <1 1>, <1 2>, <1 3>;
-+			interrupts = <BCM2835_INT_TIMER0>,
-+				     <BCM2835_INT_TIMER1>,
-+				     <BCM2835_INT_TIMER2>,
-+				     <BCM2835_INT_TIMER3>;
- 			/* This could be a reference to BCM2835_CLOCK_TIMER,
- 			 * but we don't have the driver using the common clock
- 			 * support yet.
-@@ -36,19 +40,19 @@
- 		dma: dma@7e007000 {
- 			compatible = "brcm,bcm2835-dma";
- 			reg = <0x7e007000 0xf00>;
--			interrupts = <1 16>,
--				     <1 17>,
--				     <1 18>,
--				     <1 19>,
--				     <1 20>,
--				     <1 21>,
--				     <1 22>,
--				     <1 23>,
--				     <1 24>,
--				     <1 25>,
--				     <1 26>,
--				     <1 27>,
--				     <1 28>;
-+			interrupts = <BCM2835_INT_DMA0>,
-+				     <BCM2835_INT_DMA1>,
-+				     <BCM2835_INT_DMA2>,
-+				     <BCM2835_INT_DMA3>,
-+				     <BCM2835_INT_DMA4>,
-+				     <BCM2835_INT_DMA5>,
-+				     <BCM2835_INT_DMA6>,
-+				     <BCM2835_INT_DMA7>,
-+				     <BCM2835_INT_DMA8>,
-+				     <BCM2835_INT_DMA9>,
-+				     <BCM2835_INT_DMA10>,
-+				     <BCM2835_INT_DMA11_12_13_14>,
-+				     <BCM2835_INT_DMA_ALL>;
- 
- 			#dma-cells = <1>;
- 			brcm,dma-channel-mask = <0x7f35>;
-@@ -85,7 +89,7 @@
- 		mailbox: mailbox@7e00b800 {
- 			compatible = "brcm,bcm2835-mbox";
- 			reg = <0x7e00b880 0x40>;
--			interrupts = <0 1>;
-+			interrupts = <BCM2835_INT_ARM_MAILBOX>;
- 			#mbox-cells = <0>;
- 		};
- 
-@@ -103,7 +107,10 @@
- 			 * So, a bank0 interrupt shows up on 17, 20, and
- 			 * a bank1 interrupt shows up on 18, 19, 20!
- 			 */
--			interrupts = <2 17>, <2 18>, <2 19>, <2 20>;
-+			interrupts = <BCM2835_INT_GPIO0>,
-+				     <BCM2835_INT_GPIO1>,
-+				     <BCM2835_INT_GPIO2>,
-+				     <BCM2835_INT_GPIO3>;
- 
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -115,7 +122,7 @@
- 		uart0: serial@7e201000 {
- 			compatible = "brcm,bcm2835-pl011", "arm,pl011", "arm,primecell";
- 			reg = <0x7e201000 0x1000>;
--			interrupts = <2 25>;
-+			interrupts = <BCM2835_INT_UART>;
- 			clocks = <&clocks BCM2835_CLOCK_UART>,
- 				 <&clocks BCM2835_CLOCK_VPU>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -136,7 +143,7 @@
- 		spi: spi@7e204000 {
- 			compatible = "brcm,bcm2835-spi";
- 			reg = <0x7e204000 0x1000>;
--			interrupts = <2 22>;
-+			interrupts = <BCM2835_INT_SPI>;
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -146,7 +153,7 @@
- 		i2c0: i2c@7e205000 {
- 			compatible = "brcm,bcm2835-i2c";
- 			reg = <0x7e205000 0x1000>;
--			interrupts = <2 21>;
-+			interrupts = <BCM2835_INT_I2C>;
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -163,7 +170,7 @@
- 		uart1: serial@7e215040 {
- 			compatible = "brcm,bcm2835-aux-uart";
- 			reg = <0x7e215040 0x40>;
--			interrupts = <1 29>;
-+			interrupts = <BCM2835_INT_AUX_UART>;
- 			clocks = <&aux BCM2835_AUX_CLOCK_UART>;
- 			status = "disabled";
- 		};
-@@ -171,7 +178,7 @@
- 		spi1: spi@7e215080 {
- 			compatible = "brcm,bcm2835-aux-spi";
- 			reg = <0x7e215080 0x40>;
--			interrupts = <1 29>;
-+			interrupts = <BCM2835_INT_AUX_SPI1>;
- 			clocks = <&aux BCM2835_AUX_CLOCK_SPI1>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -181,7 +188,7 @@
- 		spi2: spi@7e2150c0 {
- 			compatible = "brcm,bcm2835-aux-spi";
- 			reg = <0x7e2150c0 0x40>;
--			interrupts = <1 29>;
-+			interrupts = <BCM2835_INT_AUX_SPI2>;
- 			clocks = <&aux BCM2835_AUX_CLOCK_SPI2>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -201,7 +208,7 @@
- 		sdhci: sdhci@7e300000 {
- 			compatible = "brcm,bcm2835-sdhci";
- 			reg = <0x7e300000 0x100>;
--			interrupts = <2 30>;
-+			interrupts = <BCM2835_INT_ARSANSDIO>;
- 			clocks = <&clocks BCM2835_CLOCK_EMMC>;
- 			status = "disabled";
- 		};
-@@ -209,7 +216,7 @@
- 		i2c1: i2c@7e804000 {
- 			compatible = "brcm,bcm2835-i2c";
- 			reg = <0x7e804000 0x1000>;
--			interrupts = <2 21>;
-+			interrupts = <BCM2835_INT_I2C>;
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -219,7 +226,7 @@
- 		i2c2: i2c@7e805000 {
- 			compatible = "brcm,bcm2835-i2c";
- 			reg = <0x7e805000 0x1000>;
--			interrupts = <2 21>;
-+			interrupts = <BCM2835_INT_I2C>;
- 			clocks = <&clocks BCM2835_CLOCK_VPU>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -229,7 +236,7 @@
- 		usb: usb@7e980000 {
- 			compatible = "brcm,bcm2835-usb";
- 			reg = <0x7e980000 0x10000>;
--			interrupts = <1 9>;
-+			interrupts = <BCM2835_INT_USB>;
- 		};
- 	};
- 
--- 
-2.1.4
+> Perhaps it's one to let sit into at least the next cycle (and get some te=
+sting
+> on those media devices if we can) but, whilst it is fiddly the gains seen=
+ in
+> individual drivers (like the example Peter put in response to the V4 seri=
+es)
+> make it look worthwhile to me.  Also, whilst the invensense part is plain=
+ odd
+> in many ways, the case Peter had looks rather more normal.
+>=20
+> At the end of the day, sometimes fiddly problems need fiddly code.=20
+> (says a guy who doesn't have to maintain it!)
+>=20
+> It certainly helps that Peter has done a thorough job, broken the patches
+> up cleanly and provided clean descriptions of what he is doing.
 
+Yes, Peter has done a great job so far and the latest results were very
+convincing (fixing the invensense issue and the savings for rtl2832).
+
+And yes, I am reluctant to maintain this code alone, so my question
+would be:
+
+Peter, are you interested in becoming the i2c-mux maintainer and look
+after the code even after it was merged? (From "you reviewing patches and
+me picking them up" to "you have your own branch which I pull", we can
+discuss the best workflow.)
+
+If that would be the case, I have the same idea like Jonathan: Give it
+another cycle for more review & test and aim for the 4.7 merge window.
+
+I have to admit that I still haven't done a more thorough review, so I
+can't say if I see a show-stopper in this series. Yet, even if so I am
+positive it can be sorted out. Oh, and we should call for people with
+special experience in locking.
+
+What do people think?
+
+Regards,
+
+   Wolfram
+
+PS: Peter, have you seen my demuxer driver in my for-next branch? I hope
+it won't spoil your design?
+
+
+--bg08WKrSYDhXBjb5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJW2yWOAAoJEBQN5MwUoCm2h8QQAJpKVERebHnxPRdoWQvKdFgA
+bAkwdGd9yBqmnBLvZ7MmxLOqRdZAd9YoXa2D7fVAUeVC20nGiicwpMALB4JwUC/I
+6zmMQjEwQtErLKnHx3MUvELmsvnj5jhlFph17KgmtH4scKrJmzSSPdv//L02CxYT
+CwdmPCZAfqdSbpa8X+ZIyrMBuy0h1dYcytj5ZXlz8tXugqSSpnk7t0ruwMq3gVuy
+L50WIpWF6dJpMQRiRPVh5d5tKUOEYCbb2PbHGjIq7msFYTdD/fg6Ml4dIZuxf80C
+Fj8YwNoPEq+OuXFvF0r6PYyYZ2XfW+2wdqNRmRAr9Xt+ECav3wNMZb8E7RqfoVmE
+ssXkInXcg0+oofVNPHDzJYFQxjfPqmY4N32nmQ88z1HUCaUwA5Abfmw6SWfcI92f
+VcNjAs5AQVDzhfpfwm/atwTGs1xm6gXQymL77hDvmKQnOUvIRATuXHjSB+FLbuSs
+ypt52ZDBml0xdMTdwznX8uThijBeM6Ynw4w2UkIqkgipOfCzDuomcHd/+8n8z3i0
+WwA5NKx8rI65R72BXkHj0nHy4c9StOuTXfNilMVyBHIsE8K+GDbdu375em3TuKcD
+qiJRUHk0xpdmnhrXbURzUzvnbc3BdeG/JDJd/ErVycicx6wSXtktaqtRiEjwreSG
+qK61eIj0COHEjoX/hk3s
+=rkf3
+-----END PGP SIGNATURE-----
+
+--bg08WKrSYDhXBjb5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
