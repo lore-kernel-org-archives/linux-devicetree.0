@@ -1,97 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: core: add power sequence for USB devices
-Date: Fri, 4 Mar 2016 22:28:54 -0600
-Message-ID: <20160305042854.GW13525@rob-hp-laptop>
-References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
- <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
- <CAL_JsqLYHzb0ABYN_P9ZOEorT6otvn_BPNzuCFhoqwa5M4y-hw@mail.gmail.com>
- <20160304020242.GB30272@shlinux2.ap.freescale.net>
- <20160304022305.GB20597@lunn.ch>
- <20160304023750.GF30272@shlinux2.ap.freescale.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 01/17] dt-bindings: vendor-prefixes: Add PLX Technology
+Date: Fri, 4 Mar 2016 22:29:32 -0600
+Message-ID: <20160305042932.GX13525@rob-hp-laptop>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+ <1457005210-18485-2-git-send-email-narmstrong@baylibre.com>
+ <1457017335.3425.72.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20160304023750.GF30272-Fb7DQEYuewWctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1457017335.3425.72.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 10:37:50AM +0800, Peter Chen wrote:
-> On Fri, Mar 04, 2016 at 03:23:05AM +0100, Andrew Lunn wrote:
-> > On Fri, Mar 04, 2016 at 10:02:42AM +0800, Peter Chen wrote:
-> > > On Thu, Mar 03, 2016 at 02:54:55PM -0600, Rob Herring wrote:
-> > > > On Thu, Mar 3, 2016 at 4:01 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
-> > > > > Some hard-wired USB devices need to do power sequence to let the
-> > > > > device work normally, the typical power sequence like: enable USB
-> > > > > PHY clock, toggle reset pin, etc. But current Linux USB driver
-> > > > > lacks of such code to do it, it may cause some hard-wired USB devices
-> > > > > works abnormal or can't be recognized by controller at all.
-> > > > >
-> > > > > In this patch, it will do power on sequence at hub's probe for all
-> > > > > devices under this hub (includes root hub) if this device is described
-> > > > > at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
-> > > > > it will do power off sequence.
-> > > > >
-> > > > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > > > > ---
-> > > > >  .../devicetree/bindings/usb/usb-device.txt         |  41 +++++-
-> > > > >  drivers/usb/core/Makefile                          |   2 +-
-> > > > >  drivers/usb/core/hub.c                             |  32 +++++
-> > > > >  drivers/usb/core/pwrseq.c                          | 149 +++++++++++++++++++++
-> > > > >  include/linux/usb/of.h                             |  10 ++
-> > > > >  5 files changed, 232 insertions(+), 2 deletions(-)
-> > > > >  create mode 100644 drivers/usb/core/pwrseq.c
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > > index 1c35e7b..c7a298c 100644
-> > > > > --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > > @@ -13,8 +13,37 @@ Required properties:
-> > > > >  - reg: the port number which this device is connecting to, the range
-> > > > >    is 1-31.
-> > > > >
-> > > > > +Optional properties:
-> > > > > +- usb-pwrseq: the power sequence handler which need to do before this USB
-> > > > > +  device can work.
-> > > > > +- clocks: the input clock for USB device.
-> > > > > +- clock-frequency: the frequency for device's clock.
-> > > > > +- reset-gpios: Should specify the GPIO for reset.
-> > > > > +- reset-duration-us: the duration in microsecond for assert reset signal.
-> > > > 
-> > > > So we sorted out how to describe USB devices in DT, but now we don't
-> > > > use it?
-> > > 
-> > > We only know USB device after USB bus finds it, but without power
-> > > on sequence, the USB bus can't find it.
+On Thu, Mar 03, 2016 at 04:02:15PM +0100, Philipp Zabel wrote:
+> Am Donnerstag, den 03.03.2016, 12:39 +0100 schrieb Neil Armstrong:
+> > Add PLX Technology vendor prefix.
 > > 
-> > Not really true. Device tree says it exists, you just cannot see it
-> > yet. The fact it is in device tree means it is soldered on the board
-> > and really is there. So when the host controller enumerates the bus,
-> > it should run the power sequence of all child nodes to make them
-> > appear.
+> > Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >  1 file changed, 1 insertion(+)
 > > 
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index 72e2c5a..03970fb 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -178,6 +178,7 @@ picochip	Picochip Ltd
+> >  plathome	Plat'Home Co., Ltd.
+> >  plda	PLDA
+> >  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+> > +plxtech	PLX Technology, Inc.
+> 
+> The PLX Technology NASDAQ symbol used to be PLXT.
 
-Exactly.
+And is no longer listed? If not, then plxtech is fine. Otherwise, use 
+plxt.
 
-> Yes, it is my patch doing. My words "We only know USB device after USB
-> bus finds it" means the USB common code only create the USB device, and
-> assign its .of_node after USB bus finds it.
-
-I understand the problem. It is just as easy for you to search power 
-sequence child nodes as searching the *actual* child nodes for devices. 
-The main difference is that a power sequence node indicates that power 
-sequencing can be handled generically. With the device nodes, you have 
-to assume that the presence of standard properties like reset-gpios 
-means you can handle it generically. 
-
-Either solution suffers from not handling cases that can't be handled 
-generically. No doubt, we'll just see continued extensions to keep 
-things generic when they really shouldn't be.
+Can you fix the alphabetizing while you are at it.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
