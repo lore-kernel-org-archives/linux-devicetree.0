@@ -1,133 +1,105 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: core: add power sequence for USB devices
-Date: Sat, 5 Mar 2016 16:33:48 +0800
-Message-ID: <20160305083347.GA28858@shlinux2.ap.freescale.net>
-References: <1456999276-6315-1-git-send-email-peter.chen@nxp.com>
- <1456999276-6315-2-git-send-email-peter.chen@nxp.com>
- <CAL_JsqLYHzb0ABYN_P9ZOEorT6otvn_BPNzuCFhoqwa5M4y-hw@mail.gmail.com>
- <20160304020242.GB30272@shlinux2.ap.freescale.net>
- <20160304022305.GB20597@lunn.ch>
- <20160304023750.GF30272@shlinux2.ap.freescale.net>
- <20160305042854.GW13525@rob-hp-laptop>
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH v3 00/11] dmaengine: bcm2835: bugfix + enhancement of driver
+Date: Sat,  5 Mar 2016 10:52:11 +0000
+Message-ID: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160305042854.GW13525@rob-hp-laptop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 10:28:54PM -0600, Rob Herring wrote:
-> On Fri, Mar 04, 2016 at 10:37:50AM +0800, Peter Chen wrote:
-> > On Fri, Mar 04, 2016 at 03:23:05AM +0100, Andrew Lunn wrote:
-> > > On Fri, Mar 04, 2016 at 10:02:42AM +0800, Peter Chen wrote:
-> > > > On Thu, Mar 03, 2016 at 02:54:55PM -0600, Rob Herring wrote:
-> > > > > On Thu, Mar 3, 2016 at 4:01 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
-> > > > > > Some hard-wired USB devices need to do power sequence to let the
-> > > > > > device work normally, the typical power sequence like: enable USB
-> > > > > > PHY clock, toggle reset pin, etc. But current Linux USB driver
-> > > > > > lacks of such code to do it, it may cause some hard-wired USB devices
-> > > > > > works abnormal or can't be recognized by controller at all.
-> > > > > >
-> > > > > > In this patch, it will do power on sequence at hub's probe for all
-> > > > > > devices under this hub (includes root hub) if this device is described
-> > > > > > at dts and there is a phandle "usb-pwrseq" for it. At hub_disconnect,
-> > > > > > it will do power off sequence.
-> > > > > >
-> > > > > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > > > > > ---
-> > > > > >  .../devicetree/bindings/usb/usb-device.txt         |  41 +++++-
-> > > > > >  drivers/usb/core/Makefile                          |   2 +-
-> > > > > >  drivers/usb/core/hub.c                             |  32 +++++
-> > > > > >  drivers/usb/core/pwrseq.c                          | 149 +++++++++++++++++++++
-> > > > > >  include/linux/usb/of.h                             |  10 ++
-> > > > > >  5 files changed, 232 insertions(+), 2 deletions(-)
-> > > > > >  create mode 100644 drivers/usb/core/pwrseq.c
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > > > index 1c35e7b..c7a298c 100644
-> > > > > > --- a/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-> > > > > > @@ -13,8 +13,37 @@ Required properties:
-> > > > > >  - reg: the port number which this device is connecting to, the range
-> > > > > >    is 1-31.
-> > > > > >
-> > > > > > +Optional properties:
-> > > > > > +- usb-pwrseq: the power sequence handler which need to do before this USB
-> > > > > > +  device can work.
-> > > > > > +- clocks: the input clock for USB device.
-> > > > > > +- clock-frequency: the frequency for device's clock.
-> > > > > > +- reset-gpios: Should specify the GPIO for reset.
-> > > > > > +- reset-duration-us: the duration in microsecond for assert reset signal.
-> > > > > 
-> > > > > So we sorted out how to describe USB devices in DT, but now we don't
-> > > > > use it?
-> > > > 
-> > > > We only know USB device after USB bus finds it, but without power
-> > > > on sequence, the USB bus can't find it.
-> > > 
-> > > Not really true. Device tree says it exists, you just cannot see it
-> > > yet. The fact it is in device tree means it is soldered on the board
-> > > and really is there. So when the host controller enumerates the bus,
-> > > it should run the power sequence of all child nodes to make them
-> > > appear.
-> > > 
-> 
-> Exactly.
-> 
-> > Yes, it is my patch doing. My words "We only know USB device after USB
-> > bus finds it" means the USB common code only create the USB device, and
-> > assign its .of_node after USB bus finds it.
-> 
-> I understand the problem. It is just as easy for you to search power 
-> sequence child nodes as searching the *actual* child nodes for devices. 
-> The main difference is that a power sequence node indicates that power 
-> sequencing can be handled generically. With the device nodes, you have 
-> to assume that the presence of standard properties like reset-gpios 
-> means you can handle it generically. 
-> 
-> Either solution suffers from not handling cases that can't be handled 
-> generically. No doubt, we'll just see continued extensions to keep 
-> things generic when they really shouldn't be.
-> 
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-So, would you like to accept the generic solution like below:
+This patchset fixes several issues:
+* missing residue_granularity to allow better support for I2S
+* dma-channels are no longer artificially restricted (channel 0 and 2)
+* added correct support for dma-channels 11-14 (changeable via
+  the device tree) by using the correct shared irq line with index
+  11 into the interrupts list (changeable via device tree)
 
-- Create a generic power sequence driver, and it will be probed
-according to compatible string at device tree. At its probe,
-we can create a power sequence structure, and let this structure
-as the private data for this power sequence device.
+With this now 11 DMA channels are available instead of 7 - the
+additional HW-DMA-channels are:
+* 0, 2 (masking of channels)
+* 13, 14 (shared interrupts - see also note on channel 12)
 
-struct pwrseq
-{
-	(*on) (struct pwrseq *);
-	(*off) (struct pwrseq *);
-	...
-};
+It also adds several new features:
+* slave_sg support
+* dma_memcopy support
 
-At power sequence driver ->probe
-{
-	pwrseq = devm_kzalloc(dev, sizeof(*pwrseq), GFP_KERNEL);
-	pwrseq->on = generic_pwrseq_on(pwrseq);
-	pwrseq->on = generic_pwrseq_off(pwrseq);
-	dev_set_drvdata(dev, pwrseq);
-}
+For these a consolidated method for creating standard control-block
+chains was created to share common between cyclic, slave_sg and
+memcopy.
 
+Testing:
+* slave_sg
+  * spi-bcm2835:
+    * fb_st7735r framebuffer
+      * tested using mplayer
+* cyclic
+  * bcm2835-i2s
+    * Audio output with a Hifiberry I2S card.
+      * tested using mplayer and aplay
+* memcopy
+  * dmatest
 
-- At device driver which need to use power sequence operation
-	- Get the node according to phandle, and get its private data
-	accordingly. The driver can assign its pwrseq to its structure
-       	or not.
-	- The driver can call its pwrseq->on and pwrseq->off
-	accordingly.
+Tests using both slave_sg and cyclic concurrently were also conducted
+using mplayer to play BigBuckBunny.
 
--- 
+Note that the bcm2835-i2s driver still requires the clock patch-set
+enabling the pcm clock.
 
-Best Regards,
-Peter Chen
+The last patches (expose registers via debugfs) is optional:
+  dmaengine: bcm2835: expose dma registers via debugfs
+
+Note: DMA channel 15 is still not supported because:
+* it sits in a separate IO range
+* it is used by the firmware
+So unless the firmware no longer uses DMA 15, it is not worth
+the effort.
+
+Possibly future improvements:
+* allow control over channel selection (Lite or normal)
+  as well as AXI priorities via the device-tree
+* support for memset, memset_sg and interleave
+* using DREQ-names instead of magic numbers (via include/dt-binding/...)
+
+Change-log:
+  V1 -> V2: * rewrite of the original patch avoiding code duplication
+            * splitting of changes into multiple patches
+  V2 -> V3: * allow configuration to dma mapping va device tree.
+            * adding names binging for DREQs to get used in device-trees
+	    * move lite channel detection (via debug register) and using
+	      limits of it into separate patch
+	    * add debugfs support to see what is actually happening in
+	      the dma registers.
+	    * incorporated feedback from various people improving
+	      code-readability (primarily Patch 7)
+
+Martin Sperl (11):
+  dmaengine: bcm2835: set residue_granularity field
+  dmaengine: bcm2835: remove unnecessary masking of dma channels
+  dmaengine: bcm2835: use shared interrupt for channel 11 to 14.
+  ARM: bcm2835: dt: add bindings for shared interrupt properties
+  dmaengine: bcm2835: add additional defines for DMA-registers
+  dmaengine: bcm2835: move cyclic member from bcm2835_chan into
+    bcm2835_desc
+  dmaengine: bcm2835: move controlblock chain generation into separate
+    method
+  dmaengine: bcm2835: limit max length based on channel type
+  dmaengine: bcm2835: add slave_sg support to bcm2835-dma
+  dmaengine: bcm2835: add dma_memcopy support to bcm2835-dma
+  dmaengine: bcm2835: expose dma registers via debugfs
+
+ .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   |   6 +
+ drivers/dma/bcm2835-dma.c                          | 740 +++++++++++++++++----
+ 2 files changed, 623 insertions(+), 123 deletions(-)
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
