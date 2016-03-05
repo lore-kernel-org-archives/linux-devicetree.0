@@ -1,167 +1,322 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] iio:pressure:ms5611: complete DT support
-Date: Sat, 5 Mar 2016 14:40:34 +0000
-Message-ID: <56DAEFE2.8080403@kernel.org>
+Subject: Re: [PATCH v4 3/3] iio:pressure:ms5611: oversampling rate support
+Date: Sat, 5 Mar 2016 14:45:25 +0000
+Message-ID: <56DAF105.3010503@kernel.org>
 References: <cover.1456828051.git.gregor.boirie@parrot.com>
- <6cbaba17e57b0bdc6c3550f49af9161e33438f84.1456828051.git.gregor.boirie@parrot.com>
+ <968dd61e1b2cf2fa6ba936509594d71c799226c4.1456828051.git.gregor.boirie@parrot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6cbaba17e57b0bdc6c3550f49af9161e33438f84.1456828051.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <968dd61e1b2cf2fa6ba936509594d71c799226c4.1456828051.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 01/03/16 10:31, Gregor Boirie wrote:
-> From: Gr=C3=A9gor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
->=20
-> Add device-tree ID tables and document bindings.
->=20
+> Add support for setting and retrieving OverSampling Rate independently for
+> each of the temperature and pressure channels. This allows userspace to
+> fine tune hardware sampling process according to the following tradeoffs :
+> * the higher the OSR, the finer the resolution ;
+> * the higher the OSR, the lower the noise ;
+> BUT:
+> * the higher the OSR, the larger the drift ;
+> * the higher the OSR, the longer the response time, i.e. less samples per
+>   unit of time.
+> 
 > Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Applied to the togreg branch of iio.git - initially pushed out as testi=
-ng
-for the autobuilders to play with it.  May or may not make it in this c=
-ycle
-depending on what Linus says in his rc email tomorrow (and whether I ge=
-t time
-to do a pull request mid week).
+Applied to the togreg branch of iio.git - initially pushed out as testing
+for the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
 > ---
->  .../devicetree/bindings/iio/pressure/ms5611.txt       | 19 +++++++++=
-++++++++++
->  Documentation/devicetree/bindings/vendor-prefixes.txt |  1 +
->  drivers/iio/pressure/ms5611_i2c.c                     | 13 +++++++++=
-++++
->  drivers/iio/pressure/ms5611_spi.c                     | 13 +++++++++=
-++++
->  4 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/pressure/ms=
-5611.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/iio/pressure/ms5611.tx=
-t b/Documentation/devicetree/bindings/iio/pressure/ms5611.txt
-> new file mode 100644
-> index 0000000..17bca86
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/pressure/ms5611.txt
-> @@ -0,0 +1,19 @@
-> +MEAS ms5611 family pressure sensors
-> +
-> +Pressure sensors from MEAS Switzerland with SPI and I2C bus interfac=
-es.
-> +
-> +Required properties:
-> +- compatible: "meas,ms5611" or "meas,ms5607"
-> +- reg: the I2C address or SPI chip select the device will respond to
-> +
-> +Optional properties:
-> +- vdd-supply: an optional regulator that needs to be on to provide V=
-DD
-> +  power to the sensor.
-> +
-> +Example:
-> +
-> +ms5607@77 {
-> +	compatible =3D "meas,ms5607";
-> +	reg =3D <0x77>;
-> +	vdd-supply =3D <&ldo_3v3_gnss>;
+>  drivers/iio/pressure/ms5611.h      |  20 ++++---
+>  drivers/iio/pressure/ms5611_core.c | 105 ++++++++++++++++++++++++++++++++++++-
+>  drivers/iio/pressure/ms5611_i2c.c  |  12 ++---
+>  drivers/iio/pressure/ms5611_spi.c  |  19 +++----
+>  4 files changed, 133 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/iio/pressure/ms5611.h b/drivers/iio/pressure/ms5611.h
+> index 8b08e4b..d725a307 100644
+> --- a/drivers/iio/pressure/ms5611.h
+> +++ b/drivers/iio/pressure/ms5611.h
+> @@ -19,12 +19,6 @@
+>  #define MS5611_RESET			0x1e
+>  #define MS5611_READ_ADC			0x00
+>  #define MS5611_READ_PROM_WORD		0xA0
+> -#define MS5611_START_TEMP_CONV		0x58
+> -#define MS5611_START_PRESSURE_CONV	0x48
+> -
+> -#define MS5611_CONV_TIME_MIN		9040
+> -#define MS5611_CONV_TIME_MAX		10000
+> -
+>  #define MS5611_PROM_WORDS_NB		8
+>  
+>  enum {
+> @@ -39,10 +33,24 @@ struct ms5611_chip_info {
+>  					    s32 *temp, s32 *pressure);
+>  };
+>  
+> +/*
+> + * OverSampling Rate descriptor.
+> + * Warning: cmd MUST be kept aligned on a word boundary (see
+> + * m5611_spi_read_adc_temp_and_pressure in ms5611_spi.c).
+> + */
+> +struct ms5611_osr {
+> +	unsigned long conv_usec;
+> +	u8 cmd;
+> +	unsigned short rate;
 > +};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/=
-Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 44ddc98..7733f8c 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -136,6 +136,7 @@ lsi	LSI Corp. (LSI Logic)
->  lltc	Linear Technology Corporation
->  marvell	Marvell Technology Group Ltd.
->  maxim	Maxim Integrated Products
-> +meas	Measurement Specialties
->  mediatek	MediaTek Inc.
->  melexis	Melexis N.V.
->  merrii	Merrii Technology Co., Ltd.
-> diff --git a/drivers/iio/pressure/ms5611_i2c.c b/drivers/iio/pressure=
-/ms5611_i2c.c
-> index 7f6fc8e..57a8f2c 100644
+> +
+>  struct ms5611_state {
+>  	void *client;
+>  	struct mutex lock;
+>  
+> +	const struct ms5611_osr *pressure_osr;
+> +	const struct ms5611_osr *temp_osr;
+> +
+>  	int (*reset)(struct device *dev);
+>  	int (*read_prom_word)(struct device *dev, int index, u16 *word);
+>  	int (*read_adc_temp_and_pressure)(struct device *dev,
+> diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/ms5611_core.c
+> index a9c4d49..a2a871b 100644
+> --- a/drivers/iio/pressure/ms5611_core.c
+> +++ b/drivers/iio/pressure/ms5611_core.c
+> @@ -18,11 +18,44 @@
+>  #include <linux/delay.h>
+>  #include <linux/regulator/consumer.h>
+>  
+> +#include <linux/iio/sysfs.h>
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/iio/trigger_consumer.h>
+>  #include "ms5611.h"
+>  
+> +#define MS5611_INIT_OSR(_cmd, _conv_usec, _rate) \
+> +	{ .cmd = _cmd, .conv_usec = _conv_usec, .rate = _rate }
+> +
+> +static const struct ms5611_osr ms5611_avail_pressure_osr[] = {
+> +	MS5611_INIT_OSR(0x40, 600,  256),
+> +	MS5611_INIT_OSR(0x42, 1170, 512),
+> +	MS5611_INIT_OSR(0x44, 2280, 1024),
+> +	MS5611_INIT_OSR(0x46, 4540, 2048),
+> +	MS5611_INIT_OSR(0x48, 9040, 4096)
+> +};
+> +
+> +static const struct ms5611_osr ms5611_avail_temp_osr[] = {
+> +	MS5611_INIT_OSR(0x50, 600,  256),
+> +	MS5611_INIT_OSR(0x52, 1170, 512),
+> +	MS5611_INIT_OSR(0x54, 2280, 1024),
+> +	MS5611_INIT_OSR(0x56, 4540, 2048),
+> +	MS5611_INIT_OSR(0x58, 9040, 4096)
+> +};
+> +
+> +static const char ms5611_show_osr[] = "256 512 1024 2048 4096";
+> +
+> +static IIO_CONST_ATTR(oversampling_ratio_available, ms5611_show_osr);
+> +
+> +static struct attribute *ms5611_attributes[] = {
+> +	&iio_const_attr_oversampling_ratio_available.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group ms5611_attribute_group = {
+> +	.attrs = ms5611_attributes,
+> +};
+> +
+>  static bool ms5611_prom_is_valid(u16 *prom, size_t len)
+>  {
+>  	int i, j;
+> @@ -239,11 +272,70 @@ static int ms5611_read_raw(struct iio_dev *indio_dev,
+>  		default:
+>  			return -EINVAL;
+>  		}
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		if (chan->type != IIO_TEMP && chan->type != IIO_PRESSURE)
+> +			break;
+> +		mutex_lock(&st->lock);
+> +		if (chan->type == IIO_TEMP)
+> +			*val = (int)st->temp_osr->rate;
+> +		else
+> +			*val = (int)st->pressure_osr->rate;
+> +		mutex_unlock(&st->lock);
+> +		return IIO_VAL_INT;
+>  	}
+>  
+>  	return -EINVAL;
+>  }
+>  
+> +static const struct ms5611_osr *ms5611_find_osr(int rate,
+> +						const struct ms5611_osr *osr,
+> +						size_t count)
+> +{
+> +	unsigned int r;
+> +
+> +	for (r = 0; r < count; r++)
+> +		if ((unsigned short)rate == osr[r].rate)
+> +			break;
+> +	if (r >= count)
+> +		return NULL;
+> +	return &osr[r];
+> +}
+> +
+> +static int ms5611_write_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int val, int val2, long mask)
+> +{
+> +	struct ms5611_state *st = iio_priv(indio_dev);
+> +	const struct ms5611_osr *osr = NULL;
+> +
+> +	if (mask != IIO_CHAN_INFO_OVERSAMPLING_RATIO)
+> +		return -EINVAL;
+> +
+> +	if (chan->type == IIO_TEMP)
+> +		osr = ms5611_find_osr(val, ms5611_avail_temp_osr,
+> +				      ARRAY_SIZE(ms5611_avail_temp_osr));
+> +	else if (chan->type == IIO_PRESSURE)
+> +		osr = ms5611_find_osr(val, ms5611_avail_pressure_osr,
+> +				      ARRAY_SIZE(ms5611_avail_pressure_osr));
+> +	if (!osr)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&st->lock);
+> +
+> +	if (iio_buffer_enabled(indio_dev)) {
+> +		mutex_unlock(&st->lock);
+> +		return -EBUSY;
+> +	}
+> +
+> +	if (chan->type == IIO_TEMP)
+> +		st->temp_osr = osr;
+> +	else
+> +		st->pressure_osr = osr;
+> +
+> +	mutex_unlock(&st->lock);
+> +	return 0;
+> +}
+> +
+>  static const unsigned long ms5611_scan_masks[] = {0x3, 0};
+>  
+>  static struct ms5611_chip_info chip_info_tbl[] = {
+> @@ -259,7 +351,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
+>  	{
+>  		.type = IIO_PRESSURE,
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
+> -			BIT(IIO_CHAN_INFO_SCALE),
+> +			BIT(IIO_CHAN_INFO_SCALE) |
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+>  		.scan_index = 0,
+>  		.scan_type = {
+>  			.sign = 's',
+> @@ -271,7 +364,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
+>  	{
+>  		.type = IIO_TEMP,
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED) |
+> -			BIT(IIO_CHAN_INFO_SCALE),
+> +			BIT(IIO_CHAN_INFO_SCALE) |
+> +			BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+>  		.scan_index = 1,
+>  		.scan_type = {
+>  			.sign = 's',
+> @@ -285,6 +379,8 @@ static const struct iio_chan_spec ms5611_channels[] = {
+>  
+>  static const struct iio_info ms5611_info = {
+>  	.read_raw = &ms5611_read_raw,
+> +	.write_raw = &ms5611_write_raw,
+> +	.attrs = &ms5611_attribute_group,
+>  	.driver_module = THIS_MODULE,
+>  };
+>  
+> @@ -323,6 +419,11 @@ int ms5611_probe(struct iio_dev *indio_dev, struct device *dev,
+>  
+>  	mutex_init(&st->lock);
+>  	st->chip_info = &chip_info_tbl[type];
+> +	st->temp_osr =
+> +		&ms5611_avail_temp_osr[ARRAY_SIZE(ms5611_avail_temp_osr) - 1];
+> +	st->pressure_osr =
+> +		&ms5611_avail_pressure_osr[ARRAY_SIZE(ms5611_avail_pressure_osr)
+> +					   - 1];
+>  	indio_dev->dev.parent = dev;
+>  	indio_dev->name = name;
+>  	indio_dev->info = &ms5611_info;
+> diff --git a/drivers/iio/pressure/ms5611_i2c.c b/drivers/iio/pressure/ms5611_i2c.c
+> index 57a8f2c..55fb5fc 100644
 > --- a/drivers/iio/pressure/ms5611_i2c.c
 > +++ b/drivers/iio/pressure/ms5611_i2c.c
-> @@ -17,6 +17,7 @@
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
->  #include <linux/module.h>
-> +#include <linux/of_device.h>
-> =20
->  #include "ms5611.h"
-> =20
-> @@ -113,6 +114,17 @@ static int ms5611_i2c_remove(struct i2c_client *=
-client)
->  	return ms5611_remove(i2c_get_clientdata(client));
+> @@ -63,23 +63,23 @@ static int ms5611_i2c_read_adc_temp_and_pressure(struct device *dev,
+>  {
+>  	int ret;
+>  	struct ms5611_state *st = iio_priv(dev_to_iio_dev(dev));
+> +	const struct ms5611_osr *osr = st->temp_osr;
+>  
+> -	ret = i2c_smbus_write_byte(st->client, MS5611_START_TEMP_CONV);
+> +	ret = i2c_smbus_write_byte(st->client, osr->cmd);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
+> -
+> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
+>  	ret = ms5611_i2c_read_adc(st, temp);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	ret = i2c_smbus_write_byte(st->client, MS5611_START_PRESSURE_CONV);
+> +	osr = st->pressure_osr;
+> +	ret = i2c_smbus_write_byte(st->client, osr->cmd);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
+> -
+> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
+>  	return ms5611_i2c_read_adc(st, pressure);
 >  }
-> =20
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id ms5611_i2c_matches[] =3D {
-> +	{ .compatible =3D "meas,ms5611" },
-> +	{ .compatible =3D "ms5611" },
-> +	{ .compatible =3D "meas,ms5607" },
-> +	{ .compatible =3D "ms5607" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ms5611_i2c_matches);
-> +#endif
-> +
->  static const struct i2c_device_id ms5611_id[] =3D {
->  	{ "ms5611", MS5611 },
->  	{ "ms5607", MS5607 },
-> @@ -123,6 +135,7 @@ MODULE_DEVICE_TABLE(i2c, ms5611_id);
->  static struct i2c_driver ms5611_driver =3D {
->  	.driver =3D {
->  		.name =3D "ms5611",
-> +		.of_match_table =3D of_match_ptr(ms5611_i2c_matches)
->  	},
->  	.id_table =3D ms5611_id,
->  	.probe =3D ms5611_i2c_probe,
-> diff --git a/drivers/iio/pressure/ms5611_spi.c b/drivers/iio/pressure=
-/ms5611_spi.c
-> index 5cc009e..7ec0c64 100644
+>  
+> diff --git a/drivers/iio/pressure/ms5611_spi.c b/drivers/iio/pressure/ms5611_spi.c
+> index 7ec0c64..7600483 100644
 > --- a/drivers/iio/pressure/ms5611_spi.c
 > +++ b/drivers/iio/pressure/ms5611_spi.c
-> @@ -12,6 +12,7 @@
->  #include <linux/delay.h>
->  #include <linux/module.h>
->  #include <linux/spi/spi.h>
-> +#include <linux/of_device.h>
-> =20
->  #include "ms5611.h"
-> =20
-> @@ -114,6 +115,17 @@ static int ms5611_spi_remove(struct spi_device *=
-spi)
->  	return ms5611_remove(spi_get_drvdata(spi));
+> @@ -56,28 +56,29 @@ static int ms5611_spi_read_adc(struct device *dev, s32 *val)
+>  static int ms5611_spi_read_adc_temp_and_pressure(struct device *dev,
+>  						 s32 *temp, s32 *pressure)
+>  {
+> -	u8 cmd;
+>  	int ret;
+>  	struct ms5611_state *st = iio_priv(dev_to_iio_dev(dev));
+> +	const struct ms5611_osr *osr = st->temp_osr;
+>  
+> -	cmd = MS5611_START_TEMP_CONV;
+> -	ret = spi_write_then_read(st->client, &cmd, 1, NULL, 0);
+> +	/*
+> +	 * Warning: &osr->cmd MUST be aligned on a word boundary since used as
+> +	 * 2nd argument (void*) of spi_write_then_read.
+> +	 */
+> +	ret = spi_write_then_read(st->client, &osr->cmd, 1, NULL, 0);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
+> -
+> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
+>  	ret = ms5611_spi_read_adc(dev, temp);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	cmd = MS5611_START_PRESSURE_CONV;
+> -	ret = spi_write_then_read(st->client, &cmd, 1, NULL, 0);
+> +	osr = st->pressure_osr;
+> +	ret = spi_write_then_read(st->client, &osr->cmd, 1, NULL, 0);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	usleep_range(MS5611_CONV_TIME_MIN, MS5611_CONV_TIME_MAX);
+> -
+> +	usleep_range(osr->conv_usec, osr->conv_usec + (osr->conv_usec / 10UL));
+>  	return ms5611_spi_read_adc(dev, pressure);
 >  }
-> =20
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id ms5611_spi_matches[] =3D {
-> +	{ .compatible =3D "meas,ms5611" },
-> +	{ .compatible =3D "ms5611" },
-> +	{ .compatible =3D "meas,ms5607" },
-> +	{ .compatible =3D "ms5607" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ms5611_spi_matches);
-> +#endif
-> +
->  static const struct spi_device_id ms5611_id[] =3D {
->  	{ "ms5611", MS5611 },
->  	{ "ms5607", MS5607 },
-> @@ -124,6 +136,7 @@ MODULE_DEVICE_TABLE(spi, ms5611_id);
->  static struct spi_driver ms5611_driver =3D {
->  	.driver =3D {
->  		.name =3D "ms5611",
-> +		.of_match_table =3D of_match_ptr(ms5611_spi_matches)
->  	},
->  	.id_table =3D ms5611_id,
->  	.probe =3D ms5611_spi_probe,
->=20
+>  
+> 
