@@ -1,77 +1,149 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: Re: [PATCH v4 1/2] ehci-platform: Add support for
- controllers with multiple reset lines
-Date: Sat, 5 Mar 2016 12:02:50 -0800
-Message-ID: <20160305200250.GA24790@kroah.com>
-References: <1456592339-31767-1-git-send-email-hdegoede@redhat.com>
- <1456592339-31767-2-git-send-email-hdegoede@redhat.com>
- <20160304043559.GA21743@kroah.com>
- <56D938DE.10409@redhat.com>
-Reply-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCUJ7YGL3QFBB3HW5S3AKGQEOD2KEYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56D938DE.10409-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-usb <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/5] rtc: rtc-jz4740: Add support for the RTC in the jz4780 SoC
+Date: Sat,  5 Mar 2016 23:38:47 +0100
+Message-ID: <1457217531-26064-1-git-send-email-paul@crapouillou.net>
+Return-path: <linux-mips-bounce@linux-mips.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Alessandro Zummo <a.zummo@towertech.it>, Paul Cercueil <paul@crapouillou.net>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, rtc-linux@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 08:27:26AM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 04-03-16 05:35, Greg Kroah-Hartman wrote:
-> >On Sat, Feb 27, 2016 at 05:58:58PM +0100, Hans de Goede wrote:
-> >>From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> >>
-> >>At least the EHCI/OHCI found on the Allwinnner H3 SoC needs multiple
-> >>reset lines, the controller will not initialize while the reset for
-> >>its companion is still asserted, which means we need to de-assert
-> >>2 resets for the controller to work.
-> >>
-> >>Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-> >>Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>---
-> >>Changes in v2:
-> >>-Use the new reset_control_[de]assert_shared reset-controller functions
-> >>Changes in v3:
-> >>-Adjust for changes to shared-reset reset-controller functions
-> >>Changes in v4:
-> >>-Fix Ugly continuation line
-> >
-> >This breaks the build horribly :(
-> >
-> >As does patch 2/2, ugh.
-> 
-> As said in the cover letter:
-> 
-> "These patches apply on top of the related
-> reset-controller patches which have just been merged here:
-> 
-> git://git.pengutronix.de/git/pza/linux.git reset/next"
-> 
-> I guess I should have done s/apply on top of/depend on/
-> in the above bit. These patches apply fine without those
-> changes, but indeed they will not build.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/rtc/Kconfig      |  6 +++---
+ drivers/rtc/rtc-jz4740.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 51 insertions(+), 5 deletions(-)
 
-Then I can't take them, you know this :(
-
-> You may want to ask Philipp Zabel (added to the To: list)
-> to create a topic branch for this which you can merge into
-> your tree.
-
-If you all want me to do that, fine, otherwise just resend them after
-4.6-rc1 is out and the build will not break at that time.
-
-thanks,
-
-greg k-h
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index e593c55..b322f08 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1494,10 +1494,10 @@ config RTC_DRV_MPC5121
+ 
+ config RTC_DRV_JZ4740
+ 	tristate "Ingenic JZ4740 SoC"
+-	depends on MACH_JZ4740 || COMPILE_TEST
++	depends on MACH_INGENIC || COMPILE_TEST
+ 	help
+-	  If you say yes here you get support for the Ingenic JZ4740 SoC RTC
+-	  controller.
++	  If you say yes here you get support for the Ingenic JZ47xx SoCs RTC
++	  controllers.
+ 
+ 	  This driver can also be buillt as a module. If so, the module
+ 	  will be called rtc-jz4740.
+diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
+index b2bcfc0..47617bd 100644
+--- a/drivers/rtc/rtc-jz4740.c
++++ b/drivers/rtc/rtc-jz4740.c
+@@ -29,6 +29,10 @@
+ #define JZ_REG_RTC_HIBERNATE	0x20
+ #define JZ_REG_RTC_SCRATCHPAD	0x34
+ 
++/* The following are present on the jz4780 */
++#define JZ_REG_RTC_WENR	0x3C
++#define JZ_RTC_WENR_WEN	BIT(31)
++
+ #define JZ_RTC_CTRL_WRDY	BIT(7)
+ #define JZ_RTC_CTRL_1HZ		BIT(6)
+ #define JZ_RTC_CTRL_1HZ_IRQ	BIT(5)
+@@ -37,8 +41,17 @@
+ #define JZ_RTC_CTRL_AE		BIT(2)
+ #define JZ_RTC_CTRL_ENABLE	BIT(0)
+ 
++/* Magic value to enable writes on jz4780 */
++#define JZ_RTC_WENR_MAGIC	0xA55A
++
++enum jz4740_rtc_type {
++	ID_JZ4740,
++	ID_JZ4780,
++};
++
+ struct jz4740_rtc {
+ 	void __iomem *base;
++	enum jz4740_rtc_type type;
+ 
+ 	struct rtc_device *rtc;
+ 
+@@ -64,11 +77,33 @@ static int jz4740_rtc_wait_write_ready(struct jz4740_rtc *rtc)
+ 	return timeout ? 0 : -EIO;
+ }
+ 
++static inline int jz4780_rtc_enable_write(struct jz4740_rtc *rtc)
++{
++	uint32_t ctrl;
++	int ret, timeout = 1000;
++
++	ret = jz4740_rtc_wait_write_ready(rtc);
++	if (ret != 0)
++		return ret;
++
++	writel(JZ_RTC_WENR_MAGIC, rtc->base + JZ_REG_RTC_WENR);
++
++	do {
++		ctrl = readl(rtc->base + JZ_REG_RTC_WENR);
++	} while (!(ctrl & JZ_RTC_WENR_WEN) && --timeout);
++
++	return timeout ? 0 : -EIO;
++}
++
+ static inline int jz4740_rtc_reg_write(struct jz4740_rtc *rtc, size_t reg,
+ 	uint32_t val)
+ {
+-	int ret;
+-	ret = jz4740_rtc_wait_write_ready(rtc);
++	int ret = 0;
++
++	if (rtc->type >= ID_JZ4780)
++		ret = jz4780_rtc_enable_write(rtc);
++	if (ret == 0)
++		ret = jz4740_rtc_wait_write_ready(rtc);
+ 	if (ret == 0)
+ 		writel(val, rtc->base + reg);
+ 
+@@ -216,11 +251,14 @@ static int jz4740_rtc_probe(struct platform_device *pdev)
+ 	struct jz4740_rtc *rtc;
+ 	uint32_t scratchpad;
+ 	struct resource *mem;
++	const struct platform_device_id *id = platform_get_device_id(pdev);
+ 
+ 	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
+ 	if (!rtc)
+ 		return -ENOMEM;
+ 
++	rtc->type = id->driver_data;
++
+ 	rtc->irq = platform_get_irq(pdev, 0);
+ 	if (rtc->irq < 0) {
+ 		dev_err(&pdev->dev, "Failed to get platform irq\n");
+@@ -295,12 +333,20 @@ static const struct dev_pm_ops jz4740_pm_ops = {
+ #define JZ4740_RTC_PM_OPS NULL
+ #endif  /* CONFIG_PM */
+ 
++static const struct platform_device_id jz4740_rtc_ids[] = {
++	{"jz4740-rtc", ID_JZ4740},
++	{"jz4780-rtc", ID_JZ4780},
++	{}
++};
++MODULE_DEVICE_TABLE(platform, jz4740_rtc_ids);
++
+ static struct platform_driver jz4740_rtc_driver = {
+ 	.probe	 = jz4740_rtc_probe,
+ 	.driver	 = {
+ 		.name  = "jz4740-rtc",
+ 		.pm    = JZ4740_RTC_PM_OPS,
+ 	},
++	.id_table = jz4740_rtc_ids,
+ };
+ 
+ module_platform_driver(jz4740_rtc_driver);
+-- 
+2.7.0
