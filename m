@@ -1,11 +1,14 @@
 From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 00/13] Add A83T clk, r_pio, mmc rsb support
-Date: Sat,  5 Mar 2016 23:42:53 +0800
-Message-ID: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com>
+Subject: [PATCH v3 04/13] ARM: dts: sun8i-a83t: Add basic clocks
+ and resets
+Date: Sat,  5 Mar 2016 23:42:57 +0800
+Message-ID: <1457192586-25596-5-git-send-email-vishnupatekar0510@gmail.com>
+References: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com>
 Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBHH55O3AKGQEGHRTP4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD64TFVR3YIBBMX55O3AKGQEVK2RBMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1457192586-25596-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,96 +20,160 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.g
 Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-This is v3 of series which adds further support for A83T, mainly adds clock 
-support.Also adds R_PIO, PRCM related clocks, mmc, rsb support.
+This adds A83T system bus clocks, bus gates, and clock resets.
 
-A83T difference in short:
-R_PIO is slightly different from A23 r_pio. AHB1 has different parents as
-compared to a31-ahb1, APB1 has different dividers.Bus gates are similar to H3,
-apb0 gates are different.mmc and rsb are compatible with earlier sunxi socs.
+Three ahb reset registers are combined into one node.
 
-These patches are based on Maxime's sunxi/for-next branch.
-https://git.kernel.org/cgit/linux/kernel/git/mripard/linux.git/
+Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 114 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 112 insertions(+), 2 deletions(-)
 
-v2->v3 Changes:
-1. Corrected wrong configuration of uart0 and timer in dtsi.
-2. corrected clock gate name of "spdif" in dtsi.
-3. Added kconfig for sunxi clocks, added sun8i-apb0 and sun9i-cpus clocks to it.
-
-v1->v2 Changes:
-1. Patches for apb0 gates clock, bus gates, low speed oscillators are already
-   merged, so, not included again in this series.
-1. sorted the R_PIO Kconfig options.
-2. removed un-necessary a83t apb1 div table.
-3. combined the three ahb reset registers into one reset node.
-4. Changed the bus gates names to bus_spidf and bus_usb_otg.
-5. removed un-necessary #address-cells and #size-cells from R_PIO node.
-6. splited rsb pins and rsb controller nodes in different patches.
-7. used PF6 as mmc0 CD reference design pin.
-8. corrected the style related errors.
-
-Patch 1: adds support for r_pio pin controller.
-
-patch 2: adds ahb1 clock support, 0b1x is pll6 parent otherwise it's same as a31
-ahb1.
-
-patch 3: adds apb1 clock support, apb1 has different dividers compared to a10 
-apb0 clock.
-
-patch 4: adds basics clocks nodes to dtsi, pll6, ahb1, ahb2, apb1, apb2,
-bus gates, and resets.
-
-patch 5-6: adds mmc and it's clock nodes.
-
-patch 7: adds A83T PRCM related clocks, clock resets.
-
-patch 8: adds r_pio pin controller nodes to dtsi
-
-patch 9: adds RSB controller nodes to dtsi
-
-patch 10: adds common MMC CD detect pin as reference design pin 
-
-patch 11: enables mmc0 support for h8homlet board, tested by LABBE Corentin.
-
-patch 12: This patch adds support for Sinovoip BPI-M3 A83T based board, it has 
-2GB LPDDR3, u-boot support is added recently for this board.
-
-patch 13: Adds kconfig for clocks(sun8i-apb0 and sun9i-cpus).
-
-
-Vishnu Patekar (13):
-  pinctrl: sunxi: Add A83T R_PIO controller support
-  clk: sunxi: add ahb1 clock for A83T
-  clk: sunxi: Add APB1 clock for A83T
-  ARM: dts: sun8i-a83t: Add basic clocks and resets
-  ARM: dts: sun8i-a83t: add mmc clock nodes
-  ARM: dts: sun8i-a83t: Add mmc controller nodes
-  ARM: dts: sun8i-a83t: Add PRCM related clocks and resets
-  ARM: dts: sun8i-a83t: Add R_PIO controller node to the dtsi
-  ARM: dts: sun8i-a83t: Add RSB controller device node to dtsi
-  ARM: dts: sun8i-a83t: add mmc0 CD pin
-  ARM: dts: sun8i: enable mmc for H8Homlet Board.
-  ARM: dts: sun8i: Add A83T based Sinovoip Bpi-M3 Board
-  ARM: sunxi: Add Kconfig for sunxi clocks
-
- Documentation/devicetree/bindings/clock/sunxi.txt  |   2 +
- .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
- arch/arm/boot/dts/Makefile                         |   1 +
- .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  |  11 +
- ...omlet-v2.dts => sun8i-a83t-sinovoip-bpi-m3.dts} |  21 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi                  | 285 ++++++++++++++++++++-
- drivers/clk/Kconfig                                |   1 +
- drivers/clk/sunxi/Kconfig                          |   5 +
- drivers/clk/sunxi/Makefile                         |   4 +-
- drivers/clk/sunxi/clk-sunxi.c                      |  89 +++++++
- drivers/pinctrl/sunxi/Kconfig                      |   5 +
- drivers/pinctrl/sunxi/Makefile                     |   1 +
- drivers/pinctrl/sunxi/pinctrl-sun8i-a83t-r.c       | 119 +++++++++
- 13 files changed, 538 insertions(+), 7 deletions(-)
- copy arch/arm/boot/dts/{sun8i-a83t-allwinner-h8homlet-v2.dts => sun8i-a83t-sinovoip-bpi-m3.dts} (83%)
- create mode 100644 drivers/clk/sunxi/Kconfig
- create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-a83t-r.c
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index d3473f8..2689af4 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -146,6 +146,97 @@
+ 			clocks = <&osc16M>;
+ 			clock-output-names = "osc16M-d512";
+ 		};
++
++		pll6: clk@01c20028 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun9i-a80-pll4-clk";
++			reg = <0x01c20028 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll6";
++		};
++
++		pll6d2: pll6d2_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clock-div = <2>;
++			clock-mult = <1>;
++			clocks = <&pll6>;
++			clock-output-names = "pll6d2";
++		};
++
++		ahb1: clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-a83t-ahb1-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&osc16Md512>, <&osc24M>, <&pll6>, <&pll6>;
++			clock-output-names = "ahb1";
++		};
++
++		apb1: apb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-a83t-apb1-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&ahb1>;
++			clock-output-names = "apb1";
++		};
++
++		apb2: clk@01c20058 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb1-clk";
++			reg = <0x01c20058 0x4>;
++			clocks = <&osc16Md512>, <&osc24M>, <&pll6>, <&pll6>;
++			clock-output-names = "apb2";
++		};
++
++		ahb2: clk@01c2005c {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-h3-ahb2-clk";
++			reg = <0x01c2005c 0x4>;
++			clocks = <&ahb1>, <&pll6d2>;
++			clock-output-names = "ahb2";
++		};
++
++		bus_gates: clk@01c20060 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-a83t-bus-gates-clk";
++			reg = <0x01c20060 0x10>;
++			clocks = <&ahb1>, <&ahb2>, <&apb1>, <&apb2>;
++			clock-names = "ahb1", "ahb2", "apb1", "apb2";
++			clock-indices = <1>, <5>, <6>,
++					<8>, <9>, <10>,
++					<13>, <14>, <17>,
++					<19>, <20>,
++					<21>, <24>,
++					<26>, <27>,
++					<29>, <32>,
++					<36>, <37>,
++					<40>, <43>,
++					<44>, <52>, <53>,
++					<54>, <65>,
++					<69>, <76>, <77>,
++					<78>, <79>, <96>,
++					<97>, <98>,
++					<112>, <113>,
++					<114>, <115>,
++					<116>;
++			clock-output-names = "bus_mipidsi", "bus_ss", "bus_dma",
++					     "bus_mmc0", "bus_mmc1", "bus_mmc2",
++					     "bus_nand", "bus_sdram", "bus_emac",
++					     "bus_hstimer", "bus_spi0",
++					     "bus_spi1", "bus_usb_otg",
++					     "bus_ehci0", "bus_ehci1",
++					     "bus_ohci0", "bus_ve",
++					     "bus_lcd0", "bus_lcd1",
++					     "bus_csi", "bus_hdmi",
++					     "bus_de", "bus_gpu", "bus_msgbox",
++					     "bus_spinlock", "bus_spdif",
++					     "bus_pio", "bus_i2s0", "bus_i2s1",
++					     "bus_i2s2", "bus_tdm", "bus_i2c0",
++					     "bus_i2c1", "bus_i2c2",
++					     "bus_uart0", "bus_uart1",
++					     "bus_uart2", "bus_uart3",
++					     "bus_uart4";
++		};
+ 	};
+ 
+ 	soc {
+@@ -160,7 +251,7 @@
+ 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x01c20800 0x400>;
+-			clocks = <&osc24M>;
++			clocks = <&bus_gates 69>;
+ 			gpio-controller;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+@@ -189,6 +280,24 @@
+ 			};
+ 		};
+ 
++		ahb_reset: reset@01c202c0 {
++			reg = <0x01c202c0 0xc>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			#reset-cells = <1>;
++		};
++
++		apb1_reset: reset@01c202d0 {
++			reg = <0x01c202d0 0x4>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			#reset-cells = <1>;
++		};
++
++		apb2_reset: reset@01c202d8 {
++			reg = <0x01c202d8 0x4>;
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			#reset-cells = <1>;
++		};
++
+ 		timer@01c20c00 {
+ 			compatible = "allwinner,sun4i-a10-timer";
+ 			reg = <0x01c20c00 0xa0>;
+@@ -210,7 +319,8 @@
+ 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg-shift = <2>;
+ 			reg-io-width = <4>;
+-			clocks = <&osc24M>;
++			clocks = <&bus_gates 112>;
++			resets = <&apb2_reset 16>;
+ 			status = "disabled";
+ 		};
+ 
 -- 
 1.9.1
