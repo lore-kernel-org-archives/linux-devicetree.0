@@ -1,38 +1,65 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: OMAP2+: hwmod: Introduce ti,no-idle dt property
-Date: Fri, 4 Mar 2016 22:28:49 -0600
-Message-ID: <20160305042849.GV13525@rob-hp-laptop>
-References: <1456994525-20573-1-git-send-email-lokeshvutla@ti.com>
- <1456994525-20573-2-git-send-email-lokeshvutla@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/4] leds: Replace dedicated SN3218 driver with
+ IS31FL32XX driver
+Date: Fri, 4 Mar 2016 22:28:40 -0600
+Message-ID: <20160305042840.GU13525@rob-hp-laptop>
+References: <1456974095-1867-1-git-send-email-drivshin.allworx@gmail.com>
+ <1456974095-1867-5-git-send-email-drivshin.allworx@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1456994525-20573-2-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1456974095-1867-5-git-send-email-drivshin.allworx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 03, 2016 at 02:12:04PM +0530, Lokesh Vutla wrote:
-> Introduce a dt property, ti,no-idle, that prevents an IP to idle at any
-> point. This is to handle Errata i877, which tells that GMAC clocks
-> cannot be disabled.
+On Wed, Mar 02, 2016 at 10:01:35PM -0500, David Rivshin (Allworx) wrote:
+> From: David Rivshin <drivshin@allworx.com>
 > 
-> Acked-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> Tested-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> Si-En Technology was acquired by ISSI in 2011, and it appears that
+> the IS31FL3218/IS31FL3216 are just rebranded SN3218/SN3216 devices.
+> As the IS31FL32XX driver already handles the *3218 devices, there
+> is no longer a need for the dedicated SN3218 driver.
+> 
+> Add the "sn,sn3218" and "sn,sn3216" compatible strings into the
+> IS31FL32XX driver and binding documentation, and remove the
+> leds-sn3218 driver.
+> 
+> Datasheets:
+>     IS31FL3218: http://www.issi.com/WW/pdf/31FL3218.pdf
+>     SN3218:     http://www.si-en.com/uploadpdf/s2011517171720.pdf
+> 
+>     IS31FL3216: http://www.issi.com/WW/pdf/31FL3216.pdf
+>     SN3216;     http://www.si-en.com/uploadpdf/SN3216201152410148.pdf
+> 
+> Signed-off-by: David Rivshin <drivshin@allworx.com>
 > ---
->  Documentation/devicetree/bindings/arm/omap/omap.txt | 1 +
+> 
+> Note that the leds-sn3218 binding use a 0-based 'reg' property, while
+> the leds-is31fl32xx binding uses a 1-based 'reg' property. This seemed
+> to be the preferred binding based on [1]. Since leds-sn3216 has not been
+> in a released kernel, there is are no backwards-compatibility concerns.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It would probably make more sense to revert the sn3216 driver/binding 
+and add the additions to the previous patches. Doesn't matter to me 
+though.
 
->  arch/arm/mach-omap2/omap_hwmod.c                    | 9 ++++++++-
->  arch/arm/mach-omap2/omap_hwmod.h                    | 3 +++
->  3 files changed, 12 insertions(+), 1 deletion(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
+
+> 
+> Changes from RFC:
+>  new
+> 
+> [1] http://www.spinics.net/lists/linux-leds/msg05589.html
+> 
+>  .../devicetree/bindings/leds/leds-is31fl32xx.txt   |   9 +-
+>  .../devicetree/bindings/leds/leds-sn3218.txt       |  41 ---
+>  drivers/leds/Kconfig                               |  18 +-
+>  drivers/leds/Makefile                              |   1 -
+>  drivers/leds/leds-is31fl32xx.c                     |   6 +-
+>  drivers/leds/leds-sn3218.c                         | 306 ---------------------
+>  6 files changed, 14 insertions(+), 367 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/leds-sn3218.txt
+>  delete mode 100644 drivers/leds/leds-sn3218.c
