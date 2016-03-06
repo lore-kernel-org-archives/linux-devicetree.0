@@ -1,51 +1,117 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v3 6/8] arm64: dts: rockchip: Add power key to GeekBox
-Date: Sun,  6 Mar 2016 20:53:55 +0100
-Message-ID: <1457294038-14243-7-git-send-email-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v3 8/8] arm64: dts: rockchip: Add Landingship config
+Date: Sun,  6 Mar 2016 20:53:57 +0100
+Message-ID: <1457294038-14243-9-git-send-email-afaerber@suse.de>
 References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1457294038-14243-1-git-send-email-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Julien Chauveau <chauveau.julien@gmail.com>, Will Deacon <will.deacon@arm.com>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, "moderated list:ARM64 PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457294038-14243-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgotLS0KIHYy
-IC0+IHYzOgogKiBBZG9wdGVkIHdha2V1cC1zb3VyY2UgaW5zdGVhZCBvZiBncGlvLWtleSx3YWtl
-dXAgKEp1bGllbikKICogRHJvcHBlZCBncGlvLWtleXMgI2FkZHJlc3MtY2VsbHMgYW5kICNzaXpl
-LWNlbGxzIHByb3BlcnRpZXMgKEp1bGllbikKICogRHJvcHBlZCBwb3dlciBidXR0b24gcmVnIHBy
-b3BlcnR5IChKdWxpZW4pCiAqIEFkb3B0ZWQgS0VZX1BPV0VSIChKdWxpZW4pCiAqIEZpeGVkIHBv
-d2VyIGJ1dHRvbiBwaW5jdHJsIHB1bGwgc2V0dGluZyAoSnVsaWVuKQogCiB2MjogTmV3CiAKIGFy
-Y2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzY4LWdlZWtib3guZHRzIHwgMjAgKysrKysr
-KysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCgpkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzNjgtZ2Vla2JveC5kdHMgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM2OC1nZWVrYm94LmR0cwppbmRleCAwOThi
-ZTM3MDBhNmYuLjcwMzZiNDljOTIwNiAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9y
-b2NrY2hpcC9yazMzNjgtZ2Vla2JveC5kdHMKKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9yb2Nr
-Y2hpcC9yazMzNjgtZ2Vla2JveC5kdHMKQEAgLTQyLDYgKzQyLDcgQEAKIAogL2R0cy12MS87CiAj
-aW5jbHVkZSAicmszMzY4LmR0c2kiCisjaW5jbHVkZSA8ZHQtYmluZGluZ3MvaW5wdXQvaW5wdXQu
-aD4KIAogLyB7CiAJbW9kZWwgPSAiR2Vla0JveCI7CkBAIC03MCw2ICs3MSwxOSBAQAogCQlwaW5j
-dHJsLTAgPSA8JmlyX2ludD47CiAJfTsKIAorCWtleXM6IGdwaW8ta2V5cyB7CisJCWNvbXBhdGli
-bGUgPSAiZ3Bpby1rZXlzIjsKKwkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKKwkJcGluY3Ry
-bC0wID0gPCZwd3Jfa2V5PjsKKworCQlidXR0b25AMCB7CisJCQlncGlvcyA9IDwmZ3BpbzAgMiBH
-UElPX0FDVElWRV9MT1c+OworCQkJbGFiZWwgPSAiR1BJTyBQb3dlciI7CisJCQlsaW51eCxjb2Rl
-ID0gPEtFWV9QT1dFUj47CisJCQl3YWtldXAtc291cmNlOworCQl9OworCX07CisKIAlsZWRzOiBn
-cGlvLWxlZHMgewogCQljb21wYXRpYmxlID0gImdwaW8tbGVkcyI7CiAKQEAgLTI2NSw2ICsyNzks
-MTIgQEAKIAkJfTsKIAl9OwogCisJa2V5cyB7CisJCXB3cl9rZXk6IHB3ci1rZXkgeworCQkJcm9j
-a2NoaXAscGlucyA9IDwwIDIgUktfRlVOQ19HUElPICZwY2ZnX3B1bGxfbm9uZT47CisJCX07CisJ
-fTsKKwogCXBtaWMgewogCQlwbWljX3NsZWVwOiBwbWljLXNsZWVwIHsKIAkJCXJvY2tjaGlwLHBp
-bnMgPSA8MCAwIFJLX0ZVTkNfMiAmcGNmZ19wdWxsX25vbmU+OwotLSAKMi42LjIKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ v2 -> v3:
+ * Changed compatible string to include geekbox- (Heiko)
+ * Rebroke compatible strings line
+ * Disabled i2c1 to avoid hang (next-20160304)
+=20
+ v2: New - showcases inclusion of GeekBox module config
+=20
+ arch/arm64/boot/dts/rockchip/Makefile              |  1 +
+ .../dts/rockchip/rk3368-geekbox-landingship.dts    | 57 ++++++++++++++=
+++++++++
+ 2 files changed, 58 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-geekbox-landing=
+ship.dts
+
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dt=
+s/rockchip/Makefile
+index df37865e8ced..201bcd9863ce 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -1,5 +1,6 @@
+ dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-evb-act8846.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-geekbox.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-geekbox-landingship.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) +=3D rk3368-r88.dtb
+=20
+ always		:=3D $(dtb-y)
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox-landingship.dt=
+s b/arch/arm64/boot/dts/rockchip/rk3368-geekbox-landingship.dts
+new file mode 100644
+index 000000000000..a28ace9512bb
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox-landingship.dts
+@@ -0,0 +1,57 @@
++/*
++ * Copyright (c) 2016 Andreas F=C3=A4rber
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of =
+the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "rk3368-geekbox.dts"
++
++/ {
++	model =3D "GeekBox on Landingship";
++	compatible =3D "geekbuying,geekbox-landingship",
++		     "geekbuying,geekbox", "rockchip,rk3368";
++};
++
++&i2c1 {
++	status =3D "disabled";
++};
++
++&i2c2 {
++	status =3D "okay";
++};
+--=20
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
