@@ -1,128 +1,69 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mmc
-Date: Sun, 6 Mar 2016 22:16:13 +0800
-Message-ID: <56DC3BAD.8020107@rock-chips.com>
-References: <1457254062-22677-1-git-send-email-guodong.xu@linaro.org>
- <1457254062-22677-2-git-send-email-guodong.xu@linaro.org>
+From: Purna Chandra Mandal <purna.mandal@microchip.com>
+Subject: [PATCH v3 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
+Date: Sun, 6 Mar 2016 20:26:37 +0530
+Message-ID: <1457276198-30622-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1457254062-22677-2-git-send-email-guodong.xu@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, jh80.chung@samsung.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: shawn.lin@rock-chips.com, shawn.lin@kernel-upstream.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Joshua Henderson <digitalpeer@digitalpeer.com>, Purna Chandra Mandal <purna.mandal@microchip.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016/3/6 16:47, Guodong Xu wrote:
-> mmc registers may in abnormal state if mmc is used in bootloader,
-> eg. to support booting from eMMC. So we need reset mmc registers
-> when kernel boots up, instead of assuming mmc is in clean state.
->
-> With this patch, user can add a 'resets' property into dw_mmc dts
-> node. When driver parse_dt and probe, it calls reset API to
-> deassert the 'reset' of dw_mmc host controller. When probe error or
-> remove, it calls reset API to assert it.
->
-> Please also refer to Documentation/devicetree/bindings/reset/reset.txt
->
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
+Acked-by: Rob Herring <robh@kernel.org>
 
-Really should V2 and add the changelog.
+---
 
-> ---
->   drivers/mmc/host/dw_mmc.c | 22 +++++++++++++++++++++-
->   1 file changed, 21 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-> index 242f9a0..281ea9c 100644
-> --- a/drivers/mmc/host/dw_mmc.c
-> +++ b/drivers/mmc/host/dw_mmc.c
-> @@ -2878,6 +2878,14 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
->   	if (!pdata)
->   		return ERR_PTR(-ENOMEM);
->
-> +	/* find reset controller when exist */
-> +	pdata->rstc = devm_reset_control_get_optional(dev, NULL);
-> +	if (IS_ERR(pdata->rstc)) {
-> +		if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
-> +			return ERR_PTR(-EPROBE_DEFER);
-> +		pdata->rstc = NULL;
+Changes in v3: None
+Changes in v2:
+ - fix indentation
+ - add space after comma
+ - moved 'cs-gpios' section under 'required' properties.
 
-maybe we can remove "pdata->rstc = NULL", and directly
-use IS_ERR(..) for the following "if (host->pdata->rstc != NULL)"
-statement
+ .../bindings/spi/microchip,spi-pic32.txt           | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
 
-
-> +	}
-> +
->   	/* find out number of slots supported */
->   	of_property_read_u32(np, "num-slots", &pdata->num_slots);
->
-> @@ -2949,7 +2957,9 @@ int dw_mci_probe(struct dw_mci *host)
->
->   	if (!host->pdata) {
->   		host->pdata = dw_mci_parse_dt(host);
-> -		if (IS_ERR(host->pdata)) {
-> +		if (PTR_ERR(host->pdata) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-
-please fix the coding style here.
-
-> +		else if (IS_ERR(host->pdata)) {
->   			dev_err(host->dev, "platform data not available\n");
->   			return -EINVAL;
->   		}
-> @@ -3012,6 +3022,9 @@ int dw_mci_probe(struct dw_mci *host)
->   		}
->   	}
->
-> +	if (host->pdata->rstc != NULL)
-> +		reset_control_deassert(host->pdata->rstc);
-> +
-
-sorry, I can't follow your intention here. Shouldn't it be something
-like "assert mmc -> may need delay -> deassert mmc". As your current
-code, nothing happend right?
-
->   	setup_timer(&host->cmd11_timer,
->   		    dw_mci_cmd11_timer, (unsigned long)host);
->
-> @@ -3164,6 +3177,9 @@ err_dmaunmap:
->   	if (host->use_dma && host->dma_ops->exit)
->   		host->dma_ops->exit(host);
->
-> +	if (host->pdata->rstc != NULL)
-> +		reset_control_assert(host->pdata->rstc);
-> +
->   err_clk_ciu:
->   	if (!IS_ERR(host->ciu_clk))
->   		clk_disable_unprepare(host->ciu_clk);
-> @@ -3196,11 +3212,15 @@ void dw_mci_remove(struct dw_mci *host)
->   	if (host->use_dma && host->dma_ops->exit)
->   		host->dma_ops->exit(host);
->
-> +	if (host->pdata->rstc != NULL)
-> +		reset_control_assert(host->pdata->rstc);
-> +
->   	if (!IS_ERR(host->ciu_clk))
->   		clk_disable_unprepare(host->ciu_clk);
->
->   	if (!IS_ERR(host->biu_clk))
->   		clk_disable_unprepare(host->biu_clk);
-> +
->   }
-
-unnecessary new line here.
-
->   EXPORT_SYMBOL(dw_mci_remove);
->
->
-
-
+diff --git a/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+new file mode 100644
+index 0000000..79de379f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+@@ -0,0 +1,34 @@
++Microchip PIC32 SPI Master controller
++
++Required properties:
++- compatible: Should be "microchip,pic32mzda-spi".
++- reg: Address and length of register space for the device.
++- interrupts: Should contain all three spi interrupts in sequence
++              of <fault-irq>, <receive-irq>, <transmit-irq>.
++- interrupt-names: Should be "fault", "rx", "tx" in order.
++- clocks: Phandle of the clock generating SPI clock on the bus.
++- clock-names: Should be "mck0".
++- cs-gpios: Specifies the gpio pins to be used for chipselects.
++            See: Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Optional properties:
++- dmas: Two or more DMA channel specifiers following the convention outlined
++        in Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: Names for the dma channels. There must be at least one channel
++             named "spi-tx" for transmit and named "spi-rx" for receive.
++
++Example:
++
++spi1: spi@1f821000 {
++        compatible = "microchip,pic32mzda-spi";
++        reg = <0x1f821000 0x200>;
++        interrupts = <109 IRQ_TYPE_LEVEL_HIGH>,
++                     <110 IRQ_TYPE_LEVEL_HIGH>,
++                     <111 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "fault", "rx", "tx";
++        clocks = <&PBCLK2>;
++        clock-names = "mck0";
++        cs-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
++        dmas = <&dma 134>, <&dma 135>;
++        dma-names = "spi-rx", "spi-tx";
++};
 -- 
-Best Regards
-Shawn Lin
-
+1.8.3.1
