@@ -1,90 +1,93 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Sun,  6 Mar 2016 20:53:49 +0100
-Message-ID: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+Subject: [PATCH v3 5/8] arm64: dts: rockchip: Clean up gpio-keys nodes
+Date: Sun,  6 Mar 2016 20:53:54 +0100
+Message-ID: <1457294038-14243-6-git-send-email-afaerber@suse.de>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457294038-14243-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Drop superfluous #address-cells and #size-cells.
+Use KEY_POWER define for 116.
 
-This series adds initial support for the RK3368 based GeekBox.
+Reported-by: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ v3: New (Julien)
+=20
+ arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi | 5 ++---
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts  | 5 ++---
+ 2 files changed, 4 insertions(+), 6 deletions(-)
 
-Since v2 almost a month has passed with none of the first patches getti=
-ng queued
-despite Heiko offering to squash them himself, so here's a full update.
-
-There were no more replies on the compatible string discussion for Land=
-ingship;
-I have now adopted Heiko's proposal of using "geekbuying,geekbox-landin=
-gship".
-
-v3 does minor cleanups and starts squashing undisputed patches. The pow=
-er button
-is still left separate, inserting cleanups to align all RK3368 boards a=
-t least.
-
-On next-20160304 the GMAC seems to have regressed, it no longer finds t=
-he PHY:
-
-libphy: PHY stmmac-0:ffffffff not found
-eth0: Could not attach to PHY
-stmmac_open: Cannot attach to PHY (error: -19)
-
-=46or v2 I may have screwed up testing the Landingship FDT; I now ran i=
-nto this:
-
-rk3x-i2c ff140000.i2c: using default SCL frequency: 100000
-INFO: rcu_preempt detected stalls on CPUs/tasks:
-        1-...: (1 GPs behind) idle=3D481/140000000000000/0 softirq=3D13=
-0/131 fqs=3D5250=20
-        (detected by 7, t=3D5254 jiffies, g=3D-239, c=3D-240, q=3D90)
-Task dump for CPU 1:
-swapper/0       R  running task        0     1      0 0x00000002
-Call trace:
-[<ffffff8008085c5c>] __switch_to+0xc4/0xd0
-[<ffffff8008bc1000>] nonblocking_pool_data+0x20/0x80
-
-Keeping i2c1 disabled avoids that; i2c2 does not run into such problems=
-=2E
-A quick git-grep shows that I'm the first actual user of i2c1 (and i2c2=
-),
-so maybe something's wrong with clocks or pinctrl?
-
-Regards,
-Andreas
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Andreas F=C3=A4rber (8):
-  Documentation: devicetree: Add vendor prefix for GeekBuying.com
-  Documentation: devicetree: rockchip: Document GeekBox
-  arm64: dts: rockchip: Add GeekBox config
-  Documentation: devicetree: Clean up gpio-keys example
-  arm64: dts: rockchip: Clean up gpio-keys nodes
-  arm64: dts: rockchip: Add power key to GeekBox
-  Documentation: devicetree: rockchip: Document Landingship
-  arm64: dts: rockchip: Add Landingship config
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   9 +
- .../devicetree/bindings/input/gpio-keys.txt        |   2 -
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm64/boot/dts/rockchip/Makefile              |   2 +
- arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi       |   5 +-
- .../dts/rockchip/rk3368-geekbox-landingship.dts    |  57 ++++
- arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts    | 319 +++++++++++++=
-++++++++
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts        |   5 +-
- 8 files changed, 392 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-geekbox-landing=
-ship.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/=
+boot/dts/rockchip/rk3368-evb.dtsi
+index 06bbe421db37..b62035436d38 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
+@@ -40,6 +40,7 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+=20
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pwm/pwm.h>
+ #include "rk3368.dtsi"
+=20
+@@ -105,8 +106,6 @@
+=20
+ 	keys: gpio-keys {
+ 		compatible =3D "gpio-keys";
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+ 		pinctrl-names =3D "default";
+ 		pinctrl-0 =3D <&pwr_key>;
+=20
+@@ -114,7 +113,7 @@
+ 			wakeup-source;
+ 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+ 			label =3D "GPIO Power";
+-			linux,code =3D <116>;
++			linux,code =3D <KEY_POWER>;
+ 		};
+ 	};
+=20
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/b=
+oot/dts/rockchip/rk3368-r88.dts
+index a1d1aa9c16fe..efb5fa32ecac 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -42,6 +42,7 @@
+=20
+ /dts-v1/;
+ #include "rk3368.dtsi"
++#include <dt-bindings/input/input.h>
+=20
+ / {
+ 	model =3D "Rockchip R88";
+@@ -65,8 +66,6 @@
+=20
+ 	keys: gpio-keys {
+ 		compatible =3D "gpio-keys";
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+ 		pinctrl-names =3D "default";
+ 		pinctrl-0 =3D <&pwr_key>;
+=20
+@@ -74,7 +73,7 @@
+ 			wakeup-source;
+ 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+ 			label =3D "GPIO Power";
+-			linux,code =3D <116>;
++			linux,code =3D <KEY_POWER>;
+ 		};
+ 	};
+=20
 --=20
 2.6.2
 
