@@ -1,95 +1,57 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Sun, 6 Mar 2016 12:32:49 +0100
-Message-ID: <56DC1561.9060306@hartkopp.net>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 1/2] dt/bindings: Add bindings for PIC32 SPI
+ peripheral
+Date: Sun, 6 Mar 2016 18:33:51 +0700
+Message-ID: <20160306113351.GL18327@sirena.org.uk>
+References: <1457238927-16120-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, mkl@pengutronix.de, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, corbet@lwn.net
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, geert+renesas@glider.be, chris.paterson2@renesas.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ggeZL9srFYs+Kb9b"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457238927-16120-1-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2016 04:38 PM, Ramesh Shanmugasundaram wrote:
 
-> Changes since v1:
-> 	* Removed testmodes & debugfs code (suggested by Oliver H)
-> 	* Fixed tx path race issue by introducing lock (suggested by Marc K)
-> 	* Removed __maybe_unused attribute of rcar_canfd_of_table
-> 
+--ggeZL9srFYs+Kb9b
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Mar 06, 2016 at 10:05:26AM +0530, Purna Chandra Mandal wrote:
+> Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>=20
+> ---
+>=20
+> Changes in v2:
+>  - fix indentation
+>  - add space after comma
+>  - moved 'cs-gpios' section under 'required' properties.
 
->  obj-$(CONFIG_CAN_M_CAN)		+= m_can/
->  obj-$(CONFIG_CAN_RCAR)		+= rcar_can.o
-> +obj-$(CONFIG_CANFD_RCAR)	+= rcar_canfd.o
+Please send the *whole* series so I can keep track of which things go
+together.  There's no need to put noise words like RESEND in the subject
+line.
 
-Just for the sake of an ordered directory structure:
+--ggeZL9srFYs+Kb9b
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Would it make sense to create a rcar directory where rcar_can.c and
-rcar_canfd.c are placed?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Additionally (besides of one accident with the obsolete PCH_CAN) all CAN
-drivers start with CONFIG_CAN_...
+iQEcBAEBCAAGBQJW3BWbAAoJECTWi3JdVIfQeNEIAISKzTeq9WaU+tNeO6UB474T
+TFJTECa+atYwUu7Kp+ZgZg47tqEej+dkiZ5quwRl3z4vH6r6WXL+pPVqeSAJN9bb
+PZIxCVlX6LbBsE2lMX/jk3wbyamDe9KNJDhgLluZIlb+pR2/sZpOKpFLYAlqAzMR
+LQ/1XKu4YbcY4/RnqNBEwaC0iXovQoG9Ic+vw5aVywIuh+nzn5V1AuTq3sQxm9r8
+Xjv6rW1gyGkIjW7EEkYl9CIT5JO33NoC+t0KZLTkaYTZ40Wr4uFNWKt/9lT79g3t
+2q5jnuT/Qm2peoY4lHOcT3nPU/LC5iyV264qyCPJpYw775DyopdNfjqMQ7URSio=
+=fk2t
+-----END PGP SIGNATURE-----
 
-Following that scheme the config option should be named
-
-	CONFIG_CAN_RCAR_CANFD
-
-as we had in CONFIG_CAN_IFI_CANFD.
-
-
->  obj-$(CONFIG_CAN_SJA1000)	+= sja1000/
->  obj-$(CONFIG_CAN_SUN4I)		+= sun4i_can.o
->  obj-$(CONFIG_CAN_TI_HECC)	+= ti_hecc.o
-> diff --git a/drivers/net/can/rcar_canfd.c b/drivers/net/can/rcar_canfd.c
-
-(..)
-
-> +/* Channel priv data */
-> +struct rcar_canfd_channel {
-> +	struct can_priv can;			/* Must be the first member */
-> +	struct net_device *ndev;
-> +	struct rcar_canfd_global *gpriv;	/* Controller reference */
-> +	void __iomem *base;			/* Register base address */
-> +#ifdef CONFIG_DEBUG_FS
-> +	struct dentry *dev_root;
-> +#endif /* CONFIG_DEBUG_FS */
-
-Some missed stuff from debugfs removal?
-
-> +	struct napi_struct napi;
-> +	u8  tx_len[RCANFD_FIFO_DEPTH];		/* For net stats */
-> +	u32 tx_head;				/* Incremented on xmit */
-> +	u32 tx_tail;				/* Incremented on xmit done */
-> +	u32 channel;				/* Channel number */
-> +	spinlock_t tx_lock;			/* To protect tx path */
-> +};
-
-(..)
-
-> +static int rcar_canfd_start(struct net_device *ndev)
-> +{
-> +	struct rcar_canfd_channel *priv = netdev_priv(ndev);
-> +	int err = -EOPNOTSUPP;
-> +	u32 sts, ch = priv->channel;
-> +	u32 ridx = ch + RCANFD_RFFIFO_IDX;
-> +
-> +	/* Ensure channel starts in FD mode */
-> +	if (!(priv->can.ctrlmode & CAN_CTRLMODE_FD)) {
-> +		netdev_err(ndev, "enable can fd mode for channel %d\n", ch);
-> +		goto fail_mode;
-> +	}
-
-What's the reason behind this check?
-
-A CAN FD capable CAN controller can be either configured to run as CAN 2.0
-(Classic CAN) or as CAN FD controller.
-
-So why are to throwing an error here and produce an initialization failure?
-
-Regards,
-Oliver
+--ggeZL9srFYs+Kb9b--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
