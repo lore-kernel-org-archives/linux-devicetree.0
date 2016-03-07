@@ -1,78 +1,153 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: Re: [PATCH v3 0/8] i2c mux cleanup and locking update
-Date: Mon, 07 Mar 2016 09:38:54 +0100
-Message-ID: <56DD3E1E.5040003@lysator.liu.se>
-References: <1452265496-22475-1-git-send-email-peda@lysator.liu.se> <20160302172904.GC5439@katana> <56DB1C07.4040008@kernel.org> <20160305182934.GA1394@katana>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 03/26] memory: omap-gpmc: Introduce GPMC to NAND
+ interface
+Date: Mon, 7 Mar 2016 10:55:36 +0200
+Message-ID: <56DD4208.8030604@ti.com>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+ <1455916548-3441-4-git-send-email-rogerq@ti.com>
+ <20160305013534.GJ55664@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160305182934.GA1394@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Jonathan Cameron <jic23@kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Adriana Reus <adriana.reus@intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Nicholas Mc Guire <hofrat@osadl.org>, Olli Salonen <olli.salonen@iki.fi>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160305013534.GJ55664-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-03-05 19:29, Wolfram Sang wrote:
+Hi Brian,
+
+On 05/03/16 03:35, Brian Norris wrote:
+> Hi Roger,
 > 
->> Perhaps it's one to let sit into at least the next cycle (and get some testing
->> on those media devices if we can) but, whilst it is fiddly the gains seen in
->> individual drivers (like the example Peter put in response to the V4 series)
->> make it look worthwhile to me.  Also, whilst the invensense part is plain odd
->> in many ways, the case Peter had looks rather more normal.
+> On Fri, Feb 19, 2016 at 11:15:25PM +0200, Roger Quadros wrote:
+>> The OMAP GPMC module has certain registers dedicated for NAND
+>> access and some NAND bits mixed with other GPMC functionality.
 >>
->> At the end of the day, sometimes fiddly problems need fiddly code. 
->> (says a guy who doesn't have to maintain it!)
+>> For the NAND dedicated registers we have the struct gpmc_nand_regs.
 >>
->> It certainly helps that Peter has done a thorough job, broken the patches
->> up cleanly and provided clean descriptions of what he is doing.
+>> The NAND driver needs to access NAND specific bits from the
+>> following non-dedicated registers
+>> 1) FIFOEVENT and TERMCOUNT from GPMC_IRQENABLE and GPMC_IRQSTATUS
+>> 2) EMPTYWRITEBUFFERSTATUS from GPMC_STATUS
+>>
+>> For accessing these bits we introduce the struct gpmc_nand_ops.
+>>
+>> Rename the gpmc_update_nand_reg() API to gpmc_omap_get_nand_ops()
+>> and make it return the gpmc_nand_ops along with updating the
+>> gpmc_nand_regs. This API will be called by the OMAP NAND driver
+>> to access the necessary bits in GPMC register space.
+>>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  drivers/memory/omap-gpmc.c | 21 ++++++++++++++++++++
+>>  include/linux/omap-gpmc.h  | 49 ++++++++++++++++++++++++++++++++++++++++++++--
+>>  2 files changed, 68 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+>> index 6515dfc..c2f7320 100644
+>> --- a/drivers/memory/omap-gpmc.c
+>> +++ b/drivers/memory/omap-gpmc.c
+>> @@ -1098,6 +1098,27 @@ void gpmc_update_nand_reg(struct gpmc_nand_regs *reg, int cs)
+>>  	}
+>>  }
+>>  
+>> +static struct gpmc_nand_ops nand_ops;
+>> +
+>> +/**
+>> + * gpmc_omap_get_nand_ops - Get the GPMC NAND interface
+>> + * @regs: the GPMC NAND register map exclusive for NAND use.
+>> + * @cs: GPMC chip select number on which the NAND sits. The
+>> + *      register map returned will be specific to this chip select.
+>> + *
+>> + * Returns NULL on error e.g. invalid cs.
+>> + */
+>> +struct gpmc_nand_ops *gpmc_omap_get_nand_ops(struct gpmc_nand_regs *reg, int cs)
+>> +{
+>> +	if (cs >= gpmc_cs_num)
+>> +		return NULL;
+>> +
+>> +	gpmc_update_nand_reg(reg, cs);
+>> +
+>> +	return &nand_ops;
+>> +}
+>> +EXPORT_SYMBOL_GPL(gpmc_omap_get_nand_ops);
+>> +
+>>  int gpmc_get_client_irq(unsigned irq_config)
+>>  {
+>>  	int i;
+>> diff --git a/include/linux/omap-gpmc.h b/include/linux/omap-gpmc.h
+>> index 2dcef1c..7de9f9b 100644
+>> --- a/include/linux/omap-gpmc.h
+>> +++ b/include/linux/omap-gpmc.h
+>> @@ -14,14 +14,59 @@
+>>  #define GPMC_IRQ_FIFOEVENTENABLE	0x01
+>>  #define GPMC_IRQ_COUNT_EVENT		0x02
+>>  
+>> +enum gpmc_nand_irq {
+>> +	GPMC_NAND_IRQ_FIFOEVENT = 0,
+>> +	GPMC_NAND_IRQ_TERMCOUNT,
+>> +};
+>> +
+>> +/**
+>> + * gpmc_nand_ops - Interface between NAND and GPMC
+>> + * @nand_irq_enable: enable the requested GPMC NAND interrupt event.
+>> + * @nand_irq_disable: disable the requested GPMC NAND interrupt event.
+>> + * @nand_irq_clear: clears the GPMC NAND interrupt event status.
+>> + * @nand_irq_status: get the NAND interrupt event status.
+>> + * @nand_write_buffer_empty: get the NAND write buffer empty status.
+>> + */
+>> +struct gpmc_nand_ops {
+>> +	int (*nand_irq_enable)(enum gpmc_nand_irq irq);
+>> +	int (*nand_irq_disable)(enum gpmc_nand_irq irq);
+>> +	void (*nand_irq_clear)(enum gpmc_nand_irq irq);
+>> +	u32 (*nand_irq_status)(void);
 > 
-> Yes, Peter has done a great job so far and the latest results were very
-> convincing (fixing the invensense issue and the savings for rtl2832).
+> ^^ These 4 aren't being used in this revision?
+
+Right. I'll remove them.
 > 
-> And yes, I am reluctant to maintain this code alone, so my question
-> would be:
+>> +	bool (*nand_writebuffer_empty)(void);
+>> +};
+>> +
+>> +struct gpmc_nand_regs;
+>> +
+>> +#if IS_ENABLED(CONFIG_OMAP_GPMC)
+>> +struct gpmc_nand_ops *gpmc_omap_get_nand_ops(struct gpmc_nand_regs *regs,
+>> +					     int cs);
+>> +#else
+>> +static inline gpmc_nand_ops *gpmc_omap_get_nand_ops(struct gpmc_nand_regs *regs,
+>> +						    int cs)
+>> +{
+>> +	return NULL;
+>> +}
+>> +#endif /* CONFIG_OMAP_GPMC */
+>> +
+>> +/*--------------------------------*/
+>> +
+>> +/* deprecated APIs */
+>> +#if IS_ENABLED(CONFIG_OMAP_GPMC)
+>> +void gpmc_update_nand_reg(struct gpmc_nand_regs *reg, int cs);
+>> +#else
+>> +static inline void gpmc_update_nand_reg(struct gpmc_nand_regs *reg, int cs)
+>> +{
+>> +	reg = NULL;
 > 
-> Peter, are you interested in becoming the i2c-mux maintainer and look
-> after the code even after it was merged? (From "you reviewing patches and
-> me picking them up" to "you have your own branch which I pull", we can
-> discuss the best workflow.)
+> What are you trying to do here? 'reg' is local, so the assignment is
+> pointless.
 
-My code wouldn't be worth much if I didn't offer to look after it myself. On
-the other hand, I am also reluctant to be the go-to person for all things
-i2c-mux, as I don't have a clear picture of how much work it's going to be.
-My offer is going to be this, I'll look after any unforeseen future problems
-caused by this rework, and I can be the i2c-mux maintainer. But if being
-the i2c-mux maintainer turns out to be a huge time-sink, there is no way I
-can stay on in the long run. But I guess that is the same for any maintainer
-(whose job description does not explicitly include being maintainer).
-
-> If that would be the case, I have the same idea like Jonathan: Give it
-> another cycle for more review & test and aim for the 4.7 merge window.
-
-Yes, sounds good. One of the reasons for doing things right (or at least
-trying to) is to have more people look at the work. *I* think it's good,
-but more eyes can't hurt.
-
-> I have to admit that I still haven't done a more thorough review, so I
-> can't say if I see a show-stopper in this series. Yet, even if so I am
-> positive it can be sorted out. Oh, and we should call for people with
-> special experience in locking.
+Indeed this is pointless. I'll remove this line.
+I'll also add a patch in the end to get rid of this API as there are no more
+users to it.
 > 
-> What do people think?
+>> +}
+>> +#endif /* CONFIG_OMAP_GPMC */
 > 
-> Regards,
-> 
->    Wolfram
-> 
-> PS: Peter, have you seen my demuxer driver in my for-next branch? I hope
-> it won't spoil your design?
 
-I had a brief look, and I can't see anything in the demux that's affected by
-the mux update. The main commonality of the demux and the preexisting muxes
-seems to be that the name includes "mux" and that it is all about i2c. Agreed?
-
-In short, I see no problems.
-
-Cheers,
-Peter
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
