@@ -1,73 +1,67 @@
 From: Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH v2] iio: dac: Add support for the AD5592R/AD5593R
+Subject: Re: [PATCH v3] iio: dac: Add support for the AD5592R/AD5593R
  ADCs/DACs
-Date: Mon, 7 Mar 2016 13:25:38 +0100
-Message-ID: <56DD7342.5040101@analog.com>
-References: <1456407412-16218-1-git-send-email-michael.hennerich@analog.com>
- <56D1E1CB.6070704@kernel.org> <56D71309.30204@analog.com>
- <56DB1E49.3070908@kernel.org>
+Date: Mon, 7 Mar 2016 13:26:59 +0100
+Message-ID: <56DD7393.5070207@analog.com>
+References: <1457009883-4017-1-git-send-email-michael.hennerich@analog.com>
+ <20160305042952.GA13525@rob-hp-laptop>
 Reply-To: <michael.hennerich@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56DB1E49.3070908@kernel.org>
+In-Reply-To: <20160305042952.GA13525@rob-hp-laptop>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, lars@metafoo.de, knaack.h@gmx.de, paul.cercueil@analog.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: jic23@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, lars@metafoo.de, knaack.h@gmx.de, paul.cercueil@analog.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2016 06:58 PM, Jonathan Cameron wrote:
-> On 02/03/16 16:21, Michael Hennerich wrote:
->> On 02/27/2016 06:50 PM, Jonathan Cameron wrote:
->>> On 25/02/16 13:36, michael.hennerich@analog.com wrote:
->>>> From: Paul Cercueil <paul.cercueil@analog.com>
->>>>
->>>> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
->>>> ADC/DAC devices.
->>>>
->>>> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
->>>> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
->>>>
->>> A few bits inline.
->>>
->>> I'll need a gpio review on this (looks fine to me but it does contain
->>> a gpiochip driver.) Not to mention the question of whether they will
->>> be happy with a gpio chip hiding in iio (rather than via an mfd with a
->>> separate driver - which feels like overkill here).
->>>
->>> The big question to my mind is whether we can take the view this won't
->>> be the last multipurpose chip we will see so do we need to sort the
->>> binding out to make it generic?  It'll be a bit of a pain for you
->>> but I think we can do it fairly easily.
->>> (either way I'll also need a device tree ack on this one!)
->>>
->>> So then we get into the question of the best way of doing the bindings.
->>> The gpio approach seems a little limiting for things as flexible as
->>> this but we should certainly be using their macros where relevant.
+On 03/05/2016 05:29 AM, Rob Herring wrote:
+> On Thu, Mar 03, 2016 at 01:58:03PM +0100, michael.hennerich@analog.com wrote:
+>> From: Paul Cercueil <paul.cercueil@analog.com>
 >>
->> Hi Jonathan,
+>> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
+>> ADC/DAC devices.
 >>
->> Thanks for the review.
->>
->> The problem is see is that using GPIOF_OPEN_DRAIN, will simulate OPEN DRAIN behaviour only, by configuring the device for input when outputing logic high.
->>
-> Is it actually documented as such anywhere? (that's hideous!)
+>> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
+>> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+>
+> [...]
+>
+>> +AD5592R Example:
+>> +
+>> +	#include <dt-bindings/iio/adi,ad5592r.h>
+>> +
+>> +	vref: regulator-vref {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vref-ad559x";
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	ad5592r@0 {
+>> +		#size-cells = <0>;
+>> +		#address-cells = <1>;
+>> +		compatible = "adi,ad5592r";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <1000000>;
+>> +		spi-cpol;
+>> +
+>> +		vref-supply = <&vref>; /* optional */
+>> +		reset-gpios = <&gpio0 86 0>;  /* optional */
+>> +
+>> +		channel@0 {
+>> +			reg = <0>;
+>> +			mode = <CH_MODE_DAC>;
+>
+> You are missing the vendor prefixes thoughout.
+>
 
+Thanks
 
-In fact it is -
-www.kernel.org/doc/Documentation/gpio/gpio-legacy.txt
+Right - I'll fix this ASAP.
 
-"When setting the flag as GPIOF_OPEN_DRAIN then it will assume that pins is
-open drain type. Such pins will not be driven to 1 in output mode. It is
-require to connect pull-up on such pins. By enabling this flag, gpio lib 
-will
-make the direction to input when it is asked to set value of 1 in output 
-mode
-to make the pin HIGH. The pin is make to LOW by driving value 0 in 
-output mode."
-
-And that's exactly what the gpiolib code does.
 
 -- 
 Greetings,
