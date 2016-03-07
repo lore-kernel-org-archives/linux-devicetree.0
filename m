@@ -1,140 +1,282 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Mon, 7 Mar 2016 09:33:28 +0000
-Message-ID: <SG2PR06MB10389F82D83C6D4B89F75BC1C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <20160305043010.GC13525@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v5 13/26] memory: omap-gpmc: Support general purpose
+ input for WAITPINs
+Date: Mon, 7 Mar 2016 10:34:40 +0100
+Message-ID: <20160307103440.4b9d7a55@bbrezillon>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+	<1455916548-3441-14-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160305043010.GC13525@rob-hp-laptop>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1455916548-3441-14-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, computersforpeace@gmail.com, devicetree@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, linux-omap@vger.kernel.org, dwmw2@infradead.org, fcooper@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Roger,
 
-Thanks for the review comments.
+On Fri, 19 Feb 2016 23:15:35 +0200
+Roger Quadros <rogerq@ti.com> wrote:
 
-> On Thu, Mar 03, 2016 at 03:38:35PM +0000, Ramesh Shanmugasundaram wrote:
-> > This patch adds support for the CAN FD controller found in Renesas
-> > R-Car SoCs. The controller operates in CAN FD mode by default.
-> >
-> > CAN FD mode supports both Classical CAN & CAN FD frame formats. The
-> > controller supports ISO 11898-1:2015 CAN FD format only.
-> >
-> > This controller supports two channels and the driver can enable either
-> > or both of the channels.
-> >
-> > Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs
-> > (one per channel) for transmission. Rx filter rules are configured to
-> > the minimum (one per channel) and it accepts Standard, Extended, Data
-> > & Remote Frame combinations.
-> >
-> > Note: There are few documentation errors in R-Car Gen3 Hardware User
-> > Manual v0.5E with respect to CAN FD controller. They are listed below:
-> >
-> > 1. CAN FD interrupt numbers 29 & 30 are listed as per channel
-> > interrupts. However, they are common to both channels (i.e.) they are
-> > global and channel interrupts respectively.
-> >
-> > 2. CANFD clock is derived from PLL1. This is not documented.
-> >
-> > 3. CANFD clock is further divided by (1/2) within the CAN FD controller.
-> > This is not documented.
-> >
-> > 4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
-> > is mentioned 4 Tq in the manual.
-> >
-> > 5. The maximum number of message RAM area the controller can use is
-> > 3584 bytes. It is specified 10752 bytes in the manual.
-> >
-> > Signed-off-by: Ramesh Shanmugasundaram
-> > <ramesh.shanmugasundaram@bp.renesas.com>
-> > ---
-> > Changes since v1:
-> > 	* Removed testmodes & debugfs code (suggested by Oliver H)
-> > 	* Fixed tx path race issue by introducing lock (suggested by Marc K)
-> > 	* Removed __maybe_unused attribute of rcar_canfd_of_table
-> >
-> > Thanks,
-> > Ramesh
-> > ---
-> >  .../devicetree/bindings/net/can/rcar_canfd.txt     |   86 ++
-> >  drivers/net/can/Kconfig                            |   10 +
-> >  drivers/net/can/Makefile                           |    1 +
-> >  drivers/net/can/rcar_canfd.c                       | 1624
-> ++++++++++++++++++++
-> >  4 files changed, 1721 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> >  create mode 100644 drivers/net/can/rcar_canfd.c
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> > b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> > new file mode 100644
-> > index 0000000..4299bd8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-> > @@ -0,0 +1,86 @@
-> > +Renesas R-Car CAN FD controller Device Tree Bindings
-> > +----------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: Must contain one or more of the following:
-> > +  - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
-> > +  - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible
-> controller.
-> > +
-> > +  When compatible with the generic version, nodes must list the
-> > + SoC-specific version corresponding to the platform first, followed
-> > + by the  family-specific and/or generic versions.
-> > +
-> > +- reg: physical base address and size of the R-Car CAN FD register map.
-> > +- interrupts: interrupt specifier for the Global & Channel interrupts
-> > +- clocks: phandles and clock specifiers for 3 clock inputs.
-> > +- clock-names: 3 clock input name strings: "fck", "canfd", "can_clk".
-> > +- pinctrl-0: pin control group to be used for this controller.
-> > +- pinctrl-names: must be "default".
-> > +
-> > +Required properties for "renesas,r8a7795-canfd" compatible:
-> > +In R8A7795 SoC, canfd clock is a div6 clock and can be used by both
-> > +CAN and CAN FD controller at the same time. It needs to be scaled to
-> > +maximum frequency if any of these controllers use it. This is done
-> > +using the below properties.
-> > +
-> > +- assigned-clocks: phandle of canfd clock.
-> > +- assigned-clock-rates: maximum frequency of this clock.
-> > +
-> > +Each channel is represented as a child node. They can be
-> > +enabled/disabled using "status" property.
+> OMAPs can have 2 to 4 WAITPINs that can be used as general purpose
+> input if not used for memory wait state insertion.
 > 
-> How many channels? Required or optional?
+> The first user will be the OMAP NAND chip to get the NAND
+> read/busy status using gpiolib.
 
-Two channels and it is a required property. I will update as below in the next revision.
+Just a comment on this approach. Why do you need to exposed native R/B
+pins as GPIOs? I mean, other NAND controllers are supporting R/B
+detection using dedicated logic, and they do not exposed those pins a
+plain GPIOs. Have you considered adding another property (rb-native ?)
+to deal with this case instead of emulating a GPIO controller?
+Side note: I added an rb-gpios property in my sunxi-nand DT binding
+because in some cases, the board design forces us to use a plain GPIO.
 
-Required child node:
-The controller supports two channels and each is represented as a child
-node. The names of the child nodes are "channel0" and "channel1" respectively.
-Each child node supports the "status" property only, which is used to
-enable/disable the respective channel.
+Anyway, I realize I'm quite late to review this, and I don't want to
+delay even more the inclusion of those patches, so I leave the decision
+to the MTD and TI maintainers.
+
+Best Regards,
+
+Boris
 
 > 
-> > +
-> > +Example
-> > +-------
-> > +
-> > +SoC common .dtsi file:
-> > +
-> > +		canfd: canfd@e66c0000 {
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  .../bindings/memory-controllers/omap-gpmc.txt      |   3 +
+>  drivers/memory/Kconfig                             |   1 +
+>  drivers/memory/omap-gpmc.c                         | 115 ++++++++++++++++++---
+>  3 files changed, 107 insertions(+), 12 deletions(-)
 > 
-> can@e66c0000
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt b/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+> index 704be93..8113a52 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/omap-gpmc.txt
+> @@ -32,6 +32,9 @@ Required properties:
+>  			bootloader) are used for the physical address decoding.
+>  			As this will change in the future, filling correct
+>  			values here is a requirement.
+> + - gpio-controller:	The GPMC driver implements a GPIO controller for the
+> +			GPMC WAIT pins that can be used as general purpose inputs.
+> +			0 maps to GPMC_WAIT0 pin.
+>  
+>  Timing properties for child nodes. All are optional and default to 0.
+>  
+> diff --git a/drivers/memory/Kconfig b/drivers/memory/Kconfig
+> index 6f31546..bca24c6 100644
+> --- a/drivers/memory/Kconfig
+> +++ b/drivers/memory/Kconfig
+> @@ -51,6 +51,7 @@ config TI_EMIF
+>  
+>  config OMAP_GPMC
+>  	bool
+> +	select GPIOLIB
+>  	help
+>  	  This driver is for the General Purpose Memory Controller (GPMC)
+>  	  present on Texas Instruments SoCs (e.g. OMAP2+). GPMC allows
+> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+> index 6c8d85e..f67e5695 100644
+> --- a/drivers/memory/omap-gpmc.c
+> +++ b/drivers/memory/omap-gpmc.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/spinlock.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+> +#include <linux/gpio/driver.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/irqdomain.h>
+>  #include <linux/platform_device.h>
+> @@ -237,6 +238,7 @@ struct gpmc_device {
+>  	struct device *dev;
+>  	int irq;
+>  	struct irq_chip irq_chip;
+> +	struct gpio_chip gpio_chip;
+>  };
+>  
+>  static struct irq_domain *gpmc_irq_domain;
+> @@ -2034,10 +2036,69 @@ err:
+>  	return ret;
+>  }
+>  
+> +static int gpmc_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+> +{
+> +	return 1;	/* we're input only */
+> +}
+> +
+> +static int gpmc_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+> +{
+> +	return 0;	/* we're input only */
+> +}
+> +
+> +static int gpmc_gpio_direction_output(struct gpio_chip *chip, unsigned offset,
+> +				      int value)
+> +{
+> +	return -EINVAL;	/* we're input only */
+> +}
+> +
+> +static void gpmc_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+> +{
+> +}
+> +
+> +static int gpmc_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +	u32 reg;
+> +
+> +	offset += 8;
+> +
+> +	reg = gpmc_read_reg(GPMC_STATUS) & BIT(offset);
+> +
+> +	return !!reg;
+> +}
+> +
+> +static int gpmc_gpio_init(struct gpmc_device *gpmc)
+> +{
+> +	int ret;
+> +
+> +	gpmc->gpio_chip.parent = gpmc->dev;
+> +	gpmc->gpio_chip.owner = THIS_MODULE;
+> +	gpmc->gpio_chip.label = DEVICE_NAME;
+> +	gpmc->gpio_chip.ngpio = gpmc_nr_waitpins;
+> +	gpmc->gpio_chip.get_direction = gpmc_gpio_get_direction;
+> +	gpmc->gpio_chip.direction_input = gpmc_gpio_direction_input;
+> +	gpmc->gpio_chip.direction_output = gpmc_gpio_direction_output;
+> +	gpmc->gpio_chip.set = gpmc_gpio_set;
+> +	gpmc->gpio_chip.get = gpmc_gpio_get;
+> +	gpmc->gpio_chip.base = -1;
+> +
+> +	ret = gpiochip_add(&gpmc->gpio_chip);
+> +	if (ret < 0) {
+> +		dev_err(gpmc->dev, "could not register gpio chip: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void gpmc_gpio_exit(struct gpmc_device *gpmc)
+> +{
+> +	gpiochip_remove(&gpmc->gpio_chip);
+> +}
+> +
+>  static int gpmc_probe_dt(struct platform_device *pdev)
+>  {
+>  	int ret;
+> -	struct device_node *child;
+>  	const struct of_device_id *of_id =
+>  		of_match_device(gpmc_dt_ids, &pdev->dev);
+>  
+> @@ -2065,6 +2126,14 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> +	return 0;
+> +}
+> +
+> +static int gpmc_probe_dt_children(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct device_node *child;
+> +
+>  	for_each_available_child_of_node(pdev->dev.of_node, child) {
+>  
+>  		if (!child->name)
+> @@ -2074,6 +2143,9 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+>  			ret = gpmc_probe_onenand_child(pdev, child);
+>  		else
+>  			ret = gpmc_probe_generic_child(pdev, child);
+> +
+> +		if (ret)
+> +			return ret;
+>  	}
+>  
+>  	return 0;
+> @@ -2083,6 +2155,11 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+>  {
+>  	return 0;
+>  }
+> +
+> +static int gpmc_probe_dt_children(struct platform_device *pdev)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  static int gpmc_probe(struct platform_device *pdev)
+> @@ -2129,6 +2206,15 @@ static int gpmc_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> +	if (pdev->dev.of_node) {
+> +		rc = gpmc_probe_dt(pdev);
+> +		if (rc)
+> +			return rc;
+> +	} else {
+> +		gpmc_cs_num = GPMC_CS_NUM;
+> +		gpmc_nr_waitpins = GPMC_NR_WAITPINS;
+> +	}
+> +
+>  	pm_runtime_enable(&pdev->dev);
+>  	pm_runtime_get_sync(&pdev->dev);
+>  
+> @@ -2154,29 +2240,33 @@ static int gpmc_probe(struct platform_device *pdev)
+>  		 GPMC_REVISION_MINOR(l));
+>  
+>  	gpmc_mem_init();
+> +	rc = gpmc_gpio_init(gpmc);
+> +	if (rc)
+> +		goto gpio_init_failed;
+>  
+>  	rc = gpmc_setup_irq(gpmc);
+>  	if (rc) {
+>  		dev_err(gpmc->dev, "gpmc_setup_irq failed\n");
+> -		goto fail;
+> +		goto setup_irq_failed;
+>  	}
+>  
+> -	if (!pdev->dev.of_node) {
+> -		gpmc_cs_num	 = GPMC_CS_NUM;
+> -		gpmc_nr_waitpins = GPMC_NR_WAITPINS;
+> -	}
+> -
+> -	rc = gpmc_probe_dt(pdev);
+> +	rc = gpmc_probe_dt_children(pdev);
+>  	if (rc < 0) {
+> -		dev_err(gpmc->dev, "failed to probe DT parameters\n");
+> -		gpmc_free_irq(gpmc);
+> -		goto fail;
+> +		dev_err(gpmc->dev, "failed to probe DT children\n");
+> +		goto dt_children_failed;
+>  	}
+>  
+>  	return 0;
+>  
+> -fail:
+> +dt_children_failed:
+> +	gpmc_free_irq(gpmc);
+> +setup_irq_failed:
+> +	gpmc_gpio_exit(gpmc);
+> +gpio_init_failed:
+> +	gpmc_mem_exit();
+>  	pm_runtime_put_sync(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +
+>  	return rc;
+>  }
+>  
+> @@ -2185,6 +2275,7 @@ static int gpmc_remove(struct platform_device *pdev)
+>  	struct gpmc_device *gpmc = platform_get_drvdata(pdev);
+>  
+>  	gpmc_free_irq(gpmc);
+> +	gpmc_gpio_exit(gpmc);
+>  	gpmc_mem_exit();
+>  	pm_runtime_put_sync(&pdev->dev);
+>  	pm_runtime_disable(&pdev->dev);
 
-Thanks. I will update.
 
-Thanks,
-Ramesh
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
