@@ -1,53 +1,91 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 11/11] ARM: dts: Add Altera Arria10 L2 Cache EDAC devicetree entry
-Date: Mon, 7 Mar 2016 13:43:07 -0600
-Message-ID: <1457379787-8327-12-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 06/11] EDAC, altera: Add IRQ flags to private data struct
+Date: Mon, 7 Mar 2016 13:43:02 -0600
+Message-ID: <1457379787-8327-7-git-send-email-tthayer@opensource.altera.com>
 References: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Add the device tree entries needed to support the Altera L2
-cache EDAC on the Arria10 chip.
+In preparation for the Arria10 peripheral ECCs, irq_flags
+was added to the private data structure because Arria10
+uses shared IRQs while Cyclone5/Arria5 have exclusive IRQs.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2 Match register value (l2-ecc@ffd06010)
+v2: Split large patch into smaller patches. Add irq_flags
+    to the private data structure.
 ---
- arch/arm/boot/dts/socfpga_arria10.dtsi |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/edac/altera_edac.c |    8 ++++++--
+ drivers/edac/altera_edac.h |    1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index cce9e50..44aeb3f 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -599,6 +599,20 @@
- 			reg = <0xffe00000 0x40000>;
- 		};
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index c28cd78..fd73a77 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -759,14 +759,16 @@ static int altr_edac_device_probe(struct platform_device *pdev)
+ 	drvdata->sb_irq = platform_get_irq(pdev, 0);
+ 	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
+ 			       altr_edac_device_handler,
+-			       0, dev_name(&pdev->dev), dci);
++			       drvdata->data->irq_flags,
++			       dev_name(&pdev->dev), dci);
+ 	if (res)
+ 		goto fail1;
  
-+		eccmgr: eccmgr@ffd06090 {
-+			compatible = "altr,socfpga-ecc-manager";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			l2-ecc@ffd06010 {
-+				compatible = "altr,socfpga-a10-l2-ecc";
-+				reg = <0xffd06010 0x4>;
-+				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>,
-+					     <0 0 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
- 		rst: rstmgr@ffd05000 {
- 			#reset-cells = <1>;
- 			compatible = "altr,rst-mgr";
+ 	drvdata->db_irq = platform_get_irq(pdev, 1);
+ 	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
+ 			       altr_edac_device_handler,
+-			       0, dev_name(&pdev->dev), dci);
++			       drvdata->data->irq_flags,
++			       dev_name(&pdev->dev), dci);
+ 	if (res)
+ 		goto fail1;
+ 
+@@ -889,6 +891,7 @@ const struct edac_device_prv_data ocramecc_data = {
+ 	.ue_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJD),
+ 	.set_err_ofst = ALTR_OCR_ECC_REG_OFFSET,
+ 	.trig_alloc_sz = ALTR_TRIG_OCRAM_BYTE_SIZE,
++	.irq_flags = 0,
+ };
+ 
+ #endif	/* CONFIG_EDAC_ALTERA_OCRAM */
+@@ -964,6 +967,7 @@ const struct edac_device_prv_data l2ecc_data = {
+ 	.ue_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJD),
+ 	.set_err_ofst = ALTR_L2_ECC_REG_OFFSET,
+ 	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
++	.irq_flags = 0,
+ };
+ 
+ #endif	/* CONFIG_EDAC_ALTERA_L2C */
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index f15b4ad..b262f74 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -235,6 +235,7 @@ struct edac_device_prv_data {
+ 	int ue_set_mask;
+ 	int set_err_ofst;
+ 	int trig_alloc_sz;
++	int irq_flags;
+ };
+ 
+ struct altr_edac_device_dev {
 -- 
 1.7.9.5
