@@ -1,104 +1,153 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Mon, 7 Mar 2016 16:52:53 +0100
-Message-ID: <56DDA3D5.3090209@st.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego>
- <56DD7593.5060003@suse.de> <56DD8176.2080603@st.com>
- <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com>
- <56DDA26C.3050301@suse.de>
+From: atull <atull@opensource.altera.com>
+Subject: Re: [PATCH v17 2/6] ARM: socfpga: add bindings document for fpga
+ bridge drivers
+Date: Mon, 7 Mar 2016 10:09:24 -0600
+Message-ID: <alpine.DEB.2.02.1603071000590.29657@linuxheads99>
+References: <1456442711-29138-1-git-send-email-atull@opensource.altera.com> <1456442711-29138-3-git-send-email-atull@opensource.altera.com> <20160305043455.GA19011@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <56DDA26C.3050301-l3A5Bk7waGM@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?windows-1252?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160305043455.GA19011@rob-hp-laptop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: pantelis.antoniou@konsulko.com, Moritz Fischer <moritz.fischer@ettus.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/7/2016 4:46 PM, Andreas F=E4rber wrote:
-> Hi Peppe,
->
-> Am 07.03.2016 um 16:09 schrieb Giuseppe CAVALLARO:
->> On 3/7/2016 3:27 PM, Andreas F=E4rber wrote:
->>> Indeed, reverting Gabriel's commit fixes the observed error messages
-> [...]
->>> However, I am unable to ping any hosts on the network now.
->>
->> hmm, this could be another problem. I wonder if you can
->> check which recent patch is introducing the problem on ARM64.
->> For example if this depends on Oct_2015 update.
->
-> I've had success reverting drivers/net/ethernet/stmicro/ up to and
-> including "stmmac: first frame prep at the end of xmit routine", i.e.
-> top 7 commits.
+On Sat, 5 Mar 2016, Rob Herring wrote:
 
-Andreas, I will check it and let you know asap.
+> On Thu, Feb 25, 2016 at 05:25:07PM -0600, Alan Tull wrote:
+> > Add bindings documentation for Altera SOCFPGA bridges:
+> >  * fpga2sdram
+> >  * fpga2hps
+> >  * hps2fpga
+> >  * lwhps2fpga
+> > 
+> > Signed-off-by: Alan Tull <atull@opensource.altera.com>
+> > Signed-off-by: Matthew Gerlach <mgerlach@altera.com>
+> > Signed-off-by: Dinh Nguyen <dinguyen@opensource.altera.com>
+> > ---
+> > v2:  separate into 2 documents for the 2 drivers
+> > v12: bump version to line up with simple-fpga-bus version
+> >      remove Linux specific notes such as references to sysfs
+> >      move non-DT specific documentation elsewhere
+> >      remove bindings that would have been used to pass configuration
+> >      clean up formatting
+> > v13: Remove 'label' property
+> >      Change property from init-val to bridge-enable
+> >      Fix email address
+> > v14: Add resets
+> >      Change order of bridges to put lw bridge (controlling bridge) first
+> > v15: No change in this patch for v15 of this patch set
+> > v16: Added regs property, cleaned up unit addresses
+> > v17: No change to this patch in v17 of patch set
+> > ---
+> >  .../bindings/fpga/altera-fpga2sdram-bridge.txt     |   15 +++++++
+> >  .../bindings/fpga/altera-hps2fpga-bridge.txt       |   47 ++++++++++++++++++++
+> >  2 files changed, 62 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> >  create mode 100644 Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> 
+> Just a few minor things.
+> 
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> > new file mode 100644
+> > index 0000000..4479a79
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-fpga2sdram-bridge.txt
+> > @@ -0,0 +1,15 @@
+> > +Altera FPGA To SDRAM Bridge Driver
+> > +
+> > +Required properties:
+> > +- compatible		: Should contain "altr,socfpga-fpga2sdram-bridge"
+> > +
+> > +Optional properties:
+> > +- bridge-enable		: 0 if driver should disable bridge at startup
+> > +			  1 if driver should enable bridge at startup
+> > +			  Default is to leave bridge in current state.
+> > +
+> > +Example:
+> > +	fpga2sdram_br {
+> 
+> fpga-bridge@??
 
->
-> http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/dr=
-ivers/net/ethernet/stmicro?id=3D0e80bdc9a72df3b31a9fc2012102a6cc8d664e93
->
->> If you share some logs to me I can take a look at them.
->> Then we can try to check if the problem in on rx or tx path.
->> I also ask you yo check the axi settings.
->
-> On the reverted (good) branch I see in dmesg:
->
-> [  +0.001100] rk_gmac-dwmac ff290000.ethernet: Looking up phy-supply
-> from device tree
-> [  +0.000030] rk808 0-001b: Looking up vcc12-supply from device tree
-> [  +0.000013] vcc_lan: supplied by vcc_io
-> [  +0.000120] rk_gmac-dwmac ff290000.ethernet: clock input or output?
-> (input).
-> [  +0.000010] rk_gmac-dwmac ff290000.ethernet: TX delay(0x30).
-> [  +0.000007] rk_gmac-dwmac ff290000.ethernet: RX delay(0x10).
-> [  +0.000014] rk_gmac-dwmac ff290000.ethernet: init for RGMII
-> [  +0.000104] rk_gmac-dwmac ff290000.ethernet: clock input from PHY
-> [  +0.005099] rk_gmac-dwmac ff290000.ethernet: no reset control found
-> [  +0.000007] stmmac - user ID: 0x10, Synopsys ID: 0x35
-> [  +0.000002]  Ring mode enabled
-> [  +0.000006]  DMA HW capability register supported
-> [  +0.000000]  Normal descriptors
-> [  +0.000004]  RX Checksum Offload Engine supported (type 2)
-> [  +0.000002]  TX Checksum insertion supported
-> [  +0.000002]  Wake-Up On Lan supported
-> [  +0.000052]  Enable RX Mitigation via HW Watchdog Timer
-> [  +0.000683] rk_gmac-dwmac ff290000.ethernet eth0: No MDIO subnode found
-> [  +0.000124] of_get_named_gpiod_flags: can't parse 'snps,reset-gpio'
-> property of node '/ethernet@ff290000[0]'
-> [  +0.004219] libphy: stmmac: probed
-> [  +0.000010] eth0: PHY ID 001cc915 at 0 IRQ POLL (stmmac-0:00) active
-> [  +0.000005] eth0: PHY ID 001cc915 at 1 IRQ POLL (stmmac-0:01)
->
-> [  +0.881011] eth0: device MAC address 4a:78:dd:10:b3:17
-> [  +4.003065] rk_gmac-dwmac ff290000.ethernet eth0: Link is Up -
-> 1Gbps/Full - flow control rx/tx
->
-> The MAC address is random, changing each time. Otherwise there's no log
-> difference I spot to the pre-Gabriel broken state.
+The hardware is messy here as the control of this bridge is
+lumped into the sdram controller.  I could give the address
+of the one register that enables/disable the bridge here.
 
-ok
->
-> If you need more info, let me know where to find it.
+> 
+> > +		compatible = "altr,socfpga-fpga2sdram-bridge";
+> > +		bridge-enable = <0>;
+> > +	};
+> > diff --git a/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> > new file mode 100644
+> > index 0000000..e6b7474
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/fpga/altera-hps2fpga-bridge.txt
+> > @@ -0,0 +1,47 @@
+> > +Altera FPGA/HPS Bridge Driver
+> > +
+> > +Required properties:
+> > +- regs		: base address and size for AXI bridge module
+> > +- compatible	: Should contain one of:
+> > +		  "altr,socfpga-lwhps2fpga-bridge",
+> > +		  "altr,socfpga-hps2fpga-bridge", or
+> > +		  "altr,socfpga-fpga2hps-bridge"
+> > +- reset-names	: Should contain one of:
+> > +		  "lwhps2fpga",
+> > +		  "hps2fpga", or
+> > +		  "fpga2hps"
+> 
+> Names should be the input signal names. Do you need names with only one?
 
-no it's ok at this stage.
+Right, I will use
+of_reset_control_get_by_index(dev->of_node, 0) and eliminate
+the reset-names here.
 
->
-> Thanks,
+> 
+> > +- resets	: Phandle and reset specifier for the reset listed in
+> > +		  reset-names
+> > +- clocks	: Clocks used by this module.
+> > +
+> > +Optional properties:
+> > +- bridge-enable	: 0 if driver should disable bridge at startup.
+> > +		  1 if driver should enable bridge at startup.
+> > +		  Default is to leave bridge in its current state.
+> > +
+> > +Example:
+> > +	hps_fpgabridge0: fpgabridge@ff400000 {
+> 
+> No underscores.
+> 
+> fpga-bridge@...
 
-welcome
+OK, will add these fixes in v18.
 
-> Andreas
-
-Regards
-peppe
+> 
+> > +		compatible = "altr,socfpga-lwhps2fpga-bridge";
+> > +		reg = <0xff400000 0x100000>;
+> > +		resets = <&rst LWHPS2FPGA_RESET>;
+> > +		reset-names = "lwhps2fpga";
+> > +		clocks = <&l4_main_clk>;
+> > +		bridge-enable = <0>;
+> > +	};
+> > +
+> > +	hps_fpgabridge1: fpgabridge@ff500000 {
+> > +		compatible = "altr,socfpga-hps2fpga-bridge";
+> > +		reg = <0xff500000 0x10000>;
+> > +		resets = <&rst HPS2FPGA_RESET>;
+> > +		reset-names = "hps2fpga";
+> > +		clocks = <&l4_main_clk>;
+> > +		bridge-enable = <1>;
+> > +	};
+> > +
+> > +	hps_fpgabridge2: fpgabridge@ff600000 {
+> > +		compatible = "altr,socfpga-fpga2hps-bridge";
+> > +		reg = <0xff600000 0x100000>;
+> > +		resets = <&rst FPGA2HPS_RESET>;
+> > +		reset-names = "fpga2hps";
+> > +		clocks = <&l4_main_clk>;
+> > +	};
+> > -- 
+> > 1.7.9.5
+> > 
+> 
