@@ -1,250 +1,83 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v6 2/2] mmc: sdhci-of-arasan: add phy support for
- sdhci-of-arasan
-Date: Mon, 7 Mar 2016 15:39:59 +0200
-Message-ID: <56DD84AF.8040900@intel.com>
-References: <1457144633-30615-1-git-send-email-shawn.lin@rock-chips.com>
- <1457144676-30697-1-git-send-email-shawn.lin@rock-chips.com>
- <56DD6EE5.2090801@intel.com> <56DD7892.3040908@rock-chips.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Mon, 7 Mar 2016 15:27:10 +0100
+Message-ID: <56DD8FBE.9010200@suse.de>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego>
+ <56DD7593.5060003@suse.de> <56DD8176.2080603@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <56DD7892.3040908@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <56DD8176.2080603@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/16 14:48, Shawn Lin wrote:
-> =E5=9C=A8 2016/3/7 20:07, Adrian Hunter =E5=86=99=E9=81=93:
->> On 05/03/16 04:24, Shawn Lin wrote:
->>> This patch adds Generic PHY access for sdhci-of-arasan. Driver
->>> can get PHY handler from dt-binding, and power-on/init the PHY.
->>> Currently, it's just mandatory for arasan,sdhci-5.1.
->>>
->>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
->>>
->>> Serise-changes: 6
->>> - rebase on Ulf's next
->>> - fix some preexisting problems of err handling suggested
->>>    by Adrian
->>>
->>> Serise-changes: 5
->>> - remove rpm support from this serise
->>> - fix some err case for handling phy
->>>
->>> Serise-changes: 4
->>> - remove suspend/resume_phy
->>> - add err handle label for system PM callback
->>> - fix comments of struct sdhci_arasan_data and system PM
->>>    callback suggested by Michal
->>>
->>> Serise-changes: 3
->>> - remove phy_init/exit for suspend/resume
->>> - adjust phy_int/power_on seq to make code more reasonable
->>>    simplify suspend/resume_phy
->>>
->>> Serise-changes: 2
->>> - Keep phy as a mandatory requirement for arasan,sdhci-5.1
->>>
->>
->>
->> It looks good, but, sorry to be a pain, the fixes to the error handl=
-ing
->> really have to be separate patches.  I would make a separate patch f=
-or
->> removing clk_disable(sdhci_arasan->clk_ahb) from sdhci_arasan_resume=
-() and
->> another for the error handling fixes in sdhci_arasan_probe().
->=20
-> Thanks. Does that mean you will split these two changes out of this
-> single patch by youself? =EF=BC=9A=EF=BC=89
+Hello Giuseppe,
 
-You need to do it.  I am just Ack/Nack'ing at the moment.
+Am 07.03.2016 um 14:26 schrieb Giuseppe CAVALLARO:
+> On 3/7/2016 1:35 PM, Andreas F=E4rber wrote:
+>> Am 07.03.2016 um 13:24 schrieb Heiko St=FCbner:
+>>> Am Montag, 7. M=E4rz 2016, 13:17:54 schrieb Andreas F=E4rber:
+>>>> Am 06.03.2016 um 20:53 schrieb Andreas F=E4rber:
+>>>>> On next-20160304 the GMAC seems to have regressed, it no longer
+>>>>> finds the
+>>>>> PHY:
+>>>>>
+>>>>> libphy: PHY stmmac-0:ffffffff not found
+>=20
+> snps,phy-addr is not correct. Can you check it?
 
->=20
->>
->> By the way, those "Serise-changes" should not be in the commit msg.
->=20
-> My fault, sorry for forgeting to check the format after generating it=
- by
-> patman.py
->=20
->>
->>> ---
->>>
->>> Changes in v6: None
->>> Changes in v2: None
->>>
->>>   drivers/mmc/host/sdhci-of-arasan.c | 71
->>> +++++++++++++++++++++++++++++++++-----
->>>   1 file changed, 63 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci-of-arasan.c
->>> b/drivers/mmc/host/sdhci-of-arasan.c
->>> index 1e4b5e0..2e482b1 100644
->>> --- a/drivers/mmc/host/sdhci-of-arasan.c
->>> +++ b/drivers/mmc/host/sdhci-of-arasan.c
->>> @@ -21,6 +21,7 @@
->>>
->>>   #include <linux/module.h>
->>>   #include <linux/of_device.h>
->>> +#include <linux/phy/phy.h>
->>>   #include "sdhci-pltfm.h"
->>>
->>>   #define SDHCI_ARASAN_CLK_CTRL_OFFSET    0x2c
->>> @@ -32,9 +33,11 @@
->>>   /**
->>>    * struct sdhci_arasan_data
->>>    * @clk_ahb:    Pointer to the AHB clock
->>> + * @phy: Pointer to the generic phy
->>>    */
->>>   struct sdhci_arasan_data {
->>>       struct clk    *clk_ahb;
->>> +    struct phy    *phy;
->>>   };
->>>
->>>   static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_h=
-ost
->>> *host)
->>> @@ -88,6 +91,15 @@ static int sdhci_arasan_suspend(struct device *d=
-ev)
->>>       if (ret)
->>>           return ret;
->>>
->>> +    if (!IS_ERR(sdhci_arasan->phy)) {
->>> +        ret =3D phy_power_off(sdhci_arasan->phy);
->>> +        if (ret) {
->>> +            dev_err(dev, "Cannot power off phy.\n");
->>> +            sdhci_resume_host(host);
->>> +            return ret;
->>> +        }
->>> +    }
->>> +
->>>       clk_disable(pltfm_host->clk);
->>>       clk_disable(sdhci_arasan->clk_ahb);
->>>
->>> @@ -118,10 +130,17 @@ static int sdhci_arasan_resume(struct device =
-*dev)
->>>       ret =3D clk_enable(pltfm_host->clk);
->>>       if (ret) {
->>>           dev_err(dev, "Cannot enable SD clock.\n");
->>> -        clk_disable(sdhci_arasan->clk_ahb);
->>>           return ret;
->>>       }
->>>
->>> +    if (!IS_ERR(sdhci_arasan->phy)) {
->>> +        ret =3D phy_power_on(sdhci_arasan->phy);
->>> +        if (ret) {
->>> +            dev_err(dev, "Cannot power on phy.\n");
->>> +            return ret;
->>> +        }
->>> +    }
->>> +
->>>       return sdhci_resume_host(host);
->>>   }
->>>   #endif /* ! CONFIG_PM_SLEEP */
->>> @@ -148,19 +167,21 @@ static int sdhci_arasan_probe(struct
->>> platform_device *pdev)
->>>       sdhci_arasan->clk_ahb =3D devm_clk_get(&pdev->dev, "clk_ahb")=
-;
->>>       if (IS_ERR(sdhci_arasan->clk_ahb)) {
->>>           dev_err(&pdev->dev, "clk_ahb clock not found.\n");
->>> -        return PTR_ERR(sdhci_arasan->clk_ahb);
->>> +        ret =3D PTR_ERR(sdhci_arasan->clk_ahb);
->>> +        goto err_pltfm_free;
->>>       }
->>>
->>>       clk_xin =3D devm_clk_get(&pdev->dev, "clk_xin");
->>>       if (IS_ERR(clk_xin)) {
->>>           dev_err(&pdev->dev, "clk_xin clock not found.\n");
->>> -        return PTR_ERR(clk_xin);
->>> +        ret =3D PTR_ERR(clk_xin);
->>> +        goto err_pltfm_free;
->>>       }
->>>
->>>       ret =3D clk_prepare_enable(sdhci_arasan->clk_ahb);
->>>       if (ret) {
->>>           dev_err(&pdev->dev, "Unable to enable AHB clock.\n");
->>> -        return ret;
->>> +        goto err_pltfm_free;
->>>       }
->>>
->>>       ret =3D clk_prepare_enable(clk_xin);
->>> @@ -178,19 +199,48 @@ static int sdhci_arasan_probe(struct
->>> platform_device *pdev)
->>>           goto clk_disable_all;
->>>       }
->>>
->>> +    sdhci_arasan->phy =3D ERR_PTR(-ENODEV);
->>> +    if (of_device_is_compatible(pdev->dev.of_node,
->>> +                    "arasan,sdhci-5.1")) {
->>> +        sdhci_arasan->phy =3D devm_phy_get(&pdev->dev,
->>> +                         "phy_arasan");
->>> +        if (IS_ERR(sdhci_arasan->phy)) {
->>> +            ret =3D PTR_ERR(sdhci_arasan->phy);
->>> +            dev_err(&pdev->dev, "No phy for arasan,sdhci-5.1.\n");
->>> +            goto clk_disable_all;
->>> +        }
->>> +
->>> +        ret =3D phy_init(sdhci_arasan->phy);
->>> +        if (ret < 0) {
->>> +            dev_err(&pdev->dev, "phy_init err.\n");
->>> +            goto clk_disable_all;
->>> +        }
->>> +
->>> +        ret =3D phy_power_on(sdhci_arasan->phy);
->>> +        if (ret < 0) {
->>> +            dev_err(&pdev->dev, "phy_power_on err.\n");
->>> +            goto err_phy_power;
->>> +        }
->>> +    }
->>> +
->>>       ret =3D sdhci_add_host(host);
->>>       if (ret)
->>> -        goto err_pltfm_free;
->>> +        goto err_add_host;
->>>
->>>       return 0;
->>>
->>> -err_pltfm_free:
->>> -    sdhci_pltfm_free(pdev);
->>> +err_add_host:
->>> +    if (!IS_ERR(sdhci_arasan->phy))
->>> +        phy_power_off(sdhci_arasan->phy);
->>> +err_phy_power:
->>> +    if (!IS_ERR(sdhci_arasan->phy))
->>> +        phy_exit(sdhci_arasan->phy);
->>>   clk_disable_all:
->>>       clk_disable_unprepare(clk_xin);
->>>   clk_dis_ahb:
->>>       clk_disable_unprepare(sdhci_arasan->clk_ahb);
->>> -
->>> +err_pltfm_free:
->>> +    sdhci_pltfm_free(pdev);
->>>       return ret;
->>>   }
->>>
->>> @@ -202,6 +252,11 @@ static int sdhci_arasan_remove(struct
->>> platform_device *pdev)
->>>       struct sdhci_arasan_data *sdhci_arasan =3D sdhci_pltfm_priv(p=
-ltfm_host);
->>>       struct clk *clk_ahb =3D sdhci_arasan->clk_ahb;
->>>
->>> +    if (!IS_ERR(sdhci_arasan->phy)) {
->>> +        phy_power_off(sdhci_arasan->phy);
->>> +        phy_exit(sdhci_arasan->phy);
->>> +    }
->>> +
->>>       ret =3D sdhci_pltfm_unregister(pdev);
->>>
->>>       clk_disable_unprepare(clk_ahb);
->>>
->>
->>
->>
->>
->=20
->=20
+It was never set:
 
+https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/a=
+rch/arm64/boot/dts/rockchip/rk3368.dtsi#n436
+
+https://github.com/afaerber/linux/blob/96c5b5fd395fee5713755e93e677fb01=
+1cb9ddc0/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts#L114
+
+> In the stmmac_mdio if this is not passed as parameter the bus should
+> be scanned and the first IDs found should select the right address.
+> I suppose in your box there is a real transceiver, so maybe the patch
+> from Gabriel is not actually necessary.
+
+On the GeekBox module there's an RTL8211E phy.
+
+Indeed, reverting Gabriel's commit fixes the observed error messages:
+
+rk_gmac-dwmac ff290000.ethernet eth0: Link is Up - 1Gbps/Full - flow
+control rx/tx
+
+http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/=
+drivers/net/ethernet/stmicro?id=3D88f8b1bb41c6208f81b6a480244533ded7b59=
+493
+
+However, I am unable to ping any hosts on the network now.
+
+Regards,
+Andreas
+
+>>>>> eth0: Could not attach to PHY
+>>>>> stmmac_open: Cannot attach to PHY (error: -19)
+>>>>
+>>>> Still with us in next-20160307. CC'ing stmmac maintainers.
+>=20
+> peppe
+>=20
+>>>
+>>> do you remember from what revision you rebased away from, when it w=
+as
+>>> still
+>>> working (as a known-good state)?
+>>
+>> Hm, next-20160111 possibly... leaving all the 5 days and 4 days ago
+>> changes as candidates ("stmmac: share reset function between dwmac10=
+0
+>> and dwmac1000" .. "stmmac: Fix 'eth0: No PHY found' regression").
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
+rnberg)
