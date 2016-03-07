@@ -1,91 +1,136 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 06/11] EDAC, altera: Add IRQ flags to private data struct
-Date: Mon, 7 Mar 2016 13:43:02 -0600
-Message-ID: <1457379787-8327-7-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 10/11] ARM: socfpga: Enable Arria10 L2 cache ECC on startup
+Date: Mon, 7 Mar 2016 13:43:06 -0600
+Message-ID: <1457379787-8327-11-git-send-email-tthayer@opensource.altera.com>
 References: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-In preparation for the Arria10 peripheral ECCs, irq_flags
-was added to the private data structure because Arria10
-uses shared IRQs while Cyclone5/Arria5 have exclusive IRQs.
+Enable ECC for Arria10 L2 cache on machine startup. The ECC has to be
+enabled before data is stored in memory otherwise the ECC will fail
+on reads.
+Use DT_MACHINE to select Arria10 L2 cache function.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2: Split large patch into smaller patches. Add irq_flags
-    to the private data structure.
+v2: Split into 2 separate functions selected with DT_MACHINE.
 ---
- drivers/edac/altera_edac.c |    8 ++++++--
- drivers/edac/altera_edac.h |    1 +
- 2 files changed, 7 insertions(+), 2 deletions(-)
+ arch/arm/mach-socfpga/core.h     |    1 +
+ arch/arm/mach-socfpga/l2_cache.c |   49 ++++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-socfpga/socfpga.c  |   10 +++++++-
+ 3 files changed, 59 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index c28cd78..fd73a77 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -759,14 +759,16 @@ static int altr_edac_device_probe(struct platform_device *pdev)
- 	drvdata->sb_irq = platform_get_irq(pdev, 0);
- 	res = devm_request_irq(&pdev->dev, drvdata->sb_irq,
- 			       altr_edac_device_handler,
--			       0, dev_name(&pdev->dev), dci);
-+			       drvdata->data->irq_flags,
-+			       dev_name(&pdev->dev), dci);
- 	if (res)
- 		goto fail1;
+diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
+index 575195b..bfbc78d 100644
+--- a/arch/arm/mach-socfpga/core.h
++++ b/arch/arm/mach-socfpga/core.h
+@@ -38,6 +38,7 @@ extern void socfpga_init_clocks(void);
+ extern void socfpga_sysmgr_init(void);
+ void socfpga_init_l2_ecc(void);
+ void socfpga_init_ocram_ecc(void);
++void socfpga_init_arria10_l2_ecc(void);
  
- 	drvdata->db_irq = platform_get_irq(pdev, 1);
- 	res = devm_request_irq(&pdev->dev, drvdata->db_irq,
- 			       altr_edac_device_handler,
--			       0, dev_name(&pdev->dev), dci);
-+			       drvdata->data->irq_flags,
-+			       dev_name(&pdev->dev), dci);
- 	if (res)
- 		goto fail1;
+ extern void __iomem *sys_manager_base_addr;
+ extern void __iomem *rst_manager_base_addr;
+diff --git a/arch/arm/mach-socfpga/l2_cache.c b/arch/arm/mach-socfpga/l2_cache.c
+index e3907ab..4267c95f 100644
+--- a/arch/arm/mach-socfpga/l2_cache.c
++++ b/arch/arm/mach-socfpga/l2_cache.c
+@@ -17,6 +17,20 @@
+ #include <linux/of_platform.h>
+ #include <linux/of_address.h>
  
-@@ -889,6 +891,7 @@ const struct edac_device_prv_data ocramecc_data = {
- 	.ue_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJD),
- 	.set_err_ofst = ALTR_OCR_ECC_REG_OFFSET,
- 	.trig_alloc_sz = ALTR_TRIG_OCRAM_BYTE_SIZE,
-+	.irq_flags = 0,
- };
++#include "core.h"
++
++/* A10 System Manager L2 ECC Control register */
++#define A10_MPU_CTRL_L2_ECC_OFST          0x0
++#define A10_MPU_CTRL_L2_ECC_EN            BIT(0)
++
++/* A10 System Manager Global IRQ Mask register */
++#define A10_SYSMGR_ECC_INTMASK_CLR_OFST   0x98
++#define A10_SYSMGR_ECC_INTMASK_CLR_L2     BIT(0)
++
++/* A10 System Manager L2 ECC IRQ Clear register */
++#define A10_SYSMGR_MPU_CLEAR_L2_ECC_OFST  0xA8
++#define A10_SYSMGR_MPU_CLEAR_L2_ECC       (BIT(31) | BIT(15))
++
+ void socfpga_init_l2_ecc(void)
+ {
+ 	struct device_node *np;
+@@ -39,3 +53,38 @@ void socfpga_init_l2_ecc(void)
+ 	writel(0x01, mapped_l2_edac_addr);
+ 	iounmap(mapped_l2_edac_addr);
+ }
++
++void socfpga_init_arria10_l2_ecc(void)
++{
++	struct device_node *np;
++	void __iomem *mapped_l2_edac_addr;
++
++	/* Find the L2 EDAC device tree node */
++	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-a10-l2-ecc");
++	if (!np) {
++		pr_err("Unable to find socfpga-a10-l2-ecc in dtb\n");
++		return;
++	}
++
++	mapped_l2_edac_addr = of_iomap(np, 0);
++	of_node_put(np);
++	if (!mapped_l2_edac_addr) {
++		pr_err("Unable to find L2 ECC mapping in dtb\n");
++		return;
++	}
++
++	if (!sys_manager_base_addr) {
++		pr_err("System Mananger not mapped for L2 ECC\n");
++		goto exit;
++	}
++	/* Clear any pending IRQs */
++	writel(A10_SYSMGR_MPU_CLEAR_L2_ECC, (sys_manager_base_addr +
++	       A10_SYSMGR_MPU_CLEAR_L2_ECC_OFST));
++	/* Enable ECC */
++	writel(A10_SYSMGR_ECC_INTMASK_CLR_L2, sys_manager_base_addr +
++	       A10_SYSMGR_ECC_INTMASK_CLR_OFST);
++	writel(A10_MPU_CTRL_L2_ECC_EN, mapped_l2_edac_addr +
++	       A10_MPU_CTRL_L2_ECC_OFST);
++exit:
++	iounmap(mapped_l2_edac_addr);
++}
+diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
+index 7e0aad2..e9b5b60 100644
+--- a/arch/arm/mach-socfpga/socfpga.c
++++ b/arch/arm/mach-socfpga/socfpga.c
+@@ -66,6 +66,14 @@ static void __init socfpga_init_irq(void)
+ 		socfpga_init_ocram_ecc();
+ }
  
- #endif	/* CONFIG_EDAC_ALTERA_OCRAM */
-@@ -964,6 +967,7 @@ const struct edac_device_prv_data l2ecc_data = {
- 	.ue_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJD),
- 	.set_err_ofst = ALTR_L2_ECC_REG_OFFSET,
- 	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
-+	.irq_flags = 0,
- };
- 
- #endif	/* CONFIG_EDAC_ALTERA_L2C */
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index f15b4ad..b262f74 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -235,6 +235,7 @@ struct edac_device_prv_data {
- 	int ue_set_mask;
- 	int set_err_ofst;
- 	int trig_alloc_sz;
-+	int irq_flags;
- };
- 
- struct altr_edac_device_dev {
++static void __init socfpga_arria10_init_irq(void)
++{
++	irqchip_init();
++	socfpga_sysmgr_init();
++	if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
++		socfpga_init_arria10_l2_ecc();
++}
++
+ static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
+ {
+ 	u32 temp;
+@@ -113,7 +121,7 @@ static const char *altera_a10_dt_match[] = {
+ DT_MACHINE_START(SOCFPGA_A10, "Altera SOCFPGA Arria10")
+ 	.l2c_aux_val	= 0,
+ 	.l2c_aux_mask	= ~0,
+-	.init_irq	= socfpga_init_irq,
++	.init_irq	= socfpga_arria10_init_irq,
+ 	.restart	= socfpga_arria10_restart,
+ 	.dt_compat	= altera_a10_dt_match,
+ MACHINE_END
 -- 
 1.7.9.5
