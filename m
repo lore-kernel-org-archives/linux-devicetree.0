@@ -1,74 +1,46 @@
-From: Michael Hennerich <michael.hennerich@analog.com>
-Subject: Re: [PATCH v3] iio: dac: Add support for the AD5592R/AD5593R
- ADCs/DACs
-Date: Mon, 7 Mar 2016 13:26:59 +0100
-Message-ID: <56DD7393.5070207@analog.com>
-References: <1457009883-4017-1-git-send-email-michael.hennerich@analog.com>
- <20160305042952.GA13525@rob-hp-laptop>
-Reply-To: <michael.hennerich@analog.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Mon, 7 Mar 2016 13:35:31 +0100
+Message-ID: <56DD7593.5060003@suse.de>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160305042952.GA13525@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jic23@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, lars@metafoo.de, knaack.h@gmx.de, paul.cercueil@analog.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <2714888.1DdqvJZ8cb@diego>
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2016 05:29 AM, Rob Herring wrote:
-> On Thu, Mar 03, 2016 at 01:58:03PM +0100, michael.hennerich@analog.com wrote:
->> From: Paul Cercueil <paul.cercueil@analog.com>
+Hi Heiko,
+
+Am 07.03.2016 um 13:24 schrieb Heiko St=FCbner:
+> Am Montag, 7. M=E4rz 2016, 13:17:54 schrieb Andreas F=E4rber:
+>> Am 06.03.2016 um 20:53 schrieb Andreas F=E4rber:
+>>> On next-20160304 the GMAC seems to have regressed, it no longer fin=
+ds the
+>>> PHY:
+>>>
+>>> libphy: PHY stmmac-0:ffffffff not found
+>>> eth0: Could not attach to PHY
+>>> stmmac_open: Cannot attach to PHY (error: -19)
 >>
->> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
->> ADC/DAC devices.
->>
->> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
->> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
->
-> [...]
->
->> +AD5592R Example:
->> +
->> +	#include <dt-bindings/iio/adi,ad5592r.h>
->> +
->> +	vref: regulator-vref {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "vref-ad559x";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		regulator-always-on;
->> +	};
->> +
->> +	ad5592r@0 {
->> +		#size-cells = <0>;
->> +		#address-cells = <1>;
->> +		compatible = "adi,ad5592r";
->> +		reg = <0>;
->> +		spi-max-frequency = <1000000>;
->> +		spi-cpol;
->> +
->> +		vref-supply = <&vref>; /* optional */
->> +		reset-gpios = <&gpio0 86 0>;  /* optional */
->> +
->> +		channel@0 {
->> +			reg = <0>;
->> +			mode = <CH_MODE_DAC>;
->
-> You are missing the vendor prefixes thoughout.
->
+>> Still with us in next-20160307. CC'ing stmmac maintainers.
+>=20
+> do you remember from what revision you rebased away from, when it was=
+ still=20
+> working (as a known-good state)?
 
-Thanks
+Hm, next-20160111 possibly... leaving all the 5 days and 4 days ago
+changes as candidates ("stmmac: share reset function between dwmac100
+and dwmac1000" .. "stmmac: Fix 'eth0: No PHY found' regression").
 
-Right - I'll fix this ASAP.
+Regards,
+Andreas
 
-
--- 
-Greetings,
-Michael
-
---
-Analog Devices GmbH      Wilhelm-Wagenfeld-Str. 6      80807 Muenchen
-Sitz der Gesellschaft: Muenchen; Registergericht: Muenchen HRB 40368;
-Geschaeftsfuehrer:Dr.Carsten Suckrow, Thomas Wessel, William A. Martin,
-Margaret Seif
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
+rnberg)
