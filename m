@@ -1,32 +1,64 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mtd: spi-nor: fsl-quadspi: add big-endian support
-Date: Mon, 7 Mar 2016 12:34:10 -0800
-Message-ID: <20160307203410.GX55664@google.com>
-References: <1453793041-35868-1-git-send-email-yao.yuan@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1453793041-35868-1-git-send-email-yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuan Yao <yao.yuan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yao.yuan-3arQi8VN3Tc@public.gmane.org
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [Patch v4 0/6] ARM: am335x/am437x/dra7: Add PWM support for DRA7
+Date: Mon,  7 Mar 2016 14:39:41 -0600
+Message-ID: <1457383187-17166-1-git-send-email-fcooper@ti.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: vigneshr@ti.com, thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 26, 2016 at 03:23:55PM +0800, Yuan Yao wrote:
-> Add R/W functions for big- or little-endian registers:
-> The qSPI controller's endian is independent of the CPU core's endian.
-> So far, the qSPI have two versions for big-endian and little-endian.
-> 
-> Signed-off-by: Yuan Yao <yao.yuan-3arQi8VN3Tc@public.gmane.org>
-> Acked-by: Han xu <han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+This patch series adds support for PWM for DRA7. The IP is same as that
+present in AM33XX and AM437XX.
 
-Pushed patches 1, 2, 3, 5, and 7 to l2-mtd.git. Patch 4 seems unrelated,
-and patch 6 should go through arm-soc.
+However, before doing so remove unnecessary hwmod entries for eCAP, ePWM
+and eQEP.
 
-Regards,
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This series was tested on AM335x GP, AM437x GP and X15 + LCD screen for
+PWM based backlight.
+
+This series was also verified to be backwards compatible with old dtbs.
+
+This series depends on the below patch series for PWM bindings cleanup:
+https://patchwork.ozlabs.org/patch/593171/
+https://patchwork.ozlabs.org/patch/593168/
+https://patchwork.ozlabs.org/patch/593165/
+https://patchwork.ozlabs.org/patch/593166/
+https://patchwork.ozlabs.org/patch/593169/
+
+V3 series:
+https://patchwork.ozlabs.org/patch/588432/
+https://patchwork.ozlabs.org/patch/588434/
+https://patchwork.ozlabs.org/patch/588433/
+https://patchwork.ozlabs.org/patch/588429/
+https://patchwork.ozlabs.org/patch/588431/
+
+Franklin S Cooper Jr (3):
+  pwms: pwm-ti*: Get the clock from the PWMSS (parent)
+  ARM: dts: am437x/am33xx: Remove eCAP and ePWM hwmod properties
+  ARM: AM335x/AM437x: hwmod: Remove eQEP, ePWM and eCAP hwmod entries
+
+Vignesh R (3):
+  ARM: OMAP2+: DRA7: Add hwmod entries for PWMSS
+  ARM: dts: DRA7: Add TBCLK for PWMSS
+  ARM: dts: DRA7: Add dt nodes for PWMSS
+
+ .../devicetree/bindings/pwm/pwm-tiecap.txt         |  1 -
+ .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       | 16 ++++-
+ .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 15 +++-
+ arch/arm/boot/dts/am33xx.dtsi                      | 12 ++--
+ arch/arm/boot/dts/am4372.dtsi                      | 21 +++---
+ arch/arm/boot/dts/dra7.dtsi                        | 60 ++++++++++++++++
+ arch/arm/boot/dts/dra7xx-clocks.dtsi               | 24 +++++++
+ .../mach-omap2/omap_hwmod_33xx_43xx_common_data.h  | 18 -----
+ .../omap_hwmod_33xx_43xx_interconnect_data.c       | 64 -----------------
+ .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c | 84 ----------------------
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         |  9 ---
+ arch/arm/mach-omap2/omap_hwmod_43xx_data.c         | 54 --------------
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c          | 83 +++++++++++++++++++++
+ drivers/pwm/pwm-tiecap.c                           |  2 +-
+ drivers/pwm/pwm-tiehrpwm.c                         |  2 +-
+ 15 files changed, 214 insertions(+), 251 deletions(-)
+
+-- 
+2.7.0
