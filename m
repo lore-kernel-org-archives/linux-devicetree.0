@@ -1,69 +1,46 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
-Date: Mon, 7 Mar 2016 12:27:36 +0100
-Message-ID: <CAMuHMdVcM9KF0v_0Ejaph4TVC5BtGfOfs9MJ3KMtOL4Hp1qMmg@mail.gmail.com>
-References: <1457104420-18350-1-git-send-email-robh@kernel.org>
+From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Subject: [PATCH v3 1/2] Documentation: DT: Add entry for Freescale LS1043a-QDS
+ board
+Date: Mon, 7 Mar 2016 19:30:31 +0800
+Message-ID: <1457350232-12749-1-git-send-email-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457104420-18350-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, will.deacon@arm.com, scott.wood@nxp.com, shawnguo@kernel.org
+Cc: Shaohui.Xie@nxp.com, Hou Zhiqiang <Zhiqiang.Hou@nxp.com>, Mingkai.Hu@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 
-On Fri, Mar 4, 2016 at 4:13 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
-> fdt_node_check_compatible()"). This adds the following commits from
-> upstream:
->
-> 53bf130 libfdt: simplify fdt_node_check_compatible()
-> c9d9121 Warn on node name unit-address presence/absence mismatch
-> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> As usual, this is just an automated copy of upstream dtc into the kernel
-> tree. The changeset is small enough that I have left it here.
->
-> The main reason for this sync is to pick-up the new unit-address
-> warnings.
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+---
+v3:
+ - No change.
 
-I gave this a try. Obviously it finds many abuses that should be fixed.
+ Documentation/devicetree/bindings/arm/fsl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-However, I'm wondering about the following, where the unit-address is just
-used to distinguish between multiple instances:
-
-    Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit
-name, but no reg property
-        compatible = "cache";
-    Warning (unit_address_vs_reg): Node /regulator@1 has a unit name,
-but no reg property
-        compatible = "regulator-fixed"
-    Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no
-reg property
-        compatible = "i2c-gpio"
-
-How should these be fixed?
-
-BTW, there seems to be a missing dependency of the DTBs on the dtc itself.
-Applying your patch and running "make dtbs" didn't rebuilt any DTBs.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index 752a685..f504fdf 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -134,6 +134,7 @@ Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
+ LS1043A ARMv8 based RDB Board
+ Required root node properties:
+     - compatible = "fsl,ls1043a-rdb", "fsl,ls1043a";
++    - compatible = "fsl,ls1043a-qds", "fsl,ls1043a";
+ 
+ LS2080A ARMv8 based Simulator model
+ Required root node properties:
+-- 
+2.1.0.27.g96db324
