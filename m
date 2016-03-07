@@ -1,51 +1,137 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v3 4/8] Documentation: devicetree: Clean up gpio-keys
- example
-Date: Mon, 7 Mar 2016 19:27:22 +0100
-Message-ID: <56DDC80A.303@suse.de>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <1457294038-14243-5-git-send-email-afaerber@suse.de>
- <15855134.NAdvd5CP0M@diego>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/5] Subject: video: goldfishfb: add devicetree bindings
+Date: Mon, 7 Mar 2016 20:29:21 +0200
+Message-ID: <56DDC881.6060603@ti.com>
+References: <20160226183940.2731.42083.stgit@localhost.localdomain>
+ <20160226184146.2731.41848.stgit@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <15855134.NAdvd5CP0M@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature";
+	boundary="ClVIm2AiWOlI1EUhGqGk0etOfPia2te6M"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160226184146.2731.41848.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 07.03.2016 um 19:05 schrieb Heiko St=FCbner:
-> Am Sonntag, 6. M=E4rz 2016, 20:53:53 schrieb Andreas F=E4rber:
->> Drop #address-cells and #size-cells, which are not required by the
->> gpio-keys binding documentation, as button sub-nodes are not devices.
->>
->> Reported-by: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
->> ---
-> =
+--ClVIm2AiWOlI1EUhGqGk0etOfPia2te6M
+Content-Type: multipart/mixed; boundary="0XkHs8j1o2DMM6L5262LlJIwn5VfrEH2u"
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Alan <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org,
+ "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Message-ID: <56DDC881.6060603-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/5] Subject: video: goldfishfb: add devicetree bindings
+References: <20160226183940.2731.42083.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+ <20160226184146.2731.41848.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+In-Reply-To: <20160226184146.2731.41848.stgit-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
 
-> changes to input-device bindings should go through the input tree, and th=
-us =
+--0XkHs8j1o2DMM6L5262LlJIwn5VfrEH2u
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-> include Dmitry Thorokhov and the linux-input lists.
 
-Thanks for noticing, MAINTAINERS update proposed and resent this patch
-using it.
+On 26/02/16 20:41, Alan wrote:
+> From: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>=20
+> Add device tree bindings to the Goldfish frame buffer interface.
+>=20
+> Signed-off-by: Greg Hackmann <ghackmann-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Jin Qian <jinqian-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Alan Cox <alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/goldfish/fb.txt |   17 +++++++++++++=
+++++
+>  drivers/video/fbdev/goldfishfb.c                  |    9 ++++++++-
+>  2 files changed, 25 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/goldfish/fb.txt
 
-Andreas
+Device tree bindings should also be sent to the devicetree mailing list.
 
--- =
+> diff --git a/Documentation/devicetree/bindings/goldfish/fb.txt b/Docume=
+ntation/devicetree/bindings/goldfish/fb.txt
+> new file mode 100644
+> index 0000000..c7d2d46
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/goldfish/fb.txt
+> @@ -0,0 +1,17 @@
+> +Android Goldfish Framebuffer
+> +
+> +Andorid goldfish framebuffer device generated by android emulator.
 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FCrn=
-berg)
+Typo there in Android.
+
+> +
+> +Required properties:
+> +
+> +- compatible : should contain "google,goldfish-fb" to match emulator
+> +- reg        : <registers mapping>
+> +- interrupts : <interrupt mapping>
+> +
+> +Example:
+> +
+> +	goldfish_fb@9010000 {
+> +		compatible =3D "google,goldfish-fb";
+> +		reg =3D <0x9010000 0x100>;
+> +		interrupts =3D <0x2>;
+> +	};
+> diff --git a/drivers/video/fbdev/goldfishfb.c b/drivers/video/fbdev/gol=
+dfishfb.c
+> index 7f6c9e6..f0e651b 100644
+> --- a/drivers/video/fbdev/goldfishfb.c
+> +++ b/drivers/video/fbdev/goldfishfb.c
+> @@ -304,12 +304,19 @@ static int goldfish_fb_remove(struct platform_dev=
+ice *pdev)
+>  	return 0;
+>  }
+> =20
+> +static const struct of_device_id goldfish_fb_of_match[] =3D {
+> +	{ .compatible =3D "google,goldfish-fb", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, goldfish_fb_of_match);
+> =20
+>  static struct platform_driver goldfish_fb_driver =3D {
+>  	.probe		=3D goldfish_fb_probe,
+>  	.remove		=3D goldfish_fb_remove,
+>  	.driver =3D {
+> -		.name =3D "goldfish_fb"
+> +		.name =3D "goldfish_fb",
+> +		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D goldfish_fb_of_match,
+>  	}
+>  };
+> =20
+>=20
+
+
+--0XkHs8j1o2DMM6L5262LlJIwn5VfrEH2u--
+
+--ClVIm2AiWOlI1EUhGqGk0etOfPia2te6M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJW3ciBAAoJEPo9qoy8lh71GGoP/R5REm8om+oKfck1zfy+DuNl
+Bu9ywMQYJo290jVDnxoeo9mQmmYibJy1k7Rihq/s/tP9jOMei75kDdOSuJJ+UHAx
+YaLTVFBatA+r7lZmSFMv7Mtt05qJvK8XjPyCtKyFYmeoG67nMwk/Z+k7NTGqXH+Q
+MNH8Xc2rLz2GGUd7cX+nIKTCslFiZPRA5LWb8q83IXmFygJz6Iqz7f3PM8Iz03Zw
+WYDhMzaW37s1xcac6d+WQ58Oj9Dv91aOJFRN+m7GoI9WjlFriqwgsqfo2SGw4MXu
+K8r2W06qEXSlMoqeAr+QcwV0lrCqwaNCnjYRDbw33jz1Fjuw66FSt18iCN2F/lQr
+/0FQ+SZtx1vmHT7cAnRy0Hjwd9oUWEq9o/ElWFdIY+XMTpO22Oi38txcloTn3m8n
+y8IdeJGjHLscEnzvvX2hCdYa7wFxnAhgmU14EJZnJv7t83uFHFWFxZcCqp/6m3jq
+FNHw0/2ggSdULHat0D2FXhUo3mqhntZuuH268KBXNlbdXcpI+OfM/tO4JGceUy4v
+7pF4eSR9Exm7RdwyIEyVy1XdLwyfNzuNtDXp168IkedpBjAZCLiXyan1/yvgCXRN
+TErlT/OzHmmAS9goTvclSWqOKvtIsQTTh5OSOGqnHv80P9e27lm0QX2QMAgdgnoF
+7pw/NwWdtphzcFxPFsBq
+=rfKG
+-----END PGP SIGNATURE-----
+
+--ClVIm2AiWOlI1EUhGqGk0etOfPia2te6M--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
