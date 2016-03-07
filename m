@@ -1,51 +1,71 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] documentation: Fix pinctrl documentation for Meson8 / Meson8b
-Date: Mon, 7 Mar 2016 10:01:53 +0100
-Message-ID: <CAOQ7t2bd5-xeUkwjN4cqi=xa602B8JwZ4vvrUF1VL4y2=pkV_Q@mail.gmail.com>
-References: <1456869876-19320-1-git-send-email-carlo@caione.org>
-	<1456869876-19320-5-git-send-email-carlo@caione.org>
-	<20160305042646.GL13525@rob-hp-laptop>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 09/26] mtd: nand: omap: Clean up device tree support
+Date: Mon, 7 Mar 2016 11:02:58 +0200
+Message-ID: <56DD43C2.2080406@ti.com>
+References: <1455916548-3441-1-git-send-email-rogerq@ti.com>
+ <1455916548-3441-10-git-send-email-rogerq@ti.com>
+ <20160305022823.GO55664@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160305042646.GL13525@rob-hp-laptop>
+In-Reply-To: <20160305022823.GO55664-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 5, 2016 at 5:26 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Mar 01, 2016 at 11:04:36PM +0100, Carlo Caione wrote:
->> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+On 05/03/16 04:28, Brian Norris wrote:
+> Sorry, another small thing I noticed.
+> 
+> On Fri, Feb 19, 2016 at 11:15:31PM +0200, Roger Quadros wrote:
+>> Move NAND specific device tree parsing to NAND driver.
 >>
->> Fix pin controller documentation with the new compatibles.
->
-> What was wrong with it? (answer in the commit msg)
+>> The NAND controller node must have a compatible id, register space
+>> resource and interrupt resource.
+>>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> ---
+> [...]
+> 
+>> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+>> index 9e99199..0a637c4 100644
+>> --- a/drivers/mtd/nand/omap2.c
+>> +++ b/drivers/mtd/nand/omap2.c
+>> @@ -24,6 +24,7 @@
+>>  #include <linux/slab.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_device.h>
+>> +#include <linux/of_mtd.h>
+>>  
+>>  #include <linux/mtd/nand_bch.h>
+>>  #include <linux/platform_data/elm.h>
+>> @@ -177,10 +178,11 @@ struct omap_nand_info {
+>>  	struct gpmc_nand_regs		reg;
+>>  	struct gpmc_nand_ops		*ops;
+>>  	/* generated at runtime depending on ECC algorithm and layout selected */
+> 
+> ^^^ I don't think that comment describes the following line. You
+> probably meant to delete this one?
 
-I'll extend the commit message.
+Yes. I'll remove that. Was my bad on cherry-pick conflict resolution.
 
-[...]
->>  Required properties for the root node:
->> - - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
->> + - compatible: "amlogic,meson8-cbus-pinctrl", "amlogic,meson8b-cbus-pinctrl",
->> +   "amlogic,meson8-aobus-pinctrl" or "amlogic,meson8b-aobus-pinctrl"
->
-> Reformat with 1 per line (assuming each are mutually exclusive).
+> 
+>> +	bool				flash_bbt;
+>> +	/* generated at runtime depending on ECC algorithm and layout */
+>>  	struct nand_ecclayout		oobinfo;
+>>  	/* fields specific for BCHx_HW ECC scheme */
+>>  	struct device			*elm_dev;
+>> -	struct device_node		*of_node;
+>>  };
+>>  
+>>  static inline struct omap_nand_info *mtd_to_omap(struct mtd_info *mtd)
+> 
+> [...]
+> 
 
-ok
-
-[...]
->> -Valid sub-node names are:
->> - - "banks" for the regular domain
->> - - "ao-bank" for the always-on domain
->> -
->
-> Why are these being removed?
-
-Because we are not forced anymore to use those specific names for the sub-nodes.
-
--- 
-Carlo Caione
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
