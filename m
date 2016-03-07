@@ -1,104 +1,56 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
-Date: Mon, 7 Mar 2016 14:03:04 +0100
-Message-ID: <20160307130304.GA791@pengutronix.de>
-References: <1456761156-27664-1-git-send-email-s.trumtrar@pengutronix.de>
- <1456761156-27664-3-git-send-email-s.trumtrar@pengutronix.de>
- <CAOMZO5BN-1U6vX0HAHWX30t+23NnqEpOw6AttSgvqaZnq=cN6Q@mail.gmail.com>
- <20160229213850.GS2613@pengutronix.de>
- <CAOMZO5BLYumOrBuoB5-RgzLAJ=o4zp9ocv4jcZRy=p6Pky1SyQ@mail.gmail.com>
- <20160301074937.GU2613@pengutronix.de>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Mon, 7 Mar 2016 14:26:14 +0100
+Message-ID: <56DD8176.2080603@st.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de> <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego> <56DD7593.5060003@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160301074937.GU2613@pengutronix.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Matt Mackall <mpm@selenic.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <56DD7593.5060003@suse.de>
+Sender: netdev-owner@vger.kernel.org
+To: =?windows-1252?Q?Andreas_F=E4rber?= <afaerber@suse.de>, =?windows-1252?Q?Heiko_St=FCbner?= <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Hello Andreas, Heiko,
 
-On Tue, Mar 01, 2016 at 08:49:37AM +0100, Uwe Kleine-K=F6nig wrote:
-> Hello Fabio,
->=20
-> On Mon, Feb 29, 2016 at 08:54:19PM -0300, Fabio Estevam wrote:
-> > On Mon, Feb 29, 2016 at 6:38 PM, Uwe Kleine-K=F6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Mon, Feb 29, 2016 at 06:16:50PM -0300, Fabio Estevam wrote:
-> > >> On Mon, Feb 29, 2016 at 12:52 PM, Steffen Trumtrar
-> > >> <s.trumtrar@pengutronix.de> wrote:
-> > >>
-> > >> > +       ret =3D clk_prepare_enable(rngc->clk);
-> > >> > +       if (ret)
-> > >> > +               return ret;
-> > >> > +
-> > >> > +       rngc->irq =3D platform_get_irq(pdev, 0);
-> > >> > +       if (!rngc->irq) {
-> > >> > +               dev_err(&pdev->dev, "FSL RNGC couldn't get irq=
-\n");
-> > >> > +               clk_disable_unprepare(rngc->clk);
-> > >> > +
-> > >> > +               return ret;
-> > >>
-> > >> You are returning the wrong error code here:
-> > >>
-> > >> Better do like this:
-> > >>
-> > >>        rngc->irq =3D platform_get_irq(pdev, 0);
-> > >>        if (rngc->irq < 0) {
-> > >
-> > > rngc->irq is unsigned, so this is never true.
-> > >
-> > >>                dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n"=
-);
-> > >>                clk_disable_unprepare(rngc->clk);
-> > >>                return rngc->irq;
-> > >>        }
-> > >
-> > > So here comes my better approach:
-> >=20
-> > As irq is only used inside probe it can be removed from struct mxc_=
-rngc.
->=20
-> Good idea.
->=20
+On 3/7/2016 1:35 PM, Andreas F=E4rber wrote:
+> Hi Heiko,
+>
+> Am 07.03.2016 um 13:24 schrieb Heiko St=FCbner:
+>> Am Montag, 7. M=E4rz 2016, 13:17:54 schrieb Andreas F=E4rber:
+>>> Am 06.03.2016 um 20:53 schrieb Andreas F=E4rber:
+>>>> On next-20160304 the GMAC seems to have regressed, it no longer fi=
+nds the
+>>>> PHY:
+>>>>
+>>>> libphy: PHY stmmac-0:ffffffff not found
 
-Actually it is currently used in the mxc_rngc_init function, but I thin=
-k I can
-just move the call there into the probe function and get rid of the irq=
- in the
-struct.
+snps,phy-addr is not correct. Can you check it?
 
-> > Or maybe like this:
-> >=20
-> >          ret =3D platform_get_irq(pdev, 0);
-> >          if (ret < 0) {
-> >                  dev_err(&pdev->dev, "FSL RNGC couldn't get irq\n")=
-;
-> >                  clk_disable_unprepare(rngc->clk);
-> >                  return ret;
-> >          }
->=20
+In the stmmac_mdio if this is not passed as parameter the bus should
+be scanned and the first IDs found should select the right address.
+I suppose in your box there is a real transceiver, so maybe the patch
+from Gabriel is not actually necessary.
 
-This looks better, yes. I will change that, of course.
+>>>> eth0: Could not attach to PHY
+>>>> stmmac_open: Cannot attach to PHY (error: -19)
+>>>
+>>> Still with us in next-20160307. CC'ing stmmac maintainers.
 
-> Some people think platform_get_irq returning 0 should be handled as
-> error.
+peppe
 
-And who is right? drivers/of/unittest.c checks for irq < 0 for example.
-
-Thanks,
-Steffen
-
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+>>
+>> do you remember from what revision you rebased away from, when it wa=
+s still
+>> working (as a known-good state)?
+>
+> Hm, next-20160111 possibly... leaving all the 5 days and 4 days ago
+> changes as candidates ("stmmac: share reset function between dwmac100
+> and dwmac1000" .. "stmmac: Fix 'eth0: No PHY found' regression").
+>
+> Regards,
+> Andreas
+>
