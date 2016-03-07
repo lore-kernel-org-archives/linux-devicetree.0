@@ -1,318 +1,128 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: Add stdout-path for various boards
-Date: Mon, 7 Mar 2016 19:22:27 +0000
-Message-ID: <56DDD4F3.2010109@nvidia.com>
-References: <1455025920-21875-1-git-send-email-jonathanh@nvidia.com>
+From: Robert Richter <robert.richter@caviumnetworks.com>
+Subject: Re: [PATCH v14 2/6] Documentation, dt, numa: dt bindings for NUMA.
+Date: Mon, 7 Mar 2016 20:22:20 +0100
+Message-ID: <20160307192220.GA1535@rric.localdomain>
+References: <1457049339-23351-1-git-send-email-ddaney.cavm@gmail.com>
+ <1457049339-23351-3-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455025920-21875-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1457049339-23351-3-git-send-email-ddaney.cavm@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Daney <ddaney.cavm@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, David Daney <david.daney@cavium.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Fleming <matt@codeblueprint.co.uk>, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry,
-
-I forgot about these patches. Not urgent, but may be we can queue them
-for v4.7.
-
-Cheers
-Jon
-
-On 09/02/16 13:51, Jon Hunter wrote:
-> For Tegra boards, the device-tree alias serial0 is used for the console
-> and so add the stdout-path information so that the console no longer
-> needs to be passed via the kernel boot parameters.
+On 03.03.16 15:55:35, David Daney wrote:
+> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
 > 
-> This has been tested on boards, tegra20-trimslice, tegra30-beaver,
-> tegra114-dalmore and tegra124-jetson-tk1.
+> Add DT bindings for numa mapping of memory, CPUs and IOs.
 > 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Robert Richter <rrichter@cavium.com>
+> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+> Signed-off-by: David Daney <david.daney@cavium.com>
 > ---
+>  Documentation/devicetree/bindings/numa.txt | 272 +++++++++++++++++++++++++++++
+>  1 file changed, 272 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/numa.txt
 > 
-> The only boards that I have not modified are tegra114-roth and
-> tegra114-tn7 because these boards have two entries for console
-> in the *.dts file. AFAICT we cannot suppport multiple consoles
-> via the stdout-path and if a console is specified by the kernel
-> boot parameters then this sets the kernel variable
-> "console_set_on_cmdline" and prevents the stdout-path console
-> being registered. If there is a better way to handle these boards
-> via device-tree let me know.
-> 
->  arch/arm/boot/dts/tegra114-dalmore.dts        | 4 ++++
->  arch/arm/boot/dts/tegra124-jetson-tk1.dts     | 4 ++++
->  arch/arm/boot/dts/tegra124-nyan.dtsi          | 4 ++++
->  arch/arm/boot/dts/tegra124-venice2.dts        | 4 ++++
->  arch/arm/boot/dts/tegra20-harmony.dts         | 4 ++++
->  arch/arm/boot/dts/tegra20-iris-512.dts        | 4 ++++
->  arch/arm/boot/dts/tegra20-medcom-wide.dts     | 4 ++++
->  arch/arm/boot/dts/tegra20-paz00.dts           | 4 ++++
->  arch/arm/boot/dts/tegra20-seaboard.dts        | 4 ++++
->  arch/arm/boot/dts/tegra20-tamonten.dtsi       | 4 ++++
->  arch/arm/boot/dts/tegra20-trimslice.dts       | 4 ++++
->  arch/arm/boot/dts/tegra20-ventana.dts         | 4 ++++
->  arch/arm/boot/dts/tegra20-whistler.dts        | 4 ++++
->  arch/arm/boot/dts/tegra30-apalis-eval.dts     | 4 ++++
->  arch/arm/boot/dts/tegra30-beaver.dts          | 4 ++++
->  arch/arm/boot/dts/tegra30-cardhu.dtsi         | 4 ++++
->  arch/arm/boot/dts/tegra30-colibri-eval-v3.dts | 4 ++++
->  17 files changed, 68 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-> index 8b7aa0dcdc6e..b5748eeed473 100644
-> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
-> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-> @@ -18,6 +18,10 @@
->  		serial0 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
+> new file mode 100644
+> index 0000000..ec5ed7c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/numa.txt
+
+> +==============================================================================
+> +3 - distance-map
+> +==============================================================================
 > +
->  	memory {
->  		reg = <0x80000000 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> index 4ee2e63e11d0..a7264a15080a 100644
-> --- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> +++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-> @@ -19,6 +19,10 @@
->  		serial2 = &uartb;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +The device tree node distance-map describes the relative
+> +distance (memory latency) between all numa nodes.
 > +
->  	memory {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
-> index ec1aa64ded68..e2cd39e3c95e 100644
-> --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
-> +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
-> @@ -8,6 +8,10 @@
->  		serial0 = &uarta;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +- compatible : Should at least contain "numa-distance-map-v1".
 > +
->  	memory {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-> index cfbdf429b45d..604f4b7c2685 100644
-> --- a/arch/arm/boot/dts/tegra124-venice2.dts
-> +++ b/arch/arm/boot/dts/tegra124-venice2.dts
-> @@ -13,6 +13,10 @@
->  		serial0 = &uarta;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +- distance-matrix
+> +  This property defines a matrix to describe the relative distances
+> +  between all numa nodes.
+> +  It is represented as a list of node pairs and their relative distance.
 > +
->  	memory {
->  		reg = <0x0 0x80000000 0x0 0x80000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
-> index b926a07b9443..4b73c76f981a 100644
-> --- a/arch/arm/boot/dts/tegra20-harmony.dts
-> +++ b/arch/arm/boot/dts/tegra20-harmony.dts
-> @@ -13,6 +13,10 @@
->  		serial0 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +  Note:
+> +	1. Each entry represents distance from first node to second node.
+> +	The distances are equal in either direction.
+> +	2. The distance from a node to self (local distance) is represented
+> +	with value 10 and all internode distance should be represented with
+> +	a value greater than 10.
+> +	3. distance-matrix should have entries in lexicographical ascending
+> +	order of nodes.
+> +	4. There must be only one device node distance-map which must reside in the root node.
+
+There is no note that this one is optional, but is it right? The
+default is 10 for local and 20 for remote connections.
+
+If so, then ...
+
+static int __init of_numa_parse_distance_map(void)
+{
+	int ret = -EINVAL;
+	struct device_node *np = of_find_node_by_path("/distance-map");
+
+	if (!np)
+		return ret;
+
+must return 0 instead of -EINVAL here.
+
+-Robert
+
 > +
->  	memory {
->  		reg = <0x00000000 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts b/arch/arm/boot/dts/tegra20-iris-512.dts
-> index 1dd7d7bfdfcc..bb56dfe9e10c 100644
-> --- a/arch/arm/boot/dts/tegra20-iris-512.dts
-> +++ b/arch/arm/boot/dts/tegra20-iris-512.dts
-> @@ -11,6 +11,10 @@
->  		serial1 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +Example:
+> +	4 nodes connected in mesh/ring topology as below,
 > +
->  	host1x@50000000 {
->  		hdmi@54280000 {
->  			status = "okay";
-> diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
-> index 9b87526ab0b7..34c6588e92ef 100644
-> --- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
-> +++ b/arch/arm/boot/dts/tegra20-medcom-wide.dts
-> @@ -10,6 +10,10 @@
->  		serial0 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +		0_______20______1
+> +		|               |
+> +		|               |
+> +		20             20
+> +		|               |
+> +		|               |
+> +		|_______________|
+> +		3       20      2
 > +
->  	pwm@7000a000 {
->  		status = "okay";
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-> index ed7e1009326c..81a10a9df814 100644
-> --- a/arch/arm/boot/dts/tegra20-paz00.dts
-> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
-> @@ -14,6 +14,10 @@
->  		serial1 = &uartc;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +	if relative distance for each hop is 20,
+> +	then internode distance would be,
+> +	      0 -> 1 = 20
+> +	      1 -> 2 = 20
+> +	      2 -> 3 = 20
+> +	      3 -> 0 = 20
+> +	      0 -> 2 = 40
+> +	      1 -> 3 = 40
 > +
->  	memory {
->  		reg = <0x00000000 0x20000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
-> index aea8994b35f2..0aed748567aa 100644
-> --- a/arch/arm/boot/dts/tegra20-seaboard.dts
-> +++ b/arch/arm/boot/dts/tegra20-seaboard.dts
-> @@ -13,6 +13,10 @@
->  		serial0 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
+> +     and dt presentation for this distance matrix is,
 > +
->  	memory {
->  		reg = <0x00000000 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> index 13d4e6185275..025e9e8037da 100644
-> --- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> +++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-> @@ -10,6 +10,10 @@
->  		serial0 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0x00000000 0x20000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
-> index d99af4ef9c64..69d25ca47e04 100644
-> --- a/arch/arm/boot/dts/tegra20-trimslice.dts
-> +++ b/arch/arm/boot/dts/tegra20-trimslice.dts
-> @@ -13,6 +13,10 @@
->  		serial0 = &uarta;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0x00000000 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
-> index 04c58e9ca490..c61533a9bf0b 100644
-> --- a/arch/arm/boot/dts/tegra20-ventana.dts
-> +++ b/arch/arm/boot/dts/tegra20-ventana.dts
-> @@ -13,6 +13,10 @@
->  		serial0 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0x00000000 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra20-whistler.dts b/arch/arm/boot/dts/tegra20-whistler.dts
-> index 340d81108df1..bd7658572239 100644
-> --- a/arch/arm/boot/dts/tegra20-whistler.dts
-> +++ b/arch/arm/boot/dts/tegra20-whistler.dts
-> @@ -13,6 +13,10 @@
->  		serial0 = &uarta;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0x00000000 0x20000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> index f2879cfcca62..b914bcb381d7 100644
-> --- a/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/tegra30-apalis-eval.dts
-> @@ -17,6 +17,10 @@
->  		serial3 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	pcie-controller@00003000 {
->  		status = "okay";
->  
-> diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-> index 3dede3934446..1eca3b28ac64 100644
-> --- a/arch/arm/boot/dts/tegra30-beaver.dts
-> +++ b/arch/arm/boot/dts/tegra30-beaver.dts
-> @@ -12,6 +12,10 @@
->  		serial0 = &uarta;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0x80000000 0x7ff00000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> index bb1ca158273c..de9d6ccace14 100644
-> --- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-> @@ -35,6 +35,10 @@
->  		serial1 = &uartc;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	memory {
->  		reg = <0x80000000 0x40000000>;
->  	};
-> diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-> index 3ff019f47d00..93e1ffd95bfa 100644
-> --- a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-> +++ b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
-> @@ -15,6 +15,10 @@
->  		serial2 = &uartd;
->  	};
->  
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
->  	host1x@50000000 {
->  		dc@54200000 {
->  			rgb {
-> 
+> +		distance-map {
+> +			 compatible = "numa-distance-map-v1";
+> +			 distance-matrix = <0 0  10>,
+> +					   <0 1  20>,
+> +					   <0 2  40>,
+> +					   <0 3  20>,
+> +					   <1 0  20>,
+> +					   <1 1  10>,
+> +					   <1 2  20>,
+> +					   <1 3  40>,
+> +					   <2 0  40>,
+> +					   <2 1  20>,
+> +					   <2 2  10>,
+> +					   <2 3  20>,
+> +					   <3 0  20>,
+> +					   <3 1  40>,
+> +					   <3 2  20>,
+> +					   <3 3  10>;
+> +		};
