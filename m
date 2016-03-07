@@ -1,52 +1,48 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Mon, 7 Mar 2016 18:15:53 +0100
-Message-ID: <56DDB749.1020808@suse.de>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego>
- <56DD7593.5060003@suse.de> <56DD8176.2080603@st.com>
- <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com>
- <56DDA26C.3050301@suse.de> <56DDA3D5.3090209@st.com>
+From: Scott Wood <scott.wood@nxp.com>
+Subject: Re: [PATCH v3 1/2] Documentation: DT: Add entry for Freescale
+ LS1043a-QDS board
+Date: Mon, 7 Mar 2016 17:23:17 +0000
+Message-ID: <DB5PR0401MB1928313A537226265C54764291B10@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+References: <1457350232-12749-1-git-send-email-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56DDA3D5.3090209@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Cc: Gabriel Fernandez <gabriel.fernandez@linaro.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Fabrice GASNIER <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhiqiang Hou <zhiqiang.hou@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Shaohui Xie <shaohui.xie@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 07.03.2016 um 16:52 schrieb Giuseppe CAVALLARO:
-> On 3/7/2016 4:46 PM, Andreas F=E4rber wrote:
->> Am 07.03.2016 um 16:09 schrieb Giuseppe CAVALLARO:
->>> On 3/7/2016 3:27 PM, Andreas F=E4rber wrote:
->>>> Indeed, reverting Gabriel's commit fixes the observed error messag=
-es
->> [...]
->>>> However, I am unable to ping any hosts on the network now.
->>>
->>> hmm, this could be another problem. I wonder if you can
->>> check which recent patch is introducing the problem on ARM64.
->>> For example if this depends on Oct_2015 update.
->>
->> I've had success reverting drivers/net/ethernet/stmicro/ up to and
->> including "stmmac: first frame prep at the end of xmit routine", i.e=
-=2E
->> top 7 commits.
->=20
-> Andreas, I will check it and let you know asap.
+On 03/07/2016 05:39 AM, Zhiqiang Hou wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> v3:
+>  - No change.
+> 
+>  Documentation/devicetree/bindings/arm/fsl.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index 752a685..f504fdf 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -134,6 +134,7 @@ Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
+>  LS1043A ARMv8 based RDB Board
+>  Required root node properties:
+>      - compatible = "fsl,ls1043a-rdb", "fsl,ls1043a";
+> +    - compatible = "fsl,ls1043a-qds", "fsl,ls1043a";
 
-I verified that it's just these two commits that I need to revert:
+"fsl,ls1043a-qds" is required for the "LS1043A ARMv8 based RDB Board"?
 
-"stmmac: Fix 'eth0: No PHY found' regression"
-"stmmac: first frame prep at the end of xmit routine"
-
-Those in between don't cause conflicts and seem to work okay.
-
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
-rnberg)
+-Scott
