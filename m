@@ -1,83 +1,102 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Mon, 7 Mar 2016 15:27:10 +0100
-Message-ID: <56DD8FBE.9010200@suse.de>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego>
- <56DD7593.5060003@suse.de> <56DD8176.2080603@st.com>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/4 v2] drm: Add DT bindings documentation for ARC PGU
+ display controller
+Date: Mon, 7 Mar 2016 14:53:12 +0000
+Message-ID: <1457362392.2932.49.camel@synopsys.com>
+References: <1457015956-30708-1-git-send-email-abrodkin@synopsys.com>
+	 <1457015956-30708-3-git-send-email-abrodkin@synopsys.com>
+	 <20160305043001.GB13525@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56DD8176.2080603@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Cc: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: text/plain; charset="utf-7"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160305043001.GB13525@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <BB117C9FF404D44A93C6357D800189FE-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Giuseppe,
+Hi Rob,
 
-Am 07.03.2016 um 14:26 schrieb Giuseppe CAVALLARO:
-> On 3/7/2016 1:35 PM, Andreas F=E4rber wrote:
->> Am 07.03.2016 um 13:24 schrieb Heiko St=FCbner:
->>> Am Montag, 7. M=E4rz 2016, 13:17:54 schrieb Andreas F=E4rber:
->>>> Am 06.03.2016 um 20:53 schrieb Andreas F=E4rber:
->>>>> On next-20160304 the GMAC seems to have regressed, it no longer
->>>>> finds the
->>>>> PHY:
->>>>>
->>>>> libphy: PHY stmmac-0:ffffffff not found
->=20
-> snps,phy-addr is not correct. Can you check it?
+On Fri, 2016-03-04 at 22:30 -0600, Rob Herring wrote:
++AD4- On Thu, Mar 03, 2016 at 05:39:14PM +-0300, Alexey Brodkin wrote:
++AD4- +AD4- 
++AD4- +AD4- This add DT bindings documentation for ARC PGU display controller.
++AD4- +AD4- 
++AD4- +AD4- Signed-off-by: Alexey Brodkin +ADw-abrodkin+AEA-synopsys.com+AD4-
++AD4- +AD4- Cc: Rob Herring +ADw-robh+-dt+AEA-kernel.org+AD4-
++AD4- +AD4- Cc: Pawel Moll +ADw-pawel.moll+AEA-arm.com+AD4-
++AD4- +AD4- Cc: Mark Rutland +ADw-mark.rutland+AEA-arm.com+AD4-
++AD4- +AD4- Cc: Ian Campbell +ADw-ijc+-devicetree+AEA-hellion.org.uk+AD4-
++AD4- +AD4- Cc: Kumar Gala +ADw-galak+AEA-codeaurora.org+AD4-
++AD4- +AD4- Cc: devicetree+AEA-vger.kernel.org
++AD4- +AD4- Cc: linux-snps-arc+AEA-lists.infradead.org
++AD4- +AD4- ---
++AD4- +AD4- 
++AD4- +AD4- Changes v1 -+AD4- v2:
++AD4- +AD4- +AKAAKg- Clean-up
++AD4- Not really useful. What we like to see is what changed. Maintainers have+AKA-
++AD4- short memories and don't remember what they said previously (unless+AKA-
++AD4- comments are ignored).
 
-It was never set:
+That's understood :)
 
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/a=
-rch/arm64/boot/dts/rockchip/rk3368.dtsi#n436
++AD4- +AD4- 
++AD4- +AD4- 
++AD4- +AD4- +AKA-.../devicetree/bindings/display/snps,arcpgu.txt+AKAAoACgAKAAfA- 33 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
++AD4- +AD4- +AKA-1 file changed, 33 insertions(+-)
++AD4- +AD4- +AKA-create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- 
++AD4- +AD4- diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- new file mode 100644
++AD4- +AD4- index 0000000..57f3bc8
++AD4- +AD4- --- /dev/null
++AD4- +AD4- +-+-+- b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
++AD4- +AD4- +AEAAQA- -0,0 +-1,33 +AEAAQA-
++AD4- +AD4- +-ARC PGU
++AD4- +AD4- +-
++AD4- +AD4- +-This is a display controller found on several development boards produced
++AD4- +AD4- +-by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
++AD4- +AD4- +-framebuffer and sends it to a single digital encoder (usually HDMI).
++AD4- +AD4- +-
++AD4- +AD4- +-Required properties:
++AD4- +AD4- +-+AKAAoA-- compatible: +ACI-snps,arcpgu+ACI-
++AD4- +AD4- +-+AKAAoA-- reg: Physical base address and length of the controller's registers.
++AD4- +AD4- +-+AKAAoA-- clocks: A list of phandle +- clock-specifier pairs, one for each
++AD4- +AD4- +-+AKAAoACgAKA-entry in 'clock-names'.
++AD4- +AD4- +-+AKAAoA-- clock-names: A list of clock names. For ARC PGU it should contain:
++AD4- +AD4- +-+AKAAoACgAKAAoACg-- +ACI-pxlclk+ACI- for the clock feeding the output PLL of the controller.
++AD4- +AD4- +-
++AD4- +AD4- +-Required sub-nodes:
++AD4- +AD4- +-+AKAAoA-- port: The PGU connection to an encoder chip. The connection is modelled
++AD4- +AD4- +-+AKAAoACgAKA-using the OF graph bindings specified in
++AD4- +AD4- +-+AKAAoACgAKA-Documentation/devicetree/bindings/graph.txt.
++AD4- +AD4- +-
++AD4- +AD4- +-Example:
++AD4- +AD4- +-
++AD4- +AD4- +-/ +AHs-
++AD4- +AD4- +-	...
++AD4- +AD4- +-
++AD4- +AD4- +-	pgu+AEA-XXXXXXXX +AHs-
++AD4- +AD4- +-		compatible +AD0- +ACI-snps,arcpgu+ACIAOw-
++AD4- +AD4- +-		reg +AD0- +ADw-0xXXXXXXXX 0x400+AD4AOw-
++AD4- +AD4- +-		clocks +AD0- +ADwAJg-clock+AF8-node+AD4AOw-
++AD4- +AD4- +-		clock-names +AD0- +ACI-pxlclk+ACIAOw-
++AD4- Where's the port? Didn't you previously say it was optional?
 
-https://github.com/afaerber/linux/blob/96c5b5fd395fee5713755e93e677fb01=
-1cb9ddc0/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts#L114
+Well I wanted to get rid of anything except bare minimal that is required for
+that driver.
 
-> In the stmmac_mdio if this is not passed as parameter the bus should
-> be scanned and the first IDs found should select the right address.
-> I suppose in your box there is a real transceiver, so maybe the patch
-> from Gabriel is not actually necessary.
+What I did miss in that clean-up is description above.
+In particular +ACI-Required subnodes+ACI- section that still lists +ACI-port+ACI-.
 
-On the GeekBox module there's an RTL8211E phy.
+And frankly now I'm a bit lost with what should I put in that binding
+description and what should not. Any comments here are much appreciated.
 
-Indeed, reverting Gabriel's commit fixes the observed error messages:
-
-rk_gmac-dwmac ff290000.ethernet eth0: Link is Up - 1Gbps/Full - flow
-control rx/tx
-
-http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/=
-drivers/net/ethernet/stmicro?id=3D88f8b1bb41c6208f81b6a480244533ded7b59=
-493
-
-However, I am unable to ping any hosts on the network now.
-
-Regards,
-Andreas
-
->>>>> eth0: Could not attach to PHY
->>>>> stmmac_open: Cannot attach to PHY (error: -19)
->>>>
->>>> Still with us in next-20160307. CC'ing stmmac maintainers.
->=20
-> peppe
->=20
->>>
->>> do you remember from what revision you rebased away from, when it w=
-as
->>> still
->>> working (as a known-good state)?
->>
->> Hm, next-20160111 possibly... leaving all the 5 days and 4 days ago
->> changes as candidates ("stmmac: share reset function between dwmac10=
-0
->> and dwmac1000" .. "stmmac: Fix 'eth0: No PHY found' regression").
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
-rnberg)
+-Alexey--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
