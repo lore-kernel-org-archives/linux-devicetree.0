@@ -1,215 +1,372 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v6 2/2] mmc: sdhci-of-arasan: add phy support for
- sdhci-of-arasan
-Date: Mon, 7 Mar 2016 14:07:01 +0200
-Message-ID: <56DD6EE5.2090801@intel.com>
-References: <1457144633-30615-1-git-send-email-shawn.lin@rock-chips.com>
- <1457144676-30697-1-git-send-email-shawn.lin@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1457144676-30697-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Michal Simek <michal.simek@xilinx.com>, soren.brinkmann@xilinx.com, Rob Herring <robh+dt@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 1/2] arm64: dts: juno/vexpress: fix node name unit-address presence warnings
+Date: Mon,  7 Mar 2016 12:12:14 +0000
+Message-ID: <1457352735-24453-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/16 04:24, Shawn Lin wrote:
-> This patch adds Generic PHY access for sdhci-of-arasan. Driver
-> can get PHY handler from dt-binding, and power-on/init the PHY.
-> Currently, it's just mandatory for arasan,sdhci-5.1.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> 
-> Serise-changes: 6
-> - rebase on Ulf's next
-> - fix some preexisting problems of err handling suggested
->   by Adrian
-> 
-> Serise-changes: 5
-> - remove rpm support from this serise
-> - fix some err case for handling phy
-> 
-> Serise-changes: 4
-> - remove suspend/resume_phy
-> - add err handle label for system PM callback
-> - fix comments of struct sdhci_arasan_data and system PM
->   callback suggested by Michal
-> 
-> Serise-changes: 3
-> - remove phy_init/exit for suspend/resume
-> - adjust phy_int/power_on seq to make code more reasonable
->   simplify suspend/resume_phy
-> 
-> Serise-changes: 2
-> - Keep phy as a mandatory requirement for arasan,sdhci-5.1
-> 
+Commit fa38a82096a1 ("scripts/dtc: Update to upstream version
+53bf130b1cdd") added warnings on node name unit-address presence/absence
+mismatch in device trees.
 
+This patch fixes those warning on all the juno/vexpress platforms where
+unit-address is present in node name while the reg/ranges property is
+not present.
 
-It looks good, but, sorry to be a pain, the fixes to the error handling
-really have to be separate patches.  I would make a separate patch for
-removing clk_disable(sdhci_arasan->clk_ahb) from sdhci_arasan_resume() and
-another for the error handling fixes in sdhci_arasan_probe().
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/boot/dts/arm/foundation-v8.dtsi         |  2 +-
+ arch/arm64/boot/dts/arm/juno-base.dtsi             | 14 +++++-----
+ arch/arm64/boot/dts/arm/juno-motherboard.dtsi      | 30 +++++++++++-----------
+ arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts         |  2 +-
+ arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi   | 14 +++++-----
+ .../boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts      | 10 ++++----
+ 6 files changed, 36 insertions(+), 36 deletions(-)
 
-By the way, those "Serise-changes" should not be in the commit msg.
+Hi Rob,
 
-> ---
-> 
-> Changes in v6: None
-> Changes in v2: None
-> 
->  drivers/mmc/host/sdhci-of-arasan.c | 71 +++++++++++++++++++++++++++++++++-----
->  1 file changed, 63 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-> index 1e4b5e0..2e482b1 100644
-> --- a/drivers/mmc/host/sdhci-of-arasan.c
-> +++ b/drivers/mmc/host/sdhci-of-arasan.c
-> @@ -21,6 +21,7 @@
->  
->  #include <linux/module.h>
->  #include <linux/of_device.h>
-> +#include <linux/phy/phy.h>
->  #include "sdhci-pltfm.h"
->  
->  #define SDHCI_ARASAN_CLK_CTRL_OFFSET	0x2c
-> @@ -32,9 +33,11 @@
->  /**
->   * struct sdhci_arasan_data
->   * @clk_ahb:	Pointer to the AHB clock
-> + * @phy: Pointer to the generic phy
->   */
->  struct sdhci_arasan_data {
->  	struct clk	*clk_ahb;
-> +	struct phy	*phy;
->  };
->  
->  static unsigned int sdhci_arasan_get_timeout_clock(struct sdhci_host *host)
-> @@ -88,6 +91,15 @@ static int sdhci_arasan_suspend(struct device *dev)
->  	if (ret)
->  		return ret;
->  
-> +	if (!IS_ERR(sdhci_arasan->phy)) {
-> +		ret = phy_power_off(sdhci_arasan->phy);
-> +		if (ret) {
-> +			dev_err(dev, "Cannot power off phy.\n");
-> +			sdhci_resume_host(host);
-> +			return ret;
-> +		}
-> +	}
-> +
->  	clk_disable(pltfm_host->clk);
->  	clk_disable(sdhci_arasan->clk_ahb);
->  
-> @@ -118,10 +130,17 @@ static int sdhci_arasan_resume(struct device *dev)
->  	ret = clk_enable(pltfm_host->clk);
->  	if (ret) {
->  		dev_err(dev, "Cannot enable SD clock.\n");
-> -		clk_disable(sdhci_arasan->clk_ahb);
->  		return ret;
->  	}
->  
-> +	if (!IS_ERR(sdhci_arasan->phy)) {
-> +		ret = phy_power_on(sdhci_arasan->phy);
-> +		if (ret) {
-> +			dev_err(dev, "Cannot power on phy.\n");
-> +			return ret;
-> +		}
-> +	}
-> +
->  	return sdhci_resume_host(host);
->  }
->  #endif /* ! CONFIG_PM_SLEEP */
-> @@ -148,19 +167,21 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->  	sdhci_arasan->clk_ahb = devm_clk_get(&pdev->dev, "clk_ahb");
->  	if (IS_ERR(sdhci_arasan->clk_ahb)) {
->  		dev_err(&pdev->dev, "clk_ahb clock not found.\n");
-> -		return PTR_ERR(sdhci_arasan->clk_ahb);
-> +		ret = PTR_ERR(sdhci_arasan->clk_ahb);
-> +		goto err_pltfm_free;
->  	}
->  
->  	clk_xin = devm_clk_get(&pdev->dev, "clk_xin");
->  	if (IS_ERR(clk_xin)) {
->  		dev_err(&pdev->dev, "clk_xin clock not found.\n");
-> -		return PTR_ERR(clk_xin);
-> +		ret = PTR_ERR(clk_xin);
-> +		goto err_pltfm_free;
->  	}
->  
->  	ret = clk_prepare_enable(sdhci_arasan->clk_ahb);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Unable to enable AHB clock.\n");
-> -		return ret;
-> +		goto err_pltfm_free;
->  	}
->  
->  	ret = clk_prepare_enable(clk_xin);
-> @@ -178,19 +199,48 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
->  		goto clk_disable_all;
->  	}
->  
-> +	sdhci_arasan->phy = ERR_PTR(-ENODEV);
-> +	if (of_device_is_compatible(pdev->dev.of_node,
-> +				    "arasan,sdhci-5.1")) {
-> +		sdhci_arasan->phy = devm_phy_get(&pdev->dev,
-> +						 "phy_arasan");
-> +		if (IS_ERR(sdhci_arasan->phy)) {
-> +			ret = PTR_ERR(sdhci_arasan->phy);
-> +			dev_err(&pdev->dev, "No phy for arasan,sdhci-5.1.\n");
-> +			goto clk_disable_all;
-> +		}
-> +
-> +		ret = phy_init(sdhci_arasan->phy);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "phy_init err.\n");
-> +			goto clk_disable_all;
-> +		}
-> +
-> +		ret = phy_power_on(sdhci_arasan->phy);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "phy_power_on err.\n");
-> +			goto err_phy_power;
-> +		}
-> +	}
-> +
->  	ret = sdhci_add_host(host);
->  	if (ret)
-> -		goto err_pltfm_free;
-> +		goto err_add_host;
->  
->  	return 0;
->  
-> -err_pltfm_free:
-> -	sdhci_pltfm_free(pdev);
-> +err_add_host:
-> +	if (!IS_ERR(sdhci_arasan->phy))
-> +		phy_power_off(sdhci_arasan->phy);
-> +err_phy_power:
-> +	if (!IS_ERR(sdhci_arasan->phy))
-> +		phy_exit(sdhci_arasan->phy);
->  clk_disable_all:
->  	clk_disable_unprepare(clk_xin);
->  clk_dis_ahb:
->  	clk_disable_unprepare(sdhci_arasan->clk_ahb);
-> -
-> +err_pltfm_free:
-> +	sdhci_pltfm_free(pdev);
->  	return ret;
->  }
->  
-> @@ -202,6 +252,11 @@ static int sdhci_arasan_remove(struct platform_device *pdev)
->  	struct sdhci_arasan_data *sdhci_arasan = sdhci_pltfm_priv(pltfm_host);
->  	struct clk *clk_ahb = sdhci_arasan->clk_ahb;
->  
-> +	if (!IS_ERR(sdhci_arasan->phy)) {
-> +		phy_power_off(sdhci_arasan->phy);
-> +		phy_exit(sdhci_arasan->phy);
-> +	}
-> +
->  	ret = sdhci_pltfm_unregister(pdev);
->  
->  	clk_disable_unprepare(clk_ahb);
-> 
+I am not sure if the intention of commit fa38a82096a1 is to fix even
+existing warnings or not. I saw warning with today's -next branch.
+Let me know.
 
+Regards,
+Sudeep
+
+diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+index 9314f3943269..ba03c934a861 100644
+--- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
++++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+@@ -89,7 +89,7 @@
+ 			     <0 63 4>;
+ 	};
+ 
+-	smb {
++	smb@0,08000000 {
+ 		compatible = "arm,vexpress,v2m-p1", "simple-bus";
+ 		arm,v2m-memory-map = "rs1";
+ 		#address-cells = <2>; /* SMB chipselect number and offset */
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 4b6172b0f2cb..3841e82fa6f8 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -105,13 +105,13 @@
+ 		clocks {
+ 			compatible = "arm,scpi-clocks";
+ 
+-			scpi_dvfs: scpi_clocks@0 {
++			scpi_dvfs: scpi-clocks-0 {
+ 				compatible = "arm,scpi-dvfs-clocks";
+ 				#clock-cells = <1>;
+ 				clock-indices = <0>, <1>, <2>;
+ 				clock-output-names = "atlclk", "aplclk","gpuclk";
+ 			};
+-			scpi_clk: scpi_clocks@3 {
++			scpi_clk: scpi-clocks-1 {
+ 				compatible = "arm,scpi-variable-clocks";
+ 				#clock-cells = <1>;
+ 				clock-indices = <3>;
+@@ -154,7 +154,7 @@
+ 		clock-names = "pxlclk";
+ 
+ 		port {
+-			hdlcd1_output: endpoint@0 {
++			hdlcd1_output: endpoint0 {
+ 				remote-endpoint = <&tda998x_1_input>;
+ 			};
+ 		};
+@@ -168,7 +168,7 @@
+ 		clock-names = "pxlclk";
+ 
+ 		port {
+-			hdlcd0_output: endpoint@0 {
++			hdlcd0_output: endpoint0 {
+ 				remote-endpoint = <&tda998x_0_input>;
+ 			};
+ 		};
+@@ -196,7 +196,7 @@
+ 			compatible = "nxp,tda998x";
+ 			reg = <0x70>;
+ 			port {
+-				tda998x_0_input: endpoint@0 {
++				tda998x_0_input: endpoint0 {
+ 					remote-endpoint = <&hdlcd0_output>;
+ 				};
+ 			};
+@@ -206,7 +206,7 @@
+ 			compatible = "nxp,tda998x";
+ 			reg = <0x71>;
+ 			port {
+-				tda998x_1_input: endpoint@0 {
++				tda998x_1_input: endpoint0 {
+ 					remote-endpoint = <&hdlcd1_output>;
+ 				};
+ 			};
+@@ -243,7 +243,7 @@
+ 		      <0x00000008 0x80000000 0x1 0x80000000>;
+ 	};
+ 
+-	smb {
++	smb@0,08000000 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+index 413f1b9ebcd4..3d4af126df6e 100644
+--- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+@@ -46,7 +46,7 @@
+ 			arm,vexpress,site = <0>;
+ 			arm,v2m-memory-map = "rs1";
+ 
+-			mb_fixed_3v3: fixedregulator@0 {
++			mb_fixed_3v3: fixedregulator0 {
+ 				compatible = "regulator-fixed";
+ 				regulator-name = "MCC_SB_3V3";
+ 				regulator-min-microvolt = <3300000>;
+@@ -59,42 +59,42 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+-				button@1 {
++				button1 {
+ 					debounce_interval = <50>;
+ 					wakeup-source;
+ 					linux,code = <116>;
+ 					label = "POWER";
+ 					gpios = <&iofpga_gpio0 0 0x4>;
+ 				};
+-				button@2 {
++				button2 {
+ 					debounce_interval = <50>;
+ 					wakeup-source;
+ 					linux,code = <102>;
+ 					label = "HOME";
+ 					gpios = <&iofpga_gpio0 1 0x4>;
+ 				};
+-				button@3 {
++				button3 {
+ 					debounce_interval = <50>;
+ 					wakeup-source;
+ 					linux,code = <152>;
+ 					label = "RLOCK";
+ 					gpios = <&iofpga_gpio0 2 0x4>;
+ 				};
+-				button@4 {
++				button4 {
+ 					debounce_interval = <50>;
+ 					wakeup-source;
+ 					linux,code = <115>;
+ 					label = "VOL+";
+ 					gpios = <&iofpga_gpio0 3 0x4>;
+ 				};
+-				button@5 {
++				button5 {
+ 					debounce_interval = <50>;
+ 					wakeup-source;
+ 					linux,code = <114>;
+ 					label = "VOL-";
+ 					gpios = <&iofpga_gpio0 4 0x4>;
+ 				};
+-				button@6 {
++				button6 {
+ 					debounce_interval = <50>;
+ 					wakeup-source;
+ 					linux,code = <99>;
+@@ -159,7 +159,7 @@
+ 					compatible = "syscon", "simple-mfd";
+ 					reg = <0x010000 0x1000>;
+ 
+-					led@08.0 {
++					led0 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x01>;
+@@ -167,7 +167,7 @@
+ 						linux,default-trigger = "heartbeat";
+ 						default-state = "on";
+ 					};
+-					led@08.1 {
++					led1 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x02>;
+@@ -175,7 +175,7 @@
+ 						linux,default-trigger = "mmc0";
+ 						default-state = "off";
+ 					};
+-					led@08.2 {
++					led2 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x04>;
+@@ -183,7 +183,7 @@
+ 						linux,default-trigger = "cpu0";
+ 						default-state = "off";
+ 					};
+-					led@08.3 {
++					led3 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x08>;
+@@ -191,7 +191,7 @@
+ 						linux,default-trigger = "cpu1";
+ 						default-state = "off";
+ 					};
+-					led@08.4 {
++					led4 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x10>;
+@@ -199,7 +199,7 @@
+ 						linux,default-trigger = "cpu2";
+ 						default-state = "off";
+ 					};
+-					led@08.5 {
++					led5 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x20>;
+@@ -207,14 +207,14 @@
+ 						linux,default-trigger = "cpu3";
+ 						default-state = "off";
+ 					};
+-					led@08.6 {
++					led6 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x40>;
+ 						label = "vexpress:6";
+ 						default-state = "off";
+ 					};
+-					led@08.7 {
++					led7 {
+ 						compatible = "register-bit-led";
+ 						offset = <0x08>;
+ 						mask = <0x80>;
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+index 20addabbd127..0d0df795809c 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts
+@@ -104,7 +104,7 @@
+ 			     <0 63 4>;
+ 	};
+ 
+-	smb {
++	smb@0,08000000 {
+ 		compatible = "simple-bus";
+ 
+ 		#address-cells = <2>;
+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+index 88a7583ed7a7..09d97e1a8948 100644
+--- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
++++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
+@@ -226,7 +226,7 @@
+ 			};
+ 		};
+ 
+-		v2m_fixed_3v3: fixedregulator@0 {
++		v2m_fixed_3v3: fixedregulator {
+ 			compatible = "regulator-fixed";
+ 			regulator-name = "3V3";
+ 			regulator-min-microvolt = <3300000>;
+@@ -238,7 +238,7 @@
+ 			compatible = "arm,vexpress,config-bus";
+ 			arm,vexpress,config-bridge = <&v2m_sysreg>;
+ 
+-			v2m_oscclk1: osc@1 {
++			v2m_oscclk1: osc {
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+@@ -247,27 +247,27 @@
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+ 
+-			reset@0 {
++			reset {
+ 				compatible = "arm,vexpress-reset";
+ 				arm,vexpress-sysreg,func = <5 0>;
+ 			};
+ 
+-			muxfpga@0 {
++			muxfpga {
+ 				compatible = "arm,vexpress-muxfpga";
+ 				arm,vexpress-sysreg,func = <7 0>;
+ 			};
+ 
+-			shutdown@0 {
++			shutdown {
+ 				compatible = "arm,vexpress-shutdown";
+ 				arm,vexpress-sysreg,func = <8 0>;
+ 			};
+ 
+-			reboot@0 {
++			reboot {
+ 				compatible = "arm,vexpress-reboot";
+ 				arm,vexpress-sysreg,func = <9 0>;
+ 			};
+ 
+-			dvimode@0 {
++			dvimode {
+ 				compatible = "arm,vexpress-dvimode";
+ 				arm,vexpress-sysreg,func = <11 0>;
+ 			};
+diff --git a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+index bb3c26d1154d..00024be0c9b0 100644
+--- a/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
++++ b/arch/arm64/boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts
+@@ -93,7 +93,7 @@
+ 		compatible = "arm,vexpress,config-bus";
+ 		arm,vexpress,config-bridge = <&v2m_sysreg>;
+ 
+-		smbclk: osc@4 {
++		smbclk: osc4 {
+ 			/* SMC clock */
+ 			compatible = "arm,vexpress-osc";
+ 			arm,vexpress-sysreg,func = <1 4>;
+@@ -102,7 +102,7 @@
+ 			clock-output-names = "smclk";
+ 		};
+ 
+-		volt@0 {
++		volt0 {
+ 			/* VIO to expansion board above */
+ 			compatible = "arm,vexpress-volt";
+ 			arm,vexpress-sysreg,func = <2 0>;
+@@ -112,7 +112,7 @@
+ 			regulator-always-on;
+ 		};
+ 
+-		volt@1 {
++		volt1 {
+ 			/* 12V from power connector J6 */
+ 			compatible = "arm,vexpress-volt";
+ 			arm,vexpress-sysreg,func = <2 1>;
+@@ -120,7 +120,7 @@
+ 			regulator-always-on;
+ 		};
+ 
+-		temp@0 {
++		temp0 {
+ 			/* FPGA temperature */
+ 			compatible = "arm,vexpress-temp";
+ 			arm,vexpress-sysreg,func = <4 0>;
+@@ -128,7 +128,7 @@
+ 		};
+ 	};
+ 
+-	smb {
++	smb@0,08000000 {
+ 		compatible = "simple-bus";
+ 
+ 		#address-cells = <2>;
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
