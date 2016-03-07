@@ -1,44 +1,36 @@
-From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Subject: [PATCH 1/1] of: Empty of_read_number when !OF
-Date: Mon,  7 Mar 2016 19:33:53 +0100
-Message-ID: <1457375633-614-1-git-send-email-alexanders83@web.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys example
+Date: Mon, 7 Mar 2016 15:34:44 -0300
+Message-ID: <CABxcv=kEDoP3_Q3OKh1rGJ3=nFxRydu7L7bv5C=bNbmXyFt8dQ@mail.gmail.com>
+References: <1457375055-5544-1-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1457375055-5544-1-git-send-email-afaerber@suse.de>
+Sender: linux-input-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-input@vger.kernel.org, linux-rockchip@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Julien Chauveau <chauveau.julien@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce empty of_read_number when CONFIG_OF is not defined. This allows
-us to compile test gpio drivers.
+Hello Andreas,
 
-Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
----
-This is currently based on gpio's for-next branch due to other patches depending on this.
-If you require a different base branch, please let me know.
+On Mon, Mar 7, 2016 at 3:24 PM, Andreas F=C3=A4rber <afaerber@suse.de> =
+wrote:
+> Drop #address-cells and #size-cells, which are not required by the
+> gpio-keys binding documentation, as button sub-nodes are not devices.
+>
+> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 
- include/linux/of.h | 5 +++++
- 1 file changed, 5 insertions(+)
+Looks good to me.
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index dc6e39696b64..bea9e092979d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -672,6 +672,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
- {
- }
- 
-+static inline u64 of_read_number(const __be32 *cell, int size)
-+{
-+	return 0;
-+}
-+
- #define of_match_ptr(_ptr)	NULL
- #define of_match_node(_matches, _node)	NULL
- #endif /* CONFIG_OF */
--- 
-2.7.2
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
+Best regards,
+Javier
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
