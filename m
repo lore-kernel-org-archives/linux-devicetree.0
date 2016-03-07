@@ -1,245 +1,318 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 2/2] mailbox: Introduce TI message manager driver
-Date: Mon, 7 Mar 2016 13:18:54 -0600
-Message-ID: <56DDD41E.2050409@ti.com>
-References: <1456525452-30638-1-git-send-email-nm@ti.com>
- <1456525452-30638-3-git-send-email-nm@ti.com>
- <CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
- <56D987FF.1040607@ti.com>
- <CABb+yY1a-6V=9C+di7ZdQHDQG_M_jbYshoLqxaLiCZTqM4TfHg@mail.gmail.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add stdout-path for various boards
+Date: Mon, 7 Mar 2016 19:22:27 +0000
+Message-ID: <56DDD4F3.2010109@nvidia.com>
+References: <1455025920-21875-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY1a-6V=9C+di7ZdQHDQG_M_jbYshoLqxaLiCZTqM4TfHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Nishanth Menon <nm@ti.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <ssantosh@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1455025920-21875-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2016 12:31 PM, Jassi Brar wrote:
-> On Fri, Mar 4, 2016 at 8:05 PM, Nishanth Menon <nm@ti.com> wrote:
->> Hi Jassi,
->>
->> Thanks for reviewing the patch.
->> On 03/03/2016 11:18 PM, Jassi Brar wrote:
->>
->> [...]
->>
->>>>
->>>>  drivers/mailbox/Kconfig     |  11 +
->>>>  drivers/mailbox/Makefile    |   2 +
->>>>  drivers/mailbox/ti-msgmgr.c | 657
->>
->>> Do you want to call it something more specific than 'msgmgr from TI'?
->>> Maybe its about Keystone, like mailbox-keystone.c ?
->>
->> Here is the rationale for choosing the name:
->> There are more than 1 IPC in TI SoCs and even within Keystone SoC.
->> Further, it is indeed called message manager hardware block and used
->> across multiple SoC families (even though it is originated by keystone
->> architecture). we do have a reuse of the omap-mailbox in a future
->> keystone device (in addition to message manager), so using ti-mailbox is
->> more appropriate for omap-mailbox, but anyways.. further renaming this
->> as keystone-mailbox will confuse poor users when the new SoC comes in..
->>
->> We do have a lot of cross pollination of hardware blocks across TI
->> architectures, and "keystone-" prefix does not really fit the usage.
->> hence the usage of vendor-hardwareblock name.
->>
-> OK, I leave that to you to call it whatever you think is right.
+Hi Thierry,
 
-thanks.
+I forgot about these patches. Not urgent, but may be we can queue them
+for v4.7.
 
+Cheers
+Jon
+
+On 09/02/16 13:51, Jon Hunter wrote:
+> For Tegra boards, the device-tree alias serial0 is used for the console
+> and so add the stdout-path information so that the console no longer
+> needs to be passed via the kernel boot parameters.
 > 
->>>
->>>> +#include <linux/module.h>
->>>> +#include <linux/of_device.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/of_irq.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/ti-msgmgr.h>
->>>>
->>> This seems a bit bold. I think  include/linux/soc/ti/ is the right place.
->>
->> Sure, I can. Since I followed c, Would you
->> suggest all files such as include/linux/omap* be moved to
->> include/linux/soc/ti/ ? I guess that is not pertinent to this specific
->> patch, but I am curious..
->>
-> include/linux/omap-mailbox.h predates mailbox api.
-> But yes, I do think include/linux is not the right place for platform
-> specific headers. include/linux/soc/ is.
-
-Will  fix this.
-
->>
->>>> +       /* Do I actually have messages to read? */
->>>> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
->>>> +       if (!msg_count) {
->>>> +               /* Shared IRQ? */
->>>> +               dev_dbg(dev, "Spurious event - 0 pending data!\n");
->>>> +               return IRQ_NONE;
->>>> +       }
->>>> +
->>>> +       /*
->>>> +        * I have no idea about the protocol being used to communicate with the
->>>> +        * remote producer - 0 could be valid data, so I wont make a judgement
->>>> +        * of how many bytes I should be reading. Let the client figure this
->>>> +        * out.. I just read the full message and pass it on..
->>>> +        */
->>> Exactly. And similarly when you send data, you should not have more
->>> than one message in transit. Now please see my note in
->>> ti_msgmgr_send_data()
->>>
->>>
->>>> +static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
->>>> +{
->>>> +       struct device *dev = chan->mbox->dev;
->>>> +       struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
->>>> +       const struct ti_msgmgr_desc *desc;
->>>> +       struct ti_queue_inst *qinst = chan->con_priv;
->>>> +       int msg_count, num_words, trail_bytes;
->>>> +       struct ti_msgmgr_message *message = data;
->>>> +       void __iomem *data_reg;
->>>> +       u32 *word_data;
->>>> +
->>>> +       if (WARN_ON(!inst)) {
->>>> +               dev_err(dev, "no platform drv data??\n");
->>>> +               return -EINVAL;
->>>> +       }
->>>> +       desc = inst->desc;
->>>> +
->>>> +       if (desc->max_message_size < message->len) {
->>>> +               dev_err(dev, "Queue %s message length %d > max %d\n",
->>>> +                       qinst->name, message->len, desc->max_message_size);
->>>> +               return -EINVAL;
->>>> +       }
->>>> +
->>>> +       /* Are we able to send this or not? */
->>>> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
->>>> +       if (msg_count >= desc->max_messages) {
->>>> +               dev_warn(dev, "Queue %s is full (%d messages)\n", qinst->name,
->>>> +                        msg_count);
->>>> +               return -EBUSY;
->>>> +       }
->>> This seems fishy. mailbox api always submit 1 'complete' message to be
->>> sent and checks for completion by last_tx_done() before calling
->>> send_data() again. Controller drivers are not supposed to queue
->>> messages - mailbox core does. So you should never be unable to send a
->>> message.
->>
->>
->> OK-> to explain this, few reasons: (queue messages check and usage of
->> last_tx_done are kind of intertwined answer..
->> a) we need to remember that the message manager has a shared RAM.
->> multiple transmitter over other queues can be sharing the same.
->> unfortunately, we dont get a threshold kind of interrupt or status that
->> I am able to exploit in the current incarnation of the solution. The
->> best we can do in the full system is to constrain the number of messages
->> that are max pending simultaneously in each of the queue from various
->> transmitters in the SoC.
->> b) last_tx_done() is checked if TXDONE_BY_POLL, not if TXDONE_BY_ACK
->> right? which is how this'd work since txdone_poll is false -> that is
->> how we want this mechanism to work once the far end is ready for next
->> message, it acks. I do see your point about being tied to protocol - I
->> dont like it either.. in fact, I'd prefer that client registration
->> mention what kind of handshaking is necessary, but: a) that is not how
->> mailbox framework is constructed at the moment(we state txdone_poll at
->> mailbox registration, not at client usage) and b) I have no real need
->> for multiple clients to users of message manager who actually need
->> non-ACK usage - even for the foreseeable future (at least 1 next
->> generation of SoC) - if such a need does arise in the future, I will
->> have to rework framework and make this capability at the registration
->> time of the client - allowing each client path to use different
->> mechanisms on hardware such as these that need it.
->> c) message manager can actually queue more than one message(depending on
->> client capability). Even though, at this point, we are not really
->> capable of doing it(again from what I can see for immediate future),
->> mailbox framework by checking last_tx_done forces a single message
->> sequencing - which is not really exploiting the capability of the
->> hardware - in theory, we should be able to queue max num messages, hit
->> cpuidle and snooze away while the remote entity chomp away data at it's
->> own pace and finally give us a notification back - but again, we can
->> argue it is indeed protocol dependent, so setting txdone_poll to false
->> actually enables that to be done in user. Again - i have no immediate
->> need for any queued multiple transfer needs yet.. even if i need to, in
->> the future, it can easily be done by the client by maintaining code as
->> is - txdone_poll is false.
->>
-> All I suggest is that the controller does not queue more than 1
-> message at a time, which means the controller driver allows for
-> maximum possible resources taken by a message.
-> The buffering is already done by the core, and if for your 'batch
-> dispatch' thing the client could simply flush them to remote by
-> pretending it got the ack (which is no worse than simply sending all
-> messages to remote without caring if the first was successful or not).
-
-Are you suggesting to set txdone_poll is true? the controller is quite
-capable of queueing more than 1 message at a time. This the reason for
-letting the client choose the mode of operation - use ack mechanism for
-operation. client can choose to ignore the buffering in the controller,
-as you mentioned, but then, why force txdone_poll to true and deny the
-usage of the queue capability of the hardware?
-
->>>> +       /*
->>>> +        * NOTE about register access involved here:
->>>> +        * the hardware block is implemented with 32bit access operations and no
->>>> +        * support for data splitting.  We don't want the hardware to misbehave
->>>> +        * with sub 32bit access - For example: if the last register write is
->>>> +        * split into byte wise access, it can result in the queue getting
->>>> +        * stuck or dummy messages being transmitted or indeterminate behavior.
->>>> +        * The same can occur if out of order operations take place.
->>>> +        * Hence, we do not use memcpy_toio or ___iowrite32_copy here, instead
->>>> +        * we use writel which ensures the sequencing we need.
->>>> +        */
->>> .... deja-vu ?
->>
->> Tell me about it.. but then, surprises like these do pop in once in a
->> while.. sigh..
->>
-> I meant you have same para for read() , so maybe omit this one.
-
-Aaah.. OK. i will add something trivial as "similar constraints as read"..
-
->>>> +
->>>> +/* Keystone K2G SoC integration details */
->>>> +static const struct ti_msgmgr_valid_queue_desc k2g_valid_queues[] = {
->>>> +       {.queue_id = 0, .proxy_id = 0, .is_tx = true,},
->>>> +       {.queue_id = 1, .proxy_id = 0, .is_tx = true,},
->>>> +       {.queue_id = 2, .proxy_id = 0, .is_tx = true,},
->>>> +       {.queue_id = 3, .proxy_id = 0, .is_tx = true,},
->>>> +       {.queue_id = 5, .proxy_id = 2, .is_tx = false,},
->>>> +       {.queue_id = 56, .proxy_id = 1, .is_tx = true,},
->>>> +       {.queue_id = 57, .proxy_id = 2, .is_tx = false,},
->>>> +       {.queue_id = 58, .proxy_id = 3, .is_tx = true,},
->>>> +       {.queue_id = 59, .proxy_id = 4, .is_tx = true,},
->>>> +       {.queue_id = 60, .proxy_id = 5, .is_tx = true,},
->>>> +       {.queue_id = 61, .proxy_id = 6, .is_tx = true,},
->>>> +};
->>>> +
->>>> +static const struct ti_msgmgr_desc k2g_desc = {
->>>> +       .queue_count = 64,
->>>> +       .max_message_size = 64,
->>>> +       .max_messages = 128,
->>>> +       .q_slices = 1,
->>>> +       .q_proxies = 1,
->>>> +       .data_first_reg = 16,
->>>> +       .data_last_reg = 31,
->>>> +       .tx_polled = false,
->>>> +       .valid_queues = k2g_valid_queues,
->>>> +       .num_valid_queues = ARRAY_SIZE(k2g_valid_queues),
->>>> +};
->>> If these parameters are very configurable, maybe they should be in DT?
->>
->> These are SoC integration specific data. based on DT, we will only have
->> SoC specific compatible property in DT. Since  the data is tied to SoC
->> integration, there is no benefit of keeping these in DT.
->>
-> Well, yes if the numbers don't change with very often.
-
-Hopefully not.
-
--- 
-Regards,
-Nishanth Menon
+> This has been tested on boards, tegra20-trimslice, tegra30-beaver,
+> tegra114-dalmore and tegra124-jetson-tk1.
+> 
+> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> 
+> The only boards that I have not modified are tegra114-roth and
+> tegra114-tn7 because these boards have two entries for console
+> in the *.dts file. AFAICT we cannot suppport multiple consoles
+> via the stdout-path and if a console is specified by the kernel
+> boot parameters then this sets the kernel variable
+> "console_set_on_cmdline" and prevents the stdout-path console
+> being registered. If there is a better way to handle these boards
+> via device-tree let me know.
+> 
+>  arch/arm/boot/dts/tegra114-dalmore.dts        | 4 ++++
+>  arch/arm/boot/dts/tegra124-jetson-tk1.dts     | 4 ++++
+>  arch/arm/boot/dts/tegra124-nyan.dtsi          | 4 ++++
+>  arch/arm/boot/dts/tegra124-venice2.dts        | 4 ++++
+>  arch/arm/boot/dts/tegra20-harmony.dts         | 4 ++++
+>  arch/arm/boot/dts/tegra20-iris-512.dts        | 4 ++++
+>  arch/arm/boot/dts/tegra20-medcom-wide.dts     | 4 ++++
+>  arch/arm/boot/dts/tegra20-paz00.dts           | 4 ++++
+>  arch/arm/boot/dts/tegra20-seaboard.dts        | 4 ++++
+>  arch/arm/boot/dts/tegra20-tamonten.dtsi       | 4 ++++
+>  arch/arm/boot/dts/tegra20-trimslice.dts       | 4 ++++
+>  arch/arm/boot/dts/tegra20-ventana.dts         | 4 ++++
+>  arch/arm/boot/dts/tegra20-whistler.dts        | 4 ++++
+>  arch/arm/boot/dts/tegra30-apalis-eval.dts     | 4 ++++
+>  arch/arm/boot/dts/tegra30-beaver.dts          | 4 ++++
+>  arch/arm/boot/dts/tegra30-cardhu.dtsi         | 4 ++++
+>  arch/arm/boot/dts/tegra30-colibri-eval-v3.dts | 4 ++++
+>  17 files changed, 68 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
+> index 8b7aa0dcdc6e..b5748eeed473 100644
+> --- a/arch/arm/boot/dts/tegra114-dalmore.dts
+> +++ b/arch/arm/boot/dts/tegra114-dalmore.dts
+> @@ -18,6 +18,10 @@
+>  		serial0 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x80000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+> index 4ee2e63e11d0..a7264a15080a 100644
+> --- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+> +++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
+> @@ -19,6 +19,10 @@
+>  		serial2 = &uartb;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x0 0x80000000 0x0 0x80000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra124-nyan.dtsi b/arch/arm/boot/dts/tegra124-nyan.dtsi
+> index ec1aa64ded68..e2cd39e3c95e 100644
+> --- a/arch/arm/boot/dts/tegra124-nyan.dtsi
+> +++ b/arch/arm/boot/dts/tegra124-nyan.dtsi
+> @@ -8,6 +8,10 @@
+>  		serial0 = &uarta;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x0 0x80000000 0x0 0x80000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
+> index cfbdf429b45d..604f4b7c2685 100644
+> --- a/arch/arm/boot/dts/tegra124-venice2.dts
+> +++ b/arch/arm/boot/dts/tegra124-venice2.dts
+> @@ -13,6 +13,10 @@
+>  		serial0 = &uarta;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x0 0x80000000 0x0 0x80000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
+> index b926a07b9443..4b73c76f981a 100644
+> --- a/arch/arm/boot/dts/tegra20-harmony.dts
+> +++ b/arch/arm/boot/dts/tegra20-harmony.dts
+> @@ -13,6 +13,10 @@
+>  		serial0 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts b/arch/arm/boot/dts/tegra20-iris-512.dts
+> index 1dd7d7bfdfcc..bb56dfe9e10c 100644
+> --- a/arch/arm/boot/dts/tegra20-iris-512.dts
+> +++ b/arch/arm/boot/dts/tegra20-iris-512.dts
+> @@ -11,6 +11,10 @@
+>  		serial1 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	host1x@50000000 {
+>  		hdmi@54280000 {
+>  			status = "okay";
+> diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
+> index 9b87526ab0b7..34c6588e92ef 100644
+> --- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
+> +++ b/arch/arm/boot/dts/tegra20-medcom-wide.dts
+> @@ -10,6 +10,10 @@
+>  		serial0 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	pwm@7000a000 {
+>  		status = "okay";
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+> index ed7e1009326c..81a10a9df814 100644
+> --- a/arch/arm/boot/dts/tegra20-paz00.dts
+> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
+> @@ -14,6 +14,10 @@
+>  		serial1 = &uartc;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x20000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
+> index aea8994b35f2..0aed748567aa 100644
+> --- a/arch/arm/boot/dts/tegra20-seaboard.dts
+> +++ b/arch/arm/boot/dts/tegra20-seaboard.dts
+> @@ -13,6 +13,10 @@
+>  		serial0 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
+> index 13d4e6185275..025e9e8037da 100644
+> --- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
+> +++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
+> @@ -10,6 +10,10 @@
+>  		serial0 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x20000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
+> index d99af4ef9c64..69d25ca47e04 100644
+> --- a/arch/arm/boot/dts/tegra20-trimslice.dts
+> +++ b/arch/arm/boot/dts/tegra20-trimslice.dts
+> @@ -13,6 +13,10 @@
+>  		serial0 = &uarta;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
+> index 04c58e9ca490..c61533a9bf0b 100644
+> --- a/arch/arm/boot/dts/tegra20-ventana.dts
+> +++ b/arch/arm/boot/dts/tegra20-ventana.dts
+> @@ -13,6 +13,10 @@
+>  		serial0 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra20-whistler.dts b/arch/arm/boot/dts/tegra20-whistler.dts
+> index 340d81108df1..bd7658572239 100644
+> --- a/arch/arm/boot/dts/tegra20-whistler.dts
+> +++ b/arch/arm/boot/dts/tegra20-whistler.dts
+> @@ -13,6 +13,10 @@
+>  		serial0 = &uarta;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x00000000 0x20000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
+> index f2879cfcca62..b914bcb381d7 100644
+> --- a/arch/arm/boot/dts/tegra30-apalis-eval.dts
+> +++ b/arch/arm/boot/dts/tegra30-apalis-eval.dts
+> @@ -17,6 +17,10 @@
+>  		serial3 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	pcie-controller@00003000 {
+>  		status = "okay";
+>  
+> diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
+> index 3dede3934446..1eca3b28ac64 100644
+> --- a/arch/arm/boot/dts/tegra30-beaver.dts
+> +++ b/arch/arm/boot/dts/tegra30-beaver.dts
+> @@ -12,6 +12,10 @@
+>  		serial0 = &uarta;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x80000000 0x7ff00000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+> index bb1ca158273c..de9d6ccace14 100644
+> --- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
+> +++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
+> @@ -35,6 +35,10 @@
+>  		serial1 = &uartc;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	memory {
+>  		reg = <0x80000000 0x40000000>;
+>  	};
+> diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+> index 3ff019f47d00..93e1ffd95bfa 100644
+> --- a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+> +++ b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+> @@ -15,6 +15,10 @@
+>  		serial2 = &uartd;
+>  	};
+>  
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+>  	host1x@50000000 {
+>  		dc@54200000 {
+>  			rgb {
+> 
