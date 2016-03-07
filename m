@@ -1,160 +1,96 @@
-From: Julian Calaby <julian.calaby@gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v3 02/13] clk: sunxi: add ahb1 clock for A83T
-Date: Mon, 7 Mar 2016 13:47:19 +1100
-Message-ID: <CAGRGNgWXSDYf+pKJTWzL4uR-ZFSHby5R7EcTH4jCfrc90kHvCw@mail.gmail.com>
-References: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com> <1457192586-25596-3-git-send-email-vishnupatekar0510@gmail.com>
+From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+Date: Mon, 7 Mar 2016 02:35:28 +0000
+Message-ID: <AM3PR04MB11852B62A075A980A246D2D091B10@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
+ <1456816183-22340-3-git-send-email-qiang.zhao@nxp.com>
+ <20160305042536.GD13525@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457192586-25596-3-git-send-email-vishnupatekar0510@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans De Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, "Mailing List, Arm" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, sboyd@codeaurora.org, Reinder de Haan <patchesrdh@mveas.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160305042536.GD13525@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vishnu,
+On Tue, Mar 05, 2016 at 12:26PM, Rob Herring wrote:
+> -----Original Message-----
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Saturday, March 05, 2016 12:26 PM
+> To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; Xiaobo Xie
+> <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+> 
+> On Tue, Mar 01, 2016 at 03:09:39PM +0800, Zhao Qiang wrote:
+> > Add uqe_serial document to
+> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> >
+> > Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> > Changes for v2
+> > 	- modify tx/rx-clock-name specification Changes for v2
+> > 	- NA
+> >
+> >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt        | 19
+> +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> >
+> > diff --git
+> > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> > new file mode 100644
+> > index 0000000..436c71c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
+> > +++ txt
+> > @@ -0,0 +1,19 @@
+> > +* Serial
+> > +
+> > +Currently defined compatibles:
+> > +- ucc_uart
+> 
+> I guess this is in use already and okay. However, looking at the driver there
+> really should be SoC specific compatible strings here since the driver is looking
+> up the SoC compatible string and composing the firmware filename from that.
 
-On Sun, Mar 6, 2016 at 2:42 AM, Vishnu Patekar
-<vishnupatekar0510@gmail.com> wrote:
-> AHB1 on A83T is similar to ahb1 on A31, except parents are different.
-> clock index 0b1x is PLL6.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->  drivers/clk/sunxi/clk-sunxi.c                     | 76 +++++++++++++++++++++++
->  2 files changed, 77 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-> index c09f59b..2ee7841 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -29,6 +29,7 @@ Required properties:
->         "allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
->         "allwinner,sun9i-a80-cpus-clk" - for the CPUS on A80
->         "allwinner,sun6i-a31-ahb1-clk" - for the AHB1 clock on A31
-> +       "allwinner,sun8i-a83t-ahb1-clk" - for the AHB1 clock on A83T
->         "allwinner,sun8i-h3-ahb2-clk" - for the AHB2 clock on H3
->         "allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
->         "allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index 99f60ef..0ae1f09 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -344,6 +344,67 @@ static void sun6i_ahb1_recalc(struct factors_request *req)
->         req->rate >>= req->p;
->  }
->
-> +#define SUN8I_A83T_AHB1_PARENT_PLL6    2
-> +/**
-> + * sun8i_a83t_get_ahb_factors() - calculates m, p factors for AHB
-> + * AHB rate is calculated as follows
-> + * rate = parent_rate >> p
-> + *
-> + * if parent is pll6, then
-> + * parent_rate = pll6 rate / (m + 1)
-> + */
-> +
-> +static void sun8i_a83t_get_ahb1_factors(struct factors_request *req)
-> +{
-> +       u8 div, calcp, calcm = 1;
-> +
-> +       /*
-> +        * clock can only divide, so we will never be able to achieve
-> +        * frequencies higher than the parent frequency
-> +        */
-> +       if (req->parent_rate && req->rate > req->parent_rate)
-> +               req->rate = req->parent_rate;
-> +
-> +       div = DIV_ROUND_UP(req->parent_rate, req->rate);
-> +
-> +       /* calculate pre-divider if parent is pll6 */
-> +       if (req->parent_index >= SUN8I_A83T_AHB1_PARENT_PLL6) {
-> +               if (div < 4)
-> +                       calcp = 0;
-> +               else if (div / 2 < 4)
-> +                       calcp = 1;
-> +               else if (div / 4 < 4)
-> +                       calcp = 2;
-> +               else
-> +                       calcp = 3;
-> +
-> +               calcm = DIV_ROUND_UP(div, 1 << calcp);
-> +       } else {
-> +               calcp = __roundup_pow_of_two(div);
-> +               calcp = calcp > 3 ? 3 : calcp;
-> +}
+Ok, I will changed both driver and this compatible.
 
-You could do with a tab here.
+> 
+> > +
+> > +Properties for ucc_uart:
+> > +port-number : port number of UCC-UART tx/rx-clock-name : should be
+> > +"brg1"-"brg16" for internal clock source,
+> > +		   should be "clk1"-"clk28" for external clock source.
+> > +
+> > +Example:
+> > +
+> > +	ucc_serial: ucc@2200 {
+> > +		device_type = "serial";
+> 
+> Drop device_type. It should only be used in a few legacy cases.
+> 
+> Looks like the driver is matching on this. Please drop it from the driver too. I'd
+> leave dts files for now, but they should be updated too later.
 
-> +
-> +       req->rate = (req->parent_rate / calcm) >> calcp;
-> +       req->p = calcp;
-> +       req->m = calcm - 1;
-> +}
-> +
-> +/**
-> +* sun8i_a83t_ahb1_recalc() - calculates AHB clock rate from m, p factors and
-> +*                       parent index
-> +*/
-> +static void sun8i_a83t_ahb1_recalc(struct factors_request *req)
-> +{
-> +       req->rate = req->parent_rate;
-> +
-> +/* apply pre-divider first if parent is pll6 */
-> +       if (req->parent_index >= SUN6I_AHB1_PARENT_PLL6)
-> +               req->rate /= req->m + 1;
-> +
-> +       /* clk divider */
-> +       req->rate >>= req->p;
-> +}
-> +
->  /**
->   * sun4i_get_apb1_factors() - calculates m, p factors for APB1
->   * APB1 rate is calculated as follows
-> @@ -555,6 +616,14 @@ static const struct factors_data sun6i_ahb1_data __initconst = {
->         .recalc = sun6i_ahb1_recalc,
->  };
->
-> +static const struct factors_data sun8i_a83t_ahb1_data __initconst = {
-> +       .mux = 12,
-> +       .muxmask = BIT(1) | BIT(0),
-> +       .table = &sun6i_ahb1_config,
-> +       .getter = sun8i_a83t_get_ahb1_factors,
-> +       .recalc = sun8i_a83t_ahb1_recalc,
-> +};
-> +
->  static const struct factors_data sun4i_apb1_data __initconst = {
->         .mux = 24,
->         .muxmask = BIT(1) | BIT(0),
-> @@ -627,6 +696,13 @@ static void __init sun6i_ahb1_clk_setup(struct device_node *node)
->  CLK_OF_DECLARE(sun6i_a31_ahb1, "allwinner,sun6i-a31-ahb1-clk",
->                sun6i_ahb1_clk_setup);
->
-> +static void __init sun8i_a83t_ahb1_clk_setup(struct device_node *node)
-> +{
-> +       sunxi_factors_clk_setup(node, &sun8i_a83t_ahb1_data);
-> +}
-> +CLK_OF_DECLARE(sun8i_a83t_ahb1, "allwinner,sun8i-a83t-ahb1-clk",
-> +              sun8i_a83t_ahb1_clk_setup);
-> +
->  static void __init sun4i_apb1_clk_setup(struct device_node *node)
->  {
->         sunxi_factors_clk_setup(node, &sun4i_apb1_data);
-> --
-> 1.9.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
+Ok, Thank you for your Reviewing, I will drop it
 
-
-
--- 
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+> 
+> > +		compatible = "ucc_uart";
+> > +		port-number = <1>;
+> > +		rx-clock-name = "brg2";
+> > +		tx-clock-name = "brg2";
+> > +	};
+> > --
+> > 2.1.0.27.g96db324
+> >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
