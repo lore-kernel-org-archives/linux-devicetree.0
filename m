@@ -1,108 +1,52 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH V4 1/4] net-next: mediatek: document MediaTek SoC ethernet binding
-Date: Mon,  7 Mar 2016 09:56:34 +0100
-Message-ID: <1457340997-23116-2-git-send-email-blogic@openwrt.org>
-References: <1457340997-23116-1-git-send-email-blogic@openwrt.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457340997-23116-1-git-send-email-blogic@openwrt.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, =?UTF-8?q?Steven=20Liu=20=28=E5=8A=89=E4=BA=BA=E8=B1=AA=29?= <steven.liu@mediatek.com>, =?UTF-8?q?Carlos=20Huang=20=28=E9=BB=83=E5=A3=AB=E5=BD=B0=29?= <Carlos.Huang@mediatek.com>, Felix Fietkau <nbd@openwrt.org>, Michael Lee <igvtee@gmail.com>, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] documentation: Fix pinctrl documentation for Meson8 / Meson8b
+Date: Mon, 7 Mar 2016 10:01:53 +0100
+Message-ID: <CAOQ7t2bd5-xeUkwjN4cqi=xa602B8JwZ4vvrUF1VL4y2=pkV_Q@mail.gmail.com>
+References: <1456869876-19320-1-git-send-email-carlo@caione.org>
+	<1456869876-19320-5-git-send-email-carlo@caione.org>
+	<20160305042646.GL13525@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160305042646.GL13525@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding documentation for the MediaTek Ethernet
-controller.
+On Sat, Mar 5, 2016 at 5:26 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 01, 2016 at 11:04:36PM +0100, Carlo Caione wrote:
+>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>>
+>> Fix pin controller documentation with the new compatibles.
+>
+> What was wrong with it? (answer in the commit msg)
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/net/mediatek-net.txt       |   77 ++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mediatek-net.txt
+I'll extend the commit message.
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-new file mode 100644
-index 0000000..5ca7929
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -0,0 +1,77 @@
-+MediaTek Frame Engine Ethernet controller
-+=========================================
-+
-+The frame engine ethernet controller can be found on MediaTek SoCs. These SoCs
-+have dual GMAC each represented by a child node..
-+
-+* Ethernet controller node
-+
-+Required properties:
-+- compatible: Should be "mediatek,mt7623-eth"
-+- reg: Address and length of the register set for the device
-+- interrupts: Should contain the frame engines interrupt
-+- clocks: the clock used by the core
-+- clock-names: the names of the clock listed in the clocks property. These are
-+	"ethif", "esw", "gp2", "gp1"
-+- power-domains: phandle to the power domain that the ethernet is part of
-+- resets: Should contain a phandle to the ethsys reset signal
-+- reset-names: Should contain the reset signal name "eth"
-+- mediatek,ethsys: phandle to the syscon node that handles the port setup
-+- mediatek,pctl: phandle to the syscon node that handles the ports slew rate
-+	and driver current
-+
-+Optional properties:
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+
-+
-+* Ethernet MAC node
-+
-+Required properties:
-+- compatible: Should be "mediatek,eth-mac"
-+- reg: The number of the MAC
-+- phy-handle: see ethernet.txt file in the same directory.
-+
-+Example:
-+
-+eth: ethernet@1b100000 {
-+	compatible = "mediatek,mt7623-eth";
-+	reg = <0 0x1b100000 0 0x20000>;
-+	clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+		 <&ethsys CLK_ETHSYS_ESW>,
-+		 <&ethsys CLK_ETHSYS_GP2>,
-+		 <&ethsys CLK_ETHSYS_GP1>;
-+	clock-names = "ethif", "esw", "gp2", "gp1";
-+	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
-+	reset-names = "eth";
-+	mediatek,ethsys = <&ethsys>;
-+	mediatek,pctl = <&syscfg_pctl_a>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	gmac1: mac@0 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <0>;
-+		phy-handle = <&phy0>;
-+	};
-+
-+	gmac2: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-handle = <&phy1>;
-+	};
-+
-+	mdio-bus {
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+			phy-mode = "rgmii";
-+		};
-+
-+		phy1: ethernet-phy@1 {
-+			reg = <1>;
-+			phy-mode = "rgmii";
-+		};
-+	};
-+};
+[...]
+>>  Required properties for the root node:
+>> - - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
+>> + - compatible: "amlogic,meson8-cbus-pinctrl", "amlogic,meson8b-cbus-pinctrl",
+>> +   "amlogic,meson8-aobus-pinctrl" or "amlogic,meson8b-aobus-pinctrl"
+>
+> Reformat with 1 per line (assuming each are mutually exclusive).
+
+ok
+
+[...]
+>> -Valid sub-node names are:
+>> - - "banks" for the regular domain
+>> - - "ao-bank" for the always-on domain
+>> -
+>
+> Why are these being removed?
+
+Because we are not forced anymore to use those specific names for the sub-nodes.
+
 -- 
-1.7.10.4
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
