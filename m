@@ -1,45 +1,73 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
-Date: Mon, 7 Mar 2016 15:10:25 -0800
-Message-ID: <CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
-References: <1457104420-18350-1-git-send-email-robh@kernel.org>
+From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Mon, 7 Mar 2016 17:22:24 -0600
+Message-ID: <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+	<56DD7172.4000707@suse.de>
+	<2714888.1DdqvJZ8cb@diego>
+	<56DD7593.5060003@suse.de>
+	<56DD8176.2080603@st.com>
+	<56DD8FBE.9010200@suse.de>
+	<56DD99A4.5030004@st.com>
+	<56DDA26C.3050301@suse.de>
+	<56DDA3D5.3090209@st.com>
+	<56DDB749.1020808@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457104420-18350-1-git-send-email-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <56DDB749.1020808-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Mar 4, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
-> fdt_node_check_compatible()"). This adds the following commits from
-> upstream:
+On Mon, Mar 7, 2016 at 11:15 AM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>=
+ wrote:
+> Am 07.03.2016 um 16:52 schrieb Giuseppe CAVALLARO:
+>> On 3/7/2016 4:46 PM, Andreas F=C3=A4rber wrote:
+>>> Am 07.03.2016 um 16:09 schrieb Giuseppe CAVALLARO:
+>>>> On 3/7/2016 3:27 PM, Andreas F=C3=A4rber wrote:
+>>>>> Indeed, reverting Gabriel's commit fixes the observed error messa=
+ges
+>>> [...]
+>>>>> However, I am unable to ping any hosts on the network now.
+>>>>
+>>>> hmm, this could be another problem. I wonder if you can
+>>>> check which recent patch is introducing the problem on ARM64.
+>>>> For example if this depends on Oct_2015 update.
+>>>
+>>> I've had success reverting drivers/net/ethernet/stmicro/ up to and
+>>> including "stmmac: first frame prep at the end of xmit routine", i.=
+e.
+>>> top 7 commits.
+>>
+>> Andreas, I will check it and let you know asap.
 >
-> 53bf130 libfdt: simplify fdt_node_check_compatible()
-> c9d9121 Warn on node name unit-address presence/absence mismatch
-> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
+> I verified that it's just these two commits that I need to revert:
 >
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> As usual, this is just an automated copy of upstream dtc into the kernel
-> tree. The changeset is small enough that I have left it here.
+> "stmmac: Fix 'eth0: No PHY found' regression"
+> "stmmac: first frame prep at the end of xmit routine"
 >
-> The main reason for this sync is to pick-up the new unit-address
-> warnings.
+> Those in between don't cause conflicts and seem to work okay.
+>
 
-This spews a crazy amount of warnings on a multi_v7_defconfig build.
+I'm seeing the same issue on the SoCFPGA platform:
 
-I'd prefer to see most of those warnings fixed _before_ we introduce
-it by default. Otherwise we just add a huge amount of noise that will
-hide any real valid warnings that are now brought up.
+libphy: PHY stmmac-0:ffffffff not found
+eth0: Could not attach to PHY
+stmmac_open: Cannot attach to PHY (error: -19)
 
+If I just revert:
 
--Olof
+ "stmmac: Fix 'eth0: No PHY found' regression"
+
+then the issue goes away.
+
+Thanks,
+Dinh
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
