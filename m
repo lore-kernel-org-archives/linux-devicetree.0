@@ -1,87 +1,140 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 1/2] pwm: add DT bindings for the STMPE PWM
-Date: Mon, 7 Mar 2016 10:26:41 +0100
-Message-ID: <20160307092641.GG31189@ulmo.nvidia.com>
-References: <1455455317-17043-1-git-send-email-linus.walleij@linaro.org>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Mon, 7 Mar 2016 09:33:28 +0000
+Message-ID: <SG2PR06MB10389F82D83C6D4B89F75BC1C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <20160305043010.GC13525@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="PpAOPzA3dXsRhoo+"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455455317-17043-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160305043010.GC13525@rob-hp-laptop>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mkl@pengutronix.de" <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
---PpAOPzA3dXsRhoo+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review comments.
 
-On Sun, Feb 14, 2016 at 02:08:37PM +0100, Linus Walleij wrote:
-> This adds fairly standard device tree bindings for the STMPE
-> PWM found in STMPE24xx multi-purpose expanders.
->=20
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
->  Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt | 18 ++++++++++++=
-++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt b/Doc=
-umentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-> new file mode 100644
-> index 000000000000..c8b53f39ae31
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-> @@ -0,0 +1,18 @@
-> +=3D=3D ST STMPE PWM controller =3D=3D
-> +
-> +This is a PWM block embedded in the ST Microelectronics STMPE
-> +(ST Multi-Purpose Expander) chips. The PWM is registered as a
-> +subdevices of the STMPE MFD device.
-> +
-> +Required properties:
-> +- compatible: should be:
-> +  - "st,stmpe-pwm"
-> +- #pwm-cells: should be 2. See pwm.txt in this directory for a descripti=
-on of
-> +  the cells format.
-> +
-> +Example:
-> +
-> +stmpe1_pwm0: stmpe_pwm {
+> On Thu, Mar 03, 2016 at 03:38:35PM +0000, Ramesh Shanmugasundaram wrote:
+> > This patch adds support for the CAN FD controller found in Renesas
+> > R-Car SoCs. The controller operates in CAN FD mode by default.
+> >
+> > CAN FD mode supports both Classical CAN & CAN FD frame formats. The
+> > controller supports ISO 11898-1:2015 CAN FD format only.
+> >
+> > This controller supports two channels and the driver can enable either
+> > or both of the channels.
+> >
+> > Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs
+> > (one per channel) for transmission. Rx filter rules are configured to
+> > the minimum (one per channel) and it accepts Standard, Extended, Data
+> > & Remote Frame combinations.
+> >
+> > Note: There are few documentation errors in R-Car Gen3 Hardware User
+> > Manual v0.5E with respect to CAN FD controller. They are listed below:
+> >
+> > 1. CAN FD interrupt numbers 29 & 30 are listed as per channel
+> > interrupts. However, they are common to both channels (i.e.) they are
+> > global and channel interrupts respectively.
+> >
+> > 2. CANFD clock is derived from PLL1. This is not documented.
+> >
+> > 3. CANFD clock is further divided by (1/2) within the CAN FD controller.
+> > This is not documented.
+> >
+> > 4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
+> > is mentioned 4 Tq in the manual.
+> >
+> > 5. The maximum number of message RAM area the controller can use is
+> > 3584 bytes. It is specified 10752 bytes in the manual.
+> >
+> > Signed-off-by: Ramesh Shanmugasundaram
+> > <ramesh.shanmugasundaram@bp.renesas.com>
+> > ---
+> > Changes since v1:
+> > 	* Removed testmodes & debugfs code (suggested by Oliver H)
+> > 	* Fixed tx path race issue by introducing lock (suggested by Marc K)
+> > 	* Removed __maybe_unused attribute of rcar_canfd_of_table
+> >
+> > Thanks,
+> > Ramesh
+> > ---
+> >  .../devicetree/bindings/net/can/rcar_canfd.txt     |   86 ++
+> >  drivers/net/can/Kconfig                            |   10 +
+> >  drivers/net/can/Makefile                           |    1 +
+> >  drivers/net/can/rcar_canfd.c                       | 1624
+> ++++++++++++++++++++
+> >  4 files changed, 1721 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> >  create mode 100644 drivers/net/can/rcar_canfd.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> > b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> > new file mode 100644
+> > index 0000000..4299bd8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> > @@ -0,0 +1,86 @@
+> > +Renesas R-Car CAN FD controller Device Tree Bindings
+> > +----------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: Must contain one or more of the following:
+> > +  - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
+> > +  - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible
+> controller.
+> > +
+> > +  When compatible with the generic version, nodes must list the
+> > + SoC-specific version corresponding to the platform first, followed
+> > + by the  family-specific and/or generic versions.
+> > +
+> > +- reg: physical base address and size of the R-Car CAN FD register map.
+> > +- interrupts: interrupt specifier for the Global & Channel interrupts
+> > +- clocks: phandles and clock specifiers for 3 clock inputs.
+> > +- clock-names: 3 clock input name strings: "fck", "canfd", "can_clk".
+> > +- pinctrl-0: pin control group to be used for this controller.
+> > +- pinctrl-names: must be "default".
+> > +
+> > +Required properties for "renesas,r8a7795-canfd" compatible:
+> > +In R8A7795 SoC, canfd clock is a div6 clock and can be used by both
+> > +CAN and CAN FD controller at the same time. It needs to be scaled to
+> > +maximum frequency if any of these controllers use it. This is done
+> > +using the below properties.
+> > +
+> > +- assigned-clocks: phandle of canfd clock.
+> > +- assigned-clock-rates: maximum frequency of this clock.
+> > +
+> > +Each channel is represented as a child node. They can be
+> > +enabled/disabled using "status" property.
+> 
+> How many channels? Required or optional?
 
-Shouldn't the node name simply be "pwm"? stmpe_pwm is kind of redundant
-given that this is to be embedded in an MFD node that will, presumably,
-be called stmpe.
+Two channels and it is a required property. I will update as below in the next revision.
 
-Thierry
+Required child node:
+The controller supports two channels and each is represented as a child
+node. The names of the child nodes are "channel0" and "channel1" respectively.
+Each child node supports the "status" property only, which is used to
+enable/disable the respective channel.
 
---PpAOPzA3dXsRhoo+
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > +
+> > +Example
+> > +-------
+> > +
+> > +SoC common .dtsi file:
+> > +
+> > +		canfd: canfd@e66c0000 {
+> 
+> can@e66c0000
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Thanks. I will update.
 
-iQIcBAABCAAGBQJW3UlRAAoJEN0jrNd/PrOh6C8QAK1yF2dGvPfnc+NT4GaoRHwu
-BXjvOf+xXx4yi+z10SmLXJWPn+5RSyasg+ka8M0WRz9KES1ROLuHQ+/kvhUFlgVu
-JsjqCeiiG8k0iD1EAZV4EEyRcPOFpNSvv25FwnmLRVZhIYB8/xCPNXIUBxWnz7mg
-K+qUOzq9gsem3m+0gDohAYlCMmSUNJD3JQ/CaDimAXv+OUkvx+3f04nypda7gsb2
-KTxrZRYjUni3z6agm9TbcV1FowCRjXhgT3YPfJYQEdwAHG8WH0ruuc6rp3lNRAuf
-YRcs2LgxzBu83D2z43/rsrp5FHx6hR7xnx+/UZeYt59oeGziDGr/ozVBUEB2EB+P
-RSKOaB2i0xONyfWUdRuL4mG5Mw6FVmhyjkEyAqZ+hJFnumq4gj5RtUEgWsFC/eFT
-6uFcWZk2qGFI5T/8EdU4+3nXYfVBevE+U0cF/dR2hz/e4i6xcqfSi6ecoA+7Teak
-9I0BQyYXFTsm6NuNS0QIo2hOjqPF0r2NlHH1mLuoa/YdaSCYtNZ4ZX5qPjWnGqZm
-SszXk0yS9do9r00spgABDPNavRDySQ8/GtkR1XuJ0ATfHcQ8vYxyynAE3/SuWYLM
-7t47MOeFEV51FK+wUx82xuM5UuUjztIrmWgGXmr1e2Pfx+wUD6nvlCVDvnyQ8zH/
-6XRry/V3/t3d2QsnC+Ro
-=9eBP
------END PGP SIGNATURE-----
-
---PpAOPzA3dXsRhoo+--
+Thanks,
+Ramesh
