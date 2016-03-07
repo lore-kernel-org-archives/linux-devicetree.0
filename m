@@ -1,132 +1,118 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 03/11] EDAC, altera: Add register offset for ECC Enable
-Date: Mon, 7 Mar 2016 13:42:59 -0600
-Message-ID: <1457379787-8327-4-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 07/11] EDAC, altera: Add status offset & masks
+Date: Mon, 7 Mar 2016 13:43:03 -0600
+Message-ID: <1457379787-8327-8-git-send-email-tthayer@opensource.altera.com>
 References: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-In preparation for the Arria10 peripheral ECCs, a register
-offset from the ECC base was added to the private data
-structure to index into the ECC enable register.
+In preparation for the Arria10 peripheral ECCs, the IRQ
+status needs to be determined because the IRQs are shared.
+The IRQ status register is read to determine if the IRQ
+was for this ECC peripheral. Cyclone5 and Arria5 have
+dedicated IRQs so the confirmation mechanism is not
+required and the mask is set to 0.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
-v2: Split large patch into smaller patches. Add an ECC
-    control offset to support the different register layout
-    of Arria10 peripheral ECCs.
+v2: Split large patch into smaller patches. Determine
+    if IRQ matches this ECC peripheral before handling it.
 ---
- drivers/edac/altera_edac.c |   20 +++++++++++++++-----
- drivers/edac/altera_edac.h |    8 +++++++-
- 2 files changed, 22 insertions(+), 6 deletions(-)
+ drivers/edac/altera_edac.c |   41 +++++++++++++++++++++++++++++++----------
+ drivers/edac/altera_edac.h |    3 +++
+ 2 files changed, 34 insertions(+), 10 deletions(-)
 
 diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index eee7a39..138446c 100644
+index fd73a77..11b7291 100644
 --- a/drivers/edac/altera_edac.c
 +++ b/drivers/edac/altera_edac.c
-@@ -746,7 +746,7 @@ static int altr_edac_device_probe(struct platform_device *pdev)
+@@ -556,19 +556,32 @@ static irqreturn_t altr_edac_device_handler(int irq, void *dev_id)
+ 	struct edac_device_ctl_info *dci = dev_id;
+ 	struct altr_edac_device_dev *drvdata = dci->pvt_info;
+ 	const struct edac_device_prv_data *priv = drvdata->data;
++	void __iomem *status_addr = drvdata->status + priv->err_status_ofst;
+ 	void __iomem *clear_addr = drvdata->status + priv->clear_err_ofst;
  
- 	/* Check specific dependencies for the module */
- 	if (drvdata->data->setup) {
--		res = drvdata->data->setup(pdev, drvdata->base);
-+		res = drvdata->data->setup(pdev, drvdata);
- 		if (res)
- 			goto fail1;
++	/*
++	 * CycloneV is directly mapped to a specific IRQ. Arria10
++	 * shares the IRQ with other ECCs so we must match first.
++	 */
+ 	if (irq == drvdata->sb_irq) {
+-		if (priv->ce_clear_mask)
+-			writel(priv->ce_clear_mask, clear_addr);
+-		edac_device_handle_ce(dci, 0, 0, drvdata->edac_dev_name);
+-		ret_value = IRQ_HANDLED;
++		if (!priv->ce_status_mask ||
++		    (priv->ce_status_mask & readl(status_addr))) {
++			if (priv->ce_clear_mask)
++				writel(priv->ce_clear_mask, clear_addr);
++			edac_device_handle_ce(dci, 0, 0,
++					      drvdata->edac_dev_name);
++			ret_value = IRQ_HANDLED;
++		}
+ 	} else if (irq == drvdata->db_irq) {
+-		if (priv->ue_clear_mask)
+-			writel(priv->ue_clear_mask, clear_addr);
+-		edac_device_handle_ue(dci, 0, 0, drvdata->edac_dev_name);
+-		panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
+-		ret_value = IRQ_HANDLED;
++		if (!priv->ue_status_mask ||
++		    (priv->ue_status_mask & readl(status_addr))) {
++			if (priv->ue_clear_mask)
++				writel(priv->ue_clear_mask, clear_addr);
++			edac_device_handle_ue(dci, 0, 0,
++					      drvdata->edac_dev_name);
++			panic("\nEDAC:ECC_DEVICE[Uncorrectable errors]\n");
++			ret_value = IRQ_HANDLED;
++		}
+ 	} else {
+ 		WARN_ON(1);
  	}
-@@ -857,9 +857,12 @@ static void ocram_free_mem(void *p, size_t size, void *other)
-  *	memory will cause CE/UE errors possibly causing an ABORT.
-  */
- static int altr_ocram_check_deps(struct platform_device *pdev,
--				 void __iomem *base)
-+				 struct altr_edac_device_dev *drvdata)
- {
--	if (readl(base) & ALTR_OCR_ECC_EN)
-+	void __iomem  *base = drvdata->base;
-+	const struct edac_device_prv_data *prv = drvdata->data;
-+
-+	if (readl(base + prv->ecc_en_ofst) & prv->ecc_enable_mask)
- 		return 0;
- 
- 	edac_printk(KERN_ERR, EDAC_DEVICE,
-@@ -875,6 +878,7 @@ const struct edac_device_prv_data ocramecc_data = {
+@@ -882,6 +895,10 @@ const struct edac_device_prv_data ocramecc_data = {
+ 	.ce_clear_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_SERR),
+ 	.ue_clear_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_DERR),
+ 	.clear_err_ofst = ALTR_OCR_ECC_REG_OFFSET,
++	/* Cyclone5 & Arria5 have separate IRQs so status = 0 */
++	.ce_status_mask = 0,
++	.ue_status_mask = 0,
++	.err_status_ofst = 0,
+ 	.dbgfs_name = "altr_ocram_trigger",
  	.alloc_mem = ocram_alloc_mem,
  	.free_mem = ocram_free_mem,
- 	.ecc_enable_mask = ALTR_OCR_ECC_EN,
-+	.ecc_en_ofst = ALTR_OCR_ECC_REG_OFFSET,
- 	.ce_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJS),
- 	.ue_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJD),
- 	.trig_alloc_sz = ALTR_TRIG_OCRAM_BYTE_SIZE,
-@@ -924,10 +928,15 @@ static void l2_free_mem(void *p, size_t size, void *other)
-  *	Note that L2 Cache Enable is forced at build time.
-  */
- static int altr_l2_check_deps(struct platform_device *pdev,
--			      void __iomem *base)
-+			      struct altr_edac_device_dev *drvdata)
- {
--	if (readl(base) & ALTR_L2_ECC_EN)
-+	void __iomem  *base = drvdata->base;
-+	const struct edac_device_prv_data *prv = drvdata->data;
-+
-+	if ((readl(base + prv->ecc_en_ofst) & prv->ecc_enable_mask) ==
-+	     prv->ecc_enable_mask) {
- 		return 0;
-+	}
- 
- 	edac_printk(KERN_ERR, EDAC_DEVICE,
- 		    "L2: No ECC present, or ECC disabled\n");
-@@ -942,6 +951,7 @@ const struct edac_device_prv_data l2ecc_data = {
+@@ -957,7 +974,11 @@ const struct edac_device_prv_data l2ecc_data = {
+ 	.setup = altr_l2_check_deps,
+ 	.ce_clear_mask = 0,
+ 	.ue_clear_mask = 0,
+-	.clear_err_ofst = ALTR_L2_ECC_REG_OFFSET,
++	.clear_err_ofst = ALTR_MAN_GRP_L2_ECC_OFFSET,
++	/* Cyclone5 & Arria5 have separate IRQs so status = 0 */
++	.ce_status_mask = 0,
++	.ue_status_mask = 0,
++	.err_status_ofst = 0,
+ 	.dbgfs_name = "altr_l2_trigger",
  	.alloc_mem = l2_alloc_mem,
  	.free_mem = l2_free_mem,
- 	.ecc_enable_mask = ALTR_L2_ECC_EN,
-+	.ecc_en_ofst = ALTR_L2_ECC_REG_OFFSET,
- 	.ce_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJS),
- 	.ue_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJD),
- 	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
 diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index e531da4..54e2742 100644
+index b262f74..43e0dae 100644
 --- a/drivers/edac/altera_edac.h
 +++ b/drivers/edac/altera_edac.h
-@@ -204,6 +204,7 @@ struct altr_sdram_mc_data {
- 
- /* OCRAM ECC Management Group Defines */
- #define ALTR_MAN_GRP_OCRAM_ECC_OFFSET   0x04
-+#define ALTR_OCR_ECC_REG_OFFSET         0x00
- #define ALTR_OCR_ECC_EN                 BIT(0)
- #define ALTR_OCR_ECC_INJS               BIT(1)
- #define ALTR_OCR_ECC_INJD               BIT(2)
-@@ -212,18 +213,23 @@ struct altr_sdram_mc_data {
- 
- /* L2 ECC Management Group Defines */
- #define ALTR_MAN_GRP_L2_ECC_OFFSET      0x00
-+#define ALTR_L2_ECC_REG_OFFSET          0x00
- #define ALTR_L2_ECC_EN                  BIT(0)
- #define ALTR_L2_ECC_INJS                BIT(1)
- #define ALTR_L2_ECC_INJD                BIT(2)
- 
-+struct altr_edac_device_dev;
-+
- struct edac_device_prv_data {
--	int (*setup)(struct platform_device *pdev, void __iomem *base);
-+	int (*setup)(struct platform_device *pdev,
-+		     struct altr_edac_device_dev *drvdata);
+@@ -226,6 +226,9 @@ struct edac_device_prv_data {
  	int ce_clear_mask;
  	int ue_clear_mask;
+ 	int clear_err_ofst;
++	int ce_status_mask;
++	int ue_status_mask;
++	int err_status_ofst;
  	char dbgfs_name[20];
  	void * (*alloc_mem)(size_t size, void **other);
  	void (*free_mem)(void *p, size_t size, void *other);
- 	int ecc_enable_mask;
-+	int ecc_en_ofst;
- 	int ce_set_mask;
- 	int ue_set_mask;
- 	int trig_alloc_sz;
 -- 
 1.7.9.5
-
