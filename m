@@ -1,128 +1,54 @@
-From: Robert Richter <robert.richter@caviumnetworks.com>
-Subject: Re: [PATCH v14 2/6] Documentation, dt, numa: dt bindings for NUMA.
-Date: Mon, 7 Mar 2016 20:22:20 +0100
-Message-ID: <20160307192220.GA1535@rric.localdomain>
-References: <1457049339-23351-1-git-send-email-ddaney.cavm@gmail.com>
- <1457049339-23351-3-git-send-email-ddaney.cavm@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys
+ example
+Date: Mon, 7 Mar 2016 20:25:31 +0100
+Message-ID: <56DDD5AB.1090707@suse.de>
+References: <1457375055-5544-1-git-send-email-afaerber@suse.de>
+ <CABxcv=kEDoP3_Q3OKh1rGJ3=nFxRydu7L7bv5C=bNbmXyFt8dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1457049339-23351-3-git-send-email-ddaney.cavm@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Daney <ddaney.cavm@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, David Daney <david.daney@cavium.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Fleming <matt@codeblueprint.co.uk>, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=kEDoP3_Q3OKh1rGJ3=nFxRydu7L7bv5C=bNbmXyFt8dQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03.03.16 15:55:35, David Daney wrote:
-> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-> 
-> Add DT bindings for numa mapping of memory, CPUs and IOs.
-> 
-> Reviewed-by: Robert Richter <rrichter@cavium.com>
-> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> ---
->  Documentation/devicetree/bindings/numa.txt | 272 +++++++++++++++++++++++++++++
->  1 file changed, 272 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/numa.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
-> new file mode 100644
-> index 0000000..ec5ed7c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/numa.txt
+Hi,
 
-> +==============================================================================
-> +3 - distance-map
-> +==============================================================================
-> +
-> +The device tree node distance-map describes the relative
-> +distance (memory latency) between all numa nodes.
-> +
-> +- compatible : Should at least contain "numa-distance-map-v1".
-> +
-> +- distance-matrix
-> +  This property defines a matrix to describe the relative distances
-> +  between all numa nodes.
-> +  It is represented as a list of node pairs and their relative distance.
-> +
-> +  Note:
-> +	1. Each entry represents distance from first node to second node.
-> +	The distances are equal in either direction.
-> +	2. The distance from a node to self (local distance) is represented
-> +	with value 10 and all internode distance should be represented with
-> +	a value greater than 10.
-> +	3. distance-matrix should have entries in lexicographical ascending
-> +	order of nodes.
-> +	4. There must be only one device node distance-map which must reside in the root node.
+Am 07.03.2016 um 19:34 schrieb Javier Martinez Canillas:
+> On Mon, Mar 7, 2016 at 3:24 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org=
+> wrote:
+>> Drop #address-cells and #size-cells, which are not required by the
+>> gpio-keys binding documentation, as button sub-nodes are not devices=
+=2E
+>>
+>> Reported-by: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>=20
+> Looks good to me.
+>=20
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 
-There is no note that this one is optional, but is it right? The
-default is 10 for local and 20 for remote connections.
+Thanks. Quick summary for non-Rockchip reviewers:
 
-If so, then ...
+This is a resend of: https://patchwork.kernel.org/patch/8513851/
 
-static int __init of_numa_parse_distance_map(void)
-{
-	int ret = -EINVAL;
-	struct device_node *np = of_find_node_by_path("/distance-map");
+To avoid future resends: https://patchwork.kernel.org/patch/8521501/
 
-	if (!np)
-		return ret;
+Rockchip arm64 cleanup: https://patchwork.kernel.org/patch/8513951/
+Patch prompting all this: https://patchwork.kernel.org/patch/8513921/
 
-must return 0 instead of -EINVAL here.
+Cheers,
+Andreas
 
--Robert
-
-> +
-> +Example:
-> +	4 nodes connected in mesh/ring topology as below,
-> +
-> +		0_______20______1
-> +		|               |
-> +		|               |
-> +		20             20
-> +		|               |
-> +		|               |
-> +		|_______________|
-> +		3       20      2
-> +
-> +	if relative distance for each hop is 20,
-> +	then internode distance would be,
-> +	      0 -> 1 = 20
-> +	      1 -> 2 = 20
-> +	      2 -> 3 = 20
-> +	      3 -> 0 = 20
-> +	      0 -> 2 = 40
-> +	      1 -> 3 = 40
-> +
-> +     and dt presentation for this distance matrix is,
-> +
-> +		distance-map {
-> +			 compatible = "numa-distance-map-v1";
-> +			 distance-matrix = <0 0  10>,
-> +					   <0 1  20>,
-> +					   <0 2  40>,
-> +					   <0 3  20>,
-> +					   <1 0  20>,
-> +					   <1 1  10>,
-> +					   <1 2  20>,
-> +					   <1 3  40>,
-> +					   <2 0  40>,
-> +					   <2 1  20>,
-> +					   <2 2  10>,
-> +					   <2 3  20>,
-> +					   <3 0  20>,
-> +					   <3 1  40>,
-> +					   <3 2  20>,
-> +					   <3 3  10>;
-> +		};
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
