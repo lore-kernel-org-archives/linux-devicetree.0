@@ -1,164 +1,110 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 09/11] EDAC, altera: Addition of Arria10 L2 Cache ECC
-Date: Mon, 7 Mar 2016 13:43:05 -0600
-Message-ID: <1457379787-8327-10-git-send-email-tthayer@opensource.altera.com>
-References: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
+From: David Daney <ddaney@caviumnetworks.com>
+Subject: Re: [PATCH v14 2/6] Documentation, dt, numa: dt bindings for NUMA.
+Date: Mon, 7 Mar 2016 11:47:21 -0800
+Message-ID: <56DDDAC9.1010600@caviumnetworks.com>
+References: <1457049339-23351-1-git-send-email-ddaney.cavm@gmail.com>
+ <1457049339-23351-3-git-send-email-ddaney.cavm@gmail.com>
+ <20160307192220.GA1535@rric.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160307192220.GA1535@rric.localdomain>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Richter <robert.richter@caviumnetworks.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, David Daney <david.daney@cavium.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Fleming <matt@codeblueprint.co.uk>, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Daney <ddaney.cavm@gmail.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+On 03/07/2016 11:22 AM, Robert Richter wrote:
+> On 03.03.16 15:55:35, David Daney wrote:
+>> From: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+>>
+>> Add DT bindings for numa mapping of memory, CPUs and IOs.
+>>
+>> Reviewed-by: Robert Richter <rrichter@cavium.com>
+>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>
+>> Signed-off-by: David Daney <david.daney@cavium.com>
+>> ---
+>>   Documentation/devicetree/bindings/numa.txt | 272 +++++++++++++++++++++++++++++
+>>   1 file changed, 272 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/numa.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/numa.txt b/Documentation/devicetree/bindings/numa.txt
+>> new file mode 100644
+>> index 0000000..ec5ed7c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/numa.txt
+>
+>> +==============================================================================
+>> +3 - distance-map
+>> +==============================================================================
+>> +
+>> +The device tree node distance-map describes the relative
+>> +distance (memory latency) between all numa nodes.
+>> +
+>> +- compatible : Should at least contain "numa-distance-map-v1".
+>> +
+>> +- distance-matrix
+>> +  This property defines a matrix to describe the relative distances
+>> +  between all numa nodes.
+>> +  It is represented as a list of node pairs and their relative distance.
+>> +
+>> +  Note:
+>> +	1. Each entry represents distance from first node to second node.
+>> +	The distances are equal in either direction.
+>> +	2. The distance from a node to self (local distance) is represented
+>> +	with value 10 and all internode distance should be represented with
+>> +	a value greater than 10.
+>> +	3. distance-matrix should have entries in lexicographical ascending
+>> +	order of nodes.
+>> +	4. There must be only one device node distance-map which must reside in the root node.
+>
+> There is no note that this one is optional, but is it right? The
+> default is 10 for local and 20 for remote connections.
+>
 
-Addition of the Arria10 L2 Cache ECC handling. Addition
-of private data structure for Arria10 L2 cache ECC and
-the initialization function for it.
+Do we need to explicitly state that it is optional?  Many node types are 
+optional, and their binding specifications don't really talk about their 
+being optional.
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
----
-v2: Split large patch into smaller patches. Addition of
-    Arria10 L2 cache dependency check and private data.
----
- drivers/edac/altera_edac.c |   57 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/edac/altera_edac.h |   21 +++++++++++++++-
- 2 files changed, 77 insertions(+), 1 deletion(-)
+If the node is present then it has the meaning specified.
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 11b7291..8afdf8b 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -549,6 +549,7 @@ module_platform_driver(altr_edac_driver);
- 
- const struct edac_device_prv_data ocramecc_data;
- const struct edac_device_prv_data l2ecc_data;
-+const struct edac_device_prv_data a10_l2ecc_data;
- 
- static irqreturn_t altr_edac_device_handler(int irq, void *dev_id)
- {
-@@ -687,6 +688,8 @@ static void altr_create_edacdev_dbgfs(struct edac_device_ctl_info *edac_dci,
- static const struct of_device_id altr_edac_device_of_match[] = {
- #ifdef CONFIG_EDAC_ALTERA_L2C
- 	{ .compatible = "altr,socfpga-l2-ecc", .data = (void *)&l2ecc_data },
-+	{ .compatible = "altr,socfpga-a10-l2-ecc",
-+	  .data = (void *)&a10_l2ecc_data },
- #endif
- #ifdef CONFIG_EDAC_ALTERA_OCRAM
- 	{ .compatible = "altr,socfpga-ocram-ecc",
-@@ -970,6 +973,40 @@ static int altr_l2_check_deps(struct platform_device *pdev,
- 	return -ENODEV;
- }
- 
-+static int altr_a10_l2_check_deps(struct platform_device *pdev,
-+				  struct altr_edac_device_dev *drvdata)
-+{
-+	void __iomem  *status_base, *base = drvdata->base;
-+	const struct edac_device_prv_data *prv = drvdata->data;
-+
-+	if ((readl(base + prv->ecc_en_ofst) & prv->ecc_enable_mask) !=
-+	     prv->ecc_enable_mask) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "L2: No ECC present, or ECC disabled\n");
-+		return -ENODEV;
-+	}
-+
-+	/* A10 L2 cache status registers are not contiguous with base */
-+	if (!devm_request_mem_region(&pdev->dev, ALTR_A10_L2_ECC_STATUS,
-+				     2 * sizeof(u32), dev_name(&pdev->dev))) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Unable to request mem region\n");
-+		return -EBUSY;
-+	}
-+
-+	status_base = devm_ioremap(&pdev->dev, ALTR_A10_L2_ECC_STATUS,
-+				   2 * sizeof(u32));
-+	if (!status_base) {
-+		edac_printk(KERN_ERR, EDAC_DEVICE,
-+			    "Unable to ioremap L2 status\n");
-+		return -ENOMEM;
-+	}
-+
-+	drvdata->status = status_base;
-+
-+	return 0;
-+}
-+
- const struct edac_device_prv_data l2ecc_data = {
- 	.setup = altr_l2_check_deps,
- 	.ce_clear_mask = 0,
-@@ -991,6 +1028,26 @@ const struct edac_device_prv_data l2ecc_data = {
- 	.irq_flags = 0,
- };
- 
-+const struct edac_device_prv_data a10_l2ecc_data = {
-+	.setup = altr_a10_l2_check_deps,
-+	.ce_clear_mask = ALTR_A10_L2_ECC_SERR_CLR,
-+	.ue_clear_mask = ALTR_A10_L2_ECC_MERR_CLR,
-+	.clear_err_ofst = ALTR_A10_L2_ECC_CLR_OFST,
-+	.ce_status_mask = ALTR_A10_L2_ECC_SERR_PEND,
-+	.ue_status_mask = ALTR_A10_L2_ECC_MERR_PEND,
-+	.err_status_ofst = ALTR_A10_L2_ECC_STAT_OFST,
-+	.dbgfs_name = "altr_l2_trigger",
-+	.alloc_mem = l2_alloc_mem,
-+	.free_mem = l2_free_mem,
-+	.ecc_enable_mask = ALTR_A10_L2_ECC_EN_CTL,
-+	.ecc_en_ofst = ALTR_A10_L2_ECC_CTL_OFST,
-+	.ce_set_mask = ALTR_A10_L2_ECC_CE_INJ_MASK,
-+	.ue_set_mask = ALTR_A10_L2_ECC_UE_INJ_MASK,
-+	.set_err_ofst = ALTR_A10_L2_ECC_INJ_OFST,
-+	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
-+	.irq_flags = IRQF_SHARED,
-+};
-+
- #endif	/* CONFIG_EDAC_ALTERA_L2C */
- 
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index 43e0dae..a9177c8 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -196,12 +196,13 @@ struct altr_sdram_mc_data {
- };
- 
- /************************** EDAC Device Defines **************************/
--
-+/***** General Device Trigger Defines *****/
- #define ALTR_UE_TRIGGER_CHAR            'U'   /* Trigger for UE */
- #define ALTR_TRIGGER_READ_WRD_CNT       32    /* Line size x 4 */
- #define ALTR_TRIG_OCRAM_BYTE_SIZE       128   /* Line size x 4 */
- #define ALTR_TRIG_L2C_BYTE_SIZE         4096  /* Full Page */
- 
-+/******* Cyclone5 and Arria5 Defines *******/
- /* OCRAM ECC Management Group Defines */
- #define ALTR_MAN_GRP_OCRAM_ECC_OFFSET   0x04
- #define ALTR_OCR_ECC_REG_OFFSET         0x00
-@@ -218,6 +219,24 @@ struct altr_sdram_mc_data {
- #define ALTR_L2_ECC_INJS                BIT(1)
- #define ALTR_L2_ECC_INJD                BIT(2)
- 
-+/************* Arria10 Defines *************/
-+/* Arria 10 L2 ECC Management Group Defines */
-+#define ALTR_A10_L2_ECC_CTL_OFST        0x0
-+#define ALTR_A10_L2_ECC_EN_CTL          BIT(0)
-+
-+#define ALTR_A10_L2_ECC_STATUS          0xFFD060A4
-+#define ALTR_A10_L2_ECC_STAT_OFST       0x0
-+#define ALTR_A10_L2_ECC_SERR_PEND       BIT(15)
-+#define ALTR_A10_L2_ECC_MERR_PEND       BIT(31)
-+
-+#define ALTR_A10_L2_ECC_CLR_OFST        0x4
-+#define ALTR_A10_L2_ECC_SERR_CLR        BIT(15)
-+#define ALTR_A10_L2_ECC_MERR_CLR        BIT(31)
-+
-+#define ALTR_A10_L2_ECC_INJ_OFST        ALTR_A10_L2_ECC_CTL_OFST
-+#define ALTR_A10_L2_ECC_CE_INJ_MASK     0x00000101
-+#define ALTR_A10_L2_ECC_UE_INJ_MASK     0x00010101
-+
- struct altr_edac_device_dev;
- 
- struct edac_device_prv_data {
--- 
-1.7.9.5
+If the node is *not* present, then the special meaning described in the 
+bindings document does not apply.
+
+In the case of NUMA, this means that all memory is equally distant (i.e. 
+it is *Uniform*), and we are not talking about a *Non* *Uniform* Memory 
+Architecture (NUMA) system.
+
+
+> If so, then ...
+>
+> static int __init of_numa_parse_distance_map(void)
+> {
+> 	int ret = -EINVAL;
+> 	struct device_node *np = of_find_node_by_path("/distance-map");
+>
+> 	if (!np)
+> 		return ret;
+>
+> must return 0 instead of -EINVAL here.
+
+No, I don't think doing that would be correct.
+
+If there is no "distance-map", then of_numa_init() returns the error 
+code.  This causes the code in arch/arm64/kernel/numa.c to fall back to 
+the non-NUMA "dummy_numa" case.
+
+By adding your Reviewed-by: Robert Richter <rrichter@cavium.com> tag to 
+patch 5/6, where we select between "real" and "dummy_numa", I had 
+assumed that you agreed with this approach.
+
+David Daney
