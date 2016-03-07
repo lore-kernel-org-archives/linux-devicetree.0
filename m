@@ -1,130 +1,87 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Mon, 7 Mar 2016 10:30:06 -0500
-Message-ID: <56DD9E7E.6000406@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
- <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
- <56D8C539.9000203@linaro.org> <56D91B0E.1080203@codeaurora.org>
- <56DCFEE0.6080101@linaro.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Mon, 7 Mar 2016 16:46:52 +0100
+Message-ID: <56DDA26C.3050301@suse.de>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego>
+ <56DD7593.5060003@suse.de> <56DD8176.2080603@st.com>
+ <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56DCFEE0.6080101-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <56DD99A4.5030004@st.com>
+Sender: netdev-owner@vger.kernel.org
+To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Cc: Gabriel Fernandez <gabriel.fernandez@linaro.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, linux-rockchip@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 3/6/2016 11:09 PM, Eric Auger wrote:
->> #define module_vfio_reset_handler(compat, acpihid, reset)		\
->> > MODULE_ALIAS("vfio-reset:" acpihid? acpihid: compat);			\
->> > 
->> > This way, we'll create an alias with one of the provided strings.  
-> What if you want to use vfio platform driver for HiDMA in dt mode? the
-> HiDma reset module advertises both acpihid and dt compat support but an
-> alias module will be created only for acpihid. Then I think we will not
-> be able to load the reset module in dt mode with existing code.
-> 
+Hi Peppe,
 
-Right, it won't work. Now that we know what MODULE_ALIAS does, there is no
-harm in doing this. I think we should do this.
+Am 07.03.2016 um 16:09 schrieb Giuseppe CAVALLARO:
+> On 3/7/2016 3:27 PM, Andreas F=E4rber wrote:
+>> Indeed, reverting Gabriel's commit fixes the observed error messages
+[...]
+>> However, I am unable to ping any hosts on the network now.
+>=20
+> hmm, this could be another problem. I wonder if you can
+> check which recent patch is introducing the problem on ARM64.
+> For example if this depends on Oct_2015 update.
 
-#define module_vfio_reset_handler(compat, acpihid, reset)              \
-MODULE_ALIAS("vfio-reset:" compat);                                    \
-MODULE_ALIAS("vfio-reset:" acpihid);                                   \
+I've had success reverting drivers/net/ethernet/stmicro/ up to and
+including "stmmac: first frame prep at the end of xmit routine", i.e.
+top 7 commits.
 
-If we prefer ACPI over DT, there is no guarantee that somebody can boot DT
-kernel with ACPI kernel compilation option enabled.
+http://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/commit/=
+drivers/net/ethernet/stmicro?id=3D0e80bdc9a72df3b31a9fc2012102a6cc8d664=
+e93
 
-If one of these are null, then the module alias will be "vfio-reset:"
+> If you share some logs to me I can take a look at them.
+> Then we can try to check if the problem in on rx or tx path.
+> I also ask you yo check the axi settings.
 
-Of course to make things prettier, we could use "NOT SUPPORTED" as a string
-instead of NULL. then, the module alias will be vfio-reset: NOT SUPPORTED".
+On the reverted (good) branch I see in dmesg:
 
-We could go one step further, and do.
+[  +0.001100] rk_gmac-dwmac ff290000.ethernet: Looking up phy-supply
+from device tree
+[  +0.000030] rk808 0-001b: Looking up vcc12-supply from device tree
+[  +0.000013] vcc_lan: supplied by vcc_io
+[  +0.000120] rk_gmac-dwmac ff290000.ethernet: clock input or output?
+(input).
+[  +0.000010] rk_gmac-dwmac ff290000.ethernet: TX delay(0x30).
+[  +0.000007] rk_gmac-dwmac ff290000.ethernet: RX delay(0x10).
+[  +0.000014] rk_gmac-dwmac ff290000.ethernet: init for RGMII
+[  +0.000104] rk_gmac-dwmac ff290000.ethernet: clock input from PHY
+[  +0.005099] rk_gmac-dwmac ff290000.ethernet: no reset control found
+[  +0.000007] stmmac - user ID: 0x10, Synopsys ID: 0x35
+[  +0.000002]  Ring mode enabled
+[  +0.000006]  DMA HW capability register supported
+[  +0.000000]  Normal descriptors
+[  +0.000004]  RX Checksum Offload Engine supported (type 2)
+[  +0.000002]  TX Checksum insertion supported
+[  +0.000002]  Wake-Up On Lan supported
+[  +0.000052]  Enable RX Mitigation via HW Watchdog Timer
+[  +0.000683] rk_gmac-dwmac ff290000.ethernet eth0: No MDIO subnode fou=
+nd
+[  +0.000124] of_get_named_gpiod_flags: can't parse 'snps,reset-gpio'
+property of node '/ethernet@ff290000[0]'
+[  +0.004219] libphy: stmmac: probed
+[  +0.000010] eth0: PHY ID 001cc915 at 0 IRQ POLL (stmmac-0:00) active
+[  +0.000005] eth0: PHY ID 001cc915 at 1 IRQ POLL (stmmac-0:01)
 
-#define module_vfio_reset_handler(compat, acpihid, reset) \
-MODULE_ALIAS("vfio-reset: dt: " compat); \
-MODULE_ALIAS("vfio-reset: acpi: " acpihid); \
+[  +0.881011] eth0: device MAC address 4a:78:dd:10:b3:17
+[  +4.003065] rk_gmac-dwmac ff290000.ethernet eth0: Link is Up -
+1Gbps/Full - flow control rx/tx
 
-and change the code below for this too.
+The MAC address is random, changing each time. Otherwise there's no log
+difference I spot to the pre-Gabriel broken state.
 
+If you need more info, let me know where to find it.
 
-> This could work however with some rework in vfio_platform_common.c. In
-> vfio_platform_get_reset we should try to load the module using the
-> acpihid if the module load using compat alias fails. In the look-up
-> table we can find the acpihid corresponding to the dt compat.
+Thanks,
+Andreas
 
-I was planning to submit this for the next review. Still, I don't want to 
-assume that acpihid is the only working option. Somebody can boot DT kernel.
-
-diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-index 42d7545..ba585ad 100644
---- a/drivers/vfio/platform/vfio_platform_common.c
-+++ b/drivers/vfio/platform/vfio_platform_common.c
-@@ -58,16 +58,30 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
- 	return reset_fn;
- }
- 
--static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
-+static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
- {
-+	int rc;
-+
- 	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
- 						 &vdev->reset_module);
--	if (!vdev->reset) {
--		request_module("vfio-reset:%s", vdev->compat);
--		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
--							 vdev->acpihid,
--							 &vdev->reset_module);
--	}
-+	if (vdev->reset)
-+		return 0;
-+
-+	if (vdev->acpihid)
-+		rc = request_module("vfio-reset:%s", vdev->acpihid);
-+
-+	if (rc && vdev->compat)
-+		rc = request_module("vfio-reset:%s", vdev->compat);
-+
-+	if (rc)
-+		return rc;
-+
-+	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
-+						 &vdev->reset_module);
-+	if (vdev->reset)
-+		return 0;
-+
-+	return -ENODEV;
- }
- 
- static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
-@@ -620,7 +634,11 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
- 		return ret;
- 	}
- 
--	vfio_platform_get_reset(vdev);
-+	ret = vfio_platform_get_reset(vdev);
-+	if (ret) {
-+		iommu_group_put(group);
-+		return ret;
-+	}
- 
- 	mutex_init(&vdev->igate);
-  
-
-Let me know what you think.
-
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
+rnberg)
