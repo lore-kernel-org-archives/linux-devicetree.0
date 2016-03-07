@@ -1,89 +1,46 @@
-From: Eric Auger <eric.auger@linaro.org>
-Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Mon, 7 Mar 2016 05:09:04 +0100
-Message-ID: <56DCFEE0.6080101@linaro.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
- <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
- <56D8C539.9000203@linaro.org> <56D91B0E.1080203@codeaurora.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: Add tmu node for exynos7
+Date: Mon, 07 Mar 2016 13:14:26 +0900
+Message-ID: <56DD0022.20800@samsung.com>
+References: <1456477590-4530-1-git-send-email-alim.akhtar@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56D91B0E.1080203@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1456477590-4530-1-git-send-email-alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
-On 03/04/2016 06:20 AM, Sinan Kaya wrote:
-> On 3/3/2016 6:14 PM, Eric Auger wrote:
->> Hi Sinan,
->> On 03/02/2016 07:34 PM, Sinan Kaya wrote:
->>> On 2/26/2016 12:15 PM, Eric Auger wrote:
->>>>> -module_init(reset ## _module_init);				\
->>>>>> +#define module_vfio_reset_handler(compat, acpihid, reset)		\
->>>>>> +MODULE_ALIAS("vfio-reset:" compat);					\
->>>> Here you need to handle alias for hid case I think
->>>
->>> I'm wondering what happens when Compat or ACPI string is NULL.
->>>
->>> MODULE_ALIAS("vfio-reset:" NULL)
->>>
->>> Would the kernel like it? 
->>
->>>
->>> I'd rather create an alias only when the string is not NULL. Given
->>> this is a macro, I believe it won't work. 
->>
->> Indeed I think we should create an alias only for the supported case or
->> 2 aliases if both are supported.
->>>
->>> Can you think of any other way in the code to create the alias?
->>>
->> To be honest I did not find any elegant solution either. Personally I
->> would move the MODULE_ALIAS for compat/acpihid outside of
->> module_vfio_reset_handler macro, directly in the reset module. But maybe
->> someone will propose a better solution?
->>
+On 26.02.2016 18:06, Alim Akhtar wrote:
+> This patch adds tmu node, related temprature sensor and triping
+> point data for Atlas cpu core found on exynos7 SoC.
 > 
-> I briefly looked at this. 
+> Signed-off-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes since v1:
+> * Addressed krzysztof's review comments.
 > 
-> #define MODULE_ALIAS(_alias) MODULE_INFO(alias, _alias)
-> #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
-> 
-> and it eventually becomes this
-> 
-> #define __MODULE_INFO(tag, name, info)                                    \
-> static const char __UNIQUE_ID(name)[]                                     \
->    __used __attribute__((section(".modinfo"), unused, aligned(1)))         \
->    = __stringify(tag) "=" info
-> 
-> Since the info is on the right side of the equation, I'm allowed to add some 
-> conditionals.
-> 
-> #define module_vfio_reset_handler(compat, acpihid, reset)		\
-> MODULE_ALIAS("vfio-reset:" acpihid? acpihid: compat);			\
-> 
-> This way, we'll create an alias with one of the provided strings.  
-What if you want to use vfio platform driver for HiDMA in dt mode? the
-HiDma reset module advertises both acpihid and dt compat support but an
-alias module will be created only for acpihid. Then I think we will not
-be able to load the reset module in dt mode with existing code.
+>  .../boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi   |   25 +++++++++
+>  .../arm64/boot/dts/exynos/exynos7-trip-points.dtsi |   54 ++++++++++++++++++++
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi            |   20 ++++++++
+>  3 files changed, 99 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-tmu-sensor-conf.dtsi
+>  create mode 100644 arch/arm64/boot/dts/exynos/exynos7-trip-points.dtsi
+>
 
-This could work however with some rework in vfio_platform_common.c. In
-vfio_platform_get_reset we should try to load the module using the
-acpihid if the module load using compat alias fails. In the look-up
-table we can find the acpihid corresponding to the dt compat.
+Looks good to me.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Any thought?
+I don't have anything in DTS queue for v4.6 and it is late so I'll apply
+this for v4.7 after upcoming merge window.
 
-Best Regards
+Best regards,
+Krzysztof
 
-Eric
 
-> 
-> 
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
