@@ -1,232 +1,76 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/9] ARC: [dts] Introduce Timer bindings
-Date: Tue, 8 Mar 2016 17:56:05 +0530
-Message-ID: <1457439972-20285-3-git-send-email-vgupta@synopsys.com>
-References: <1457439972-20285-1-git-send-email-vgupta@synopsys.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 4/4] ARM64: dts: rockchip: add syscon-reboot-mode DT node
+Date: Tue,  8 Mar 2016 20:26:08 +0800
+Message-ID: <1457439968-8284-1-git-send-email-andy.yan@rock-chips.com>
+References: <1457439716-8084-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457439972-20285-1-git-send-email-vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Noam Camus <noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1457439716-8084-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, jwerner-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ARC Timers have historically been probed directly.
-As precursor to start probing Timers thru DT introduce these bindings
-Note that to keep series bisectable, these bindings are not yet used in
-code.
+Add syscon-reboot-mode driver DT node for rk3368 platform
 
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Tested-by: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
 ---
-Changes v1 -> v2
- - snps,arc-timer[0-1] folded into single snps-arc-timer	[Rob]
- - Node name in DT example fixed:				[Rob]
-     "timer1: timer_clksrc {" -> timer@1 {
- - Introduced 64bit RTC in skeleton_hs.dtsi			[Vineet]
 
-v1:
- - http://lists.infradead.org/pipermail/linux-snps-arc/2016-February/000447.html
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+- descirbe all reboot mode as properity instead of subnode
 
-Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/timer/snps,arc-timer.txt   | 26 ++++++++++++++++++++++
- .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 ++++++++++++
- .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 ++++++++++++
- arch/arc/boot/dts/abilis_tb10x.dtsi                | 14 ++++++++++++
- arch/arc/boot/dts/skeleton.dtsi                    | 14 ++++++++++++
- arch/arc/boot/dts/skeleton_hs.dtsi                 | 20 +++++++++++++++++
- arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 14 ++++++++++++
- 7 files changed, 116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
- create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+Changes in v2:
+- make this node as a subnode of pmugrf
 
-diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
-new file mode 100644
-index 000000000000..9e02be24e805
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
-@@ -0,0 +1,26 @@
-+Synopsys ARC Local Timer with Interrupt Capabilities
-+- Found on all ARC CPUs (ARC700/ARCHS)
-+- Can be optionally programmed to interrupt on Limit
-+- Two idential copies TIMER0 and TIMER1 exist in ARC cores and historically
-+  TIMER0 used as clockevent provider (true for all ARC cores)
-+  TIMER1 used for clocksource (mandatory for ARC700, optional for ARC HS)
-+
-+Required properties:
-+
-+- compatible : should be "snps,arc-timer"
-+- interrupts : single Interrupt going into parent intc
-+	       (16 for ARCHS cores, 3 for ARC700 cores)
-+- clocks     : phandle to the source clock
-+
-+Optional properties:
-+
-+- interrupt-parent : phandle to parent intc
-+
-+Example:
-+
-+	timer@0 {
-+		compatible = "snps,arc-timer0";
-+		interrupts = <3>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-diff --git a/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
-new file mode 100644
-index 000000000000..aaab100f54e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
-@@ -0,0 +1,14 @@
-+Synopsys ARC Free Running 64-bit Global Timer for ARC HS CPUs
-+- clocksource provider for SMP SoC
-+
-+Required properties:
-+
-+- compatible : should be "snps,archs-gfrc"
-+- clocks     : phandle to the source clock
-+
-+Example:
-+
-+	timer@1 {
-+		compatible = "snps,archs-gfrc";
-+		clocks = <&core_clk>;
-+	};
-diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
-new file mode 100644
-index 000000000000..13f756fa1d6d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
-@@ -0,0 +1,14 @@
-+Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
-+- clocksource provider for UP SoC
-+
-+Required properties:
-+
-+- compatible : should be "snps,archs-rtc"
-+- clocks     : phandle to the source clock
-+
-+Example:
-+
-+	timer@1 {
-+		compatible = "snps,arc-rtc";
-+		clocks = <&core_clk>;
-+	};
-diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
-index cfb5052239a1..eadbe71dfa22 100644
---- a/arch/arc/boot/dts/abilis_tb10x.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
-@@ -35,6 +35,20 @@
- 		};
+Changes in v1: None
+
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368.dtsi b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+index 122777b..9cc1458 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368.dtsi
+@@ -45,6 +45,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include <dt-bindings/thermal/thermal.h>
+ 
+ / {
+@@ -554,8 +555,18 @@
  	};
  
-+	/* TIMER0 with interrupt for clockevent */
-+	timer@0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <3>;
-+		interrupt-parent = <&intc>;
-+		clocks = <&cpu_clk>;
-+	};
+ 	pmugrf: syscon@ff738000 {
+-		compatible = "rockchip,rk3368-pmugrf", "syscon";
++		compatible = "rockchip,rk3368-pmugrf", "syscon", "simple-mfd";
+ 		reg = <0x0 0xff738000 0x0 0x1000>;
 +
-+	/* TIMER1 for free running clocksource */
-+	timer@1 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&cpu_clk>;
-+	};
-+
- 	soc100 {
- 		#address-cells	= <1>;
- 		#size-cells	= <1>;
-diff --git a/arch/arc/boot/dts/skeleton.dtsi b/arch/arc/boot/dts/skeleton.dtsi
-index 296d371a335c..f6109c2feba7 100644
---- a/arch/arc/boot/dts/skeleton.dtsi
-+++ b/arch/arc/boot/dts/skeleton.dtsi
-@@ -30,6 +30,20 @@
- 		};
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x200>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-bootloader = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_BL_DOWNLOAD>;
++		};
  	};
  
-+	/* TIMER0 with interrupt for clockevent */
-+	timer@0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <3>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* TIMER1 for free running clocksource */
-+	timer@1 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&core_clk>;
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;	/* 256M */
-diff --git a/arch/arc/boot/dts/skeleton_hs.dtsi b/arch/arc/boot/dts/skeleton_hs.dtsi
-index a53876669030..49caeabca37a 100644
---- a/arch/arc/boot/dts/skeleton_hs.dtsi
-+++ b/arch/arc/boot/dts/skeleton_hs.dtsi
-@@ -25,6 +25,26 @@
- 		};
- 	};
- 
-+	/* TIMER0 with interrupt for clockevent */
-+	timer@0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <16>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* 64-bit Local RTC: preferred clocksource for UP */
-+	timer@1 {
-+		compatible = "snps,archs-timer-rtc";
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* TIMER1 for free running clocksource: Fallback if rtc not found */
-+	timer@2 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&core_clk>;
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;	/* 256M */
-diff --git a/arch/arc/boot/dts/skeleton_hs_idu.dtsi b/arch/arc/boot/dts/skeleton_hs_idu.dtsi
-index 74898d017f7a..7e301ff16200 100644
---- a/arch/arc/boot/dts/skeleton_hs_idu.dtsi
-+++ b/arch/arc/boot/dts/skeleton_hs_idu.dtsi
-@@ -25,6 +25,20 @@
- 		};
- 	};
- 
-+	/* TIMER0 with interrupt for clockevent */
-+	timer@0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <16>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* 64-bit Global Free Running Counter */
-+	timer@1 {
-+		compatible = "snps,archs-timer-gfrc";
-+		clocks = <&core_clk>;
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;	/* 256M */
+ 	cru: clock-controller@ff760000 {
 -- 
-2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
