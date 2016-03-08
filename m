@@ -1,72 +1,50 @@
-From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
-Date: Tue, 8 Mar 2016 01:16:49 +0000
-Message-ID: <AM3PR04MB1185D8F20D8D2763DB909B3791B20@AM3PR04MB1185.eurprd04.prod.outlook.com>
-References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
-	 <1456816183-22340-3-git-send-email-qiang.zhao@nxp.com>
-	 <20160305042536.GD13525@rob-hp-laptop>
-	 <AM3PR04MB11852B62A075A980A246D2D091B10@AM3PR04MB1185.eurprd04.prod.outlook.com>
- <1457371686.5360.107.camel@buserror.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457371686.5360.107.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH v5 1/6] pwms: pwm-ti*: Get the clock from the PWMSS (parent)
+Date: Mon,  7 Mar 2016 19:23:39 -0600
+Message-ID: <1457400224-24797-2-git-send-email-fcooper@ti.com>
+References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1457400224-24797-1-git-send-email-fcooper@ti.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMDgsIDIwMTYgYXQgMToyOEFNLCBTY290dCBXb29kIHdyb3RlOg0KPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86b3NzQGJ1
-c2Vycm9yLm5ldF0NCj4gU2VudDogVHVlc2RheSwgTWFyY2ggMDgsIDIwMTYgMToyOCBBTQ0KPiBU
-bzogUWlhbmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4NCj4gQ2M6IFlhbmctTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBYaWFvYm8g
-WGllIDx4aWFvYm8ueGllQG54cC5jb20+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
-OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxh
-YnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMy83XSBRRTogQWRkIHVxZV9zZXJpYWwg
-ZG9jdW1lbnQgdG8gYmluZGluZ3MNCj4gDQo+IE9uIE1vbiwgMjAxNi0wMy0wNyBhdCAwMjozNSAr
-MDAwMCwgUWlhbmcgWmhhbyB3cm90ZToNCj4gPiBPbiBUdWUsIE1hciAwNSwgMjAxNiBhdCAxMjoy
-NlBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
-DQo+ID4gPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gPiA+
-IFNlbnQ6IFNhdHVyZGF5LCBNYXJjaCAwNSwgMjAxNiAxMjoyNiBQTQ0KPiA+ID4gVG86IFFpYW5n
-IFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gPiA+IENjOiBvc3NAYnVzZXJyb3IubmV0OyBZ
-YW5nLUxlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgWGlhb2JvIFhpZQ0KPiA+ID4gPHhpYW9i
-by54aWVAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4g
-PiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMy83XSBRRTogQWRkIHVxZV9zZXJpYWwgZG9jdW1l
-bnQgdG8gYmluZGluZ3MNCj4gPiA+DQo+ID4gPiBPbiBUdWUsIE1hciAwMSwgMjAxNiBhdCAwMzow
-OTozOVBNICswODAwLCBaaGFvIFFpYW5nIHdyb3RlOg0KPiA+ID4gPiBBZGQgdXFlX3NlcmlhbCBk
-b2N1bWVudCB0bw0KPiA+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
-ZXJwYy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwudHgNCj4gPiA+ID4gdA0KPiA+ID4gPg0KPiA+ID4g
-PiBTaWduZWQtb2ZmLWJ5OiBaaGFvIFFpYW5nIDxxaWFuZy56aGFvQG54cC5jb20+DQo+ID4gPiA+
-IC0tLQ0KPiA+ID4gPiBDaGFuZ2VzIGZvciB2Mg0KPiA+ID4gPiAJLSBtb2RpZnkgdHgvcngtY2xv
-Y2stbmFtZSBzcGVjaWZpY2F0aW9uIENoYW5nZXMgZm9yIHYyDQo+ID4gPiA+IAktIE5BDQo+ID4g
-PiA+DQo+ID4gPiA+ICAuLi4vYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwu
-dHh0ICAgICAgICB8IDE5DQo+ID4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAxIGZp
-bGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
-DQo+ID4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9j
-cG1fcWUvdXFlX3NlcmlhbC50eA0KPiA+ID4gPiB0DQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1n
-aXQNCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9m
-c2wvY3BtX3FlL3VxZV9zZXJpYWwuDQo+ID4gPiA+IHR4dA0KPiA+ID4gPiBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvdXFlX3NlcmlhbC4NCj4g
-PiA+ID4gdHh0DQo+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+IGluZGV4IDAw
-MDAwMDAuLjQzNmM3MWMNCj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysNCj4gYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9z
-ZXJpYWwuDQo+ID4gPiA+ICsrKyB0eHQNCj4gPiA+ID4gQEAgLTAsMCArMSwxOSBAQA0KPiA+ID4g
-PiArKiBTZXJpYWwNCj4gPiA+ID4gKw0KPiA+ID4gPiArQ3VycmVudGx5IGRlZmluZWQgY29tcGF0
-aWJsZXM6DQo+ID4gPiA+ICstIHVjY191YXJ0DQo+ID4gPg0KPiA+ID4gSSBndWVzcyB0aGlzIGlz
-IGluIHVzZSBhbHJlYWR5IGFuZCBva2F5LiBIb3dldmVyLCBsb29raW5nIGF0IHRoZQ0KPiA+ID4g
-ZHJpdmVyIHRoZXJlIHJlYWxseSBzaG91bGQgYmUgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgc3Ry
-aW5ncyBoZXJlDQo+ID4gPiBzaW5jZSB0aGUgZHJpdmVyIGlzIGxvb2tpbmcgdXAgdGhlIFNvQyBj
-b21wYXRpYmxlIHN0cmluZyBhbmQNCj4gPiA+IGNvbXBvc2luZyB0aGUgZmlybXdhcmUgZmlsZW5h
-bWUgZnJvbSB0aGF0Lg0KPiA+DQo+ID4gT2ssIEkgd2lsbCBjaGFuZ2VkIGJvdGggZHJpdmVyIGFu
-ZCB0aGlzIGNvbXBhdGlibGUuDQo+IA0KPiBCdXQgZG9uJ3QgYnJlYWsgZXhpc3RpbmcgZGV2aWNl
-IHRyZWVzIHdoaWxlIGRvaW5nIHNvLg0KDQpEbyBJIG5lZWQgdG8gc2VuZCBkcml2ZXIgcGF0Y2gg
-aW4gdGhpcyBwYXRjaHNldCBvciBhIGluZGl2aWR1YWwgcGF0Y2g/DQoNCkJSDQotWmhhbyBRaWFu
-Zw0KDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The eCAP and ePWM doesn't have their own separate clocks. They simply
+utilize the clock provided directly by the PWMSS. Therefore, they simply
+need to grab a reference to their parent's clock.
+
+Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+---
+ drivers/pwm/pwm-tiecap.c   | 2 +-
+ drivers/pwm/pwm-tiehrpwm.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+index 616af76..9418159 100644
+--- a/drivers/pwm/pwm-tiecap.c
++++ b/drivers/pwm/pwm-tiecap.c
+@@ -212,7 +212,7 @@ static int ecap_pwm_probe(struct platform_device *pdev)
+ 	if (!pc)
+ 		return -ENOMEM;
+ 
+-	clk = devm_clk_get(&pdev->dev, "fck");
++	clk = devm_clk_get(pdev->dev.parent, "fck");
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "failed to get clock\n");
+ 		return PTR_ERR(clk);
+diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+index 6a41e66..09dc1bc 100644
+--- a/drivers/pwm/pwm-tiehrpwm.c
++++ b/drivers/pwm/pwm-tiehrpwm.c
+@@ -443,7 +443,7 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	if (!pc)
+ 		return -ENOMEM;
+ 
+-	clk = devm_clk_get(&pdev->dev, "fck");
++	clk = devm_clk_get(pdev->dev.parent, "fck");
+ 	if (IS_ERR(clk)) {
+ 		dev_err(&pdev->dev, "failed to get clock\n");
+ 		return PTR_ERR(clk);
+-- 
+2.7.0
