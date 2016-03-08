@@ -1,89 +1,98 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH v2 0/4] leds: Add driver for the ISSI IS31FL32xx family of
- LED controllers
-Date: Tue, 08 Mar 2016 10:43:35 +0100
-Message-ID: <56DE9EC7.9020600@samsung.com>
-References: <1457398636-6485-1-git-send-email-drivshin.allworx@gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RESEND PATCH v7] mtd: spi-nor: add hisilicon spi-nor flash
+ controller driver
+Date: Tue, 8 Mar 2016 10:46:28 +0100
+Message-ID: <20160308104628.6224bde2@bbrezillon>
+References: <1456474316-24473-1-git-send-email-xuejiancheng@huawei.com>
+	<20160307225229.GC55664@google.com>
+	<56DE9A79.30704@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <1457398636-6485-1-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56DE9A79.30704-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, furquan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Tue, 8 Mar 2016 17:25:13 +0800
+Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
 
-Thanks for posting the final version. Very nice driver.
-Applied whole series, after dropping leds-sn3218 with its
-DT bindings. Stefan, thanks for testing the driver on the
-Si-En hardware.
+> Hi Brian=EF=BC=8C
+>    Thank you very much for your comments.
+>=20
+> On 2016/3/8 6:52, Brian Norris wrote:
+> [...]
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.tx=
+t b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+> >> new file mode 100644
+> >> index 0000000..7407147
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+> >=20
+> > This is not a SPI controller (or is it? it looks like a SPI NOR
+> > controller that doesn't do generic SPI), so it shouldn't go in the =
+spi/
+> > directory.
+> >=20
+> OK. I'll move this file into Documentation/devicetree/bindings/mtd.
+>=20
+> >> @@ -0,0 +1,25 @@
+> >> +HiSilicon SPI-NOR Flash Controller
+> >> +
+> >> +Required properties:
+> >> +- compatible : Should be "hisilicon,hisi-sfc" and one of the foll=
+owing strings:
+> >> +		"hisilicon,hi3519-sfc"
+> >> +- address-cells : number of cells required to define a chip selec=
+t
+> >> +        address on the SPI bus. Should be set to 1. See spi-bus.t=
+xt.
+> >=20
+> > This is not exactly a typical SPI bus, though I suppose some of tha=
+t
+> > documentation could apply...
+> >=20
+>=20
+> OK. I'll modify the description.
+>=20
+> [...]
+> >> +static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, =
+u8 *buf,
+> >> +		int len)
+> >> +{
+> >> +	struct hifmc_priv *priv =3D nor->priv;
+> >> +	struct hifmc_host *host =3D priv->host;
+> >> +	int ret;
+> >> +
+> >> +	ret =3D hisi_spi_nor_send_cmd(nor, opcode, len);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	memcpy(buf, host->iobase, len);
+> >=20
+> > sparse doesn't like any of these memcpy()'s, since that's __iomem. =
+Are
+> > you sure you want a regular memcpy here, and elsewhere?
+> >=20
+> It's not a must to use memcpy though host->iobase represents a segmen=
+t of inner memory
+> which stores data from flash device byte by byte.  I will give up usi=
+ng memcpy here and
+> hisi_spi_nor_write_reg() in next version. Thank you!
 
-Thanks,
-Jacek Anaszewski
+Or you can use memcpy_fromio(), which should give you better perfs than
+using readX() accessors in a loop.
 
-On 03/08/2016 01:57 AM, David Rivshin (Allworx) wrote:
-> From: David Rivshin <drivshin@allworx.com>
->
-> This series adds support for the ISSI IS31FL32xx family of I2C LED
-> controllers. Since the IS31FL3218/3216 are actually the same devices as
-> the SN3218/3216, adds their compatible strings as aliases.
->
-> As requested, this series is based on the current linux-leds/for-next, minus
-> patch 2 and 3 of the standalone sn3218 driver. As such, it will not directly
-> apply to the current linux-next without minor merges in the leds Kconfig
-> and Makefile. This will apply cleanly to v4.5-rc7, albeit with a compiler
-> warning in patch 3 (which is fixed elsewhere in linux-next).
->
-> Changes from v1 [1]:
->   - swapped node name and label in binding example
->   - removed line stating filename from file header comment of is31fl32xx.c
->   - dropped #includes for err.h and of_platform.h
->   - added #includes for device.h, of.h, and of_device.h
->   - patch 4 no longer removes leds-sn3218, as that will be done separately
->   - patch 4 commit log no longer references leds-sn3218 driver
->   - added Rob's acks for patches 1, 2, and 4
->   - added Tested-By from Stefan (for SN3218)
->
-> Changes from RFC [2]:
->   - Removed max-brightness DT property.
->   - Added #address-cells and #size-cells properties to the example DT.
->   - Refer to these devices as "LED controllers" in Kconfig.
->   - Removed redundant last sentence from Kconfig entry
->   - Removed unnecessary debug code.
->   - Do not set led_classdev.brightness to 0 explicitly, as it is
->     already initialized to 0 by devm_kzalloc().
->   - Used of_property_read_string() instead of of_get_property().
->   - Fail immediately on DT parsing error in a child node, rather than
->     continuing on with the non-faulty ones.
->   - Added additional comments for some things that might be non-obvious.
->   - Added constants for the location of the SSD bit in the SHUTDOWN
->     register, and the 3216's CONFIG register.
->   - Added special sw_shutdown_func for the 3216 device, as that bit
->     is in a different register, at a different position, and has reverse
->     polarity compared to all the other devices.
->   - Refactored is31fl32xx_init_regs() to separate out some logic into
->     is31fl32xx_reset_regs() and is31fl32xx_software_shutdown().
->   - Added 4th patch to replace the now-redundant leds-sn3218.
->
-> [1] https://lkml.org/lkml/2016/3/2/1004
-> [2] http://www.spinics.net/lists/linux-leds/msg05564.html
->
-> David Rivshin (4):
->    DT: Add vendor prefix for Integrated Silicon Solutions Inc.
->    DT: leds: Add binding for the ISSI IS31FL32xx family of LED
->      controllers
->    leds: Add driver for the ISSI IS31FL32xx family of LED controllers
->    leds: Add SN3218 and SN3216 support to the IS31FL32XX driver
->
->   .../devicetree/bindings/leds/leds-is31fl32xx.txt   |  52 +++
->   .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->   drivers/leds/Kconfig                               |   8 +
->   drivers/leds/Makefile                              |   1 +
->   drivers/leds/leds-is31fl32xx.c                     | 508 +++++++++++++++++++++
->   5 files changed, 570 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
->   create mode 100644 drivers/leds/leds-is31fl32xx.c
->
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
