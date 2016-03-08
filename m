@@ -1,66 +1,50 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Tue, 8 Mar 2016 12:48:50 +0000
-Message-ID: <SG2PR06MB10388F87746A1191E51B199FC3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56DC1561.9060306@hartkopp.net>
- <SG2PR06MB10386D712BC8C345DF726523C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DD36F5.2000308@pengutronix.de>
- <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DE8345.50901@hartkopp.net>
- <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DEC49D.4@hartkopp.net>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] driver for the hardware monitoring chip in the Zyxel NSA320
+Date: Tue, 08 Mar 2016 14:01:06 +0100
+Message-ID: <87mvq93yzx.fsf@free-electrons.com>
+References: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
+	<20160308115506.GA25899@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56DEC49D.4@hartkopp.net>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160308115506.GA25899-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> (Guenter Roeck's message of
+	"Tue, 8 Mar 2016 03:55:06 -0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgT2xpdmVyLA0KDQpUaGFua3MgZm9yIHRoZSBjb21tZW50cy4NCg0KPiBPbiAwOC4wMy4yMDE2
-IDA5OjU3LCBSYW1lc2ggU2hhbm11Z2FzdW5kYXJhbSB3cm90ZToNCj4gDQo+ID4NCj4gPiBBcyB5
-b3UgbWVudGlvbmVkIGZ1cnRoZXIgZG93biwgd2hlbiBhIHVzZXIgZG9lcyB0aGlzDQo+ID4NCj4g
-PiAiaXAgbGluayBzZXQgY2FuMCB1cCB0eXBlIGNhbiBiaXRyYXRlIDEwMDAwMDAiDQo+ID4NCj4g
-PiB0aGUgaW50ZW50aW9uIGlzIHRvIHB1dCB0aGUgY29udHJvbGxlciBpbiBDQU4gMi4wIG1vZGUu
-IEV2ZW4gaWYgd2UgdXNlIGENCj4gc3RhdHVzIGZsYWcgb3IgY29weSB0aGUgZGF0YSBiaXRyYXRl
-IGVxdWFsIHRvIHRoZSBub21pbmFsIGJpdHJhdGUsIHdoYXQNCj4gd291bGQgaXQgYWNoaWV2ZT8g
-SXQgc3RpbGwgY2Fubm90IGJlIGEgQ0FOIDIuMCBub2RlIC0gaXQgaXMgYSBDQU4gRkQgbm9kZQ0K
-PiBjb25maWd1cmVkIHdpdGggc2FtZSBub21pbmFsICYgZGF0YSBiaXRyYXRlLg0KPiA+DQo+ID4g
-VGhpcyBpcyB3aHkgSSBoYXZlIHRoaXMgY2hlY2sgaW4gbmRvX29wZW4sIHNvIHRoYXQgdGhlIHVz
-ZXIgaXMgYXdhcmUgaXQNCj4gaXMgYSBDQU4gRkQgbm9kZSBhbHdheXMgYW5kIGF2b2lkIG1pc2Nv
-bmZpZ3VyYXRpb24gbGlrZSBhYm92ZSB3aXRoDQo+IEVPUE5PVFNVUFAuDQo+ID4NCj4gDQo+IG9r
-IC0gZ290IGl0IG5vdy4NCj4gDQo+IEluIGZhY3QgeW91IHByb3ZpZGVkIGEgQ0FOIGRyaXZlciB3
-aGljaCBpcyAiQ0FOLUZELW9ubHkiLg0KDQpZZXMuIFRoYXQncyB0aGUgc3RhdHVzIG9mIGN1cnJl
-bnQgc3VibWlzc2lvbi4NCg0KPiBXZSBkaWQgbm90IGhhZCB0aGF0IGJlZm9yZSBidXQgdGhlcmUn
-cyBhIHNvbHV0aW9uIGZvciB0aGlzIGtpbmQgb2Ygc2V0dXAuDQo+IA0KPiBUaGVyZSBpcyBhIHNp
-bWlsYXIgY2FzZSB3aXRoIENBTl9DVFJMTU9ERV9GRF9OT05fSVNPIHdlIGhhZCBvbiB0aGUgTV9D
-QU4NCj4gZHJpdmVyIHdoaWNoIG9ubHkgcHJvdmlkZXMgbm9uLUlTTyBjb25maWd1cmF0aW9uIGZv
-ciB0aGUgc3VwcG9ydGVkIElQIGNvcmUNCj4gYW5kIF9ub18gb3B0aW9uIHRvIF9jaGFuZ2VfIHRo
-aXMgdmFsdWU6DQo+IA0KPiBodHRwczovL2dpdC5rZXJuZWwub3JnL2NnaXQvbGludXgva2VybmVs
-L2dpdC90b3J2YWxkcy9saW51eC5naXQvY29tbWl0Lz9pZA0KPiA9NmNmZGE3ZmJlYmU4YTRmZDMz
-ZWE1NzIyZmEwMjEyZjk4ZjY0M2MzNQ0KPiANCj4gSWYgeW91IHdvdWxkIGRvIGl0IHNpbWlsYXIg
-aW4gcmNhcl9jYW5mZC5jIHdpdGgNCj4gDQo+IC8qIENBTl9DVFJMTU9ERV9GRCBpcyBmaXhlZCB3
-aXRoIFItQ2FyIENBTiBGRCAqLw0KPiBwcml2LT5jYW4uY3RybG1vZGUgPSBDQU5fQ1RSTE1PREVf
-RkQ7DQo+IA0KPiBhbmQgcmVtb3ZlIENBTl9DVFJMTU9ERV9GRCBmcm9tIHRoZSBwcml2LT5jYW4u
-Y3RybG1vZGVfc3VwcG9ydGVkDQo+IGFzc2lnbm1lbnQgdGhlbiBpdCBzaG91bGQgZG8gdGhlIGVu
-dGlyZSBjb25maWd1cmF0aW9uIHByb2Nlc3MgY29ycmVjdGx5DQo+IGZvciB5b3UuDQo+IEluY2x1
-ZGluZyB0aGUgcHJvcGVyIHRlc3RzIGZvciB0aGUgdHdvIGJpdHJhdGVzLg0KPiAoc2VlIG9wZW5f
-Y2FuZGV2KCkgaW4gbGludXgvZHJpdmVycy9uZXQvY2FuL2Rldi5jKQ0KPiANCj4gUmlnaHQ/DQoN
-CkkgZGlkIHRyeSB0aGlzIG9wdGlvbiBlYXJsaWVyIGJ1dCB0aGVyZSBhcmUgdHdvIHByb2JsZW1z
-IHdpdGggdGhpcyBtZXRob2QuDQoNCjEpIEJlbG93IGNvbmZpZ3VyYXRpb24gaXMgbm90IHBvc3Np
-YmxlDQoNCmlwIGxpbmsgc2V0IGNhbjAgdXAgdHlwZSBjYW4gYml0cmF0ZSAxMDAwMDAwIGRiaXRy
-YXRlIDEwMDAwMDAgZmQgb24NCg0KImZkIG9uIiAtPiBUaGlzIGlzIG5vdCBhbGxvd2VkIGJlY2F1
-c2UgQ0FOX0NUUkxNT0RFX0ZEIGJpdCBpcyBub3Qgc2V0IGluIGN0cmxtb2RlX3N1cHBvcnRlZC4N
-Cg0KMikgSWYgSSBpZ25vcmUgImZkIG9uIiwgbXkgaW50ZXJmYWNlIE1UVSBzdGF5cyBhcyBDQU5f
-TVRVIG9ubHkuIElmIEkgaGF2ZSB0byBjaGFuZ2UgdGhlIE1UVSBhbG9uZSB0byBDQU5GRF9NVFUg
-dXNpbmcgYW5vdGhlciBuZXRsaW5rIG1lc3NhZ2UsIGl0IGFnYWluIGNoZWNrcyBjdHJsbW9kZV9z
-dXBwb3J0ZWQgd2hlcmUgaXQgd291bGQgZmFpbC4gSSBoYXZlIHRoZSBvcHRpb24gb2YgcHJvdmlk
-aW5nIG15IG93biBjaGFuZ2VfbXR1IGZ1bmN0aW9uICYgaWdub3JlIHRoaXMgY2hlY2sgYnV0IHR3
-byBjb25maWd1cmF0aW9uIG1lc3NhZ2VzIGFyZSByZXF1aXJlZCBmb3IgbXkgZHJpdmVyIGFsb25l
-IDotKC4NCg0KQm90aCB0aGVzZSBhbm9tYWxpZXMgYXJlIGFkZHJlc3NlZCB3aXRoIHRoZSBjdXJy
-ZW50IGNoZWNrIEkgaGF2ZS4gDQoNClRoYW5rcywNClJhbWVzaA0KDQo=
+Hi Adam and Guenter,
+ 
+ On mar., mars 08 2016, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+
+> On Sat, Mar 05, 2016 at 03:34:54PM +0000, Adam Baker wrote:
+>>  Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt |  21 +++++
+>>  Documentation/hwmon/nsa320                             |  53 +++++++++++
+>>  arch/arm/boot/dts/kirkwood-nsa320.dts                  |  13 ++-
+>>  drivers/hwmon/Kconfig                                  |  15 +++
+>>  drivers/hwmon/Makefile                                 |   1 +
+>>  drivers/hwmon/nsa320-hwmon.c                           | 216 ++++++++++++++++++++++++++++++++++++++++++++
+>>  6 files changed, 317 insertions(+), 2 deletions(-)
+>> 
+> Patch 1/3 and 2/3 applied to hwmon-next.
+>
+> I assume that patch 3/3 will go through the arm tree.
+
+Yes but now that the rc7 was released is too late putting it to arm-soc
+for the 4.6 kernel.
+
+Gregory
+
+>
+> Guenter
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
