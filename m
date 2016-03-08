@@ -1,30 +1,27 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: bcm2835: Add VC4 to the device tree.
-Date: Mon, 7 Mar 2016 23:00:32 -0700
-Message-ID: <56DE6A80.1060707@wwwdotorg.org>
-References: <1457123528-13482-1-git-send-email-eric@anholt.net>
- <1457123528-13482-4-git-send-email-eric@anholt.net>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] ARM: DRA7: hwmod: Add data for
+ McASP1/2/4/5/6/7/8
+Date: Tue, 8 Mar 2016 06:37:28 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1603080637060.4974@utopia.booyaka.com>
+References: <1457363857-20797-1-git-send-email-peter.ujfalusi@ti.com> <1457363857-20797-10-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457123528-13482-4-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <1457363857-20797-10-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2016 01:32 PM, Eric Anholt wrote:
-> VC4 is the GPU (display and 3D) present on the 283x.
+On Mon, 7 Mar 2016, Peter Ujfalusi wrote:
 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+> Add missing data for all McASP ports for the dra7 family
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 
-> +&hdmi {
-> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-> +};
+Thanks, queued for v4.7.
 
-Isn't that the same everywhere? If so, adding it to bcm2835-rpi.dtsi 
-seems like a better idea; it'd avoid duplicating it everywhere.
+- Paul
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
