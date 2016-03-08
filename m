@@ -1,60 +1,130 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/5] ARM: at91: pm: add ULP1 mode support
-Date: Tue, 8 Mar 2016 09:41:57 +0800
-Message-ID: <1457401322-29120-1-git-send-email-wenyou.yang@atmel.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH v4 1/5] ARM: at91: pm: create a separate procedure for the ULP0 mode
+Date: Tue, 8 Mar 2016 09:41:58 +0800
+Message-ID: <1457401322-29120-2-git-send-email-wenyou.yang@atmel.com>
+References: <1457401322-29120-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1457401322-29120-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-The ULP1 (Ultra Low-power mode 1) is introduced by SAMA5D2.
+To make the code more legible and prepare to add the ULP1 mode
+support in the future, create a separate procedure for the ULP0 mode.
 
-In order to achieve the lowest power consumption, in the ULP1 mode,
-all the clocks are shut off, inclusive the embedded 12MHz RC oscillator.
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
 
-The fast startup signal is used as a wake up source for ULP1 mode.
-As soon as the wake up event is asserted, the embedded 12MHz RC
-oscillator restarts automatically, which fast startup signal
-to trigger the PMC to wake up the system from the ULP1 mode can be
-configured via DT.
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v4:
- - add Acked-by tag.
- - add fast_restart node to the DT file.
+ arch/arm/mach-at91/pm_suspend.S |   65 ++++++++++++++++++++++++---------------
+ 1 file changed, 40 insertions(+), 25 deletions(-)
 
-Changes in v3:
- - use 0 and 1, not string, to define the trigger active polarity.
- - update the property description.
-
-Changes in v2:
- - fix label pm_exit to ulp_exit.
- - shorten the pmc-fast-startup property's name.
- - use the value property, instead of bool property for high
-   or low triggered.
- - change the property name and property description.
-
-Wenyou Yang (5):
-  ARM: at91: pm: create a separate procedure for the ULP0 mode
-  ARM: at91: pm: add ULP1 mode support
-  ARM: at91: pm: configure PMC fast startup signals
-  Documentation: atmel-pmc: add DT bindings for fast startup
-  ARM: at91/dt: sama5d2_xplained: add fast_restart node
-
- .../devicetree/bindings/arm/atmel-pmc.txt          |   63 ++++++++
- arch/arm/boot/dts/at91-sama5d2_xplained.dts        |    8 +
- arch/arm/mach-at91/pm.c                            |  130 +++++++++++++++-
- arch/arm/mach-at91/pm.h                            |    7 +
- arch/arm/mach-at91/pm_suspend.S                    |  158 +++++++++++++++++---
- include/linux/clk/at91_pmc.h                       |   36 +++++
- 6 files changed, 377 insertions(+), 25 deletions(-)
-
+diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
+index a25defd..5fcffdc 100644
+--- a/arch/arm/mach-at91/pm_suspend.S
++++ b/arch/arm/mach-at91/pm_suspend.S
+@@ -107,7 +107,7 @@ ENTRY(at91_pm_suspend_in_sram)
+ 
+ 	ldr	r0, .pm_mode
+ 	tst	r0, #AT91_PM_SLOW_CLOCK
+-	beq	skip_disable_main_clock
++	beq	standby_mode
+ 
+ 	ldr	pmc, .pmc_base
+ 
+@@ -131,32 +131,13 @@ ENTRY(at91_pm_suspend_in_sram)
+ 	orr	tmp1, tmp1, #(1 << 29)		/* bit 29 always set */
+ 	str	tmp1, [pmc, #AT91_CKGR_PLLAR]
+ 
+-	/* Turn off the main oscillator */
+-	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+-	bic	tmp1, tmp1, #AT91_PMC_MOSCEN
+-	orr	tmp1, tmp1, #AT91_PMC_KEY
+-	str	tmp1, [pmc, #AT91_CKGR_MOR]
+-
+-skip_disable_main_clock:
+-	ldr	pmc, .pmc_base
+-
+-	/* Wait for interrupt */
+-	at91_cpu_idle
+-
+-	ldr	r0, .pm_mode
+-	tst	r0, #AT91_PM_SLOW_CLOCK
+-	beq	skip_enable_main_clock
++ulp0_mode:
++	bl	at91_pm_ulp0_mode
++	b	ulp_exit
+ 
++ulp_exit:
+ 	ldr	pmc, .pmc_base
+ 
+-	/* Turn on the main oscillator */
+-	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+-	orr	tmp1, tmp1, #AT91_PMC_MOSCEN
+-	orr	tmp1, tmp1, #AT91_PMC_KEY
+-	str	tmp1, [pmc, #AT91_CKGR_MOR]
+-
+-	wait_moscrdy
+-
+ 	/* Restore PLLA setting */
+ 	ldr	tmp1, .saved_pllar
+ 	str	tmp1, [pmc, #AT91_CKGR_PLLAR]
+@@ -177,7 +158,15 @@ skip_disable_main_clock:
+ 
+ 	wait_mckrdy
+ 
+-skip_enable_main_clock:
++	b	pm_exit
++
++standby_mode:
++	ldr	pmc, .pmc_base
++
++	/* Wait for interrupt */
++	at91_cpu_idle
++
++pm_exit:
+ 	/* Exit the self-refresh mode */
+ 	mov	r0, #SRAMC_SELF_FRESH_EXIT
+ 	bl	at91_sramc_self_refresh
+@@ -311,6 +300,32 @@ exit_sramc_sf:
+ 	mov	pc, lr
+ ENDPROC(at91_sramc_self_refresh)
+ 
++/*
++ * void at91_pm_ulp0_mode(void)
++ */
++ENTRY(at91_pm_ulp0_mode)
++	ldr	pmc, .pmc_base
++
++	/* Turn off the crystal oscillator */
++	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
++	bic	tmp1, tmp1, #AT91_PMC_MOSCEN
++	orr	tmp1, tmp1, #AT91_PMC_KEY
++	str	tmp1, [pmc, #AT91_CKGR_MOR]
++
++	/* Wait for interrupt */
++	at91_cpu_idle
++
++	/* Turn on the crystal oscillator */
++	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
++	orr	tmp1, tmp1, #AT91_PMC_MOSCEN
++	orr	tmp1, tmp1, #AT91_PMC_KEY
++	str	tmp1, [pmc, #AT91_CKGR_MOR]
++
++	wait_moscrdy
++
++	mov	pc, lr
++ENDPROC(at91_pm_ulp0_mode)
++
+ .pmc_base:
+ 	.word 0
+ .sramc_base:
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
