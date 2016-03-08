@@ -1,64 +1,79 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
-Date: Tue, 8 Mar 2016 11:56:33 +1100
-Message-ID: <20160308005633.GA30023@gwshan>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_JsqJydgmkU=SGcr-0JHsYG8wXk5GEQCQXY7y+FHH2A0LZkw@mail.gmail.com>
- <20160219031655.GA10818@gwshan>
- <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
+From: "David Rivshin (Allworx)" <drivshin.allworx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/4] leds: Add driver for the ISSI IS31FL32xx family of LED controllers
+Date: Mon,  7 Mar 2016 19:57:12 -0500
+Message-ID: <1457398636-6485-1-git-send-email-drivshin.allworx@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 01, 2016 at 08:40:12PM -0600, Rob Herring wrote:
->On Thu, Feb 18, 2016 at 9:16 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->> On Wed, Feb 17, 2016 at 08:59:53AM -0600, Rob Herring wrote:
->>>On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->>>> This renames unflatten_dt_node() to unflatten_dt_nodes() as it
->>>> populates multiple device nodes from FDT blob. No logical changes
->>>> introduced.
->>>>
->>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>>> ---
->>>>  drivers/of/fdt.c | 14 +++++++-------
->>>>  1 file changed, 7 insertions(+), 7 deletions(-)
->>>
->>>Acked-by: Rob Herring <robh@kernel.org>
->>>
->>>I'm happy to take patches 40-42 for 4.6 if the rest of the series
->>>doesn't go in given they fix a separate problem. I just need to know
->>>soon (or at least they need to go into -next soon).
->>>
->>
->> Thanks for quick response, Rob. It depends how much comments I will
->> receive for the powerpc/powernv part. Except that, all parts including
->> this one have been ack'ed. I can discuss it with Michael Ellerman.
->> By the way, how soon you need the decision to merge 40-42? If that's
->> one or two weeks later, I don't think the reivew on the whole series
->> can be done.
->
->Well, it's been 2 weeks now. I need to know this week.
->
->> Also, I think you probably can merge 40-44 as they're all about
->> fdt.c. If they can be merged at one time, I needn't bother (cc)
->> you again if I need send a updated revision. Thanks for your
->> review.
->
->I did not include 43 and 44 as they are only needed for the rest of your series.
->
+From: David Rivshin <drivshin-5fOYsn7Fw8lBDgjK7y7TUQ@public.gmane.org>
 
-Rob, sorry for late reponse. I really expect this series to be merged to 4.6 and
-I was checking reviewers' bandwidth to review it. Unfortunately, I didn't receive
-any comments except yours until now. That means this series has to miss 4.6. Please
-pick/merge 41 and 42 if no body has objection. Thanks again for your time on this.
+This series adds support for the ISSI IS31FL32xx family of I2C LED
+controllers. Since the IS31FL3218/3216 are actually the same devices as
+the SN3218/3216, adds their compatible strings as aliases.
 
-Thanks,
-Gavin
+As requested, this series is based on the current linux-leds/for-next, minus
+patch 2 and 3 of the standalone sn3218 driver. As such, it will not directly
+apply to the current linux-next without minor merges in the leds Kconfig
+and Makefile. This will apply cleanly to v4.5-rc7, albeit with a compiler
+warning in patch 3 (which is fixed elsewhere in linux-next).
+
+Changes from v1 [1]:
+ - swapped node name and label in binding example
+ - removed line stating filename from file header comment of is31fl32xx.c
+ - dropped #includes for err.h and of_platform.h
+ - added #includes for device.h, of.h, and of_device.h
+ - patch 4 no longer removes leds-sn3218, as that will be done separately
+ - patch 4 commit log no longer references leds-sn3218 driver
+ - added Rob's acks for patches 1, 2, and 4
+ - added Tested-By from Stefan (for SN3218)
+
+Changes from RFC [2]:
+ - Removed max-brightness DT property.
+ - Added #address-cells and #size-cells properties to the example DT.
+ - Refer to these devices as "LED controllers" in Kconfig.
+ - Removed redundant last sentence from Kconfig entry
+ - Removed unnecessary debug code.
+ - Do not set led_classdev.brightness to 0 explicitly, as it is
+   already initialized to 0 by devm_kzalloc().
+ - Used of_property_read_string() instead of of_get_property().
+ - Fail immediately on DT parsing error in a child node, rather than
+   continuing on with the non-faulty ones.
+ - Added additional comments for some things that might be non-obvious.
+ - Added constants for the location of the SSD bit in the SHUTDOWN
+   register, and the 3216's CONFIG register.
+ - Added special sw_shutdown_func for the 3216 device, as that bit
+   is in a different register, at a different position, and has reverse
+   polarity compared to all the other devices.
+ - Refactored is31fl32xx_init_regs() to separate out some logic into
+   is31fl32xx_reset_regs() and is31fl32xx_software_shutdown().
+ - Added 4th patch to replace the now-redundant leds-sn3218.
+
+[1] https://lkml.org/lkml/2016/3/2/1004
+[2] http://www.spinics.net/lists/linux-leds/msg05564.html
+
+David Rivshin (4):
+  DT: Add vendor prefix for Integrated Silicon Solutions Inc.
+  DT: leds: Add binding for the ISSI IS31FL32xx family of LED
+    controllers
+  leds: Add driver for the ISSI IS31FL32xx family of LED controllers
+  leds: Add SN3218 and SN3216 support to the IS31FL32XX driver
+
+ .../devicetree/bindings/leds/leds-is31fl32xx.txt   |  52 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/leds/Kconfig                               |   8 +
+ drivers/leds/Makefile                              |   1 +
+ drivers/leds/leds-is31fl32xx.c                     | 508 +++++++++++++++++++++
+ 5 files changed, 570 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
+ create mode 100644 drivers/leds/leds-is31fl32xx.c
+
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
