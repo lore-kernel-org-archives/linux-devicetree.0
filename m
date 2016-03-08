@@ -1,137 +1,51 @@
-From: Ganapatrao Kulkarni <gpkulkarni-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v14 2/6] Documentation, dt, numa: dt bindings for NUMA.
-Date: Tue, 8 Mar 2016 10:31:33 +0530
-Message-ID: <CAFpQJXWHXxa2DLKHpLHqnURUJqY-+P-vLintUoCmm3Fmh6xsZQ@mail.gmail.com>
-References: <1457049339-23351-1-git-send-email-ddaney.cavm@gmail.com>
-	<1457049339-23351-3-git-send-email-ddaney.cavm@gmail.com>
-	<20160307192220.GA1535@rric.localdomain>
-	<56DDDAC9.1010600@caviumnetworks.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
+ detecting the reset driver
+Date: Tue, 8 Mar 2016 00:07:29 -0500
+Message-ID: <56DE5E11.3060307@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
+ <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
+ <56D8C539.9000203@linaro.org> <56D91B0E.1080203@codeaurora.org>
+ <56DCFEE0.6080101@linaro.org> <56DD9E7E.6000406@codeaurora.org>
+ <56DE592E.6010403@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56DDDAC9.1010600-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Cc: Robert Richter <robert.richter-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56DE592E.6010403@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Auger <eric.auger@linaro.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 8, 2016 at 1:17 AM, David Daney <ddaney-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> On 03/07/2016 11:22 AM, Robert Richter wrote:
->>
->> On 03.03.16 15:55:35, David Daney wrote:
->>>
->>> From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->>>
->>> Add DT bindings for numa mapping of memory, CPUs and IOs.
->>>
->>> Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>> Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
->>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   Documentation/devicetree/bindings/numa.txt | 272
->>> +++++++++++++++++++++++++++++
->>>   1 file changed, 272 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/numa.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/numa.txt
->>> b/Documentation/devicetree/bindings/numa.txt
->>> new file mode 100644
->>> index 0000000..ec5ed7c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/numa.txt
->>
->>
->>>
->>> +==============================================================================
->>> +3 - distance-map
->>>
->>> +==============================================================================
->>> +
->>> +The device tree node distance-map describes the relative
->>> +distance (memory latency) between all numa nodes.
->>> +
->>> +- compatible : Should at least contain "numa-distance-map-v1".
->>> +
->>> +- distance-matrix
->>> +  This property defines a matrix to describe the relative distances
->>> +  between all numa nodes.
->>> +  It is represented as a list of node pairs and their relative distance.
->>> +
->>> +  Note:
->>> +       1. Each entry represents distance from first node to second node.
->>> +       The distances are equal in either direction.
->>> +       2. The distance from a node to self (local distance) is
->>> represented
->>> +       with value 10 and all internode distance should be represented
->>> with
->>> +       a value greater than 10.
->>> +       3. distance-matrix should have entries in lexicographical
->>> ascending
->>> +       order of nodes.
->>> +       4. There must be only one device node distance-map which must
->>> reside in the root node.
->>
->>
->> There is no note that this one is optional, but is it right? The
->> default is 10 for local and 20 for remote connections.
->>
->
-> Do we need to explicitly state that it is optional?  Many node types are
-> optional, and their binding specifications don't really talk about their
-> being optional.
->
-> If the node is present then it has the meaning specified.
->
-> If the node is *not* present, then the special meaning described in the
-> bindings document does not apply.
->
-> In the case of NUMA, this means that all memory is equally distant (i.e. it
-> is *Uniform*), and we are not talking about a *Non* *Uniform* Memory
-> Architecture (NUMA) system.
->
->
->> If so, then ...
->>
->> static int __init of_numa_parse_distance_map(void)
->> {
->>         int ret = -EINVAL;
->>         struct device_node *np = of_find_node_by_path("/distance-map");
->>
->>         if (!np)
->>                 return ret;
->>
->> must return 0 instead of -EINVAL here.
->
->
-> No, I don't think doing that would be correct.
->
-> If there is no "distance-map", then of_numa_init() returns the error code.
-> This causes the code in arch/arm64/kernel/numa.c to fall back to the
-> non-NUMA "dummy_numa" case.
+On 3/7/2016 11:46 PM, Eric Auger wrote:
+>> #define module_vfio_reset_handler(compat, acpihid, reset) \
+>> > MODULE_ALIAS("vfio-reset: dt: " compat); \
+>> > MODULE_ALIAS("vfio-reset: acpi: " acpihid); \
+> My gut feeling is we must not create a dummy alias when the mode
+> (dt/acpi) is not supported/tested. It fills the modinfo section with
+> spurious data, aliases are visible to modinfo, ...
+> 
+> So I personally foresee 2 solutions,
+> 1) we create a single alias using acpihid if supported or compat if not.
+> Then even in dt mode we try to load this module through the acpihid
+> alias. Looks weird but should work.
+> 2) We simply move the module alias declaration out of this macro (to the
+> reset module itself), define 2 aliases in case both dt and acpi are
+> supported & tested.
+> 
+> My personal preference is 2 I think.
+> 
+> Best Regards
+> 
+> Eric
+> 
 
-IMO, return 0 will allow 2 node system to have distance-map optional.
-by default node distance is set to 10 for local node and for remote node is 20
-and this will suffice the need of 2 node system.
-by returning EINVAL, we are forcing 2 node system (and even for
-systems which has equal remote distances)
-to define distance-map.
+I agree with your assessment of #2. We are trying to be too smart. 
+I'll post a patch with #2 solution.
 
->
-> By adding your Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> tag to
-> patch 5/6, where we select between "real" and "dummy_numa", I had assumed
-> that you agreed with this approach.
->
-> David Daney
-
-Ganapat
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
