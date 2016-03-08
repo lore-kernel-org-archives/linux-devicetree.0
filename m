@@ -1,96 +1,76 @@
-From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Subject: [PATCH 2/2] MIPS: OCTEON: add DTS for EdgeRouter Lite
-Date: Tue,  8 Mar 2016 23:32:27 +0200
-Message-ID: <1457472747-9339-2-git-send-email-aaro.koskinen@iki.fi>
-References: <1457472747-9339-1-git-send-email-aaro.koskinen@iki.fi>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457472747-9339-1-git-send-email-aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 1/3] thermal: exynos: List vtmu-supply as optional
+ property in DT binding
+Date: Tue, 8 Mar 2016 13:51:55 -0800
+Message-ID: <20160308215153.GA10983@localhost.localdomain>
+References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
+ <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
+ <20160308210744.GA8145@localhost.localdomain>
+ <56DF4469.7090603@osg.samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56DF4469.7090603@osg.samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DTS for EdgeRouter Lite that is usable as is without any "pruning"
-with APPENDED_DTB.
+On Tue, Mar 08, 2016 at 06:30:17PM -0300, Javier Martinez Canillas wrote:
+> Hello Eduardo,
+> 
+> On 03/08/2016 06:07 PM, Eduardo Valentin wrote:
+> > On Thu, Feb 18, 2016 at 03:19:09PM -0300, Javier Martinez Canillas wrote:
+> >> The Exynos Thermal Management Unit binding says that the vtmu-supply
+> >> is optional but is listed in the required properties section. Add an
+> >> optional properties section and move the regulator property there.
+> >>
+> >> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> >> ---
+> >>
+> >>  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
+> >>  1 file changed, 6 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> >> index faa62059b5c5..70b4c16c7ed8 100644
+> >> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> >> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
+> >> @@ -41,9 +41,6 @@
+> >>  		for current TMU channel
+> >>  	-- "tmu_sclk" clock for functional operation of the current TMU
+> >>  		channel
+> >> -- vtmu-supply: This entry is optional and provides the regulator node supplying
+> >> -		voltage to TMU. If needed this entry can be placed inside
+> >> -		board/platform specific dts file.
+> >>  
+> >>  The Exynos TMU supports generating interrupts when reaching given
+> >>  temperature thresholds. Number of supported thermal trip points depends
+> > 
+> > Where is this patch based on? I checked it on my fixes and linus
+> > branches, also on linux-next 0308 branch, and none of those apply clean.
+> >
+> 
+> I mentioned in the cover letter [0] that this series were based on top
+> of in-flight patches from Krzysztof Kozlowski to avoid merge conflicts.
+> 
+> Those have not landed yet either so maybe you could look at those first?
+>  
+> > Can you please send this based on upstream kernel?
+> >
+> 
+> Ok, my intention was to make picking both patch series easier but if
+> this is inconvenient to you, I can base on top of current mainline
+> and let you handle the merge conflicts (or ask Krzysztof to resend
+> on top of my patches).
+> 
+> [0]: https://lkml.org/lkml/2016/2/18/591
 
-Compared to builtin generic DTB, we can avoid errors and delays from
-probing non-existent I2C devices.
+Got it. I am checking his patches first then.
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
----
- arch/mips/boot/dts/cavium-octeon/ubnt_e100.dts | 59 ++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 arch/mips/boot/dts/cavium-octeon/ubnt_e100.dts
-
-diff --git a/arch/mips/boot/dts/cavium-octeon/ubnt_e100.dts b/arch/mips/boot/dts/cavium-octeon/ubnt_e100.dts
-new file mode 100644
-index 0000000..243e5dc
---- /dev/null
-+++ b/arch/mips/boot/dts/cavium-octeon/ubnt_e100.dts
-@@ -0,0 +1,59 @@
-+/*
-+ * Device tree source for EdgeRouter Lite.
-+ *
-+ * Written by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/include/ "octeon_3xxx.dtsi"
-+
-+/ {
-+	model = "ubnt,e100";
-+
-+	soc@0 {
-+		smi0: mdio@1180000001800 {
-+			phy5: ethernet-phy@5 {
-+				reg = <5>;
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+			};
-+			phy6: ethernet-phy@6 {
-+				reg = <6>;
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+			};
-+			phy7: ethernet-phy@7 {
-+				reg = <7>;
-+				compatible = "ethernet-phy-ieee802.3-c22";
-+			};
-+		};
-+
-+		pip: pip@11800a0000000 {
-+			interface@0 {
-+				ethernet@0 {
-+					phy-handle = <&phy7>;
-+				};
-+				ethernet@1 {
-+					phy-handle = <&phy6>;
-+				};
-+				ethernet@2 {
-+					phy-handle = <&phy5>;
-+				};
-+			};
-+		};
-+
-+		uart0: serial@1180000000800 {
-+			clock-frequency = <500000000>;
-+		};
-+
-+		usbn: usbn@1180068000000 {
-+			refclk-frequency = <12000000>;
-+			refclk-type = "crystal";
-+		};
-+	};
-+
-+	aliases {
-+		pip = &pip;
-+	};
-+};
--- 
-2.4.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+> Best regards,
+> -- 
+> Javier Martinez Canillas
+> Open Source Group
+> Samsung Research America
