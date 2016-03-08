@@ -1,143 +1,65 @@
-From: Eric Auger <eric.auger@linaro.org>
-Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Tue, 8 Mar 2016 05:46:38 +0100
-Message-ID: <56DE592E.6010403@linaro.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
- <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
- <56D8C539.9000203@linaro.org> <56D91B0E.1080203@codeaurora.org>
- <56DCFEE0.6080101@linaro.org> <56DD9E7E.6000406@codeaurora.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] mfd: act8945a: fix platform_no_drv_owner.cocci warnings
+Date: Tue, 8 Mar 2016 11:50:39 +0700
+Message-ID: <20160308045039.GK13692@x1>
+References: <201603080703.Td3Y9Ers%fengguang.wu@intel.com>
+ <20160307235423.GA88525@ivytown2.intel.com>
+ <B256D81BAE5131468A838E5D7A243641D6436282@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56DD9E7E.6000406@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D6436282@penmbx01>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
-On 03/07/2016 04:30 PM, Sinan Kaya wrote:
-> On 3/6/2016 11:09 PM, Eric Auger wrote:
->>> #define module_vfio_reset_handler(compat, acpihid, reset)		\
->>>> MODULE_ALIAS("vfio-reset:" acpihid? acpihid: compat);			\
->>>>
->>>> This way, we'll create an alias with one of the provided strings.  
->> What if you want to use vfio platform driver for HiDMA in dt mode? the
->> HiDma reset module advertises both acpihid and dt compat support but an
->> alias module will be created only for acpihid. Then I think we will not
->> be able to load the reset module in dt mode with existing code.
->>
-> 
-> Right, it won't work. Now that we know what MODULE_ALIAS does, there is no
-> harm in doing this. I think we should do this.
-> 
-> #define module_vfio_reset_handler(compat, acpihid, reset)              \
-> MODULE_ALIAS("vfio-reset:" compat);                                    \
-> MODULE_ALIAS("vfio-reset:" acpihid);                                   \
-> 
-> If we prefer ACPI over DT, there is no guarantee that somebody can boot DT
-> kernel with ACPI kernel compilation option enabled.
-> 
-> If one of these are null, then the module alias will be "vfio-reset:"
-> 
-> Of course to make things prettier, we could use "NOT SUPPORTED" as a string
-> instead of NULL. then, the module alias will be vfio-reset: NOT SUPPORTED".
-> 
-> We could go one step further, and do.
-> 
-> #define module_vfio_reset_handler(compat, acpihid, reset) \
-> MODULE_ALIAS("vfio-reset: dt: " compat); \
-> MODULE_ALIAS("vfio-reset: acpi: " acpihid); \
+On Tue, 08 Mar 2016, Yang, Wenyou wrote:
 
-My gut feeling is we must not create a dummy alias when the mode
-(dt/acpi) is not supported/tested. It fills the modinfo section with
-spurious data, aliases are visible to modinfo, ...
+> Hi Fengguang Wu,
+>=20
+> Thank you for your patch.
+>=20
+> > -----Original Message-----
+> > From: kbuild test robot [mailto:lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org]
+> > Sent: 2016=E5=B9=B43=E6=9C=888=E6=97=A5 7:54
+> > To: Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org; Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; Rob Herrin=
+g
+> > <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>; Mark Rutland
+> > <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org=
+>; Kumar
+> > Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>; Ferre, Nicolas <Nicolas.FERRE-AIFe0yeh4nA@public.gmane.org=
+m>;
+> > linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Yang, Wen=
+you
+> > <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Subject: [PATCH] mfd: act8945a: fix platform_no_drv_owner.cocci war=
+nings
+> >=20
+> > drivers/mfd/act8945a.c:100:6-11: No need to set .owner here. The co=
+re will do it.
+> >=20
+> >  Remove .owner field if calls are used which set it automatically
+> >=20
+> > Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
+> >=20
+> > CC: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>=20
+> Reviewed-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-So I personally foresee 2 solutions,
-1) we create a single alias using acpihid if supported or compat if not.
-Then even in dt mode we try to load this module through the acpihid
-alias. Looks weird but should work.
-2) We simply move the module alias declaration out of this macro (to the
-reset module itself), define 2 aliases in case both dt and acpi are
-supported & tested.
+Please fix this code up into the original patch and resubmit the set.
 
-My personal preference is 2 I think.
-
-Best Regards
-
-Eric
-
-> 
-> and change the code below for this too.
-> 
-> 
->> This could work however with some rework in vfio_platform_common.c. In
->> vfio_platform_get_reset we should try to load the module using the
->> acpihid if the module load using compat alias fails. In the look-up
->> table we can find the acpihid corresponding to the dt compat.
-> 
-> I was planning to submit this for the next review. Still, I don't want to 
-> assume that acpihid is the only working option. Somebody can boot DT kernel.
-> 
-> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-> index 42d7545..ba585ad 100644
-> --- a/drivers/vfio/platform/vfio_platform_common.c
-> +++ b/drivers/vfio/platform/vfio_platform_common.c
-> @@ -58,16 +58,30 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->  	return reset_fn;
->  }
->  
-> -static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
-> +static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->  {
-> +	int rc;
-> +
->  	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
->  						 &vdev->reset_module);
-> -	if (!vdev->reset) {
-> -		request_module("vfio-reset:%s", vdev->compat);
-> -		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
-> -							 vdev->acpihid,
-> -							 &vdev->reset_module);
-> -	}
-> +	if (vdev->reset)
-> +		return 0;
-> +
-> +	if (vdev->acpihid)
-> +		rc = request_module("vfio-reset:%s", vdev->acpihid);
-> +
-> +	if (rc && vdev->compat)
-> +		rc = request_module("vfio-reset:%s", vdev->compat);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
-> +						 &vdev->reset_module);
-> +	if (vdev->reset)
-> +		return 0;
-> +
-> +	return -ENODEV;
->  }
->  
->  static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
-> @@ -620,7 +634,11 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
->  		return ret;
->  	}
->  
-> -	vfio_platform_get_reset(vdev);
-> +	ret = vfio_platform_get_reset(vdev);
-> +	if (ret) {
-> +		iommu_group_put(group);
-> +		return ret;
-> +	}
->  
->  	mutex_init(&vdev->igate);
->   
-> 
-> Let me know what you think.
-> 
-> 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
