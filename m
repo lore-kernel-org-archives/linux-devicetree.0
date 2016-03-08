@@ -1,80 +1,73 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv2 11/11] ARM: dts: Add Altera Arria10 L2 Cache EDAC
- devicetree entry
-Date: Tue, 8 Mar 2016 09:59:51 -0600
-Message-ID: <56DEF6F7.1030100@opensource.altera.com>
-References: <1457379787-8327-1-git-send-email-tthayer@opensource.altera.com>
- <1457379787-8327-12-git-send-email-tthayer@opensource.altera.com>
- <56DEE6AE.100@opensource.altera.com>
-Reply-To: <tthayer@opensource.altera.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
+Date: Tue, 8 Mar 2016 08:22:42 -0800
+Message-ID: <CAOesGMjkk-Ow=VnVhgJk8cERre_Jm7Q14wmLAsVb0GufyFBF+g@mail.gmail.com>
+References: <1457104420-18350-1-git-send-email-robh@kernel.org>
+	<CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
+	<CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <56DEE6AE.100@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@opensource.altera.com>, bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+Hi,
 
-On 03/08/2016 08:50 AM, Dinh Nguyen wrote:
->
->
-> On 03/07/2016 01:43 PM, tthayer@opensource.altera.com wrote:
->> From: Thor Thayer <tthayer@opensource.altera.com>
+On Mon, Mar 7, 2016 at 11:37 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, Mar 7, 2016 at 5:10 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>> Hi,
 >>
->> Add the device tree entries needed to support the Altera L2
->> cache EDAC on the Arria10 chip.
+>> On Fri, Mar 4, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
+>>> fdt_node_check_compatible()"). This adds the following commits from
+>>> upstream:
+>>>
+>>> 53bf130 libfdt: simplify fdt_node_check_compatible()
+>>> c9d9121 Warn on node name unit-address presence/absence mismatch
+>>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
+>>>
+>>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> ---
+>>> As usual, this is just an automated copy of upstream dtc into the kernel
+>>> tree. The changeset is small enough that I have left it here.
+>>>
+>>> The main reason for this sync is to pick-up the new unit-address
+>>> warnings.
 >>
->> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
->> ---
->> v2 Match register value (l2-ecc@ffd06010)
->> ---
->>   arch/arm/boot/dts/socfpga_arria10.dtsi |   14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
->> index cce9e50..44aeb3f 100644
->> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
->> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
->> @@ -599,6 +599,20 @@
->>   			reg = <0xffe00000 0x40000>;
->>   		};
->>
->> +		eccmgr: eccmgr@ffd06090 {
->> +			compatible = "altr,socfpga-ecc-manager";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			ranges;
->> +
->> +			l2-ecc@ffd06010 {
->> +				compatible = "altr,socfpga-a10-l2-ecc";
->> +				reg = <0xffd06010 0x4>;
->> +				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>,
->> +					     <0 0 IRQ_TYPE_LEVEL_HIGH>;
->> +			};
->> +		};
->> +
+>> This spews a crazy amount of warnings on a multi_v7_defconfig build.
 >
-> Just checking if these addresses are correct. The eccmgr is at
-> 0xffd06090, but the l2-ecc is at 0xffd06010? I would have thought from
-> the placement the l2-ecc address would be inside the eccmgr's address?
+> Shocking, huh? And I've got more checks in the works. :)
 >
-> Dinh
+>> I'd prefer to see most of those warnings fixed _before_ we introduce
+>> it by default. Otherwise we just add a huge amount of noise that will
+>> hide any real valid warnings that are now brought up.
 >
+> How do you propose to do that? If it is not enabled, then no one will
+> see them nor care. I don't intend to fix everyone's stuff myself.
 
-Yes, this is confusing and I'll clarify/reorganize in the next series. 
-The eccmgr is pointing to the ECC IRQ mask bits. These registers and the 
-L2 ECC registers are organized in different areas within the system manager.
+Right, but pushing a change on everyone that makes the build
+near-unusable as a tool to see if you're introducing a new error is
+also not a good way to do it. However:
 
-I'm actually redoing the series since the Arria10 IRQ handling is 
-significantly different.
+> We could hide the check behind COMPILE_TEST perhaps.
 
-Since this change will affect the bindings and dti (the eccmgr will have 
-the IRQs), please disregard this series.
+Putting it behind an option sounds like a suitable approach. Would it
+be possible to plumb in under "make C=1" / "make C=2" instead? That's
+closer in meaning to what you're doing here than COMPILE_TEST, which
+is more about turning on drivers that might not make sense on your
+platform to get compile coverage.
 
-Sorry for the noise.
+This would make people aware of the tool, give them an easy way to run
+it to do the cleanups. Nag maintainers when they post new code without
+having paid attention to the old sources/cleanup, and with some amount
+of time most of it might be fixed.
 
-Thor
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
