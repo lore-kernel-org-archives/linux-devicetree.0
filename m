@@ -1,37 +1,57 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH 1/2] vfio, platform: add support for ACPI while detecting
- the reset driver
-Date: Tue, 8 Mar 2016 10:37:34 -0500
-Message-ID: <56DEF1BE.8010701@codeaurora.org>
-References: <1457451209-21462-1-git-send-email-okaya@codeaurora.org>
+Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
+ detecting the reset driver
+Date: Tue, 8 Mar 2016 10:44:48 -0500
+Message-ID: <56DEF370.3000904@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
+ <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
+ <56D8C539.9000203@linaro.org> <56D91B0E.1080203@codeaurora.org>
+ <56DCFEE0.6080101@linaro.org> <56DD9E7E.6000406@codeaurora.org>
+ <56DE592E.6010403@linaro.org> <56DE5E11.3060307@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <kvm-owner@vger.kernel.org>
-In-Reply-To: <1457451209-21462-1-git-send-email-okaya@codeaurora.org>
-Sender: kvm-owner@vger.kernel.org
-To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Dan Carpenter <dan.carpenter@oracle.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56DE5E11.3060307@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Eric Auger <eric.auger@linaro.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/8/2016 10:33 AM, Sinan Kaya wrote:
-> +	int rc = 0;
-> +
+Hi,
 
-I should have initialized this to -1. 
+On 3/8/2016 12:07 AM, Sinan Kaya wrote:
+> On 3/7/2016 11:46 PM, Eric Auger wrote:
+>>> #define module_vfio_reset_handler(compat, acpihid, reset) \
+>>>> MODULE_ALIAS("vfio-reset: dt: " compat); \
+>>>> MODULE_ALIAS("vfio-reset: acpi: " acpihid); \
+>> My gut feeling is we must not create a dummy alias when the mode
+>> (dt/acpi) is not supported/tested. It fills the modinfo section with
+>> spurious data, aliases are visible to modinfo, ...
+>>
+>> So I personally foresee 2 solutions,
+>> 1) we create a single alias using acpihid if supported or compat if not.
+>> Then even in dt mode we try to load this module through the acpihid
+>> alias. Looks weird but should work.
+>> 2) We simply move the module alias declaration out of this macro (to the
+>> reset module itself), define 2 aliases in case both dt and acpi are
+>> supported & tested.
+>>
+>> My personal preference is 2 I think.
+>>
+>> Best Regards
+>>
+>> Eric
+>>
+> 
+> I agree with your assessment of #2. We are trying to be too smart. 
+> I'll post a patch with #2 solution.
+> 
 
-> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
-> +						 &vdev->reset_module);
-> +	if (vdev->reset)
-> +		return 0;
-> +
-> +	if (vdev->acpihid)
-> +		rc = request_module("vfio-reset:%s", vdev->acpihid);
-> +
-> +	if (rc && vdev->compat)
-> +		rc = request_module("vfio-reset:%s", vdev->compat);
-> +
+I split patch 8 and 9 from the series and posted a new set here.
 
+http://www.spinics.net/lists/arm-kernel/msg489578.html
 
 -- 
 Sinan Kaya
