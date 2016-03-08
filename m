@@ -1,55 +1,50 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Tue, 8 Mar 2016 09:45:04 -0600
-Message-ID: <CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
-	<56DD7172.4000707@suse.de>
-	<2714888.1DdqvJZ8cb@diego>
-	<56DD7593.5060003@suse.de>
-	<56DD8176.2080603@st.com>
-	<56DD8FBE.9010200@suse.de>
-	<56DD99A4.5030004@st.com>
-	<56DDA26C.3050301@suse.de>
-	<56DDA3D5.3090209@st.com>
-	<56DDB749.1020808@suse.de>
-	<CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
-	<56DE7E1D.5070508@st.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 2/5] gpio: gpiolib: Print error number if gpio hog failed
+Date: Tue, 8 Mar 2016 21:02:59 +0530
+Message-ID: <56DEF0AB.7090807@nvidia.com>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <1457438528-29054-3-git-send-email-ldewangan@nvidia.com> <20160308142217.GB9864@ulmo.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56DE7E1D.5070508@st.com>
-Sender: netdev-owner@vger.kernel.org
-To: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, netdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Fabrice GASNIER <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160308142217.GB9864@ulmo.nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thierry Reding <treding@nvidia.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 8, 2016 at 1:24 AM, Giuseppe CAVALLARO
-<peppe.cavallaro@st.com> wrote:
-> Hi Dinh,
->
-> On 3/8/2016 12:22 AM, Dinh Nguyen wrote:
-> [snip]
->>
->>
->> I'm seeing the same issue on the SoCFPGA platform:
->>
->> libphy: PHY stmmac-0:ffffffff not found
->> eth0: Could not attach to PHY
->> stmmac_open: Cannot attach to PHY (error: -19)
->>
->> If I just revert:
->>
->>   "stmmac: Fix 'eth0: No PHY found' regression"
->>
->> then the issue goes away.
->
->
-> do you have this patch "stmmac: first frame prep at the end of xmit routine"
-> ? Or you just reverted
->   "stmmac: Fix 'eth0: No PHY found' regression"
 
-I only reverted "stmmac: Fix 'eth0: No PHY found' regression". I do have the
-patch "stmmac: first frame prep at the end of the xmit routine", but I did not
-need to revert that patch.
+On Tuesday 08 March 2016 07:52 PM, Thierry Reding wrote:
+> On Tue, Mar 08, 2016 at 05:32:05PM +0530, Laxman Dewangan wrote:
+>
+>> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+>> ---
+>>   drivers/gpio/gpiolib.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>> index bc788b9..7575ebb 100644
+>> --- a/drivers/gpio/gpiolib.c
+>> +++ b/drivers/gpio/gpiolib.c
+>> @@ -2621,15 +2621,16 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
+>>   
+>>   	local_desc = gpiochip_request_own_desc(chip, hwnum, name);
+>>   	if (IS_ERR(local_desc)) {
+>> -		pr_err("requesting hog GPIO %s (chip %s, offset %d) failed\n",
+>> -		       name, chip->label, hwnum);
+>> +		status = PTR_ERR(local_desc);
+>> +		pr_err("requesting hog GPIO %s, chip %s, offset %d failed %d\n",
+>> +		       name, chip->label, hwnum, status);
+> I find this type of format hard to read. I prefer a semi-colon to
+> separate the message from the failure reason (i.e. error code).
+>
+> Besides that I don't understand why you're dropping the parentheses
+> around the "chip %s, offset %d", I found that easier on the eye.
+>
+>
 
-Dinh
+
+I did to accommodate the  3 extra character ( %d) for string format on 
+that line as it was already near to 80 column.
+Just did not want to split in multiple lines.
+
