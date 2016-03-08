@@ -1,51 +1,44 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v4 5/5] ARM: at91/dt: sama5d2_xplained: add fast_restart node
-Date: Tue, 8 Mar 2016 09:42:02 +0800
-Message-ID: <1457401322-29120-6-git-send-email-wenyou.yang@atmel.com>
-References: <1457401322-29120-1-git-send-email-wenyou.yang@atmel.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH] mfd: act8945a: fix platform_no_drv_owner.cocci warnings
+Date: Tue, 8 Mar 2016 01:53:37 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D6436282@penmbx01>
+References: <201603080703.Td3Y9Ers%fengguang.wu@intel.com>
+ <20160307235423.GA88525@ivytown2.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457401322-29120-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160307235423.GA88525@ivytown2.intel.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: "kbuild-all@01.org" <kbuild-all@01.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add fast_restart node as a pmc's child node to support fast startup
-signal configuration.
-
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
-
-Changes in v4:
- - add fast_restart node to the DT file.
-
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/at91-sama5d2_xplained.dts |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 21c780f..45a78a7 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -110,6 +110,14 @@
- 		};
- 
- 		apb {
-+			pmc: pmc@f0014000 {
-+				pmc_fast_restart {
-+					compatible = "atmel,sama5d2-pmc-fast-startup";
-+					atmel,wkup-trigger;
-+					atmel,rtc-alarm-trigger;
-+				};
-+			};
-+
- 			spi0: spi@f8000000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_spi0_default>;
--- 
-1.7.9.5
-
+SGkgRmVuZ2d1YW5nIFd1LA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcGF0Y2guDQoNCj4gLS0tLS1P
+cmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbToga2J1aWxkIHRlc3Qgcm9ib3QgW21haWx0bzps
+a3BAaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE2xOoz1MI4yNUgNzo1NA0KPiBUbzogWWFuZywgV2Vu
+eW91IDxXZW55b3UuWWFuZ0BhdG1lbC5jb20+DQo+IENjOiBrYnVpbGQtYWxsQDAxLm9yZzsgTGVl
+IEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz47IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtl
+cm5lbC5vcmc+OyBQYXdlbCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIFJ1dGxhbmQN
+Cj4gPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBo
+ZWxsaW9uLm9yZy51az47IEt1bWFyDQo+IEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPjsgRmVy
+cmUsIE5pY29sYXMgPE5pY29sYXMuRkVSUkVAYXRtZWwuY29tPjsNCj4gbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IFlhbmcsIFdlbnlvdQ0K
+PiA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBTdWJqZWN0OiBbUEFUQ0hdIG1mZDogYWN0ODk0
+NWE6IGZpeCBwbGF0Zm9ybV9ub19kcnZfb3duZXIuY29jY2kgd2FybmluZ3MNCj4gDQo+IGRyaXZl
+cnMvbWZkL2FjdDg5NDVhLmM6MTAwOjYtMTE6IE5vIG5lZWQgdG8gc2V0IC5vd25lciBoZXJlLiBU
+aGUgY29yZSB3aWxsIGRvIGl0Lg0KPiANCj4gIFJlbW92ZSAub3duZXIgZmllbGQgaWYgY2FsbHMg
+YXJlIHVzZWQgd2hpY2ggc2V0IGl0IGF1dG9tYXRpY2FsbHkNCj4gDQo+IEdlbmVyYXRlZCBieTog
+c2NyaXB0cy9jb2NjaW5lbGxlL2FwaS9wbGF0Zm9ybV9ub19kcnZfb3duZXIuY29jY2kNCj4gDQo+
+IENDOiBXZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KPiBTaWduZWQtb2ZmLWJ5
+OiBGZW5nZ3VhbmcgV3UgPGZlbmdndWFuZy53dUBpbnRlbC5jb20+DQoNClJldmlld2VkLWJ5OiBX
+ZW55b3UgWWFuZyA8d2VueW91LnlhbmdAYXRtZWwuY29tPg0KDQo+IC0tLQ0KPiANCj4gIGFjdDg5
+NDVhLmMgfCAgICAxIC0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pDQo+IA0KPiAt
+LS0gYS9kcml2ZXJzL21mZC9hY3Q4OTQ1YS5jDQo+ICsrKyBiL2RyaXZlcnMvbWZkL2FjdDg5NDVh
+LmMNCj4gQEAgLTk3LDcgKzk3LDYgQEAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWN0ODk0NWFf
+b2ZfbWF0YyAgc3RhdGljDQo+IHN0cnVjdCBpMmNfZHJpdmVyIGFjdDg5NDVhX2kyY19kcml2ZXIg
+PSB7DQo+ICAJLmRyaXZlciA9IHsNCj4gIAkJICAgLm5hbWUgPSAiYWN0ODk0NWEiLA0KPiAtCQkg
+ICAub3duZXIgPSBUSElTX01PRFVMRSwNCj4gIAkJICAgLm9mX21hdGNoX3RhYmxlID0gb2ZfbWF0
+Y2hfcHRyKGFjdDg5NDVhX29mX21hdGNoKSwNCj4gIAl9LA0KPiAgCS5wcm9iZSA9IGFjdDg5NDVh
+X2kyY19wcm9iZSwNCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3UgWWFuZw0K
