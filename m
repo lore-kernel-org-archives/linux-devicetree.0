@@ -1,42 +1,33 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv2 4/8] ARM: dts: imx6-tx6: disable the spi node by default
-Date: Tue,  8 Mar 2016 09:04:00 +0100
-Message-ID: <1457424244-14549-5-git-send-email-LW@KARO-electronics.de>
-References: <1457424244-14549-1-git-send-email-LW@KARO-electronics.de>
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: [PATCHv2 0/8] ARM: dts: update Ka-Ro i.MX6 module support
+Date: Tue,  8 Mar 2016 09:03:56 +0100
+Message-ID: <1457424244-14549-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1457424244-14549-1-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dan Williams <dan.j.williams@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHNwaWRldiBkcml2ZXIgZG9lc24ndCBsaWtlIHRvIGJlIGluc3RhbnRpYXRlZCB2aWEgYSBu
-YWtlZCAnc3BpZGV2Jwpjb21wYXRpYmxlLCB0aG91Z2ggaXQgaXMgdmVyeSBjb252ZW5pZW50IHRv
-IGludm9rZSBpdCB0aGlzIHdheSB3aXRob3V0CmEgZGVkaWNhdGVkIFNQSSBkZXZpY2UgZm9yIGJh
-c2ljIGZ1bmN0aW9uYWwgdGVzdGluZy4KRGlzYWJsZSB0aGUgc3BpIG5vZGUgYnkgZGVmYXVsdCB0
-byBzaWxlbmNlIHRoZSBXQVJOX09OKCkgZnJvbSB0aGUKc3BpZGV2IGRyaXZlciwgYnV0IGxlYXZl
-IHRoZSBjb25maWd1cmF0aW9uIGludGFjdCBvdGhlcndpc2UuCgpTaWduZWQtb2ZmLWJ5OiBMb3Ro
-YXIgV2HDn21hbm4gPExXQEtBUk8tZWxlY3Ryb25pY3MuZGU+Ci0tLQogYXJjaC9hcm0vYm9vdC9k
-dHMvaW14NnFkbC10eDYuZHRzaSB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwt
-dHg2LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLXR4Ni5kdHNpCmluZGV4IGVjMzc0
-ZjUuLjk1MDliNDQgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZxZGwtdHg2LmR0
-c2kKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC10eDYuZHRzaQpAQCAtMjI0LDcgKzIy
-NCw3IEBACiAJCSZncGlvMiAzMCBHUElPX0FDVElWRV9ISUdICiAJCSZncGlvMyAxOSBHUElPX0FD
-VElWRV9ISUdICiAJPjsKLQlzdGF0dXMgPSAib2theSI7CisJc3RhdHVzID0gImRpc2FibGVkIjsK
-IAogCXNwaWRldjA6IHNwaUAwIHsKIAkJY29tcGF0aWJsZSA9ICJzcGlkZXYiOwotLSAKMi4xLjQK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+This patch set updates the Ka-Ro electronics i.MX6 based module
+support and adds support for some new modules and a new baseboard.
+
+changes vs. v1:
+- relicense DTS files under GPLv2/X11
+- dropped patches which have been applied already
+- added some cleanup patches
+
+[PATCHv2 1/8] ARM: dts: imx6-tx6: Relicense the Ka-Ro DT files under GPLv2/X11
+[PATCHv2 2/8] ARM: dts: imx6-tx6: cleanup; no functional change
+[PATCHv2 3/8] ARM: dts: imx6-tx6: remove regulator bus
+[PATCHv2 4/8] ARM: dts: imx6-tx6: disable the spi node by default
+[PATCHv2 5/8] ARM: dts: imx6-tx6: remove container node around pinctrl nodes
+[PATCHv2 6/8] ARM: dts: imx6qdl-tx6: add mdio node for ethernet phy
+[PATCHv2 7/8] ARM: dts: imx6: add support for more Ka-Ro electronics modules
+[PATCHv2 8/8] ARM: dts: imx6: add support for the Ka-Ro electronics 'MB7' baseboard
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
