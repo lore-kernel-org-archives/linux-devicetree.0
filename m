@@ -1,113 +1,102 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH] firmware: qemu_fw_cfg.c: hold ACPI global lock
- during device access
-Date: Tue, 8 Mar 2016 11:21:37 +0200
-Message-ID: <20160308110716-mutt-send-email-mst@redhat.com>
-References: <20160307235543.GD2049@HEDWIG.INI.CMU.EDU>
- <20160308000215.GA11917@kroah.com>
+From: Jiancheng Xue <xuejiancheng@huawei.com>
+Subject: Re: [RESEND PATCH v7] mtd: spi-nor: add hisilicon spi-nor flash
+ controller driver
+Date: Tue, 8 Mar 2016 17:25:13 +0800
+Message-ID: <56DE9A79.30704@huawei.com>
+References: <1456474316-24473-1-git-send-email-xuejiancheng@huawei.com>
+ <20160307225229.GC55664@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160308000215.GA11917-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160307225229.GC55664@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, zajec5@gmail.com, boris.brezillon@free-electrons.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, juhosg@openwrt.org, shijie.huang@intel.com, mika.westerberg@linux.intel.com, furquan@google.com, han.xu@freescale.com, fabio.estevam@freescale.com, manabian@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, Binquan Peng <pengbinquan@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 07, 2016 at 04:02:15PM -0800, Greg KH wrote:
-> On Mon, Mar 07, 2016 at 06:55:43PM -0500, Gabriel Somlo wrote:
-> > Allowing for the future possibility of implementing AML-based
-> > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> > acquire the global ACPI lock when accessing the device on behalf
-> > of the guest-side sysfs driver, to prevent any potential race
-> > conditions.
-> > 
-> > Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+Hi Brian=EF=BC=8C
+   Thank you very much for your comments.
 
-ACK, except for Gerd's comments below.
+On 2016/3/8 6:52, Brian Norris wrote:
+[...]
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt =
+b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+>> new file mode 100644
+>> index 0000000..7407147
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+>=20
+> This is not a SPI controller (or is it? it looks like a SPI NOR
+> controller that doesn't do generic SPI), so it shouldn't go in the sp=
+i/
+> directory.
+>=20
+OK. I'll move this file into Documentation/devicetree/bindings/mtd.
 
-> > ---
-> > 
-> > Turns out, there *is* a way to acquire a global ACPI lock from within
-> > a "random" kernel driver after all. Luckily I have a healthy dose of
-> > respect for Michael's opinions :) so I kept circling back through
-> > existing kernel sources for an example I can use, and I think this
-> > might be it.
-> > 
-> > I'm posting as RFC because I'm not really confident about assessing
-> > the likelihood of there ever being a race condition between the kernel
-> > fw_cfg sysfs driver and firmware on my own. Obviously Michael has
-> > concerns about it, but any additional opinions from the QEMU camp would
-> > be much appreciated.
-> > 
-> > Thanks again,
-> >  --Gabriel
-> > 
-> >  drivers/firmware/qemu_fw_cfg.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> > 
-> > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> > index 7bba76c..cc4c27a 100644
-> > --- a/drivers/firmware/qemu_fw_cfg.c
-> > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > @@ -77,12 +77,26 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> >  static inline void fw_cfg_read_blob(u16 key,
-> >  				    void *buf, loff_t pos, size_t count)
-> >  {
-> > +#ifdef CONFIG_ACPI
+>> @@ -0,0 +1,25 @@
+>> +HiSilicon SPI-NOR Flash Controller
+>> +
+>> +Required properties:
+>> +- compatible : Should be "hisilicon,hisi-sfc" and one of the follow=
+ing strings:
+>> +		"hisilicon,hi3519-sfc"
+>> +- address-cells : number of cells required to define a chip select
+>> +        address on the SPI bus. Should be set to 1. See spi-bus.txt=
+=2E
+>=20
+> This is not exactly a typical SPI bus, though I suppose some of that
+> documentation could apply...
+>=20
 
-You should include linux/acpi.h if you use this,
-do not rely on some other header to pull this in.
+OK. I'll modify the description.
 
-> > +	u32 glk;
-> > +	int status;
-> > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> 
-> Why not fix up the ACPI api to not require #ifdef here?  It should be
-> added to a .h file somewhere instead.
+[...]
+>> +static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8=
+ *buf,
+>> +		int len)
+>> +{
+>> +	struct hifmc_priv *priv =3D nor->priv;
+>> +	struct hifmc_host *host =3D priv->host;
+>> +	int ret;
+>> +
+>> +	ret =3D hisi_spi_nor_send_cmd(nor, opcode, len);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	memcpy(buf, host->iobase, len);
+>=20
+> sparse doesn't like any of these memcpy()'s, since that's __iomem. Ar=
+e
+> you sure you want a regular memcpy here, and elsewhere?
+>=20
+It's not a must to use memcpy though host->iobase represents a segment =
+of inner memory
+which stores data from flash device byte by byte.  I will give up using=
+ memcpy here and
+hisi_spi_nor_write_reg() in next version. Thank you!
 
-Indeed. In fact include/acpi/platform/aclinux.h already has
-this code:
+>> +
+>> +	return 0;
+>> +}
+>> +
+[...]
+>> +static void hisi_spi_nor_dma_transfer(struct spi_nor *nor, u32 star=
+t_off,
+>> +		u32 dma_buf, u32 len, u8 op_type)
+>=20
+> Does this controller support 64-bit addresses? What if you see LPAE, =
+or
+> an ARM64 CPU? It'd be nice if you don't truncate potentially 64-bit
+> dma_buf down to u32.
+>=20
+> Brian
+>=20
+No, this controller just supports 32-bit addresses. So I think I have t=
+o truncate 64-bit dma_buf. :(
 
-#ifndef CONFIG_ACPI
+Thank you very much!
 
-/* External globals for __KERNEL__, stubs is needed */
-
-#define ACPI_GLOBAL(t,a)
-#define ACPI_INIT_GLOBAL(t,a,b)
-
-/* Generating stubs for configurable ACPICA macros */
-
-#define ACPI_NO_MEM_ALLOCATIONS
-
-/* Generating stubs for configurable ACPICA functions */
-
-#define ACPI_NO_ERROR_MESSAGES
-#undef ACPI_DEBUG_OUTPUT
-
-/* External interface for __KERNEL__, stub is needed */
-
-#define ACPI_EXTERNAL_RETURN_STATUS(prototype) \
-        static ACPI_INLINE prototype {return(AE_NOT_CONFIGURED);}
-#define ACPI_EXTERNAL_RETURN_OK(prototype) \
-        static ACPI_INLINE prototype {return(AE_OK);}
-#define ACPI_EXTERNAL_RETURN_VOID(prototype) \
-        static ACPI_INLINE prototype {return;}
-#define ACPI_EXTERNAL_RETURN_UINT32(prototype) \
-        static ACPI_INLINE prototype {return(0);}
-#define ACPI_EXTERNAL_RETURN_PTR(prototype) \
-        static ACPI_INLINE prototype {return(NULL);}
-
-#endif                          /* CONFIG_ACPI */
-
-
-so it's just a question of testing the return code for AE_NOT_CONFIGURED.
-
--- 
-MST
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Jiancheng
