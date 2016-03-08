@@ -1,245 +1,179 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 2/2] PCI: tegra: Support per-lane PHYs
-Date: Tue,  8 Mar 2016 16:48:14 +0100
-Message-ID: <1457452094-5409-2-git-send-email-thierry.reding@gmail.com>
-References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457452094-5409-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Subject: RE: [PATCH V4 5/5] Microblaze: Modifying microblaze PCI subsytem to
+ support generic Xilinx AXI PCIe Host Bridge IP driver
+Date: Tue, 8 Mar 2016 15:54:01 +0000
+Message-ID: <8520D5D51A55D047800579B09414719825887D2E@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
+ <1455208091-15556-6-git-send-email-bharatku@xilinx.com>
+ <56CC3DB2.3080900@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <56CC3DB2.3080900@xilinx.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Michal Simek <michals@xilinx.com>, Bjorn Helgaas <bhelgaas@google.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "paul.burton@imgtec.com" <paul.burton@imgtec.com>, "yinghai@kernel.org" <yinghai@kernel.org>, "wangyijing@huawei.com" <wangyijing@huawei.com>, "robh@kernel.org" <robh@kernel.org>, "russell.joyce@york.ac.uk" <russell.joyce@york.ac.uk>, Soren Brinkmann <sorenb@xilinx.com>, "jiang.liu@linux.intel.com" <jiang.liu@linux.intel.com>, "arnd@arndb.de" <arnd@arndb.de>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Ravikiran Gummaluri <rgummal@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi Bjorn,
 
-The current XUSB pad controller bindings are insufficient to describe
-PHY devices attached to USB controllers. New bindings have been created
-to overcome these restrictions. As a side-effect each root port now is
-assigned a set of PHY devices, one for each lane associated with the
-root port. This has the benefit of allowing fine-grained control of the
-power management for each lane.
+Can you please take this in to your tree.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3:
-- cache result of check for new PHY bindings usage (Stephen Warren)
+Thanks,
+Bharat
 
-Changes in v2:
-- rework commit message to more accurately describe this change
-
- drivers/pci/host/pci-tegra.c | 151 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 135 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-index 75c55265ca73..3b59e3162dfa 100644
---- a/drivers/pci/host/pci-tegra.c
-+++ b/drivers/pci/host/pci-tegra.c
-@@ -290,6 +290,7 @@ struct tegra_pcie {
- 	struct reset_control *afi_rst;
- 	struct reset_control *pcie_xrst;
- 
-+	bool legacy_phy;
- 	struct phy *phy;
- 
- 	struct tegra_msi msi;
-@@ -307,11 +308,14 @@ struct tegra_pcie {
- 
- struct tegra_pcie_port {
- 	struct tegra_pcie *pcie;
-+	struct device_node *np;
- 	struct list_head list;
- 	struct resource regs;
- 	void __iomem *base;
- 	unsigned int index;
- 	unsigned int lanes;
-+
-+	struct phy **phys;
- };
- 
- struct tegra_pcie_bus {
-@@ -844,6 +848,24 @@ static int tegra_pcie_phy_enable(struct tegra_pcie *pcie)
- 	return 0;
- }
- 
-+static int tegra_pcie_port_phy_power_on(struct tegra_pcie_port *port)
-+{
-+	struct device *dev = port->pcie->dev;
-+	unsigned int i;
-+	int err;
-+
-+	for (i = 0; i < port->lanes; i++) {
-+		err = phy_power_on(port->phys[i]);
-+		if (err < 0) {
-+			dev_err(dev, "failed to power on PHY#%u: %d\n", i,
-+				err);
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- {
- 	const struct tegra_pcie_soc_data *soc = pcie->soc_data;
-@@ -883,14 +905,24 @@ static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
- 		afi_writel(pcie, value, AFI_FUSE);
- 	}
- 
--	if (!pcie->phy)
--		err = tegra_pcie_phy_enable(pcie);
--	else
--		err = phy_power_on(pcie->phy);
-+	if (!pcie->legacy_phy) {
-+		list_for_each_entry(port, &pcie->ports, list) {
-+			err = tegra_pcie_port_phy_power_on(port);
-+			if (err < 0) {
-+				dev_err(pcie->dev,
-+					"failed to power on PCIe port: %d\n",
-+					err);
-+				return err;
-+			}
-+		}
-+	} else {
-+		if (!pcie->phy)
-+			err = tegra_pcie_phy_enable(pcie);
-+		else
-+			err = phy_power_on(pcie->phy);
- 
--	if (err < 0) {
--		dev_err(pcie->dev, "failed to power on PHY: %d\n", err);
--		return err;
-+		if (err < 0)
-+			dev_err(pcie->dev, "failed to power on PHY: %d\n", err);
- 	}
- 
- 	/* take the PCIe interface module out of reset */
-@@ -1033,6 +1065,99 @@ static int tegra_pcie_resets_get(struct tegra_pcie *pcie)
- 	return 0;
- }
- 
-+static int tegra_pcie_phys_get_legacy(struct tegra_pcie *pcie)
-+{
-+	int err;
-+
-+	pcie->phy = devm_phy_optional_get(pcie->dev, "pcie");
-+	if (IS_ERR(pcie->phy)) {
-+		err = PTR_ERR(pcie->phy);
-+		dev_err(pcie->dev, "failed to get PHY: %d\n", err);
-+		return err;
-+	}
-+
-+	err = phy_init(pcie->phy);
-+	if (err < 0) {
-+		dev_err(pcie->dev, "failed to initialize PHY: %d\n", err);
-+		return err;
-+	}
-+
-+	pcie->legacy_phy = true;
-+
-+	return 0;
-+}
-+
-+static struct phy *devm_of_phy_optional_get_index(struct device *dev,
-+						  struct device_node *np,
-+						  const char *consumer,
-+						  unsigned int index)
-+{
-+	struct phy *phy;
-+	char *name;
-+
-+	name = kasprintf(GFP_KERNEL, "%s-%u", consumer, index);
-+	if (!name)
-+		return ERR_PTR(-ENOMEM);
-+
-+	phy = devm_of_phy_get(dev, np, name);
-+	kfree(name);
-+
-+	if (IS_ERR(phy) && PTR_ERR(phy) == -ENODEV)
-+		phy = NULL;
-+
-+	return phy;
-+}
-+
-+static int tegra_pcie_port_get_phys(struct tegra_pcie_port *port)
-+{
-+	struct device *dev = port->pcie->dev;
-+	struct phy *phy;
-+	unsigned int i;
-+	int err;
-+
-+	port->phys = devm_kcalloc(dev, sizeof(phy), port->lanes, GFP_KERNEL);
-+	if (!port->phys)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < port->lanes; i++) {
-+		phy = devm_of_phy_optional_get_index(dev, port->np, "pcie", i);
-+		if (IS_ERR(phy)) {
-+			dev_err(dev, "failed to get PHY#%u: %ld\n", i,
-+				PTR_ERR(phy));
-+			return PTR_ERR(phy);
-+		}
-+
-+		err = phy_init(phy);
-+		if (err < 0) {
-+			dev_err(dev, "failed to initialize PHY#%u: %d\n", i,
-+				err);
-+			return err;
-+		}
-+
-+		port->phys[i] = phy;
-+	}
-+
-+	return 0;
-+}
-+
-+static int tegra_pcie_phys_get(struct tegra_pcie *pcie)
-+{
-+	struct tegra_pcie_port *port;
-+	int err;
-+
-+	if (of_get_property(pcie->dev->of_node, "phys", NULL) != NULL)
-+		return tegra_pcie_phys_get_legacy(pcie);
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		err = tegra_pcie_port_get_phys(port);
-+		if (err < 0) {
-+			return err;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
- {
- 	struct platform_device *pdev = to_platform_device(pcie->dev);
-@@ -1051,16 +1176,9 @@ static int tegra_pcie_get_resources(struct tegra_pcie *pcie)
- 		return err;
- 	}
- 
--	pcie->phy = devm_phy_optional_get(pcie->dev, "pcie");
--	if (IS_ERR(pcie->phy)) {
--		err = PTR_ERR(pcie->phy);
--		dev_err(&pdev->dev, "failed to get PHY: %d\n", err);
--		return err;
--	}
--
--	err = phy_init(pcie->phy);
-+	err = tegra_pcie_phys_get(pcie);
- 	if (err < 0) {
--		dev_err(&pdev->dev, "failed to initialize PHY: %d\n", err);
-+		dev_err(&pdev->dev, "failed to get PHYs: %d\n", err);
- 		return err;
- 	}
- 
-@@ -1725,6 +1843,7 @@ static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
- 		rp->index = index;
- 		rp->lanes = value;
- 		rp->pcie = pcie;
-+		rp->np = port;
- 
- 		rp->base = devm_ioremap_resource(pcie->dev, &rp->regs);
- 		if (IS_ERR(rp->base))
--- 
-2.7.1
+> On 11.2.2016 17:28, Bharat Kumar Gogada wrote:
+> > This patch does required modifications to microblaze PCI subsystem, to
+> > work with generic driver (drivers/pci/host/pcie-xilinx.c) on
+> > Microblaze and Zynq.
+> >
+> > Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+> > Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+> > ---
+> > Changes:
+> > Removed pcibios_get_phb_of_node in pci-common.c, using generic
+> version
+> > instead.
+> > Modified pcibios_fixup_bus in pci-common.c, as per generic architecuture.
+> > Modified pcibios_align_resource in pci-common.c, as per generic
+> > architecuture, removed temporary variable.
+> > Removed pci_domain_nr in pci-common.c, instead using generic code.
+> > Added pcibios_add_device in pci-common.c, as per generic architecuture.
+> > Adding Kernel configuration in arch/microblaze as required for generic
+> > PCI domains.
+> > Added kernel configuration for driver to support Microblaze.
+> > ---
+> >  arch/microblaze/Kconfig          |  3 +++
+> >  arch/microblaze/pci/pci-common.c | 56 +++++++-------------------------------
+> --
+> >  drivers/pci/host/Kconfig         |  2 +-
+> >  3 files changed, 14 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/arch/microblaze/Kconfig b/arch/microblaze/Kconfig index
+> > 0bce820..c3702b9 100644
+> > --- a/arch/microblaze/Kconfig
+> > +++ b/arch/microblaze/Kconfig
+> > @@ -271,6 +271,9 @@ config PCI
+> >  config PCI_DOMAINS
+> >  	def_bool PCI
+> >
+> > +config PCI_DOMAINS_GENERIC
+> > +	def_bool PCI_DOMAINS
+> > +
+> >  config PCI_SYSCALL
+> >  	def_bool PCI
+> >
+> > diff --git a/arch/microblaze/pci/pci-common.c
+> > b/arch/microblaze/pci/pci-common.c
+> > index ae838ed..35654be 100644
+> > --- a/arch/microblaze/pci/pci-common.c
+> > +++ b/arch/microblaze/pci/pci-common.c
+> > @@ -123,17 +123,6 @@ unsigned long pci_address_to_pio(phys_addr_t
+> > address)  }  EXPORT_SYMBOL_GPL(pci_address_to_pio);
+> >
+> > -/*
+> > - * Return the domain number for this bus.
+> > - */
+> > -int pci_domain_nr(struct pci_bus *bus) -{
+> > -	struct pci_controller *hose = pci_bus_to_host(bus);
+> > -
+> > -	return hose->global_number;
+> > -}
+> > -EXPORT_SYMBOL(pci_domain_nr);
+> > -
+> >  /* This routine is meant to be used early during boot, when the
+> >   * PCI bus numbers have not yet been assigned, and you need to
+> >   * issue PCI config cycles to an OF device.
+> > @@ -863,26 +852,10 @@ void pcibios_setup_bus_devices(struct pci_bus
+> > *bus)
+> >
+> >  void pcibios_fixup_bus(struct pci_bus *bus)  {
+> > -	/* When called from the generic PCI probe, read PCI<->PCI bridge
+> > -	 * bases. This is -not- called when generating the PCI tree from
+> > -	 * the OF device-tree.
+> > -	 */
+> > -	if (bus->self != NULL)
+> > -		pci_read_bridge_bases(bus);
+> > -
+> > -	/* Now fixup the bus bus */
+> > -	pcibios_setup_bus_self(bus);
+> > -
+> > -	/* Now fixup devices on that bus */
+> > -	pcibios_setup_bus_devices(bus);
+> > +	/* nothing to do */
+> >  }
+> >  EXPORT_SYMBOL(pcibios_fixup_bus);
+> >
+> > -static int skip_isa_ioresource_align(struct pci_dev *dev) -{
+> > -	return 0;
+> > -}
+> > -
+> >  /*
+> >   * We need to avoid collisions with `mirrored' VGA ports
+> >   * and other strange ISA hardware, so we always want the @@ -899,20
+> > +872,18 @@ static int skip_isa_ioresource_align(struct pci_dev *dev)
+> > resource_size_t pcibios_align_resource(void *data, const struct resource
+> *res,
+> >  				resource_size_t size, resource_size_t align)  {
+> > -	struct pci_dev *dev = data;
+> > -	resource_size_t start = res->start;
+> > -
+> > -	if (res->flags & IORESOURCE_IO) {
+> > -		if (skip_isa_ioresource_align(dev))
+> > -			return start;
+> > -		if (start & 0x300)
+> > -			start = (start + 0x3ff) & ~0x3ff;
+> > -	}
+> > -
+> > -	return start;
+> > +	return res->start;
+> >  }
+> >  EXPORT_SYMBOL(pcibios_align_resource);
+> >
+> > +int pcibios_add_device(struct pci_dev *dev) {
+> > +	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
+> > +
+> > +	return 0;
+> > +}
+> > +EXPORT_SYMBOL(pcibios_add_device);
+> > +
+> >  /*
+> >   * Reparent resource children of pr that conflict with res
+> >   * under res, and make res replace those children.
+> > @@ -1333,13 +1304,6 @@ static void pcibios_setup_phb_resources(struct
+> pci_controller *hose,
+> >  		 (unsigned long)hose->io_base_virt - _IO_BASE);  }
+> >
+> > -struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus) -{
+> > -	struct pci_controller *hose = bus->sysdata;
+> > -
+> > -	return of_node_get(hose->dn);
+> > -}
+> > -
+> >  static void pcibios_scan_phb(struct pci_controller *hose)  {
+> >  	LIST_HEAD(resources);
+> > diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig index
+> > d5e58ba..7c56c2e 100644
+> > --- a/drivers/pci/host/Kconfig
+> > +++ b/drivers/pci/host/Kconfig
+> > @@ -79,7 +79,7 @@ config PCI_KEYSTONE
+> >
+> >  config PCIE_XILINX
+> >  	bool "Xilinx AXI PCIe host bridge support"
+> > -	depends on ARCH_ZYNQ
+> > +	depends on ARCH_ZYNQ || MICROBLAZE
+> >  	help
+> >  	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+> >  	  Host Bridge driver.
+> >
+> 
+> Less code in arch is better.
+> 
+> Acked-by: Michal Simek <michal.simek@xilinx.com>
+> 
+> Bjorn: Please take this via your tree.
+> 
+> Thanks,
+> Michal
