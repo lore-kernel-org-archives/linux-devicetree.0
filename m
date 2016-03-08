@@ -1,61 +1,143 @@
-From: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dra7: Enable Errata i877
-Date: Tue, 8 Mar 2016 09:23:03 +0530
-Message-ID: <56DE4C9F.7060603@ti.com>
-References: <1456994525-20573-1-git-send-email-lokeshvutla@ti.com>
- <alpine.DEB.2.02.1603070938170.3437@utopia.booyaka.com>
- <56DD4C70.7070105@ti.com>
- <alpine.DEB.2.02.1603072355030.27387@utopia.booyaka.com>
+From: Eric Auger <eric.auger@linaro.org>
+Subject: Re: [PATCH V14 8/9] vfio, platform: add support for ACPI while
+ detecting the reset driver
+Date: Tue, 8 Mar 2016 05:46:38 +0100
+Message-ID: <56DE592E.6010403@linaro.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-9-git-send-email-okaya@codeaurora.org>
+ <56D08843.5020306@linaro.org> <56D7323B.4040100@codeaurora.org>
+ <56D8C539.9000203@linaro.org> <56D91B0E.1080203@codeaurora.org>
+ <56DCFEE0.6080101@linaro.org> <56DD9E7E.6000406@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1603072355030.27387-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56DD9E7E.6000406@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tuesday 08 March 2016 05:26 AM, Paul Walmsley wrote:
-> On Mon, 7 Mar 2016, Lokesh Vutla wrote:
-> 
->> On Monday 07 March 2016 03:09 PM, Paul Walmsley wrote:
->>> On Thu, 3 Mar 2016, Lokesh Vutla wrote:
->>>
->>>> This series enables Errata i877 for all DRA7 platforms. The public errata
->>>> documentation can be found here[1].
+Hi Sinan,
+On 03/07/2016 04:30 PM, Sinan Kaya wrote:
+> On 3/6/2016 11:09 PM, Eric Auger wrote:
+>>> #define module_vfio_reset_handler(compat, acpihid, reset)		\
+>>>> MODULE_ALIAS("vfio-reset:" acpihid? acpihid: compat);			\
 >>>>
->>>> [1] http://www.ti.com/lit/er/sprz429h/sprz429h.pdf
->>>>
->>>> Lokesh Vutla (1):
->>>>   ARM: OMAP2+: hwmod: Introduce ti,no-idle dt property
->>>>
->>>> Mugunthan V N (1):
->>>>   ARM: dts: dra7: do not gate cpsw clock due to errata i877
->>>
->>> I've sent these for merging immediately. 
->>>
->>> Have you sent patches for U-boot yet?
->> Yes, It is already merged into u-boot.
->> http://git.denx.de/?p=u-boot.git;a=commitdiff;h=f986d9720836433ded29f06c8f5aed462bd20924;hp=65e9d56fb9ce9cfd7ffff7afaa6b7de50e400e06
+>>>> This way, we'll create an alias with one of the provided strings.  
+>> What if you want to use vfio platform driver for HiDMA in dt mode? the
+>> HiDma reset module advertises both acpihid and dt compat support but an
+>> alias module will be created only for acpihid. Then I think we will not
+>> be able to load the reset module in dt mode with existing code.
+>>
 > 
-> I may be misreading this patch, but all it seems to do is add clock 
-> control for GMAC.  It doesn't seem to force the clock to stay on.  What am 
-> I missing?
-So, this is an array containing clock controls which are needed very
-early. This array will be passed to clock framework to enable all the
-clocks. Just adding it to the array is sufficient.
+> Right, it won't work. Now that we know what MODULE_ALIAS does, there is no
+> harm in doing this. I think we should do this.
+> 
+> #define module_vfio_reset_handler(compat, acpihid, reset)              \
+> MODULE_ALIAS("vfio-reset:" compat);                                    \
+> MODULE_ALIAS("vfio-reset:" acpihid);                                   \
+> 
+> If we prefer ACPI over DT, there is no guarantee that somebody can boot DT
+> kernel with ACPI kernel compilation option enabled.
+> 
+> If one of these are null, then the module alias will be "vfio-reset:"
+> 
+> Of course to make things prettier, we could use "NOT SUPPORTED" as a string
+> instead of NULL. then, the module alias will be vfio-reset: NOT SUPPORTED".
+> 
+> We could go one step further, and do.
+> 
+> #define module_vfio_reset_handler(compat, acpihid, reset) \
+> MODULE_ALIAS("vfio-reset: dt: " compat); \
+> MODULE_ALIAS("vfio-reset: acpi: " acpihid); \
 
-Thanks and regards,
-Lokesh
+My gut feeling is we must not create a dummy alias when the mode
+(dt/acpi) is not supported/tested. It fills the modinfo section with
+spurious data, aliases are visible to modinfo, ...
+
+So I personally foresee 2 solutions,
+1) we create a single alias using acpihid if supported or compat if not.
+Then even in dt mode we try to load this module through the acpihid
+alias. Looks weird but should work.
+2) We simply move the module alias declaration out of this macro (to the
+reset module itself), define 2 aliases in case both dt and acpi are
+supported & tested.
+
+My personal preference is 2 I think.
+
+Best Regards
+
+Eric
 
 > 
+> and change the code below for this too.
 > 
-> - Paul
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> This could work however with some rework in vfio_platform_common.c. In
+>> vfio_platform_get_reset we should try to load the module using the
+>> acpihid if the module load using compat alias fails. In the look-up
+>> table we can find the acpihid corresponding to the dt compat.
+> 
+> I was planning to submit this for the next review. Still, I don't want to 
+> assume that acpihid is the only working option. Somebody can boot DT kernel.
+> 
+> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+> index 42d7545..ba585ad 100644
+> --- a/drivers/vfio/platform/vfio_platform_common.c
+> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> @@ -58,16 +58,30 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+>  	return reset_fn;
+>  }
+>  
+> -static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
+> +static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>  {
+> +	int rc;
+> +
+>  	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
+>  						 &vdev->reset_module);
+> -	if (!vdev->reset) {
+> -		request_module("vfio-reset:%s", vdev->compat);
+> -		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+> -							 vdev->acpihid,
+> -							 &vdev->reset_module);
+> -	}
+> +	if (vdev->reset)
+> +		return 0;
+> +
+> +	if (vdev->acpihid)
+> +		rc = request_module("vfio-reset:%s", vdev->acpihid);
+> +
+> +	if (rc && vdev->compat)
+> +		rc = request_module("vfio-reset:%s", vdev->compat);
+> +
+> +	if (rc)
+> +		return rc;
+> +
+> +	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
+> +						 &vdev->reset_module);
+> +	if (vdev->reset)
+> +		return 0;
+> +
+> +	return -ENODEV;
+>  }
+>  
+>  static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
+> @@ -620,7 +634,11 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+>  		return ret;
+>  	}
+>  
+> -	vfio_platform_get_reset(vdev);
+> +	ret = vfio_platform_get_reset(vdev);
+> +	if (ret) {
+> +		iommu_group_put(group);
+> +		return ret;
+> +	}
+>  
+>  	mutex_init(&vdev->igate);
+>   
+> 
+> Let me know what you think.
+> 
+> 
