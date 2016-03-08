@@ -1,291 +1,61 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v5 2/4] power: reset: add reboot mode driver
-Date: Tue,  8 Mar 2016 20:24:18 +0800
-Message-ID: <1457439858-8182-1-git-send-email-andy.yan@rock-chips.com>
-References: <1457439716-8084-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457439716-8084-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, john.stultz@linaro.org, arnd@arndb.de, heiko@sntech.de
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, olof@lixom.net, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, sre@kernel.org, jun.nie@linaro.org, edubezval@gmail.com, f.fainelli@gmail.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, matthias.bgg@gmail.com, linux@arm.linux.org.uk, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, richard@nod.at, dwmw2@infradead.org, jwerner@google.com, Andy Yan <andy.yan@rock-chips.com>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
+Subject: Re: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Tue, 8 Mar 2016 13:25:01 +0100
+Message-ID: <56DEC49D.4@hartkopp.net>
+References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <56DC1561.9060306@hartkopp.net>
+ <SG2PR06MB10386D712BC8C345DF726523C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <56DD36F5.2000308@pengutronix.de>
+ <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
+ <56DE8345.50901@hartkopp.net>
+ <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver parse the reboot commands like "reboot loader"
-and "reboot recovery" to get a boot mode described in the
-device tree , then call the write interfae to store the boot
-mode in some place like special register or sram , which can
-be read by the bootloader after system reboot, then the bootloader
-can take different action according to the mode stored.
+Hi Ramesh,
 
-This is commonly used on Android based devices, in order to
-reboot the device into fastboot or recovery mode.
+On 08.03.2016 09:57, Ramesh Shanmugasundaram wrote:
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Acked-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+>
+> As you mentioned further down, when a user does this
+>
+> "ip link set can0 up type can bitrate 1000000"
+>
+> the intention is to put the controller in CAN 2.0 mode. Even if we use a status flag or copy the data bitrate equal to the nominal bitrate, what would it achieve? It still cannot be a CAN 2.0 node - it is a CAN FD node configured with same nominal & data bitrate.
+>
+> This is why I have this check in ndo_open, so that the user is aware it is a CAN FD node always and avoid misconfiguration like above with EOPNOTSUPP.
+>
 
----
+ok - got it now.
 
-Changes in v5:
-- use two blank space under help in Kconfig
-- use unsigned int instead of int for member magic in struct mode_info
+In fact you provided a CAN driver which is "CAN-FD-only".
+We did not had that before but there's a solution for this kind of setup.
 
-Changes in v4:
-- make this driver depends on OF to avoid kbuild test error
+There is a similar case with CAN_CTRLMODE_FD_NON_ISO we had on the M_CAN 
+driver which only provides non-ISO configuration for the supported IP core and 
+_no_ option to _change_ this value:
 
-Changes in v3:
-- scan multi properities
-- add mask value for some platform which only use some bits of the register
-  to store boot mode magic value
+https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=6cfda7fbebe8a4fd33ea5722fa0212f98f643c35
 
-Changes in v2:
-- move to dir drivers/power/reset/
-- make syscon-reboot-mode a generic driver
+If you would do it similar in rcar_canfd.c with
 
-Changes in v1:
-- fix the embarrassed compile warning
-- correct the maskrom magic number
-- check for the normal reboot
+/* CAN_CTRLMODE_FD is fixed with R-Car CAN FD */
+priv->can.ctrlmode = CAN_CTRLMODE_FD;
 
- drivers/power/reset/Kconfig              |  13 ++++
- drivers/power/reset/Makefile             |   2 +
- drivers/power/reset/reboot-mode.c        | 106 +++++++++++++++++++++++++++++++
- drivers/power/reset/reboot-mode.h        |   6 ++
- drivers/power/reset/syscon-reboot-mode.c |  65 +++++++++++++++++++
- 5 files changed, 192 insertions(+)
- create mode 100644 drivers/power/reset/reboot-mode.c
- create mode 100644 drivers/power/reset/reboot-mode.h
- create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+and remove CAN_CTRLMODE_FD from the priv->can.ctrlmode_supported assignment 
+then it should do the entire configuration process correctly for you.
+Including the proper tests for the two bitrates.
+(see open_candev() in linux/drivers/net/can/dev.c)
 
-diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-index 1131cf7..cf50630 100644
---- a/drivers/power/reset/Kconfig
-+++ b/drivers/power/reset/Kconfig
-@@ -173,5 +173,18 @@ config POWER_RESET_ZX
- 	help
- 	  Reboot support for ZTE SoCs.
- 
-+config REBOOT_MODE
-+	tristate
-+
-+config SYSCON_REBOOT_MODE
-+	bool "Generic SYSCON regmap reboot mode driver"
-+	depends on OF
-+	select REBOOT_MODE
-+	help
-+	  Say y here will enable reboot mode driver. This will
-+	  get reboot mode arguments and store it in SYSCON mapped
-+	  register, then the bootloader can read it to take different
-+	  action according to the mode.
-+
- endif
- 
-diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-index 096fa67..a63865b 100644
---- a/drivers/power/reset/Makefile
-+++ b/drivers/power/reset/Makefile
-@@ -20,3 +20,5 @@ obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
- obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
- obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
- obj-$(CONFIG_POWER_RESET_ZX) += zx-reboot.o
-+obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
-+obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
-diff --git a/drivers/power/reset/reboot-mode.c b/drivers/power/reset/reboot-mode.c
-new file mode 100644
-index 0000000..9aa7b80
---- /dev/null
-+++ b/drivers/power/reset/reboot-mode.c
-@@ -0,0 +1,106 @@
-+/*
-+ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/reboot.h>
-+#include "reboot-mode.h"
-+
-+#define PREFIX "mode-"
-+
-+struct mode_info {
-+	char mode[32];
-+	unsigned int magic;
-+	struct list_head list;
-+};
-+
-+struct reboot_mode_driver {
-+	struct list_head head;
-+	int (*write)(int magic);
-+	struct notifier_block reboot_notifier;
-+};
-+
-+static int get_reboot_mode_magic(struct reboot_mode_driver *reboot,
-+				 const char *cmd)
-+{
-+	const char *normal = "normal";
-+	int magic = 0;
-+	struct mode_info *info;
-+
-+	if (!cmd)
-+		cmd = normal;
-+
-+	list_for_each_entry(info, &reboot->head, list) {
-+		if (!strcmp(info->mode, cmd)) {
-+			magic = info->magic;
-+			break;
-+		}
-+	}
-+
-+	return magic;
-+}
-+
-+static int reboot_mode_notify(struct notifier_block *this,
-+			      unsigned long mode, void *cmd)
-+{
-+	struct reboot_mode_driver *reboot;
-+	int magic;
-+
-+	reboot = container_of(this, struct reboot_mode_driver, reboot_notifier);
-+	magic = get_reboot_mode_magic(reboot, cmd);
-+	if (magic)
-+		reboot->write(magic);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+int reboot_mode_register(struct device *dev, int (*write)(int))
-+{
-+	struct reboot_mode_driver *reboot;
-+	struct mode_info *info;
-+	struct property *prop;
-+	size_t len = strlen(PREFIX);
-+	int ret;
-+
-+	reboot = devm_kzalloc(dev, sizeof(*reboot), GFP_KERNEL);
-+	if (!reboot)
-+		return -ENOMEM;
-+
-+	reboot->write = write;
-+	INIT_LIST_HEAD(&reboot->head);
-+	for_each_property_of_node(dev->of_node, prop) {
-+		if (len > strlen(prop->name) || strncmp(prop->name, PREFIX, len))
-+			continue;
-+		info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+		if (!info)
-+			return -ENOMEM;
-+		strcpy(info->mode, prop->name + len);
-+		if (of_property_read_u32(dev->of_node, prop->name, &info->magic)) {
-+			dev_err(dev, "reboot mode %s without magic number\n",
-+				info->mode);
-+			devm_kfree(dev, info);
-+			continue;
-+		}
-+		list_add_tail(&info->list, &reboot->head);
-+	}
-+	reboot->reboot_notifier.notifier_call = reboot_mode_notify;
-+	ret = register_reboot_notifier(&reboot->reboot_notifier);
-+	if (ret)
-+		dev_err(dev, "can't register reboot notifier\n");
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(reboot_mode_register);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-+MODULE_DESCRIPTION("System reboot mode driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/power/reset/reboot-mode.h b/drivers/power/reset/reboot-mode.h
-new file mode 100644
-index 0000000..44ed34f
---- /dev/null
-+++ b/drivers/power/reset/reboot-mode.h
-@@ -0,0 +1,6 @@
-+#ifndef __REBOOT_MODE_H__
-+#define __REBOOT_MODE_H__
-+
-+int reboot_mode_register(struct device *dev, int (*write)(int));
-+
-+#endif
-diff --git a/drivers/power/reset/syscon-reboot-mode.c b/drivers/power/reset/syscon-reboot-mode.c
-new file mode 100644
-index 0000000..d1521d8
---- /dev/null
-+++ b/drivers/power/reset/syscon-reboot-mode.c
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/reboot.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include "reboot-mode.h"
-+
-+static struct regmap *map;
-+static u32 offset;
-+static u32 mask = 0xffffffff;
-+
-+static int syscon_reboot_mode_write(int magic)
-+{
-+	regmap_update_bits(map, offset, mask, magic);
-+
-+	return 0;
-+}
-+
-+static int syscon_reboot_mode_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+
-+	map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+	if (IS_ERR(map))
-+		return PTR_ERR(map);
-+	if (of_property_read_u32(pdev->dev.of_node, "offset", &offset))
-+		return -EINVAL;
-+	of_property_read_u32(pdev->dev.of_node, "mask", &mask);
-+	ret = reboot_mode_register(&pdev->dev, syscon_reboot_mode_write);
-+	if (ret)
-+		dev_err(&pdev->dev, "can't register reboot mode\n");
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id syscon_reboot_mode_of_match[] = {
-+	{ .compatible = "syscon-reboot-mode" },
-+	{}
-+};
-+
-+static struct platform_driver syscon_reboot_mode_driver = {
-+	.probe = syscon_reboot_mode_probe,
-+	.driver = {
-+		.name = "syscon-reboot-mode",
-+		.of_match_table = syscon_reboot_mode_of_match,
-+	},
-+};
-+module_platform_driver(syscon_reboot_mode_driver);
-+
-+MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-+MODULE_DESCRIPTION("SYSCON reboot mode driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Right?
+
+Best regards,
+Oliver
