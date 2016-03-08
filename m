@@ -1,57 +1,73 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH 2/2] mfd: add documentation for ACT8945A DT bindings
-Date: Tue, 8 Mar 2016 07:57:30 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A243641D6436459@penmbx01>
-References: <1452218729-11357-3-git-send-email-wenyou.yang@atmel.com>
- <201603081124.QHccT8lq%fengguang.wu@intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
+Date: Tue, 8 Mar 2016 02:00:12 -0600
+Message-ID: <CAL_Jsq+cBNcHebxdrhn3nQOX4VikVodSBA3kSaWX+uERFNG8cw@mail.gmail.com>
+References: <1457104420-18350-1-git-send-email-robh@kernel.org> <CAMuHMdVcM9KF0v_0Ejaph4TVC5BtGfOfs9MJ3KMtOL4Hp1qMmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201603081124.QHccT8lq%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAMuHMdVcM9KF0v_0Ejaph4TVC5BtGfOfs9MJ3KMtOL4Hp1qMmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbToga2J1aWxkIHRlc3Qg
-cm9ib3QgW21haWx0bzpsa3BAaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE2xOoz1MI4yNUgMTE6MDQN
-Cj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzoga2J1aWxk
-LWFsbEAwMS5vcmc7IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+OyBSb2IgSGVycmlu
-Zw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29t
-PjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbCA8
-aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hcg0KPiBHYWxhIDxnYWxha0Bjb2Rl
-YXVyb3JhLm9yZz47IEZlcnJlLCBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47DQo+
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBZYW5nLCBXZW55b3UNCj4gPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAyLzJdIG1mZDogYWRkIGRvY3VtZW50YXRpb24gZm9yIEFDVDg5NDVBIERUIGJpbmRp
-bmdzDQo+IA0KPiBIaSBXZW55b3UsDQo+IA0KPiBbYXV0byBidWlsZCB0ZXN0IEVSUk9SIG9uIHY0
-LjQtcmM4XQ0KPiBbY2Fubm90IGFwcGx5IHRvIG5leHQtMjAxNjAzMDddDQo+IFtpZiB5b3VyIHBh
-dGNoIGlzIGFwcGxpZWQgdG8gdGhlIHdyb25nIGdpdCB0cmVlLCBwbGVhc2UgZHJvcCB1cyBhIG5v
-dGUgdG8gaGVscA0KPiBpbXByb3ZpbmcgdGhlIHN5c3RlbV0NCj4gDQo+IHVybDogICAgaHR0cHM6
-Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0cy9XZW55b3UtWWFuZy9tZmQtYWN0ODk0
-NWEtYWRkLQ0KPiBBY3RpdmUtc2VtaS1BQ1Q4OTQ1QS1QTUlDLU1GRC1kcml2ZXIvMjAxNjAxMDgt
-MTAwOTQzDQoNClRoaXMgaXMgbm90IHRoZSBsYXRlc3QgdmVyc2lvbiwgcGxlYXNlIHVzZSBodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE2LUZl
-YnJ1YXJ5LzQwNTI1OC5odG1sDQoNCj4gY29uZmlnOiB4ODZfNjQtYWxsbW9kY29uZmlnIChhdHRh
-Y2hlZCBhcyAuY29uZmlnKQ0KPiByZXByb2R1Y2U6DQo+ICAgICAgICAgIyBzYXZlIHRoZSBhdHRh
-Y2hlZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gICAgICAgICBtYWtlIEFSQ0g9eDg2
-XzY0DQo+IA0KDQpJdCB3b3JrcyB1c2luZyB0aGUgY29tbWFuZHMgYXMgYmVsb3cuDQoNCiQgbWFr
-ZSBtcnByb3Blcg0KJCBleHBvcnQgQVJDSD14ODZfNjQNCiQgZXhwb3J0IENST1NTX0NPTVBJTEU9
-DQokIG1ha2UgYWxsbW9kY29uZmlnDQokIG1ha2UNCg0KDQo+IEFsbCBlcnJvcnMgKG5ldyBvbmVz
-IHByZWZpeGVkIGJ5ID4+KToNCj4gDQo+ICAgIGRyaXZlcnMvYnVpbHQtaW4ubzogSW4gZnVuY3Rp
-b24gYGFjdDg5NDVhX2kyY19wcm9iZSc6DQo+ID4+IGFjdDg5NDVhLmM6KC50ZXh0KzB4MjJiYjI2
-KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgX19kZXZtX3JlZ21hcF9pbml0X2kyYycNCj4gICAg
-ZHJpdmVycy9idWlsdC1pbi5vOiBJbiBmdW5jdGlvbiBgYWN0ODk0NWFfaTJjX2luaXQnOg0KPiA+
-PiBhY3Q4OTQ1YS5jOiguaW5pdC50ZXh0KzB4MWE1N2EpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
-IGBpMmNfcmVnaXN0ZXJfZHJpdmVyJw0KPiAgICBkcml2ZXJzL2J1aWx0LWluLm86IEluIGZ1bmN0
-aW9uIGBhY3Q4OTQ1YV9pMmNfZXhpdCc6DQo+ID4+IGFjdDg5NDVhLmM6KC5leGl0LnRleHQrMHg2
-OGYpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBpMmNfZGVsX2RyaXZlcicNCj4gDQo+IC0tLQ0K
-PiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVyZSAgICAgICAgICAgICAgICBPcGVuIFNv
-dXJjZSBUZWNobm9sb2d5IENlbnRlcg0KPiBodHRwczovL2xpc3RzLjAxLm9yZy9waXBlcm1haWwv
-a2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJbnRlbCBDb3Jwb3JhdGlvbg0KDQoNCkJlc3Qg
-UmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+On Mon, Mar 7, 2016 at 5:27 AM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Rob,
+>
+> On Fri, Mar 4, 2016 at 4:13 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
+>> fdt_node_check_compatible()"). This adds the following commits from
+>> upstream:
+>>
+>> 53bf130 libfdt: simplify fdt_node_check_compatible()
+>> c9d9121 Warn on node name unit-address presence/absence mismatch
+>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
+>>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> As usual, this is just an automated copy of upstream dtc into the kernel
+>> tree. The changeset is small enough that I have left it here.
+>>
+>> The main reason for this sync is to pick-up the new unit-address
+>> warnings.
+>
+> I gave this a try. Obviously it finds many abuses that should be fixed.
+>
+> However, I'm wondering about the following, where the unit-address is just
+> used to distinguish between multiple instances:
+>
+>     Warning (unit_address_vs_reg): Node /cache-controller@0 has a unit
+> name, but no reg property
+>         compatible = "cache";
+
+Just add a reg property. The values should probably match the MPIDR in
+some way (e.g. 0 and 100).
+
+>     Warning (unit_address_vs_reg): Node /regulator@1 has a unit name,
+> but no reg property
+>         compatible = "regulator-fixed"
+
+Regulators are oddball in that the node names are generally supposed
+to be the regulator name not generic.
+
+>     Warning (unit_address_vs_reg): Node /i2c@2 has a unit name, but no
+> reg property
+>         compatible = "i2c-gpio"
+
+You all should have all the on-chip devices under a simple-bus, then
+you would not have this namespace collision here. Still you could have
+2 i2c-gpio devices. We can add reg in those cases.
+
+>
+> How should these be fixed?
+>
+> BTW, there seems to be a missing dependency of the DTBs on the dtc itself.
+> Applying your patch and running "make dtbs" didn't rebuilt any DTBs.
+
+Should probably fix, but It is rare that that would actually matter.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
