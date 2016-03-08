@@ -1,38 +1,42 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 1/5] gpio: of: Scan available child node for gpio-hog
-Date: Tue, 8 Mar 2016 17:32:04 +0530
-Message-ID: <1457438528-29054-2-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 5/5] gpio: DT: Rephrase property "gpios" of hog node to support multiple gpios
+Date: Tue, 8 Mar 2016 17:32:08 +0530
+Message-ID: <1457438528-29054-6-git-send-email-ldewangan@nvidia.com>
 References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: linus.walleij@linaro.org, robh+dt@kernel.org
 Cc: pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Look for child node which are available when iterating for
-gpio hog node for request/set GPIO initial configuration
-during OF gpio chip registration.
+The property "gpios" of GPIO hog node support the multiple GPIO entries.
+Rephrase the details of this property for this new support.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 ---
- drivers/gpio/gpiolib-of.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/gpio/gpio.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index 42a4bb7..f2ba1a4 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -210,7 +210,7 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 	enum gpio_lookup_flags lflags;
- 	enum gpiod_flags dflags;
- 
--	for_each_child_of_node(chip->of_node, np) {
-+	for_each_available_child_of_node(chip->of_node, np) {
- 		if (!of_property_read_bool(np, "gpio-hog"))
- 			continue;
- 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 069cdf6..ea5d7df 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -162,9 +162,9 @@ gpio-controller's driver probe function.
+ Each GPIO hog definition is represented as a child node of the GPIO controller.
+ Required properties:
+ - gpio-hog:   A property specifying that this child node represent a GPIO hog.
+-- gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+-	      number of cells specified in its parent node (GPIO controller
+-	      node).
++- gpios:      Store the GPIO information (id, flags, ...). Multiple GPIOs are
++	      possible to list here. Shall contain the number of cells
++	      specified in its parent node (GPIO controller node) per GPIOs.
+ Only one of the following properties scanned in the order shown below.
+ This means that when multiple properties are present they will be searched
+ in the order presented below and the first match is taken as the intended
 -- 
 2.1.4
+
