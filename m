@@ -1,60 +1,62 @@
-From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 1/1] Fixes: 3145229f9191 ("iio:pressure:ms5611: power regulator support")
-Date: Tue, 8 Mar 2016 19:00:32 +0100
-Message-ID: <26a4b9ab8ae9b40f9c96c51f12c977fdad36532f.1457459537.git.gregor.boirie@parrot.com>
-References: <cover.1457459537.git.gregor.boirie@parrot.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: bcm2835: Add VC4 to the device tree.
+Date: Tue, 08 Mar 2016 10:04:35 -0800
+Message-ID: <87bn6ozw0c.fsf@eliezer.anholt.net>
+References: <1457123528-13482-1-git-send-email-eric@anholt.net> <1457123528-13482-4-git-send-email-eric@anholt.net> <56DE6A80.1060707@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1457459537.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56DE6A80.1060707-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When not compiled-in, regulator layer will return a NULL=C2=A0pointer w=
-hen
-trying to get a reference to any regulator using devm_regulator_get(). =
- As
-IS_ERR() does not consider this an error, the ms5611 probing operation =
-will
-try to enable a NULL regulator, which will invariably cause a kernel
-crash.
-This patch fixes this situation by using devm_regulator_get_optional()
-instead of devm_regulator_get().
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
----
- drivers/iio/pressure/ms5611_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> writes:
 
-diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/=
-ms5611_core.c
-index 37dbc04..a2a871b 100644
---- a/drivers/iio/pressure/ms5611_core.c
-+++ b/drivers/iio/pressure/ms5611_core.c
-@@ -387,8 +387,8 @@ static const struct iio_info ms5611_info =3D {
- static int ms5611_init(struct iio_dev *indio_dev)
- {
- 	int ret;
--	struct regulator *vdd =3D devm_regulator_get(indio_dev->dev.parent,
--	                                           "vdd");
-+	struct regulator *vdd =3D
-+		devm_regulator_get_optional(indio_dev->dev.parent, "vdd");
-=20
- 	/* Enable attached regulator if any. */
- 	if (!IS_ERR(vdd)) {
-@@ -398,6 +398,10 @@ static int ms5611_init(struct iio_dev *indio_dev)
- 			        "failed to enable Vdd supply: %d\n", ret);
- 			return ret;
- 		}
-+	} else {
-+		ret =3D PTR_ERR(vdd);
-+		if (ret !=3D -ENODEV)
-+			return ret;
- 	}
-=20
- 	ret =3D ms5611_reset(indio_dev);
---=20
-2.1.4
+> On 03/04/2016 01:32 PM, Eric Anholt wrote:
+>> VC4 is the GPU (display and 3D) present on the 283x.
+>
+>> diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dt=
+s/bcm2835-rpi-a-plus.dts
+>
+>> +&hdmi {
+>> +	hpd-gpios =3D <&gpio 46 GPIO_ACTIVE_LOW>;
+>> +};
+>
+> Isn't that the same everywhere? If so, adding it to bcm2835-rpi.dtsi=20
+> seems like a better idea; it'd avoid duplicating it everywhere.
+
+It's not the same everywhere (_HIGH vs _LOW), which is why it's in the
+individual files.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJW3xQ0AAoJELXWKTbR/J7oqKgQAIvf7dwXxF5YWTpbqYHSLZM3
+iABdxFdg/oe/a3sgmpJmlno/ETB4naKEwp+4RTJklZFQYFBTIDbaP2AarSWjmqxO
+du5IAMlv1usRqNyF7qGK3IsvE/jxY+67ZgRZZEIIGu73GXC2G0ckyQU4ZSCPUr+B
+JK2JewqqXl41f5Y1EZUlStyVy3lum2JuJzgQZS7Jk6sdnvXjapUE4/zcbP0UY0gN
+3hpKZrGkTWerwOJPNBZbqGXQxc9Vnye8R4pT3j40/By828y+MjDJXo9ZEUGZnNvk
+Sb1LAt2ID6YaU+oN78i78mPy6Nwb/LrLk/HUfGbekXpMyAtmSEIfQYjPU9IsjSg/
+8vq1LHf30ZQs57U82Lf+f/KBKaLZF3+IFqXsL+wDX/HL1535nrX43PfVEmcFwYNs
+NgnfPkXqZAXwOsXVTfk2acJqJw2zjwTpZ/OiaeplV/D/JQD/PWEOc7Sd78e8qxCA
+rmxoJiQbIAK5Dh7wM1RiS/hpYmbU2B0o2V1Ep/9tVXQkOkioUAbAsdfcbyOHuAiA
+q0V51oOI2GmzWmfFD5ZHJAlMhz3dQF3O2VUAR5go/r+1pSwSXmyY6HAz6RXT0oVp
+VgohMPYVsyMbfNEeoevLEx7/u1YG0P6rdoWfyTK6MuGGMR0XuhL9n8uyFRcqnX/2
+9Xs2vHukSaDPAB0GL/jX
+=ipWH
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
