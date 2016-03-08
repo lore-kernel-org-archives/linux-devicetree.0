@@ -1,64 +1,70 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 1/3] thermal: exynos: List vtmu-supply as optional
- property in DT binding
-Date: Tue, 8 Mar 2016 13:07:45 -0800
-Message-ID: <20160308210744.GA8145@localhost.localdomain>
-References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
- <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
+From: Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 1/1] Fixes: 3145229f9191 ("iio:pressure:ms5611: power
+ regulator support")
+Date: Tue, 8 Mar 2016 23:16:20 +0200
+Message-ID: <CAEnQRZBsQ4_XPBXfuWu4WL_qLG7fo3ynsWfQ51v=Ya2O6-jXyQ@mail.gmail.com>
+References: <cover.1457459537.git.gregor.boirie@parrot.com>
+	<26a4b9ab8ae9b40f9c96c51f12c977fdad36532f.1457459537.git.gregor.boirie@parrot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1455819551-4666-2-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <26a4b9ab8ae9b40f9c96c51f12c977fdad36532f.1457459537.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 18, 2016 at 03:19:09PM -0300, Javier Martinez Canillas wrote:
-> The Exynos Thermal Management Unit binding says that the vtmu-supply
-> is optional but is listed in the required properties section. Add an
-> optional properties section and move the regulator property there.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+On Tue, Mar 8, 2016 at 8:00 PM, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> wrote:
+> When not compiled-in, regulator layer will return a NULL pointer when
+> trying to get a reference to any regulator using devm_regulator_get().  As
+> IS_ERR() does not consider this an error, the ms5611 probing operation will
+> try to enable a NULL regulator, which will invariably cause a kernel
+> crash.
+> This patch fixes this situation by using devm_regulator_get_optional()
+> instead of devm_regulator_get().
+>
+> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+
+$Subject should be here. And the commit subject should be something
+more appropriate like:
+
+iio: pressure: ms5611: Fix crash when ...
+
+
 > ---
-> 
->  Documentation/devicetree/bindings/thermal/exynos-thermal.txt | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-> index faa62059b5c5..70b4c16c7ed8 100644
-> --- a/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-> +++ b/Documentation/devicetree/bindings/thermal/exynos-thermal.txt
-> @@ -41,9 +41,6 @@
->  		for current TMU channel
->  	-- "tmu_sclk" clock for functional operation of the current TMU
->  		channel
-> -- vtmu-supply: This entry is optional and provides the regulator node supplying
-> -		voltage to TMU. If needed this entry can be placed inside
-> -		board/platform specific dts file.
->  
->  The Exynos TMU supports generating interrupts when reaching given
->  temperature thresholds. Number of supported thermal trip points depends
-
-Where is this patch based on? I checked it on my fixes and linus
-branches, also on linux-next 0308 branch, and none of those apply clean.
-
-Can you please send this based on upstream kernel?
-
-> @@ -65,6 +62,12 @@ Following properties are mandatory (depending on SoC):
->  - samsung,tmu_default_temp_offset: Default temperature offset
->  - samsung,tmu_cal_type: Callibration type
->  
-> +** Optional properties:
-> +
-> +- vtmu-supply: This entry is optional and provides the regulator node supplying
-> +		voltage to TMU. If needed this entry can be placed inside
-> +		board/platform specific dts file.
-> +
->  Example 1):
->  
->  	tmu@100C0000 {
-> -- 
-> 2.5.0
-> 
+>  drivers/iio/pressure/ms5611_core.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/ms5611_core.c
+> index 37dbc04..a2a871b 100644
+> --- a/drivers/iio/pressure/ms5611_core.c
+> +++ b/drivers/iio/pressure/ms5611_core.c
+> @@ -387,8 +387,8 @@ static const struct iio_info ms5611_info = {
+>  static int ms5611_init(struct iio_dev *indio_dev)
+>  {
+>         int ret;
+> -       struct regulator *vdd = devm_regulator_get(indio_dev->dev.parent,
+> -                                                  "vdd");
+> +       struct regulator *vdd =
+> +               devm_regulator_get_optional(indio_dev->dev.parent, "vdd");
+>
+>         /* Enable attached regulator if any. */
+>         if (!IS_ERR(vdd)) {
+> @@ -398,6 +398,10 @@ static int ms5611_init(struct iio_dev *indio_dev)
+>                                 "failed to enable Vdd supply: %d\n", ret);
+>                         return ret;
+>                 }
+> +       } else {
+> +               ret = PTR_ERR(vdd);
+> +               if (ret != -ENODEV)
+> +                       return ret;
+>         }
+>
+>         ret = ms5611_reset(indio_dev);
+> --
+> 2.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
