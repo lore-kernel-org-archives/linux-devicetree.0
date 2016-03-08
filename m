@@ -1,102 +1,107 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 2/5] regulator: pwm: Add support to have multiple instance of pwm regulator
-Date: Tue, 8 Mar 2016 16:23:22 +0530
-Message-ID: <1457434405-30372-3-git-send-email-ldewangan@nvidia.com>
-References: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 2/7] mtd: nand: sunxi: make OOB retrieval optional
+Date: Tue,  8 Mar 2016 12:15:10 +0100
+Message-ID: <1457435715-24740-3-git-send-email-boris.brezillon@free-electrons.com>
+References: <1457435715-24740-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com
-Cc: lgirdwood@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBT7I7K3AKGQEJYOEWBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1457435715-24740-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some of platforms like Nvidia's Tegra210 Jetson-TX1 platform has
-multiple PMW based regulators. Add support to have multiple instances
-of the driver by not changing any global data of pwm regulator and
-if required, making instance specific copy and then making changes.
+sunxi_nfc_hw_ecc_read_chunk() always retrieves the ECC and protected free
+bytes, no matter if the user really asked for it or not. This can take a
+non negligible amount of time, especially on NAND chips exposing large OOB
+areas (> 1KB). Make it optional.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/regulator/pwm-regulator.c | 27 ++++++++++++++++++++-------
- 1 file changed, 20 insertions(+), 7 deletions(-)
+ drivers/mtd/nand/sunxi_nand.c | 27 ++++++++++++++++-----------
+ 1 file changed, 16 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index 4d8eb35..4689d62 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -27,6 +27,13 @@ struct pwm_regulator_data {
- 
- 	/* Voltage table */
- 	struct pwm_voltages *duty_cycle_table;
-+
-+	/* regulator descriptor */
-+	struct regulator_desc desc;
-+
-+	/* Regulator ops */
-+	struct regulator_ops ops;
-+
- 	int state;
- 
- 	/* Continuous voltage */
-@@ -212,8 +219,10 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
- 	}
- 
- 	drvdata->duty_cycle_table	= duty_cycle_table;
--	pwm_regulator_desc.ops		= &pwm_regulator_voltage_table_ops;
--	pwm_regulator_desc.n_voltages	= length / sizeof(*duty_cycle_table);
-+	memcpy(&drvdata->ops, &pwm_regulator_voltage_table_ops,
-+	       sizeof(drvdata->ops));
-+	drvdata->desc.ops = &drvdata->ops;
-+	drvdata->desc.n_voltages	= length / sizeof(*duty_cycle_table);
- 
- 	return 0;
- }
-@@ -221,8 +230,10 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
- static int pwm_regulator_init_continuous(struct platform_device *pdev,
- 					 struct pwm_regulator_data *drvdata)
+diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
+index 90c121d..7b3ae72 100644
+--- a/drivers/mtd/nand/sunxi_nand.c
++++ b/drivers/mtd/nand/sunxi_nand.c
+@@ -869,7 +869,7 @@ static int sunxi_nfc_hw_ecc_read_chunk(struct mtd_info *mtd,
+ 				       u8 *oob, int oob_off,
+ 				       int *cur_off,
+ 				       unsigned int *max_bitflips,
+-				       bool bbm, int page)
++				       bool bbm, bool oob_required, int page)
  {
--	pwm_regulator_desc.ops = &pwm_regulator_voltage_continuous_ops;
--	pwm_regulator_desc.continuous_voltage_range = true;
-+	memcpy(&drvdata->ops, &pwm_regulator_voltage_continuous_ops,
-+	       sizeof(drvdata->ops));
-+	drvdata->desc.ops = &drvdata->ops;
-+	drvdata->desc.continuous_voltage_range = true;
+ 	struct nand_chip *nand = mtd_to_nand(mtd);
+ 	struct sunxi_nfc *nfc = to_sunxi_nfc(nand->controller);
+@@ -901,7 +901,8 @@ static int sunxi_nfc_hw_ecc_read_chunk(struct mtd_info *mtd,
  
- 	return 0;
- }
-@@ -245,6 +256,8 @@ static int pwm_regulator_probe(struct platform_device *pdev)
- 	if (!drvdata)
- 		return -ENOMEM;
+ 	*cur_off = oob_off + ecc->bytes + 4;
  
-+	memcpy(&drvdata->desc, &pwm_regulator_desc, sizeof(drvdata->desc));
-+
- 	if (of_find_property(np, "voltage-table", NULL))
- 		ret = pwm_regulator_init_table(pdev, drvdata);
- 	else
-@@ -253,7 +266,7 @@ static int pwm_regulator_probe(struct platform_device *pdev)
- 		return ret;
+-	ret = sunxi_nfc_hw_ecc_correct(mtd, data, oob, 0, &erased);
++	ret = sunxi_nfc_hw_ecc_correct(mtd, data, oob_required ? oob : NULL, 0,
++				       &erased);
+ 	if (erased)
+ 		return 1;
  
- 	init_data = of_get_regulator_init_data(&pdev->dev, np,
--					       &pwm_regulator_desc);
-+					       &drvdata->desc);
- 	if (!init_data)
- 		return -ENOMEM;
+@@ -929,12 +930,14 @@ static int sunxi_nfc_hw_ecc_read_chunk(struct mtd_info *mtd,
+ 	} else {
+ 		memcpy_fromio(data, nfc->regs + NFC_RAM0_BASE, ecc->size);
  
-@@ -269,10 +282,10 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+-		nand->cmdfunc(mtd, NAND_CMD_RNDOUT, oob_off, -1);
+-		sunxi_nfc_randomizer_read_buf(mtd, oob, ecc->bytes + 4,
+-					      true, page);
++		if (oob_required) {
++			nand->cmdfunc(mtd, NAND_CMD_RNDOUT, oob_off, -1);
++			sunxi_nfc_randomizer_read_buf(mtd, oob, ecc->bytes + 4,
++						      true, page);
+ 
+-		sunxi_nfc_hw_ecc_get_prot_oob_bytes(mtd, oob, 0,
+-						    bbm, page);
++			sunxi_nfc_hw_ecc_get_prot_oob_bytes(mtd, oob, 0,
++							    bbm, page);
++		}
  	}
  
- 	regulator = devm_regulator_register(&pdev->dev,
--					    &pwm_regulator_desc, &config);
-+					    &drvdata->desc, &config);
- 	if (IS_ERR(regulator)) {
- 		dev_err(&pdev->dev, "Failed to register regulator %s\n",
--			pwm_regulator_desc.name);
-+			drvdata->desc.name);
- 		return PTR_ERR(regulator);
+ 	sunxi_nfc_hw_ecc_update_stats(mtd, max_bitflips, ret);
+@@ -1048,7 +1051,7 @@ static int sunxi_nfc_hw_ecc_read_page(struct mtd_info *mtd,
+ 		ret = sunxi_nfc_hw_ecc_read_chunk(mtd, data, data_off, oob,
+ 						  oob_off + mtd->writesize,
+ 						  &cur_off, &max_bitflips,
+-						  !i, page);
++						  !i, oob_required, page);
+ 		if (ret < 0)
+ 			return ret;
+ 		else if (ret)
+@@ -1086,8 +1089,8 @@ static int sunxi_nfc_hw_ecc_read_subpage(struct mtd_info *mtd,
+ 		ret = sunxi_nfc_hw_ecc_read_chunk(mtd, data, data_off,
+ 						  oob,
+ 						  oob_off + mtd->writesize,
+-						  &cur_off, &max_bitflips,
+-						  !i, page);
++						  &cur_off, &max_bitflips, !i,
++						  false, page);
+ 		if (ret < 0)
+ 			return ret;
  	}
+@@ -1149,7 +1152,9 @@ static int sunxi_nfc_hw_syndrome_ecc_read_page(struct mtd_info *mtd,
  
+ 		ret = sunxi_nfc_hw_ecc_read_chunk(mtd, data, data_off, oob,
+ 						  oob_off, &cur_off,
+-						  &max_bitflips, !i, page);
++						  &max_bitflips, !i,
++						  oob_required,
++						  page);
+ 		if (ret < 0)
+ 			return ret;
+ 		else if (ret)
 -- 
 2.1.4
