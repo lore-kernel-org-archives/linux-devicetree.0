@@ -1,48 +1,67 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: add "simple-bus" where "arm,amba-bus" is
- used alone
-Date: Tue, 8 Mar 2016 02:49:27 -0600
-Message-ID: <CAL_JsqJvT+4efH-+_EhehzwhHZsrYTX8pa1NLsg_Wn4YReN4Ag@mail.gmail.com>
-References: <1457415977-3401-1-git-send-email-yamada.masahiro@socionext.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys example
+Date: Tue, 8 Mar 2016 09:54:50 +0100
+Message-ID: <CAMuHMdVMVYaygvKd3qgTz2fF9SuLA_zEYRoZZrJO+2zmP=jxag@mail.gmail.com>
+References: <1457375055-5544-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1457415977-3401-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "arm@kernel.org" <arm@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, David Brown <david.brown@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org"linux-arm-kernel@lists.infradead.org" <linux-ar>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1457375055-5544-1-git-send-email-afaerber@suse.de>
+Sender: linux-input-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Julien Chauveau <chauveau.julien@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 7, 2016 at 11:46 PM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
-> The compatible string "simple-bus" is well defined in ePAPR, while
-> I see no documentation for the "arm,amba-bus" in ePAPR or under
-> Documentation/devicetree/.
+On Mon, Mar 7, 2016 at 7:24 PM, Andreas F=C3=A4rber <afaerber@suse.de> =
+wrote:
+> Drop #address-cells and #size-cells, which are not required by the
+> gpio-keys binding documentation, as button sub-nodes are not devices.
 >
-> DT is also used by other projects than Linux kernel.  It is not a
-> good idea to rely on such an unofficial binding.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 > ---
+>  Documentation/devicetree/bindings/input/gpio-keys.txt | 2 --
+>  1 file changed, 2 deletions(-)
 >
-> Changes in v2:
->   - Rephrase the git-log
-
-[...]
-
-> diff --git a/arch/arm/boot/dts/axm55xx.dtsi b/arch/arm/boot/dts/axm55xx.dtsi
-> index ea288f0..8da4582 100644
-> --- a/arch/arm/boot/dts/axm55xx.dtsi
-> +++ b/arch/arm/boot/dts/axm55xx.dtsi
-> @@ -107,7 +107,7 @@
->                 };
+> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/=
+Documentation/devicetree/bindings/input/gpio-keys.txt
+> index 21641236c095..1552a11f6786 100644
+> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+> @@ -34,8 +34,6 @@ Example nodes:
 >
->                 amba {
-> -                       compatible = "arm,amba-bus";
-> +                       compatible = "arm,amba-bus", "simple-bus";
+>         gpio_keys {
+>                         compatible =3D "gpio-keys";
+> -                       #address-cells =3D <1>;
+> -                       #size-cells =3D <0>;
+>                         autorepeat;
+>                         button@21 {
 
-As I mentioned in the last version, I think you should remove
-arm,amba-bus and just have simple-bus. I don't believe anything relies
-on having arm,amba-bus.
+=46YI, with "[PATCH] scripts/dtc: Update to upstream version 53bf130b1c=
+dd":
+(http://www.spinics.net/lists/devicetree/msg117206.html) applied:
 
-Rob
+Warning (unit_address_vs_reg): Node /keyboard/button@21 has a unit
+name, but no reg property
+
+>                                 label =3D "GPIO Key UP";
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
