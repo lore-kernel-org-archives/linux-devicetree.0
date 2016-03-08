@@ -1,62 +1,47 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Tue, 8 Mar 2016 08:24:13 +0100
-Message-ID: <56DE7E1D.5070508@st.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>	<56DD7172.4000707@suse.de>	<2714888.1DdqvJZ8cb@diego>	<56DD7593.5060003@suse.de>	<56DD8176.2080603@st.com>	<56DD8FBE.9010200@suse.de>	<56DD99A4.5030004@st.com>	<56DDA26C.3050301@suse.de>	<56DDA3D5.3090209@st.com>	<56DDB749.1020808@suse.de>
- <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
+Date: Tue, 8 Mar 2016 01:37:47 -0600
+Message-ID: <CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA@mail.gmail.com>
+References: <1457104420-18350-1-git-send-email-robh@kernel.org> <CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?SGVpa28gUw==?= =?UTF-8?B?dMO8Ym5lcg==?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
-
-On 3/8/2016 12:22 AM, Dinh Nguyen wrote:
-[snip]
+On Mon, Mar 7, 2016 at 5:10 PM, Olof Johansson <olof@lixom.net> wrote:
+> Hi,
 >
-> I'm seeing the same issue on the SoCFPGA platform:
+> On Fri, Mar 4, 2016 at 7:13 AM, Rob Herring <robh@kernel.org> wrote:
+>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
+>> fdt_node_check_compatible()"). This adds the following commits from
+>> upstream:
+>>
+>> 53bf130 libfdt: simplify fdt_node_check_compatible()
+>> c9d9121 Warn on node name unit-address presence/absence mismatch
+>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>> As usual, this is just an automated copy of upstream dtc into the kernel
+>> tree. The changeset is small enough that I have left it here.
+>>
+>> The main reason for this sync is to pick-up the new unit-address
+>> warnings.
 >
-> libphy: PHY stmmac-0:ffffffff not found
-> eth0: Could not attach to PHY
-> stmmac_open: Cannot attach to PHY (error: -19)
->
-> If I just revert:
->
->   "stmmac: Fix 'eth0: No PHY found' regression"
->
-> then the issue goes away.
+> This spews a crazy amount of warnings on a multi_v7_defconfig build.
 
-do you have this patch "stmmac: first frame prep at the end of xmit 
-routine" ? Or you just reverted
-   "stmmac: Fix 'eth0: No PHY found' regression"
+Shocking, huh? And I've got more checks in the works. :)
 
-maybe we can sum:
+> I'd prefer to see most of those warnings fixed _before_ we introduce
+> it by default. Otherwise we just add a huge amount of noise that will
+> hide any real valid warnings that are now brought up.
 
-   "stmmac: Fix 'eth0: No PHY found' regression"
-            that is introducing a problem when a box
-            has a transceiver
+How do you propose to do that? If it is not enabled, then no one will
+see them nor care. I don't intend to fix everyone's stuff myself. We
+could hide the check behind COMPILE_TEST perhaps.
 
-  "stmmac: first frame prep at the end of xmit routine"
-            That is breaking the tx path on arm64
-
-I will check both patches on my side and let you know
-
-peppe
-
->
-> Thanks,
-> Dinh
->
+Rob
