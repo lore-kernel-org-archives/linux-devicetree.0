@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 5/5] regulator: pwm: Add DT binding details for Linear Equal Step Mode
-Date: Tue, 8 Mar 2016 16:23:25 +0530
-Message-ID: <1457434405-30372-6-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 2/5] regulator: pwm: Add support to have multiple instance of pwm regulator
+Date: Tue, 8 Mar 2016 16:23:22 +0530
+Message-ID: <1457434405-30372-3-git-send-email-ldewangan@nvidia.com>
 References: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,83 +12,91 @@ To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com
 Cc: lgirdwood@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Linear Equal Step mode  in pwm regulators on which
-specified regulator's minimum and maximum voltages are divided into
-specified equal steps. The number of steps must divided the range of
-minimum to maximum as well as PWM periods in equal parts.
-
-Add DT property to specify number of steps and its details.
+Some of platforms like Nvidia's Tegra210 Jetson-TX1 platform has
+multiple PMW based regulators. Add support to have multiple instances
+of the driver by not changing any global data of pwm regulator and
+if required, making instance specific copy and then making changes.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: Lee Jones <lee.jones@linaro.org>
 ---
- .../bindings/regulator/pwm-regulator.txt           | 32 +++++++++++++++++++---
- 1 file changed, 28 insertions(+), 4 deletions(-)
+ drivers/regulator/pwm-regulator.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index ed936f0..b61ff59 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -1,7 +1,7 @@
- Bindings for the Generic PWM Regulator
- ======================================
+diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
+index 4d8eb35..4689d62 100644
+--- a/drivers/regulator/pwm-regulator.c
++++ b/drivers/regulator/pwm-regulator.c
+@@ -27,6 +27,13 @@ struct pwm_regulator_data {
  
--Currently supports 2 modes of operation:
-+Currently supports following modes of operation:
- 
- Voltage Table:		When in this mode, a voltage table (See below) of
- 			predefined voltage <=> duty-cycle values must be
-@@ -23,20 +23,34 @@ Continuous Voltage:	This mode uses the regulator's maximum and minimum
- 			regulator voltage to run at half way between the
- 			supplied max_uV and min_uV values.
- 
-+Linear Equal Step:	This modes divides the regulator's maximum and minimum
-+			supplied voltages into specified equal steps. The
-+			number of steps must equally divides the PWM periods.
-+			On this case, step is translated into number of pulse
-+			in PWM periods and then multiplied by voltage
-+			selectors number to get the duty cycles of PWM.
+ 	/* Voltage table */
+ 	struct pwm_voltages *duty_cycle_table;
 +
- Required properties:
- --------------------
- - compatible:		Should be "pwm-regulator"
- 
- - pwms:			PWM specification (See: ../pwm/pwm.txt)
- 
--Only required for Voltage Table Mode:
-+Optional properties:
-+--------------------
-+For Voltage Table Mode, following properties must be supplied:
- - voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
- 			    First cell is voltage in microvolts (uV)
- 			    Second cell is duty-cycle in percent (%)
- 
-+For Linear Equal Steps, following properties must be supplied:
-+- regulator-n-voltages:	Number of voltage steps between regulator's minimum
-+			and maximum.
++	/* regulator descriptor */
++	struct regulator_desc desc;
 +
- NB: To be clear, if voltage-table is provided, then the device will be used
--in Voltage Table Mode.  If no voltage-table is provided, then the device will
--be used in Continuous Voltage Mode.
-+in Voltage Table Mode.  If regulator-n-voltages is provided then the device
-+will be used in Linear Equal Step Mode. If both properties are not provided,
-+then the device will be used in Continuous Voltage Mode.
- 
- Any property defined as part of the core regulator binding can also be used.
- (See: ../regulator/regulator.txt)
-@@ -66,3 +80,13 @@ Voltage Table Example:
- 				<1036000 40>,
- 				<1016000 50>;
- 	};
++	/* Regulator ops */
++	struct regulator_ops ops;
 +
-+Linear Equal Step Mode Example:
-+	pwm-regulator@1 {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm 1 4880>;
-+		regulator-name = "vdd-gpu";
-+		regulator-min-microvolt = <710000>;
-+		regulator-max-microvolt = <1320000>;
-+		regulator-n-voltages = <62>;
-+	};
+ 	int state;
+ 
+ 	/* Continuous voltage */
+@@ -212,8 +219,10 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
+ 	}
+ 
+ 	drvdata->duty_cycle_table	= duty_cycle_table;
+-	pwm_regulator_desc.ops		= &pwm_regulator_voltage_table_ops;
+-	pwm_regulator_desc.n_voltages	= length / sizeof(*duty_cycle_table);
++	memcpy(&drvdata->ops, &pwm_regulator_voltage_table_ops,
++	       sizeof(drvdata->ops));
++	drvdata->desc.ops = &drvdata->ops;
++	drvdata->desc.n_voltages	= length / sizeof(*duty_cycle_table);
+ 
+ 	return 0;
+ }
+@@ -221,8 +230,10 @@ static int pwm_regulator_init_table(struct platform_device *pdev,
+ static int pwm_regulator_init_continuous(struct platform_device *pdev,
+ 					 struct pwm_regulator_data *drvdata)
+ {
+-	pwm_regulator_desc.ops = &pwm_regulator_voltage_continuous_ops;
+-	pwm_regulator_desc.continuous_voltage_range = true;
++	memcpy(&drvdata->ops, &pwm_regulator_voltage_continuous_ops,
++	       sizeof(drvdata->ops));
++	drvdata->desc.ops = &drvdata->ops;
++	drvdata->desc.continuous_voltage_range = true;
+ 
+ 	return 0;
+ }
+@@ -245,6 +256,8 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 	if (!drvdata)
+ 		return -ENOMEM;
+ 
++	memcpy(&drvdata->desc, &pwm_regulator_desc, sizeof(drvdata->desc));
++
+ 	if (of_find_property(np, "voltage-table", NULL))
+ 		ret = pwm_regulator_init_table(pdev, drvdata);
+ 	else
+@@ -253,7 +266,7 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	init_data = of_get_regulator_init_data(&pdev->dev, np,
+-					       &pwm_regulator_desc);
++					       &drvdata->desc);
+ 	if (!init_data)
+ 		return -ENOMEM;
+ 
+@@ -269,10 +282,10 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	regulator = devm_regulator_register(&pdev->dev,
+-					    &pwm_regulator_desc, &config);
++					    &drvdata->desc, &config);
+ 	if (IS_ERR(regulator)) {
+ 		dev_err(&pdev->dev, "Failed to register regulator %s\n",
+-			pwm_regulator_desc.name);
++			drvdata->desc.name);
+ 		return PTR_ERR(regulator);
+ 	}
+ 
 -- 
 2.1.4
