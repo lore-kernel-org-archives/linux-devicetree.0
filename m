@@ -1,48 +1,64 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [Patch v4 6/6] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Mon, 7 Mar 2016 18:20:50 -0600
-Message-ID: <56DE1AE2.5070908@ti.com>
-References: <1457383187-17166-1-git-send-email-fcooper@ti.com>
- <1457383187-17166-7-git-send-email-fcooper@ti.com>
- <alpine.DEB.2.02.1603072352510.27387@utopia.booyaka.com>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
+Date: Tue, 8 Mar 2016 11:56:33 +1100
+Message-ID: <20160308005633.GA30023@gwshan>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqJydgmkU=SGcr-0JHsYG8wXk5GEQCQXY7y+FHH2A0LZkw@mail.gmail.com>
+ <20160219031655.GA10818@gwshan>
+ <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.02.1603072352510.27387@utopia.booyaka.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul@pwsan.com>
-Cc: vigneshr@ti.com, thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/07/2016 05:53 PM, Paul Walmsley wrote:
-> On Mon, 7 Mar 2016, Franklin S Cooper Jr wrote:
->
->> From: Vignesh R <vigneshr@ti.com>
+On Tue, Mar 01, 2016 at 08:40:12PM -0600, Rob Herring wrote:
+>On Thu, Feb 18, 2016 at 9:16 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>> On Wed, Feb 17, 2016 at 08:59:53AM -0600, Rob Herring wrote:
+>>>On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>>> This renames unflatten_dt_node() to unflatten_dt_nodes() as it
+>>>> populates multiple device nodes from FDT blob. No logical changes
+>>>> introduced.
+>>>>
+>>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>> ---
+>>>>  drivers/of/fdt.c | 14 +++++++-------
+>>>>  1 file changed, 7 insertions(+), 7 deletions(-)
+>>>
+>>>Acked-by: Rob Herring <robh@kernel.org>
+>>>
+>>>I'm happy to take patches 40-42 for 4.6 if the rest of the series
+>>>doesn't go in given they fix a separate problem. I just need to know
+>>>soon (or at least they need to go into -next soon).
+>>>
 >>
->> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
->> for dt bindings.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> [fcooper@ti.com: Use updated bindings for PWMSS and ePWM]
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->> Version 4 changes:
->> Remove hwmod entries.
->> Add clocks/clock-names to pwm nodes.
-> Hmm, what about moving the eqep, ecap DT nodes under the epwmss nodes?
+>> Thanks for quick response, Rob. It depends how much comments I will
+>> receive for the powerpc/powernv part. Except that, all parts including
+>> this one have been ack'ed. I can discuss it with Michael Ellerman.
+>> By the way, how soon you need the decision to merge 40-42? If that's
+>> one or two weeks later, I don't think the reivew on the whole series
+>> can be done.
 >
+>Well, it's been 2 weeks now. I need to know this week.
 >
-> - Paul
+>> Also, I think you probably can merge 40-44 as they're all about
+>> fdt.c. If they can be merged at one time, I needn't bother (cc)
+>> you again if I need send a updated revision. Thanks for your
+>> review.
+>
+>I did not include 43 and 44 as they are only needed for the rest of your series.
+>
 
-We don't have a driver for eQEP which is why there is no DT
-entry for it. For eCAP, the original patch series didn't
-include the eCAP DT nodes and I never verified why this is
-the case. In our TI tree we have eCAP0 only in the DT. The
-TRM doesn't state that eCAP0-2 are unsupported so there
-should be entries for all 3 eCAPs.
+Rob, sorry for late reponse. I really expect this series to be merged to 4.6 and
+I was checking reviewers' bandwidth to review it. Unfortunately, I didn't receive
+any comments except yours until now. That means this series has to miss 4.6. Please
+pick/merge 41 and 42 if no body has objection. Thanks again for your time on this.
 
-For AM335x and AM437x, eCAP nodes are already under the
-ePWMSS nodes.
+Thanks,
+Gavin
