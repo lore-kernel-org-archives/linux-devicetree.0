@@ -1,45 +1,113 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] ARM: dts: add "simple-bus" where "arm,amba-bus" is
- used alone
-Date: Tue, 8 Mar 2016 09:58:24 +0100
-Message-ID: <CAMuHMdWwCdFSN7tAMa7ffjhSFD2DppV4SrzFB0pmshYvA2RYmw@mail.gmail.com>
-References: <1457415977-3401-1-git-send-email-yamada.masahiro@socionext.com>
-	<CAL_JsqJvT+4efH-+_EhehzwhHZsrYTX8pa1NLsg_Wn4YReN4Ag@mail.gmail.com>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH] firmware: qemu_fw_cfg.c: hold ACPI global lock
+ during device access
+Date: Tue, 8 Mar 2016 11:21:37 +0200
+Message-ID: <20160308110716-mutt-send-email-mst@redhat.com>
+References: <20160307235543.GD2049@HEDWIG.INI.CMU.EDU>
+ <20160308000215.GA11917@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJvT+4efH-+_EhehzwhHZsrYTX8pa1NLsg_Wn4YReN4Ag@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, "arm@kernel.org" <arm@kernel.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Heiko Stuebner <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, David Brown <david.brown@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160308000215.GA11917-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 8, 2016 at 9:49 AM, Rob Herring <robh+dt@kernel.org> wrote:
->> diff --git a/arch/arm/boot/dts/axm55xx.dtsi b/arch/arm/boot/dts/axm55xx.dtsi
->> index ea288f0..8da4582 100644
->> --- a/arch/arm/boot/dts/axm55xx.dtsi
->> +++ b/arch/arm/boot/dts/axm55xx.dtsi
->> @@ -107,7 +107,7 @@
->>                 };
->>
->>                 amba {
->> -                       compatible = "arm,amba-bus";
->> +                       compatible = "arm,amba-bus", "simple-bus";
->
-> As I mentioned in the last version, I think you should remove
-> arm,amba-bus and just have simple-bus. I don't believe anything relies
-> on having arm,amba-bus.
+On Mon, Mar 07, 2016 at 04:02:15PM -0800, Greg KH wrote:
+> On Mon, Mar 07, 2016 at 06:55:43PM -0500, Gabriel Somlo wrote:
+> > Allowing for the future possibility of implementing AML-based
+> > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> > acquire the global ACPI lock when accessing the device on behalf
+> > of the guest-side sysfs driver, to prevent any potential race
+> > conditions.
+> > 
+> > Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
 
-It may have a side-effect: currently "arm.amba-bus" is only treated equivalent
-to  "simple-bus" if CONFIG_ARM_AMBA is enabled.
+ACK, except for Gerd's comments below.
 
-Gr{oetje,eeting}s,
+> > ---
+> > 
+> > Turns out, there *is* a way to acquire a global ACPI lock from within
+> > a "random" kernel driver after all. Luckily I have a healthy dose of
+> > respect for Michael's opinions :) so I kept circling back through
+> > existing kernel sources for an example I can use, and I think this
+> > might be it.
+> > 
+> > I'm posting as RFC because I'm not really confident about assessing
+> > the likelihood of there ever being a race condition between the kernel
+> > fw_cfg sysfs driver and firmware on my own. Obviously Michael has
+> > concerns about it, but any additional opinions from the QEMU camp would
+> > be much appreciated.
+> > 
+> > Thanks again,
+> >  --Gabriel
+> > 
+> >  drivers/firmware/qemu_fw_cfg.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> > 
+> > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> > index 7bba76c..cc4c27a 100644
+> > --- a/drivers/firmware/qemu_fw_cfg.c
+> > +++ b/drivers/firmware/qemu_fw_cfg.c
+> > @@ -77,12 +77,26 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+> >  static inline void fw_cfg_read_blob(u16 key,
+> >  				    void *buf, loff_t pos, size_t count)
+> >  {
+> > +#ifdef CONFIG_ACPI
 
-                        Geert
+You should include linux/acpi.h if you use this,
+do not rely on some other header to pull this in.
 
+> > +	u32 glk;
+> > +	int status;
+> > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
+> 
+> Why not fix up the ACPI api to not require #ifdef here?  It should be
+> added to a .h file somewhere instead.
+
+Indeed. In fact include/acpi/platform/aclinux.h already has
+this code:
+
+#ifndef CONFIG_ACPI
+
+/* External globals for __KERNEL__, stubs is needed */
+
+#define ACPI_GLOBAL(t,a)
+#define ACPI_INIT_GLOBAL(t,a,b)
+
+/* Generating stubs for configurable ACPICA macros */
+
+#define ACPI_NO_MEM_ALLOCATIONS
+
+/* Generating stubs for configurable ACPICA functions */
+
+#define ACPI_NO_ERROR_MESSAGES
+#undef ACPI_DEBUG_OUTPUT
+
+/* External interface for __KERNEL__, stub is needed */
+
+#define ACPI_EXTERNAL_RETURN_STATUS(prototype) \
+        static ACPI_INLINE prototype {return(AE_NOT_CONFIGURED);}
+#define ACPI_EXTERNAL_RETURN_OK(prototype) \
+        static ACPI_INLINE prototype {return(AE_OK);}
+#define ACPI_EXTERNAL_RETURN_VOID(prototype) \
+        static ACPI_INLINE prototype {return;}
+#define ACPI_EXTERNAL_RETURN_UINT32(prototype) \
+        static ACPI_INLINE prototype {return(0);}
+#define ACPI_EXTERNAL_RETURN_PTR(prototype) \
+        static ACPI_INLINE prototype {return(NULL);}
+
+#endif                          /* CONFIG_ACPI */
+
+
+so it's just a question of testing the return code for AE_NOT_CONFIGURED.
+
+-- 
+MST
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
