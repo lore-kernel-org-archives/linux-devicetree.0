@@ -1,73 +1,64 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
-Date: Tue, 8 Mar 2016 08:22:42 -0800
-Message-ID: <CAOesGMjkk-Ow=VnVhgJk8cERre_Jm7Q14wmLAsVb0GufyFBF+g@mail.gmail.com>
-References: <1457104420-18350-1-git-send-email-robh@kernel.org>
-	<CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
-	<CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/5] ARM: bcm2835: Replace alt0/i2s_alt[02] with standard
+ groups.
+Date: Tue, 8 Mar 2016 09:42:24 -0700
+Message-ID: <56DF00F0.3080801@wwwdotorg.org>
+References: <1456510756-15337-1-git-send-email-eric@anholt.net>
+ <1456510756-15337-3-git-send-email-eric@anholt.net>
+ <CACRpkdYzSt=R7j9GLSY39CsyMKLjqRYnP_31ti5jWiGngJacqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYzSt=R7j9GLSY39CsyMKLjqRYnP_31ti5jWiGngJacqA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Eric Anholt <eric@anholt.net>
+Cc: linux-rpi-kernel <linux-rpi-kernel@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lee Jones <lee@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Mon, Mar 7, 2016 at 11:37 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Mar 7, 2016 at 5:10 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->> Hi,
+On 03/08/2016 01:24 AM, Linus Walleij wrote:
+> On Sat, Feb 27, 2016 at 1:19 AM, Eric Anholt <eric@anholt.net> wrote:
+>
+>> Since all of these pins were documented, we can use their names to
+>> explain what's going on.
 >>
->> On Fri, Mar 4, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
->>> fdt_node_check_compatible()"). This adds the following commits from
->>> upstream:
->>>
->>> 53bf130 libfdt: simplify fdt_node_check_compatible()
->>> c9d9121 Warn on node name unit-address presence/absence mismatch
->>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
->>>
->>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>> As usual, this is just an automated copy of upstream dtc into the kernel
->>> tree. The changeset is small enough that I have left it here.
->>>
->>> The main reason for this sync is to pick-up the new unit-address
->>> warnings.
->>
->> This spews a crazy amount of warnings on a multi_v7_defconfig build.
+>> Signed-off-by: Eric Anholt <eric@anholt.net>
 >
-> Shocking, huh? And I've got more checks in the works. :)
+>> +       pinctrl-0 = <&i2c0_gpio0
+>> +                    &i2c1_gpio2
+>> +                    &gpclk0_gpio4
+>> +                    &gpclk1_gpio5
+>> +                    &spi0_gpio7
+>> +                    &pcm_gpio18
+>> +                    &pwm0_gpio40
+>> +                    &pwm1_gpio45
+>> +                    &gpioout
+>> +                    &alt3>;
 >
->> I'd prefer to see most of those warnings fixed _before_ we introduce
->> it by default. Otherwise we just add a huge amount of noise that will
->> hide any real valid warnings that are now brought up.
+> Why are all of these done as hogs instead of being in pinctrl-0
+> "default" for the device that is using them? i2c1, gpclk0,
+> etc?
 >
-> How do you propose to do that? If it is not enabled, then no one will
-> see them nor care. I don't intend to fix everyone's stuff myself.
+> The only reason I see would be if they are unused or something.
 
-Right, but pushing a change on everyone that makes the build
-near-unusable as a tool to see if you're introducing a new error is
-also not a good way to do it. However:
+I think it makes sense to have the pinctrl driver (or even FW before the 
+kernel boots) set up everything at once where possible. That's the 
+easiest way to ensure there are never any conflicts in the pinmux table 
+(i.e. that two different pins don't end up being both muxed to SPI1's 
+MISO signal at the same time for a while before all the drivers probe). 
+Putting pinctrl entries into individual devices only makes sense to me 
+when one of:
 
-> We could hide the check behind COMPILE_TEST perhaps.
+a) That device needs to dynamically change the pinmux at run-time, e.g. 
+to switch between different states, so needs definitions of those 
+different states.
 
-Putting it behind an option sounds like a suitable approach. Would it
-be possible to plumb in under "make C=1" / "make C=2" instead? That's
-closer in meaning to what you're doing here than COMPILE_TEST, which
-is more about turning on drivers that might not make sense on your
-platform to get compile coverage.
+or:
 
-This would make people aware of the tool, give them an easy way to run
-it to do the cleanups. Nag maintainers when they post new code without
-having paid attention to the old sources/cleanup, and with some amount
-of time most of it might be fixed.
+b) The initial pinmux is guaranteed set up to a safe non-conflicting 
+state that enables very little, and we need to defer enabling various 
+peripherals until a later time when we know the peripheral is in use, 
+e.g. when loading a DT overlay from user-space.
 
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On the RPi there are certain peripherals that fall into each category, 
+e.g. SD card is always used, I2S only optionally used.
