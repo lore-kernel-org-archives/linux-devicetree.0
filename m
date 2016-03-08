@@ -1,67 +1,78 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys example
-Date: Tue, 8 Mar 2016 09:54:50 +0100
-Message-ID: <CAMuHMdVMVYaygvKd3qgTz2fF9SuLA_zEYRoZZrJO+2zmP=jxag@mail.gmail.com>
-References: <1457375055-5544-1-git-send-email-afaerber@suse.de>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v3 0/3] clk: clock driver for the Marvell Armada AP806
+Date: Tue, 08 Mar 2016 09:57:47 +0100
+Message-ID: <87r3fl4a9g.fsf@free-electrons.com>
+References: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1457375055-5544-1-git-send-email-afaerber@suse.de>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Julien Chauveau <chauveau.julien@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	(Thomas Petazzoni's message of "Fri, 4 Mar 2016 13:57:52 +0100")
+Sender: linux-clk-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 7, 2016 at 7:24 PM, Andreas F=C3=A4rber <afaerber@suse.de> =
-wrote:
-> Drop #address-cells and #size-cells, which are not required by the
-> gpio-keys binding documentation, as button sub-nodes are not devices.
+Hi Thomas,
+ 
+ On ven., mars 04 2016, Thomas Petazzoni <thomas.petazzoni@free-electrons.com> wrote:
+
+> Michael, Stephen,
 >
-> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->  Documentation/devicetree/bindings/input/gpio-keys.txt | 2 --
->  1 file changed, 2 deletions(-)
+> Here is a new version of the clock driver and its DT binding for the
+> Marvell Armada AP806. As you will see, there is no longer any
+> reference to the DFX Server and changes in the clock tree compared to
+> the v2. This is due to the fact that the HW has changed from this
+> point of view between the test chips and the final revision, and this
+> new version aims at supporting only the final revision.
 >
-> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/=
-Documentation/devicetree/bindings/input/gpio-keys.txt
-> index 21641236c095..1552a11f6786 100644
-> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> @@ -34,8 +34,6 @@ Example nodes:
+> We therefore have a very simple DT binding, with one single node that
+> covers the entire "system controller" registers, associated to one
+> driver that provides the clocks. This system controller will later be
+> used to support other features such as pin-muxing, but for now we only
+> support the clocks aspects of it.
 >
->         gpio_keys {
->                         compatible =3D "gpio-keys";
-> -                       #address-cells =3D <1>;
-> -                       #size-cells =3D <0>;
->                         autorepeat;
->                         button@21 {
+> Please let me know if this approach works for you.
+>
+> Note that this patch series is based on clk-net, because I wanted to
+> avoid introducing a new use of CLK_IS_ROOT. To do this, I needed the
+> patches currently in clk-next that remove the need for CLK_IS_ROOT.
+>
+> Thanks!
 
-=46YI, with "[PATCH] scripts/dtc: Update to upstream version 53bf130b1c=
-dd":
-(http://www.spinics.net/lists/devicetree/msg117206.html) applied:
+The series is clean and small, I didn't see any problem with it, so for
+the whole series:
 
-Warning (unit_address_vs_reg): Node /keyboard/button@21 has a unit
-name, but no reg property
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
->                                 label =3D "GPIO Key UP";
+Thanks,
 
-Gr{oetje,eeting}s,
+Gregory
 
-                        Geert
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
+>
+> Thomas
+>
+> Thomas Petazzoni (3):
+>   dt-bindings: arm: add DT binding for Marvell AP806 system controller
+>   clk: unconditionally recurse into clk/mvebu/
+>   clk: mvebu: new driver for Armada AP806 system controller
+>
+>  .../arm/marvell/ap806-system-controller.txt        |  34 +++++++
+>  drivers/clk/Makefile                               |   2 +-
+>  drivers/clk/mvebu/Kconfig                          |   3 +
+>  drivers/clk/mvebu/Makefile                         |   1 +
+>  drivers/clk/mvebu/ap806-system-controller.c        | 106 +++++++++++++++++++++
+>  5 files changed, 145 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+>  create mode 100644 drivers/clk/mvebu/ap806-system-controller.c
+>
+> -- 
+> 2.6.4
+>
 
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
