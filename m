@@ -1,59 +1,94 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/5] regulator: pwm: Prints error number when it fails
-Date: Tue, 8 Mar 2016 16:23:23 +0530
-Message-ID: <1457434405-30372-4-git-send-email-ldewangan@nvidia.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 5/5] regulator: pwm: Add DT binding details for Linear Equal Step Mode
+Date: Tue, 8 Mar 2016 16:23:25 +0530
+Message-ID: <1457434405-30372-6-git-send-email-ldewangan@nvidia.com>
 References: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457434405-30372-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com
+Cc: lgirdwood@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Prints the error number along with error message when any
-error occurs. This helps on getting the reason of failure
-quickly from log without any code instrument.
+Add support for Linear Equal Step mode  in pwm regulators on which
+specified regulator's minimum and maximum voltages are divided into
+specified equal steps. The number of steps must divided the range of
+minimum to maximum as well as PWM periods in equal parts.
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Add DT property to specify number of steps and its details.
+
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/regulator/pwm-regulator.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ .../bindings/regulator/pwm-regulator.txt           | 32 +++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/pwm-regulator.c b/drivers/regulator/pwm-regulator.c
-index 4689d62..9db67a1 100644
---- a/drivers/regulator/pwm-regulator.c
-+++ b/drivers/regulator/pwm-regulator.c
-@@ -277,16 +277,18 @@ static int pwm_regulator_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+index ed936f0..b61ff59 100644
+--- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+@@ -1,7 +1,7 @@
+ Bindings for the Generic PWM Regulator
+ ======================================
  
- 	drvdata->pwm = devm_pwm_get(&pdev->dev, NULL);
- 	if (IS_ERR(drvdata->pwm)) {
--		dev_err(&pdev->dev, "Failed to get PWM\n");
--		return PTR_ERR(drvdata->pwm);
-+		ret = PTR_ERR(drvdata->pwm);
-+		dev_err(&pdev->dev, "Failed to get PWM, %d\n", ret);
-+		return ret;
- 	}
+-Currently supports 2 modes of operation:
++Currently supports following modes of operation:
  
- 	regulator = devm_regulator_register(&pdev->dev,
- 					    &drvdata->desc, &config);
- 	if (IS_ERR(regulator)) {
--		dev_err(&pdev->dev, "Failed to register regulator %s\n",
--			drvdata->desc.name);
--		return PTR_ERR(regulator);
-+		ret = PTR_ERR(regulator);
-+		dev_err(&pdev->dev, "Failed to register regulator %s, %d\n",
-+			drvdata->desc.name, ret);
-+		return ret;
- 	}
+ Voltage Table:		When in this mode, a voltage table (See below) of
+ 			predefined voltage <=> duty-cycle values must be
+@@ -23,20 +23,34 @@ Continuous Voltage:	This mode uses the regulator's maximum and minimum
+ 			regulator voltage to run at half way between the
+ 			supplied max_uV and min_uV values.
  
- 	return 0;
++Linear Equal Step:	This modes divides the regulator's maximum and minimum
++			supplied voltages into specified equal steps. The
++			number of steps must equally divides the PWM periods.
++			On this case, step is translated into number of pulse
++			in PWM periods and then multiplied by voltage
++			selectors number to get the duty cycles of PWM.
++
+ Required properties:
+ --------------------
+ - compatible:		Should be "pwm-regulator"
+ 
+ - pwms:			PWM specification (See: ../pwm/pwm.txt)
+ 
+-Only required for Voltage Table Mode:
++Optional properties:
++--------------------
++For Voltage Table Mode, following properties must be supplied:
+ - voltage-table: 	Voltage and Duty-Cycle table consisting of 2 cells
+ 			    First cell is voltage in microvolts (uV)
+ 			    Second cell is duty-cycle in percent (%)
+ 
++For Linear Equal Steps, following properties must be supplied:
++- regulator-n-voltages:	Number of voltage steps between regulator's minimum
++			and maximum.
++
+ NB: To be clear, if voltage-table is provided, then the device will be used
+-in Voltage Table Mode.  If no voltage-table is provided, then the device will
+-be used in Continuous Voltage Mode.
++in Voltage Table Mode.  If regulator-n-voltages is provided then the device
++will be used in Linear Equal Step Mode. If both properties are not provided,
++then the device will be used in Continuous Voltage Mode.
+ 
+ Any property defined as part of the core regulator binding can also be used.
+ (See: ../regulator/regulator.txt)
+@@ -66,3 +80,13 @@ Voltage Table Example:
+ 				<1036000 40>,
+ 				<1016000 50>;
+ 	};
++
++Linear Equal Step Mode Example:
++	pwm-regulator@1 {
++		compatible = "pwm-regulator";
++		pwms = <&pwm 1 4880>;
++		regulator-name = "vdd-gpu";
++		regulator-min-microvolt = <710000>;
++		regulator-max-microvolt = <1320000>;
++		regulator-n-voltages = <62>;
++	};
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
