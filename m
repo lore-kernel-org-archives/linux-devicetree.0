@@ -1,97 +1,313 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: Re: [PATCH v2 0/4] leds: Add driver for the ISSI IS31FL32xx family
- of LED controllers
-Date: Tue, 8 Mar 2016 10:21:55 -0500
-Message-ID: <20160308102155.7ae1f777.drivshin.allworx@gmail.com>
-References: <1457398636-6485-1-git-send-email-drivshin.allworx@gmail.com>
-	<56DE9EC7.9020600@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <56DE9EC7.9020600@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH 1/2] vfio, platform: add support for ACPI while detecting the reset driver
+Date: Tue,  8 Mar 2016 10:33:22 -0500
+Message-ID: <1457451209-21462-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Dan Carpenter <dan.carpenter@oracle.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 08 Mar 2016 10:43:35 +0100
-Jacek Anaszewski <j.anaszewski@samsung.com> wrote:
+The code is using the compatible DT string to associate a reset driver with
+the actual device itself. The compatible string does not exist on ACPI
+based systems. HID is the unique identifier for a device driver instead.
+The change allows a driver to register with DT compatible string or ACPI
+HID and then match the object with one of these conditions.
 
-> Hi David,
-> 
-> Thanks for posting the final version. Very nice driver.
-> Applied whole series, after dropping leds-sn3218 with its
-> DT bindings. Stefan, thanks for testing the driver on the
-> Si-En hardware.
+Rules for loading the reset driver are as follow:
+- ACPI HID needs match for ACPI systems
+- DT compat needs to match for OF systems
 
-Thanks Jacek. And thanks also for your patience with all my 
-questions along the way.
+Tested-by: Eric Auger <eric.auger@linaro.org> (device tree only)
+Tested-by: Shanker Donthineni <shankerd@codeaurora.org> (ACPI only)
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   4 +-
+ .../platform/reset/vfio_platform_calxedaxgmac.c    |   4 +-
+ drivers/vfio/platform/vfio_platform_common.c       | 112 +++++++++++++++++----
+ drivers/vfio/platform/vfio_platform_private.h      |  43 ++++----
+ 4 files changed, 125 insertions(+), 38 deletions(-)
 
-> 
-> Thanks,
-> Jacek Anaszewski
-> 
-> On 03/08/2016 01:57 AM, David Rivshin (Allworx) wrote:
-> > From: David Rivshin <drivshin@allworx.com>
-> >
-> > This series adds support for the ISSI IS31FL32xx family of I2C LED
-> > controllers. Since the IS31FL3218/3216 are actually the same devices as
-> > the SN3218/3216, adds their compatible strings as aliases.
-> >
-> > As requested, this series is based on the current linux-leds/for-next, minus
-> > patch 2 and 3 of the standalone sn3218 driver. As such, it will not directly
-> > apply to the current linux-next without minor merges in the leds Kconfig
-> > and Makefile. This will apply cleanly to v4.5-rc7, albeit with a compiler
-> > warning in patch 3 (which is fixed elsewhere in linux-next).
-> >
-> > Changes from v1 [1]:
-> >   - swapped node name and label in binding example
-> >   - removed line stating filename from file header comment of is31fl32xx.c
-> >   - dropped #includes for err.h and of_platform.h
-> >   - added #includes for device.h, of.h, and of_device.h
-> >   - patch 4 no longer removes leds-sn3218, as that will be done separately
-> >   - patch 4 commit log no longer references leds-sn3218 driver
-> >   - added Rob's acks for patches 1, 2, and 4
-> >   - added Tested-By from Stefan (for SN3218)
-> >
-> > Changes from RFC [2]:
-> >   - Removed max-brightness DT property.
-> >   - Added #address-cells and #size-cells properties to the example DT.
-> >   - Refer to these devices as "LED controllers" in Kconfig.
-> >   - Removed redundant last sentence from Kconfig entry
-> >   - Removed unnecessary debug code.
-> >   - Do not set led_classdev.brightness to 0 explicitly, as it is
-> >     already initialized to 0 by devm_kzalloc().
-> >   - Used of_property_read_string() instead of of_get_property().
-> >   - Fail immediately on DT parsing error in a child node, rather than
-> >     continuing on with the non-faulty ones.
-> >   - Added additional comments for some things that might be non-obvious.
-> >   - Added constants for the location of the SSD bit in the SHUTDOWN
-> >     register, and the 3216's CONFIG register.
-> >   - Added special sw_shutdown_func for the 3216 device, as that bit
-> >     is in a different register, at a different position, and has reverse
-> >     polarity compared to all the other devices.
-> >   - Refactored is31fl32xx_init_regs() to separate out some logic into
-> >     is31fl32xx_reset_regs() and is31fl32xx_software_shutdown().
-> >   - Added 4th patch to replace the now-redundant leds-sn3218.
-> >
-> > [1] https://lkml.org/lkml/2016/3/2/1004
-> > [2] http://www.spinics.net/lists/linux-leds/msg05564.html
-> >
-> > David Rivshin (4):
-> >    DT: Add vendor prefix for Integrated Silicon Solutions Inc.
-> >    DT: leds: Add binding for the ISSI IS31FL32xx family of LED
-> >      controllers
-> >    leds: Add driver for the ISSI IS31FL32xx family of LED controllers
-> >    leds: Add SN3218 and SN3216 support to the IS31FL32XX driver
-> >
-> >   .../devicetree/bindings/leds/leds-is31fl32xx.txt   |  52 +++
-> >   .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-> >   drivers/leds/Kconfig                               |   8 +
-> >   drivers/leds/Makefile                              |   1 +
-> >   drivers/leds/leds-is31fl32xx.c                     | 508 +++++++++++++++++++++
-> >   5 files changed, 570 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-> >   create mode 100644 drivers/leds/leds-is31fl32xx.c
-> >  
+diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+index d4030d0..170dcf5 100644
+--- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
++++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+@@ -119,7 +119,9 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+ 	return 0;
+ }
+ 
+-module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
++module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
++			  vfio_platform_amdxgbe_reset);
++VFIO_PLATFORM_MODULE_ALIAS("amd,xgbe-seattle-v1a");
+ 
+ MODULE_VERSION("0.1");
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+index e3d3d94..635c6e0 100644
+--- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
++++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+@@ -77,7 +77,9 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
+ 	return 0;
+ }
+ 
+-module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
++module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
++			  vfio_platform_calxedaxgmac_reset);
++VFIO_PLATFORM_MODULE_ALIAS("calxeda,hb-xgmac");
+ 
+ MODULE_VERSION(DRIVER_VERSION);
+ MODULE_LICENSE("GPL v2");
+diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+index 418cdd9..c758e72 100644
+--- a/drivers/vfio/platform/vfio_platform_common.c
++++ b/drivers/vfio/platform/vfio_platform_common.c
+@@ -13,6 +13,7 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/acpi.h>
+ #include <linux/iommu.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+@@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
+ static DEFINE_MUTEX(driver_lock);
+ 
+ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+-					struct module **module)
++				  const char *acpihid, struct module **module)
+ {
+ 	struct vfio_platform_reset_node *iter;
+ 	vfio_platform_reset_fn_t reset_fn = NULL;
+ 
+ 	mutex_lock(&driver_lock);
+ 	list_for_each_entry(iter, &reset_list, link) {
+-		if (!strcmp(iter->compat, compat) &&
++		if (acpihid && iter->acpihid &&
++		    !strcmp(iter->acpihid, acpihid) &&
++			try_module_get(iter->owner)) {
++			*module = iter->owner;
++			reset_fn = iter->reset;
++			break;
++		}
++		if (compat && iter->compat &&
++		    !strcmp(iter->compat, compat) &&
+ 			try_module_get(iter->owner)) {
+ 			*module = iter->owner;
+ 			reset_fn = iter->reset;
+@@ -49,15 +58,30 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+ 	return reset_fn;
+ }
+ 
+-static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
++static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+ {
+-	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+-						&vdev->reset_module);
+-	if (!vdev->reset) {
+-		request_module("vfio-reset:%s", vdev->compat);
+-		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+-							 &vdev->reset_module);
+-	}
++	int rc = 0;
++
++	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
++						 &vdev->reset_module);
++	if (vdev->reset)
++		return 0;
++
++	if (vdev->acpihid)
++		rc = request_module("vfio-reset:%s", vdev->acpihid);
++
++	if (rc && vdev->compat)
++		rc = request_module("vfio-reset:%s", vdev->compat);
++
++	if (rc)
++		return rc;
++
++	vdev->reset = vfio_platform_lookup_reset(vdev->compat, vdev->acpihid,
++						 &vdev->reset_module);
++	if (vdev->reset)
++		return 0;
++
++	return -ENODEV;
+ }
+ 
+ static void vfio_platform_put_reset(struct vfio_platform_device *vdev)
+@@ -541,6 +565,46 @@ static const struct vfio_device_ops vfio_platform_ops = {
+ 	.mmap		= vfio_platform_mmap,
+ };
+ 
++#ifdef CONFIG_ACPI
++int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
++			     struct device *dev)
++{
++	struct acpi_device* adev = ACPI_COMPANION(dev);
++
++	if (!adev)
++		return -ENODEV;
++
++	vdev->acpihid = acpi_device_hid(adev);
++	if (!vdev->acpihid) {
++		pr_err("VFIO: cannot find ACPI HID for %s\n",
++		       vdev->name);
++		return -ENODEV;
++	}
++	return 0;
++}
++#else
++int vfio_platform_probe_acpi(struct vfio_platform_device *vdev,
++			     struct device *dev)
++{
++	return -EINVAL;
++}
++#endif
++
++int vfio_platform_probe_of(struct vfio_platform_device *vdev,
++			   struct device *dev)
++{
++	int ret;
++
++	ret = device_property_read_string(dev, "compatible",
++					  &vdev->compat);
++	if (ret) {
++		pr_err("VFIO: cannot retrieve compat for %s\n",
++			vdev->name);
++		return ret;
++	}
++	return 0;
++}
++
+ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 			       struct device *dev)
+ {
+@@ -550,14 +614,14 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 	if (!vdev)
+ 		return -EINVAL;
+ 
+-	ret = device_property_read_string(dev, "compatible", &vdev->compat);
+-	if (ret) {
+-		pr_err("VFIO: cannot retrieve compat for %s\n", vdev->name);
+-		return -EINVAL;
+-	}
++	ret = vfio_platform_probe_acpi(vdev, dev);
++	if (ret)
++		ret = vfio_platform_probe_of(vdev, dev);
+ 
+-	vdev->device = dev;
++	if (ret)
++		return ret;
+ 
++	vdev->device = dev;
+ 	group = iommu_group_get(dev);
+ 	if (!group) {
+ 		pr_err("VFIO: No IOMMU group for device %s\n", vdev->name);
+@@ -570,7 +634,11 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 		return ret;
+ 	}
+ 
+-	vfio_platform_get_reset(vdev);
++	ret = vfio_platform_get_reset(vdev);
++	if (ret) {
++		iommu_group_put(group);
++		return ret;
++	}
+ 
+ 	mutex_init(&vdev->igate);
+ 
+@@ -602,13 +670,21 @@ void __vfio_platform_register_reset(struct vfio_platform_reset_node *node)
+ EXPORT_SYMBOL_GPL(__vfio_platform_register_reset);
+ 
+ void vfio_platform_unregister_reset(const char *compat,
++				    const char *acpihid,
+ 				    vfio_platform_reset_fn_t fn)
+ {
+ 	struct vfio_platform_reset_node *iter, *temp;
+ 
+ 	mutex_lock(&driver_lock);
+ 	list_for_each_entry_safe(iter, temp, &reset_list, link) {
+-		if (!strcmp(iter->compat, compat) && (iter->reset == fn)) {
++		if (acpihid && iter->acpihid &&
++		    !strcmp(iter->acpihid, acpihid) && (iter->reset == fn)) {
++			list_del(&iter->link);
++			break;
++		}
++
++		if (compat && iter->compat &&
++		    !strcmp(iter->compat, compat) && (iter->reset == fn)) {
+ 			list_del(&iter->link);
+ 			break;
+ 		}
+diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+index 42816dd..20787f7 100644
+--- a/drivers/vfio/platform/vfio_platform_private.h
++++ b/drivers/vfio/platform/vfio_platform_private.h
+@@ -58,6 +58,7 @@ struct vfio_platform_device {
+ 	struct mutex			igate;
+ 	struct module			*parent_module;
+ 	const char			*compat;
++	const char			*acpihid;
+ 	struct module			*reset_module;
+ 	struct device			*device;
+ 
+@@ -79,6 +80,7 @@ typedef int (*vfio_platform_reset_fn_t)(struct vfio_platform_device *vdev);
+ struct vfio_platform_reset_node {
+ 	struct list_head link;
+ 	char *compat;
++	char *acpihid;
+ 	struct module *owner;
+ 	vfio_platform_reset_fn_t reset;
+ };
+@@ -98,27 +100,32 @@ extern int vfio_platform_set_irqs_ioctl(struct vfio_platform_device *vdev,
+ 
+ extern void __vfio_platform_register_reset(struct vfio_platform_reset_node *n);
+ extern void vfio_platform_unregister_reset(const char *compat,
++					   const char *acpihid,
+ 					   vfio_platform_reset_fn_t fn);
+-#define vfio_platform_register_reset(__compat, __reset)		\
+-static struct vfio_platform_reset_node __reset ## _node = {	\
+-	.owner = THIS_MODULE,					\
+-	.compat = __compat,					\
+-	.reset = __reset,					\
+-};								\
++
++#define vfio_platform_register_reset(__compat, __acpihid, __reset)	\
++static struct vfio_platform_reset_node __reset ## _node = {		\
++	.owner = THIS_MODULE,						\
++	.compat = __compat,						\
++	.acpihid = __acpihid,						\
++	.reset = __reset,						\
++};									\
+ __vfio_platform_register_reset(&__reset ## _node)
+ 
+-#define module_vfio_reset_handler(compat, reset)		\
+-MODULE_ALIAS("vfio-reset:" compat);				\
+-static int __init reset ## _module_init(void)			\
+-{								\
+-	vfio_platform_register_reset(compat, reset);		\
+-	return 0;						\
+-};								\
+-static void __exit reset ## _module_exit(void)			\
+-{								\
+-	vfio_platform_unregister_reset(compat, reset);		\
+-};								\
+-module_init(reset ## _module_init);				\
++#define VFIO_PLATFORM_MODULE_ALIAS(name)				\
++	MODULE_ALIAS("vfio-reset:" name)
++
++#define module_vfio_reset_handler(compat, acpihid, reset)		\
++static int __init reset ## _module_init(void)				\
++{									\
++	vfio_platform_register_reset(compat, acpihid, reset);		\
++	return 0;							\
++};									\
++static void __exit reset ## _module_exit(void)				\
++{									\
++	vfio_platform_unregister_reset(compat, acpihid, reset);		\
++};									\
++module_init(reset ## _module_init);					\
+ module_exit(reset ## _module_exit)
+ 
+ #endif /* VFIO_PLATFORM_PRIVATE_H */
+-- 
+1.8.2.1
