@@ -1,72 +1,80 @@
 From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH 1/5] gpio: of: Scan available child node for gpio-hog
-Date: Tue, 8 Mar 2016 15:18:46 +0100
-Message-ID: <20160308141844.GA9864@ulmo.nvidia.com>
+Subject: Re: [PATCH 2/5] gpio: gpiolib: Print error number if gpio hog failed
+Date: Tue, 8 Mar 2016 15:22:19 +0100
+Message-ID: <20160308142217.GB9864@ulmo.nvidia.com>
 References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
- <1457438528-29054-2-git-send-email-ldewangan@nvidia.com>
+ <1457438528-29054-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1457438528-29054-2-git-send-email-ldewangan@nvidia.com>
+	protocol="application/pgp-signature"; boundary="pvezYHf7grwyp3Bc"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457438528-29054-3-git-send-email-ldewangan@nvidia.com>
 Content-Disposition: inline
-Sender: linux-gpio-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
---UugvWAfsgieZRqgk
+--pvezYHf7grwyp3Bc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 08, 2016 at 05:32:04PM +0530, Laxman Dewangan wrote:
-> Look for child node which are available when iterating for
-> gpio hog node for request/set GPIO initial configuration
-> during OF gpio chip registration.
->=20
+On Tue, Mar 08, 2016 at 05:32:05PM +0530, Laxman Dewangan wrote:
+> Print the error number of GPIO hog failed during
+> its configurations. This helps in identifying the
+> failure without instrumenting the code.
+
+Please use up all 72 characters per line at your disposal. Excessively
+short lines are hard to read.
+
 > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 > ---
->  drivers/gpio/gpiolib-of.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/gpio/gpiolib.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-> index 42a4bb7..f2ba1a4 100644
-> --- a/drivers/gpio/gpiolib-of.c
-> +++ b/drivers/gpio/gpiolib-of.c
-> @@ -210,7 +210,7 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *=
-chip)
->  	enum gpio_lookup_flags lflags;
->  	enum gpiod_flags dflags;
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index bc788b9..7575ebb 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2621,15 +2621,16 @@ int gpiod_hog(struct gpio_desc *desc, const char =
+*name,
 > =20
-> -	for_each_child_of_node(chip->of_node, np) {
-> +	for_each_available_child_of_node(chip->of_node, np) {
->  		if (!of_property_read_bool(np, "gpio-hog"))
->  			continue;
+>  	local_desc =3D gpiochip_request_own_desc(chip, hwnum, name);
+>  	if (IS_ERR(local_desc)) {
+> -		pr_err("requesting hog GPIO %s (chip %s, offset %d) failed\n",
+> -		       name, chip->label, hwnum);
+> +		status =3D PTR_ERR(local_desc);
+> +		pr_err("requesting hog GPIO %s, chip %s, offset %d failed %d\n",
+> +		       name, chip->label, hwnum, status);
 
-Makes sense:
+I find this type of format hard to read. I prefer a semi-colon to
+separate the message from the failure reason (i.e. error code).
 
-Reviewed-by: Thierry Reding <treding@nvidia.com>
+Besides that I don't understand why you're dropping the parentheses
+around the "chip %s, offset %d", I found that easier on the eye.
 
---UugvWAfsgieZRqgk
+Thierry
+
+--pvezYHf7grwyp3Bc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAABCAAGBQJW3t9AAAoJEN0jrNd/PrOhHdcP/RqazKFP5mEi7MugNVJ9yeEK
-wMlBvSFwt2RGuXrOEO2Tf8nygYit+1lWd3knz/6JXjRTWDVed2fDLEg2f1lit5Nu
-v2jOdcMxepCiVg95jKIzqZ/lSFI4vO+fgAlxE7Wov4Nyxl1+cYyUnty8OopqRlyE
-+X3S2+KKjckawLsDO3ADbs5jIK8YeI4DnRMltnYnU2KEDxoL8dtLVxCECeS0AnEk
-fQRwDye1wXLBXGcD0mcYOgTb98otGQtQ14eBVhvujahqg6WcAj31nMFzNvFHXxHL
-J4JxFxhCPkIZ84Zs8Yi7X0dVRM5ANHMbNNTC7PLRB8aS97NYQhKEkxjiHbCQAB4G
-zb6rAaXvLRBz7WPkHwIj39vfu6akrgwcg6tlRDzq78imqZAByv38l7rhq8eh4fXt
-pb7zm8TgEQnxHB/oqZ7LwEhL5P74sWN4lkQNjzRe33mq4IKzZtINzOUDvBD2zOim
-B0xMnarsBsFyPxbaHTKGnVZY1GYQT+UXUml/IwmZMiYlocHk5iKkqWwCwW/bHr+A
-9KcZcaeInzhZUmXHVkNXSuRC4BX3L7JtRgE+xq2uCwXCva9s5GetSNcOZ3zvmi+Y
-jYjBrr1ehk4bq9JuhOnk48cK5UKhoDZexcNlZaTUmUDE8Eq/Hz58dMIBMX42uE3W
-rWddoksqnKsYlBDIMztK
-=vOkY
+iQIcBAABCAAGBQJW3uAZAAoJEN0jrNd/PrOhorMP/AvzHbguLnY8zJMCCIG3EgS+
+CSmh61z3s2edTuHGG2xrZnUV2Iz6+7Mv+GIjGVpqS26tcpVUxPRRIW2FGE7zBcwh
+DdT0l2S9HGESXl2EUl1jeOFBYjGkTbnXRqWnAsHGQMsczJICQw2/F76UGrFyh86l
+jnuEYK3wQVSMAvy10SfyRNIlQqKIW+3HC3310ER7msXQcWsfHDq5yoGst844BqkA
+TOZU6uR1VmA2CjSqNXrmmkLEnpbeRIBeHzstRcYMEKWE+neE7DqN12ipWXYRhA65
+GVH8yyhNbfeuoMGDkbOfQ+mYwwKdmO3eUhY9hjiPIvzQMVLxHDp8Tvl5dyFE9PqJ
+IJgodSZzhYeXTJSsWdUy0vRBLbTVcuEx7Zh4CO2TGdphFxf/fNW5LnFEkRmKRBpG
+DVlKFziGVvh2bu34i9w7FMZ5G9BGgmCY2yWlE4jKHi4ON6y2C8okrxvwCvBXym2Q
+2JvNmkvzScuy9VmMzh2BmArWGXLLpPlNfpOcXf0xE2pyMym73mE7/MoybR5j9bFv
+fNs3e9B/tf3rr5RKECEEfk2+YOKXNQx+BFw9fKw5kgio0/GfHLdo/yE3mqCrE/pp
+LJrMvIK0zHyH5dHgoO+8DORPtb+VUXHqT6tBFKMh5T32ipgKzd8ELMp1gUm11eAJ
+OSFQr6YVkzz5ccRCObvT
+=1SCZ
 -----END PGP SIGNATURE-----
 
---UugvWAfsgieZRqgk--
+--pvezYHf7grwyp3Bc--
