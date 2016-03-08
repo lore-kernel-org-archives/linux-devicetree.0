@@ -1,39 +1,33 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 0/3] driver for the hardware monitoring chip in the
- Zyxel NSA320
-Date: Tue, 8 Mar 2016 03:55:06 -0800
-Message-ID: <20160308115506.GA25899@roeck-us.net>
-References: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 0/5] gpio: of: Add error handling and support for multiple gpio in gpio-hog
+Date: Tue, 8 Mar 2016 17:32:03 +0530
+Message-ID: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adam Baker <linux@baker-net.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jean Delvare <jdelvare@suse.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, carl.wolfgang@googlemail.com, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org, robh+dt@kernel.org
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 05, 2016 at 03:34:54PM +0000, Adam Baker wrote:
->  Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt |  21 +++++
->  Documentation/hwmon/nsa320                             |  53 +++++++++++
->  arch/arm/boot/dts/kirkwood-nsa320.dts                  |  13 ++-
->  drivers/hwmon/Kconfig                                  |  15 +++
->  drivers/hwmon/Makefile                                 |   1 +
->  drivers/hwmon/nsa320-hwmon.c                           | 216 ++++++++++++++++++++++++++++++++++++++++++++
->  6 files changed, 317 insertions(+), 2 deletions(-)
-> 
-Patch 1/3 and 2/3 applied to hwmon-next.
+This series enhance the error print by adding error number in print message,
+handle the error if gpio_hogd() fails and returns error to caller, and
+add the support of multiple GPIOs to be passed from property "gpios" under
+gpio hogd node.
 
-I assume that patch 3/3 will go through the arm tree.
+Laxman Dewangan (5):
+  gpio: of: Scan available child node for gpio-hog
+  gpio: gpiolib: Print error number if gpio hog failed
+  gpio: of: Return error if gpio hog configuration failed
+  gpio: of: Add support to have multiple gpios in gpio-hog
+  gpio: DT: Rephrase property "gpios" of hog node to support multiple
+    gpios
 
-Guenter
+ Documentation/devicetree/bindings/gpio/gpio.txt |  6 +-
+ drivers/gpio/gpiolib-of.c                       | 73 +++++++++++++++++++------
+ drivers/gpio/gpiolib.c                          |  9 +--
+ 3 files changed, 63 insertions(+), 25 deletions(-)
+
+-- 
+2.1.4
+
