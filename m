@@ -1,30 +1,72 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/7] mtd: provide helper to prepare buffers for DMA
- operations
-Date: Tue, 8 Mar 2016 19:48:53 +0530
-Message-ID: <20160308141853.GQ11154@localhost>
-References: <1457435715-24740-1-git-send-email-boris.brezillon@free-electrons.com>
- <1457435715-24740-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH 1/5] gpio: of: Scan available child node for gpio-hog
+Date: Tue, 8 Mar 2016 15:18:46 +0100
+Message-ID: <20160308141844.GA9864@ulmo.nvidia.com>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
+ <1457438528-29054-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1457438528-29054-2-git-send-email-ldewangan@nvidia.com>
 Content-Disposition: inline
-In-Reply-To: <1457435715-24740-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TZUIDd8j+nm9g@public.gmane.org
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 08, 2016 at 12:15:13PM +0100, Boris Brezillon wrote:
->  
-> +#ifdef CONFIG_HAS_DMA
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shouldn't this be CONFIG_DMA_ENGINE as you are preparing these descriptors
-for DMA transfer?
+On Tue, Mar 08, 2016 at 05:32:04PM +0530, Laxman Dewangan wrote:
+> Look for child node which are available when iterating for
+> gpio hog node for request/set GPIO initial configuration
+> during OF gpio chip registration.
+>=20
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> ---
+>  drivers/gpio/gpiolib-of.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+> index 42a4bb7..f2ba1a4 100644
+> --- a/drivers/gpio/gpiolib-of.c
+> +++ b/drivers/gpio/gpiolib-of.c
+> @@ -210,7 +210,7 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *=
+chip)
+>  	enum gpio_lookup_flags lflags;
+>  	enum gpiod_flags dflags;
+> =20
+> -	for_each_child_of_node(chip->of_node, np) {
+> +	for_each_available_child_of_node(chip->of_node, np) {
+>  		if (!of_property_read_bool(np, "gpio-hog"))
+>  			continue;
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Makes sense:
+
+Reviewed-by: Thierry Reding <treding@nvidia.com>
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJW3t9AAAoJEN0jrNd/PrOhHdcP/RqazKFP5mEi7MugNVJ9yeEK
+wMlBvSFwt2RGuXrOEO2Tf8nygYit+1lWd3knz/6JXjRTWDVed2fDLEg2f1lit5Nu
+v2jOdcMxepCiVg95jKIzqZ/lSFI4vO+fgAlxE7Wov4Nyxl1+cYyUnty8OopqRlyE
++X3S2+KKjckawLsDO3ADbs5jIK8YeI4DnRMltnYnU2KEDxoL8dtLVxCECeS0AnEk
+fQRwDye1wXLBXGcD0mcYOgTb98otGQtQ14eBVhvujahqg6WcAj31nMFzNvFHXxHL
+J4JxFxhCPkIZ84Zs8Yi7X0dVRM5ANHMbNNTC7PLRB8aS97NYQhKEkxjiHbCQAB4G
+zb6rAaXvLRBz7WPkHwIj39vfu6akrgwcg6tlRDzq78imqZAByv38l7rhq8eh4fXt
+pb7zm8TgEQnxHB/oqZ7LwEhL5P74sWN4lkQNjzRe33mq4IKzZtINzOUDvBD2zOim
+B0xMnarsBsFyPxbaHTKGnVZY1GYQT+UXUml/IwmZMiYlocHk5iKkqWwCwW/bHr+A
+9KcZcaeInzhZUmXHVkNXSuRC4BX3L7JtRgE+xq2uCwXCva9s5GetSNcOZ3zvmi+Y
+jYjBrr1ehk4bq9JuhOnk48cK5UKhoDZexcNlZaTUmUDE8Eq/Hz58dMIBMX42uE3W
+rWddoksqnKsYlBDIMztK
+=vOkY
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
