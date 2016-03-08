@@ -1,49 +1,29 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 0/3] thermal: exynos: Fixes for vtmu-supply regulator
- handling
-Date: Tue, 8 Mar 2016 10:30:33 -0300
-Message-ID: <56DED3F9.8050505@osg.samsung.com>
-References: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
+From: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 2/4] mmc: sdhci-of-arasan: remove disable clk_ahb from
+ sdhci_arasan_resume
+Date: Tue, 8 Mar 2016 15:50:20 +0200
+Message-ID: <56DED89C.5070301@intel.com>
+References: <1457365099-23248-1-git-send-email-shawn.lin@rock-chips.com>
+ <1457365136-23332-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1455819551-4666-1-git-send-email-javier@osg.samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-pm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Zhang Rui <rui.zhang@intel.com>, Mark Rutland <mark.rutland@arm.com>, Eduardo Valentin <edubezval@gmail.com>, Lukasz Majewski <l.majewski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457365136-23332-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Lukasz, Eduardo,
+On 07/03/16 17:38, Shawn Lin wrote:
+> We don't really need disable clk_ahb when failing to resume. Otherwise
+> we may take risk of bus error for accessing register without clk_ahb.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-On 02/18/2016 03:19 PM, Javier Martinez Canillas wrote:
-> Hello,
-> 
-> On a recent patch series to build a PMIC chip as a module [0], Krzysztof
-> asked me to check if all the consumer drivers, using the resources that
-> this PMIC provides, already support probe deferral.
-> 
-> While investigating that, I noticed that the Exynos TMU didn't do it so
-> this series fix that bug and other two minor issues that I noticed while
-> reviewing the driver and its DT binding.
-> 
-> The series are on top of Krzysztof's patches [1,2,3] not because there's
-> a dependency but to avoid merge conflicts with in-flight patches. Please
-> let me know if you prefer to use a different base instead.
-> 
-> [0]: https://lkml.org/lkml/2016/2/11/857
-> [1]: https://patchwork.kernel.org/patch/8345791/
-> [2]: https://patchwork.kernel.org/patch/8345741/
-> [3]: https://patchwork.kernel.org/patch/8345701/
-> 
-> Best regards,
-> Javier
-> 
+Acked-by: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 
-Any comments about this series?
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
