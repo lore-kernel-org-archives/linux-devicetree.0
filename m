@@ -1,46 +1,83 @@
-From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: dra7: Enable Errata i877
-Date: Mon, 7 Mar 2016 23:56:05 +0000 (UTC)
-Message-ID: <alpine.DEB.2.02.1603072355030.27387@utopia.booyaka.com>
-References: <1456994525-20573-1-git-send-email-lokeshvutla@ti.com> <alpine.DEB.2.02.1603070938170.3437@utopia.booyaka.com> <56DD4C70.7070105@ti.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [RFC PATCH] firmware: qemu_fw_cfg.c: hold ACPI global lock
+ during device access
+Date: Mon, 7 Mar 2016 16:02:15 -0800
+Message-ID: <20160308000215.GA11917@kroah.com>
+References: <20160307235543.GD2049@HEDWIG.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56DD4C70.7070105-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>
-Cc: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160307235543.GD2049-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Mar 2016, Lokesh Vutla wrote:
+On Mon, Mar 07, 2016 at 06:55:43PM -0500, Gabriel Somlo wrote:
+> Allowing for the future possibility of implementing AML-based
+> (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> acquire the global ACPI lock when accessing the device on behalf
+> of the guest-side sysfs driver, to prevent any potential race
+> conditions.
+> 
+> Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+> ---
+> 
+> Turns out, there *is* a way to acquire a global ACPI lock from within
+> a "random" kernel driver after all. Luckily I have a healthy dose of
+> respect for Michael's opinions :) so I kept circling back through
+> existing kernel sources for an example I can use, and I think this
+> might be it.
+> 
+> I'm posting as RFC because I'm not really confident about assessing
+> the likelihood of there ever being a race condition between the kernel
+> fw_cfg sysfs driver and firmware on my own. Obviously Michael has
+> concerns about it, but any additional opinions from the QEMU camp would
+> be much appreciated.
+> 
+> Thanks again,
+>  --Gabriel
+> 
+>  drivers/firmware/qemu_fw_cfg.c | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> index 7bba76c..cc4c27a 100644
+> --- a/drivers/firmware/qemu_fw_cfg.c
+> +++ b/drivers/firmware/qemu_fw_cfg.c
+> @@ -77,12 +77,26 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+>  static inline void fw_cfg_read_blob(u16 key,
+>  				    void *buf, loff_t pos, size_t count)
+>  {
+> +#ifdef CONFIG_ACPI
+> +	u32 glk;
+> +	int status;
+> +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
 
-> On Monday 07 March 2016 03:09 PM, Paul Walmsley wrote:
-> > On Thu, 3 Mar 2016, Lokesh Vutla wrote:
-> > 
-> >> This series enables Errata i877 for all DRA7 platforms. The public errata
-> >> documentation can be found here[1].
-> >>
-> >> [1] http://www.ti.com/lit/er/sprz429h/sprz429h.pdf
-> >>
-> >> Lokesh Vutla (1):
-> >>   ARM: OMAP2+: hwmod: Introduce ti,no-idle dt property
-> >>
-> >> Mugunthan V N (1):
-> >>   ARM: dts: dra7: do not gate cpsw clock due to errata i877
-> > 
-> > I've sent these for merging immediately. 
-> > 
-> > Have you sent patches for U-boot yet?
-> Yes, It is already merged into u-boot.
-> http://git.denx.de/?p=u-boot.git;a=commitdiff;h=f986d9720836433ded29f06c8f5aed462bd20924;hp=65e9d56fb9ce9cfd7ffff7afaa6b7de50e400e06
-
-I may be misreading this patch, but all it seems to do is add clock 
-control for GMAC.  It doesn't seem to force the clock to stay on.  What am 
-I missing?
+Why not fix up the ACPI api to not require #ifdef here?  It should be
+added to a .h file somewhere instead.
 
 
-- Paul
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	if (ACPI_FAILURE(status)) {
+> +		/* Should never get here */
+> +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
+> +		memset(buf, 0, count);
+> +		return;
+> +	}
+> +#endif
+>  	mutex_lock(&fw_cfg_dev_lock);
+>  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
+>  	while (pos-- > 0)
+>  		ioread8(fw_cfg_reg_data);
+>  	ioread8_rep(fw_cfg_reg_data, buf, count);
+>  	mutex_unlock(&fw_cfg_dev_lock);
+> +#ifdef CONFIG_ACPI
+> +	acpi_release_global_lock(glk);
+
+Same here.
+
+thanks,
+
+greg k-h
