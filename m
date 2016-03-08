@@ -1,147 +1,90 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH 4/5] gpio: of: Add support to have multiple gpios in gpio-hog
-Date: Tue, 8 Mar 2016 17:32:07 +0530
-Message-ID: <1457438528-29054-5-git-send-email-ldewangan@nvidia.com>
-References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 0/4] add reboot mode driver
+Date: Tue,  8 Mar 2016 20:21:56 +0800
+Message-ID: <1457439716-8084-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jwerner-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The child node for gpio hogs under gpio controller's node
-provide the mechanism to automatic GPIO request and
-configuration as part of the gpio-controller's driver
-probe function.
 
-Currently, property "gpio" takes one gpios for such
-configuration. Add support to have multiple GPIOs in
-this property so that multiple GPIOs of gpio-controller
-can be configured by this mechanism with one child node.
+This driver parse the reboot commands like "reboot loader"
+and "reboot recovery" to get a boot mode described in the
+device tree , then call the corresponding  write interfae
+to store the boot mode in some place like special register
+or ram , which can be read by the bootloader after system
+reboot.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Benoit Parrot <bparrot@ti.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>
----
- drivers/gpio/gpiolib-of.c | 64 ++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 49 insertions(+), 15 deletions(-)
+This is commonly done on Android based devices, in order to
+reboot the device into fastboot or recovery mode.
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index d81dbd8..0e4e8fd 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -118,6 +118,21 @@ int of_get_named_gpio_flags(struct device_node *np, const char *list_name,
- }
- EXPORT_SYMBOL(of_get_named_gpio_flags);
- 
-+static int of_gpio_get_gpio_cells_size(struct device_node *chip_np)
-+{
-+	u32 ncells;
-+	int ret;
-+
-+	ret = of_property_read_u32(chip_np, "#gpio-cells", &ncells);
-+	if (ret)
-+		return ret;
-+
-+	if (ncells > MAX_PHANDLE_ARGS)
-+		return -EINVAL;
-+
-+	return ncells;
-+}
-+
- /**
-  * of_parse_own_gpio() - Get a GPIO hog descriptor, names and flags for GPIO API
-  * @np:		device node to get GPIO from
-@@ -131,6 +146,7 @@ EXPORT_SYMBOL(of_get_named_gpio_flags);
-  */
- static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 					   const char **name,
-+					   int gpio_index,
- 					   enum gpio_lookup_flags *lflags,
- 					   enum gpiod_flags *dflags)
- {
-@@ -139,8 +155,8 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 	struct gg_data gg_data = {
- 		.flags = &xlate_flags,
- 	};
--	u32 tmp;
--	int i, ret;
-+	int ncells;
-+	int i, start_index, ret;
- 
- 	chip_np = np->parent;
- 	if (!chip_np)
-@@ -150,17 +166,16 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 	*lflags = 0;
- 	*dflags = 0;
- 
--	ret = of_property_read_u32(chip_np, "#gpio-cells", &tmp);
--	if (ret)
--		return ERR_PTR(ret);
-+	ncells = of_gpio_get_gpio_cells_size(chip_np);
-+	if (ncells < 0)
-+		return ERR_PTR(ncells);
- 
--	if (tmp > MAX_PHANDLE_ARGS)
--		return ERR_PTR(-EINVAL);
-+	start_index = ncells * gpio_index;
- 
--	gg_data.gpiospec.args_count = tmp;
-+	gg_data.gpiospec.args_count = ncells;
- 	gg_data.gpiospec.np = chip_np;
--	for (i = 0; i < tmp; i++) {
--		ret = of_property_read_u32_index(np, "gpios", i,
-+	for (i = 0; i < ncells; i++) {
-+		ret = of_property_read_u32_index(np, "gpios", start_index + i,
- 					   &gg_data.gpiospec.args[i]);
- 		if (ret)
- 			return ERR_PTR(ret);
-@@ -211,18 +226,37 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 	enum gpio_lookup_flags lflags;
- 	enum gpiod_flags dflags;
- 	int ret;
-+	int i, ncells, ngpios;
-+
-+	ncells = of_gpio_get_gpio_cells_size(chip->of_node);
-+	if (ncells < 0)
-+		return 0;
- 
- 	for_each_available_child_of_node(chip->of_node, np) {
- 		if (!of_property_read_bool(np, "gpio-hog"))
- 			continue;
- 
--		desc = of_parse_own_gpio(np, &name, &lflags, &dflags);
--		if (IS_ERR(desc))
-+		ngpios = of_property_count_u32_elems(np, "gpios");
-+		if (ngpios < 0)
-+			continue;
-+
-+		if (ngpios % ncells) {
-+			dev_warn(chip->parent,
-+				"GPIOs entries are not proper in gpios\n");
- 			continue;
-+		}
-+
-+		ngpios /= ncells;
-+		for (i = 0; i < ngpios; i++) {
-+			desc = of_parse_own_gpio(np, &name, i,
-+						 &lflags, &dflags);
-+			if (IS_ERR(desc))
-+				continue;
- 
--		ret = gpiod_hog(desc, name, lflags, dflags);
--		if (ret < 0)
--			return ret;
-+			ret = gpiod_hog(desc, name, lflags, dflags);
-+			if (ret < 0)
-+				return ret;
-+		}
- 	}
- 
- 	return 0;
+
+Changes in v5:
+- delete a unnecessary blank line in syscon-reboot-mode.txt
+- rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
+- use two blank space under help in Kconfig
+- use unsigned int instead of int for member magic in struct mode_info
+
+Changes in v4:
+- remove mode-maskrom
+- rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
+- make this driver depends on OF to avoid kbuild test error
+
+Changes in v3:
+- descirbe all reboot mode as properity instead of subnode
+- scan multi properities
+- add mask value for some platform which only use some bits of the register
+  to store boot mode magic value
+- descirbe all reboot mode as property instead of subnode
+- add rk3036 support
+- descirbe all reboot mode as properity instead of subnode
+
+Changes in v2:
+- move to dir drivers/power/reset/
+- make syscon-reboot-mode a generic driver
+- make this node as a subnode of PMU
+- make this node as a subnode of pmugrf
+
+Changes in v1:
+- fix the embarrassed compile warning
+- correct the maskrom magic number
+- check for the normal reboot
+- correct the maskrom magic number
+- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
+
+Andy Yan (4):
+  dt-bindings: power: reset: add document for reboot-mode driver
+  power: reset: add reboot mode driver
+  ARM: dts: rockchip: add syscon-reboot-mode DT node
+  ARM64: dts: rockchip: add syscon-reboot-mode DT node
+
+ .../bindings/power/reset/reboot-mode.txt           |  24 +++++
+ .../bindings/power/reset/syscon-reboot-mode.txt    |  34 +++++++
+ arch/arm/boot/dts/rk3036.dtsi                      |  11 ++-
+ arch/arm/boot/dts/rk3288.dtsi                      |  10 ++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |  12 ++-
+ arch/arm64/boot/dts/rockchip/rk3368.dtsi           |  13 ++-
+ drivers/power/reset/Kconfig                        |  13 +++
+ drivers/power/reset/Makefile                       |   2 +
+ drivers/power/reset/reboot-mode.c                  | 106 +++++++++++++++++++++
+ drivers/power/reset/reboot-mode.h                  |   6 ++
+ drivers/power/reset/syscon-reboot-mode.c           |  65 +++++++++++++
+ include/dt-bindings/soc/rockchip_boot-mode.h       |  15 +++
+ 12 files changed, 308 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+ create mode 100644 drivers/power/reset/reboot-mode.c
+ create mode 100644 drivers/power/reset/reboot-mode.h
+ create mode 100644 drivers/power/reset/syscon-reboot-mode.c
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
+
 -- 
-2.1.4
+1.9.1
 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
