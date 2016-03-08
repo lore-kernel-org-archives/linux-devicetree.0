@@ -1,92 +1,72 @@
-From: "David Rivshin (Allworx)" <drivshin.allworx@gmail.com>
-Subject: [PATCH v2 2/4] DT: leds: Add binding for the ISSI IS31FL32xx family of LED controllers
-Date: Mon,  7 Mar 2016 19:57:14 -0500
-Message-ID: <1457398636-6485-3-git-send-email-drivshin.allworx@gmail.com>
-References: <1457398636-6485-1-git-send-email-drivshin.allworx@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457398636-6485-1-git-send-email-drivshin.allworx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <j.anaszewski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stefan Wahren <stefan.wahren@i2se.com>, linux-kernel@vger.kernel.org
+From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+Date: Tue, 8 Mar 2016 01:16:49 +0000
+Message-ID: <AM3PR04MB1185D8F20D8D2763DB909B3791B20@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
+	 <1456816183-22340-3-git-send-email-qiang.zhao@nxp.com>
+	 <20160305042536.GD13525@rob-hp-laptop>
+	 <AM3PR04MB11852B62A075A980A246D2D091B10@AM3PR04MB1185.eurprd04.prod.outlook.com>
+ <1457371686.5360.107.camel@buserror.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457371686.5360.107.camel-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: David Rivshin <drivshin@allworx.com>
-
-This adds a binding description for the is31fl3236/35/18/16 I2C LED
-controllers.
-
-Signed-off-by: David Rivshin <drivshin@allworx.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-
-Changes from v1:
- - swapped node name and label in example
- - added Rob's ack (given above fix) [1]
-
-Changes from RFC:
- - Removed max-brightness property.
- - Added #address-cells and #size-cells properties to the example.
-
-[1] https://lkml.org/lkml/2016/3/4/959
-
- .../devicetree/bindings/leds/leds-is31fl32xx.txt   | 49 ++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-
-diff --git a/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-new file mode 100644
-index 0000000..e72ed66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-is31fl32xx.txt
-@@ -0,0 +1,49 @@
-+Binding for ISSI IS31FL32xx LED Drivers
-+
-+The IS31FL32xx family of LED drivers are I2C devices with multiple
-+constant-current channels, each with independent 256-level PWM control.
-+Each LED is represented as a sub-node of the device.
-+
-+Required properties:
-+- compatible: one of
-+	issi,is31fl3236
-+	issi,is31fl3235
-+	issi,is31fl3218
-+	issi,is31fl3216
-+- reg: I2C slave address
-+- address-cells : must be 1
-+- size-cells : must be 0
-+
-+LED sub-node properties:
-+- reg : LED channel number (1..N)
-+- label :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+- linux,default-trigger :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+
-+
-+Example:
-+
-+is31fl3236: led-controller@3c {
-+	compatible = "issi,is31fl3236";
-+	reg = <0x3c>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	led@1 {
-+		reg = <1>;
-+		label = "EB:blue:usr0";
-+	};
-+	led@2 {
-+		reg = <2>;
-+		label = "EB:blue:usr1";
-+	};
-+	...
-+	led@36 {
-+		reg = <36>;
-+		label = "EB:blue:usr35";
-+	};
-+};
-+
-+For more product information please see the link below:
-+http://www.issi.com/US/product-analog-fxled-driver.shtml
--- 
-2.5.0
+T24gVHVlLCBNYXIgMDgsIDIwMTYgYXQgMToyOEFNLCBTY290dCBXb29kIHdyb3RlOg0KPiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290dCBXb29kIFttYWlsdG86b3NzQGJ1
+c2Vycm9yLm5ldF0NCj4gU2VudDogVHVlc2RheSwgTWFyY2ggMDgsIDIwMTYgMToyOCBBTQ0KPiBU
+bzogUWlhbmcgWmhhbyA8cWlhbmcuemhhb0BueHAuY29tPjsgUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4NCj4gQ2M6IFlhbmctTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBYaWFvYm8g
+WGllIDx4aWFvYm8ueGllQG54cC5jb20+Ow0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3Jn
+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtDQo+IGRldkBsaXN0cy5vemxh
+YnMub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMy83XSBRRTogQWRkIHVxZV9zZXJpYWwg
+ZG9jdW1lbnQgdG8gYmluZGluZ3MNCj4gDQo+IE9uIE1vbiwgMjAxNi0wMy0wNyBhdCAwMjozNSAr
+MDAwMCwgUWlhbmcgWmhhbyB3cm90ZToNCj4gPiBPbiBUdWUsIE1hciAwNSwgMjAxNiBhdCAxMjoy
+NlBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0t
+DQo+ID4gPiBGcm9tOiBSb2IgSGVycmluZyBbbWFpbHRvOnJvYmhAa2VybmVsLm9yZ10NCj4gPiA+
+IFNlbnQ6IFNhdHVyZGF5LCBNYXJjaCAwNSwgMjAxNiAxMjoyNiBQTQ0KPiA+ID4gVG86IFFpYW5n
+IFpoYW8gPHFpYW5nLnpoYW9AbnhwLmNvbT4NCj4gPiA+IENjOiBvc3NAYnVzZXJyb3IubmV0OyBZ
+YW5nLUxlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgWGlhb2JvIFhpZQ0KPiA+ID4gPHhpYW9i
+by54aWVAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZp
+Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcNCj4g
+PiA+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMy83XSBRRTogQWRkIHVxZV9zZXJpYWwgZG9jdW1l
+bnQgdG8gYmluZGluZ3MNCj4gPiA+DQo+ID4gPiBPbiBUdWUsIE1hciAwMSwgMjAxNiBhdCAwMzow
+OTozOVBNICswODAwLCBaaGFvIFFpYW5nIHdyb3RlOg0KPiA+ID4gPiBBZGQgdXFlX3NlcmlhbCBk
+b2N1bWVudCB0bw0KPiA+ID4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
+ZXJwYy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwudHgNCj4gPiA+ID4gdA0KPiA+ID4gPg0KPiA+ID4g
+PiBTaWduZWQtb2ZmLWJ5OiBaaGFvIFFpYW5nIDxxaWFuZy56aGFvQG54cC5jb20+DQo+ID4gPiA+
+IC0tLQ0KPiA+ID4gPiBDaGFuZ2VzIGZvciB2Mg0KPiA+ID4gPiAJLSBtb2RpZnkgdHgvcngtY2xv
+Y2stbmFtZSBzcGVjaWZpY2F0aW9uIENoYW5nZXMgZm9yIHYyDQo+ID4gPiA+IAktIE5BDQo+ID4g
+PiA+DQo+ID4gPiA+ICAuLi4vYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9zZXJpYWwu
+dHh0ICAgICAgICB8IDE5DQo+ID4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAxIGZp
+bGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+DQo+ID4gPiA+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9j
+cG1fcWUvdXFlX3NlcmlhbC50eA0KPiA+ID4gPiB0DQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1n
+aXQNCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9m
+c2wvY3BtX3FlL3VxZV9zZXJpYWwuDQo+ID4gPiA+IHR4dA0KPiA+ID4gPiBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcG1fcWUvdXFlX3NlcmlhbC4NCj4g
+PiA+ID4gdHh0DQo+ID4gPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gPiA+IGluZGV4IDAw
+MDAwMDAuLjQzNmM3MWMNCj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysNCj4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3BtX3FlL3VxZV9z
+ZXJpYWwuDQo+ID4gPiA+ICsrKyB0eHQNCj4gPiA+ID4gQEAgLTAsMCArMSwxOSBAQA0KPiA+ID4g
+PiArKiBTZXJpYWwNCj4gPiA+ID4gKw0KPiA+ID4gPiArQ3VycmVudGx5IGRlZmluZWQgY29tcGF0
+aWJsZXM6DQo+ID4gPiA+ICstIHVjY191YXJ0DQo+ID4gPg0KPiA+ID4gSSBndWVzcyB0aGlzIGlz
+IGluIHVzZSBhbHJlYWR5IGFuZCBva2F5LiBIb3dldmVyLCBsb29raW5nIGF0IHRoZQ0KPiA+ID4g
+ZHJpdmVyIHRoZXJlIHJlYWxseSBzaG91bGQgYmUgU29DIHNwZWNpZmljIGNvbXBhdGlibGUgc3Ry
+aW5ncyBoZXJlDQo+ID4gPiBzaW5jZSB0aGUgZHJpdmVyIGlzIGxvb2tpbmcgdXAgdGhlIFNvQyBj
+b21wYXRpYmxlIHN0cmluZyBhbmQNCj4gPiA+IGNvbXBvc2luZyB0aGUgZmlybXdhcmUgZmlsZW5h
+bWUgZnJvbSB0aGF0Lg0KPiA+DQo+ID4gT2ssIEkgd2lsbCBjaGFuZ2VkIGJvdGggZHJpdmVyIGFu
+ZCB0aGlzIGNvbXBhdGlibGUuDQo+IA0KPiBCdXQgZG9uJ3QgYnJlYWsgZXhpc3RpbmcgZGV2aWNl
+IHRyZWVzIHdoaWxlIGRvaW5nIHNvLg0KDQpEbyBJIG5lZWQgdG8gc2VuZCBkcml2ZXIgcGF0Y2gg
+aW4gdGhpcyBwYXRjaHNldCBvciBhIGluZGl2aWR1YWwgcGF0Y2g/DQoNCkJSDQotWmhhbyBRaWFu
+Zw0KDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
