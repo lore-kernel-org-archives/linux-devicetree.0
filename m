@@ -1,75 +1,39 @@
-From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
-Subject: Re: [PATCH v3 04/11] ARM: bcm2835: dt: add bindings for shared interrupt properties
-Date: Tue, 8 Mar 2016 12:23:51 +0100
-Message-ID: <3503D512-7E9C-46E8-91C7-CAD828DD48D1@martin.sperl.org>
-References: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org> <1457175142-28665-5-git-send-email-kernel@martin.sperl.org> <87fuw1yipi.fsf@eliezer.anholt.net>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fuw1yipi.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4 0/3] driver for the hardware monitoring chip in the
+ Zyxel NSA320
+Date: Tue, 8 Mar 2016 03:55:06 -0800
+Message-ID: <20160308115506.GA25899@roeck-us.net>
+References: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Adam Baker <linux@baker-net.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jean Delvare <jdelvare@suse.com>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, lm-sensors@lm-sensors.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, carl.wolfgang@googlemail.com, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Mar 05, 2016 at 03:34:54PM +0000, Adam Baker wrote:
+>  Documentation/devicetree/bindings/hwmon/nsa320-mcu.txt |  21 +++++
+>  Documentation/hwmon/nsa320                             |  53 +++++++++++
+>  arch/arm/boot/dts/kirkwood-nsa320.dts                  |  13 ++-
+>  drivers/hwmon/Kconfig                                  |  15 +++
+>  drivers/hwmon/Makefile                                 |   1 +
+>  drivers/hwmon/nsa320-hwmon.c                           | 216 ++++++++++++++++++++++++++++++++++++++++++++
+>  6 files changed, 317 insertions(+), 2 deletions(-)
+> 
+Patch 1/3 and 2/3 applied to hwmon-next.
 
-> On 08.03.2016, at 00:24, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
->=20
-> kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org writes:
->=20
->> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->>=20
->> Add binding documentation for the new shared interrupt properties:
->> * brcm,dma-channel-shared-mask
->> * brcm,dma-shared-irq-index
->>=20
->> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
->> ---
->> Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt | 6 +++++=
-+
->> 1 file changed, 6 insertions(+)
->>=20
->> diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.=
-txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->> index 1396078..f9e84ee 100644
->> --- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->> +++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
->> @@ -17,6 +17,10 @@ Required properties:
->> - brcm,dma-channel-mask: Bit mask representing the channels
->> 			 not used by the firmware in ascending order,
->> 			 i.e. first channel corresponds to LSB.
->> +- brcm,dma-channel-shared-mask: Bit mask representing the channels
->> +				that use a shared interrupt
->> +- brcm,dma-shared-irq-index: index of which of the interrupts menti=
-oned
->> +			     above is the shared interrupt
->=20
-> This should be under "Optional properties" since there are appropriat=
-e
-> defaults for the only compatible string listed.
+I assume that patch 3/3 will go through the arm tree.
 
-Well - IMO it is actually required and the defaults are only for backwa=
-rds
-compatibility with older device-trees, but that is easy to change=E2=80=
-=A6
->=20
-> I still don't think exposing this in the DT is necessary (it's hardwa=
-re
-> block internals), but I'm not writing the code so I'm fine with it
-Actually this was a request by Vinod to make this configurable via the
-device-tree.
-
-> either way, really.  Regardless, it would be really good to get the
-> slave_sg part of the series in, which is really important for the
-> platform.
-Yes, then we can bring the DMA implementations for mmc/sdhost forward.
-
-Martin
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Guenter
