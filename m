@@ -1,49 +1,30 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v2 1/5] thermal: change "hysteresis" as optional property
-Date: Tue, 8 Mar 2016 21:57:43 +0800
-Message-ID: <20160308135743.GC4921@leoy-linaro>
-References: <1456458227-12950-1-git-send-email-leo.yan@linaro.org>
- <1456458227-12950-2-git-send-email-leo.yan@linaro.org>
- <20160303162942.GA2445@localhost.localdomain>
- <20160304030349.GA11012@leoy-linaro>
- <20160304115752.GA13894@e104805>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 5/7] mtd: provide helper to prepare buffers for DMA
+ operations
+Date: Tue, 8 Mar 2016 19:48:53 +0530
+Message-ID: <20160308141853.GQ11154@localhost>
+References: <1457435715-24740-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1457435715-24740-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160304115752.GA13894@e104805>
-Sender: linux-pm-owner@vger.kernel.org
-To: Javi Merino <javi.merino@arm.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <1457435715-24740-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TZUIDd8j+nm9g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
+On Tue, Mar 08, 2016 at 12:15:13PM +0100, Boris Brezillon wrote:
+>  
+> +#ifdef CONFIG_HAS_DMA
 
-On Fri, Mar 04, 2016 at 11:57:53AM +0000, Javi Merino wrote:
-> On Fri, Mar 04, 2016 at 11:03:49AM +0800, Leo Yan wrote:
-> > On Thu, Mar 03, 2016 at 08:29:44AM -0800, Eduardo Valentin wrote:
-> > > On Fri, Feb 26, 2016 at 11:43:43AM +0800, Leo Yan wrote:
+Shouldn't this be CONFIG_DMA_ENGINE as you are preparing these descriptors
+for DMA transfer?
 
-[...]
-
-> > > > The property "hysteresis" is mandatory for trip points, so if without
-> > > > it the thermal zone cannot register successfully. But "hysteresis" is
-> > > > ignored in the thermal subsystem and only inquired by several thermal
-> > > > sensor drivers.
-> > > 
-> > > If the Linux thermal subsystem has a problem with handling hysteresis, I
-> > > would rather fix Linux code than relaxing the DT binding. Or if you
-> > > still believe hysteresis is really optional, I would prefer to see a
-> > > better justification than "Linux ignores it".
-> 
-> I see it the other way round, Is hysteresis a property that, without
-> it, the thermal code can't configure itself so it fails to create the
-> trip point?  The current code goes "There is no hysteresis for this
-> property, I don't know how to set up this trip point!".  I think we
-> can do better than this.
-
-Do you agree with Javi's suggestion? If you think it's okay, I will
-move on to send out a new version patch based on Javi's comments.
-
-Thanks,
-Leo Yan
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
