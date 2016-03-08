@@ -1,113 +1,58 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Tue, 8 Mar 2016 08:46:13 +0100
-Message-ID: <56DE8345.50901@hartkopp.net>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56DC1561.9060306@hartkopp.net>
- <SG2PR06MB10386D712BC8C345DF726523C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DD36F5.2000308@pengutronix.de>
- <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
+From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH 2/2] mfd: add documentation for ACT8945A DT bindings
+Date: Tue, 8 Mar 2016 07:57:30 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D6436459@penmbx01>
+References: <1452218729-11357-3-git-send-email-wenyou.yang@atmel.com>
+ <201603081124.QHccT8lq%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201603081124.QHccT8lq%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 03/07/2016 09:32 AM, Ramesh Shanmugasundaram wrote:
-
->>>>> +	/* Ensure channel starts in FD mode */
->>>>> +	if (!(priv->can.ctrlmode & CAN_CTRLMODE_FD)) {
->>>>> +		netdev_err(ndev, "enable can fd mode for channel %d\n", ch);
->>>>> +		goto fail_mode;
->>>>> +	}
->>>>
->>>> What's the reason behind this check?
->>>>
->>>> A CAN FD capable CAN controller can be either configured to run as
->>>> CAN 2.0 (Classic CAN) or as CAN FD controller.
->>>>
->>>> So why are to throwing an error here and produce an initialization
->>>> failure?
->>>
->>> When this controller is configured in FD mode and used only with CAN
->>> 2.0 nodes, it still expects a DTSEG (data bitrate) configuration same
->>> as NTSEG (nominal bitrate). This check, specifically in ndo_open,
->>> ensures both are configured and will work fine with CAN 2.0 nodes
->>> (e.g.)
->>>
->>> "ip link set can0 up type can bitrate 1000000 dbitrate 1000000 fd on"
->>>
->>> If I don't have this check, a configuration like this
->>>
->>> "ip link set can0 up type can bitrate 1000000"
->>>
->>> will bring up the controller without DTSEG configured.
-
-What about spending some status flag or setting the data bitrate equal to the
-nominal bitrate unless a data bitrate is provided?
-
->>
->> That should bring up the controller in CAN 2.0 mode.
-> 
-> Yes, that's the user's intention but the manual states DTSEG still need to be configured. In the above configuration, it will not be.
-> Besides, this will not be a "pure" CAN 2.0 node (i.e.) if a frame with length > 8 bytes is received the controller will "ACK" because in FD mode it can receive up to 64 bytes frame.
-
-Oh. We probably mix something up here (CAN frame formats & bitrates).
-
-A CAN2.0 frame and a CAN FD frame have very different representations on the
-wire! So if you see a FDF (former EDL) bit this is a CAN FD frame, which
-requires two bitrates (nominal/data bitrate) where the data bitrate has to be
-greater or equal the nominal bitrate.
-
-The fact that the data bitrate is equal the nominal/arbitration bitrate has
-nothing to do with CAN2.0 then. Regarding your answer this is not even "a pure
-CAN2.0" node - it still looks like a CAN FD node with equal data/nominal bitrates.
-
-The fact that a CAN FD frame has a size of 8 bytes doesn't make it a CAN2.0
-frame :-)
-
-> 
-> The controller does support a "pure" classical CAN mode with a different set of register map itself.
-
-Is this a can_rcar controller register mapping then?
-
-> Do you think a pure CAN 2.0 mode support would be beneficial? I can submit this in coming days on top of current submission.
-> 
-> The current submission status is:
->  - Controller operates in CAN FD mode only.
->  - If needed to interoperate with CAN 2.0 nodes, data bitrate still need to be configured and it will work perfectly. However, it is not a "pure" CAN 2.0 node as mentioned above.
-
-When you have a CAN FD /capable/ controller the idea is:
-
-"ip link set can0 up type can bitrate 1000000"
-
-The controller is in CAN2.0 mode:
-
-1. It can send and receive CAN2.0 frames @1MBit/s.
-2. The MTU is set to 16 (sizeof(struct can_frame)) ; CAN_CTRLMODE_FD is unset.
-3. The CAN controller is not CAN FD tolerant (will produce error frames)
-
-"ip link set can0 up type can bitrate 1000000 dbitrate 1000000 fd on"
-
-1. It can send and receive CAN2.0 frames @1MBit/s.
-2. It can send and receive CAN FD frames @1MBit/s (arbitration&data bitrate).
-3. The MTU is set to 72 (sizeof(struct canfd_frame)) ; CAN_CTRLMODE_FD is set.
-
-For CAN FD frames the data bitrate can be increased like:
-"ip link set can0 up type can bitrate 1000000 dbitrate 4000000 fd on"
-
-So when CAN_CTRLMODE_FD is unset the controller should act like a "pure
-CAN2.0" node. When people configure a CAN FD controller with "fd on" and use
-CAN2.0 frames all the time this is ok either - but the controller is able to
-process CAN FD frames with the correct bitrate too.
-
-Regards,
-Oliver
-
+SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbToga2J1aWxkIHRlc3Qg
+cm9ib3QgW21haWx0bzpsa3BAaW50ZWwuY29tXQ0KPiBTZW50OiAyMDE2xOoz1MI4yNUgMTE6MDQN
+Cj4gVG86IFlhbmcsIFdlbnlvdSA8V2VueW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzoga2J1aWxk
+LWFsbEAwMS5vcmc7IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+OyBSb2IgSGVycmlu
+Zw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsgUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29t
+PjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IElhbiBDYW1wYmVsbCA8
+aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+OyBLdW1hcg0KPiBHYWxhIDxnYWxha0Bjb2Rl
+YXVyb3JhLm9yZz47IEZlcnJlLCBOaWNvbGFzIDxOaWNvbGFzLkZFUlJFQGF0bWVsLmNvbT47DQo+
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBZYW5nLCBXZW55b3UNCj4gPFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCAyLzJdIG1mZDogYWRkIGRvY3VtZW50YXRpb24gZm9yIEFDVDg5NDVBIERUIGJpbmRp
+bmdzDQo+IA0KPiBIaSBXZW55b3UsDQo+IA0KPiBbYXV0byBidWlsZCB0ZXN0IEVSUk9SIG9uIHY0
+LjQtcmM4XQ0KPiBbY2Fubm90IGFwcGx5IHRvIG5leHQtMjAxNjAzMDddDQo+IFtpZiB5b3VyIHBh
+dGNoIGlzIGFwcGxpZWQgdG8gdGhlIHdyb25nIGdpdCB0cmVlLCBwbGVhc2UgZHJvcCB1cyBhIG5v
+dGUgdG8gaGVscA0KPiBpbXByb3ZpbmcgdGhlIHN5c3RlbV0NCj4gDQo+IHVybDogICAgaHR0cHM6
+Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0cy9XZW55b3UtWWFuZy9tZmQtYWN0ODk0
+NWEtYWRkLQ0KPiBBY3RpdmUtc2VtaS1BQ1Q4OTQ1QS1QTUlDLU1GRC1kcml2ZXIvMjAxNjAxMDgt
+MTAwOTQzDQoNClRoaXMgaXMgbm90IHRoZSBsYXRlc3QgdmVyc2lvbiwgcGxlYXNlIHVzZSBodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwvbGludXgtYXJtLWtlcm5lbC8yMDE2LUZl
+YnJ1YXJ5LzQwNTI1OC5odG1sDQoNCj4gY29uZmlnOiB4ODZfNjQtYWxsbW9kY29uZmlnIChhdHRh
+Y2hlZCBhcyAuY29uZmlnKQ0KPiByZXByb2R1Y2U6DQo+ICAgICAgICAgIyBzYXZlIHRoZSBhdHRh
+Y2hlZCAuY29uZmlnIHRvIGxpbnV4IGJ1aWxkIHRyZWUNCj4gICAgICAgICBtYWtlIEFSQ0g9eDg2
+XzY0DQo+IA0KDQpJdCB3b3JrcyB1c2luZyB0aGUgY29tbWFuZHMgYXMgYmVsb3cuDQoNCiQgbWFr
+ZSBtcnByb3Blcg0KJCBleHBvcnQgQVJDSD14ODZfNjQNCiQgZXhwb3J0IENST1NTX0NPTVBJTEU9
+DQokIG1ha2UgYWxsbW9kY29uZmlnDQokIG1ha2UNCg0KDQo+IEFsbCBlcnJvcnMgKG5ldyBvbmVz
+IHByZWZpeGVkIGJ5ID4+KToNCj4gDQo+ICAgIGRyaXZlcnMvYnVpbHQtaW4ubzogSW4gZnVuY3Rp
+b24gYGFjdDg5NDVhX2kyY19wcm9iZSc6DQo+ID4+IGFjdDg5NDVhLmM6KC50ZXh0KzB4MjJiYjI2
+KTogdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgX19kZXZtX3JlZ21hcF9pbml0X2kyYycNCj4gICAg
+ZHJpdmVycy9idWlsdC1pbi5vOiBJbiBmdW5jdGlvbiBgYWN0ODk0NWFfaTJjX2luaXQnOg0KPiA+
+PiBhY3Q4OTQ1YS5jOiguaW5pdC50ZXh0KzB4MWE1N2EpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRv
+IGBpMmNfcmVnaXN0ZXJfZHJpdmVyJw0KPiAgICBkcml2ZXJzL2J1aWx0LWluLm86IEluIGZ1bmN0
+aW9uIGBhY3Q4OTQ1YV9pMmNfZXhpdCc6DQo+ID4+IGFjdDg5NDVhLmM6KC5leGl0LnRleHQrMHg2
+OGYpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBpMmNfZGVsX2RyaXZlcicNCj4gDQo+IC0tLQ0K
+PiAwLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVyZSAgICAgICAgICAgICAgICBPcGVuIFNv
+dXJjZSBUZWNobm9sb2d5IENlbnRlcg0KPiBodHRwczovL2xpc3RzLjAxLm9yZy9waXBlcm1haWwv
+a2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJbnRlbCBDb3Jwb3JhdGlvbg0KDQoNCkJlc3Qg
+UmVnYXJkcywNCldlbnlvdSBZYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
