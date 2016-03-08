@@ -1,139 +1,138 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [PATCH v6 4/6] drm/i2c: tda998x: Improve tda998x_configure_audio()
- audio related pdata
-Date: Tue, 8 Mar 2016 22:14:28 +0200
-Message-ID: <8ea85cacdb564c1ab58cae8ab95df824c3449720.1457465383.git.jsarha@ti.com>
-References: <cover.1457465383.git.jsarha@ti.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V4 0/5] PCIe Xilinx generic driver for Microblaze and
+Date: Tue, 8 Mar 2016 14:34:44 -0600
+Message-ID: <20160308203444.GA27132@localhost>
+References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.1457465383.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org
-Cc: peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, arnaud.pouliquen@st.com, Jyri Sarha <jsarha@ti.com>, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Cc: bhelgaas@google.com, michals@xilinx.com, lorenzo.pieralisi@arm.com, paul.burton@imgtec.com, yinghai@kernel.org, wangyijing@huawei.com, robh@kernel.org, russell.joyce@york.ac.uk, sorenb@xilinx.com, jiang.liu@linux.intel.com, arnd@arndb.de, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-RGVmaW5lIHN0cnVjdCB0ZGE5OTh4X2F1ZGlvX3BhcmFtcyBpbiBpbmNsdWRlL2RybS9pMmMvdGRh
-OTk4eC5oIGFuZAp1c2UgaXQgaW4gcGRhdGEgYW5kIGZvciB0ZGE5OTh4X2NvbmZpZ3VyZV9hdWRp
-bygpIHBhcmFtZXRlcnMuIEFsc28KdXBkYXRlcyB0ZGE5OTh4X3dyaXRlX2FpZigpIHRvIHRha2Ug
-c3RydWN0IGhkbWlfYXVkaW9faW5mb2ZyYW1lICoKZGlyZWN0bHkgYXMgYSBwYXJhbWV0ZXIuCgpT
-aWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29tPgotLS0KIGRyaXZlcnMvZ3B1
-L2RybS9pMmMvdGRhOTk4eF9kcnYuYyB8IDc3ICsrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0t
-LS0tLS0tLS0tLQogaW5jbHVkZS9kcm0vaTJjL3RkYTk5OHguaCAgICAgICAgIHwgMjQgKysrKysr
-Ky0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDUzIGluc2VydGlvbnMoKyksIDQ4IGRlbGV0aW9ucygt
-KQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9kcnYuYyBiL2RyaXZl
-cnMvZ3B1L2RybS9pMmMvdGRhOTk4eF9kcnYuYwppbmRleCBiNjEyODJkLi4yMDZkZjBiIDEwMDY0
-NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vaTJjL3RkYTk5OHhfZHJ2LmMKKysrIGIvZHJpdmVycy9n
-cHUvZHJtL2kyYy90ZGE5OTh4X2Rydi5jCkBAIC00MSw3ICs0MSw3IEBAIHN0cnVjdCB0ZGE5OTh4
-X3ByaXYgewogCXU4IHZpcF9jbnRybF8wOwogCXU4IHZpcF9jbnRybF8xOwogCXU4IHZpcF9jbnRy
-bF8yOwotCXN0cnVjdCB0ZGE5OTh4X2VuY29kZXJfcGFyYW1zIHBhcmFtczsKKwlzdHJ1Y3QgdGRh
-OTk4eF9hdWRpb19wYXJhbXMgYXVkaW9fcGFyYW1zOwogCiAJd2FpdF9xdWV1ZV9oZWFkX3Qgd3Ff
-ZWRpZDsKIAl2b2xhdGlsZSBpbnQgd3FfZWRpZF93YWl0OwpAQCAtNjY2LDI2ICs2NjYsMTYgQEAg
-dGRhOTk4eF93cml0ZV9pZihzdHJ1Y3QgdGRhOTk4eF9wcml2ICpwcml2LCB1OCBiaXQsIHUxNiBh
-ZGRyLAogCXJlZ19zZXQocHJpdiwgUkVHX0RJUF9JRl9GTEFHUywgYml0KTsKIH0KIAotc3RhdGlj
-IHZvaWQKLXRkYTk5OHhfd3JpdGVfYWlmKHN0cnVjdCB0ZGE5OTh4X3ByaXYgKnByaXYsIHN0cnVj
-dCB0ZGE5OTh4X2VuY29kZXJfcGFyYW1zICpwKQorc3RhdGljIGludCB0ZGE5OTh4X3dyaXRlX2Fp
-ZihzdHJ1Y3QgdGRhOTk4eF9wcml2ICpwcml2LAorCQkJICAgICBzdHJ1Y3QgaGRtaV9hdWRpb19p
-bmZvZnJhbWUgKmNlYSkKIHsKIAl1bmlvbiBoZG1pX2luZm9mcmFtZSBmcmFtZTsKIAotCWhkbWlf
-YXVkaW9faW5mb2ZyYW1lX2luaXQoJmZyYW1lLmF1ZGlvKTsKLQotCWZyYW1lLmF1ZGlvLmNoYW5u
-ZWxzID0gcC0+YXVkaW9fZnJhbWVbMV0gJiAweDA3OwotCWZyYW1lLmF1ZGlvLmNoYW5uZWxfYWxs
-b2NhdGlvbiA9IHAtPmF1ZGlvX2ZyYW1lWzRdOwotCWZyYW1lLmF1ZGlvLmxldmVsX3NoaWZ0X3Zh
-bHVlID0gKHAtPmF1ZGlvX2ZyYW1lWzVdICYgMHg3OCkgPj4gMzsKLQlmcmFtZS5hdWRpby5kb3du
-bWl4X2luaGliaXQgPSAocC0+YXVkaW9fZnJhbWVbNV0gJiAweDgwKSA+PiA3OwotCi0JLyoKLQkg
-KiBMLVBDTSBhbmQgSUVDNjE5MzcgY29tcHJlc3NlZCBhdWRpbyBzaGFsbCBhbHdheXMgc2V0IHNh
-bXBsZQotCSAqIGZyZXF1ZW5jeSB0byAicmVmZXIgdG8gc3RyZWFtIi4gIEZvciBvdGhlcnMsIHNl
-ZSB0aGUgSERNSQotCSAqIHNwZWNpZmljYXRpb24uCi0JICovCi0JZnJhbWUuYXVkaW8uc2FtcGxl
-X2ZyZXF1ZW5jeSA9IChwLT5hdWRpb19mcmFtZVsyXSAmIDB4MWMpID4+IDI7CisJZnJhbWUuYXVk
-aW8gPSAqY2VhOwogCiAJdGRhOTk4eF93cml0ZV9pZihwcml2LCBESVBfSUZfRkxBR1NfSUY0LCBS
-RUdfSUY0X0hCMCwgJmZyYW1lKTsKKworCXJldHVybiAwOwogfQogCiBzdGF0aWMgdm9pZApAQCAt
-NzEwLDIwICs3MDAsMjEgQEAgc3RhdGljIHZvaWQgdGRhOTk4eF9hdWRpb19tdXRlKHN0cnVjdCB0
-ZGE5OTh4X3ByaXYgKnByaXYsIGJvb2wgb24pCiAJfQogfQogCi1zdGF0aWMgdm9pZAorc3RhdGlj
-IGludAogdGRhOTk4eF9jb25maWd1cmVfYXVkaW8oc3RydWN0IHRkYTk5OHhfcHJpdiAqcHJpdiwK
-LQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUsIHN0cnVjdCB0ZGE5OTh4X2VuY29kZXJf
-cGFyYW1zICpwKQorCQkJc3RydWN0IHRkYTk5OHhfYXVkaW9fcGFyYW1zICpwYXJhbXMsCisJCQl1
-bnNpZ25lZCBtb2RlX2Nsb2NrKQogewogCXU4IGJ1Zls2XSwgY2xrc2VsX2FpcCwgY2xrc2VsX2Zz
-LCBjdHNfbiwgYWRpdjsKIAl1MzIgbjsKIAogCS8qIEVuYWJsZSBhdWRpbyBwb3J0cyAqLwotCXJl
-Z193cml0ZShwcml2LCBSRUdfRU5BX0FQLCBwLT5hdWRpb19jZmcpOwotCXJlZ193cml0ZShwcml2
-LCBSRUdfRU5BX0FDTEssIHAtPmF1ZGlvX2Nsa19jZmcpOworCXJlZ193cml0ZShwcml2LCBSRUdf
-RU5BX0FQLCBwYXJhbXMtPmNvbmZpZyk7CiAKIAkvKiBTZXQgYXVkaW8gaW5wdXQgc291cmNlICov
-Ci0Jc3dpdGNoIChwLT5hdWRpb19mb3JtYXQpIHsKKwlzd2l0Y2ggKHBhcmFtcy0+Zm9ybWF0KSB7
-CiAJY2FzZSBBRk1UX1NQRElGOgorCQlyZWdfd3JpdGUocHJpdiwgUkVHX0VOQV9BQ0xLLCAwKTsK
-IAkJcmVnX3dyaXRlKHByaXYsIFJFR19NVVhfQVAsIE1VWF9BUF9TRUxFQ1RfU1BESUYpOwogCQlj
-bGtzZWxfYWlwID0gQUlQX0NMS1NFTF9BSVBfU1BESUY7CiAJCWNsa3NlbF9mcyA9IEFJUF9DTEtT
-RUxfRlNfRlM2NFNQRElGOwpAQCAtNzMxLDE1ICs3MjIsMjkgQEAgdGRhOTk4eF9jb25maWd1cmVf
-YXVkaW8oc3RydWN0IHRkYTk5OHhfcHJpdiAqcHJpdiwKIAkJYnJlYWs7CiAKIAljYXNlIEFGTVRf
-STJTOgorCQlyZWdfd3JpdGUocHJpdiwgUkVHX0VOQV9BQ0xLLCAxKTsKIAkJcmVnX3dyaXRlKHBy
-aXYsIFJFR19NVVhfQVAsIE1VWF9BUF9TRUxFQ1RfSTJTKTsKIAkJY2xrc2VsX2FpcCA9IEFJUF9D
-TEtTRUxfQUlQX0kyUzsKIAkJY2xrc2VsX2ZzID0gQUlQX0NMS1NFTF9GU19BQ0xLOwotCQljdHNf
-biA9IENUU19OX00oMykgfCBDVFNfTl9LKDMpOworCQlzd2l0Y2ggKHBhcmFtcy0+c2FtcGxlX3dp
-ZHRoKSB7CisJCWNhc2UgMTY6CisJCQljdHNfbiA9IENUU19OX00oMykgfCBDVFNfTl9LKDEpOwor
-CQkJYnJlYWs7CisJCWNhc2UgMTg6CisJCWNhc2UgMjA6CisJCWNhc2UgMjQ6CisJCQljdHNfbiA9
-IENUU19OX00oMykgfCBDVFNfTl9LKDIpOworCQkJYnJlYWs7CisJCWRlZmF1bHQ6CisJCWNhc2Ug
-MzI6CisJCQljdHNfbiA9IENUU19OX00oMykgfCBDVFNfTl9LKDMpOworCQkJYnJlYWs7CisJCX0K
-IAkJYnJlYWs7CiAKIAlkZWZhdWx0OgogCQlCVUcoKTsKLQkJcmV0dXJuOworCQlyZXR1cm4gLUVJ
-TlZBTDsKIAl9CiAKIAlyZWdfd3JpdGUocHJpdiwgUkVHX0FJUF9DTEtTRUwsIGNsa3NlbF9haXAp
-OwpAQCAtNzU1LDExICs3NjAsMTEgQEAgdGRhOTk4eF9jb25maWd1cmVfYXVkaW8oc3RydWN0IHRk
-YTk5OHhfcHJpdiAqcHJpdiwKIAkgKiBhc3N1bWUgMTAwTUh6IHJlcXVpcmVzIGxhcmdlciBkaXZp
-ZGVyLgogCSAqLwogCWFkaXYgPSBBVURJT19ESVZfU0VSQ0xLXzg7Ci0JaWYgKG1vZGUtPmNsb2Nr
-ID4gMTAwMDAwKQorCWlmIChtb2RlX2Nsb2NrID4gMTAwMDAwKQogCQlhZGl2Kys7CQkJLyogQVVE
-SU9fRElWX1NFUkNMS18xNiAqLwogCiAJLyogUy9QRElGIGFza3MgZm9yIGEgbGFyZ2VyIGRpdmlk
-ZXIgKi8KLQlpZiAocC0+YXVkaW9fZm9ybWF0ID09IEFGTVRfU1BESUYpCisJaWYgKHBhcmFtcy0+
-Zm9ybWF0ID09IEFGTVRfU1BESUYpCiAJCWFkaXYrKzsJCQkvKiBBVURJT19ESVZfU0VSQ0xLXzE2
-IG9yIF8zMiAqLwogCiAJcmVnX3dyaXRlKHByaXYsIFJFR19BVURJT19ESVYsIGFkaXYpOwpAQCAt
-NzY4LDcgKzc3Myw3IEBAIHRkYTk5OHhfY29uZmlndXJlX2F1ZGlvKHN0cnVjdCB0ZGE5OTh4X3By
-aXYgKnByaXYsCiAJICogVGhpcyBpcyB0aGUgYXBwcm94aW1hdGUgdmFsdWUgb2YgTiwgd2hpY2gg
-aGFwcGVucyB0byBiZQogCSAqIHRoZSByZWNvbW1lbmRlZCB2YWx1ZXMgZm9yIG5vbi1jb2hlcmVu
-dCBjbG9ja3MuCiAJICovCi0JbiA9IDEyOCAqIHAtPmF1ZGlvX3NhbXBsZV9yYXRlIC8gMTAwMDsK
-KwluID0gMTI4ICogcGFyYW1zLT5zYW1wbGVfcmF0ZSAvIDEwMDA7CiAKIAkvKiBXcml0ZSB0aGUg
-Q1RTIGFuZCBOIHZhbHVlcyAqLwogCWJ1ZlswXSA9IDB4NDQ7CkBAIC03ODcsMTkgKzc5MiwxMyBA
-QCB0ZGE5OTh4X2NvbmZpZ3VyZV9hdWRpbyhzdHJ1Y3QgdGRhOTk4eF9wcml2ICpwcml2LAogCXJl
-Z19jbGVhcihwcml2LCBSRUdfQUlQX0NOVFJMXzAsIEFJUF9DTlRSTF8wX1JTVF9DVFMpOwogCiAJ
-LyogV3JpdGUgdGhlIGNoYW5uZWwgc3RhdHVzICovCi0JYnVmWzBdID0gSUVDOTU4X0FFUzBfQ09O
-X05PVF9DT1BZUklHSFQ7Ci0JYnVmWzFdID0gMHgwMDsKLQlidWZbMl0gPSBJRUM5NThfQUVTM19D
-T05fRlNfTk9USUQ7Ci0JYnVmWzNdID0gSUVDOTU4X0FFUzRfQ09OX09SSUdGU19OT1RJRCB8Ci0J
-CQlJRUM5NThfQUVTNF9DT05fTUFYX1dPUkRMRU5fMjQ7Ci0JcmVnX3dyaXRlX3JhbmdlKHByaXYs
-IFJFR19DSF9TVEFUX0IoMCksIGJ1ZiwgNCk7CisJcmVnX3dyaXRlX3JhbmdlKHByaXYsIFJFR19D
-SF9TVEFUX0IoMCksIHBhcmFtcy0+c3RhdHVzLCA0KTsKIAogCXRkYTk5OHhfYXVkaW9fbXV0ZShw
-cml2LCB0cnVlKTsKIAltc2xlZXAoMjApOwogCXRkYTk5OHhfYXVkaW9fbXV0ZShwcml2LCBmYWxz
-ZSk7CiAKLQkvKiBXcml0ZSB0aGUgYXVkaW8gaW5mb3JtYXRpb24gcGFja2V0ICovCi0JdGRhOTk4
-eF93cml0ZV9haWYocHJpdiwgcCk7CisJcmV0dXJuIHRkYTk5OHhfd3JpdGVfYWlmKHByaXYsICZw
-YXJhbXMtPmNlYSk7CiB9CiAKIC8qIERSTSBlbmNvZGVyIGZ1bmN0aW9ucyAqLwpAQCAtODIwLDcg
-KzgxOSw3IEBAIHN0YXRpYyB2b2lkIHRkYTk5OHhfZW5jb2Rlcl9zZXRfY29uZmlnKHN0cnVjdCB0
-ZGE5OTh4X3ByaXYgKnByaXYsCiAJCQkgICAgVklQX0NOVFJMXzJfU1dBUF9GKHAtPnN3YXBfZikg
-fAogCQkJICAgIChwLT5taXJyX2YgPyBWSVBfQ05UUkxfMl9NSVJSX0YgOiAwKTsKIAotCXByaXYt
-PnBhcmFtcyA9ICpwOworCXByaXYtPmF1ZGlvX3BhcmFtcyA9IHAtPmF1ZGlvOwogfQogCiBzdGF0
-aWMgdm9pZCB0ZGE5OTh4X2VuY29kZXJfZHBtcyhzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIs
-IGludCBtb2RlKQpAQCAtMTA1Nyw5ICsxMDU2LDExIEBAIHRkYTk5OHhfZW5jb2Rlcl9tb2RlX3Nl
-dChzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIsCiAKIAkJdGRhOTk4eF93cml0ZV9hdmkocHJp
-diwgYWRqdXN0ZWRfbW9kZSk7CiAKLQkJaWYgKHByaXYtPnBhcmFtcy5hdWRpb19jZmcpCi0JCQl0
-ZGE5OTh4X2NvbmZpZ3VyZV9hdWRpbyhwcml2LCBhZGp1c3RlZF9tb2RlLAotCQkJCQkJJnByaXYt
-PnBhcmFtcyk7CisJCWlmIChwcml2LT5hdWRpb19wYXJhbXMuZm9ybWF0ICE9IEFGTVRfVU5VU0VE
-KSB7CisJCQl0ZGE5OTh4X2NvbmZpZ3VyZV9hdWRpbyhwcml2LAorCQkJCQkJJnByaXYtPmF1ZGlv
-X3BhcmFtcywKKwkJCQkJCWFkanVzdGVkX21vZGUtPmNsb2NrKTsKKwkJfQogCX0KIH0KIApkaWZm
-IC0tZ2l0IGEvaW5jbHVkZS9kcm0vaTJjL3RkYTk5OHguaCBiL2luY2x1ZGUvZHJtL2kyYy90ZGE5
-OTh4LmgKaW5kZXggM2U0MTlkOS4uMjRiZTdhYSAxMDA2NDQKLS0tIGEvaW5jbHVkZS9kcm0vaTJj
-L3RkYTk5OHguaAorKysgYi9pbmNsdWRlL2RybS9pMmMvdGRhOTk4eC5oCkBAIC0xLDYgKzEsMTkg
-QEAKICNpZm5kZWYgX19EUk1fSTJDX1REQTk5OFhfSF9fCiAjZGVmaW5lIF9fRFJNX0kyQ19UREE5
-OThYX0hfXwogCisjZGVmaW5lIEFGTVRfVU5VU0VECTAKKyNkZWZpbmUgQUZNVF9TUERJRgkxCisj
-ZGVmaW5lIEFGTVRfSTJTCTIKKworc3RydWN0IHRkYTk5OHhfYXVkaW9fcGFyYW1zIHsKKwl1OCBj
-b25maWc7CisJdTggZm9ybWF0OworCXVuc2lnbmVkIHNhbXBsZV93aWR0aDsKKwl1bnNpZ25lZCBz
-YW1wbGVfcmF0ZTsKKwlzdHJ1Y3QgaGRtaV9hdWRpb19pbmZvZnJhbWUgY2VhOworCXU4IHN0YXR1
-c1s0XTsKK307CisKIHN0cnVjdCB0ZGE5OTh4X2VuY29kZXJfcGFyYW1zIHsKIAl1OCBzd2FwX2I6
-MzsKIAl1OCBtaXJyX2I6MTsKQEAgLTE1LDE2ICsyOCw3IEBAIHN0cnVjdCB0ZGE5OTh4X2VuY29k
-ZXJfcGFyYW1zIHsKIAl1OCBzd2FwX2U6MzsKIAl1OCBtaXJyX2U6MTsKIAotCXU4IGF1ZGlvX2Nm
-ZzsKLQl1OCBhdWRpb19jbGtfY2ZnOwotCXU4IGF1ZGlvX2ZyYW1lWzZdOwotCi0JZW51bSB7Ci0J
-CUFGTVRfU1BESUYsCi0JCUFGTVRfSTJTCi0JfSBhdWRpb19mb3JtYXQ7Ci0KLQl1bnNpZ25lZCBh
-dWRpb19zYW1wbGVfcmF0ZTsKKwlzdHJ1Y3QgdGRhOTk4eF9hdWRpb19wYXJhbXMgYXVkaW87CiB9
-OwogCiAjZW5kaWYKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Thu, Feb 11, 2016 at 09:58:06PM +0530, Bharat Kumar Gogada wrote:
+> This patch series does modifications to pcie-xilinx.c, to support common
+> driver on both Zynq and Microblaze architectures.
+> Microblaze pci-common.c has been modified to support generic driver.
+> 
+> Bharat Kumar Gogada (5):
+>   PCI: xilinx: Removing xilinx_pcie_parse_and_add_res function
+>   PCI: xilinx: Removing struct hw_pci structure.
+>   PCI: xilinx: Modifying AXI PCIe Host Bridge driver to work on both
+>      Zynq and Microblaze
+>   PCI: xilinx: Updating Zynq PCI binding documentation with 
+>     Microblaze node.
+>   Microblaze: Modifying microblaze PCI subsytem to support  generic
+>     Xilinx  AXI PCIe Host Bridge IP driver
+> 
+>  .../devicetree/bindings/pci/xilinx-pcie.txt        |  32 +++-
+>  arch/microblaze/Kconfig                            |   3 +
+>  arch/microblaze/pci/pci-common.c                   |  56 ++----
+>  drivers/pci/host/Kconfig                           |   2 +-
+>  drivers/pci/host/pcie-xilinx.c                     | 191 +++------------------
+>  5 files changed, 66 insertions(+), 218 deletions(-)
+
+I applied this series to my pci/host-xilinx branch for v4.6.
+
+Michal, you only explicitly acked the last patch, but that only makes
+sense if I apply the whole series, so I applied your ack to all the
+patches.
+
+Someday somebody should rework pci_fixup_irqs() so that doesn't have
+to be arch-dependent.
+
+I reworked the changelogs as below.
+
+Bjorn
+
+
+commit 01cf9d524ff0
+Author: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Date:   Thu Feb 11 21:58:11 2016 +0530
+
+    microblaze/PCI: Support generic Xilinx AXI PCIe Host Bridge IP driver
+    
+    Modify the Microblaze PCI subsystem to work with the generic
+    drivers/pci/host/pcie-xilinx.c driver on Microblaze and Zynq.
+    
+    [bhelgaas: changelog]
+    Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+    Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+commit e5d4b2006c97
+Author: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Date:   Thu Feb 11 21:58:10 2016 +0530
+
+    PCI: xilinx: Update Zynq binding with Microblaze node
+    
+    Update Zynq PCI binding documentation with Microblaze node.
+    
+    [bhelgaas: fix "microbalze_0_intc" typo]
+    Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+    Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Acked-by: Rob Herring <robh@kernel.org>
+    Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+commit 2c51391d2559
+Author: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Date:   Thu Feb 11 21:58:09 2016 +0530
+
+    PCI: xilinx: Don't call pci_fixup_irqs() on Microblaze
+    
+    The Xilinx AXI PCIe Host Bridge Soft IP driver was previously only
+    supported on ARM (in particular, on ARCH_ZYNC), and pci_fixup_irqs() is
+    available there.  But Microblaze will do IRQ fixup in pcibios_add_device(),
+    so pci_fixup_irqs() is not available on Microblaze.
+    
+    Don't call pci_fixup_irqs() on Microblaze, so the driver can work on both
+    Zynq and Microblaze Architectures.
+    
+    [bhelgaas: revise changelog to show similarity to bdb8a1844f31 ("PCI: iproc: Call pci_fixup_irqs() for ARM64 as well as ARM")]
+    Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+    Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+    Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+commit 4c01f3b089a0
+Author: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Date:   Thu Feb 11 21:58:08 2016 +0530
+
+    PCI: xilinx: Remove dependency on ARM-specific struct hw_pci
+    
+    The Xilinx PCIe host controller driver uses pci_common_init_dev(), which
+    is ARM-specific and requires the ARM struct hw_pci.  The part of
+    pci_common_init_dev() that is needed is limited and can be done here
+    without using hw_pci.
+    
+    Create and scan the root bus directly without using the ARM
+    pci_common_init_dev() interface.
+    
+    [bhelgaas: revise changelog to show similarity to 79953dd22c1d ("PCI: rcar: Remove dependency on ARM-specific struct hw_pci")]
+    Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+    Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+    Acked-by: Michal Simek <michal.simek@xilinx.com>
+
+commit 0259882e342e
+Author: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+Date:   Thu Feb 11 21:58:07 2016 +0530
+
+    PCI: xilinx: Use of_pci_get_host_bridge_resources() to parse DT
+    
+    Use the new of_pci_get_host_bridge_resources() API in place of the PCI OF
+    DT parser.
+    
+    [bhelgaas: revise changelog to show similarity to 0021d22b73d6 ("PCI: designware: Use of_pci_get_host_bridge_resources() to parse DT")]
+    Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
+    Signed-off-by: Ravi Kiran Gummaluri <rgummal@xilinx.com>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+    Acked-by: Michal Simek <michal.simek@xilinx.com>
