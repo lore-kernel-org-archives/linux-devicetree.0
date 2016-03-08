@@ -1,102 +1,64 @@
-From: Jiancheng Xue <xuejiancheng@huawei.com>
-Subject: Re: [RESEND PATCH v7] mtd: spi-nor: add hisilicon spi-nor flash
- controller driver
-Date: Tue, 8 Mar 2016 17:25:13 +0800
-Message-ID: <56DE9A79.30704@huawei.com>
-References: <1456474316-24473-1-git-send-email-xuejiancheng@huawei.com>
- <20160307225229.GC55664@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Julien Chauveau <chauveau.julien@gmail.com>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys example
+Date: Tue, 8 Mar 2016 10:41:37 +0100
+Message-ID: <525564DD-D0D3-4DEB-9306-3A23288FD83F@gmail.com>
+References: <1457375055-5544-1-git-send-email-afaerber@suse.de> <CAMuHMdVMVYaygvKd3qgTz2fF9SuLA_zEYRoZZrJO+2zmP=jxag@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160307225229.GC55664@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dwmw2@infradead.org, zajec5@gmail.com, boris.brezillon@free-electrons.com, jteki@openedev.com, ezequiel@vanguardiasur.com.ar, juhosg@openwrt.org, shijie.huang@intel.com, mika.westerberg@linux.intel.com, furquan@google.com, han.xu@freescale.com, fabio.estevam@freescale.com, manabian@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, Binquan Peng <pengbinquan@huawei.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVMVYaygvKd3qgTz2fF9SuLA_zEYRoZZrJO+2zmP=jxag@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian=EF=BC=8C
-   Thank you very much for your comments.
 
-On 2016/3/8 6:52, Brian Norris wrote:
-[...]
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt =
-b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
->> new file mode 100644
->> index 0000000..7407147
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-hisi-sfc.txt
+> Le 8 mars 2016 =C3=A0 09:54, Geert Uytterhoeven <geert@linux-m68k.org=
+> a =C3=A9crit :
 >=20
-> This is not a SPI controller (or is it? it looks like a SPI NOR
-> controller that doesn't do generic SPI), so it shouldn't go in the sp=
-i/
-> directory.
->=20
-OK. I'll move this file into Documentation/devicetree/bindings/mtd.
-
->> @@ -0,0 +1,25 @@
->> +HiSilicon SPI-NOR Flash Controller
->> +
->> +Required properties:
->> +- compatible : Should be "hisilicon,hisi-sfc" and one of the follow=
-ing strings:
->> +		"hisilicon,hi3519-sfc"
->> +- address-cells : number of cells required to define a chip select
->> +        address on the SPI bus. Should be set to 1. See spi-bus.txt=
+> On Mon, Mar 7, 2016 at 7:24 PM, Andreas F=C3=A4rber <afaerber@suse.de=
+> wrote:
+>> Drop #address-cells and #size-cells, which are not required by the
+>> gpio-keys binding documentation, as button sub-nodes are not devices=
 =2E
+>>=20
+>> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>> ---
+>> Documentation/devicetree/bindings/input/gpio-keys.txt | 2 --
+>> 1 file changed, 2 deletions(-)
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b=
+/Documentation/devicetree/bindings/input/gpio-keys.txt
+>> index 21641236c095..1552a11f6786 100644
+>> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+>> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+>> @@ -34,8 +34,6 @@ Example nodes:
+>>=20
+>>        gpio_keys {
+>>                        compatible =3D "gpio-keys";
+>> -                       #address-cells =3D <1>;
+>> -                       #size-cells =3D <0>;
+>>                        autorepeat;
+>>                        button@21 {
 >=20
-> This is not exactly a typical SPI bus, though I suppose some of that
-> documentation could apply...
+> FYI, with "[PATCH] scripts/dtc: Update to upstream version 53bf130b1c=
+dd":
+> (http://www.spinics.net/lists/devicetree/msg117206.html) applied:
+>=20
+> Warning (unit_address_vs_reg): Node /keyboard/button@21 has a unit
+> name, but no reg property
 >=20
 
-OK. I'll modify the description.
+Hi Andreas,
+This means you can also drop the unit-address (the @21 part) for the bu=
+tton.
+What about using a more relevant name like "key_up" instead of "button"=
+?
 
-[...]
->> +static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8=
- *buf,
->> +		int len)
->> +{
->> +	struct hifmc_priv *priv =3D nor->priv;
->> +	struct hifmc_host *host =3D priv->host;
->> +	int ret;
->> +
->> +	ret =3D hisi_spi_nor_send_cmd(nor, opcode, len);
->> +	if (ret)
->> +		return ret;
->> +
->> +	memcpy(buf, host->iobase, len);
->=20
-> sparse doesn't like any of these memcpy()'s, since that's __iomem. Ar=
-e
-> you sure you want a regular memcpy here, and elsewhere?
->=20
-It's not a must to use memcpy though host->iobase represents a segment =
-of inner memory
-which stores data from flash device byte by byte.  I will give up using=
- memcpy here and
-hisi_spi_nor_write_reg() in next version. Thank you!
-
->> +
->> +	return 0;
->> +}
->> +
-[...]
->> +static void hisi_spi_nor_dma_transfer(struct spi_nor *nor, u32 star=
-t_off,
->> +		u32 dma_buf, u32 len, u8 op_type)
->=20
-> Does this controller support 64-bit addresses? What if you see LPAE, =
-or
-> an ARM64 CPU? It'd be nice if you don't truncate potentially 64-bit
-> dma_buf down to u32.
->=20
-> Brian
->=20
-No, this controller just supports 32-bit addresses. So I think I have t=
-o truncate 64-bit dma_buf. :(
-
-Thank you very much!
-
-Regards,
-Jiancheng
+Julien--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
