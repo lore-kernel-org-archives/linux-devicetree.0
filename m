@@ -1,61 +1,165 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Tue, 8 Mar 2016 13:25:01 +0100
-Message-ID: <56DEC49D.4@hartkopp.net>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56DC1561.9060306@hartkopp.net>
- <SG2PR06MB10386D712BC8C345DF726523C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DD36F5.2000308@pengutronix.de>
- <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DE8345.50901@hartkopp.net>
- <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 3/4] ARM: dts: rockchip: add syscon-reboot-mode DT node
+Date: Tue,  8 Mar 2016 20:25:21 +0800
+Message-ID: <1457439921-8233-1-git-send-email-andy.yan@rock-chips.com>
+References: <1457439716-8084-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1457439716-8084-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, jwerner-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+Rockchip platform use a SYSCON mapped register store
+the reboot mode magic value for bootloader to use when
+system reboot. So add syscon-reboot-mode driver DT node
+for rk3xxx,rk3036, rk3288 platform
 
-On 08.03.2016 09:57, Ramesh Shanmugasundaram wrote:
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
->
-> As you mentioned further down, when a user does this
->
-> "ip link set can0 up type can bitrate 1000000"
->
-> the intention is to put the controller in CAN 2.0 mode. Even if we use a status flag or copy the data bitrate equal to the nominal bitrate, what would it achieve? It still cannot be a CAN 2.0 node - it is a CAN FD node configured with same nominal & data bitrate.
->
-> This is why I have this check in ndo_open, so that the user is aware it is a CAN FD node always and avoid misconfiguration like above with EOPNOTSUPP.
->
+---
 
-ok - got it now.
+Changes in v5: None
+Changes in v4: None
+Changes in v3:
+- descirbe all reboot mode as property instead of subnode
+- add rk3036 support
 
-In fact you provided a CAN driver which is "CAN-FD-only".
-We did not had that before but there's a solution for this kind of setup.
+Changes in v2:
+- make this node as a subnode of PMU
 
-There is a similar case with CAN_CTRLMODE_FD_NON_ISO we had on the M_CAN 
-driver which only provides non-ISO configuration for the supported IP core and 
-_no_ option to _change_ this value:
+Changes in v1:
+- correct the maskrom magic number
+- use macro defined in rockchip_boot-mode.h for reboot-mode DT node
 
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=6cfda7fbebe8a4fd33ea5722fa0212f98f643c35
+ arch/arm/boot/dts/rk3036.dtsi                | 11 ++++++++++-
+ arch/arm/boot/dts/rk3288.dtsi                | 10 ++++++++++
+ arch/arm/boot/dts/rk3xxx.dtsi                | 12 +++++++++++-
+ include/dt-bindings/soc/rockchip_boot-mode.h | 15 +++++++++++++++
+ 4 files changed, 46 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/soc/rockchip_boot-mode.h
 
-If you would do it similar in rcar_canfd.c with
-
-/* CAN_CTRLMODE_FD is fixed with R-Car CAN FD */
-priv->can.ctrlmode = CAN_CTRLMODE_FD;
-
-and remove CAN_CTRLMODE_FD from the priv->can.ctrlmode_supported assignment 
-then it should do the entire configuration process correctly for you.
-Including the proper tests for the two bitrates.
-(see open_candev() in linux/drivers/net/can/dev.c)
-
-Right?
-
-Best regards,
-Oliver
+diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+index b9567c1..4011c2e 100644
+--- a/arch/arm/boot/dts/rk3036.dtsi
++++ b/arch/arm/boot/dts/rk3036.dtsi
+@@ -43,6 +43,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ #include <dt-bindings/clock/rk3036-cru.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -261,8 +262,16 @@
+ 	};
+ 
+ 	grf: syscon@20008000 {
+-		compatible = "rockchip,rk3036-grf", "syscon";
++		compatible = "rockchip,rk3036-grf", "syscon", "simple-mfd";
+ 		reg = <0x20008000 0x1000>;
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x1d8>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-bootloader = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_BL_DOWNLOAD>;
++		};
+ 	};
+ 
+ 	acodec: acodec-ana@20030000 {
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 8ac49f3..9aa7d73 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -45,6 +45,7 @@
+ #include <dt-bindings/clock/rk3288-cru.h>
+ #include <dt-bindings/thermal/thermal.h>
+ #include <dt-bindings/power/rk3288-power.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -713,6 +714,15 @@
+ 				clocks = <&cru ACLK_GPU>;
+ 			};
+ 		};
++
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x94>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-bootloader = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_BL_DOWNLOAD>;
++		};
+ 	};
+ 
+ 	sgrf: syscon@ff740000 {
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index 99eeea7..f8f661f 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -43,6 +43,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/rockchip_boot-mode.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -243,8 +244,17 @@
+ 	};
+ 
+ 	pmu: pmu@20004000 {
+-		compatible = "rockchip,rk3066-pmu", "syscon";
++		compatible = "rockchip,rk3066-pmu", "syscon", "simple-mfd";
+ 		reg = <0x20004000 0x100>;
++
++		reboot-mode {
++			compatible = "syscon-reboot-mode";
++			offset = <0x40>;
++			mode-normal = <BOOT_NORMAL>;
++			mode-recovery = <BOOT_RECOVERY>;
++			mode-bootloader = <BOOT_FASTBOOT>;
++			mode-loader = <BOOT_BL_DOWNLOAD>;
++		};
+ 	};
+ 
+ 	grf: grf@20008000 {
+diff --git a/include/dt-bindings/soc/rockchip_boot-mode.h b/include/dt-bindings/soc/rockchip_boot-mode.h
+new file mode 100644
+index 0000000..62cfab3
+--- /dev/null
++++ b/include/dt-bindings/soc/rockchip_boot-mode.h
+@@ -0,0 +1,15 @@
++#ifndef __ROCKCHIP_BOOT_MODE_H
++#define __ROCKCHIP_BOOT_MODE_H
++
++/*high 24 bits is tag, low 8 bits is type*/
++#define REBOOT_FLAG		0x5242C300
++/* normal boot */
++#define BOOT_NORMAL		(REBOOT_FLAG + 0)
++/* enter bootloader rockusb mode */
++#define BOOT_BL_DOWNLOAD	(REBOOT_FLAG + 1)
++/* enter recovery */
++#define BOOT_RECOVERY		(REBOOT_FLAG + 3)
++ /* enter fastboot mode */
++#define BOOT_FASTBOOT		(REBOOT_FLAG + 9)
++
++#endif
+-- 
+1.9.1
