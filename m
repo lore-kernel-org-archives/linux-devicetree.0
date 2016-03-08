@@ -1,58 +1,154 @@
-From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [1/3] TDM: Add maxim ds26522 document to bindings
-Date: Tue, 8 Mar 2016 17:37:23 -0600
-Message-ID: <20160308233723.GA32122@home.buserror.net>
-References: <1452221215-12681-1-git-send-email-qiang.zhao@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452221215-12681-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: David Daney <ddaney.cavm@gmail.com>
+Subject: [PATCH v15 0/6] arm64, numa: Add numa support for arm64 platforms
+Date: Tue,  8 Mar 2016 15:59:41 -0800
+Message-ID: <1457481587-8976-1-git-send-email-ddaney.cavm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Matt Fleming <matt@codeblueprint.co.uk>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 08, 2016 at 10:46:53AM +0800, Zhao Qiang wrote:
-> Add maxim ds26522 document to
-> Documentation/devicetree/bindings/tdm/maxim,ds26522.txt
-> 
-> Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/tdm/maxim,ds26522.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/tdm/maxim,ds26522.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/tdm/maxim,ds26522.txt b/Documentation/devicetree/bindings/tdm/maxim,ds26522.txt
-> new file mode 100644
-> index 0000000..3548c51
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/tdm/maxim,ds26522.txt
-> @@ -0,0 +1,13 @@
-> +* Maxim (Dallas) DS26522 Octal T1/E1/J1 Transceiver
-> +
-> +Required properties:
-> +- compatible: Should contain "maxim,ds26522".
-> +- reg: SPI CS
-> +- spi-max-frequency: SPI bus max frequency.
-> +
-> +Example:
-> +	slic@2 {
-> +		compatible = "maxim,ds26522";
-> +		reg = <2>;
-> +		spi-max-frequency = <2000000>;
-> +	};
+From: David Daney <david.daney@cavium.com>
 
-An almost identical file was added by you in commit
-a109752ea6a55c3682b6ac9114a125c5ce7e5353
+v15:
 
-There is also overlap in the later patches of this set.
+	- Make the distance-map node optional (again), if it is not in
+          the device tree, default values are used.
 
-Why did you send this again?  What tree are you basing your patches on?
+	- Minor cleanups to of_numa.c as suggested by Rob Harring.
 
--Scott
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v14:
+	- Revised patch to unflatten the device tree earlier.
+
+	- Cleanups and added EXPORT_SYMBOL to of_numa.c as suggested
+          by Rob Harring
+
+v13:
+	- Added patch to unflatten the device tree earlier.
+
+	- Rewrote of_numa.c to work on unflattened the device tree.
+
+	- Cleanup of EXPORTs in arch/arm64/mm/numa.c as suggested by
+          Will Deacon.
+
+v12:
+
+	- Replaced 6 patches from Ard Biesheuvel with new simpler, and
+          more correct, single patch, also from Ard.
+
+v11:
+	- Dropped cleanup patches for other architectures, they will be
+          submitted as a separate set after more testing.
+
+	- Added patch set from Ard Biesheuvel that are needed to make
+          the whole thing actually work.  Previously this was a
+          separate set.
+
+	- Kconfig and other fixes and simplifications as suggested by
+          Rob Herring.
+
+	- Rearranged, refactored and reordered so that we don't patch
+          new files multiple times.
+
+	- Summary:
+
+		o 6 patches from Ard Biesheuvel to allow use of
+		  "memory" nodes with efi stub.
+
+		o 2 patches to document and add of_numa.c
+
+		o 1 patch to add arm64 NUMA support.
+
+		o 1 patch to add NUMA balancing support for arm64.
+
+v10:
+	- Incorporated review comments from Rob Herring.
+	- Moved numa binding and implementation to devicetree core.
+	- Added cleanup patch to remove redundant NODE_DATA macro from asm header files
+	- Include numa balancing support for arm64 patch in this series.
+	- Fix tile build issue reported by the kbuild robot(patch 7)
+
+v9:	- Added cleanup patch to reuse and avoid redefinition of cpumask_of_pcibus
+	  as suggested from Will Deacon and Bjorn Helgaas.
+	  - Including patch to Make pci-host-generic driver numa aware.
+	  - Incorporated comment from Shannon Zhao.
+
+v8:
+	- Incorporated review comments of Mark Rutland and Will Deacon.
+	- Added pci helper function and macro for numa.
+
+v7:
+	- managing numa memory mapping using memblock.
+	- Incorporated review comments of Mark Rutland.
+
+v6:
+	- defined and implemented the numa dt binding using
+	node property proximity and device node distance-map.
+	- renamed dt_numa to of_numa
+
+v5:
+        - created base verion of numa.c which creates dummy numa without using dt
+          on single socket platforms. Then added patches for dt support.
+        - Incorporated review comments from Hanjun Guo.
+
+v4:
+done changes as per Arnd review comments.
+
+v3:
+Added changes to support numa on arm64 based platforms.
+Tested these patches on cavium's multinode(2 node topology) platform.
+In this patchset, defined and implemented dt bindings for numa mapping
+for core and memory using device node property arm,associativity.
+
+v2:
+Defined and implemented numa map for memory, cores to node and
+proximity distance matrix of nodes.
+
+v1:
+Initial patchset to support numa on arm64 platforms.
+
+Note: 1. This patchset is tested for NUMA and without NUMA with dt
+        (both with and without NUMA bindings) on thunderx single
+        socket and dual socket boards.
+
+Ard Biesheuvel (1):
+  efi: ARM/arm64: ignore DT memory nodes instead of removing them
+
+David Daney (2):
+  of, numa: Add NUMA of binding implementation.
+  arm64: Move unflatten_device_tree() call earlier.
+
+Ganapatrao Kulkarni (3):
+  Documentation, dt, numa: dt bindings for NUMA.
+  arm64, numa: Add NUMA support for arm64 platforms.
+  arm64, mm, numa: Add NUMA balancing support for arm64.
+
+ Documentation/devicetree/bindings/numa.txt | 275 ++++++++++++++++++++
+ arch/arm64/Kconfig                         |  27 ++
+ arch/arm64/include/asm/mmu.h               |   3 +-
+ arch/arm64/include/asm/mmzone.h            |  12 +
+ arch/arm64/include/asm/numa.h              |  45 ++++
+ arch/arm64/include/asm/pgtable.h           |  15 ++
+ arch/arm64/include/asm/topology.h          |  10 +
+ arch/arm64/kernel/pci.c                    |  10 +
+ arch/arm64/kernel/setup.c                  |  19 +-
+ arch/arm64/kernel/smp.c                    |   4 +
+ arch/arm64/mm/Makefile                     |   1 +
+ arch/arm64/mm/init.c                       |  34 ++-
+ arch/arm64/mm/mmu.c                        |  18 +-
+ arch/arm64/mm/numa.c                       | 396 +++++++++++++++++++++++++++++
+ drivers/firmware/efi/arm-init.c            |   8 +
+ drivers/firmware/efi/libstub/fdt.c         |  24 +-
+ drivers/of/Kconfig                         |   3 +
+ drivers/of/Makefile                        |   1 +
+ drivers/of/of_numa.c                       | 211 +++++++++++++++
+ include/linux/of.h                         |   9 +
+ 20 files changed, 1085 insertions(+), 40 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/numa.txt
+ create mode 100644 arch/arm64/include/asm/mmzone.h
+ create mode 100644 arch/arm64/include/asm/numa.h
+ create mode 100644 arch/arm64/mm/numa.c
+ create mode 100644 drivers/of/of_numa.c
+
+-- 
+1.8.3.1
