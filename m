@@ -1,108 +1,113 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH V5 1/4] net-next: mediatek: document MediaTek SoC ethernet binding
-Date: Tue,  8 Mar 2016 11:29:54 +0100
-Message-ID: <1457432997-25526-2-git-send-email-blogic@openwrt.org>
-References: <1457432997-25526-1-git-send-email-blogic@openwrt.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457432997-25526-1-git-send-email-blogic@openwrt.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, =?UTF-8?q?Steven=20Liu=20=28=E5=8A=89=E4=BA=BA=E8=B1=AA=29?= <steven.liu@mediatek.com>, =?UTF-8?q?Carlos=20Huang=20=28=E9=BB=83=E5=A3=AB=E5=BD=B0=29?= <Carlos.Huang@mediatek.com>, Felix Fietkau <nbd@openwrt.org>, Michael Lee <igvtee@gmail.com>, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
+From: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Tue, 8 Mar 2016 11:33:21 +0100
+Message-ID: <CAG374jD=O+ETuGRz3DPR9FTC3TkoKff+Q0psOjBksLz8Lrc=nA@mail.gmail.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego> <56DD7593.5060003@suse.de>
+ <56DD8176.2080603@st.com> <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com>
+ <56DDA26C.3050301@suse.de> <56DDA3D5.3090209@st.com> <56DDB749.1020808@suse.de>
+ <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
+ <CAG374jBLD5YuBT=r3V98OqdUTXMepvQ_tLz4XMJdQMzzGYi22A@mail.gmail.com> <56DEA840.1050305@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56DEA840.1050305-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the binding documentation for the MediaTek Ethernet
-controller.
+On 8 March 2016 at 11:24, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org> w=
+rote:
+> On 3/8/2016 11:03 AM, Gabriel Fernandez wrote:
+>>
+>> Hi Andreas and Dinh  Thanks for your feedback i will check it.
+>
+>
+> hmm, I was looking at the code and indeed I have some doubt on
+> mdio_bus_data management that the patch changes explaining
+> why the Andreas's box fails and phy_add is not detected.
+>
+> Keep the sync
+>
+> peppe
+>
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/net/mediatek-net.txt       |   77 ++++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/mediatek-net.txt
+Okay Thanks Peppe
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-new file mode 100644
-index 0000000..5ca7929
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -0,0 +1,77 @@
-+MediaTek Frame Engine Ethernet controller
-+=========================================
-+
-+The frame engine ethernet controller can be found on MediaTek SoCs. These SoCs
-+have dual GMAC each represented by a child node..
-+
-+* Ethernet controller node
-+
-+Required properties:
-+- compatible: Should be "mediatek,mt7623-eth"
-+- reg: Address and length of the register set for the device
-+- interrupts: Should contain the frame engines interrupt
-+- clocks: the clock used by the core
-+- clock-names: the names of the clock listed in the clocks property. These are
-+	"ethif", "esw", "gp2", "gp1"
-+- power-domains: phandle to the power domain that the ethernet is part of
-+- resets: Should contain a phandle to the ethsys reset signal
-+- reset-names: Should contain the reset signal name "eth"
-+- mediatek,ethsys: phandle to the syscon node that handles the port setup
-+- mediatek,pctl: phandle to the syscon node that handles the ports slew rate
-+	and driver current
-+
-+Optional properties:
-+- interrupt-parent: Should be the phandle for the interrupt controller
-+  that services interrupts for this device
-+
-+
-+* Ethernet MAC node
-+
-+Required properties:
-+- compatible: Should be "mediatek,eth-mac"
-+- reg: The number of the MAC
-+- phy-handle: see ethernet.txt file in the same directory.
-+
-+Example:
-+
-+eth: ethernet@1b100000 {
-+	compatible = "mediatek,mt7623-eth";
-+	reg = <0 0x1b100000 0 0x20000>;
-+	clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+		 <&ethsys CLK_ETHSYS_ESW>,
-+		 <&ethsys CLK_ETHSYS_GP2>,
-+		 <&ethsys CLK_ETHSYS_GP1>;
-+	clock-names = "ethif", "esw", "gp2", "gp1";
-+	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
-+	reset-names = "eth";
-+	mediatek,ethsys = <&ethsys>;
-+	mediatek,pctl = <&syscfg_pctl_a>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	gmac1: mac@0 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <0>;
-+		phy-handle = <&phy0>;
-+	};
-+
-+	gmac2: mac@1 {
-+		compatible = "mediatek,eth-mac";
-+		reg = <1>;
-+		phy-handle = <&phy1>;
-+	};
-+
-+	mdio-bus {
-+		phy0: ethernet-phy@0 {
-+			reg = <0>;
-+			phy-mode = "rgmii";
-+		};
-+
-+		phy1: ethernet-phy@1 {
-+			reg = <1>;
-+			phy-mode = "rgmii";
-+		};
-+	};
-+};
--- 
-1.7.10.4
+Gabriel
+
+>
+>
+>> Best regards
+>>
+>> Gabriel
+>>
+>> On 8 March 2016 at 00:22, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>> On Mon, Mar 7, 2016 at 11:15 AM, Andreas F=C3=A4rber <afaerber@suse=
+=2Ede> wrote:
+>>>>
+>>>> Am 07.03.2016 um 16:52 schrieb Giuseppe CAVALLARO:
+>>>>>
+>>>>> On 3/7/2016 4:46 PM, Andreas F=C3=A4rber wrote:
+>>>>>>
+>>>>>> Am 07.03.2016 um 16:09 schrieb Giuseppe CAVALLARO:
+>>>>>>>
+>>>>>>> On 3/7/2016 3:27 PM, Andreas F=C3=A4rber wrote:
+>>>>>>>>
+>>>>>>>> Indeed, reverting Gabriel's commit fixes the observed error me=
+ssages
+>>>>>>
+>>>>>> [...]
+>>>>>>>>
+>>>>>>>> However, I am unable to ping any hosts on the network now.
+>>>>>>>
+>>>>>>>
+>>>>>>> hmm, this could be another problem. I wonder if you can
+>>>>>>> check which recent patch is introducing the problem on ARM64.
+>>>>>>> For example if this depends on Oct_2015 update.
+>>>>>>
+>>>>>>
+>>>>>> I've had success reverting drivers/net/ethernet/stmicro/ up to a=
+nd
+>>>>>> including "stmmac: first frame prep at the end of xmit routine",=
+ i.e.
+>>>>>> top 7 commits.
+>>>>>
+>>>>>
+>>>>> Andreas, I will check it and let you know asap.
+>>>>
+>>>>
+>>>> I verified that it's just these two commits that I need to revert:
+>>>>
+>>>> "stmmac: Fix 'eth0: No PHY found' regression"
+>>>> "stmmac: first frame prep at the end of xmit routine"
+>>>>
+>>>> Those in between don't cause conflicts and seem to work okay.
+>>>>
+>>>
+>>> I'm seeing the same issue on the SoCFPGA platform:
+>>>
+>>> libphy: PHY stmmac-0:ffffffff not found
+>>> eth0: Could not attach to PHY
+>>> stmmac_open: Cannot attach to PHY (error: -19)
+>>>
+>>> If I just revert:
+>>>
+>>>   "stmmac: Fix 'eth0: No PHY found' regression"
+>>>
+>>> then the issue goes away.
+>>>
+>>> Thanks,
+>>> Dinh
+>>
+>>
+>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
