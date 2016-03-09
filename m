@@ -1,133 +1,111 @@
-From: Zhao Qiang <qiang.zhao@nxp.com>
-Subject: [PATCH v5 5/7] T104xD4RDB: Add qe node to t104xd4rdb
-Date: Wed, 9 Mar 2016 09:21:32 +0800
-Message-ID: <1457486494-11377-5-git-send-email-qiang.zhao@nxp.com>
-References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ata: sata_rcar: add gen[123] fallback compatibility
+ strings
+Date: Wed, 9 Mar 2016 11:24:23 +0900
+Message-ID: <20160309022420.GA4986@verge.net.au>
+References: <1457400642-19377-1-git-send-email-horms+renesas@verge.net.au>
+ <20160308013312.GA19565@verge.net.au>
+ <CAMuHMdXeU3UfLe7nFV3PHksJKvUzUbn0tifAZBNcrxzgXmiEcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: oss@buserror.net, leoyang.li@nxp.com, xiaobo.xie@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Zhao Qiang <qiang.zhao@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXeU3UfLe7nFV3PHksJKvUzUbn0tifAZBNcrxzgXmiEcA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Tejun Heo <tj@kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-add qe node to t104xd4rdb.dtsi and t1040si-post.dtsi.
+On Tue, Mar 08, 2016 at 09:37:24AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Tue, Mar 8, 2016 at 2:33 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Tue, Mar 08, 2016 at 10:30:42AM +0900, Simon Horman wrote:
+> >> Add fallback compatibility string for R-Car Gen 1, 2 and 3.
+> >>
+> >> In the case of Renesas R-Car hardware we know that there are generations of
+> >> SoCs, e.g. Gen 1 and 2. But beyond that its not clear what the relationship
+> >> between IP blocks might be. For example, I believe that r8a7779 is older
+> >> than r8a7778 but that doesn't imply that the latter is a descendant of the
+> >> former or vice versa.
+> >>
+> >> We can, however, by examining the documentation and behaviour of the
+> >> hardware at run-time observe that the current driver implementation appears
+> >> to be compatible with the IP blocks on SoCs within a given generation.
+> >>
+> >> For the above reasons and convenience when enabling new SoCs a
+> >> per-generation fallback compatibility string scheme being adopted for
+> >> drivers for Renesas SoCs.
+> >>
+> >> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> >> ---
+> >> Based on libata/for-next
+> >> ---
+> >>  Documentation/devicetree/bindings/ata/sata_rcar.txt | 15 ++++++++++++---
+> >>  drivers/ata/sata_rcar.c                             | 12 ++++++++++++
+> >>  2 files changed, 24 insertions(+), 3 deletions(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> index 0764f9ab63dc..b44048176938 100644
+> >> --- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> +++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+> >> @@ -1,14 +1,23 @@
+> >>  * Renesas R-Car SATA
+> >>
+> >>  Required properties:
+> >> -- compatible         : should contain one of the following:
+> >> +- compatible         : should contain one or more of the following:
+> >>                         - "renesas,sata-r8a7779" for R-Car H1
+> >> -                         ("renesas,rcar-sata" is deprecated)
+> >>                         - "renesas,sata-r8a7790-es1" for R-Car H2 ES1
+> >>                         - "renesas,sata-r8a7790" for R-Car H2 other than ES1
+> >>                         - "renesas,sata-r8a7791" for R-Car M2-W
+> >>                         - "renesas,sata-r8a7793" for R-Car M2-N
+> >>                         - "renesas,sata-r8a7795" for R-Car H3
+> >> +                       - "renesas,rcar-gen1-sata" for a generic R-Car Gen1 compatible device
+> 
+> Given R-Car H1 is the only member of the R-Car Gen1 family that has SATA
+> (both M1A and E1 don't seem to have it), do we want to support
+> "renesas,rcar-gen1-sata" in the bindings...
 
-Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
----
-Changes for v2
-	- rebase
-Changes for v3
-	- rebase
-Changes for v4
-	- rebase
-Changes for v5
-	- rebase
+I added it mainly for consistency. I'm happy to drop it if you like.
 
- arch/powerpc/boot/dts/fsl/t1040si-post.dtsi | 45 +++++++++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi   | 38 ++++++++++++++++++++++++
- 2 files changed, 83 insertions(+)
-
-diff --git a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-index e0f4da5..012f813 100644
---- a/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t1040si-post.dtsi
-@@ -673,3 +673,48 @@
- 		};
- 	};
- };
-+
-+&qe {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	device_type = "qe";
-+	compatible = "fsl,qe";
-+	fsl,qe-num-riscs = <1>;
-+	fsl,qe-num-snums = <28>;
-+
-+	qeic: interrupt-controller@80 {
-+		interrupt-controller;
-+		compatible = "fsl,qe-ic";
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		reg = <0x80 0x80>;
-+		interrupts = <95 2 0 0  94 2 0 0>; //high:79 low:78
-+	};
-+
-+	ucc@2000 {
-+		cell-index = <1>;
-+		reg = <0x2000 0x200>;
-+		interrupts = <32>;
-+		interrupt-parent = <&qeic>;
-+	};
-+
-+	ucc@2200 {
-+		cell-index = <3>;
-+		reg = <0x2200 0x200>;
-+		interrupts = <34>;
-+		interrupt-parent = <&qeic>;
-+	};
-+
-+	muram@10000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "fsl,qe-muram", "fsl,cpm-muram";
-+		ranges = <0x0 0x10000 0x6000>;
-+
-+		data-only@0 {
-+			compatible = "fsl,qe-muram-data",
-+			"fsl,cpm-muram-data";
-+			reg = <0x0 0x6000>;
-+		};
-+	};
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-index 3f6d7c6..7cc3596 100644
---- a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-@@ -212,4 +212,42 @@
- 				  0 0x00010000>;
- 		};
- 	};
-+
-+	qe: qe@ffe140000 {
-+		ranges = <0x0 0xf 0xfe140000 0x40000>;
-+		reg = <0xf 0xfe140000 0 0x480>;
-+		brg-frequency = <0>;
-+		bus-frequency = <0>;
-+
-+		si1: si@700 {
-+			compatible = "fsl,t1040-qe-si";
-+			reg = <0x700 0x80>;
-+		};
-+
-+		siram1: siram@1000 {
-+			compatible = "fsl,t1040-qe-siram";
-+			reg = <0x1000 0x800>;
-+		};
-+
-+		ucc_hdlc: ucc@2000 {
-+			compatible = "fsl,ucc-hdlc";
-+			rx-clock-name = "clk8";
-+			tx-clock-name = "clk9";
-+			fsl,rx-sync-clock = "rsync_pin";
-+			fsl,tx-sync-clock = "tsync_pin";
-+			fsl,tx-timeslot-mask = <0xfffffffe>;
-+			fsl,rx-timeslot-mask = <0xfffffffe>;
-+			fsl,tdm-framer-type = "e1";
-+			fsl,tdm-id = <0>;
-+			fsl,siram-entry-id = <0>;
-+			fsl,tdm-interface;
-+		};
-+
-+		ucc_serial: ucc@2200 {
-+			compatible = "fsl,t1040-ucc-uart";
-+			port-number = <0>;
-+			rx-clock-name = "brg2";
-+			tx-clock-name = "brg2";
-+		};
-+	};
- };
--- 
-2.1.0.27.g96db324
+> >> +                       - "renesas,rcar-gen2-sata" for a generic R-Car Gen2 compatible device
+> >> +                       - "renesas,rcar-gen3-sata" for a generic R-Car Gen3 compatible device
+> >> +                       - "renesas,rcar-sata" is deprecated
+> 
+> >> --- a/drivers/ata/sata_rcar.c
+> >> +++ b/drivers/ata/sata_rcar.c
+> >> @@ -858,6 +858,18 @@ static struct of_device_id sata_rcar_match[] = {
+> >>               .compatible = "renesas,sata-r8a7795",
+> >>               .data = (void *)RCAR_GEN2_SATA
+> >>       },
+> >> +     {
+> >> +             .compatible = "renesas,rcar-gen1-sata",
+> >> +             .data = (void *)RCAR_GEN1_SATA
+> >> +     },
+> 
+> ... and in the driver?
+> It already matches on (deprecated) "renesas,rcar-sata" and
+> "renesas,sata-r8a7779"?
+> 
+> >> +     {
+> >> +             .compatible = "renesas,rcar-gen2-sata",
+> >> +             .data = (void *)RCAR_GEN2_SATA
+> >> +     },
+> >> +     {
+> >> +             .compatible = "renesas,rcar-gen3-sata",
+> >> +             .data = (void *)RCAR_GEN2_SATA
+> >> +     },
+> >>       { },
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
