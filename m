@@ -1,144 +1,52 @@
-From: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 1/2] iio: mma8452: add support for FXLS8471Q
-Date: Wed,  9 Mar 2016 12:01:29 +0100
-Message-ID: <1457521289-32717-1-git-send-email-martink@posteo.de>
-References: <1457514014-19032-1-git-send-email-martink@posteo.de>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457514014-19032-1-git-send-email-martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org, teodora.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tiberiu.a.breana-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/4] Add AXP209 GPIO driver
+Date: Wed,  9 Mar 2016 11:50:10 +0100
+Message-ID: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBVMGQC3QKGQEMAZFXPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for Freescale's (now NXP's) FXLS8471Q accelerometer.
+Hi,
 
-We use MMA8451Q's configuration because for what the driver supports,
-FXLS8471Q is the same.
+The axp209 PMIC used in combination to some Allwinner SoCs has a bunch
+of GPIOs accessible. Some boards use these to control their backlight
+or a few LEDs.
 
-Support for FXLS8471Q's features (fast SPI interface and a larger FIFO,
-among others) can be added to this driver anytime.
+There's supposed to be 4 of them, but the fourth one has a different
+configuration register scheme, and I couldn't find any board that was
+using this GPIO. It will be probably be supported eventually, but
+until then, we support only the first 3 GPIOs.
 
-See it's datasheet for the details:
-http://cache.nxp.com/files/sensors/doc/data_sheet/FXLS8471Q.pdf
+Let me know what you think,
+Maxime
 
-Signed-off-by: Martin Kepplinger <martink-1KBjaw7Xf1+zQB+pC5nmwQ@public.gmane.org>
----
-revision history:
-v2:
-	forgot to add i2c_device_id to table, for consistency
+Maxime Ripard (4):
+  gpio: Add AXP209 GPIO driver
+  mfd: axp20x: Add AXP209 GPIO driver to the mfd
+  ARM: dt: axp209: Add AXP209 GPIO driver
+  ARM: sun5i: chip: Add status LED
 
+ .../devicetree/bindings/gpio/gpio-axp209.txt       |  30 ++++
+ arch/arm/boot/dts/axp209.dtsi                      |   6 +
+ arch/arm/boot/dts/sun5i-r8-chip.dts                |  10 ++
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-axp209.c                         | 166 +++++++++++++++++++++
+ drivers/mfd/axp20x.c                               |   3 +
+ 7 files changed, 222 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
+ create mode 100644 drivers/gpio/gpio-axp209.c
 
- .../devicetree/bindings/iio/accel/mma8452.txt      |  3 ++-
- drivers/iio/accel/Kconfig                          |  3 ++-
- drivers/iio/accel/mma8452.c                        | 22 ++++++++++++++++++++++
- 3 files changed, 26 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/accel/mma8452.txt b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-index 165937e..45f5c5c 100644
---- a/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/mma8452.txt
-@@ -1,4 +1,4 @@
--Freescale MMA8451Q, MMA8452Q, MMA8453Q, MMA8652FC or MMA8653FC
-+Freescale MMA8451Q, MMA8452Q, MMA8453Q, MMA8652FC, MMA8653FC or FXLS8471Q
- triaxial accelerometer
- 
- Required properties:
-@@ -9,6 +9,7 @@ Required properties:
-     * "fsl,mma8453"
-     * "fsl,mma8652"
-     * "fsl,mma8653"
-+    * "fsl,fxls8471"
- 
-   - reg: the I2C address of the chip
- 
-diff --git a/drivers/iio/accel/Kconfig b/drivers/iio/accel/Kconfig
-index b0d3ecf..c0f56f4 100644
---- a/drivers/iio/accel/Kconfig
-+++ b/drivers/iio/accel/Kconfig
-@@ -143,7 +143,8 @@ config MMA8452
- 	select IIO_TRIGGERED_BUFFER
- 	help
- 	  Say yes here to build support for the following Freescale 3-axis
--	  accelerometers: MMA8451Q, MMA8452Q, MMA8453Q, MMA8652FC, MMA8653FC.
-+	  accelerometers: MMA8451Q, MMA8452Q, MMA8453Q, MMA8652FC, MMA8653FC,
-+	  FXLS8471Q.
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called mma8452.
-diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-index 5ca0d16..305ed0e 100644
---- a/drivers/iio/accel/mma8452.c
-+++ b/drivers/iio/accel/mma8452.c
-@@ -6,6 +6,7 @@
-  * MMA8453Q (10 bit)
-  * MMA8652FC (12 bit)
-  * MMA8653FC (10 bit)
-+ * FXLS8471Q (14 bit)
-  *
-  * Copyright 2015 Martin Kepplinger <martin.kepplinger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-  * Copyright 2014 Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
-@@ -92,6 +93,7 @@
- #define MMA8453_DEVICE_ID			0x3a
- #define MMA8652_DEVICE_ID			0x4a
- #define MMA8653_DEVICE_ID			0x5a
-+#define FXLS8471_DEVICE_ID			0x6a
- 
- #define MMA8452_AUTO_SUSPEND_DELAY_MS		2000
- 
-@@ -1055,6 +1057,7 @@ enum {
- 	mma8453,
- 	mma8652,
- 	mma8653,
-+	fxls8471,
- };
- 
- static const struct mma_chip_info mma_chip_info_table[] = {
-@@ -1146,6 +1149,22 @@ static const struct mma_chip_info mma_chip_info_table[] = {
- 		.ev_ths_mask = MMA8452_FF_MT_THS_MASK,
- 		.ev_count = MMA8452_FF_MT_COUNT,
- 	},
-+	[fxls8471] = {
-+		.chip_id = FXLS8471_DEVICE_ID,
-+		.channels = mma8451_channels,
-+		.num_channels = ARRAY_SIZE(mma8451_channels),
-+		.mma_scales = { {0, 2394}, {0, 4788}, {0, 9577} },
-+		.ev_cfg = MMA8452_TRANSIENT_CFG,
-+		.ev_cfg_ele = MMA8452_TRANSIENT_CFG_ELE,
-+		.ev_cfg_chan_shift = 1,
-+		.ev_src = MMA8452_TRANSIENT_SRC,
-+		.ev_src_xe = MMA8452_TRANSIENT_SRC_XTRANSE,
-+		.ev_src_ye = MMA8452_TRANSIENT_SRC_YTRANSE,
-+		.ev_src_ze = MMA8452_TRANSIENT_SRC_ZTRANSE,
-+		.ev_ths = MMA8452_TRANSIENT_THS,
-+		.ev_ths_mask = MMA8452_TRANSIENT_THS_MASK,
-+		.ev_count = MMA8452_TRANSIENT_COUNT,
-+	},
- };
- 
- static struct attribute *mma8452_attributes[] = {
-@@ -1275,6 +1294,7 @@ static const struct of_device_id mma8452_dt_ids[] = {
- 	{ .compatible = "fsl,mma8453", .data = &mma_chip_info_table[mma8453] },
- 	{ .compatible = "fsl,mma8652", .data = &mma_chip_info_table[mma8652] },
- 	{ .compatible = "fsl,mma8653", .data = &mma_chip_info_table[mma8653] },
-+	{ .compatible = "fsl,fxls8471", .data = &mma_chip_info_table[fxls8471] },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mma8452_dt_ids);
-@@ -1312,6 +1332,7 @@ static int mma8452_probe(struct i2c_client *client,
- 	case MMA8453_DEVICE_ID:
- 	case MMA8652_DEVICE_ID:
- 	case MMA8653_DEVICE_ID:
-+	case FXLS8471_DEVICE_ID:
- 		if (ret == data->chip_info->chip_id)
- 			break;
- 	default:
-@@ -1518,6 +1539,7 @@ static const struct i2c_device_id mma8452_id[] = {
- 	{ "mma8453", mma8453 },
- 	{ "mma8652", mma8652 },
- 	{ "mma8653", mma8653 },
-+	{ "fxls8471", fxls8471 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, mma8452_id);
 -- 
-2.1.4
+2.7.2
