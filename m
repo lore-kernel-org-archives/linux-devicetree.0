@@ -1,52 +1,54 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/6] Implement generic ASoC HDMI codec and use it in
- tda998x
-Date: Wed, 9 Mar 2016 10:29:07 +0700
-Message-ID: <20160309032907.GG3898@sirena.org.uk>
-References: <cover.1457465383.git.jsarha@ti.com>
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESEND PATCH v7] mtd: spi-nor: add hisilicon spi-nor flash
+ controller driver
+Date: Wed, 9 Mar 2016 11:35:57 +0800
+Message-ID: <56DF9A1D.8090100@huawei.com>
+References: <1456474316-24473-1-git-send-email-xuejiancheng@huawei.com>
+ <20160307225229.GC55664@google.com> <56DE9A79.30704@huawei.com>
+ <20160308104628.6224bde2@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lHGcFxmlz1yfXmOs"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1457465383.git.jsarha-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20160308104628.6224bde2@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, furquan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
---lHGcFxmlz1yfXmOs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2016/3/8 17:46, Boris Brezillon wrote:
+>> [...]
+>>>> +static int hisi_spi_nor_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf,
+>>>> +		int len)
+>>>> +{
+>>>> +	struct hifmc_priv *priv = nor->priv;
+>>>> +	struct hifmc_host *host = priv->host;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = hisi_spi_nor_send_cmd(nor, opcode, len);
+>>>> +	if (ret)
+>>>> +		return ret;
+>>>> +
+>>>> +	memcpy(buf, host->iobase, len);
+>>>
+>>> sparse doesn't like any of these memcpy()'s, since that's __iomem. Are
+>>> you sure you want a regular memcpy here, and elsewhere?
+>>>
+>> It's not a must to use memcpy though host->iobase represents a segment of inner memory
+>> which stores data from flash device byte by byte.  I will give up using memcpy here and
+>> hisi_spi_nor_write_reg() in next version. Thank you!
+> 
+> Or you can use memcpy_fromio(), which should give you better perfs than
+> using readX() accessors in a loop.
+> 
 
-On Tue, Mar 08, 2016 at 10:14:24PM +0200, Jyri Sarha wrote:
+Thank you very much for your suggestion. I'll look into sparse and this function.
 
-> There is currently two other patch series[1][2] that depend on the
+Regards,
+Jiancheng
 
-> [1] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-March/105509.html
-> [2] http://mailman.alsa-project.org/pipermail/alsa-devel/2016-March/105502.html
-
-Oh, and as usual please provide human readable descriptions of things
-especially for the benefit of those working offline or with spotty
-network connections.
-
---lHGcFxmlz1yfXmOs
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW35iCAAoJECTWi3JdVIfQFtYH/1E/b6VfUULMlpvUYozvyZNQ
-Cq6R9EbenTH7uEqB/ApA+WCle0jO8Wjj0gkQCGoaH1didlspnDbJUy36XOonEF8Z
-b/Z6WhseYp5aWU9P2KwvyawJy0ZTivn/kpPeFD4wgIw+1+ErlW/lRj3Caod6T5SC
-L2BjjZLQFf5iRVttIvNGDHdvY1nq0qsMGCo0zZHaDvN6qwyw7emrClKD9JxrOQf9
-fM2VHzZi+xuzWzjatV72i4z4OnmgnC4XCGEv9ZBoHYCI0AmfdaG3LGt0KpCD7zuu
-SFb6zg6ZnnpRGdIHQoNsPizyI0PqOYbcEgDXDmbb/Uc6MLohtQVrE0BjKMz6zlM=
-=vQ/r
------END PGP SIGNATURE-----
-
---lHGcFxmlz1yfXmOs--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
