@@ -1,72 +1,84 @@
-From: Yao Yuan <yao.yuan@nxp.com>
-Subject: RE: [PATCH 2/2] dts/ls2080a: Update DSPI compatible
-Date: Wed, 9 Mar 2016 03:43:57 +0000
-Message-ID: <AM2PR04MB07224122C47B72BD60A8E6B889B30@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1457425377-6383-1-git-send-email-yao.yuan@freescale.com>
- <1457425377-6383-2-git-send-email-yao.yuan@freescale.com>
+From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v5 7/7] T104xQDS: Add qe node to t104xqds
+Date: Wed, 9 Mar 2016 09:21:34 +0800
+Message-ID: <1457486494-11377-7-git-send-email-qiang.zhao@nxp.com>
+References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457425377-6383-2-git-send-email-yao.yuan@freescale.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yuan Yao <yao.yuan@freescale.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457486494-11377-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+add qe node to t104xqds.dtsi
 
-Sorry for the patch:
-dts/ls2080a: Update DSPI compatible
+Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+---
+Changes for v2
+	- rebase
+Changes for v3
+	- rebase
+Changes for v4
+	- rebase
+Changes for v5
+	- rebase
 
-I was just trying to resend this patch:
-dts/ls2080a: update the DTS for QSPI and DSPI support
-https://patchwork.ozlabs.org/patch/573108/
+ arch/powerpc/boot/dts/fsl/t104xqds.dtsi | 38 +++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-But I have a big mistake to sending a wrong patch.
-Please ignore it.
+diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+index 1498d1e..3358d4c 100644
+--- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
+@@ -190,4 +190,42 @@
+ 				  0 0x00010000>;
+ 		};
+ 	};
++
++	qe: qe@ffe140000 {
++		ranges = <0x0 0xf 0xfe140000 0x40000>;
++		reg = <0xf 0xfe140000 0 0x480>;
++		brg-frequency = <0>;
++		bus-frequency = <0>;
++
++		si1: si@700 {
++			compatible = "fsl,t1040-qe-si";
++			reg = <0x700 0x80>;
++		};
++
++		siram1: siram@1000 {
++			compatible = "fsl,t1040-qe-siram";
++			reg = <0x1000 0x800>;
++		};
++
++		ucc_hdlc: ucc@2000 {
++			compatible = "fsl,ucc-hdlc";
++			rx-clock-name = "clk8";
++			tx-clock-name = "clk9";
++			fsl,rx-sync-clock = "rsync_pin";
++			fsl,tx-sync-clock = "tsync_pin";
++			fsl,tx-timeslot-mask = <0xfffffffe>;
++			fsl,rx-timeslot-mask = <0xfffffffe>;
++			fsl,tdm-framer-type = "e1";
++			fsl,tdm-id = <0>;
++			fsl,siram-entry-id = <0>;
++			fsl,tdm-interface;
++		};
++
++		ucc_serial: ucc@2200 {
++			compatible = "fsl,t1040-ucc-uart";
++			port-number = <0>;
++			rx-clock-name = "brg2";
++			tx-clock-name = "brg2";
++		};
++	};
+ };
+-- 
+2.1.0.27.g96db324
 
-And I will resend the right patch.
-
-Sorry for make you confused.
-
-Best Regards,
-Yuan Yao
-
-
-> -----Original Message-----
-> From: Yuan Yao [mailto:yao.yuan@freescale.com]
-> Sent: Tuesday, March 08, 2016 4:23 PM
-> To: robh+dt@kernel.org; mark.rutland@arm.com; pawel.moll@arm.com
-> Cc: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; Yao Yuan <yao.yuan@nxp.com>
-> Subject: [PATCH 2/2] dts/ls2080a: Update DSPI compatible
-> 
-> From: Yuan Yao <yao.yuan@nxp.com>
-> 
-> The patch adds LS2085a to DSPI compatible.
-> The DSPI driver on LS2080A should use TCFQ mode.
-> It's different from on vf610.
-> 
-> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 9d746c6..122c517 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -318,7 +318,7 @@
-> 
->  		dspi: dspi@2100000 {
->  			status = "disabled";
-> -			compatible = "fsl,vf610-dspi";
-> +			compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0x0 0x2100000 0x0 0x10000>;
-> --
-> 2.1.0.27.g96db324
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
