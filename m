@@ -1,128 +1,57 @@
-From: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v5 4/7] bindings: move cpm_qe binding from powerpc/fsl to soc/fsl
-Date: Wed, 9 Mar 2016 09:21:31 +0800
-Message-ID: <1457486494-11377-4-git-send-email-qiang.zhao@nxp.com>
-References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 01/13] pinctrl: sunxi: Add A83T R_PIO controller support
+Date: Wed, 9 Mar 2016 09:55:44 +0700
+Message-ID: <CACRpkdZ5o=SKtHxshaedkYNETERt6DfiOPtC5JV2LNWKL_mqDg@mail.gmail.com>
+References: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com>
+	<1457192586-25596-2-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457486494-11377-1-git-send-email-qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1457192586-25596-2-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jon Corbet <corbet@lwn.net>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>R
 List-Id: devicetree@vger.kernel.org
 
-cpm_qe is supported on both powerpc and arm.
-and the QE code has been moved from arch/powerpc into
-drivers/soc/fsl, so move cpm_qe binding from powerpc/fsl
-to soc/fsl
+On Sat, Mar 5, 2016 at 10:42 PM, Vishnu Patekar
+<vishnupatekar0510@gmail.com> wrote:
 
-Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Acked-by: Rob Herring<robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes for v3
-	- NA
-Changes for v4
-	- NA
-Changes for v5
-	- NA
+> The A83T has R_PIO pin controller, it's same as A23, execpt A83T
+> interrupt bit is 6th and A83T has one extra pin PL12.
+>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm.txt     | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/brg.txt | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/i2c.txt | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/pic.txt | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/usb.txt | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/gpio.txt    | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/network.txt | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe.txt      | 0
- .../devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/firmware.txt       | 0
- .../devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/par_io.txt         | 0
- .../devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/pincfg.txt         | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/ucc.txt  | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/usb.txt  | 0
- Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/serial.txt  | 0
- .../devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/uqe_serial.txt        | 0
- 15 files changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/brg.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/i2c.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/pic.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/cpm/usb.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/gpio.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/network.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/firmware.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/par_io.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/pincfg.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/ucc.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/qe/usb.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/serial.txt (100%)
- rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/cpm_qe/uqe_serial.txt (100%)
+As partly noted by others:
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/brg.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/brg.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/brg.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/brg.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/i2c.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/i2c.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/i2c.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/i2c.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/pic.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/pic.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/pic.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/pic.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/usb.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/usb.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/cpm/usb.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/cpm/usb.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/gpio.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/gpio.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/gpio.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/network.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/network.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/firmware.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/firmware.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/firmware.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/firmware.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/par_io.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/par_io.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/par_io.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/par_io.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/pincfg.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/pincfg.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/pincfg.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/pincfg.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/ucc.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/ucc.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/ucc.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/usb.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/qe/usb.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/qe/usb.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/serial.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/serial.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/serial.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/serial.txt
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt b/Documentation/devicetree/bindings/soc/fsl/cpm_qe/uqe_serial.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-rename to Documentation/devicetree/bindings/soc/fsl/cpm_qe/uqe_serial.txt
--- 
-2.1.0.27.g96db324
+> +config PINCTRL_SUN8I_A83T_R
+> +       def_bool MACH_SUN8I
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+bool
+
+> +       depends on RESET_CONTROLLER
+
+Should it rather select RESET_CONTROLLER?
+
+> +static const struct of_device_id sun8i_a83t_r_pinctrl_match[] = {
+> +       { .compatible = "allwinner,sun8i-a83t-r-pinctrl", },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, sun8i_a83t_r_pinctrl_match);
+
+Module talk in bool driver.
+
+> +static struct platform_driver sun8i_a83t_r_pinctrl_driver = {
+> +       .probe  = sun8i_a83t_r_pinctrl_probe,
+> +       .driver = {
+> +               .name           = "sun8i-a83t-r-pinctrl",
+> +               .of_match_table = sun8i_a83t_r_pinctrl_match,
+> +       },
+> +};
+> +module_platform_driver(sun8i_a83t_r_pinctrl_driver);
+
+Should be builtin?
+
+Yours,
+Linus Walleij
