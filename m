@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 16/18] dt-bindings: Add OXNAS bindings
-Date: Wed,  9 Mar 2016 11:24:18 +0100
-Message-ID: <1457519060-6038-17-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v2 17/18] dt-bindings: Add Western Digital to vendor prefixes
+Date: Wed,  9 Mar 2016 11:24:19 +0100
+Message-ID: <1457519060-6038-18-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
  <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,26 +11,23 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetr
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/arm/oxnas.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/oxnas.txt
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
-new file mode 100644
-index 0000000..f6032d2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/oxnas.txt
-@@ -0,0 +1,9 @@
-+PLX Technology OXNAS SoCs Family device tree bindings
-+-------------------------------------------
-+
-+Boards with the OX810SE Soc SoC shall have the following properties:
-+  Required root node property:
-+    compatible: "oxsemi,ox810se"
-+
-+Board compatible values:
-+  - "wd,mbwe" (OX810SE)
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 188671f..968d3f4 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -249,6 +249,7 @@ via	VIA Technologies, Inc.
+ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
+ vivante	Vivante Corporation
+ voipac	Voipac Technologies s.r.o.
++wd	Western Digital Corp.
+ wexler	Wexler
+ winbond Winbond Electronics corp.
+ wlf	Wolfson Microelectronics
 -- 
 1.9.1
