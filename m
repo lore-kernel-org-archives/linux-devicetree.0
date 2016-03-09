@@ -1,128 +1,38 @@
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 1/7] dt-bindings: add bindings for rk3399 clock controller
-Date: Wed,  9 Mar 2016 10:37:01 +0800
-Message-ID: <1457491027-30936-2-git-send-email-zhengxing@rock-chips.com>
-References: <1457491027-30936-1-git-send-email-zhengxing@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/1] gpio: mcp23s08: Add support for mcp23s18.
+Date: Wed, 9 Mar 2016 09:50:27 +0700
+Message-ID: <CACRpkdbW9quP1_jjcOEubcjdSrt9wmwgDt8p4OJ5ZYH=eUhVAQ@mail.gmail.com>
+References: <1456813541-74321-1-git-send-email-preid@electromag.com.au>
+	<1456813541-74321-2-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1457491027-30936-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, elaine.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1456813541-74321-2-git-send-email-preid@electromag.com.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings for Rockchip cru which found on
-Rockchip SoCs.
+On Tue, Mar 1, 2016 at 1:25 PM, Phil Reid <preid@electromag.com.au> wrote:
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+> This patch adds support for the mcp23s18 which is very similar to
+> the mcp23s17. A couple of control bits are not the same.
+> Notable IOCON_HAEN (s17 only) & IOCON_INTCC. Which can be ignored.
+>
+> Patch changes the following:
+> - Add mcp23s18 types.
+> - Always set mirror bit if the dts defines mcp23s18. regardless of type.
+>   Mirror bit is ignored on 8 bit devices anyway.
+> - In mcp23s08_probe use chip.ngpio instead of logic based on type
+>   to determine number of gpio lins to increment by. This is set
+>   appropiately by the call to mcp23s08_probe_one.
+> - Add mcp23s18 to device tree documentation.
+> - Remove statement that irqs don't work for spi. They do.
+>   Tested with mcp23s18.
+>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
 
-Changes in v3: None
-Changes in v2: None
+Patch applied with Rob's ACK.
 
- .../bindings/clock/rockchip,rk3399-cru.txt         |   82 ++++++++++++++++++++
- 1 file changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-new file mode 100644
-index 0000000..07bcc6e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
-@@ -0,0 +1,82 @@
-+* Rockchip RK3399 Clock and Reset Unit
-+
-+The RK3399 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
-+- compatible: CRU should be "rockchip,rk3399-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing, pll rates are not changeable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "xin32k" - rtc clock - optional,
-+ - "ext_i2s" - external I2S clock - optional,
-+ - "ext_gmac" - external GMAC clock - optional
-+ - "ext_hsadc" - external HSADC clock - optional,
-+ - "ext_isp" - external ISP clock - optional,
-+ - "ext_jtag" - external JTAG clock - optional
-+ - "ext_vip" - external VIP clock - optional,
-+ - "usbotg_out" - output clock of the pll in the otg phy
-+
-+Example: General Register Files
-+
-+	pmugrf: syscon@ff320000 {
-+		compatible = "rockchip,rk3399-pmugrf", "syscon";
-+		reg = <0x0 0xff320000 0x0 0x1000>;
-+	};
-+
-+	grf: syscon@ff770000 {
-+		compatible = "rockchip,rk3399-grf", "syscon";
-+		reg = <0x0 0xff770000 0x0 0x10000>;
-+	};
-+
-+Example: Clock controller node:
-+
-+	pmucru: pmu-clock-controller@ff750000 {
-+		compatible = "rockchip,rk3399-pmucru";
-+		reg = <0x0 0xff750000 0x0 0x1000>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+	cru: clock-controller@ff760000 {
-+		compatible = "rockchip,rk3399-cru";
-+		reg = <0x0 0xff760000 0x0 0x1000>;
-+		rockchip,grf = <&grf>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@ff1a0000 {
-+		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
-+		reg = <0x0 0xff180000 0x0 0x100>;
-+		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
-+		clock-names = "baudclk", "apb_pclk";
-+		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
--- 
-1.7.9.5
+Yours,
+Linus Walleij
