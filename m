@@ -1,57 +1,74 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 01/13] pinctrl: sunxi: Add A83T R_PIO controller support
-Date: Wed, 9 Mar 2016 09:55:44 +0700
-Message-ID: <CACRpkdZ5o=SKtHxshaedkYNETERt6DfiOPtC5JV2LNWKL_mqDg@mail.gmail.com>
-References: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com>
-	<1457192586-25596-2-git-send-email-vishnupatekar0510@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 0/6] Implement generic ASoC HDMI codec and use it in
+ tda998x
+Date: Wed, 9 Mar 2016 10:27:08 +0700
+Message-ID: <20160309032708.GF3898@sirena.org.uk>
+References: <cover.1457465383.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457192586-25596-2-git-send-email-vishnupatekar0510@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jon Corbet <corbet@lwn.net>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>R
+Content-Type: multipart/mixed; boundary="===============2067412802=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1457465383.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 5, 2016 at 10:42 PM, Vishnu Patekar
-<vishnupatekar0510@gmail.com> wrote:
 
-> The A83T has R_PIO pin controller, it's same as A23, execpt A83T
-> interrupt bit is 6th and A83T has one extra pin PL12.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+--===============2067412802==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l+goss899txtYvYf"
+Content-Disposition: inline
 
-As partly noted by others:
 
-> +config PINCTRL_SUN8I_A83T_R
-> +       def_bool MACH_SUN8I
+--l+goss899txtYvYf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-bool
+On Tue, Mar 08, 2016 at 10:14:24PM +0200, Jyri Sarha wrote:
+> There is currently two other patch series[1][2] that depend on the
+> three first (ALSA-) patches of this series. It would be nice to get at
+> least those three applied sooner rather than later, so please tell me
+> if I can do anything to get those in.
 
-> +       depends on RESET_CONTROLLER
+It would be good if the people working on those other series could
+review this code then - there's no Reviwed-by or Acked-by on those
+patches or anything like that.  This is what I mean about a lack of
+visible collaboration, there is no real enagagment that can be seen
+here.
 
-Should it rather select RESET_CONTROLLER?
+--l+goss899txtYvYf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +static const struct of_device_id sun8i_a83t_r_pinctrl_match[] = {
-> +       { .compatible = "allwinner,sun8i-a83t-r-pinctrl", },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(of, sun8i_a83t_r_pinctrl_match);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Module talk in bool driver.
+iQEcBAEBCAAGBQJW35gHAAoJECTWi3JdVIfQv8kH/2idHRO+3i5Rr+AVGtuC1279
+Z4SHO+DEGj41H3ezrjsxEnZArXdhYVmP3eVkedbmzj3k0yHrocsMUXSptUR5RXym
+l4hwDeQi+JiORkDs7S7rabwIbzAbdoVUCIA/HUsoXjXbntlWtDtXgKxXpx6uoZxm
+WnEIMWg/muSantBeUtkqgxQw+x1VB1Wh74woLLoWju13RNULTiQ6SZMsuJnDO3eX
+cII2hrJFBf2QfHcT2XqOjXsf8zHxK9EXa1uC0NfEejiQwOS0HovzM+OaU11NL1Jl
+qfKmmrg4+uPuKMJMy4Xmm9YdhEHKmXe/SmUiTAVNjUjlZPHS6Hf0bT+YZ2y2QJ4=
+=pT2X
+-----END PGP SIGNATURE-----
 
-> +static struct platform_driver sun8i_a83t_r_pinctrl_driver = {
-> +       .probe  = sun8i_a83t_r_pinctrl_probe,
-> +       .driver = {
-> +               .name           = "sun8i-a83t-r-pinctrl",
-> +               .of_match_table = sun8i_a83t_r_pinctrl_match,
-> +       },
-> +};
-> +module_platform_driver(sun8i_a83t_r_pinctrl_driver);
+--l+goss899txtYvYf--
 
-Should be builtin?
+--===============2067412802==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-Yours,
-Linus Walleij
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============2067412802==--
