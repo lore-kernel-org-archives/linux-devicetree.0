@@ -1,583 +1,154 @@
-From: Zhiqiang Hou <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v2] dts/fsl/powerpc: add "jedec,spi-nor" flash compatible binding
-Date: Wed, 9 Mar 2016 17:50:55 +0800
-Message-ID: <1457517055-6629-1-git-send-email-Zhiqiang.Hou@nxp.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH v6 1/6] ALSA: pcm: add IEC958 channel
+ status helper for hw_params
+Date: Wed, 9 Mar 2016 11:08:54 +0100
+Message-ID: <56DFF636.9090304@st.com>
+References: <cover.1457465383.git.jsarha@ti.com>
+ <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jyri Sarha <jsarha@ti.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc: "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "tiwai@suse.de" <tiwai@suse.de>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hello Jyri,
 
-Starting with commit <8947e396a829> ("Documentation: dt: mtd:
-replace "nor-jedec" binding with "jedec, spi-nor"") we have
-"jedec,spi-nor" binding indicating support for JEDEC identification.
+Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
 
-Use it for all flashes that are supposed to support READ ID op
-according to the datasheets.
+With few nitpicking remarks on form.
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-v2:
- - Correct the copy-paste error of node flash@2 in t208xqds.dtsi.
+Regards
+Arnaud
 
- arch/powerpc/boot/dts/fsl/b4qds.dtsi       | 2 +-
- arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi  | 2 +-
- arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi  | 2 +-
- arch/powerpc/boot/dts/fsl/c293pcie.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/kmcoge4.dts      | 4 ++--
- arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi   | 8 ++++----
- arch/powerpc/boot/dts/fsl/mvme2500.dts     | 4 ++--
- arch/powerpc/boot/dts/fsl/p1010rdb.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi | 2 +-
- arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts  | 2 +-
- arch/powerpc/boot/dts/fsl/p1020rdb.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/p1021mds.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi | 2 +-
- arch/powerpc/boot/dts/fsl/p1022ds.dtsi     | 2 +-
- arch/powerpc/boot/dts/fsl/p1022rdk.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/p1024rdb.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/p1025rdb.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi | 2 +-
- arch/powerpc/boot/dts/fsl/p2020rdb.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/p2041rdb.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/p3041ds.dts      | 2 +-
- arch/powerpc/boot/dts/fsl/p4080ds.dts      | 2 +-
- arch/powerpc/boot/dts/fsl/p5020ds.dts      | 2 +-
- arch/powerpc/boot/dts/fsl/p5040ds.dts      | 2 +-
- arch/powerpc/boot/dts/fsl/t1023rdb.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/t1024qds.dts     | 6 +++---
- arch/powerpc/boot/dts/fsl/t1024rdb.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi  | 2 +-
- arch/powerpc/boot/dts/fsl/t104xqds.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/t104xrdb.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/t208xqds.dtsi    | 6 +++---
- arch/powerpc/boot/dts/fsl/t208xrdb.dtsi    | 2 +-
- arch/powerpc/boot/dts/fsl/t4240qds.dts     | 2 +-
- arch/powerpc/boot/dts/fsl/t4240rdb.dts     | 2 +-
- 34 files changed, 43 insertions(+), 43 deletions(-)
-
-diff --git a/arch/powerpc/boot/dts/fsl/b4qds.dtsi b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
-index 6455774..823824c 100644
---- a/arch/powerpc/boot/dts/fsl/b4qds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/b4qds.dtsi
-@@ -135,7 +135,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "sst,sst25wf040";
-+				compatible = "sst,sst25wf040", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi b/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi
-index f4d96d2..53f8b95 100644
---- a/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/bsc9131rdb.dtsi
-@@ -53,7 +53,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <50000000>;
- 
-diff --git a/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi b/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi
-index 7a13bf2..fead484 100644
---- a/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/bsc9132qds.dtsi
-@@ -55,7 +55,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <30000000>;
- 		};
-diff --git a/arch/powerpc/boot/dts/fsl/c293pcie.dts b/arch/powerpc/boot/dts/fsl/c293pcie.dts
-index 53ab4db..6670978 100644
---- a/arch/powerpc/boot/dts/fsl/c293pcie.dts
-+++ b/arch/powerpc/boot/dts/fsl/c293pcie.dts
-@@ -167,7 +167,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <50000000>;
- 
-diff --git a/arch/powerpc/boot/dts/fsl/kmcoge4.dts b/arch/powerpc/boot/dts/fsl/kmcoge4.dts
-index 6858ec9..2d4b64f 100644
---- a/arch/powerpc/boot/dts/fsl/kmcoge4.dts
-+++ b/arch/powerpc/boot/dts/fsl/kmcoge4.dts
-@@ -63,7 +63,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25fl256s1";
-+				compatible = "spansion,s25fl256s1", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <20000000>; /* input clock */
- 			};
-@@ -77,7 +77,7 @@
- 			flash@2 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,m25p32";
-+				compatible = "micron,m25p32", "jedec,spi-nor";
- 				reg = <2>;
- 				spi-max-frequency = <15000000>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi b/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi
-index 937ad7e..a925fe4 100644
---- a/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/mpc8536ds.dtsi
-@@ -142,7 +142,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>;
- 			partition@u-boot {
-@@ -166,17 +166,17 @@
- 			};
- 		};
- 		flash@1 {
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <1>;
- 			spi-max-frequency = <40000000>;
- 		};
- 		flash@2 {
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <2>;
- 			spi-max-frequency = <40000000>;
- 		};
- 		flash@3 {
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <3>;
- 			spi-max-frequency = <40000000>;
- 		};
-diff --git a/arch/powerpc/boot/dts/fsl/mvme2500.dts b/arch/powerpc/boot/dts/fsl/mvme2500.dts
-index c7bc1a0..69559e9 100644
---- a/arch/powerpc/boot/dts/fsl/mvme2500.dts
-+++ b/arch/powerpc/boot/dts/fsl/mvme2500.dts
-@@ -70,12 +70,12 @@
- 			fsl,espi-num-chipselects = <2>;
- 
- 			flash@0 {
--				compatible = "atmel,at25df641";
-+				compatible = "atmel,at25df641", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <10000000>;
- 			};
- 			flash@1 {
--				compatible = "atmel,at25df641";
-+				compatible = "atmel,at25df641", "jedec,spi-nor";
- 				reg = <1>;
- 				spi-max-frequency = <10000000>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
-index 14b6295..a8e4ba0 100644
---- a/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1010rdb.dtsi
-@@ -110,7 +110,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>;
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi b/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi
-index c952cd3..25f81ee 100644
---- a/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1020rdb-pc.dtsi
-@@ -151,7 +151,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>; /* input clock */
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts b/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts
-index 740553c..f2dc6c0 100644
---- a/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts
-+++ b/arch/powerpc/boot/dts/fsl/p1020rdb-pd.dts
-@@ -155,7 +155,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				/* input clock */
- 				spi-max-frequency = <40000000>;
-diff --git a/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi
-index 1fb7e0e..703142e 100644
---- a/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1020rdb.dtsi
-@@ -148,7 +148,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>; /* input clock */
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1021mds.dts b/arch/powerpc/boot/dts/fsl/p1021mds.dts
-index 27fdfd7..291454c 100644
---- a/arch/powerpc/boot/dts/fsl/p1021mds.dts
-+++ b/arch/powerpc/boot/dts/fsl/p1021mds.dts
-@@ -123,7 +123,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi b/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi
-index e8a0f95..18f9b31 100644
---- a/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1021rdb-pc.dtsi
-@@ -150,7 +150,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>; /* input clock */
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1022ds.dtsi b/arch/powerpc/boot/dts/fsl/p1022ds.dtsi
-index 149da0f..ddefbf6 100644
---- a/arch/powerpc/boot/dts/fsl/p1022ds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1022ds.dtsi
-@@ -160,7 +160,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>; /* input clock */
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1022rdk.dts b/arch/powerpc/boot/dts/fsl/p1022rdk.dts
-index 04c1633..d505d7c 100644
---- a/arch/powerpc/boot/dts/fsl/p1022rdk.dts
-+++ b/arch/powerpc/boot/dts/fsl/p1022rdk.dts
-@@ -86,7 +86,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,m25p80";
-+				compatible = "spansion,m25p80", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <1000000>;
- 				partition@0 {
-diff --git a/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi
-index b05dcb4..b4d0586 100644
---- a/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1024rdb.dtsi
-@@ -129,7 +129,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,m25p80";
-+			compatible = "spansion,m25p80", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>;
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi b/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi
-index f502564..d44bb12 100644
---- a/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p1025rdb.dtsi
-@@ -137,7 +137,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,s25sl12801";
-+			compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>; /* input clock */
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi b/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi
-index ad2e242..03c9afc 100644
---- a/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2020rdb-pc.dtsi
-@@ -151,7 +151,7 @@
- 		flash@0 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
--			compatible = "spansion,m25p80";
-+			compatible = "spansion,m25p80", "jedec,spi-nor";
- 			reg = <0>;
- 			spi-max-frequency = <40000000>;
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p2020rdb.dts b/arch/powerpc/boot/dts/fsl/p2020rdb.dts
-index 70cf090..435a319 100644
---- a/arch/powerpc/boot/dts/fsl/p2020rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/p2020rdb.dts
-@@ -155,7 +155,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>;
- 
-diff --git a/arch/powerpc/boot/dts/fsl/p2041rdb.dts b/arch/powerpc/boot/dts/fsl/p2041rdb.dts
-index e9bd894..10bdf5d 100644
---- a/arch/powerpc/boot/dts/fsl/p2041rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/p2041rdb.dts
-@@ -83,7 +83,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 				partition@u-boot {
-diff --git a/arch/powerpc/boot/dts/fsl/p3041ds.dts b/arch/powerpc/boot/dts/fsl/p3041ds.dts
-index f2b1d40..09a8220 100644
---- a/arch/powerpc/boot/dts/fsl/p3041ds.dts
-+++ b/arch/powerpc/boot/dts/fsl/p3041ds.dts
-@@ -83,7 +83,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <35000000>; /* input clock */
- 				partition@u-boot {
-diff --git a/arch/powerpc/boot/dts/fsl/p4080ds.dts b/arch/powerpc/boot/dts/fsl/p4080ds.dts
-index 28a55c5..94bf5c5 100644
---- a/arch/powerpc/boot/dts/fsl/p4080ds.dts
-+++ b/arch/powerpc/boot/dts/fsl/p4080ds.dts
-@@ -84,7 +84,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 				partition@u-boot {
-diff --git a/arch/powerpc/boot/dts/fsl/p5020ds.dts b/arch/powerpc/boot/dts/fsl/p5020ds.dts
-index 920dc77..23f1f71 100644
---- a/arch/powerpc/boot/dts/fsl/p5020ds.dts
-+++ b/arch/powerpc/boot/dts/fsl/p5020ds.dts
-@@ -83,7 +83,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 				partition@u-boot {
-diff --git a/arch/powerpc/boot/dts/fsl/p5040ds.dts b/arch/powerpc/boot/dts/fsl/p5040ds.dts
-index e169cc2..e50952a 100644
---- a/arch/powerpc/boot/dts/fsl/p5040ds.dts
-+++ b/arch/powerpc/boot/dts/fsl/p5040ds.dts
-@@ -83,7 +83,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25sl12801";
-+				compatible = "spansion,s25sl12801", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 				partition@u-boot {
-diff --git a/arch/powerpc/boot/dts/fsl/t1023rdb.dts b/arch/powerpc/boot/dts/fsl/t1023rdb.dts
-index 6bd842b..0fcce8b 100644
---- a/arch/powerpc/boot/dts/fsl/t1023rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1023rdb.dts
-@@ -79,7 +79,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "spansion,s25fl512s";
-+				compatible = "spansion,s25fl512s", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <10000000>; /* input clk */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t1024qds.dts b/arch/powerpc/boot/dts/fsl/t1024qds.dts
-index 6a3581b..772143d 100644
---- a/arch/powerpc/boot/dts/fsl/t1024qds.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1024qds.dts
-@@ -87,7 +87,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q128a11";  /* 16MB */
-+				compatible = "micron,n25q128a11", "jedec,spi-nor";  /* 16MB */
- 				reg = <0>;
- 				spi-max-frequency = <10000000>;
- 			};
-@@ -95,7 +95,7 @@
- 			flash@1 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "sst,sst25wf040";  /* 512KB */
-+				compatible = "sst,sst25wf040", "jedec,spi-nor";  /* 512KB */
- 				reg = <1>;
- 				spi-max-frequency = <10000000>;
- 			};
-@@ -103,7 +103,7 @@
- 			flash@2 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "eon,en25s64";   /* 8MB */
-+				compatible = "eon,en25s64", "jedec,spi-nor";   /* 8MB */
- 				reg = <2>;
- 				spi-max-frequency = <10000000>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t1024rdb.dts b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-index 0ccc7d0..4bf80b3 100644
---- a/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t1024rdb.dts
-@@ -89,7 +89,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q512ax3";
-+				compatible = "micron,n25q512ax3", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <10000000>; /* input clk */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-index 3f6d7c6..8c7ea6c 100644
---- a/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xd4rdb.dtsi
-@@ -104,7 +104,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q512ax3";
-+				compatible = "micron,n25q512ax3", "jedec,spi-nor";
- 				reg = <0>;
- 				/* input clock */
- 				spi-max-frequency = <10000000>;
-diff --git a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-index 1498d1e..636a73e 100644
---- a/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xqds.dtsi
-@@ -112,7 +112,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q128a11";
-+				compatible = "micron,n25q128a11", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <10000000>; /* input clock */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-index 830ea48..5b5978f 100644
---- a/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t104xrdb.dtsi
-@@ -103,7 +103,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q512a";
-+				compatible = "micron,n25q512a", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <10000000>; /* input clock */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t208xqds.dtsi b/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
-index 869f915..ec080bd 100644
---- a/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t208xqds.dtsi
-@@ -112,7 +112,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q128a11"; /* 16MB */
-+				compatible = "micron,n25q128a11", "jedec,spi-nor"; /* 16MB */
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 			};
-@@ -120,7 +120,7 @@
- 			flash@1 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "sst,sst25wf040";
-+				compatible = "sst,sst25wf040", "jedec,spi-nor";
- 				reg = <1>;
- 				spi-max-frequency = <35000000>;
- 			};
-@@ -128,7 +128,7 @@
- 			flash@2 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "eon,en25s64";
-+				compatible = "eon,en25s64", "jedec,spi-nor";
- 				reg = <2>;
- 				spi-max-frequency = <35000000>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
-index 693d2a8..dc93268 100644
---- a/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t208xrdb.dtsi
-@@ -113,7 +113,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "micron,n25q512a";
-+				compatible = "micron,n25q512a", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <10000000>; /* input clock */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t4240qds.dts b/arch/powerpc/boot/dts/fsl/t4240qds.dts
-index c067a65..80db7c7 100644
---- a/arch/powerpc/boot/dts/fsl/t4240qds.dts
-+++ b/arch/powerpc/boot/dts/fsl/t4240qds.dts
-@@ -138,7 +138,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "sst,sst25wf040";
-+				compatible = "sst,sst25wf040", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/t4240rdb.dts b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-index 6e820a8..cd1307a 100644
---- a/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-+++ b/arch/powerpc/boot/dts/fsl/t4240rdb.dts
-@@ -107,7 +107,7 @@
- 			flash@0 {
- 				#address-cells = <1>;
- 				#size-cells = <1>;
--				compatible = "sst,sst25wf040";
-+				compatible = "sst,sst25wf040", "jedec,spi-nor";
- 				reg = <0>;
- 				spi-max-frequency = <40000000>; /* input clock */
- 			};
--- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 03/08/2016 09:14 PM, Jyri Sarha wrote:
+> Add IEC958 channel status helper that gets the audio properties from
+> snd_pcm_hw_params instead of snd_pcm_runtime. This is needed to
+> produce the channel status bits already in audio stream configuration
+> phase.
+> 
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  include/sound/pcm_iec958.h |  2 ++
+>  sound/core/pcm_iec958.c    | 53 +++++++++++++++++++++++++++++++---------------
+>  2 files changed, 38 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/sound/pcm_iec958.h b/include/sound/pcm_iec958.h
+> index 0eed397..36f023a 100644
+> --- a/include/sound/pcm_iec958.h
+> +++ b/include/sound/pcm_iec958.h
+> @@ -6,4 +6,6 @@
+>  int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+>  	size_t len);
+>  
+> +int snd_pcm_create_iec958_consumer_hw_params(struct snd_pcm_hw_params *params,
+> +					     u8 *cs, size_t len);
+>  #endif
+> diff --git a/sound/core/pcm_iec958.c b/sound/core/pcm_iec958.c
+> index 36b2d7a..27e0981 100644
+> --- a/sound/core/pcm_iec958.c
+> +++ b/sound/core/pcm_iec958.c
+> @@ -9,30 +9,18 @@
+>  #include <linux/types.h>
+>  #include <sound/asoundef.h>
+>  #include <sound/pcm.h>
+> +#include <sound/pcm_params.h>
+>  #include <sound/pcm_iec958.h>
+>  
+> -/**
+> - * snd_pcm_create_iec958_consumer - create consumer format IEC958 channel status
+> - * @runtime: pcm runtime structure with ->rate filled in
+> - * @cs: channel status buffer, at least four bytes
+> - * @len: length of channel status buffer
+> - *
+> - * Create the consumer format channel status data in @cs of maximum size
+> - * @len corresponding to the parameters of the PCM runtime @runtime.
+> - *
+> - * Drivers may wish to tweak the contents of the buffer after creation.
+> - *
+> - * Returns: length of buffer, or negative error code if something failed.
+> - */
+> -int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+> -	size_t len)
+> +static int create_iec958_consumer(uint rate, uint sample_width,
+> +				  u8 *cs, size_t len)
+>  {
+>  	unsigned int fs, ws;
+>  
+>  	if (len < 4)
+>  		return -EINVAL;
+>  
+> -	switch (runtime->rate) {
+> +	switch (rate) {
+>  	case 32000:
+>  		fs = IEC958_AES3_CON_FS_32000;
+>  		break;
+> @@ -59,7 +47,7 @@ int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+>  	}
+>  
+>  	if (len > 4) {
+> -		switch (snd_pcm_format_width(runtime->format)) {
+> +		switch (sample_width) {
+>  		case 16:
+>  			ws = IEC958_AES4_CON_WORDLEN_20_16;
+>  			break;
+> @@ -71,6 +59,7 @@ int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+>  			     IEC958_AES4_CON_MAX_WORDLEN_24;
+>  			break;
+>  		case 24:
+> +		case 32: /* Assume 24-bit width for 32-bit samples. */
+>  			ws = IEC958_AES4_CON_WORDLEN_24_20 |
+>  			     IEC958_AES4_CON_MAX_WORDLEN_24;
+>  			break;
+> @@ -92,4 +81,34 @@ int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+>  
+>  	return len;
+>  }
+> +
+> +/**
+> + * snd_pcm_create_iec958_consumer - create consumer format IEC958 channel status
+> + * @runtime: pcm runtime structure with ->rate filled in
+> + * @cs: channel status buffer, at least four bytes
+> + * @len: length of channel status buffer
+> + *
+> + * Create the consumer format channel status data in @cs of maximum size
+> + * @len corresponding to the parameters of the PCM runtime @runtime.
+> + *
+> + * Drivers may wish to tweak the contents of the buffer after creation.
+> + *
+> + * Returns: length of buffer, or negative error code if something failed.
+> + */
+> +int snd_pcm_create_iec958_consumer(struct snd_pcm_runtime *runtime, u8 *cs,
+> +	size_t len)
+should be aligned on parenthesis
+> +{
+> +	return create_iec958_consumer(runtime->rate,
+> +				      snd_pcm_format_width(runtime->format),
+> +				      cs, len);
+> +}
+>  EXPORT_SYMBOL(snd_pcm_create_iec958_consumer);
+> +
+> +
+No kernel-doc comment?
+> +int snd_pcm_create_iec958_consumer_hw_params(struct snd_pcm_hw_params *params,
+Could be snd_pcm_hw_params_create_iec958_consumer to be coherent with
+functions declared in pcm.h
+> +					     u8 *cs, size_t len)
+should be aligned on parenthesis
+> +{
+> +	return create_iec958_consumer(params_rate(params), params_width(params),
+> +				      cs, len);
+> +}
+> +EXPORT_SYMBOL(snd_pcm_create_iec958_consumer_hw_params);
+> 
