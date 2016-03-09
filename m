@@ -1,117 +1,131 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v6 1/6] ALSA: pcm: add IEC958 channel status helper for
- hw_params
-Date: Wed, 9 Mar 2016 16:38:59 +0200
-Message-ID: <56E03583.3030907@ti.com>
-References: <cover.1457465383.git.jsarha@ti.com>
- <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
- <56DFF636.9090304@st.com>
+From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Wed, 9 Mar 2016 15:53:02 +0100
+Message-ID: <56E038CE.606@st.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de> <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego> <56DD7593.5060003@suse.de> <56DD8176.2080603@st.com> <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com> <56DDA26C.3050301@suse.de> <56DDA3D5.3090209@st.com> <56DDB749.1020808@suse.de> <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com> <56DE7E1D.5070508@st.com> <CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com> <CAAObsKD9HoEbtV_JMz_R=bcrQseDmhncRAWP9k8djksL-LMQqw@mail.gmail.com> <56DFE55B.2090806@st.com> <56DFE64B.8060606@st.com> <CAAObsKBr9SXg1-wr9O-ypR8JozdGpeAwfDLMeUKi8ozxkKyTXg@mail.gmail.com> <56DFF253.9050208@st.com> <56DFFA9E.7060602@st.com> <CAAObsKBUzBXcamEyup44N1bYUzGr_ZZTsYcD5x3PXb-2E00cGA@mail.gmail.com> <56E033C8.40506@st.c
+ om>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56DFF636.9090304@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "airlied@linux.ie" <airlied@linux.ie>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc: "peter.ujfalusi@ti.com" <peter.ujfalusi@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@kernel.org" <broonie@kernel.org>, "liam.r.girdwood@linux.intel.com" <liam.r.girdwood@linux.intel.com>, "tomi.valkeinen@ti.com" <tomi.valkeinen@ti.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E033C8.40506-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, =?UTF-8?B?RnJhbmsgU2Now6RmZXI=?= <fschaefer.oss-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDMvMDkvMTYgMTI6MDgsIEFybmF1ZCBQb3VsaXF1ZW4gd3JvdGU6Cj4gSGVsbG8gSnlyaSwK
-Pgo+IEFja2VkLWJ5OiBBcm5hdWQgUG91bGlxdWVuIDxhcm5hdWQucG91bGlxdWVuQHN0LmNvbT4K
-Pgo+IFdpdGggZmV3IG5pdHBpY2tpbmcgcmVtYXJrcyBvbiBmb3JtLgo+Cj4gUmVnYXJkcwo+IEFy
-bmF1ZAo+Cj4gT24gMDMvMDgvMjAxNiAwOToxNCBQTSwgSnlyaSBTYXJoYSB3cm90ZToKPj4gQWRk
-IElFQzk1OCBjaGFubmVsIHN0YXR1cyBoZWxwZXIgdGhhdCBnZXRzIHRoZSBhdWRpbyBwcm9wZXJ0
-aWVzIGZyb20KPj4gc25kX3BjbV9od19wYXJhbXMgaW5zdGVhZCBvZiBzbmRfcGNtX3J1bnRpbWUu
-IFRoaXMgaXMgbmVlZGVkIHRvCj4+IHByb2R1Y2UgdGhlIGNoYW5uZWwgc3RhdHVzIGJpdHMgYWxy
-ZWFkeSBpbiBhdWRpbyBzdHJlYW0gY29uZmlndXJhdGlvbgo+PiBwaGFzZS4KPj4KPj4gU2lnbmVk
-LW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KPj4gLS0tCj4+ICAgaW5jbHVkZS9z
-b3VuZC9wY21faWVjOTU4LmggfCAgMiArKwo+PiAgIHNvdW5kL2NvcmUvcGNtX2llYzk1OC5jICAg
-IHwgNTMgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQo+PiAg
-IDIgZmlsZXMgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25zKC0pCj4+Cj4+
-IGRpZmYgLS1naXQgYS9pbmNsdWRlL3NvdW5kL3BjbV9pZWM5NTguaCBiL2luY2x1ZGUvc291bmQv
-cGNtX2llYzk1OC5oCj4+IGluZGV4IDBlZWQzOTcuLjM2ZjAyM2EgMTAwNjQ0Cj4+IC0tLSBhL2lu
-Y2x1ZGUvc291bmQvcGNtX2llYzk1OC5oCj4+ICsrKyBiL2luY2x1ZGUvc291bmQvcGNtX2llYzk1
-OC5oCj4+IEBAIC02LDQgKzYsNiBAQAo+PiAgIGludCBzbmRfcGNtX2NyZWF0ZV9pZWM5NThfY29u
-c3VtZXIoc3RydWN0IHNuZF9wY21fcnVudGltZSAqcnVudGltZSwgdTggKmNzLAo+PiAgIAlzaXpl
-X3QgbGVuKTsKPj4KPj4gK2ludCBzbmRfcGNtX2NyZWF0ZV9pZWM5NThfY29uc3VtZXJfaHdfcGFy
-YW1zKHN0cnVjdCBzbmRfcGNtX2h3X3BhcmFtcyAqcGFyYW1zLAo+PiArCQkJCQkgICAgIHU4ICpj
-cywgc2l6ZV90IGxlbik7Cj4+ICAgI2VuZGlmCj4+IGRpZmYgLS1naXQgYS9zb3VuZC9jb3JlL3Bj
-bV9pZWM5NTguYyBiL3NvdW5kL2NvcmUvcGNtX2llYzk1OC5jCj4+IGluZGV4IDM2YjJkN2EuLjI3
-ZTA5ODEgMTAwNjQ0Cj4+IC0tLSBhL3NvdW5kL2NvcmUvcGNtX2llYzk1OC5jCj4+ICsrKyBiL3Nv
-dW5kL2NvcmUvcGNtX2llYzk1OC5jCj4+IEBAIC05LDMwICs5LDE4IEBACj4+ICAgI2luY2x1ZGUg
-PGxpbnV4L3R5cGVzLmg+Cj4+ICAgI2luY2x1ZGUgPHNvdW5kL2Fzb3VuZGVmLmg+Cj4+ICAgI2lu
-Y2x1ZGUgPHNvdW5kL3BjbS5oPgo+PiArI2luY2x1ZGUgPHNvdW5kL3BjbV9wYXJhbXMuaD4KPj4g
-ICAjaW5jbHVkZSA8c291bmQvcGNtX2llYzk1OC5oPgo+Pgo+PiAtLyoqCj4+IC0gKiBzbmRfcGNt
-X2NyZWF0ZV9pZWM5NThfY29uc3VtZXIgLSBjcmVhdGUgY29uc3VtZXIgZm9ybWF0IElFQzk1OCBj
-aGFubmVsIHN0YXR1cwo+PiAtICogQHJ1bnRpbWU6IHBjbSBydW50aW1lIHN0cnVjdHVyZSB3aXRo
-IC0+cmF0ZSBmaWxsZWQgaW4KPj4gLSAqIEBjczogY2hhbm5lbCBzdGF0dXMgYnVmZmVyLCBhdCBs
-ZWFzdCBmb3VyIGJ5dGVzCj4+IC0gKiBAbGVuOiBsZW5ndGggb2YgY2hhbm5lbCBzdGF0dXMgYnVm
-ZmVyCj4+IC0gKgo+PiAtICogQ3JlYXRlIHRoZSBjb25zdW1lciBmb3JtYXQgY2hhbm5lbCBzdGF0
-dXMgZGF0YSBpbiBAY3Mgb2YgbWF4aW11bSBzaXplCj4+IC0gKiBAbGVuIGNvcnJlc3BvbmRpbmcg
-dG8gdGhlIHBhcmFtZXRlcnMgb2YgdGhlIFBDTSBydW50aW1lIEBydW50aW1lLgo+PiAtICoKPj4g
-LSAqIERyaXZlcnMgbWF5IHdpc2ggdG8gdHdlYWsgdGhlIGNvbnRlbnRzIG9mIHRoZSBidWZmZXIg
-YWZ0ZXIgY3JlYXRpb24uCj4+IC0gKgo+PiAtICogUmV0dXJuczogbGVuZ3RoIG9mIGJ1ZmZlciwg
-b3IgbmVnYXRpdmUgZXJyb3IgY29kZSBpZiBzb21ldGhpbmcgZmFpbGVkLgo+PiAtICovCj4+IC1p
-bnQgc25kX3BjbV9jcmVhdGVfaWVjOTU4X2NvbnN1bWVyKHN0cnVjdCBzbmRfcGNtX3J1bnRpbWUg
-KnJ1bnRpbWUsIHU4ICpjcywKPj4gLQlzaXplX3QgbGVuKQo+PiArc3RhdGljIGludCBjcmVhdGVf
-aWVjOTU4X2NvbnN1bWVyKHVpbnQgcmF0ZSwgdWludCBzYW1wbGVfd2lkdGgsCj4+ICsJCQkJICB1
-OCAqY3MsIHNpemVfdCBsZW4pCj4+ICAgewo+PiAgIAl1bnNpZ25lZCBpbnQgZnMsIHdzOwo+Pgo+
-PiAgIAlpZiAobGVuIDwgNCkKPj4gICAJCXJldHVybiAtRUlOVkFMOwo+Pgo+PiAtCXN3aXRjaCAo
-cnVudGltZS0+cmF0ZSkgewo+PiArCXN3aXRjaCAocmF0ZSkgewo+PiAgIAljYXNlIDMyMDAwOgo+
-PiAgIAkJZnMgPSBJRUM5NThfQUVTM19DT05fRlNfMzIwMDA7Cj4+ICAgCQlicmVhazsKPj4gQEAg
-LTU5LDcgKzQ3LDcgQEAgaW50IHNuZF9wY21fY3JlYXRlX2llYzk1OF9jb25zdW1lcihzdHJ1Y3Qg
-c25kX3BjbV9ydW50aW1lICpydW50aW1lLCB1OCAqY3MsCj4+ICAgCX0KPj4KPj4gICAJaWYgKGxl
-biA+IDQpIHsKPj4gLQkJc3dpdGNoIChzbmRfcGNtX2Zvcm1hdF93aWR0aChydW50aW1lLT5mb3Jt
-YXQpKSB7Cj4+ICsJCXN3aXRjaCAoc2FtcGxlX3dpZHRoKSB7Cj4+ICAgCQljYXNlIDE2Ogo+PiAg
-IAkJCXdzID0gSUVDOTU4X0FFUzRfQ09OX1dPUkRMRU5fMjBfMTY7Cj4+ICAgCQkJYnJlYWs7Cj4+
-IEBAIC03MSw2ICs1OSw3IEBAIGludCBzbmRfcGNtX2NyZWF0ZV9pZWM5NThfY29uc3VtZXIoc3Ry
-dWN0IHNuZF9wY21fcnVudGltZSAqcnVudGltZSwgdTggKmNzLAo+PiAgIAkJCSAgICAgSUVDOTU4
-X0FFUzRfQ09OX01BWF9XT1JETEVOXzI0Owo+PiAgIAkJCWJyZWFrOwo+PiAgIAkJY2FzZSAyNDoK
-Pj4gKwkJY2FzZSAzMjogLyogQXNzdW1lIDI0LWJpdCB3aWR0aCBmb3IgMzItYml0IHNhbXBsZXMu
-ICovCj4+ICAgCQkJd3MgPSBJRUM5NThfQUVTNF9DT05fV09SRExFTl8yNF8yMCB8Cj4+ICAgCQkJ
-ICAgICBJRUM5NThfQUVTNF9DT05fTUFYX1dPUkRMRU5fMjQ7Cj4+ICAgCQkJYnJlYWs7Cj4+IEBA
-IC05Miw0ICs4MSwzNCBAQCBpbnQgc25kX3BjbV9jcmVhdGVfaWVjOTU4X2NvbnN1bWVyKHN0cnVj
-dCBzbmRfcGNtX3J1bnRpbWUgKnJ1bnRpbWUsIHU4ICpjcywKPj4KPj4gICAJcmV0dXJuIGxlbjsK
-Pj4gICB9Cj4+ICsKPj4gKy8qKgo+PiArICogc25kX3BjbV9jcmVhdGVfaWVjOTU4X2NvbnN1bWVy
-IC0gY3JlYXRlIGNvbnN1bWVyIGZvcm1hdCBJRUM5NTggY2hhbm5lbCBzdGF0dXMKPj4gKyAqIEBy
-dW50aW1lOiBwY20gcnVudGltZSBzdHJ1Y3R1cmUgd2l0aCAtPnJhdGUgZmlsbGVkIGluCj4+ICsg
-KiBAY3M6IGNoYW5uZWwgc3RhdHVzIGJ1ZmZlciwgYXQgbGVhc3QgZm91ciBieXRlcwo+PiArICog
-QGxlbjogbGVuZ3RoIG9mIGNoYW5uZWwgc3RhdHVzIGJ1ZmZlcgo+PiArICoKPj4gKyAqIENyZWF0
-ZSB0aGUgY29uc3VtZXIgZm9ybWF0IGNoYW5uZWwgc3RhdHVzIGRhdGEgaW4gQGNzIG9mIG1heGlt
-dW0gc2l6ZQo+PiArICogQGxlbiBjb3JyZXNwb25kaW5nIHRvIHRoZSBwYXJhbWV0ZXJzIG9mIHRo
-ZSBQQ00gcnVudGltZSBAcnVudGltZS4KPj4gKyAqCj4+ICsgKiBEcml2ZXJzIG1heSB3aXNoIHRv
-IHR3ZWFrIHRoZSBjb250ZW50cyBvZiB0aGUgYnVmZmVyIGFmdGVyIGNyZWF0aW9uLgo+PiArICoK
-Pj4gKyAqIFJldHVybnM6IGxlbmd0aCBvZiBidWZmZXIsIG9yIG5lZ2F0aXZlIGVycm9yIGNvZGUg
-aWYgc29tZXRoaW5nIGZhaWxlZC4KPj4gKyAqLwo+PiAraW50IHNuZF9wY21fY3JlYXRlX2llYzk1
-OF9jb25zdW1lcihzdHJ1Y3Qgc25kX3BjbV9ydW50aW1lICpydW50aW1lLCB1OCAqY3MsCj4+ICsJ
-c2l6ZV90IGxlbikKPiBzaG91bGQgYmUgYWxpZ25lZCBvbiBwYXJlbnRoZXNpcwo+PiArewo+PiAr
-CXJldHVybiBjcmVhdGVfaWVjOTU4X2NvbnN1bWVyKHJ1bnRpbWUtPnJhdGUsCj4+ICsJCQkJICAg
-ICAgc25kX3BjbV9mb3JtYXRfd2lkdGgocnVudGltZS0+Zm9ybWF0KSwKPj4gKwkJCQkgICAgICBj
-cywgbGVuKTsKPj4gK30KPj4gICBFWFBPUlRfU1lNQk9MKHNuZF9wY21fY3JlYXRlX2llYzk1OF9j
-b25zdW1lcik7Cj4+ICsKPj4gKwo+IE5vIGtlcm5lbC1kb2MgY29tbWVudD8KCk9oIHllcy4gSXQn
-bGwgYmUgbW9zdGx5IHJlZHVuZGFudCB3aXRoIHNuZF9wY21fY3JlYXRlX2llYzk1OF9jb25zdW1l
-cigpIApidXQgc3RpbGwgaXQgc2hvdWxkIGJlIHRoZXJlLgoKPj4gK2ludCBzbmRfcGNtX2NyZWF0
-ZV9pZWM5NThfY29uc3VtZXJfaHdfcGFyYW1zKHN0cnVjdCBzbmRfcGNtX2h3X3BhcmFtcyAqcGFy
-YW1zLAo+IENvdWxkIGJlIHNuZF9wY21faHdfcGFyYW1zX2NyZWF0ZV9pZWM5NThfY29uc3VtZXIg
-dG8gYmUgY29oZXJlbnQgd2l0aAo+IGZ1bmN0aW9ucyBkZWNsYXJlZCBpbiBwY20uaAoKSSBmZWVs
-IHRoYXQgaWVjOTU4IHNob3VsZCBiZSBlYXJsaWVyIGluIHRoZSBuYW1lIGJlY2F1c2UgaXQgaXMg
-dGhlIApjb21tb24gZGVub21pbmF0b3IgaW4gdGhpcyBjLWZpbGUuIFRoZW4gYWdhaW4gSSBoYXZl
-IG5vIHN0cm9uZyBvcGluaW9ucyAKYWJvdXQgdGhpcy4KCj4+ICsJCQkJCSAgICAgdTggKmNzLCBz
-aXplX3QgbGVuKQo+IHNob3VsZCBiZSBhbGlnbmVkIG9uIHBhcmVudGhlc2lzCgpCdXQgaXQgaXMu
-IEl0IGp1c3QgdGhhdCB0aGUgZGlmZiAnKyctc2lnbiBwdXNoZXMgdGhlIGxpbmUgYWJvdmUgb25l
-IGNoYXIgCnJpZ2h0LCBidXQgdGhlIGxpbmUgYmVsbG93IGlzIG5vdCBwdXNoZWQgYmVjYXVzZSBp
-dCBpbmRlbnRlZCB3aXRoIHRhYnMgCihsaWtlIGl0IHNob3VsZCBiZSkuCgo+PiArewo+PiArCXJl
-dHVybiBjcmVhdGVfaWVjOTU4X2NvbnN1bWVyKHBhcmFtc19yYXRlKHBhcmFtcyksIHBhcmFtc193
-aWR0aChwYXJhbXMpLAo+PiArCQkJCSAgICAgIGNzLCBsZW4pOwo+PiArfQo+PiArRVhQT1JUX1NZ
-TUJPTChzbmRfcGNtX2NyZWF0ZV9pZWM5NThfY29uc3VtZXJfaHdfcGFyYW1zKTsKPj4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Tomeu, Dinh, Andreas
+
+I need a sum and help from you to go ahead on the
+tx timeout.
+
+The "stmmac: MDIO fixes" seems to be the candidate to
+fix the phy connection and I will send the V2 asap (Andreas' comment).
+
+So, supposing the probe is ok and phy is connected,
+I need your input ...
+
+  Tomeu: after revering the 0e80bdc9a72d (stmmac: first frame
+         prep at the end of xmit routine) the network is
+         not stable and there is a timeout after a while.
+         The box has 3.50 with normal desc settings.
+
+  Dinh: the network is ok, I wonder if you can share a boot
+        log just to understand if the normal or enhanced
+        descriptors are used.
+
+  Andreas: you are also using 3.50 with normal desc but I have not
+           clear if just reverting 0e80bdc9a72d  commit the
+           network is ok or you see timeout issues.
+
+In the meantime I am trying to find a box where try normal setup
+and I can confirm that enhanced descriptors are ok on my side
+
+Regards
+Peppe
+
+
+
+
+On 3/9/2016 3:31 PM, Giuseppe CAVALLARO wrote:
+> Hi Tomeu
+>
+> On 3/9/2016 11:53 AM, Tomeu Vizoso wrote:
+>> On 9 March 2016 at 11:27, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+>> wrote:
+>>> Hello Tomeu, Andreas,
+>>>
+>>> On 3/9/2016 10:52 AM, Giuseppe CAVALLARO wrote:
+>>>>>
+>>>>> * today's linux-next: probe failed
+>>>>>
+>>>>> * today's linux-next + revert of 88f8b1bb41c6 stmmac: Fix 'eth0: No
+>>>>> PHY found' regression: probe succeeded but no network at all
+>>>>>
+>>>>> * today's linux-next + revert of 88f8b1bb41c6 (stmmac: Fix 'eth0: No
+>>>>> PHY found' regression) + revert of 0e80bdc9a72d (stmmac: first frame
+>>>>> prep at the end of xmit routine): probe succeeded, dhcp succeeds and
+>>>>> nfsroot works for a few seconds before timing out
+>>>>
+>>>>
+>>>> ok, I was looking at this problem now that seems to related
+>>>> the "stmmac: first frame prep at the end of xmit routine"
+>>>> that, at first glance, is breaking the gmac 3.50 with normal
+>>>> descriptor.
+>>>
+>>>
+>>> I have no Hw where to test this use case. So, I wonder if may I ask
+>>> you to
+>>> test some patch.
+>>>
+>>> This first patch adds a missing barrier to the normal routine that
+>>> inits the
+>>> descriptor. Barrier was needed to well manage the OWN
+>>> descriptor and it was not added in case of normal desc case after
+>>> the xmit rework.
+>>>
+>>> Then I will check the algo behind the new xmit and in case of problems,
+>>> if you agree, we will decide to revert it because it aimed to add an
+>>> optimization.
+>>>
+>>> Let me know if you agree.
+>>
+>> I'm not sure what you would like to be tested, but just in case, I
+>> have just tried your patch on top of these commits and the result is
+>> the "transmit queue 0 timed out" error during boot:
+>>
+>> 6542b30d0a67 Revert "stmmac: first frame prep at the end of xmit routine"
+>> eb5274cbc0f7 Revert "stmmac: do not poll phy handler when attach a
+>> switch"
+>> e88e625a68d9 Revert "stmmac: fix phy init when attached to a phy"
+>> ef5dd3777876 stmmac: fix MDIO settings
+>> 77634ba1f25c Revert "stmmac: Fix 'eth0: No PHY found' regression"
+>> 7811b4ffc312 Add linux-next specific files for 20160309
+>
+> I missed that the issue is not only related the
+>    "stmmac: first frame prep at the end of xmit routine"
+> I have to try to test on 3.50 with normal descriptor.
+> When using enhanced descriptors all works fine on my
+> side.
+>
+> I keep you informed.
+>
+> peppe
+>
+>
+>> Regards,
+>>
+>> Tomeu
+>>
+>>> Regards
+>>> Peppe
+>>
+>>
+>
+>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
