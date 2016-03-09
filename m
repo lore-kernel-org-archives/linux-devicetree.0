@@ -1,71 +1,153 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 4/5] gpio: of: Add support to have multiple gpios in gpio-hog
-Date: Wed, 9 Mar 2016 18:50:53 +0530
-Message-ID: <56E02335.6020901@nvidia.com>
-References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <1457438528-29054-5-git-send-email-ldewangan@nvidia.com> <20160309062849.GB10454@pengutronix.de>
+From: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH V4 0/5] PCIe Xilinx generic driver for Microblaze and
+Date: Wed, 9 Mar 2016 13:41:13 +0000
+Message-ID: <8520D5D51A55D047800579B09414719825888041@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1455208091-15556-1-git-send-email-bharatku@xilinx.com>
+ <20160308203444.GA27132@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160309062849.GB10454@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, swarren@wwwdotorg.org, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160308203444.GA27132@localhost>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org" <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <yinghai-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <wangyijing-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org" <russell.joyce-3oYoeGyd3e21Qrn1Bg8BZw@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>"linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux->
 List-Id: devicetree@vger.kernel.org
 
+Thanks Bjorn.
+Thanks to Bjorn Helgaas and Arnd Bergmann for your review and suggestions.
 
-On Wednesday 09 March 2016 11:58 AM, Markus Pargmann wrote:
-> * PGP Signed by an unknown key
->
-> Hi,
->
-> On Tue, Mar 08, 2016 at 05:32:07PM +0530, Laxman Dewangan wrote:
->> The child node for gpio hogs under gpio controller's node
->> provide the mechanism to automatic GPIO request and
->> configuration as part of the gpio-controller's driver
->> probe function.
->>
->> Currently, property "gpio" takes one gpios for such
->> configuration. Add support to have multiple GPIOs in
->> this property so that multiple GPIOs of gpio-controller
->> can be configured by this mechanism with one child node.
-> So if I read this correctly you want to have multiple GPIOs with the
-> same line name? Why don't you use multiple child nodes with individual
-> line names?
->
-There is cases on which particular functional configuration needs sets 
-of GPIO to set. On this case, making sub node for each GPIOs creates 
-lots of sub-nodes and  add complexity on readability, usability and 
-maintainability.
-Example: for my board, I wanted to set GPIO H2 to input and H0 and H1 to 
-be output high.
-Instead of three nodes, I can have two here:
-        gpio@0,6000d000 {
-                wlan_input {
-                        gpio-hog;
-                        gpios = <TEGRA_GPIO(H, 2) 0>;
-                        input;
-                };
+Bharat
 
-                wlan_output {
-                        gpio-hog;
-                        gpios = <TEGRA_GPIO(H, 0) 0 TEGRA_GPIO(H, 1) 0>;
-                        output-high;
-                };
-        };
-
-So here I am grouping the multiple output GPIO together.
-
-This looks much similar if we have many GPIOs for one type of 
-configurations.
-
-Even it looks better if we have something:
-        gpio@0,6000d000 {
-                wlan_control {
-                        gpio-hog;
-                        gpios-input = <TEGRA_GPIO(H, 2) 0>;
-                        gpios-output-high = <TEGRA_GPIO(H, 0) 0 
-TEGRA_GPIO(H, 1) 0>;
-                };
-        };
-
+> On Thu, Feb 11, 2016 at 09:58:06PM +0530, Bharat Kumar Gogada wrote:
+> > This patch series does modifications to pcie-xilinx.c, to support common
+> > driver on both Zynq and Microblaze architectures.
+> > Microblaze pci-common.c has been modified to support generic driver.
+> >
+> > Bharat Kumar Gogada (5):
+> >   PCI: xilinx: Removing xilinx_pcie_parse_and_add_res function
+> >   PCI: xilinx: Removing struct hw_pci structure.
+> >   PCI: xilinx: Modifying AXI PCIe Host Bridge driver to work on both
+> >      Zynq and Microblaze
+> >   PCI: xilinx: Updating Zynq PCI binding documentation with
+> >     Microblaze node.
+> >   Microblaze: Modifying microblaze PCI subsytem to support  generic
+> >     Xilinx  AXI PCIe Host Bridge IP driver
+> >
+> >  .../devicetree/bindings/pci/xilinx-pcie.txt        |  32 +++-
+> >  arch/microblaze/Kconfig                            |   3 +
+> >  arch/microblaze/pci/pci-common.c                   |  56 ++----
+> >  drivers/pci/host/Kconfig                           |   2 +-
+> >  drivers/pci/host/pcie-xilinx.c                     | 191 +++------------------
+> >  5 files changed, 66 insertions(+), 218 deletions(-)
+> 
+> I applied this series to my pci/host-xilinx branch for v4.6.
+> 
+> Michal, you only explicitly acked the last patch, but that only makes
+> sense if I apply the whole series, so I applied your ack to all the
+> patches.
+> 
+> Someday somebody should rework pci_fixup_irqs() so that doesn't have
+> to be arch-dependent.
+> 
+> I reworked the changelogs as below.
+> 
+> Bjorn
+> 
+> 
+> commit 01cf9d524ff0
+> Author: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Date:   Thu Feb 11 21:58:11 2016 +0530
+> 
+>     microblaze/PCI: Support generic Xilinx AXI PCIe Host Bridge IP driver
+> 
+>     Modify the Microblaze PCI subsystem to work with the generic
+>     drivers/pci/host/pcie-xilinx.c driver on Microblaze and Zynq.
+> 
+>     [bhelgaas: changelog]
+>     Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>     Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> commit e5d4b2006c97
+> Author: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Date:   Thu Feb 11 21:58:10 2016 +0530
+> 
+>     PCI: xilinx: Update Zynq binding with Microblaze node
+> 
+>     Update Zynq PCI binding documentation with Microblaze node.
+> 
+>     [bhelgaas: fix "microbalze_0_intc" typo]
+>     Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>     Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>     Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> commit 2c51391d2559
+> Author: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Date:   Thu Feb 11 21:58:09 2016 +0530
+> 
+>     PCI: xilinx: Don't call pci_fixup_irqs() on Microblaze
+> 
+>     The Xilinx AXI PCIe Host Bridge Soft IP driver was previously only
+>     supported on ARM (in particular, on ARCH_ZYNC), and pci_fixup_irqs() is
+>     available there.  But Microblaze will do IRQ fixup in pcibios_add_device(),
+>     so pci_fixup_irqs() is not available on Microblaze.
+> 
+>     Don't call pci_fixup_irqs() on Microblaze, so the driver can work on both
+>     Zynq and Microblaze Architectures.
+> 
+>     [bhelgaas: revise changelog to show similarity to bdb8a1844f31 ("PCI: iproc:
+> Call pci_fixup_irqs() for ARM64 as well as ARM")]
+>     Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>     Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>     Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> commit 4c01f3b089a0
+> Author: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Date:   Thu Feb 11 21:58:08 2016 +0530
+> 
+>     PCI: xilinx: Remove dependency on ARM-specific struct hw_pci
+> 
+>     The Xilinx PCIe host controller driver uses pci_common_init_dev(), which
+>     is ARM-specific and requires the ARM struct hw_pci.  The part of
+>     pci_common_init_dev() that is needed is limited and can be done here
+>     without using hw_pci.
+> 
+>     Create and scan the root bus directly without using the ARM
+>     pci_common_init_dev() interface.
+> 
+>     [bhelgaas: revise changelog to show similarity to 79953dd22c1d ("PCI: rcar:
+> Remove dependency on ARM-specific struct hw_pci")]
+>     Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>     Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>     Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> 
+> commit 0259882e342e
+> Author: Bharat Kumar Gogada <bharat.kumar.gogada-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Date:   Thu Feb 11 21:58:07 2016 +0530
+> 
+>     PCI: xilinx: Use of_pci_get_host_bridge_resources() to parse DT
+> 
+>     Use the new of_pci_get_host_bridge_resources() API in place of the PCI
+> OF
+>     DT parser.
+> 
+>     [bhelgaas: revise changelog to show similarity to 0021d22b73d6 ("PCI:
+> designware: Use of_pci_get_host_bridge_resources() to parse DT")]
+>     Signed-off-by: Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Ravi Kiran Gummaluri <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>     Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>     Acked-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
