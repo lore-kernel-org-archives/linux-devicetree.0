@@ -1,161 +1,71 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 2/6] thermal: of-thermal: Add devm version of thermal_zone_of_sensor_register
-Date: Wed, 9 Mar 2016 18:40:06 +0530
-Message-ID: <1457529010-6538-3-git-send-email-ldewangan@nvidia.com>
-References: <1457529010-6538-1-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH 4/5] gpio: of: Add support to have multiple gpios in gpio-hog
+Date: Wed, 9 Mar 2016 18:50:53 +0530
+Message-ID: <56E02335.6020901@nvidia.com>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <1457438528-29054-5-git-send-email-ldewangan@nvidia.com> <20160309062849.GB10454@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1457529010-6538-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: edubezval@gmail.com, rui.zhang@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, rklein@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160309062849.GB10454@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, swarren@wwwdotorg.org, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add resource managed version of thermal_zone_of_sensor_register() and
-thermal_zone_of_sensor_unregister().
 
-This helps in reducing the code size in error path, remove of
-driver remove callbacks and making proper sequence for deallocations.
+On Wednesday 09 March 2016 11:58 AM, Markus Pargmann wrote:
+> * PGP Signed by an unknown key
+>
+> Hi,
+>
+> On Tue, Mar 08, 2016 at 05:32:07PM +0530, Laxman Dewangan wrote:
+>> The child node for gpio hogs under gpio controller's node
+>> provide the mechanism to automatic GPIO request and
+>> configuration as part of the gpio-controller's driver
+>> probe function.
+>>
+>> Currently, property "gpio" takes one gpios for such
+>> configuration. Add support to have multiple GPIOs in
+>> this property so that multiple GPIOs of gpio-controller
+>> can be configured by this mechanism with one child node.
+> So if I read this correctly you want to have multiple GPIOs with the
+> same line name? Why don't you use multiple child nodes with individual
+> line names?
+>
+There is cases on which particular functional configuration needs sets 
+of GPIO to set. On this case, making sub node for each GPIOs creates 
+lots of sub-nodes and  add complexity on readability, usability and 
+maintainability.
+Example: for my board, I wanted to set GPIO H2 to input and H0 and H1 to 
+be output high.
+Instead of three nodes, I can have two here:
+        gpio@0,6000d000 {
+                wlan_input {
+                        gpio-hog;
+                        gpios = <TEGRA_GPIO(H, 2) 0>;
+                        input;
+                };
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+                wlan_output {
+                        gpio-hog;
+                        gpios = <TEGRA_GPIO(H, 0) 0 TEGRA_GPIO(H, 1) 0>;
+                        output-high;
+                };
+        };
 
----
-Changes from V1:
-- Run checkpatch --strict and fix the issue.
+So here I am grouping the multiple output GPIO together.
 
- drivers/thermal/of-thermal.c | 81 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/thermal.h      | 18 ++++++++++
- 2 files changed, 99 insertions(+)
+This looks much similar if we have many GPIOs for one type of 
+configurations.
 
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index 9043f8f..49ac23d 100644
---- a/drivers/thermal/of-thermal.c
-+++ b/drivers/thermal/of-thermal.c
-@@ -555,6 +555,87 @@ void thermal_zone_of_sensor_unregister(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(thermal_zone_of_sensor_unregister);
- 
-+static void devm_thermal_zone_of_sensor_release(struct device *dev, void *res)
-+{
-+	thermal_zone_of_sensor_unregister(dev,
-+					  *(struct thermal_zone_device **)res);
-+}
-+
-+static int devm_thermal_zone_of_sensor_match(struct device *dev, void *res,
-+					     void *data)
-+{
-+	struct thermal_zone_device **r = res;
-+
-+	if (WARN_ON(!r || !*r))
-+		return 0;
-+
-+	return *r == data;
-+}
-+
-+/**
-+ * devm_thermal_zone_of_sensor_register - Resource managed version of
-+ *				thermal_zone_of_sensor_register()
-+ * @dev: a valid struct device pointer of a sensor device. Must contain
-+ *       a valid .of_node, for the sensor node.
-+ * @sensor_id: a sensor identifier, in case the sensor IP has more
-+ *	       than one sensors
-+ * @data: a private pointer (owned by the caller) that will be passed
-+ *	  back, when a temperature reading is needed.
-+ * @ops: struct thermal_zone_of_device_ops *. Must contain at least .get_temp.
-+ *
-+ * Refer thermal_zone_of_sensor_register() for more details.
-+ *
-+ * Return: On success returns a valid struct thermal_zone_device,
-+ * otherwise, it returns a corresponding ERR_PTR(). Caller must
-+ * check the return value with help of IS_ERR() helper.
-+ * Registered hermal_zone_device device will automatically be
-+ * released when device is unbounded.
-+ */
-+struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
-+	struct device *dev, int sensor_id,
-+	void *data, const struct thermal_zone_of_device_ops *ops)
-+{
-+	struct thermal_zone_device **ptr, *tzd;
-+
-+	ptr = devres_alloc(devm_thermal_zone_of_sensor_release, sizeof(*ptr),
-+			   GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	tzd = thermal_zone_of_sensor_register(dev, sensor_id, data, ops);
-+	if (IS_ERR(tzd)) {
-+		devres_free(ptr);
-+		return tzd;
-+	}
-+
-+	*ptr = tzd;
-+	devres_add(dev, ptr);
-+
-+	return tzd;
-+}
-+EXPORT_SYMBOL_GPL(devm_thermal_zone_of_sensor_register);
-+
-+/**
-+ * devm_thermal_zone_of_sensor_unregister - Resource managed version of
-+ *				thermal_zone_of_sensor_unregister().
-+ * @dev: Device for which which resource was allocated.
-+ * @tzd: a pointer to struct thermal_zone_device where the sensor is registered.
-+ *
-+ * This function removes the sensor callbacks and private data from the
-+ * thermal zone device registered with devm_thermal_zone_of_sensor_register()
-+ * API. It will also silent the zone by remove the .get_temp() and .get_trend()
-+ * thermal zone device callbacks.
-+ * Normally this function will not need to be called and the resource
-+ * management code will ensure that the resource is freed.
-+ */
-+void devm_thermal_zone_of_sensor_unregister(struct device *dev,
-+					    struct thermal_zone_device *tzd)
-+{
-+	WARN_ON(devres_release(dev, devm_thermal_zone_of_sensor_release,
-+			       devm_thermal_zone_of_sensor_match, tzd));
-+}
-+EXPORT_SYMBOL_GPL(devm_thermal_zone_of_sensor_unregister);
-+
- /***   functions parsing device tree nodes   ***/
- 
- /**
-diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-index e13a1ac..9c48199 100644
---- a/include/linux/thermal.h
-+++ b/include/linux/thermal.h
-@@ -362,6 +362,11 @@ thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
- 				const struct thermal_zone_of_device_ops *ops);
- void thermal_zone_of_sensor_unregister(struct device *dev,
- 				       struct thermal_zone_device *tz);
-+struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
-+		struct device *dev, int id, void *data,
-+		const struct thermal_zone_of_device_ops *ops);
-+void devm_thermal_zone_of_sensor_unregister(struct device *dev,
-+					    struct thermal_zone_device *tz);
- #else
- static inline struct thermal_zone_device *
- thermal_zone_of_sensor_register(struct device *dev, int id, void *data,
-@@ -376,6 +381,19 @@ void thermal_zone_of_sensor_unregister(struct device *dev,
- {
- }
- 
-+static inline struct thermal_zone_device *devm_thermal_zone_of_sensor_register(
-+		struct device *dev, int id, void *data,
-+		const struct thermal_zone_of_device_ops *ops)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+static inline
-+void devm_thermal_zone_of_sensor_unregister(struct device *dev,
-+					    struct thermal_zone_device *tz)
-+{
-+}
-+
- #endif
- 
- #if IS_ENABLED(CONFIG_THERMAL)
--- 
-2.1.4
+Even it looks better if we have something:
+        gpio@0,6000d000 {
+                wlan_control {
+                        gpio-hog;
+                        gpios-input = <TEGRA_GPIO(H, 2) 0>;
+                        gpios-output-high = <TEGRA_GPIO(H, 0) 0 
+TEGRA_GPIO(H, 1) 0>;
+                };
+        };
 
