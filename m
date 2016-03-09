@@ -1,45 +1,48 @@
-From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 0/1] iio:pressure:ms5611: fix and enhancements
-Date: Wed, 9 Mar 2016 12:34:06 +0100
-Message-ID: <cover.1457522751.git.gregor.boirie@parrot.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH 0/4] Add AXP209 GPIO driver
+Date: Wed, 9 Mar 2016 13:17:50 +0100
+Message-ID: <56E0146E.6050102@redhat.com>
+References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Changes since v1:
-* temperature compensation fix:
-    * reword commit message
-    * remove useless parenthesis
-* power regulator: reword commit message
-* add oversampling rate support
+Hi,
 
-Changes since v2:
-* remove non printable characters from commit messages
+On 09-03-16 11:50, Maxime Ripard wrote:
+> Hi,
+>
+> The axp209 PMIC used in combination to some Allwinner SoCs has a bunch
+> of GPIOs accessible. Some boards use these to control their backlight
+> or a few LEDs.
 
-Changes since v3:
-* drop first 3 patches since applied onto testing
-* fix oops at regulator probing time if regulator support not compiled-in
-* complete device-tree support and documentation
-* remove continuous sampling support (see Jonathan's "kthread tight loop
-  trigger" proposal)
-* checkpatch'ed
+Thanks for working on this, but IMHO this cannot go upstream like this,
+the gpio pins on the axp pmics need a pinctrl driver, not a gpio
+driver. I.E. on the axp209 gpio0 and gpio1 can also be used to output
+an additional low-noise ldo (so as a regulator), or as an adc input.
 
-Changes since v4:
-* drop first 2 patches since applied
-* amend commit to include "Fixes" tag
+I've been working on gsl1680 touchscreen support lately and on at least
+a few a23 tablets, the low-noise ldo is used as AVCC for the touchscreen
+controller. Now these use an axp223 pmic, but nothing is stopping
+someone from doing something similar with an axp209 and I think it
+would be best to support this from day one, rather then hope we can
+retro-fit this later without breaking dts.
 
-Changes since v5:
-* reword patch subject line and include "Fixes" tag in commit message
+> There's supposed to be 4 of them, but the fourth one has a different
+> configuration register scheme, and I couldn't find any board that was
+> using this GPIO. It will be probably be supported eventually, but
+> until then, we support only the first 3 GPIOs.
 
-Gregor Boirie (1):
-  iio:pressure:ms5611: fix crash when probing regulator
+He he, this matches what I've done in u-boot, the 4th gpio indeed
+is somewhat funky (and the docs are not quite clear on how it works
+exactly IIRC), leaving it out for now indeed seems for the best.
 
- drivers/iio/pressure/ms5611_core.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Regards,
 
--- 
-2.1.4
+Hans
