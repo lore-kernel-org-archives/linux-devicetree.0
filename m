@@ -1,65 +1,96 @@
-From: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v15 6/6] arm64, mm, numa: Add NUMA balancing support for arm64.
-Date: Tue,  8 Mar 2016 15:59:47 -0800
-Message-ID: <1457481587-8976-7-git-send-email-ddaney.cavm@gmail.com>
-References: <1457481587-8976-1-git-send-email-ddaney.cavm@gmail.com>
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457481587-8976-1-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+From: Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+Date: Tue, 08 Mar 2016 18:13:13 -0600
+Message-ID: <1457482393.5360.115.camel@buserror.net>
+References: <1456816183-22340-1-git-send-email-qiang.zhao@nxp.com>
+	 <1456816183-22340-3-git-send-email-qiang.zhao@nxp.com>
+	 <20160305042536.GD13525@rob-hp-laptop>
+	 <AM3PR04MB11852B62A075A980A246D2D091B10@AM3PR04MB1185.eurprd04.prod.outlook.com>
+	 <1457371686.5360.107.camel@buserror.net>
+	 <AM3PR04MB1185D8F20D8D2763DB909B3791B20@AM3PR04MB1185.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <AM3PR04MB1185D8F20D8D2763DB909B3791B20-f56W/S9L6NSBfqFqbnzQ1s9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+On Tue, 2016-03-08 at 01:16 +0000, Qiang Zhao wrote:
+> On Tue, Mar 08, 2016 at 1:28AM, Scott Wood wrote:
+> > -----Original Message-----
+> > From: Scott Wood [mailto:oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org]
+> > Sent: Tuesday, March 08, 2016 1:28 AM
+> > To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>; Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>;
+> > linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-
+> > dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > Subject: Re: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+> > 
+> > On Mon, 2016-03-07 at 02:35 +0000, Qiang Zhao wrote:
+> > > On Tue, Mar 05, 2016 at 12:26PM, Rob Herring wrote:
+> > > > -----Original Message-----
+> > > > From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > > > Sent: Saturday, March 05, 2016 12:26 PM
+> > > > To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> > > > Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; Xiaobo Xie
+> > > > <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > > > devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> > > > Subject: Re: [PATCH v3 3/7] QE: Add uqe_serial document to bindings
+> > > > 
+> > > > On Tue, Mar 01, 2016 at 03:09:39PM +0800, Zhao Qiang wrote:
+> > > > > Add uqe_serial document to
+> > > > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.tx
+> > > > > t
+> > > > > 
+> > > > > Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> > > > > ---
+> > > > > Changes for v2
+> > > > > 	- modify tx/rx-clock-name specification Changes for v2
+> > > > > 	- NA
+> > > > > 
+> > > > >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt        | 19
+> > > > +++++++++++++++++++
+> > > > >  1 file changed, 19 insertions(+)
+> > > > >  create mode 100644
+> > > > > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.tx
+> > > > > t
+> > > > > 
+> > > > > diff --git
+> > > > > a/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
+> > > > > txt
+> > > > > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
+> > > > > txt
+> > > > > new file mode 100644
+> > > > > index 0000000..436c71c
+> > > > > --- /dev/null
+> > > > > +++
+> > b/Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.
+> > > > > +++ txt
+> > > > > @@ -0,0 +1,19 @@
+> > > > > +* Serial
+> > > > > +
+> > > > > +Currently defined compatibles:
+> > > > > +- ucc_uart
+> > > > 
+> > > > I guess this is in use already and okay. However, looking at the
+> > > > driver there really should be SoC specific compatible strings here
+> > > > since the driver is looking up the SoC compatible string and
+> > > > composing the firmware filename from that.
+> > > 
+> > > Ok, I will changed both driver and this compatible.
+> > 
+> > But don't break existing device trees while doing so.
+> 
+> Do I need to send driver patch in this patchset or a individual patch?
 
-Enable NUMA balancing for arm64 platforms.
-Add pte, pmd protnone helpers for use by automatic NUMA balancing.
+Doesn't matter.
 
-Reviewed-by: Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
----
- arch/arm64/Kconfig               |  1 +
- arch/arm64/include/asm/pgtable.h | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+-Scott
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7013087..20f5192 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -11,6 +11,7 @@ config ARM64
- 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
- 	select ARCH_USE_CMPXCHG_LOCKREF
- 	select ARCH_SUPPORTS_ATOMIC_RMW
-+	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
- 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
- 	select ARCH_WANT_FRAME_POINTERS
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 819aff5..2150cb7 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -348,6 +348,21 @@ static inline pgprot_t mk_sect_prot(pgprot_t prot)
- 	return __pgprot(pgprot_val(prot) & ~PTE_TABLE_BIT);
- }
- 
-+#ifdef CONFIG_NUMA_BALANCING
-+/*
-+ * See the comment in include/asm-generic/pgtable.h
-+ */
-+static inline int pte_protnone(pte_t pte)
-+{
-+	return (pte_val(pte) & (PTE_VALID | PTE_PROT_NONE)) == PTE_PROT_NONE;
-+}
-+
-+static inline int pmd_protnone(pmd_t pmd)
-+{
-+	return pte_protnone(pmd_pte(pmd));
-+}
-+#endif
-+
- /*
-  * THP definitions.
-  */
--- 
-1.8.3.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
