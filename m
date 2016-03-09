@@ -1,305 +1,36 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 15/18] arm: boot: dts: Add PLX Technology OX810SE dtsi
-Date: Wed,  9 Mar 2016 11:24:17 +0100
-Message-ID: <1457519060-6038-16-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 16/18] dt-bindings: Add OXNAS bindings
+Date: Wed,  9 Mar 2016 11:24:18 +0100
+Message-ID: <1457519060-6038-17-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
  <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457519060-6038-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/ox810se.dtsi | 273 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 273 insertions(+)
- create mode 100644 arch/arm/boot/dts/ox810se.dtsi
+ Documentation/devicetree/bindings/arm/oxnas.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/oxnas.txt
 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
+diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
 new file mode 100644
-index 0000000..5852a57
+index 0000000..f6032d2
 --- /dev/null
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -0,0 +1,273 @@
-+/*
-+ * ox810se.dtsi - Device tree file for Oxford Semiconductor OX810SE SoC
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
++++ b/Documentation/devicetree/bindings/arm/oxnas.txt
+@@ -0,0 +1,9 @@
++PLX Technology OXNAS SoCs Family device tree bindings
++-------------------------------------------
 +
-+/include/ "skeleton.dtsi"
++Boards with the OX810SE Soc SoC shall have the following properties:
++  Required root node property:
++    compatible: "oxsemi,ox810se"
 +
-+/ {
-+	compatible = "oxsemi,ox810se";
-+
-+	cpus {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			device_type = "cpu";
-+			compatible = "arm,arm926ej-s";
-+			clocks = <&armclk>;
-+		};
-+	};
-+
-+	memory {
-+		/* Max 256MB @ 0x48000000 */
-+		reg = <0x48000000 0x10000000>;
-+	};
-+
-+	clocks {
-+		osc: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		gmacclk: gmacclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <125000000>;
-+		};
-+
-+		rpsclk: rpsclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <1>;
-+			clock-mult = <1>;
-+			clocks = <&osc>;
-+		};
-+
-+		pll400: pll400 {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <733333333>;
-+		};
-+
-+		sysclk: sysclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+			clocks = <&pll400>;
-+		};
-+
-+		armclk: armclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+			clocks = <&pll400>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+		interrupt-parent = <&intc>;
-+
-+		apb-bridge@44000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x44000000 0x1000000>;
-+
-+			pinctrl: pinctrl {
-+				compatible = "oxsemi,ox810se-pinctrl", "simple-bus";
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				ranges;
-+
-+				/* Regmap for sys registers */
-+				plxtech,sys-ctrl = <&sys>;
-+
-+				/* Default, all-open mux-map */
-+				plxtech,mux-mask = <
-+					0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
-+					0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
-+					>;
-+
-+				gpio0: gpio@000000 {
-+					compatible = "oxsemi,ox810se-gpio";
-+					reg = <0x000000 0x100000>;
-+					interrupts = <21>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					#gpio-lines = <32>;
-+				};
-+
-+				gpio1: gpio@100000 {
-+					compatible = "oxsemi,ox810se-gpio";
-+					reg = <0x100000 0x100000>;
-+					interrupts = <22>;
-+					#gpio-cells = <2>;
-+					gpio-controller;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					#gpio-lines = <3>;
-+				};
-+
-+				uart0 {
-+					pinctrl_uart0: uart0 {
-+						plxtech,pins = <0 31 3 0
-+								0 32 3 0>;
-+					};
-+					pinctrl_uart0_modem: uart0_modem {
-+						plxtech,pins = <0 27 3 0
-+								0 28 3 0
-+								0 29 3 0
-+								0 30 3 0
-+								0 33 3 0
-+								0 34 3 0>;
-+					};
-+				};
-+
-+				uart1 {
-+					pinctrl_uart1: uart1 {
-+						plxtech,pins = <0 20 3 0
-+								0 22 3 0>;
-+					};
-+					pinctrl_uart1_modem: uart1_modem {
-+						plxtech,pins = <0 8 3 0
-+								0 9 3 0
-+								0 23 3 0
-+								0 24 3 0
-+								0 25 3 0
-+								0 26 3 0>;
-+					};
-+				};
-+
-+				uart2 {
-+					pinctrl_uart2: uart2 {
-+						plxtech,pins = <0 6 3 0
-+								0 7 3 0>;
-+					};
-+					pinctrl_uart2_modem: uart2_modem {
-+						plxtech,pins = <0 0 3 0
-+								0 1 3 0
-+								0 2 3 0
-+								0 3 3 0
-+								0 4 3 0
-+								0 5 3 0>;
-+					};
-+				};
-+			};
-+
-+			uart0: serial@200000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <23>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 17>;
-+			};
-+
-+			uart1: serial@300000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x300000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <24>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 18>;
-+			};
-+
-+			uart2: serial@900000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x900000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <29>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 22>;
-+			};
-+
-+			uart3: serial@a00000 {
-+			       compatible = "ns16550a";
-+			       reg = <0xa00000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <30>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 23>;
-+			};
-+		};
-+
-+		apb-bridge@45000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x45000000 0x1000000>;
-+
-+			sys: sys-ctrl@000000 {
-+				compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
-+				reg = <0x000000 0x100000>;
-+
-+				reset: reset-controller {
-+					compatible = "oxsemi,ox810se-reset";
-+					#reset-cells = <1>;
-+				};
-+
-+				stdclk: stdclk {
-+					compatible = "oxsemi,ox810se-stdclk";
-+					#clock-cells = <1>;
-+				};
-+			};
-+
-+			rps@300000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "simple-bus";
-+				ranges = <0 0x300000 0x100000>;
-+
-+				intc: interrupt-controller@0 {
-+					compatible = "arm,rps-irq";
-+					interrupt-controller;
-+					reg = <0 0x200>;
-+					#interrupt-cells = <1>;
-+					valid-mask = <0xFFFFFFFF>;
-+					clear-mask = <0>;
-+				};
-+
-+				timer0: timer@200 {
-+					compatible = "arm,sp804";
-+					reg = <0x200 0x40>;
-+					clocks = <&rpsclk>;
-+					interrupts = <4 5>;
-+					arm,timer-width = <24>;
-+				};
-+			};
-+		};
-+	};
-+};
++Board compatible values:
++  - "wd,mbwe" (OX810SE)
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
