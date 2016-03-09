@@ -1,163 +1,97 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl and gpio bindings
-Date: Wed,  9 Mar 2016 11:24:14 +0100
-Message-ID: <1457519060-6038-13-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v2 08/18] dt-bindings: Add PLX Technology Reset Controller
+ bindings
+Date: Wed,  9 Mar 2016 11:24:10 +0100
+Message-ID: <1457519060-6038-9-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
  <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../devicetree/bindings/gpio/gpio_oxnas.txt        |  27 ++++++
- .../bindings/pinctrl/plxtech,pinctrl.txt           | 100 +++++++++++++++++++++
- 2 files changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
+ .../devicetree/bindings/reset/plxtech,reset.txt    | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/plxtech,reset.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+diff --git a/Documentation/devicetree/bindings/reset/plxtech,reset.txt b/Documentation/devicetree/bindings/reset/plxtech,reset.txt
 new file mode 100644
-index 0000000..cbb03c4
+index 0000000..581c974
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-@@ -0,0 +1,27 @@
-+PLX Technology OXNAS SoC GPIO Controller
-+==========================================
++++ b/Documentation/devicetree/bindings/reset/plxtech,reset.txt
+@@ -0,0 +1,58 @@
++PLX Technology OXNAS SoC Family RESET Controller
++================================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
 +
 +Required properties:
-+- compatible: "oxsemi,ox810se-gpio".
-+- reg: Should contain GPIO controller registers location and length
-+- interrupts: Should be the port interrupt shared by all the pins.
-+- #gpio-cells: Should be two.  The first cell is the pin number and
-+  the second cell is used to specify optional parameters (currently
-+  unused).
-+- gpio-controller: Marks the device node as a GPIO controller.
++- compatible: Should be "oxsemi,ox810se-reset"
++- #reset-cells: 1, see below
 +
-+optional properties:
-+- #gpio-lines: Number of gpio if absent 32.
++Parent node should have the following properties :
++- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
 +
++For OX810SE, the indices are :
++ - 0 : ARM
++ - 1 : COPRO
++ - 2 : Reserved
++ - 3 : Reserved
++ - 4 : USBHS
++ - 5 : USBHSPHY
++ - 6 : MAC
++ - 7 : PCI
++ - 8 : DMA
++ - 9 : DPE
++ - 10 : DDR
++ - 11 : SATA
++ - 12 : SATA_LINK
++ - 13 : SATA_PHY
++ - 14 : Reserved
++ - 15 : NAND
++ - 16 : GPIO
++ - 17 : UART1
++ - 18 : UART2
++ - 19 : MISC
++ - 20 : I2S
++ - 21 : AHB_MON
++ - 22 : UART3
++ - 23 : UART4
++ - 24 : SGDMA
++ - 25 : Reserved
++ - 26 : Reserved
++ - 27 : Reserved
++ - 28 : Reserved
++ - 29 : Reserved
++ - 30 : Reserved
++ - 31 : BUS
 +
-+Example:
-+	gpio0: gpio@000000 {
-+		compatible = "oxsemi,ox810se-gpio";
-+		reg = <0x000000 0x100000>;
-+		interrupts = <21>;
-+		#gpio-cells = <2>;
-+		gpio-controller;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		#gpio-lines = <32>;
++example:
++
++sys: sys-ctrl@000000 {
++	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
++	reg = <0x000000 0x100000>;
++
++	reset: reset-controller {
++		compatible = "oxsemi,ox810se-reset";
++		#reset-cells = <1>;
 +	};
-diff --git a/Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
-new file mode 100644
-index 0000000..0c5051a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
-@@ -0,0 +1,100 @@
-+PLX Technology OXNAS SoC Pinmux Controller
-+==========================================
-+
-+The OXNAS Pinmux Controller, enables the IC to share one PAD to several
-+functional blocks. The sharing is done by multiplexing the PAD input/output
-+signals. For each PAD there are up to 8 muxing options (called periph modes).
-+Since different modules require different PAD settings
-+(like pull up, keeper, etc) the contoller controls also the PAD settings
-+parameters.
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+OXNAS pin configuration node is a node of a group of pins which can be
-+used for a specific device or function. This node represents both mux and config
-+of the pins in that group. The 'pins' selects the function mode(also named pin
-+mode) this pin can work on and the 'config' configures various pad settings
-+such as pull-up, multi drive, etc.
-+
-+Required properties for iomux controller:
-+- compatible: "oxsemi,ox810se-pinctrl"
-+- plxtech,mux-mask: array of mask (periph per bank) to describe if a pin can be
-+  configured in this periph mode. All the periph and bank need to be describe.
-+- plxtech,sys-ctrl: a phandle to the system controller syscon node
-+
-+How to create such array:
-+
-+Each column will represent the possible peripheral of the pinctrl
-+Each line will represent a pio bank
-+
-+For example :
-+Peripheral: 2 ( A and B)
-+Bank: 2 (A, B and C)
-+=>
-+
-+  /*    A         B     */
-+  0xffffffff 0xffc00c3b  /* pioA */
-+  0xffffffff 0x7fff3ccf  /* pioB */
-+
-+For each peripheral/bank we will descibe in a u32 if a pin can be
-+configured in it by putting 1 to the pin bit (1 << pin)
-+
-+Required properties for pin configuration node:
-+- plxtech,pins: 4 integers array, represents a group of pins mux and config
-+  setting. The format is plxtech,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
-+  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
-+  PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
-+
-+Bits used for CONFIG:
-+ - None Yet
-+
-+Examples:
-+
-+pinctrl: pinctrl {
-+	compatible = "oxsemi,ox810se-pinctrl", "simple-bus";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	/* Regmap for sys registers */
-+	plxtech,sys-ctrl = <&sys>;
-+
-+	/* Default, all-open mux-map */
-+	plxtech,mux-mask = <
-+		 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
-+		 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF 0xFFFFFFFF
-+		 >;
-+
-+	uart0 {
-+		pinctrl_uart0: uart0 {
-+			plxtech,pins = <0 31 3 0
-+					0 32 3 0>;
-+		};
-+		pinctrl_uart0_modem: uart0_modem {
-+			plxtech,pins = <0 27 3 0
-+					0 28 3 0
-+					0 29 3 0
-+					0 30 3 0
-+					0 33 3 0
-+					0 34 3 0>;
-+		};
-+	};
-+};
-+
-+uart0: uart@200000 {
-+	compatible = "ns16550a";
-+	reg = <0x200000 0x100000>;
-+	clocks = <&sysclk>;
-+	interrupts = <23>;
-+	reg-shift = <0>;
-+	fifo-size = <16>;
-+	reg-io-width = <1>;
-+	current-speed = <115200>;
-+	no-loopback-test;
-+	status = "disabled";
-+	resets = <&reset 17>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart0>;
 +};
 -- 
 1.9.1
-
