@@ -1,46 +1,58 @@
 From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH 3/4] gpio: dt-bindings: Declare gpio-hog optional for GPIO subnodes
-Date: Wed, 9 Mar 2016 10:53:18 +0700
-Message-ID: <CACRpkdaE64pjnr=hn0nMJb-KHx5GhvOSrdhNWJucY+UJVcV18w@mail.gmail.com>
+Date: Wed, 9 Mar 2016 11:07:25 +0700
+Message-ID: <CACRpkdaem3OOP_TrZsUajxOB0ftYgLmcSr6LtFJpqN-4ETPe0A@mail.gmail.com>
 References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de>
 	<1456214089-13954-3-git-send-email-mpa@pengutronix.de>
 	<20160223232534.GA29637@rob-hp-laptop>
+	<1813679.JaFRxta3v8@adelgunde>
+	<20160302154120.GA23716@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160223232534.GA29637@rob-hp-laptop>
+In-Reply-To: <20160302154120.GA23716@rob-hp-laptop>
 Sender: linux-gpio-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
 Cc: Markus Pargmann <mpa@pengutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 24, 2016 at 6:25 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Feb 23, 2016 at 08:54:48AM +0100, Markus Pargmann wrote:
+On Wed, Mar 2, 2016 at 10:41 PM, Rob Herring <robh@kernel.org> wrote:
 
->> +Optional properties:
->> +- line-name:  The GPIO name. If not present the node name is used.
->
-> I'd like to deprecate line-name in favor of the standard property
-> for user visible names "label".
+> Requiring removing the gpio-hog to add a specific
+> binding is a problem. AIUI, a hog will prevent any other user in the
+> kernel. I think that is backwards in that a hog should only provide some
+> default configuration/use.
 
-This causes some unfortunate confusion wrt internal linux naming.
+I think there is some misunderstanding here.
 
-GPIO lines have two "names"
+- HOGS are done to hook a line up in a way so that
+  it is *used* for something, such as biasing a MMC CD line
+  in this example from arch/arm/boot/dts/ste-nomadik-s8815.dts:
 
-- The "name" is what the line (pin) is named
-  on the chip, or the name of the rail going out on the board, from the chip,
-  so it is a producer name.
+        gpio3: gpio@101e7000 {
+                /* This hog will bias the MMC/SD card detect line */
+                mmcsd-gpio {
+                        gpio-hog;
+                        gpios = <16 0x0>;
+                        output-low;
+                        line-name = "card detect bias";
+                };
+        };
 
-- Then the GPIO consumers set a second name, called "label"
-  (confusingly) so we can see in e.g. debugfs and now also the userspace
-  ABI who is using it.
+   So it's not like this line is "unused" or something.
 
-I named these "name" and "consumer" in the userspace ABI, I think
-I should take a round and rename it from "label" to "consumer"
-also inside the kernel to avoid confusion with this, because "label"
-in DT is going to be converted to "name" in the GPIOlib and
-then it also has something named "label" and that is another thing,
-argh!
+- For the case when we want to just set up some default values
+  in some registers for a GPIO line and just leave it for whatever
+  consumer may turn up (whether a driver or e.g. userspace), we
+  have had proposals for
+  setting up initial values from the DT, using essentially the hog
+  syntax but with another bool than "gpio-hog" obviously,
+  "gpio-initval" or just leaving it blank was suggested in the former
+  thread. (See switch discussion.)
+
+So my view is if we want just initial configuration of lines, then handle
+that separately, do not try to change the semantic meaning of the
+hogs to be something else, let hogs be hogs.
 
 Yours,
 Linus Walleij
