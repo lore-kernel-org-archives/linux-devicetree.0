@@ -1,63 +1,161 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 10/18] dt-bindings: Add PLX Technology OXNAS Standard Clocks bindings
-Date: Wed,  9 Mar 2016 11:24:12 +0100
-Message-ID: <1457519060-6038-11-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 18/18] arm: boot: dts: Add Western Digital My Book World Edition device tree
+Date: Wed,  9 Mar 2016 11:24:20 +0100
+Message-ID: <1457519060-6038-19-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
  <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457519060-6038-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/clock/plxtech,stdclk.txt   | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
+Add Western Digital My Book World Edition device tree based on
+PLX Technology OX810SE SoC.
 
-diff --git a/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile    |   2 +
+ arch/arm/boot/dts/wd-mbwe.dts | 112 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 114 insertions(+)
+ create mode 100644 arch/arm/boot/dts/wd-mbwe.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index a4a6d70..0395674 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -520,6 +520,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+ 	orion5x-rd88f5182-nas.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ 	prima2-evb.dtb
++dtb-$(CONFIG_ARCH_OXNAS) += \
++	wd-mbwe.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8064-cm-qs600.dtb \
+ 	qcom-apq8064-ifc6410.dtb \
+diff --git a/arch/arm/boot/dts/wd-mbwe.dts b/arch/arm/boot/dts/wd-mbwe.dts
 new file mode 100644
-index 0000000..c60b459
+index 0000000..ac3250a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
-@@ -0,0 +1,35 @@
-+PLX Technology OXNAS SoC Family Standard Clocks
-+================================================
++++ b/arch/arm/boot/dts/wd-mbwe.dts
+@@ -0,0 +1,112 @@
++/*
++ * wd-mbwe.dtsi - Device tree file for Western Digital My Book World Edition
++ *
++ * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
++ *
++ * Licensed under GPLv2 or later
++ */
 +
-+Please also refer to clock-bindings.txt in this directory for common clock
-+bindings usage.
++/dts-v1/;
++#include "ox810se.dtsi"
 +
-+Required properties:
-+- compatible: Should be "oxsemi,ox810se-stdclk"
-+- #clock-cells: 1, see below
++/ {
++	model = "Western Digital My Book World Edition";
 +
-+Parent node should have the following properties :
-+- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++	compatible = "wd,mbwe", "oxsemi,ox810se";
 +
-+For OX810SE, the clock indices are :
-+ - 0: LEON
-+ - 1: DMA_SGDMA
-+ - 2: CIPHER
-+ - 3: SATA
-+ - 4: AUDIO
-+ - 5: USBMPH
-+ - 6: ETHA
-+ - 7: PCIA
-+ - 8: NAND
-+
-+example:
-+
-+sys: sys-ctrl@000000 {
-+	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
-+	reg = <0x000000 0x100000>;
-+
-+	stdclk: stdclk {
-+		compatible = "oxsemi,ox810se-stdclk";
-+		#clock-cells = <1>;
++	chosen {
++		bootargs = "console=ttyS1,115200n8 earlyprintk=serial";
 +	};
++
++	memory {
++		/* 128Mbytes DDR */
++		reg = <0x48000000 0x8000000>;
++	};
++
++	aliases {
++		serial1 = &uart1;
++		gpio0 = &gpio0;
++		gpio1 = &gpio1;
++	};
++
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		poll-interval = <100>;
++
++		power {
++			label = "power";
++			gpios = <&gpio0 0 1>;
++			linux,code = <0x198>;
++		};
++
++		recovery {
++			label = "recovery";
++			gpios = <&gpio0 4 1>;
++			linux,code = <0xab>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		a0 {
++			label = "activity0";
++			gpios = <&gpio0 25 0>;
++			default-state = "keep";
++		};
++
++		a1 {
++			label = "activity1";
++			gpios = <&gpio0 26 0>;
++			default-state = "keep";
++		};
++
++		a2 {
++			label = "activity2";
++			gpios = <&gpio0 5 0>;
++			default-state = "keep";
++		};
++
++		a3 {
++			label = "activity3";
++			gpios = <&gpio0 6 0>;
++			default-state = "keep";
++		};
++
++		a4 {
++			label = "activity4";
++			gpios = <&gpio0 7 0>;
++			default-state = "keep";
++		};
++
++		a5 {
++			label = "activity5";
++			gpios = <&gpio1 2 0>;
++			default-state = "keep";
++		};
++	};
++
++	i2c-gpio {
++		compatible = "i2c-gpio";
++		gpios = <&gpio0 3 0 /* sda */
++			 &gpio0 2 0 /* scl */
++			 >;
++		i2c-gpio,delay-us = <2>;        /* ~100 kHz */
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		rtc0: rtc@48 {
++			compatible = "st,m41t00";
++			reg = <0x68>;
++		};
++	};
++};
++
++&uart1 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
 +};
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
