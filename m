@@ -1,52 +1,59 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 4/4] ARM: sun5i: chip: Add status LED
-Date: Wed,  9 Mar 2016 11:50:14 +0100
-Message-ID: <1457520614-32239-5-git-send-email-maxime.ripard@free-electrons.com>
-References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Javi Merino <javi.merino@arm.com>
+Subject: Re: [PATCH v2 1/5] thermal: change "hysteresis" as optional property
+Date: Wed, 9 Mar 2016 11:10:52 +0000
+Message-ID: <20160309111051.GA3369@e104805>
+References: <1456458227-12950-1-git-send-email-leo.yan@linaro.org>
+ <1456458227-12950-2-git-send-email-leo.yan@linaro.org>
+ <20160303162942.GA2445@localhost.localdomain>
+ <20160304030349.GA11012@leoy-linaro>
+ <20160304115752.GA13894@e104805>
+ <20160308135743.GC4921@leoy-linaro>
+ <20160308205558.GA7010@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBYMGQC3QKGQEKYP3PSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1457520614-32239-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160308205558.GA7010@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CHIP has a status LED connected to one of the AXP GPIOs. Add the
-gpio-leds node to be able to use the proper LED framework to control it.
+On Tue, Mar 08, 2016 at 12:55:59PM -0800, Eduardo Valentin wrote:
+> On Tue, Mar 08, 2016 at 09:57:43PM +0800, Leo Yan wrote:
+> > Hi Eduardo,
+> > 
+> > On Fri, Mar 04, 2016 at 11:57:53AM +0000, Javi Merino wrote:
+> > > On Fri, Mar 04, 2016 at 11:03:49AM +0800, Leo Yan wrote:
+> > > > On Thu, Mar 03, 2016 at 08:29:44AM -0800, Eduardo Valentin wrote:
+> > > > > On Fri, Feb 26, 2016 at 11:43:43AM +0800, Leo Yan wrote:
+> > 
+> > [...]
+> > 
+> > > > > > The property "hysteresis" is mandatory for trip points, so if without
+> > > > > > it the thermal zone cannot register successfully. But "hysteresis" is
+> > > > > > ignored in the thermal subsystem and only inquired by several thermal
+> > > > > > sensor drivers.
+> > > > > 
+> > > > > If the Linux thermal subsystem has a problem with handling hysteresis, I
+> > > > > would rather fix Linux code than relaxing the DT binding. Or if you
+> > > > > still believe hysteresis is really optional, I would prefer to see a
+> > > > > better justification than "Linux ignores it".
+> > > 
+> > > I see it the other way round, Is hysteresis a property that, without
+> > > it, the thermal code can't configure itself so it fails to create the
+> > > trip point?  The current code goes "There is no hysteresis for this
+> > > property, I don't know how to set up this trip point!".  I think we
+> > > can do better than this.
+> > 
+> > Do you agree with Javi's suggestion? If you think it's okay, I will
+> > move on to send out a new version patch based on Javi's comments.
+> 
+> No I don't. This discussion so far has been about Linux code. I still
+> havent seen an argument explaining why hysteresis has to be optional.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun5i-r8-chip.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Fair enough.  Looks like I'm holding this driver from being
+upstreamed, so I'll back off.
 
-diff --git a/arch/arm/boot/dts/sun5i-r8-chip.dts b/arch/arm/boot/dts/sun5i-r8-chip.dts
-index f6898c6b84d4..9a54df81ece7 100644
---- a/arch/arm/boot/dts/sun5i-r8-chip.dts
-+++ b/arch/arm/boot/dts/sun5i-r8-chip.dts
-@@ -64,6 +64,16 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		status {
-+			label = "chip:white:status";
-+			gpios = <&axp_gpio 2 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
- };
- 
- &codec {
--- 
-2.7.2
+Leo, sorry for misguiding you.  Please bring back the hysteresis
+property you had in v1.
