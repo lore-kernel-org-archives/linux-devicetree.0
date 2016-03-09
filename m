@@ -1,59 +1,56 @@
-From: Javi Merino <javi.merino@arm.com>
-Subject: Re: [PATCH v2 1/5] thermal: change "hysteresis" as optional property
-Date: Wed, 9 Mar 2016 11:10:52 +0000
-Message-ID: <20160309111051.GA3369@e104805>
-References: <1456458227-12950-1-git-send-email-leo.yan@linaro.org>
- <1456458227-12950-2-git-send-email-leo.yan@linaro.org>
- <20160303162942.GA2445@localhost.localdomain>
- <20160304030349.GA11012@leoy-linaro>
- <20160304115752.GA13894@e104805>
- <20160308135743.GC4921@leoy-linaro>
- <20160308205558.GA7010@localhost.localdomain>
+From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 1/1] iio:pressure:ms5611: fix crash when probing regulator
+Date: Wed, 9 Mar 2016 12:34:07 +0100
+Message-ID: <7767ba4decd3938eb1b37990f707b016228e0ef5.1457522751.git.gregor.boirie@parrot.com>
+References: <cover.1457522751.git.gregor.boirie@parrot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160308205558.GA7010@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, kongxinwei <kong.kongxinwei@hisilicon.com>, Punit Agrawal <Punit.Agrawal@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1457522751.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 08, 2016 at 12:55:59PM -0800, Eduardo Valentin wrote:
-> On Tue, Mar 08, 2016 at 09:57:43PM +0800, Leo Yan wrote:
-> > Hi Eduardo,
-> > 
-> > On Fri, Mar 04, 2016 at 11:57:53AM +0000, Javi Merino wrote:
-> > > On Fri, Mar 04, 2016 at 11:03:49AM +0800, Leo Yan wrote:
-> > > > On Thu, Mar 03, 2016 at 08:29:44AM -0800, Eduardo Valentin wrote:
-> > > > > On Fri, Feb 26, 2016 at 11:43:43AM +0800, Leo Yan wrote:
-> > 
-> > [...]
-> > 
-> > > > > > The property "hysteresis" is mandatory for trip points, so if without
-> > > > > > it the thermal zone cannot register successfully. But "hysteresis" is
-> > > > > > ignored in the thermal subsystem and only inquired by several thermal
-> > > > > > sensor drivers.
-> > > > > 
-> > > > > If the Linux thermal subsystem has a problem with handling hysteresis, I
-> > > > > would rather fix Linux code than relaxing the DT binding. Or if you
-> > > > > still believe hysteresis is really optional, I would prefer to see a
-> > > > > better justification than "Linux ignores it".
-> > > 
-> > > I see it the other way round, Is hysteresis a property that, without
-> > > it, the thermal code can't configure itself so it fails to create the
-> > > trip point?  The current code goes "There is no hysteresis for this
-> > > property, I don't know how to set up this trip point!".  I think we
-> > > can do better than this.
-> > 
-> > Do you agree with Javi's suggestion? If you think it's okay, I will
-> > move on to send out a new version patch based on Javi's comments.
-> 
-> No I don't. This discussion so far has been about Linux code. I still
-> havent seen an argument explaining why hysteresis has to be optional.
+When not compiled-in, regulator layer will return a NULL pointer when
+trying to get a reference to any regulator using devm_regulator_get().  As
+IS_ERR() does not consider this an error, the ms5611 probing operation will
+try to enable a NULL regulator, which will invariably cause a kernel
+crash.
+This patch fixes this situation by using devm_regulator_get_optional()
+instead of devm_regulator_get().
 
-Fair enough.  Looks like I'm holding this driver from being
-upstreamed, so I'll back off.
+Fixes: 3145229f9191 ("iio:pressure:ms5611: power regulator support")
+Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/iio/pressure/ms5611_core.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Leo, sorry for misguiding you.  Please bring back the hysteresis
-property you had in v1.
+diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/ms5611_core.c
+index 37dbc04..a2a871b 100644
+--- a/drivers/iio/pressure/ms5611_core.c
++++ b/drivers/iio/pressure/ms5611_core.c
+@@ -387,8 +387,8 @@ static const struct iio_info ms5611_info = {
+ static int ms5611_init(struct iio_dev *indio_dev)
+ {
+ 	int ret;
+-	struct regulator *vdd = devm_regulator_get(indio_dev->dev.parent,
+-	                                           "vdd");
++	struct regulator *vdd =
++		devm_regulator_get_optional(indio_dev->dev.parent, "vdd");
+ 
+ 	/* Enable attached regulator if any. */
+ 	if (!IS_ERR(vdd)) {
+@@ -398,6 +398,10 @@ static int ms5611_init(struct iio_dev *indio_dev)
+ 			        "failed to enable Vdd supply: %d\n", ret);
+ 			return ret;
+ 		}
++	} else {
++		ret = PTR_ERR(vdd);
++		if (ret != -ENODEV)
++			return ret;
+ 	}
+ 
+ 	ret = ms5611_reset(indio_dev);
+-- 
+2.1.4
