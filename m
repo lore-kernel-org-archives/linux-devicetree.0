@@ -1,109 +1,111 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/5 v9] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Wed,  9 Mar 2016 10:24:47 +0100
-Message-ID: <1457515487-31411-1-git-send-email-petr@barix.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Wed, 9 Mar 2016 10:42:28 +0100
+Message-ID: <CAAObsKBr9SXg1-wr9O-ypR8JozdGpeAwfDLMeUKi8ozxkKyTXg@mail.gmail.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <56DD7172.4000707@suse.de> <2714888.1DdqvJZ8cb@diego> <56DD7593.5060003@suse.de>
+ <56DD8176.2080603@st.com> <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com>
+ <56DDA26C.3050301@suse.de> <56DDA3D5.3090209@st.com> <56DDB749.1020808@suse.de>
+ <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
+ <56DE7E1D.5070508@st.com> <CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com>
+ <CAAObsKD9HoEbtV_JMz_R=bcrQseDmhncRAWP9k8djksL-LMQqw@mail.gmail.com>
+ <56DFE55B.2090806@st.com> <56DFE64B.8060606@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56DFE64B.8060606-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, =?UTF-8?Q?Frank_Sch=C3=A4fer?= <fschaefer.oss-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+On 9 March 2016 at 10:00, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org> wrote:
+> On 3/9/2016 9:56 AM, Giuseppe CAVALLARO wrote:
+>>
+>> Hello
+>>
+>> On 3/9/2016 9:35 AM, Tomeu Vizoso wrote:
+>>>
+>>>
+>>> in order to get the onboard network on the Radxa Rock2 to work at all
+>>> on today's linux-next, I had to revert both commits:
+>>>
+>>> * "stmmac: Fix 'eth0: No PHY found' regression" for the drivers to
+>>> probe and the link to come up, and
+>>
+>>
+>> I've just sent two patches (on top of net.git) to fix this problem
+>> pls let me know if these help on your side too.
+>>
+>>>
+>>> * "stmmac: first frame prep at the end of the xmit routine" for the
+>>> network interface to work at all.
+>>
+>>
+>> I cannot reproduce it right now but I am looking at this again and let
+>> you know.
+>> I will check your output file too
+>
+>
+> hmm, I think that the problem is around the "normal descriptor"
+> management that is configured on the boxes where the driver is
+> failing now. Using enhanced descriptors the network is ok.
+> I will keep you up-to-date.
 
-Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
----
-v1: <initial>
+Hi,
 
-v2:
- - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
- - using "ti," prefix instead of "da8xx," for specific property names
- - no wildcards in compatibility string
+I have done some tests and these are the results:
 
-v3:
- - added "reg", "interrupts" and "interrupt-names" properties
- - wildcards in compatibility string
+* net.git (133800d1f028): probe failed
 
-v4:
- - compatibility string set to "ti,da830-musb"
- - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
- - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
- - removed "ti,hwmods"
+* net.git (133800d1f028) + revert: everything fine
 
-v5:
- - "ti,phy20-refclock-frequency" property made mandatory
+* net.git (133800d1f028) + revert + "stmmac: fix MDIO settings": everything fine
 
-v6:
- - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
+* today's linux-next: probe failed
 
-v7:
- - removed the "mentor,power" property; hard coded to 500mA in the code
+* today's linux-next + revert of 88f8b1bb41c6 stmmac: Fix 'eth0: No
+PHY found' regression: probe succeeded but no network at all
 
-v8:
- - "ti,usb2-phy-refclock-frequency" renamed to "ti,usb2-phy-refclock-hz" and description amended
- - "ti,usb2-phy-clkmux-pll" changed to "ti,usb2-phy-clkmux-refclkin" to reflect the more common case
- - USB maximum power modelled via a regulator "vbus-supply"
+* today's linux-next + revert of 88f8b1bb41c6 (stmmac: Fix 'eth0: No
+PHY found' regression) + revert of 0e80bdc9a72d (stmmac: first frame
+prep at the end of xmit routine): probe succeeded, dhcp succeeds and
+nfsroot works for a few seconds before timing out
 
-v9: <no change>
+Btw, could you CC LKML on future patches that need testing?
 
- .../devicetree/bindings/usb/da8xx-usb.txt          | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-new file mode 100644
-index 0000000..a6eda5b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-@@ -0,0 +1,45 @@
-+TI DA8xx MUSB
-+~~~~~~~~~~~~~
-+For DA8xx/OMAP-L1x/AM17xx/AM18xx platforms.
-+
-+Required properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - compatible : Should be set to "ti,da830-musb".
-+
-+ - reg: Offset and length of the USB controller register set.
-+
-+ - interrupts: The USB interrupt number.
-+
-+ - interrupt-names: Should be set to "mc".
-+
-+ - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
-+
-+ - vbus-supply: Phandle to a regulator providing the USB bus power.
-+
-+ - ti,usb2-phy-refclock-hz : Integer. Frequency in Hz of the USB 2.0 PHY reference clock,
-+     either provided by the internal PLL or an external source.
-+     The supported values are: 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz.
-+
-+
-+Optional properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - ti,usb2-phy-clkmux-refclkin: Boolean. Defines the USB 2.0 PHY reference clock source.
-+     If present the the external USB_REFCLKIN pin is used as a clock source, otherwise
-+     the internal PLL is used.
-+
-+Example:
-+
-+	usb20: usb@1e00000 {
-+		compatible = "ti,da830-musb";
-+		reg =   <0x00200000 0x10000>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
-+		interrupt-names = "mc";
-+
-+		dr_mode = "host";
-+		vbus-supply = <&usb_vbus>;
-+
-+		ti,usb2-phy-refclock-hz = <24000000>;
-+
-+		status = "okay";
-+	};
--- 
-1.9.1
+Tomeu
 
+> peppe
+>
+>
+>>
+>> Regards
+>> peppe
+>>
+>>
+>>> But a few seconds into the nfsroot boot I start getting:
+>>>
+>>> [    9.136701] systemd[1]: Started Load Kernel Modules.
+>>> [   18.116321] nfs: server 10.42.0.1 not responding, still trying
+>>> [   18.516224] ------------[ cut here ]------------
+>>> [   18.521024] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:303
+>>> dev_watchdog+0x284/0x288
+>>> [   18.529456] NETDEV WATCHDOG: eth0 (rk_gmac-dwmac): transmit queue 0
+>>> timed out
+>>>
+>>> I'm attaching the full boot log.
+>>>
+>>> Regards,
+>>>
+>>> Tomeu
+>>>
+>>
+>>
+>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
