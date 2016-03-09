@@ -1,86 +1,51 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 08/18] dt-bindings: Add PLX Technology Reset Controller
- bindings
-Date: Wed,  9 Mar 2016 11:24:10 +0100
-Message-ID: <1457519060-6038-9-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v2 10/18] dt-bindings: Add PLX Technology OXNAS Standard Clocks bindings
+Date: Wed,  9 Mar 2016 11:24:12 +0100
+Message-ID: <1457519060-6038-11-git-send-email-narmstrong@baylibre.com>
 References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
  <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../devicetree/bindings/reset/plxtech,reset.txt    | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/plxtech,reset.txt
+ .../devicetree/bindings/clock/plxtech,stdclk.txt   | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
 
-diff --git a/Documentation/devicetree/bindings/reset/plxtech,reset.txt b/Documentation/devicetree/bindings/reset/plxtech,reset.txt
+diff --git a/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
 new file mode 100644
-index 0000000..581c974
+index 0000000..c60b459
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/plxtech,reset.txt
-@@ -0,0 +1,58 @@
-+PLX Technology OXNAS SoC Family RESET Controller
++++ b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
+@@ -0,0 +1,35 @@
++PLX Technology OXNAS SoC Family Standard Clocks
 +================================================
 +
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
++Please also refer to clock-bindings.txt in this directory for common clock
++bindings usage.
 +
 +Required properties:
-+- compatible: Should be "oxsemi,ox810se-reset"
-+- #reset-cells: 1, see below
++- compatible: Should be "oxsemi,ox810se-stdclk"
++- #clock-cells: 1, see below
 +
 +Parent node should have the following properties :
 +- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
 +
-+For OX810SE, the indices are :
-+ - 0 : ARM
-+ - 1 : COPRO
-+ - 2 : Reserved
-+ - 3 : Reserved
-+ - 4 : USBHS
-+ - 5 : USBHSPHY
-+ - 6 : MAC
-+ - 7 : PCI
-+ - 8 : DMA
-+ - 9 : DPE
-+ - 10 : DDR
-+ - 11 : SATA
-+ - 12 : SATA_LINK
-+ - 13 : SATA_PHY
-+ - 14 : Reserved
-+ - 15 : NAND
-+ - 16 : GPIO
-+ - 17 : UART1
-+ - 18 : UART2
-+ - 19 : MISC
-+ - 20 : I2S
-+ - 21 : AHB_MON
-+ - 22 : UART3
-+ - 23 : UART4
-+ - 24 : SGDMA
-+ - 25 : Reserved
-+ - 26 : Reserved
-+ - 27 : Reserved
-+ - 28 : Reserved
-+ - 29 : Reserved
-+ - 30 : Reserved
-+ - 31 : BUS
++For OX810SE, the clock indices are :
++ - 0: LEON
++ - 1: DMA_SGDMA
++ - 2: CIPHER
++ - 3: SATA
++ - 4: AUDIO
++ - 5: USBMPH
++ - 6: ETHA
++ - 7: PCIA
++ - 8: NAND
 +
 +example:
 +
@@ -88,10 +53,11 @@ index 0000000..581c974
 +	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
 +	reg = <0x000000 0x100000>;
 +
-+	reset: reset-controller {
-+		compatible = "oxsemi,ox810se-reset";
-+		#reset-cells = <1>;
++	stdclk: stdclk {
++		compatible = "oxsemi,ox810se-stdclk";
++		#clock-cells = <1>;
 +	};
 +};
 -- 
 1.9.1
+
