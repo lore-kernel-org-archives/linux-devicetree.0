@@ -1,84 +1,63 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH V2 5/6] thermal: max77620: Add thermal driver for reporting
- junction temp
-Date: Thu, 10 Mar 2016 12:26:24 +0530
-Message-ID: <56E11A98.4000000@nvidia.com>
-References: <1457529010-6538-1-git-send-email-ldewangan@nvidia.com> <1457529010-6538-6-git-send-email-ldewangan@nvidia.com> <20160309192751.GB2422@localhost.localdomain>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/5] gpio: gpiolib: Print error number if gpio hog failed
+Date: Thu, 10 Mar 2016 12:28:10 +0530
+Message-ID: <56E11B02.6080501@nvidia.com>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <1457438528-29054-3-git-send-email-ldewangan@nvidia.com> <20160308142217.GB9864@ulmo.nvidia.com> <56DEF0AB.7090807@nvidia.com> <56E0584B.9050607@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160309192751.GB2422@localhost.localdomain>
-Sender: linux-doc-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: rui.zhang@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, rklein@nvidia.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E0584B.9050607-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Thursday 10 March 2016 12:57 AM, Eduardo Valentin wrote:
-> * PGP Signed by an unknown key
->
-> On Wed, Mar 09, 2016 at 06:40:09PM +0530, Laxman Dewangan wrote:
->> Maxim Semiconductor Max77620 supports alarm interrupts when
->> its die temperature crosses 120C and 140C. These threshold
->> temperatures are not configurable.
+On Wednesday 09 March 2016 10:37 PM, Stephen Warren wrote:
+> On 03/08/2016 08:32 AM, Laxman Dewangan wrote:
 >>
->> Add thermal driver to register PMIC die temperature as thermal
->> zone sensor and capture the die temperature warning interrupts
->> to notifying the client.
+>> On Tuesday 08 March 2016 07:52 PM, Thierry Reding wrote:
+>>> On Tue, Mar 08, 2016 at 05:32:05PM +0530, Laxman Dewangan wrote:
+>>>
+>>>> Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>   drivers/gpio/gpiolib.c | 9 +++++----
+>>>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>>>> index bc788b9..7575ebb 100644
+>>>> --- a/drivers/gpio/gpiolib.c
+>>>> +++ b/drivers/gpio/gpiolib.c
+>>>> @@ -2621,15 +2621,16 @@ int gpiod_hog(struct gpio_desc *desc, const
+>>>> char *name,
+>>>>       local_desc = gpiochip_request_own_desc(chip, hwnum, name);
+>>>>       if (IS_ERR(local_desc)) {
+>>>> -        pr_err("requesting hog GPIO %s (chip %s, offset %d) 
+>>>> failed\n",
+>>>> -               name, chip->label, hwnum);
+>>>> +        status = PTR_ERR(local_desc);
+>>>> +        pr_err("requesting hog GPIO %s, chip %s, offset %d failed
+>>>> %d\n",
+>>>> +               name, chip->label, hwnum, status);
+>>> I find this type of format hard to read. I prefer a semi-colon to
+>>> separate the message from the failure reason (i.e. error code).
+>>>
+>>> Besides that I don't understand why you're dropping the parentheses
+>>> around the "chip %s, offset %d", I found that easier on the eye.
 >>
->> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
->>
->> ---
->> Changes from V1:
->> - checkpatch warning fix and simplifying the dev.of_node
->>    initialisation.
->>
->>   drivers/thermal/Kconfig            |  10 +++
->>   drivers/thermal/Makefile           |   1 +
->>   drivers/thermal/thermal-max77620.c | 151 +++++++++++++++++++++++++++++++++++++
->>   3 files changed, 162 insertions(+)
->>   create mode 100644 drivers/thermal/thermal-max77620.c
->>
->> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
->> index 5e7c97a..fc856eb 100644
->> --- a/drivers/thermal/Kconfig
->> +++ b/drivers/thermal/Kconfig
->> @@ -194,6 +194,16 @@ config IMX_THERMAL
->>   	  cpufreq is used as the cooling device to throttle CPUs when the
->>   	  passive trip is crossed.
->>   
->> +config MAX77620_THERMAL
->> +	tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
->> +	depends on MFD_MAX77620
->> +	depends on OF
-> The previous question on compile test was more if we could add depends
-> on COMPILE_TEST flag. Sorry if I was not clear enough.
+>> I did to accommodate the  3 extra character ( %d) for string format on
+>> that line as it was already near to 80 column.
+>> Just did not want to split in multiple lines.
 >
->
-> I am adding the flag here:
->
->   
->    config MAX77620_THERMAL
->            tristate "Temperature sensor driver for Maxim MAX77620 PMIC"
-> 	  -       depends on MFD_MAX77620
-> 	  +       depends on MFD_MAX77620 || COMPILE_TEST
-> 	  +       depends on HAS_IOMEM
-> 	          depends on OF
-> 		          help
-> 			            Support for die junction temperature
-> 				    warning alarm for Maxim
->
->
-> but I still cannot compile test the file because of the missing header.
-> drivers/thermal/thermal-max77620.c:16:32: fatal error:
-> linux/mfd/max77620.h: No such file or directory
->   #include <linux/mfd/max77620.h>
->
->
-> I wont be able to merge this as it is. We need to sort out the
-> dependency first.
->
-I will update you once the mfd patches will merge as this header is on 
-that patch.
+> Note that strings shouldn't be split across lines since it makes it 
+> harder to grep for them. This is one case where the 80-column limit 
+> isn't strict, within reason.
 
+OK, so not change the existing string, just add new  format.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
