@@ -1,72 +1,69 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 6/7] soc: renesas: Add r8a7794 SYSC PM Domain Binding Definitions
-Date: Thu, 10 Mar 2016 04:35:40 +0200
-Message-ID: <2528246.N5ujmKLBqb@avalon>
-References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be> <1457551122-21838-7-git-send-email-geert+renesas@glider.be>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 2/3] spi/spi-xilinx:  Add clock support
+Date: Thu, 10 Mar 2016 10:29:48 +0700
+Message-ID: <20160310032948.GI3898@sirena.org.uk>
+References: <1457513242-11202-1-git-send-email-shubhraj@xilinx.com>
+ <1457513242-11202-2-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1457551122-21838-7-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SdaPbLtAangIkrMZ"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457513242-11202-2-git-send-email-shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-Thank you for the patch.
+--SdaPbLtAangIkrMZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wednesday 09 March 2016 20:18:41 Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - New.
-> ---
->  include/dt-bindings/power/r8a7794-sysc.h | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 include/dt-bindings/power/r8a7794-sysc.h
-> 
-> diff --git a/include/dt-bindings/power/r8a7794-sysc.h
-> b/include/dt-bindings/power/r8a7794-sysc.h new file mode 100644
-> index 0000000000000000..bbe54e977e05bdd1
-> --- /dev/null
-> +++ b/include/dt-bindings/power/r8a7794-sysc.h
-> @@ -0,0 +1,23 @@
-> +/*
-> + * Copyright (C) 2016 Glider bvba
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + */
-> +#ifndef __DT_BINDINGS_POWER_R8A7794_SYSC_H__
-> +#define __DT_BINDINGS_POWER_R8A7794_SYSC_H__
+On Wed, Mar 09, 2016 at 02:17:21PM +0530, Shubhrajyoti Datta wrote:
+
+> +       xspi->clk = devm_clk_get(&pdev->dev, NULL);
+> +       if (IS_ERR(xspi->clk)) {
+
+As someone pointed out on the previous version of the series this will
+cause the driver to fail to probe with existing DTs.  We probably need
+to explicitly handle a -ENOENT as a "this clock will never appear" or
+something.
+
+This also requests a single nameless clock but someone pointed out on
+the previous version there are multiple clocks into the IP.  Even if
+you only want to add one clock right now the clock should probably be
+named so we can scale up.
+
+> +	}
+> +	ret = clk_prepare_enable(xspi->clk);
+
+Missing blank line here.
+
+> +	if (ret)
+> +		dev_err(&pdev->dev, "Unable to enable clock.\n");
 > +
-> +/*
-> + * These power domain indices match the numbers of the interrupt bits
-> + * representing the power areas in the various Interrupt Registers
-> + * (e.g. SYSCISR, Interrupt Status Register)
-> + */
-> +
-> +#define R8A7794_PD_CA7_CPU0		 5
-> +#define R8A7794_PD_CA7_CPU1		 6
-> +#define R8A7794_PD_SH			16
 
-This power domain is called SH-4A in the data sheet, you might want to name it 
-R8A7794_PD_SH_4A.
+This isn't really checking the return code - if we failed to enable the
+clock we should be failing the probe, not just carrying on.
 
-Apart from that,
+--SdaPbLtAangIkrMZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-> +#define R8A7794_PD_SGX			20
-> +#define R8A7794_PD_CA7_SCU		21
-> +
-> +#endif /* __DT_BINDINGS_POWER_R8A7794_SYSC_H__ */
+iQEcBAEBCAAGBQJW4OooAAoJECTWi3JdVIfQiRcH/28LbOoPCxnkc9ODT0g6cg6c
+q2ZnGLfXbPcbtzzi4rIu0b3GEhkHi24J/qs1RHnLyqsbkbJsdOpy06dzACaGJ8r2
+O5N9bt3YNJo0CNkdkzs6BmvFv2agKztyLBO5FAl3g0fuyoGWqDaO2ButVjWa9Oy/
+WJxSsrrzIP0Yz2Bi1eI+ExX9KLt8mK0CJSMgUz3gNkAIEVTyqOCBF+mJMO+unCsO
+91AVFXWsZ0ofpAYDP528rAq7DS+k938QmID3ZYFT/fPMclt2NWKTCuGYysQAD8ck
+jeanuWSf/BGMd1iAiquh5bdDR3stpNrpoWYg7u5YOLK3sjGGxApZahtpkdBVAk8=
+=FdtR
+-----END PGP SIGNATURE-----
 
--- 
-Regards,
-
-Laurent Pinchart
-
+--SdaPbLtAangIkrMZ--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
