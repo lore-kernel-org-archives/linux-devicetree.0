@@ -1,62 +1,89 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] iio:magnetometer:ak8975: mounting matrix support
-Date: Wed, 9 Mar 2016 20:15:52 -0600
-Message-ID: <CAL_JsqJZfr5Cx6vkSGePESjf-gmz54jATjqb=Xgc6HiUtL4_Tw@mail.gmail.com>
-References: <cover.1457001111.git.gregor.boirie@parrot.com>
- <022da3dfc0853c6f9820b24c2d9eaaf0c5ccf294.1457001111.git.gregor.boirie@parrot.com>
- <56DAFCEB.6080905@kernel.org> <56E0014D.1040209@parrot.com> <56E08B91.6070603@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E08B91.6070603-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 00/18] ARM: vf610: Suspend/resume with self-refresh mode
+Date: Wed,  9 Mar 2016 18:16:41 -0800
+Message-ID: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 9, 2016 at 2:46 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 09/03/16 10:56, Gregor Boirie wrote:
->>
->> On 03/05/2016 04:36 PM, Jonathan Cameron wrote:
->>> On 03/03/16 10:44, Gregor Boirie wrote:
->>>> Expose a rotation matrix to indicate userspace the chip placement with
->>>> respect to the overall hardware system. This is needed to adjust
->>>> coordinates sampled from a magnetometer chip when its position deviates
->>>> from the main hardware system.
->>>>
->>>> Final coordinates computation is delegated to userspace since:
->>>> * computation may involve floating point arithmetics ;
->>>> * it allows an application to combine adjustments with arbitrary
->>>>    transformations.
->>>>
->>>> This 3 dimentional space rotation matrix is expressed as 3x3 array of
->>>> strings to support floating point numbers. It may be retrieved from a
->>>> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
->>>> entry as a "matrix" property.
->>>>
->>>> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
->>> This one definitely wants to go to the device tree list. I'd also like a few
->>> IIO related comments as well. I was sure we'd been through this before and
->>> ended up with some sort of solution, but now I can't find it... Oh well.
->> I took inv_mpu_core as an example. However matrices are exposed as integers
->> and we really need floating point support.
->> A search on the device-tree mailing list archive does not show up with a
->> solution to encode floating point numbers into DTS either.
-> Certainly non obvious how to do this.
->
-> For anyone device tree related who picks this up (I've added a CC)
-> we are basically talking about passing a rotation matrix from the device tree
-> straight through to userspace to describe the relative orientation of
-> some sensor.  An array of strings clearly works, but is this the best
-> way to do it?
+This is a reworked and extended respin of an older patchset posted
+back in 2014:
+http://lkml.iu.edu/hypermail/linux/kernel/1409.2/03734.html
 
-That's probably okay. I'd format the dts and sysfs to be arranged in a
-3x3 matrix rather than a linear list though, but that is just style.
+This implementation supports Vybrids STOP (standby) and LPSTOP2
+mode (mem). Only the latter puts the memory in self-refresh mode
+and the SoC in a deep sleep state. However, self-refresh is only
+supported if external pull-ups/downs are populated (which not
+all hardware revisions have in place), therefor this patchset also
+introduces a device tree property to denote whether memory can be
+put into self-refresh mode or not.
 
-However, there's nothing really preventing us from having floats in
-DT. Data is not typed, so it would be a matter of adding the dtc
-parsing support. The other aspect would be the limited use of float
-types in the kernel (though that should not influence binding design).
-Are there cases of the kernel ABI using floats?
+The LPSTOP2 implementation is similar to the i.MX 6 implementation:
+Entering and resuming from self-refresh mode is implemented in
+assembler, and the function is copied to SRAM while entering suspend
+mode.
 
-Rob
+There are several fixes and extensions necessary to make suspend
+actually working, mainly because most blocks loose its state in
+LPSTOP2 mode.
+
+Feedback welcome! Especially the linking between the GPIOs of the 
+WKPU unit (which allows to use some GPIOs as wake-up source) and
+the regular GPIO block seems rather hacky...
+
+The code has been tested on a Colibri VF50 and VF61. Currently
+there is an issue with USB Host not correctly restoring after
+resume which could not yet been resolved.
+
+Stefan Agner (18):
+  irqchip: vf610-gpc: add Vybrid GPC IRQ controller
+  ARM: dts: vf610: add GPC as new interrupt parent
+  ARM: dts: vf610-colibri: GPIO wakeup key
+  ARM: dts: vf610: add on-chip SRAM
+  ARM: dts: vf610: add modules required for PM
+  ARM: imx: clk-gate2: allow custom gate configuration
+  ARM: imx: clk-vf610: leave DDR clock on
+  ARM: clk: add WKPU unit
+  ARM: vf610: clk: add suspend/resume support
+  tty: serial: fsl_lpuart: support suspend/resume
+  pinctrl: pinctrl-imx: implement suspend/resume
+  gpio: vf610: add system PM suspend/resume
+  ARM: dts: vf610: add WKPU connection to GPIO
+  gpio: vf610: add support for WKPU unit
+  ARM: vf610: PM: initial suspend/resume support
+  ARM: vf610: PM: enable Suspend-to-RAM only if hardware fixes are in
+    place
+  Documentation: dt: add Vybrid DDR memory controller bindings
+  ARM: vf610: PM: enable SNVS access
+
+ .../bindings/arm/freescale/fsl,vf610-ddrmc.txt     |  23 +
+ .../devicetree/bindings/gpio/gpio-vf610.txt        |   6 +
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi          |  22 +
+ arch/arm/boot/dts/vfxxx.dtsi                       |  74 ++-
+ arch/arm/mach-imx/Makefile                         |   3 +
+ arch/arm/mach-imx/common.h                         |  10 +
+ arch/arm/mach-imx/mach-vf610.c                     |   8 +
+ arch/arm/mach-imx/pm-vf610.c                       | 649 +++++++++++++++++++++
+ arch/arm/mach-imx/suspend-vf610.S                  | 448 ++++++++++++++
+ drivers/clk/imx/clk-gate2.c                        |   7 +-
+ drivers/clk/imx/clk-vf610.c                        |  83 ++-
+ drivers/clk/imx/clk.h                              |  13 +-
+ drivers/gpio/gpio-vf610.c                          | 188 ++++++
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-vf610-gpc.c                    | 138 +++++
+ drivers/pinctrl/freescale/pinctrl-imx.c            |  63 ++
+ drivers/pinctrl/freescale/pinctrl-imx.h            |   3 +
+ drivers/pinctrl/freescale/pinctrl-vf610.c          |   6 +
+ drivers/tty/serial/fsl_lpuart.c                    |  16 +-
+ include/dt-bindings/clock/vf610-clock.h            |   4 +-
+ 20 files changed, 1750 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-ddrmc.txt
+ create mode 100644 arch/arm/mach-imx/pm-vf610.c
+ create mode 100644 arch/arm/mach-imx/suspend-vf610.S
+ create mode 100644 drivers/irqchip/irq-vf610-gpc.c
+
+-- 
+2.7.2
+
