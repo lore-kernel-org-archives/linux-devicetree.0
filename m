@@ -1,7 +1,7 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 07/18] ARM: imx: clk-vf610: leave DDR clock on
-Date: Wed,  9 Mar 2016 18:16:48 -0800
-Message-ID: <1457576219-7971-8-git-send-email-stefan@agner.ch>
+Subject: [PATCH 11/18] pinctrl: pinctrl-imx: implement suspend/resume
+Date: Wed,  9 Mar 2016 18:16:52 -0800
+Message-ID: <1457576219-7971-12-git-send-email-stefan@agner.ch>
 References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1457576219-7971-1-git-send-email-stefan@agner.ch>
@@ -10,51 +10,162 @@ To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
 Cc: kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-To use STOP mode without putting DDR3 into self-refresh mode, we
-need to keep the DDR clock enabled. Use the new gate configuration
-with a value of 2 to make sure that the clock is enabled in RUN,
-WAIT and STOP mode.
+In some SoC's using the IMX pin controller, the IP looses its state
+when entering lowest power modes. Enhance the driver with suspend/
+resume functions restoring the pin states.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- drivers/clk/imx/clk-vf610.c             | 3 +++
- include/dt-bindings/clock/vf610-clock.h | 3 ++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/freescale/pinctrl-imx.c   | 63 +++++++++++++++++++++++++++++++
+ drivers/pinctrl/freescale/pinctrl-imx.h   |  3 ++
+ drivers/pinctrl/freescale/pinctrl-vf610.c |  6 +++
+ 3 files changed, 72 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index 0a94d96..f0ff458 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -119,6 +119,7 @@ static unsigned int const clks_init_on[] __initconst = {
- 	VF610_CLK_SYS_BUS,
- 	VF610_CLK_DDR_SEL,
- 	VF610_CLK_DAP,
-+	VF610_CLK_DDRMC,
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.c b/drivers/pinctrl/freescale/pinctrl-imx.c
+index a5bb939..42fc9a9 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.c
++++ b/drivers/pinctrl/freescale/pinctrl-imx.c
+@@ -24,6 +24,7 @@
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/slab.h>
++#include <linux/syscore_ops.h>
+ 
+ #include "../core.h"
+ #include "pinctrl-imx.h"
+@@ -42,6 +43,8 @@ struct imx_pinctrl {
+ 	void __iomem *base;
+ 	void __iomem *input_sel_base;
+ 	const struct imx_pinctrl_soc_info *info;
++	u32 *mux_regs;
++	u32 *input_regs;
  };
  
- static struct clk * __init vf610_get_fixed_clock(
-@@ -233,6 +234,8 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
- 	clk[VF610_CLK_PLL4_MAIN_DIV] = clk_register_divider_table(NULL, "pll4_audio_div", "pll4_audio", 0, CCM_CACRR, 6, 3, 0, pll4_audio_div_table, &imx_ccm_lock);
- 	clk[VF610_CLK_PLL6_MAIN_DIV] = imx_clk_divider("pll6_video_div", "pll6_video", CCM_CACRR, 21, 1);
+ static const inline struct imx_pin_group *imx_pinctrl_find_group_by_name(
+@@ -689,6 +692,54 @@ static int imx_pinctrl_probe_dt(struct platform_device *pdev,
+ 	return 0;
+ }
  
-+	clk[VF610_CLK_DDRMC] = imx_clk_gate2_cgr("ddrmc", "ddr_sel", CCM_CCGR6, CCM_CCGRx_CGn(14), 0x2);
++static int __maybe_unused imx_pinctrl_suspend(struct device *dev)
++{
++	struct imx_pinctrl *ipctl = dev_get_drvdata(dev);
++	const struct imx_pinctrl_soc_info *info = ipctl->info;
++	int i;
 +
- 	clk[VF610_CLK_USBPHY0] = imx_clk_gate("usbphy0", "pll3_usb_otg", PLL3_CTRL, 6);
- 	clk[VF610_CLK_USBPHY1] = imx_clk_gate("usbphy1", "pll7_usb_host", PLL7_CTRL, 6);
++	for (i = 0; i < info->npins; i++) {
++		const struct imx_pin_reg *pin_reg = &info->pin_regs[i];
++
++		if (pin_reg->mux_reg == -1)
++			continue;
++
++		ipctl->mux_regs[i] = readl(ipctl->base + pin_reg->mux_reg);
++	}
++
++	for (i = 0; i < info->ninput_regs; i++)
++		ipctl->input_regs[i] = readl(ipctl->base +
++				info->input_regs_offset + i * sizeof(u32 *));
++
++	return 0;
++}
++
++static int __maybe_unused imx_pinctrl_resume(struct device *dev)
++{
++	struct imx_pinctrl *ipctl = dev_get_drvdata(dev);
++	const struct imx_pinctrl_soc_info *info = ipctl->info;
++	const struct imx_pin_reg *pin_reg;
++	int i;
++
++	for (i = 0; i < info->npins; i++) {
++		pin_reg = &info->pin_regs[i];
++		if (pin_reg->mux_reg == -1)
++			continue;
++
++		writel(ipctl->mux_regs[i], ipctl->base + pin_reg->mux_reg);
++	}
++
++	for (i = 0; i < info->ninput_regs; i++)
++		writel(ipctl->input_regs[i], ipctl->base +
++				info->input_regs_offset + i * sizeof(u32 *));
++
++	return 0;
++}
++
++const struct dev_pm_ops imx_pinctrl_dev_pm_ops = {
++	SET_LATE_SYSTEM_SLEEP_PM_OPS(imx_pinctrl_suspend, imx_pinctrl_resume)
++};
++
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 		      struct imx_pinctrl_soc_info *info)
+ {
+@@ -719,6 +770,18 @@ int imx_pinctrl_probe(struct platform_device *pdev,
+ 		info->pin_regs[i].conf_reg = -1;
+ 	}
  
-diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
-index 56c16aa..cf2c00a 100644
---- a/include/dt-bindings/clock/vf610-clock.h
-+++ b/include/dt-bindings/clock/vf610-clock.h
-@@ -195,6 +195,7 @@
- #define VF610_CLK_SNVS			182
- #define VF610_CLK_DAP			183
- #define VF610_CLK_OCOTP         184
--#define VF610_CLK_END			185
-+#define VF610_CLK_DDRMC			185
-+#define VF610_CLK_END			186
++#ifdef CONFIG_PM_SLEEP
++	ipctl->mux_regs = devm_kzalloc(&pdev->dev, sizeof(u32 *) *
++				       info->npins, GFP_KERNEL);
++	if (!ipctl->mux_regs)
++		return -ENOMEM;
++
++	ipctl->input_regs = devm_kzalloc(&pdev->dev, sizeof(u32 *) *
++					 info->ninput_regs, GFP_KERNEL);
++	if (!ipctl->input_regs)
++		return -ENOMEM;
++#endif
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	ipctl->base = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(ipctl->base))
+diff --git a/drivers/pinctrl/freescale/pinctrl-imx.h b/drivers/pinctrl/freescale/pinctrl-imx.h
+index 2a592f6..56851a6 100644
+--- a/drivers/pinctrl/freescale/pinctrl-imx.h
++++ b/drivers/pinctrl/freescale/pinctrl-imx.h
+@@ -81,6 +81,8 @@ struct imx_pinctrl_soc_info {
+ 	unsigned int group_index;
+ 	struct imx_pmx_func *functions;
+ 	unsigned int nfunctions;
++	unsigned int input_regs_offset;
++	unsigned int ninput_regs;
+ 	unsigned int flags;
+ };
  
- #endif /* __DT_BINDINGS_CLOCK_VF610_H */
+@@ -99,4 +101,5 @@ struct imx_pinctrl_soc_info {
+ int imx_pinctrl_probe(struct platform_device *pdev,
+ 			struct imx_pinctrl_soc_info *info);
+ int imx_pinctrl_remove(struct platform_device *pdev);
++extern const struct dev_pm_ops imx_pinctrl_dev_pm_ops;
+ #endif /* __DRIVERS_PINCTRL_IMX_H */
+diff --git a/drivers/pinctrl/freescale/pinctrl-vf610.c b/drivers/pinctrl/freescale/pinctrl-vf610.c
+index 587d1ff..b6280a8 100644
+--- a/drivers/pinctrl/freescale/pinctrl-vf610.c
++++ b/drivers/pinctrl/freescale/pinctrl-vf610.c
+@@ -19,6 +19,9 @@
+ 
+ #include "pinctrl-imx.h"
+ 
++#define VF610_INPUT_REG_CNT		49
++#define VF610_INPUT_REG_BASE		0x2ec
++
+ enum vf610_pads {
+ 	VF610_PAD_PTA6 = 0,
+ 	VF610_PAD_PTA8 = 1,
+@@ -299,6 +302,8 @@ static const struct pinctrl_pin_desc vf610_pinctrl_pads[] = {
+ static struct imx_pinctrl_soc_info vf610_pinctrl_info = {
+ 	.pins = vf610_pinctrl_pads,
+ 	.npins = ARRAY_SIZE(vf610_pinctrl_pads),
++	.input_regs_offset = VF610_INPUT_REG_BASE,
++	.ninput_regs = VF610_INPUT_REG_CNT,
+ 	.flags = SHARE_MUX_CONF_REG | ZERO_OFFSET_VALID,
+ };
+ 
+@@ -316,6 +321,7 @@ static struct platform_driver vf610_pinctrl_driver = {
+ 	.driver = {
+ 		.name = "vf610-pinctrl",
+ 		.of_match_table = vf610_pinctrl_of_match,
++		.pm = &imx_pinctrl_dev_pm_ops,
+ 	},
+ 	.probe = vf610_pinctrl_probe,
+ 	.remove = imx_pinctrl_remove,
 -- 
 2.7.2
 
