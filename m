@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 03/30] ARM: dts: r8a7790: Reference both DMA controllers in HSCIF nodes
-Date: Thu, 10 Mar 2016 12:35:55 +0100
-Message-ID: <1457609782-24108-4-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH 04/30] ARM: dts: r8a7790: Reference both DMA controllers in SCIF nodes
+Date: Thu, 10 Mar 2016 12:35:56 +0100
+Message-ID: <1457609782-24108-5-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -26,29 +26,29 @@ h.se>
 
 diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790=
 =2Edtsi
-index 8856111..c8a2f68 100644
+index c8a2f68..164bad25 100644
 --- a/arch/arm/boot/dts/r8a7790.dtsi
 +++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -692,8 +692,9 @@
- 		interrupts =3D <0 154 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp7_clks R8A7790_CLK_HSCIF0>;
+@@ -668,8 +668,9 @@
+ 		interrupts =3D <0 152 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp7_clks R8A7790_CLK_SCIF0>;
  		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>;
+-		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>,
-+		       <&dmac1 0x39>, <&dmac1 0x3a>;
++		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>,
++		       <&dmac1 0x29>, <&dmac1 0x2a>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -704,8 +705,9 @@
- 		interrupts =3D <0 155 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp7_clks R8A7790_CLK_HSCIF1>;
+@@ -680,8 +681,9 @@
+ 		interrupts =3D <0 153 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp7_clks R8A7790_CLK_SCIF1>;
  		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>;
+-		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>,
-+		       <&dmac1 0x4d>, <&dmac1 0x4e>;
++		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>,
++		       <&dmac1 0x2d>, <&dmac1 0x2e>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
