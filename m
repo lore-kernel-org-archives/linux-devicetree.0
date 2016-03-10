@@ -1,61 +1,94 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 13/18] ARM: dts: vf610: add WKPU connection to GPIO
-Date: Wed,  9 Mar 2016 18:16:54 -0800
-Message-ID: <1457576219-7971-14-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 12/18] gpio: vf610: add system PM suspend/resume
+Date: Wed,  9 Mar 2016 18:16:53 -0800
+Message-ID: <1457576219-7971-13-git-send-email-stefan@agner.ch>
 References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457576219-7971-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sergeimir-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+Sender: linux-clk-owner@vger.kernel.org
+To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
+Cc: kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Some GPIO have extended wake-up capabilities through the WKPU
-module. Encode the connection between the GPIO's and the WKPU
-interrupt sources in the device tree.
+Store the state of the GPIO module (which contains the GPIO output
+state) in memory during suspend. The driver already maintains an
+interrupt configuration in memory, hence we can use this
+configuration to restore the port control register (PCR).
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/vfxxx.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpio-vf610.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index 335f4e5..869b230 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -383,6 +383,7 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				gpio-ranges = <&iomuxc 0 0 32>;
-+				fsl,gpio-wakeup = <&wakeup 22 0 8>; /* PTB0...PTB7 */
- 			};
+diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+index 6284bdb..1a022be 100644
+--- a/drivers/gpio/gpio-vf610.c
++++ b/drivers/gpio/gpio-vf610.c
+@@ -37,6 +37,7 @@ struct vf610_gpio_port {
+ 	void __iomem *gpio_base;
+ 	u8 irqc[VF610_GPIO_PER_PORT];
+ 	int irq;
++	u32 state;
+ };
  
- 			gpio1: gpio@4004a000 {
-@@ -394,6 +395,10 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				gpio-ranges = <&iomuxc 0 32 32>;
-+				fsl,gpio-wakeup = <&wakeup 1 8 2>, /* PTB11, PTB12 (NMI)*/
-+						<&wakeup 4 10 1>, /* PTB14 */
-+						<&wakeup 6 11 1>, /* PTB16 */
-+						<&wakeup 9 12 2>; /* PTB19, PTB20 */
- 			};
+ #define GPIO_PDOR		0x00
+@@ -215,6 +216,40 @@ static struct irq_chip vf610_gpio_irq_chip = {
+ 	.irq_set_wake	= vf610_gpio_irq_set_wake,
+ };
  
- 			gpio2: gpio@4004b000 {
-@@ -416,6 +421,9 @@
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				gpio-ranges = <&iomuxc 0 96 32>;
-+				fsl,gpio-wakeup = <&wakeup 1 14 1>, /* PTB27 */
-+						<&wakeup 7 15 1>, /* PTC30 */
-+						<&wakeup 29 16 1>; /* PTE20 */
- 			};
++static int __maybe_unused vf610_gpio_suspend(struct device *dev)
++{
++	struct vf610_gpio_port *port = dev_get_drvdata(dev);
++
++	port->state = vf610_gpio_readl(port->gpio_base + GPIO_PDOR);
++
++	/*
++	 * There is no need to store Port state since we maintain the state
++	 * alread in the irqc array
++	 */
++
++	return 0;
++}
++
++static int __maybe_unused vf610_gpio_resume(struct device *dev)
++{
++	struct vf610_gpio_port *port = dev_get_drvdata(dev);
++	int i;
++
++	vf610_gpio_writel(port->state, port->gpio_base + GPIO_PDOR);
++
++	for (i = 0; i < port->gc.ngpio; i++) {
++		u32 irqc = port->irqc[i] << PORT_PCR_IRQC_OFFSET;
++
++		vf610_gpio_writel(irqc, port->base + PORT_PCR(i));
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops vf610_gpio_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(vf610_gpio_suspend, vf610_gpio_resume)
++};
++
+ static int vf610_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -272,6 +307,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ 	}
+ 	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
+ 				     vf610_gpio_irq_handler);
++	platform_set_drvdata(pdev, port);
  
- 			gpio4: gpio@4004d000 {
+ 	return 0;
+ }
+@@ -279,6 +315,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+ static struct platform_driver vf610_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "gpio-vf610",
++		.pm = &vf610_gpio_pm_ops,
+ 		.of_match_table = vf610_gpio_dt_ids,
+ 	},
+ 	.probe		= vf610_gpio_probe,
 -- 
 2.7.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
