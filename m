@@ -1,65 +1,40 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 00/30] ARM: dts: r8a779[0-4]: Reference both DMA
- controllers
-Date: Fri, 11 Mar 2016 08:38:56 +0900
-Message-ID: <20160310233855.GD7423@verge.net.au>
-References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
- <CAMuHMdXF4FMLg=Y_cZ2chjzGWAV90N=vLsCkPKGmmYx5mFY64Q@mail.gmail.com>
- <20160310134325.GA1111@bigcity.dyn.berto.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160310134325.GA1111@bigcity.dyn.berto.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH v4 3/7] ARM: dts: am437x: Fix GPMC dma properties
+Date: Thu, 10 Mar 2016 17:56:39 -0600
+Message-ID: <1457654203-20856-4-git-send-email-fcooper@ti.com>
+References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457654203-20856-1-git-send-email-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nsekhar@ti.com, dwmw2@infradead.org, computersforpeace@gmail.com, rogerq@ti.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 10, 2016 at 02:43:25PM +0100, Niklas S=C3=B6derlund wrote:
-> Hi Geert,
->=20
-> On 2016-03-10 13:20:56 +0100, Geert Uytterhoeven wrote:
-> > Hi Niklas,
-> >=20
-> > On Thu, Mar 10, 2016 at 12:35 PM, Niklas S=C3=B6derlund
-> > <niklas.soderlund+renesas@ragnatech.se> wrote:
-> > > R-Car Gen2 have two DMA controllers, which are equivalent. Howeve=
-r DMA
-> > > slaves were tied only to a single DMA controller in .dtsi. This s=
-eries
-> > > add references to to both DMA controllers for all nodes that prev=
-iously
-> > > only referenced one of them. It also adds dma references to the S=
-DHI
-> > > nodes for r8a7794 which according to the datasheet should work bu=
-t I
-> > > have not access to HW to verify.
-> > >
-> > > Tested on Koelsch (r8a7791) by altering the compatible value of e=
-ither
-> > > dmac0 or dmac1 and verifying that the DMA slaves pick the DMA con=
-troller
-> > > that is instantiated.
-> >=20
-> > Thanks for your series!
-> >=20
-> > If you fix the subject of patch 30:
-> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
->=20
-> Thanks for your review and that you found my error in the subject.
->=20
-> >=20
-> > I guess this is against v4.5-rc7? It doesn't apply against
-> > renesas-devel-20160308-v4.5-rc7.
-> > Unfortunately you'll have to rebase against Simon's tree, and add s=
-cif2
-> > on r8a7790, and i2c[6-8] on r8a7793.
->=20
-> I will rebase and update the relevant patches to include the addition=
-s=20
-> to r8a7790 and r8a7793.
+This patch updates the GPMC's DT DMA property to reflect the updated eDMA
+bindings.
 
-If its not too much bother could you provide a git branch as well as
-patches posted to the mailing list.  For larger series that is helpful =
-to me.
+Fixes: cce1ee000187 ("ARM: DTS: am437x: Use the new DT bindings for the eDMA3")
+
+Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+---
+Version 4 changes:
+Split into its own commit. Use proper Fixes syntax.
+
+ arch/arm/boot/dts/am4372.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 92068fb..2878b04 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -884,7 +884,7 @@
+ 		gpmc: gpmc@50000000 {
+ 			compatible = "ti,am3352-gpmc";
+ 			ti,hwmods = "gpmc";
+-			dmas = <&edma 52>;
++			dmas = <&edma 52 0>;
+ 			dma-names = "rxtx";
+ 			clocks = <&l3s_gclk>;
+ 			clock-names = "fck";
+-- 
+2.7.0
