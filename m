@@ -1,255 +1,51 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun6i: Add dts for colorfly e708 q1 tablet
-Date: Wed,  9 Mar 2016 22:50:30 +0100
-Message-ID: <1457560230-32199-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/1] iio:pressure:ms5611: fix and enhancements
+Date: Thu, 10 Mar 2016 09:07:36 +0900
+Message-ID: <56E0BAC8.2080607@samsung.com>
+References: <cover.1457522751.git.gregor.boirie@parrot.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <cover.1457522751.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The colorfly e708 q1 is a 7" tablet which is clearly marked as colorfly
-e708 q1 on the back. It features a 9:16 800x1280 IPS LCD, A31s SoC,
-1GB RAM, 8G NAND, ilitek 2139qt004 touchscreen on i2c-1 addr 0x41,
-stk8313 accelerometer on i2c-2 addr 0x22 and a rtl8188etv wifi chip.
+On 09.03.2016 20:34, Gregor Boirie wrote:
+> Changes since v1:
+> * temperature compensation fix:
+>     * reword commit message
+>     * remove useless parenthesis
+> * power regulator: reword commit message
+> * add oversampling rate support
+> 
+> Changes since v2:
+> * remove non printable characters from commit messages
+> 
+> Changes since v3:
+> * drop first 3 patches since applied onto testing
+> * fix oops at regulator probing time if regulator support not compiled-in
+> * complete device-tree support and documentation
+> * remove continuous sampling support (see Jonathan's "kthread tight loop
+>   trigger" proposal)
+> * checkpatch'ed
+> 
+> Changes since v4:
+> * drop first 2 patches since applied
+> * amend commit to include "Fixes" tag
+> 
+> Changes since v5:
+> * reword patch subject line and include "Fixes" tag in commit message
+> 
+> Gregor Boirie (1):
+>   iio:pressure:ms5611: fix crash when probing regulator
+> 
+>  drivers/iio/pressure/ms5611_core.c | 8 ++++++--
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                        |   1 +
- arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts | 208 ++++++++++++++++++++++
- 2 files changed, 209 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
+Really, how the heck you connected my humble person with this file?
+get_maintainer.pl does not print me. Even when run with --git argument.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ef39613..02505a0 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -655,6 +655,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
- 	sun6i-a31-i7.dtb \
- 	sun6i-a31-m9.dtb \
- 	sun6i-a31-mele-a1000g-quad.dtb \
-+	sun6i-a31s-colorfly-e708-q1.dtb \
- 	sun6i-a31s-cs908.dtb \
- 	sun6i-a31s-primo81.dtb \
- 	sun6i-a31s-sina31s.dtb \
-diff --git a/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts b/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
-new file mode 100644
-index 0000000..e182eec
---- /dev/null
-+++ b/arch/arm/boot/dts/sun6i-a31s-colorfly-e708-q1.dts
-@@ -0,0 +1,208 @@
-+/*
-+ * Copyright 2016 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun6i-a31s.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Colorfly E708 Q1 tablet";
-+	compatible = "colorfly,e708-q1", "allwinner,sun6i-a31s";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
-+
-+&ehci0 {
-+	/* rtl8188etv wifi is connected here */
-+	status = "okay";
-+};
-+
-+&lradc {
-+	vref-supply = <&reg_aldo3>;
-+	status = "okay";
-+
-+	button@1000 {
-+		label = "Home";
-+		linux,code = <KEY_HOMEPAGE>;
-+		channel = <0>;
-+		voltage = <1000000>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_e708_q1>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 0 8 GPIO_ACTIVE_HIGH>; /* PA8 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&pio {
-+	mma8452_int_e708_q1: mma8452_int_pin@0 {
-+		allwinner,pins = "PA9";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+
-+	mmc0_cd_pin_e708_q1: mmc0_cd_pin@0 {
-+		allwinner,pins = "PA8";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+	};
-+};
-+
-+&p2wi {
-+	status = "okay";
-+
-+	axp22x: pmic@68 {
-+		compatible = "x-powers,axp221";
-+		reg = <0x68>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp22x.dtsi"
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2700000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_dc1sw {
-+	regulator-name = "vcc-lcd";
-+};
-+
-+&reg_dc5ldo {
-+	regulator-always-on;
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-cpus"; /* This is an educated guess */
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-3v0";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-gpu";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc4 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <700000>;
-+	regulator-max-microvolt = <1320000>;
-+	regulator-name = "vdd-sys-dll";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vcc-pg";
-+};
-+
-+&simplefb_lcd {
-+	vcc-lcd-supply = <&reg_dc1sw>;
-+	vcc-pg-supply = <&reg_dldo2>;
-+};
-+
-+/*
-+ * FIXME for now we only support host mode and rely on u-boot to have
-+ * turned on Vbus which is controlled by the axp221 pmic on the board.
-+ *
-+ * Once we have axp221 power-supply and vbus-usb support we should switch
-+ * to fully supporting otg.
-+ */
-+&usb_otg {
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb1_vbus-supply = <&reg_dldo1>;
-+	status = "okay";
-+};
--- 
-2.7.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+BR,
+Krzysztof
