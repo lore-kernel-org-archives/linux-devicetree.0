@@ -1,55 +1,57 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] soc: renesas: Add r8a7790 SYSC PM Domain Binding Definitions
-Date: Thu, 10 Mar 2016 09:26:34 +0100
-Message-ID: <CAMuHMdVy1eY1t55NSmdkJ=haFEPYWoTReecOOK-63XaJj6ztew@mail.gmail.com>
-References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be>
-	<1457551122-21838-4-git-send-email-geert+renesas@glider.be>
-	<9850717.l0t66FzFha@avalon>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 7/7] soc: renesas: Add r8a7795 SYSC PM Domain Binding Definitions
+Date: Thu, 10 Mar 2016 10:54:21 +0200
+Message-ID: <1579605.LMd6ZIAa80@avalon>
+References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be> <1636171.nVxheqdHqq@avalon> <CAMuHMdUyFy427ydtojd_4uDUuxUs0Erf-KDJR1y-dMzy3o_vgA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9850717.l0t66FzFha@avalon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUyFy427ydtojd_4uDUuxUs0Erf-KDJR1y-dMzy3o_vgA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Geert,
 
-On Thu, Mar 10, 2016 at 7:57 AM, Laurent Pinchart
-<laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
->> --- /dev/null
->> +++ b/include/dt-bindings/power/r8a7790-sysc.h
->> @@ -0,0 +1,31 @@
+On Thursday 10 March 2016 09:17:40 Geert Uytterhoeven wrote:
+> On Thu, Mar 10, 2016 at 3:32 AM, Laurent Pinchart wrote:
+> > On Wednesday 09 March 2016 20:18:42 Geert Uytterhoeven wrote:
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> 
+> >> --- /dev/null
+> >> +++ b/include/dt-bindings/power/r8a7795-sysc.h
+> >> @@ -0,0 +1,42 @@
+> >> 
+> >> +/* Always-on power area */
+> >> +#define R8A7795_PD_ALWAYS_ON         32
+> > 
+> > Shouldn't we also define the always-on power domain for the other SoCs
+> > (patches 2/7 to 6/7 in this series) ? I know they're already covered by
+> > the cpg power domain, but going forward I believe that standardizing on
+> > the SYSC power domains would be beneficial. We of course have to keep
+> > backward compatibility in the implementation.
+> 
+> Yes, that's the plan. I didn't want to make that change now, as someone
+> may object against the always-on power domain. On r8a7795 it feels more
+> natural, as it also has I/O devices in SYSC power areas, unlike R-Car Gen2
+> and H1.
 
->> +#define R8A7790_PD_SH                        16
->
-> The power domain is called SH-4A in the datasheet, how about naming it
-> R8A7790_PD_SH_4A ?
+That's fine with me.
 
-Thanks, wlll update (for all SoCs).
+> Note that it also complicates the rcar-sysc core driver: it has to choose
+> between the cpg_mssr_*() or cpg_mstp_*() callbacks, depending on SoC, and
+> also depending on DTS if we migrate the older SoCs to CPG/MSSR and want to
+> maintain backwards-compatibility.
+> 
+> Time to finish the "renesas,apmu" enable-method work, and celebrate one big
+> flag day for all the new DT evolutions?
 
-> Apart from that,
->
-> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
->
->> +#define R8A7790_PD_RGX                       20
->> +#define R8A7790_PD_CA7_SCU           21
->> +#define R8A7790_PD_IMP                       24
+I'll bring champagne ;-)
 
-Then this has to become R8A7790_PD_IMP_X4.
+-- 
+Regards,
 
-Gr{oetje,eeting}s,
+Laurent Pinchart
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
