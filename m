@@ -1,49 +1,71 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v3 1/6] memory: omap-gpmc: Store handle to GPMC dev
-Date: Wed,  9 Mar 2016 22:07:36 -0600
-Message-ID: <1457582861-20619-2-git-send-email-fcooper@ti.com>
-References: <1457582861-20619-1-git-send-email-fcooper@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457582861-20619-1-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nsekhar@ti.com, dwmw2@infradead.org, computersforpeace@gmail.com, rogerq@ti.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v6 1/6] ALSA: pcm: add IEC958 channel status helper for
+ hw_params
+Date: Thu, 10 Mar 2016 12:24:07 +0700
+Message-ID: <20160310052407.GL3898@sirena.org.uk>
+References: <cover.1457465383.git.jsarha@ti.com>
+ <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============1410407889=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The dma channel information is located within the GPMC node. The NAND
-driver requires a handle to the GPMC's dev to properly parse the DMA
-properties. Therefore, store a handle to the dev so it can be referenced
-within the NAND driver.
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- drivers/memory/omap-gpmc.c                   | 1 +
- include/linux/platform_data/mtd-nand-omap2.h | 2 ++
- 2 files changed, 3 insertions(+)
+--===============1410407889==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oOpJzULQ70+PGW7h"
+Content-Disposition: inline
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index 6515dfc..2932d13 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -1796,6 +1796,7 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
- 
- 	gpmc_nand_data->cs = val;
- 	gpmc_nand_data->of_node = child;
-+	gpmc_nand_data->gpmc_dev = &pdev->dev;
- 
- 	/* Detect availability of ELM module */
- 	gpmc_nand_data->elm_of_node = of_parse_phandle(child, "ti,elm-id", 0);
-diff --git a/include/linux/platform_data/mtd-nand-omap2.h b/include/linux/platform_data/mtd-nand-omap2.h
-index 090bbab..534b984 100644
---- a/include/linux/platform_data/mtd-nand-omap2.h
-+++ b/include/linux/platform_data/mtd-nand-omap2.h
-@@ -80,5 +80,7 @@ struct omap_nand_platform_data {
- 	/* for passing the partitions */
- 	struct device_node	*of_node;
- 	struct device_node	*elm_of_node;
-+
-+	struct device		*gpmc_dev;
- };
- #endif
--- 
-2.7.0
+
+--oOpJzULQ70+PGW7h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Mar 08, 2016 at 10:14:25PM +0200, Jyri Sarha wrote:
+> Add IEC958 channel status helper that gets the audio properties from
+> snd_pcm_hw_params instead of snd_pcm_runtime. This is needed to
+> produce the channel status bits already in audio stream configuration
+> phase.
+
+Takashi, are you OK with this one?
+
+--oOpJzULQ70+PGW7h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW4QTxAAoJECTWi3JdVIfQLWAH/2FZ08qtvMqhvuRBc2aFaq2v
+K6QQXxBCw4Ipy0ZshaZoADsM9dieZVeMppUyG6jm2/gt4e9zlqcQ8f2mseuB2XwV
+BTaiAgm8SCi/T1W70tIQ5ZyCEZu6lhHoOIB8XAskN/qJxd1tSdf3BqEdYfoaFMX2
+aMp+BigFdRHYRh1M62b8FDR5SUSCZ1J9tN77X2s9dWgFaUNoXRsJcGPr8E8OegTu
+qUgBcO9ZAZh9Rsx3+tp0w9vX++XAbniIW3Zxl7A+BnvowOMsj1kZcCZuLeRNeFPI
+aBuOG71ffyDHcy1y/6FWqTV2me2jl8utjAywldZflshtCNwKW2gIvOtvaUqLiUw=
+=8RvK
+-----END PGP SIGNATURE-----
+
+--oOpJzULQ70+PGW7h--
+
+--===============1410407889==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1410407889==--
