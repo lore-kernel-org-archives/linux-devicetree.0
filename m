@@ -1,82 +1,98 @@
 From: Julien Chauveau <chauveau.julien@gmail.com>
-Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys example
-Date: Fri, 11 Mar 2016 00:08:56 +0100
-Message-ID: <A62AD22E-ECB3-4DC7-8156-22BC84795412@gmail.com>
-References: <1457375055-5544-1-git-send-email-afaerber@suse.de> <CAMuHMdVMVYaygvKd3qgTz2fF9SuLA_zEYRoZZrJO+2zmP=jxag@mail.gmail.com> <56DEA4D6.10008@suse.de>
+Subject: Re: [PATCH v3 6/8] arm64: dts: rockchip: Add power key to GeekBox
+Date: Fri, 11 Mar 2016 00:09:04 +0100
+Message-ID: <BE473E87-8B7E-4F30-B715-680D869C4D0C@gmail.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de> <1457294038-14243-7-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56DEA4D6.10008@suse.de>
+In-Reply-To: <1457294038-14243-7-git-send-email-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, LAKML <linux-arm-kernel@lists.infradead.org>, =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Heiko Stuebner <heiko@sntech.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-> Le 8 mars 2016 =C3=A0 11:09, Andreas F=C3=A4rber <afaerber@suse.de> a=
+> Le 6 mars 2016 =C3=A0 20:53, Andreas F=C3=A4rber <afaerber@suse.de> a=
  =C3=A9crit :
 >=20
-> Am 08.03.2016 um 09:54 schrieb Geert Uytterhoeven:
->> On Mon, Mar 7, 2016 at 7:24 PM, Andreas F=C3=A4rber <afaerber@suse.d=
-e> wrote:
->>> Drop #address-cells and #size-cells, which are not required by the
->>> gpio-keys binding documentation, as button sub-nodes are not device=
-s.
->>>=20
->>> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
->>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>> ---
->>> Documentation/devicetree/bindings/input/gpio-keys.txt | 2 --
->>> 1 file changed, 2 deletions(-)
->>>=20
->>> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt =
-b/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> index 21641236c095..1552a11f6786 100644
->>> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
->>> @@ -34,8 +34,6 @@ Example nodes:
->>>=20
->>>        gpio_keys {
+> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+> ---
+> v2 -> v3:
+> * Adopted wakeup-source instead of gpio-key,wakeup (Julien)
+> * Dropped gpio-keys #address-cells and #size-cells properties (Julien=
+)
+> * Dropped power button reg property (Julien)
+> * Adopted KEY_POWER (Julien)
+> * Fixed power button pinctrl pull setting (Julien)
 >=20
-> While at it, I was told the preferred node naming would be dashes, no=
-t
-> underscores. The deeper we dig, the more we find.
-
-I agree, here we should use dashes, not underscores. So "gpio-keys" ins=
-tead of "gpio_keys".
-
+> v2: New
 >=20
->>>                        compatible =3D "gpio-keys";
->>> -                       #address-cells =3D <1>;
->>> -                       #size-cells =3D <0>;
->>>                        autorepeat;
+> arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 ++++++++++++++++=
+++++
+> 1 file changed, 20 insertions(+)
 >=20
-> Also a white line here may be optically more pleasant.
-
-I agree.
-
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/a=
+rm64/boot/dts/rockchip/rk3368-geekbox.dts
+> index 098be3700a6f..7036b49c9206 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+> @@ -42,6 +42,7 @@
 >=20
->>>                        button@21 {
->>=20
->> FYI, with "[PATCH] scripts/dtc: Update to upstream version 53bf130b1=
-cdd":
->> (http://www.spinics.net/lists/devicetree/msg117206.html) applied:
->>=20
->> Warning (unit_address_vs_reg): Node /keyboard/button@21 has a unit
->> name, but no reg property
+> /dts-v1/;
+> #include "rk3368.dtsi"
+> +#include <dt-bindings/input/input.h>
 >=20
-> My v2 GeekBox patch did have *-cells and a reg property, but Julien
-> asked I drop that: https://patchwork.kernel.org/patch/8246481/
+> / {
+> 	model =3D "GeekBox";
+> @@ -70,6 +71,19 @@
+> 		pinctrl-0 =3D <&ir_int>;
+> 	};
 >=20
-> Are you suggesting we should add a reg property here and drop this pa=
-tch
-> or go with this patch but follow up to not use @21?
+> +	keys: gpio-keys {
 
-I may be wrong but I think that if the unit-address has no meaning and =
-is not used, then it should be removed.
+I think you don't need the "keys" label, because there=E2=80=99s no pha=
+ndle that refers to this.
 
-By the way, I think the warning message is wrong. It should be _address=
-_ instead of name: "Node has a unit address, but no reg property".
+> +		compatible =3D "gpio-keys";
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&pwr_key>;
+> +
+> +		button@0 {
 
-Julien
+Here you should use "power" instead of "button@0".
+
+> +			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+> +			label =3D "GPIO Power";
+> +			linux,code =3D <KEY_POWER>;
+
+According to Documentation/input/event-codes.txt, there=E2=80=99s a spe=
+cial event type for the power button.
+Should we use it here for that purpose?
+
+			linux,input-type =3D <EV_PWR>
+
+> +			wakeup-source;
+> +		};
+> +	};
+> +
+> 	leds: gpio-leds {
+> 		compatible =3D "gpio-leds";
+>=20
+> @@ -265,6 +279,12 @@
+> 		};
+> 	};
+>=20
+> +	keys {
+> +		pwr_key: pwr-key {
+> +			rockchip,pins =3D <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
+> +		};
+> +	};
+> +
+> 	pmic {
+> 		pmic_sleep: pmic-sleep {
+> 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
+> --=20
+> 2.6.2
+>=20
