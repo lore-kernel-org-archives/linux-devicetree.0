@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 19/30] ARM: dts: r8a7793: Reference both DMA controllers in SCIFA nodes
-Date: Thu, 10 Mar 2016 12:36:11 +0100
-Message-ID: <1457609782-24108-20-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH 23/30] ARM: dts: r8a7793: Reference both DMA controllers in QSPI node
+Date: Thu, 10 Mar 2016 12:36:15 +0100
+Message-ID: <1457609782-24108-24-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -21,85 +21,25 @@ later if the first one is unavailable.
 Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
 ---
- arch/arm/boot/dts/r8a7793.dtsi | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+ arch/arm/boot/dts/r8a7793.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793=
 =2Edtsi
-index aef9e69..322d290 100644
+index 506ef10..deed701 100644
 --- a/arch/arm/boot/dts/r8a7793.dtsi
 +++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -303,8 +303,9 @@
- 		interrupts =3D <0 144 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7793_CLK_SCIFA0>;
- 		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>;
+@@ -548,8 +548,9 @@
+ 		reg =3D <0 0xe6b10000 0 0x2c>;
+ 		interrupts =3D <0 184 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp9_clks R8A7793_CLK_QSPI_MOD>;
+-		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>,
-+		       <&dmac1 0x21>, <&dmac1 0x22>;
++		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>,
++		       <&dmac1 0x17>, <&dmac1 0x18>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -315,8 +316,9 @@
- 		interrupts =3D <0 145 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7793_CLK_SCIFA1>;
- 		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>,
-+		       <&dmac1 0x25>, <&dmac1 0x26>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -327,8 +329,9 @@
- 		interrupts =3D <0 151 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7793_CLK_SCIFA2>;
- 		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>,
-+		       <&dmac1 0x27>, <&dmac1 0x28>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -339,8 +342,9 @@
- 		interrupts =3D <0 29 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7793_CLK_SCIFA3>;
- 		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>,
-+		       <&dmac1 0x1b>, <&dmac1 0x1c>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -351,8 +355,9 @@
- 		interrupts =3D <0 30 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7793_CLK_SCIFA4>;
- 		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>,
-+		       <&dmac1 0x1f>, <&dmac1 0x20>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -363,8 +368,9 @@
- 		interrupts =3D <0 31 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7793_CLK_SCIFA5>;
- 		clock-names =3D "sci_ick";
--		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>,
-+		       <&dmac1 0x23>, <&dmac1 0x24>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
+ 		num-cs =3D <1>;
+ 		#address-cells =3D <1>;
 --=20
 2.7.2
