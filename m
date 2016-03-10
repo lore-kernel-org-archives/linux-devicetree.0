@@ -1,104 +1,84 @@
-From: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 6/8] arm64: dts: rockchip: Add power key to GeekBox
-Date: Fri, 11 Mar 2016 00:04:09 +0100
-Message-ID: <6BD669A2-4971-4702-8742-77C9994AA4E9@gmail.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de> <1457294038-14243-7-git-send-email-afaerber@suse.de>
+From: Julien Chauveau <chauveau.julien@gmail.com>
+Subject: Re: [PATCH RESEND] Documentation: devicetree: Clean up gpio-keys example
+Date: Fri, 11 Mar 2016 00:08:49 +0100
+Message-ID: <7E647096-6B3B-4015-BB0F-7B4087206180@gmail.com>
+References: <1457375055-5544-1-git-send-email-afaerber@suse.de> <CAMuHMdVMVYaygvKd3qgTz2fF9SuLA_zEYRoZZrJO+2zmP=jxag@mail.gmail.com> <525564DD-D0D3-4DEB-9306-3A23288FD83F@gmail.com> <56DEA67E.8090704@suse.de>
 Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457294038-14243-7-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <56DEA67E.8090704@suse.de>
+Sender: linux-input-owner@vger.kernel.org
+To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, LAKML <linux-arm-kernel@lists.infradead.org>, =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
-> Le 6 mars 2016 =C3=A0 20:53, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> a=
+> Le 8 mars 2016 =C3=A0 11:16, Andreas F=C3=A4rber <afaerber@suse.de> a=
  =C3=A9crit :
 >=20
-> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
-> v2 -> v3:
-> * Adopted wakeup-source instead of gpio-key,wakeup (Julien)
-> * Dropped gpio-keys #address-cells and #size-cells properties (Julien=
-)
-> * Dropped power button reg property (Julien)
-> * Adopted KEY_POWER (Julien)
-> * Fixed power button pinctrl pull setting (Julien)
+> Am 08.03.2016 um 10:41 schrieb Julien Chauveau:
+>> Le 8 mars 2016 =C3=A0 09:54, Geert Uytterhoeven <geert@linux-m68k.or=
+g> a =C3=A9crit :
+>>> On Mon, Mar 7, 2016 at 7:24 PM, Andreas F=C3=A4rber <afaerber@suse.=
+de> wrote:
+>>>> Drop #address-cells and #size-cells, which are not required by the
+>>>> gpio-keys binding documentation, as button sub-nodes are not devic=
+es.
+>>>>=20
+>>>> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>>>> ---
+>>>> Documentation/devicetree/bindings/input/gpio-keys.txt | 2 --
+>>>> 1 file changed, 2 deletions(-)
+>>>>=20
+>>>> diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt=
+ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+>>>> index 21641236c095..1552a11f6786 100644
+>>>> --- a/Documentation/devicetree/bindings/input/gpio-keys.txt
+>>>> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+>>>> @@ -34,8 +34,6 @@ Example nodes:
+>>>>=20
+>>>>       gpio_keys {
+>>>>                       compatible =3D "gpio-keys";
+>>>> -                       #address-cells =3D <1>;
+>>>> -                       #size-cells =3D <0>;
+>>>>                       autorepeat;
+>>>>                       button@21 {
+>>>=20
+>>> FYI, with "[PATCH] scripts/dtc: Update to upstream version 53bf130b=
+1cdd":
+>>> (http://www.spinics.net/lists/devicetree/msg117206.html) applied:
+>>>=20
+>>> Warning (unit_address_vs_reg): Node /keyboard/button@21 has a unit
+>>> name, but no reg property
+>>>=20
+>>=20
+>> Hi Andreas,
+>> This means you can also drop the unit-address (the @21 part) for the=
+ button.
+>> What about using a more relevant name like "key_up" instead of "butt=
+on"?
 >=20
-> v2: New
->=20
-> arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 ++++++++++++++++=
-++++
-> 1 file changed, 20 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/a=
-rm64/boot/dts/rockchip/rk3368-geekbox.dts
-> index 098be3700a6f..7036b49c9206 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-> @@ -42,6 +42,7 @@
->=20
-> /dts-v1/;
-> #include "rk3368.dtsi"
-> +#include <dt-bindings/input/input.h>
->=20
-> / {
-> 	model =3D "GeekBox";
-> @@ -70,6 +71,19 @@
-> 		pinctrl-0 =3D <&ir_int>;
-> 	};
->=20
-> +	keys: gpio-keys {
+> Or in my case power-key or power-button. Or would just power suffice?
 
-I think you don't need the "keys" label, because there=E2=80=99s no pha=
-ndle that refers to this.
+=46or the example nodes of the documentation, according to the labels y=
+ou=E2=80=99ll probably want to use "up" and "down" (or "key-up" and "ke=
+y-down", or "up-key" and "down-key").
 
-> +		compatible =3D "gpio-keys";
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&pwr_key>;
-> +
-> +		button@0 {
+=46or the Geekbox, I think "power" is meaningful enough.
 
-Here you should use "power" instead of "button@0".
-
-> +			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
-> +			label =3D "GPIO Power";
-> +			linux,code =3D <KEY_POWER>;
-
-According to Documentation/input/event-codes.txt, there=E2=80=99s a spe=
-cial event type for the power button.
-Should we use it here for that purpose?
-
-			linux,input-type =3D <EV_PWR>
-
-> +			wakeup-source;
-> +		};
-> +	};
-> +
-> 	leds: gpio-leds {
-> 		compatible =3D "gpio-leds";
 >=20
-> @@ -265,6 +279,12 @@
-> 		};
-> 	};
->=20
-> +	keys {
-> +		pwr_key: pwr-key {
-> +			rockchip,pins =3D <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> 	pmic {
-> 		pmic_sleep: pmic-sleep {
-> 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
-> --=20
-> 2.6.2
->=20
+> The Landingship baseboard does have four more buttons not yet enabled=
+,
+> so I do need some way to distinguish nodes.
+
+The labels on the board are key1, key2, key3 and key4. Maybe you can us=
+e that?
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
