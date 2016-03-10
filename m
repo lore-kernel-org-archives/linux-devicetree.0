@@ -1,64 +1,65 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] mtd: brcmnand: Add support for v6.2 controllers
-Date: Thu, 10 Mar 2016 15:34:16 -0800
-Message-ID: <1457652859-767-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BROADCOM STB NAND
-	FLASH DRIVER" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 00/30] ARM: dts: r8a779[0-4]: Reference both DMA
+ controllers
+Date: Fri, 11 Mar 2016 08:38:56 +0900
+Message-ID: <20160310233855.GD7423@verge.net.au>
+References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+ <CAMuHMdXF4FMLg=Y_cZ2chjzGWAV90N=vLsCkPKGmmYx5mFY64Q@mail.gmail.com>
+ <20160310134325.GA1111@bigcity.dyn.berto.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160310134325.GA1111@bigcity.dyn.berto.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Document and match the brcm,brcmnand-v6.2 compatible string, the controller has
-a register layout identical to the v6.0 version and supports prefetch. Update the
-command shift logic to account for v6.2 controller which are the first ones to
-use a shift of 0 (6.1 used a shift of 24).
+On Thu, Mar 10, 2016 at 02:43:25PM +0100, Niklas S=C3=B6derlund wrote:
+> Hi Geert,
+>=20
+> On 2016-03-10 13:20:56 +0100, Geert Uytterhoeven wrote:
+> > Hi Niklas,
+> >=20
+> > On Thu, Mar 10, 2016 at 12:35 PM, Niklas S=C3=B6derlund
+> > <niklas.soderlund+renesas@ragnatech.se> wrote:
+> > > R-Car Gen2 have two DMA controllers, which are equivalent. Howeve=
+r DMA
+> > > slaves were tied only to a single DMA controller in .dtsi. This s=
+eries
+> > > add references to to both DMA controllers for all nodes that prev=
+iously
+> > > only referenced one of them. It also adds dma references to the S=
+DHI
+> > > nodes for r8a7794 which according to the datasheet should work bu=
+t I
+> > > have not access to HW to verify.
+> > >
+> > > Tested on Koelsch (r8a7791) by altering the compatible value of e=
+ither
+> > > dmac0 or dmac1 and verifying that the DMA slaves pick the DMA con=
+troller
+> > > that is instantiated.
+> >=20
+> > Thanks for your series!
+> >=20
+> > If you fix the subject of patch 30:
+> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>=20
+> Thanks for your review and that you found my error in the subject.
+>=20
+> >=20
+> > I guess this is against v4.5-rc7? It doesn't apply against
+> > renesas-devel-20160308-v4.5-rc7.
+> > Unfortunately you'll have to rebase against Simon's tree, and add s=
+cif2
+> > on r8a7790, and i2c[6-8] on r8a7793.
+>=20
+> I will rebase and update the relevant patches to include the addition=
+s=20
+> to r8a7790 and r8a7793.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 1 +
- drivers/mtd/nand/brcmnand/brcmnand.c                    | 3 ++-
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-index c2546ced9c02..deb24cbdda82 100644
---- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-+++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-@@ -24,6 +24,7 @@ Required properties:
-                          brcm,brcmnand-v5.0
-                          brcm,brcmnand-v6.0
-                          brcm,brcmnand-v6.1
-+                         brcm,brcmnand-v6.2
-                          brcm,brcmnand-v7.0
-                          brcm,brcmnand-v7.1
-                          brcm,brcmnand
-diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-index e0528397306a..0b7a698cc233 100644
---- a/drivers/mtd/nand/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-@@ -601,7 +601,7 @@ static void brcmnand_wr_corr_thresh(struct brcmnand_host *host, u8 val)
- 
- static inline int brcmnand_cmd_shift(struct brcmnand_controller *ctrl)
- {
--	if (ctrl->nand_version < 0x0700)
-+	if (ctrl->nand_version < 0x0602)
- 		return 24;
- 	return 0;
- }
-@@ -2115,6 +2115,7 @@ static const struct of_device_id brcmnand_of_match[] = {
- 	{ .compatible = "brcm,brcmnand-v5.0" },
- 	{ .compatible = "brcm,brcmnand-v6.0" },
- 	{ .compatible = "brcm,brcmnand-v6.1" },
-+	{ .compatible = "brcm,brcmnand-v6.2" },
- 	{ .compatible = "brcm,brcmnand-v7.0" },
- 	{ .compatible = "brcm,brcmnand-v7.1" },
- 	{},
--- 
-2.1.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If its not too much bother could you provide a git branch as well as
+patches posted to the mailing list.  For larger series that is helpful =
+to me.
