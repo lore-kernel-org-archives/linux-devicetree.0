@@ -1,121 +1,58 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 06/18] ARM: imx: clk-gate2: allow custom gate configuration
-Date: Wed,  9 Mar 2016 18:16:47 -0800
-Message-ID: <1457576219-7971-7-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH 17/18] Documentation: dt: add Vybrid DDR memory controller bindings
+Date: Wed,  9 Mar 2016 18:16:58 -0800
+Message-ID: <1457576219-7971-18-git-send-email-stefan@agner.ch>
 References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, sergeimir@emcraft.com, kernel@pengutronix.de, galak@codeaurora.org, tglx@linutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457576219-7971-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sergeimir-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The 2-bit gates found i.MX and Vybrid SoC support different clock
-configuration:
+Add device-tree bindings of Vybrids LPDDR2/DDR3 SDRAM Memory
+Controller. Access to the device is required to put the memory
+into self-refresh mode.
 
-0b00: clk disabled
-0b01: clk enabled in RUN mode but disabled in WAIT and STOP mode
-0b10: clk enabled in RUN, WAIT and STOP mode (only Vybrid)
-0b11: clk enabled in RUN and WAIT mode
-
-For some clocks, we might want to configure different behaviour,
-e.g. a memory clock should be on even in STOP mode. Add a new
-function imx_clk_gate2_cgr which allow to configure specific
-gate values through the cgr_val parameter.
-
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- drivers/clk/imx/clk-gate2.c |  7 +++++--
- drivers/clk/imx/clk.h       | 13 ++++++++++---
- 2 files changed, 15 insertions(+), 5 deletions(-)
+ .../bindings/arm/freescale/fsl,vf610-ddrmc.txt     | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,vf610-ddrmc.txt
 
-diff --git a/drivers/clk/imx/clk-gate2.c b/drivers/clk/imx/clk-gate2.c
-index 8935bff..db44a19 100644
---- a/drivers/clk/imx/clk-gate2.c
-+++ b/drivers/clk/imx/clk-gate2.c
-@@ -31,6 +31,7 @@ struct clk_gate2 {
- 	struct clk_hw hw;
- 	void __iomem	*reg;
- 	u8		bit_idx;
-+	u8		cgr_val;
- 	u8		flags;
- 	spinlock_t	*lock;
- 	unsigned int	*share_count;
-@@ -50,7 +51,8 @@ static int clk_gate2_enable(struct clk_hw *hw)
- 		goto out;
- 
- 	reg = readl(gate->reg);
--	reg |= 3 << gate->bit_idx;
-+	reg &= ~(3 << gate->bit_idx);
-+	reg |= gate->cgr_val << gate->bit_idx;
- 	writel(reg, gate->reg);
- 
- out:
-@@ -125,7 +127,7 @@ static struct clk_ops clk_gate2_ops = {
- 
- struct clk *clk_register_gate2(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
--		void __iomem *reg, u8 bit_idx,
-+		void __iomem *reg, u8 bit_idx, u8 cgr_val,
- 		u8 clk_gate2_flags, spinlock_t *lock,
- 		unsigned int *share_count)
- {
-@@ -140,6 +142,7 @@ struct clk *clk_register_gate2(struct device *dev, const char *name,
- 	/* struct clk_gate2 assignments */
- 	gate->reg = reg;
- 	gate->bit_idx = bit_idx;
-+	gate->cgr_val = cgr_val;
- 	gate->flags = clk_gate2_flags;
- 	gate->lock = lock;
- 	gate->share_count = share_count;
-diff --git a/drivers/clk/imx/clk.h b/drivers/clk/imx/clk.h
-index c94ac5c..9311755 100644
---- a/drivers/clk/imx/clk.h
-+++ b/drivers/clk/imx/clk.h
-@@ -41,7 +41,7 @@ struct clk *imx_clk_pllv3(enum imx_pllv3_type type, const char *name,
- 
- struct clk *clk_register_gate2(struct device *dev, const char *name,
- 		const char *parent_name, unsigned long flags,
--		void __iomem *reg, u8 bit_idx,
-+		void __iomem *reg, u8 bit_idx, u8 cgr_val,
- 		u8 clk_gate_flags, spinlock_t *lock,
- 		unsigned int *share_count);
- 
-@@ -55,7 +55,7 @@ static inline struct clk *imx_clk_gate2(const char *name, const char *parent,
- 		void __iomem *reg, u8 shift)
- {
- 	return clk_register_gate2(NULL, name, parent, CLK_SET_RATE_PARENT, reg,
--			shift, 0, &imx_ccm_lock, NULL);
-+			shift, 0x3, 0, &imx_ccm_lock, NULL);
- }
- 
- static inline struct clk *imx_clk_gate2_shared(const char *name,
-@@ -63,7 +63,14 @@ static inline struct clk *imx_clk_gate2_shared(const char *name,
- 		unsigned int *share_count)
- {
- 	return clk_register_gate2(NULL, name, parent, CLK_SET_RATE_PARENT, reg,
--			shift, 0, &imx_ccm_lock, share_count);
-+			shift, 0x3, 0, &imx_ccm_lock, share_count);
-+}
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-ddrmc.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-ddrmc.txt
+new file mode 100644
+index 0000000..56a71d6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,vf610-ddrmc.txt
+@@ -0,0 +1,23 @@
++Freescale Vybrid LPDDR2/DDR3 SDRAM Memory Controller
 +
-+static inline struct clk *imx_clk_gate2_cgr(const char *name, const char *parent,
-+		void __iomem *reg, u8 shift, u8 cgr_val)
-+{
-+	return clk_register_gate2(NULL, name, parent, CLK_SET_RATE_PARENT, reg,
-+			shift, cgr_val, 0, &imx_ccm_lock, NULL);
- }
- 
- struct clk *imx_clk_pfd(const char *name, const char *parent_name,
++The memory controller supports high performance applications for 16-bit or
++8-bit DDR2, or LPDDR SDRAM memories.
++
++Required properties:
++- compatible:	"fsl,vf610-ddrmc"
++- reg:		the register range of the DDRMC registers
++- clocks:	DDRMC main clock to clock memory and access registers.
++- clock-names:	Must contain "ddrc", matching entry in the clocks property.
++- fsl,has-cke-reset-pulls:
++		States whether pull-down/up are populated on DDR CKE/RESET
++		signals to allow using DDR self-refresh modes (see Vybrid
++		Hardware Development Guide for details).
++
++Example:
++	ddrmc: ddrmc@400ae000 {
++		compatible = "fsl,vf610-ddrmc";
++		reg = <0x400ae000 0x1000>;
++		clocks = <&clks VF610_CLK_DDRMC>;
++		clock-names = "ddrc";
++		fsl,has-cke-reset-pulls;
++	}
 -- 
 2.7.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
