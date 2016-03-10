@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 23/30] ARM: dts: r8a7793: Reference both DMA controllers in QSPI node
-Date: Thu, 10 Mar 2016 12:36:15 +0100
-Message-ID: <1457609782-24108-24-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH 28/30] ARM: dts: r8a7794: Reference both DMA controllers in QSPI node
+Date: Thu, 10 Mar 2016 12:36:20 +0100
+Message-ID: <1457609782-24108-29-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -21,18 +21,18 @@ later if the first one is unavailable.
 Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
 ---
- arch/arm/boot/dts/r8a7793.dtsi | 5 +++--
+ arch/arm/boot/dts/r8a7794.dtsi | 5 +++--
  1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793=
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794=
 =2Edtsi
-index 506ef10..deed701 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -548,8 +548,9 @@
+index 325ba88..23617a0 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -644,8 +644,9 @@
  		reg =3D <0 0xe6b10000 0 0x2c>;
  		interrupts =3D <0 184 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7793_CLK_QSPI_MOD>;
+ 		clocks =3D <&mstp9_clks R8A7794_CLK_QSPI_MOD>;
 -		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>;
 -		dma-names =3D "tx", "rx";
 +		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>,
