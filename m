@@ -1,51 +1,61 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 4/5] gpio: of: Add support to have multiple gpios in gpio-hog
-Date: Thu, 10 Mar 2016 17:23:55 +0530
-Message-ID: <56E16053.60802@nvidia.com>
-References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <56E05AA9.8000503@wwwdotorg.org> <56E11D34.60401@nvidia.com> <2337414.ntEtcfKnX0@hermes>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 30/30] ARM: dts: r8a7794: Reference both DMA controllers
+ in QSPI node
+Date: Thu, 10 Mar 2016 13:08:56 +0100
+Message-ID: <CAMuHMdW_nMfWF-sQPFgtxmtA_1vxw_hFPsb1DkRp7TJtKrB2ig@mail.gmail.com>
+References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+	<1457609782-24108-31-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <2337414.ntEtcfKnX0@hermes>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457609782-24108-31-git-send-email-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Niklas,
 
-On Thursday 10 March 2016 04:46 PM, Markus Pargmann wrote:
-> On Thursday 10 March 2016 12:37:32 Laxman Dewangan wrote:
->> On Wednesday 09 March 2016 10:47 PM, Stephen Warren wrote:
->>> On 03/09/2016 06:20 AM, Laxman Dewangan wrote:
->>> The problem with that is the description used when acquiring the GPIO
->>> is just "wlan_input", "wlan_output", or "wlan_control". There's
->>> nothing to indicate what those individual pins do (perhaps one is a
->>> reset signal, one is a regulator enable, etc.?) By requiring separate
->>> nodes for each GPIO, then the node name can provide a meaningful
->>> semantic name/description for each GPIO, which provides much more
->>> information.
->>>
->> On this case, we have already property "line-name" and passed the name
->> of the gpio via this property.
->> The property names is "line-name" which is good for one string. We can
->> support other property "line-names" with multiple string per GPIO index.
->>
->> line-names = "wlan-reset", "wlan-enable";
-> There is currently a discussion about the future bindings for subnodes in GPIO
-> controller nodes. Please have a look at these two mail threads:
+On Thu, Mar 10, 2016 at 12:36 PM, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org> wrote:
+> R-Car Gen2 have two DMA controllers, which are equivalent. Add
+> references to both dmac0 and dmac1 so the driver can fallback to the
+> later if the first one is unavailable.
 >
-> 	"Device tree binding documentation for gpio-switch"
-> 	"gpio: of: Add support to have multiple gpios in gpio-hog"
+> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
+ech.se>
+> ---
+>  arch/arm/boot/dts/r8a7794.dtsi | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a77=
+94.dtsi
+> index 76709ff..e098eab 100644
+> --- a/arch/arm/boot/dts/r8a7794.dtsi
+> +++ b/arch/arm/boot/dts/r8a7794.dtsi
+> @@ -605,8 +605,9 @@
+>                 reg =3D <0 0xee200000 0 0x80>;
+>                 interrupts =3D <0 169 IRQ_TYPE_LEVEL_HIGH>;
+>                 clocks =3D <&mstp3_clks R8A7794_CLK_MMCIF0>;
 
-Second one is this patch only. Is it by intention?
+This one has the wrong subject: QSPI vs. MMCIF.
 
-The binding details about the gpio-switch and names are given by 
-property "lable". I think property "label" is standard way of going 
-forward i.e. I post similar patch for gpio-keys device name from DT 
-after got review comment.
+Gr{oetje,eeting}s,
 
-So here,  we can have the gpio names  under property "label" or "labels".
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
 
-Or am I missing anything?
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
