@@ -1,52 +1,68 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: RE: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Fri, 11 Mar 2016 07:14:43 +0000
-Message-ID: <KL1PR06MB10315B45ADA2037A5AA85A56C3B50@KL1PR06MB1031.apcprd06.prod.outlook.com>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56DC1561.9060306@hartkopp.net>
- <SG2PR06MB10386D712BC8C345DF726523C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DD36F5.2000308@pengutronix.de>
- <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DE8345.50901@hartkopp.net>
- <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DEC49D.4@hartkopp.net>
- <SG2PR06MB10388F87746A1191E51B199FC3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DF0900.6090906@hartkopp.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 04/11] ARM: bcm2835: dt: add bindings for shared
+ interrupt properties
+Date: Thu, 10 Mar 2016 08:57:18 +0000
+Message-ID: <20160310085714.GA31313@svinekod>
+References: <1457175142-28665-1-git-send-email-kernel@martin.sperl.org>
+ <1457175142-28665-5-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <56DF0900.6090906@hartkopp.net>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>, Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457175142-28665-5-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgT2xpdmVyLCBNYXJjLA0KDQo+IE9uIDAzLzA4LzIwMTYgMDE6NDggUE0sIFJhbWVzaCBTaGFu
-bXVnYXN1bmRhcmFtIHdyb3RlOg0KPiANCj4gPj4gSW4gZmFjdCB5b3UgcHJvdmlkZWQgYSBDQU4g
-ZHJpdmVyIHdoaWNoIGlzICJDQU4tRkQtb25seSIuDQo+ID4NCj4gPiBZZXMuIFRoYXQncyB0aGUg
-c3RhdHVzIG9mIGN1cnJlbnQgc3VibWlzc2lvbi4NCg0KKC4uLikNCg0KPiA+DQo+ID4gSSBkaWQg
-dHJ5IHRoaXMgb3B0aW9uIGVhcmxpZXIgYnV0IHRoZXJlIGFyZSB0d28gcHJvYmxlbXMgd2l0aCB0
-aGlzDQo+IG1ldGhvZC4NCj4gPg0KPiA+IDEpIEJlbG93IGNvbmZpZ3VyYXRpb24gaXMgbm90IHBv
-c3NpYmxlDQo+ID4NCj4gPiBpcCBsaW5rIHNldCBjYW4wIHVwIHR5cGUgY2FuIGJpdHJhdGUgMTAw
-MDAwMCBkYml0cmF0ZSAxMDAwMDAwIGZkIG9uDQo+ID4NCj4gPiAiZmQgb24iIC0+IFRoaXMgaXMg
-bm90IGFsbG93ZWQgYmVjYXVzZSBDQU5fQ1RSTE1PREVfRkQgYml0IGlzIG5vdCBzZXQgaW4NCj4g
-Y3RybG1vZGVfc3VwcG9ydGVkLg0KPiA+DQo+ID4gMikgSWYgSSBpZ25vcmUgImZkIG9uIiwgbXkg
-aW50ZXJmYWNlIE1UVSBzdGF5cyBhcyBDQU5fTVRVIG9ubHkuIElmIEkNCj4gaGF2ZSB0byBjaGFu
-Z2UgdGhlIE1UVSBhbG9uZSB0byBDQU5GRF9NVFUgdXNpbmcgYW5vdGhlciBuZXRsaW5rIG1lc3Nh
-Z2UsDQo+IGl0IGFnYWluIGNoZWNrcyBjdHJsbW9kZV9zdXBwb3J0ZWQgd2hlcmUgaXQgd291bGQg
-ZmFpbC4gSSBoYXZlIHRoZSBvcHRpb24NCj4gb2YgcHJvdmlkaW5nIG15IG93biBjaGFuZ2VfbXR1
-IGZ1bmN0aW9uICYgaWdub3JlIHRoaXMgY2hlY2sgYnV0IHR3bw0KPiBjb25maWd1cmF0aW9uIG1l
-c3NhZ2VzIGFyZSByZXF1aXJlZCBmb3IgbXkgZHJpdmVyIGFsb25lIDotKC4NCj4gPg0KPiA+IEJv
-dGggdGhlc2UgYW5vbWFsaWVzIGFyZSBhZGRyZXNzZWQgd2l0aCB0aGUgY3VycmVudCBjaGVjayBJ
-IGhhdmUuDQo+IA0KPiBPaCAtIHlvdSBhcmUgcmlnaHQgd2l0aCBjb21wbGFpbmluZyBhYm91dCB0
-aGlzIGluY29uc2lzdGVuY3kuDQo+IA0KPiBDYW4geW91IGNoZWNrIG15IFJGQyBwYXRjaCBmb3Ig
-TGludXggc3RhYmxlIEkganVzdCBzZW50IG9uIHRoZSBtYWlsaW5nDQo+IGxpc3Q/DQo+IGh0dHA6
-Ly9tYXJjLmluZm8vP2w9bGludXgtY2FuJm09MTQ1NzQ1NzI0OTE3OTc2Jnc9Mg0KDQpBcyB3ZSBh
-cmUgZml4aW5nIHRoaXMgaXNzdWUgaW4gQ0FOIGRldi5jLCBJJ2xsIHJlbW92ZSB0aGlzIGNoZWNr
-IGluIG5kb19vcGVuIGFuZCBzZXQgQ0FOX0NUUkxNT0RFX0ZEIGZsYWcgaW4gY3RybG1vZGUgJiBy
-ZW1vdmUgdGhlIGZsYWcgaW4gY3RybG1vZGVfc3VwcG9ydGVkIGluIHRoZSBuZXh0IHYzIHZlcnNp
-b24gb2YgdGhlIHBhdGNoLg0KDQpBcmUgdGhlcmUgYW55IGZ1cnRoZXIgY29tbWVudHMgb24gdjIg
-cGF0Y2ggcGxlYXNlPw0KDQpUaGFua3MsDQpSYW1lc2gNCg==
+Hi,
+
+As a general note, please put DT bindings patches before any patches
+implementing them, as per
+Documentation/devicetree/bindings/submitting-patches.txt.
+
+That makes it possible to review a series in-order.
+
+On Sat, Mar 05, 2016 at 10:52:15AM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> Add binding documentation for the new shared interrupt properties:
+> * brcm,dma-channel-shared-mask
+> * brcm,dma-shared-irq-index
+> 
+> Signed-off-by: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> index 1396078..f9e84ee 100644
+> --- a/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/brcm,bcm2835-dma.txt
+> @@ -17,6 +17,10 @@ Required properties:
+>  - brcm,dma-channel-mask: Bit mask representing the channels
+>  			 not used by the firmware in ascending order,
+>  			 i.e. first channel corresponds to LSB.
+> +- brcm,dma-channel-shared-mask: Bit mask representing the channels
+> +				that use a shared interrupt
+
+Generally we don't like masks in DT (though I see this is in keeping with
+another property above). I won't push strongly here.
+
+I take it that this is a fixed HW property rather than a software configuration
+option?
+
+> +- brcm,dma-shared-irq-index: index of which of the interrupts mentioned
+> +			     above is the shared interrupt
+
+What is the usual order of the interrupts? How are they expected to be parsed
+if this is in the middle of the list, for example?
+
+I think this needs a more thorough description.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
