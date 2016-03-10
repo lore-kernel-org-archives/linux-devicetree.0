@@ -1,86 +1,54 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v3 1/6] memory: omap-gpmc: Store handle to GPMC dev
-Date: Thu, 10 Mar 2016 09:24:44 -0600
-Message-ID: <56E191BC.4070705@ti.com>
-References: <1457582861-20619-1-git-send-email-fcooper@ti.com>
- <1457582861-20619-2-git-send-email-fcooper@ti.com> <56E16B20.5070001@ti.com>
- <56E17932.6090304@ti.com> <56E19148.9060207@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: [PATCH v4 0/2] power: reset: support for Atmel alternative Shutdown Controller
+Date: Thu, 10 Mar 2016 16:37:38 +0100
+Message-ID: <1457624260-30350-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56E19148.9060207@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: nsekhar@ti.com, dwmw2@infradead.org, computersforpeace@gmail.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, sre@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Nicolas Ferre <nicolas.ferre@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
+This is a series to add driver for a new Atmel Shutdown Controller. This new IP
+is extensible and some features will be added later (see the TODO section).
+Its extensible nature led to write a new binding so that wake-up sources can be
+described easily.
 
+Changes in v4:
+- change property to debounce-delay-us so that we can use a generic property
+  and we can have the unit explicitly included it the name according to
+  Documentation/devicetree/bindings/property-units.txt.
+- move to atmel,wakeup-active-high boolean property instead of a "high", "low"
+  string comparison.
+- fix warning found by 0-day robot: large integer implicitly truncated to
+  unsigned type [-Woverflow]
+- add entry in MAINTAINERS file
 
-On 03/10/2016 09:22 AM, Roger Quadros wrote:
-> Franklin,
->
-> On 10/03/16 15:40, Franklin S Cooper Jr. wrote:
->>
->> On 03/10/2016 06:40 AM, Roger Quadros wrote:
->>> Franklin,
->>>
->>> On 10/03/16 06:07, Franklin S Cooper Jr wrote:
->>>> The dma channel information is located within the GPMC node. The NAND
->>>> driver requires a handle to the GPMC's dev to properly parse the DMA
->>>> properties. Therefore, store a handle to the dev so it can be referenced
->>>> within the NAND driver.
->>>>
->>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->>>> ---
->>>>  drivers/memory/omap-gpmc.c                   | 1 +
->>>>  include/linux/platform_data/mtd-nand-omap2.h | 2 ++
->>>>  2 files changed, 3 insertions(+)
->>>>
->>>> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
->>>> index 6515dfc..2932d13 100644
->>>> --- a/drivers/memory/omap-gpmc.c
->>>> +++ b/drivers/memory/omap-gpmc.c
->>>> @@ -1796,6 +1796,7 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->>>>  
->>>>  	gpmc_nand_data->cs = val;
->>>>  	gpmc_nand_data->of_node = child;
->>>> +	gpmc_nand_data->gpmc_dev = &pdev->dev;
->>>>  
->>>>  	/* Detect availability of ELM module */
->>>>  	gpmc_nand_data->elm_of_node = of_parse_phandle(child, "ti,elm-id", 0);
->>>> diff --git a/include/linux/platform_data/mtd-nand-omap2.h b/include/linux/platform_data/mtd-nand-omap2.h
->>>> index 090bbab..534b984 100644
->>>> --- a/include/linux/platform_data/mtd-nand-omap2.h
->>>> +++ b/include/linux/platform_data/mtd-nand-omap2.h
->>>> @@ -80,5 +80,7 @@ struct omap_nand_platform_data {
->>>>  	/* for passing the partitions */
->>>>  	struct device_node	*of_node;
->>>>  	struct device_node	*elm_of_node;
->>>> +
->>>> +	struct device		*gpmc_dev;
->>>>  };
->>>>  #endif
->>>>
->>> Why do you need this? Can't we just use dev->parent in the omap2-nand driver?
->> The omap2-nand platform_device is created by
->> platform_device_alloc. The created platform_device dev
->> parent isn't by default set to the GPMC dev. I didn't think
->> this was the right approach to manually set the parent
->> property. However, taking a look at other usages of
->> platform_device_alloc it seems this is actually pretty
->> common. If your ok with this then I can go that route.
-> After my DT cleanup we no longer use platform_dev_alloc for DT cases.
-> As Nand node is child of GPMC node, omap2 nand's parent is guaranteed to be the
-> GPMC device.
->
-> But for legacy boot we still use gpmc_nand_init() which calls platform_device_add()
-> without setting pdev->parent and so it will set the parent to platform bus.
->
-> Maybe we could patch gpmc_nand_init() to set NAND's parent to GPMC device?
+Changes in v3:
+- get and use slow clock and specify its handler in binding
+- add the slow clock handle as the IP uses it
+- remove useless protection at the beginning of pm_power_off handler
+- allow to compile it as a module
+- add COMPILE_TEST directive in Kconfig
+- update description in file header
 
-Yup that was my plan. I'll send a rev 4 with this change and
-also your comments on PATCH 2.
->
-> cheers,
-> -roger
+Changes in v2:
+- add MODULE_DEVICE_TABLE as advised by Sebastian Reichel
+- review indentation and braces to correct errors pointed out by checkpatch
+
+Nicolas Ferre (2):
+  ARM: dts: at91: shdwc binding: add new shutdown controller
+    documentation
+  power: reset: at91-shdwc: add new shutdown controller driver
+
+ .../devicetree/bindings/arm/atmel-at91.txt         |  59 +++++
+ MAINTAINERS                                        |   5 +
+ drivers/power/reset/Kconfig                        |   8 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/at91-shdwc.c                   | 282 +++++++++++++++++++++
+ 5 files changed, 355 insertions(+)
+ create mode 100644 drivers/power/reset/at91-shdwc.c
+
+-- 
+2.1.3
