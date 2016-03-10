@@ -1,58 +1,114 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH 08/18] ARM: clk: add WKPU unit
-Date: Wed,  9 Mar 2016 18:16:49 -0800
-Message-ID: <1457576219-7971-9-git-send-email-stefan@agner.ch>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457576219-7971-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sergeimir-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/7] PM / Domains: Add DT bindings for the R-Car System Controller
+Date: Thu, 10 Mar 2016 04:24:02 +0200
+Message-ID: <5264125.Rrtl9KtOQy@avalon>
+References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be> <1457551122-21838-2-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1457551122-21838-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- drivers/clk/imx/clk-vf610.c             | 2 ++
- include/dt-bindings/clock/vf610-clock.h | 3 ++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Hi Geert,
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index f0ff458..610a724 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -120,6 +120,7 @@ static unsigned int const clks_init_on[] __initconst = {
- 	VF610_CLK_DDR_SEL,
- 	VF610_CLK_DAP,
- 	VF610_CLK_DDRMC,
-+	VF610_CLK_WKPU,
- };
- 
- static struct clk * __init vf610_get_fixed_clock(
-@@ -235,6 +236,7 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
- 	clk[VF610_CLK_PLL6_MAIN_DIV] = imx_clk_divider("pll6_video_div", "pll6_video", CCM_CACRR, 21, 1);
- 
- 	clk[VF610_CLK_DDRMC] = imx_clk_gate2_cgr("ddrmc", "ddr_sel", CCM_CCGR6, CCM_CCGRx_CGn(14), 0x2);
-+	clk[VF610_CLK_WKPU] = imx_clk_gate2_cgr("wkpu", "ipg_bus", CCM_CCGR4, CCM_CCGRx_CGn(10), 0x2);
- 
- 	clk[VF610_CLK_USBPHY0] = imx_clk_gate("usbphy0", "pll3_usb_otg", PLL3_CTRL, 6);
- 	clk[VF610_CLK_USBPHY1] = imx_clk_gate("usbphy1", "pll7_usb_host", PLL7_CTRL, 6);
-diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
-index cf2c00a..7dc1b84 100644
---- a/include/dt-bindings/clock/vf610-clock.h
-+++ b/include/dt-bindings/clock/vf610-clock.h
-@@ -196,6 +196,7 @@
- #define VF610_CLK_DAP			183
- #define VF610_CLK_OCOTP         184
- #define VF610_CLK_DDRMC			185
--#define VF610_CLK_END			186
-+#define VF610_CLK_WKPU			186
-+#define VF610_CLK_END			187
- 
- #endif /* __DT_BINDINGS_CLOCK_VF610_H */
+Thank you for the patch.
+
+On Wednesday 09 March 2016 20:18:36 Geert Uytterhoeven wrote:
+> The Renesas R-Car System Controller provides power management for the
+> CPU cores and various coprocessors, following the generic PM domain
+> bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> 
+> This supports R-Car Gen1 (H1), Gen2, and Gen3.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - Move power area hierarchy from DT to C (cfr. DT bindings for Renesas
+>     CPG/MSSR), and switch to "#power-domain-cells = <1>",
+>   - Drop fallback compatibility strings, as the bindings are
+>     SoC-specific,
+>   - Rename from renesas,sysc-rcar.txt to renesas,rcar-sysc.txt,
+> 
+> v2:
+>   - Add R-Car H3 (r8a7795) support,
+>   - Use "renesas,<type>-sysc" instead of "renesas,sysc-<type>",
+>   - Add fallback compatibility strings for R-Car Gen2 and Gen3.
+> ---
+>  .../bindings/power/renesas,rcar-sysc.txt           | 48 +++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+> b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt new file
+> mode 100644
+> index 0000000000000000..1765fd37c3658b60
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+> @@ -0,0 +1,48 @@
+> +DT bindings for the Renesas R-Car System Controller
+> +
+> +== System Controller Node ==
+> +
+> +The R-Car System Controller provides power management for the CPU cores and
+> +various coprocessors.
+> +
+> +Required properties:
+> +  - compatible: Must contain one or more of the following:
+
+I'd be curious to see a use case for specifying more than one ;-) I think you 
+can phrase it as "Must contain exactly one of the following".
+
+Apart from that,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +      - "renesas,r8a7779-sysc" (R-Car H1)
+> +      - "renesas,r8a7790-sysc" (R-Car H2)
+> +      - "renesas,r8a7791-sysc" (R-Car M2-W)
+> +      - "renesas,r8a7792-sysc" (R-Car V2H)
+> +      - "renesas,r8a7793-sysc" (R-Car M2-N)
+> +      - "renesas,r8a7794-sysc" (R-Car E2)
+> +      - "renesas,r8a7795-sysc" (R-Car H3)
+> +  - reg: Address start and address range for the device.
+> +  - #power-domain-cells: Must be 1.
+> +
+> +
+> +Example:
+> +
+> +	sysc: system-controller@e6180000 {
+> +		compatible = "renesas,r8a7791-sysc";
+> +		reg = <0 0xe6180000 0 0x0200>;
+> +		#power-domain-cells = <1>;
+> +	};
+> +
+> +
+> +== PM Domain Consumers ==
+> +
+> +Devices residing in a power area must refer to that power area, as
+> documented +by the generic PM domain bindings in
+> +Documentation/devicetree/bindings/power/power_domain.txt.
+> +
+> +Required properties:
+> +  - power-domains: A phandle and symbolic PM domain specifier, as defined
+> in
+> +		   <dt-bindings/power/r8a77*-sysc.h>.
+> +
+> +
+> +Example:
+> +
+> +	L2_CA15: cache-controller@0 {
+> +		compatible = "cache";
+> +		power-domains = <&sysc R8A7791_PD_CA15_SCU>;
+> +		cache-unified;
+> +		cache-level = <2>;
+> +	};
+
 -- 
-2.7.2
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
