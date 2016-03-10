@@ -1,47 +1,53 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/3] bindings: spi: Add devicetree binding for
- spi-xilinx
-Date: Thu, 10 Mar 2016 10:30:27 +0700
-Message-ID: <20160310033027.GJ3898@sirena.org.uk>
-References: <1457513242-11202-1-git-send-email-shubhraj@xilinx.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="sT9gWZPUZYhvPS56"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457513242-11202-1-git-send-email-shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH v4 0/4] Add more clock compatible features and support the RK3399 clock
+Date: Thu, 10 Mar 2016 11:46:58 +0800
+Message-ID: <1457581622-31192-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: heiko@sntech.de, huangtao@rock-chips.com, jay.xu@rock-chips.com, elaine.zhang@rock-chips.com, dianders@chromium.org, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---sT9gWZPUZYhvPS56
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi,
+  The patch series add support more mux parameters and multiple
+clock providers for the rockchip features of the clock framework,
+and support the clock controller for the RK3399.
 
-On Wed, Mar 09, 2016 at 02:17:20PM +0530, Shubhrajyoti Datta wrote:
-> Add a binding document for the spi/spi-xilinx
 
-Please use subject lines matching the style for the subsystem.
+Changes in v4:
+- fix some define errors due to careless
 
---sT9gWZPUZYhvPS56
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v3:
+- rename pclkin_cif to pclkin_cifmux, add diagram and comment for
+  pclkin_cifmux
+- add the clk_test node
+- modify the cif_testout path
+- include two new patches that dt-bindings and header file from
+  Jianqun's patch series
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes in v2:
+- rename the aplll/apllb to lpll/bpll
+- add drv/sample clock nodes for sdmmc/sdio
 
-iQEcBAEBCAAGBQJW4OpPAAoJECTWi3JdVIfQzncH/2bpTKVoKubrn+UYRWQfli/3
-ekqar8HtmXGUxsSiyLHMBKBv8kuw8mrL4zU5ndtUzO3tGotvF/hBemk0gSXiaKlD
-UYqUZRIcG2wAejHE3l/FUgeJV+403eriCTWdqD2biTQTJ2SzuVAFZgSpopXAUybl
-1t+XavDHbBcT694ael+T0RBBgsTvU2Rier4UY5rfwX/p2SSb4mV8I174B2KGrJGS
-/YLpMkybdGjN7vbjElVkTt10VpU98GtkIlvjR2p1GEKIMNqVpCrlYAkQZLP1Uq5I
-0ZB0d8C6m6P5y5LePbVzMgJ9bUubWffieamYMuC8dWcRinUoMqG5dLORtI1zVLU=
-=LnEf
------END PGP SIGNATURE-----
+Xing Zheng (4):
+  dt-bindings: add bindings for rk3399 clock controller
+  clk: rockchip: add dt-binding header for rk3399
+  clk: rockchip: add new pll-type for rk3399 and similar socs
+  clk: rockchip: add clock controller for the RK3399
 
---sT9gWZPUZYhvPS56--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/clock/rockchip,rk3399-cru.txt         |   82 +
+ drivers/clk/rockchip/Makefile                      |    1 +
+ drivers/clk/rockchip/clk-pll.c                     |  271 +++-
+ drivers/clk/rockchip/clk-rk3399.c                  | 1567 ++++++++++++++++++++
+ drivers/clk/rockchip/clk.h                         |   27 +-
+ include/dt-bindings/clock/rk3399-cru.h             |  720 +++++++++
+ 6 files changed, 2665 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 drivers/clk/rockchip/clk-rk3399.c
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
+
+-- 
+1.7.9.5
+
+
