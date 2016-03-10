@@ -1,115 +1,79 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 09/18] ARM: vf610: clk: add suspend/resume support
-Date: Wed,  9 Mar 2016 18:16:50 -0800
-Message-ID: <1457576219-7971-10-git-send-email-stefan@agner.ch>
+Subject: [PATCH 03/18] ARM: dts: vf610-colibri: GPIO wakeup key
+Date: Wed,  9 Mar 2016 18:16:44 -0800
+Message-ID: <1457576219-7971-4-git-send-email-stefan@agner.ch>
 References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, sergeimir@emcraft.com, kernel@pengutronix.de, galak@codeaurora.org, tglx@linutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The clock register are lost when enterying LPSTOPx, hence provide
-suspend/resume functions restoring them. The clock gates get
-restored by the individual driver, hence we do not need to restore
-them here.
+Enable GPIO wakeup key on Vybrid PAD 41 which is routed to the
+Colibri default wakeup pin SO-DIMM 45.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- drivers/clk/imx/clk-vf610.c | 49 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index 610a724..e2e2c43 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -10,6 +10,7 @@
+diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+index 4d8b7f6..936ece6 100644
+--- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+@@ -39,6 +39,8 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
  
- #include <linux/of_address.h>
- #include <linux/clk.h>
-+#include <linux/syscore_ops.h>
- #include <dt-bindings/clock/vf610-clock.h>
- 
- #include "clk.h"
-@@ -40,6 +41,7 @@
- #define CCM_CCGR9		(ccm_base + 0x64)
- #define CCM_CCGR10		(ccm_base + 0x68)
- #define CCM_CCGR11		(ccm_base + 0x6c)
-+#define CCM_CCGRx(x)		(CCM_CCGR0 + (x) * 4)
- #define CCM_CMEOR0		(ccm_base + 0x70)
- #define CCM_CMEOR1		(ccm_base + 0x74)
- #define CCM_CMEOR2		(ccm_base + 0x78)
-@@ -115,6 +117,13 @@ static struct clk_div_table pll4_audio_div_table[] = {
- static struct clk *clk[VF610_CLK_END];
- static struct clk_onecell_data clk_data;
- 
-+static u32 cscmr1;
-+static u32 cscmr2;
-+static u32 cscdr1;
-+static u32 cscdr2;
-+static u32 cscdr3;
-+static u32 ccgr[12];
++#include <dt-bindings/input/input.h>
 +
- static unsigned int const clks_init_on[] __initconst = {
- 	VF610_CLK_SYS_BUS,
- 	VF610_CLK_DDR_SEL,
-@@ -134,6 +143,43 @@ static struct clk * __init vf610_get_fixed_clock(
- 	return clk;
+ / {
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+@@ -74,6 +76,20 @@
+ 		gpio = <&gpio2 19 GPIO_ACTIVE_LOW>; /* USBH_PEN resp. USBH_P_EN */
+ 		vin-supply = <&reg_5v0>;
+ 	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpiokeys>;
++
++		power {
++			label = "Wake-Up";
++			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
++			linux,code = <KEY_WAKEUP>;
++			debounce-interval = <10>;
++			gpio-key,wakeup;
++		};
++	};
  };
  
-+static int vf610_clk_suspend(void)
-+{
-+	int i;
+ &bl {
+@@ -157,5 +173,11 @@
+ 				VF610_PAD_PTB21__GPIO_43	0x22ed
+ 			>;
+ 		};
 +
-+	cscmr1 = readl_relaxed(CCM_CSCMR1);
-+	cscmr2 = readl_relaxed(CCM_CSCMR2);
-+
-+	cscdr1 = readl_relaxed(CCM_CSCDR1);
-+	cscdr2 = readl_relaxed(CCM_CSCDR2);
-+	cscdr3 = readl_relaxed(CCM_CSCDR3);
-+
-+	for (i = 0; i < 12; i++)
-+		ccgr[i] = readl_relaxed(CCM_CCGRx(i));
-+
-+	return 0;
-+}
-+
-+static void vf610_clk_resume(void)
-+{
-+	int i;
-+
-+	writel_relaxed(cscmr1, CCM_CSCMR1);
-+	writel_relaxed(cscmr2, CCM_CSCMR2);
-+
-+	writel_relaxed(cscdr1, CCM_CSCDR1);
-+	writel_relaxed(cscdr2, CCM_CSCDR2);
-+	writel_relaxed(cscdr3, CCM_CSCDR3);
-+
-+	for (i = 0; i < 12; i++)
-+		writel_relaxed(ccgr[i], CCM_CCGRx(i));
-+}
-+
-+static struct syscore_ops vf610_clk_syscore_ops = {
-+	.suspend = vf610_clk_suspend,
-+	.resume = vf610_clk_resume,
-+};
-+
- static void __init vf610_clocks_init(struct device_node *ccm_node)
- {
- 	struct device_node *np;
-@@ -414,9 +460,12 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
- 	for (i = 0; i < ARRAY_SIZE(clks_init_on); i++)
- 		clk_prepare_enable(clk[clks_init_on[i]]);
- 
-+	register_syscore_ops(&vf610_clk_syscore_ops);
-+
- 	/* Add the clocks to provider list */
- 	clk_data.clks = clk;
- 	clk_data.clk_num = ARRAY_SIZE(clk);
- 	of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data);
- }
- CLK_OF_DECLARE(vf610, "fsl,vf610-ccm", vf610_clocks_init);
-+
++		pinctrl_gpiokeys: gpiokeys {
++			fsl,pins = <
++				VF610_PAD_PTB19__GPIO_41	0x218d
++			>;
++		};
+ 	};
+ };
 -- 
 2.7.2
