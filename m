@@ -1,92 +1,121 @@
-From: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
-Subject: [PATCH] dt: bindings: add new dt entry for pre calibration in qcom,ath10k.txt
-Date: Thu, 10 Mar 2016 15:42:04 +0530
-Message-ID: <1457604724-14378-1-git-send-email-rmani@qti.qualcomm.com>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCH 4/5] gpio: of: Add support to have multiple gpios in gpio-hog
+Date: Thu, 10 Mar 2016 12:16:58 +0100
+Message-ID: <2337414.ntEtcfKnX0@hermes>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <56E05AA9.8000503@wwwdotorg.org> <56E11D34.60401@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56E11D34.60401@nvidia.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-There two things done in this patch,
+On Thursday 10 March 2016 12:37:32 Laxman Dewangan wrote:
+> 
+> On Wednesday 09 March 2016 10:47 PM, Stephen Warren wrote:
+> > On 03/09/2016 06:20 AM, Laxman Dewangan wrote:
+> >>
+> >> On Wednesday 09 March 2016 11:58 AM, Markus Pargmann wrote:
+> >>> * PGP Signed by an unknown key
+> >>>
+> >>> Hi,
+> >>>
+> >>> On Tue, Mar 08, 2016 at 05:32:07PM +0530, Laxman Dewangan wrote:
+> >>>> The child node for gpio hogs under gpio controller's node
+> >>>> provide the mechanism to automatic GPIO request and
+> >>>> configuration as part of the gpio-controller's driver
+> >>>> probe function.
+> >>>>
+> >>>> Currently, property "gpio" takes one gpios for such
+> >>>> configuration. Add support to have multiple GPIOs in
+> >>>> this property so that multiple GPIOs of gpio-controller
+> >>>> can be configured by this mechanism with one child node.
+> >>> So if I read this correctly you want to have multiple GPIOs with the
+> >>> same line name? Why don't you use multiple child nodes with individual
+> >>> line names?
+> >>>
+> >> There is cases on which particular functional configuration needs sets
+> >> of GPIO to set. On this case, making sub node for each GPIOs creates
+> >> lots of sub-nodes and  add complexity on readability, usability and
+> >> maintainability.
+> >> Example: for my board, I wanted to set GPIO H2 to input and H0 and H1 to
+> >> be output high.
+> >> Instead of three nodes, I can have two here:
+> >>         gpio@0,6000d000 {
+> >>                 wlan_input {
+> >>                         gpio-hog;
+> >>                         gpios = <TEGRA_GPIO(H, 2) 0>;
+> >>                         input;
+> >>                 };
+> >>
+> >>                 wlan_output {
+> >>                         gpio-hog;
+> >>                         gpios = <TEGRA_GPIO(H, 0) 0 TEGRA_GPIO(H, 1) 0>;
+> >>                         output-high;
+> >>                 };
+> >>         };
+> > >
+> >> So here I am grouping the multiple output GPIO together.
+> >>
+> >> This looks much similar if we have many GPIOs for one type of
+> >> configurations.
+> >>
+> >> Even it looks better if we have something:
+> >>         gpio@0,6000d000 {
+> >>                 wlan_control {
+> >>                         gpio-hog;
+> >>                         gpios-input = <TEGRA_GPIO(H, 2) 0>;
+> >>                         gpios-output-high = <TEGRA_GPIO(H, 0) 0
+> >> TEGRA_GPIO(H, 1) 0>;
+> >>                 };
+> >>         };
+> >
+> > The problem with that is the description used when acquiring the GPIO 
+> > is just "wlan_input", "wlan_output", or "wlan_control". There's 
+> > nothing to indicate what those individual pins do (perhaps one is a 
+> > reset signal, one is a regulator enable, etc.?) By requiring separate 
+> > nodes for each GPIO, then the node name can provide a meaningful 
+> > semantic name/description for each GPIO, which provides much more 
+> > information.
+> >
+> 
+> On this case, we have already property "line-name" and passed the name 
+> of the gpio via this property.
+> The property names is "line-name" which is good for one string. We can 
+> support other property "line-names" with multiple string per GPIO index.
+> 
+> line-names = "wlan-reset", "wlan-enable";
 
-1) Existing device tree entry 'qcom,ath10k-calibration-data' carries
-   not only calibration data, it carries board specific data too.
-   So, make appropriate update in doc.
+There is currently a discussion about the future bindings for subnodes in GPIO
+controller nodes. Please have a look at these two mail threads:
 
-2) ipq4019 wifi needs new devie tree entry to carry calibration
-   data alone (called pre cal data, it doesn't include any other info).
-   Using 'qcom,ath10k-calibration-data' for ipq4019 would alter
-   the purpose of it. Hence, add new device tree entry called
-   'qcom,ath10k-pre-calibration-data' to carry only pre calibration data.
+	"Device tree binding documentation for gpio-switch"
+	"gpio: of: Add support to have multiple gpios in gpio-hog"
 
-Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
----
+Best Regards,
 
-Below patches covers the corresponding changes in the ath10k driver.
-It's posted separately to ath10k and linux-wireless mailing list.
+Markus
 
-  1) ath10k: pass cal data location as an argument to ath10k_download_cal_{file|dt}
-  2) ath10k: move cal data len to hw_params
-  3) ath10k: incorporate qca4019 cal data download sequence
+> 
+> 
+> > If the approach in this patch is acceptable though, I think you want 
+> > to update the description of "gpios" (in the GPIO hog definition 
+> > section) in Documentation/devicetree/bindings/gpio/gpio.txt to mention 
+> > that multiple GPIO entries are legal. Right now it says that property 
+> > much contain exactly #gpio-cells, not a multiple of #gpio-cells.
+> 
+> I have 5th patch for this and will rearrange series as you suggested on 
+> 5th patch.
+> 
+> 
+> 
 
- .../bindings/net/wireless/qcom,ath10k.txt          | 23 +++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index 96aae6b..74d7f0a 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -5,12 +5,18 @@ Required properties:
- 	* "qcom,ath10k"
- 	* "qcom,ipq4019-wifi"
- 
--PCI based devices uses compatible string "qcom,ath10k" and takes only
--calibration data via "qcom,ath10k-calibration-data". Rest of the properties
--are not applicable for PCI based devices.
-+PCI based devices uses compatible string "qcom,ath10k" and takes calibration
-+data along with board specific data via "qcom,ath10k-calibration-data".
-+Rest of the properties are not applicable for PCI based devices.
- 
- AHB based devices (i.e. ipq4019) uses compatible string "qcom,ipq4019-wifi"
--and also uses most of the properties defined in this doc.
-+and also uses most of the properties defined in this doc (except
-+"qcom,ath10k-calibration-data"). It uses "qcom,ath10k-pre-calibration-data"
-+to carry pre calibration data.
-+
-+In general, entry "qcom,ath10k-pre-calibration-data" and
-+"qcom,ath10k-calibration-data" conflict with each other and only one
-+can be provided per device.
- 
- Optional properties:
- - reg: Address and length of the register set for the device.
-@@ -35,8 +41,11 @@ Optional properties:
- - qcom,msi_addr: MSI interrupt address.
- - qcom,msi_base: Base value to add before writing MSI data into
- 		MSI address register.
--- qcom,ath10k-calibration-data : calibration data as an array, the
--				 length can vary between hw versions
-+- qcom,ath10k-calibration-data : calibration data + board specific data
-+				 as an array, the length can vary between
-+				 hw versions.
-+- qcom,ath10k-pre-calibration-data : pre calibration data as an array,
-+				     the length can vary between hw versions.
- 
- Example (to supply the calibration data alone):
- 
-@@ -105,5 +114,5 @@ wifi0: wifi@a000000 {
- 			  "legacy";
- 	qcom,msi_addr = <0x0b006040>;
- 	qcom,msi_base = <0x40>;
--	qcom,ath10k-calibration-data = [ 01 02 03 ... ];
-+	qcom,ath10k-pre-calibration-data = [ 01 02 03 ... ];
- };
 -- 
-1.8.1.2
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
