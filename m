@@ -1,41 +1,91 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 29/30] ARM: dts: r8a7794: Reference both DMA controllers
- in SDHI nodes
-Date: Thu, 10 Mar 2016 13:09:41 +0100
-Message-ID: <CAMuHMdVEQZXc=nqn7w5YbNOWGX8XevSLm0pRbQ5HF5a+dPqYRQ@mail.gmail.com>
-References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-	<1457609782-24108-30-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv3 1/2] spi/spi-xilinx:  Add clock support
+Date: Thu, 10 Mar 2016 17:41:04 +0530
+Message-ID: <1457611865-40120-1-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1457609782-24108-30-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 10, 2016 at 12:36 PM, Niklas S=C3=B6derlund
-<niklas.soderlund+renesas@ragnatech.se> wrote:
-> R-Car Gen2 have two DMA controllers, which are equivalent. Add
-> references to both dmac0 and dmac1 so the driver can fallback to the
-> later if the first one is unavailable.
->
-> Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
-ech.se>
+Add basic clock support. The clocks are requested at probe
+and released at remove.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+---
+v3 changes:
+Do not fail probe if no clock is given
+Add a clk name
+Fix some space errors
 
-Gr{oetje,eeting}s,
+ drivers/spi/spi-xilinx.c |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
 
-                        Geert
+diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
+index 3009121..426ce12 100644
+--- a/drivers/spi/spi-xilinx.c
++++ b/drivers/spi/spi-xilinx.c
+@@ -21,6 +21,7 @@
+ #include <linux/spi/spi_bitbang.h>
+ #include <linux/spi/xilinx_spi.h>
+ #include <linux/io.h>
++#include <linux/clk.h>
+ 
+ #define XILINX_SPI_MAX_CS	32
+ 
+@@ -83,6 +84,7 @@ struct xilinx_spi {
+ 	struct spi_bitbang bitbang;
+ 	struct completion done;
+ 	void __iomem	*regs;	/* virt. address of the control registers */
++	struct clk *clk;
+ 
+ 	int		irq;
+ 
+@@ -428,6 +430,22 @@ static int xilinx_spi_probe(struct platform_device *pdev)
+ 		goto put_master;
+ 	}
+ 
++	xspi->clk = devm_clk_get(&pdev->dev, "spi_fclk");
++	if (IS_ERR(xspi->clk)) {
++		if (PTR_ERR(xspi->clk) == -ENOENT) {
++			xspi->clk = NULL;
++		} else {
++			ret = PTR_ERR(xspi->clk);
++			goto put_master;
++		}
++	}
++
++	ret = clk_prepare_enable(xspi->clk);
++	if (ret) {
++		dev_err(&pdev->dev, "Unable to enable clock.\n");
++		goto put_master;
++	}
++
+ 	master->bus_num = pdev->id;
+ 	master->num_chipselect = num_cs;
+ 	master->dev.of_node = pdev->dev.of_node;
+@@ -485,6 +503,7 @@ static int xilinx_spi_probe(struct platform_device *pdev)
+ 
+ put_master:
+ 	spi_master_put(master);
++	clk_disable_unprepare(xspi->clk);
+ 
+ 	return ret;
+ }
+@@ -503,6 +522,7 @@ static int xilinx_spi_remove(struct platform_device *pdev)
+ 	xspi->write_fn(0, regs_base + XIPIF_V123B_DGIER_OFFSET);
+ 
+ 	spi_master_put(xspi->bitbang.master);
++	clk_disable_unprepare(xspi->clk);
+ 
+ 	return 0;
+ }
+-- 
+1.7.1
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
-
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
