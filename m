@@ -1,69 +1,67 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v3 1/6] memory: omap-gpmc: Store handle to GPMC dev
-Date: Thu, 10 Mar 2016 07:40:02 -0600
-Message-ID: <56E17932.6090304@ti.com>
-References: <1457582861-20619-1-git-send-email-fcooper@ti.com>
- <1457582861-20619-2-git-send-email-fcooper@ti.com> <56E16B20.5070001@ti.com>
+From: "Niklas =?iso-8859-1?Q?S=F6derlund?=" <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH 30/30] ARM: dts: r8a7794: Reference both DMA controllers
+ in QSPI node
+Date: Thu, 10 Mar 2016 14:42:43 +0100
+Message-ID: <20160310134243.GA24099@bigcity.dyn.berto.se>
+References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+ <1457609782-24108-31-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+ <CAMuHMdW_nMfWF-sQPFgtxmtA_1vxw_hFPsb1DkRp7TJtKrB2ig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56E16B20.5070001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, nsekhar@ti.com, dwmw2@infradead.org, computersforpeace@gmail.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW_nMfWF-sQPFgtxmtA_1vxw_hFPsb1DkRp7TJtKrB2ig@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2016-03-10 13:08:56 +0100, Geert Uytterhoeven wrote:
+> Hi Niklas,
+>=20
+> On Thu, Mar 10, 2016 at 12:36 PM, Niklas S=F6derlund
+> <niklas.soderlund+renesas@ragnatech.se> wrote:
+> > R-Car Gen2 have two DMA controllers, which are equivalent. Add
+> > references to both dmac0 and dmac1 so the driver can fallback to th=
+e
+> > later if the first one is unavailable.
+> >
+> > Signed-off-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnate=
+ch.se>
+> > ---
+> >  arch/arm/boot/dts/r8a7794.dtsi | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a=
+7794.dtsi
+> > index 76709ff..e098eab 100644
+> > --- a/arch/arm/boot/dts/r8a7794.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7794.dtsi
+> > @@ -605,8 +605,9 @@
+> >                 reg =3D <0 0xee200000 0 0x80>;
+> >                 interrupts =3D <0 169 IRQ_TYPE_LEVEL_HIGH>;
+> >                 clocks =3D <&mstp3_clks R8A7794_CLK_MMCIF0>;
+>=20
+> This one has the wrong subject: QSPI vs. MMCIF.
 
+Thanks for noticing, would have been embarrassing for me.
 
-On 03/10/2016 06:40 AM, Roger Quadros wrote:
-> Franklin,
->
-> On 10/03/16 06:07, Franklin S Cooper Jr wrote:
->> The dma channel information is located within the GPMC node. The NAND
->> driver requires a handle to the GPMC's dev to properly parse the DMA
->> properties. Therefore, store a handle to the dev so it can be referenced
->> within the NAND driver.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->>  drivers/memory/omap-gpmc.c                   | 1 +
->>  include/linux/platform_data/mtd-nand-omap2.h | 2 ++
->>  2 files changed, 3 insertions(+)
->>
->> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
->> index 6515dfc..2932d13 100644
->> --- a/drivers/memory/omap-gpmc.c
->> +++ b/drivers/memory/omap-gpmc.c
->> @@ -1796,6 +1796,7 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->>  
->>  	gpmc_nand_data->cs = val;
->>  	gpmc_nand_data->of_node = child;
->> +	gpmc_nand_data->gpmc_dev = &pdev->dev;
->>  
->>  	/* Detect availability of ELM module */
->>  	gpmc_nand_data->elm_of_node = of_parse_phandle(child, "ti,elm-id", 0);
->> diff --git a/include/linux/platform_data/mtd-nand-omap2.h b/include/linux/platform_data/mtd-nand-omap2.h
->> index 090bbab..534b984 100644
->> --- a/include/linux/platform_data/mtd-nand-omap2.h
->> +++ b/include/linux/platform_data/mtd-nand-omap2.h
->> @@ -80,5 +80,7 @@ struct omap_nand_platform_data {
->>  	/* for passing the partitions */
->>  	struct device_node	*of_node;
->>  	struct device_node	*elm_of_node;
->> +
->> +	struct device		*gpmc_dev;
->>  };
->>  #endif
->>
-> Why do you need this? Can't we just use dev->parent in the omap2-nand driver?
+>=20
+> Gr{oetje,eeting}s,
+>=20
+>                         Geert
+>=20
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linu=
+x-m68k.org
+>=20
+> In personal conversations with technical people, I call myself a hack=
+er. But
+> when I'm talking to journalists I just say "programmer" or something =
+like that.
+>                                 -- Linus Torvalds
 
-The omap2-nand platform_device is created by
-platform_device_alloc. The created platform_device dev
-parent isn't by default set to the GPMC dev. I didn't think
-this was the right approach to manually set the parent
-property. However, taking a look at other usages of
-platform_device_alloc it seems this is actually pretty
-common. If your ok with this then I can go that route.
->
-> cheers,
-> -roger
+--=20
+Regards,
+Niklas S=F6derlund
