@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCH 17/30] ARM: dts: r8a7791: Reference both DMA controllers in SDHI nodes
-Date: Thu, 10 Mar 2016 12:36:09 +0100
-Message-ID: <1457609782-24108-18-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCH 19/30] ARM: dts: r8a7793: Reference both DMA controllers in SCIFA nodes
+Date: Thu, 10 Mar 2016 12:36:11 +0100
+Message-ID: <1457609782-24108-20-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -21,46 +21,82 @@ later if the first one is unavailable.
 Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/r8a7793.dtsi | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791=
+diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793=
 =2Edtsi
-index 30b78a3..2eb8850 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -538,8 +538,9 @@
- 		reg =3D <0 0xee100000 0 0x328>;
- 		interrupts =3D <0 165 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI0>;
--		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>;
+index aef9e69..322d290 100644
+--- a/arch/arm/boot/dts/r8a7793.dtsi
++++ b/arch/arm/boot/dts/r8a7793.dtsi
+@@ -303,8 +303,9 @@
+ 		interrupts =3D <0 144 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp2_clks R8A7793_CLK_SCIFA0>;
+ 		clock-names =3D "sci_ick";
+-		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>,
-+		       <&dmac0 0xcd>, <&dmac0 0xce>;
++		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>,
++		       <&dmac1 0x21>, <&dmac1 0x22>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -549,8 +550,9 @@
- 		reg =3D <0 0xee140000 0 0x100>;
- 		interrupts =3D <0 167 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI1>;
--		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>;
+@@ -315,8 +316,9 @@
+ 		interrupts =3D <0 145 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp2_clks R8A7793_CLK_SCIFA1>;
+ 		clock-names =3D "sci_ick";
+-		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>,
-+		       <&dmac0 0xc1>, <&dmac0 0xc2>;
++		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>,
++		       <&dmac1 0x25>, <&dmac1 0x26>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -560,8 +562,9 @@
- 		reg =3D <0 0xee160000 0 0x100>;
- 		interrupts =3D <0 168 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI2>;
--		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>;
+@@ -327,8 +329,9 @@
+ 		interrupts =3D <0 151 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp2_clks R8A7793_CLK_SCIFA2>;
+ 		clock-names =3D "sci_ick";
+-		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>,
-+		       <&dmac0 0xd3>, <&dmac0 0xd4>;
++		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>,
++		       <&dmac1 0x27>, <&dmac1 0x28>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -339,8 +342,9 @@
+ 		interrupts =3D <0 29 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp11_clks R8A7793_CLK_SCIFA3>;
+ 		clock-names =3D "sci_ick";
+-		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>,
++		       <&dmac1 0x1b>, <&dmac1 0x1c>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -351,8 +355,9 @@
+ 		interrupts =3D <0 30 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp11_clks R8A7793_CLK_SCIFA4>;
+ 		clock-names =3D "sci_ick";
+-		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>,
++		       <&dmac1 0x1f>, <&dmac1 0x20>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -363,8 +368,9 @@
+ 		interrupts =3D <0 31 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp11_clks R8A7793_CLK_SCIFA5>;
+ 		clock-names =3D "sci_ick";
+-		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>,
++		       <&dmac1 0x23>, <&dmac1 0x24>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
