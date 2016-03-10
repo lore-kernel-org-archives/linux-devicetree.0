@@ -1,71 +1,73 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 1/6] ALSA: pcm: add IEC958 channel status helper for
- hw_params
-Date: Thu, 10 Mar 2016 12:24:07 +0700
-Message-ID: <20160310052407.GL3898@sirena.org.uk>
-References: <cover.1457465383.git.jsarha@ti.com>
- <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 2/7] soc: renesas: Add r8a7779 SYSC PM Domain Binding Definitions
+Date: Thu, 10 Mar 2016 04:40:59 +0200
+Message-ID: <3847967.WBShi7eqzc@avalon>
+References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be> <1457551122-21838-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1410407889=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <3d9fbdac702b93742841221e3e8d2468a3d18f12.1457465383.git.jsarha@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jyri Sarha <jsarha@ti.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1457551122-21838-3-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
---===============1410407889==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oOpJzULQ70+PGW7h"
-Content-Disposition: inline
+Thank you for the patch.
 
+On Wednesday 09 March 2016 20:18:37 Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - New.
+> ---
+>  include/dt-bindings/power/r8a7779-sysc.h | 25 +++++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 include/dt-bindings/power/r8a7779-sysc.h
+> 
+> diff --git a/include/dt-bindings/power/r8a7779-sysc.h
+> b/include/dt-bindings/power/r8a7779-sysc.h new file mode 100644
+> index 0000000000000000..6b66612d1260d396
+> --- /dev/null
+> +++ b/include/dt-bindings/power/r8a7779-sysc.h
+> @@ -0,0 +1,25 @@
+> +/*
+> + * Copyright (C) 2016 Glider bvba
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + */
+> +#ifndef __DT_BINDINGS_POWER_R8A7779_SYSC_H__
+> +#define __DT_BINDINGS_POWER_R8A7779_SYSC_H__
+> +
+> +/*
+> + * These power domain indices match the numbers of the interrupt bits
+> + * representing the power areas in the various Interrupt Registers
+> + * (e.g. SYSCISR, Interrupt Status Register)
+> + */
+> +
+> +#define R8A7779_PD_ARM1			 1
+> +#define R8A7779_PD_ARM2			 2
+> +#define R8A7779_PD_ARM3			 3
+> +#define R8A7779_PD_SH			16
 
---oOpJzULQ70+PGW7h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't see this power domain in version 0.6 of the datasheet, you might have 
+a more recent version than I do.
 
-On Tue, Mar 08, 2016 at 10:14:25PM +0200, Jyri Sarha wrote:
-> Add IEC958 channel status helper that gets the audio properties from
-> snd_pcm_hw_params instead of snd_pcm_runtime. This is needed to
-> produce the channel status bits already in audio stream configuration
-> phase.
+Apart from that,
 
-Takashi, are you OK with this one?
+Reveiwed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
---oOpJzULQ70+PGW7h
-Content-Type: application/pgp-signature; name="signature.asc"
+> +#define R8A7779_PD_SGX			20
+> +#define R8A7779_PD_VDP			21
+> +#define R8A7779_PD_IMP			24
+> +
+> +#endif /* __DT_BINDINGS_POWER_R8A7779_SYSC_H__ */
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+-- 
+Regards,
 
-iQEcBAEBCAAGBQJW4QTxAAoJECTWi3JdVIfQLWAH/2FZ08qtvMqhvuRBc2aFaq2v
-K6QQXxBCw4Ipy0ZshaZoADsM9dieZVeMppUyG6jm2/gt4e9zlqcQ8f2mseuB2XwV
-BTaiAgm8SCi/T1W70tIQ5ZyCEZu6lhHoOIB8XAskN/qJxd1tSdf3BqEdYfoaFMX2
-aMp+BigFdRHYRh1M62b8FDR5SUSCZ1J9tN77X2s9dWgFaUNoXRsJcGPr8E8OegTu
-qUgBcO9ZAZh9Rsx3+tp0w9vX++XAbniIW3Zxl7A+BnvowOMsj1kZcCZuLeRNeFPI
-aBuOG71ffyDHcy1y/6FWqTV2me2jl8utjAywldZflshtCNwKW2gIvOtvaUqLiUw=
-=8RvK
------END PGP SIGNATURE-----
-
---oOpJzULQ70+PGW7h--
-
---===============1410407889==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1410407889==--
+Laurent Pinchart
