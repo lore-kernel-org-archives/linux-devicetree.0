@@ -1,64 +1,52 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCHv2 2/3] spi/spi-xilinx:  Add clock support
-Date: Thu, 10 Mar 2016 11:20:53 +0000
-Message-ID: <4EED9C67BE3EF440A606099F8E34C5282652F809@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1457513242-11202-1-git-send-email-shubhraj@xilinx.com>
- <1457513242-11202-2-git-send-email-shubhraj@xilinx.com>
- <20160310032948.GI3898@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160310032948.GI3898-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 5/5] dt/bindings: sound: new chip added into TAS571x binding
+Date: Thu, 10 Mar 2016 12:25:00 +0100
+Message-ID: <1457609100-17164-1-git-send-email-petr@barix.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This adds the TAS5721 into the TAS571x binding.
 
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/tas571x.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> -----Original Message-----
-> From: Mark Brown [mailto:broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Thursday, March 10, 2016 9:00 AM
-> To: Shubhrajyoti Datta
-> Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Soren Brinkmann;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Michal Simek; Shubhrajyoti Datta
-> Subject: Re: [PATCHv2 2/3] spi/spi-xilinx: Add clock support
-> 
-> On Wed, Mar 09, 2016 at 02:17:21PM +0530, Shubhrajyoti Datta wrote:
-> 
-> > +       xspi->clk = devm_clk_get(&pdev->dev, NULL);
-> > +       if (IS_ERR(xspi->clk)) {
-> 
-> As someone pointed out on the previous version of the series this will cause
-> the driver to fail to probe with existing DTs.  We probably need to explicitly
-> handle a -ENOENT as a "this clock will never appear" or something.
-I got comments after I sent the v2.
-I will update it with Lars comments.
-> 
-> This also requests a single nameless clock but someone pointed out on the
-> previous version there are multiple clocks into the IP.  Even if you only want
-> to add one clock right now the clock should probably be named so we can
-> scale up
+diff --git a/Documentation/devicetree/bindings/sound/tas571x.txt b/Documentation/devicetree/bindings/sound/tas571x.txt
+index 0ac31d8..f1aade3 100644
+--- a/Documentation/devicetree/bindings/sound/tas571x.txt
++++ b/Documentation/devicetree/bindings/sound/tas571x.txt
+@@ -1,4 +1,4 @@
+-Texas Instruments TAS5711/TAS5717/TAS5719 stereo power amplifiers
++Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 stereo power amplifiers
+ 
+ The codec is controlled through an I2C interface.  It also has two other
+ signals that can be wired up to GPIOs: reset (strongly recommended), and
+@@ -6,7 +6,7 @@ powerdown (optional).
+ 
+ Required properties:
+ 
+-- compatible: "ti,tas5711", "ti,tas5717", or "ti,tas5719"
++- compatible: "ti,tas5711", "ti,tas5717", or "ti,tas5719", "ti,tas5721"
+ - reg: The I2C address of the device
+ - #sound-dai-cells: must be equal to 0
+ 
+@@ -25,6 +25,8 @@ Optional properties:
+ - PVDD_B-supply: regulator phandle for the PVDD_B supply (5711)
+ - PVDD_C-supply: regulator phandle for the PVDD_C supply (5711)
+ - PVDD_D-supply: regulator phandle for the PVDD_D supply (5711)
++- DRVDD-supply: regulator phandle for the DRVDD supply (5721)
++- PVDD-supply: regulator phandle for the PVDD supply (5721)
+ 
+ Example:
+ 
+-- 
+1.9.1
 
-I will add a name.
-.
-> 
-> > +	}
-> > +	ret = clk_prepare_enable(xspi->clk);
-> 
-> Missing blank line here.
-Will fix in next version
-> 
-> > +	if (ret)
-> > +		dev_err(&pdev->dev, "Unable to enable clock.\n");
-> > +
-> 
-> This isn't really checking the return code - if we failed to enable the clock we
-> should be failing the probe, not just carrying on.
-Will fix.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
