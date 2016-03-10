@@ -1,54 +1,61 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3 2/2] bindings: spi: Add clock entries for spi-xilinx
-Date: Thu, 10 Mar 2016 17:41:05 +0530
-Message-ID: <1457611865-40120-2-git-send-email-shubhraj@xilinx.com>
-References: <1457611865-40120-1-git-send-email-shubhraj@xilinx.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 00/30] ARM: dts: r8a779[0-4]: Reference both DMA controllers
+Date: Thu, 10 Mar 2016 13:20:56 +0100
+Message-ID: <CAMuHMdXF4FMLg=Y_cZ2chjzGWAV90N=vLsCkPKGmmYx5mFY64Q@mail.gmail.com>
+References: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457611865-40120-1-git-send-email-shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1457609782-24108-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add clock description for spi-xilinx
+Hi Niklas,
 
-Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-v3
-Add a clock name
+On Thu, Mar 10, 2016 at 12:35 PM, Niklas S=C3=B6derlund
+<niklas.soderlund+renesas@ragnatech.se> wrote:
+> R-Car Gen2 have two DMA controllers, which are equivalent. However DM=
+A
+> slaves were tied only to a single DMA controller in .dtsi. This serie=
+s
+> add references to to both DMA controllers for all nodes that previous=
+ly
+> only referenced one of them. It also adds dma references to the SDHI
+> nodes for r8a7794 which according to the datasheet should work but I
+> have not access to HW to verify.
+>
+> Tested on Koelsch (r8a7791) by altering the compatible value of eithe=
+r
+> dmac0 or dmac1 and verifying that the DMA slaves pick the DMA control=
+ler
+> that is instantiated.
 
- .../devicetree/bindings/spi/spi-xilinx.txt         |    5 +++++
- 1 files changed, 5 insertions(+), 0 deletions(-)
+Thanks for your series!
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-index c7b7856..71bd464 100644
---- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
-@@ -7,6 +7,9 @@ Required properties:
- - interrupts		: Property with a value describing the interrupt
- 			  number.
- - interrupt-parent	: Must be core interrupt controller
-+- clocks: Input clock specifier. Refer to common clock bindings.
-+- clock-names: tuple listing input clock names.
-+	Required elements: "spi_fclk"
- 
- Optional properties:
- - xlnx,num-ss-bits	: Number of chip selects used.
-@@ -14,6 +17,8 @@ Optional properties:
- Example:
- 	axi_quad_spi@41e00000 {
- 			compatible = "xlnx,xps-spi-2.00.a";
-+			clocks = <&clkc 15>;
-+			clock-names = "spi_fclk";
- 			interrupt-parent = <&intc>;
- 			interrupts = <0 31 1>;
- 			reg = <0x41e00000 0x10000>;
--- 
-1.7.1
+If you fix the subject of patch 30:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+I guess this is against v4.5-rc7? It doesn't apply against
+renesas-devel-20160308-v4.5-rc7.
+Unfortunately you'll have to rebase against Simon's tree, and add scif2
+on r8a7790, and i2c[6-8] on r8a7793.
+
+Hint for the other reviewers: use the --color-words option of git diff/=
+show.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
+m68k.org
+
+In personal conversations with technical people, I call myself a hacker=
+=2E But
+when I'm talking to journalists I just say "programmer" or something li=
+ke that.
+                                -- Linus Torvalds
