@@ -1,74 +1,46 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 05/18] ARM: dts: vf610: add modules required for PM
-Date: Wed,  9 Mar 2016 18:16:46 -0800
-Message-ID: <1457576219-7971-6-git-send-email-stefan@agner.ch>
+Subject: [PATCH 18/18] ARM: vf610: PM: enable SNVS access
+Date: Wed,  9 Mar 2016 18:16:59 -0800
+Message-ID: <1457576219-7971-19-git-send-email-stefan@agner.ch>
 References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, sergeimir@emcraft.com, kernel@pengutronix.de, galak@codeaurora.org, tglx@linutronix.de, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
+
+Restore access to SNVS which seems to be done by the boot ROM
+on normal boot. This is required for RTC wakeup not ending up
+in a interrupt storm, since the SNVS RTC driver can not
+acknowledge the wakeup alarm without write access.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/vfxxx.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ arch/arm/mach-imx/suspend-vf610.S | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-index b038ea4..335f4e5 100644
---- a/arch/arm/boot/dts/vfxxx.dtsi
-+++ b/arch/arm/boot/dts/vfxxx.dtsi
-@@ -434,6 +434,11 @@
- 				reg = <0x40050000 0x400>;
- 			};
+diff --git a/arch/arm/mach-imx/suspend-vf610.S b/arch/arm/mach-imx/suspend-vf610.S
+index 09ad246..6df0622 100644
+--- a/arch/arm/mach-imx/suspend-vf610.S
++++ b/arch/arm/mach-imx/suspend-vf610.S
+@@ -429,6 +429,17 @@ ddrmc_initializing:
+ 	ldr	r5, =0x0
+ 	str	r5, [r11, #VF610_GPC_LPMR]
  
-+			scsc: scsc@40052000 {
-+				compatible = "fsl,vf610-scsc";
-+				reg = <0x40052000 0x1000>;
-+			};
++	/* Enable SNVS */
++	ldr	r3, [r0, #PM_INFO_VF610_CCM_P_OFFSET]
++	ldr	r4, [r3, #VF610_CCM_CCGR6]
++	orr	r4, r4, #0x0000C000
++	str	r4, [r3, #VF610_CCM_CCGR6]
 +
- 			usbphy0: usbphy@40050800 {
- 				compatible = "fsl,vf610-usbphy";
- 				reg = <0x40050800 0x400>;
-@@ -480,6 +485,13 @@
- 				status = "disabled";
- 			};
++	/* Enable SNVS access (RTC) */
++	ldr	r11, =0x400a7000
++	ldr	r4, =0x80000100
++	str	r4, [r11, #0x4]
++
+ 	/* get physical resume address from pm_info. */
+ 	ldr	lr, [r0, #PM_INFO_RESUME_ADDR_OFFSET]
  
-+			wakeup: wkpu@4006a000 {
-+				compatible = "fsl,vf610-wkpu";
-+				reg = <0x4006a000 0x1000>;
-+				interrupts = <92 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&clks VF610_CLK_WKPU>;
-+			};
-+
- 			clks: ccm@4006b000 {
- 				compatible = "fsl,vf610-ccm";
- 				reg = <0x4006b000 0x1000>;
-@@ -600,6 +612,13 @@
- 				status = "disabled";
- 			};
- 
-+			ddrmc: ddrmc@400ae000 {
-+				compatible = "fsl,vf610-ddrmc";
-+				reg = <0x400ae000 0x400>;
-+				clocks = <&clks VF610_CLK_DDRMC>;
-+				clock-names = "ddrc";
-+			};
-+
- 			adc1: adc@400bb000 {
- 				compatible = "fsl,vf610-adc";
- 				reg = <0x400bb000 0x1000>;
 -- 
 2.7.2
