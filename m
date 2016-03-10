@@ -1,7 +1,7 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: [PATCH v2 2/2] reset: add a SYSCON based reset driver
-Date: Thu, 10 Mar 2016 15:46:05 -0600
-Message-ID: <1457646365-1723-3-git-send-email-afd@ti.com>
+Subject: [PATCH v2 1/2] Documentation: dt: reset: Add syscon reset binding
+Date: Thu, 10 Mar 2016 15:46:04 -0600
+Message-ID: <1457646365-1723-2-git-send-email-afd@ti.com>
 References: <1457646365-1723-1-git-send-email-afd@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,339 +12,170 @@ To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pa
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a reset-controller driver for performing reset management of
-various devices present on the SoC, with the reset registers shared
-between devices in a common register memory space. This driver uses
-the syscon/regmap frameworks to actually implement the various reset
-functionalities needed by the reset consumer devices.
+Add syscon reset controller binding. This will hook to the reset
+framework and use syscon/regmap to set reset bits. This allows
+reset control of individual SoC subsytems and devices with
+memory-mapped reset registers in a common register memory
+space.
 
 Signed-off-by: Andrew F. Davis <afd@ti.com>
-[s-anna@ti.com: add documentation, syscon name change]
+[s-anna@ti.com: revise the binding format]
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- drivers/reset/Kconfig        |  10 ++
- drivers/reset/Makefile       |   1 +
- drivers/reset/reset-syscon.c | 283 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 294 insertions(+)
- create mode 100644 drivers/reset/reset-syscon.c
+ .../devicetree/bindings/reset/syscon-reset.txt     | 114 +++++++++++++++++++++
+ include/dt-bindings/reset/syscon.h                 |  23 +++++
+ 2 files changed, 137 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
+ create mode 100644 include/dt-bindings/reset/syscon.h
 
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index df37212..5f26755 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -12,5 +12,15 @@ menuconfig RESET_CONTROLLER
- 
- 	  If unsure, say no.
- 
-+config SYSCON_RESET
-+	tristate "SYSCON Reset Driver"
-+	depends on RESET_CONTROLLER
-+	select MFD_SYSCON
-+	help
-+	  This enables the reset driver support for devices with memory-mapped
-+	  reset registers as part of a syscon device node. If you wish to use
-+	  the reset framework for such memory-mapped devices, say Y here.
-+	  Otherwise, say N.
-+
- source "drivers/reset/sti/Kconfig"
- source "drivers/reset/hisilicon/Kconfig"
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 4d7178e..6b3f6e3 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -7,3 +7,4 @@ obj-$(CONFIG_ARCH_STI) += sti/
- obj-$(CONFIG_ARCH_HISI) += hisilicon/
- obj-$(CONFIG_ARCH_ZYNQ) += reset-zynq.o
- obj-$(CONFIG_ATH79) += reset-ath79.o
-+obj-$(CONFIG_SYSCON_RESET) += reset-syscon.o
-diff --git a/drivers/reset/reset-syscon.c b/drivers/reset/reset-syscon.c
+diff --git a/Documentation/devicetree/bindings/reset/syscon-reset.txt b/Documentation/devicetree/bindings/reset/syscon-reset.txt
 new file mode 100644
-index 0000000..d127c83
+index 0000000..02bc9e3
 --- /dev/null
-+++ b/drivers/reset/reset-syscon.c
-@@ -0,0 +1,283 @@
++++ b/Documentation/devicetree/bindings/reset/syscon-reset.txt
+@@ -0,0 +1,114 @@
++SysCon Reset Controller
++=======================
++
++Almost all SoCs have hardware modules that require reset control in addition
++to clock and power control for their functionality. The reset control is
++typically provided by means of memory-mapped I/O registers. These registers are
++sometimes a part of a larger register space region implementing various
++functionalities. This register range is best represented as a syscon node to
++allow multiple entities to access their relevant registers in the common
++register space.
++
++A SysCon Reset Controller node defines a device that uses a syscon node
++and provides reset management functionality for various hardware modules
++present on the SoC.
++
++SysCon Reset Controller Node
++============================
++Each of the reset provider/controller nodes should be a child of a syscon
++node and have the following properties.
++
++Required properties:
++--------------------
++ - compatible		: Should be "syscon-reset"
++ - #reset-cells		: Should be 1. Please see the reset consumer node below
++			  for usage details
++ - #address-cells	: Should be 1
++ - #size-cells		: Should be 0
++
++SysCon Reset Child Node
++============================
++Each reset provider/controller node should have a child node for each reset
++it would like to expose to consumers.
++
++Required properties:
++--------------------
++ - reg			: This reset's number, this will be used to reference
++			  this reset by consumers of this reset
++ - reset-control	: Contains the reset control register information
++			  Should contain 3 cells defined as:
++			    Cell #1 : register offset of the reset
++			              control/status register from the syscon
++			              register base
++			    Cell #2 : bit shift value for the reset in the
++			              respective reset control/status register
++			    Cell #3 : polarity of the reset bit. Should be 1 or
++				      RESET_ASSERT_SET for resets that are
++				      asserted when the bit is set, 0 or
++				      RESET_ASSERT_CLEAR for resets that are
++				      asserted when the bit is cleared
++
++Optional properties:
++--------------------
++ - reset-status		: Contains the reset status register information. The
++			  contents of this property are the equivalent to
++			  reset-control as defined above. If this property is
++			  not present and the toggle flag is not set, the
++			  reset register is assumed to be the same as the
++			  control register
++ - toggle		: Mark this reset as a toggle only reset, this is used
++			  when no status register is available.
++
++SysCon Reset Consumer Nodes
++===========================
++Each of the reset consumer nodes should have the following properties,
++in addition to their own properties.
++
++Required properties:
++--------------------
++ - resets	: A phandle and a reset specifier, the reset specifier should
++		  be a numerical address matching the desired reset as set
++		  by the reg property defined above.
++
++Please also refer to Documentation/devicetree/bindings/reset/reset.txt for
++common reset controller usage by consumers.
++
++Example:
++--------
++The following example demonstrates a syscon node, the reset controller node
++using the syscon node, and a consumer (a DSP device) on the TI Keystone 2
++Hawking SoC.
++
++/ {
++	soc {
++		psc: power-sleep-controller@02350000 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x02350000 0x1000>;
++
++			pscrst: psc-reset {
++				compatible = "syscon-reset";
++				#reset-cells = <1>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				dsp@0 {
++					reg = <0>;
++					reset-control = <0xa3c 8 RESET_ASSERT_CLEAR>;
++					reset-status = <0x83c 8 RESET_ASSERT_CLEAR>;
++				};
++
++				imu@1 {
++					reg = <1>;
++					reset-control = <0xa40 5 RESET_ASSERT_SET>;
++					toggle;
++				};
++			};
++		};
++
++		dsp0: dsp0 {
++			...
++			resets = <&pscrst 0>;
++			...
++		};
++	};
++};
+diff --git a/include/dt-bindings/reset/syscon.h b/include/dt-bindings/reset/syscon.h
+new file mode 100644
+index 0000000..9927779
+--- /dev/null
++++ b/include/dt-bindings/reset/syscon.h
+@@ -0,0 +1,23 @@
 +/*
-+ * SYSCON regmap reset driver
++ * Syscon Reset definitions
 + *
 + * Copyright (C) 2015-2016 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
-+ *	Suman Anna <afd@ti.com>
 + *
 + * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset-controller.h>
++#ifndef __DT_BINDINGS_RESET_SYSCON_H__
++#define __DT_BINDINGS_RESET_SYSCON_H__
 +
-+/**
-+ * struct syscon_reset_control - reset control structure
-+ * @offset: reset control register offset from syscon base
-+ * @reset_bit: reset bit in the reset control register
-+ * @assert_high: flag to indicate if setting the bit high asserts the reset
-+ * @status_offset: reset status register offset from syscon base
-+ * @status_reset_bit: reset status bit in the reset status register
-+ * @status_assert_high: flag to indicate if a set bit represents asserted state
-+ * @toggle: flag to indicate this reset has no readable status register
-+ */
-+struct syscon_reset_control {
-+	unsigned int offset;
-+	unsigned int reset_bit;
-+	bool assert_high;
-+	unsigned int status_offset;
-+	unsigned int status_reset_bit;
-+	bool status_assert_high;
-+	bool toggle;
-+};
++#define RESET_ASSERT_CLEAR	0x0
++#define RESET_ASSERT_SET	0x1
 +
-+/**
-+ * struct syscon_reset_data - reset controller information structure
-+ * @rcdev: reset controller entity
-+ * @dev: reset controller device pointer
-+ * @memory: regmap handle containing the memory-mapped reset registers
-+ * @idr: idr structure for mapping ids to reset control structures
-+ */
-+struct syscon_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct device *dev;
-+	struct regmap *memory;
-+};
-+
-+#define to_syscon_reset_data(rcdev)	\
-+	container_of(rcdev, struct syscon_reset_data, rcdev)
-+
-+/**
-+ * syscon_reset_get_control() - get reset control info from DT node
-+ * @data: reset controller data
-+ * @id: ID address of control data node
-+ * @control: control data struct to fill
-+ *
-+ * Search DT for a child node at the specified address that contains
-+ * reset control info and use that to fill in control data.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int syscon_reset_get_control(struct syscon_reset_data *data,
-+				    unsigned long id,
-+				    struct syscon_reset_control *control)
-+{
-+	struct device_node *child;
-+	const __be32 *address;
-+	const __be32 *list;
-+	int size;
-+
-+	for_each_child_of_node(data->rcdev.of_node, child) {
-+		address = of_get_address(child, 0, NULL, NULL);
-+		if (!address || be32_to_cpup(address) != id)
-+			continue;
-+
-+		list = of_get_property(child, "reset-control", &size);
-+		if (!list || size != (3 * sizeof(*list)))
-+			return -EINVAL;
-+		control->offset = be32_to_cpup(list++);
-+		control->reset_bit = be32_to_cpup(list++);
-+		control->assert_high = be32_to_cpup(list) == 1;
-+
-+		if (of_find_property(child, "reset-toggle", NULL)) {
-+			control->toggle = true;
-+			return 0;
-+		}
-+		control->toggle = false;
-+
-+		list = of_get_property(child, "reset-status", &size);
-+		if (!list) {
-+			/* use control register values */
-+			control->status_offset = control->offset;
-+			control->status_reset_bit = control->reset_bit;
-+			control->status_assert_high = control->assert_high;
-+			return 0;
-+		}
-+
-+		if (size != (3 * sizeof(*list)))
-+			return -EINVAL;
-+		control->status_offset = be32_to_cpup(list++);
-+		control->status_reset_bit = be32_to_cpup(list++);
-+		control->status_assert_high = be32_to_cpup(list) == 1;
-+		return 0;
-+	}
-+
-+	return -ENOENT;
-+}
-+
-+/**
-+ * syscon_reset_set() - program a device's reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to toggle
-+ * @assert: boolean flag to indicate assert or deassert
-+ *
-+ * This is a common internal function used to assert or deassert a device's
-+ * reset using the regmap API. The device's reset is asserted if the @assert
-+ * argument is true, or deasserted if the @assert argument is false.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int syscon_reset_set(struct reset_controller_dev *rcdev,
-+			    unsigned long id, bool assert)
-+{
-+	struct syscon_reset_data *data = to_syscon_reset_data(rcdev);
-+	struct syscon_reset_control control;
-+	unsigned int mask, value;
-+	int ret;
-+
-+	ret = syscon_reset_get_control(data, id, &control);
-+	if (ret)
-+		return ret;
-+
-+	mask = BIT(control.reset_bit);
-+	value = (assert == control.assert_high) ? mask : 0x0;
-+
-+	return regmap_update_bits(data->memory, control.offset, mask, value);
-+}
-+
-+/**
-+ * syscon_reset_assert() - assert device reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset to be asserted
-+ *
-+ * This function implements the reset driver op to assert a device's reset.
-+ * This invokes the function syscon_reset_set() with the corresponding
-+ * parameters as passed in, but with the @assert argument set to true for
-+ * asserting the reset.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int syscon_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	return syscon_reset_set(rcdev, id, true);
-+}
-+
-+/**
-+ * syscon_reset_deassert() - deassert device reset
-+ * @rcdev: reset controller entity
-+ * @id: ID of reset to be deasserted
-+ *
-+ * This function implements the reset driver op to deassert a device's reset.
-+ * This invokes the function syscon_reset_set() with the corresponding
-+ * parameters as passed in, but with the @assert argument set to false for
-+ * deasserting the reset.
-+ *
-+ * Return: 0 for successful request, else a corresponding error value
-+ */
-+static int syscon_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	return syscon_reset_set(rcdev, id, false);
-+}
-+
-+/**
-+ * syscon_reset_status() - check device reset status
-+ * @rcdev: reset controller entity
-+ * @id: ID of the reset for which the status is being requested
-+ *
-+ * This function implements the reset driver op to return the status of a
-+ * device's reset.
-+ *
-+ * Return: 0 if reset is deasserted, true if reset is asserted, else a
-+ * corresponding error value
-+ */
-+static int syscon_reset_status(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct syscon_reset_data *data = to_syscon_reset_data(rcdev);
-+	struct syscon_reset_control control;
-+	unsigned int reset_state;
-+	int ret;
-+
-+	ret = syscon_reset_get_control(data, id, &control);
-+	if (ret)
-+		return ret;
-+
-+	if (control.toggle)
-+		return -ENOSYS; /* status not supported for this reset */
-+
-+	ret = regmap_read(data->memory, control.status_offset, &reset_state);
-+	if (ret)
-+		return ret;
-+
-+	return (reset_state & BIT(control.status_reset_bit)) ==
-+			control.status_assert_high;
-+}
-+
-+static struct reset_control_ops syscon_reset_ops = {
-+	.assert		= syscon_reset_assert,
-+	.deassert	= syscon_reset_deassert,
-+	.status		= syscon_reset_status,
-+};
-+
-+static int syscon_reset_probe(struct platform_device *pdev)
-+{
-+	struct syscon_reset_data *data;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct regmap *memory;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	memory = syscon_node_to_regmap(np->parent);
-+	if (IS_ERR(memory))
-+		return PTR_ERR(memory);
-+
-+	data->rcdev.ops = &syscon_reset_ops;
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.of_node = np;
-+	data->rcdev.nr_resets = of_get_child_count(np);
-+	data->dev = dev;
-+	data->memory = memory;
-+	platform_set_drvdata(pdev, data);
-+
-+	return reset_controller_register(&data->rcdev);
-+}
-+
-+static int syscon_reset_remove(struct platform_device *pdev)
-+{
-+	struct syscon_reset_data *data = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&data->rcdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id syscon_reset_of_match[] = {
-+	{ .compatible = "syscon-reset", },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, syscon_reset_of_match);
-+
-+static struct platform_driver syscon_reset_driver = {
-+	.probe = syscon_reset_probe,
-+	.remove = syscon_reset_remove,
-+	.driver = {
-+		.name = "syscon-reset",
-+		.of_match_table = syscon_reset_of_match,
-+	},
-+};
-+module_platform_driver(syscon_reset_driver);
-+
-+MODULE_AUTHOR("Andrew F. Davis <afd@ti.com>");
-+MODULE_AUTHOR("Suman Anna <s-anna@ti.com>");
-+MODULE_DESCRIPTION("SYSCON Regmap Reset Driver");
-+MODULE_LICENSE("GPL v2");
++#endif
 -- 
 2.7.2
