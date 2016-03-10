@@ -1,188 +1,393 @@
-From: Yaniv Gardi <ygardi@codeaurora.org>
-Subject: [PATCH v8 01/17] scsi: ufs-qcom: add number of lanes per direction
-Date: Thu, 10 Mar 2016 17:37:05 +0200
-Message-ID: <1457624241-20525-2-git-send-email-ygardi@codeaurora.org>
-References: <1457624241-20525-1-git-send-email-ygardi@codeaurora.org>
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1457624241-20525-1-git-send-email-ygardi@codeaurora.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: James.Bottomley@HansenPartnership.com
-Cc: linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-arm-msm@vger.kernel.org, santoshsy@gmail.com, linux-scsi-owner@vger.kernel.org, ygardi@codeaurora.org, Gilad Broner <gbroner@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <JBottomley@odin.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Hannes Reinecke <hare@suse.de>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 2/2] power: reset: at91-shdwc: add new shutdown controller driver
+Date: Thu, 10 Mar 2016 16:37:40 +0100
+Message-ID: <1457624260-30350-3-git-send-email-nicolas.ferre@atmel.com>
+References: <1457624260-30350-1-git-send-email-nicolas.ferre@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457624260-30350-1-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Different platform may have different number of lanes
-for the UFS link.
-Add parameter to device tree specifying how many lanes
-should be configured for the UFS link.
+Sama5d2 SoC has a completely new shutdown controller with new features and
+register layout. It thus makes sense to add a new driver for this new
+peripheral.
 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gilad Broner <gbroner@codeaurora.org>
-Signed-off-by: Yaniv Gardi <ygardi@codeaurora.org>
+This driver is Device Tree only and handles events from the wake-up pin and
+the RTC.
+As the register layout may change in the future, so some values are encoded
+in a configuration structure.
 
+Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  3 ++
- drivers/scsi/ufs/ufs-qcom.c                        | 39 ++++++++++++----------
- drivers/scsi/ufs/ufshcd-pltfrm.c                   | 19 +++++++++++
- drivers/scsi/ufs/ufshcd.c                          |  1 +
- drivers/scsi/ufs/ufshcd.h                          |  2 ++
- 5 files changed, 47 insertions(+), 17 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 03c0e98..66f6adf 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -38,6 +38,9 @@ Optional properties:
- 			  defined or a value in the array is "0" then it is assumed
- 			  that the frequency is set by the parent clock or a
- 			  fixed rate clock source.
-+-lanes-per-direction	: number of lanes available per direction - either 1 or 2.
-+			  Note that it is assume same number of lanes is used both
-+			  directions at once. If not specified, default is 2 lanes per direction.
+Changes in v4:
+- fix warning found by 0-day robot: large integer implicitly truncated to
+  unsigned type [-Woverflow]
+- move to the property debounce-delay-us
+- move to atmel,wakeup-active-high boolean
+- add entry in MAINTAINERS file
+
+Changes in v3:
+- add the slow clock handle as the IP uses it
+- remove useless protection at the beginning of pm_power_off handler
+- allow to compile it as a module
+- add COMPILE_TEST directive in Kconfig
+- update description in file header
+
+Changes in v2:
+- add MODULE_DEVICE_TABLE as advised by Sebastian Reichel
+- review indentation and braces to correct errors pointed out by checkpatch
+
+ MAINTAINERS                      |   5 +
+ drivers/power/reset/Kconfig      |   8 ++
+ drivers/power/reset/Makefile     |   1 +
+ drivers/power/reset/at91-shdwc.c | 282 +++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 296 insertions(+)
+ create mode 100644 drivers/power/reset/at91-shdwc.c
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5744af3d79ab..afac65c0d68c 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1999,6 +1999,11 @@ M:	Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+ S:	Supported
+ F:	drivers/tty/serial/atmel_serial.c
  
- Note: If above properties are not defined it can be assumed that the supply
- regulators or clocks are always on.
-diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-index 4f38d00..ed57729 100644
---- a/drivers/scsi/ufs/ufs-qcom.c
-+++ b/drivers/scsi/ufs/ufs-qcom.c
-@@ -1,5 +1,5 @@
- /*
-- * Copyright (c) 2013-2015, Linux Foundation. All rights reserved.
-+ * Copyright (c) 2013-2016, Linux Foundation. All rights reserved.
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 and
-@@ -132,21 +132,24 @@ static int ufs_qcom_enable_lane_clks(struct ufs_qcom_host *host)
- 	if (err)
- 		goto disable_rx_l0;
- 
--	err = ufs_qcom_host_clk_enable(dev, "rx_lane1_sync_clk",
--		host->rx_l1_sync_clk);
--	if (err)
--		goto disable_tx_l0;
-+	if (host->hba->lanes_per_direction > 1) {
-+		err = ufs_qcom_host_clk_enable(dev, "rx_lane1_sync_clk",
-+			host->rx_l1_sync_clk);
-+		if (err)
-+			goto disable_tx_l0;
- 
--	err = ufs_qcom_host_clk_enable(dev, "tx_lane1_sync_clk",
--		host->tx_l1_sync_clk);
--	if (err)
--		goto disable_rx_l1;
-+		err = ufs_qcom_host_clk_enable(dev, "tx_lane1_sync_clk",
-+			host->tx_l1_sync_clk);
-+		if (err)
-+			goto disable_rx_l1;
-+	}
- 
- 	host->is_lane_clks_enabled = true;
- 	goto out;
- 
- disable_rx_l1:
--	clk_disable_unprepare(host->rx_l1_sync_clk);
-+	if (host->hba->lanes_per_direction > 1)
-+		clk_disable_unprepare(host->rx_l1_sync_clk);
- disable_tx_l0:
- 	clk_disable_unprepare(host->tx_l0_sync_clk);
- disable_rx_l0:
-@@ -170,14 +173,16 @@ static int ufs_qcom_init_lane_clks(struct ufs_qcom_host *host)
- 	if (err)
- 		goto out;
- 
--	err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
--		&host->rx_l1_sync_clk);
--	if (err)
--		goto out;
--
--	err = ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
--		&host->tx_l1_sync_clk);
-+	/* In case of single lane per direction, don't read lane1 clocks */
-+	if (host->hba->lanes_per_direction > 1) {
-+		err = ufs_qcom_host_clk_get(dev, "rx_lane1_sync_clk",
-+			&host->rx_l1_sync_clk);
-+		if (err)
-+			goto out;
- 
-+		err = ufs_qcom_host_clk_get(dev, "tx_lane1_sync_clk",
-+			&host->tx_l1_sync_clk);
-+	}
- out:
- 	return err;
- }
-diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
-index d2a7b12..718f12e 100644
---- a/drivers/scsi/ufs/ufshcd-pltfrm.c
-+++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
-@@ -40,6 +40,8 @@
- #include "ufshcd.h"
- #include "ufshcd-pltfrm.h"
- 
-+#define UFSHCD_DEFAULT_LANES_PER_DIRECTION		2
++ATMEL AT91 Alternative Shutdown Controller
++M:	Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++S:	Supported
++F:	drivers/power/reset/at91-shdwc.c
 +
- static int ufshcd_parse_clock_info(struct ufs_hba *hba)
- {
- 	int ret = 0;
-@@ -277,6 +279,21 @@ void ufshcd_pltfrm_shutdown(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(ufshcd_pltfrm_shutdown);
+ ATMEL SAMA5D2 ADC DRIVER
+ M:	Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+ L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 0a6408a39c66..a23109bed7bd 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -30,6 +30,14 @@ config POWER_RESET_AT91_RESET
+ 	  This driver supports restart for Atmel AT91SAM9 and SAMA5
+ 	  SoCs
  
-+static void ufshcd_init_lanes_per_dir(struct ufs_hba *hba)
++config POWER_RESET_AT91_SHDWC
++	tristate "Atmel AT91 shutdown controller driver"
++	depends on ARCH_AT91 || COMPILE_TEST
++	default SOC_SAMA5
++	help
++	  This driver supports the alternate shutdown controller for some Atmel
++	  SAMA5 SoCs. It is present for example on SAMA5D2 SoC.
++
+ config POWER_RESET_AXXIA
+ 	bool "LSI Axxia reset driver"
+ 	depends on ARCH_AXXIA
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 096fa67047f6..6b9020ed3fb7 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -1,6 +1,7 @@
+ obj-$(CONFIG_POWER_RESET_AS3722) += as3722-poweroff.o
+ obj-$(CONFIG_POWER_RESET_AT91_POWEROFF) += at91-poweroff.o
+ obj-$(CONFIG_POWER_RESET_AT91_RESET) += at91-reset.o
++obj-$(CONFIG_POWER_RESET_AT91_SHDWC) += at91-shdwc.o
+ obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
+ obj-$(CONFIG_POWER_RESET_BRCMSTB) += brcmstb-reboot.o
+ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+diff --git a/drivers/power/reset/at91-shdwc.c b/drivers/power/reset/at91-shdwc.c
+new file mode 100644
+index 000000000000..e3b7b430de8e
+--- /dev/null
++++ b/drivers/power/reset/at91-shdwc.c
+@@ -0,0 +1,282 @@
++/*
++ * Atmel alternative Shutdown Controller (SHDWC) driver.
++ * Found on some SoCs as the sama5d2 for instance.
++ *
++ * Copyright (C) 2015 Atmel Corporation,
++ *                    Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * Evolved from driver at91-poweroff.c.
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ *
++ * TODO:
++ * - addition to status of other wake-up inputs [1 - 15]
++ * - Analog Comparator wake-up alarm
++ * - Serial RX wake-up alarm
++ * - low power debouncer
++ */
++
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/printk.h>
++
++#define SLOW_CLOCK_FREQ	32768
++
++#define AT91_SHDW_CR	0x00		/* Shut Down Control Register */
++#define AT91_SHDW_SHDW		BIT(0)			/* Shut Down command */
++#define AT91_SHDW_KEY		(0xa5UL << 24)		/* KEY Password */
++
++#define AT91_SHDW_MR	0x04		/* Shut Down Mode Register */
++#define AT91_SHDW_WKUPDBC_SHIFT	24
++#define AT91_SHDW_WKUPDBC_MASK	GENMASK(31, 16)
++#define AT91_SHDW_WKUPDBC(x)	(((x) << AT91_SHDW_WKUPDBC_SHIFT) \
++						& AT91_SHDW_WKUPDBC_MASK)
++
++#define AT91_SHDW_SR	0x08		/* Shut Down Status Register */
++#define AT91_SHDW_WKUPIS_SHIFT	16
++#define AT91_SHDW_WKUPIS_MASK	GENMASK(31, 16)
++#define AT91_SHDW_WKUPIS(x)	((1 << (x)) << AT91_SHDW_WKUPIS_SHIFT \
++						& AT91_SHDW_WKUPIS_MASK)
++
++#define AT91_SHDW_WUIR	0x0c		/* Shutdown Wake-up Inputs Register */
++#define AT91_SHDW_WKUPEN_MASK	GENMASK(15, 0)
++#define AT91_SHDW_WKUPEN(x)	((1 << (x)) & AT91_SHDW_WKUPEN_MASK)
++#define AT91_SHDW_WKUPT_SHIFT	16
++#define AT91_SHDW_WKUPT_MASK	GENMASK(31, 16)
++#define AT91_SHDW_WKUPT(x)	((1 << (x)) << AT91_SHDW_WKUPT_SHIFT \
++						& AT91_SHDW_WKUPT_MASK)
++
++#define SHDW_WK_PIN(reg, cfg)	((reg) & AT91_SHDW_WKUPIS((cfg)->wkup_pin_input))
++#define SHDW_RTCWK(reg, cfg)	(((reg) >> ((cfg)->sr_rtcwk_shift)) & 0x1)
++#define SHDW_RTCWKEN(cfg)	(1 << ((cfg)->mr_rtcwk_shift))
++
++#define DBC_PERIOD_US(x)	DIV_ROUND_UP_ULL((1000000 * (x)), \
++							SLOW_CLOCK_FREQ)
++
++struct shdwc_config {
++	u8 wkup_pin_input;
++	u8 mr_rtcwk_shift;
++	u8 sr_rtcwk_shift;
++};
++
++struct shdwc {
++	struct shdwc_config *cfg;
++	void __iomem *at91_shdwc_base;
++};
++
++/*
++ * Hold configuration here, cannot be more than one instance of the driver
++ * since pm_power_off itself is global.
++ */
++static struct shdwc *at91_shdwc;
++static struct clk *sclk;
++
++static const unsigned long long sdwc_dbc_period[] = {
++	0, 3, 32, 512, 4096, 32768,
++};
++
++static void __init at91_wakeup_status(struct platform_device *pdev)
 +{
-+	struct device *dev = hba->dev;
-+	int ret;
++	struct shdwc *shdw = platform_get_drvdata(pdev);
++	u32 reg;
++	char *reason = "unknown";
 +
-+	ret = of_property_read_u32(dev->of_node, "lanes-per-direction",
-+		&hba->lanes_per_direction);
-+	if (ret) {
-+		dev_dbg(hba->dev,
-+			"%s: failed to read lanes-per-direction, ret=%d\n",
-+			__func__, ret);
-+		hba->lanes_per_direction = UFSHCD_DEFAULT_LANES_PER_DIRECTION;
-+	}
++	reg = readl(shdw->at91_shdwc_base + AT91_SHDW_SR);
++
++	dev_dbg(&pdev->dev, "%s: status = %#x\n", __func__, reg);
++
++	/* Simple power-on, just bail out */
++	if (!reg)
++		return;
++
++	if (SHDW_WK_PIN(reg, shdw->cfg))
++		reason = "WKUP pin";
++	else if (SHDW_RTCWK(reg, shdw->cfg))
++		reason = "RTC";
++
++	pr_info("AT91: Wake-Up source: %s\n", reason);
 +}
 +
- /**
-  * ufshcd_pltfrm_init - probe routine of the driver
-  * @pdev: pointer to Platform device handle
-@@ -331,6 +348,8 @@ int ufshcd_pltfrm_init(struct platform_device *pdev,
- 	pm_runtime_set_active(&pdev->dev);
- 	pm_runtime_enable(&pdev->dev);
- 
-+	ufshcd_init_lanes_per_dir(hba);
++static void at91_poweroff(void)
++{
++	writel(AT91_SHDW_KEY | AT91_SHDW_SHDW,
++			at91_shdwc->at91_shdwc_base + AT91_SHDW_CR);
++}
 +
- 	err = ufshcd_init(hba, mmio_base, irq);
- 	if (err) {
- 		dev_err(dev, "Initialization failed\n");
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 9c1b94b..a8e42df 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -40,6 +40,7 @@
- #include <linux/async.h>
- #include <linux/devfreq.h>
- 
-+#include <linux/of.h>
- #include "ufshcd.h"
- #include "unipro.h"
- 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-index e3931d0..9ae7f85 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -509,6 +509,8 @@ struct ufs_hba {
- 
- 	bool wlun_dev_clr_ua;
- 
-+	/* Number of lanes available (1 or 2) for Rx/Tx */
-+	u32 lanes_per_direction;
- 	struct ufs_pa_layer_attr pwr_info;
- 	struct ufs_pwr_mode_info max_pwr_info;
- 
++static u32 at91_shdwc_debouncer_value(struct platform_device *pdev,
++				      u32 in_period_us)
++{
++	int i;
++	int max_idx = ARRAY_SIZE(sdwc_dbc_period) - 1;
++	unsigned long long period_us;
++	unsigned long long max_period_us = DBC_PERIOD_US(sdwc_dbc_period[max_idx]);
++
++	if (in_period_us > max_period_us) {
++		dev_warn(&pdev->dev,
++			 "debouncer period %u too big, reduced to %llu us\n",
++			 in_period_us, max_period_us);
++		return max_idx;
++	}
++
++	for (i = max_idx - 1; i > 0; i--) {
++		period_us = DBC_PERIOD_US(sdwc_dbc_period[i]);
++		dev_dbg(&pdev->dev, "%s: ref[%d] = %llu\n",
++						__func__, i, period_us);
++		if (in_period_us > period_us)
++			break;
++	}
++
++	return i + 1;
++}
++
++static u32 at91_shdwc_get_wakeup_input(struct platform_device *pdev,
++				       struct device_node *np)
++{
++	struct device_node *cnp;
++	u32 wk_input_mask;
++	u32 wuir = 0;
++	u32 wk_input;
++
++	for_each_child_of_node(np, cnp) {
++		if (of_property_read_u32(cnp, "reg", &wk_input)) {
++			dev_warn(&pdev->dev, "reg property is missing for %s\n",
++				 cnp->full_name);
++			continue;
++		}
++
++		wk_input_mask = 1 << wk_input;
++		if (!(wk_input_mask & AT91_SHDW_WKUPEN_MASK)) {
++			dev_warn(&pdev->dev,
++				 "wake-up input %d out of bounds ignore\n",
++				 wk_input);
++			continue;
++		}
++		wuir |= wk_input_mask;
++
++		if (of_property_read_bool(cnp, "atmel,wakeup-active-high"))
++			wuir |= AT91_SHDW_WKUPT(wk_input);
++
++		dev_dbg(&pdev->dev, "%s: (child %d) wuir = %#x\n",
++						__func__, wk_input, wuir);
++	}
++
++	return wuir;
++}
++
++static void at91_shdwc_dt_configure(struct platform_device *pdev)
++{
++	struct shdwc *shdw = platform_get_drvdata(pdev);
++	struct device_node *np = pdev->dev.of_node;
++	u32 mode = 0, tmp, input;
++
++	if (!np) {
++		dev_err(&pdev->dev, "device node not found\n");
++		return;
++	}
++
++	if (!of_property_read_u32(np, "debounce-delay-us", &tmp))
++		mode |= AT91_SHDW_WKUPDBC(at91_shdwc_debouncer_value(pdev, tmp));
++
++	if (of_property_read_bool(np, "atmel,wakeup-rtc-timer"))
++		mode |= SHDW_RTCWKEN(shdw->cfg);
++
++	dev_dbg(&pdev->dev, "%s: mode = %#x\n", __func__, mode);
++	writel(mode, shdw->at91_shdwc_base + AT91_SHDW_MR);
++
++	input = at91_shdwc_get_wakeup_input(pdev, np);
++	writel(input, shdw->at91_shdwc_base + AT91_SHDW_WUIR);
++}
++
++static const struct shdwc_config sama5d2_shdwc_config = {
++	.wkup_pin_input = 0,
++	.mr_rtcwk_shift = 17,
++	.sr_rtcwk_shift = 5,
++};
++
++static const struct of_device_id at91_shdwc_of_match[] = {
++	{
++		.compatible = "atmel,sama5d2-shdwc",
++		.data = &sama5d2_shdwc_config,
++	}, {
++		/*sentinel*/
++	}
++};
++MODULE_DEVICE_TABLE(of, at91_shdwc_of_match);
++
++static int __init at91_shdwc_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	const struct of_device_id *match;
++	int ret;
++
++	if (!pdev->dev.of_node)
++		return -ENODEV;
++
++	at91_shdwc = devm_kzalloc(&pdev->dev, sizeof(*at91_shdwc), GFP_KERNEL);
++	if (!at91_shdwc)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, at91_shdwc);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	at91_shdwc->at91_shdwc_base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(at91_shdwc->at91_shdwc_base)) {
++		dev_err(&pdev->dev, "Could not map reset controller address\n");
++		return PTR_ERR(at91_shdwc->at91_shdwc_base);
++	}
++
++	match = of_match_node(at91_shdwc_of_match, pdev->dev.of_node);
++	at91_shdwc->cfg = (struct shdwc_config *)(match->data);
++
++	sclk = devm_clk_get(&pdev->dev, NULL);
++	if (IS_ERR(sclk))
++		return PTR_ERR(sclk);
++
++	ret = clk_prepare_enable(sclk);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not enable slow clock\n");
++		return ret;
++	}
++
++	at91_wakeup_status(pdev);
++
++	at91_shdwc_dt_configure(pdev);
++
++	pm_power_off = at91_poweroff;
++
++	return 0;
++}
++
++static int __exit at91_shdwc_remove(struct platform_device *pdev)
++{
++	struct shdwc *shdw = platform_get_drvdata(pdev);
++
++	if (pm_power_off == at91_poweroff)
++		pm_power_off = NULL;
++
++	/* Reset values to disable wake-up features  */
++	writel(0, shdw->at91_shdwc_base + AT91_SHDW_MR);
++	writel(0, shdw->at91_shdwc_base + AT91_SHDW_WUIR);
++
++	clk_disable_unprepare(sclk);
++
++	return 0;
++}
++
++static struct platform_driver at91_shdwc_driver = {
++	.remove = __exit_p(at91_shdwc_remove),
++	.driver = {
++		.name = "at91-shdwc",
++		.of_match_table = at91_shdwc_of_match,
++	},
++};
++module_platform_driver_probe(at91_shdwc_driver, at91_shdwc_probe);
++
++MODULE_AUTHOR("Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>");
++MODULE_DESCRIPTION("Atmel shutdown controller driver");
++MODULE_LICENSE("GPL v2");
 -- 
-1.8.5.2
+2.1.3
 
--- 
-QUALCOMM ISRAEL, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
