@@ -1,51 +1,62 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/1] iio:pressure:ms5611: fix and enhancements
-Date: Thu, 10 Mar 2016 09:07:36 +0900
-Message-ID: <56E0BAC8.2080607@samsung.com>
-References: <cover.1457522751.git.gregor.boirie@parrot.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] iio:magnetometer:ak8975: mounting matrix support
+Date: Wed, 9 Mar 2016 20:15:52 -0600
+Message-ID: <CAL_JsqJZfr5Cx6vkSGePESjf-gmz54jATjqb=Xgc6HiUtL4_Tw@mail.gmail.com>
+References: <cover.1457001111.git.gregor.boirie@parrot.com>
+ <022da3dfc0853c6f9820b24c2d9eaaf0c5ccf294.1457001111.git.gregor.boirie@parrot.com>
+ <56DAFCEB.6080905@kernel.org> <56E0014D.1040209@parrot.com> <56E08B91.6070603@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <cover.1457522751.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <56E08B91.6070603-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09.03.2016 20:34, Gregor Boirie wrote:
-> Changes since v1:
-> * temperature compensation fix:
->     * reword commit message
->     * remove useless parenthesis
-> * power regulator: reword commit message
-> * add oversampling rate support
-> 
-> Changes since v2:
-> * remove non printable characters from commit messages
-> 
-> Changes since v3:
-> * drop first 3 patches since applied onto testing
-> * fix oops at regulator probing time if regulator support not compiled-in
-> * complete device-tree support and documentation
-> * remove continuous sampling support (see Jonathan's "kthread tight loop
->   trigger" proposal)
-> * checkpatch'ed
-> 
-> Changes since v4:
-> * drop first 2 patches since applied
-> * amend commit to include "Fixes" tag
-> 
-> Changes since v5:
-> * reword patch subject line and include "Fixes" tag in commit message
-> 
-> Gregor Boirie (1):
->   iio:pressure:ms5611: fix crash when probing regulator
-> 
->  drivers/iio/pressure/ms5611_core.c | 8 ++++++--
+On Wed, Mar 9, 2016 at 2:46 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 09/03/16 10:56, Gregor Boirie wrote:
+>>
+>> On 03/05/2016 04:36 PM, Jonathan Cameron wrote:
+>>> On 03/03/16 10:44, Gregor Boirie wrote:
+>>>> Expose a rotation matrix to indicate userspace the chip placement with
+>>>> respect to the overall hardware system. This is needed to adjust
+>>>> coordinates sampled from a magnetometer chip when its position deviates
+>>>> from the main hardware system.
+>>>>
+>>>> Final coordinates computation is delegated to userspace since:
+>>>> * computation may involve floating point arithmetics ;
+>>>> * it allows an application to combine adjustments with arbitrary
+>>>>    transformations.
+>>>>
+>>>> This 3 dimentional space rotation matrix is expressed as 3x3 array of
+>>>> strings to support floating point numbers. It may be retrieved from a
+>>>> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
+>>>> entry as a "matrix" property.
+>>>>
+>>>> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+>>> This one definitely wants to go to the device tree list. I'd also like a few
+>>> IIO related comments as well. I was sure we'd been through this before and
+>>> ended up with some sort of solution, but now I can't find it... Oh well.
+>> I took inv_mpu_core as an example. However matrices are exposed as integers
+>> and we really need floating point support.
+>> A search on the device-tree mailing list archive does not show up with a
+>> solution to encode floating point numbers into DTS either.
+> Certainly non obvious how to do this.
+>
+> For anyone device tree related who picks this up (I've added a CC)
+> we are basically talking about passing a rotation matrix from the device tree
+> straight through to userspace to describe the relative orientation of
+> some sensor.  An array of strings clearly works, but is this the best
+> way to do it?
 
-Really, how the heck you connected my humble person with this file?
-get_maintainer.pl does not print me. Even when run with --git argument.
+That's probably okay. I'd format the dts and sysfs to be arranged in a
+3x3 matrix rather than a linear list though, but that is just style.
 
-BR,
-Krzysztof
+However, there's nothing really preventing us from having floats in
+DT. Data is not typed, so it would be a matter of adding the dtc
+parsing support. The other aspect would be the limited use of float
+types in the kernel (though that should not influence binding design).
+Are there cases of the kernel ABI using floats?
+
+Rob
