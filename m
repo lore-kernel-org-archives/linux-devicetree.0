@@ -1,94 +1,106 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 12/18] gpio: vf610: add system PM suspend/resume
-Date: Wed,  9 Mar 2016 18:16:53 -0800
-Message-ID: <1457576219-7971-13-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH 10/18] tty: serial: fsl_lpuart: support suspend/resume
+Date: Wed,  9 Mar 2016 18:16:51 -0800
+Message-ID: <1457576219-7971-11-git-send-email-stefan@agner.ch>
 References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-Sender: linux-clk-owner@vger.kernel.org
-To: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org
-Cc: kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457576219-7971-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sergeimir-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Store the state of the GPIO module (which contains the GPIO output
-state) in memory during suspend. The driver already maintains an
-interrupt configuration in memory, hence we can use this
-configuration to restore the port control register (PCR).
+In order to allow wake support in STOP sleep mode, clocks are
+needed. Use imx_clk_gate2_cgr to disable automatic clock gating
+in low power mode STOP. This allows to enable wake by UART using:
+echo enabled > /sys/class/tty/ttyLP0/power/wakeup
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+However, if wake is not enabled, the driver should disable the
+clocks explicitly to save power.
+
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- drivers/gpio/gpio-vf610.c | 37 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/clk/imx/clk-vf610.c     | 12 ++++++------
+ drivers/tty/serial/fsl_lpuart.c | 16 ++++++++++++++--
+ 2 files changed, 20 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-index 6284bdb..1a022be 100644
---- a/drivers/gpio/gpio-vf610.c
-+++ b/drivers/gpio/gpio-vf610.c
-@@ -37,6 +37,7 @@ struct vf610_gpio_port {
- 	void __iomem *gpio_base;
- 	u8 irqc[VF610_GPIO_PER_PORT];
- 	int irq;
-+	u32 state;
- };
+diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+index e2e2c43..170a96c 100644
+--- a/drivers/clk/imx/clk-vf610.c
++++ b/drivers/clk/imx/clk-vf610.c
+@@ -315,12 +315,12 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
  
- #define GPIO_PDOR		0x00
-@@ -215,6 +216,40 @@ static struct irq_chip vf610_gpio_irq_chip = {
- 	.irq_set_wake	= vf610_gpio_irq_set_wake,
- };
+ 	clk[VF610_CLK_PIT] = imx_clk_gate2("pit", "ipg_bus", CCM_CCGR1, CCM_CCGRx_CGn(7));
  
-+static int __maybe_unused vf610_gpio_suspend(struct device *dev)
-+{
-+	struct vf610_gpio_port *port = dev_get_drvdata(dev);
-+
-+	port->state = vf610_gpio_readl(port->gpio_base + GPIO_PDOR);
-+
-+	/*
-+	 * There is no need to store Port state since we maintain the state
-+	 * alread in the irqc array
-+	 */
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused vf610_gpio_resume(struct device *dev)
-+{
-+	struct vf610_gpio_port *port = dev_get_drvdata(dev);
-+	int i;
-+
-+	vf610_gpio_writel(port->state, port->gpio_base + GPIO_PDOR);
-+
-+	for (i = 0; i < port->gc.ngpio; i++) {
-+		u32 irqc = port->irqc[i] << PORT_PCR_IRQC_OFFSET;
-+
-+		vf610_gpio_writel(irqc, port->base + PORT_PCR(i));
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops vf610_gpio_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(vf610_gpio_suspend, vf610_gpio_resume)
-+};
-+
- static int vf610_gpio_probe(struct platform_device *pdev)
+-	clk[VF610_CLK_UART0] = imx_clk_gate2("uart0", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(7));
+-	clk[VF610_CLK_UART1] = imx_clk_gate2("uart1", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(8));
+-	clk[VF610_CLK_UART2] = imx_clk_gate2("uart2", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(9));
+-	clk[VF610_CLK_UART3] = imx_clk_gate2("uart3", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(10));
+-	clk[VF610_CLK_UART4] = imx_clk_gate2("uart4", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(9));
+-	clk[VF610_CLK_UART5] = imx_clk_gate2("uart5", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(10));
++	clk[VF610_CLK_UART0] = imx_clk_gate2_cgr("uart0", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(7), 0x2);
++	clk[VF610_CLK_UART1] = imx_clk_gate2_cgr("uart1", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(8), 0x2);
++	clk[VF610_CLK_UART2] = imx_clk_gate2_cgr("uart2", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(9), 0x2);
++	clk[VF610_CLK_UART3] = imx_clk_gate2_cgr("uart3", "ipg_bus", CCM_CCGR0, CCM_CCGRx_CGn(10), 0x2);
++	clk[VF610_CLK_UART4] = imx_clk_gate2_cgr("uart4", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(9), 0x2);
++	clk[VF610_CLK_UART5] = imx_clk_gate2_cgr("uart5", "ipg_bus", CCM_CCGR6, CCM_CCGRx_CGn(10), 0x2);
+ 
+ 	clk[VF610_CLK_I2C0] = imx_clk_gate2("i2c0", "ipg_bus", CCM_CCGR4, CCM_CCGRx_CGn(6));
+ 	clk[VF610_CLK_I2C1] = imx_clk_gate2("i2c1", "ipg_bus", CCM_CCGR4, CCM_CCGRx_CGn(7));
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 3d79003..94e29ba 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -483,9 +483,8 @@ static void lpuart_dma_rx_complete(void *arg)
+ 	spin_unlock_irqrestore(&sport->port.lock, flags);
+ }
+ 
+-static void lpuart_timer_func(unsigned long data)
++static void lpuart_dma_rx_terminate(struct lpuart_port *sport)
  {
- 	struct device *dev = &pdev->dev;
-@@ -272,6 +307,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
+-	struct lpuart_port *sport = (struct lpuart_port *)data;
+ 	struct tty_port *port = &sport->port.state->port;
+ 	struct dma_tx_state state;
+ 	unsigned long flags;
+@@ -510,6 +509,11 @@ static void lpuart_timer_func(unsigned long data)
+ 	spin_unlock_irqrestore(&sport->port.lock, flags);
+ }
+ 
++static void lpuart_timer_func(unsigned long data)
++{
++	lpuart_dma_rx_terminate((struct lpuart_port *)data);
++}
++
+ static inline void lpuart_prepare_rx(struct lpuart_port *sport)
+ {
+ 	unsigned long flags;
+@@ -1915,7 +1919,12 @@ static int lpuart_suspend(struct device *dev)
+ 		writeb(temp, sport->port.membase + UARTCR2);
  	}
- 	gpiochip_set_chained_irqchip(gc, &vf610_gpio_irq_chip, port->irq,
- 				     vf610_gpio_irq_handler);
-+	platform_set_drvdata(pdev, port);
+ 
++	if (sport->dma_rx_in_progress)
++		lpuart_dma_rx_terminate(sport);
++
+ 	uart_suspend_port(&lpuart_reg, &sport->port);
++	if (sport->port.suspended && !sport->port.irq_wake)
++		clk_disable_unprepare(sport->clk);
  
  	return 0;
  }
-@@ -279,6 +315,7 @@ static int vf610_gpio_probe(struct platform_device *pdev)
- static struct platform_driver vf610_gpio_driver = {
- 	.driver		= {
- 		.name	= "gpio-vf610",
-+		.pm = &vf610_gpio_pm_ops,
- 		.of_match_table = vf610_gpio_dt_ids,
- 	},
- 	.probe		= vf610_gpio_probe,
+@@ -1925,6 +1934,9 @@ static int lpuart_resume(struct device *dev)
+ 	struct lpuart_port *sport = dev_get_drvdata(dev);
+ 	unsigned long temp;
+ 
++	if (sport->port.suspended && !sport->port.irq_wake)
++		clk_prepare_enable(sport->clk);
++
+ 	if (sport->lpuart32) {
+ 		lpuart32_setup_watermark(sport);
+ 		temp = lpuart32_read(sport->port.membase + UARTCTRL);
 -- 
 2.7.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
