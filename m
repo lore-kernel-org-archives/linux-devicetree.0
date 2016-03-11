@@ -1,30 +1,232 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
- driver
-Date: Fri, 11 Mar 2016 14:24:17 +0300
-Message-ID: <56E2AAE1.408@cogentembedded.com>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH 5/6] clk: rockchip: rk3036: fix and add node id for emac
+ clock
+Date: Fri, 11 Mar 2016 20:01:10 +0800
+Message-ID: <56E2B386.7060107@gmail.com>
+References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
+ <1457693731-6966-6-git-send-email-wxt@rock-chips.com>
+ <2005499.uduk6By3kM@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <2005499.uduk6By3kM@diego>
+Sender: linux-clk-owner@vger.kernel.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Caesar Wang <wxt@rock-chips.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, zhengxing <zhengxing@rock-chips.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, keescook@google.com, "David S. Miller" <davem@davemloft.net>, leozwang@google.com
 List-Id: devicetree@vger.kernel.org
 
-On 3/11/2016 11:29 AM, Petr Kulhavy wrote:
+Hi Heiko,
 
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+The link [0] need a bit changes if we want the emac to be happy work.
+
+-RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
+
++RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
+
+
+I will need resend the series patches with your change in link[0], OK?
+
+Since the Mr.rebot just notice the build error, I will check and resend=
+=20
+with your emac changing.
+
+
+
+
+=E5=9C=A8 2016=E5=B9=B403=E6=9C=8811=E6=97=A5 19:15, Heiko St=C3=BCbner=
+ =E5=86=99=E9=81=93:
+> Hi Caesar,
 >
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> Am Freitag, 11. M=C3=A4rz 2016, 18:55:30 schrieb Caesar Wang:
+>> From: zhengxing <zhengxing@rock-chips.com>
+>>
+>> In the emac driver, we need to refer HCLK_MAC since there are
+>> only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clocks are under the
+>> GPLL, and it is unable to provide the accurate rate for mac_ref whic=
+h
+>> need to 50MHz probability, we should let it under the DPLL and are
+>> able to set the freq which integer multiples of 50MHz, so we add the=
+se
+>> emac node for reference.
+>>
+>> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+>> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> I think I mentioned it somewhere before, but I'd like to do this
+> differently, like in [0].
+>
+> That should work in a similar way and at least in my tests the report=
+ed
+> clock rate seems to be correct. As I said as well I haven't been able=
+ to
+> make the emac detect a link on my kylin boards, so it would be cool
+> if you could test if this different approach works in practice as wel=
+l.
 
-Acked-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+I fetch your branch patches, it doesn't work for me.
+c467a5f clk: rockchip: associate SCLK_MAC_PLL and disable reparenting o=
+n=20
+rk3036
+ae7ed09 clk: rockchip: add clock-id for rk3036 emac pll source clock
+f876a7e clk: rockchip: associate the rk3036 HCLK_EMAC clock-id
+5093371 clk: rockchip: add node-id for rk3036 emac hclk
 
-MBR, Sergei
+f44eeee Revert "clk: rockchip: rk3036: fix and add node id for emac clo=
+ck"
+=2E.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It works if the patch
+c467a5f clk: rockchip: associate SCLK_MAC_PLL and disable reparenting o=
+n=20
+rk3036 to change as following
+
+--- a/drivers/clk/rockchip/clk-rk3036.c
++++ b/drivers/clk/rockchip/clk-rk3036.c
+@@ -348,8 +348,8 @@ static struct rockchip_clk_branch=20
+rk3036_clk_branches[] __initdata =3D {
+                         RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFL=
+AGS,
+                         RK2928_CLKGATE_CON(10), 5, GFLAGS),
+
+-       COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+-                       RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLA=
+GS),
++       COMPOSITE_NOGATE(SCLK_MACPLL, "mac_pll_src",=20
+mux_pll_src_3plls_p, CLK_SET_RATE_NO_REPARENT,
++                       RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLA=
+GS),
+
+
+>
+>
+> Thanks
+> Heiko
+>
+> ------ 8< ---------
+>  From e83a8b19dbf95c40d2c908727c342fbc6b167ea1 Mon Sep 17 00:00:00 20=
+01
+> From: Heiko Stuebner <heiko@sntech.de>
+> Date: Fri, 19 Feb 2016 21:31:43 +0100
+> Subject: [PATCH] clk: rockchip: associate SCLK_MAC_PLL and disable re=
+parenting
+>   on rk3036
+>
+> The emac needs constant and very specific rate but the possible PLL-s=
+ources
+> are very limited, so we expect the PLL source to be set manually on p=
+er
+> board and don't want it to get changed in an automatic way later.
+> So add the necessary clock-id and disable reparenting on set_rate cal=
+ls.
+>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>   drivers/clk/rockchip/clk-rk3036.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip=
+/clk-rk3036.c
+> index 3c742bf..0084c57 100644
+> --- a/drivers/clk/rockchip/clk-rk3036.c
+> +++ b/drivers/clk/rockchip/clk-rk3036.c
+> @@ -348,7 +348,7 @@ static struct rockchip_clk_branch rk3036_clk_bran=
+ches[] __initdata =3D {
+>   			RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
+>   			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+>  =20
+> -	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+> +	COMPOSITE_NOGATE(SCLK_MACPLL, "mac_pll_src", mux_pll_src_3plls_p, C=
+LK_SET_RATE_NO_REPARENT,
+>   			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
+
+-RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
+
++RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
+
+
+
+>   	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+>   			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
+>
+> ------ 8< ---------
+>
+>
+> [0] https://github.com/mmind/linux-rockchip/commit/e83a8b19dbf95c40d2=
+c908727c342fbc6b167ea1
+>
+>
+>> ---
+>>
+>>   drivers/clk/rockchip/clk-rk3036.c      | 9 ++++++---
+>>   include/dt-bindings/clock/rk3036-cru.h | 2 ++
+>>   2 files changed, 8 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clk/rockchip/clk-rk3036.c
+>> b/drivers/clk/rockchip/clk-rk3036.c index 0703c8f..27c35fa 100644
+>> --- a/drivers/clk/rockchip/clk-rk3036.c
+>> +++ b/drivers/clk/rockchip/clk-rk3036.c
+>> @@ -348,8 +348,11 @@ static struct rockchip_clk_branch rk3036_clk_br=
+anches[]
+>> __initdata =3D { RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
+>>   			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+>>
+>> -	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+>> -			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
+>> +	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
+>> +			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
+>> +	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
+>> +			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
+>> +
+>>   	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+>>   			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
+>>
+>> @@ -408,7 +411,7 @@ static struct rockchip_clk_branch rk3036_clk_bra=
+nches[]
+>> __initdata =3D { GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNOR=
+E_UNUSED,
+>> RK2928_CLKGATE_CON(7), 3, GFLAGS), GATE(HCLK_I2S, "hclk_i2s", "hclk_=
+peri",
+>> 0, RK2928_CLKGATE_CON(7), 2, GFLAGS), GATE(0, "hclk_sfc", "hclk_peri=
+",
+>> CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS), -	GATE(0,
+>> "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 1=
+5,
+>> GFLAGS), +	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0,
+>> RK2928_CLKGATE_CON(3), 5, GFLAGS),
+>>
+>>   	/* pclk_peri gates */
+>>   	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED,
+>> RK2928_CLKGATE_CON(4), 1, GFLAGS), diff --git
+>> a/include/dt-bindings/clock/rk3036-cru.h
+>> b/include/dt-bindings/clock/rk3036-cru.h index ebc7a7b..de44109 1006=
+44
+>> --- a/include/dt-bindings/clock/rk3036-cru.h
+>> +++ b/include/dt-bindings/clock/rk3036-cru.h
+>> @@ -54,6 +54,7 @@
+>>   #define SCLK_PVTM_VIDEO		125
+>>   #define SCLK_MAC		151
+>>   #define SCLK_MACREF		152
+>> +#define SCLK_MACPLL		153
+>>   #define SCLK_SFC		160
+>>
+>>   /* aclk gates */
+>> @@ -92,6 +93,7 @@
+>>   #define HCLK_SDMMC		456
+>>   #define HCLK_SDIO		457
+>>   #define HCLK_EMMC		459
+>> +#define HCLK_MAC		460
+>>   #define HCLK_I2S		462
+>>   #define HCLK_LCDC		465
+>>   #define HCLK_ROM		467
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
+
+--=20
+Thanks,
+Caesar
+
