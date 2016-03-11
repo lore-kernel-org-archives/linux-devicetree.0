@@ -1,65 +1,153 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: Add dts for colorfly e708 q1 tablet
-Date: Fri, 11 Mar 2016 12:00:54 +0100
-Message-ID: <20160311110054.GC8418@lukather>
-References: <1457560230-32199-1-git-send-email-hdegoede@redhat.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 5/6] clk: rockchip: rk3036: fix and add node id for emac clock
+Date: Fri, 11 Mar 2016 12:15:33 +0100
+Message-ID: <2005499.uduk6By3kM@diego>
+References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com> <1457693731-6966-6-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="f84gc1imS8AYVgCy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457560230-32199-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1457693731-6966-6-git-send-email-wxt@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Caesar,
 
---f84gc1imS8AYVgCy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Mar 09, 2016 at 10:50:30PM +0100, Hans de Goede wrote:
-> The colorfly e708 q1 is a 7" tablet which is clearly marked as colorfly
-> e708 q1 on the back. It features a 9:16 800x1280 IPS LCD, A31s SoC,
-> 1GB RAM, 8G NAND, ilitek 2139qt004 touchscreen on i2c-1 addr 0x41,
-> stk8313 accelerometer on i2c-2 addr 0x22 and a rtl8188etv wifi chip.
+Am Freitag, 11. M=E4rz 2016, 18:55:30 schrieb Caesar Wang:
+> From: zhengxing <zhengxing@rock-chips.com>
 >=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> In the emac driver, we need to refer HCLK_MAC since there are
+> only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clocks are under the
+> GPLL, and it is unable to provide the accurate rate for mac_ref which
+> need to 50MHz probability, we should let it under the DPLL and are
+> able to set the freq which integer multiples of 50MHz, so we add thes=
+e
+> emac node for reference.
+>=20
+> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-Queued, thanks!
-Maxime
+I think I mentioned it somewhere before, but I'd like to do this
+differently, like in [0].
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+That should work in a similar way and at least in my tests the reported
+clock rate seems to be correct. As I said as well I haven't been able t=
+o
+make the emac detect a link on my kylin boards, so it would be cool
+if you could test if this different approach works in practice as well.
 
---f84gc1imS8AYVgCy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Thanks
+Heiko
 
-iQIcBAEBAgAGBQJW4qVmAAoJEBx+YmzsjxAg4zAP/0qvT1G6K4OKEnXn/6iML3sa
-VPtMk13s8S6qAJha4T0v7yRlX/hgpMEiQm4squnjeif1anc2yC/RnER9L+f0MmPJ
-0aHJlNrKtxXx0TbQEKK+qd1oigwczgRD49SnryezL6ELflSYXDUn1c46X42iuZBC
-3dVtulKBNH6NKWQFDyUPZB2RCYl/5zxxT5OyH0Saq2gTy41uQ2j5NNnHQtyw99R1
-x86aa9Gvw/QrjhKjT2fVXjPz4GHhDOCY3a4n0LJf7/Vwm3Ef1zAiRwQAyL94n65u
-ERjiYU0J2HULhZbPkkDZbNgD6zic/iZZn+0fvE81dubsxDxEqqTD3qAdu23bIE7Z
-alKY8GnuODgXSXOEZwGcnVAjWBESuzoC0hAe1Urt56DPzwJ/SG3sX3b7m5aK+Ul1
-qC4W3CgEsla00K2ATY7DyUNYriQew1wzh7WhiYqQnnd7oLwZ3aOcSOhOEVlk/jea
-53mtdf3OSwQjYuNzHQQd78BKSr4nb27eS1dij4vGytxOUrWpC39PL0yFogYoD4ye
-0eAfv7wLKXjGCJQjQJxF93gjTGlNIhXUsE5Cl9OAtk9gNCwpowoZyN+oLl5E+E/S
-TYSMdQPu7buJUrruZiQ0sEatl1jpz/8kgxWh2nAuTFCni6PGZ/NaqR3KQmQQv5Lr
-jbYa9tVblKoNttn18/8t
-=A6X8
------END PGP SIGNATURE-----
+------ 8< ---------
+=46rom e83a8b19dbf95c40d2c908727c342fbc6b167ea1 Mon Sep 17 00:00:00 200=
+1
+=46rom: Heiko Stuebner <heiko@sntech.de>
+Date: Fri, 19 Feb 2016 21:31:43 +0100
+Subject: [PATCH] clk: rockchip: associate SCLK_MAC_PLL and disable repa=
+renting
+ on rk3036
 
---f84gc1imS8AYVgCy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The emac needs constant and very specific rate but the possible PLL-sou=
+rces
+are very limited, so we expect the PLL source to be set manually on per
+board and don't want it to get changed in an automatic way later.
+So add the necessary clock-id and disable reparenting on set_rate calls=
+=2E
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ drivers/clk/rockchip/clk-rk3036.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/c=
+lk-rk3036.c
+index 3c742bf..0084c57 100644
+--- a/drivers/clk/rockchip/clk-rk3036.c
++++ b/drivers/clk/rockchip/clk-rk3036.c
+@@ -348,7 +348,7 @@ static struct rockchip_clk_branch rk3036_clk_branch=
+es[] __initdata =3D {
+ 			RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
+ 			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+=20
+-	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
++	COMPOSITE_NOGATE(SCLK_MACPLL, "mac_pll_src", mux_pll_src_3plls_p, CLK=
+_SET_RATE_NO_REPARENT,
+ 			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
+ 	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+ 			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
+
+------ 8< ---------
+
+
+[0] https://github.com/mmind/linux-rockchip/commit/e83a8b19dbf95c40d2c9=
+08727c342fbc6b167ea1
+
+
+> ---
+>=20
+>  drivers/clk/rockchip/clk-rk3036.c      | 9 ++++++---
+>  include/dt-bindings/clock/rk3036-cru.h | 2 ++
+>  2 files changed, 8 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/clk/rockchip/clk-rk3036.c
+> b/drivers/clk/rockchip/clk-rk3036.c index 0703c8f..27c35fa 100644
+> --- a/drivers/clk/rockchip/clk-rk3036.c
+> +++ b/drivers/clk/rockchip/clk-rk3036.c
+> @@ -348,8 +348,11 @@ static struct rockchip_clk_branch rk3036_clk_bra=
+nches[]
+> __initdata =3D { RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
+>  			RK2928_CLKGATE_CON(10), 5, GFLAGS),
+>=20
+> -	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
+> -			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
+> +	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
+> +			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
+> +	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
+> +			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
+> +
+>  	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
+>  			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
+>=20
+> @@ -408,7 +411,7 @@ static struct rockchip_clk_branch rk3036_clk_bran=
+ches[]
+> __initdata =3D { GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNORE=
+_UNUSED,
+> RK2928_CLKGATE_CON(7), 3, GFLAGS), GATE(HCLK_I2S, "hclk_i2s", "hclk_p=
+eri",
+> 0, RK2928_CLKGATE_CON(7), 2, GFLAGS), GATE(0, "hclk_sfc", "hclk_peri"=
+,
+> CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS), -	GATE(0,
+> "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15=
+,
+> GFLAGS), +	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0,
+> RK2928_CLKGATE_CON(3), 5, GFLAGS),
+>=20
+>  	/* pclk_peri gates */
+>  	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED,
+> RK2928_CLKGATE_CON(4), 1, GFLAGS), diff --git
+> a/include/dt-bindings/clock/rk3036-cru.h
+> b/include/dt-bindings/clock/rk3036-cru.h index ebc7a7b..de44109 10064=
+4
+> --- a/include/dt-bindings/clock/rk3036-cru.h
+> +++ b/include/dt-bindings/clock/rk3036-cru.h
+> @@ -54,6 +54,7 @@
+>  #define SCLK_PVTM_VIDEO		125
+>  #define SCLK_MAC		151
+>  #define SCLK_MACREF		152
+> +#define SCLK_MACPLL		153
+>  #define SCLK_SFC		160
+>=20
+>  /* aclk gates */
+> @@ -92,6 +93,7 @@
+>  #define HCLK_SDMMC		456
+>  #define HCLK_SDIO		457
+>  #define HCLK_EMMC		459
+> +#define HCLK_MAC		460
+>  #define HCLK_I2S		462
+>  #define HCLK_LCDC		465
+>  #define HCLK_ROM		467
+
