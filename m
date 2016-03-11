@@ -1,257 +1,109 @@
-From: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Subject: [PATCH v5 1/2] iio: ad5755: add support for dt bindings
-Date: Fri, 11 Mar 2016 15:12:40 +0100
-Message-ID: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
+From: Caesar Wang <caesar.upstream@gmail.com>
+Subject: Re: [PATCH 0/6] arc_emac: fixes the emac issues oand cleanup emac
+ drivers
+Date: Fri, 11 Mar 2016 22:48:36 +0800
+Message-ID: <56E2DAC4.4020105@gmail.com>
+References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
+ <56E2CC39.6050907@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <56E2CC39.6050907@cogentembedded.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, zhengxing <zhengxing@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, keescook@google.com, Jiri Kosina <trivial@kernel.org>, linux-clk@vger.kernel.org, leozwang@google.com
 List-Id: devicetree@vger.kernel.org
 
-Devicetree can provide platform data
+Hi Sergei,
 
-Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
----
-Changes since v4:
-- added lookups tables instead of large switchcases
+=E5=9C=A8 2016=E5=B9=B403=E6=9C=8811=E6=97=A5 21:46, Sergei Shtylyov =E5=
+=86=99=E9=81=93:
+> Hello.
+>
+> On 3/11/2016 1:55 PM, Caesar Wang wrote:
+>
+>> This series patches are based on kernel 4.5-rc7+ version.
+>> Linux version 4.5.0-rc7-next-20160310+ (wxt@nb) (...) #23 SMP Fri Ma=
+r=20
+>> 11 15:55:53
+>
+> [...]
+>
+>> 1) This series has 6 patches: (1--->6)
+>> net: arc_emac: make the rockchip emac document more compatible
+>> net: arc_emac: add phy-reset-* are optional for device tree
+>
+>    I'm not seeing these patches on netdev...
 
-Changes since v3:
-- replaced '_' with '-'
-- Now used actual values instead of register values.
+Sent by the patman tool.
 
-Changes since v2:
-- removed defines from DT
+LKML:
+https://patchwork.kernel.org/patch/8564501/
+https://patchwork.kernel.org/patch/8564511/
 
- drivers/iio/dac/ad5755.c | 186 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 185 insertions(+), 1 deletion(-)
+>
+>> net: arc_emac: support the phy reset for emac driver
+>> net: arc: trivial: cleanup the emac driver
+>> clk: rockchip: rk3036: fix and add node id for emac clock
+>> ARM: dts: rockchip: add support emac for RK3036
+>>
+>> 2) This series patches have the following decriptions:
+>
+>    Descriptions.
+>
+>> Hi Rob, David:
+>> PATCH[1/6-2/6]: =3D=3D=3D=3D>
+>> net: arc_emac: make the rockchip emac document more compatible
+>> net: arc_emac: add phy-reset-* are optional for device tree
+>>
+>> The patches change the rockchip emac document for more compatible an=
+d
+>> Add the phy-reset-* property for document.
+>>
+>> This patch adds the following property for arc_emac.
+>>
+>> phy-reset-* include the following:
+>> 1) phy-reset-gpios:
+>> The phy-reset-gpios is an optional property for arc emac device tree=
+=20
+>> boot.
+>> Change the binding document to match the driver code.
+>>
+>> 2) phy-reset-duration:
+>> Different boards may require different phy reset duration. Add prope=
+rty
+>> phy-reset-duration for device tree probe, so that the boards that ne=
+ed
+>> a longer reset duration can specify it in their device tree.
+>>
+>> 3) phy-reset-active-high:
+>> We need that for a custom hardware that needs the reverse reset=20
+>> sequence.
+>
+>    Why not infer this from the "phy-reset-gpios" prop?
 
-diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
-index bfb350a..b380803 100644
---- a/drivers/iio/dac/ad5755.c
-+++ b/drivers/iio/dac/ad5755.c
-@@ -14,6 +14,7 @@
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include <linux/delay.h>
-+#include <linux/of.h>
- #include <linux/iio/iio.h>
- #include <linux/iio/sysfs.h>
- #include <linux/platform_data/ad5755.h>
-@@ -109,6 +110,49 @@ enum ad5755_type {
- 	ID_AD5737,
- };
- 
-+static const int ad5755_dcdc_freq_table[][2] = {
-+	{ 250000, AD5755_DC_DC_FREQ_250kHZ },
-+	{ 410000, AD5755_DC_DC_FREQ_410kHZ },
-+	{ 650000, AD5755_DC_DC_FREQ_650kHZ }
-+};
-+
-+static const int ad5755_dcdc_maxv_table[][2] = {
-+	{ 23000000, AD5755_DC_DC_MAXV_23V },
-+	{ 24500000, AD5755_DC_DC_MAXV_24V5 },
-+	{ 27000000, AD5755_DC_DC_MAXV_27V },
-+	{ 29500000, AD5755_DC_DC_MAXV_29V5 },
-+};
-+
-+static const int ad5755_slew_rate_table[][2] = {
-+	{ 64000, AD5755_SLEW_RATE_64k },
-+	{ 32000, AD5755_SLEW_RATE_32k },
-+	{ 16000, AD5755_SLEW_RATE_16k },
-+	{ 8000, AD5755_SLEW_RATE_8k },
-+	{ 4000, AD5755_SLEW_RATE_4k },
-+	{ 2000, AD5755_SLEW_RATE_2k },
-+	{ 1000, AD5755_SLEW_RATE_1k },
-+	{ 500, AD5755_SLEW_RATE_500 },
-+	{ 250, AD5755_SLEW_RATE_250 },
-+	{ 125, AD5755_SLEW_RATE_125 },
-+	{ 64, AD5755_SLEW_RATE_64 },
-+	{ 32, AD5755_SLEW_RATE_32 },
-+	{ 16, AD5755_SLEW_RATE_16 },
-+	{ 8, AD5755_SLEW_RATE_8 },
-+	{ 4, AD5755_SLEW_RATE_4 },
-+	{ 0, AD5755_SLEW_RATE_0_5 },
-+};
-+
-+static const int ad5755_slew_step_table[][2] = {
-+	{ 256, AD5755_SLEW_STEP_SIZE_256 },
-+	{ 128, AD5755_SLEW_STEP_SIZE_128 },
-+	{ 64, AD5755_SLEW_STEP_SIZE_64 },
-+	{ 32, AD5755_SLEW_STEP_SIZE_32 },
-+	{ 16, AD5755_SLEW_STEP_SIZE_16 },
-+	{ 4, AD5755_SLEW_STEP_SIZE_4 },
-+	{ 2, AD5755_SLEW_STEP_SIZE_2 },
-+	{ 1, AD5755_SLEW_STEP_SIZE_1 },
-+};
-+
- static int ad5755_write_unlocked(struct iio_dev *indio_dev,
- 	unsigned int reg, unsigned int val)
- {
-@@ -556,6 +600,129 @@ static const struct ad5755_platform_data ad5755_default_pdata = {
- 	},
- };
- 
-+#ifdef CONFIG_OF
-+static struct ad5755_platform_data *ad5755_parse_dt(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	struct device_node *pp;
-+	struct ad5755_platform_data *pdata;
-+	unsigned int tmp;
-+	unsigned int tmparray[3];
-+	int devnr, i;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->ext_dc_dc_compenstation_resistor =
-+	    of_property_read_bool(np, "adi,ext-dc-dc-compenstation-resistor");
-+
-+	if (!of_property_read_u32(np, "adi,dc-dc-phase", &tmp))
-+		pdata->dc_dc_phase = tmp;
-+	else
-+		pdata->dc_dc_phase = AD5755_DC_DC_PHASE_ALL_SAME_EDGE;
-+
-+	pdata->dc_dc_freq = AD5755_DC_DC_FREQ_410kHZ;
-+	if (!of_property_read_u32(np, "adi,dc-dc-freq-hz", &tmp)) {
-+		for (i = 0; i < ARRAY_SIZE(ad5755_dcdc_freq_table); i++) {
-+			if (tmp == ad5755_dcdc_freq_table[i][0]) {
-+				pdata->dc_dc_freq = ad5755_dcdc_freq_table[i][1];
-+				break;
-+			}
-+		}
-+
-+		if (i == ARRAY_SIZE(ad5755_dcdc_freq_table)) {
-+			dev_err(dev,
-+				"adi,dc-dc-freq out of range selecting 410kHz");
-+		}
-+	}
-+
-+	pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_23V;
-+	if (!of_property_read_u32(np, "adi,dc-dc-max-microvolt", &tmp)) {
-+		for (i = 0; i < ARRAY_SIZE(ad5755_dcdc_maxv_table); i++) {
-+			if (tmp == ad5755_dcdc_maxv_table[i][0]) {
-+				pdata->dc_dc_maxv = ad5755_dcdc_maxv_table[i][1];
-+				break;
-+			}
-+		}
-+		if (i == ARRAY_SIZE(ad5755_dcdc_maxv_table)) {
-+				dev_err(dev,
-+					"adi,dc-dc-maxv out of range selecting 23V");
-+		}
-+	}
-+
-+	devnr = 0;
-+	for_each_child_of_node(np, pp) {
-+		if (devnr > AD5755_NUM_CHANNELS) {
-+			dev_err(dev,
-+				"There is to many channels defined in DT\n");
-+			goto error_out;
-+		}
-+
-+		if (!of_property_read_u32(pp, "adi,mode", &tmp))
-+			pdata->dac[devnr].mode = tmp;
-+		else
-+			pdata->dac[devnr].mode = AD5755_MODE_CURRENT_4mA_20mA;
-+
-+		pdata->dac[devnr].ext_current_sense_resistor =
-+		    of_property_read_bool(pp, "adi,ext-current-sense-resistor");
-+
-+		pdata->dac[devnr].enable_voltage_overrange =
-+		    of_property_read_bool(pp, "adi,enable-voltage-overrange");
-+
-+		if (!of_property_read_u32_array(pp, "adi,slew", tmparray, 3)) {
-+			pdata->dac[devnr].slew.enable = tmparray[0];
-+
-+			pdata->dac[devnr].slew.rate = AD5755_SLEW_RATE_64k;
-+			for (i = 0; i < ARRAY_SIZE(ad5755_slew_rate_table); i++) {
-+				if (tmparray[1] == ad5755_slew_rate_table[i][0]) {
-+					pdata->dac[devnr].slew.rate =
-+						ad5755_slew_rate_table[i][1];
-+					break;
-+				}
-+			}
-+			if (i == ARRAY_SIZE(ad5755_slew_rate_table)) {
-+				dev_err(dev,
-+					"channel %d slew rate out of range selecting 64kHz",
-+					devnr);
-+			}
-+
-+			pdata->dac[devnr].slew.step_size = AD5755_SLEW_STEP_SIZE_1;
-+			for (i = 0; i < ARRAY_SIZE(ad5755_slew_step_table); i++) {
-+				if (tmparray[2] == ad5755_slew_step_table[i][0]) {
-+					pdata->dac[devnr].slew.step_size =
-+						ad5755_slew_step_table[i][1];
-+					break;
-+				}
-+			}
-+			if (i == ARRAY_SIZE(ad5755_slew_step_table)) {
-+				dev_err(dev,
-+					"channel %d slew step size out of range selecting 1 LSB",
-+					devnr);
-+			}
-+		} else {
-+			pdata->dac[devnr].slew.enable = false;
-+			pdata->dac[devnr].slew.rate = AD5755_SLEW_RATE_64k;
-+			pdata->dac[devnr].slew.step_size =
-+			    AD5755_SLEW_STEP_SIZE_1;
-+		}
-+		devnr++;
-+	}
-+
-+	return pdata;
-+
-+ error_out:
-+	devm_kfree(dev, pdata);
-+	return NULL;
-+}
-+#else
-+static
-+struct adf4350_platform_data *adf4350_parse_dt(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int ad5755_probe(struct spi_device *spi)
- {
- 	enum ad5755_type type = spi_get_device_id(spi)->driver_data;
-@@ -583,8 +750,15 @@ static int ad5755_probe(struct spi_device *spi)
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->num_channels = AD5755_NUM_CHANNELS;
- 
--	if (!pdata)
-+	if (spi->dev.of_node)
-+		pdata = ad5755_parse_dt(&spi->dev);
-+	else
-+		pdata = spi->dev.platform_data;
-+
-+	if (!pdata) {
-+		dev_warn(&spi->dev, "no platform data? using default\n");
- 		pdata = &ad5755_default_pdata;
-+	}
- 
- 	ret = ad5755_init_channels(indio_dev, pdata);
- 	if (ret)
-@@ -607,6 +781,16 @@ static const struct spi_device_id ad5755_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, ad5755_id);
- 
-+static const struct of_device_id ad5755_of_match[] = {
-+	{ .compatible = "adi,ad5755" },
-+	{ .compatible = "adi,ad5755-1" },
-+	{ .compatible = "adi,ad5757" },
-+	{ .compatible = "adi,ad5735" },
-+	{ .compatible = "adi,ad5737" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ad5755_of_match);
-+
- static struct spi_driver ad5755_driver = {
- 	.driver = {
- 		.name = "ad5755",
--- 
-2.7.2
+See:
+https://patchwork.kernel.org/patch/8564511/
+
+phy-reset-active-high : If present then the reset sequence using the GP=
+IO
+  specified in the "phy-reset-gpios" property is reversed (H=3Dreset st=
+ate,
+  L=3Doperation state).
+
+
+Thanks,
+
+Caesar
+
+>
+> MBR, Sergei
+>
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+
