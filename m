@@ -1,257 +1,177 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V9 1/6] mfd: add device-tree binding doc for PMIC max77620/max20024
-Date: Fri, 11 Mar 2016 20:13:53 +0530
-Message-ID: <1457707438-9842-2-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V9 3/6] pinctrl: add DT binding doc for pincontrol of PMIC max77620/max20024
+Date: Fri, 11 Mar 2016 20:13:55 +0530
+Message-ID: <1457707438-9842-4-git-send-email-ldewangan@nvidia.com>
 References: <1457707438-9842-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <1457707438-9842-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com
 Cc: broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, rklein@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The MAXIM PMIC MAX77620 and MAX20024 are power management IC
-which supports RTC, GPIO, DCDC/LDO regulators, interrupt,
-watchdog etc.
+Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
+which act as GPIO as well as special function mode.
 
-Add DT binding document for the different functionality of
-this device.
+Add DT binding document to configure pins in function mode as
+well as pin configuration parameters.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
 ---
-Changes from V1:
-- Added units in some of properties.
-- Change the boolean property to tristate type and detail some of
-  properties.
-
-Change from V2:
-- added unit in period related dt property.
-
-Change from V3: None
-- Added Rob's ack.
-
 Changes from V4:
-- A- Provide more details in the dt binding doc.
-- Take care of fps nodes.
-- Split the submodule's DT binding doc on respective folder.
-- Drop the battery charger and low battery binding and related code as
-  it need to go on power driver.
+- Separate out from pincontrol driver
 
-Change from V5:
+Changes from V5:
+- Starting patch title with pinctrl instead of DT:pinctrl
+
+Changes from V6/V7:
 - None
 
-Change from V6:
--start the patch title with mfd instead of DT: mfd:
+Changes on V8:
+- Collected Ack from Linus.
 
-Change from V7:
-- Better describe the FPS to make more clear.
+ .../bindings/pinctrl/pinctrl-max77620.txt          | 127 +++++++++++++++++++++
+ 1 file changed, 127 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
 
-Changes from V8:
-None
-
- Documentation/devicetree/bindings/mfd/max77620.txt | 143 +++++++++++++++++++++
- include/dt-bindings/mfd/max77620.h                 |  39 ++++++
- 2 files changed, 182 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
- create mode 100644 include/dt-bindings/mfd/max77620.h
-
-diff --git a/Documentation/devicetree/bindings/mfd/max77620.txt b/Documentation/devicetree/bindings/mfd/max77620.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
 new file mode 100644
-index 0000000..2ad44f7
+index 0000000..ad4fce3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max77620.txt
-@@ -0,0 +1,143 @@
-+MAX77620 Power management IC from Maxim Semiconductor.
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+@@ -0,0 +1,127 @@
++Pincontrol driver for MAX77620 Power management IC from Maxim Semiconductor.
++
++Device has 8 GPIO pins which can be configured as GPIO as well as the
++special IO functions.
++
++Please refer file <devicetree/bindings/pinctrl/pinctrl-bindings.txt>
++for details of the common pinctrl bindings used by client devices,
++including the meaning of the phrase "pin configuration node".
++
++Optional Pinmux properties:
++--------------------------
++Following properties are required if default setting of pins are required
++at boot.
++- pinctrl-names: A pinctrl state named per <pinctrl-binding.txt>.
++- pinctrl[0...n]: Properties to contain the phandle for pinctrl states per
++		<pinctrl-binding.txt>.
++
++The pin configurations are defined as child of the pinctrl states node. Each
++sub-node have following properties:
 +
 +Required properties:
-+-------------------
-+- compatible: Must be one of
-+		"maxim,max77620"
-+		"maxim,max20024".
-+- reg: I2C device address.
++------------------
++- pins: List of pins. Valid values of pins properties are:
++		      gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7.
 +
 +Optional properties:
 +-------------------
-+- interrupts:		The interrupt on the parent the controller is
-+			connected to.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells:	is <2> and their usage is compliant to the 2 cells
-+			variant of <../interrupt-controller/interrupts.txt>
-+			IRQ numbers for different interrupt source of MAX77620
-+			are defined at dt-bindings/mfd/max77620.h.
++Following are optional properties defined as pinmux DT binding document
++<pinctrl-bindings.txt>. Absence of properties will leave the configuration
++on default.
++	function,
++	drive-push-pull,
++	drive-open-drain,
++	bias-pull-up,
++	bias-pull-down.
 +
-+Optional subnodes and their properties:
-+=======================================
++Valid values for function properties are:
++	gpio, lpm-control-in, fps-out, 32k-out, sd0-dvs-in, sd1-dvs-in,
++	reference-out
 +
-+Flexible power sequence configurations:
-+--------------------------------------
-+The Flexible Power Sequencer (FPS) allows each regulator to power up under
-+hardware or software control. Additionally, each regulator can power on
-+independently or among a group of other regulators with an adjustable power-up
-+and power-down delays (sequencing). GPIO1, GPIO2, and GPIO3 can be programmed
-+to be part of a sequence allowing external regulators to be sequenced along
-+with internal regulators. 32KHz clock can be programmed to be part of a
-+sequence.
++Theres is also customised properties for the GPIO1, GPIO2 and GPIO3. These
++customised properties are required to configure FPS configuration parameters
++of these GPIOs. Please refer <devicetree/bindings/mfd/max77620.txt> for more
++detail of Flexible Power Sequence (FPS).
 +
-+The flexible sequencing structure consists of two hardware enable inputs
-+(EN0, EN1), and 3 master sequencing timers called FPS0, FPS1 and FPS2.
-+Each master sequencing timer is programmable through its configuration
-+register to have a hardware enable source (EN1 or EN2) or a software enable
-+source (SW). When enabled/disabled, the master sequencing timer generates
-+eight sequencing events on different time periods called slots. The time
-+period between each event is programmable within the configuration register.
-+Each regulator, GPIO1, GPIO2, GPIO3, and 32KHz clock has a flexible power
-+sequence slave register which allows its enable source to be specified as
-+a flexible power sequencer timer or a software bit. When a FPS source of
-+regulators, GPIOs and clocks specifies the enable source to be a flexible
-+power sequencer, the power up and power down delays can be specified in
-+the regulators, GPIOs and clocks flexible power sequencer configuration
-+registers.
++- maxim,active-fps-source:		FPS source for the GPIOs to get
++					enabled/disabled when system is in
++					active state.  Valid values are:
++					- MAX77620_FPS_SRC_0,
++						FPS source is FPS0.
++					- MAX77620_FPS_SRC_1,
++						FPS source is FPS1
++					- MAX77620_FPS_SRC_2 and
++						FPS source is FPS2
++					- MAX77620_FPS_SRC_NONE.
++						GPIO is not controlled
++						by FPS events and it gets
++						enabled/disabled by register
++						access.
++					Absence of this property will leave
++					the FPS configuration register for that
++					GPIO to default configuration.
 +
-+When FPS event cleared (set to LOW), regulators, GPIOs and 32KHz
-+clock are set into following state at the sequencing event that
-+corresponds to its flexible sequencer configuration register.
-+	Sleep state: 			In this state, regulators, GPIOs
-+					and 32KHz clock get disabled at
-+					the sequencing event.
-+	Global Low Power Mode (GLPM):	In this state, regulators are set in
-+					low power mode at the sequencing event.
++- maxim,active-fps-power-up-slot:	Sequencing event slot number on which
++					the GPIO get enabled when
++					master FPS input event set to HIGH.
++					Valid values are 0 to 7.
++					This is applicable if FPS source is
++					selected as FPS0, FPS1 or FPS2.
 +
-+The configuration parameters of FPS is provided through sub-node "fps"
-+and their child for FPS specific. The child node name for FPS are "fps0",
-+"fps1", and "fps2" for FPS0, FPS1 and FPS2 respectively.
++- maxim,active-fps-power-down-slot:	Sequencing event slot number on which
++					the GPIO get disabled when master
++					FPS input event set to LOW.
++					Valid values are 0 to 7.
++					This is applicable if FPS source is
++					selected as FPS0, FPS1 or FPS2.
 +
-+The FPS configurations like FPS source, power up and power down slots for
-+regulators, GPIOs and 32kHz clocks are provided in their respective
-+configuration nodes which is explained in respective sub-system DT
-+binding document.
++- maxim,suspend-fps-source:		This is same as property
++					"maxim,active-fps-source" but value
++					get configured when system enters in
++					to suspend state.
 +
-+There is need for different FPS configuration parameters based on system
-+state like when system state changed from active to suspend or active to
-+power off (shutdown).
++- maxim,suspend-fps-power-up-slot:	This is same as property
++					"maxim,active-fps-power-up-slot" but
++					this value get configured into FPS
++					configuration register when system
++					enters into suspend.
++					This is applicable if suspend state
++					FPS source is selected as FPS0, FPS1 or
 +
-+Optional properties:
-+-------------------
-+-maxim,fps-event-source:		u32, FPS event source like external
-+					hardware input to PMIC i.e. EN0, EN1 or
-+					software (SW).
-+					The macros are defined on
-+						dt-bindings/mfd/max77620.h
-+					for different control source.
-+					- MAX77620_FPS_EVENT_SRC_EN0
-+						for hardware input pin EN0.
-+					- MAX77620_FPS_EVENT_SRC_EN1
-+						for hardware input pin EN1.
-+					- MAX77620_FPS_EVENT_SRC_SW
-+						for software control.
-+
-+-maxim,shutdown-fps-time-period-us:	u32, FPS time period in microseconds
-+					when system enters in to shutdown
-+					state.
-+
-+-maxim,suspend-fps-time-period-us:	u32, FPS time period in microseconds
-+					when system enters in to suspend state.
-+
-+-maxim,device-state-on-disabled-event:	u32, describe the PMIC state when FPS
-+					event cleared (set to LOW) whether it
-+					should go to sleep state or low-power
-+					state. Following are valid values:
-+					- MAX77620_FPS_INACTIVE_STATE_SLEEP
-+						to set the PMIC state to sleep.
-+					- MAX77620_FPS_INACTIVE_STATE_LOW_POWER
-+						to set the PMIC state to low
-+						power.
-+					Absence of this property or other value
-+					will not change device state when FPS
-+					event get cleared.
-+
-+Here supported time periods by device in microseconds are as follows:
-+MAX77620 supports 40, 80, 160, 320, 640, 1280, 2560 and 5120 microseconds.
-+MAX20024 supports 20, 40, 80, 160, 320, 640, 1280 and 2540 microseconds.
-+
-+For DT binding details of different sub modules like GPIO, pincontrol,
-+regulator, power, please refer respective device-tree binding document
-+under their respective sub-system directories.
++- maxim,suspend-fps-power-down-slot:	This is same as property
++					"maxim,active-fps-power-down-slot" but
++					this value get configured into FPS
++					configuration register when system
++					enters into suspend.
++					This is applicable if suspend state
++					FPS source is selected as FPS0, FPS1 or
++					FPS2.
 +
 +Example:
 +--------
 +#include <dt-bindings/mfd/max77620.h>
-+
++...
 +max77620@3c {
-+	compatible = "maxim,max77620";
-+	reg = <0x3c>;
 +
-+	interrupt-parent = <&intc>;
-+	interrupts = <0 86 IRQ_TYPE_NONE>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&spmic_default>;
 +
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	fps {
-+		fps0 {
-+			maxim,shutdown-fps-time-period-us = <1280>;
-+			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN1>;
++	spmic_default: pinmux@0 {
++		pin_gpio0 {
++			pins = "gpio0";
++			function = "gpio";
 +		};
 +
-+		fps1 {
-+			maxim,shutdown-fps-time-period-us = <1280>;
-+			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_EN0>;
++		pin_gpio1 {
++			pins = "gpio1";
++			function = "fps-out";
++			maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
 +		};
 +
-+		fps2 {
-+			maxim,shutdown-fps-time-period-us = <1280>;
-+			maxim,fps-event-source = <MAX77620_FPS_EVENT_SRC_SW>;
++		pin_gpio2 {
++			pins = "gpio2";
++			function = "fps-out";
++			maxim,active-fps-source = <MAX77620_FPS_SRC_1>;
 +		};
 +	};
 +};
-diff --git a/include/dt-bindings/mfd/max77620.h b/include/dt-bindings/mfd/max77620.h
-new file mode 100644
-index 0000000..b911a07
---- /dev/null
-+++ b/include/dt-bindings/mfd/max77620.h
-@@ -0,0 +1,39 @@
-+/*
-+ * This header provides macros for MAXIM MAX77620 device bindings.
-+ *
-+ * Copyright (c) 2016, NVIDIA Corporation.
-+ * Author: Laxman Dewangan <ldewangan@nvidia.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_MFD_MAX77620_H
-+#define _DT_BINDINGS_MFD_MAX77620_H
-+
-+/* MAX77620 interrupts */
-+#define MAX77620_IRQ_TOP_GLBL		0 /* Low-Battery */
-+#define MAX77620_IRQ_TOP_SD		1 /* SD power fail */
-+#define MAX77620_IRQ_TOP_LDO		2 /* LDO power fail */
-+#define MAX77620_IRQ_TOP_GPIO		3 /* GPIO internal int to MAX77620 */
-+#define MAX77620_IRQ_TOP_RTC		4 /* RTC */
-+#define MAX77620_IRQ_TOP_32K		5 /* 32kHz oscillator */
-+#define MAX77620_IRQ_TOP_ONOFF		6 /* ON/OFF oscillator */
-+#define MAX77620_IRQ_LBT_MBATLOW	7 /* Thermal alarm status, > 120C */
-+#define MAX77620_IRQ_LBT_TJALRM1	8 /* Thermal alarm status, > 120C */
-+#define MAX77620_IRQ_LBT_TJALRM2	9 /* Thermal alarm status, > 140C */
-+
-+/* FPS event source */
-+#define MAX77620_FPS_EVENT_SRC_EN0		0
-+#define MAX77620_FPS_EVENT_SRC_EN1		1
-+#define MAX77620_FPS_EVENT_SRC_SW		2
-+
-+/* Device state when FPS event LOW  */
-+#define MAX77620_FPS_INACTIVE_STATE_SLEEP	0
-+#define MAX77620_FPS_INACTIVE_STATE_LOW_POWER	1
-+
-+/* FPS source */
-+#define MAX77620_FPS_SRC_0			0
-+#define MAX77620_FPS_SRC_1			1
-+#define MAX77620_FPS_SRC_2			2
-+#define MAX77620_FPS_SRC_NONE			3
-+#define MAX77620_FPS_SRC_DEF			4
-+
-+#endif
 -- 
 2.1.4
+
