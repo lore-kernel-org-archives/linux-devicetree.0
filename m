@@ -1,73 +1,39 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
- interface
-Date: Fri, 11 Mar 2016 11:44:26 -0500
-Message-ID: <56E2F5EA.10207@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
- <20160311020650.GG11154@localhost> <56E2EC1C.6040107@codeaurora.org>
- <20160311163221.GC13211@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH V2 0/3] vfio, platform: add HIDMA and ACPI support
+Date: Fri, 11 Mar 2016 11:54:32 -0500
+Message-ID: <1457715275-11925-1-git-send-email-okaya@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160311163221.GC13211@localhost>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/11/2016 11:32 AM, Vinod Koul wrote:
->>>> memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
->>>> > >> +	       TRE_SIZE);
-> This one
-> 
->>>> > >> +	lldev->tx_status_list[tre->idx].err_code = 0;
->>>> > >> +	lldev->tx_status_list[tre->idx].err_info = 0;
->>>> > >> +	tre->queued = 1;
->>>> > >> +	lldev->pending_tre_count++;
->> > 
->> > Is this the only one without alignment? I couldn't understand what you mean by 
->> > above one?
-> quoting Coding Style:
-> 
-> Statements longer than 80 columns will be broken into sensible chunks, unless
-> exceeding 80 columns significantly increases readability and does not hide
-> information. 
+The patchset makes three different changes.
+1. Add support for probing ACPI platform reset drivers.
+2. Make reset driver a requirement now
+3. Add support for HIDMA reset driver.
 
-> "Descendants are always substantially shorter than the parent and
-> are placed substantially to the right."
-> 
-> 
+Specific changes:
 
-Sorry for my poor English. I never got this rule. 
+vfio, platform: add support for ACPI while detecting the reset driver
+Changes from V1: (https://lkml.org/lkml/2016/1/29/672)
+* renamed VFIO_PLATFORM_RESET_MODULE_ALIAS to
+* MODULE_ALIAS_VFIO_PLATFORM_RESET
 
-Which one is a "substantially" right? Can you give me an example?
+Sinan Kaya (3):
+  vfio, platform: add support for ACPI while detecting the reset driver
+  vfio, platform: make reset driver a requirement
+  vfio, platform: add QTI HIDMA reset driver
 
-I need to understand how you'd write this to satisfy the above rule.
-
-like this:
-
-memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
-       TRE_SIZE);
-
-or
-
-memcpy(lldev->tre_ring + lldev->tre_write_offset,
-       &tre->tre_local[0], TRE_SIZE);
-
-or
-
-memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
-							   TRE_SIZE);
-
-or
-
-memcpy(lldev->tre_ring + lldev->tre_write_offset,
-	&tre->tre_local[0], 
-	TRE_SIZE);
+ drivers/vfio/platform/reset/Kconfig                |   9 ++
+ drivers/vfio/platform/reset/Makefile               |   2 +
+ .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   4 +-
+ .../platform/reset/vfio_platform_calxedaxgmac.c    |   4 +-
+ .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 101 +++++++++++++++++
+ drivers/vfio/platform/vfio_platform_common.c       | 123 ++++++++++++++++-----
+ drivers/vfio/platform/vfio_platform_private.h      |  43 ++++---
+ 7 files changed, 241 insertions(+), 45 deletions(-)
+ create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
 
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+1.8.2.1
