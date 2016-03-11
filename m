@@ -1,109 +1,125 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH 0/6] arc_emac: fixes the emac issues oand cleanup emac
- drivers
-Date: Fri, 11 Mar 2016 22:48:36 +0800
-Message-ID: <56E2DAC4.4020105@gmail.com>
-References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
- <56E2CC39.6050907@cogentembedded.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V9 0/6] Add support for MAXIM MAX77620/MAX20024 PMIC
+Date: Fri, 11 Mar 2016 20:13:52 +0530
+Message-ID: <1457707438-9842-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56E2CC39.6050907@cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, zhengxing <zhengxing@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, keescook@google.com, Jiri Kosina <trivial@kernel.org>, linux-clk@vger.kernel.org, leozwang@google.com
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linus.walleij@linaro.org, gnurou@gmail.com
+Cc: broonie@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, swarren@nvidia.com, treding@nvidia.com, k.kozlowski@samsung.com, rklein@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Add SW support for MAXIM Semiconductor's Power Management
+IC (PMIC) MAX77620/MAX20024. This PMIC supports DC-DC/LDOS, GPIOs,
+RTC, watchdog, clocks etc.
 
-=E5=9C=A8 2016=E5=B9=B403=E6=9C=8811=E6=97=A5 21:46, Sergei Shtylyov =E5=
-=86=99=E9=81=93:
-> Hello.
->
-> On 3/11/2016 1:55 PM, Caesar Wang wrote:
->
->> This series patches are based on kernel 4.5-rc7+ version.
->> Linux version 4.5.0-rc7-next-20160310+ (wxt@nb) (...) #23 SMP Fri Ma=
-r=20
->> 11 15:55:53
->
-> [...]
->
->> 1) This series has 6 patches: (1--->6)
->> net: arc_emac: make the rockchip emac document more compatible
->> net: arc_emac: add phy-reset-* are optional for device tree
->
->    I'm not seeing these patches on netdev...
+This series add respective driver for each of sub-modules.
+---
+Changes from V1: 
+DT DOC:
+- Added units in some of properties.
+- Change the boolean property to tristate type and detail some of
+  properties.
 
-Sent by the patman tool.
+RTC:
+- Rename the file to rtc-max77xxx.c and make the generic implementation.
+- Direct regmap apis are used for the register access.
+- Decouped from max77620 driver.
+- Taken care of cleanup comments form V1 version.
 
-LKML:
-https://patchwork.kernel.org/patch/8564501/
-https://patchwork.kernel.org/patch/8564511/
+MFD:
+- Code cleanups per review from V1. 
+- Move register access APIs from header to c file.
+- Remove some of non required variable, remove duplication in error message
+ and simplify some of function implementation.
 
->
->> net: arc_emac: support the phy reset for emac driver
->> net: arc: trivial: cleanup the emac driver
->> clk: rockchip: rk3036: fix and add node id for emac clock
->> ARM: dts: rockchip: add support emac for RK3036
->>
->> 2) This series patches have the following decriptions:
->
->    Descriptions.
->
->> Hi Rob, David:
->> PATCH[1/6-2/6]: =3D=3D=3D=3D>
->> net: arc_emac: make the rockchip emac document more compatible
->> net: arc_emac: add phy-reset-* are optional for device tree
->>
->> The patches change the rockchip emac document for more compatible an=
-d
->> Add the phy-reset-* property for document.
->>
->> This patch adds the following property for arc_emac.
->>
->> phy-reset-* include the following:
->> 1) phy-reset-gpios:
->> The phy-reset-gpios is an optional property for arc emac device tree=
-=20
->> boot.
->> Change the binding document to match the driver code.
->>
->> 2) phy-reset-duration:
->> Different boards may require different phy reset duration. Add prope=
-rty
->> phy-reset-duration for device tree probe, so that the boards that ne=
-ed
->> a longer reset duration can specify it in their device tree.
->>
->> 3) phy-reset-active-high:
->> We need that for a custom hardware that needs the reverse reset=20
->> sequence.
->
->    Why not infer this from the "phy-reset-gpios" prop?
+GPIO:
+- Use the gpiochip_add_data and get the chip data from core APIs.
+- Cleanups based on comment received on mfd/rtc.
+- Avoid duplication on error message.
 
-See:
-https://patchwork.kernel.org/patch/8564511/
+Pinctrl:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
 
-phy-reset-active-high : If present then the reset sequence using the GP=
-IO
-  specified in the "phy-reset-gpios" property is reversed (H=3Dreset st=
-ate,
-  L=3Doperation state).
+Regulators:
+- Cleanup code based on comment received on mfd/rtc.
+- Avoid duplication on error message.
+- Taken care of review comment from Mark.
+
+Changes from V2: 
+- Run coccicheck and checkpatch in strict mode for the alignment.
+- Drop RTC driver and its i2c client registartion.
+- Refactor Regulator  driver to use core API for DT parsing.
+
+Changes from V3: 
+- Change all sys initcall to module driver.
+- change the max77620_read argument to unisgned int from u8.
 
 
-Thanks,
+Changes from V4:
+- Provide more details in the dt binding doc.
+- Take care of fps nodes.
+- Split the submodule's DT binding doc on respective folder.
+- Drop the battery charger and low battery binding and related code as
+  it need to go on power driver.
 
-Caesar
+Changes from V5:
+- None
 
->
-> MBR, Sergei
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+Changes from V6:
+- Taken care of Lee's comment like used defines for irqs, remove max77620
+  register access abstractions, remove DTof module and use ID table only,
+  reduce the copyright lines.
+- Drop configuration for hard power off time change as it will be in
+  power driver.
+- Taken care of Mark's comment about the active discharge. Currently
+  drop this configuration and follow up patches to move this to core
+  and add callback apis are planned.
+- Use direct regmap from all drivers instead of using abstractions.
+- move regulator supply to device node instead of regulators sub node.
+
+Changes from V7:
+- Used mfd defines, better describe the FPS sequence properties.
+
+Changes from V8:
+- Used local defines as the MFD defines need to be fix for size calculations.
+- Regulator patches are already applied and hence droping it.
+- Run checkpatch --strict in final patches and fix error/warning.
+
+Laxman Dewangan (6):
+  mfd: add device-tree binding doc for PMIC max77620/max20024
+  mfd: max77620: add core driver for MAX77620/MAX20024
+  pinctrl: add DT binding doc for pincontrol of PMIC max77620/max20024
+  pinctrl: max77620: add pincontrol driver for MAX77620/MAX20024
+  gpio: add DT binding doc for gpio of PMIC max77620/max20024
+  gpio: max77620: add gpio driver for MAX77620/MAX20024
+
+ .../devicetree/bindings/gpio/gpio-max77620.txt     |  25 +
+ Documentation/devicetree/bindings/mfd/max77620.txt | 143 +++++
+ .../bindings/pinctrl/pinctrl-max77620.txt          | 127 ++++
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-max77620.c                       | 263 ++++++++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/max77620.c                             | 550 ++++++++++++++++
+ drivers/pinctrl/Kconfig                            |  10 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-max77620.c                 | 688 +++++++++++++++++++++
+ include/dt-bindings/mfd/max77620.h                 |  39 ++
+ include/linux/mfd/max77620.h                       | 337 ++++++++++
+ 14 files changed, 2209 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77620.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77620.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+ create mode 100644 drivers/gpio/gpio-max77620.c
+ create mode 100644 drivers/mfd/max77620.c
+ create mode 100644 drivers/pinctrl/pinctrl-max77620.c
+ create mode 100644 include/dt-bindings/mfd/max77620.h
+ create mode 100644 include/linux/mfd/max77620.h
+
+-- 
+2.1.4
 
