@@ -1,153 +1,61 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 5/6] clk: rockchip: rk3036: fix and add node id for emac clock
-Date: Fri, 11 Mar 2016 12:15:33 +0100
-Message-ID: <2005499.uduk6By3kM@diego>
-References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com> <1457693731-6966-6-git-send-email-wxt@rock-chips.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: Tons of "no unit name" spam with make dtbs
+Date: Fri, 11 Mar 2016 11:16:44 +0000
+Message-ID: <20160311111644.GQ5783@n2100.arm.linux.org.uk>
+References: <20160310180745.GD9329@atomide.com>
+ <CAL_JsqJswSBTf+5Vdv2gg05nUg1008vPeh5MYDO_7WHAc=Dndw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457693731-6966-6-git-send-email-wxt@rock-chips.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.com, zhengxing <zhengxing@rock-chips.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJswSBTf+5Vdv2gg05nUg1008vPeh5MYDO_7WHAc=Dndw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+On Thu, Mar 10, 2016 at 07:23:23PM -0600, Rob Herring wrote:
+> On Thu, Mar 10, 2016 at 12:07 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > Hey Rob,
+> >
+> > I'm seeing tons of dtc spam with make dtbs (about 23k lines
+> > with multi_v7_defconfig!) with commit fa38a82096a1 ("scripts/dtc:
+> > Update to upstream version 53bf130b1cdd").
+> >
+> > Introducing something like this few days with merge window
+> > about to open seems to be in the "a bit intrusive" category
+> > to me :)
+> >
+> > Probably some of these changes should be reverted?
+> 
+> It is in -next, but I'm not planning to send to Linus this cycle.
 
-Am Freitag, 11. M=E4rz 2016, 18:55:30 schrieb Caesar Wang:
-> From: zhengxing <zhengxing@rock-chips.com>
->=20
-> In the emac driver, we need to refer HCLK_MAC since there are
-> only 3PLLs (APLL/GPLL/DPLL) on the rk3036, most clocks are under the
-> GPLL, and it is unable to provide the accurate rate for mac_ref which
-> need to 50MHz probability, we should let it under the DPLL and are
-> able to set the freq which integer multiples of 50MHz, so we add thes=
-e
-> emac node for reference.
->=20
-> Signed-off-by: Xing Zheng <zhengxing@rock-chips.com>
-> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Then it shouldn't be in -next.  -next is a tree for integration testing
+and conflict discovery for the upcoming merge window, and should only
+contain code targetted at that merge window.  Here's a reminder of
+sfr's boilerplate which lays this out:
 
-I think I mentioned it somewhere before, but I'd like to do this
-differently, like in [0].
+  Thanks for adding your subsystem tree as a participant of linux-next.  As
+  you may know, this is not a judgment of your code.  The purpose of
+  linux-next is for integration testing and to lower the impact of
+  conflicts between subsystems in the next merge window.
 
-That should work in a similar way and at least in my tests the reported
-clock rate seems to be correct. As I said as well I haven't been able t=
-o
-make the emac detect a link on my kylin boards, so it would be cool
-if you could test if this different approach works in practice as well.
+  You will need to ensure that the patches/commits in your tree/series have
+  been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and
+     * destined for the current or next Linux merge window.
 
+It seems it doesn't satisfy the last point there.
 
-Thanks
-Heiko
-
------- 8< ---------
-=46rom e83a8b19dbf95c40d2c908727c342fbc6b167ea1 Mon Sep 17 00:00:00 200=
-1
-=46rom: Heiko Stuebner <heiko@sntech.de>
-Date: Fri, 19 Feb 2016 21:31:43 +0100
-Subject: [PATCH] clk: rockchip: associate SCLK_MAC_PLL and disable repa=
-renting
- on rk3036
-
-The emac needs constant and very specific rate but the possible PLL-sou=
-rces
-are very limited, so we expect the PLL source to be set manually on per
-board and don't want it to get changed in an automatic way later.
-So add the necessary clock-id and disable reparenting on set_rate calls=
-=2E
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- drivers/clk/rockchip/clk-rk3036.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/rockchip/clk-rk3036.c b/drivers/clk/rockchip/c=
-lk-rk3036.c
-index 3c742bf..0084c57 100644
---- a/drivers/clk/rockchip/clk-rk3036.c
-+++ b/drivers/clk/rockchip/clk-rk3036.c
-@@ -348,7 +348,7 @@ static struct rockchip_clk_branch rk3036_clk_branch=
-es[] __initdata =3D {
- 			RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
- 			RK2928_CLKGATE_CON(10), 5, GFLAGS),
-=20
--	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
-+	COMPOSITE_NOGATE(SCLK_MACPLL, "mac_pll_src", mux_pll_src_3plls_p, CLK=
-_SET_RATE_NO_REPARENT,
- 			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 4, 5, DFLAGS),
- 	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
-
------- 8< ---------
-
-
-[0] https://github.com/mmind/linux-rockchip/commit/e83a8b19dbf95c40d2c9=
-08727c342fbc6b167ea1
-
-
-> ---
->=20
->  drivers/clk/rockchip/clk-rk3036.c      | 9 ++++++---
->  include/dt-bindings/clock/rk3036-cru.h | 2 ++
->  2 files changed, 8 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/clk/rockchip/clk-rk3036.c
-> b/drivers/clk/rockchip/clk-rk3036.c index 0703c8f..27c35fa 100644
-> --- a/drivers/clk/rockchip/clk-rk3036.c
-> +++ b/drivers/clk/rockchip/clk-rk3036.c
-> @@ -348,8 +348,11 @@ static struct rockchip_clk_branch rk3036_clk_bra=
-nches[]
-> __initdata =3D { RK2928_CLKSEL_CON(16), 0, 2, MFLAGS, 2, 5, DFLAGS,
->  			RK2928_CLKGATE_CON(10), 5, GFLAGS),
->=20
-> -	COMPOSITE_NOGATE(0, "mac_pll_src", mux_pll_src_3plls_p, 0,
-> -			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS, 9, 5, DFLAGS),
-> +	MUX(SCLK_MACPLL, "mac_pll_pre", mux_pll_src_3plls_p, 0,
-> +			RK2928_CLKSEL_CON(21), 0, 2, MFLAGS),
-> +	DIV(0, "mac_pll_src", "mac_pll_pre", 0,
-> +			RK2928_CLKSEL_CON(21), 9, 5, DFLAGS),
-> +
->  	MUX(SCLK_MACREF, "mac_clk_ref", mux_mac_p, CLK_SET_RATE_PARENT,
->  			RK2928_CLKSEL_CON(21), 3, 1, MFLAGS),
->=20
-> @@ -408,7 +411,7 @@ static struct rockchip_clk_branch rk3036_clk_bran=
-ches[]
-> __initdata =3D { GATE(HCLK_OTG1, "hclk_otg1", "hclk_peri", CLK_IGNORE=
-_UNUSED,
-> RK2928_CLKGATE_CON(7), 3, GFLAGS), GATE(HCLK_I2S, "hclk_i2s", "hclk_p=
-eri",
-> 0, RK2928_CLKGATE_CON(7), 2, GFLAGS), GATE(0, "hclk_sfc", "hclk_peri"=
-,
-> CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS), -	GATE(0,
-> "hclk_mac", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15=
-,
-> GFLAGS), +	GATE(HCLK_MAC, "hclk_mac", "hclk_peri", 0,
-> RK2928_CLKGATE_CON(3), 5, GFLAGS),
->=20
->  	/* pclk_peri gates */
->  	GATE(0, "pclk_peri_matrix", "pclk_peri", CLK_IGNORE_UNUSED,
-> RK2928_CLKGATE_CON(4), 1, GFLAGS), diff --git
-> a/include/dt-bindings/clock/rk3036-cru.h
-> b/include/dt-bindings/clock/rk3036-cru.h index ebc7a7b..de44109 10064=
-4
-> --- a/include/dt-bindings/clock/rk3036-cru.h
-> +++ b/include/dt-bindings/clock/rk3036-cru.h
-> @@ -54,6 +54,7 @@
->  #define SCLK_PVTM_VIDEO		125
->  #define SCLK_MAC		151
->  #define SCLK_MACREF		152
-> +#define SCLK_MACPLL		153
->  #define SCLK_SFC		160
->=20
->  /* aclk gates */
-> @@ -92,6 +93,7 @@
->  #define HCLK_SDMMC		456
->  #define HCLK_SDIO		457
->  #define HCLK_EMMC		459
-> +#define HCLK_MAC		460
->  #define HCLK_I2S		462
->  #define HCLK_LCDC		465
->  #define HCLK_ROM		467
-
+-- 
+RMK's Patch system: http://www.arm.linux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
