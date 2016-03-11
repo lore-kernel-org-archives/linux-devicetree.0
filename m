@@ -1,47 +1,83 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 6/6] arm64: dts: r8a7795: Add SYSC PM domains
-Date: Fri, 11 Mar 2016 09:01:09 +0100
-Message-ID: <CAMuHMdWH96S6W_h+zYqos6r2-kr6qf_3yo_PvDUc1zfJTzwfdw@mail.gmail.com>
-References: <1457551135-22078-1-git-send-email-geert+renesas@glider.be>
-	<1457551135-22078-7-git-send-email-geert+renesas@glider.be>
-	<20160310233411.GC7423@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160310233411.GC7423@verge.net.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux PM list <linux-pm@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 3/5 v10] usb: musb: core: added missing const qualifier to musb_hdrc_platform_data::config
+Date: Fri, 11 Mar 2016 09:29:47 +0100
+Message-ID: <1457684989-13318-3-git-send-email-petr@barix.com>
+References: <1457684989-13318-1-git-send-email-petr@barix.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+The musb_hdrc_platform_data::config was defined as a non-const pointer.
+However some drivers (e.g. the ux500) set up this pointer to point to a
+static structure, which is potentially dangerous. Since the musb core
+uses the pointer in a read-only manner the const qualifier was added to
+protect the content of the config.
 
-On Fri, Mar 11, 2016 at 12:34 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Wed, Mar 09, 2016 at 08:18:55PM +0100, Geert Uytterhoeven wrote:
->> Add a device node for the System Controller.
->> Hook up the Cortex-A57 CPU cores and the Cortex-A57 and Cortex A53 L2
->> caches/SCUs to their respective PM domains.
->> Hook up all devices that are part of the CPG/MSSR Clock Domain to the
->> SYSC "always-on" PM Domain.
->
-> [snip]
->
->> +             sysc: system-controller@e6180000 {
->> +                     compatible = "renesas,r8a7795-sysc";
->> +                     reg = <0 0xe6180000 0 0x0400>;
->
-> In table 9.2 of v0.51e of the documentation I see some registers
-> beyond the 0x400 range above. Perhaps it could be enlarged accordingly?
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Acked-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+---
+v5: <initial>
 
-No, these registers do not apply to R-Car H3.
+v6:
+ - whitespace formatting corrected
 
-Gr{oetje,eeting}s,
+v7: <no change>
+v8: <no change>
+v9: <no change>
+v10: <no change>
 
-                        Geert
+ drivers/usb/musb/musb_core.c | 2 +-
+ drivers/usb/musb/musb_core.h | 2 +-
+ include/linux/usb/musb.h     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index 6a2d6d3..b0be1a9 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -1920,7 +1920,7 @@ static void musb_recover_from_babble(struct musb *musb)
+  */
+ 
+ static struct musb *allocate_instance(struct device *dev,
+-		struct musb_hdrc_config *config, void __iomem *mbase)
++		const struct musb_hdrc_config *config, void __iomem *mbase)
+ {
+ 	struct musb		*musb;
+ 	struct musb_hw_ep	*ep;
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index 3f7a325..a062185 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -438,7 +438,7 @@ struct musb {
+ 	 */
+ 	unsigned                double_buffer_not_ok:1;
+ 
+-	struct musb_hdrc_config	*config;
++	const struct musb_hdrc_config *config;
+ 
+ 	int			xceiv_old_state;
+ #ifdef CONFIG_DEBUG_FS
+diff --git a/include/linux/usb/musb.h b/include/linux/usb/musb.h
+index 96ddfb7..0b3da40 100644
+--- a/include/linux/usb/musb.h
++++ b/include/linux/usb/musb.h
+@@ -124,7 +124,7 @@ struct musb_hdrc_platform_data {
+ 	int		(*set_power)(int state);
+ 
+ 	/* MUSB configuration-specific details */
+-	struct musb_hdrc_config	*config;
++	const struct musb_hdrc_config *config;
+ 
+ 	/* Architecture specific board data	*/
+ 	void		*board_data;
+-- 
+1.9.1
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
