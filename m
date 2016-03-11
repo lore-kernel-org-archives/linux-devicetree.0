@@ -1,76 +1,238 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] vfio, platform: add support for ACPI while
- detecting the reset driver
-Date: Fri, 11 Mar 2016 04:05:37 +0000
-Message-ID: <20160311040537.4067a210@arm.com>
-References: <1457451209-21462-1-git-send-email-okaya@codeaurora.org>
-	<56E14858.9050401@linaro.org>
-	<56E1AB38.8020702@codeaurora.org>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] ARC: [dts] Introduce Timer bindings
+Date: Fri, 11 Mar 2016 04:19:23 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F4E8F330@us01wembx1.internal.synopsys.com>
+References: <1457439972-20285-1-git-send-email-vgupta@synopsys.com>
+ <1457439972-20285-3-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E1AB38.8020702-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Baptiste Reynal <b.reynal-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Noam Camus <noamc-d5a29ZRxExrQT0dZR+AlfA@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Mar 2016 12:13:28 -0500
-Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+On Tuesday 08 March 2016 05:56 PM, Vineet Gupta wrote:
+> ARC Timers have historically been probed directly.
+> As precursor to start probing Timers thru DT introduce these bindings
+> Note that to keep series bisectable, these bindings are not yet used in
+> code.
+>
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> ---
+> Changes v1 -> v2
+>  - snps,arc-timer[0-1] folded into single snps-arc-timer	[Rob]
+>  - Node name in DT example fixed:				[Rob]
+>      "timer1: timer_clksrc {" -> timer@1 {
+>  - Introduced 64bit RTC in skeleton_hs.dtsi			[Vineet]
+>
+> v1:
+>  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-February/000447.html
+>
+> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-> On 3/10/2016 5:11 AM, Eric Auger wrote:
-> > Hi Sinan,
-> > On 03/08/2016 04:33 PM, Sinan Kaya wrote:
-> >> The  code is using the compatible DT string to associate a reset driver with
-> >> the actual device itself. The compatible string does not exist on ACPI
-> >> based systems. HID is the unique identifier for a device driver instead.
-> >> The change allows a driver to register with DT compatible string or ACPI
-> >> HID and then match the object with one of these conditions.
-> >>
-> >> Rules for loading the reset driver are as follow:
-> >> - ACPI HID needs match for ACPI systems
-> >> - DT compat needs to match for OF systems
-> >>
-> >> Tested-by: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (device tree only)
-> >> Tested-by: Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (ACPI only)
-> >> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> >> ---
-> >>  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   4 +-
-> >>  .../platform/reset/vfio_platform_calxedaxgmac.c    |   4 +-
-> >>  drivers/vfio/platform/vfio_platform_common.c       | 112 +++++++++++++++++----
-> >>  drivers/vfio/platform/vfio_platform_private.h      |  43 ++++----
-> >>  4 files changed, 125 insertions(+), 38 deletions(-)
+Rob, sorry for pinging you sooner than I should. This must be busy time ahead of
+merge window. However if you can take a quick look at the DT bindings, we might be
+able to squeeze this into 4.6
+This code seems to be functionally working well and stable !
 
-[...]
+> ---
+>  .../devicetree/bindings/timer/snps,arc-timer.txt   | 26 ++++++++++++++++++++++
+>  .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 ++++++++++++
+>  .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 ++++++++++++
+>  arch/arc/boot/dts/abilis_tb10x.dtsi                | 14 ++++++++++++
+>  arch/arc/boot/dts/skeleton.dtsi                    | 14 ++++++++++++
+>  arch/arc/boot/dts/skeleton_hs.dtsi                 | 20 +++++++++++++++++
+>  arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 14 ++++++++++++
+>  7 files changed, 116 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
+> new file mode 100644
+> index 000000000000..9e02be24e805
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
+> @@ -0,0 +1,26 @@
+> +Synopsys ARC Local Timer with Interrupt Capabilities
+> +- Found on all ARC CPUs (ARC700/ARCHS)
+> +- Can be optionally programmed to interrupt on Limit
+> +- Two idential copies TIMER0 and TIMER1 exist in ARC cores and historically
+> +  TIMER0 used as clockevent provider (true for all ARC cores)
+> +  TIMER1 used for clocksource (mandatory for ARC700, optional for ARC HS)
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,arc-timer"
+> +- interrupts : single Interrupt going into parent intc
+> +	       (16 for ARCHS cores, 3 for ARC700 cores)
+> +- clocks     : phandle to the source clock
+> +
+> +Optional properties:
+> +
+> +- interrupt-parent : phandle to parent intc
+> +
+> +Example:
+> +
+> +	timer@0 {
+> +		compatible = "snps,arc-timer0";
+> +		interrupts = <3>;
+> +		interrupt-parent = <&core_intc>;
+> +		clocks = <&core_clk>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+> new file mode 100644
+> index 000000000000..aaab100f54e7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+> @@ -0,0 +1,14 @@
+> +Synopsys ARC Free Running 64-bit Global Timer for ARC HS CPUs
+> +- clocksource provider for SMP SoC
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,archs-gfrc"
+> +- clocks     : phandle to the source clock
+> +
+> +Example:
+> +
+> +	timer@1 {
+> +		compatible = "snps,archs-gfrc";
+> +		clocks = <&core_clk>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+> new file mode 100644
+> index 000000000000..13f756fa1d6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+> @@ -0,0 +1,14 @@
+> +Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
+> +- clocksource provider for UP SoC
+> +
+> +Required properties:
+> +
+> +- compatible : should be "snps,archs-rtc"
+> +- clocks     : phandle to the source clock
+> +
+> +Example:
+> +
+> +	timer@1 {
+> +		compatible = "snps,arc-rtc";
+> +		clocks = <&core_clk>;
+> +	};
+> diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
+> index cfb5052239a1..eadbe71dfa22 100644
+> --- a/arch/arc/boot/dts/abilis_tb10x.dtsi
+> +++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
+> @@ -35,6 +35,20 @@
+>  		};
+>  	};
+>  
+> +	/* TIMER0 with interrupt for clockevent */
+> +	timer@0 {
+> +		compatible = "snps,arc-timer";
+> +		interrupts = <3>;
+> +		interrupt-parent = <&intc>;
+> +		clocks = <&cpu_clk>;
+> +	};
+> +
+> +	/* TIMER1 for free running clocksource */
+> +	timer@1 {
+> +		compatible = "snps,arc-timer";
+> +		clocks = <&cpu_clk>;
+> +	};
+> +
+>  	soc100 {
+>  		#address-cells	= <1>;
+>  		#size-cells	= <1>;
+> diff --git a/arch/arc/boot/dts/skeleton.dtsi b/arch/arc/boot/dts/skeleton.dtsi
+> index 296d371a335c..f6109c2feba7 100644
+> --- a/arch/arc/boot/dts/skeleton.dtsi
+> +++ b/arch/arc/boot/dts/skeleton.dtsi
+> @@ -30,6 +30,20 @@
+>  		};
+>  	};
+>  
+> +	/* TIMER0 with interrupt for clockevent */
+> +	timer@0 {
+> +		compatible = "snps,arc-timer";
+> +		interrupts = <3>;
+> +		interrupt-parent = <&core_intc>;
+> +		clocks = <&core_clk>;
+> +	};
+> +
+> +	/* TIMER1 for free running clocksource */
+> +	timer@1 {
+> +		compatible = "snps,arc-timer";
+> +		clocks = <&core_clk>;
+> +	};
+> +
+>  	memory {
+>  		device_type = "memory";
+>  		reg = <0x80000000 0x10000000>;	/* 256M */
+> diff --git a/arch/arc/boot/dts/skeleton_hs.dtsi b/arch/arc/boot/dts/skeleton_hs.dtsi
+> index a53876669030..49caeabca37a 100644
+> --- a/arch/arc/boot/dts/skeleton_hs.dtsi
+> +++ b/arch/arc/boot/dts/skeleton_hs.dtsi
+> @@ -25,6 +25,26 @@
+>  		};
+>  	};
+>  
+> +	/* TIMER0 with interrupt for clockevent */
+> +	timer@0 {
+> +		compatible = "snps,arc-timer";
+> +		interrupts = <16>;
+> +		interrupt-parent = <&core_intc>;
+> +		clocks = <&core_clk>;
+> +	};
+> +
+> +	/* 64-bit Local RTC: preferred clocksource for UP */
+> +	timer@1 {
+> +		compatible = "snps,archs-timer-rtc";
+> +		clocks = <&core_clk>;
+> +	};
+> +
+> +	/* TIMER1 for free running clocksource: Fallback if rtc not found */
+> +	timer@2 {
+> +		compatible = "snps,arc-timer";
+> +		clocks = <&core_clk>;
+> +	};
+> +
+>  	memory {
+>  		device_type = "memory";
+>  		reg = <0x80000000 0x10000000>;	/* 256M */
+> diff --git a/arch/arc/boot/dts/skeleton_hs_idu.dtsi b/arch/arc/boot/dts/skeleton_hs_idu.dtsi
+> index 74898d017f7a..7e301ff16200 100644
+> --- a/arch/arc/boot/dts/skeleton_hs_idu.dtsi
+> +++ b/arch/arc/boot/dts/skeleton_hs_idu.dtsi
+> @@ -25,6 +25,20 @@
+>  		};
+>  	};
+>  
+> +	/* TIMER0 with interrupt for clockevent */
+> +	timer@0 {
+> +		compatible = "snps,arc-timer";
+> +		interrupts = <16>;
+> +		interrupt-parent = <&core_intc>;
+> +		clocks = <&core_clk>;
+> +	};
+> +
+> +	/* 64-bit Global Free Running Counter */
+> +	timer@1 {
+> +		compatible = "snps,archs-timer-gfrc";
+> +		clocks = <&core_clk>;
+> +	};
+> +
+>  	memory {
+>  		device_type = "memory";
+>  		reg = <0x80000000 0x10000000>;	/* 256M */
 
-> >> -	vfio_platform_get_reset(vdev);
-> >> +	ret = vfio_platform_get_reset(vdev);
-> >> +	if (ret) {
-> >> +		iommu_group_put(group);
-> >> +		return ret;
-> >> +	}
-> > This change is not related to your commit message. Also here you change
-> > the use model of VFIO platform and forbid any usage if no reset module
-> > is available, right? I don't think this is something we discussed and I
-> > think it removes some flexibility. Currently a warning is emitted in
-> > case we don't have a reset function.
-> 
-> Well, I haven't seen that warning during testing. I was trying to be more 
-> proactive.
-> 
-> I'm fine removing these checks but not having a reset driver needs a really
-> big warning here.
-
-This code really needs to be moved to a separate patch, but I agree
-overall: a reset function should be made mandatory - I cannot imagine
-trusting the HW to be left in a sane state after being used by a guest.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
