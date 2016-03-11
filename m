@@ -1,41 +1,129 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
- driver
-Date: Fri, 11 Mar 2016 16:58:52 +0100
-Message-ID: <56E2EB3C.6080602@barix.com>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
- <20160311155115.GC20204@uda0271908>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
+ interface
+Date: Fri, 11 Mar 2016 11:02:36 -0500
+Message-ID: <56E2EC1C.6040107@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
+ <20160311020650.GG11154@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160311155115.GC20204@uda0271908>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160311020650.GG11154@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 3/10/2016 9:06 PM, Vinod Koul wrote:
+> On Thu, Feb 04, 2016 at 11:34:36PM -0500, Sinan Kaya wrote:
+> 
+>> +
+>> +#define EVRE_SIZE			16	/* each EVRE is 16 bytes */
+>> +
+>> +#define TRCA_CTRLSTS_OFFSET		0x000
+>> +#define TRCA_RING_LOW_OFFSET		0x008
+>> +#define TRCA_RING_HIGH_OFFSET		0x00C
+>> +#define TRCA_RING_LEN_OFFSET		0x010
+>> +#define TRCA_READ_PTR_OFFSET		0x018
+>> +#define TRCA_WRITE_PTR_OFFSET		0x020
+>> +#define TRCA_DOORBELL_OFFSET		0x400
+>> +
+>> +#define EVCA_CTRLSTS_OFFSET		0x000
+>> +#define EVCA_INTCTRL_OFFSET		0x004
+>> +#define EVCA_RING_LOW_OFFSET		0x008
+>> +#define EVCA_RING_HIGH_OFFSET		0x00C
+>> +#define EVCA_RING_LEN_OFFSET		0x010
+>> +#define EVCA_READ_PTR_OFFSET		0x018
+>> +#define EVCA_WRITE_PTR_OFFSET		0x020
+>> +#define EVCA_DOORBELL_OFFSET		0x400
+>> +
+>> +#define EVCA_IRQ_STAT_OFFSET		0x100
+>> +#define EVCA_IRQ_CLR_OFFSET		0x108
+>> +#define EVCA_IRQ_EN_OFFSET		0x110
+>> +
+>> +#define EVRE_CFG_IDX			0
+>> +#define EVRE_LEN_IDX			1
+>> +#define EVRE_DEST_LOW_IDX		2
+>> +#define EVRE_DEST_HI_IDX		3
+>> +
+>> +#define EVRE_ERRINFO_BIT_POS		24
+>> +#define EVRE_CODE_BIT_POS		28
+>> +
+>> +#define EVRE_ERRINFO_MASK		GENMASK(3, 0)
+>> +#define EVRE_CODE_MASK			GENMASK(3, 0)
+> 
+> These are rest here are not namespace properly...
+
+If I understood it right, you want me to prefix them with as HIDMA_xyz.
+Correct?
+
+> 
+>> +static int hidma_ll_enable(struct hidma_lldev *lldev)
+>> +{
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	val = readl(lldev->evca + EVCA_CTRLSTS_OFFSET);
+>> +	val &= ~(CH_CONTROL_MASK << 16);
+>> +	val |= CH_ENABLE << 16;
+>> +	writel(val, lldev->evca + EVCA_CTRLSTS_OFFSET);
+>> +
+>> +	ret = readl_poll_timeout(lldev->evca + EVCA_CTRLSTS_OFFSET, val,
+>> +				 (HIDMA_CH_STATE(val) == CH_ENABLED) ||
+>> +				 (HIDMA_CH_STATE(val) == CH_RUNNING), 1000,
+>> +				 10000);
+>> +	if (ret) {
+>> +		dev_err(lldev->dev, "event channel did not get enabled\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	val = readl(lldev->trca + TRCA_CTRLSTS_OFFSET);
+>> +	val &= ~(CH_CONTROL_MASK << 16);
+>> +	val |= CH_ENABLE << 16;
+>> +	writel(val, lldev->trca + TRCA_CTRLSTS_OFFSET);
+>> +
+>> +	ret = readl_poll_timeout(lldev->trca + TRCA_CTRLSTS_OFFSET, val,
+>> +				 (HIDMA_CH_STATE(val) == CH_ENABLED) ||
+>> +				 (HIDMA_CH_STATE(val) == CH_RUNNING), 1000,
+>> +				 10000);
+> 
+> first arg for readl_poll_timeout is accessor fn to do read, which doesnt
+> seem to be here... so what did i miss?
+> 
+> 
+>> +void hidma_ll_queue_request(struct hidma_lldev *lldev, u32 tre_ch)
+>> +{
+>> +	struct hidma_tre *tre;
+>> +	unsigned long flags;
+>> +
+>> +	tre = &lldev->trepool[tre_ch];
+>> +
+>> +	/* copy the TRE into its location in the TRE ring */
+>> +	spin_lock_irqsave(&lldev->lock, flags);
+>> +	tre->tre_index = lldev->tre_write_offset / TRE_SIZE;
+>> +	lldev->pending_tre_list[tre->tre_index] = tre;
+>> +	memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+>> +	       TRE_SIZE);
+>> +	lldev->tx_status_list[tre->idx].err_code = 0;
+>> +	lldev->tx_status_list[tre->idx].err_info = 0;
+>> +	tre->queued = 1;
+>> +	lldev->pending_tre_count++;
+
+Is this the only one without alignment? I couldn't understand what you mean by 
+above one?
+
+>> +	lldev->tre_write_offset = (lldev->tre_write_offset + TRE_SIZE)
+>> +	    % lldev->tre_ring_size;
+> 
+> These and above one should be right justfied per coding style
+> 
 
 
-On 11.03.2016 16:51, Bin Liu wrote:
-> Hi,
->
-> On Fri, Mar 11, 2016 at 09:29:45AM +0100, Petr Kulhavy wrote:
->> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
-> It seems the dts(i) file is not touched in this patch set, so DA8xx MUSB
-> still does not use DT with these patches?  Or did I miss anything?
->
-> Thanks,
-> -Bin.
-Hi Bin,
 
-I have not touched the DA8xx dtsi file as I have these changes in my own 
-board specific dts.
-But I can create another patch if you find it sensible. For me it makes 
-sense.
 
-Petr
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
