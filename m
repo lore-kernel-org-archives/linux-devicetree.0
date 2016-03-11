@@ -1,43 +1,63 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 1/6] net: arc_emac: make the rockchip emac document more compatible
-Date: Fri, 11 Mar 2016 18:55:26 +0800
-Message-ID: <1457693731-6966-2-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 2/6] net: arc_emac: add phy-reset-* are optional for device tree
+Date: Fri, 11 Mar 2016 18:55:27 +0800
+Message-ID: <1457693731-6966-3-git-send-email-wxt@rock-chips.com>
 References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.com, Caesar Wang <wxt@rock-chips.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457693731-6966-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the all kings of SoCs to compatible.
+This patch adds the following property for arc_emac.
 
-The rk3036 emac has been landed in mainline, so we should add rk3036 emac
-for document.
+1) phy-reset-gpios:
+The phy-reset-gpios is an optional property for arc emac device tree boot.
+Change the binding document to match the driver code.
 
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+2) phy-reset-duration:
+Different boards may require different phy reset duration. Add property
+phy-reset-duration for device tree probe, so that the boards that need
+a longer reset duration can specify it in their device tree.
+
+3) phy-reset-active-high:
+We need that for a custom hardware that needs the reverse reset
+sequence.
+
+Anyway, we can add the above property for arc emac.
+
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- Documentation/devicetree/bindings/net/emac_rockchip.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/net/arc_emac.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/emac_rockchip.txt b/Documentation/devicetree/bindings/net/emac_rockchip.txt
-index 8dc1c79..f705bb8 100644
---- a/Documentation/devicetree/bindings/net/emac_rockchip.txt
-+++ b/Documentation/devicetree/bindings/net/emac_rockchip.txt
-@@ -1,8 +1,10 @@
--* ARC EMAC 10/100 Ethernet platform driver for Rockchip Rk3066/RK3188 SoCs
-+* ARC EMAC 10/100 Ethernet platform driver for Rockchip RK3036/Rk3066/RK3188 SoCs
+diff --git a/Documentation/devicetree/bindings/net/arc_emac.txt b/Documentation/devicetree/bindings/net/arc_emac.txt
+index a1d71eb..6389b00 100644
+--- a/Documentation/devicetree/bindings/net/arc_emac.txt
++++ b/Documentation/devicetree/bindings/net/arc_emac.txt
+@@ -7,6 +7,16 @@ Required properties:
+ - max-speed: see ethernet.txt file in the same directory.
+ - phy: see ethernet.txt file in the same directory.
  
- Required properties:
--- compatible: Should be "rockchip,rk3066-emac" or "rockchip,rk3188-emac"
--  according to the target SoC.
-+- compatible: should be "rockchip,<name>-emac"
-+   "rockchip,rk3036-emac": found on RK3036 SoCs
-+   "rockchip,rk3066-emac": found on RK3066 SoCs
-+   "rockchip,rockchip,rk3188-emac": found on RK3188 SoCs
- - reg: Address and length of the register set for the device
- - interrupts: Should contain the EMAC interrupts
- - rockchip,grf: phandle to the syscon grf used to control speed and mode
++Optional properties:
++- phy-reset-gpios : Should specify the gpio for phy reset
++- phy-reset-duration : Reset duration in milliseconds.  Should present
++  only if property "phy-reset-gpios" is available.  Missing the property
++  will have the duration be 1 millisecond.  Numbers greater than 1000 are
++  invalid and 1 millisecond will be used instead.
++- phy-reset-active-high : If present then the reset sequence using the GPIO
++  specified in the "phy-reset-gpios" property is reversed (H=reset state,
++  L=operation state).
++
+ Clock handling:
+ The clock frequency is needed to calculate and set polling period of EMAC.
+ It must be provided by one of:
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
