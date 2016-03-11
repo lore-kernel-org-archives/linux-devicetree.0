@@ -1,69 +1,64 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
- driver
-Date: Fri, 11 Mar 2016 17:21:12 +0100
-Message-ID: <56E2F078.9020708@barix.com>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
- <20160311155115.GC20204@uda0271908> <56E2EB3C.6080602@barix.com>
- <20160311160603.GF20204@uda0271908>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
+ interface
+Date: Fri, 11 Mar 2016 22:02:21 +0530
+Message-ID: <20160311163221.GC13211@localhost>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
+ <20160311020650.GG11154@localhost>
+ <56E2EC1C.6040107@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160311160603.GF20204@uda0271908>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56E2EC1C.6040107-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 11, 2016 at 11:02:36AM -0500, Sinan Kaya wrote:
+> > These are rest here are not namespace properly...
+> 
+> If I understood it right, you want me to prefix them with as HIDMA_xyz.
+> Correct?
+
+Yes..
+
+> >> +	/* copy the TRE into its location in the TRE ring */
+> >> +	spin_lock_irqsave(&lldev->lock, flags);
+> >> +	tre->tre_index = lldev->tre_write_offset / TRE_SIZE;
+> >> +	lldev->pending_tre_list[tre->tre_index] = tre;
+> >> +	memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+> >> +	       TRE_SIZE);
+
+This one
+
+> >> +	lldev->tx_status_list[tre->idx].err_code = 0;
+> >> +	lldev->tx_status_list[tre->idx].err_info = 0;
+> >> +	tre->queued = 1;
+> >> +	lldev->pending_tre_count++;
+> 
+> Is this the only one without alignment? I couldn't understand what you mean by 
+> above one?
+
+quoting Coding Style:
+
+Statements longer than 80 columns will be broken into sensible chunks, unless
+exceeding 80 columns significantly increases readability and does not hide
+information. Descendants are always substantially shorter than the parent and
+are placed substantially to the right.
 
 
-On 11.03.2016 17:06, Bin Liu wrote:
-> Hi,
->
-> On Fri, Mar 11, 2016 at 04:58:52PM +0100, Petr Kulhavy wrote:
->>
->> On 11.03.2016 16:51, Bin Liu wrote:
->>> Hi,
->>>
->>> On Fri, Mar 11, 2016 at 09:29:45AM +0100, Petr Kulhavy wrote:
->>>> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
->>> It seems the dts(i) file is not touched in this patch set, so DA8xx MUSB
->>> still does not use DT with these patches?  Or did I miss anything?
->>>
->>> Thanks,
->>> -Bin.
->> Hi Bin,
->>
->> I have not touched the DA8xx dtsi file as I have these changes in my
->> own board specific dts.
->> But I can create another patch if you find it sensible. For me it
->> makes sense.
-> Okay, that is up to you, you can submit that patch whenever you are
-> ready. I will take this patch set when all comments are sorted out.
-I will submit that patch once the DT is there.
+> 
+> >> +	lldev->tre_write_offset = (lldev->tre_write_offset + TRE_SIZE)
+> >> +	    % lldev->tre_ring_size;
+> > 
+> > These and above one should be right justfied per coding style
 
-> I am having 2nd thought on parsing the clock prop, Sergei's comment
-> might be better. I will look more on this over this weekend. (DT is not
-> in my expertise...)
->
-> Regards,
-> -Bin.
-
-I like Sergei's comment as well, but cannot see (yet) how the clock 
-input selection would be done.
-I mean, it makes sense to do the clock abstraction only if it can be 
-done properly and the clock input selection can be covered as well.
-The DA8xx platform is missing the real clock framework and therefore the 
-different clocks cannot be referenced in DT.
-There is a fake clock framework in arch/arm/mach-davinci/clock.c - I've 
-already been through that and then gave up.
-
-So if you come up with some good idea it's appreciated.
-
-Regards
-Petr
+-- 
+~Vinod
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
