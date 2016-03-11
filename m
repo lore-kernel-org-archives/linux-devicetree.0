@@ -1,110 +1,101 @@
 From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB driver
-Date: Fri, 11 Mar 2016 09:29:45 +0100
-Message-ID: <1457684989-13318-1-git-send-email-petr@barix.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 2/5 v10] usb: musb: core: added helper function for parsing DT
+Date: Fri, 11 Mar 2016 09:29:46 +0100
+Message-ID: <1457684989-13318-2-git-send-email-petr@barix.com>
+References: <1457684989-13318-1-git-send-email-petr@barix.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+This adds the function musb_get_mode() to get the DT property "dr_mode"
 
 Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Acked-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 ---
-v1: <initial>
-
-v2:
- - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
- - using "ti," prefix instead of "da8xx," for specific property names
- - no wildcards in compatibility string
-
-v3:
- - added "reg", "interrupts" and "interrupt-names" properties
- - wildcards in compatibility string
-
-v4:
- - compatibility string set to "ti,da830-musb"
- - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
- - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
- - removed "ti,hwmods"
+v4: <initial>
+ - created musb_get_dr_mode()
 
 v5:
- - "ti,phy20-refclock-frequency" property made mandatory
+ - musb_get_dr_mode() renamed to musb_get_mode()
+ - added musb_get_power()
 
 v6:
- - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
+ - musb_get_power() : added missing boundary check for the maximum value 510mA
+ - formatting
+ - added empty implementation of musb_get_power()
 
 v7:
- - removed the "mentor,power" property; hard coded to 500mA in the code
+ - removed empty implementation of musb_get_power()
+ - musb_get_mode() returns MUSB_OTG if the property is not found
 
 v8:
- - "ti,usb2-phy-refclock-frequency" renamed to "ti,usb2-phy-refclock-hz" and description amended
- - "ti,usb2-phy-clkmux-pll" changed to "ti,usb2-phy-clkmux-refclkin" to reflect the more common case
- - USB maximum power modelled via a regulator "vbus-supply"
+ - musb_get_power() removed
 
 v9: <no change>
 v10: <no change>
 
- .../devicetree/bindings/usb/da8xx-usb.txt          | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+ drivers/usb/musb/musb_core.c | 19 +++++++++++++++++++
+ drivers/usb/musb/musb_core.h |  5 +++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-new file mode 100644
-index 0000000..a6eda5b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-@@ -0,0 +1,45 @@
-+TI DA8xx MUSB
-+~~~~~~~~~~~~~
-+For DA8xx/OMAP-L1x/AM17xx/AM18xx platforms.
+diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+index c3791a0..6a2d6d3 100644
+--- a/drivers/usb/musb/musb_core.c
++++ b/drivers/usb/musb/musb_core.c
+@@ -100,6 +100,7 @@
+ #include <linux/io.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/usb.h>
++#include <linux/usb/of.h>
+ 
+ #include "musb_core.h"
+ 
+@@ -129,6 +130,24 @@ static inline struct musb *dev_to_musb(struct device *dev)
+ 	return dev_get_drvdata(dev);
+ }
+ 
++enum musb_mode musb_get_mode(struct device *dev)
++{
++	enum usb_dr_mode mode;
 +
-+Required properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - compatible : Should be set to "ti,da830-musb".
++	mode = usb_get_dr_mode(dev);
++	switch (mode) {
++	case USB_DR_MODE_HOST:
++		return MUSB_HOST;
++	case USB_DR_MODE_PERIPHERAL:
++		return MUSB_PERIPHERAL;
++	case USB_DR_MODE_OTG:
++	case USB_DR_MODE_UNKNOWN:
++	default:
++		return MUSB_OTG;
++	}
++}
++EXPORT_SYMBOL_GPL(musb_get_mode);
 +
-+ - reg: Offset and length of the USB controller register set.
+ /*-------------------------------------------------------------------------*/
+ 
+ #ifndef CONFIG_BLACKFIN
+diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
+index fd215fb..3f7a325 100644
+--- a/drivers/usb/musb/musb_core.h
++++ b/drivers/usb/musb/musb_core.h
+@@ -614,4 +614,9 @@ static inline void musb_platform_post_root_reset_end(struct musb *musb)
+ 		musb->ops->post_root_reset_end(musb);
+ }
+ 
++/* gets the "dr_mode" property from DT and converts it into musb_mode
++ * if the property is not found or not recognized returns MUSB_OTG
++ */
++extern enum musb_mode musb_get_mode(struct device *dev);
 +
-+ - interrupts: The USB interrupt number.
-+
-+ - interrupt-names: Should be set to "mc".
-+
-+ - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
-+
-+ - vbus-supply: Phandle to a regulator providing the USB bus power.
-+
-+ - ti,usb2-phy-refclock-hz : Integer. Frequency in Hz of the USB 2.0 PHY reference clock,
-+     either provided by the internal PLL or an external source.
-+     The supported values are: 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz.
-+
-+
-+Optional properties:
-+~~~~~~~~~~~~~~~~~~~~
-+ - ti,usb2-phy-clkmux-refclkin: Boolean. Defines the USB 2.0 PHY reference clock source.
-+     If present the the external USB_REFCLKIN pin is used as a clock source, otherwise
-+     the internal PLL is used.
-+
-+Example:
-+
-+	usb20: usb@1e00000 {
-+		compatible = "ti,da830-musb";
-+		reg =   <0x00200000 0x10000>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <58>;
-+		interrupt-names = "mc";
-+
-+		dr_mode = "host";
-+		vbus-supply = <&usb_vbus>;
-+
-+		ti,usb2-phy-refclock-hz = <24000000>;
-+
-+		status = "okay";
-+	};
+ #endif	/* __MUSB_CORE_H__ */
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
