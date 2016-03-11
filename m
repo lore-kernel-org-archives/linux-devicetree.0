@@ -1,86 +1,41 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] ARM: OMAP2+: gpmc-nand: Set omap2-nand's parent
- dev to GPMC dev
-Date: Fri, 11 Mar 2016 15:52:55 +0200
-Message-ID: <56E2CDB7.2080306@ti.com>
-References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
- <1457654203-20856-2-git-send-email-fcooper@ti.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 0/5] gpio: of: Add error handling and support for multiple gpio in gpio-hog
+Date: Fri, 11 Mar 2016 19:13:19 +0530
+Message-ID: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457654203-20856-2-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: bparrot-l0cyMroinI0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Franklin,
+This series enhance the error print by adding error number in print message,
+handle the error if gpio_hogd() fails and returns error to caller, and 
+add the support of multiple GPIOs to be passed from property "gpios" under
+gpio hogd node.
 
-On 11/03/16 01:56, Franklin S Cooper Jr wrote:
-> The dma channel information is located within the GPMC node which is the
-> NAND's parent node. The NAND driver requires a handle to the GPMC's dev
-> to properly parse the DMA properties. Therefore, set the NAND's parent dev
-> to the GPMC's dev so it can be referenced within the driver.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-> ---
-> Version 4 changes:
-> Instead of storing the GPMC dev in a new property simply grab a reference
-> to it and set omap2-nand's dev.parent to it.
-> 
->  arch/arm/mach-omap2/gpmc-nand.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
-> index 72918c4..77e453c 100644
-> --- a/arch/arm/mach-omap2/gpmc-nand.c
-> +++ b/arch/arm/mach-omap2/gpmc-nand.c
-> @@ -15,6 +15,7 @@
->  #include <linux/omap-gpmc.h>
->  #include <linux/mtd/nand.h>
->  #include <linux/platform_data/mtd-nand-omap2.h>
-> +#include <linux/of_platform.h>
->  
->  #include <asm/mach/flash.h>
->  
-> @@ -77,6 +78,9 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
->  	int err	= 0;
->  	struct gpmc_settings s;
->  	struct platform_device *pdev;
-> +	struct platform_device *gpmc_dev;
-> +	struct device_node *gpmc_node;
-> +
->  	struct resource gpmc_nand_res[] = {
->  		{ .flags = IORESOURCE_MEM, },
->  		{ .flags = IORESOURCE_IRQ, },
-> @@ -134,8 +138,18 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
->  	if (pdev) {
->  		err = platform_device_add_resources(pdev, gpmc_nand_res,
->  						    ARRAY_SIZE(gpmc_nand_res));
-> -		if (!err)
-> +		if (!err) {
->  			pdev->dev.platform_data = gpmc_nand_data;
-> +
-> +			gpmc_node = of_get_parent(gpmc_nand_data->of_node);
+Changes from V1:
+- revert the chnage of error message.
+- Collected acks/reviewed by.
+- Added label for name in gpio hog node.
+- Reseeunce to have dt doc before driver change.
 
-I'm afraid that we can't use this method as we want to restrict
-gpmc_nand_init() to non-DT boots.
+Laxman Dewangan (5):
+  gpio: of: Scan available child node for gpio-hog
+  gpio: gpiolib: Print error number if gpio hog failed
+  gpio: of: Return error if gpio hog configuration failed
+  gpio: DT: Rephrase "gpios" of hog node to support multiple gpios
+  gpio: of: Add support to have multiple gpios in gpio-hog
 
-> +
-> +			if (gpmc_node) {
-> +				gpmc_dev = of_find_device_by_node(gpmc_node);
-> +
-> +				if (gpmc_dev)
-> +					pdev->dev.parent = &gpmc_dev->dev;
-> +			}
-> +		}
->  	} else {
->  		err = -ENOMEM;
->  	}
-> 
+ Documentation/devicetree/bindings/gpio/gpio.txt | 11 +++-
+ drivers/gpio/gpiolib-of.c                       | 86 +++++++++++++++++++------
+ drivers/gpio/gpiolib.c                          | 11 ++--
+ 3 files changed, 79 insertions(+), 29 deletions(-)
 
-cheers,
--roger
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
