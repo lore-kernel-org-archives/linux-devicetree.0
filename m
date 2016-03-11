@@ -1,39 +1,28 @@
 From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] of_mdio: use IS_ERR_OR_NULL() in of_mdiobus_register_phy()
-Date: Sat, 12 Mar 2016 00:12:54 +0300
-Message-ID: <11763266.4LDe0Junmu@wasted.cogentembedded.com>
+Subject: Re: [PATCH] of_mdio: use IS_ERR_OR_NULL() in
+ of_mdiobus_register_phy()
+Date: Sat, 12 Mar 2016 00:26:30 +0300
+Message-ID: <56E33806.9010301@cogentembedded.com>
+References: <11763266.4LDe0Junmu@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11763266.4LDe0Junmu-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-IS_ERR_OR_NULL() is basically open coded in of_mdiobus_register_phy(), so
-just call it directly...
+On 03/12/2016 12:12 AM, Sergei Shtylyov wrote:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> IS_ERR_OR_NULL() is basically open coded in of_mdiobus_register_phy(), so
+> just call it directly...
 
----
-The patch is against DaveM's 'net-next.git' repo.
+    I found one more place where this change is needed, will recast.
 
- drivers/of/of_mdio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Index: net-next/drivers/of/of_mdio.c
-===================================================================
---- net-next.orig/drivers/of/of_mdio.c
-+++ net-next/drivers/of/of_mdio.c
-@@ -56,7 +56,7 @@ static int of_mdiobus_register_phy(struc
- 		phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
- 	else
- 		phy = get_phy_device(mdio, addr, is_c45);
--	if (!phy || IS_ERR(phy))
-+	if (IS_ERR_OR_NULL(phy))
- 		return 1;
- 
- 	rc = irq_of_parse_and_map(child, 0);
+MBR, Sergei
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
