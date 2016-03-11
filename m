@@ -1,30 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] of_mdio: use IS_ERR_OR_NULL() in
- of_mdiobus_register_phy()
-Date: Sat, 12 Mar 2016 00:26:30 +0300
-Message-ID: <56E33806.9010301@cogentembedded.com>
-References: <11763266.4LDe0Junmu@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11763266.4LDe0Junmu-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V15 0/4] dma: add Qualcomm Technologies HIDMA driver
+Date: Fri, 11 Mar 2016 16:49:50 -0500
+Message-ID: <1457732994-11175-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: dmaengine@vger.kernel.org, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, vinod.koul@intel.com, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/12/2016 12:12 AM, Sergei Shtylyov wrote:
+dma: add Qualcomm Technologies HIDMA driver
 
-> IS_ERR_OR_NULL() is basically open coded in of_mdiobus_register_phy(), so
-> just call it directly...
+The Qualcomm Technologies HIDMA device has been designed
+to support virtualization technology. The driver has been
+divided into two to follow the hardware design.
 
-    I found one more place where this change is needed, will recast.
+1. HIDMA Management driver
+2. HIDMA Channel driver
 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Each HIDMA HW consists of multiple channels. These channels
+share some set of common parameters. These parameters are
+initialized by the management driver during power up.
+Same management driver is used for monitoring the execution
+of the channels. Management driver can change the performance
+behavior dynamically such as bandwidth allocation and
+prioritization in the future.
 
-MBR, Sergei
+The management driver is executed in host context and
+is the main management entity for all channels provided by
+the device.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------
+What's new
+------------------------
+- Coding style corrections.
+- Correct OF node lookup.
+
+------------------------
+Git repos
+------------------------
+QEMU Support
+https://www.codeaurora.org/cgit/quic/qemu/qemu/log/?h=v2.5.0-sriov
+
+------------------------
+History of Changes
+------------------------
+dma: qcom_hidma: add support for object hierarchy
+Changes from V14: (https://lkml.org/lkml/2016/2/4/1089)
+* use correct node (child) to read dma attribute.
+
+dma: qcom_hidma: implement lower level hardware interface
+Changes from V14: (https://lkml.org/lkml/2016/2/4/1086)
+* renamed constants as HIDMA_xyz
+
+dma: qcom_hidma: add support for object hierarchy
+Changes from V14: (https://lkml.org/lkml/2016/2/4/1089)
+* renamed constants as HIDMA_xyz
+
+Sinan Kaya (4):
+  dma: qcom_hidma: implement lower level hardware interface
+  dma: qcom_hidma: add debugfs hooks
+  dma: qcom_hidma: add support for object hierarchy
+  dma: qcom_hidma: read the channel id from HW
+
+ Documentation/ABI/testing/sysfs-platform-hidma     |   9 +
+ .../devicetree/bindings/dma/qcom_hidma_mgmt.txt    |   3 -
+ drivers/dma/qcom/*Backtrace*                       |   4 +
+ drivers/dma/qcom/Makefile                          |   2 +
+ drivers/dma/qcom/hidma.c                           |  81 +-
+ drivers/dma/qcom/hidma.h                           |  20 +-
+ drivers/dma/qcom/hidma_dbg.c                       | 219 +++++
+ drivers/dma/qcom/hidma_ll.c                        | 918 +++++++++++++++++++++
+ drivers/dma/qcom/hidma_mgmt.c                      | 111 ++-
+ 9 files changed, 1313 insertions(+), 54 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-hidma
+ create mode 100644 drivers/dma/qcom/*Backtrace*
+ create mode 100644 drivers/dma/qcom/hidma_dbg.c
+ create mode 100644 drivers/dma/qcom/hidma_ll.c
+
+-- 
+1.8.2.1
