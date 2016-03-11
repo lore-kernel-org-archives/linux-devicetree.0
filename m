@@ -1,66 +1,108 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/6] arc_emac: fixes the emac issues oand cleanup emac
- drivers
-Date: Fri, 11 Mar 2016 21:46:04 +0300
-Message-ID: <56E3126C.7000100@cogentembedded.com>
-References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
- <56E2CC39.6050907@cogentembedded.com> <56E2DAC4.4020105@gmail.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
+ interface
+Date: Fri, 11 Mar 2016 14:29:41 -0500
+Message-ID: <56E31CA5.6040106@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
+ <20160311020650.GG11154@localhost> <56E2EC1C.6040107@codeaurora.org>
+ <20160311163221.GC13211@localhost> <56E2F5EA.10207@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <56E2DAC4.4020105@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Caesar Wang <caesar.upstream@gmail.com>
-Cc: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, zhengxing <zhengxing@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, keescook@google.com, Jiri Kosina <trivial@kernel.org>, linux-clk@vger.kernel.org, leozwang@google.com
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56E2F5EA.10207@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 03/11/2016 05:48 PM, Caesar Wang wrote:
-
-[...]
-
->>> Hi Rob, David:
->>> PATCH[1/6-2/6]: ====>
->>> net: arc_emac: make the rockchip emac document more compatible
->>> net: arc_emac: add phy-reset-* are optional for device tree
->>>
->>> The patches change the rockchip emac document for more compatible and
->>> Add the phy-reset-* property for document.
->>>
->>> This patch adds the following property for arc_emac.
->>>
->>> phy-reset-* include the following:
->>> 1) phy-reset-gpios:
->>> The phy-reset-gpios is an optional property for arc emac device tree boot.
->>> Change the binding document to match the driver code.
->>>
->>> 2) phy-reset-duration:
->>> Different boards may require different phy reset duration. Add property
->>> phy-reset-duration for device tree probe, so that the boards that need
->>> a longer reset duration can specify it in their device tree.
->>>
->>> 3) phy-reset-active-high:
->>> We need that for a custom hardware that needs the reverse reset sequence.
+On 3/11/2016 11:44 AM, Sinan Kaya wrote:
+> On 3/11/2016 11:32 AM, Vinod Koul wrote:
+>>>>> memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+>>>>>>>> +	       TRE_SIZE);
+>> This one
 >>
->>    Why not infer this from the "phy-reset-gpios" prop?
->
-> See:
-> https://patchwork.kernel.org/patch/8564511/
- >
-> phy-reset-active-high : If present then the reset sequence using the GPIO
->   specified in the "phy-reset-gpios" property is reversed (H=reset state,
->   L=operation state).
+>>>>>>>> +	lldev->tx_status_list[tre->idx].err_code = 0;
+>>>>>>>> +	lldev->tx_status_list[tre->idx].err_info = 0;
+>>>>>>>> +	tre->queued = 1;
+>>>>>>>> +	lldev->pending_tre_count++;
+>>>>
+>>>> Is this the only one without alignment? I couldn't understand what you mean by 
+>>>> above one?
+>> quoting Coding Style:
+>>
+>> Statements longer than 80 columns will be broken into sensible chunks, unless
+>> exceeding 80 columns significantly increases readability and does not hide
+>> information. 
+> 
+>> "Descendants are always substantially shorter than the parent and
+>> are placed substantially to the right."
+>>
+>>
+> 
+> Sorry for my poor English. I never got this rule. 
+> 
+> Which one is a "substantially" right? Can you give me an example?
+> 
+> I need to understand how you'd write this to satisfy the above rule.
+> 
+> like this:
+> 
+> memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+>        TRE_SIZE);
+> 
+> or
+> 
+> memcpy(lldev->tre_ring + lldev->tre_write_offset,
+>        &tre->tre_local[0], TRE_SIZE);
+> 
+> or
+> 
+> memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+> 							   TRE_SIZE);
+> 
+> or
+> 
+> memcpy(lldev->tre_ring + lldev->tre_write_offset,
+> 	&tre->tre_local[0], 
+> 	TRE_SIZE);
+> 
+so, I looked at other examples in drivers/dma/dw/core.c file...
 
-    Referring to your own suggested bindings isn't an answer. If the driver 
-that you're copying from here (fec) had a reason to handle the GPIO sense with 
-the help of an extra prop (legacy code), it doesn't mean your new driver needs 
-to mimic this as well, AFAIU...
+I'm seeing two different patterns in the code. One pattern is to align
+the next line to the first character of the first line like I did based
+on the previous review comments.
 
-> Thanks,
->
-> Caesar
+	mem_width = min_t(unsigned int,
+                          data_width, dwc_fast_ffs(mem | len));
 
-MBR, Sergei
+The second example places an extra tab like this.
 
+	list_add_tail(&desc->desc_node,
+			&first->tx_list);
+
+
+Based on this example: this is how I'm changing the second one
+
++       lldev->tre_write_offset = (lldev->tre_write_offset + HIDMA_TRE_SIZE)
++                                       % lldev->tre_ring_size;
++
+
+I'm still not sure what you want to do with this:
+
+Is this what you want to do ?
+        memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+-              HIDMA_TRE_SIZE);
++               HIDMA_TRE_SIZE);
+
+I also got flagged before that HIDMA_TRE_SIZE does not start from the first 
+character.
+
+I have done the renaming. This is all left for me to post a follow up.
+
+
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
