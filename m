@@ -1,217 +1,180 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 01/18] irqchip: vf610-gpc: add Vybrid GPC IRQ controller
-Date: Fri, 11 Mar 2016 03:41:37 +0000
-Message-ID: <20160311034137.169f22ae@arm.com>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
-	<1457576219-7971-2-git-send-email-stefan@agner.ch>
+From: Eric Auger <eric.auger@linaro.org>
+Subject: Re: [PATCH 1/2] vfio, platform: add support for ACPI while detecting
+ the reset driver
+Date: Fri, 11 Mar 2016 04:48:34 +0100
+Message-ID: <56E24012.90002@linaro.org>
+References: <1457451209-21462-1-git-send-email-okaya@codeaurora.org>
+ <56E14858.9050401@linaro.org> <56E1AB38.8020702@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457576219-7971-2-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sergeimir-qv+LCo8X3VpBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56E1AB38.8020702@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Dan Carpenter <dan.carpenter@oracle.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  9 Mar 2016 18:16:42 -0800
-Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
-
-Hi Stefan,
-
-> This patch introduces a driver for Vybrids GPC (Global Power
-> Controller). Vybrids GPC IP is simpler than the one found in
-> i.MX 6: There is no power gating control (GPC) and the GPC INTC
-> does not need to clear IRQ masks for an interrupt to get routed
-> to the GIC (the mask only applys for wake-up control).
+Hi Sinan,
+On 03/10/2016 06:13 PM, Sinan Kaya wrote:
+> On 3/10/2016 5:11 AM, Eric Auger wrote:
+>> Hi Sinan,
+>> On 03/08/2016 04:33 PM, Sinan Kaya wrote:
+>>> The  code is using the compatible DT string to associate a reset driver with
+>>> the actual device itself. The compatible string does not exist on ACPI
+>>> based systems. HID is the unique identifier for a device driver instead.
+>>> The change allows a driver to register with DT compatible string or ACPI
+>>> HID and then match the object with one of these conditions.
+>>>
+>>> Rules for loading the reset driver are as follow:
+>>> - ACPI HID needs match for ACPI systems
+>>> - DT compat needs to match for OF systems
+>>>
+>>> Tested-by: Eric Auger <eric.auger@linaro.org> (device tree only)
+>>> Tested-by: Shanker Donthineni <shankerd@codeaurora.org> (ACPI only)
+>>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+>>> ---
+>>>  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   4 +-
+>>>  .../platform/reset/vfio_platform_calxedaxgmac.c    |   4 +-
+>>>  drivers/vfio/platform/vfio_platform_common.c       | 112 +++++++++++++++++----
+>>>  drivers/vfio/platform/vfio_platform_private.h      |  43 ++++----
+>>>  4 files changed, 125 insertions(+), 38 deletions(-)
+>>>
+>>> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+>>> index d4030d0..170dcf5 100644
+>>> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+>>> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
+>>> @@ -119,7 +119,9 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
+>>> +module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
+>>> +			  vfio_platform_amdxgbe_reset);
+>>> +VFIO_PLATFORM_MODULE_ALIAS("amd,xgbe-seattle-v1a");
+>> Looks the other overridden MODULE_ALIAS have a naming like
+>> MODULE_ALIAS_something? what about MODULE_ALIAS_VFIO_PLATFORM_RESET?
+>> not very compact but maybe closer to what it stands for.
 > 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  drivers/irqchip/Makefile        |   1 +
->  drivers/irqchip/irq-vf610-gpc.c | 138 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 139 insertions(+)
->  create mode 100644 drivers/irqchip/irq-vf610-gpc.c
+> alright, I'll follow that.
 > 
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index 18caacb..0a77ac6 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -45,6 +45,7 @@ obj-$(CONFIG_TS4800_IRQ)		+= irq-ts4800.o
->  obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
->  obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
->  obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-> +obj-$(CONFIG_SOC_VF610)			+= irq-vf610-gpc.o
->  obj-$(CONFIG_SOC_VF610)			+= irq-vf610-mscm-ir.o
->  obj-$(CONFIG_BCM7038_L1_IRQ)		+= irq-bcm7038-l1.o
->  obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
-> diff --git a/drivers/irqchip/irq-vf610-gpc.c b/drivers/irqchip/irq-vf610-gpc.c
-> new file mode 100644
-> index 0000000..2c6a043
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-vf610-gpc.c
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Copyright (C) 2016 Toradex AG
-> + * Author: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + *
-> + * The GPC (General Power Controller) irqchip driver takes care of the
-> + * interrupt wakeup functionality.
-> + *
-> + * o All peripheral interrupts of the Vybrid SoC can be used as wakeup
-> + *   source from STOP mode. In LPSTOP mode however, the GPC is unpowered
-> + *   too and cannot be used to as a wakeup source. The WKPU (Wakeup Unit)
-> + *   is responsible for wakeups from LPSTOP modes.
-> + */
-> +
-> +#include <linux/cpu_pm.h>
-> +#include <linux/io.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqchip.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/slab.h>
-> +#include <linux/regmap.h>
-> +
-> +#define IMR_NUM			4
-> +#define VF610_GPC_IMR1		0x044
-> +#define VF610_GPC_MAX_IRQS	(IMR_NUM * 32)
-> +
-> +static void __iomem *gpc_base;
-> +
-> +static int vf610_gpc_irq_set_wake(struct irq_data *d, unsigned int on)
-> +{
-> +	unsigned int idx = d->hwirq / 32;
-> +	void __iomem *reg_imr = gpc_base + VF610_GPC_IMR1 + (idx * 4);
-> +	u32 mask = 1 << d->hwirq % 32;
-> +
-> +	if (on)
-> +		writel_relaxed(readl_relaxed(reg_imr) & ~mask, reg_imr);
-> +	else
-> +		writel_relaxed(readl_relaxed(reg_imr) | mask, reg_imr);
-> +
-> +	/*
-> +	 * Do *not* call into the parent, as the GIC doesn't have any
-> +	 * wake-up facility...
-> +	 */
-> +	return 0;
-> +}
-> +
-> +static struct irq_chip vf610_gpc_chip = {
-> +	.name			= "vf610-gpc",
-> +	.irq_mask		= irq_chip_mask_parent,
-> +	.irq_unmask		= irq_chip_unmask_parent,
-> +	.irq_enable		= irq_chip_enable_parent,
-> +	.irq_disable		= irq_chip_disable_parent,
+>>>  
+>>>  MODULE_VERSION("0.1");
+>>>  MODULE_LICENSE("GPL v2");
+>>> diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+>>> index e3d3d94..635c6e0 100644
+>>> --- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+>>> +++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
+>>> @@ -77,7 +77,9 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
+>>> +module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
+>>> +			  vfio_platform_calxedaxgmac_reset);
+>>> +VFIO_PLATFORM_MODULE_ALIAS("calxeda,hb-xgmac");
+>>>  
+>>>  MODULE_VERSION(DRIVER_VERSION);
+>>>  MODULE_LICENSE("GPL v2");
+>>> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+>>> index 418cdd9..c758e72 100644
+>>> --- a/drivers/vfio/platform/vfio_platform_common.c
+>>> +++ b/drivers/vfio/platform/vfio_platform_common.c
+>>> @@ -13,6 +13,7 @@
+>>>   */
+>>>  
+>>>  #include <linux/device.h>
+>>> +#include <linux/acpi.h>
+>>>  #include <linux/iommu.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/mutex.h>
+>>> @@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
+>>>  static DEFINE_MUTEX(driver_lock);
+>>>  
+>>>  static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+>>> -					struct module **module)
+>>> +				  const char *acpihid, struct module **module)
+>>>  {
+>>>  	struct vfio_platform_reset_node *iter;
+>>>  	vfio_platform_reset_fn_t reset_fn = NULL;
+>>>  
+>>>  	mutex_lock(&driver_lock);
+>>>  	list_for_each_entry(iter, &reset_list, link) {
+>>> -		if (!strcmp(iter->compat, compat) &&
+>>> +		if (acpihid && iter->acpihid &&
+>>> +		    !strcmp(iter->acpihid, acpihid) &&
+>>> +			try_module_get(iter->owner)) {
+>>> +			*module = iter->owner;
+>>> +			reset_fn = iter->reset;
+>>> +			break;
+>>> +		}
+>>> +		if (compat && iter->compat &&
+>>> +		    !strcmp(iter->compat, compat) &&
+>>>  			try_module_get(iter->owner)) {
+>>>  			*module = iter->owner;
+>>>  			reset_fn = iter->reset;
+>>> @@ -49,15 +58,30 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
+>>>  	return reset_fn;
+>>>  }
+>>>  
+>>> -static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>>> +static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>> What is the point returning a value here? See my comment at the end.
+> 
+> I was trying to do some error handling here. If a driver does not have a
+> reset implementation, we are letting it go right now. 
+> 
+> I think we need to make reset driver a requirement. Mark Rutland reminded me 
+> that I need a reset driver. 
+> 
+> I did not think about it during implementation and I have not seen any 
+> warnings like you said.
+the warning currently is emitted on vfio_platform_open/release:
+dev_warn(vdev->device, "no reset function found!\n");
+> 
+>>>  {
+>>> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+>>> -						&vdev->reset_module);
+>>> -	if (!vdev->reset) {
+>>> -		request_module("vfio-reset:%s", vdev->compat);
+>>> -		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
+>>> -							 &vdev->reset_module);
+>>> -	}
+> 
+> 
+>>>  
+>>> -	vfio_platform_get_reset(vdev);
+>>> +	ret = vfio_platform_get_reset(vdev);
+>>> +	if (ret) {
+>>> +		iommu_group_put(group);
+>>> +		return ret;
+>>> +	}
+>> This change is not related to your commit message. Also here you change
+>> the use model of VFIO platform and forbid any usage if no reset module
+>> is available, right? I don't think this is something we discussed and I
+>> think it removes some flexibility. Currently a warning is emitted in
+>> case we don't have a reset function.
+> 
+> Well, I haven't seen that warning during testing. I was trying to be more 
+> proactive.
+Thank you for that. Personally I agree to proceed with the proposed
+change, ie. forbid vfio platform driver to be used if there is no reset
+function found but this should be in a separate patch with explicit
+commit mesg and you should remove dev_warn & related dead code.
 
-Any reason why you are providing enable/disable methods? This driver
-seems to be GIC specific (various comments in the code), but the GIC
-doesn't implement those.
+Best Regards
 
-> +	.irq_eoi		= irq_chip_eoi_parent,
-> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
-> +	.irq_set_wake		= vf610_gpc_irq_set_wake,
-> +};
-> +
-> +static int vf610_gpc_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> +				  unsigned int nr_irqs, void *arg)
-> +{
-> +	int i;
-> +	irq_hw_number_t hwirq;
-> +	struct irq_fwspec *fwspec = arg;
-> +	struct irq_fwspec parent_fwspec;
-> +
-> +	if (!irq_domain_get_of_node(domain->parent))
-> +		return -EINVAL;
-> +
-> +	if (fwspec->param_count != 2)
-> +		return -EINVAL;
-> +
-> +	hwirq = fwspec->param[0];
-> +	for (i = 0; i < nr_irqs; i++)
-> +		irq_domain_set_hwirq_and_chip(domain, virq + i, hwirq + i,
-> +					      &vf610_gpc_chip, NULL);
-> +
-> +	parent_fwspec = *fwspec;
+Eric
 
-Now I'm confused. The next irqchip in the hierarchy cannot be the GIC,
-because that's the wrong fwspec format (the GIC expect 3 parameters).
-Glancing at patch #2, I can see that this points to the mscm, so maybe
-it is that the comments are just wrong?
-
-> +	parent_fwspec.fwnode = domain->parent->fwnode;
-> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
-> +					    &parent_fwspec);
-> +}
-> +
-> +static int vf610_gpc_domain_translate(struct irq_domain *d,
-> +					  struct irq_fwspec *fwspec,
-> +					  unsigned long *hwirq,
-> +					  unsigned int *type)
-> +{
-> +	if (WARN_ON(fwspec->param_count < 2))
-> +		return -EINVAL;
-> +	*hwirq = fwspec->param[0];
-> +	*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
-> +	return 0;
-> +}
-> +
-> +static const struct irq_domain_ops gpc_irq_domain_ops = {
-> +	.translate = vf610_gpc_domain_translate,
-> +	.alloc = vf610_gpc_domain_alloc,
-> +	.free = irq_domain_free_irqs_common,
-> +};
-> +
-> +static int __init vf610_gpc_of_init(struct device_node *node,
-> +			       struct device_node *parent)
-> +{
-> +	struct irq_domain *domain, *domain_parent;
-> +	int i;
-> +
-> +	domain_parent = irq_find_host(parent);
-> +	if (!domain_parent) {
-> +		pr_err("vf610_gpc: interrupt-parent not found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	gpc_base = of_io_request_and_map(node, 0, "gpc");
-> +	if (WARN_ON(!gpc_base))
-> +		return PTR_ERR(gpc_base);
-
-If gpc_base is NULL, PTR_ERR(NULL) returns 0. Probably not what you
-want here...
-
-> +
-> +	domain = irq_domain_add_hierarchy(domain_parent, 0, VF610_GPC_MAX_IRQS,
-> +					  node, &gpc_irq_domain_ops, NULL);
-> +	if (!domain) {
-> +		iounmap(gpc_base);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* Initially mask all interrupts for wakeup */
-> +	for (i = 0; i < IMR_NUM; i++)
-> +		writel_relaxed(~0, gpc_base + VF610_GPC_IMR1 + i * 4);
-> +
-> +	return 0;
-> +}
-> +IRQCHIP_DECLARE(vf610_gpc, "fsl,vf610-gpc", vf610_gpc_of_init);
-
-It would be good to have some binding documentation as well.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> I'm fine removing these checks but not having a reset driver needs a really
+> big warning here.
+> 
+>>
+>> Best Regards
+>>
+>> Eric
+>>>  
+> 
+> 
+> 
