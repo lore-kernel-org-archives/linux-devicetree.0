@@ -1,171 +1,61 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 5/5] gpio: of: Add support to have multiple gpios in gpio-hog
-Date: Fri, 11 Mar 2016 19:13:24 +0530
-Message-ID: <1457703804-3016-6-git-send-email-ldewangan@nvidia.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 2/5] gpio: gpiolib: Print error number if gpio hog failed
+Date: Fri, 11 Mar 2016 19:13:21 +0530
+Message-ID: <1457703804-3016-3-git-send-email-ldewangan@nvidia.com>
 References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, mpa@pengutronix.de, swarren@wwwdotorg.org, treding@nvidia.com
-Cc: bparrot@ti.com, acourbot@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457703804-3016-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: bparrot-l0cyMroinI0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The child node for gpio hogs under gpio controller's node
-provide the mechanism to automatic GPIO request and
-configuration as part of the gpio-controller's driver
-probe function.
+Print the error number of GPIO hog failed during its configurations.
+This helps in identifying the failure without instrumenting the code.
 
-Currently, property "gpio" takes one gpios for such
-configuration. Add support to have multiple GPIOs in
-this property so that multiple GPIOs of gpio-controller
-can be configured by this mechanism with one child node.
-
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Benoit Parrot <bparrot@ti.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>
+Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
 ---
 Changes from V1:
-- Add "labels" property for GPIO label names.
+- Keep originality of error message, just add the error number.
+- It makes line to be >80 for string and understood that it is
+  fine for string on some cases.
 ---
- drivers/gpio/gpiolib-of.c | 77 ++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 59 insertions(+), 18 deletions(-)
+ drivers/gpio/gpiolib.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index d81dbd8..47a514d 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -118,6 +118,21 @@ int of_get_named_gpio_flags(struct device_node *np, const char *list_name,
- }
- EXPORT_SYMBOL(of_get_named_gpio_flags);
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1741ef4..b682d73 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2680,15 +2680,16 @@ int gpiod_hog(struct gpio_desc *desc, const char *name,
  
-+static int of_gpio_get_gpio_cells_size(struct device_node *chip_np)
-+{
-+	u32 ncells;
-+	int ret;
-+
-+	ret = of_property_read_u32(chip_np, "#gpio-cells", &ncells);
-+	if (ret)
-+		return ret;
-+
-+	if (ncells > MAX_PHANDLE_ARGS)
-+		return -EINVAL;
-+
-+	return ncells;
-+}
-+
- /**
-  * of_parse_own_gpio() - Get a GPIO hog descriptor, names and flags for GPIO API
-  * @np:		device node to get GPIO from
-@@ -131,6 +146,7 @@ EXPORT_SYMBOL(of_get_named_gpio_flags);
-  */
- static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 					   const char **name,
-+					   int gpio_index,
- 					   enum gpio_lookup_flags *lflags,
- 					   enum gpiod_flags *dflags)
- {
-@@ -139,8 +155,8 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 	struct gg_data gg_data = {
- 		.flags = &xlate_flags,
- 	};
--	u32 tmp;
--	int i, ret;
-+	int ncells;
-+	int i, start_index, ret;
- 
- 	chip_np = np->parent;
- 	if (!chip_np)
-@@ -150,18 +166,17 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 	*lflags = 0;
- 	*dflags = 0;
- 
--	ret = of_property_read_u32(chip_np, "#gpio-cells", &tmp);
--	if (ret)
--		return ERR_PTR(ret);
-+	ncells = of_gpio_get_gpio_cells_size(chip_np);
-+	if (ncells < 0)
-+		return ERR_PTR(ncells);
- 
--	if (tmp > MAX_PHANDLE_ARGS)
--		return ERR_PTR(-EINVAL);
-+	start_index = ncells * gpio_index;
- 
--	gg_data.gpiospec.args_count = tmp;
-+	gg_data.gpiospec.args_count = ncells;
- 	gg_data.gpiospec.np = chip_np;
--	for (i = 0; i < tmp; i++) {
--		ret = of_property_read_u32_index(np, "gpios", i,
--					   &gg_data.gpiospec.args[i]);
-+	for (i = 0; i < ncells; i++) {
-+		ret = of_property_read_u32_index(np, "gpios", start_index + i,
-+						 &gg_data.gpiospec.args[i]);
- 		if (ret)
- 			return ERR_PTR(ret);
- 	}
-@@ -189,9 +204,16 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
- 		return ERR_PTR(-EINVAL);
+ 	local_desc = gpiochip_request_own_desc(chip, hwnum, name);
+ 	if (IS_ERR(local_desc)) {
+-		pr_err("requesting hog GPIO %s (chip %s, offset %d) failed\n",
+-		       name, chip->label, hwnum);
+-		return PTR_ERR(local_desc);
++		status = PTR_ERR(local_desc);
++		pr_err("requesting hog GPIO %s (chip %s, offset %d) failed, %d\n",
++		       name, chip->label, hwnum, status);
++		return status;
  	}
  
--	if (name && of_property_read_string(np, "line-name", name))
--		*name = np->name;
-+	if (!name)
-+		goto out;
- 
-+	ret = of_property_read_string(np, "line-name", name);
-+	if (ret)
-+		ret = of_property_read_string_index(np, "label", gpio_index,
-+						    name);
-+	if (ret)
-+		*name = np->name;
-+out:
- 	return gg_data.out_gpio;
- }
- 
-@@ -211,18 +233,37 @@ static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 	enum gpio_lookup_flags lflags;
- 	enum gpiod_flags dflags;
- 	int ret;
-+	int i, ncells, ngpios;
-+
-+	ncells = of_gpio_get_gpio_cells_size(chip->of_node);
-+	if (ncells < 0)
-+		return 0;
- 
- 	for_each_available_child_of_node(chip->of_node, np) {
- 		if (!of_property_read_bool(np, "gpio-hog"))
- 			continue;
- 
--		desc = of_parse_own_gpio(np, &name, &lflags, &dflags);
--		if (IS_ERR(desc))
-+		ngpios = of_property_count_u32_elems(np, "gpios");
-+		if (ngpios < 0)
- 			continue;
- 
--		ret = gpiod_hog(desc, name, lflags, dflags);
--		if (ret < 0)
--			return ret;
-+		if (ngpios % ncells) {
-+			dev_warn(chip->parent, "Invalid GPIO entries at %s\n",
-+				 np->name);
-+			continue;
-+		}
-+
-+		ngpios /= ncells;
-+		for (i = 0; i < ngpios; i++) {
-+			desc = of_parse_own_gpio(np, &name, i,
-+						 &lflags, &dflags);
-+			if (IS_ERR(desc))
-+				continue;
-+
-+			ret = gpiod_hog(desc, name, lflags, dflags);
-+			if (ret < 0)
-+				return ret;
-+		}
+ 	status = gpiod_configure_flags(desc, name, dflags);
+ 	if (status < 0) {
+-		pr_err("setup of hog GPIO %s (chip %s, offset %d) failed\n",
+-		       name, chip->label, hwnum);
++		pr_err("setup of hog GPIO %s (chip %s, offset %d) failed, %d\n",
++		       name, chip->label, hwnum, status);
+ 		gpiochip_free_own_desc(desc);
+ 		return status;
  	}
- 
- 	return 0;
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
