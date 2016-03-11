@@ -1,31 +1,65 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V14 4/9] dma: add Qualcomm Technologies HIDMA channel
- driver
-Date: Fri, 11 Mar 2016 07:47:06 +0530
-Message-ID: <20160311021706.GK11154@localhost>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-5-git-send-email-okaya@codeaurora.org>
+From: "pankaj.dubey" <pankaj.dubey@samsung.com>
+Subject: Re: [RESPIN 1/6] dt-bindings: EXYNOS: Add exynos-srom device tree
+ binding
+Date: Fri, 11 Mar 2016 08:09:47 +0530
+Message-ID: <56E22FF3.7070003@samsung.com>
+References: <1456389222-12738-1-git-send-email-pankaj.dubey@samsung.com>
+ <1456389222-12738-2-git-send-email-pankaj.dubey@samsung.com>
+ <20160302175319.GA11155@rob-hp-laptop> <56DA7A3F.4060105@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1454646882-24369-5-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56DA7A3F.4060105@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, k.kozlowski@samsung.com, thomas.ab@samsung.com, olof@lixom.net, p.fedin@samsung.com, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 04, 2016 at 11:34:35PM -0500, Sinan Kaya wrote:
-> This patch adds support for hidma engine. The driver consists of two
-> logical blocks. The DMA engine interface and the low-level interface.
-> The hardware only supports memcpy/memset and this driver only support
-> memcpy interface. HW and driver doesn't support slave interface.
- 
-Applied after fixing subsystem name
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On Saturday 05 March 2016 11:48 AM, pankaj.dubey wrote:
+> Hi
+> 
+> On Wednesday 02 March 2016 11:23 PM, Rob Herring wrote:
+>> On Thu, Feb 25, 2016 at 02:03:37PM +0530, Pankaj Dubey wrote:
+>>> This patch adds exynos-srom binding information for SROM Controller
+>>> driver on Exynos SoCs.
+>>>
+>>> CC: Rob Herring <robh+dt@kernel.org>
+>>> CC: Mark Rutland <mark.rutland@arm.com>
+>>> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>> CC: devicetree@vger.kernel.org
+>>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>>> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> Signed-off-by: Kukjin Kim <kgene@kernel.org>
+>>> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>>> ---
+>>>  .../devicetree/bindings/memory-controllers/exynos-srom.txt   | 12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
+>>> new file mode 100644
+>>> index 0000000..33886d5
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/memory-controllers/exynos-srom.txt
+>>> @@ -0,0 +1,12 @@
+>>> +SAMSUNG Exynos SoCs SROM Controller driver.
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should contain "samsung,exynos-srom".
+>>
+>> There should be SoC specific compatible strings in addition to this.
+>>
+> 
+> I do not understood need of additional SoC specific compatible here. As
+> of now all SoCs having SROM can work with exynos specific common
+> compatible. Do you see any issues if we do not have SoC specific
+> compatible here.
+> 
+
+Gentle ping.
+
+Thanks,
+Pankaj Dubey
