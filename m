@@ -1,74 +1,117 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/4 v3] drm: Add support of ARC PGU display controller
-Date: Fri, 11 Mar 2016 18:42:35 +0300
-Message-ID: <1457710959-9562-1-git-send-email-abrodkin@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: [PATCH 2/4 v3] drm: Add DT bindings documentation for ARC PGU display controller
+Date: Fri, 11 Mar 2016 18:42:37 +0300
+Message-ID: <1457710959-9562-3-git-send-email-abrodkin@synopsys.com>
+References: <1457710959-9562-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457710959-9562-1-git-send-email-abrodkin@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series add support of ARC PGU display controller.
-ARC PGU is a quite simple byte streamer that gets data from the framebuffer
-and pushes it to hte connected encoder (DP or HDMI).
+This add DT bindings documentation for ARC PGU display controller.
 
-It was tested on ARC SDP boards (axs101 in particular).
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: David Airlie <airlied@linux.ie>
+Cc: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+---
 
 Changes v2 -> v3:
- * Improved failure path if arcpgu_connector wasn't allocated.
- * Fixed driver building as module.
- * Implemented uncached mapping of user-space FB pages.
- * Again updated DT bindings docs.
+ * Reverted back to initial larger version of example
+   with minor fixes (thanks Rob for spotting those).
 
 Changes v1 -> v2:
- * Clean-up of DT bindings documentation.
- * Added missing "pxlclk" clock in axs10x_mb.dtsi.
+ * Removed everything except PGU node itself.
 
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
-Alexey Brodkin (4):
-  drm: Add support of ARC PGU display controller
-  drm: Add DT bindings documentation for ARC PGU display controller
-  arc: axs10x - add support of ARC PGU
-  MAINTAINERS: Add maintainer for ARC PGU display controller
-
- .../devicetree/bindings/display/snps,arcpgu.txt    |  72 ++++++
- MAINTAINERS                                        |   6 +
- arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
- drivers/gpu/drm/Kconfig                            |   2 +
- drivers/gpu/drm/Makefile                           |   1 +
- drivers/gpu/drm/arc/Kconfig                        |  10 +
- drivers/gpu/drm/arc/Makefile                       |   2 +
- drivers/gpu/drm/arc/arcpgu.h                       |  50 ++++
- drivers/gpu/drm/arc/arcpgu_crtc.c                  | 274 +++++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_drv.c                   | 252 +++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_fbdev.c                 | 245 ++++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 207 ++++++++++++++++
- drivers/gpu/drm/arc/arcpgu_regs.h                  |  36 +++
- 13 files changed, 1218 insertions(+)
+ .../devicetree/bindings/display/snps,arcpgu.txt    | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
- create mode 100644 drivers/gpu/drm/arc/Kconfig
- create mode 100644 drivers/gpu/drm/arc/Makefile
- create mode 100644 drivers/gpu/drm/arc/arcpgu.h
- create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_fbdev.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
- create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
 
+diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
+new file mode 100644
+index 0000000..b130924
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
+@@ -0,0 +1,72 @@
++ARC PGU
++
++This is a display controller found on several development boards produced
++by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
++framebuffer and sends it to a single digital encoder (usually HDMI).
++
++Required properties:
++  - compatible: "snps,arcpgu"
++  - reg: Physical base address and length of the controller's registers.
++  - clocks: A list of phandle + clock-specifier pairs, one for each
++    entry in 'clock-names'.
++  - clock-names: A list of clock names. For ARC PGU it should contain:
++      - "pxlclk" for the clock feeding the output PLL of the controller.
++  - encoder-slave: Phandle of encoder chip.
++
++Required sub-nodes:
++  - port: The PGU connection to an encoder chip.
++
++Example:
++
++/ {
++	...
++
++	pgu@XXXXXXXX {
++		compatible = "snps,arcpgu";
++		reg = <0xXXXXXXXX 0x400>;
++		clocks = <&clock_node>;
++		clock-names = "pxlclk";
++		encoder-slave = <&encoder_node>;
++
++		port {
++			pgu_output: endpoint {
++				remote-endpoint = <&hdmi_enc_input>;
++			};
++		};
++	};
++
++	/* HDMI encoder on I2C bus */
++	i2c@XXXXXXXX {
++		compatible = "...";
++
++		encoder_node:encoder_node@0xXX{
++			compatible="...";
++
++			ports {
++				port@0 {
++					reg = <0>;
++					hdmi_enc_input:endpoint {
++						remote-endpoint = <&pgu_output>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					hdmi_enc_output:endpoint {
++						remote-endpoint = <&hdmi_connector_in>;
++					};
++				};
++			};
++		};
++	}
++
++	hdmi0: connector {
++		compatible = "hdmi-connector";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_enc_output>;
++			};
++		};
++	};
++};
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
