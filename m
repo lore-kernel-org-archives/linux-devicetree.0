@@ -1,68 +1,41 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sun5i-a13-empire-electronix-d709: Remove
- mmc2 node
-Date: Fri, 11 Mar 2016 11:10:09 +0100
-Message-ID: <20160311101009.GX8418@lukather>
-References: <1457645884-10282-1-git-send-email-hdegoede@redhat.com>
- <1457645884-10282-2-git-send-email-hdegoede@redhat.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91/dt: sama5d4 xplained: don't disable hsmci regulator
+Date: Fri, 11 Mar 2016 11:35:10 +0100
+Message-ID: <1457692516-3151-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qGW1X6pRZ+lkBpGQ"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457645884-10282-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+If enabling the hsmci regulator on card detection, the board can reboot
+on sd card insertion. Keeping the regulator always enabled fixes this
+issue.
 
---qGW1X6pRZ+lkBpGQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Fixes: 8d545f32bd77 ("ARM: at91/dt: sama5d4 xplained: add regulators for
+v(q)mmc1 supplies")
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org #4.3 and later
+---
+ arch/arm/boot/dts/at91-sama5d4_xplained.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-On Thu, Mar 10, 2016 at 10:38:03PM +0100, Hans de Goede wrote:
-> The empire-electronix-d709 does not have an emmc, it uses nand, the
-> mmc2 node in the dts comes from a copy and paste error from the
-> inet98fv2 dts, remove it.
->=20
-> While at it also do s/inet98fv2/d709/ to fix some other copy/paste
-> leftovers.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+index 569026e..da84e65 100644
+--- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
+@@ -268,5 +268,6 @@
+ 		regulator-min-microvolt = <3300000>;
+ 		regulator-max-microvolt = <3300000>;
+ 		vin-supply = <&vcc_3v3_reg>;
++		regulator-always-on;
+ 	};
+ };
+-- 
+2.5.0
 
-Queued for 4.7, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---qGW1X6pRZ+lkBpGQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJW4pmBAAoJEBx+YmzsjxAg7NIQAKAHV+8COTtB6qUP/U3jDiSu
-3zyh4Oqss9JTVTYs5oD9Twnru3C7cLu69kF/Z3XmQyVji5sHiQAJGF+oy6zDfYIT
-+75tHY2zhImbVVUDcokfm1NDtfMsUzwzfx9tyKus6WnEx1wneoS7ohc8cu44rHfm
-gziDqpG2mAJCXmM83wfrSBGPfBD8quG6kGoWrjT9tn5pY8yzfqCVB+92rqN0lGKJ
-lXeU7KUN0a6GB0k0lIuOwctmp/jDmjj855fro7IHpQJb4HK/+qo6zxM9x0xgAxpf
-Uk6ambxtCo2s4ewsJk8ADzcxwuq3wOAZ/WPtputYWFPOG6C57menHBOe7Mn9AMtP
-VU7ezfKhGgP8rqcOJN19rYU/SjZE3/2S1PrlTaHZFRxZuNv6qJ9NyqeDUJeeTjcK
-JgEEtCYB0KhyYn5Vn3+rwmmGj4MoGlkifofpoQ3xXfKbzmkQXVtdhNcS7Gpk5Vq7
-erYaoLxNN/J2xrXl/FUKV8cMACdCNqT/0r9A3/LU6fy/PdvXJgn9mTLxY43YUaUy
-tL3G7Dfk0SJXbfYhI5iXyoesPQmvomu+Wb8UQ3uXLMu+urXTXrRR1xKgpsqeWOB4
-2zF4BH2vbrMoaeK8f0fyujSLnfqb0vLPqvYlJDW0xvHsxkSz5unpjzAWqqPNDVSg
-hEVjo59ght1pjyv+0YpU
-=pqie
------END PGP SIGNATURE-----
-
---qGW1X6pRZ+lkBpGQ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
