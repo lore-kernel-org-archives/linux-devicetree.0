@@ -1,64 +1,149 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
- interface
-Date: Fri, 11 Mar 2016 22:02:21 +0530
-Message-ID: <20160311163221.GC13211@localhost>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
- <20160311020650.GG11154@localhost>
- <56E2EC1C.6040107@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] iio: dac: Add support for the AD5592R/AD5593R ADCs/DACs
+Date: Fri, 11 Mar 2016 23:28:32 +0700
+Message-ID: <CACRpkdap_8YGCAvNeK7_0H2MDDnwQ9QDJH4O2SzEkDmczPGtLg@mail.gmail.com>
+References: <1456407412-16218-1-git-send-email-michael.hennerich@analog.com>
+	<56D1E1CB.6070704@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56E2EC1C.6040107-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56D1E1CB.6070704@kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Michael Hennerich <michael.hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Paul Cercueil <paul.cercueil@analog.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 11:02:36AM -0500, Sinan Kaya wrote:
-> > These are rest here are not namespace properly...
-> 
-> If I understood it right, you want me to prefix them with as HIDMA_xyz.
-> Correct?
+On Sun, Feb 28, 2016 at 12:50 AM, Jonathan Cameron <jic23@kernel.org> wrote:
 
-Yes..
+>> +Analog Devices AD5592R/AD5593R DAC/ADC device driver
+>> +
+>> +Required properties for the AD5592R:
+>> +     - compatible: Must be "adi,ad5592r"
+>> +     - reg: SPI chip select number for the device
+>> +     - spi-max-frequency: Max SPI frequency to use (< 30000000)
+>> +     - spi-cpol: The AD5592R requires inverse clock polarity (CPOL) mode
 
-> >> +	/* copy the TRE into its location in the TRE ring */
-> >> +	spin_lock_irqsave(&lldev->lock, flags);
-> >> +	tre->tre_index = lldev->tre_write_offset / TRE_SIZE;
-> >> +	lldev->pending_tre_list[tre->tre_index] = tre;
-> >> +	memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
-> >> +	       TRE_SIZE);
+If this should be a gpiochip, this shall also be reflected in the
+device tree bindings and the example in the bindings by
+stating gpio-controller; and #gpio-cells, referring to
+the binding in gpio/gpio.txt so consumers can pick a GPIO
+from this device.
 
-This one
+I haven't seen the original patch, please mail the next version
+to me so I can take a look.
 
-> >> +	lldev->tx_status_list[tre->idx].err_code = 0;
-> >> +	lldev->tx_status_list[tre->idx].err_info = 0;
-> >> +	tre->queued = 1;
-> >> +	lldev->pending_tre_count++;
-> 
-> Is this the only one without alignment? I couldn't understand what you mean by 
-> above one?
+>> +config AD5592R_BASE
+>> +     tristate
+>> +
+>> +config AD5592R
+>> +     tristate "Analog Devices AD5592R ADC/DAC driver"
+>> +     depends on SPI_MASTER
+>> +     depends on OF
+>> +     select AD5592R_BASE
+>> +     help
+>> +       Say yes here to build support for Analog Devices AD5592R
+>> +       Digital to Analog / Analog to Digital Converter.
+>> +
+>> +       To compile this driver as a module, choose M here: the
+>> +       module will be called ad5592r.
+>> +
+>> +config AD5593R
+>> +     tristate "Analog Devices AD5593R ADC/DAC driver"
+>> +     depends on I2C
+>> +     depends on OF
+>> +     select AD5592R_BASE
+>> +     help
+>> +       Say yes here to build support for Analog Devices AD5593R
+>> +       Digital to Analog / Analog to Digital Converter.
+>> +
+>> +       To compile this driver as a module, choose M here: the
+>> +       module will be called ad5593r.
+>> +
 
-quoting Coding Style:
+I guess something here should select GPIOLIB
+and depend of OF_GPIO
 
-Statements longer than 80 columns will be broken into sensible chunks, unless
-exceeding 80 columns significantly increases readability and does not hide
-information. Descendants are always substantially shorter than the parent and
-are placed substantially to the right.
+>> +#ifdef CONFIG_GPIOLIB
 
+Naaaaah really? Just select GPIOLIB and get rid of ifdeffery.
+It's cool to have gpios available.
 
-> 
-> >> +	lldev->tre_write_offset = (lldev->tre_write_offset + TRE_SIZE)
-> >> +	    % lldev->tre_ring_size;
-> > 
-> > These and above one should be right justfied per coding style
+>> +static int ad5592r_gpio_request(struct gpio_chip *chip, unsigned offset)
+>> +{
+>> +     struct ad5592r_state *st = gpiochip_get_data(chip);
+>> +
+>> +     if (!(st->gpio_map & BIT(offset))) {
+>> +             dev_err(st->dev, "GPIO %d is reserved by alternate function\n",
+>> +                     offset);
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This gpio_map looks a bit like pin control.
+
+It might be overkill to use all of the pinctrl subsystem,
+we have circumvented it in other places.
+
+>> +             return -ENODEV;
+>> +     }
+>> +
+>> +     if (offset >= chip->ngpio)
+>> +             return -EINVAL;
+
+gpiolib already guards against this I think.
+
+>> +static int ad5592r_gpio_init(struct ad5592r_state *st)
+>> +{
+>> +     st->gpiochip.label = dev_name(st->dev);
+>> +     st->gpiochip.base = -1;
+>> +     st->gpiochip.ngpio = 8;
+>> +     st->gpiochip.parent = st->dev;
+>> +     st->gpiochip.can_sleep = true;
+>> +     st->gpiochip.direction_input = ad5592r_gpio_direction_input;
+>> +     st->gpiochip.direction_output = ad5592r_gpio_direction_output;
+>> +     st->gpiochip.get = ad5592r_gpio_get;
+>> +     st->gpiochip.set = ad5592r_gpio_set;
+>> +     st->gpiochip.request = ad5592r_gpio_request;
+>> +     st->gpiochip.owner = THIS_MODULE;
+>> +
+>> +     mutex_init(&st->gpio_lock);
+>> +
+>> +     return gpiochip_add_data(&st->gpiochip, st);
+
+The gpiolib should be fine with the of_node from the parent so
+looks fine.
+
+>> +             mutex_lock(&iio_dev->mlock);
+>> +             st->ops->reg_write(st, AD5592R_REG_RESET, 0xdac);
+>> +             mutex_unlock(&iio_dev->mlock);
+
+What's that? (0xdac)? Clever magic?
+
+>> +             case CH_MODE_DAC_AND_ADC:
+>> +                     dac |= BIT(i);
+>> +                     adc |= BIT(i);
+>> +                     break;
+>> +
+>> +             case CH_MODE_UNUSED_PULL_DOWN:
+>> +                     pulldown |= BIT(i);
+>> +                     break;
+>> +
+>> +             case CH_MODE_UNUSED_OUT_TRISTATE:
+>> +                     tristate |= BIT(i);
+>> +                     break;
+>> +
+>> +             case CH_MODE_UNUSED_OUT_LOW:
+>> +                     st->gpio_out |= BIT(i);
+>> +                     break;
+>> +
+>> +             case CH_MODE_UNUSED_OUT_HIGH:
+>> +                     st->gpio_out |= BIT(i);
+>> +                     st->gpio_val |= BIT(i);
+>> +                     break;
+>> +
+>> +             case CH_MODE_GPIO_OPEN_DRAIN:
+>> +                     open_drain |= BIT(i);
+
+Deja-vu with include/linux/pinctrl/pinconf-generic.h
+
+We call tristate "bias high impedance".
+
+Yours,
+Linus Walleij
