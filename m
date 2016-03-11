@@ -1,49 +1,42 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v12] [PATCH] PCI: Xilinx-NWL-PCIe: Adding support for
- Xilinx NWL PCIe Host Controller
-Date: Fri, 11 Mar 2016 15:58:19 -0600
-Message-ID: <20160311215819.GB16257@localhost>
-References: <1457281934-32068-1-git-send-email-bharatku@xilinx.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
+ interface
+Date: Fri, 11 Mar 2016 16:59:23 -0500
+Message-ID: <56E33FBB.2000401@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
+ <20160311020650.GG11154@localhost> <56E2EC1C.6040107@codeaurora.org>
+ <20160311163221.GC13211@localhost> <56E2F5EA.10207@codeaurora.org>
+ <56E31CA5.6040106@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457281934-32068-1-git-send-email-bharatku@xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michals@xilinx.com, sorenb@xilinx.com, bhelgaas@google.com, arnd@arndb.de, tinamdar@apm.com, treding@nvidia.com, rjui@broadcom.com, Minghuan.Lian@freescale.com, m-karicheri2@ti.com, hauke@hauke-m.de, marc.zyngier@arm.com, dhdang@apm.com, sbranden@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>, Ravi Kiran Gummaluri <rgummal@xilinx.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56E31CA5.6040106@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bharat,
+Vinod,
 
-I forgot I still have one question here:
+On 3/11/2016 2:29 PM, Sinan Kaya wrote:
+> I have done the renaming. This is all left for me to post a follow up.
 
-On Sun, Mar 06, 2016 at 10:02:14PM +0530, Bharat Kumar Gogada wrote:
-> Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
+I just posted v15 (forgot to put v15 on 4/4).
 
-> +static bool nwl_pcie_valid_device(struct pci_bus *bus, unsigned int devfn)
-> +{
-> +	struct nwl_pcie *pcie = bus->sysdata;
-> +
-> +	/* Check link,before accessing downstream ports */
-> +	if (bus->number != pcie->root_busno) {
-> +		if (!nwl_pcie_link_up(pcie))
-> +			return false;
-> +	}
+http://www.spinics.net/lists/arm-kernel/msg490282.html
 
-This seems racy.  What if we check, and the link is up, but the link
-goes down before we actually complete the config access?
+I wanted to get v15 out before the end of the week with the macro renames. 
+Let me know which lines need corrections.
 
-I'm suggesting that this check for the link being up might be
-superfluous.
+There is also a single line change for the object hierarchy patch. The code 
+was looking up DMA attributes (OF:dma-coherent) from the wrong place.
 
-The hardware should do something reasonable with the config access if
-it can't send it down the link.
+Thanks and have a good weekend,
+Sinan
 
-> +
-> +	/* Only one device down on each root port */
-> +	if (bus->number == pcie->root_busno && devfn > 0)
-> +		return false;
-> +
-> +	return true;
-> +}
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
