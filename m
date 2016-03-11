@@ -1,7 +1,7 @@
 From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v1 1/4] mfd: syscon: Introduce syscon_regmap_read_from_offset
-Date: Fri, 11 Mar 2016 14:29:28 +0530
-Message-ID: <bf50505be7aedd3bc30bd4959c9a7c0273654944.1457684688.git.maitysanchayan@gmail.com>
+Subject: [PATCH v1 3/4] ARM: dts: vfxxx: Add OCROM and phandle entries for Vybrid SoC bus driver
+Date: Fri, 11 Mar 2016 14:29:30 +0530
+Message-ID: <39ab1c08dacb7fc4e36a3f3517da16d4da47710b.1457684688.git.maitysanchayan@gmail.com>
 References: <cover.1457684688.git.maitysanchayan@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1457684688.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,92 +12,39 @@ To: arnd-r2nGTMty4D4@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gm
 Cc: stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently syscon does not provide an abstraction to access a
-register from syscon reference like below
-
-ocotp-cfg1 = <&ocotp 0x20>
-
-syscon_regmap_read_from_offset provides a generic abstraction to
-access a register from syscon reference as above. It allows to
-specify the node and node name of phandle reference, reading the
-offset from the node entry and providing the value from the offset
-in the register map.
+Add OCROM node and introduce phandles to OCROM, MSCM and NVMEM
+OCOTP for use by the Vybrid SoC bus driver.
 
 Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/mfd/syscon.c       | 30 ++++++++++++++++++++++++++++++
- include/linux/mfd/syscon.h | 10 ++++++++++
- 2 files changed, 40 insertions(+)
+ arch/arm/boot/dts/vfxxx.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index b7aabee..349c38e 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -129,6 +129,36 @@ struct regmap *syscon_node_to_regmap(struct device_node *np)
- }
- EXPORT_SYMBOL_GPL(syscon_node_to_regmap);
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index db9157e..0dd7ad5 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -87,9 +87,19 @@
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		compatible = "simple-bus";
++		compatible = "fsl,vf610-soc-bus", "simple-bus";
+ 		interrupt-parent = <&mscm_ir>;
+ 		ranges;
++		fsl,rom-revision = <&ocrom 0x80>;
++		fsl,cpu-count = <&mscm_cpucfg 0x2C>;
++		fsl,l2-size = <&mscm_cpucfg 0x14>;
++		nvmem-cells = <&ocotp_cfg0>, <&ocotp_cfg1>;
++		nvmem-cell-names = "cfg0", "cfg1";
++
++		ocrom: ocrom@00000000 {
++			compatible = "fsl,vf610-ocrom", "syscon";
++			reg = <0x00000000 0x18000>;
++		};
  
-+int syscon_regmap_read_from_offset(struct device_node *np,
-+				const char *s, unsigned int *val)
-+{
-+	struct of_phandle_args pargs;
-+	struct regmap *regmap;
-+	int offset;
-+	int ret;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	ret = of_parse_phandle_with_fixed_args(np, s, 1, 0, &pargs);
-+	if (ret)
-+		return ret;
-+
-+	regmap = syscon_node_to_regmap(pargs.np);
-+	if (IS_ERR(regmap)) {
-+		of_node_put(pargs.np);
-+		return PTR_ERR(regmap);
-+	}
-+
-+	offset = pargs.args[0];
-+	of_node_put(pargs.np);
-+
-+	ret = regmap_read(regmap, offset, val);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(syscon_regmap_read_from_offset);
-+
- struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
- {
- 	struct device_node *syscon_np;
-diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
-index 75e543b..3c02ed9 100644
---- a/include/linux/mfd/syscon.h
-+++ b/include/linux/mfd/syscon.h
-@@ -26,6 +26,9 @@ extern struct regmap *syscon_regmap_lookup_by_pdevname(const char *s);
- extern struct regmap *syscon_regmap_lookup_by_phandle(
- 					struct device_node *np,
- 					const char *property);
-+extern int syscon_regmap_read_from_offset(struct device_node *np,
-+					  const char *s,
-+					  unsigned int *val);
- #else
- static inline struct regmap *syscon_node_to_regmap(struct device_node *np)
- {
-@@ -48,6 +51,13 @@ static inline struct regmap *syscon_regmap_lookup_by_phandle(
- {
- 	return ERR_PTR(-ENOSYS);
- }
-+
-+static inline int syscon_regmap_read_from_offset(struct device_node *np,
-+						 const char *s,
-+						 unsigned int *val)
-+{
-+	return ERR_PTR(-ENOSYS);
-+}
- #endif
- 
- #endif /* __LINUX_MFD_SYSCON_H__ */
+ 		aips0: aips-bus@40000000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
 -- 
 2.7.2
 
