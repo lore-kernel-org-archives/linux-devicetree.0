@@ -1,180 +1,38 @@
-From: Eric Auger <eric.auger@linaro.org>
-Subject: Re: [PATCH 1/2] vfio, platform: add support for ACPI while detecting
- the reset driver
-Date: Fri, 11 Mar 2016 04:48:34 +0100
-Message-ID: <56E24012.90002@linaro.org>
-References: <1457451209-21462-1-git-send-email-okaya@codeaurora.org>
- <56E14858.9050401@linaro.org> <56E1AB38.8020702@codeaurora.org>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 5/5] arm64: tegra210: Add IOMMU node to GM20B
+Date: Fri, 11 Mar 2016 12:51:58 +0900
+Message-ID: <1457668318-2821-6-git-send-email-acourbot@nvidia.com>
+References: <1457668318-2821-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56E1AB38.8020702@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sinan Kaya <okaya@codeaurora.org>, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Dan Carpenter <dan.carpenter@oracle.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457668318-2821-1-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sinan,
-On 03/10/2016 06:13 PM, Sinan Kaya wrote:
-> On 3/10/2016 5:11 AM, Eric Auger wrote:
->> Hi Sinan,
->> On 03/08/2016 04:33 PM, Sinan Kaya wrote:
->>> The  code is using the compatible DT string to associate a reset driver with
->>> the actual device itself. The compatible string does not exist on ACPI
->>> based systems. HID is the unique identifier for a device driver instead.
->>> The change allows a driver to register with DT compatible string or ACPI
->>> HID and then match the object with one of these conditions.
->>>
->>> Rules for loading the reset driver are as follow:
->>> - ACPI HID needs match for ACPI systems
->>> - DT compat needs to match for OF systems
->>>
->>> Tested-by: Eric Auger <eric.auger@linaro.org> (device tree only)
->>> Tested-by: Shanker Donthineni <shankerd@codeaurora.org> (ACPI only)
->>> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
->>> ---
->>>  .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   4 +-
->>>  .../platform/reset/vfio_platform_calxedaxgmac.c    |   4 +-
->>>  drivers/vfio/platform/vfio_platform_common.c       | 112 +++++++++++++++++----
->>>  drivers/vfio/platform/vfio_platform_private.h      |  43 ++++----
->>>  4 files changed, 125 insertions(+), 38 deletions(-)
->>>
->>> diff --git a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
->>> index d4030d0..170dcf5 100644
->>> --- a/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
->>> +++ b/drivers/vfio/platform/reset/vfio_platform_amdxgbe.c
->>> @@ -119,7 +119,9 @@ int vfio_platform_amdxgbe_reset(struct vfio_platform_device *vdev)
->>>  	return 0;
->>>  }
->>>  
->>> -module_vfio_reset_handler("amd,xgbe-seattle-v1a", vfio_platform_amdxgbe_reset);
->>> +module_vfio_reset_handler("amd,xgbe-seattle-v1a", NULL,
->>> +			  vfio_platform_amdxgbe_reset);
->>> +VFIO_PLATFORM_MODULE_ALIAS("amd,xgbe-seattle-v1a");
->> Looks the other overridden MODULE_ALIAS have a naming like
->> MODULE_ALIAS_something? what about MODULE_ALIAS_VFIO_PLATFORM_RESET?
->> not very compact but maybe closer to what it stands for.
-> 
-> alright, I'll follow that.
-> 
->>>  
->>>  MODULE_VERSION("0.1");
->>>  MODULE_LICENSE("GPL v2");
->>> diff --git a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
->>> index e3d3d94..635c6e0 100644
->>> --- a/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
->>> +++ b/drivers/vfio/platform/reset/vfio_platform_calxedaxgmac.c
->>> @@ -77,7 +77,9 @@ int vfio_platform_calxedaxgmac_reset(struct vfio_platform_device *vdev)
->>>  	return 0;
->>>  }
->>>  
->>> -module_vfio_reset_handler("calxeda,hb-xgmac", vfio_platform_calxedaxgmac_reset);
->>> +module_vfio_reset_handler("calxeda,hb-xgmac", NULL,
->>> +			  vfio_platform_calxedaxgmac_reset);
->>> +VFIO_PLATFORM_MODULE_ALIAS("calxeda,hb-xgmac");
->>>  
->>>  MODULE_VERSION(DRIVER_VERSION);
->>>  MODULE_LICENSE("GPL v2");
->>> diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
->>> index 418cdd9..c758e72 100644
->>> --- a/drivers/vfio/platform/vfio_platform_common.c
->>> +++ b/drivers/vfio/platform/vfio_platform_common.c
->>> @@ -13,6 +13,7 @@
->>>   */
->>>  
->>>  #include <linux/device.h>
->>> +#include <linux/acpi.h>
->>>  #include <linux/iommu.h>
->>>  #include <linux/module.h>
->>>  #include <linux/mutex.h>
->>> @@ -31,14 +32,22 @@ static LIST_HEAD(reset_list);
->>>  static DEFINE_MUTEX(driver_lock);
->>>  
->>>  static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->>> -					struct module **module)
->>> +				  const char *acpihid, struct module **module)
->>>  {
->>>  	struct vfio_platform_reset_node *iter;
->>>  	vfio_platform_reset_fn_t reset_fn = NULL;
->>>  
->>>  	mutex_lock(&driver_lock);
->>>  	list_for_each_entry(iter, &reset_list, link) {
->>> -		if (!strcmp(iter->compat, compat) &&
->>> +		if (acpihid && iter->acpihid &&
->>> +		    !strcmp(iter->acpihid, acpihid) &&
->>> +			try_module_get(iter->owner)) {
->>> +			*module = iter->owner;
->>> +			reset_fn = iter->reset;
->>> +			break;
->>> +		}
->>> +		if (compat && iter->compat &&
->>> +		    !strcmp(iter->compat, compat) &&
->>>  			try_module_get(iter->owner)) {
->>>  			*module = iter->owner;
->>>  			reset_fn = iter->reset;
->>> @@ -49,15 +58,30 @@ static vfio_platform_reset_fn_t vfio_platform_lookup_reset(const char *compat,
->>>  	return reset_fn;
->>>  }
->>>  
->>> -static void vfio_platform_get_reset(struct vfio_platform_device *vdev)
->>> +static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->> What is the point returning a value here? See my comment at the end.
-> 
-> I was trying to do some error handling here. If a driver does not have a
-> reset implementation, we are letting it go right now. 
-> 
-> I think we need to make reset driver a requirement. Mark Rutland reminded me 
-> that I need a reset driver. 
-> 
-> I did not think about it during implementation and I have not seen any 
-> warnings like you said.
-the warning currently is emitted on vfio_platform_open/release:
-dev_warn(vdev->device, "no reset function found!\n");
-> 
->>>  {
->>> -	vdev->reset = vfio_platform_lookup_reset(vdev->compat,
->>> -						&vdev->reset_module);
->>> -	if (!vdev->reset) {
->>> -		request_module("vfio-reset:%s", vdev->compat);
->>> -		vdev->reset = vfio_platform_lookup_reset(vdev->compat,
->>> -							 &vdev->reset_module);
->>> -	}
-> 
-> 
->>>  
->>> -	vfio_platform_get_reset(vdev);
->>> +	ret = vfio_platform_get_reset(vdev);
->>> +	if (ret) {
->>> +		iommu_group_put(group);
->>> +		return ret;
->>> +	}
->> This change is not related to your commit message. Also here you change
->> the use model of VFIO platform and forbid any usage if no reset module
->> is available, right? I don't think this is something we discussed and I
->> think it removes some flexibility. Currently a warning is emitted in
->> case we don't have a reset function.
-> 
-> Well, I haven't seen that warning during testing. I was trying to be more 
-> proactive.
-Thank you for that. Personally I agree to proceed with the proposed
-change, ie. forbid vfio platform driver to be used if there is no reset
-function found but this should be in a separate patch with explicit
-commit mesg and you should remove dev_warn & related dead code.
+Nouveau can take advantage of this declaration to remove the need for
+contiguous memory.
 
-Best Regards
+Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Eric
-
-> 
-> I'm fine removing these checks but not having a reset driver needs a really
-> big warning here.
-> 
->>
->> Best Regards
->>
->> Eric
->>>  
-> 
-> 
-> 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 0c51ac3b0f56..63063e56c1d9 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -314,6 +314,9 @@
+ 		clock-names = "gpu", "pwr", "pllg_ref";
+ 		resets = <&tegra_car 184>;
+ 		reset-names = "gpu";
++
++		iommus = <&mc TEGRA_SWGROUP_GPU>;
++
+ 		status = "disabled";
+ 	};
+ 
+-- 
+2.7.2
