@@ -1,149 +1,127 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] iio: dac: Add support for the AD5592R/AD5593R ADCs/DACs
-Date: Fri, 11 Mar 2016 23:28:32 +0700
-Message-ID: <CACRpkdap_8YGCAvNeK7_0H2MDDnwQ9QDJH4O2SzEkDmczPGtLg@mail.gmail.com>
-References: <1456407412-16218-1-git-send-email-michael.hennerich@analog.com>
-	<56D1E1CB.6070704@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <56D1E1CB.6070704@kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Paul Cercueil <paul.cercueil@analog.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+From: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+Subject: [RFC 3/8] drivers/of: export of_attach_node_sysfs
+Date: Fri, 11 Mar 2016 16:56:10 +0100
+Message-ID: <1457711775-6326-4-git-send-email-franck.jullien@odyssee-systemes.fr>
+References: <1457711775-6326-1-git-send-email-franck.jullien@odyssee-systemes.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457711775-6326-1-git-send-email-franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 28, 2016 at 12:50 AM, Jonathan Cameron <jic23@kernel.org> wrote:
+Signed-off-by: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
+---
+ drivers/of/base.c       |    5 +++--
+ drivers/of/dynamic.c    |    4 ++--
+ drivers/of/of_private.h |    1 -
+ drivers/of/unittest.c   |    4 ++--
+ include/linux/of.h      |    2 ++
+ 5 files changed, 9 insertions(+), 7 deletions(-)
 
->> +Analog Devices AD5592R/AD5593R DAC/ADC device driver
->> +
->> +Required properties for the AD5592R:
->> +     - compatible: Must be "adi,ad5592r"
->> +     - reg: SPI chip select number for the device
->> +     - spi-max-frequency: Max SPI frequency to use (< 30000000)
->> +     - spi-cpol: The AD5592R requires inverse clock polarity (CPOL) mode
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a7ff11f..faa108a 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -156,7 +156,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 	return rc;
+ }
+ 
+-int __of_attach_node_sysfs(struct device_node *np)
++int of_attach_node_sysfs(struct device_node *np)
+ {
+ 	const char *name;
+ 	struct property *pp;
+@@ -188,6 +188,7 @@ int __of_attach_node_sysfs(struct device_node *np)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(of_attach_node_sysfs);
+ 
+ void __init of_core_init(void)
+ {
+@@ -202,7 +203,7 @@ void __init of_core_init(void)
+ 		return;
+ 	}
+ 	for_each_of_allnodes(np)
+-		__of_attach_node_sysfs(np);
++		of_attach_node_sysfs(np);
+ 	mutex_unlock(&of_mutex);
+ 
+ 	/* Symlink in /proc as required by userspace ABI */
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index c647bd1..ff03c85 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -251,7 +251,7 @@ int of_attach_node(struct device_node *np)
+ 	__of_attach_node(np);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+-	__of_attach_node_sysfs(np);
++	of_attach_node_sysfs(np);
+ 	mutex_unlock(&of_mutex);
+ 
+ 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
+@@ -606,7 +606,7 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
+ 
+ 	switch (ce->action) {
+ 	case OF_RECONFIG_ATTACH_NODE:
+-		__of_attach_node_sysfs(ce->np);
++		of_attach_node_sysfs(ce->np);
+ 		break;
+ 	case OF_RECONFIG_DETACH_NODE:
+ 		__of_detach_node_sysfs(ce->np);
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 829469f..1bf7deb 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -79,7 +79,6 @@ extern void __of_update_property_sysfs(struct device_node *np,
+ 		struct property *newprop, struct property *oldprop);
+ 
+ extern void __of_attach_node(struct device_node *np);
+-extern int __of_attach_node_sysfs(struct device_node *np);
+ extern void __of_detach_node(struct device_node *np);
+ extern void __of_detach_node_sysfs(struct device_node *np);
+ 
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 979b6e4..5986b05 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -878,7 +878,7 @@ static int attach_node_and_children(struct device_node *np)
+ 	of_node_clear_flag(np, OF_DETACHED);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+-	__of_attach_node_sysfs(np);
++	of_attach_node_sysfs(np);
+ 	mutex_unlock(&of_mutex);
+ 
+ 	while (child) {
+@@ -936,7 +936,7 @@ static int __init unittest_data_add(void)
+ 	if (!of_root) {
+ 		of_root = unittest_data_node;
+ 		for_each_of_allnodes(np)
+-			__of_attach_node_sysfs(np);
++			of_attach_node_sysfs(np);
+ 		of_aliases = of_find_node_by_path("/aliases");
+ 		of_chosen = of_find_node_by_path("/chosen");
+ 		return 0;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index dc6e396..d6c31fd 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -344,6 +344,8 @@ extern int of_add_property(struct device_node *np, struct property *prop);
+ extern int of_remove_property(struct device_node *np, struct property *prop);
+ extern int of_update_property(struct device_node *np, struct property *newprop);
+ 
++extern int of_attach_node_sysfs(struct device_node *np);
++
+ /* For updating the device tree at runtime */
+ #define OF_RECONFIG_ATTACH_NODE		0x0001
+ #define OF_RECONFIG_DETACH_NODE		0x0002
+-- 
+1.7.1
 
-If this should be a gpiochip, this shall also be reflected in the
-device tree bindings and the example in the bindings by
-stating gpio-controller; and #gpio-cells, referring to
-the binding in gpio/gpio.txt so consumers can pick a GPIO
-from this device.
-
-I haven't seen the original patch, please mail the next version
-to me so I can take a look.
-
->> +config AD5592R_BASE
->> +     tristate
->> +
->> +config AD5592R
->> +     tristate "Analog Devices AD5592R ADC/DAC driver"
->> +     depends on SPI_MASTER
->> +     depends on OF
->> +     select AD5592R_BASE
->> +     help
->> +       Say yes here to build support for Analog Devices AD5592R
->> +       Digital to Analog / Analog to Digital Converter.
->> +
->> +       To compile this driver as a module, choose M here: the
->> +       module will be called ad5592r.
->> +
->> +config AD5593R
->> +     tristate "Analog Devices AD5593R ADC/DAC driver"
->> +     depends on I2C
->> +     depends on OF
->> +     select AD5592R_BASE
->> +     help
->> +       Say yes here to build support for Analog Devices AD5593R
->> +       Digital to Analog / Analog to Digital Converter.
->> +
->> +       To compile this driver as a module, choose M here: the
->> +       module will be called ad5593r.
->> +
-
-I guess something here should select GPIOLIB
-and depend of OF_GPIO
-
->> +#ifdef CONFIG_GPIOLIB
-
-Naaaaah really? Just select GPIOLIB and get rid of ifdeffery.
-It's cool to have gpios available.
-
->> +static int ad5592r_gpio_request(struct gpio_chip *chip, unsigned offset)
->> +{
->> +     struct ad5592r_state *st = gpiochip_get_data(chip);
->> +
->> +     if (!(st->gpio_map & BIT(offset))) {
->> +             dev_err(st->dev, "GPIO %d is reserved by alternate function\n",
->> +                     offset);
-
-This gpio_map looks a bit like pin control.
-
-It might be overkill to use all of the pinctrl subsystem,
-we have circumvented it in other places.
-
->> +             return -ENODEV;
->> +     }
->> +
->> +     if (offset >= chip->ngpio)
->> +             return -EINVAL;
-
-gpiolib already guards against this I think.
-
->> +static int ad5592r_gpio_init(struct ad5592r_state *st)
->> +{
->> +     st->gpiochip.label = dev_name(st->dev);
->> +     st->gpiochip.base = -1;
->> +     st->gpiochip.ngpio = 8;
->> +     st->gpiochip.parent = st->dev;
->> +     st->gpiochip.can_sleep = true;
->> +     st->gpiochip.direction_input = ad5592r_gpio_direction_input;
->> +     st->gpiochip.direction_output = ad5592r_gpio_direction_output;
->> +     st->gpiochip.get = ad5592r_gpio_get;
->> +     st->gpiochip.set = ad5592r_gpio_set;
->> +     st->gpiochip.request = ad5592r_gpio_request;
->> +     st->gpiochip.owner = THIS_MODULE;
->> +
->> +     mutex_init(&st->gpio_lock);
->> +
->> +     return gpiochip_add_data(&st->gpiochip, st);
-
-The gpiolib should be fine with the of_node from the parent so
-looks fine.
-
->> +             mutex_lock(&iio_dev->mlock);
->> +             st->ops->reg_write(st, AD5592R_REG_RESET, 0xdac);
->> +             mutex_unlock(&iio_dev->mlock);
-
-What's that? (0xdac)? Clever magic?
-
->> +             case CH_MODE_DAC_AND_ADC:
->> +                     dac |= BIT(i);
->> +                     adc |= BIT(i);
->> +                     break;
->> +
->> +             case CH_MODE_UNUSED_PULL_DOWN:
->> +                     pulldown |= BIT(i);
->> +                     break;
->> +
->> +             case CH_MODE_UNUSED_OUT_TRISTATE:
->> +                     tristate |= BIT(i);
->> +                     break;
->> +
->> +             case CH_MODE_UNUSED_OUT_LOW:
->> +                     st->gpio_out |= BIT(i);
->> +                     break;
->> +
->> +             case CH_MODE_UNUSED_OUT_HIGH:
->> +                     st->gpio_out |= BIT(i);
->> +                     st->gpio_val |= BIT(i);
->> +                     break;
->> +
->> +             case CH_MODE_GPIO_OPEN_DRAIN:
->> +                     open_drain |= BIT(i);
-
-Deja-vu with include/linux/pinctrl/pinconf-generic.h
-
-We call tristate "bias high impedance".
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
