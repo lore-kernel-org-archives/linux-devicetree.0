@@ -1,7 +1,7 @@
 From: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
-Subject: [RFC 6/8] of.h: add for_each_compatible_node_from helper
-Date: Fri, 11 Mar 2016 16:56:13 +0100
-Message-ID: <1457711775-6326-7-git-send-email-franck.jullien@odyssee-systemes.fr>
+Subject: [RFC 4/8] drivers/of: export of_update_property
+Date: Fri, 11 Mar 2016 16:56:11 +0100
+Message-ID: <1457711775-6326-5-git-send-email-franck.jullien@odyssee-systemes.fr>
 References: <1457711775-6326-1-git-send-email-franck.jullien@odyssee-systemes.fr>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1457711775-6326-1-git-send-email-franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
@@ -10,28 +10,23 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When working with independant trees, one need to find each
-compatible node from something else than of_root.
-
 Signed-off-by: Franck Jullien <franck.jullien-EduPiq9onwdphFt5fpzH3laPQRlvutdw@public.gmane.org>
 ---
- include/linux/of.h |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ drivers/of/base.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 883df55..37da652 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -891,6 +891,9 @@ static inline int of_property_read_s32(const struct device_node *np,
- #define for_each_compatible_node(dn, type, compatible) \
- 	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
- 	     dn = of_find_compatible_node(dn, type, compatible))
-+#define for_each_compatible_node_from(from, dn, type, compatible) \
-+	for (dn = of_find_compatible_node(from, type, compatible); dn; \
-+	     dn = of_find_compatible_node(dn, type, compatible))
- #define for_each_matching_node(dn, matches) \
- 	for (dn = of_find_matching_node(NULL, matches); dn; \
- 	     dn = of_find_matching_node(dn, matches))
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index faa108a..fd75a45 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1869,6 +1869,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 
+ 	return rc;
+ }
++EXPORT_SYMBOL(of_update_property);
+ 
+ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+ 			 int id, const char *stem, int stem_len)
 -- 
 1.7.1
 
