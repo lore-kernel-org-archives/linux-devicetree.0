@@ -1,98 +1,74 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v4 1/7] ARM: OMAP2+: gpmc-nand: Set omap2-nand's parent
- dev to GPMC dev
-Date: Fri, 11 Mar 2016 09:39:28 -0600
-Message-ID: <56E2E6B0.5050507@ti.com>
-References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
- <1457654203-20856-2-git-send-email-fcooper@ti.com> <56E2CDB7.2080306@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56E2CDB7.2080306@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, nsekhar@ti.com, dwmw2@infradead.org, computersforpeace@gmail.com, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4 v3] drm: Add support of ARC PGU display controller
+Date: Fri, 11 Mar 2016 18:42:35 +0300
+Message-ID: <1457710959-9562-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series add support of ARC PGU display controller.
+ARC PGU is a quite simple byte streamer that gets data from the framebuffer
+and pushes it to hte connected encoder (DP or HDMI).
 
+It was tested on ARC SDP boards (axs101 in particular).
 
-On 03/11/2016 07:52 AM, Roger Quadros wrote:
-> Franklin,
->
-> On 11/03/16 01:56, Franklin S Cooper Jr wrote:
->> The dma channel information is located within the GPMC node which is the
->> NAND's parent node. The NAND driver requires a handle to the GPMC's dev
->> to properly parse the DMA properties. Therefore, set the NAND's parent dev
->> to the GPMC's dev so it can be referenced within the driver.
->>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->> Version 4 changes:
->> Instead of storing the GPMC dev in a new property simply grab a reference
->> to it and set omap2-nand's dev.parent to it.
->>
->>  arch/arm/mach-omap2/gpmc-nand.c | 16 +++++++++++++++-
->>  1 file changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
->> index 72918c4..77e453c 100644
->> --- a/arch/arm/mach-omap2/gpmc-nand.c
->> +++ b/arch/arm/mach-omap2/gpmc-nand.c
->> @@ -15,6 +15,7 @@
->>  #include <linux/omap-gpmc.h>
->>  #include <linux/mtd/nand.h>
->>  #include <linux/platform_data/mtd-nand-omap2.h>
->> +#include <linux/of_platform.h>
->>  
->>  #include <asm/mach/flash.h>
->>  
->> @@ -77,6 +78,9 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
->>  	int err	= 0;
->>  	struct gpmc_settings s;
->>  	struct platform_device *pdev;
->> +	struct platform_device *gpmc_dev;
->> +	struct device_node *gpmc_node;
->> +
->>  	struct resource gpmc_nand_res[] = {
->>  		{ .flags = IORESOURCE_MEM, },
->>  		{ .flags = IORESOURCE_IRQ, },
->> @@ -134,8 +138,18 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
->>  	if (pdev) {
->>  		err = platform_device_add_resources(pdev, gpmc_nand_res,
->>  						    ARRAY_SIZE(gpmc_nand_res));
->> -		if (!err)
->> +		if (!err) {
->>  			pdev->dev.platform_data = gpmc_nand_data;
->> +
->> +			gpmc_node = of_get_parent(gpmc_nand_data->of_node);
-> I'm afraid that we can't use this method as we want to restrict
-> gpmc_nand_init() to non-DT boots.
+Changes v2 -> v3:
+ * Improved failure path if arcpgu_connector wasn't allocated.
+ * Fixed driver building as module.
+ * Implemented uncached mapping of user-space FB pages.
+ * Again updated DT bindings docs.
 
-The only users of the parent GPMC driver are already using
-DT. The gpmc_probe_nand_child function in the GPMC driver
-which calls gpmc_nand_init is already DT only.
+Changes v1 -> v2:
+ * Clean-up of DT bindings documentation.
+ * Added missing "pxlclk" clock in axs10x_mb.dtsi.
 
-The only other caller to gpmc_nand_init is board-flash.c.
-The driver doesn't utilize xfer_type to even switch to any
-other modes including DMA prefetch mode.  Looking at it
-closer there isn't a dev from some kind of parent for me to
-pass along. Board_nand_init which calls gpmc_nand_init just
-takes raw NAND values with no relation to its parent.
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
+Alexey Brodkin (4):
+  drm: Add support of ARC PGU display controller
+  drm: Add DT bindings documentation for ARC PGU display controller
+  arc: axs10x - add support of ARC PGU
+  MAINTAINERS: Add maintainer for ARC PGU display controller
 
-With that being said are you ok with leaving it as is?
->
->> +
->> +			if (gpmc_node) {
->> +				gpmc_dev = of_find_device_by_node(gpmc_node);
->> +
->> +				if (gpmc_dev)
->> +					pdev->dev.parent = &gpmc_dev->dev;
->> +			}
->> +		}
->>  	} else {
->>  		err = -ENOMEM;
->>  	}
->>
-> cheers,
-> -roger
+ .../devicetree/bindings/display/snps,arcpgu.txt    |  72 ++++++
+ MAINTAINERS                                        |   6 +
+ arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/arc/Kconfig                        |  10 +
+ drivers/gpu/drm/arc/Makefile                       |   2 +
+ drivers/gpu/drm/arc/arcpgu.h                       |  50 ++++
+ drivers/gpu/drm/arc/arcpgu_crtc.c                  | 274 +++++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_drv.c                   | 252 +++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_fbdev.c                 | 245 ++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 207 ++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_regs.h                  |  36 +++
+ 13 files changed, 1218 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+ create mode 100644 drivers/gpu/drm/arc/Kconfig
+ create mode 100644 drivers/gpu/drm/arc/Makefile
+ create mode 100644 drivers/gpu/drm/arc/arcpgu.h
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_fbdev.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
+
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
