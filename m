@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V2 3/5] gpio: of: Return error if gpio hog configuration failed
-Date: Fri, 11 Mar 2016 19:13:22 +0530
-Message-ID: <1457703804-3016-4-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V2 4/5] gpio: DT: Rephrase "gpios" of hog node to support multiple gpios
+Date: Fri, 11 Mar 2016 19:13:23 +0530
+Message-ID: <1457703804-3016-5-git-send-email-ldewangan@nvidia.com>
 References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,76 +12,49 @@ To: linus.walleij@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutla
 Cc: bparrot@ti.com, acourbot@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-If GPIO hog configuration failed while adding OF based
-gpiochip() then return the error instead of ignoring it.
+The property "gpios" of GPIO hog node support the multiple GPIO entries.
+Rephrase the details of this property for this new support.
 
-This helps of properly handling the gpio driver dependency.
-
-When adding the gpio hog nodes for NVIDIA's Tegra210 platforms,
-the gpio_hogd() fails with EPROBE_DEFER because pinctrl is not
-ready at this time and gpio_request() for Tegra GPIO driver
-returns error. The error was not causing the Tegra GPIO driver
-to fail as the error was getting ignored.
+Add details of new property "label" for GPIO label name.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Benoit Parrot <bparrot@ti.com>
-Cc: Alexandre Courbot <acourbot@nvidia.com>
-Reviewed-by: Thierry Reding <treding@nvidia.com>
 
 ---
 Changes from V1:
-- Add Thierry's ack.
+- Add details for the new property "label".
+- Resequence series to make this as 4/5 which was 5/5.
 ---
- drivers/gpio/gpiolib-of.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ Documentation/devicetree/bindings/gpio/gpio.txt | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
-index f2ba1a4..d81dbd8 100644
---- a/drivers/gpio/gpiolib-of.c
-+++ b/drivers/gpio/gpiolib-of.c
-@@ -201,14 +201,16 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
-  *
-  * This is only used by of_gpiochip_add to request/set GPIO initial
-  * configuration.
-+ * It retures error if it fails otherwise 0 on success.
-  */
--static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
-+static int of_gpiochip_scan_gpios(struct gpio_chip *chip)
- {
- 	struct gpio_desc *desc = NULL;
- 	struct device_node *np;
- 	const char *name;
- 	enum gpio_lookup_flags lflags;
- 	enum gpiod_flags dflags;
-+	int ret;
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 069cdf6..6270e2d 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -162,9 +162,9 @@ gpio-controller's driver probe function.
+ Each GPIO hog definition is represented as a child node of the GPIO controller.
+ Required properties:
+ - gpio-hog:   A property specifying that this child node represent a GPIO hog.
+-- gpios:      Store the GPIO information (id, flags, ...). Shall contain the
+-	      number of cells specified in its parent node (GPIO controller
+-	      node).
++- gpios:      Store the GPIO information (id, flags, ...). Multiple GPIOs are
++	      possible to list here. Shall contain the number of cells
++	      specified in its parent node (GPIO controller node) per GPIOs.
+ Only one of the following properties scanned in the order shown below.
+ This means that when multiple properties are present they will be searched
+ in the order presented below and the first match is taken as the intended
+@@ -177,6 +177,11 @@ configuration.
  
- 	for_each_available_child_of_node(chip->of_node, np) {
- 		if (!of_property_read_bool(np, "gpio-hog"))
-@@ -218,9 +220,12 @@ static void of_gpiochip_scan_gpios(struct gpio_chip *chip)
- 		if (IS_ERR(desc))
- 			continue;
+ Optional properties:
+ - line-name:  The GPIO label name. If not present the node name is used.
++- label:      The GPIO lable name. This can have multiple string for GPIO
++	      label names to match with the GPIOs in "gpios" properties.
++	      If line-name is prosent than name is taken from line-name. If
++	      it is not then the name will be taken from label. If both are
++	      not available then node name is used for GPIO label name.
  
--		if (gpiod_hog(desc, name, lflags, dflags))
--			continue;
-+		ret = gpiod_hog(desc, name, lflags, dflags);
-+		if (ret < 0)
-+			return ret;
- 	}
-+
-+	return 0;
- }
+ Example of two SOC GPIO banks defined as gpio-controller nodes:
  
- /**
-@@ -442,9 +447,7 @@ int of_gpiochip_add(struct gpio_chip *chip)
- 
- 	of_node_get(chip->of_node);
- 
--	of_gpiochip_scan_gpios(chip);
--
--	return 0;
-+	return of_gpiochip_scan_gpios(chip);
- }
- 
- void of_gpiochip_remove(struct gpio_chip *chip)
 -- 
 2.1.4
