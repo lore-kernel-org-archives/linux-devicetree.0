@@ -1,79 +1,106 @@
 From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/5 v10] usb: musb: core: added missing const qualifier to musb_hdrc_platform_data::config
-Date: Fri, 11 Mar 2016 09:29:47 +0100
-Message-ID: <1457684989-13318-3-git-send-email-petr@barix.com>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
+Subject: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Fri, 11 Mar 2016 09:29:45 +0100
+Message-ID: <1457684989-13318-1-git-send-email-petr@barix.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The musb_hdrc_platform_data::config was defined as a non-const pointer.
-However some drivers (e.g. the ux500) set up this pointer to point to a
-static structure, which is potentially dangerous. Since the musb core
-uses the pointer in a read-only manner the const qualifier was added to
-protect the content of the config.
+DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
 
 Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Acked-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
 ---
-v5: <initial>
+v1: <initial>
+
+v2:
+ - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
+ - using "ti," prefix instead of "da8xx," for specific property names
+ - no wildcards in compatibility string
+
+v3:
+ - added "reg", "interrupts" and "interrupt-names" properties
+ - wildcards in compatibility string
+
+v4:
+ - compatibility string set to "ti,da830-musb"
+ - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
+ - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
+ - removed "ti,hwmods"
+
+v5:
+ - "ti,phy20-refclock-frequency" property made mandatory
 
 v6:
- - whitespace formatting corrected
+ - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
 
-v7: <no change>
-v8: <no change>
+v7:
+ - removed the "mentor,power" property; hard coded to 500mA in the code
+
+v8:
+ - "ti,usb2-phy-refclock-frequency" renamed to "ti,usb2-phy-refclock-hz" and description amended
+ - "ti,usb2-phy-clkmux-pll" changed to "ti,usb2-phy-clkmux-refclkin" to reflect the more common case
+ - USB maximum power modelled via a regulator "vbus-supply"
+
 v9: <no change>
 v10: <no change>
 
- drivers/usb/musb/musb_core.c | 2 +-
- drivers/usb/musb/musb_core.h | 2 +-
- include/linux/usb/musb.h     | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/usb/da8xx-usb.txt          | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
 
-diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
-index 6a2d6d3..b0be1a9 100644
---- a/drivers/usb/musb/musb_core.c
-+++ b/drivers/usb/musb/musb_core.c
-@@ -1920,7 +1920,7 @@ static void musb_recover_from_babble(struct musb *musb)
-  */
- 
- static struct musb *allocate_instance(struct device *dev,
--		struct musb_hdrc_config *config, void __iomem *mbase)
-+		const struct musb_hdrc_config *config, void __iomem *mbase)
- {
- 	struct musb		*musb;
- 	struct musb_hw_ep	*ep;
-diff --git a/drivers/usb/musb/musb_core.h b/drivers/usb/musb/musb_core.h
-index 3f7a325..a062185 100644
---- a/drivers/usb/musb/musb_core.h
-+++ b/drivers/usb/musb/musb_core.h
-@@ -438,7 +438,7 @@ struct musb {
- 	 */
- 	unsigned                double_buffer_not_ok:1;
- 
--	struct musb_hdrc_config	*config;
-+	const struct musb_hdrc_config *config;
- 
- 	int			xceiv_old_state;
- #ifdef CONFIG_DEBUG_FS
-diff --git a/include/linux/usb/musb.h b/include/linux/usb/musb.h
-index 96ddfb7..0b3da40 100644
---- a/include/linux/usb/musb.h
-+++ b/include/linux/usb/musb.h
-@@ -124,7 +124,7 @@ struct musb_hdrc_platform_data {
- 	int		(*set_power)(int state);
- 
- 	/* MUSB configuration-specific details */
--	struct musb_hdrc_config	*config;
-+	const struct musb_hdrc_config *config;
- 
- 	/* Architecture specific board data	*/
- 	void		*board_data;
+diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+new file mode 100644
+index 0000000..a6eda5b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+@@ -0,0 +1,45 @@
++TI DA8xx MUSB
++~~~~~~~~~~~~~
++For DA8xx/OMAP-L1x/AM17xx/AM18xx platforms.
++
++Required properties:
++~~~~~~~~~~~~~~~~~~~~
++ - compatible : Should be set to "ti,da830-musb".
++
++ - reg: Offset and length of the USB controller register set.
++
++ - interrupts: The USB interrupt number.
++
++ - interrupt-names: Should be set to "mc".
++
++ - dr_mode: The USB operation mode. Should be one of "host", "peripheral" or "otg".
++
++ - vbus-supply: Phandle to a regulator providing the USB bus power.
++
++ - ti,usb2-phy-refclock-hz : Integer. Frequency in Hz of the USB 2.0 PHY reference clock,
++     either provided by the internal PLL or an external source.
++     The supported values are: 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz.
++
++
++Optional properties:
++~~~~~~~~~~~~~~~~~~~~
++ - ti,usb2-phy-clkmux-refclkin: Boolean. Defines the USB 2.0 PHY reference clock source.
++     If present the the external USB_REFCLKIN pin is used as a clock source, otherwise
++     the internal PLL is used.
++
++Example:
++
++	usb20: usb@1e00000 {
++		compatible = "ti,da830-musb";
++		reg =   <0x00200000 0x10000>;
++		interrupt-parent = <&intc>;
++		interrupts = <58>;
++		interrupt-names = "mc";
++
++		dr_mode = "host";
++		vbus-supply = <&usb_vbus>;
++
++		ti,usb2-phy-refclock-hz = <24000000>;
++
++		status = "okay";
++	};
 -- 
 1.9.1
 
