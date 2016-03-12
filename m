@@ -1,65 +1,191 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] dt: document NXP LPC1850 DAC driver bindings
-Date: Sat, 12 Mar 2016 18:17:41 +0000
-Message-ID: <56E45D45.4050605@kernel.org>
-References: <1457785817-32328-1-git-send-email-manabian@gmail.com>
- <1457785817-32328-5-git-send-email-manabian@gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] pinctrl: sunxi: Fix A33 external interrupts not working
+Date: Sat, 12 Mar 2016 19:44:57 +0100
+Message-ID: <1457808297-12300-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457785817-32328-5-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBMWHSG3QKGQEX5YWRWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/16 12:30, Joachim Eastwood wrote:
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-A very straight forward binding so I'm happy to apply this without
-a devicetree ack (still time if anyone does want to take a look though as
-it won't be in my non rebasing tree until probably next weekend now.)
+pinctrl-sun8i-a33.c (and the dts) declare only 2 interrupt banks,
+where as the closely related a23 has 3 banks. This matches with the
+datasheet for the A33 where only interrupt banks B and G are specified
+where as the A23 has banks A, B and G.
 
-Applied to the togreg branch of iio.git - initially pushed out as testing
-for the autobuilders to play with it.
+However the A33 being the A23 derative it is means that the interrupt
+configure/status io-addresses for the 2 banks it has are not changed
+from the A23, iow they have the same address as if bank A was still
+present. Where as the sunxi pinctrl currently tries to use the A23 bank
+A addresses for bank B, since the pinctrl code does not know about the
+removed bank A.
 
-We have unfortunately missed the merge window that will probably open tomorrow
-(as IIO stuff must be in a few weeks before that) so this is looking at the
-next merge window in 3 months time.  Will be in linux-next in about 3-4 weeks
-though after I send a pull request to Greg KH post merge window closing.
+Add a irq_bank_base parameter and use this where appropriate to take
+the missing bank A into account.
 
-Thanks,
+This fixes external interrupts not working on the A33 (tested with
+an i2c touchscreen controller which uses an external interrupt).
 
-Jonathan
-> ---
->  .../devicetree/bindings/iio/dac/lpc1850-dac.txt      | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/lpc1850-dac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/lpc1850-dac.txt b/Documentation/devicetree/bindings/iio/dac/lpc1850-dac.txt
-> new file mode 100644
-> index 000000000000..7d6647d4af5e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/lpc1850-dac.txt
-> @@ -0,0 +1,20 @@
-> +NXP LPC1850 DAC bindings
-> +
-> +Required properties:
-> +- compatible: Should be "nxp,lpc1850-dac"
-> +- reg: Offset and length of the register set for the ADC device
-> +- interrupts: The interrupt number for the ADC device
-> +- clocks: The root clock of the ADC controller
-> +- vref-supply: The regulator supply ADC reference voltage
-> +- resets: phandle to reset controller and line specifier
-> +
-> +Example:
-> +dac: dac@400e1000 {
-> +	compatible = "nxp,lpc1850-dac";
-> +	reg = <0x400e1000 0x1000>;
-> +	interrupts = <0>;
-> +	clocks = <&ccu1 CLK_APB3_DAC>;
-> +	vref-supply = <&reg_vdda>;
-> +	resets = <&rgu 42>;
-> +	status = "disabled";
-> +};
-> 
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c |  1 +
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c     | 17 ++++++++++-------
+ drivers/pinctrl/sunxi/pinctrl-sunxi.h     | 21 +++++++++++----------
+ 3 files changed, 22 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c b/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c
+index 00265f0..8b381d6 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sun8i-a33.c
+@@ -485,6 +485,7 @@ static const struct sunxi_pinctrl_desc sun8i_a33_pinctrl_data = {
+ 	.pins = sun8i_a33_pins,
+ 	.npins = ARRAY_SIZE(sun8i_a33_pins),
+ 	.irq_banks = 2,
++	.irq_bank_base = 1,
+ };
+ 
+ static int sun8i_a33_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 96f64a1..188c11c 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -579,7 +579,7 @@ static void sunxi_pinctrl_irq_release_resources(struct irq_data *d)
+ static int sunxi_pinctrl_irq_set_type(struct irq_data *d, unsigned int type)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 reg = sunxi_irq_cfg_reg(d->hwirq);
++	u32 reg = sunxi_irq_cfg_reg(d->hwirq, pctl->desc->irq_bank_base);
+ 	u8 index = sunxi_irq_cfg_offset(d->hwirq);
+ 	unsigned long flags;
+ 	u32 regval;
+@@ -626,7 +626,8 @@ static int sunxi_pinctrl_irq_set_type(struct irq_data *d, unsigned int type)
+ static void sunxi_pinctrl_irq_ack(struct irq_data *d)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 status_reg = sunxi_irq_status_reg(d->hwirq);
++	u32 status_reg = sunxi_irq_status_reg(d->hwirq,
++					      pctl->desc->irq_bank_base);
+ 	u8 status_idx = sunxi_irq_status_offset(d->hwirq);
+ 
+ 	/* Clear the IRQ */
+@@ -636,7 +637,7 @@ static void sunxi_pinctrl_irq_ack(struct irq_data *d)
+ static void sunxi_pinctrl_irq_mask(struct irq_data *d)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 reg = sunxi_irq_ctrl_reg(d->hwirq);
++	u32 reg = sunxi_irq_ctrl_reg(d->hwirq, pctl->desc->irq_bank_base);
+ 	u8 idx = sunxi_irq_ctrl_offset(d->hwirq);
+ 	unsigned long flags;
+ 	u32 val;
+@@ -653,7 +654,7 @@ static void sunxi_pinctrl_irq_mask(struct irq_data *d)
+ static void sunxi_pinctrl_irq_unmask(struct irq_data *d)
+ {
+ 	struct sunxi_pinctrl *pctl = irq_data_get_irq_chip_data(d);
+-	u32 reg = sunxi_irq_ctrl_reg(d->hwirq);
++	u32 reg = sunxi_irq_ctrl_reg(d->hwirq, pctl->desc->irq_bank_base);
+ 	u8 idx = sunxi_irq_ctrl_offset(d->hwirq);
+ 	unsigned long flags;
+ 	u32 val;
+@@ -745,7 +746,7 @@ static void sunxi_pinctrl_irq_handler(struct irq_desc *desc)
+ 	if (bank == pctl->desc->irq_banks)
+ 		return;
+ 
+-	reg = sunxi_irq_status_reg_from_bank(bank);
++	reg = sunxi_irq_status_reg_from_bank(bank, pctl->desc->irq_bank_base);
+ 	val = readl(pctl->membase + reg);
+ 
+ 	if (val) {
+@@ -1024,9 +1025,11 @@ int sunxi_pinctrl_init(struct platform_device *pdev,
+ 
+ 	for (i = 0; i < pctl->desc->irq_banks; i++) {
+ 		/* Mask and clear all IRQs before registering a handler */
+-		writel(0, pctl->membase + sunxi_irq_ctrl_reg_from_bank(i));
++		writel(0, pctl->membase + sunxi_irq_ctrl_reg_from_bank(i,
++						pctl->desc->irq_bank_base));
+ 		writel(0xffffffff,
+-			pctl->membase + sunxi_irq_status_reg_from_bank(i));
++		       pctl->membase + sunxi_irq_status_reg_from_bank(i,
++						pctl->desc->irq_bank_base));
+ 
+ 		irq_set_chained_handler_and_data(pctl->irq[i],
+ 						 sunxi_pinctrl_irq_handler,
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.h b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+index e248e81..0afce1a 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.h
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.h
+@@ -97,6 +97,7 @@ struct sunxi_pinctrl_desc {
+ 	int				npins;
+ 	unsigned			pin_base;
+ 	unsigned			irq_banks;
++	unsigned			irq_bank_base;
+ 	bool				irq_read_needs_mux;
+ };
+ 
+@@ -233,12 +234,12 @@ static inline u32 sunxi_pull_offset(u16 pin)
+ 	return pin_num * PULL_PINS_BITS;
+ }
+ 
+-static inline u32 sunxi_irq_cfg_reg(u16 irq)
++static inline u32 sunxi_irq_cfg_reg(u16 irq, unsigned bank_base)
+ {
+ 	u8 bank = irq / IRQ_PER_BANK;
+ 	u8 reg = (irq % IRQ_PER_BANK) / IRQ_CFG_IRQ_PER_REG * 0x04;
+ 
+-	return IRQ_CFG_REG + bank * IRQ_MEM_SIZE + reg;
++	return IRQ_CFG_REG + (bank_base + bank) * IRQ_MEM_SIZE + reg;
+ }
+ 
+ static inline u32 sunxi_irq_cfg_offset(u16 irq)
+@@ -247,16 +248,16 @@ static inline u32 sunxi_irq_cfg_offset(u16 irq)
+ 	return irq_num * IRQ_CFG_IRQ_BITS;
+ }
+ 
+-static inline u32 sunxi_irq_ctrl_reg_from_bank(u8 bank)
++static inline u32 sunxi_irq_ctrl_reg_from_bank(u8 bank, unsigned bank_base)
+ {
+-	return IRQ_CTRL_REG + bank * IRQ_MEM_SIZE;
++	return IRQ_CTRL_REG + (bank_base + bank) * IRQ_MEM_SIZE;
+ }
+ 
+-static inline u32 sunxi_irq_ctrl_reg(u16 irq)
++static inline u32 sunxi_irq_ctrl_reg(u16 irq, unsigned bank_base)
+ {
+ 	u8 bank = irq / IRQ_PER_BANK;
+ 
+-	return sunxi_irq_ctrl_reg_from_bank(bank);
++	return sunxi_irq_ctrl_reg_from_bank(bank, bank_base);
+ }
+ 
+ static inline u32 sunxi_irq_ctrl_offset(u16 irq)
+@@ -265,16 +266,16 @@ static inline u32 sunxi_irq_ctrl_offset(u16 irq)
+ 	return irq_num * IRQ_CTRL_IRQ_BITS;
+ }
+ 
+-static inline u32 sunxi_irq_status_reg_from_bank(u8 bank)
++static inline u32 sunxi_irq_status_reg_from_bank(u8 bank, unsigned bank_base)
+ {
+-	return IRQ_STATUS_REG + bank * IRQ_MEM_SIZE;
++	return IRQ_STATUS_REG + (bank_base + bank) * IRQ_MEM_SIZE;
+ }
+ 
+-static inline u32 sunxi_irq_status_reg(u16 irq)
++static inline u32 sunxi_irq_status_reg(u16 irq, unsigned bank_base)
+ {
+ 	u8 bank = irq / IRQ_PER_BANK;
+ 
+-	return sunxi_irq_status_reg_from_bank(bank);
++	return sunxi_irq_status_reg_from_bank(bank, bank_base);
+ }
+ 
+ static inline u32 sunxi_irq_status_offset(u16 irq)
+-- 
+2.7.2
