@@ -1,57 +1,67 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4] ASoC: pcm179x: Add support for pcm1795 and pcm1796
-Date: Sat, 12 Mar 2016 09:50:46 +0700
-Message-ID: <20160312025046.GS3898@sirena.org.uk>
-References: <1452382685-18009-1-git-send-email-michael@amarulasolutions.com>
- <1452382685-18009-4-git-send-email-michael@amarulasolutions.com>
- <20160110120045.GW6588@sirena.org.uk>
- <20160110173812.GA16304@panicking>
- <20160205172451.GA30542@panicking>
- <20160222031944.GT18327@sirena.org.uk>
- <20160311225937.GA27257@panicking>
+From: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Subject: Re: [PATCH v3 01/13] pinctrl: sunxi: Add A83T R_PIO controller support
+Date: Sat, 12 Mar 2016 12:48:02 +0800
+Message-ID: <CAEzqOZta65UBJPBrp_4xr=SzHU98dWDucwzVb80eKE9ChJ8jpQ@mail.gmail.com>
+References: <1457192586-25596-1-git-send-email-vishnupatekar0510@gmail.com>
+ <1457192586-25596-2-git-send-email-vishnupatekar0510@gmail.com> <CACRpkdZ5o=SKtHxshaedkYNETERt6DfiOPtC5JV2LNWKL_mqDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3ig5MTpp3LwprTX9"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160311225937.GA27257@panicking>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jacob Siverskog <jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, adamo.a60-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ5o=SKtHxshaedkYNETERt6DfiOPtC5JV2LNWKL_mqDg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Jon Corbet <corbet@lwn.net>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>R
 List-Id: devicetree@vger.kernel.org
 
+Hello Linus,
 
---3ig5MTpp3LwprTX9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 11, 2016 at 11:59:42PM +0100, Michael Trimarchi wrote:
-> ASoC: pcm179x: Add support for pcm1795 and pcm1796
->=20
-> Signed-off-by: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Tested-by: Angelo Adamo <adamo.a60-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Please don't send new patches in reply to old patches, it makes it hard
-to tell what versions of things are current.
-
---3ig5MTpp3LwprTX9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW44QCAAoJECTWi3JdVIfQkpQH/RXMXtvN33TQeX9q6WIlkwDJ
-P3ORqIu98cEVbfjvpyOxdBicHw1ZJqOpf46xQa7CVFG/VhL1rSyFB5IVevYZA1t2
-K2VKg6CX9qhSw19ES1arN7fro+nylr2UjDLlaQLPemBH3FMrOsyvYSNnk5djU1ho
-kqs7tcUoLYZH0cUr7w7az1T14hVDtx14waquQ7iAeK2CuOUsc6hvYmS9XF+tEEsy
-XxeoJFWr5uApDfRewqv+THJ3Js6qcPbWe5SJ7iAq3yFEuujAwG2Zm+TtY4XRA7f2
-Wk7biwenxwdP5V0V2M/h3HK3KtNe4ddQxGRwlZDqBdag4chEJ9yEncKagQToPnk=
-=ifwi
------END PGP SIGNATURE-----
-
---3ig5MTpp3LwprTX9--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Mar 9, 2016 at 10:55 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Sat, Mar 5, 2016 at 10:42 PM, Vishnu Patekar
+> <vishnupatekar0510@gmail.com> wrote:
+>
+>> The A83T has R_PIO pin controller, it's same as A23, execpt A83T
+>> interrupt bit is 6th and A83T has one extra pin PL12.
+>>
+>> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+>> Acked-by: Chen-Yu Tsai <wens@csie.org>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>
+> As partly noted by others:
+>
+>> +config PINCTRL_SUN8I_A83T_R
+>> +       def_bool MACH_SUN8I
+>
+> bool
+>
+>> +       depends on RESET_CONTROLLER
+>
+> Should it rather select RESET_CONTROLLER?
+I used depends on and def_bool as it is used for other sunxi pinctrl drivers.
+Using bool and select will not harm anything.
+Should I change it to bool and select ?  or keep it to be uniform with
+earlier options?
+>
+>> +static const struct of_device_id sun8i_a83t_r_pinctrl_match[] = {
+>> +       { .compatible = "allwinner,sun8i-a83t-r-pinctrl", },
+>> +       {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sun8i_a83t_r_pinctrl_match);
+>
+> Module talk in bool driver.
+I'll remove it.
+>
+>> +static struct platform_driver sun8i_a83t_r_pinctrl_driver = {
+>> +       .probe  = sun8i_a83t_r_pinctrl_probe,
+>> +       .driver = {
+>> +               .name           = "sun8i-a83t-r-pinctrl",
+>> +               .of_match_table = sun8i_a83t_r_pinctrl_match,
+>> +       },
+>> +};
+>> +module_platform_driver(sun8i_a83t_r_pinctrl_driver);
+>
+> Should be builtin?
+Yes, It should be. I missed Maxime's earlier commets.
+>
+> Yours,
+> Linus Walleij
