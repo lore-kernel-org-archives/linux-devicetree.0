@@ -1,81 +1,44 @@
-From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: tegra: paz00: configure power off
-Date: Sat, 12 Mar 2016 14:34:31 +0100
-Message-ID: <2473480.r8zbktHrhX@fb07-iapwap2>
-References: <1457730000-11868-1-git-send-email-zombah@gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] regulator: axp20x: Fix axp209 ldo4 ranges
+Date: Sat, 12 Mar 2016 15:20:01 +0100
+Message-ID: <1457792401-28337-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1613468.fv5e0luEql"; micalg="pgp-sha256"; protocol="application/pgp-signature"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457730000-11868-1-git-send-email-zombah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Misha Komarovskiy <zombah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBG6LSC3QKGQEN4APXIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart1613468.fv5e0luEql
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+The axp209 ldo4 regulator has a hole at (skips) 2600 mV and 2900 mV, fix
+its range table to match.
 
-Hi Micha,
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ drivers/regulator/axp20x-regulator.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Am Samstag, 12. M=E4rz 2016, 00:00:00 CET schrieb Misha Komarovskiy:
-> Add DT property to tell the regulator that it should provide
-> the pm_power_off() implementation. This fix "shutdown" issue
-> on this device.
->=20
-> Signed-off-by: Misha Komarovskiy <zombah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->=20
-> Tested on current mainline version, ac100 models 116 and 117,
-> successful rate of "shutdown" increased from 10% to 90%.
->=20
->  arch/arm/boot/dts/tegra20-paz00.dts | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
-> b/arch/arm/boot/dts/tegra20-paz00.dts index ed7e100..c82e3ae 100644
-> --- a/arch/arm/boot/dts/tegra20-paz00.dts
-> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
-> @@ -316,6 +316,8 @@
->  			#gpio-cells =3D <2>;
->  			gpio-controller;
->=20
-> +			ti,system-power-controller;
-> +
->  			sys-supply =3D <&p5valw_reg>;
->  			vin-sm0-supply =3D <&sys_reg>;
->  			vin-sm1-supply =3D <&sys_reg>;
-
-I think this is the wrong fix. The power_off hook is already occupied by nv=
-ec.=20
-So either the tps or nvec is responsible for shutting down the system. AFAI=
-R,=20
-nvec has some hard wired connection to the tps for doing this, so in the en=
-d,=20
-it will shut down (but I can't find it now in the schematics). See paz00-
-diag.c in the original sources on how the system is beeing shut down.
-
-In any case, we can only have one power_off handler. Either via tps or nvec=
-,=20
-not both.
-
-Marc
-
---nextPart1613468.fv5e0luEql
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAABCAAGBQJW5BrnAAoJEKyeR39HFBtoJ6wH/11ZtLj/1h2xFHoppvITrJAp
-4LljLWix0TWmxH/U9MztQrLL2Xzj/lKZvycKmaeS0tjdUzKSIAgmzBhLRrrwlllf
-nXzLP7DviBd+ZPXIH30AJXsa9xkwja5aBb5Wp/7hdnJBEhG9O6DSKn3IUNomeNT4
-48vftryV2QZ2z4KNZLJAsL72Vxf1V+TdhQNxZDigUnrIgfgFr9ohjS7MvxOC0SxZ
-m35OsQ1X444+vAywK0u2iZz+4KS2zJrhHeqpFhIGbEQwcWEoopUL2NA6IDgozviu
-BZpSsqawvyKb/etG9Z44SAsi7bf+g3zAJ0G5Vi7to0wHjYxooG31q4agIEckj1k=
-=30+D
------END PGP SIGNATURE-----
-
---nextPart1613468.fv5e0luEql--
+diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+index 4250b1b..500d162 100644
+--- a/drivers/regulator/axp20x-regulator.c
++++ b/drivers/regulator/axp20x-regulator.c
+@@ -157,7 +157,9 @@ static struct regulator_ops axp20x_ops_sw = {
+ static const struct regulator_linear_range axp20x_ldo4_ranges[] = {
+ 	REGULATOR_LINEAR_RANGE(1250000, 0x0, 0x0, 0),
+ 	REGULATOR_LINEAR_RANGE(1300000, 0x1, 0x8, 100000),
+-	REGULATOR_LINEAR_RANGE(2500000, 0x9, 0xf, 100000),
++	REGULATOR_LINEAR_RANGE(2500000, 0x9, 0x9, 0),
++	REGULATOR_LINEAR_RANGE(2700000, 0xa, 0xb, 100000),
++	REGULATOR_LINEAR_RANGE(3000000, 0xc, 0xf, 100000),
+ };
+ 
+ static const struct regulator_desc axp20x_regulators[] = {
+-- 
+2.7.2
