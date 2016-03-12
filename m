@@ -1,82 +1,76 @@
-From: Misha Komarovskiy <zombah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dt: tegra: paz00: configure power off
-Date: Sat, 12 Mar 2016 17:47:39 +0300
-Message-ID: <CANLc0-ZrPcX01YA9LRRNW5BuqUnbQngOWGOtVqtddzppKzuwvA@mail.gmail.com>
-References: <1457730000-11868-1-git-send-email-zombah@gmail.com> <2473480.r8zbktHrhX@fb07-iapwap2>
+From: Shubhrajyoti Datta <shubhrajyoti.datta-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv4 2/2] bindings: spi: Add clock entries for spi-xilinx
+Date: Sat, 12 Mar 2016 21:22:15 +0530
+Message-ID: <CAKfKVtEJ=7z3UwjmoiVMH_Qsm2xCQ=4EEJCcRzG75d-AC0nFQg@mail.gmail.com>
+References: <1457769637-5627-1-git-send-email-shubhraj@xilinx.com>
+	<1457769637-5627-2-git-send-email-shubhraj@xilinx.com>
+	<20160312100518.GT3173@xsjsorenbubuntu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2473480.r8zbktHrhX@fb07-iapwap2>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160312100518.GT3173@xsjsorenbubuntu>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc,
-
-On Sat, Mar 12, 2016 at 4:34 PM, Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org> wrote:
-> Hi Micha,
->
-> Am Samstag, 12. M=C3=A4rz 2016, 00:00:00 CET schrieb Misha Komarovski=
-y:
->> Add DT property to tell the regulator that it should provide
->> the pm_power_off() implementation. This fix "shutdown" issue
->> on this device.
+On Sat, Mar 12, 2016 at 3:35 PM, S=C3=B6ren Brinkmann
+<soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Sat, 2016-03-12 at 13:30:37 +0530, Shubhrajyoti Datta wrote:
+>> Add clock description for spi-xilinx
 >>
->> Signed-off-by: Misha Komarovskiy <zombah-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 >> ---
+>> v3
+>> Add a clock name
+>> v4
+>> Correct the name
+>>  .../devicetree/bindings/spi/spi-xilinx.txt         |    5 +++++
+>>  1 files changed, 5 insertions(+), 0 deletions(-)
 >>
->> Tested on current mainline version, ac100 models 116 and 117,
->> successful rate of "shutdown" increased from 10% to 90%.
->>
->>  arch/arm/boot/dts/tegra20-paz00.dts | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/tegra20-paz00.dts
->> b/arch/arm/boot/dts/tegra20-paz00.dts index ed7e100..c82e3ae 100644
->> --- a/arch/arm/boot/dts/tegra20-paz00.dts
->> +++ b/arch/arm/boot/dts/tegra20-paz00.dts
->> @@ -316,6 +316,8 @@
->>                       #gpio-cells =3D <2>;
->>                       gpio-controller;
->>
->> +                     ti,system-power-controller;
->> +
->>                       sys-supply =3D <&p5valw_reg>;
->>                       vin-sm0-supply =3D <&sys_reg>;
->>                       vin-sm1-supply =3D <&sys_reg>;
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/=
+Documentation/devicetree/bindings/spi/spi-xilinx.txt
+>> index c7b7856..07ec09a 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+>> +++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+>> @@ -7,6 +7,9 @@ Required properties:
+>>  - interrupts         : Property with a value describing the interru=
+pt
+>>                         number.
+>>  - interrupt-parent   : Must be core interrupt controller
+>> +- clocks: Input clock specifier. Refer to common clock bindings.
+>> +- clock-names: tuple listing input clock names.
+>> +     Required elements: "s_axi_aclk"
 >
-> I think this is the wrong fix. The power_off hook is already occupied=
- by nvec.
-> So either the tps or nvec is responsible for shutting down the system=
-=2E AFAIR,
-> nvec has some hard wired connection to the tps for doing this, so in =
-the end,
-> it will shut down (but I can't find it now in the schematics). See pa=
-z00-
-> diag.c in the original sources on how the system is beeing shut down.
+> I thought there were too clocks? If the IP has two clocks, I think bo=
+th
+> should be added and supported here.
 >
-> In any case, we can only have one power_off handler. Either via tps o=
-r nvec,
-> not both.
+Ok sure
 
-Currently shutdown work very poor, lucky if i have one clean shutdown
-of ten tries. With power_off handler by tps driver i have eight clean
-shutdowns of ten tries.
+>>
+>>  Optional properties:
+>>  - xlnx,num-ss-bits   : Number of chip selects used.
+>> @@ -14,6 +17,8 @@ Optional properties:
+>>  Example:
+>>       axi_quad_spi@41e00000 {
+>>                       compatible =3D "xlnx,xps-spi-2.00.a";
+>> +                     clocks =3D <&clkc 15>;
+>> +                     clock-names =3D "spi_fclk";
+>
+> Doesn't match the binding documented above.
 
-Now it is possible to boot paz00 without nvec at all, in comparison to
-downstream
-kernels.
-If such solution acceptable, i can test with disabled nvec power_off
-hadler and compare results.
+missed it will update thanks.
 
 >
-> Marc
-
-
-
---=20
-Best Regards,
-Misha Komarovskiy
-zombahatgmaildotcom
+>         S=C3=B6ren
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-spi" =
+in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
