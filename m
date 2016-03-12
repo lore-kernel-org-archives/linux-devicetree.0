@@ -1,118 +1,271 @@
-From: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv4 1/2] spi/spi-xilinx:  Add clock support
-Date: Sat, 12 Mar 2016 13:30:36 +0530
-Message-ID: <1457769637-5627-1-git-send-email-shubhraj@xilinx.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] iio: ad5755: add support for dt bindings
+Date: Sat, 12 Mar 2016 09:25:42 +0000
+Message-ID: <56E3E096.1040605@kernel.org>
+References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457705561-12253-1-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add basic clock support. The clocks are requested at probe
-and released at remove.
+On 11/03/16 14:12, Sean Nyekjaer wrote:
+> Devicetree can provide platform data
+> 
+> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+Looks good to me. Would like an Ack / reviewed by from Lars
+and a device tree ack for the bindings.  No particular rush
+though given it has missed the current merge window now anyway.
 
-Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-v3 changes:
-Do not fail probe if no clock is given
-Add a clk name
-Fix some space errors
-v4 changes:
-correct the clock name
-also check for ENOENT to prevent breaking current dts
+Please do cc the driver author and maintainers for the device tree
+bindings on relevant patches.  Both will probably pick it up from
+the list, but they may well read emails addressed directly to
+them earlier!
+I'll add cc's for the binding in a mo.
 
- drivers/spi/spi-xilinx.c |   28 +++++++++++++++++++++++++---
- 1 files changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/spi/spi-xilinx.c b/drivers/spi/spi-xilinx.c
-index 3009121..bd9ad61 100644
---- a/drivers/spi/spi-xilinx.c
-+++ b/drivers/spi/spi-xilinx.c
-@@ -21,6 +21,7 @@
- #include <linux/spi/spi_bitbang.h>
- #include <linux/spi/xilinx_spi.h>
- #include <linux/io.h>
-+#include <linux/clk.h>
- 
- #define XILINX_SPI_MAX_CS	32
- 
-@@ -83,6 +84,7 @@ struct xilinx_spi {
- 	struct spi_bitbang bitbang;
- 	struct completion done;
- 	void __iomem	*regs;	/* virt. address of the control registers */
-+	struct clk *aclk;	/* AXI clock */
- 
- 	int		irq;
- 
-@@ -428,6 +430,24 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 		goto put_master;
- 	}
- 
-+	xspi->aclk = devm_clk_get(&pdev->dev, "s_axi_aclk");
-+	if (IS_ERR(xspi->aclk)) {
-+		if (PTR_ERR(xspi->aclk) == -ENOENT) {
-+			dev_err(&pdev->dev, "No clocks found for aclk\n");
-+			xspi->aclk = NULL;
-+		} else {
-+			dev_err(&pdev->dev, "axi clock error %d\n", ret);
-+			ret = PTR_ERR(xspi->aclk);
-+			goto put_master;
-+		}
-+	}
-+
-+	ret = clk_prepare_enable(xspi->aclk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to enable axi clock.\n");
-+		goto put_master;
-+	}
-+
- 	master->bus_num = pdev->id;
- 	master->num_chipselect = num_cs;
- 	master->dev.of_node = pdev->dev.of_node;
-@@ -460,7 +480,7 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 		ret = devm_request_irq(&pdev->dev, xspi->irq, xilinx_spi_irq, 0,
- 				dev_name(&pdev->dev), xspi);
- 		if (ret)
--			goto put_master;
-+			goto dis_master_clk;
- 	}
- 
- 	/* SPI controller initializations */
-@@ -469,7 +489,7 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 	ret = spi_bitbang_start(&xspi->bitbang);
- 	if (ret) {
- 		dev_err(&pdev->dev, "spi_bitbang_start FAILED\n");
--		goto put_master;
-+		goto dis_master_clk;
- 	}
- 
- 	dev_info(&pdev->dev, "at 0x%08llX mapped to 0x%p, irq=%d\n",
-@@ -483,9 +503,10 @@ static int xilinx_spi_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, master);
- 	return 0;
- 
-+dis_master_clk:
-+	clk_disable_unprepare(xspi->aclk);
- put_master:
- 	spi_master_put(master);
--
- 	return ret;
- }
- 
-@@ -503,6 +524,7 @@ static int xilinx_spi_remove(struct platform_device *pdev)
- 	xspi->write_fn(0, regs_base + XIPIF_V123B_DGIER_OFFSET);
- 
- 	spi_master_put(xspi->bitbang.master);
-+	clk_disable_unprepare(xspi->aclk);
- 
- 	return 0;
- }
--- 
-1.7.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+> Changes since v4:
+> - added lookups tables instead of large switchcases
+> 
+> Changes since v3:
+> - replaced '_' with '-'
+> - Now used actual values instead of register values.
+> 
+> Changes since v2:
+> - removed defines from DT
+> 
+>  drivers/iio/dac/ad5755.c | 186 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 185 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iio/dac/ad5755.c b/drivers/iio/dac/ad5755.c
+> index bfb350a..b380803 100644
+> --- a/drivers/iio/dac/ad5755.c
+> +++ b/drivers/iio/dac/ad5755.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/sysfs.h>
+>  #include <linux/delay.h>
+> +#include <linux/of.h>
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  #include <linux/platform_data/ad5755.h>
+> @@ -109,6 +110,49 @@ enum ad5755_type {
+>  	ID_AD5737,
+>  };
+>  
+> +static const int ad5755_dcdc_freq_table[][2] = {
+> +	{ 250000, AD5755_DC_DC_FREQ_250kHZ },
+> +	{ 410000, AD5755_DC_DC_FREQ_410kHZ },
+> +	{ 650000, AD5755_DC_DC_FREQ_650kHZ }
+> +};
+> +
+> +static const int ad5755_dcdc_maxv_table[][2] = {
+> +	{ 23000000, AD5755_DC_DC_MAXV_23V },
+> +	{ 24500000, AD5755_DC_DC_MAXV_24V5 },
+> +	{ 27000000, AD5755_DC_DC_MAXV_27V },
+> +	{ 29500000, AD5755_DC_DC_MAXV_29V5 },
+> +};
+> +
+> +static const int ad5755_slew_rate_table[][2] = {
+> +	{ 64000, AD5755_SLEW_RATE_64k },
+> +	{ 32000, AD5755_SLEW_RATE_32k },
+> +	{ 16000, AD5755_SLEW_RATE_16k },
+> +	{ 8000, AD5755_SLEW_RATE_8k },
+> +	{ 4000, AD5755_SLEW_RATE_4k },
+> +	{ 2000, AD5755_SLEW_RATE_2k },
+> +	{ 1000, AD5755_SLEW_RATE_1k },
+> +	{ 500, AD5755_SLEW_RATE_500 },
+> +	{ 250, AD5755_SLEW_RATE_250 },
+> +	{ 125, AD5755_SLEW_RATE_125 },
+> +	{ 64, AD5755_SLEW_RATE_64 },
+> +	{ 32, AD5755_SLEW_RATE_32 },
+> +	{ 16, AD5755_SLEW_RATE_16 },
+> +	{ 8, AD5755_SLEW_RATE_8 },
+> +	{ 4, AD5755_SLEW_RATE_4 },
+> +	{ 0, AD5755_SLEW_RATE_0_5 },
+> +};
+> +
+> +static const int ad5755_slew_step_table[][2] = {
+> +	{ 256, AD5755_SLEW_STEP_SIZE_256 },
+> +	{ 128, AD5755_SLEW_STEP_SIZE_128 },
+> +	{ 64, AD5755_SLEW_STEP_SIZE_64 },
+> +	{ 32, AD5755_SLEW_STEP_SIZE_32 },
+> +	{ 16, AD5755_SLEW_STEP_SIZE_16 },
+> +	{ 4, AD5755_SLEW_STEP_SIZE_4 },
+> +	{ 2, AD5755_SLEW_STEP_SIZE_2 },
+> +	{ 1, AD5755_SLEW_STEP_SIZE_1 },
+> +};
+> +
+>  static int ad5755_write_unlocked(struct iio_dev *indio_dev,
+>  	unsigned int reg, unsigned int val)
+>  {
+> @@ -556,6 +600,129 @@ static const struct ad5755_platform_data ad5755_default_pdata = {
+>  	},
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static struct ad5755_platform_data *ad5755_parse_dt(struct device *dev)
+> +{
+> +	struct device_node *np = dev->of_node;
+> +	struct device_node *pp;
+> +	struct ad5755_platform_data *pdata;
+> +	unsigned int tmp;
+> +	unsigned int tmparray[3];
+> +	int devnr, i;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return NULL;
+> +
+> +	pdata->ext_dc_dc_compenstation_resistor =
+> +	    of_property_read_bool(np, "adi,ext-dc-dc-compenstation-resistor");
+> +
+> +	if (!of_property_read_u32(np, "adi,dc-dc-phase", &tmp))
+> +		pdata->dc_dc_phase = tmp;
+> +	else
+> +		pdata->dc_dc_phase = AD5755_DC_DC_PHASE_ALL_SAME_EDGE;
+> +
+> +	pdata->dc_dc_freq = AD5755_DC_DC_FREQ_410kHZ;
+> +	if (!of_property_read_u32(np, "adi,dc-dc-freq-hz", &tmp)) {
+> +		for (i = 0; i < ARRAY_SIZE(ad5755_dcdc_freq_table); i++) {
+> +			if (tmp == ad5755_dcdc_freq_table[i][0]) {
+> +				pdata->dc_dc_freq = ad5755_dcdc_freq_table[i][1];
+> +				break;
+> +			}
+> +		}
+> +
+> +		if (i == ARRAY_SIZE(ad5755_dcdc_freq_table)) {
+> +			dev_err(dev,
+> +				"adi,dc-dc-freq out of range selecting 410kHz");
+> +		}
+> +	}
+> +
+> +	pdata->dc_dc_maxv = AD5755_DC_DC_MAXV_23V;
+> +	if (!of_property_read_u32(np, "adi,dc-dc-max-microvolt", &tmp)) {
+> +		for (i = 0; i < ARRAY_SIZE(ad5755_dcdc_maxv_table); i++) {
+> +			if (tmp == ad5755_dcdc_maxv_table[i][0]) {
+> +				pdata->dc_dc_maxv = ad5755_dcdc_maxv_table[i][1];
+> +				break;
+> +			}
+> +		}
+> +		if (i == ARRAY_SIZE(ad5755_dcdc_maxv_table)) {
+> +				dev_err(dev,
+> +					"adi,dc-dc-maxv out of range selecting 23V");
+> +		}
+> +	}
+> +
+> +	devnr = 0;
+> +	for_each_child_of_node(np, pp) {
+> +		if (devnr > AD5755_NUM_CHANNELS) {
+> +			dev_err(dev,
+> +				"There is to many channels defined in DT\n");
+> +			goto error_out;
+> +		}
+> +
+> +		if (!of_property_read_u32(pp, "adi,mode", &tmp))
+> +			pdata->dac[devnr].mode = tmp;
+> +		else
+> +			pdata->dac[devnr].mode = AD5755_MODE_CURRENT_4mA_20mA;
+> +
+> +		pdata->dac[devnr].ext_current_sense_resistor =
+> +		    of_property_read_bool(pp, "adi,ext-current-sense-resistor");
+> +
+> +		pdata->dac[devnr].enable_voltage_overrange =
+> +		    of_property_read_bool(pp, "adi,enable-voltage-overrange");
+> +
+> +		if (!of_property_read_u32_array(pp, "adi,slew", tmparray, 3)) {
+> +			pdata->dac[devnr].slew.enable = tmparray[0];
+> +
+> +			pdata->dac[devnr].slew.rate = AD5755_SLEW_RATE_64k;
+> +			for (i = 0; i < ARRAY_SIZE(ad5755_slew_rate_table); i++) {
+> +				if (tmparray[1] == ad5755_slew_rate_table[i][0]) {
+> +					pdata->dac[devnr].slew.rate =
+> +						ad5755_slew_rate_table[i][1];
+> +					break;
+> +				}
+> +			}
+> +			if (i == ARRAY_SIZE(ad5755_slew_rate_table)) {
+> +				dev_err(dev,
+> +					"channel %d slew rate out of range selecting 64kHz",
+> +					devnr);
+> +			}
+> +
+> +			pdata->dac[devnr].slew.step_size = AD5755_SLEW_STEP_SIZE_1;
+> +			for (i = 0; i < ARRAY_SIZE(ad5755_slew_step_table); i++) {
+> +				if (tmparray[2] == ad5755_slew_step_table[i][0]) {
+> +					pdata->dac[devnr].slew.step_size =
+> +						ad5755_slew_step_table[i][1];
+> +					break;
+> +				}
+> +			}
+> +			if (i == ARRAY_SIZE(ad5755_slew_step_table)) {
+> +				dev_err(dev,
+> +					"channel %d slew step size out of range selecting 1 LSB",
+> +					devnr);
+> +			}
+> +		} else {
+> +			pdata->dac[devnr].slew.enable = false;
+> +			pdata->dac[devnr].slew.rate = AD5755_SLEW_RATE_64k;
+> +			pdata->dac[devnr].slew.step_size =
+> +			    AD5755_SLEW_STEP_SIZE_1;
+> +		}
+> +		devnr++;
+> +	}
+> +
+> +	return pdata;
+> +
+> + error_out:
+> +	devm_kfree(dev, pdata);
+> +	return NULL;
+> +}
+> +#else
+> +static
+> +struct adf4350_platform_data *adf4350_parse_dt(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  static int ad5755_probe(struct spi_device *spi)
+>  {
+>  	enum ad5755_type type = spi_get_device_id(spi)->driver_data;
+> @@ -583,8 +750,15 @@ static int ad5755_probe(struct spi_device *spi)
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->num_channels = AD5755_NUM_CHANNELS;
+>  
+> -	if (!pdata)
+> +	if (spi->dev.of_node)
+> +		pdata = ad5755_parse_dt(&spi->dev);
+> +	else
+> +		pdata = spi->dev.platform_data;
+> +
+> +	if (!pdata) {
+> +		dev_warn(&spi->dev, "no platform data? using default\n");
+>  		pdata = &ad5755_default_pdata;
+> +	}
+>  
+>  	ret = ad5755_init_channels(indio_dev, pdata);
+>  	if (ret)
+> @@ -607,6 +781,16 @@ static const struct spi_device_id ad5755_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(spi, ad5755_id);
+>  
+> +static const struct of_device_id ad5755_of_match[] = {
+> +	{ .compatible = "adi,ad5755" },
+> +	{ .compatible = "adi,ad5755-1" },
+> +	{ .compatible = "adi,ad5757" },
+> +	{ .compatible = "adi,ad5735" },
+> +	{ .compatible = "adi,ad5737" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ad5755_of_match);
+> +
+>  static struct spi_driver ad5755_driver = {
+>  	.driver = {
+>  		.name = "ad5755",
+> 
