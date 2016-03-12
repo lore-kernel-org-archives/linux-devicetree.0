@@ -1,47 +1,41 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v2] can: rcar_canfd: Add Renesas R-Car CAN FD driver
-Date: Sat, 12 Mar 2016 19:49:22 +0100
-Message-ID: <56E464B2.5050303@hartkopp.net>
-References: <1456824849-7987-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <56DC1561.9060306@hartkopp.net>
- <SG2PR06MB10386D712BC8C345DF726523C3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DD36F5.2000308@pengutronix.de>
- <SG2PR06MB1038DD47FAFF354C99AF2E4FC3B10@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DE8345.50901@hartkopp.net>
- <SG2PR06MB1038B71C7921984611F72CF5C3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DEC49D.4@hartkopp.net>
- <SG2PR06MB10388F87746A1191E51B199FC3B20@SG2PR06MB1038.apcprd06.prod.outlook.com>
- <56DF0900.6090906@hartkopp.net>
- <KL1PR06MB10315B45ADA2037A5AA85A56C3B50@KL1PR06MB1031.apcprd06.prod.outlook.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] dt: document NXP LPC1850 DAC driver bindings
+Date: Sat, 12 Mar 2016 20:06:59 +0100
+Message-ID: <CAGhQ9Vwys4G_pDWWDObDXVs0fTHkNr6v7aNWDZJue89GY+UV6w@mail.gmail.com>
+References: <1457785817-32328-1-git-send-email-manabian@gmail.com>
+	<1457785817-32328-5-git-send-email-manabian@gmail.com>
+	<56E45D45.4050605@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <KL1PR06MB10315B45ADA2037A5AA85A56C3B50@KL1PR06MB1031.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
-Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E45D45.4050605-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
+Hi Jonathan,
 
-On 03/11/2016 08:14 AM, Ramesh Shanmugasundaram wrote:
+On 12 March 2016 at 19:17, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 12/03/16 12:30, Joachim Eastwood wrote:
+>> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> A very straight forward binding so I'm happy to apply this without
+> a devicetree ack (still time if anyone does want to take a look though as
+> it won't be in my non rebasing tree until probably next weekend now.)
+>
+> Applied to the togreg branch of iio.git - initially pushed out as testing
+> for the autobuilders to play with it.
 
-> As we are fixing this issue in CAN dev.c, I'll remove this check in ndo_open and set CAN_CTRLMODE_FD flag in ctrlmode & remove the flag in ctrlmode_supported in the next v3 version of the patch.
+Thanks!
 
-I posted a V2 version of that fix some minutes ago.
-It also adds some documentation and a new variable ctrlmode_static which 
-makes it clear how to specify static/fixed control modes.
+> We have unfortunately missed the merge window that will probably open tomorrow
+> (as IIO stuff must be in a few weeks before that) so this is looking at the
+> next merge window in 3 months time.  Will be in linux-next in about 3-4 weeks
+> though after I send a pull request to Greg KH post merge window closing.
+I wasn't expecting it to go upstream in the upcoming window. But I
+will be good to get it into next after the window closes so I can get
+the DT bits for lpc18xx upstream as well.
 
-Please use the new can_set_static_ctrlmode() helper as suggested in the 
-changes for m_can.c.
 
-A feedback is welcome whether this new fix fits your expectations.
-
-> Are there any further comments on v2 patch please?
-
-Besides the stuff I wrote above: No :-)
-
-Best regards,
-Oliver
+regards,
+Joachim Eastwood
