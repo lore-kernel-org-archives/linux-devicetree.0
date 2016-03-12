@@ -1,176 +1,84 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: ad5755: Add DT binding documentation
-Date: Sat, 12 Mar 2016 09:28:01 +0000
-Message-ID: <56E3E121.9030400@kernel.org>
-References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1457705561-12253-2-git-send-email-sean.nyekjaer@prevas.dk>
+Subject: Re: [PATCH v2 4/5] iio:magnetometer:ak8975: mounting matrix support
+Date: Sat, 12 Mar 2016 09:44:50 +0000
+Message-ID: <56E3E512.4030205@kernel.org>
+References: <cover.1457001111.git.gregor.boirie@parrot.com>
+ <022da3dfc0853c6f9820b24c2d9eaaf0c5ccf294.1457001111.git.gregor.boirie@parrot.com>
+ <56DAFCEB.6080905@kernel.org> <56E0014D.1040209@parrot.com>
+ <56E08B91.6070603@kernel.org>
+ <CAL_JsqJZfr5Cx6vkSGePESjf-gmz54jATjqb=Xgc6HiUtL4_Tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457705561-12253-2-git-send-email-sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
+In-Reply-To: <CAL_JsqJZfr5Cx6vkSGePESjf-gmz54jATjqb=Xgc6HiUtL4_Tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/03/16 14:12, Sean Nyekjaer wrote:
-> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-Looks much better to me.
+On 10/03/16 02:15, Rob Herring wrote:
+> On Wed, Mar 9, 2016 at 2:46 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On 09/03/16 10:56, Gregor Boirie wrote:
+>>>
+>>> On 03/05/2016 04:36 PM, Jonathan Cameron wrote:
+>>>> On 03/03/16 10:44, Gregor Boirie wrote:
+>>>>> Expose a rotation matrix to indicate userspace the chip placement with
+>>>>> respect to the overall hardware system. This is needed to adjust
+>>>>> coordinates sampled from a magnetometer chip when its position deviates
+>>>>> from the main hardware system.
+>>>>>
+>>>>> Final coordinates computation is delegated to userspace since:
+>>>>> * computation may involve floating point arithmetics ;
+>>>>> * it allows an application to combine adjustments with arbitrary
+>>>>>    transformations.
+>>>>>
+>>>>> This 3 dimentional space rotation matrix is expressed as 3x3 array of
+>>>>> strings to support floating point numbers. It may be retrieved from a
+>>>>> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
+>>>>> entry as a "matrix" property.
+>>>>>
+>>>>> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+>>>> This one definitely wants to go to the device tree list. I'd also like a few
+>>>> IIO related comments as well. I was sure we'd been through this before and
+>>>> ended up with some sort of solution, but now I can't find it... Oh well.
+>>> I took inv_mpu_core as an example. However matrices are exposed as integers
+>>> and we really need floating point support.
+>>> A search on the device-tree mailing list archive does not show up with a
+>>> solution to encode floating point numbers into DTS either.
+>> Certainly non obvious how to do this.
+>>
+>> For anyone device tree related who picks this up (I've added a CC)
+>> we are basically talking about passing a rotation matrix from the device tree
+>> straight through to userspace to describe the relative orientation of
+>> some sensor.  An array of strings clearly works, but is this the best
+>> way to do it?
+> 
+> That's probably okay. I'd format the dts and sysfs to be arranged in a
+> 3x3 matrix rather than a linear list though, but that is just style.
+> 
+> However, there's nothing really preventing us from having floats in
+> DT. Data is not typed, so it would be a matter of adding the dtc
+> parsing support. The other aspect would be the limited use of float
+> types in the kernel (though that should not influence binding design).
+> Are there cases of the kernel ABI using floats?
+Not many cases of true floats, but certainly in IIO we use a lot of
+pseudo floats in which an enum is combined with two integers.
+Enum effectively specifies the 'fixed point' location and the
+pair of integers typically the integer part and the decimal part
+(as we often end up with for example scales that are close to 1)
+It's a bit hideous in some ways, but seeing as we are doing fixed
+point maths with it in the kernel it actually works out reasonably
+cleanly internally.
 
-Looking for Acks from Lars and a device tree binding maintainer
-on this one though.
-(added CCs)
+Right now I don't think any of those are passed in from device tree
+but it's certainly possible in the future.
 
-As an aside Device Tree bindings maintainers, do you prefer a personal cc
-or just getting them directly from the devicetree list?
-
-Jonthan
-> ---
-> Changes since v4:
-> - Appended -hz to dc-dc-freq
-> - Added adi,dc-dc-max-microvolt
-> - Added reg property
+Jonathan
 > 
-> Changes since v3:
-> - replaced '_' with '-'
-> - Now used actual values instead of register values.
-> 
-> Changes since v2:
->  - Removed defines, alot easier to read
-> 
->  .../devicetree/bindings/iio/dac/ad5755.txt         | 124 +++++++++++++++++++++
->  1 file changed, 124 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5755.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-> new file mode 100644
-> index 0000000..f0bbd7e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
-> @@ -0,0 +1,124 @@
-> +* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
-> +
-> +Required properties:
-> + - compatible: Has to contain one of the following:
-> +	adi,ad5755
-> +	adi,ad5755-1
-> +	adi,ad5757
-> +	adi,ad5735
-> +	adi,ad5737
-> +
-> + - reg: spi chip select number for the device
-> + - spi-cpha or spi-cpol: is the only modes that is supported
-> +
-> +Recommended properties:
-> + - spi-max-frequency: Definition as per
-> +		Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +Optional properties:
-> +See include/dt-bindings/iio/ad5755.h
-> + - adi,ext-dc-dc-compenstation-resistor: boolean set if the hardware have an
-> +					 external resistor and thereby bypasses
-> +					 the internal compensation resistor.
-> + - adi,dc-dc-phase:
-> +	Valid values for DC DC Phase control is:
-> +	0: All dc-to-dc converters clock on the same edge.
-> +	1: Channel A and Channel B clock on the same edge,
-> +	   Channel C and Channel D clock on opposite edges.
-> +	2: Channel A and Channel C clock on the same edge,
-> +	   Channel B and Channel D clock on opposite edges.
-> +	3: Channel A, Channel B, Channel C, and Channel D
-> +	   clock 90 degrees out of phase from each other.
-> + - adi,dc-dc-freq-hz:
-> +	Valid values for DC DC frequency is [Hz]:
-> +	250000
-> +	410000
-> +	650000
-> + - adi,dc-dc-max-microvolt:
-> +	Valid values for the maximum allowed Vboost voltage supplied by
-> +	the dc-to-dc converter is:
-> +	23000000
-> +	24500000
-> +	27000000
-> +	29500000
-> +
-> +Optional for every channel:
-> + - adi,mode:
-> +	Valid values for DAC modes is:
-> +	0: 0 V to 5 V voltage range.
-> +	1: 0 V to 10 V voltage range.
-> +	2: Plus minus 5 V voltage range.
-> +	3: Plus minus 10 V voltage range.
-> +	4: 4 mA to 20 mA current range.
-> +	5: 0 mA to 20 mA current range.
-> +	6: 0 mA to 24 mA current range.
-> + - adi,ext-current-sense-resistor: boolean set if the hardware a external
-> +				   current sense resistor.
-> + - adi,enable-voltage-overrange: boolean enable voltage overrange
-> + - adi,slew: Array of slewrate settings should contain 3 fields:
-> +	1: Should be either 0 or 1 in order to enable or disable slewrate.
-> +	2: Slew rate settings:
-> +		Valid values for the slew rate update frequency:
-> +		64000
-> +		32000
-> +		16000
-> +		8000
-> +		4000
-> +		2000
-> +		1000
-> +		500
-> +		250
-> +		125
-> +		64
-> +		32
-> +		16
-> +		8
-> +		4
-> +		0
-> +	3: Slew step size:
-> +		Valid values for the step size LSBs:
-> +		1
-> +		2
-> +		4
-> +		16
-> +		32
-> +		64
-> +		128
-> +		256
-> +
-> +Example:
-> +dac@0 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "adi,ad5755";
-> +	reg = <0>;
-> +	spi-max-frequency = <1000000>;
-> +	spi-cpha;
-> +	adi,dc-dc-phase = <0>;
-> +	adi,dc-dc-freq-hz = <410000>;
-> +	adi,dc-dc-max-microvolt = <23000000>;
-> +	channel@0 {
-> +		reg = <0>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +	channel@1 {
-> +		reg = <1>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +	channel@2 {
-> +		reg = <2>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +	channel@3 {
-> +		reg = <3>;
-> +		adi,mode = <4>;
-> +		adi,ext-current-sense-resistor;
-> +		adi,slew = <0 64000 1>;
-> +	};
-> +};
+> Rob
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
