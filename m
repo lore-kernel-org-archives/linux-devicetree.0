@@ -1,80 +1,73 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/1] iio:pressure:ms5611: fix crash when probing
- regulator
-Date: Sat, 12 Mar 2016 11:04:32 +0000
-Message-ID: <56E3F7C0.3080408@kernel.org>
-References: <cover.1457522751.git.gregor.boirie@parrot.com>
- <7767ba4decd3938eb1b37990f707b016228e0ef5.1457522751.git.gregor.boirie@parrot.com>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: adc: add NXP LPC18xx ADC driver
+Date: Sat, 12 Mar 2016 12:11:03 +0100
+Message-ID: <CAGhQ9VyEywGgUv128oCSqaXUkVNniqEAi7qXbpSypZjCr-ixxQ@mail.gmail.com>
+References: <1457262795-20282-1-git-send-email-manabian@gmail.com>
+	<1457262795-20282-2-git-send-email-manabian@gmail.com>
+	<56E3EFAC.8090906@kernel.org>
+	<56E3F104.20105@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7767ba4decd3938eb1b37990f707b016228e0ef5.1457522751.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <56E3F104.20105-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/03/16 11:34, Gregor Boirie wrote:
-> When not compiled-in, regulator layer will return a NULL pointer when
-> trying to get a reference to any regulator using devm_regulator_get().  As
-> IS_ERR() does not consider this an error, the ms5611 probing operation will
-> try to enable a NULL regulator, which will invariably cause a kernel
-> crash.
-> This patch fixes this situation by using devm_regulator_get_optional()
-> instead of devm_regulator_get().
-> 
-> Fixes: 3145229f9191 ("iio:pressure:ms5611: power regulator support")
-> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+On 12 March 2016 at 11:35, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 12/03/16 10:30, Jonathan Cameron wrote:
+>> On 06/03/16 11:13, Joachim Eastwood wrote:
+>>> Add base support for the 10-bit SAR ADC peripheral found
+>>> on NXP LPC18xx/43xx SoCs.
+>>>
+>>> This is a minimal driver that does not support burst mode,
+>>> interrupts, DMA or hardware triggers.
+>>>
+>>> User manual with register description can be found on:
+>>> LPC18xx: www.nxp.com/documents/user_manual/UM10430.pdf
+>>> LPC43xx: www.nxp.com/documents/user_manual/UM10503.pdf
+>>>
+>>> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Applied to the togreg branch of iio.git - initially pushed out as testing
+>> for the autobuilders to play with it.
+> Actually I've backed this out.  Picked up on a few things lookint
+> at the DAC driver that apply here too.
+>
+> Clearly half asleep this morning!
+>
+> Sorry,
+>
+> Jonathan
+>>
+>> Thanks,
+>>
+>> Jonathan
+>>> ---
+>>>  drivers/iio/adc/Kconfig       |  10 ++
+>>>  drivers/iio/adc/Makefile      |   1 +
+>>>  drivers/iio/adc/lpc18xx_adc.c | 228 ++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 239 insertions(+)
+>>>  create mode 100644 drivers/iio/adc/lpc18xx_adc.c
 
-I've been thinking a bit more about these cases and think we are missusing
-the optional regulators.  If regulator support is present and a non optional
-register is requested then it will feed a dummy regulator back. 
-The intent of this is to handle the case where an non optional regulator is
-needed, but not specified (typically because it is always on).
+>>> +static int lpc18xx_adc_read_raw(struct iio_dev *indio_dev,
+>>> +                            struct iio_chan_spec const *chan,
+>>> +                            int *val, int *val2, long mask)
+>>> +{
+>>> +    struct lpc18xx_adc *adc = iio_priv(indio_dev);
+>>> +
+>>> +    switch (mask) {
+>>> +    case IIO_CHAN_INFO_RAW:
+> Please use a local lock to protect channels.  The mlock is specifically
+> for use in protecting against moving in and out of buffered mode for
+> drivers in which individual reads will break buffered capture.
 
-So the question is how should we handle the regulators not built in case.
-If you do call devm_regulator_get you'll get a null pointer.
-Without regulators built in regulator_enable will be fine (returns 0)
-as does regulator disable.
+okey, got it. I'll send out a new version later today. I'll add the
+lock to the dac driver as well.
 
-So I'm unclear on where the crash is coming from.
-
-Also interesting is this driver enables the regulator but never disables
-it (which it should).   I was clearly half asleep when reviewing this.
-Sorry!
-
-Jonathan
+Does this mean that if buffered mode support is added to the driver
+I'll have to change the lock again?
 
 
-> ---
->  drivers/iio/pressure/ms5611_core.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/iio/pressure/ms5611_core.c b/drivers/iio/pressure/ms5611_core.c
-> index 37dbc04..a2a871b 100644
-> --- a/drivers/iio/pressure/ms5611_core.c
-> +++ b/drivers/iio/pressure/ms5611_core.c
-> @@ -387,8 +387,8 @@ static const struct iio_info ms5611_info = {
->  static int ms5611_init(struct iio_dev *indio_dev)
->  {
->  	int ret;
-> -	struct regulator *vdd = devm_regulator_get(indio_dev->dev.parent,
-> -	                                           "vdd");
-> +	struct regulator *vdd =
-> +		devm_regulator_get_optional(indio_dev->dev.parent, "vdd");
->  
->  	/* Enable attached regulator if any. */
->  	if (!IS_ERR(vdd)) {
-> @@ -398,6 +398,10 @@ static int ms5611_init(struct iio_dev *indio_dev)
->  			        "failed to enable Vdd supply: %d\n", ret);
->  			return ret;
->  		}
-> +	} else {
-> +		ret = PTR_ERR(vdd);
-> +		if (ret != -ENODEV)
-> +			return ret;
->  	}
->  
->  	ret = ms5611_reset(indio_dev);
-> 
+regards,
+Joachim Eastwood
