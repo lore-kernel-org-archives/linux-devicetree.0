@@ -1,52 +1,286 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] dt: document NXP LPC1850 ADC driver bindings
-Date: Sat, 12 Mar 2016 18:15:07 +0000
-Message-ID: <56E45CAB.9040803@kernel.org>
+Subject: Re: [PATCH v3 3/4] iio: dac: add NXP LPC18xx DAC driver
+Date: Sat, 12 Mar 2016 18:15:23 +0000
+Message-ID: <56E45CBB.2090808@kernel.org>
 References: <1457785817-32328-1-git-send-email-manabian@gmail.com>
- <1457785817-32328-3-git-send-email-manabian@gmail.com>
+ <1457785817-32328-4-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457785817-32328-3-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1457785817-32328-4-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 12/03/16 12:30, Joachim Eastwood wrote:
+> Add base support for the 10-bit DAC peripheral found
+> on NXP LPC18xx/43xx SoCs.
+> 
+> This is a minimal driver that does not support DMA or
+> interrupts.
+> 
+> User manual with register description can be found on:
+> LPC18xx: www.nxp.com/documents/user_manual/UM10430.pdf
+> LPC43xx: www.nxp.com/documents/user_manual/UM10503.pdf
+> 
 > Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Applied.
 > ---
->  .../devicetree/bindings/iio/adc/lpc1850-adc.txt     | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/lpc1850-adc.txt
+>  drivers/iio/dac/Kconfig       |  10 ++
+>  drivers/iio/dac/Makefile      |   1 +
+>  drivers/iio/dac/lpc18xx_dac.c | 210 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 221 insertions(+)
+>  create mode 100644 drivers/iio/dac/lpc18xx_dac.c
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/lpc1850-adc.txt b/Documentation/devicetree/bindings/iio/adc/lpc1850-adc.txt
+> diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+> index a995139f907c..210db81ca144 100644
+> --- a/drivers/iio/dac/Kconfig
+> +++ b/drivers/iio/dac/Kconfig
+> @@ -154,6 +154,16 @@ config AD7303
+>  	  To compile this driver as module choose M here: the module will be called
+>  	  ad7303.
+>  
+> +config LPC18XX_DAC
+> +	tristate "NXP LPC18xx DAC driver"
+> +	depends on ARCH_LPC18XX || COMPILE_TEST
+> +	depends on OF && HAS_IOMEM
+> +	help
+> +	  Say yes here to build support for NXP LPC18XX DAC.
+> +
+> +	  To compile this driver as a module, choose M here: the module will be
+> +	  called lpc18xx_dac.
+> +
+>  config M62332
+>  	tristate "Mitsubishi M62332 DAC driver"
+>  	depends on I2C
+> diff --git a/drivers/iio/dac/Makefile b/drivers/iio/dac/Makefile
+> index 67b48429686d..420a15cdaa53 100644
+> --- a/drivers/iio/dac/Makefile
+> +++ b/drivers/iio/dac/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_AD5764) += ad5764.o
+>  obj-$(CONFIG_AD5791) += ad5791.o
+>  obj-$(CONFIG_AD5686) += ad5686.o
+>  obj-$(CONFIG_AD7303) += ad7303.o
+> +obj-$(CONFIG_LPC18XX_DAC) += lpc18xx_dac.o
+>  obj-$(CONFIG_M62332) += m62332.o
+>  obj-$(CONFIG_MAX517) += max517.o
+>  obj-$(CONFIG_MAX5821) += max5821.o
+> diff --git a/drivers/iio/dac/lpc18xx_dac.c b/drivers/iio/dac/lpc18xx_dac.c
 > new file mode 100644
-> index 000000000000..0bcae5140bc5
+> index 000000000000..55d1456a059d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/lpc1850-adc.txt
-> @@ -0,0 +1,21 @@
-> +NXP LPC1850 ADC bindings
+> +++ b/drivers/iio/dac/lpc18xx_dac.c
+> @@ -0,0 +1,210 @@
+> +/*
+> + * IIO DAC driver for NXP LPC18xx DAC
+> + *
+> + * Copyright (C) 2016 Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * UNSUPPORTED hardware features:
+> + *  - Interrupts
+> + *  - DMA
+> + */
 > +
-> +Required properties:
-> +- compatible: Should be "nxp,lpc1850-adc"
-> +- reg: Offset and length of the register set for the ADC device
-> +- interrupts: The interrupt number for the ADC device
-> +- clocks: The root clock of the ADC controller
-> +- vref-supply: The regulator supply ADC reference voltage
-> +- resets: phandle to reset controller and line specifier
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/driver.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
 > +
-> +Example:
+> +/* LPC18XX DAC registers and bits */
+> +#define LPC18XX_DAC_CR			0x000
+> +#define  LPC18XX_DAC_CR_VALUE_SHIFT	6
+> +#define  LPC18XX_DAC_CR_VALUE_MASK	0x3ff
+> +#define  LPC18XX_DAC_CR_BIAS		BIT(16)
+> +#define LPC18XX_DAC_CTRL		0x004
+> +#define  LPC18XX_DAC_CTRL_DMA_ENA	BIT(3)
 > +
-> +adc0: adc@400e3000 {
-> +	compatible = "nxp,lpc1850-adc";
-> +	reg = <0x400e3000 0x1000>;
-> +	interrupts = <17>;
-> +	clocks = <&ccu1 CLK_APB3_ADC0>;
-> +	vref-supply = <&reg_vdda>;
-> +	resets = <&rgu 40>;
-> +	status = "disabled";
+> +struct lpc18xx_dac {
+> +	struct regulator *vref;
+> +	void __iomem *base;
+> +	struct mutex lock;
+> +	struct clk *clk;
 > +};
+> +
+> +static const struct iio_chan_spec lpc18xx_dac_iio_channels[] = {
+> +	{
+> +		.type = IIO_VOLTAGE,
+> +		.output = 1,
+> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+> +				      BIT(IIO_CHAN_INFO_SCALE),
+> +	},
+> +};
+> +
+> +static int lpc18xx_dac_read_raw(struct iio_dev *indio_dev,
+> +				struct iio_chan_spec const *chan,
+> +				int *val, int *val2, long mask)
+> +{
+> +	struct lpc18xx_dac *dac = iio_priv(indio_dev);
+> +	u32 reg;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		reg = readl(dac->base + LPC18XX_DAC_CR);
+> +		*val = reg >> LPC18XX_DAC_CR_VALUE_SHIFT;
+> +		*val &= LPC18XX_DAC_CR_VALUE_MASK;
+> +
+> +		return IIO_VAL_INT;
+> +
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = regulator_get_voltage(dac->vref) / 1000;
+> +		*val2 = 10;
+> +
+> +		return IIO_VAL_FRACTIONAL_LOG2;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int lpc18xx_dac_write_raw(struct iio_dev *indio_dev,
+> +				 struct iio_chan_spec const *chan,
+> +				 int val, int val2, long mask)
+> +{
+> +	struct lpc18xx_dac *dac = iio_priv(indio_dev);
+> +	u32 reg;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		if (val < 0 || val > LPC18XX_DAC_CR_VALUE_MASK)
+> +			return -EINVAL;
+> +
+> +		reg = LPC18XX_DAC_CR_BIAS;
+> +		reg |= val << LPC18XX_DAC_CR_VALUE_SHIFT;
+> +
+> +		mutex_lock(&dac->lock);
+> +		writel(reg, dac->base + LPC18XX_DAC_CR);
+> +		writel(LPC18XX_DAC_CTRL_DMA_ENA, dac->base + LPC18XX_DAC_CTRL);
+> +		mutex_unlock(&dac->lock);
+> +
+> +		return 0;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static const struct iio_info lpc18xx_dac_info = {
+> +	.read_raw = lpc18xx_dac_read_raw,
+> +	.write_raw = lpc18xx_dac_write_raw,
+> +	.driver_module = THIS_MODULE,
+> +};
+> +
+> +static int lpc18xx_dac_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct lpc18xx_dac *dac;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*dac));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +	dac = iio_priv(indio_dev);
+> +	mutex_init(&dac->lock);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	dac->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(dac->base))
+> +		return PTR_ERR(dac->base);
+> +
+> +	dac->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(dac->clk)) {
+> +		dev_err(&pdev->dev, "error getting clock\n");
+> +		return PTR_ERR(dac->clk);
+> +	}
+> +
+> +	dac->vref = devm_regulator_get(&pdev->dev, "vref");
+> +	if (IS_ERR(dac->vref)) {
+> +		dev_err(&pdev->dev, "error getting regulator\n");
+> +		return PTR_ERR(dac->vref);
+> +	}
+> +
+> +	indio_dev->name = dev_name(&pdev->dev);
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->info = &lpc18xx_dac_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = lpc18xx_dac_iio_channels;
+> +	indio_dev->num_channels = ARRAY_SIZE(lpc18xx_dac_iio_channels);
+> +
+> +	ret = regulator_enable(dac->vref);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "unable to enable regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(dac->clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "unable to enable clock\n");
+> +		goto dis_reg;
+> +	}
+> +
+> +	writel(0, dac->base + LPC18XX_DAC_CTRL);
+> +	writel(0, dac->base + LPC18XX_DAC_CR);
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "unable to register device\n");
+> +		goto dis_clk;
+> +	}
+> +
+> +	return 0;
+> +
+> +dis_clk:
+> +	clk_disable_unprepare(dac->clk);
+> +dis_reg:
+> +	regulator_disable(dac->vref);
+> +	return ret;
+> +}
+> +
+> +static int lpc18xx_dac_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct lpc18xx_dac *dac = iio_priv(indio_dev);
+> +
+> +	iio_device_unregister(indio_dev);
+> +
+> +	writel(0, dac->base + LPC18XX_DAC_CTRL);
+> +	clk_disable_unprepare(dac->clk);
+> +	regulator_disable(dac->vref);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id lpc18xx_dac_match[] = {
+> +	{ .compatible = "nxp,lpc1850-dac" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, lpc18xx_dac_match);
+> +
+> +static struct platform_driver lpc18xx_dac_driver = {
+> +	.probe	= lpc18xx_dac_probe,
+> +	.remove	= lpc18xx_dac_remove,
+> +	.driver	= {
+> +		.name = "lpc18xx-dac",
+> +		.of_match_table = lpc18xx_dac_match,
+> +	},
+> +};
+> +module_platform_driver(lpc18xx_dac_driver);
+> +
+> +MODULE_DESCRIPTION("LPC18xx DAC driver");
+> +MODULE_AUTHOR("Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_LICENSE("GPL v2");
 > 
