@@ -1,84 +1,62 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] iio:magnetometer:ak8975: mounting matrix support
-Date: Sat, 12 Mar 2016 09:44:50 +0000
-Message-ID: <56E3E512.4030205@kernel.org>
-References: <cover.1457001111.git.gregor.boirie@parrot.com>
- <022da3dfc0853c6f9820b24c2d9eaaf0c5ccf294.1457001111.git.gregor.boirie@parrot.com>
- <56DAFCEB.6080905@kernel.org> <56E0014D.1040209@parrot.com>
- <56E08B91.6070603@kernel.org>
- <CAL_JsqJZfr5Cx6vkSGePESjf-gmz54jATjqb=Xgc6HiUtL4_Tw@mail.gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv4 2/2] bindings: spi: Add clock entries for spi-xilinx
+Date: Sat, 12 Mar 2016 02:05:18 -0800
+Message-ID: <20160312100518.GT3173@xsjsorenbubuntu>
+References: <1457769637-5627-1-git-send-email-shubhraj@xilinx.com>
+ <1457769637-5627-2-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJZfr5Cx6vkSGePESjf-gmz54jATjqb=Xgc6HiUtL4_Tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457769637-5627-2-git-send-email-shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/16 02:15, Rob Herring wrote:
-> On Wed, Mar 9, 2016 at 2:46 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On 09/03/16 10:56, Gregor Boirie wrote:
->>>
->>> On 03/05/2016 04:36 PM, Jonathan Cameron wrote:
->>>> On 03/03/16 10:44, Gregor Boirie wrote:
->>>>> Expose a rotation matrix to indicate userspace the chip placement with
->>>>> respect to the overall hardware system. This is needed to adjust
->>>>> coordinates sampled from a magnetometer chip when its position deviates
->>>>> from the main hardware system.
->>>>>
->>>>> Final coordinates computation is delegated to userspace since:
->>>>> * computation may involve floating point arithmetics ;
->>>>> * it allows an application to combine adjustments with arbitrary
->>>>>    transformations.
->>>>>
->>>>> This 3 dimentional space rotation matrix is expressed as 3x3 array of
->>>>> strings to support floating point numbers. It may be retrieved from a
->>>>> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
->>>>> entry as a "matrix" property.
->>>>>
->>>>> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
->>>> This one definitely wants to go to the device tree list. I'd also like a few
->>>> IIO related comments as well. I was sure we'd been through this before and
->>>> ended up with some sort of solution, but now I can't find it... Oh well.
->>> I took inv_mpu_core as an example. However matrices are exposed as integers
->>> and we really need floating point support.
->>> A search on the device-tree mailing list archive does not show up with a
->>> solution to encode floating point numbers into DTS either.
->> Certainly non obvious how to do this.
->>
->> For anyone device tree related who picks this up (I've added a CC)
->> we are basically talking about passing a rotation matrix from the device tree
->> straight through to userspace to describe the relative orientation of
->> some sensor.  An array of strings clearly works, but is this the best
->> way to do it?
-> 
-> That's probably okay. I'd format the dts and sysfs to be arranged in a
-> 3x3 matrix rather than a linear list though, but that is just style.
-> 
-> However, there's nothing really preventing us from having floats in
-> DT. Data is not typed, so it would be a matter of adding the dtc
-> parsing support. The other aspect would be the limited use of float
-> types in the kernel (though that should not influence binding design).
-> Are there cases of the kernel ABI using floats?
-Not many cases of true floats, but certainly in IIO we use a lot of
-pseudo floats in which an enum is combined with two integers.
-Enum effectively specifies the 'fixed point' location and the
-pair of integers typically the integer part and the decimal part
-(as we often end up with for example scales that are close to 1)
-It's a bit hideous in some ways, but seeing as we are doing fixed
-point maths with it in the kernel it actually works out reasonably
-cleanly internally.
+On Sat, 2016-03-12 at 13:30:37 +0530, Shubhrajyoti Datta wrote:
+> Add clock description for spi-xilinx
+>=20
+> Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> v3
+> Add a clock name
+> v4
+> Correct the name=20
+>  .../devicetree/bindings/spi/spi-xilinx.txt         |    5 +++++
+>  1 files changed, 5 insertions(+), 0 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/D=
+ocumentation/devicetree/bindings/spi/spi-xilinx.txt
+> index c7b7856..07ec09a 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+> @@ -7,6 +7,9 @@ Required properties:
+>  - interrupts		: Property with a value describing the interrupt
+>  			  number.
+>  - interrupt-parent	: Must be core interrupt controller
+> +- clocks: Input clock specifier. Refer to common clock bindings.
+> +- clock-names: tuple listing input clock names.
+> +	Required elements: "s_axi_aclk"
 
-Right now I don't think any of those are passed in from device tree
-but it's certainly possible in the future.
+I thought there were too clocks? If the IP has two clocks, I think both
+should be added and supported here.
 
-Jonathan
-> 
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> =20
+>  Optional properties:
+>  - xlnx,num-ss-bits	: Number of chip selects used.
+> @@ -14,6 +17,8 @@ Optional properties:
+>  Example:
+>  	axi_quad_spi@41e00000 {
+>  			compatible =3D "xlnx,xps-spi-2.00.a";
+> +			clocks =3D <&clkc 15>;
+> +			clock-names =3D "spi_fclk";
+
+Doesn't match the binding documented above.
+
+	S=C3=B6ren
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
