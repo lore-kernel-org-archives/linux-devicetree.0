@@ -1,59 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 3/3] of_mdio: use PTR_ERR_OR_ZERO()
-Date: Sun, 13 Mar 2016 00:34:58 +0300
-Message-ID: <4102374.DztQrXbNvq@wasted.cogentembedded.com>
-References: <2682275.WNlbxTfNal@wasted.cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <2682275.WNlbxTfNal@wasted.cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCH 3/7] ARM: dts: OMAP3-N950: Add Vibrator
+Date: Sun, 13 Mar 2016 01:06:16 +0100
+Message-ID: <1457827580-16919-4-git-send-email-sre@kernel.org>
+References: <1457827580-16919-1-git-send-email-sre@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457827580-16919-1-git-send-email-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PTR_ERR_OR_ZERO() is open coded in of_phy_register_fixed_link(), so just
-call it directly...
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
-
+Signed-off-by: Sebastian Reichel <sre@kernel.org>
 ---
-Changes in version 2:
-- added the "Reviewed-by:" tags.
+ arch/arm/boot/dts/omap3-n950.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
- drivers/of/of_mdio.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-Index: net-next/drivers/of/of_mdio.c
-===================================================================
---- net-next.orig/drivers/of/of_mdio.c
-+++ net-next/drivers/of/of_mdio.c
-@@ -412,7 +412,7 @@ int of_phy_register_fixed_link(struct de
- 		if (strcmp(managed, "in-band-status") == 0) {
- 			/* status is zeroed, namely its .link member */
- 			phy = fixed_phy_register(PHY_POLL, &status, -1, np);
--			return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+			return PTR_ERR_OR_ZERO(phy);
- 		}
- 	}
+diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n950.dts
+index 80bed4eb6b08..3dbf9d66bcc1 100644
+--- a/arch/arm/boot/dts/omap3-n950.dts
++++ b/arch/arm/boot/dts/omap3-n950.dts
+@@ -55,6 +55,13 @@
+ 	};
+ };
  
-@@ -434,7 +434,7 @@ int of_phy_register_fixed_link(struct de
- 			return -EPROBE_DEFER;
- 
- 		phy = fixed_phy_register(PHY_POLL, &status, link_gpio, np);
--		return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+		return PTR_ERR_OR_ZERO(phy);
- 	}
- 
- 	/* Old binding */
-@@ -446,7 +446,7 @@ int of_phy_register_fixed_link(struct de
- 		status.pause = be32_to_cpu(fixed_link_prop[3]);
- 		status.asym_pause = be32_to_cpu(fixed_link_prop[4]);
- 		phy = fixed_phy_register(PHY_POLL, &status, -1, np);
--		return IS_ERR(phy) ? PTR_ERR(phy) : 0;
-+		return PTR_ERR_OR_ZERO(phy);
- 	}
- 
- 	return -ENODEV;
++&twl {
++	twl_audio: audio {
++		compatible = "ti,twl4030-audio";
++		ti,enable-vibra = <1>;
++	};
++};
++
+ &twl_keypad {
+ 	linux,keymap = < MATRIX_KEY(0x00, 0x00, KEY_BACKSLASH)
+ 			 MATRIX_KEY(0x01, 0x00, KEY_LEFTSHIFT)
+-- 
+2.7.0
