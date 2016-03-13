@@ -1,31 +1,130 @@
-From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: bad mediatek-ethernet binding docs in linux-next
-Date: Sun, 13 Mar 2016 16:01:51 +0100
-Message-ID: <56E580DF.2080406@openwrt.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
+ interface
+Date: Sun, 13 Mar 2016 21:29:33 +0530
+Message-ID: <20160313155933.GD13211@localhost>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
+ <20160311020650.GG11154@localhost>
+ <56E2EC1C.6040107@codeaurora.org>
+ <20160311163221.GC13211@localhost>
+ <56E2F5EA.10207@codeaurora.org>
+ <56E31CA5.6040106@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56E31CA5.6040106@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Mar 11, 2016 at 02:29:41PM -0500, Sinan Kaya wrote:
+> On 3/11/2016 11:44 AM, Sinan Kaya wrote:
+> > On 3/11/2016 11:32 AM, Vinod Koul wrote:
+> >>>>> memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+> >>>>>>>> +	       TRE_SIZE);
+> >> This one
 
-Dave merged the V6 of the MediaTek ethernet driver. However in
-linux-next I can see the correct devicetree binding aswell as the
-obseleted version of the binding docs from the V1 series. The following
-files should not be there.
+I would write this as:
 
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/net/mediatek,mt7620-gsw.txt
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/net/ralink,rt2880-net.txt
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/net/ralink,rt3050-esw.txt
+memcpy(lldev->tre_ring + lldev->tre_write_offset,
+		&tre->tre_local[0], TRE_SIZE);
 
-offending commit is 88b095d1f13b707dd30e3baccc030d0511f7568f. I failed
-to figure out which tree this originates from.
+To make it look more readable
 
-	John
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>
+> >>>>>>>> +	lldev->tx_status_list[tre->idx].err_code = 0;
+> >>>>>>>> +	lldev->tx_status_list[tre->idx].err_info = 0;
+> >>>>>>>> +	tre->queued = 1;
+> >>>>>>>> +	lldev->pending_tre_count++;
+> >>>>
+> >>>> Is this the only one without alignment? I couldn't understand what you mean by 
+> >>>> above one?
+> >> quoting Coding Style:
+> >>
+> >> Statements longer than 80 columns will be broken into sensible chunks, unless
+> >> exceeding 80 columns significantly increases readability and does not hide
+> >> information. 
+> > 
+> >> "Descendants are always substantially shorter than the parent and
+> >> are placed substantially to the right."
+> >>
+> >>
+> > 
+> > Sorry for my poor English. I never got this rule. 
+> > 
+> > Which one is a "substantially" right? Can you give me an example?
+> > 
+> > I need to understand how you'd write this to satisfy the above rule.
+> > 
+> > like this:
+> > 
+> > memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+> >        TRE_SIZE);
+
+No
+
+> > 
+> > or
+> > 
+> > memcpy(lldev->tre_ring + lldev->tre_write_offset,
+> >        &tre->tre_local[0], TRE_SIZE);
+
+Better or above
+
+> > 
+> > or
+> > 
+> > memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+> > 							   TRE_SIZE);
+
+This doesnt look very readable IMHO, mostly try to use common sense and if
+it looks good and easy to read then you might have nailed it :)
+
+
+> > 
+> > or
+> > 
+> > memcpy(lldev->tre_ring + lldev->tre_write_offset,
+> > 	&tre->tre_local[0], 
+> > 	TRE_SIZE);
+> > 
+> so, I looked at other examples in drivers/dma/dw/core.c file...
+> 
+> I'm seeing two different patterns in the code. One pattern is to align
+> the next line to the first character of the first line like I did based
+> on the previous review comments.
+> 
+> 	mem_width = min_t(unsigned int,
+>                           data_width, dwc_fast_ffs(mem | len));
+> 
+> The second example places an extra tab like this.
+> 
+> 	list_add_tail(&desc->desc_node,
+> 			&first->tx_list);
+> 
+> 
+> Based on this example: this is how I'm changing the second one
+> 
+> +       lldev->tre_write_offset = (lldev->tre_write_offset + HIDMA_TRE_SIZE)
+> +                                       % lldev->tre_ring_size;
+> +
+> 
+> I'm still not sure what you want to do with this:
+> 
+> Is this what you want to do ?
+>         memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
+> -              HIDMA_TRE_SIZE);
+> +               HIDMA_TRE_SIZE);
+> 
+> I also got flagged before that HIDMA_TRE_SIZE does not start from the first 
+> character.
+> 
+> I have done the renaming. This is all left for me to post a follow up.
+
+OK
+
+-- 
+~Vinod
