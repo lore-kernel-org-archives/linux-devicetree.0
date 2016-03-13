@@ -1,91 +1,62 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: dts: sunxi: Add the SPDIF to the
- A10 and A20
-Date: Sun, 13 Mar 2016 22:50:43 +0100
-Message-ID: <20160313215043.GJ8418@lukather>
-References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
- <1456589909-2428-4-git-send-email-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] of_mdio: use IS_ERR_OR_NULL()
+Date: Sun, 13 Mar 2016 23:22:54 +0100
+Message-ID: <4173235.nHpIx7Ti2k@wuerfel>
+References: <2682275.WNlbxTfNal@wasted.cogentembedded.com> <2638820.ej0i0xi4Er@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SkX+M46lOXSAf1kP"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBNOBS63QKGQE32FW3QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1456589909-2428-4-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2638820.ej0i0xi4Er-gHKXc3Y1Z8zGSmamagVegGFoWSdPRAKMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---SkX+M46lOXSAf1kP
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Sat, Feb 27, 2016 at 05:18:27PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Sunday 13 March 2016 00:34:02 Sergei Shtylyov wrote:
+> IS_ERR_OR_NULL() is open coded in of_mdiobus_register_phy(), so just call
+> it directly...
 > 
-> Add the SPDIF transceiver controller and clock to the A10 and
-> A20 dtsi.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun4i-a10.dtsi | 23 +++++++++++++++++++++++
->  arch/arm/boot/dts/sun7i-a20.dtsi | 23 +++++++++++++++++++++++
->  2 files changed, 46 insertions(+)
+> Changes in version 2:
+> - removed the of_mdiobus_register_device() hunk;
+> - added the "Reviewed-by:" tag.
 > 
-> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-> index 0483640..83d46b2 100644
-> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
-> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-> @@ -477,6 +477,17 @@
->  			clock-output-names = "ir1";
->  		};
+>  drivers/of/of_mdio.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Index: net-next/drivers/of/of_mdio.c
+> ===================================================================
+> --- net-next.orig/drivers/of/of_mdio.c
+> +++ net-next/drivers/of/of_mdio.c
+> @@ -56,7 +56,7 @@ static int of_mdiobus_register_phy(struc
+>                 phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
+>         else
+>                 phy = get_phy_device(mdio, addr, is_c45);
+> -       if (!phy || IS_ERR(phy))
+> +       if (IS_ERR_OR_NULL(phy))
+>                 return 1;
 >  
-> +		spdif_clk: clk@01c200c0 {
-> +			#clock-cells = <0>;
-> +			compatible = "allwinner,sun4i-a10-mod1-clk";
-> +			reg = <0x01c200c0 0x4>;
-> +			clocks = <&pll2 SUN4I_A10_PLL2_8X>,
-> +				 <&pll2 SUN4I_A10_PLL2_4X>,
-> +				 <&pll2 SUN4I_A10_PLL2_2X>,
-> +				 <&pll2 SUN4I_A10_PLL2_1X>;
-> +			clock-output-names = "spdif";
-> +		};
-> +
->  		usb_clk: clk@01c200cc {
->  			#clock-cells = <1>;
->  			#reset-cells = <1>;
-> @@ -1055,6 +1066,18 @@
->  			status = "disabled";
->  		};
->  
-> +		spdif: spdif@01c21000 {
-> +			#sound-dai-cells = <0>;
-> +			compatible = "allwinner,sun4i-a10-spdif";
-> +			reg = <0x01c21000 0x40>;
+>         rc = irq_of_parse_and_map(child, 0);
+> 
+> 
 
-It only takes 64 bytes?
+IS_ERR_OR_NULL() usually indicates that the code is wrong, or that
+an API has been misdesigned.
 
-> +			interrupts = <13>;
-> +			clocks = <&apb0_gates 1>, <&spdif_clk>;
-> +			clock-names = "apb", "spdif";
-> +			dmas = <&dma 0 2>, <&dma 0 2>;
+Can you clarify in the changelog which one it is, or (better) change
+it so that 'phy' in this function is either NULL or IS_ERR() in case
+of an error but not both?
 
-Please use the defines here.
+I think moving the 'if (problem) return 1' into the two if/else
+is a correct transformation that also makes it very clear what
+is going on here.
 
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---SkX+M46lOXSAf1kP--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
