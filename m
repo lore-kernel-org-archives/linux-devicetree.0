@@ -1,61 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: sunxi: Fix A33 external interrupts
- not working
-Date: Sun, 13 Mar 2016 18:02:54 +0100
-Message-ID: <20160313170254.GF8418@lukather>
-References: <1457808297-12300-1-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V2 2/3] vfio, platform: make reset driver a requirement
+Date: Sun, 13 Mar 2016 13:25:05 -0400
+Message-ID: <56E5A271.6000408@codeaurora.org>
+References: <1457715275-11925-1-git-send-email-okaya@codeaurora.org>
+ <1457715275-11925-3-git-send-email-okaya@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ckw48dMXwVCm+GhK"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBP52S23QKGQEK2DAYFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457808297-12300-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <kvm-owner@vger.kernel.org>
+In-Reply-To: <1457715275-11925-3-git-send-email-okaya@codeaurora.org>
+Sender: kvm-owner@vger.kernel.org
+To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---ckw48dMXwVCm+GhK
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Sat, Mar 12, 2016 at 07:44:57PM +0100, Hans de Goede wrote:
-> pinctrl-sun8i-a33.c (and the dts) declare only 2 interrupt banks,
-> where as the closely related a23 has 3 banks. This matches with the
-> datasheet for the A33 where only interrupt banks B and G are specified
-> where as the A23 has banks A, B and G.
+On 3/11/2016 11:54 AM, Sinan Kaya wrote:
+> The code was allowing platform devices to be used without a supporting VFIO
+> reset driver. The hardware can be left in some inconsistent state after a
+> guest machine abort.
 > 
-> However the A33 being the A23 derative it is means that the interrupt
-> configure/status io-addresses for the 2 banks it has are not changed
-> from the A23, iow they have the same address as if bank A was still
-> present. Where as the sunxi pinctrl currently tries to use the A23 bank
-> A addresses for bank B, since the pinctrl code does not know about the
-> removed bank A.
+> The reset driver will put the hardware back to safe state and disable
+> interrupts before returning the control back to the host machine.
 > 
-> Add a irq_bank_base parameter and use this where appropriate to take
-> the missing bank A into account.
+> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> ---
+>  drivers/vfio/platform/vfio_platform_common.c | 16 +++++++++-------
+>  1 file changed, 9 insertions(+), 7 deletions(-)
 > 
-> This fixes external interrupts not working on the A33 (tested with
-> an i2c touchscreen controller which uses an external interrupt).
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+I was looking at the code. It looks like this is going to break VFIO AMBA. The
+common implementation is shared with AMBA and platform devices.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+I couldn't see a reset function for AMBA devices.
 
-You should send it to stable though.
+Is there anyway to write reset function for it? I have no experience with 
+AMBA devices.
 
-Thanks!
-Maxime
+Would you include a reset needed flag and just not require it for AMBA? 
+(I honestly don't like this idea)
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---ckw48dMXwVCm+GhK--
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
