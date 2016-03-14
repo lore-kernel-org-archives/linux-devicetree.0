@@ -1,7 +1,8 @@
 From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 5/9] clk: rockchip: add node-id for rk3036 emac hclk
-Date: Mon, 14 Mar 2016 16:01:56 +0800
-Message-ID: <1457942520-12859-6-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v3 7/9] clk: rockchip: add clock-id for rk3036 emac pll source
+ clock
+Date: Mon, 14 Mar 2016 16:01:58 +0800
+Message-ID: <1457942520-12859-8-git-send-email-wxt@rock-chips.com>
 References: <1457942520-12859-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,7 +24,10 @@ List-Id: devicetree@vger.kernel.org
 
 From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Add the node-id for the emac hclk to the binding header.
+Suitable PLLs for the emac on the rk3036 are difficult to find
+and one of them is the (continuously changing) APLL. So in most
+cases it will be necessary to select a PLL manually.
+So add a clock-id for it.
 
 Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
@@ -45,16 +49,16 @@ Changes in v2: None
  1 file changed, 1 insertion(+)
 
 diff --git a/include/dt-bindings/clock/rk3036-cru.h b/include/dt-bindings/clock/rk3036-cru.h
-index ebc7a7b..3396591 100644
+index 3396591..de44109 100644
 --- a/include/dt-bindings/clock/rk3036-cru.h
 +++ b/include/dt-bindings/clock/rk3036-cru.h
-@@ -92,6 +92,7 @@
- #define HCLK_SDMMC		456
- #define HCLK_SDIO		457
- #define HCLK_EMMC		459
-+#define HCLK_MAC		460
- #define HCLK_I2S		462
- #define HCLK_LCDC		465
- #define HCLK_ROM		467
+@@ -54,6 +54,7 @@
+ #define SCLK_PVTM_VIDEO		125
+ #define SCLK_MAC		151
+ #define SCLK_MACREF		152
++#define SCLK_MACPLL		153
+ #define SCLK_SFC		160
+ 
+ /* aclk gates */
 -- 
 1.9.1
