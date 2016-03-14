@@ -1,72 +1,54 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/3] of_mdio: use IS_ERR_OR_NULL()
-Date: Mon, 14 Mar 2016 21:52:00 +0300
-Message-ID: <56E70850.5020602@cogentembedded.com>
-References: <2682275.WNlbxTfNal@wasted.cogentembedded.com>
- <2638820.ej0i0xi4Er@wasted.cogentembedded.com> <4173235.nHpIx7Ti2k@wuerfel>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARM: dts: sunxi: Add the SPDIF to the
+ A10 and A20
+Date: Mon, 14 Mar 2016 19:52:43 +0100
+Message-ID: <20160314185243.GE30977@lukather>
+References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
+ <1456589909-2428-4-git-send-email-codekipper@gmail.com>
+ <20160313215043.GJ8418@lukather>
+ <CAEKpxBm4bs7sNSbDjomdP6XS2ApvfDT-s942DBb3JWv1iOZJ0w@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4173235.nHpIx7Ti2k@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7EQTS3QKGQEJZIFFAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAEKpxBm4bs7sNSbDjomdP6XS2ApvfDT-s942DBb3JWv1iOZJ0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2016 01:22 AM, Arnd Bergmann wrote:
+--Yb+qhiCg54lqZFXW
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
->> IS_ERR_OR_NULL() is open coded in of_mdiobus_register_phy(), so just call
->> it directly...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
->>
->> ---
->> Changes in version 2:
->> - removed the of_mdiobus_register_device() hunk;
->> - added the "Reviewed-by:" tag.
->>
->>   drivers/of/of_mdio.c |    2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> Index: net-next/drivers/of/of_mdio.c
->> ===================================================================
->> --- net-next.orig/drivers/of/of_mdio.c
->> +++ net-next/drivers/of/of_mdio.c
->> @@ -56,7 +56,7 @@ static int of_mdiobus_register_phy(struc
->>                  phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
->>          else
->>                  phy = get_phy_device(mdio, addr, is_c45);
->> -       if (!phy || IS_ERR(phy))
->> +       if (IS_ERR_OR_NULL(phy))
->>                  return 1;
->>
->>          rc = irq_of_parse_and_map(child, 0);
->>
->>
+On Mon, Mar 14, 2016 at 05:29:37PM +0100, Code Kipper wrote:
+> >> +             spdif: spdif@01c21000 {
+> >> +                     #sound-dai-cells = <0>;
+> >> +                     compatible = "allwinner,sun4i-a10-spdif";
+> >> +                     reg = <0x01c21000 0x40>;
+> >
+> > It only takes 64 bytes?
 >
-> IS_ERR_OR_NULL() usually indicates that the code is wrong, or that
-> an API has been misdesigned.
->
-> Can you clarify in the changelog which one it is,
+> Yep(just like the audio codec!)
+> http://linux-sunxi.org/SPDIF#SUNXI_SPDIF_DEFAULT_VALUES
 
-    The second. :-)
+Yet the datasheet says it takes 1k in the memory map.
 
-> or (better) change
-> it so that 'phy' in this function is either NULL or IS_ERR() in case
-> of an error but not both?
+Please use that value instead.
 
-    I guess you meant to change get_phy_device() to not return NULL (and so 
-only return the error codes, not both), am I correct?
+Thanks!
+Maxime
 
-> I think moving the 'if (problem) return 1' into the two if/else
-> is a correct transformation that also makes it very clear what
-> is going on here.
-
-    Can be done too... it's not that I have much time for that many respins 
-though. It all started with 1 little patch (this one). :-)
-
-> 	Arnd
-
-MBR, Sergei
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--Yb+qhiCg54lqZFXW--
