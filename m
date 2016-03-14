@@ -1,74 +1,89 @@
-From: Graham Moore <grmoore@opensource.altera.com>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Mon, 14 Mar 2016 13:17:08 -0500
-Message-ID: <56E70024.3080205@opensource.altera.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
- <201602060842.38290.marex@denx.de> <56B879BD.2070608@ti.com>
- <201602081627.57666.marex@denx.de> <56BB60F1.9070306@opensource.altera.com>
- <56BB629D.2040209@denx.de> <56E1DF45.901@opensource.altera.com>
- <56E1E2C8.8030405@denx.de>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC v3 08/14] MIPS: dts: qca: introduce AR9331 devicetree
+Date: Mon, 14 Mar 2016 21:53:45 +0300
+Message-ID: <20160314215345.00df3fa56c363061e730572e@gmail.com>
+References: <1453580251-2341-1-git-send-email-antonynpavlov@gmail.com>
+	<1453580251-2341-9-git-send-email-antonynpavlov@gmail.com>
+	<20160125234630.16098b7f@tock>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <56E1E2C8.8030405@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marex@denx.de>, Vignesh R <vigneshr@ti.com>
-Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160125234630.16098b7f@tock>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/10/2016 03:10 PM, Marek Vasut wrote:
-> On 03/10/2016 09:55 PM, Graham Moore wrote:
->> On 02/10/2016 10:17 AM, Marek Vasut wrote:
->>
->> [...]
->>
->>> All right, so we will just add a special property or compat string for
->>> the TI SoC. But we need to get this driver mainlined first :)
->>>
->>
->> Hi Marek,
->
-> Hi Graham,
->
->> How's that mainlining going?  You probably noticed this patch needed
->> some refactoring for 4.4.  In the course of testing, we realized this
->> driver needs to enable its clock.
->>
->> Do you have a 4.4 or later version in your tree?  I'd like to add the
->> clock enabling.
->
-> Still waiting for the patches from Cyrille to go in, so this patch is
-> stuck. I just checked next and some of them made it, but there are more
-> which didn't. I have a V10 of this patch , it is in the ML already [1],
-> so try playing around with that.
->
-> I have linux 4.4 branch with all the necessary patches backported and/or
-> applied if you'd be interested in that, but I do my development on
-> linux-next .
->
-> What sort of clock patch are you missing ?
->
+On Mon, 25 Jan 2016 23:46:30 +0100
+Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
 
-The clock needs to be enabled, after the devm_clk_get().  I've added a 
-clk_prepare_enable() there, and also clk_disable_unprepare() in the 
-remove function.
+> On Sat, 23 Jan 2016 23:17:25 +0300
+> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+> > This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet=
+).
+> > The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
+> > typically used in very cheap Access Points and Routers.
+> >=20
+> > Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> > Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> > Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > ---
+> >  arch/mips/boot/dts/qca/ar9331.dtsi | 123 +++++++++++++++++++++++++=
+++++++++++++
+> >  1 file changed, 123 insertions(+)
+> >=20
+> > diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dt=
+s/qca/ar9331.dtsi
+> > new file mode 100644
+> > index 0000000..bf128a2
+> > --- /dev/null
+> > +++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+> > @@ -0,0 +1,123 @@
+> > +#include <dt-bindings/clock/ath79-clk.h>
+> > +
+> > +/ {
+> > +	compatible =3D "qca,ar9331";
+> > +
+>=20
+> [...]
+>=20
+> > +
+> > +	extosc: oscillator {
+> > +		compatible =3D "fixed-clock";
+> > +		#clock-cells =3D <0>;
+> > +	};
+>=20
+> This oscillator is on the board and not in the SoC, so it should
+> be in the board DTS.
 
-That ML patch won't apply to any tree I have, 4.4, 4.5, linux-next, etc. 
-  Maybe I'll just wait until it's in linux-next.
+However oscillator is inside SoC!
 
--Graham
+Please see https://en.wikipedia.org/wiki/Electronic_oscillator
 
+    An electronic oscillator is an electronic circuit that produces a p=
+eriodic,
+    oscillating electronic signal, often a sine wave or a square wave.
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Please see AR9331 data sheet: the SoC has no input for external oscilla=
+tor,
+only two pins (XTALO and XTALI) for connecting 25 MHz or 40 MHz quartz =
+crystal.
+The crystal can't produce a square wave itself! The crystal is only a p=
+art
+of a complete oscillator.
+
+So we have a good reason to put basic oscillator node into the SoC dtsi=
+-file.
+
+--=A0
+Best regards,
+=A0 Antony Pavlov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
