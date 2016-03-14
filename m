@@ -1,62 +1,77 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 05/10] ARM: dts: Add exynos3250-artik5 dtsi file for ARTIK5
- module
-Date: Mon, 14 Mar 2016 16:22:30 +0900
-Message-ID: <56E666B6.7060701@samsung.com>
-References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
- <1457921056-21257-6-git-send-email-cw00.choi@samsung.com>
- <56E65D5D.8060702@samsung.com> <56E660F1.3060407@samsung.com>
+From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [v6, 5/5] mmc: sdhci-of-esdhc: fix host version for
+	T4240-R1.0-R2.0
+Date: Mon, 14 Mar 2016 07:29:26 +0000
+Message-ID: <HE1PR04MB0889CE4742B92461A925B9C4F8880@HE1PR04MB0889.eurprd04.prod.outlook.com>
+References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
+	<1457518131-11339-6-git-send-email-yangbo.lu@nxp.com>
+	<4947024.WeMycs2fID@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <56E660F1.3060407@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4947024.WeMycs2fID@wuerfel>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWOunwaRDDq4rA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 15:57, Chanwoo Choi wrote:
-> Hi Krzysztof,
->=20
-> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 15:42, Krzysztof Kozlowski w=
-rote:
->> On 14.03.2016 11:04, Chanwoo Choi wrote:
->>> This patch adds the support for Device Tree source for Samsung ARTI=
-K5 module[1]
->>> based on Exynos3250 SoC. The ARTIK5 module includes the follwoing d=
-evices:
->>> - Application Processor (Samsung Exynos3250)
->>> - WiFi/BT Combo chip (Broadcom4354)
->>> - PMIC (Samsung S2MPS14)
->>> - eMMC (4GB)
->>> - DRAM LPDDR3 (512MB)
->>> - Connectors pin (60 Pins x 3 set)
->>>
->>> Also, this patch adds the ARTIK5 development board[2] dts file whic=
-h includes
->>> the ARTIK5 module[1] and have the devices such as sound codec, sd c=
-ard port,
->>> ethernet port, uart port and so on.
->>>
->>> [1] https://www.artik.io/hardware/artik-5
->>> [2] http://www.digikey.com/product-search/en?FV=3Dffecca14
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
->>> ---
->>>  arch/arm/boot/dts/Makefile                    |   1 +
->>>  arch/arm/boot/dts/exynos3250-artik5-devel.dts |  26 +++
->>>  arch/arm/boot/dts/exynos3250-artik5.dtsi      | 282 ++++++++++++++=
-++++++++++++
->>
->> Plus changes in
->> Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt.
+> -----Original Message-----
+> From: Arnd Bergmann [mailto:arnd-r2nGTMty4D4@public.gmane.org]
+> Sent: Monday, March 14, 2016 6:26 AM
+> To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Yangbo Lu; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
+> foundation.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Zhao Qiang; Russell King; Bhupesh Sharma; Joerg
+> Roedel; Santosh Shilimkar; Scott Wood; Rob Herring; Claudiu Manoil; Kumar
+> Gala; Yang-Leo Li; Xiaobo Xie
+> Subject: Re: [v6, 5/5] mmc: sdhci-of-esdhc: fix host version for T4240-
+> R1.0-R2.0
+> 
+> On Wednesday 09 March 2016 18:08:51 Yangbo Lu wrote:
+> > @@ -567,10 +580,20 @@ static void esdhc_init(struct platform_device
+> *pdev, struct sdhci_host *host)
+> >         struct sdhci_pltfm_host *pltfm_host;
+> >         struct sdhci_esdhc *esdhc;
+> >         u16 host_ver;
+> > +       u32 svr;
+> >
+> >         pltfm_host = sdhci_priv(host);
+> >         esdhc = sdhci_pltfm_priv(pltfm_host);
+> >
+> > +       fsl_guts_init();
+> > +       svr = fsl_guts_get_svr();
+> > +       if (svr) {
+> > +               esdhc->soc_ver = SVR_SOC_VER(svr);
+> > +               esdhc->soc_rev = SVR_REV(svr);
+> > +       } else {
+> > +               dev_err(&pdev->dev, "Failed to get SVR value!\n");
+> > +       }
+> > +
+> 
+> This makes the driver non-portable. Better identify the specific
+> workarounds based on the compatible string for this device, or add a
+> boolean DT property for the quirk.
+> 
+> 	Arnd
 
-OK.
-Also, I'll change the board name from 'artik5-devel' to 'artik5-eval'.
+[Lu Yangbo-B47093] Hi Arnd, we did have a discussion about using DTS in v1 before.
+https://patchwork.kernel.org/patch/6834221/
 
-[snip]
+We don't have a separate DTS file for each revision of an SOC and if we did, we'd constantly have people using the wrong one.
+In addition, the device tree is stable ABI and errata are often discovered after device tree are deployed.
+See the link for details.
 
-Best Regards,
-Chanwoo Choi
+So we decide to read SVR from the device-config/guts MMIO block other than using DTS.
+Thanks.
