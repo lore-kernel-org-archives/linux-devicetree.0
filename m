@@ -1,146 +1,51 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v12] [PATCH] PCI: Xilinx-NWL-PCIe: Adding support for
- Xilinx NWL PCIe Host Controller
-Date: Mon, 14 Mar 2016 12:04:37 -0500
-Message-ID: <20160314170437.GA16729@localhost>
-References: <1457281934-32068-1-git-send-email-bharatku@xilinx.com>
- <20160311215819.GB16257@localhost>
- <8520D5D51A55D047800579B09414719825889095@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] iio:magnetometer:ak8975: mounting matrix support
+Date: Mon, 14 Mar 2016 18:18:17 +0100
+Message-ID: <56E6F259.5020007@parrot.com>
+References: <cover.1457001111.git.gregor.boirie@parrot.com> <022da3dfc0853c6f9820b24c2d9eaaf0c5ccf294.1457001111.git.gregor.boirie@parrot.com> <56DAFCEB.6080905@kernel.org> <56E0014D.1040209@parrot.com> <56E08B91.6070603@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8520D5D51A55D047800579B09414719825889095@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "arnd@arndb.de" <arnd@arndb.de>, "tinamdar@apm.com" <tinamdar@apm.com>, "treding@nvidia.com" <treding@nvidia.com>, "rjui@broadcom.com" <rjui@broadcom.com>, "Minghuan.Lian@freescale.com" <Minghuan.Lian@freescale.com>, "m-karicheri2@ti.com" <m-karicheri2@ti.com>, "hauke@hauke-m.de" <hauke@hauke-m.de>, "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "dhdang@apm.com" <dhdang@apm.com>, "sbranden@broadcom.com" <sbranden@broadcom.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E08B91.6070603-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 14, 2016 at 03:51:01PM +0000, Bharat Kumar Gogada wrote:
-> > On Sun, Mar 06, 2016 at 10:02:14PM +0530, Bharat Kumar Gogada wrote=
-:
-> > > Adding PCIe Root Port driver for Xilinx PCIe NWL bridge IP.
-> >=20
-> > > +static bool nwl_pcie_valid_device(struct pci_bus *bus, unsigned =
-int
-> > > +devfn) {
-> > > +	struct nwl_pcie *pcie =3D bus->sysdata;
-> > > +
-> > > +	/* Check link,before accessing downstream ports */
-> > > +	if (bus->number !=3D pcie->root_busno) {
-> > > +		if (!nwl_pcie_link_up(pcie))
-> > > +			return false;
-> > > +	}
-> >=20
-> > This seems racy.  What if we check, and the link is up, but the
-> > link goes down before we actually complete the config access?
-> >=20
-> > I'm suggesting that this check for the link being up might be
-> > superfluous.
+On 03/09/2016 09:46 PM, Jonathan Cameron wrote:
 
-> Without the above check and also if there is no EP then we are gettin=
-g kernel stack as follows,
-> [    2.654105] PCI host bridge /amba/pcie@fd0e0000 ranges:
-> [    2.659268]   No bus range found for /amba/pcie@fd0e0000, using [b=
-us 00-ff]
-> [    2.666195]   MEM 0xe1000000..0xefffffff -> 0xe1000000
-> [    2.671410] nwl-pcie fd0e0000.pcie: PCI host bridge to bus 0000:00
-> [    2.677436] pci_bus 0000:00: root bus resource [bus 00-ff]
-> [    2.682883] pci_bus 0000:00: root bus resource [mem 0xe1000000-0xe=
-fffffff]
-> [    2.690031] Unhandled fault: synchronous external abort (0x9600021=
-0) at 0xffffff8000200000
-> [    2.690036] nwl-pcie fd0e0000.pcie: Slave error
-> [    2.702582] Internal error: : 96000210 [#1] SMP
-> [    2.707078] Modules linked in:
-> [    2.710108] CPU: 3 PID: 1 Comm: swapper/0 Not tainted 4.5.0-rc6+ #=
-5
-> [    2.716332] Hardware name: ZynqMP (DT)
-> [    2.720659] task: ffffffc0798bed00 ti: ffffffc0798c0000 task.ti: f=
-fffffc0798c0000
-> [    2.728102] PC is at pci_generic_config_read+0x38/0x9c
-> [    2.733202] LR is at pci_generic_config_read+0x1c/0x9c
-> .......
-> [    3.322701] [<ffffffc000498b1c>] pci_generic_config_read+0x38/0x9c
-> [    3.328842] [<ffffffc000498f54>] pci_bus_read_config_dword+0x80/0x=
-b0
-> [    3.335156] [<ffffffc00049abd4>] pci_bus_read_dev_vendor_id+0x30/0=
-x104
-> [    3.341643] [<ffffffc00049c5b0>] pci_scan_single_device+0x50/0xc4
-> [    3.347698] [<ffffffc00049c674>] pci_scan_slot+0x50/0xe8
-> [    3.352974] [<ffffffc00049d530>] pci_scan_child_bus+0x30/0xd8
-> [    3.358683] [<ffffffc00049d210>] pci_scan_bridge+0x1fc/0x4ec
-> [    3.364306] [<ffffffc00049d58c>] pci_scan_child_bus+0x8c/0xd8
-> [    3.370016] [<ffffffc0004b2d9c>] nwl_pcie_probe+0x6c4/0x8e0
-> .....
->=20
-> > The hardware should do something reasonable with the config access =
-if it
-> > can't send it down the link.
+[snip...]
+> Definitely needs ABI docs in Documentation/ABI/testing/sysfs-bus-iio
+> as well. We need the reference directions to be well specified as
+> well - how do we define the main hardware orientation?  on yours presumably
+> the usual approach of using the screen is irrelevant so that definition
+> could be a little 'interesting' to write down?
+>> The standard orientation for us is defined with respect to the drone's head
+>> and the propellers plane, which does not suit the nominal use cases indeed...
+>> Although it really deserves some more detailed documentation, I wonder if the
+>> question is relevant.
+>> Given that the DTS is board specific (correct me if I'm wrong), why not
+>> consider the reference orientation as board specific as well (and make the
+>> whole thing implicit) ?
+> I think that is fine for your sort of usecase - though might be nice to keep
+> a bit of documentation somewhere (perhaps as comments in the DTS), or perhaps
+> more centrally - would be nice for userspace libraries if at least all aircraft
+> had a similar 'default orientation'.
+As you said earlier, things are never that simple. The standard orientation
+may vary with types of UAVs (quad-rotor, fixed wings, bizarre home made 
+UFOs...)
+> For the more 'standard' device with a screen I think we would want to standardise
+> if at all possible.  Most hand held devices have a 'natural' orientation
+> (front facing camera at the top for example).  In those cases we are basically looking
+> at whether the sensor is mounted on the back or the front of the main circuit board and
+> then of course it can be at any rotation in plane but typically is at 90 degrees
+> (hence the inv mpu limitations)
 >
-> When Link is down and H/W gets a ECAM access request for downstream
-> ports, hardware responds by DECERR (decode error) status on AXI
-> Interface.
-
-DECERR isn't a PCIe concept, so I assume it's something specific to
-Xilinx.  In the general case of a PCIe switch, a config access that
-targets a device where the link is down should cause an Unsupported
-Request completion (see PCIe spec r3.0, section 2.9.1, quoted below).
-Possibly your Root Complex turns Unsupported Request completions into
-DECERR.
-
-  2.9 Link Status Dependencies
-  2.9.1 Transaction Layer Behavior in DL_Down Status
-
-  DL_Down status indicates that there is no connection with another
-  component on the Link, or that the connection with the other
-  component has been lost and is not recoverable by the Physical or
-  Data Link Layers.
-
-  For a Downstream Port, DL_Down status is handled by:
- =20
-   for Non-Posted Requests, forming completions for any Requests
-   submitted by the device core for Transmission, returning
-   Unsupported Request Completion Status, then discarding the Requests
-
-Linux expects reads with Unsupported Request completion status to
-return all 1's data to the CPU as in section 2.3.2:
-
-  2.3.2 Completion Handling Rules
-
-  Read Data Values with UR Completion Status
-
-  Some system configuration software depends on reading a data value
-  of all 1=E2=80=99s when a Configuration Read Request is terminated as=
- an
-  Unsupported Request, particularly when probing to determine the
-  existence of a device in the system.  A Root Complex intended for
-  use with software that depends on a read-data value of all 1=E2=80=99=
-s must
-  synthesize this value when UR Completion Status is returned for a
-  Configuration Read Request.
-
-> So without any EP and without this condition, Linux kernel cannot
-> determine above response from H/W. So the above condition is useful
-> only when no EP is connected.
->=20
-> Now even if the link is up initially, but the link goes down before
-> we actually complete the config access, then H/W responds by DECERR,
-> then Linux kernel might throw similar stack. (We haven't observed
-> this condition yet)
-
-It'd be hard to hit this race unless you added delay in
-nwl_pcie_map_bus() after nwl_pcie_valid_device(), then removed the
-device during that delay.
-
-> It looks like we need a different type of hardware response to get
-> rid of this situation, but it's not easy way.  Have you come across
-> this/similar kind of problem anywhere else?  Can you suggest if
-> there is any other way to handle this.
-
-I'm not a hardware designer, so I don't know what to suggest here.
-The current design does seem like a robustness issue: surprise removal
-of a device may cause this external abort in rare cases.
-
-Bjorn
+> I'm guessing there are existing userspace mappings for this.  Perhaps in the Gnome
+> sensors stuff?
+[snip...]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
