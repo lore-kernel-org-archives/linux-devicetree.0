@@ -1,65 +1,46 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 09/10] ARM: dts: Add MSHC2 dt node for SD card for
- exynos3250-artik5-devel board
-Date: Mon, 14 Mar 2016 17:48:32 +0900
-Message-ID: <56E67AE0.9060306@samsung.com>
-References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
- <1457921056-21257-11-git-send-email-cw00.choi@samsung.com>
- <56E676EE.8060500@samsung.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: am43xx: fix edma memcpy channel allocation
+Date: Mon, 14 Mar 2016 11:01:50 +0200
+Message-ID: <1457946110-4612-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56E676EE.8060500@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 17:31, Krzysztof Kozlowski wro=
-te:
-> On 14.03.2016 11:04, Chanwoo Choi wrote:
->> From: Jaehoon Chung <jh80.chung@samsung.com>
->>
->> This patch adds MSHC (Mobile Storage Host Controller) dt node for
->> Exynos3250 SoC. MSHC is an interface between the system and the SD c=
-ard
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos3250-artik5-devel.dts | 16 ++++++++++++++++
->>  1 file changed, 16 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos3250-artik5-devel.dts b/arch/ar=
-m/boot/dts/exynos3250-artik5-devel.dts
->> index d17c28969118..a371baf8536d 100644
->> --- a/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->> +++ b/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->> @@ -21,6 +21,22 @@
->>  			"samsung,exynos3250", "samsung,exynos3";
->>  };
->> =20
->> +&mshc_2 {
->> +	num-slots =3D <1>;
->> +	cap-sd-highspeed;
->> +	disable-wp;
->> +	card-detect-delay =3D <200>;
->> +	clock-frequency =3D <100000000>;
->> +	clock-freq-min-max =3D <400000 100000000>;
->> +	samsung,dw-mshc-ciu-div =3D <1>;
->> +	samsung,dw-mshc-sdr-timing =3D <0 1>;
->> +	samsung,dw-mshc-ddr-timing =3D <1 2>;
->> +	pinctrl-names =3D "default";
->> +	pinctrl-0 =3D <&sd2_cmd &sd2_clk &sd2_cd &sd2_bus1 &sd2_bus4>;
->> +	bus-width =3D <4>;
->> +	status =3D "okay";
->=20
-> vqmmc-supply =3D ldo3?
+EDMA was allocating DMA channels 32 and 33 for memcpy usage, out of which
+channel 33 is actually used by DES crypto engine. This bad allocation of
+the channel causes a crash in the DES crypto engine, as the channel
+gets configured for memcpy usage instead of hardware <-> memory DMA.
 
-ldo3 is always on state because ldo3 is used for various IP in exynos32=
-50.
-I think that we had better to remain always on state for ldo3.
+Fixed by allocating DMA channels 58 and 59 for memcpy usage (I2C0 RX/TX),
+which are not used by anybody.
 
-Best Regards,
-Chanwoo Choi
+Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Suggested-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am4372.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 92068fb..cdd3d78 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -207,7 +207,7 @@
+ 			ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
+ 				   <&edma_tptc2 0>;
+ 
+-			ti,edma-memcpy-channels = <32 33>;
++			ti,edma-memcpy-channels = <58 59>;
+ 		};
+ 
+ 		edma_tptc0: tptc@49800000 {
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
