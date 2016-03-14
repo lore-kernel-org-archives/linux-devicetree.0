@@ -1,92 +1,40 @@
-From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: dts: sunxi: Add the SPDIF to the
- A10 and A20
-Date: Mon, 14 Mar 2016 17:29:37 +0100
-Message-ID: <CAEKpxBm4bs7sNSbDjomdP6XS2ApvfDT-s942DBb3JWv1iOZJ0w@mail.gmail.com>
-References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
-	<1456589909-2428-4-git-send-email-codekipper@gmail.com>
-	<20160313215043.GJ8418@lukather>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 4/5] gpio: DT: Rephrase "gpios" of hog node to support
+ multiple gpios
+Date: Mon, 14 Mar 2016 10:31:15 -0600
+Message-ID: <56E6E753.1020505@wwwdotorg.org>
+References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
+ <1457703804-3016-5-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBB4WNTO3QKGQE4EYPSTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20160313215043.GJ8418@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457703804-3016-5-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13 March 2016 at 22:50, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
+On 03/11/2016 06:43 AM, Laxman Dewangan wrote:
+> The property "gpios" of GPIO hog node support the multiple GPIO entries.
+> Rephrase the details of this property for this new support.
 >
-> On Sat, Feb 27, 2016 at 05:18:27PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Add the SPDIF transceiver controller and clock to the A10 and
->> A20 dtsi.
->>
->> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun4i-a10.dtsi | 23 +++++++++++++++++++++++
->>  arch/arm/boot/dts/sun7i-a20.dtsi | 23 +++++++++++++++++++++++
->>  2 files changed, 46 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
->> index 0483640..83d46b2 100644
->> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
->> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
->> @@ -477,6 +477,17 @@
->>                       clock-output-names = "ir1";
->>               };
->>
->> +             spdif_clk: clk@01c200c0 {
->> +                     #clock-cells = <0>;
->> +                     compatible = "allwinner,sun4i-a10-mod1-clk";
->> +                     reg = <0x01c200c0 0x4>;
->> +                     clocks = <&pll2 SUN4I_A10_PLL2_8X>,
->> +                              <&pll2 SUN4I_A10_PLL2_4X>,
->> +                              <&pll2 SUN4I_A10_PLL2_2X>,
->> +                              <&pll2 SUN4I_A10_PLL2_1X>;
->> +                     clock-output-names = "spdif";
->> +             };
->> +
->>               usb_clk: clk@01c200cc {
->>                       #clock-cells = <1>;
->>                       #reset-cells = <1>;
->> @@ -1055,6 +1066,18 @@
->>                       status = "disabled";
->>               };
->>
->> +             spdif: spdif@01c21000 {
->> +                     #sound-dai-cells = <0>;
->> +                     compatible = "allwinner,sun4i-a10-spdif";
->> +                     reg = <0x01c21000 0x40>;
->
-> It only takes 64 bytes?
-Yep(just like the audio codec!)
-http://linux-sunxi.org/SPDIF#SUNXI_SPDIF_DEFAULT_VALUES
->
->> +                     interrupts = <13>;
->> +                     clocks = <&apb0_gates 1>, <&spdif_clk>;
->> +                     clock-names = "apb", "spdif";
->> +                     dmas = <&dma 0 2>, <&dma 0 2>;
->
-> Please use the defines here.
-ACK...will resend.
-Thanks,
-CK
->
-> Thanks!
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+> Add details of new property "label" for GPIO label name.
+
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+
+>   Optional properties:
+>   - line-name:  The GPIO label name. If not present the node name is used.
+> +- label:      The GPIO lable name. This can have multiple string for GPIO
+> +	      label names to match with the GPIOs in "gpios" properties.
+> +	      If line-name is prosent than name is taken from line-name. If
+> +	      it is not then the name will be taken from label. If both are
+> +	      not available then node name is used for GPIO label name.
+
+Why are there two properties for the same thing? Why not just allow 
+line-name to have multiple entries instead of introducing a new property?
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
