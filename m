@@ -1,56 +1,32 @@
-From: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am43xx: fix edma memcpy channel allocation
-Date: Mon, 14 Mar 2016 14:43:41 +0530
-Message-ID: <56E680C5.5000409@ti.com>
-References: <1457946110-4612-1-git-send-email-t-kristo@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457946110-4612-1-git-send-email-t-kristo-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v4 0/2] Add UCS1002 USB Port Power Controller
+Date: Mon, 14 Mar 2016 10:24:43 +0100
+Message-ID: <1457947485-14140-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+Dear all,
 
+This is the fourth version of the UCS1002 driver, a Programmable USB Port
+Power Controller with Charger Emulation.
 
-On Monday 14 March 2016 02:31 PM, Tero Kristo wrote:
-> EDMA was allocating DMA channels 32 and 33 for memcpy usage, out of which
-> channel 33 is actually used by DES crypto engine. This bad allocation of
-> the channel causes a crash in the DES crypto engine, as the channel
-> gets configured for memcpy usage instead of hardware <-> memory DMA.
-> 
-> Fixed by allocating DMA channels 58 and 59 for memcpy usage (I2C0 RX/TX),
-> which are not used by anybody.
+Any comments are welcome. Thanks in advance.
 
-Reviewed-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Enric Balletbo i Serra (2):
+  devicetree: Add UCS1002 USB Port Power Controller binding
+  power: ucs1002: Add support for Programmable USB Port Power Controller
 
-Thanks and regards,
-Lokesh
+ .../devicetree/bindings/power/ucs1002.txt          |   41 +
+ drivers/power/Kconfig                              |    9 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/ucs1002_power.c                      | 1004 ++++++++++++++++++++
+ 4 files changed, 1055 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
+ create mode 100644 drivers/power/ucs1002_power.c
 
-> 
-> Signed-off-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-> Suggested-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am4372.dtsi |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index 92068fb..cdd3d78 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -207,7 +207,7 @@
->  			ti,tptcs = <&edma_tptc0 7>, <&edma_tptc1 5>,
->  				   <&edma_tptc2 0>;
->  
-> -			ti,edma-memcpy-channels = <32 33>;
-> +			ti,edma-memcpy-channels = <58 59>;
->  		};
->  
->  		edma_tptc0: tptc@49800000 {
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.1.0
+
