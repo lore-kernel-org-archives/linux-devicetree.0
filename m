@@ -1,73 +1,74 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V6] ASoC: pcm179x: Add support for pcm1795 and pcm1796
-Date: Mon, 14 Mar 2016 16:24:09 +0000
-Message-ID: <20160314162409.GB2566@sirena.org.uk>
-References: <1452382685-18009-4-git-send-email-michael@amarulasolutions.com>
- <20160110120045.GW6588@sirena.org.uk>
- <20160110173812.GA16304@panicking>
- <20160205172451.GA30542@panicking>
- <20160222031944.GT18327@sirena.org.uk>
- <20160311225937.GA27257@panicking>
- <20160311230930.GB27257@panicking>
- <20160311232856.GC27257@panicking>
- <20160312055317.GT3898@sirena.org.uk>
- <20160313085346.GA8896@panicking>
+Subject: Re: [PATCH 4/5] regulator: pwm: Add support for voltage linear equal
+ steps
+Date: Mon, 14 Mar 2016 16:28:43 +0000
+Message-ID: <20160314162843.GC2566@sirena.org.uk>
+References: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
+ <1457434405-30372-5-git-send-email-ldewangan@nvidia.com>
+ <20160312060925.GW3898@sirena.org.uk>
+ <56E565BE.5010703@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+	protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160313085346.GA8896@panicking>
+In-Reply-To: <56E565BE.5010703-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jacob Siverskog <jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, adamo.a60-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---4SFOXa2GPu3tIq4H
+--wxDdMuZNg1r63Hyj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Mar 13, 2016 at 09:53:50AM +0100, Michael Trimarchi wrote:
-> On Sat, Mar 12, 2016 at 12:53:17PM +0700, Mark Brown wrote:
-> > On Sat, Mar 12, 2016 at 12:29:00AM +0100, Michael Trimarchi wrote:
+On Sun, Mar 13, 2016 at 06:36:06PM +0530, Laxman Dewangan wrote:
+> On Saturday 12 March 2016 11:39 AM, Mark Brown wrote:
 
-> > I don't actually know if MODULE_DEVICE_TABLE can reference an object in
-> > a different file off the top of my head, though a brief test suggests it
-> > has issues.
+> >I can't see any reason why this would ever be preferable to just using
+> >the flat linear range (you certainly haven't articulated one, you're
+> >just stating it).  This seems like you are bodging around a limited
+> >consumer driver, you should fix the consumer to cope with regulators
+> >with lots of voltages - PWM regulators aren't the only ones with high
+> >resolution steps.
 
-> Does this approch can work?
+> The requirement is to have perfect linear steps interms of the period/pulse
+> time of PWM without loosing any voltage.
+> Continuous mode is pretty much near to what you said but here we are loosing
+> the perfect step as this divides the periods to 100 parts and then set
+> voltage.
 
-I'd suggest testing...
+Could you be more specific about what the issue is?  We've hopefully got
+errors of less than 1% in the values here...
 
-> > It would be more data driven to just register a different DAI structure
-> > for the 1795.  Both approaches work, it's just a little nicer to avoid
-> > code where possible.
+> If new mode is not accpetable then need to enhance the existing continuous
+> mode like before scaling for 100% of period, first look if we get the
+> perfect pulse time of of PWM period and if it is there then use this direct
+> instead of converting required voltage to 100% scale and then back
+> calculating duty time.
 
-> Yes I know but my idea was exactly to not create special DAI because
-> technically they are the same code with diffferent constraints. This even
-> give an other example of the usage of the API.
+That seems a lot better, what you're proposing is changing the ABI to
+fudge things for a client specific requirement where both the client
+requirement and the change you're proposing are specific to the current
+Linux implementation.  That doesn't sound like a DT thing.
 
-They would still share all the same code, it's just moving the decision
-to probe time given that this is a trivial constraint change and the
-constraints are listed in the data structure.
-
---4SFOXa2GPu3tIq4H
+--wxDdMuZNg1r63Hyj
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJW5uWoAAoJECTWi3JdVIfQ4OkH+wWiHwTfGzCf3XA1X35HMIn5
-GPp/KYMo3/8iFu8uiPdVVS1HjMLeJJg9QCFq0FNgHZxY7i3ajlHyc3kMIaFnPW58
-pIZQO+JfWxFRr80nu4PP2MRy5h7zAEZeP9i6lu+R4g3vJEDT1IiN4bzZOe2a3+1v
-7420ev2+Y3W4jvxPIKZ8KXoka9AaFDTqThq+KPwYf2CnNjgy0pknGxbp2VX2qsXY
-hisliXflbY4VEOzUipUGkNSNeGOH0ZdP3KyRxGmGA22hW5yBxrgYb5KNvbZNeRl6
-oqoUcIMzXBGpg7H8qv6uJjALpZaJjOcgCFI5pOr1Npoy7t19yeCtZD6DnlF9og4=
-=boKN
+iQEcBAEBCAAGBQJW5ua6AAoJECTWi3JdVIfQqw0H/RQktJyRcNuIDmbziylrXQ5v
+czCa7zha6uSDIIizkU0pvwBI8tmrbgAUloRiACb8MlgEk1dsGShRjMjbShPeMLp8
+rNe5FN5b3zRQQrOUzF40UzMwhiy+PuJhwPfMbE4GVwtE3nS5svbaonGD9SVjMiCB
+az0XrE1T28oef4tyhfbSxqq8C3w1JYgiNzbje09JLieMmFjYMaV5PKSId00eHGFg
+uMgNdUZ9Q4nhmA0zQPMUdMTUz8qu3XduLY0vHlICzY/Yc78mg3M/U3k8uNjztvRi
+r7zRGVt5bGfdkEdTeRbjJozx1sM6NGrBTCf0KqzUg9cv40fktFOqoJ3cY8G1zVM=
+=GJ61
 -----END PGP SIGNATURE-----
 
---4SFOXa2GPu3tIq4H--
+--wxDdMuZNg1r63Hyj--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
