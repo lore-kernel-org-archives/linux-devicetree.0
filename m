@@ -1,75 +1,74 @@
-From: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Mon, 14 Mar 2016 17:20:00 +0100
-Message-ID: <56E6E4B0.8060408@st.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com>
- <56DDA26C.3050301@suse.de> <56DDA3D5.3090209@st.com>
- <56DDB749.1020808@suse.de>
- <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
- <56DE7E1D.5070508@st.com>
- <CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com>
- <CAAObsKD9HoEbtV_JMz_R=bcrQseDmhncRAWP9k8djksL-LMQqw@mail.gmail.com>
- <56DFE55B.2090806@st.com> <56DFE64B.8060606@st.com>
- <CAAObsKBr9SXg1-wr9O-ypR8JozdGpeAwfDLMeUKi8ozxkKyTXg@mail.gmail.com>
- <56DFF253.9050208@st.com> <56DFFA9E.7060602@st.com>
- <CAAObsKBUzBXcamEyup44N1bYUzGr_ZZTsYcD5x3PXb-2E00cGA@mail.gmail.com>
- <56E033C8.40506@st.com> <56E038CE.606@st.com>
- <CADhT+wcMpzA_Coj8Z5OQZsc3bF3a7yOmsbazQMPtcdUWkJSuCA@mail.gmail.com>
- <56E13AAB.2080900@st.com>
- <CADhT+wd=vcph2y_OxkGNO5EwHvN=kBy-BrfZHmNjZHww4LxmTg@mail.gmail.com>
- <56E28B5D.6000708@st.com>
- <CAAObsKB-tSCu5KMYk2Zi-oX9zMKEOwwT93sMkiZKiYvtexmHaQ@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V6] ASoC: pcm179x: Add support for pcm1795 and pcm1796
+Date: Mon, 14 Mar 2016 16:24:09 +0000
+Message-ID: <20160314162409.GB2566@sirena.org.uk>
+References: <1452382685-18009-4-git-send-email-michael@amarulasolutions.com>
+ <20160110120045.GW6588@sirena.org.uk>
+ <20160110173812.GA16304@panicking>
+ <20160205172451.GA30542@panicking>
+ <20160222031944.GT18327@sirena.org.uk>
+ <20160311225937.GA27257@panicking>
+ <20160311230930.GB27257@panicking>
+ <20160311232856.GC27257@panicking>
+ <20160312055317.GT3898@sirena.org.uk>
+ <20160313085346.GA8896@panicking>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAAObsKB-tSCu5KMYk2Zi-oX9zMKEOwwT93sMkiZKiYvtexmHaQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?RnJhbmsgU2Now6RmZXI=?= <fschaefer.oss-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber-l3A5Bk7waGM@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160313085346.GA8896@panicking>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jacob Siverskog <jacob-EZCvousvhKUZux3j3Bed6dkegs52MxvZ@public.gmane.org>, Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, adamo.a60-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomeu
 
-On 3/14/2016 12:43 PM, Tomeu Vizoso wrote:
-> Hi Peppe,
->
-> with that patch I don't see any difference at all in my setup.
->
-> So to be clear, with these commits on top of next-20160314, I still
-> get the hang during boot:
->
-> 209afef6f0cd ARM: dts: rockchip: Add mdio node to ethernet node
-> 2315acc6cf7f Revert "stmmac: first frame prep at the end of xmit routine"
-> b5e08e810c63 stmmac: fix tx prepare for normal desc
-> 37c15a31d850 i2c: immediately mark ourselves as registered
-> 4342eec3c5a2 Add linux-next specific files for 20160314
->
-> [   27.521026] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:303
-> dev_watchdog+0x284/0x288
-> [   27.529460] NETDEV WATCHDOG: eth0 (rk_gmac-dwmac): transmit queue 0 timed out
+--4SFOXa2GPu3tIq4H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I do not reproduce the WATCHDOG but i am continuing to look at the code
-to understand if normal descriptor management is ok or not. I keep you
-informed.
+On Sun, Mar 13, 2016 at 09:53:50AM +0100, Michael Trimarchi wrote:
+> On Sat, Mar 12, 2016 at 12:53:17PM +0700, Mark Brown wrote:
+> > On Sat, Mar 12, 2016 at 12:29:00AM +0100, Michael Trimarchi wrote:
 
-Just an info, did you test with 2315acc6cf7f included? Just to
-understand if it is introducing a problem. It works in case of
-enhanced descriptors are used instead of.
+> > I don't actually know if MODULE_DEVICE_TABLE can reference an object in
+> > a different file off the top of my head, though a brief test suggests it
+> > has issues.
 
->
-> https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=broken-eth-on-rock2
+> Does this approch can work?
 
-thx I will take a look at this
+I'd suggest testing...
 
-Regards
-Peppe
+> > It would be more data driven to just register a different DAI structure
+> > for the 1795.  Both approaches work, it's just a little nicer to avoid
+> > code where possible.
+
+> Yes I know but my idea was exactly to not create special DAI because
+> technically they are the same code with diffferent constraints. This even
+> give an other example of the usage of the API.
+
+They would still share all the same code, it's just moving the decision
+to probe time given that this is a trivial constraint change and the
+constraints are listed in the data structure.
+
+--4SFOXa2GPu3tIq4H
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW5uWoAAoJECTWi3JdVIfQ4OkH+wWiHwTfGzCf3XA1X35HMIn5
+GPp/KYMo3/8iFu8uiPdVVS1HjMLeJJg9QCFq0FNgHZxY7i3ajlHyc3kMIaFnPW58
+pIZQO+JfWxFRr80nu4PP2MRy5h7zAEZeP9i6lu+R4g3vJEDT1IiN4bzZOe2a3+1v
+7420ev2+Y3W4jvxPIKZ8KXoka9AaFDTqThq+KPwYf2CnNjgy0pknGxbp2VX2qsXY
+hisliXflbY4VEOzUipUGkNSNeGOH0ZdP3KyRxGmGA22hW5yBxrgYb5KNvbZNeRl6
+oqoUcIMzXBGpg7H8qv6uJjALpZaJjOcgCFI5pOr1Npoy7t19yeCtZD6DnlF9og4=
+=boKN
+-----END PGP SIGNATURE-----
+
+--4SFOXa2GPu3tIq4H--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
