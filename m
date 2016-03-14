@@ -1,79 +1,38 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 09/10] ARM: dts: Add MSHC2 dt node for SD card for
- exynos3250-artik5-devel board
-Date: Mon, 14 Mar 2016 19:22:34 +0900
-Message-ID: <56E690EA.50205@samsung.com>
-References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
- <1457921056-21257-11-git-send-email-cw00.choi@samsung.com>
- <56E676EE.8060500@samsung.com> <56E67AE0.9060306@samsung.com>
- <56E687E6.3070305@samsung.com>
+From: Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] media: v4l2-compat-ioctl32: fix missing reserved field copy in put_v4l2_create32
+Date: Mon, 14 Mar 2016 18:41:46 +0800
+Message-ID: <1457952106-38215-1-git-send-email-tiffany.lin@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56E687E6.3070305@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 18:44, Krzysztof Kozlowski wro=
-te:
-> On 14.03.2016 17:48, Chanwoo Choi wrote:
->> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 17:31, Krzysztof Kozlowski =
-wrote:
->>> On 14.03.2016 11:04, Chanwoo Choi wrote:
->>>> From: Jaehoon Chung <jh80.chung@samsung.com>
->>>>
->>>> This patch adds MSHC (Mobile Storage Host Controller) dt node for
->>>> Exynos3250 SoC. MSHC is an interface between the system and the SD=
- card
->>>>
->>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>> ---
->>>>  arch/arm/boot/dts/exynos3250-artik5-devel.dts | 16 ++++++++++++++=
-++
->>>>  1 file changed, 16 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos3250-artik5-devel.dts b/arch/=
-arm/boot/dts/exynos3250-artik5-devel.dts
->>>> index d17c28969118..a371baf8536d 100644
->>>> --- a/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>> +++ b/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>> @@ -21,6 +21,22 @@
->>>>  			"samsung,exynos3250", "samsung,exynos3";
->>>>  };
->>>> =20
->>>> +&mshc_2 {
->>>> +	num-slots =3D <1>;
->>>> +	cap-sd-highspeed;
->>>> +	disable-wp;
->>>> +	card-detect-delay =3D <200>;
->>>> +	clock-frequency =3D <100000000>;
->>>> +	clock-freq-min-max =3D <400000 100000000>;
->>>> +	samsung,dw-mshc-ciu-div =3D <1>;
->>>> +	samsung,dw-mshc-sdr-timing =3D <0 1>;
->>>> +	samsung,dw-mshc-ddr-timing =3D <1 2>;
->>>> +	pinctrl-names =3D "default";
->>>> +	pinctrl-0 =3D <&sd2_cmd &sd2_clk &sd2_cd &sd2_bus1 &sd2_bus4>;
->>>> +	bus-width =3D <4>;
->>>> +	status =3D "okay";
->>>
->>> vqmmc-supply =3D ldo3?
->>
->> ldo3 is always on state because ldo3 is used for various IP in exyno=
-s3250.
->> I think that we had better to remain always on state for ldo3.
->=20
-> Yes, I wasn't thinking about toggling ldo3 but about taking the
-> regulator here to model the dependencies between components.
+Change-Id: Idac449fae5059a3ce255340e6da491f8bd83af7a
+---
+ drivers/media/v4l2-core/v4l2-compat-ioctl32.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Okay. I'll add it as following:
+diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+index f38c076..109f687 100644
+--- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
++++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+@@ -280,7 +280,8 @@ static int put_v4l2_format32(struct v4l2_format *kp, struct v4l2_format32 __user
+ static int put_v4l2_create32(struct v4l2_create_buffers *kp, struct v4l2_create_buffers32 __user *up)
+ {
+ 	if (!access_ok(VERIFY_WRITE, up, sizeof(struct v4l2_create_buffers32)) ||
+-	    copy_to_user(up, kp, offsetof(struct v4l2_create_buffers32, format)))
++	    copy_to_user(up, kp, offsetof(struct v4l2_create_buffers32, format)) ||
++	    copy_to_user(up->reserved, kp->reserved, sizeof(kp->reserved)))
+ 		return -EFAULT;
+ 	return __put_v4l2_format32(&kp->format, &up->format);
+ }
+-- 
+1.7.9.5
 
-	vmmc-supply =3D <&ldo18_reg>;
-	vqmmc-supply =3D <&ldo3>;
-
-
-Best Regards,
-Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
