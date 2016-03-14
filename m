@@ -1,48 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Fix wrong Quad core /
- a33 compat for sun8i-a23-gt90h-v4
-Date: Mon, 14 Mar 2016 19:51:34 +0100
-Message-ID: <20160314185134.GD30977@lukather>
-References: <1457973145-26203-1-git-send-email-hdegoede@redhat.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/3] of_mdio: use IS_ERR_OR_NULL()
+Date: Mon, 14 Mar 2016 21:52:00 +0300
+Message-ID: <56E70850.5020602@cogentembedded.com>
+References: <2682275.WNlbxTfNal@wasted.cogentembedded.com>
+ <2638820.ej0i0xi4Er@wasted.cogentembedded.com> <4173235.nHpIx7Ti2k@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOEQTS3QKGQET25JPGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457973145-26203-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4173235.nHpIx7Ti2k@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---JwB53PgKC5A7+0Ej
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+On 03/14/2016 01:22 AM, Arnd Bergmann wrote:
 
-On Mon, Mar 14, 2016 at 05:32:23PM +0100, Hans de Goede wrote:
-> As the dts file name already implies sun8i-a23-gt90h-v4.dts is for
-> an a23 equipped tablet. I don't know how the "Quad Core" or a33
-> comaptible got in there, likely a copy and paste error.
-> 
-> Regardless this commit fixes this, note this is almost
-> purely a cosmetical fix, for all things that matter at the
-> machine compatible level the a23 and a33 are compatible.
-> 
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> IS_ERR_OR_NULL() is open coded in of_mdiobus_register_phy(), so just call
+>> it directly...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+>>
+>> ---
+>> Changes in version 2:
+>> - removed the of_mdiobus_register_device() hunk;
+>> - added the "Reviewed-by:" tag.
+>>
+>>   drivers/of/of_mdio.c |    2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> Index: net-next/drivers/of/of_mdio.c
+>> ===================================================================
+>> --- net-next.orig/drivers/of/of_mdio.c
+>> +++ net-next/drivers/of/of_mdio.c
+>> @@ -56,7 +56,7 @@ static int of_mdiobus_register_phy(struc
+>>                  phy = phy_device_create(mdio, addr, phy_id, 0, NULL);
+>>          else
+>>                  phy = get_phy_device(mdio, addr, is_c45);
+>> -       if (!phy || IS_ERR(phy))
+>> +       if (IS_ERR_OR_NULL(phy))
+>>                  return 1;
+>>
+>>          rc = irq_of_parse_and_map(child, 0);
+>>
+>>
+>
+> IS_ERR_OR_NULL() usually indicates that the code is wrong, or that
+> an API has been misdesigned.
+>
+> Can you clarify in the changelog which one it is,
 
-Applied all three, thanks
+    The second. :-)
 
-Maxime
+> or (better) change
+> it so that 'phy' in this function is either NULL or IS_ERR() in case
+> of an error but not both?
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---JwB53PgKC5A7+0Ej--
+    I guess you meant to change get_phy_device() to not return NULL (and so 
+only return the error codes, not both), am I correct?
+
+> I think moving the 'if (problem) return 1' into the two if/else
+> is a correct transformation that also makes it very clear what
+> is going on here.
+
+    Can be done too... it's not that I have much time for that many respins 
+though. It all started with 1 little patch (this one). :-)
+
+> 	Arnd
+
+MBR, Sergei
