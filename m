@@ -1,63 +1,52 @@
-From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Subject: Re: [PATCH v15 1/3] drm: rockchip: Add basic drm driver
-Date: Mon, 14 Mar 2016 14:35:22 +0100
-Message-ID: <CAAObsKANPWAHdoFG3SHK_RAwzZ6d=TVKGZP8ukk3a6CxewOajw@mail.gmail.com>
-References: <1417511600-7054-1-git-send-email-mark.yao@rock-chips.com>
- <1417511739-7141-1-git-send-email-mark.yao@rock-chips.com>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
+ interface
+Date: Mon, 14 Mar 2016 09:53:09 -0400
+Message-ID: <56E6C245.3090702@codeaurora.org>
+References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
+ <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
+ <20160311020650.GG11154@localhost> <56E2EC1C.6040107@codeaurora.org>
+ <20160311163221.GC13211@localhost> <56E2F5EA.10207@codeaurora.org>
+ <56E31CA5.6040106@codeaurora.org> <56E33FBB.2000401@codeaurora.org>
+ <20160313160034.GE13211@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1417511739-7141-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160313160034.GE13211@localhost>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 December 2014 at 10:15, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> new file mode 100644
-> index 0000000..e7ca25b
-> --- /dev/null
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> @@ -0,0 +1,1455 @@
-...
-> +static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
-> +                               const struct drm_display_mode *mode,
-> +                               struct drm_display_mode *adjusted_mode)
-> +{
-> +       if (adjusted_mode->htotal == 0 || adjusted_mode->vtotal == 0)
-> +               return false;
+On 3/13/2016 12:00 PM, Vinod Koul wrote:
+> On Fri, Mar 11, 2016 at 04:59:23PM -0500, Sinan Kaya wrote:
+>> Vinod,
+>>
+>> On 3/11/2016 2:29 PM, Sinan Kaya wrote:
+>>> I have done the renaming. This is all left for me to post a follow up.
+>>
+>> I just posted v15 (forgot to put v15 on 4/4).
+> 
+> Don't do that manually!
+> 
+> git formt-patch --subject-prefix is for that
+> 
 
-Hi Mark,
+Thanks for the hint. I was using the --annotate option and adding version numbers.
 
-what's the rationale for this?
+>>
+>> http://www.spinics.net/lists/arm-kernel/msg490282.html
+>>
+>> I wanted to get v15 out before the end of the week with the macro renames. 
+>> Let me know which lines need corrections.
+>>
+>> There is also a single line change for the object hierarchy patch. The code 
+>> was looking up DMA attributes (OF:dma-coherent) from the wrong place.
+> 
 
-Disabling a CRTC as in [0] will cause mode_fixup() to be called with
-an empty mode, failing that test.
 
-Removing the check seems to get things working fine for a short while,
-but a later modeset invariably gets the VOP to hang (as reported by
-[1]).
-
-Do you know why that check was put in place and what exactly could be
-causing the hw to hang?
-
-[0] https://cgit.freedesktop.org/xorg/app/intel-gpu-tools/tree/lib/igt_kms.c#n1616
-[1] https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/drivers/gpu/drm/rockchip/rockchip_drm_vop.c#n873
-
-Thanks,
-
-Tomeu
-
-> +
-> +       return true;
-> +}
+-- 
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
