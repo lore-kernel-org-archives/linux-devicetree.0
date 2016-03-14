@@ -1,65 +1,61 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: axp20x: Fix axp22x ldo_io
- voltage ranges
-Date: Mon, 14 Mar 2016 14:59:41 +0800
-Message-ID: <CAGb2v67vsbH1-Vq_G_C=t3CCBFBaS1RCZc4ggqhoyjj7F_Hgaw@mail.gmail.com>
-References: <1457727151-16392-1-git-send-email-hdegoede@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB driver
+Date: Mon, 14 Mar 2016 09:00:49 +0200
+Message-ID: <87fuvtbl26.fsf@intel.com>
+References: <1457684989-13318-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB5GCTG3QKGQE3K52DEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1457727151-16392-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha1; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 12, 2016 at 4:12 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> The minium voltage of 1800mV is a copy and paste error from the axp20x
-> regulator info. The correct minimum voltage for the ldo_io regulators
-> on the axp22x is 700mV.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Fixes: 1b82b4e4f954 ("regulator: axp20x: Add support for AXP22X regulators")
-
-then
-
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Also, this bug has been in since v4.2. Should we mark it for stable?
-
-Regards
-ChenYu
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
 
-> ---
->  drivers/regulator/axp20x-regulator.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-> index 40cd894..0c0e7a3 100644
-> --- a/drivers/regulator/axp20x-regulator.c
-> +++ b/drivers/regulator/axp20x-regulator.c
-> @@ -215,10 +215,10 @@ static const struct regulator_desc axp22x_regulators[] = {
->                  AXP22X_ELDO2_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(1)),
->         AXP_DESC(AXP22X, ELDO3, "eldo3", "eldoin", 700, 3300, 100,
->                  AXP22X_ELDO3_V_OUT, 0x1f, AXP22X_PWR_OUT_CTRL2, BIT(2)),
-> -       AXP_DESC_IO(AXP22X, LDO_IO0, "ldo_io0", "ips", 1800, 3300, 100,
-> +       AXP_DESC_IO(AXP22X, LDO_IO0, "ldo_io0", "ips", 700, 3300, 100,
->                     AXP22X_LDO_IO0_V_OUT, 0x1f, AXP20X_GPIO0_CTRL, 0x07,
->                     AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
-> -       AXP_DESC_IO(AXP22X, LDO_IO1, "ldo_io1", "ips", 1800, 3300, 100,
-> +       AXP_DESC_IO(AXP22X, LDO_IO1, "ldo_io1", "ips", 700, 3300, 100,
->                     AXP22X_LDO_IO1_V_OUT, 0x1f, AXP20X_GPIO1_CTRL, 0x07,
->                     AXP22X_IO_ENABLED, AXP22X_IO_DISABLED),
->         AXP_DESC_FIXED(AXP22X, RTC_LDO, "rtc_ldo", "ips", 3000),
-> --
-> 2.7.2
->
+Hi,
+
+Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> writes:
+> + - ti,usb2-phy-refclock-hz : Integer. Frequency in Hz of the USB 2.0 PHY=
+ reference clock,
+> +     either provided by the internal PLL or an external source.
+> +     The supported values are: 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MH=
+z, 38.4MHz, 40MHz, 48MHz.
+
+why isn't this an actual clock phandle ? Driver could, then, use
+clk_get_rate() to figure this one out. You could just use a fixed clock
+here to satisfy the clock API.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJW5mGiAAoJEIaOsuA1yqREhZoP/ArP0vz3cF/V1pE8hY9XiK5t
+m2I+c2yPlIANlrmkGJ1Y25+Axk61WUt5PY5qgscT/loC4m2OApiyos4hyZTOnELr
+97nYN1q7iq528HUqHFGSlUGSHt2q5XSmzrGaOMzhEVPGrbHXMkBpWzfQgCsUNNlZ
+RWMXGQYyBBVwit/dLRxLGnw/rCHJW8lyYF1TFW2Wge70ujFw5HMgJBa8l1yUU5z5
+SuiNyWQqJE+oi84qm8d5AdJedhnURK3P1vTChvs6K59MRSr3DeVvtoHPOkeagTKv
+HH5AyrCyaaiRlAW6NcL3YeMZnmUHFeRVXdBle7XsDWYWF89wjzRL8g/1+OrShEHz
+qYzsHeVljVUegoSkdu/XUyYxHosB/k0LGQbNHzyfmAJMleY+WsqrNgQjsl6rKosz
+y7iKuXOEZheQGIy1aUhoEKg7ab99RELB9hcZY6P51cUHYI5MGgaRYmfl4iuYO4Nz
+2PV3UHwAdvYiyAteUwUq6H84Ww75EQjClnTsioJza7tmihLovU66dxIvnc0PIZOk
+QybPkFC34JGZ+H5ebYFkhuX1HemdkGY0dAS90pZMMCkZXyzQSnlOamS6NNGAOaK9
+Tv6XaM1vYLtiDFRt5hzWfeMmd+FwFp0d8mobEcV47ViaFH7ZYwFZWsLTz5ywwkpH
+SMUWY7/VeDw267vYTgPr
+=hWS9
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
