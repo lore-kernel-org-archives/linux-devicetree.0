@@ -1,89 +1,48 @@
-From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v3 08/14] MIPS: dts: qca: introduce AR9331 devicetree
-Date: Mon, 14 Mar 2016 21:53:45 +0300
-Message-ID: <20160314215345.00df3fa56c363061e730572e@gmail.com>
-References: <1453580251-2341-1-git-send-email-antonynpavlov@gmail.com>
-	<1453580251-2341-9-git-send-email-antonynpavlov@gmail.com>
-	<20160125234630.16098b7f@tock>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun8i: Fix wrong Quad core /
+ a33 compat for sun8i-a23-gt90h-v4
+Date: Mon, 14 Mar 2016 19:51:34 +0100
+Message-ID: <20160314185134.GD30977@lukather>
+References: <1457973145-26203-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160125234630.16098b7f@tock>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JwB53PgKC5A7+0Ej"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOEQTS3QKGQET25JPGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457973145-26203-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 25 Jan 2016 23:46:30 +0100
-Alban <albeu-GANU6spQydw@public.gmane.org> wrote:
+--JwB53PgKC5A7+0Ej
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-> On Sat, 23 Jan 2016 23:17:25 +0300
-> Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->=20
-> > This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet=
-).
-> > The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
-> > typically used in very cheap Access Points and Routers.
-> >=20
-> > Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> > Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> > Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > ---
-> >  arch/mips/boot/dts/qca/ar9331.dtsi | 123 +++++++++++++++++++++++++=
-++++++++++++
-> >  1 file changed, 123 insertions(+)
-> >=20
-> > diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dt=
-s/qca/ar9331.dtsi
-> > new file mode 100644
-> > index 0000000..bf128a2
-> > --- /dev/null
-> > +++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-> > @@ -0,0 +1,123 @@
-> > +#include <dt-bindings/clock/ath79-clk.h>
-> > +
-> > +/ {
-> > +	compatible =3D "qca,ar9331";
-> > +
->=20
-> [...]
->=20
-> > +
-> > +	extosc: oscillator {
-> > +		compatible =3D "fixed-clock";
-> > +		#clock-cells =3D <0>;
-> > +	};
->=20
-> This oscillator is on the board and not in the SoC, so it should
-> be in the board DTS.
+On Mon, Mar 14, 2016 at 05:32:23PM +0100, Hans de Goede wrote:
+> As the dts file name already implies sun8i-a23-gt90h-v4.dts is for
+> an a23 equipped tablet. I don't know how the "Quad Core" or a33
+> comaptible got in there, likely a copy and paste error.
+> 
+> Regardless this commit fixes this, note this is almost
+> purely a cosmetical fix, for all things that matter at the
+> machine compatible level the a23 and a33 are compatible.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-However oscillator is inside SoC!
+Applied all three, thanks
 
-Please see https://en.wikipedia.org/wiki/Electronic_oscillator
+Maxime
 
-    An electronic oscillator is an electronic circuit that produces a p=
-eriodic,
-    oscillating electronic signal, often a sine wave or a square wave.
-
-Please see AR9331 data sheet: the SoC has no input for external oscilla=
-tor,
-only two pins (XTALO and XTALI) for connecting 25 MHz or 40 MHz quartz =
-crystal.
-The crystal can't produce a square wave itself! The crystal is only a p=
-art
-of a complete oscillator.
-
-So we have a good reason to put basic oscillator node into the SoC dtsi=
--file.
-
---=A0
-Best regards,
-=A0 Antony Pavlov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--JwB53PgKC5A7+0Ej--
