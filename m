@@ -1,64 +1,63 @@
-From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] media: v4l2-compat-ioctl32: fix missing reserved field
- copy in put_v4l2_create32
-Date: Mon, 14 Mar 2016 20:22:42 +0800
-Message-ID: <1457958162.8737.3.camel@mtksdaap41>
-References: <1457952106-38215-1-git-send-email-tiffany.lin@mediatek.com>
-	 <20160314082859.31340fb6@recife.lan>
+From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+Subject: Re: [PATCH v15 1/3] drm: rockchip: Add basic drm driver
+Date: Mon, 14 Mar 2016 14:35:22 +0100
+Message-ID: <CAAObsKANPWAHdoFG3SHK_RAwzZ6d=TVKGZP8ukk3a6CxewOajw@mail.gmail.com>
+References: <1417511600-7054-1-git-send-email-mark.yao@rock-chips.com>
+ <1417511739-7141-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160314082859.31340fb6-+RedX5hVuTR+urZeOPWqwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1417511739-7141-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, dbehr-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, yxj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Eddie Cai <cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2016-03-14 at 08:28 -0300, Mauro Carvalho Chehab wrote:
-> Em Mon, 14 Mar 2016 18:41:46 +0800
-> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
-> 
-> > Change-Id: Idac449fae5059a3ce255340e6da491f8bd83af7a
-> 
-> We don't need change-id at the Kernel, but we do need a proper patch
-> description.
-> 
-Hi Mauro,
+On 2 December 2014 at 10:15, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> new file mode 100644
+> index 0000000..e7ca25b
+> --- /dev/null
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -0,0 +1,1455 @@
+...
+> +static bool vop_crtc_mode_fixup(struct drm_crtc *crtc,
+> +                               const struct drm_display_mode *mode,
+> +                               struct drm_display_mode *adjusted_mode)
+> +{
+> +       if (adjusted_mode->htotal == 0 || adjusted_mode->vtotal == 0)
+> +               return false;
 
-Sorry, I accidentally add change-id in this patch.
-I had remove change-id and add patch description in 
-[PATCH v2] media: v4l2-compat-ioctl32: fix missing reserved field copy
-in put_v4l2_create32
+Hi Mark,
 
-best regards,
-Tiffany
+what's the rationale for this?
 
+Disabling a CRTC as in [0] will cause mode_fixup() to be called with
+an empty mode, failing that test.
 
-> Regards,
-> Mauro
-> 
-> > ---
-> >  drivers/media/v4l2-core/v4l2-compat-ioctl32.c |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> > index f38c076..109f687 100644
-> > --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> > +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
-> > @@ -280,7 +280,8 @@ static int put_v4l2_format32(struct v4l2_format *kp, struct v4l2_format32 __user
-> >  static int put_v4l2_create32(struct v4l2_create_buffers *kp, struct v4l2_create_buffers32 __user *up)
-> >  {
-> >  	if (!access_ok(VERIFY_WRITE, up, sizeof(struct v4l2_create_buffers32)) ||
-> > -	    copy_to_user(up, kp, offsetof(struct v4l2_create_buffers32, format)))
-> > +	    copy_to_user(up, kp, offsetof(struct v4l2_create_buffers32, format)) ||
-> > +	    copy_to_user(up->reserved, kp->reserved, sizeof(kp->reserved)))
-> >  		return -EFAULT;
-> >  	return __put_v4l2_format32(&kp->format, &up->format);
-> >  }
+Removing the check seems to get things working fine for a short while,
+but a later modeset invariably gets the VOP to hang (as reported by
+[1]).
 
+Do you know why that check was put in place and what exactly could be
+causing the hw to hang?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0] https://cgit.freedesktop.org/xorg/app/intel-gpu-tools/tree/lib/igt_kms.c#n1616
+[1] https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/drivers/gpu/drm/rockchip/rockchip_drm_vop.c#n873
+
+Thanks,
+
+Tomeu
+
+> +
+> +       return true;
+> +}
