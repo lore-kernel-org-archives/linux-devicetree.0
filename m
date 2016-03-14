@@ -1,166 +1,34 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH] ARM: dts: Add initial pin configuration for exynos3250-rinato
-Date: Mon, 14 Mar 2016 10:12:54 +0900
-Message-ID: <1457917974-314-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: k.kozlowski@samsung.com, kgene@kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
+From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH 5/5] MIPS: jz4740: Use the jz4740-rtc driver as the power
+ controller
+Date: Mon, 14 Mar 2016 02:53:53 +0100
+Message-ID: <20160314015353.GB29020@linux-mips.org>
+References: <1457217531-26064-1-git-send-email-paul@crapouillou.net>
+ <1457217531-26064-5-git-send-email-paul@crapouillou.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457217531-26064-5-git-send-email-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds initial pin configuration using pinctrl subsystem
-to reduce leakage power-consumption of gpio pins in normal state.
-All pins included in this patch are NC (not connected) pin.
+On Sat, Mar 05, 2016 at 11:38:51PM +0100, Paul Cercueil wrote:
 
-Cc: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
----
- arch/arm/boot/dts/exynos3250-pinctrl.dtsi | 38 +++++++++++++++++
- arch/arm/boot/dts/exynos3250-rinato.dts   | 70 ++++++++++++++++++++++++++++++-
- 2 files changed, 106 insertions(+), 2 deletions(-)
+> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+> ---
+>  arch/mips/boot/dts/ingenic/jz4740.dtsi |  2 ++
+>  arch/mips/jz4740/reset.c               | 64 ----------------------------------
 
-diff --git a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
-index 5ab81c39e2c9..ecf79386e891 100644
---- a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
-@@ -16,11 +16,49 @@
- #define PIN_PULL_DOWN		1
- #define PIN_PULL_UP		3
- 
-+#define PIN_DRV_LV1		0
-+#define PIN_DRV_LV2		2
-+#define PIN_DRV_LV3		1
-+#define PIN_DRV_LV4		3
-+
- #define PIN_PDN_OUT0		0
- #define PIN_PDN_OUT1		1
- #define PIN_PDN_INPUT		2
- #define PIN_PDN_PREV		3
- 
-+#define PIN_IN(_pin, _pull, _drv)			\
-+	_pin {						\
-+		samsung,pins = #_pin;			\
-+		samsung,pin-function = <0>;		\
-+		samsung,pin-pud = <PIN_PULL_ ##_pull>;	\
-+		samsung,pin-drv = <PIN_DRV_ ##_drv>;	\
-+	}
-+
-+#define PIN_OUT(_pin, _drv)				\
-+	_pin {						\
-+		samsung,pins = #_pin;			\
-+		samsung,pin-function = <1>;		\
-+		samsung,pin-pud = <0>;			\
-+		samsung,pin-drv = <PIN_DRV_ ##_drv>;	\
-+	}
-+
-+#define PIN_OUT_SET(_pin, _val, _drv)			\
-+	_pin {						\
-+		samsung,pins = #_pin;			\
-+		samsung,pin-function = <1>;		\
-+		samsung,pin-pud = <0>;			\
-+		samsung,pin-drv = <PIN_DRV_ ##_drv>;	\
-+		samsung,pin-val = <_val>;		\
-+	}
-+
-+#define PIN_CFG(_pin, _sel, _pull, _drv)		\
-+	_pin {						\
-+		samsung,pins = #_pin;			\
-+		samsung,pin-function = <_sel>;		\
-+		samsung,pin-pud = <PIN_PULL_ ##_pull>;	\
-+		samsung,pin-drv = <PIN_DRV_ ##_drv>;	\
-+	}
-+
- #define PIN_SLP(_pin, _mode, _pull)				\
- 	_pin {							\
- 		samsung,pins = #_pin;				\
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 3e64d5dcdd60..1c78a2153776 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -681,7 +681,21 @@
- 
- &pinctrl_0 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&sleep0>;
-+	pinctrl-0 = <&initial0 &sleep0>;
-+
-+	initial0: initial-state {
-+		PIN_IN(gpa1-4, DOWN, LV1);
-+		PIN_IN(gpa1-5, DOWN, LV1);
-+
-+		PIN_IN(gpc0-0, DOWN, LV1);
-+		PIN_IN(gpc0-1, DOWN, LV1);
-+		PIN_IN(gpc0-2, DOWN, LV1);
-+		PIN_IN(gpc0-3, DOWN, LV1);
-+		PIN_IN(gpc0-4, DOWN, LV1);
-+
-+		PIN_IN(gpd0-0, DOWN, LV1);
-+		PIN_IN(gpd0-1, DOWN, LV1);
-+	};
- 
- 	sleep0: sleep-state {
- 		PIN_SLP(gpa0-0, INPUT, DOWN);
-@@ -735,7 +749,59 @@
- 
- &pinctrl_1 {
- 	pinctrl-names = "default";
--	pinctrl-0 = <&sleep1>;
-+	pinctrl-0 = <&initial1 &sleep1>;
-+
-+	initial1: initial-state {
-+		PIN_IN(gpe0-6, DOWN, LV1);
-+		PIN_IN(gpe0-7, DOWN, LV1);
-+
-+		PIN_IN(gpe1-0, DOWN, LV1);
-+		PIN_IN(gpe1-3, DOWN, LV1);
-+		PIN_IN(gpe1-4, DOWN, LV1);
-+		PIN_IN(gpe1-5, DOWN, LV1);
-+		PIN_IN(gpe1-6, DOWN, LV1);
-+
-+		PIN_IN(gpk2-0, DOWN, LV1);
-+		PIN_IN(gpk2-1, DOWN, LV1);
-+		PIN_IN(gpk2-2, DOWN, LV1);
-+		PIN_IN(gpk2-3, DOWN, LV1);
-+		PIN_IN(gpk2-4, DOWN, LV1);
-+		PIN_IN(gpk2-5, DOWN, LV1);
-+		PIN_IN(gpk2-6, DOWN, LV1);
-+
-+		PIN_IN(gpm0-0, DOWN, LV1);
-+		PIN_IN(gpm0-1, DOWN, LV1);
-+		PIN_IN(gpm0-2, DOWN, LV1);
-+		PIN_IN(gpm0-3, DOWN, LV1);
-+		PIN_IN(gpm0-4, DOWN, LV1);
-+		PIN_IN(gpm0-5, DOWN, LV1);
-+		PIN_IN(gpm0-6, DOWN, LV1);
-+		PIN_IN(gpm0-7, DOWN, LV1);
-+
-+		PIN_IN(gpm1-0, DOWN, LV1);
-+		PIN_IN(gpm1-1, DOWN, LV1);
-+		PIN_IN(gpm1-2, DOWN, LV1);
-+		PIN_IN(gpm1-3, DOWN, LV1);
-+		PIN_IN(gpm1-4, DOWN, LV1);
-+		PIN_IN(gpm1-5, DOWN, LV1);
-+		PIN_IN(gpm1-6, DOWN, LV1);
-+		PIN_IN(gpm2-0, DOWN, LV1);
-+		PIN_IN(gpm2-1, DOWN, LV1);
-+
-+		PIN_IN(gpm3-0, DOWN, LV1);
-+		PIN_IN(gpm3-1, DOWN, LV1);
-+		PIN_IN(gpm3-2, DOWN, LV1);
-+		PIN_IN(gpm3-3, DOWN, LV1);
-+		PIN_IN(gpm3-4, DOWN, LV1);
-+
-+		PIN_IN(gpm4-1, DOWN, LV1);
-+		PIN_IN(gpm4-2, DOWN, LV1);
-+		PIN_IN(gpm4-3, DOWN, LV1);
-+		PIN_IN(gpm4-4, DOWN, LV1);
-+		PIN_IN(gpm4-5, DOWN, LV1);
-+		PIN_IN(gpm4-6, DOWN, LV1);
-+		PIN_IN(gpm4-7, DOWN, LV1);
-+	};
- 
- 	sleep1: sleep-state {
- 		PIN_SLP(gpe0-0, PREV, NONE);
--- 
-1.9.1
+Acked-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+
+Feel free to funnel this patch upstream through the RTC tree.  Or I can
+carry the whole series, just lemme know.
+
+  Ralf
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
