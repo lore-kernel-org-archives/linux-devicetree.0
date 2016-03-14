@@ -1,79 +1,62 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: dra7: Correct clock tree for sys_32k_ck
-Date: Mon, 14 Mar 2016 17:33:21 +0530
-Message-ID: <1457957001-720-1-git-send-email-j-keerthy@ti.com>
+From: tiffany lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] media: v4l2-compat-ioctl32: fix missing reserved field
+ copy in put_v4l2_create32
+Date: Mon, 14 Mar 2016 20:22:42 +0800
+Message-ID: <1457958162.8737.3.camel@mtksdaap41>
+References: <1457952106-38215-1-git-send-email-tiffany.lin@mediatek.com>
+	 <20160314082859.31340fb6@recife.lan>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160314082859.31340fb6-+RedX5hVuTR+urZeOPWqwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, PoChun.Lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is w.r.t J6/J6eco: 32clk is pseudo (erratum i856) - clock source.
-Errata i856 for the AM572x (DRA7xx) points out that the 32.768KHz external
-crystal is not enabled at power up. Instead the CPU falls back to using
-an emulation for the 32KHz clock which is SYSCLK1/610.  SYSCLK1 is usually
-20MHz on boards so far (which gives an emulated frequency of 32.786KHz)
+On Mon, 2016-03-14 at 08:28 -0300, Mauro Carvalho Chehab wrote:
+> Em Mon, 14 Mar 2016 18:41:46 +0800
+> Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> escreveu:
+> 
+> > Change-Id: Idac449fae5059a3ce255340e6da491f8bd83af7a
+> 
+> We don't need change-id at the Kernel, but we do need a proper patch
+> description.
+> 
+Hi Mauro,
 
-Modelling the same in device tree.
+Sorry, I accidentally add change-id in this patch.
+I had remove change-id and add patch description in 
+[PATCH v2] media: v4l2-compat-ioctl32: fix missing reserved field copy
+in put_v4l2_create32
 
-Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
-Errata Document: http://www.ti.com/lit/er/sprz429h/sprz429h.pdf
-Errata number: i856
+best regards,
+Tiffany
 
-Tested the debugfs clock tree nodes on DRA7-EVM.
 
-Changes in v2:
+> Regards,
+> Mauro
+> 
+> > ---
+> >  drivers/media/v4l2-core/v4l2-compat-ioctl32.c |    3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> > index f38c076..109f687 100644
+> > --- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> > +++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+> > @@ -280,7 +280,8 @@ static int put_v4l2_format32(struct v4l2_format *kp, struct v4l2_format32 __user
+> >  static int put_v4l2_create32(struct v4l2_create_buffers *kp, struct v4l2_create_buffers32 __user *up)
+> >  {
+> >  	if (!access_ok(VERIFY_WRITE, up, sizeof(struct v4l2_create_buffers32)) ||
+> > -	    copy_to_user(up, kp, offsetof(struct v4l2_create_buffers32, format)))
+> > +	    copy_to_user(up, kp, offsetof(struct v4l2_create_buffers32, format)) ||
+> > +	    copy_to_user(up->reserved, kp->reserved, sizeof(kp->reserved)))
+> >  		return -EFAULT;
+> >  	return __put_v4l2_format32(&kp->format, &up->format);
+> >  }
 
-Added missing Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index 357bede..7f1f892 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -98,12 +98,20 @@
- 		clock-frequency = <32768>;
- 	};
- 
--	sys_32k_ck: sys_32k_ck {
-+	sys_clk32_crystal_ck: sys_clk32_crystal_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <32768>;
- 	};
- 
-+	sys_clk32_pseudo_ck: sys_clk32_pseudo_ck {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&sys_clkin1>;
-+		clock-mult = <1>;
-+		clock-div = <610>;
-+	};
-+
- 	virt_12000000_ck: virt_12000000_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -2146,4 +2154,12 @@
- 		ti,bit-shift = <0>;
- 		reg = <0x558>;
- 	};
-+
-+	sys_32k_ck: sys_32k_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&sys_clk32_crystal_ck>, <&sys_clk32_pseudo_ck>, <&sys_clk32_pseudo_ck>, <&sys_clk32_pseudo_ck>;
-+		ti,bit-shift = <8>;
-+		reg = <0x6c4>;
-+	};
- };
--- 
-1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
