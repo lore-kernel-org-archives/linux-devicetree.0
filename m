@@ -1,163 +1,102 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 9/9] ARM: dts: rockchip: add to support emac for rk3036 SoCs
-Date: Mon, 14 Mar 2016 16:02:00 +0800
-Message-ID: <1457942520-12859-10-git-send-email-wxt@rock-chips.com>
-References: <1457942520-12859-1-git-send-email-wxt@rock-chips.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH 06/10] ARM: dts: Add MSHC0 dt node for eMMC device for
+ exynos3250-artik5 module
+Date: Mon, 14 Mar 2016 17:15:21 +0900
+Message-ID: <56E67319.1050502@samsung.com>
+References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
+ <1457921056-21257-7-git-send-email-cw00.choi@samsung.com>
+ <56E660D2.9090706@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1457942520-12859-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56E660D2.9090706@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
+Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 15:57, Krzysztof Kozlowski wro=
+te:
+> On 14.03.2016 11:04, Chanwoo Choi wrote:
+>> From: Jaehoon Chung <jh80.chung@samsung.com>
+>>
+>> This patch adds MSHC (Mobile Storage Host Controller) dt node for Ex=
+ynos3250
+>> SoC. MSHC is an interface between the system and the eMMC device.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos3250-artik5.dtsi | 19 +++++++++++++++++++
+>>  1 file changed, 19 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boo=
+t/dts/exynos3250-artik5.dtsi
+>> index 97d0087efb9f..75b291c10cdc 100644
+>> --- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
+>> +++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+>> @@ -277,6 +277,25 @@
+>>  	};
+>>  };
+>> =20
+>> +&mshc_0 {
+>> +	num-slots =3D <1>;
+>> +	broken-cd;
+>> +	non-removable;
+>=20
+> Broken or non-removable, not both.
 
-This patch adds the emac device node for rk3036 SoCs.
-We need to let mac clock under the DPLL which is able to provide
-the accurate 50MHz what mac_ref need, since that will cause some
-unstable things if the cpufreq is working.
+I'll remove the 'broken-cd' property.
 
-Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>=20
+>> +	cap-mmc-highspeed;
+>> +	desc-num =3D <4>;
+>> +	card-detect-delay =3D <200>;
+>> +	vmmc-supply =3D <&ldo11_reg>;
+>=20
+> Isn't this vqmmc-supply?
 
----
+I'll fix it as following by using ldo12_reg:
+	vmmc-supply =3D <&ldo12_reg>;
 
-Changes in v3:
-- rename reset-gpio to phy-reset-gpios.
-- change the commit.
-- remove the pcfg_output_high, that's really not needed for emac.
-- Add the Cc people.
-- Fixes the 'zhengxing' to 'Xing Zheng'.
+>=20
+> BTW, both MMC0 regulators (ldo11, ldo12) are marked as always-on. Why
+> they cannot be controlled by XMMC0CDN (just like on Rinato)?
 
-Changes in v2:
-- rename phy-reset-gpio to reset-gpios.
+I'll fix it like rinato board to handle the ldo11/ldo12 as following:
+gpk0-2 is XMMC0CDN pin.
 
- arch/arm/boot/dts/rk3036-evb.dts   | 14 ++++++++++++++
- arch/arm/boot/dts/rk3036-kylin.dts | 14 ++++++++++++++
- arch/arm/boot/dts/rk3036.dtsi      | 39 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 67 insertions(+)
+                       ldo11_reg: LDO11 {
+-                               /* VDD_MMC */
++                               /* VDD74 ~ VDD75 */
+                                regulator-name =3D "VLDO11_1.8V";
+                                regulator-min-microvolt =3D <1800000>;
+                                regulator-max-microvolt =3D <1800000>;
+-                               regulator-always-on;
++                               samsung,ext-control-gpios =3D <&gpk0 2 =
+GPIO_ACTIVE_HIGH>;
+                        };
 
-diff --git a/arch/arm/boot/dts/rk3036-evb.dts b/arch/arm/boot/dts/rk3036-evb.dts
-index 28a0336..b3d6ec8 100644
---- a/arch/arm/boot/dts/rk3036-evb.dts
-+++ b/arch/arm/boot/dts/rk3036-evb.dts
-@@ -47,6 +47,20 @@
- 	compatible = "rockchip,rk3036-evb", "rockchip,rk3036";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>;
-+	phy = <&phy0>;
-+	phy-reset-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>; /* PHY_RST */
-+	phy-reset-duration = <10>; /* millisecond */
-+
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &i2c1 {
- 	status = "okay";
- 
-diff --git a/arch/arm/boot/dts/rk3036-kylin.dts b/arch/arm/boot/dts/rk3036-kylin.dts
-index eb9c979..951f15d 100644
---- a/arch/arm/boot/dts/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rk3036-kylin.dts
-@@ -112,6 +112,20 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_xfer>, <&emac_mdio>;
-+	phy = <&phy0>;
-+	phy-reset-gpios = <&gpio2 22 GPIO_ACTIVE_LOW>; /* PHY_RST */
-+	phy-reset-duration = <10>; /* millisecond */
-+
-+	status = "okay";
-+
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+};
-+
- &emmc {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 90faa86..5175a2a 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -223,6 +223,27 @@
- 		status = "disabled";
- 	};
- 
-+	emac: ethernet@10200000 {
-+		compatible = "rockchip,rk3036-emac", "snps,arc-emac";
-+		reg = <0x10200000 0x4000>;
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		rockchip,grf = <&grf>;
-+		clocks = <&cru HCLK_MAC>, <&cru SCLK_MACREF>, <&cru SCLK_MAC>;
-+		clock-names = "hclk", "macref", "macclk";
-+		/*
-+		 * Fix the emac parent clock is DPLL instead of APLL.
-+		 * since that will cause some unstable things if the cpufreq
-+		 * is working. (e.g: the accurate 50MHz what mac_ref need)
-+		 */
-+		assigned-clocks = <&cru SCLK_MACPLL>;
-+		assigned-clock-parents = <&cru PLL_DPLL>;
-+		max-speed = <100>;
-+		phy-mode = "rmii";
-+		status = "disabled";
-+	};
-+
- 	sdmmc: dwmmc@10214000 {
- 		compatible = "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc";
- 		reg = <0x10214000 0x4000>;
-@@ -628,6 +649,24 @@
- 			};
- 		};
- 
-+		emac {
-+			emac_xfer: emac-xfer {
-+				rockchip,pins = <2 10 RK_FUNC_1 &pcfg_pull_default>, /* crs_dvalid */
-+						<2 13 RK_FUNC_1 &pcfg_pull_default>, /* tx_en */
-+						<2 14 RK_FUNC_1 &pcfg_pull_default>, /* mac_clk */
-+						<2 15 RK_FUNC_1 &pcfg_pull_default>, /* rx_err */
-+						<2 16 RK_FUNC_1 &pcfg_pull_default>, /* rxd1 */
-+						<2 17 RK_FUNC_1 &pcfg_pull_default>, /* rxd0 */
-+						<2 18 RK_FUNC_1 &pcfg_pull_default>, /* txd1 */
-+						<2 19 RK_FUNC_1 &pcfg_pull_default>; /* txd0 */
-+			};
-+
-+			emac_mdio: emac-mdio {
-+				rockchip,pins = <2 12 RK_FUNC_1 &pcfg_pull_default>, /* mac_md */
-+						<2 25 RK_FUNC_1 &pcfg_pull_default>; /* mac_mdclk */
-+			};
-+		};
-+
- 		i2c0 {
- 			i2c0_xfer: i2c0-xfer {
- 				rockchip,pins = <0 0 RK_FUNC_1 &pcfg_pull_none>,
--- 
-1.9.1
+                        ldo12_reg: LDO12 {
+@@ -177,7 +178,7 @@
+                                regulator-name =3D "VLDO12_2.8V";
+                                regulator-min-microvolt =3D <2800000>;
+                                regulator-max-microvolt =3D <2800000>;
+-                               regulator-always-on;
++                               samsung,ext-control-gpios =3D <&gpk0 2 =
+GPIO_ACTIVE_HIGH>;
+                        };
+
+>=20
+> What is the benefit of making this patch separate from "Add
+> exynos3250-artik5 dtsi file for ARTIK5 module"? Does the board boot
+> properly without this patch?
+
+OK. I'll merge it with 5/10 patch.
+
+Best Regards,
+Chanwoo Choi
+
+[snip]
