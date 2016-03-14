@@ -1,56 +1,82 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] regulator: axp20x: Fix axp209 ldo4 ranges
-Date: Mon, 14 Mar 2016 14:48:48 +0800
-Message-ID: <CAGb2v67RGWn6-bgDXYL37RDvR+MqJRKNtVuqE1p9eLGBqxrgJg@mail.gmail.com>
-References: <1457792401-28337-1-git-send-email-hdegoede@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 06/10] ARM: dts: Add MSHC0 dt node for eMMC device for
+ exynos3250-artik5 module
+Date: Mon, 14 Mar 2016 15:57:22 +0900
+Message-ID: <56E660D2.9090706@samsung.com>
+References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
+ <1457921056-21257-7-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ55TG3QKGQEZ3ZAAEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1457792401-28337-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1457921056-21257-7-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 12, 2016 at 10:20 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> The axp209 ldo4 regulator has a hole at (skips) 2600 mV and 2900 mV, fix
-> its range table to match.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Fixes: 13d57e64352a ("regulator: axp20x: Use linear voltage ranges for
-AXP20X LDO4")
-
-then
-
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
+On 14.03.2016 11:04, Chanwoo Choi wrote:
+> From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> This patch adds MSHC (Mobile Storage Host Controller) dt node for Exynos3250
+> SoC. MSHC is an interface between the system and the eMMC device.
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > ---
->  drivers/regulator/axp20x-regulator.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-> index 4250b1b..500d162 100644
-> --- a/drivers/regulator/axp20x-regulator.c
-> +++ b/drivers/regulator/axp20x-regulator.c
-> @@ -157,7 +157,9 @@ static struct regulator_ops axp20x_ops_sw = {
->  static const struct regulator_linear_range axp20x_ldo4_ranges[] = {
->         REGULATOR_LINEAR_RANGE(1250000, 0x0, 0x0, 0),
->         REGULATOR_LINEAR_RANGE(1300000, 0x1, 0x8, 100000),
-> -       REGULATOR_LINEAR_RANGE(2500000, 0x9, 0xf, 100000),
-> +       REGULATOR_LINEAR_RANGE(2500000, 0x9, 0x9, 0),
-> +       REGULATOR_LINEAR_RANGE(2700000, 0xa, 0xb, 100000),
-> +       REGULATOR_LINEAR_RANGE(3000000, 0xc, 0xf, 100000),
+>  arch/arm/boot/dts/exynos3250-artik5.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250-artik5.dtsi b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> index 97d0087efb9f..75b291c10cdc 100644
+> --- a/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250-artik5.dtsi
+> @@ -277,6 +277,25 @@
+>  	};
 >  };
->
->  static const struct regulator_desc axp20x_regulators[] = {
-> --
-> 2.7.2
->
+>  
+> +&mshc_0 {
+> +	num-slots = <1>;
+> +	broken-cd;
+> +	non-removable;
+
+Broken or non-removable, not both.
+
+> +	cap-mmc-highspeed;
+> +	desc-num = <4>;
+> +	card-detect-delay = <200>;
+> +	vmmc-supply = <&ldo11_reg>;
+
+Isn't this vqmmc-supply?
+
+BTW, both MMC0 regulators (ldo11, ldo12) are marked as always-on. Why
+they cannot be controlled by XMMC0CDN (just like on Rinato)?
+
+What is the benefit of making this patch separate from "Add
+exynos3250-artik5 dtsi file for ARTIK5 module"? Does the board boot
+properly without this patch?
+
+Best regards,
+Krzysztof
+
+> +	clock-frequency = <100000000>;
+> +	clock-freq-min-max = <400000 100000000>;
+> +	samsung,dw-mshc-ciu-div = <1>;
+> +	samsung,dw-mshc-sdr-timing = <0 1>;
+> +	samsung,dw-mshc-ddr-timing = <1 2>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sd0_cmd &sd0_bus1 &sd0_bus4 &sd0_bus8>;
+> +	bus-width = <8>;
+> +	status = "okay";
+> +};
+> +
+>  &xusbxti {
+>  	clock-frequency = <24000000>;
+>  };
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
