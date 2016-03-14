@@ -1,75 +1,92 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/5] regulator: pwm: Add support for voltage linear equal
- steps
-Date: Mon, 14 Mar 2016 16:28:43 +0000
-Message-ID: <20160314162843.GC2566@sirena.org.uk>
-References: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com>
- <1457434405-30372-5-git-send-email-ldewangan@nvidia.com>
- <20160312060925.GW3898@sirena.org.uk>
- <56E565BE.5010703@nvidia.com>
+From: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/5] ARM: dts: sunxi: Add the SPDIF to the
+ A10 and A20
+Date: Mon, 14 Mar 2016 17:29:37 +0100
+Message-ID: <CAEKpxBm4bs7sNSbDjomdP6XS2ApvfDT-s942DBb3JWv1iOZJ0w@mail.gmail.com>
+References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
+	<1456589909-2428-4-git-send-email-codekipper@gmail.com>
+	<20160313215043.GJ8418@lukather>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wxDdMuZNg1r63Hyj"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56E565BE.5010703-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBB4WNTO3QKGQE4EYPSTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20160313215043.GJ8418@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---wxDdMuZNg1r63Hyj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Sun, Mar 13, 2016 at 06:36:06PM +0530, Laxman Dewangan wrote:
-> On Saturday 12 March 2016 11:39 AM, Mark Brown wrote:
-
-> >I can't see any reason why this would ever be preferable to just using
-> >the flat linear range (you certainly haven't articulated one, you're
-> >just stating it).  This seems like you are bodging around a limited
-> >consumer driver, you should fix the consumer to cope with regulators
-> >with lots of voltages - PWM regulators aren't the only ones with high
-> >resolution steps.
-
-> The requirement is to have perfect linear steps interms of the period/pulse
-> time of PWM without loosing any voltage.
-> Continuous mode is pretty much near to what you said but here we are loosing
-> the perfect step as this divides the periods to 100 parts and then set
-> voltage.
-
-Could you be more specific about what the issue is?  We've hopefully got
-errors of less than 1% in the values here...
-
-> If new mode is not accpetable then need to enhance the existing continuous
-> mode like before scaling for 100% of period, first look if we get the
-> perfect pulse time of of PWM period and if it is there then use this direct
-> instead of converting required voltage to 100% scale and then back
-> calculating duty time.
-
-That seems a lot better, what you're proposing is changing the ABI to
-fudge things for a client specific requirement where both the client
-requirement and the change you're proposing are specific to the current
-Linux implementation.  That doesn't sound like a DT thing.
-
---wxDdMuZNg1r63Hyj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW5ua6AAoJECTWi3JdVIfQqw0H/RQktJyRcNuIDmbziylrXQ5v
-czCa7zha6uSDIIizkU0pvwBI8tmrbgAUloRiACb8MlgEk1dsGShRjMjbShPeMLp8
-rNe5FN5b3zRQQrOUzF40UzMwhiy+PuJhwPfMbE4GVwtE3nS5svbaonGD9SVjMiCB
-az0XrE1T28oef4tyhfbSxqq8C3w1JYgiNzbje09JLieMmFjYMaV5PKSId00eHGFg
-uMgNdUZ9Q4nhmA0zQPMUdMTUz8qu3XduLY0vHlICzY/Yc78mg3M/U3k8uNjztvRi
-r7zRGVt5bGfdkEdTeRbjJozx1sM6NGrBTCf0KqzUg9cv40fktFOqoJ3cY8G1zVM=
-=GJ61
------END PGP SIGNATURE-----
-
---wxDdMuZNg1r63Hyj--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 13 March 2016 at 22:50, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Sat, Feb 27, 2016 at 05:18:27PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Add the SPDIF transceiver controller and clock to the A10 and
+>> A20 dtsi.
+>>
+>> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun4i-a10.dtsi | 23 +++++++++++++++++++++++
+>>  arch/arm/boot/dts/sun7i-a20.dtsi | 23 +++++++++++++++++++++++
+>>  2 files changed, 46 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> index 0483640..83d46b2 100644
+>> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+>> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+>> @@ -477,6 +477,17 @@
+>>                       clock-output-names = "ir1";
+>>               };
+>>
+>> +             spdif_clk: clk@01c200c0 {
+>> +                     #clock-cells = <0>;
+>> +                     compatible = "allwinner,sun4i-a10-mod1-clk";
+>> +                     reg = <0x01c200c0 0x4>;
+>> +                     clocks = <&pll2 SUN4I_A10_PLL2_8X>,
+>> +                              <&pll2 SUN4I_A10_PLL2_4X>,
+>> +                              <&pll2 SUN4I_A10_PLL2_2X>,
+>> +                              <&pll2 SUN4I_A10_PLL2_1X>;
+>> +                     clock-output-names = "spdif";
+>> +             };
+>> +
+>>               usb_clk: clk@01c200cc {
+>>                       #clock-cells = <1>;
+>>                       #reset-cells = <1>;
+>> @@ -1055,6 +1066,18 @@
+>>                       status = "disabled";
+>>               };
+>>
+>> +             spdif: spdif@01c21000 {
+>> +                     #sound-dai-cells = <0>;
+>> +                     compatible = "allwinner,sun4i-a10-spdif";
+>> +                     reg = <0x01c21000 0x40>;
+>
+> It only takes 64 bytes?
+Yep(just like the audio codec!)
+http://linux-sunxi.org/SPDIF#SUNXI_SPDIF_DEFAULT_VALUES
+>
+>> +                     interrupts = <13>;
+>> +                     clocks = <&apb0_gates 1>, <&spdif_clk>;
+>> +                     clock-names = "apb", "spdif";
+>> +                     dmas = <&dma 0 2>, <&dma 0 2>;
+>
+> Please use the defines here.
+ACK...will resend.
+Thanks,
+CK
+>
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
