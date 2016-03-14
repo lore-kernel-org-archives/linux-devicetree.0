@@ -1,81 +1,89 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V14 5/9] dma: qcom_hidma: implement lower level hardware
- interface
-Date: Mon, 14 Mar 2016 09:56:01 -0400
-Message-ID: <56E6C2F1.7070504@codeaurora.org>
-References: <1454646882-24369-1-git-send-email-okaya@codeaurora.org>
- <1454646882-24369-6-git-send-email-okaya@codeaurora.org>
- <20160311020650.GG11154@localhost> <56E2EC1C.6040107@codeaurora.org>
- <20160311163221.GC13211@localhost> <56E2F5EA.10207@codeaurora.org>
- <56E31CA5.6040106@codeaurora.org> <20160313155933.GD13211@localhost>
+From: "Franklin S Cooper Jr." <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 0/7] mtd: nand: Fix support for NAND DMA prefetch
+Date: Mon, 14 Mar 2016 09:17:19 -0500
+Message-ID: <56E6C7EF.3030501@ti.com>
+References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
+ <56E2CFF3.3030009@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160313155933.GD13211@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: dmaengine@vger.kernel.org, marc.zyngier@arm.com, mark.rutland@arm.com, timur@codeaurora.org, devicetree@vger.kernel.org, cov@codeaurora.org, jcm@redhat.com, shankerd@codeaurora.org, vikrams@codeaurora.org, eric.auger@linaro.org, agross@codeaurora.org, arnd@arndb.de, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E2CFF3.3030009-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
 
-On 3/13/2016 11:59 AM, Vinod Koul wrote:
-> I would write this as:
-> 
-> memcpy(lldev->tre_ring + lldev->tre_write_offset,
-> 		&tre->tre_local[0], TRE_SIZE);
-> 
-> To make it look more readable
 
-Got it.
+On 03/11/2016 08:02 AM, Roger Quadros wrote:
+> Franklin,
+>
+> On 11/03/16 01:56, Franklin S Cooper Jr wrote:
+>> NAND DMA prefetch has been broken for awhile and seems to have only
+>> worked for SDMA based devices
+>>
+>> This patchset fixes DMA prefetch to work on both EDMA and SDMA devices
+>>
+>> Test on:
+>> am335x gp evm
+>> am437x gp evm
+>> am37x gp evm
+>>
+>> This rev is pretty much the same as v2 which was blocked due to
+>> dependencies to Roger's update GPMC/NAND rework.
+>>
+>> This updated rev removes this dependency.
+>>
+>> Also it fixes an issue that was introduced when the eDMA driver was
+>> recently updated.
+>>
+>> Links to rev 3 patchset:
+>> https://patchwork.ozlabs.org/patch/595631/
+>> https://patchwork.ozlabs.org/patch/595626/
+>> https://patchwork.ozlabs.org/patch/595628/
+>> https://patchwork.ozlabs.org/patch/595630/
+>> https://patchwork.ozlabs.org/patch/595627/
+>> https://patchwork.ozlabs.org/patch/595629/
+>>
+>> Links to rev 2 patchset:
+>> https://patchwork.kernel.org/patch/7408691/
+>> https://patchwork.kernel.org/patch/7408681/
+>> https://patchwork.kernel.org/patch/7408661/
+>> https://patchwork.kernel.org/patch/7408641/
+>> https://patchwork.kernel.org/patch/7408621/
+>>
+>> Franklin S Cooper Jr (7):
+>>   ARM: OMAP2+: gpmc-nand: Set omap2-nand's parent dev to GPMC dev
+>>   ARM: dts: am33xx: Fix GPMC dma properties
+>>   ARM: dts: am437x: Fix GPMC dma properties
+> Can you please fix the gpmc nodes in dm816x.dtsi and dm814x.dtsi as well?
+> You can use linux-next tree or [1] to see the latest changes to these files
+> that will end up in v4.6 and base your changes on that.
+>
+> [1] Tony's omap-for-v4.6/dt
+> https://git.kernel.org/cgit/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v4.6/dt
 
-> 
->>>> > >>
->>>>>>>>>> > >>>>>>>> +	lldev->tx_status_list[tre->idx].err_code = 0;
->>>>>>>>>> > >>>>>>>> +	lldev->tx_status_list[tre->idx].err_info = 0;
->>>>>>>>>> > >>>>>>>> +	tre->queued = 1;
->>>>>>>>>> > >>>>>>>> +	lldev->pending_tre_count++;
->>>>>> > >>>>
->>>>>> > >>>> Is this the only one without alignment? I couldn't understand what you mean by 
->>>>>> > >>>> above one?
->>>> > >> quoting Coding Style:
->>>> > >>
->>>> > >> Statements longer than 80 columns will be broken into sensible chunks, unless
->>>> > >> exceeding 80 columns significantly increases readability and does not hide
->>>> > >> information. 
->>> > > 
->>>> > >> "Descendants are always substantially shorter than the parent and
->>>> > >> are placed substantially to the right."
->>>> > >>
->>>> > >>
->>> > > 
->>> > > Sorry for my poor English. I never got this rule. 
->>> > > 
->>> > > Which one is a "substantially" right? Can you give me an example?
->>> > > 
->>> > > I need to understand how you'd write this to satisfy the above rule.
->>> > > 
->>> > > like this:
->>> > > 
->>> > > memcpy(lldev->tre_ring + lldev->tre_write_offset, &tre->tre_local[0],
->>> > >        TRE_SIZE);
-> No
-> 
->>> > > 
->>> > > or
->>> > > 
->>> > > memcpy(lldev->tre_ring + lldev->tre_write_offset,
->>> > >        &tre->tre_local[0], TRE_SIZE);
-> Better or above
-> 
+Sorry I didn't bother looking at dm816 and dm814 dtsi files
+since I assumed it didn't use edma since the recent edma
+updates didn't make updates for those devices. My mistake.
+I'll update those dtsi files.
+>>   mtd: nand: omap2: Support parsing dma channel information from DT
+>>   mtd: nand: omap2: Start dma request before enabling prefetch
+>>   mtd: nand: omap2: Fix high memory dma prefetch transfer
+>>   ARM: OMAP2+: Update GPMC and NAND DT binding documentation
+>>
+>>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  7 +++++-
+>>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  2 +-
+>>  arch/arm/boot/dts/am33xx.dtsi                      |  2 +-
+>>  arch/arm/boot/dts/am4372.dtsi                      |  2 +-
+>>  arch/arm/mach-omap2/gpmc-nand.c                    | 16 ++++++++++++-
+>>  drivers/mtd/nand/omap2.c                           | 27 +++++++++-------------
+>>  6 files changed, 35 insertions(+), 21 deletions(-)
+>>
+> cheers,
+> -roger
 
-I'll do this to be consistent with the rest of the code. 
-
-Please let me know when you want to have the updated version. I don't want to post v16
-while you are reviewing the rest of the code.
-
--- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
