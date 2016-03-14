@@ -1,54 +1,24 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: dts: sunxi: Add the SPDIF to the
- A10 and A20
-Date: Mon, 14 Mar 2016 19:52:43 +0100
-Message-ID: <20160314185243.GE30977@lukather>
-References: <1456589909-2428-1-git-send-email-codekipper@gmail.com>
- <1456589909-2428-4-git-send-email-codekipper@gmail.com>
- <20160313215043.GJ8418@lukather>
- <CAEKpxBm4bs7sNSbDjomdP6XS2ApvfDT-s942DBb3JWv1iOZJ0w@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/3] of_mdio: use IS_ERR_OR_NULL() and
+ PTR_ERR_OR_ZERO()
+Date: Mon, 14 Mar 2016 15:32:21 -0400 (EDT)
+Message-ID: <20160314.153221.835659842149162060.davem@davemloft.net>
+References: <2682275.WNlbxTfNal@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Yb+qhiCg54lqZFXW"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7EQTS3QKGQEJZIFFAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAEKpxBm4bs7sNSbDjomdP6XS2ApvfDT-s942DBb3JWv1iOZJ0w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <2682275.WNlbxTfNal@wasted.cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, netdev@vger.kernel.org, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---Yb+qhiCg54lqZFXW
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Date: Sun, 13 Mar 2016 00:32:13 +0300
 
-On Mon, Mar 14, 2016 at 05:29:37PM +0100, Code Kipper wrote:
-> >> +             spdif: spdif@01c21000 {
-> >> +                     #sound-dai-cells = <0>;
-> >> +                     compatible = "allwinner,sun4i-a10-spdif";
-> >> +                     reg = <0x01c21000 0x40>;
-> >
-> > It only takes 64 bytes?
->
-> Yep(just like the audio codec!)
-> http://linux-sunxi.org/SPDIF#SUNXI_SPDIF_DEFAULT_VALUES
+>    Here's the set of 3 patches against DaveM's 'net-next.git'
+> repo. They deal with some error checks in the device tree MDIO
+> code...
 
-Yet the datasheet says it takes 1k in the memory map.
-
-Please use that value instead.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---Yb+qhiCg54lqZFXW--
+Series applied, thanks.
