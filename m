@@ -1,91 +1,74 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [v6, 5/5] mmc: sdhci-of-esdhc: fix host version for
- T4240-R1.0-R2.0
-Date: Mon, 14 Mar 2016 17:45:43 +0000
-Message-ID: <DB5PR0401MB19286B2D23D07F5C60DB799D91880@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
- <1457518131-11339-6-git-send-email-yangbo.lu@nxp.com>
- <4947024.WeMycs2fID@wuerfel>
- <HE1PR04MB0889CE4742B92461A925B9C4F8880@HE1PR04MB0889.eurprd04.prod.outlook.com>
+From: Graham Moore <grmoore@opensource.altera.com>
+Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
+ Controller driver.
+Date: Mon, 14 Mar 2016 13:17:08 -0500
+Message-ID: <56E70024.3080205@opensource.altera.com>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
+ <201602060842.38290.marex@denx.de> <56B879BD.2070608@ti.com>
+ <201602081627.57666.marex@denx.de> <56BB60F1.9070306@opensource.altera.com>
+ <56BB629D.2040209@denx.de> <56E1DF45.901@opensource.altera.com>
+ <56E1E2C8.8030405@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yangbo Lu <yangbo.lu@nxp.com>, Arnd Bergmann <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Zhao Qiang <qiang.zhao@freescale.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Kumar Gala <galak@codeaurora.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Santosh Shilimkar <ssantosh@kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, linux-arm-kernel@lists.infradead.
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <56E1E2C8.8030405@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marex@denx.de>, Vignesh R <vigneshr@ti.com>
+Cc: Rob Herring <robh@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alan Tull <atull@opensource.altera.com>, Yves Vandervennet <yvanderv@opensource.altera.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Dinh Nguyen <dinguyen@opensource.altera.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2016 02:29 AM, Yangbo Lu wrote:
->> -----Original Message-----
->> From: Arnd Bergmann [mailto:arnd@arndb.de]
->> Sent: Monday, March 14, 2016 6:26 AM
->> To: linuxppc-dev@lists.ozlabs.org
->> Cc: Yangbo Lu; devicetree@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
->> clk@vger.kernel.org; linux-i2c@vger.kernel.org; iommu@lists.linux-
->> foundation.org; netdev@vger.kernel.org; linux-mmc@vger.kernel.org;
->> ulf.hansson@linaro.org; Zhao Qiang; Russell King; Bhupesh Sharma; Joerg
->> Roedel; Santosh Shilimkar; Scott Wood; Rob Herring; Claudiu Manoil; Kumar
->> Gala; Yang-Leo Li; Xiaobo Xie
->> Subject: Re: [v6, 5/5] mmc: sdhci-of-esdhc: fix host version for T4240-
->> R1.0-R2.0
+On 03/10/2016 03:10 PM, Marek Vasut wrote:
+> On 03/10/2016 09:55 PM, Graham Moore wrote:
+>> On 02/10/2016 10:17 AM, Marek Vasut wrote:
 >>
->> On Wednesday 09 March 2016 18:08:51 Yangbo Lu wrote:
->>> @@ -567,10 +580,20 @@ static void esdhc_init(struct platform_device
->> *pdev, struct sdhci_host *host)
->>>         struct sdhci_pltfm_host *pltfm_host;
->>>         struct sdhci_esdhc *esdhc;
->>>         u16 host_ver;
->>> +       u32 svr;
+>> [...]
+>>
+>>> All right, so we will just add a special property or compat string for
+>>> the TI SoC. But we need to get this driver mainlined first :)
 >>>
->>>         pltfm_host =3D sdhci_priv(host);
->>>         esdhc =3D sdhci_pltfm_priv(pltfm_host);
->>>
->>> +       fsl_guts_init();
->>> +       svr =3D fsl_guts_get_svr();
->>> +       if (svr) {
->>> +               esdhc->soc_ver =3D SVR_SOC_VER(svr);
->>> +               esdhc->soc_rev =3D SVR_REV(svr);
->>> +       } else {
->>> +               dev_err(&pdev->dev, "Failed to get SVR value!\n");
->>> +       }
->>> +
 >>
->> This makes the driver non-portable. Better identify the specific
->> workarounds based on the compatible string for this device, or add a
->> boolean DT property for the quirk.
+>> Hi Marek,
+>
+> Hi Graham,
+>
+>> How's that mainlining going?  You probably noticed this patch needed
+>> some refactoring for 4.4.  In the course of testing, we realized this
+>> driver needs to enable its clock.
 >>
->> 	Arnd
-> =
+>> Do you have a 4.4 or later version in your tree?  I'd like to add the
+>> clock enabling.
+>
+> Still waiting for the patches from Cyrille to go in, so this patch is
+> stuck. I just checked next and some of them made it, but there are more
+> which didn't. I have a V10 of this patch , it is in the ML already [1],
+> so try playing around with that.
+>
+> I have linux 4.4 branch with all the necessary patches backported and/or
+> applied if you'd be interested in that, but I do my development on
+> linux-next .
+>
+> What sort of clock patch are you missing ?
+>
 
-> [Lu Yangbo-B47093] Hi Arnd, we did have a discussion about using DTS in v=
-1 before.
-> https://patchwork.kernel.org/patch/6834221/
-> =
+The clock needs to be enabled, after the devm_clk_get().  I've added a 
+clk_prepare_enable() there, and also clk_disable_unprepare() in the 
+remove function.
 
-> We don=92t have a separate DTS file for each revision of an SOC and if we=
- did, we'd constantly have people using the wrong one.
-> In addition, the device tree is stable ABI and errata are often discovere=
-d after device tree are deployed.
-> See the link for details.
-> =
+That ML patch won't apply to any tree I have, 4.4, 4.5, linux-next, etc. 
+  Maybe I'll just wait until it's in linux-next.
 
-> So we decide to read SVR from the device-config/guts MMIO block other tha=
-n using DTS.
-> Thanks.
+-Graham
 
-Also note that this driver is already only for fsl-specific hardware,
-and it will still work even if fsl_guts doesn't find anything to bind to
--- it just wouldn't be able to detect errata based on SVR in that case.
 
--Scott
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
