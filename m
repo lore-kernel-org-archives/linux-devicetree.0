@@ -1,66 +1,92 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH V2 4/5] gpio: DT: Rephrase "gpios" of hog node to support
- multiple gpios
-Date: Tue, 15 Mar 2016 09:40:16 -0600
-Message-ID: <56E82CE0.4010102@wwwdotorg.org>
-References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
- <1457703804-3016-5-git-send-email-ldewangan@nvidia.com>
- <56E6E753.1020505@wwwdotorg.org> <56E7ADA5.7000502@nvidia.com>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 1/3] Documentation: DT: Add binding documentation for NVIDIA ADMA
+Date: Tue, 15 Mar 2016 15:56:28 +0000
+Message-ID: <1458057390-20756-2-git-send-email-jonathanh@nvidia.com>
+References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E7ADA5.7000502-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458057390-20756-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2016 12:37 AM, Laxman Dewangan wrote:
->
-> On Monday 14 March 2016 10:01 PM, Stephen Warren wrote:
->> On 03/11/2016 06:43 AM, Laxman Dewangan wrote:
->>> The property "gpios" of GPIO hog node support the multiple GPIO entries.
->>> Rephrase the details of this property for this new support.
->>>
->>> Add details of new property "label" for GPIO label name.
->>
->>> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt
->>> b/Documentation/devicetree/bindings/gpio/gpio.txt
->>
->>>   Optional properties:
->>>   - line-name:  The GPIO label name. If not present the node name is
->>> used.
->>> +- label:      The GPIO lable name. This can have multiple string for
->>> GPIO
->>> +          label names to match with the GPIOs in "gpios" properties.
->>> +          If line-name is prosent than name is taken from line-name. If
->>> +          it is not then the name will be taken from label. If both are
->>> +          not available then node name is used for GPIO label name.
->>
->> Why are there two properties for the same thing? Why not just allow
->> line-name to have multiple entries instead of introducing a new property?
->>
->
-> We can use the lin-names also but per disucssion on the patch V1 of
->      gpio: of: Add support to have multiple gpios in gpio-hog
->
-> Markus suggested the discussion about the discussion
-> (https://lkml.org/lkml/2016/3/10/194):
->      "Device tree binding documentation for gpio-switch"
->
->
-> and on that, label is used.  Also for names, "label" is going to very
-> common.
->
-> So I added new property "label" to support multiple names.
+Add device-tree binding documentation for the Tegra210 Audio DMA
+controller.
 
-It makes sense to standardize on a common name for new bindings, but 
-this binding has already picked a name. It'd be much simpler for anyone 
-looking at the binding (and backwards-compatibility) to just stick with 
-it. We have to support the old name forever no matter what. Supporting 
-two different names will just be confusing.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ .../devicetree/bindings/dma/tegra210-adma.txt      | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/tegra210-adma.txt
+
+diff --git a/Documentation/devicetree/bindings/dma/tegra210-adma.txt b/Documentation/devicetree/bindings/dma/tegra210-adma.txt
+new file mode 100644
+index 000000000000..04ee77d6c79d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/tegra210-adma.txt
+@@ -0,0 +1,61 @@
++* NVIDIA Tegra Audio DMA (ADMA) controller
++
++The Tegra Audio DMA controller that is used for transferring data
++between system memory and the Audio Processing Engine (APE).
++
++Required properties:
++- compatible: Must be "nvidia,tegra210-adma".
++- reg: Should contain DMA registers location and length. This should be
++  a single entry that includes all of the per-channel registers in one
++  contiguous bank.
++- interrupt-parent: Phandle to the interrupt parent controller.
++- interrupts: Should contain all of the per-channel DMA interrupts in
++  ascending order with respect to the DMA channel index.
++- clocks: Must contain the entries for the APE clock (TEGRA210_CLK_APE),
++  APE interface clock (TEGRA210_CLK_APB2APE) and ADMA module clock
++  (TEGRA210_CLK_D_AUDIO).
++- clock-names: Must contain the names "ape", "apb2ape" and "d_audio"
++  for the corresponding 'clocks' entries.
++- #dma-cells : Must be 1. The first cell denotes the receive/transmit
++  request number and should be between 1 and the maximum number of
++  requests supported. This value corresponds to the RX/TX_REQUEST_SELECT
++  fields in the ADMA_CHn_CTRL register.
++- power-domains: Must contain a phandle that points to the audio
++  powergate (namely 'aud') for Tegra210.
++
++
++Example:
++
++adma: dma@702e2000 {
++	compatible = "nvidia,tegra210-adma";
++	reg = <0x0 0x702e2000 0x0 0x2000>;
++	interrupt-parent = <&tegra_agic>;
++	interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
++		     <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&tegra_car TEGRA210_CLK_APE>,
++		 <&tegra_car TEGRA210_CLK_APB2APE>,
++		 <&tegra_car TEGRA210_CLK_D_AUDIO>;
++	clock-names = "ape", "apb2ape", "d_audio";
++	power-domains = <&pd_audio>;
++	#dma-cells = <1>;
++};
+-- 
+2.1.4
