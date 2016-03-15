@@ -1,81 +1,82 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 4/5] regulator: pwm: Add support for voltage linear equal
- steps
-Date: Tue, 15 Mar 2016 12:14:50 +0530
-Message-ID: <56E7AF62.7000908@nvidia.com>
-References: <1457434405-30372-1-git-send-email-ldewangan@nvidia.com> <1457434405-30372-5-git-send-email-ldewangan@nvidia.com> <20160312060925.GW3898@sirena.org.uk> <56E565BE.5010703@nvidia.com> <20160314162843.GC2566@sirena.org.uk>
+From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
+Date: Tue, 15 Mar 2016 08:23:29 +0100
+Message-ID: <CAAObsKCdk+6HdzFYxRKZbPiaKcfMCLjbpngurat47YvyvSgH-w@mail.gmail.com>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com> <56DDA26C.3050301@suse.de>
+ <56DDA3D5.3090209@st.com> <56DDB749.1020808@suse.de> <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
+ <56DE7E1D.5070508@st.com> <CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com>
+ <CAAObsKD9HoEbtV_JMz_R=bcrQseDmhncRAWP9k8djksL-LMQqw@mail.gmail.com>
+ <56DFE55B.2090806@st.com> <56DFE64B.8060606@st.com> <CAAObsKBr9SXg1-wr9O-ypR8JozdGpeAwfDLMeUKi8ozxkKyTXg@mail.gmail.com>
+ <56DFF253.9050208@st.com> <56DFFA9E.7060602@st.com> <CAAObsKBUzBXcamEyup44N1bYUzGr_ZZTsYcD5x3PXb-2E00cGA@mail.gmail.com>
+ <56E033C8.40506@st.com> <56E038CE.606@st.com> <CADhT+wcMpzA_Coj8Z5OQZsc3bF3a7yOmsbazQMPtcdUWkJSuCA@mail.gmail.com>
+ <56E13AAB.2080900@st.com> <CADhT+wd=vcph2y_OxkGNO5EwHvN=kBy-BrfZHmNjZHww4LxmTg@mail.gmail.com>
+ <56E28B5D.6000708@st.com> <CAAObsKB-tSCu5KMYk2Zi-oX9zMKEOwwT93sMkiZKiYvtexmHaQ@mail.gmail.com>
+ <56E6E4B0.8060408@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160314162843.GC2566@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, lgirdwood@gmail.com, lee.jones@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E6E4B0.8060408-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, =?UTF-8?Q?Frank_Sch=C3=A4fer?= <fschaefer.oss-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On Monday 14 March 2016 09:58 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
+On 14 March 2016 at 17:20, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org> wrote:
+> Hi Tomeu
 >
-> On Sun, Mar 13, 2016 at 06:36:06PM +0530, Laxman Dewangan wrote:
->> On Saturday 12 March 2016 11:39 AM, Mark Brown wrote:
->>> I can't see any reason why this would ever be preferable to just using
->>> the flat linear range (you certainly haven't articulated one, you're
->>> just stating it).  This seems like you are bodging around a limited
->>> consumer driver, you should fix the consumer to cope with regulators
->>> with lots of voltages - PWM regulators aren't the only ones with high
->>> resolution steps.
->> The requirement is to have perfect linear steps interms of the period/pulse
->> time of PWM without loosing any voltage.
->> Continuous mode is pretty much near to what you said but here we are loosing
->> the perfect step as this divides the periods to 100 parts and then set
->> voltage.
-> Could you be more specific about what the issue is?  We've hopefully got
-> errors of less than 1% in the values here...
+> On 3/14/2016 12:43 PM, Tomeu Vizoso wrote:
+>>
+>> Hi Peppe,
+>>
+>> with that patch I don't see any difference at all in my setup.
+>>
+>> So to be clear, with these commits on top of next-20160314, I still
+>> get the hang during boot:
+>>
+>> 209afef6f0cd ARM: dts: rockchip: Add mdio node to ethernet node
+>> 2315acc6cf7f Revert "stmmac: first frame prep at the end of xmit routine"
+>> b5e08e810c63 stmmac: fix tx prepare for normal desc
+>> 37c15a31d850 i2c: immediately mark ourselves as registered
+>> 4342eec3c5a2 Add linux-next specific files for 20160314
+>>
+>> [   27.521026] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:303
+>> dev_watchdog+0x284/0x288
+>> [   27.529460] NETDEV WATCHDOG: eth0 (rk_gmac-dwmac): transmit queue 0
+>> timed out
 >
-If I use the continuous mode of PWM regulator then the calculation for 
-PWM pulse ON time(duty_pulse)
-done as:
-         duty_cycle = ((requested - minimum) * 100) / voltage_range.
+>
+> I do not reproduce the WATCHDOG but i am continuing to look at the code
+> to understand if normal descriptor management is ok or not. I keep you
+> informed.
+>
+> Just an info, did you test with 2315acc6cf7f included? Just to
+> understand if it is introducing a problem. It works in case of
+> enhanced descriptors are used instead of.
+>
+>>
+>>
+>> https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=broken-eth-on-rock2
+>
+>
+> thx I will take a look at this
 
-         duty_pulse = (pwm_period/100) * duty_cycle
+Thanks.
 
-This leads to the calculation error if we have the requested voltage 
-where accurate pulse time is possible. For example: Let's have following 
-case
-         voltage range is 800000uV to 1350000uV.
-         pwm-period = 1550ns (1ns time is 1mV).
-         Requested 900000uV.
+Btw, I have rebased on top of 4.5 this morning and I have noticed that
+88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression") got in
+there, so I guess we have now a bunch of boards with broken network on
+that release :(
 
-         duty_cycle = ((900000uV - 800000uV) * 100)/ 1550000
-                    = 6.45 but we will get 6 due to integer division.
+Regards,
 
-         duty_pulse = (1550/100) * 6 = 90 pulse time.
+Tomeu
 
-     90 pulse time is equivalent to 90mV and this gives us pulse time 
-equivalent
-     to 890000uV instead of 900000uV.
-
-
->> If new mode is not accpetable then need to enhance the existing continuous
->> mode like before scaling for 100% of period, first look if we get the
->> perfect pulse time of of PWM period and if it is there then use this direct
->> instead of converting required voltage to 100% scale and then back
->> calculating duty time.
-> That seems a lot better,
-
-You mean using the continuous mode only.
-
-If I add following logic then also it resolve the issue:
-if (((req_uV - min_uV) * pwm_period) % voltage_range == 0)
-     duty_pulse =  ((req_uV - min_uV) * pwm_period) / voltage_range;
-else
-     existing_continuous mode calculation.
-
-So on above example:
-     duty_pulse  = ((900000uV - 800000uV) * 1550)/1550000)
-                        = 100
-
-and this is equivalent to 100mV and so final voltage is
-     (800000 + 100000) = 900000uV which is same as requested,
+> Regards
+> Peppe
+>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
