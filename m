@@ -1,40 +1,85 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
- driver
-Date: Mon, 14 Mar 2016 21:07:22 -0500
-Message-ID: <56E76E5A.5060801@lechnology.com>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
- <87fuvtbl26.fsf@intel.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: MediaTek: Add binding document for the
+ AUXADC
+Date: Tue, 15 Mar 2016 11:45:25 +0800
+Message-ID: <1458013525.30001.5.camel@mtksdaap41>
+References: <1455866326-15095-1-git-send-email-s.hauer@pengutronix.de>
+	 <20160223203254.GA14660@rob-hp-laptop> <56CDBFFE.9050406@gmail.com>
+	 <20160224151204.GP3939@pengutronix.de> <56CDF7AB.7050201@gmail.com>
+	 <20160307065233.GA21851@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87fuvtbl26.fsf-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160307065233.GA21851-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2016 02:00 AM, Felipe Balbi wrote:
->
-> Hi,
->
-> Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> writes:
->> + - ti,usb2-phy-refclock-hz : Integer. Frequency in Hz of the USB 2.0 PHY reference clock,
->> +     either provided by the internal PLL or an external source.
->> +     The supported values are: 12MHz, 13MHz, 19.2MHz, 20MHz, 24MHz, 26MHz, 38.4MHz, 40MHz, 48MHz.
->
-> why isn't this an actual clock phandle ? Driver could, then, use
-> clk_get_rate() to figure this one out. You could just use a fixed clock
-> here to satisfy the clock API.
->
+Hi Matthias,
+
+On Mon, 2016-03-07 at 14:52 +0800, Sascha Hauer wrote:
+> On Wed, Feb 24, 2016 at 07:34:19PM +0100, Matthias Brugger wrote:
+> > 
+> > 
+> > On 24/02/16 16:12, Sascha Hauer wrote:
+> > >Hi Matthias,
+> > >
+> > >On Wed, Feb 24, 2016 at 03:36:46PM +0100, Matthias Brugger wrote:
+> > >>
+> > >>
+> > >>On 23/02/16 21:32, Rob Herring wrote:
+> > >>>On Fri, Feb 19, 2016 at 08:18:46AM +0100, Sascha Hauer wrote:
+> > >>>>Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > >>>>---
+> > >>>>
+> > >>>>This is a supplement to the MTK Thermal series which was lacking the
+> > >>>>description for the AUXADC.
+> > >>>
+> > >>>So it will be applied with that I presume.
+> > >>>
+> > >>>Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >>>
+> > >>
+> > >>Well the basic problem that I see is, that the auxadc has some more
+> > >>registers (at least in mt6589) for the touch screen registers.
+> > >>So this makes it a candidate for syscon and regmap.
+> > >>But this needs a patch in the thermal driver first...
+> > >
+> > >When we want to have a driver for the auxadc we are free to write one.
+> > >No need to use syscon and/or regmap for it.
+> > >
+> > >Note that the auxadc is not used by the thermal *driver*, it's used by
+> > >the thermal *hardware*. It's the hardware that directly reads/writes
+> > >auxadc registers. If MTK did it right then a real auxadc driver should
+> > >not be disturbed by the thermal controller accesses. At least from
+> > 
+> > Right, didn't realize this.
+> > 
+> > >checking the datasheet the registers the thermal controller accesses
+> > >are completely orthogonal to the ones a auxadc driver would use.
+> > >
+> > 
+> > As you already explained, syscon/regmap is not needed here. Just for
+> > completion: we already had completely orthogonal registers for the reset
+> > controller, and we decided to use regmap there as well.
+> > We should stay consistent on this.
+> 
+> Matthias, is this some kind of action topic for me? We can use regmap
+> for the AUXADC driver if we want to, I have no problem with that.
+> 
+
+So you want to add 
+  compatible = "mediatek,mt8173-auxadc", "syscon";
+
+And use regmap to access auxadc register in thermal driver. Then you
+will accept this patch and thermal dts patch, right ?
+
+Eddie
 
 
-I've actually been working on getting the da8xx ohci driver working with 
-device tree. It has similar clock issues (in fact, the ohci clock is a 
-child of the musb clock). Petr, give me a day or two and will have post 
-some patches. It will have a clock that can be used here for clk_get_rate().
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
