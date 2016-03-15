@@ -1,17 +1,17 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCHv2 21/31] ARM: dts: r8a7793: Reference both DMA controllers in HSCIF nodes
-Date: Tue, 15 Mar 2016 13:41:58 +0100
-Message-ID: <1458045728-4758-22-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+	<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Subject: [PATCHv2 27/31] ARM: dts: r8a7794: Reference both DMA controllers in HSCIF nodes
+Date: Tue, 15 Mar 2016 13:42:04 +0100
+Message-ID: <1458045728-4758-28-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 R-Car Gen2 have two DMA controllers, which are equivalent. Add
@@ -20,18 +20,18 @@ later if the first one is unavailable.
 
 Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7793.dtsi | 15 +++++++++------
+ arch/arm/boot/dts/r8a7794.dtsi | 15 +++++++++------
  1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793=
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794=
 =2Edtsi
-index d704790..be2e1fd 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -725,8 +725,9 @@
- 		clocks =3D <&mstp7_clks R8A7793_CLK_HSCIF0>, <&zs_clk>,
+index ccf3061..bc65153 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -507,8 +507,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_HSCIF0>, <&zs_clk>,
  			 <&scif_clk>;
  		clock-names =3D "fck", "brg_int", "scif_clk";
 -		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>;
@@ -42,8 +42,8 @@ index d704790..be2e1fd 100644
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -739,8 +740,9 @@
- 		clocks =3D <&mstp7_clks R8A7793_CLK_HSCIF1>, <&zs_clk>,
+@@ -521,8 +522,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_HSCIF1>, <&zs_clk>,
  			 <&scif_clk>;
  		clock-names =3D "fck", "brg_int", "scif_clk";
 -		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>;
@@ -54,8 +54,8 @@ index d704790..be2e1fd 100644
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -753,8 +755,9 @@
- 		clocks =3D <&mstp7_clks R8A7793_CLK_HSCIF2>, <&zs_clk>,
+@@ -535,8 +537,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_HSCIF2>, <&zs_clk>,
  			 <&scif_clk>;
  		clock-names =3D "fck", "brg_int", "scif_clk";
 -		dmas =3D <&dmac0 0x3b>, <&dmac0 0x3c>;
@@ -68,3 +68,9 @@ index d704790..be2e1fd 100644
  	};
 --=20
 2.7.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
