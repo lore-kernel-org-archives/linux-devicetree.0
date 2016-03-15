@@ -1,49 +1,49 @@
-From: Nicolas Saenz Julienne <nicolassaenzj@gmail.com>
-Subject: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
-Date: Mon, 14 Mar 2016 23:32:10 +0000
-Message-ID: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v7] rtc: rewrite DS1302 using SPI
+Date: Tue, 15 Mar 2016 01:18:44 +0100
+Message-ID: <20160315001844.GJ28277@piout.net>
+References: <1456105286-28598-1-git-send-email-ynvich@gmail.com>
+ <1456224900-4877-1-git-send-email-ynvich@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1456224900-4877-1-git-send-email-ynvich@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux@googlegroups.com>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The chip is also an 8 bit shift register which works out of the box as a GPO
-expander with this patch
+Hi,
 
-Signed-off-by: Nicolas Saenz Julienne <nicolassaenzj@gmail.com>
----
- Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 4 +++-
- drivers/gpio/gpio-74x164.c                             | 1 +
- 2 files changed, 4 insertions(+), 1 deletion(-)
+Thank you for your work!
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-index cc26080..ce1b223 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-@@ -1,7 +1,9 @@
- * Generic 8-bits shift register GPIO driver
- 
- Required properties:
--- compatible : Should be "fairchild,74hc595"
-+- compatible: Should contain one of the following:
-+    "fairchild,74hc595"
-+    "nxp,74lvc594"
- - reg : chip select number
- - gpio-controller : Marks the device node as a gpio controller.
- - #gpio-cells : Should be two.  The first cell is the pin number and
-diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-index c81224f..ebd0d1a 100644
---- a/drivers/gpio/gpio-74x164.c
-+++ b/drivers/gpio/gpio-74x164.c
-@@ -153,6 +153,7 @@ static int gen_74x164_remove(struct spi_device *spi)
- 
- static const struct of_device_id gen_74x164_dt_ids[] = {
- 	{ .compatible = "fairchild,74hc595" },
-+	{ .compatible = "nxp,74lvc594" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, gen_74x164_dt_ids);
+On 23/02/2016 at 13:54:57 +0300, Sergei Ianovich wrote :
+> -#ifdef CONFIG_SH_SECUREEDGE5410
+> -#include <asm/rtc.h>
+> -#include <mach/secureedge5410.h>
+> -
+> -#define	RTC_RESET	0x1000
+> -#define	RTC_IODATA	0x0800
+> -#define	RTC_SCLK	0x0400
+> -
+> -#define set_dp(x)	SECUREEDGE_WRITE_IOPORT(x, 0x1c00)
+> -#define get_dp()	SECUREEDGE_READ_IOPORT()
+> -#define ds1302_set_tx()
+> -#define ds1302_set_rx()
+> -
+
+I would like to have a solution for secureedge5410 even if it is
+untested. Else, we are breaking an existing platform without any
+solution.
+
+I've put the sh maintainers in copy, maybe they have an opinion. Else
+I'll let your patch sit in linux-next for the next cycle.
+
+I have further cleanups in that driver but they can probably be done
+later.
+
 -- 
-2.5.0
-
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
