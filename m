@@ -1,110 +1,70 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 5/9] ARM: dts: imx: add Boundary Devices Nitrogen6_MAX QP board
-Date: Tue, 15 Mar 2016 15:04:24 +0100
-Message-ID: <1458050668-26748-6-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [PATCH v2 0/9] imx: add latest Boundary Devices boards support
+Date: Tue, 15 Mar 2016 15:04:19 +0100
+Message-ID: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
 References: <1458037826-19375-1-git-send-email-gary.bisson@boundarydevices.com>
- <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458050668-26748-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <1458037826-19375-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Based on i.MX6 Quad Plus with 4GB of RAM.
+Hi all,
 
-https://boundarydevices.com/product/nitrogen6max/
+This series adds support for the following Boundary Devices boards:
+- Nitrogen7 (i.MX7)
+- Nitrogen6SX (i.MX6SoloX)
+- Nitrogen6QP_MAX (i.MX6QP)
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
+The first patches add display and CAN support to i.MX7 device tree. Those
+two features have been successfully tested on the Nitrogen7. Also the support
+of CKIL clock has been added in order to use it as slow clock for the WiFi
+module.
+
+Then the last 3 patches add some missing configurations in order to fully
+support Boundary platforms using imx_v6_v7_defconfig.
+
+All the patches have been applied/tested on top of Shawn's 'for-next' branch.
+
+Here are some remarks/questions that came during testing:
+- Is the pxp v4l2 driver being worked on for mainline inclusion?
+- Are the ldb modifications for SoloX being worked on for mainline inclusion?
+- Is the WM8960 ASoC machine driver being worked on for mainline inclusion?
+- When booting the Nitrogen7, there's backtrace due to clk_pllv3_prepare, does
+  it happen on the sdb too? Note that it doesn't prevent the board to work.
 
 Changelog v1 -> v2:
+- Remove lines commented out from nitrogen6sx dts as suggested by Vladimir
 - Disable pcie for nitrogen6qp_max dts
-  -> required for the board to boot normally
 
----
- arch/arm/boot/dts/Makefile                 |  1 +
- arch/arm/boot/dts/imx6qp-nitrogen6_max.dts | 59 ++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+Regards,
+Gary
+
+Gary Bisson (9):
+  ARM: dts: imx7d: add lcdif support
+  ARM: dts: imx7d: add flexcan support
+  clk: imx: add ckil clock for i.MX7
+  ARM: dts: imx: add Boundary Devices Nitrogen7 board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_MAX QP board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_SoloX board
+  ARM: imx_v6_v7_defconfig: add FT5x06 and TSC2004 touch support
+  ARM: imx_v6_v7_defconfig: add CONFIG_I2C_MUX_GPIO
+  ARM: imx_v6_v7_defconfig: add CONFIG_RTC_DRV_M41T80
+
+ arch/arm/boot/dts/Makefile                 |   3 +
+ arch/arm/boot/dts/imx6qp-nitrogen6_max.dts |  59 +++
+ arch/arm/boot/dts/imx6sx-nitrogen6sx.dts   | 732 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d-nitrogen7.dts      | 818 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d.dtsi               |  33 ++
+ arch/arm/configs/imx_v6_v7_defconfig       |   4 +
+ drivers/clk/imx/clk-imx7d.c                |   3 +-
+ include/dt-bindings/clock/imx7d-clock.h    |   3 +-
+ 8 files changed, 1653 insertions(+), 2 deletions(-)
  create mode 100644 arch/arm/boot/dts/imx6qp-nitrogen6_max.dts
+ create mode 100644 arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-nitrogen7.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fd67d8d..279ec61 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -356,6 +356,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6q-udoo.dtb \
- 	imx6q-wandboard.dtb \
- 	imx6q-wandboard-revb1.dtb \
-+	imx6qp-nitrogen6_max.dtb \
- 	imx6qp-sabreauto.dtb \
- 	imx6qp-sabresd.dtb
- dtb-$(CONFIG_SOC_IMX6SL) += \
-diff --git a/arch/arm/boot/dts/imx6qp-nitrogen6_max.dts b/arch/arm/boot/dts/imx6qp-nitrogen6_max.dts
-new file mode 100644
-index 0000000..a39b860
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6qp-nitrogen6_max.dts
-@@ -0,0 +1,59 @@
-+/*
-+ * Copyright 2016 Boundary Devices, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6qp.dtsi"
-+#include "imx6qdl-nitrogen6_max.dtsi"
-+
-+/ {
-+	model = "Boundary Devices i.MX6 Quad Plus Nitrogen6_MAX Board";
-+	compatible = "boundary,imx6qp-nitrogen6_max", "fsl,imx6qp";
-+};
-+
-+&pcie {
-+	status = "disabled";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
 -- 
 2.7.0
 
