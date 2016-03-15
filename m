@@ -1,73 +1,83 @@
-From: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v4 00/18] i2c mux cleanup and locking update
-Date: Tue, 15 Mar 2016 19:08:08 +0200
-Message-ID: <56E84178.2020204@iki.fi>
-References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se>
- <56E817AE.2090005@lysator.liu.se>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i-q8-common: Do not set constraints on
+ dc1sw regulator
+Date: Tue, 15 Mar 2016 19:29:54 +0100
+Message-ID: <20160315182954.GH30977@lukather>
+References: <1457552339-400-1-git-send-email-hdegoede@redhat.com>
+ <1457552339-400-2-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uwB7x3tnyrZQfZJI"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E817AE.2090005-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457552339-400-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Viorel Suman <viorel.suman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Terry Heo <terryheo-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tommi Rantala <tt.rantala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2016 04:09 PM, Peter Rosin wrote:
 
-> The series will be posted again for review. This is just a heads up.
->
-> v5 compared to v4:
-> - Rebase on top of v4.5-rc7.
-> - A new patch making me maintainer of i2c muxes (also sent separately).
-> - A new file Documentation/i2c/i2c-topology that describes various muxing
->    issues.
-> - Rename "i2c-controlled" muxes "self-locked" instead, as it is perfectly
->    reasonable to have i2c-controlled muxes that use the pre-existing locking
->    scheme. The pre-existing locking scheme for i2c muxes is from here on
->    called "parent-locked".
-> - Rename i2c-mux.c:i2c_mux_master_xfer to __i2c_mux_master_xfer since it
->    calls __i2c_transfer, which leaves room for a new i2c_mux_master_xfer
->    that calls i2c_transfer. Similar rename shuffle for i2c_mux_smbus_xfer.
-> - Use sizeof(*priv) instead of sizeof(struct i2c_mux_priv). One instance.
-> - Some follow-up patches that were posted in response to v2-v4 cleaning up
->    and simplifying various i2c muxes outside drivers/i2c/, among those is
->    an unrelated cleanup patch to drivers/media/dvb-frontends/rtl2832.c that
->    I carry here since it conflicts (trivially) with this series. That
->    unrelated patch is (currently) the last patch in the series.
->
->
-> The series looks like this now:
->
-> The following changes since commit f6cede5b49e822ebc41a099fe41ab4989f64e2cb:
->
->    Linux 4.5-rc7 (2016-03-06 14:48:03 -0800)
->
-> are available in the git repository at:
->
->    https://github.com/peda-r/i2c-mux.git mux-core-and-locking-5
+--uwB7x3tnyrZQfZJI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I reviewed and tested these patches:
+On Wed, Mar 09, 2016 at 08:38:59PM +0100, Hans de Goede wrote:
+> dc1sw is an on/off only regulator and as such it cannot have constraints.
+>=20
+> This is a limitation of the kernel regulator implementation which resolves
+> supplies on the first regulator_get(), which is done after applying
+> constraints, and applying the constrains will fail because it calls
+> _regulator_get_voltage() and _regulator_do_set_voltage() both of which
+> will fail on a switch regulator when there is no supply (yet).
+>=20
+> This causes registering of all axp22x regulators to fail with the
+> following errors:
+>=20
+> [    1.395249] vcc-lcd: failed to get the current voltage(-22)
+> [    1.405131] axp20x-regulator axp20x-regulator: Failed to register dc1sw
+> [    1.412436] axp20x-regulator: probe of axp20x-regulator failed with er=
+ror -22
+>=20
+> This commit removes the constrains on dc1sw / vcc-lcd fixing this problem
+> note that dcdc1 itself is contrained to the exact same values, so this
+> does not change anything.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-c1ef4a2 [media] rtl2832: regmap is aware of lockdep, drop local locking hack
-6636178 [media] rtl2832_sdr: get rid of empty regmap wrappers
-001ad6b [media] rtl2832: declare that the i2c gate is self-locked
-e2e82e4 [media] si2168: declare that the i2c gate is self-locked
-b52f766 [media] si2168: convert to use an explicit i2c mux core
-4ba9115 [media] rtl2832: convert to use an explicit i2c mux core
-3f1778b [media] rtl2830: convert to use an explicit i2c mux core
-5c8bfc8 [media] m88ds3103: convert to use an explicit i2c mux core
+Queued this as fixes for 4.6.
 
+Thanks!
+Maxime
 
-Reviewed-by: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
-Tested-by: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-regards
-Antti
+--uwB7x3tnyrZQfZJI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-http://palosaari.fi/
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJW6FSiAAoJEBx+YmzsjxAgym4P/RCT4OOcTgBvyY78ikxkSjcw
+0BQMYOoD6/8SJyN+ZkyGx70Q8v7SmXi8u6CpbU49SJ2jHrh9lwJrLT+KBEVWJYe2
+36oARY97c43DnXDPaewEvPvEDJOQVkQ4zobYALcrqMCv1c6tiR6K7BmBhw80IjEZ
+sU3H3mh9SVYWnyi5IOK7YnALjc9ik2eRVAmELl8m/bbA8Qa/veE1bXyiTD3aJSiI
+hOJmraX+YUIWBqn1Lkrs3854uABs96HRFg15GHxy0HqTBp/JtPqsBbADx8tjjD2Q
+jBaixlZN2aVJHY8/PsaV4dwx9J24R7zEtjZwm2D2CJ4vk2wLRmOK/OLAiniTsTp8
+OW5qI3/vyXdTpRYwCZvJpX+laBldQZ2zpcE2rKs8hU+SGUMZ0mbQ9hjaU1gpnZI4
+WNIWanv3mH9AMgYkFUdt4k3u+rdRFzAoNxabAHndyq6QBKgLbB0KB01Pk+n4jh2b
+5FILqCq7mkXUO1rSKH1tBvur+Xq4iR5PcskoYv3muFM3uFCFv5KTarepghWOp7N9
+1Clj6fgl+gD0vdfX7j9ztPpQhrecjJE7HmRJLTtK+FA9eyeLX1Yypi8XtihM+1j9
+ljG1+dACHy/Typ8UJd/kgeDHTj632FjlVRSlkmRBeACWhTIfY83yX7xk7nkxqPRp
+QW6CAaxANC4Z3S+u1S+E
+=uLMC
+-----END PGP SIGNATURE-----
+
+--uwB7x3tnyrZQfZJI--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
