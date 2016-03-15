@@ -1,17 +1,17 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-	<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCHv2 30/31] ARM: dts: r8a7794: Reference both DMA controllers in SDHI nodes
-Date: Tue, 15 Mar 2016 13:42:07 +0100
-Message-ID: <1458045728-4758-31-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+	<niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCHv2 28/31] ARM: dts: r8a7794: Reference both DMA controllers in SCIF nodes
+Date: Tue, 15 Mar 2016 13:42:05 +0100
+Message-ID: <1458045728-4758-29-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
 R-Car Gen2 have two DMA controllers, which are equivalent. Add
@@ -20,52 +20,87 @@ later if the first one is unavailable.
 
 Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7794.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm/boot/dts/r8a7794.dtsi | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
 diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794=
 =2Edtsi
-index 4761849..ec54246 100644
+index bc65153..982f089 100644
 --- a/arch/arm/boot/dts/r8a7794.dtsi
 +++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -664,6 +664,9 @@
- 		reg =3D <0 0xee100000 0 0x200>;
- 		interrupts =3D <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7794_CLK_SDHI0>;
-+		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>,
-+		       <&dmac0 0xcd>, <&dmac0 0xce>;
+@@ -423,8 +423,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_SCIF0>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>,
++		       <&dmac1 0x29>, <&dmac1 0x2a>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -673,6 +676,9 @@
- 		reg =3D <0 0xee140000 0 0x100>;
- 		interrupts =3D <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7794_CLK_SDHI1>;
-+		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>,
-+		       <&dmac0 0xc1>, <&dmac0 0xc2>;
+@@ -437,8 +438,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_SCIF1>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>,
++		       <&dmac1 0x2d>, <&dmac1 0x2e>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -682,6 +688,9 @@
- 		reg =3D <0 0xee160000 0 0x100>;
- 		interrupts =3D <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7794_CLK_SDHI2>;
-+		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>,
-+		       <&dmac0 0xd3>, <&dmac0 0xd4>;
+@@ -451,8 +453,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_SCIF2>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>,
++		       <&dmac1 0x2b>, <&dmac1 0x2c>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -465,8 +468,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_SCIF3>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x2f>, <&dmac0 0x30>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x2f>, <&dmac0 0x30>,
++		       <&dmac1 0x2f>, <&dmac1 0x30>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -479,8 +483,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_SCIF4>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0xfb>, <&dmac0 0xfc>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0xfb>, <&dmac0 0xfc>,
++		       <&dmac1 0xfb>, <&dmac1 0xfc>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -493,8 +498,9 @@
+ 		clocks =3D <&mstp7_clks R8A7794_CLK_SCIF5>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0xfd>, <&dmac0 0xfe>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0xfd>, <&dmac0 0xfe>,
++		       <&dmac1 0xfd>, <&dmac1 0xfe>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
 --=20
 2.7.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
