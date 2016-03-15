@@ -1,82 +1,80 @@
-From: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Tue, 15 Mar 2016 08:23:29 +0100
-Message-ID: <CAAObsKCdk+6HdzFYxRKZbPiaKcfMCLjbpngurat47YvyvSgH-w@mail.gmail.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <56DD8FBE.9010200@suse.de> <56DD99A4.5030004@st.com> <56DDA26C.3050301@suse.de>
- <56DDA3D5.3090209@st.com> <56DDB749.1020808@suse.de> <CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
- <56DE7E1D.5070508@st.com> <CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com>
- <CAAObsKD9HoEbtV_JMz_R=bcrQseDmhncRAWP9k8djksL-LMQqw@mail.gmail.com>
- <56DFE55B.2090806@st.com> <56DFE64B.8060606@st.com> <CAAObsKBr9SXg1-wr9O-ypR8JozdGpeAwfDLMeUKi8ozxkKyTXg@mail.gmail.com>
- <56DFF253.9050208@st.com> <56DFFA9E.7060602@st.com> <CAAObsKBUzBXcamEyup44N1bYUzGr_ZZTsYcD5x3PXb-2E00cGA@mail.gmail.com>
- <56E033C8.40506@st.com> <56E038CE.606@st.com> <CADhT+wcMpzA_Coj8Z5OQZsc3bF3a7yOmsbazQMPtcdUWkJSuCA@mail.gmail.com>
- <56E13AAB.2080900@st.com> <CADhT+wd=vcph2y_OxkGNO5EwHvN=kBy-BrfZHmNjZHww4LxmTg@mail.gmail.com>
- <56E28B5D.6000708@st.com> <CAAObsKB-tSCu5KMYk2Zi-oX9zMKEOwwT93sMkiZKiYvtexmHaQ@mail.gmail.com>
- <56E6E4B0.8060408@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E6E4B0.8060408-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, =?UTF-8?Q?Frank_Sch=C3=A4fer?= <fschaefer.oss-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v3 0/8] ARM: dts: Add new Exynos3250-based ARTIK5 module dtsi
+ file
+Date: Tue, 15 Mar 2016 16:38:02 +0900
+Message-ID: <1458027490-13787-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: k.kozlowski@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
+Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, cw00.choi@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14 March 2016 at 17:20, Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org> wrote:
-> Hi Tomeu
->
-> On 3/14/2016 12:43 PM, Tomeu Vizoso wrote:
->>
->> Hi Peppe,
->>
->> with that patch I don't see any difference at all in my setup.
->>
->> So to be clear, with these commits on top of next-20160314, I still
->> get the hang during boot:
->>
->> 209afef6f0cd ARM: dts: rockchip: Add mdio node to ethernet node
->> 2315acc6cf7f Revert "stmmac: first frame prep at the end of xmit routine"
->> b5e08e810c63 stmmac: fix tx prepare for normal desc
->> 37c15a31d850 i2c: immediately mark ourselves as registered
->> 4342eec3c5a2 Add linux-next specific files for 20160314
->>
->> [   27.521026] WARNING: CPU: 1 PID: 0 at net/sched/sch_generic.c:303
->> dev_watchdog+0x284/0x288
->> [   27.529460] NETDEV WATCHDOG: eth0 (rk_gmac-dwmac): transmit queue 0
->> timed out
->
->
-> I do not reproduce the WATCHDOG but i am continuing to look at the code
-> to understand if normal descriptor management is ok or not. I keep you
-> informed.
->
-> Just an info, did you test with 2315acc6cf7f included? Just to
-> understand if it is introducing a problem. It works in case of
-> enhanced descriptors are used instead of.
->
->>
->>
->> https://git.collabora.com/cgit/user/tomeu/linux.git/log/?h=broken-eth-on-rock2
->
->
-> thx I will take a look at this
+This patchset add the support for Device Tree source for Samsung ARTIK5 module[1]
+based on Exynos3250 SoC and development board[2]. The ARTIK5 module includes
+the follwoing devices:
+- Application Processor (Samsung Exynos3250)
+- WiFi/BT Combo chip
+- PMIC (Samsung S2MPS14)
+- eMMC (4GB)
+- DRAM LPDDR3 (512MB)
+- Connectors pin (60 Pins x 3 set)
 
-Thanks.
+Also, this patchset add the ARTIK5 development board[2] dts file which includes
+the ARTIK5 module[1] and have the devices such as sound codec, sd card port,
+ethernet port, uart port and so on.
 
-Btw, I have rebased on top of 4.5 this morning and I have noticed that
-88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression") got in
-there, so I guess we have now a bunch of boards with broken network on
-that release :(
+[1] https://www.artik.io/hardware/artik-5
+[2] http://www.digikey.com/product-detail/en/SIP-KITNXB001/1510-1316-ND/5825102
 
-Regards,
+Changes from v2:
+(https://lkml.org/lkml/2016/3/14/910)
+- Add reviewed tag by Krzysztof Kozlowski for all patches
+- Include the separate patch1[3] in patchset because patch5 depend on patch1[3]
+  [3] https://lkml.org/lkml/2016/3/14/245
+- Fix the order issue in exynos3250-artik5.dtsi
+- Use lowercase for hex address in exynos3250-artik5.dtsi
 
-Tomeu
+Changes from v1:
+(https://lkml.org/lkml/2016/3/13/215)
+- Change the board name from 'artik5-devel' to 'artik5-eval'
+- Merge the patch6/7/8 to patch5
+- Add the new board information to samsung-boards.txt[1]
+  [1] Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
+- Fix minor coding style issue and remove 'wakeup' property
+- Remove 'broken-cd' and 'desc-num' property from mshc_0 node
+- Handle the LDO11/LDO12 by using XMMC0CDn pin (GPK0-2 gpio) for MMC device
+  and fix the ldo number of 'vmmc-supply' property.
+- Add the 'vqmmc-supply' property for MSHC2
+- Drop the patch10 for PPMU node
+- Add the new patch to initialize the MMC2 gpio pin on monk board
 
-> Regards
-> Peppe
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chanwoo Choi (5):
+  ARM: dts: Add initial pin configuration for exynos3250-rinato
+  clk: samsung: exynos3250: Add MMC2 clock
+  ARM: dts: Add initial gpio setting of MMC2 device for exynos3250-monk
+  ARM: dts: Add MSHC2 dt node for Exynos3250 SoC
+  ARM: dts: Add exynos3250-artik5 dtsi file for ARTIK5 module
+
+Jaehoon Chung (1):
+  ARM: dts: Add MSHC2 dt node for SD card for exynos3250-artik5-eval board
+
+Pankaj Dubey (2):
+  clk: samsung: exynos3250: Add UART2 clock
+  ARM: dts: Add UART2 dt node for Exynos3250 SoC
+
+ .../bindings/arm/samsung/samsung-boards.txt        |   2 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/exynos3250-artik5-eval.dts       |  43 +++
+ arch/arm/boot/dts/exynos3250-artik5.dtsi           | 334 +++++++++++++++++++++
+ arch/arm/boot/dts/exynos3250-monk.dts              |  12 +-
+ arch/arm/boot/dts/exynos3250-pinctrl.dtsi          |  80 +++++
+ arch/arm/boot/dts/exynos3250-rinato.dts            |  71 ++++-
+ arch/arm/boot/dts/exynos3250.dtsi                  |  25 ++
+ drivers/clk/samsung/clk-exynos3250.c               |  15 +
+ include/dt-bindings/clock/exynos3250.h             |  11 +-
+ 10 files changed, 590 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos3250-artik5-eval.dts
+ create mode 100644 arch/arm/boot/dts/exynos3250-artik5.dtsi
+
+-- 
+1.9.1
