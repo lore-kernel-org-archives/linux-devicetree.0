@@ -1,108 +1,91 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v13 03/14] drm/mediatek: Add DSI sub driver
-Date: Tue, 15 Mar 2016 20:06:32 +0800
-Message-ID: <CAGS+omCPoA=Y_fRK9rrpq5EWfwdMTMzrwUrKaUOCUbaokJ8wGA@mail.gmail.com>
-References: <1457443649-12133-1-git-send-email-p.zabel@pengutronix.de>
- <1457443649-12133-4-git-send-email-p.zabel@pengutronix.de>
- <CAGS+omDuzLt7ErhpqC4rBwLnCDtKi-mci6=PVFEh=4JJZ+zS_g@mail.gmail.com>
- <1458042570.3360.26.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1458042570.3360.26.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, dri-devel <dri-devel@lists.freedesktop.org>, Jie Qiu <jie.qiu@mediatek.com>, Cawa Cheng <cawa.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Jitao Shi <jitao.shi@mediatek.com>, Sasha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, Paul Bolle <pebolle@tiscali.nl>, Emil Velikov <emil.l.velikov@gmail.com>, Tomasz Figa <tfiga@chromium.org>, Kumar Gala <galak@codeaurora.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH RESEND] ARM: l2x0: add three special L210 aux control flags
+Date: Tue, 15 Mar 2016 13:11:22 +0100
+Message-ID: <1458043882-16881-1-git-send-email-linus.walleij@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBNYXIgMTUsIDIwMTYgYXQgNzo0OSBQTSwgUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBw
-ZW5ndXRyb25peC5kZT4gd3JvdGU6Cj4KPiBIaSBEYW5pZWwsCj4KPiBBbSBNaXR0d29jaCwgZGVu
-IDA5LjAzLjIwMTYsIDIyOjA3ICswODAwIHNjaHJpZWIgRGFuaWVsIEt1cnR6Ogo+ID4gSGkgUGhp
-bGlwcCwgQ0ssCj4gPgo+ID4gU29tZSBzbWFsbCBjb21tZW50cy4KPiA+IE5vdGhpbmcgdGhhdCBj
-b3VsZG4ndCBiZSBhZGRyZXNzZWQgYWZ0ZXIgbWVyZ2luZywgaWYgeW91IHByZWZlci4KPiA+Cj4g
-PiBPbiBUdWUsIE1hciA4LCAyMDE2IGF0IDk6MjcgUE0sIFBoaWxpcHAgWmFiZWwgPHAuemFiZWxA
-cGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+IFsuLi5dCj4gPiA+ICtzdGF0aWMgaW50IG10a19kc2lf
-cG93ZXJvbihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ID4gPiArewo+ID4gPiArICAgICAgIHN0cnVj
-dCBkZXZpY2UgKmRldiA9IGRzaS0+ZGV2Owo+ID4gPiArICAgICAgIGludCByZXQ7Cj4gPiA+ICsK
-PiA+ID4gKyAgICAgICBpZiAoKytkc2ktPnJlZmNvdW50ICE9IDEpCj4gPiA+ICsgICAgICAgICAg
-ICAgICByZXR1cm4gMDsKPiA+Cj4gPiBXaGF0IGlzIHRoZSBwb2ludCBvZiB0aGlzIHJlZmNvdW50
-Pwo+ID4gSSBiZWxpZXZlIGRzaS0+ZW5hYmxlZCBhbHJlYWR5IGVuc3VyZXMgcG93ZXJvbi9wb3dl
-cm9mZiBjYWxscyBhcmUgcGFpcmVkLgo+Cj4gbXRrX2RzaV9wb3dlcm9uKCkgaXMgY2FsbGVkIGZy
-b20gYm90aCBtdGtfZHNpX2VuY29kZXJfZW5hYmxlKCkgYW5kCj4gbXRrX2RzaV9kZHBfc3RhcnQo
-KSBhbmQgZW5hYmxlcyBqdXN0IGVub3VnaCBvZiB0aGUgRFNJIHRvIHByb3ZpZGUgcG93ZXIKPiBh
-bmQgdGhlIHBpeGVsIGNsb2NrLiBUaGUgcmVhc29uIGlzIHRoYXQgdGhlIERTSSBhbHNvIHByb3Zp
-ZGVzIHRoZSBwaXhlbAo+IGNsb2NrIHRvIHRoZSByZXN0IG9mIHRoZSBwaXBlbGluZSBlbGVtZW50
-cy4KPgo+IGRzaS0+ZW5hYmxlZCBvbmx5IHRyYWNrcyB0aGUgd2hvbGUgRFNJIGJlaW5nIGFjdGl2
-ZSBhZnRlciB0aGUgY2FsbCBvZgo+IG10a19kc2lfZW5jb2Rlcl9lbmFibGUoKS4KPgo+IFsuLi5d
-Cj4gPiA+ICtzdGF0aWMgaW50IG10a19kc2lfY3JlYXRlX2Nvbm5fZW5jKHN0cnVjdCBkcm1fZGV2
-aWNlICpkcm0sIHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gPiA+ICt7Cj4gPiA+ICsgICAgICAgaW50
-IHJldDsKPiA+ID4gKwo+ID4gPiArICAgICAgIHJldCA9IGRybV9lbmNvZGVyX2luaXQoZHJtLCAm
-ZHNpLT5lbmNvZGVyLCAmbXRrX2RzaV9lbmNvZGVyX2Z1bmNzLAo+ID4gPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgRFJNX01PREVfRU5DT0RFUl9EU0ksIE5VTEwpOwo+ID4gPiArICAg
-ICAgIGlmIChyZXQpIHsKPiA+ID4gKyAgICAgICAgICAgICAgIERSTV9FUlJPUigiRmFpbGVkIHRv
-IGVuY29kZXIgaW5pdCB0byBkcm1cbiIpOwo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIHJl
-dDsKPiA+ID4gKyAgICAgICB9Cj4gPiA+ICsgICAgICAgZHJtX2VuY29kZXJfaGVscGVyX2FkZCgm
-ZHNpLT5lbmNvZGVyLCAmbXRrX2RzaV9lbmNvZGVyX2hlbHBlcl9mdW5jcyk7Cj4gPiA+ICsKPiA+
-ID4gKyAgICAgICAvKgo+ID4gPiArICAgICAgICAqIEN1cnJlbnRseSBkaXNwbGF5IGRhdGEgcGF0
-aHMgYXJlIHN0YXRpY2FsbHkgYXNzaWduZWQgdG8gYSBjcnRjIGVhY2guCj4gPiA+ICsgICAgICAg
-ICogY3J0YyAwIGlzIE9WTDAgLT4gQ09MT1IwIC0+IEFBTCAtPiBPRCAtPiBSRE1BMCAtPiBVRk9F
-IC0+IERTSTAKPiA+ID4gKyAgICAgICAgKi8KPiA+ID4gKyAgICAgICBkc2ktPmVuY29kZXIucG9z
-c2libGVfY3J0Y3MgPSAxOwo+ID4gPiArCj4gPiA+ICsgICAgICAgLyogUHJlLWVtcHQgRFAgY29u
-bmVjdG9yIGNyZWF0aW9uIGlmIHRoZXJlJ3MgYSBicmlkZ2UgKi8KPiA+ID4gKyAgICAgICByZXQg
-PSBtdGtfZHJtX2F0dGFjaF9icmlkZ2UoZHNpLT5icmlkZ2UsICZkc2ktPmVuY29kZXIpOwo+ID4g
-PiArICAgICAgIGlmICghcmV0KQo+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4gPgo+
-ID4gbml0OiB0aGUgYWJvdmUgdmFsaWQgZWFybHkgdGVybWluYXRpb24gb2YgdGhpcyBmdW5jdGlv
-biBoZXJlIGlzIGEgYml0IHVudXN1YWwuCj4gPiBJdCBtaWdodCBiZSBtb3JlIGNsZWFyIGlmIHRo
-ZSAiY29ubmVjdG9yIGluaXQiIHBhcnQgYmVsb3cgd2FzIHNwbGl0IG91dCBpbnRvIGl0cwo+ID4g
-b3duIGhlbHBlciBmdW5jdGlvbi4KPgo+IEdvb2QgcG9pbnQsIHdpbGwgZG8gdGhhdC4KPgo+IFsu
-Li5dCj4gPiA+ICtzdGF0aWMgaW50IG10a19kc2lfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCj4gPiA+ICt7Cj4gPiA+ICsgICAgICAgc3RydWN0IG10a19kc2kgKmRzaSA9IHBs
-YXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOwo+ID4gPiArCj4gPiA+ICsgICAgICAgbXRrX291dHB1
-dF9kc2lfZGlzYWJsZShkc2kpOwo+ID4KPiA+IFRoaXMgb25lIGxvb2tzIHVubWF0Y2hlZC4KPgo+
-IEl0IGlzLCBpbmRlZWQgd2Ugc2hvdWxkIGxldCB0aGUgZHJtIGNvcmUgZGlzYWJsZSB0aGUgZW5j
-b2RlciBiZWZvcmUgdGhlCj4gZHJpdmVyIGlzIHJlbW92ZWQuCj4KPiBbLi4uXQo+ID4gPiArc3Rh
-dGljIGludCBtdGtfZHNpX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiA+ICt7Cj4gPiA+
-ICsgICAgICAgc3RydWN0IG10a19kc2kgKmRzaTsKPiA+ID4gKwo+ID4gPiArICAgICAgIGRzaSA9
-IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwo+ID4gPiArCj4gPiA+ICsgICAgICAgbXRrX291dHB1dF9k
-c2lfZW5hYmxlKGRzaSk7Cj4gPiA+ICsgICAgICAgRFJNX0RFQlVHX0RSSVZFUigiZHNpIHJlc3Vt
-ZSBzdWNjZXNzIVxuIik7Cj4gPiA+ICsKPiA+ID4gKyAgICAgICByZXR1cm4gMDsKPiA+ID4gK30K
-PiA+ID4gKyNlbmRpZgo+ID4gPiArc3RhdGljIFNJTVBMRV9ERVZfUE1fT1BTKG10a19kc2lfcG1f
-b3BzLCBtdGtfZHNpX3N1c3BlbmQsIG10a19kc2lfcmVzdW1lKTsKPiA+Cj4gPiBJIGRvbid0IHRo
-aW5rIHdlIHdhbnQgUE0gb3BzLgo+ID4gVGhlIE1USyBEUk0gZHJpdmVyIGRpc2FibGVzL2VuYWJs
-ZXMgZW5jb2RlcnMgZHVyaW5nIHN1c3BlbmQvcmVzdW1lLgo+Cj4gWWVzLCBhbmQgdGhhdCB3aWxs
-IGFsc28gYWxsb3cgdG8gbWVyZ2UgbXRrX291dHB1dF9kc2lfZGlzYWJsZSgpIGludG8KPiBtdGtf
-ZHNpX2VuY29kZXJfZGlzYWJsZSgpLCB0b28uCj4KPiBbLi4uXQo+ID4gPiArc3RhdGljIHVuc2ln
-bmVkIGxvbmcgbXRrX21pcGlfdHhfcGxsX3JlY2FsY19yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LAo+
-ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdW5z
-aWduZWQgbG9uZyBwYXJlbnRfcmF0ZSkKPiA+ID4gK3sKPiA+ID4gKyAgICAgICBzdHJ1Y3QgbXRr
-X21pcGlfdHggKm1pcGlfdHggPSBjb250YWluZXJfb2YoaHcsIHN0cnVjdCBtdGtfbWlwaV90eCwK
-PiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-cGxsX2h3KTsKPiA+Cj4gPiBBbiBpbmxpbmUgZnVuY3Rpb24gLyBtYWNybyB3b3VsZCBoZWxwIGhl
-cmUuCj4KPiBPay4KPgo+IFsuLi5dCj4gPiA+ICtzdGF0aWMgdm9pZCBtdGtfbWlwaV90eF9wb3dl
-cl9vZmZfc2lnbmFsKHN0cnVjdCBwaHkgKnBoeSkKPiA+ID4gK3sKPiA+ID4gKyAgICAgICBzdHJ1
-Y3QgbXRrX21pcGlfdHggKm1pcGlfdHggPSBwaHlfZ2V0X2RydmRhdGEocGh5KTsKPiA+ID4gKwo+
-ID4gPiArICAgICAgIG10a19taXBpX3R4X21hc2sobWlwaV90eCwgTUlQSVRYX0RTSV9UT1BfQ09O
-LCBSR19EU0lfUEFEX1RJRV9MT1dfRU4sCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICBS
-R19EU0lfUEFEX1RJRV9MT1dfRU4pOwo+ID4KPiA+IEFzIG1lbnRpb25lZCBpbiB0aGUgSERNSSBy
-ZXZpZXcsIF9zZXRfYml0cygpIC8gX2Nscl9iaXRzKCkgaXMgbW9yZSByZWFkYWJsZSB0aGFuCj4g
-PiBfbWFzaygpIGlmIHdlIGFyZSBqdXN0IHNldHRpbmcvY2xlYXJpbmcgZ3JvdXBzIG9mIGJpdHMu
-Cj4KPiBJIGRvbid0IHRoaW5rCj4gICAgICAgICBtdGtfbWlwaV90eF9zZXRfYml0cyhtaXBpX3R4
-LCBNSVBJVFhfRFNJX1RPUF9DT04sCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBSR19E
-U0lfUEFEX1RJRV9MT1dfRU4pOwo+IGlzIHRoYXQgbXVjaCBlYXNpZXIgdG8gcmVhZC4gSG93IGFi
-b3V0IGNhbGxpbmcgdGhlIGZ1bmN0aW9uCj4gbXRrX21pcGlfdHhfdXBkYXRlX2JpdHMgaW5zdGVh
-ZD8KCkFjdHVhbGx5LCB0aGUgaW1wb3J0YW50IHBhcnQgaGVyZSB3YXMgdG8gcmVtb3ZlIHRoZSBy
-ZWR1bmRhbnQgJ3ZhbHVlJwpwYXJhbWV0ZXIsIGFuZCBpbnN0ZWFkIGhhdmUgZGVkaWNhdGVkIGNs
-ZWFyIC8gc2V0IGZ1bmN0aW9ucyB0aGF0Cm9wZXJhdGUgb24ganVzdCB0aGUgbWFzay4KCgoKPgo+
-IHJlZ2FyZHMKPiBQaGlsaXBwCj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZHJpLWRldmVsCg==
+This adds support for setting the flag bits "wrap access disable",
+"write allocate override" and "exclusive abort disable" to the L210
+variant from the device tree.
+
+The "write allocate override" bit was used on the Nomadik and
+necessary to properly make use of the L210 cache on that machine
+without sporadic crashes.
+
+I took this oppportunity to add all three flags so we avoid excess
+patching for each one.
+
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/l2c2x0.txt | 10 ++++++++++
+ arch/arm/mm/cache-l2x0.c                         | 18 ++++++++++++++++++
+ 2 files changed, 28 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+index fe0398c5c77b..975d1ae304d4 100644
+--- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
++++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+@@ -74,6 +74,16 @@ Optional properties:
+   or "write through no write allocate" (for writes).
+   On systems where this may cause DMA buffer corruption, this property must be
+   specified to indicate that such transforms are precluded.
++- arm,wrap-access-disable : (L210 only) if this flag is set, wrap accesses
++  requested on slave ports are converted to linear acesses on master ports.
++- arm,write-allocate-override : (L210 only) normally the L210 will use HPROT
++  attributes, setting this bit overrides that behaviour and cause the cache
++  to make all write-through and write-back accesses into read-write-allocate
++  accesses.
++- arm,exclusive-abort-disable : (L210 only) normally the cache controller sends
++  an ERROR response back to exclusive access in a cacheable, shared memory
++  region with the shared override bit set, but setting this flag disables the
++  abort generation and the access is instead treated as cacheable, non-shared.
+ - arm,parity-enable : enable parity checking on the L2 cache (L220 or PL310).
+ - arm,parity-disable : disable parity checking on the L2 cache (L220 or PL310).
+ - arm,outer-sync-disable : disable the outer sync operation on the L2 cache.
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 9f9d54271aad..301c3c2dc09f 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1076,6 +1076,24 @@ static void __init l2x0_of_parse(const struct device_node *np,
+ 		val |= L2C_AUX_CTRL_SHARED_OVERRIDE;
+ 	}
+ 
++	/* L210-specific aux control flags */
++	if (of_device_is_compatible(np, "arm,l210-cache")) {
++		if (of_property_read_bool(np, "arm,wrap-access-disable")) {
++			mask &= ~L210_AUX_CTRL_WRAP_DISABLE;
++			val |= L210_AUX_CTRL_WRAP_DISABLE;
++		}
++
++		if (of_property_read_bool(np, "arm,write-allocate-override")) {
++			mask &= ~L210_AUX_CTRL_WA_OVERRIDE;
++			val |= L210_AUX_CTRL_WA_OVERRIDE;
++		}
++
++		if (of_property_read_bool(np, "arm,exclusive-abort-disable")) {
++			mask &= ~L210_AUX_CTRL_EXCLUSIVE_ABORT;
++			val |= L210_AUX_CTRL_EXCLUSIVE_ABORT;
++		}
++	}
++
+ 	ret = l2x0_cache_size_of_parse(np, aux_val, aux_mask, &assoc, SZ_256K);
+ 	if (ret)
+ 		return;
+-- 
+2.4.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
