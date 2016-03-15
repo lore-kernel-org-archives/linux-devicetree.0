@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCHv2 24/31] ARM: dts: r8a7793: Reference both DMA controllers in IIC nodes
-Date: Tue, 15 Mar 2016 13:42:01 +0100
-Message-ID: <1458045728-4758-25-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCHv2 13/31] ARM: dts: r8a7791: Reference both DMA controllers in SCIF nodes
+Date: Tue, 15 Mar 2016 13:41:50 +0100
+Message-ID: <1458045728-4758-14-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -22,46 +22,82 @@ Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
 Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7793.dtsi | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793=
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791=
 =2Edtsi
-index b16b0cc..90925c5 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -470,8 +470,9 @@
- 		reg =3D <0 0xe60b0000 0 0x425>;
- 		interrupts =3D <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7793_CLK_IICDVFS>;
--		dmas =3D <&dmac0 0x77>, <&dmac0 0x78>;
+index 7854a4f..76c8da8 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -727,8 +727,9 @@
+ 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF0>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x77>, <&dmac0 0x78>,
-+		       <&dmac1 0x77>, <&dmac1 0x78>;
++		dmas =3D <&dmac0 0x29>, <&dmac0 0x2a>,
++		       <&dmac1 0x29>, <&dmac1 0x2a>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -483,8 +484,9 @@
- 		reg =3D <0 0xe6500000 0 0x425>;
- 		interrupts =3D <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7793_CLK_IIC0>;
--		dmas =3D <&dmac0 0x61>, <&dmac0 0x62>;
+@@ -741,8 +742,9 @@
+ 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF1>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x61>, <&dmac0 0x62>,
-+		       <&dmac1 0x61>, <&dmac1 0x62>;
++		dmas =3D <&dmac0 0x2d>, <&dmac0 0x2e>,
++		       <&dmac1 0x2d>, <&dmac1 0x2e>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
  	};
-@@ -496,8 +498,9 @@
- 		reg =3D <0 0xe6510000 0 0x425>;
- 		interrupts =3D <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp3_clks R8A7793_CLK_IIC1>;
--		dmas =3D <&dmac0 0x65>, <&dmac0 0x66>;
+@@ -755,8 +757,9 @@
+ 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF2>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x65>, <&dmac0 0x66>,
-+		       <&dmac1 0x65>, <&dmac1 0x66>;
++		dmas =3D <&dmac0 0x2b>, <&dmac0 0x2c>,
++		       <&dmac1 0x2b>, <&dmac1 0x2c>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -769,8 +772,9 @@
+ 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF3>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0x2f>, <&dmac0 0x30>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0x2f>, <&dmac0 0x30>,
++		       <&dmac1 0x2f>, <&dmac1 0x30>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -783,8 +787,9 @@
+ 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF4>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0xfb>, <&dmac0 0xfc>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0xfb>, <&dmac0 0xfc>,
++		       <&dmac1 0xfb>, <&dmac1 0xfc>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -797,8 +802,9 @@
+ 		clocks =3D <&mstp7_clks R8A7791_CLK_SCIF5>, <&zs_clk>,
+ 			 <&scif_clk>;
+ 		clock-names =3D "fck", "brg_int", "scif_clk";
+-		dmas =3D <&dmac0 0xfd>, <&dmac0 0xfe>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac0 0xfd>, <&dmac0 0xfe>,
++		       <&dmac1 0xfd>, <&dmac1 0xfe>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
  		status =3D "disabled";
