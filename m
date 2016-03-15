@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
-Subject: [PATCHv2 06/31] ARM: dts: r8a7790: Reference both DMA controllers in QSPI node
-Date: Tue, 15 Mar 2016 13:41:43 +0100
-Message-ID: <1458045728-4758-7-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCHv2 17/31] ARM: dts: r8a7791: Reference both DMA controllers in SDHI nodes
+Date: Tue, 15 Mar 2016 13:41:54 +0100
+Message-ID: <1458045728-4758-18-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 References: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -22,26 +22,50 @@ Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
 h.se>
 Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790=
+diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791=
 =2Edtsi
-index 102973c..a80791a 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1494,8 +1494,9 @@
- 		reg =3D <0 0xe6b10000 0 0x2c>;
- 		interrupts =3D <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp9_clks R8A7790_CLK_QSPI_MOD>;
--		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>;
+index 9acecdf..145c5aa 100644
+--- a/arch/arm/boot/dts/r8a7791.dtsi
++++ b/arch/arm/boot/dts/r8a7791.dtsi
+@@ -568,8 +568,9 @@
+ 		reg =3D <0 0xee100000 0 0x328>;
+ 		interrupts =3D <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI0>;
+-		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>;
 -		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x17>, <&dmac0 0x18>,
-+		       <&dmac1 0x17>, <&dmac1 0x18>;
++		dmas =3D <&dmac1 0xcd>, <&dmac1 0xce>,
++		       <&dmac0 0xcd>, <&dmac0 0xce>;
 +		dma-names =3D "tx", "rx", "tx", "rx";
  		power-domains =3D <&cpg_clocks>;
- 		num-cs =3D <1>;
- 		#address-cells =3D <1>;
+ 		status =3D "disabled";
+ 	};
+@@ -579,8 +580,9 @@
+ 		reg =3D <0 0xee140000 0 0x100>;
+ 		interrupts =3D <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI1>;
+-		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac1 0xc1>, <&dmac1 0xc2>,
++		       <&dmac0 0xc1>, <&dmac0 0xc2>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
+@@ -590,8 +592,9 @@
+ 		reg =3D <0 0xee160000 0 0x100>;
+ 		interrupts =3D <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks =3D <&mstp3_clks R8A7791_CLK_SDHI2>;
+-		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>;
+-		dma-names =3D "tx", "rx";
++		dmas =3D <&dmac1 0xd3>, <&dmac1 0xd4>,
++		       <&dmac0 0xd3>, <&dmac0 0xd4>;
++		dma-names =3D "tx", "rx", "tx", "rx";
+ 		power-domains =3D <&cpg_clocks>;
+ 		status =3D "disabled";
+ 	};
 --=20
 2.7.2
 
