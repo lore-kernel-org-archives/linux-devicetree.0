@@ -1,73 +1,98 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH V8 1/2] mtd: spi-nor: Bindings for Cadence Quad SPI Flash
- Controller driver.
-Date: Mon, 14 Mar 2016 23:47:23 +0100
-Message-ID: <56E73F7B.2010408@denx.de>
-References: <1452486886-8049-1-git-send-email-marex@denx.de> <201602060842.38290.marex@denx.de> <56B879BD.2070608@ti.com> <201602081627.57666.marex@denx.de> <56BB60F1.9070306@opensource.altera.com> <56BB629D.2040209@denx.de> <56E1DF45.901@opensource.altera.com> <56E1E2C8.8030405@denx.de> <56E70024.3080205@opensource.altera.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH 09/10] ARM: dts: Add MSHC2 dt node for SD card for
+ exynos3250-artik5-devel board
+Date: Tue, 15 Mar 2016 09:56:33 +0900
+Message-ID: <56E75DC1.7000807@samsung.com>
+References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
+ <1457921056-21257-11-git-send-email-cw00.choi@samsung.com>
+ <56E676EE.8060500@samsung.com> <56E67AE0.9060306@samsung.com>
+ <56E687E6.3070305@samsung.com> <56E690EA.50205@samsung.com>
+ <56E7567B.40301@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E70024.3080205-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <56E7567B.40301@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
+Cc: andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/14/2016 07:17 PM, Graham Moore wrote:
-> On 03/10/2016 03:10 PM, Marek Vasut wrote:
->> On 03/10/2016 09:55 PM, Graham Moore wrote:
->>> On 02/10/2016 10:17 AM, Marek Vasut wrote:
->>>
->>> [...]
->>>
->>>> All right, so we will just add a special property or compat string for
->>>> the TI SoC. But we need to get this driver mainlined first :)
+On 03/15/2016 09:25 AM, Krzysztof Kozlowski wrote:
+> On 14.03.2016 19:22, Chanwoo Choi wrote:
+>> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 18:44, Krzysztof Kozlowski =
+wrote:
+>>> On 14.03.2016 17:48, Chanwoo Choi wrote:
+>>>> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 17:31, Krzysztof Kozlowsk=
+i wrote:
+>>>>> On 14.03.2016 11:04, Chanwoo Choi wrote:
+>>>>>> From: Jaehoon Chung <jh80.chung@samsung.com>
+>>>>>>
+>>>>>> This patch adds MSHC (Mobile Storage Host Controller) dt node fo=
+r
+>>>>>> Exynos3250 SoC. MSHC is an interface between the system and the =
+SD card
+>>>>>>
+>>>>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>>> ---
+>>>>>>  arch/arm/boot/dts/exynos3250-artik5-devel.dts | 16 ++++++++++++=
+++++
+>>>>>>  1 file changed, 16 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/exynos3250-artik5-devel.dts b/arc=
+h/arm/boot/dts/exynos3250-artik5-devel.dts
+>>>>>> index d17c28969118..a371baf8536d 100644
+>>>>>> --- a/arch/arm/boot/dts/exynos3250-artik5-devel.dts
+>>>>>> +++ b/arch/arm/boot/dts/exynos3250-artik5-devel.dts
+>>>>>> @@ -21,6 +21,22 @@
+>>>>>>  			"samsung,exynos3250", "samsung,exynos3";
+>>>>>>  };
+>>>>>> =20
+>>>>>> +&mshc_2 {
+>>>>>> +	num-slots =3D <1>;
+>>>>>> +	cap-sd-highspeed;
+>>>>>> +	disable-wp;
+>>>>>> +	card-detect-delay =3D <200>;
+>>>>>> +	clock-frequency =3D <100000000>;
+>>>>>> +	clock-freq-min-max =3D <400000 100000000>;
+>>>>>> +	samsung,dw-mshc-ciu-div =3D <1>;
+>>>>>> +	samsung,dw-mshc-sdr-timing =3D <0 1>;
+>>>>>> +	samsung,dw-mshc-ddr-timing =3D <1 2>;
+>>>>>> +	pinctrl-names =3D "default";
+>>>>>> +	pinctrl-0 =3D <&sd2_cmd &sd2_clk &sd2_cd &sd2_bus1 &sd2_bus4>;
+>>>>>> +	bus-width =3D <4>;
+>>>>>> +	status =3D "okay";
+>>>>>
+>>>>> vqmmc-supply =3D ldo3?
 >>>>
+>>>> ldo3 is always on state because ldo3 is used for various IP in exy=
+nos3250.
+>>>> I think that we had better to remain always on state for ldo3.
 >>>
->>> Hi Marek,
+>>> Yes, I wasn't thinking about toggling ldo3 but about taking the
+>>> regulator here to model the dependencies between components.
 >>
->> Hi Graham,
+>> Okay. I'll add it as following:
 >>
->>> How's that mainlining going?  You probably noticed this patch needed
->>> some refactoring for 4.4.  In the course of testing, we realized this
->>> driver needs to enable its clock.
->>>
->>> Do you have a 4.4 or later version in your tree?  I'd like to add the
->>> clock enabling.
->>
->> Still waiting for the patches from Cyrille to go in, so this patch is
->> stuck. I just checked next and some of them made it, but there are more
->> which didn't. I have a V10 of this patch , it is in the ML already [1],
->> so try playing around with that.
->>
->> I have linux 4.4 branch with all the necessary patches backported and/or
->> applied if you'd be interested in that, but I do my development on
->> linux-next .
->>
->> What sort of clock patch are you missing ?
->>
-> 
-> The clock needs to be enabled, after the devm_clk_get().  I've added a
-> clk_prepare_enable() there, and also clk_disable_unprepare() in the
-> remove function.
+>> 	vmmc-supply =3D <&ldo18_reg>;
+>> 	vqmmc-supply =3D <&ldo3>;
+>=20
+> ldo18 is not used by mshc2. At least my schematics show that LDO3 goe=
+s
+> to DVDD_MMC2 (on different board revision that would be ldo18 instead=
+ of
+> ldo3, but not both).
 
-Yeah, please send me a patch and I will add it into the driver, add your
-SoB line and repost.
+It's confusing..but it seems that Krzysztof's opinion is right.
 
-> That ML patch won't apply to any tree I have, 4.4, 4.5, linux-next, etc.
->  Maybe I'll just wait until it's in linux-next.
+Best Regards,
+Jaehoon Chung
 
-I'll send you the backport to 4.4 off-list, so I don't bother people here.
-
-> -Graham
-> 
-
-
--- 
-Best regards,
-Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> The card itself is powered by VDDFLASH_28/MAIN_BAT.
+>=20
+> BR,
+> Krzysztof
+>=20
+>=20
