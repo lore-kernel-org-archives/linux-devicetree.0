@@ -1,58 +1,80 @@
 From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
 	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCHv2 03/31] ARM: dts: r8a7790: Reference both DMA controllers in HSCIF nodes
-Date: Tue, 15 Mar 2016 13:41:40 +0100
-Message-ID: <1458045728-4758-4-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-References: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+Subject: [PATCHv2 00/31] ARM: dts: r8a779[0-4]: Reference both DMA controllers
+Date: Tue, 15 Mar 2016 13:41:37 +0100
+Message-ID: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com
 Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
 List-Id: devicetree@vger.kernel.org
 
-R-Car Gen2 have two DMA controllers, which are equivalent. Add
-references to both dmac0 and dmac1 so the driver can fallback to the
-later if the first one is unavailable.
+Hi,
 
-Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
-h.se>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+R-Car Gen2 have two DMA controllers, which are equivalent. However DMA
+slaves were tied only to a single DMA controller in .dtsi. This series
+add references to to both DMA controllers for all nodes that previously
+only referenced one of them. It also adds dma references to the SDHI
+nodes for r8a7794 which according to the datasheet should work but I
+have not access to HW to verify.
+
+Tested on Koelsch (r8a7791) by altering the compatible value of either
+dmac0 or dmac1 and verifying that the DMA slaves pick the DMA controlle=
+r
+that is instantiated.
+
+=46or your convince the series can be fetched from
+https://git.ragnatech.se/linux rcar-dmas-dt-2
+
+* Changes since v1
+- Rebase on top of renesas-devel-20160315-v4.5 and add dmas references
+  new nodes (r8a7790: scif2 r8a7793: i2c6,i2c7,i2c8).
+- Correct error in commit message 31/31 (s/QSPI/MMCIF).
+- Collect Ack and Reviewed tags from Geert.
+
+Niklas S=C3=B6derlund (31):
+  ARM: dts: r8a7790: Reference both DMA controllers in SCIFA nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in SCIFB nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in HSCIF nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in SCIF nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in MSIOF nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in QSPI node
+  ARM: dts: r8a7790: Reference both DMA controllers in IIC nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in SDHI nodes
+  ARM: dts: r8a7790: Reference both DMA controllers in MMCIF nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in SCIFA nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in SCIFB nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in HSCIF nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in SCIF nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in MSIOF nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in QSPI node
+  ARM: dts: r8a7791: Reference both DMA controllers in IIC nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in SDHI nodes
+  ARM: dts: r8a7791: Reference both DMA controllers in MMCIF node
+  ARM: dts: r8a7793: Reference both DMA controllers in SCIFA nodes
+  ARM: dts: r8a7793: Reference both DMA controllers in SCIFB nodes
+  ARM: dts: r8a7793: Reference both DMA controllers in HSCIF nodes
+  ARM: dts: r8a7793: Reference both DMA controllers in SCIF nodes
+  ARM: dts: r8a7793: Reference both DMA controllers in QSPI node
+  ARM: dts: r8a7793: Reference both DMA controllers in IIC nodes
+  ARM: dts: r8a7794: Reference both DMA controllers in SCIFA nodes
+  ARM: dts: r8a7794: Reference both DMA controllers in SCIFB nodes
+  ARM: dts: r8a7794: Reference both DMA controllers in HSCIF nodes
+  ARM: dts: r8a7794: Reference both DMA controllers in SCIF nodes
+  ARM: dts: r8a7794: Reference both DMA controllers in QSPI node
+  ARM: dts: r8a7794: Reference both DMA controllers in SDHI nodes
+  ARM: dts: r8a7794: Reference both DMA controllers in MMCIF node
+
+ arch/arm/boot/dts/r8a7790.dtsi | 130 +++++++++++++++++++++------------=
 ---
- arch/arm/boot/dts/r8a7790.dtsi | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi | 145 ++++++++++++++++++++++++---------=
+--------
+ arch/arm/boot/dts/r8a7793.dtsi | 110 ++++++++++++++++++-------------
+ arch/arm/boot/dts/r8a7794.dtsi | 109 +++++++++++++++++++------------
+ 4 files changed, 300 insertions(+), 194 deletions(-)
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790=
-=2Edtsi
-index 13e8817..2c02493 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -760,8 +760,9 @@
- 		clocks =3D <&mstp7_clks R8A7790_CLK_HSCIF0>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x39>, <&dmac0 0x3a>,
-+		       <&dmac1 0x39>, <&dmac1 0x3a>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -774,8 +775,9 @@
- 		clocks =3D <&mstp7_clks R8A7790_CLK_HSCIF1>, <&zs_clk>,
- 			 <&scif_clk>;
- 		clock-names =3D "fck", "brg_int", "scif_clk";
--		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x4d>, <&dmac0 0x4e>,
-+		       <&dmac1 0x4d>, <&dmac1 0x4e>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
---=20
+--
 2.7.2
