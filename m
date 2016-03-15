@@ -1,101 +1,110 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH 09/10] ARM: dts: Add MSHC2 dt node for SD card for
- exynos3250-artik5-devel board
-Date: Tue, 15 Mar 2016 10:46:49 +0900
-Message-ID: <56E76989.6000008@samsung.com>
-References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
- <1457921056-21257-11-git-send-email-cw00.choi@samsung.com>
- <56E676EE.8060500@samsung.com> <56E67AE0.9060306@samsung.com>
- <56E687E6.3070305@samsung.com> <56E690EA.50205@samsung.com>
- <56E7567B.40301@samsung.com> <56E75DC1.7000807@samsung.com>
- <56E7692A.1020407@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Subject: [PATCH v2 2/7] clk: samsung: exynos3250: Add MMC2 clock
+Date: Tue, 15 Mar 2016 11:08:10 +0900
+Message-ID: <1458007695-3627-3-git-send-email-cw00.choi@samsung.com>
+References: <1458007695-3627-1-git-send-email-cw00.choi@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56E7692A.1020407@samsung.com>
+In-reply-to: <1458007695-3627-1-git-send-email-cw00.choi@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: k.kozlowski@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
+Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, cw00.choi@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016=EB=85=84 03=EC=9B=94 15=EC=9D=BC 10:45, Chanwoo Choi wrote:
-> On 2016=EB=85=84 03=EC=9B=94 15=EC=9D=BC 09:56, Jaehoon Chung wrote:
->> On 03/15/2016 09:25 AM, Krzysztof Kozlowski wrote:
->>> On 14.03.2016 19:22, Chanwoo Choi wrote:
->>>> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 18:44, Krzysztof Kozlowsk=
-i wrote:
->>>>> On 14.03.2016 17:48, Chanwoo Choi wrote:
->>>>>> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 17:31, Krzysztof Kozlow=
-ski wrote:
->>>>>>> On 14.03.2016 11:04, Chanwoo Choi wrote:
->>>>>>>> From: Jaehoon Chung <jh80.chung@samsung.com>
->>>>>>>>
->>>>>>>> This patch adds MSHC (Mobile Storage Host Controller) dt node =
-for
->>>>>>>> Exynos3250 SoC. MSHC is an interface between the system and th=
-e SD card
->>>>>>>>
->>>>>>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>>>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>>>>> ---
->>>>>>>>  arch/arm/boot/dts/exynos3250-artik5-devel.dts | 16 ++++++++++=
-++++++
->>>>>>>>  1 file changed, 16 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/arch/arm/boot/dts/exynos3250-artik5-devel.dts b/a=
-rch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>>>>>> index d17c28969118..a371baf8536d 100644
->>>>>>>> --- a/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>>>>>> +++ b/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>>>>>> @@ -21,6 +21,22 @@
->>>>>>>>  			"samsung,exynos3250", "samsung,exynos3";
->>>>>>>>  };
->>>>>>>> =20
->>>>>>>> +&mshc_2 {
->>>>>>>> +	num-slots =3D <1>;
->>>>>>>> +	cap-sd-highspeed;
->>>>>>>> +	disable-wp;
->>>>>>>> +	card-detect-delay =3D <200>;
->>>>>>>> +	clock-frequency =3D <100000000>;
->>>>>>>> +	clock-freq-min-max =3D <400000 100000000>;
->>>>>>>> +	samsung,dw-mshc-ciu-div =3D <1>;
->>>>>>>> +	samsung,dw-mshc-sdr-timing =3D <0 1>;
->>>>>>>> +	samsung,dw-mshc-ddr-timing =3D <1 2>;
->>>>>>>> +	pinctrl-names =3D "default";
->>>>>>>> +	pinctrl-0 =3D <&sd2_cmd &sd2_clk &sd2_cd &sd2_bus1 &sd2_bus4=
->;
->>>>>>>> +	bus-width =3D <4>;
->>>>>>>> +	status =3D "okay";
->>>>>>>
->>>>>>> vqmmc-supply =3D ldo3?
->>>>>>
->>>>>> ldo3 is always on state because ldo3 is used for various IP in e=
-xynos3250.
->>>>>> I think that we had better to remain always on state for ldo3.
->>>>>
->>>>> Yes, I wasn't thinking about toggling ldo3 but about taking the
->>>>> regulator here to model the dependencies between components.
->>>>
->>>> Okay. I'll add it as following:
->>>>
->>>> 	vmmc-supply =3D <&ldo18_reg>;
->>>> 	vqmmc-supply =3D <&ldo3>;
->>>
->>> ldo18 is not used by mshc2. At least my schematics show that LDO3 g=
-oes
->>> to DVDD_MMC2 (on different board revision that would be ldo18 inste=
-ad of
->>> ldo3, but not both).
->=20
-> ARTIK5 schema document VLDO18 and VLDO3 are connected to DVDD_MMC2_AP=
-=2E
-> But, I'm not sure what is meaning. So, I'll drop the 'vmmc-supply'
+This patch add the MMC2 clocks (mux, divider, gate) of Exynos3250 SoC.
 
-VLDO18 is not connected to DVDD_MMC2_AP. It is NC state.
-Sorry for confusion.
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ drivers/clk/samsung/clk-exynos3250.c   | 9 +++++++++
+ include/dt-bindings/clock/exynos3250.h | 7 ++++++-
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-Best Regards,
-Chanwoo Choi
-
-[snip]
+diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsung/clk-exynos3250.c
+index bc60e399d1bc..16575ee874cb 100644
+--- a/drivers/clk/samsung/clk-exynos3250.c
++++ b/drivers/clk/samsung/clk-exynos3250.c
+@@ -302,6 +302,7 @@ static struct samsung_mux_clock mux_clks[] __initdata = {
+ 
+ 	/* SRC_FSYS */
+ 	MUX(CLK_MOUT_TSADC, "mout_tsadc", group_sclk_p, SRC_FSYS, 28, 4),
++	MUX(CLK_MOUT_MMC2, "mout_mmc2", group_sclk_p, SRC_FSYS, 8, 4),
+ 	MUX(CLK_MOUT_MMC1, "mout_mmc1", group_sclk_p, SRC_FSYS, 4, 4),
+ 	MUX(CLK_MOUT_MMC0, "mout_mmc0", group_sclk_p, SRC_FSYS, 0, 4),
+ 
+@@ -390,6 +391,11 @@ static struct samsung_div_clock div_clks[] __initdata = {
+ 		CLK_SET_RATE_PARENT, 0),
+ 	DIV(CLK_DIV_MMC0, "div_mmc0", "mout_mmc0", DIV_FSYS1, 0, 4),
+ 
++	/* DIV_FSYS2 */
++	DIV_F(CLK_DIV_MMC2_PRE, "div_mmc2_pre", "div_mmc2", DIV_FSYS2, 8, 8,
++		CLK_SET_RATE_PARENT, 0),
++	DIV(CLK_DIV_MMC2, "div_mmc2", "mout_mmc2", DIV_FSYS2, 0, 4),
++
+ 	/* DIV_PERIL0 */
+ 	DIV(CLK_DIV_UART2, "div_uart2", "mout_uart2", DIV_PERIL0, 8, 4),
+ 	DIV(CLK_DIV_UART1, "div_uart1", "mout_uart1", DIV_PERIL0, 4, 4),
+@@ -540,6 +546,8 @@ static struct samsung_gate_clock gate_clks[] __initdata = {
+ 		GATE_SCLK_FSYS, 9, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_EBI, "sclk_ebi", "div_ebi",
+ 		GATE_SCLK_FSYS, 6, CLK_SET_RATE_PARENT, 0),
++	GATE(CLK_SCLK_MMC2, "sclk_mmc2", "div_mmc2_pre",
++		GATE_SCLK_FSYS, 2, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_MMC1, "sclk_mmc1", "div_mmc1_pre",
+ 		GATE_SCLK_FSYS, 1, CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_SCLK_MMC0, "sclk_mmc0", "div_mmc0_pre",
+@@ -635,6 +643,7 @@ static struct samsung_gate_clock gate_clks[] __initdata = {
+ 	GATE(CLK_USBOTG, "usbotg", "div_aclk_200", GATE_IP_FSYS, 13, 0, 0),
+ 	GATE(CLK_USBHOST, "usbhost", "div_aclk_200", GATE_IP_FSYS, 12, 0, 0),
+ 	GATE(CLK_SROMC, "sromc", "div_aclk_200", GATE_IP_FSYS, 11, 0, 0),
++	GATE(CLK_SDMMC2, "sdmmc2", "div_aclk_200", GATE_IP_FSYS, 7, 0, 0),
+ 	GATE(CLK_SDMMC1, "sdmmc1", "div_aclk_200", GATE_IP_FSYS, 6, 0, 0),
+ 	GATE(CLK_SDMMC0, "sdmmc0", "div_aclk_200", GATE_IP_FSYS, 5, 0, 0),
+ 	GATE(CLK_PDMA1, "pdma1", "div_aclk_200", GATE_IP_FSYS, 1, 0, 0),
+diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bindings/clock/exynos3250.h
+index ddb874130d86..c796ff02ceeb 100644
+--- a/include/dt-bindings/clock/exynos3250.h
++++ b/include/dt-bindings/clock/exynos3250.h
+@@ -80,6 +80,7 @@
+ #define CLK_MOUT_APLL			59
+ #define CLK_MOUT_ACLK_266_SUB		60
+ #define CLK_MOUT_UART2			61
++#define CLK_MOUT_MMC2			62
+ 
+ /* Dividers */
+ #define CLK_DIV_GPL			64
+@@ -129,6 +130,8 @@
+ #define CLK_DIV_HPM			108
+ #define CLK_DIV_COPY			109
+ #define CLK_DIV_UART2			110
++#define CLK_DIV_MMC2_PRE		111
++#define CLK_DIV_MMC2			112
+ 
+ /* Gates */
+ #define CLK_ASYNC_G3D			128
+@@ -226,6 +229,7 @@
+ #define CLK_BLOCK_CAM			220
+ #define CLK_SMIES			221
+ #define CLK_UART2			222
++#define CLK_SDMMC2			223
+ 
+ /* Special clocks */
+ #define CLK_SCLK_JPEG			224
+@@ -253,12 +257,13 @@
+ #define CLK_SCLK_UART1			246
+ #define CLK_SCLK_UART0			247
+ #define CLK_SCLK_UART2			248
++#define CLK_SCLK_MMC2			249
+ 
+ /*
+  * Total number of clocks of main CMU.
+  * NOTE: Must be equal to last clock ID increased by one.
+  */
+-#define CLK_NR_CLKS			249
++#define CLK_NR_CLKS			250
+ 
+ /*
+  * CMU DMC
+-- 
+1.9.1
