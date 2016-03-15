@@ -1,106 +1,135 @@
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?=
-	<niklas.soderlund+renesas@ragnatech.se>
-Subject: [PATCHv2 10/31] ARM: dts: r8a7791: Reference both DMA controllers in SCIFA nodes
-Date: Tue, 15 Mar 2016 13:41:47 +0100
-Message-ID: <1458045728-4758-11-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-References: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v3] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Tue, 15 Mar 2016 13:51:51 +0100
+Message-ID: <56E80567.9060201@pengutronix.de>
+References: <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1458045728-4758-1-git-send-email-niklas.soderlund+renesas@ragnatech.se>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, geert@linux-m68k.org, laurent.pinchart@ideasonboard.com
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="6nomFkabhXg7Xua0Wkbm7e13uQQ3O9l37"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, corbet@lwn.net
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, geert+renesas@glider.be, chris.paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-R-Car Gen2 have two DMA controllers, which are equivalent. Add
-references to both dmac0 and dmac1 so the driver can fallback to the
-later if the first one is unavailable.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--6nomFkabhXg7Xua0Wkbm7e13uQQ3O9l37
+Content-Type: multipart/mixed; boundary="tVEFGSCu3uInSe5LrCKVaiDJhlpLsPSna"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>,
+ wg@grandegger.com, robh+dt@kernel.org, pawel.moll@arm.com,
+ mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org,
+ corbet@lwn.net
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-can@vger.kernel.org, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, geert+renesas@glider.be,
+ chris.paterson2@renesas.com
+Message-ID: <56E80567.9060201@pengutronix.de>
+Subject: Re: [PATCH v3] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+References: <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+In-Reply-To: <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 
-Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatec=
-h.se>
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- arch/arm/boot/dts/r8a7791.dtsi | 30 ++++++++++++++++++------------
- 1 file changed, 18 insertions(+), 12 deletions(-)
+--tVEFGSCu3uInSe5LrCKVaiDJhlpLsPSna
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791=
-=2Edtsi
-index 396a640..4de4812 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -600,8 +600,9 @@
- 		interrupts =3D <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFA0>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x21>, <&dmac0 0x22>,
-+		       <&dmac1 0x21>, <&dmac1 0x22>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -613,8 +614,9 @@
- 		interrupts =3D <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFA1>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x25>, <&dmac0 0x26>,
-+		       <&dmac1 0x25>, <&dmac1 0x26>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -626,8 +628,9 @@
- 		interrupts =3D <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp2_clks R8A7791_CLK_SCIFA2>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x27>, <&dmac0 0x28>,
-+		       <&dmac1 0x27>, <&dmac1 0x28>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -639,8 +642,9 @@
- 		interrupts =3D <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7791_CLK_SCIFA3>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1b>, <&dmac0 0x1c>,
-+		       <&dmac1 0x1b>, <&dmac1 0x1c>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -652,8 +656,9 @@
- 		interrupts =3D <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7791_CLK_SCIFA4>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x1f>, <&dmac0 0x20>,
-+		       <&dmac1 0x1f>, <&dmac1 0x20>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
-@@ -665,8 +670,9 @@
- 		interrupts =3D <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks =3D <&mstp11_clks R8A7791_CLK_SCIFA5>;
- 		clock-names =3D "fck";
--		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>;
--		dma-names =3D "tx", "rx";
-+		dmas =3D <&dmac0 0x23>, <&dmac0 0x24>,
-+		       <&dmac1 0x23>, <&dmac1 0x24>;
-+		dma-names =3D "tx", "rx", "tx", "rx";
- 		power-domains =3D <&cpg_clocks>;
- 		status =3D "disabled";
- 	};
+On 03/15/2016 10:48 AM, Ramesh Shanmugasundaram wrote:
+> This patch adds support for the CAN FD controller found in Renesas R-Ca=
+r
+> SoCs. The controller operates in CAN FD only mode by default.
+>=20
+> CAN FD mode supports both Classical CAN & CAN FD frame formats. The
+> controller supports ISO 11898-1:2015 CAN FD format only.
+>=20
+> This controller supports two channels and the driver can enable either
+> or both of the channels.
+>=20
+> Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs (on=
+e
+> per channel) for transmission. Rx filter rules are configured to the
+> minimum (one per channel) and it accepts Standard, Extended, Data &
+> Remote Frame combinations.
+>=20
+> Note: There are few documentation errors in R-Car Gen3 Hardware User
+> Manual v0.5E with respect to CAN FD controller. They are listed below:
+>=20
+> 1. CAN FD interrupt numbers 29 & 30 are listed as per channel
+> interrupts. However, they are common to both channels (i.e.) they are
+> global and channel interrupts respectively.
+>=20
+> 2. CANFD clock is derived from PLL1. This is not documented.
+>=20
+> 3. CANFD clock is further divided by (1/2) within the CAN FD controller=
+=2E
+> This is not documented.
+>=20
+> 4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
+> is specified 4 Tq in the manual.
+>=20
+> 5. The maximum number of message RAM area the controller can use is 358=
+4
+> bytes. It is specified 10752 bytes in the manual.
+>=20
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.rene=
+sas.com>
+> ---
+> Hi All,
+>=20
+>    Thanks for the review comments.
+>=20
+>    This updated patch is based on linux-can-next tag (linux-can-next-fo=
+r-4.6-20160310).
+>=20
+>    This patch depends on
+>=20
+>    [RFC] [PATCH v3] can: fix handling of unmodifiable configuration opt=
+ions
+>    (http://comments.gmane.org/gmane.linux.can/9126)
+>=20
+> Changes since v2:
+> 	* Rebased to latest tag (linux-can-next-for-4.6-20160310)
+> 	* Cleaned up leftover debugfs code (Thanks Oliver H)
+> 	* Revised devicetree documentation text (as suggested by Rob H)
+> 	  (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg0=
+1597.html)
+> 	* Used new can subsystem api to set static configuration & removed che=
+ck in rcar_canfd_start (as suggested by Oliver H)
+> 	  (Refer: http://comments.gmane.org/gmane.linux.can/9126 &
+> 	   https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg0=
+1867.html)
+> 	* Clubbed Renesas controller drivers to driver/net/can/rcar dir (as su=
+ggested by Oliver H)
+
+Please make moving of the existing drivers a separate patch.
+
+Marc
 --=20
-2.7.2
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--tVEFGSCu3uInSe5LrCKVaiDJhlpLsPSna--
+
+--6nomFkabhXg7Xua0Wkbm7e13uQQ3O9l37
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEcBAEBCgAGBQJW6AVnAAoJED07qiWsqSVqRZAH/2Sgg5ZB3lVEHw6niY8B5p5S
+OaUlvXm2LvGM55+hFnyswDdIYRkHRhpt6ww7b1FscdJISPXyac4QpUz1HCYgEiV1
+vkETBGfVcza4XCgGwN9rSXPwJdLpS5Mgaf6lkCewdZ6Wv1RKXrA72pheOrkusu79
+EWoz1wkJ7doJvIyaOJiI6ehME1PM/VZjXhxjG3ZSWnIYZVsPafmo6XMs/yfyEamX
+0Yb4o6ucKxXQuR7vKClEx/1zrYvX4q9OAjSafW63vu9EoU40N1tnBNbW66s+GlwA
+7nn23dHmsZzr5TTdmUTXJYStFMnHhWQH0NLo/SboCYgyaCFhRf0/ocoAY25UlfA=
+=TcTX
+-----END PGP SIGNATURE-----
+
+--6nomFkabhXg7Xua0Wkbm7e13uQQ3O9l37--
