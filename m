@@ -1,50 +1,50 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v2 7/7] ARM: dts: Add initial gpio setting of MMC2 device
- for exynos3250-monk
-Date: Tue, 15 Mar 2016 13:25:57 +0900
-Message-ID: <56E78ED5.9060604@samsung.com>
-References: <201603151221.FDX9rQCr%fengguang.wu@intel.com>
+From: dawei chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH v6 0/3] thermal: mediatek: Add cpu dynamic power cooling
+ model.
+Date: Tue, 15 Mar 2016 12:53:40 +0800
+Message-ID: <1458017620.30412.3.camel@mtksdaap41>
+References: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
+	 <20151217015231.GC3496@ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <201603151221.FDX9rQCr%fengguang.wu@intel.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, k.kozlowski@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com, jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20151217015231.GC3496@ubuntu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 2015-12-17 at 09:52 +0800, Viresh Kumar wrote:
+> On 16-12-15, 21:29, Dawei Chien wrote:
+> > Use Intelligent Power Allocation (IPA) technical to add dynamic power model
+> > for binding CPU thermal zone. The power allocator governor allocates power
+> > budget to control CPU temperature.
+> >
+> > Power Allocator governor is able to keep SOC temperature within a defined
+> > temperature range to avoid SOC overheat and keep it's performance.
+> > mt8173-cpufreq.c need to register its' own power model with power allocator
+> > thermal governor, so that power allocator governor can allocates suitable
+> > power budget to control CPU temperature.
+> >
+> > Binding document is refer to this patchset
+> > https://lkml.org/lkml/2015/11/30/239
+> >
+> > Change since V5:
+> > 1. Remove thermal sensor ID from phandles
+> 
+> Though you should have included this in the new version, but still
+> 
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> 
+> --
+> viresh
 
-On 2016=EB=85=84 03=EC=9B=94 15=EC=9D=BC 13:18, kbuild test robot wrote=
-:
-> Hi Chanwoo,
->=20
-> [auto build test ERROR on v4.5-rc7]
-> [also build test ERROR on next-20160314]
-> [if your patch is applied to the wrong git tree, please drop us a not=
-e to help improving the system]
->=20
-> url:    https://github.com/0day-ci/linux/commits/Chanwoo-Choi/ARM-dts=
--Add-new-Exynos3250-based-ARTIK5-module-dtsi-file/20160315-101326
-> config: arm-exynos_defconfig (attached as .config)
-> reproduce:
->         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tes=
-ts.git/plain/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=3Darm=20
->=20
-> All errors (new ones prefixed by >>):
->=20
->>> Error: arch/arm/boot/dts/exynos3250-monk.dts:564.9-10 syntax error
->    FATAL ERROR: Unable to parse input tree
+Hi Viresh,
+Would you please pull this patch to your tree since following patch
+already pulled in, thank you.
 
->    FATAL ERROR: Unable to parse input tree
+https://lkml.org/lkml/2015/11/30/239
 
-This patch depend on patch[1]. I send the separate patch-set.
-To build this patch, patch[1] should be applied. It is my mistake.
-[1] https://lkml.org/lkml/2016/3/14/245
-
-Best Regards,
-Chanwoo Choi
+BR,
+Dawei
