@@ -1,70 +1,63 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 11/17] dt-bindings: Add PLX Technology OXNAS pinctrl and
- gpio bindings
-Date: Tue, 15 Mar 2016 15:30:06 +0100
-Message-ID: <CACRpkdYZ5Lm5FkuLmL2ZWTF1jc027d_Jm9AzK3xGS89dostzqw@mail.gmail.com>
-References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
-	<1457005210-18485-12-git-send-email-narmstrong@baylibre.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Tue, 15 Mar 2016 14:48:22 +0000
+Message-ID: <20160315144822.GP2566@sirena.org.uk>
+References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com>
+ <20160229174751.GQ21240@tuxbot>
+ <20160301022326.GC18327@sirena.org.uk>
+ <56D5111E.6090606@nvidia.com>
+ <20160302033833.GV18327@sirena.org.uk>
+ <56D65F7E.3090907@nvidia.com>
+ <20160302043506.GC18327@sirena.org.uk>
+ <56E81103.8010903@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zxEKvxCKojqA/Afl"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457005210-18485-12-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56E81103.8010903-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 3, 2016 at 12:40 PM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-This is a vert terse zero-line commit message. Atleast describe what you are
-trying to do.
+--zxEKvxCKojqA/Afl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On Tue, Mar 15, 2016 at 07:11:23PM +0530, Laxman Dewangan wrote:
 
-> +optional properties:
-> +- #gpio-lines: Number of gpio if absent 32.
+> So here we will need two parameters:
+> advertised-ramp-delay for PMIC configurations and
+> ramp-delay which is measured one.
 
-NACK, use ngpio from the gpio.txt document like
-everyone else.
+> Most of time, advertised-ramp-delay is same as ramp-delay and hence one
+> value from DT will be sufficient.
+> If there is difference then both value can be provided and
+> advertised-ramp-delay  will be used for PMIC configuration and rest of
+> calculation about delay will be from ramp-delay.
 
-> +Required properties for iomux controller:
-> +- compatible: "plxtech,nas782x-pinctrl" or "plxtech,ox810se-pinctrl"
-> +- plxtech,mux-mask: array of mask (periph per bank) to describe if a pin can be
-> +  configured in this periph mode. All the periph and bank need to be describe.
+This sounds more like the difference between typical and maximum spec
+values than anything else, we are looking for maxima in Linux.
 
-Why? Encode this into the driver and select muxmask from
-the compatible string if it is a hardware limitation.
+--zxEKvxCKojqA/Afl
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +Each column will represent the possible peripheral of the pinctrl
-> +Each line will represent a pio bank
-> +
-> +For example :
-> +Peripheral: 2 ( A and B)
-> +Bank: 2 (A, B and C)
-> +=>
-> +
-> +  /*    A         B     */
-> +  0xffffffff 0xffc00c3b  /* pioA */
-> +  0xffffffff 0x7fff3ccf  /* pioB */
-> +
-> +For each peripheral/bank we will descibe in a u32 if a pin can be
-> +configured in it by putting 1 to the pin bit (1 << pin)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-That's just completely hopeless to understand for a DT author.
-Put it into the driver.
+iQEcBAEBCAAGBQJW6CCvAAoJECTWi3JdVIfQiKQH/iex503K7e4ns+oVkx9uHqSJ
+8be13i2grpX3DD0zfhEbLOp6xg9xkxgvHz56Z+V9NNL3F4tmA2y4dxNMzkFo1VVv
+nyapz1XZ7Y6lwaLiLS3l3rMc2FUwgPXxq2P4lvQvPy6A31fBthFLVl0PHwO+vRc9
+8J76npZZ0Qx7jsXeltnrceTsPsa/ruNmVR9w1ri8y+mlJlENJAy2f9GpeA5EkPDI
+YyejMQ9j1tF8fuPeopZwU2wiL6MIXulsISqjBEAz0/PGLyE1NugAOZ2A6bItI4ye
+rE2S+TxJ4MWOAwjQEuc+xO4458ArCv0RH263fOiXMBuqs/emSQe5ozdMmL5HHfI=
+=PDmT
+-----END PGP SIGNATURE-----
 
-> +Required properties for pin configuration node:
-> +- plxtech,pins: 4 integers array, represents a group of pins mux and config
-> +  setting. The format is plxtech,pins = <PIN_BANK PIN_BANK_NUM PERIPH CONFIG>.
-> +  The PERIPH 0 means gpio, PERIPH 1 is periph A, PERIPH 2 is periph B...
-> +  PIN_BANK 0 is pioA, PIN_BANK 1 is pioB...
-
-NACK, use the standard binding for "pins" from pinctrl-bindings.txt
-
-Also make the driver use the existing helpers for this property.
-
-Yours,
-Linus Walleij
+--zxEKvxCKojqA/Afl--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
