@@ -1,62 +1,71 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2 5/5] gpio: of: Add support to have multiple gpios in gpio-hog
-Date: Tue, 15 Mar 2016 15:21:43 +0100
-Message-ID: <CACRpkdaoKeKAJX1mOD2v1rG_5ZVjAo66agoZrs6E606syUDLSQ@mail.gmail.com>
-References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
-	<1457703804-3016-6-git-send-email-ldewangan@nvidia.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: RE: [PATCH v3] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Tue, 15 Mar 2016 14:26:03 +0000
+Message-ID: <SG2PR06MB1038438FAB232ECD54066FF7C3890@SG2PR06MB1038.apcprd06.prod.outlook.com>
+References: <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <56E80567.9060201@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457703804-3016-6-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Markus Pargmann <mpa@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <treding@nvidia.com>, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <56E80567.9060201@pengutronix.de>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, "wg@grandegger.com" <wg@grandegger.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "corbet@lwn.net" <corbet@lwn.net>
+Cc: "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "geert+renesas@glider.be" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 2:43 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-
-> The child node for gpio hogs under gpio controller's node
-> provide the mechanism to automatic GPIO request and
-> configuration as part of the gpio-controller's driver
-> probe function.
->
-> Currently, property "gpio" takes one gpios for such
-> configuration. Add support to have multiple GPIOs in
-> this property so that multiple GPIOs of gpio-controller
-> can be configured by this mechanism with one child node.
->
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> Cc: Benoit Parrot <bparrot@ti.com>
-> Cc: Alexandre Courbot <acourbot@nvidia.com>
->
-> ---
-> Changes from V1:
-> - Add "labels" property for GPIO label names.
-
-Actually it's just "label" as seen from the code and the binding.
-Though it would make sense to have labels (pluralis) as it can be more
-than one and accompanies "gpios" which is plural.
-
-Rob: what is the pattern here?
-
-(Grep the existing bindings to check how multiple labels are handled
-in other subsystems...)
-
-(...)
-> -       if (name && of_property_read_string(np, "line-name", name))
-> -               *name = np->name;
-> +       if (!name)
-> +               goto out;
->
-> +       ret = of_property_read_string(np, "line-name", name);
-> +       if (ret)
-> +               ret = of_property_read_string_index(np, "label", gpio_index,
-> +                                                   name);
-> +       if (ret)
-> +               *name = np->name;
-
-This looks to me like if "line-name" is specified, all lines will get the
-same name if gpios contain more than one item. Is this what we want?
-
-Yours,
-Linus Walleij
+SGkgTWFyYywNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzXSBjYW46IHJjYXJfY2FuZmQ6IEFk
+ZCBSZW5lc2FzIFItQ2FyIENBTiBGRCBkcml2ZXINCj4gDQo+IE9uIDAzLzE1LzIwMTYgMTA6NDgg
+QU0sIFJhbWVzaCBTaGFubXVnYXN1bmRhcmFtIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggYWRkcyBz
+dXBwb3J0IGZvciB0aGUgQ0FOIEZEIGNvbnRyb2xsZXIgZm91bmQgaW4gUmVuZXNhcw0KPiA+IFIt
+Q2FyIFNvQ3MuIFRoZSBjb250cm9sbGVyIG9wZXJhdGVzIGluIENBTiBGRCBvbmx5IG1vZGUgYnkg
+ZGVmYXVsdC4NCj4gPg0KPiA+IENBTiBGRCBtb2RlIHN1cHBvcnRzIGJvdGggQ2xhc3NpY2FsIENB
+TiAmIENBTiBGRCBmcmFtZSBmb3JtYXRzLiBUaGUNCj4gPiBjb250cm9sbGVyIHN1cHBvcnRzIElT
+TyAxMTg5OC0xOjIwMTUgQ0FOIEZEIGZvcm1hdCBvbmx5Lg0KPiA+DQo+ID4gVGhpcyBjb250cm9s
+bGVyIHN1cHBvcnRzIHR3byBjaGFubmVscyBhbmQgdGhlIGRyaXZlciBjYW4gZW5hYmxlIGVpdGhl
+cg0KPiA+IG9yIGJvdGggb2YgdGhlIGNoYW5uZWxzLg0KPiA+DQo+ID4gRHJpdmVyIHVzZXMgUngg
+RklGT3MgKG9uZSBwZXIgY2hhbm5lbCkgZm9yIHJlY2VwdGlvbiAmIENvbW1vbiBGSUZPcw0KPiA+
+IChvbmUgcGVyIGNoYW5uZWwpIGZvciB0cmFuc21pc3Npb24uIFJ4IGZpbHRlciBydWxlcyBhcmUg
+Y29uZmlndXJlZCB0bw0KPiA+IHRoZSBtaW5pbXVtIChvbmUgcGVyIGNoYW5uZWwpIGFuZCBpdCBh
+Y2NlcHRzIFN0YW5kYXJkLCBFeHRlbmRlZCwgRGF0YQ0KPiA+ICYgUmVtb3RlIEZyYW1lIGNvbWJp
+bmF0aW9ucy4NCj4gPg0KPiA+IE5vdGU6IFRoZXJlIGFyZSBmZXcgZG9jdW1lbnRhdGlvbiBlcnJv
+cnMgaW4gUi1DYXIgR2VuMyBIYXJkd2FyZSBVc2VyDQo+ID4gTWFudWFsIHYwLjVFIHdpdGggcmVz
+cGVjdCB0byBDQU4gRkQgY29udHJvbGxlci4gVGhleSBhcmUgbGlzdGVkIGJlbG93Og0KPiA+DQo+
+ID4gMS4gQ0FOIEZEIGludGVycnVwdCBudW1iZXJzIDI5ICYgMzAgYXJlIGxpc3RlZCBhcyBwZXIg
+Y2hhbm5lbA0KPiA+IGludGVycnVwdHMuIEhvd2V2ZXIsIHRoZXkgYXJlIGNvbW1vbiB0byBib3Ro
+IGNoYW5uZWxzIChpLmUuKSB0aGV5IGFyZQ0KPiA+IGdsb2JhbCBhbmQgY2hhbm5lbCBpbnRlcnJ1
+cHRzIHJlc3BlY3RpdmVseS4NCj4gPg0KPiA+IDIuIENBTkZEIGNsb2NrIGlzIGRlcml2ZWQgZnJv
+bSBQTEwxLiBUaGlzIGlzIG5vdCBkb2N1bWVudGVkLg0KPiA+DQo+ID4gMy4gQ0FORkQgY2xvY2sg
+aXMgZnVydGhlciBkaXZpZGVkIGJ5ICgxLzIpIHdpdGhpbiB0aGUgQ0FOIEZEIGNvbnRyb2xsZXIu
+DQo+ID4gVGhpcyBpcyBub3QgZG9jdW1lbnRlZC4NCj4gPg0KPiA+IDQuIFRoZSBtaW5pbXVtIHZh
+bHVlIG9mIE5UU0VHMSBpbiBSU0NGRG5DRkRDbU5DRkcgcmVnaXN0ZXIgaXMgMiBUcS4gSXQNCj4g
+PiBpcyBzcGVjaWZpZWQgNCBUcSBpbiB0aGUgbWFudWFsLg0KPiA+DQo+ID4gNS4gVGhlIG1heGlt
+dW0gbnVtYmVyIG9mIG1lc3NhZ2UgUkFNIGFyZWEgdGhlIGNvbnRyb2xsZXIgY2FuIHVzZSBpcw0K
+PiA+IDM1ODQgYnl0ZXMuIEl0IGlzIHNwZWNpZmllZCAxMDc1MiBieXRlcyBpbiB0aGUgbWFudWFs
+Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogUmFtZXNoIFNoYW5tdWdhc3VuZGFyYW0NCj4gPiA8
+cmFtZXNoLnNoYW5tdWdhc3VuZGFyYW1AYnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gSGkg
+QWxsLA0KPiA+DQo+ID4gICAgVGhhbmtzIGZvciB0aGUgcmV2aWV3IGNvbW1lbnRzLg0KPiA+DQo+
+ID4gICAgVGhpcyB1cGRhdGVkIHBhdGNoIGlzIGJhc2VkIG9uIGxpbnV4LWNhbi1uZXh0IHRhZyAo
+bGludXgtY2FuLW5leHQtDQo+IGZvci00LjYtMjAxNjAzMTApLg0KPiA+DQo+ID4gICAgVGhpcyBw
+YXRjaCBkZXBlbmRzIG9uDQo+ID4NCj4gPiAgICBbUkZDXSBbUEFUQ0ggdjNdIGNhbjogZml4IGhh
+bmRsaW5nIG9mIHVubW9kaWZpYWJsZSBjb25maWd1cmF0aW9uDQo+IG9wdGlvbnMNCj4gPiAgICAo
+aHR0cDovL2NvbW1lbnRzLmdtYW5lLm9yZy9nbWFuZS5saW51eC5jYW4vOTEyNikNCj4gPg0KPiA+
+IENoYW5nZXMgc2luY2UgdjI6DQo+ID4gCSogUmViYXNlZCB0byBsYXRlc3QgdGFnIChsaW51eC1j
+YW4tbmV4dC1mb3ItNC42LTIwMTYwMzEwKQ0KPiA+IAkqIENsZWFuZWQgdXAgbGVmdG92ZXIgZGVi
+dWdmcyBjb2RlIChUaGFua3MgT2xpdmVyIEgpDQo+ID4gCSogUmV2aXNlZCBkZXZpY2V0cmVlIGRv
+Y3VtZW50YXRpb24gdGV4dCAoYXMgc3VnZ2VzdGVkIGJ5IFJvYiBIKQ0KPiA+IAkgIChodHRwczov
+L3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LXJlbmVzYXMtDQo+IHNvY0B2Z2VyLmtlcm5lbC5v
+cmcvbXNnMDE1OTcuaHRtbCkNCj4gPiAJKiBVc2VkIG5ldyBjYW4gc3Vic3lzdGVtIGFwaSB0byBz
+ZXQgc3RhdGljIGNvbmZpZ3VyYXRpb24gJiByZW1vdmVkDQo+IGNoZWNrIGluIHJjYXJfY2FuZmRf
+c3RhcnQgKGFzIHN1Z2dlc3RlZCBieSBPbGl2ZXIgSCkNCj4gPiAJICAoUmVmZXI6IGh0dHA6Ly9j
+b21tZW50cy5nbWFuZS5vcmcvZ21hbmUubGludXguY2FuLzkxMjYgJg0KPiA+IAkgICBodHRwczov
+L3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LXJlbmVzYXMtDQo+IHNvY0B2Z2VyLmtlcm5lbC5v
+cmcvbXNnMDE4NjcuaHRtbCkNCj4gPiAJKiBDbHViYmVkIFJlbmVzYXMgY29udHJvbGxlciBkcml2
+ZXJzIHRvIGRyaXZlci9uZXQvY2FuL3JjYXIgZGlyIChhcw0KPiA+IHN1Z2dlc3RlZCBieSBPbGl2
+ZXIgSCkNCj4gDQo+IFBsZWFzZSBtYWtlIG1vdmluZyBvZiB0aGUgZXhpc3RpbmcgZHJpdmVycyBh
+IHNlcGFyYXRlIHBhdGNoLg0KDQpPSy4gSSdsbCBzdWJtaXQgbmV3IHBhdGNoIHdpdGggQ0FOIEZE
+IGRyaXZlciBpbiBuZXcgInJjYXIiIGRpciBhbmQgd2lsbCBwcm92aWRlIGEgc2VwYXJhdGUgcGF0
+Y2ggb24gdG9wIHRoYXQgd2lsbCBtb3ZlIHRoZSBDQU4gZHJpdmVyIHRvICJyY2FyIiBkaXIuDQoN
+ClRoYW5rcywNClJhbWVzaA0K
