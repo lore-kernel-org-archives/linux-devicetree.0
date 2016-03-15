@@ -1,58 +1,65 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Tue, 15 Mar 2016 19:11:23 +0530
-Message-ID: <56E81103.8010903@nvidia.com>
-References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com> <20160229174751.GQ21240@tuxbot> <20160301022326.GC18327@sirena.org.uk> <56D5111E.6090606@nvidia.com> <20160302033833.GV18327@sirena.org.uk> <56D65F7E.3090907@nvidia.com> <20160302043506.GC18327@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160302043506.GC18327@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, bjorn.andersson@sonymobile.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v2 2/9] ARM: dts: imx7d: add flexcan support
+Date: Tue, 15 Mar 2016 15:04:21 +0100
+Message-ID: <1458050668-26748-3-git-send-email-gary.bisson@boundarydevices.com>
+References: <1458037826-19375-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458050668-26748-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add the device nodes for the i.MX7 FlexCAN buses.
 
-On Wednesday 02 March 2016 10:05 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Wed, Mar 02, 2016 at 09:05:26AM +0530, Laxman Dewangan wrote:
->> On Wednesday 02 March 2016 09:08 AM, Mark Brown wrote:
->>> You're not trying to scale the value here, you're trying to replace the
->>> value because the PMIC is incapable of delivering the advertised ramp
->>> rate.  Trying to express this as a multiple of the advertised ramp rate
->>> is just adding complexity.
->> So should we provide absolute ramp value here for platform specific?
-> Yes, otherwise if the PMIC vendor respecifies their ramp rates to
-> reflect reality and the driver is updated then your DT will be broken.
->
->> Or any other suggestion to handle this situation as this is very common and
->> almost all our boards have this slowness on ramp.
-> Perhaps time to have a chat with your PMIC vendors...
->
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
 
-I had discussion with our HW team to get more information about this 
-variation.
-They said that Maxim advertise the ramp time with given condition in 
-interface i.e. capacitance etc which is very generic.
-We did the experiment with Maxim recommendation about the rail and its 
-capacitance (2.2uF) and found that measured value is same as what they 
-advertise in datasheet.
+Changelog v1 -> v2:
+- none
 
-When chip team use this PMIC with Tegra hardware specs and did the 
-circuit simulation to ensures how our boards should be designed for 
-signal integrity they suggested that the rail capacitance should be more 
-than what Maxim recommending in general to work with our silicon. So 
-here condition get changed and hence the effective ramp time.
+---
+ arch/arm/boot/dts/imx7d.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-So here we will need two parameters:
-advertised-ramp-delay for PMIC configurations and
-ramp-delay which is measured one.
+diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+index a768716..c5e47a4 100644
+--- a/arch/arm/boot/dts/imx7d.dtsi
++++ b/arch/arm/boot/dts/imx7d.dtsi
+@@ -930,6 +930,28 @@
+ 				fsl,num-rx-queues=<3>;
+ 				status = "disabled";
+ 			};
++
++			flexcan1: can@30a00000 {
++				compatible = "fsl,imx7d-flexcan", "fsl,imx6q-flexcan";
++				reg = <0x30a00000 0x10000>;
++				interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX7D_CLK_DUMMY>,
++					<&clks IMX7D_CAN1_ROOT_CLK>;
++				clock-names = "ipg", "per";
++				stop-mode = <&gpr 0x10 1 0x10 17>;
++				status = "disabled";
++			};
++
++			flexcan2: can@30a10000 {
++				compatible = "fsl,imx7d-flexcan", "fsl,imx6q-flexcan";
++				reg = <0x30a10000 0x10000>;
++				interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks IMX7D_CLK_DUMMY>,
++					<&clks IMX7D_CAN2_ROOT_CLK>;
++				clock-names = "ipg", "per";
++				stop-mode = <&gpr 0x10 2 0x10 18>;
++				status = "disabled";
++			};
+ 		};
+ 	};
+ };
+-- 
+2.7.0
 
-Most of time, advertised-ramp-delay is same as ramp-delay and hence one 
-value from DT will be sufficient.
-If there is difference then both value can be provided and 
-advertised-ramp-delay  will be used for PMIC configuration and rest of 
-calculation about delay will be from ramp-delay.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
