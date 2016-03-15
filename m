@@ -1,57 +1,65 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
-Date: Tue, 15 Mar 2016 16:27:55 +0100
-Message-ID: <CAMuHMdW5Owzv06wnV34W3cYp=ibrONcfBVV6WST5VyvQ1ENjsA@mail.gmail.com>
-References: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 4/5] gpio: DT: Rephrase "gpios" of hog node to support
+ multiple gpios
+Date: Tue, 15 Mar 2016 09:40:16 -0600
+Message-ID: <56E82CE0.4010102@wwwdotorg.org>
+References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com>
+ <1457703804-3016-5-git-send-email-ldewangan@nvidia.com>
+ <56E6E753.1020505@wwwdotorg.org> <56E7ADA5.7000502@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457998330-8070-1-git-send-email-nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <56E7ADA5.7000502-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Saenz Julienne <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 12:32 AM, Nicolas Saenz Julienne
-<nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The chip is also an 8 bit shift register which works out of the box as a GPO
-> expander with this patch
+On 03/15/2016 12:37 AM, Laxman Dewangan wrote:
 >
-> Signed-off-by: Nicolas Saenz Julienne <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 4 +++-
->  drivers/gpio/gpio-74x164.c                             | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
+> On Monday 14 March 2016 10:01 PM, Stephen Warren wrote:
+>> On 03/11/2016 06:43 AM, Laxman Dewangan wrote:
+>>> The property "gpios" of GPIO hog node support the multiple GPIO entries.
+>>> Rephrase the details of this property for this new support.
+>>>
+>>> Add details of new property "label" for GPIO label name.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt
+>>> b/Documentation/devicetree/bindings/gpio/gpio.txt
+>>
+>>>   Optional properties:
+>>>   - line-name:  The GPIO label name. If not present the node name is
+>>> used.
+>>> +- label:      The GPIO lable name. This can have multiple string for
+>>> GPIO
+>>> +          label names to match with the GPIOs in "gpios" properties.
+>>> +          If line-name is prosent than name is taken from line-name. If
+>>> +          it is not then the name will be taken from label. If both are
+>>> +          not available then node name is used for GPIO label name.
+>>
+>> Why are there two properties for the same thing? Why not just allow
+>> line-name to have multiple entries instead of introducing a new property?
+>>
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> index cc26080..ce1b223 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> @@ -1,7 +1,9 @@
->  * Generic 8-bits shift register GPIO driver
+> We can use the lin-names also but per disucssion on the patch V1 of
+>      gpio: of: Add support to have multiple gpios in gpio-hog
 >
->  Required properties:
-> -- compatible : Should be "fairchild,74hc595"
-> +- compatible: Should contain one of the following:
-> +    "fairchild,74hc595"
-> +    "nxp,74lvc594"
+> Markus suggested the discussion about the discussion
+> (https://lkml.org/lkml/2016/3/10/194):
+>      "Device tree binding documentation for gpio-switch"
+>
+>
+> and on that, label is used.  Also for names, "label" is going to very
+> common.
+>
+> So I added new property "label" to support multiple names.
 
-Why did you choose the "lvc" variant?
-
-Ideally, you want to put the oldest "manuf,74x594" variant here.
-I once read it was Motorola who invented the 7459x parts, to interface with
-SPI.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+It makes sense to standardize on a common name for new bindings, but 
+this binding has already picked a name. It'd be much simpler for anyone 
+looking at the binding (and backwards-compatibility) to just stick with 
+it. We have to support the old name forever no matter what. Supporting 
+two different names will just be confusing.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
