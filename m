@@ -1,56 +1,58 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v6 0/3] thermal: mediatek: Add cpu dynamic power cooling
- model.
-Date: Tue, 15 Mar 2016 13:17:09 +0700
-Message-ID: <20160315061709.GC13831@vireshk-mac-ubuntu>
-References: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
- <20151217015231.GC3496@ubuntu>
- <1458017620.30412.3.camel@mtksdaap41>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V2 4/5] gpio: DT: Rephrase "gpios" of hog node to support
+ multiple gpios
+Date: Tue, 15 Mar 2016 12:07:25 +0530
+Message-ID: <56E7ADA5.7000502@nvidia.com>
+References: <1457703804-3016-1-git-send-email-ldewangan@nvidia.com> <1457703804-3016-5-git-send-email-ldewangan@nvidia.com> <56E6E753.1020505@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458017620.30412.3.camel@mtksdaap41>
-Sender: linux-pm-owner@vger.kernel.org
-To: dawei chien <dawei.chien@mediatek.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E6E753.1020505-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15-03-16, 12:53, dawei chien wrote:
-> On Thu, 2015-12-17 at 09:52 +0800, Viresh Kumar wrote:
-> > On 16-12-15, 21:29, Dawei Chien wrote:
-> > > Use Intelligent Power Allocation (IPA) technical to add dynamic power model
-> > > for binding CPU thermal zone. The power allocator governor allocates power
-> > > budget to control CPU temperature.
-> > >
-> > > Power Allocator governor is able to keep SOC temperature within a defined
-> > > temperature range to avoid SOC overheat and keep it's performance.
-> > > mt8173-cpufreq.c need to register its' own power model with power allocator
-> > > thermal governor, so that power allocator governor can allocates suitable
-> > > power budget to control CPU temperature.
-> > >
-> > > Binding document is refer to this patchset
-> > > https://lkml.org/lkml/2015/11/30/239
-> > >
-> > > Change since V5:
-> > > 1. Remove thermal sensor ID from phandles
-> > 
-> > Though you should have included this in the new version, but still
-> > 
-> > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > 
-> > --
-> > viresh
-> 
-> Hi Viresh,
-> Would you please pull this patch to your tree since following patch
-> already pulled in, thank you.
-> 
-> https://lkml.org/lkml/2015/11/30/239
 
-Its Rafael, who is going to apply this one.
+On Monday 14 March 2016 10:01 PM, Stephen Warren wrote:
+> On 03/11/2016 06:43 AM, Laxman Dewangan wrote:
+>> The property "gpios" of GPIO hog node support the multiple GPIO entries.
+>> Rephrase the details of this property for this new support.
+>>
+>> Add details of new property "label" for GPIO label name.
+>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt 
+>> b/Documentation/devicetree/bindings/gpio/gpio.txt
+>
+>>   Optional properties:
+>>   - line-name:  The GPIO label name. If not present the node name is 
+>> used.
+>> +- label:      The GPIO lable name. This can have multiple string for 
+>> GPIO
+>> +          label names to match with the GPIOs in "gpios" properties.
+>> +          If line-name is prosent than name is taken from line-name. If
+>> +          it is not then the name will be taken from label. If both are
+>> +          not available then node name is used for GPIO label name.
+>
+> Why are there two properties for the same thing? Why not just allow 
+> line-name to have multiple entries instead of introducing a new property?
+>
 
-Can you please resend it as he may not have it in patchworks?
+We can use the lin-names also but per disucssion on the patch V1 of
+     gpio: of: Add support to have multiple gpios in gpio-hog
 
--- 
-viresh
+Markus suggested the discussion about the discussion 
+(https://lkml.org/lkml/2016/3/10/194):
+     "Device tree binding documentation for gpio-switch"
+
+
+and on that, label is used.  Also for names, "label" is going to very 
+common.
+
+So I added new property "label" to support multiple names.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
