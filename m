@@ -1,63 +1,57 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Tue, 15 Mar 2016 14:48:22 +0000
-Message-ID: <20160315144822.GP2566@sirena.org.uk>
-References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com>
- <20160229174751.GQ21240@tuxbot>
- <20160301022326.GC18327@sirena.org.uk>
- <56D5111E.6090606@nvidia.com>
- <20160302033833.GV18327@sirena.org.uk>
- <56D65F7E.3090907@nvidia.com>
- <20160302043506.GC18327@sirena.org.uk>
- <56E81103.8010903@nvidia.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
+Date: Tue, 15 Mar 2016 16:27:55 +0100
+Message-ID: <CAMuHMdW5Owzv06wnV34W3cYp=ibrONcfBVV6WST5VyvQ1ENjsA@mail.gmail.com>
+References: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zxEKvxCKojqA/Afl"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56E81103.8010903-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1457998330-8070-1-git-send-email-nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Nicolas Saenz Julienne <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 15, 2016 at 12:32 AM, Nicolas Saenz Julienne
+<nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The chip is also an 8 bit shift register which works out of the box as a GPO
+> expander with this patch
+>
+> Signed-off-by: Nicolas Saenz Julienne <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 4 +++-
+>  drivers/gpio/gpio-74x164.c                             | 1 +
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+> index cc26080..ce1b223 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
+> @@ -1,7 +1,9 @@
+>  * Generic 8-bits shift register GPIO driver
+>
+>  Required properties:
+> -- compatible : Should be "fairchild,74hc595"
+> +- compatible: Should contain one of the following:
+> +    "fairchild,74hc595"
+> +    "nxp,74lvc594"
 
---zxEKvxCKojqA/Afl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Why did you choose the "lvc" variant?
 
-On Tue, Mar 15, 2016 at 07:11:23PM +0530, Laxman Dewangan wrote:
+Ideally, you want to put the oldest "manuf,74x594" variant here.
+I once read it was Motorola who invented the 7459x parts, to interface with
+SPI.
 
-> So here we will need two parameters:
-> advertised-ramp-delay for PMIC configurations and
-> ramp-delay which is measured one.
+Gr{oetje,eeting}s,
 
-> Most of time, advertised-ramp-delay is same as ramp-delay and hence one
-> value from DT will be sufficient.
-> If there is difference then both value can be provided and
-> advertised-ramp-delay  will be used for PMIC configuration and rest of
-> calculation about delay will be from ramp-delay.
+                        Geert
 
-This sounds more like the difference between typical and maximum spec
-values than anything else, we are looking for maxima in Linux.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
---zxEKvxCKojqA/Afl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW6CCvAAoJECTWi3JdVIfQiKQH/iex503K7e4ns+oVkx9uHqSJ
-8be13i2grpX3DD0zfhEbLOp6xg9xkxgvHz56Z+V9NNL3F4tmA2y4dxNMzkFo1VVv
-nyapz1XZ7Y6lwaLiLS3l3rMc2FUwgPXxq2P4lvQvPy6A31fBthFLVl0PHwO+vRc9
-8J76npZZ0Qx7jsXeltnrceTsPsa/ruNmVR9w1ri8y+mlJlENJAy2f9GpeA5EkPDI
-YyejMQ9j1tF8fuPeopZwU2wiL6MIXulsISqjBEAz0/PGLyE1NugAOZ2A6bItI4ye
-rE2S+TxJ4MWOAwjQEuc+xO4458ArCv0RH263fOiXMBuqs/emSQe5ozdMmL5HHfI=
-=PDmT
------END PGP SIGNATURE-----
-
---zxEKvxCKojqA/Afl--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
