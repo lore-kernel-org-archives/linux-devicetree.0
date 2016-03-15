@@ -1,60 +1,64 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 3/9] clk: imx: add ckil clock for i.MX7
-Date: Tue, 15 Mar 2016 11:30:20 +0100
-Message-ID: <1458037826-19375-4-git-send-email-gary.bisson@boundarydevices.com>
-References: <1458037826-19375-1-git-send-email-gary.bisson@boundarydevices.com>
+Subject: [PATCH 0/9] imx: add latest Boundary Devices boards support
+Date: Tue, 15 Mar 2016 11:30:17 +0100
+Message-ID: <1458037826-19375-1-git-send-email-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458037826-19375-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary clock to use the ckil on i.MX7.
+Hi all,
 
-Inspired from the following patch:
-https://github.com/boundarydevices/linux-imx6/commit/b80e8271
+This series adds support for the following Boundary Devices boards:
+- Nitrogen7 (i.MX7)
+- Nitrogen6SX (i.MX6SoloX)
+- Nitrogen6QP_MAX (i.MX6QP)
 
-Signed-off-by: Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
- drivers/clk/imx/clk-imx7d.c             | 3 ++-
- include/dt-bindings/clock/imx7d-clock.h | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+The first patches add display and CAN support to i.MX7 device tree. Those
+two features have been successfully tested on the Nitrogen7. Also the support
+of CKIL clock has been added in order to use it as slow clock for the WiFi
+module.
 
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index fbb6a8c..7912be8 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -342,7 +342,7 @@ static const char *clko1_sel[] = { "osc", "pll_sys_main_clk",
- 
- static const char *clko2_sel[] = { "osc", "pll_sys_main_240m_clk",
- 	"pll_sys_pfd0_392m_clk", "pll_sys_pfd1_166m_clk", "pll_sys_pfd4_clk",
--	"pll_audio_main_clk", "pll_video_main_clk", "osc_32k_clk", };
-+	"pll_audio_main_clk", "pll_video_main_clk", "ckil", };
- 
- static const char *lvds1_sel[] = { "pll_arm_main_clk",
- 	"pll_sys_main_clk", "pll_sys_pfd0_392m_clk", "pll_sys_pfd1_332m_clk",
-@@ -382,6 +382,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 
- 	clks[IMX7D_CLK_DUMMY] = imx_clk_fixed("dummy", 0);
- 	clks[IMX7D_OSC_24M_CLK] = of_clk_get_by_name(ccm_node, "osc");
-+	clks[IMX7D_CKIL] = of_clk_get_by_name(ccm_node, "ckil");
- 
- 	np = of_find_compatible_node(NULL, NULL, "fsl,imx7d-anatop");
- 	base = of_iomap(np, 0);
-diff --git a/include/dt-bindings/clock/imx7d-clock.h b/include/dt-bindings/clock/imx7d-clock.h
-index edca8985c..1183347 100644
---- a/include/dt-bindings/clock/imx7d-clock.h
-+++ b/include/dt-bindings/clock/imx7d-clock.h
-@@ -448,5 +448,6 @@
- #define IMX7D_PLL_DRAM_TEST_DIV		435
- #define IMX7D_ADC_ROOT_CLK		436
- #define IMX7D_CLK_ARM			437
--#define IMX7D_CLK_END			438
-+#define IMX7D_CKIL			438
-+#define IMX7D_CLK_END			439
- #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
+Then the last 3 patches add some missing configurations in order to fully
+support Boundary platforms using imx_v6_v7_defconfig.
+
+All the patches have been applied/tested on top of Shawn's 'for-next' branch.
+
+Here are some remarks/questions that came during testing:
+- Is the pxp v4l2 driver being worked on for mainline inclusion?
+- Are the ldb modifications for SoloX being worked on for mainline inclusion?
+- Is the WM8960 ASoC machine driver being worked on for mainline inclusion?
+- When booting the Nitrogen7, there's backtrace due to clk_pllv3_prepare, does
+  it happen on the sdb too? Note that it doesn't prevent the board to work.
+
+Regards,
+Gary
+
+Gary Bisson (9):
+  ARM: dts: imx7d: add lcdif support
+  ARM: dts: imx7d: add flexcan support
+  clk: imx: add ckil clock for i.MX7
+  ARM: dts: imx: add Boundary Devices Nitrogen7 board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_MAX QP board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_SoloX board
+  ARM: imx_v6_v7_defconfig: add FT5x06 and TSC2004 touch support
+  ARM: imx_v6_v7_defconfig: add CONFIG_I2C_MUX_GPIO
+  ARM: imx_v6_v7_defconfig: add CONFIG_RTC_DRV_M41T80
+
+ arch/arm/boot/dts/Makefile                 |   3 +
+ arch/arm/boot/dts/imx6qp-nitrogen6_max.dts |  55 ++
+ arch/arm/boot/dts/imx6sx-nitrogen6sx.dts   | 745 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d-nitrogen7.dts      | 818 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d.dtsi               |  33 ++
+ arch/arm/configs/imx_v6_v7_defconfig       |   4 +
+ drivers/clk/imx/clk-imx7d.c                |   3 +-
+ include/dt-bindings/clock/imx7d-clock.h    |   3 +-
+ 8 files changed, 1662 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6qp-nitrogen6_max.dts
+ create mode 100644 arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-nitrogen7.dts
+
 -- 
 2.7.0
 
