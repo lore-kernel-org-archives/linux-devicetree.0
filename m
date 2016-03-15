@@ -1,98 +1,39 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 09/10] ARM: dts: Add MSHC2 dt node for SD card for
- exynos3250-artik5-devel board
-Date: Tue, 15 Mar 2016 09:56:33 +0900
-Message-ID: <56E75DC1.7000807@samsung.com>
-References: <1457921056-21257-1-git-send-email-cw00.choi@samsung.com>
- <1457921056-21257-11-git-send-email-cw00.choi@samsung.com>
- <56E676EE.8060500@samsung.com> <56E67AE0.9060306@samsung.com>
- <56E687E6.3070305@samsung.com> <56E690EA.50205@samsung.com>
- <56E7567B.40301@samsung.com>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH v4 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
+Date: Tue, 15 Mar 2016 10:18:23 +0900
+Message-ID: <CANqRtoReyc+1NKXXupVShSrGcM8MPtA0JLHMjG31ABLbcQKCRQ@mail.gmail.com>
+References: <20160314142342.17180.21352.sendpatchset@little-apple>
+	<20160314142434.17180.92245.sendpatchset@little-apple>
+	<56E6F30B.9090707@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <56E7567B.40301@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <56E6F30B.9090707@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 03/15/2016 09:25 AM, Krzysztof Kozlowski wrote:
-> On 14.03.2016 19:22, Chanwoo Choi wrote:
->> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 18:44, Krzysztof Kozlowski =
-wrote:
->>> On 14.03.2016 17:48, Chanwoo Choi wrote:
->>>> On 2016=EB=85=84 03=EC=9B=94 14=EC=9D=BC 17:31, Krzysztof Kozlowsk=
-i wrote:
->>>>> On 14.03.2016 11:04, Chanwoo Choi wrote:
->>>>>> From: Jaehoon Chung <jh80.chung@samsung.com>
->>>>>>
->>>>>> This patch adds MSHC (Mobile Storage Host Controller) dt node fo=
-r
->>>>>> Exynos3250 SoC. MSHC is an interface between the system and the =
-SD card
->>>>>>
->>>>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>>> ---
->>>>>>  arch/arm/boot/dts/exynos3250-artik5-devel.dts | 16 ++++++++++++=
-++++
->>>>>>  1 file changed, 16 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/exynos3250-artik5-devel.dts b/arc=
-h/arm/boot/dts/exynos3250-artik5-devel.dts
->>>>>> index d17c28969118..a371baf8536d 100644
->>>>>> --- a/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>>>> +++ b/arch/arm/boot/dts/exynos3250-artik5-devel.dts
->>>>>> @@ -21,6 +21,22 @@
->>>>>>  			"samsung,exynos3250", "samsung,exynos3";
->>>>>>  };
->>>>>> =20
->>>>>> +&mshc_2 {
->>>>>> +	num-slots =3D <1>;
->>>>>> +	cap-sd-highspeed;
->>>>>> +	disable-wp;
->>>>>> +	card-detect-delay =3D <200>;
->>>>>> +	clock-frequency =3D <100000000>;
->>>>>> +	clock-freq-min-max =3D <400000 100000000>;
->>>>>> +	samsung,dw-mshc-ciu-div =3D <1>;
->>>>>> +	samsung,dw-mshc-sdr-timing =3D <0 1>;
->>>>>> +	samsung,dw-mshc-ddr-timing =3D <1 2>;
->>>>>> +	pinctrl-names =3D "default";
->>>>>> +	pinctrl-0 =3D <&sd2_cmd &sd2_clk &sd2_cd &sd2_bus1 &sd2_bus4>;
->>>>>> +	bus-width =3D <4>;
->>>>>> +	status =3D "okay";
->>>>>
->>>>> vqmmc-supply =3D ldo3?
->>>>
->>>> ldo3 is always on state because ldo3 is used for various IP in exy=
-nos3250.
->>>> I think that we had better to remain always on state for ldo3.
->>>
->>> Yes, I wasn't thinking about toggling ldo3 but about taking the
->>> regulator here to model the dependencies between components.
+Hi Sergei,
+
+On Tue, Mar 15, 2016 at 2:21 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Hello.
+>
+> On 03/14/2016 05:24 PM, Magnus Damm wrote:
+>
+>> From: Magnus Damm <damm+renesas@opensource.se>
 >>
->> Okay. I'll add it as following:
+>> Remove the 32-bit CMT compat strings to reduce maintenance burden.
 >>
->> 	vmmc-supply =3D <&ldo18_reg>;
->> 	vqmmc-supply =3D <&ldo3>;
->=20
-> ldo18 is not used by mshc2. At least my schematics show that LDO3 goe=
-s
-> to DVDD_MMC2 (on different board revision that would be ldo18 instead=
- of
-> ldo3, but not both).
+>> It should be fine to break DT compatibility because the 32-bit
+>> 32-bit
+>
+>
+>    Once is enough. :-)
 
-It's confusing..but it seems that Krzysztof's opinion is right.
+Right, forgot about that one. Think of it as 64-bit compatible. =)
 
-Best Regards,
-Jaehoon Chung
+Cheers,
 
->=20
-> The card itself is powered by VDDFLASH_28/MAIN_BAT.
->=20
-> BR,
-> Krzysztof
->=20
->=20
+/ magnus
