@@ -1,44 +1,33 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH 0/5] Modularize PCI_DW related drivers.
-Date: Tue, 15 Mar 2016 16:50:50 -0400
-Message-ID: <56E875AA.7070106@ti.com>
-References: <1454889644-27830-1-git-send-email-paul.gortmaker@windriver.com>
- <2837386.VTD89bjPJz@wuerfel> <56D40F7F.5060204@ti.com>
- <2163039.5ZupTHB3qf@wuerfel>
+From: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Subject: Re: [PATCH 1/1] of: Empty of_read_number when !OF
+Date: Tue, 15 Mar 2016 22:09:33 +0100
+Message-ID: <3322869.hMdihePIvu@kongar>
+References: <1457375633-614-1-git-send-email-alexanders83@web.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <2163039.5ZupTHB3qf@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Ley Foon Tan <lftan@altera.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Stanimir Varbanov <svarbanov@mm-sol.com>, Thierry Reding <thierry.reding@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457375633-614-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2016 04:35 PM, Arnd Bergmann wrote:
-> On Monday 29 February 2016 14:59:35 Kishon Vijay Abraham I wrote:
->>> }
->>>
->>> You just need to pass the same resource in here htat you pass into
->>> pci_remap_iospace().
->>
->> I still seem to get the abort in ioremap_page_range().
->>
->> Here's the patch I used [3] and here's the kernel log [4].
->>
->> [3] -> http://pastebin.ubuntu.com/15241614/
->> [4] -> http://pastebin.ubuntu.com/15241637/
->>
->>
+On Monday 07 March 2016, 19:33:53 wrote Alexander Stein:
+> Introduce empty of_read_number when CONFIG_OF is not defined. This allows
+> us to compile test gpio drivers.
 > 
-> Sorry, I'm out of ideas here. The patch looks right to me, but the problem
-> looks unchanged.
-> 
-> 	Arnd
-> 
+> Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+> ---
+> This is currently based on gpio's for-next branch due to other patches depending on this.
+> If you require a different base branch, please let me know.
 
-Was there any progress since this last response from Arnd? or is it a TBD?
+Any feedback on this one?
 
--- 
-Murali Karicheri
-Linux Kernel, Keystone
+Best regards,
+Alexander
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
