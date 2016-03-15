@@ -1,92 +1,95 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 4/4] gpio: Add parsing of DT GPIO line-names
-Date: Tue, 15 Mar 2016 09:41:26 +0100
-Message-ID: <CACRpkdby+VUhZTwD9c3Q0t2BGqQYTbaypaM-L1WzXXrshNLbYw@mail.gmail.com>
-References: <1456214089-13954-1-git-send-email-mpa@pengutronix.de>
-	<1456214089-13954-4-git-send-email-mpa@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1456214089-13954-4-git-send-email-mpa@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Markus Pargmann <mpa@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Johan Hovold <johan@kernel.org>, Michael Welling <mwelling@ieee.org>, Bamvor Jian Zhang <bamvor.zhangjian@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH 0/4] Implement USB device/host switch for Vybrid
+Date: Tue, 15 Mar 2016 14:08:26 +0530
+Message-ID: <cover.1458030082.git.maitysanchayan@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter.Chen-3arQi8VN3Tc@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 23, 2016 at 8:54 AM, Markus Pargmann <mpa@pengutronix.de> wrote:
+Hello Peter,
 
-> This patch reuses the DT bindings that are already in place for the
-> gpio-hogging mechanism. These bindings define line-name properties for
-> GPIOs inside the gpio-chip device node.
->
-> of_parse_own_gpio() now sets the gpio descriptor name using the newly
-> introduced gpiod_set_name(). It checks for name collisions within a GPIO
-> chip to avoid GPIOs with the same name that are exported over the same
-> GPIO character device.
->
-> The GPIO flags that describe the GPIO state are not required anymore in
-> general but are checked if the gpio-hog property was found.
->
-> This can be used to use the line names from the schematic. Example of lsgpio on
-> a modified i.MX6s Riotboard:
->
->         GPIO chip: gpiochip0, "209c000.gpio", 32 GPIO lines
->                 line 0: unnamed unlabeled
->                 line 1: unnamed unlabeled
->                 line 2: SD2_WP "wp" [kernel output open-drain]
->                 line 3: GPIO_3_CLK unlabeled
->                 line 4: SD2_CD "cd" [kernel output open-drain]
->                 ...
->
-> The modified DT:
->          &gpio1 {
->                 sd2_wp {
->                         gpios = <2 0>;
->                         line-name = "SD2_WP";
->                 };
->
->                 gpio_3_clk {
->                         gpios = <3 0>;
->                         line-name = "GPIO_3_CLK";
->                 };
->
->                 sd2_cd {
->                         gpios = <4 0>;
->                         line-name = "SD2_CD";
->                 };
->         };
->
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+The existing usage of extcon in Chipidea driver relies on OTG
+registers. In case of SoC with dual role device but not a true
+OTG controller, this does not work. Such SoC's should specify
+the existing CI_HDRC_DUAL_ROLE_NOT_OTG flag and do the role
+switch without checking any of the OTG registers in my opinion.
+This is the case for Vybrid which uses a Chipidea IP but does
+not have a true 5 pin OTG implemented.
 
-I discussed the method for naming the GPIO lines with Rob Herring, Grant
-Likely and Arnd Bergmann in person last week.
+This patch almost reverts most of commit 3ecb3e09b042e70799ff3a1ff464a5ecaa7547d9
+"usb: chipidea: Use extcon framework for VBUS and ID detect".
+We do not rely anymore on emulating an OTG capable controller
+by faking OTG controller reads.
 
-Rob strongly prefers that we just assign the names to the indices using an
-array, like is done in the clock framework so we don't deviate from their
-pattern for clock-output-names:
-Documentation/devicetree/bindings/clock/clock-bindings.txt
+Observations without the following patchset with the current
+implementation.
 
-In our case I proposed that it be named gpio-line-names, so:
+CONFIG_USB_OTG was kept selected. Just the device tree changes
+done in the fourth patch of this patch were done.
 
-gpio-line-names = "foo", "bar", "baz" ... ;
+1. Booting with the USB device connected and then disconnecting
+on boot results in "irq 38: nobody cared (try booting with the
+"irqpoll" option)" stack trace.
 
-It needs to be named gpio-line-names, since they are
-bidirectional so gpio-output-names would not work, also
-gpio-names = ... would be ambigous. So I suggest gpio-line-names.
+2. Disconnecting the USB device and reconnecting results in a
+timeout error message coming ci_handle_id_switch --> hw_wait_reg
+while waiting for OTGSC_BSV register field. Why rely on a read
+from OTG register while using extcon?
 
-Further, there is a problem that I did not realize with reusing the
-hog names: the name specified in there is for the consumer side:
-so it will result in gpiod_get("name") and name the consumer
-side (label) of the GPIO. It is confusing if the same scheme is
-used to name the producer side: so let's leave hogs to be hogs:
-they are a kind of consumer nothing else.
+Also, usb_gadget_vbus_connect seems not to be called, render device
+mode useless (usb_gadget_vbus_connect according to my understanding
+should be called through ci_vbus_notifier -> ci_irq -> ci_otg_work ->
+ci_handle_vbus_change).
 
-We also discussed initial values/set up. This is another issue
-and we didn't reach a conclusion on that.
+3. Once in a while doing the switch from host to device would
+result "ci_hdrc.0 Freeing queued request" but the switch won't
+be successful as expected and I wont get the following message
 
-Anyways: we need a line naming patch, are you interested
-in hacking it up (keep DT bindings and code changed in the
-same file) or should I do it?
+[  167.298040] ci_hdrc ci_hdrc.0: USB bus 2 deregistered
+[  167.772520] configfs-gadget gadget: high-speed config #1: c
 
-Yours,
-Linus Walleij
+and further our RNDIS client configuration on said USB connection
+won't work. Once in a while I also experience a complete freeze
+if I try to ping the interface after this.
+
+4. With the current "OTG" implementation, should the ci->lock not
+be acquired before calling ci_role_stop or ci_role_start in the
+code path ci_id_notifier -> ci_irq -> otg_workqueue?
+
+Looking at the commit message this extcon was introduced for Qualcomm's
+410 Dragonboard and while I did not look at Dragonboard's or 410's DS,
+requirement seems similar to Vybrid.?
+
+What are your thoughts on this? Or considering the requirement of Qualcomm
+would keeping direct role switch in case of DUAL_ROLE_NOT_OTG flag
+and keeping existing OTG reads would be acceptable? Currently in our tree
+we keep both implementations. The 410 is a 64bit SoC but grepping arch/
+arm64/boot/dts/qcom for an extcon entry I didn't find any.
+
+Regards,
+Sanchayan.
+
+Sanchayan Maity (4):
+  usb: chipidea: Do not rely on OTG while using extcon
+  usb: chipidea: ci_hdrc_imx: Introduce CI_HDRC_DUAL_ROLE_NOT_OTG for Vybrid
+  ARM: dts: vfxxx: Make Vybrid match only on it's own compatible string
+  ARM: dts: vf-colibri: USB device/host switch using extcon gpio
+
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 12 ++++++
+ arch/arm/boot/dts/vf-colibri.dtsi         |  7 ++++
+ arch/arm/boot/dts/vfxxx.dtsi              |  2 +-
+ drivers/usb/chipidea/ci_hdrc_imx.c        |  5 +++
+ drivers/usb/chipidea/core.c               | 64 +++++++++++++++++--------------
+ drivers/usb/chipidea/otg.c                | 39 +------------------
+ include/linux/usb/chipidea.h              |  2 -
+ 7 files changed, 61 insertions(+), 70 deletions(-)
+
+-- 
+2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
