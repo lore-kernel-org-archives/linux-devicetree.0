@@ -1,168 +1,73 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mailbox: Introduce TI message manager driver
-Date: Tue, 15 Mar 2016 12:05:20 -0500
-Message-ID: <CAGo_u6qwCFXH-sHijZHcC3iBTEAzqrkGf439DC5=7k39PS-+kg@mail.gmail.com>
-References: <1456525452-30638-1-git-send-email-nm@ti.com>
-	<1456525452-30638-3-git-send-email-nm@ti.com>
-	<CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
-	<56D987FF.1040607@ti.com>
-	<CABb+yY1a-6V=9C+di7ZdQHDQG_M_jbYshoLqxaLiCZTqM4TfHg@mail.gmail.com>
-	<56DDD41E.2050409@ti.com>
-	<CABb+yY2A35=uG9dk_VHVHbEBUsguw6414KeyQJxxp-Jnsq-0dw@mail.gmail.com>
-	<CAGo_u6pHLDhqoHD-V9xKbKkr6-NpdH+vTUufXQGvoMK7C-yj9Q@mail.gmail.com>
-	<CABb+yY3ZqM1Do5TdYCU_MGzk0dottaASo3qCdeKJ6TbGf2D8+Q@mail.gmail.com>
+From: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v4 00/18] i2c mux cleanup and locking update
+Date: Tue, 15 Mar 2016 19:08:08 +0200
+Message-ID: <56E84178.2020204@iki.fi>
+References: <1457044050-15230-1-git-send-email-peda@lysator.liu.se>
+ <56E817AE.2090005@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY3ZqM1Do5TdYCU_MGzk0dottaASo3qCdeKJ6TbGf2D8+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <56E817AE.2090005-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+To: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Viorel Suman <viorel.suman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Terry Heo <terryheo-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tommi Rantala <tt.rantala-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 12:31 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, Mar 8, 2016 at 8:07 PM, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
->> Jassi,
->>
->> On Tue, Mar 8, 2016 at 1:10 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Tue, Mar 8, 2016 at 2:18 AM, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
->>>> On 03/07/2016 12:31 PM, Jassi Brar wrote:
->>>>> On Fri, Mar 4, 2016 at 8:05 PM, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
->>>>>>>
->>>>>>>> +static int ti_msgmgr_send_data(struct mbox_chan *chan, void *data)
->>>>>>>> +{
->>>>>>>> +       struct device *dev = chan->mbox->dev;
->>>>>>>> +       struct ti_msgmgr_inst *inst = dev_get_drvdata(dev);
->>>>>>>> +       const struct ti_msgmgr_desc *desc;
->>>>>>>> +       struct ti_queue_inst *qinst = chan->con_priv;
->>>>>>>> +       int msg_count, num_words, trail_bytes;
->>>>>>>> +       struct ti_msgmgr_message *message = data;
->>>>>>>> +       void __iomem *data_reg;
->>>>>>>> +       u32 *word_data;
->>>>>>>> +
->>>>>>>> +       if (WARN_ON(!inst)) {
->>>>>>>> +               dev_err(dev, "no platform drv data??\n");
->>>>>>>> +               return -EINVAL;
->>>>>>>> +       }
->>>>>>>> +       desc = inst->desc;
->>>>>>>> +
->>>>>>>> +       if (desc->max_message_size < message->len) {
->>>>>>>> +               dev_err(dev, "Queue %s message length %d > max %d\n",
->>>>>>>> +                       qinst->name, message->len, desc->max_message_size);
->>>>>>>> +               return -EINVAL;
->>>>>>>> +       }
->>>>>>>> +
->>>>>>>> +       /* Are we able to send this or not? */
->>>>>>>> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
->>>>>>>> +       if (msg_count >= desc->max_messages) {
->>>>>>>> +               dev_warn(dev, "Queue %s is full (%d messages)\n", qinst->name,
->>>>>>>> +                        msg_count);
->>>>>>>> +               return -EBUSY;
->>>>>>>> +       }
->>>>>>> This seems fishy. mailbox api always submit 1 'complete' message to be
->>>>>>> sent and checks for completion by last_tx_done() before calling
->>>>>>> send_data() again. Controller drivers are not supposed to queue
->>>>>>> messages - mailbox core does. So you should never be unable to send a
->>>>>>> message.
->>>>>>
->>>>>>
->>>>>> OK-> to explain this, few reasons: (queue messages check and usage of
->>>>>> last_tx_done are kind of intertwined answer..
->>>>>> a) we need to remember that the message manager has a shared RAM.
->>>>>> multiple transmitter over other queues can be sharing the same.
->>>>>> unfortunately, we dont get a threshold kind of interrupt or status that
->>>>>> I am able to exploit in the current incarnation of the solution. The
->>>>>> best we can do in the full system is to constrain the number of messages
->>>>>> that are max pending simultaneously in each of the queue from various
->>>>>> transmitters in the SoC.
->>>>>> b) last_tx_done() is checked if TXDONE_BY_POLL, not if TXDONE_BY_ACK
->>>>>> right? which is how this'd work since txdone_poll is false -> that is
->>>>>> how we want this mechanism to work once the far end is ready for next
->>>>>> message, it acks. I do see your point about being tied to protocol - I
->>>>>> dont like it either.. in fact, I'd prefer that client registration
->>>>>> mention what kind of handshaking is necessary, but: a) that is not how
->>>>>> mailbox framework is constructed at the moment(we state txdone_poll at
->>>>>> mailbox registration, not at client usage) and b) I have no real need
->>>>>> for multiple clients to users of message manager who actually need
->>>>>> non-ACK usage - even for the foreseeable future (at least 1 next
->>>>>> generation of SoC) - if such a need does arise in the future, I will
->>>>>> have to rework framework and make this capability at the registration
->>>>>> time of the client - allowing each client path to use different
->>>>>> mechanisms on hardware such as these that need it.
->>>>>> c) message manager can actually queue more than one message(depending on
->>>>>> client capability). Even though, at this point, we are not really
->>>>>> capable of doing it(again from what I can see for immediate future),
->>>>>> mailbox framework by checking last_tx_done forces a single message
->>>>>> sequencing - which is not really exploiting the capability of the
->>>>>> hardware - in theory, we should be able to queue max num messages, hit
->>>>>> cpuidle and snooze away while the remote entity chomp away data at it's
->>>>>> own pace and finally give us a notification back - but again, we can
->>>>>> argue it is indeed protocol dependent, so setting txdone_poll to false
->>>>>> actually enables that to be done in user. Again - i have no immediate
->>>>>> need for any queued multiple transfer needs yet.. even if i need to, in
->>>>>> the future, it can easily be done by the client by maintaining code as
->>>>>> is - txdone_poll is false.
->>>>>>
->>>>> All I suggest is that the controller does not queue more than 1
->>>>> message at a time, which means the controller driver allows for
->>>>> maximum possible resources taken by a message.
->>>>> The buffering is already done by the core, and if for your 'batch
->>>>> dispatch' thing the client could simply flush them to remote by
->>>>> pretending it got the ack (which is no worse than simply sending all
->>>>> messages to remote without caring if the first was successful or not).
->>>>
->>>> Are you suggesting to set txdone_poll is true?
->>> No.
->>>
->>>> the controller is quite
->>>> capable of queueing more than 1 message at a time. This the reason for
->>>> letting the client choose the mode of operation - use ack mechanism for
->>>> operation. client can choose to ignore the buffering in the controller,
->>>> as you mentioned, but then, why force txdone_poll to true and deny the
->>>> usage of the queue capability of the hardware?
->>>>
->>> irq/poll/ack whatever you use, there is no valid reason to buffer
->>> messages in the controller driver. Please let me know what usecase you
->>> have in mind that must have messages buffered in controller driver and
->>> not core.
->>
->> I am confused, I am _not_ buffering any tx data in the controller
->> driver - rx data is stored in a temp buffer to send up the stack -
->> that is just regular practise, right?
->>
-> right.
->
->> In tx, I just check to ensure
->> that the queue has'nt run out prior to transmission since the hardware
->> is capable of queueing - ok, in a single transmitter system it is
->> probably a little overkill, but we would like to function in multiple
->> producer SoC as well. What am I missing here?
->>
-> In send_data() you have ...
->
-> +       /* Are we able to send this or not? */
-> +       msg_count = ti_msgmgr_queue_get_num_messages(qinst);
-> +       if (msg_count >= desc->max_messages) {
-> +               dev_warn(dev, "Queue %s is full (%d messages)\n", qinst->name,
-> +                        msg_count);
-> +               return -EBUSY;
-> +       }
->
-> That is, you check if there are some messages in the TX-Queue already.
-> I am not sure how you could hit this and if that is legit.
+On 03/15/2016 04:09 PM, Peter Rosin wrote:
 
-Alright, i will drop this check since it is causing a lot more
-confusion that that is worth. we can introduce it when we finally do
-hit an issue eventually with multiple processors trying to transmit on
-the same queue manager. that is not a concern at the very immediate
-time, so we should be good to drop.
+> The series will be posted again for review. This is just a heads up.
+>
+> v5 compared to v4:
+> - Rebase on top of v4.5-rc7.
+> - A new patch making me maintainer of i2c muxes (also sent separately).
+> - A new file Documentation/i2c/i2c-topology that describes various muxing
+>    issues.
+> - Rename "i2c-controlled" muxes "self-locked" instead, as it is perfectly
+>    reasonable to have i2c-controlled muxes that use the pre-existing locking
+>    scheme. The pre-existing locking scheme for i2c muxes is from here on
+>    called "parent-locked".
+> - Rename i2c-mux.c:i2c_mux_master_xfer to __i2c_mux_master_xfer since it
+>    calls __i2c_transfer, which leaves room for a new i2c_mux_master_xfer
+>    that calls i2c_transfer. Similar rename shuffle for i2c_mux_smbus_xfer.
+> - Use sizeof(*priv) instead of sizeof(struct i2c_mux_priv). One instance.
+> - Some follow-up patches that were posted in response to v2-v4 cleaning up
+>    and simplifying various i2c muxes outside drivers/i2c/, among those is
+>    an unrelated cleanup patch to drivers/media/dvb-frontends/rtl2832.c that
+>    I carry here since it conflicts (trivially) with this series. That
+>    unrelated patch is (currently) the last patch in the series.
+>
+>
+> The series looks like this now:
+>
+> The following changes since commit f6cede5b49e822ebc41a099fe41ab4989f64e2cb:
+>
+>    Linux 4.5-rc7 (2016-03-06 14:48:03 -0800)
+>
+> are available in the git repository at:
+>
+>    https://github.com/peda-r/i2c-mux.git mux-core-and-locking-5
 
-please let me know if you are ok with this.
+I reviewed and tested these patches:
+
+c1ef4a2 [media] rtl2832: regmap is aware of lockdep, drop local locking hack
+6636178 [media] rtl2832_sdr: get rid of empty regmap wrappers
+001ad6b [media] rtl2832: declare that the i2c gate is self-locked
+e2e82e4 [media] si2168: declare that the i2c gate is self-locked
+b52f766 [media] si2168: convert to use an explicit i2c mux core
+4ba9115 [media] rtl2832: convert to use an explicit i2c mux core
+3f1778b [media] rtl2830: convert to use an explicit i2c mux core
+5c8bfc8 [media] m88ds3103: convert to use an explicit i2c mux core
+
+
+Reviewed-by: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+Tested-by: Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>
+
+regards
+Antti
 
 -- 
----
-Regards,
-Nishanth Menon
+http://palosaari.fi/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
