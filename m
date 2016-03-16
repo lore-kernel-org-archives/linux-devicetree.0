@@ -1,45 +1,31 @@
-From: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: k2*: Rename the k2* files to keystone-k2* files
-Date: Wed, 16 Mar 2016 08:43:10 -0700
-Message-ID: <56E97F0E.6070309@oracle.com>
-References: <1458139150-30382-1-git-send-email-nm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+Subject: [PATCH 0/2] auxdisplay: Introduce driver for ht16k33 LED controller
+Date: Wed, 16 Mar 2016 16:52:07 +0100
+Message-ID: <cover.1458140954.git.robin@protonic.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458139150-30382-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/16/2016 7:39 AM, Nishanth Menon wrote:
-> As reported in [1], rename the k2* dts files to keystone-* files
-> this will force consistency throughout.
->
-> Script for the same (and hand modified for Makefile and MAINTAINERS
-> files):
-> for i in arch/arm/boot/dts/k2*
-> do
-> 	b=`basename $i`;
-> 	git mv $i arch/arm/boot/dts/keystone-$b;
-> 	sed -i -e "s/$b/keystone-$b/g" arch/arm/boot/dts/*[si]
-> done
->
-> NOTE: bootloaders that depend on older dtb names will need to be
-> updated as well.
->
-> [1] http://marc.info/?l=linux-arm-kernel&m=145637407804754&w=2
->
-> Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-> ---
->
-Thanks Nishant for taking care of this. I will add this to the
-next soon.
+This patch series adds a driver for the ht16k33 LED controller and a
+new vendor prefix for Holtek Semiconductor Inc.
 
-Reagrds,
-Santosh
+Robin van der Gracht (2):
+  of: add vendor prefix for Holtek Semiconductor
+  auxdisplay: ht16k33: Driver for LED controller
+
+ .../devicetree/bindings/display/ht16k33.txt        |  42 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/auxdisplay/Kconfig                         |   9 +
+ drivers/auxdisplay/Makefile                        |   1 +
+ drivers/auxdisplay/ht16k33.c                       | 563 +++++++++++++++++++++
+ 5 files changed, 616 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ht16k33.txt
+ create mode 100644 drivers/auxdisplay/ht16k33.c
+
+-- 
+2.5.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
