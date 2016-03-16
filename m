@@ -1,85 +1,46 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v3 6/8] arm64: dts: rockchip: Add power key to GeekBox
-Date: Wed, 16 Mar 2016 14:52:33 +0100
-Message-ID: <56E96521.40304@suse.de>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <1457294038-14243-7-git-send-email-afaerber@suse.de>
- <6BD669A2-4971-4702-8742-77C9994AA4E9@gmail.com> <56E93C43.1060500@suse.de>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/9] net: arc_emac: add phy reset is optional for
+ device tree
+Date: Wed, 16 Mar 2016 16:57:42 +0300
+Message-ID: <56E96656.5000101@cogentembedded.com>
+References: <1457942520-12859-1-git-send-email-wxt@rock-chips.com>
+ <1457942520-12859-3-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E93C43.1060500-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <1457942520-12859-3-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 16.03.2016 um 11:58 schrieb Andreas F=C3=A4rber:
-> Am 11.03.2016 um 00:04 schrieb Julien Chauveau:
->>> @@ -70,6 +71,19 @@
->>> 		pinctrl-0 =3D <&ir_int>;
->>> 	};
->>>
->>> +	keys: gpio-keys {
-[...]
->>> +		compatible =3D "gpio-keys";
->>> +		pinctrl-names =3D "default";
->>> +		pinctrl-0 =3D <&pwr_key>;
->>> +
->>> +		button@0 {
-[...]
->>> +			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
->>> +			label =3D "GPIO Power";
->>> +			linux,code =3D <KEY_POWER>;
->>
->> According to Documentation/input/event-codes.txt, there=E2=80=99s a =
-special event type for the power button.
->> Should we use it here for that purpose?
->>
->> 			linux,input-type =3D <EV_PWR>
->=20
-> The other RK3368 boards don't, so unless you can give a justification=
- to
-> convert all boards yet again and test how this makes a difference, I'=
-d
-> rather not do experiments here but leave that to someone who knows wh=
-at
-> they're doing and then do it consistently...
+Hello.
 
-=46or the record here's an evtest log:
+On 3/14/2016 11:01 AM, Caesar Wang wrote:
 
-geekbox:~ # evtest
-No device specified, trying to scan all of /dev/input/event*
-Available devices:
-/dev/input/event0:      gpio_ir_recv
-/dev/input/event1:      MCE IR Keyboard/Mouse (gpio-rc-recv)
-/dev/input/event2:      gpio-keys
-Select the device event number [0-2]: 2
-Input driver version is 1.0.1
-Input device ID: bus 0x19 vendor 0x1 product 0x1 version 0x100
-Input device name: "gpio-keys"
-Supported events:
-  Event type 0 (EV_SYN)
-  Event type 1 (EV_KEY)
-    Event code 116 (KEY_POWER)
-Properties:
-Testing ... (interrupt to exit)
-Event: time 1458136008.850429, type 1 (EV_KEY), code 116 (KEY_POWER),
-value 1
-Event: time 1458136008.850429, -------------- SYN_REPORT ------------
+> This patch adds the following property for arc_emac.
+>
+> 1) phy-reset-gpios:
+> The phy-reset-gpio is an optional property for arc emac device tree boot.
+> Change the binding document to match the driver code.
+>
+> 2) phy-reset-duration:
+> Different boards may require different phy reset duration. Add property
+> phy-reset-duration for device tree probe, so that the boards that need
+> a longer reset duration can specify it in their device tree.
+>
+> Anyway, we can add the above property for arc emac.
+>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-systemd then goes on to shut down the system cleanly.
+   Could you have a look at drivers/net/ethernet/cadence/macb/? It seems to be 
+the only driver which places the PHY's "reset-gpios" prop correctly, into the 
+PHY subnode? I'm currently working on adding support of this prop into phylib...
 
-Regards,
-Andreas
+MBR, Sergei
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
