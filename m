@@ -1,143 +1,38 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH v5 7/7] ARM: STiH407: Move over to using
- the 'reserved-memory' API for obtaining DMA memory
-Date: Wed, 16 Mar 2016 20:10:51 +0000
-Message-ID: <20160316201051.GA10042@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
- <1452602781-22424-8-git-send-email-lee.jones@linaro.org>
- <20160316163508.GA8396@griffinp-ThinkPad-X1-Carbon-2nd>
- <20160316165526.GZ13692@x1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20160316165526.GZ13692@x1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: ohad@wizery.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, kernel@stlinux.com, Nathan_Lynch@mentor.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 5/8] arm64: dts: rockchip: Clean up gpio-keys nodes
+Date: Wed, 16 Mar 2016 22:55:44 +0100
+Message-ID: <27950358-06A9-4D97-8747-C32F56B73F11@gmail.com>
+References: <1458136727-32075-1-git-send-email-afaerber@suse.de> <1458136727-32075-6-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458136727-32075-6-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Andreas,
 
-On Wed, 16 Mar 2016, Lee Jones wrote:
+> Le 16 mars 2016 =C3=A0 14:58, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> =
+a =C3=A9crit :
+>=20
+> Drop superfluous #address-cells and #size-cells.
+> Use KEY_POWER define for 116.
+> Rename sub-nodes to avoid new dtc warnings.
+>=20
+> Reported-by: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
 
-> On Wed, 16 Mar 2016, Peter Griffin wrote:
-> 
-> > Hi Lee,
-> > 
-> > On Tue, 12 Jan 2016, Lee Jones wrote:
-> > 
-> > > Doing so saves quite a bit of code in the driver.
-> > > 
-> > > For more information on the 'reserved-memory' bindings see:
-> > > 
-> > >   Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> > > 
-> > > Suggested-by: Suman Anna <s-anna@ti.com>
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  arch/arm/boot/dts/stih407-family.dtsi | 46 +++++++++++++++++++++++++++++------
-> > >  1 file changed, 38 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> > > index 15c20b6..27b8efc 100644
-> > > --- a/arch/arm/boot/dts/stih407-family.dtsi
-> > > +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> > > @@ -15,6 +15,36 @@
-> > >  	#address-cells = <1>;
-> > >  	#size-cells = <1>;
-> > >  
-> > > +	reserved-memory {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +		ranges;
-> > > +
-> > > +		gp0_reserved: rproc@40000000 {
-> > > +			compatible = "shared-dma-pool";
-> > > +			reg = <0x40000000 0x01000000>;
-> > > +			no-map;
-> > > +		};
-> > > +
-> > > +		gp1_reserved: rproc@41000000 {
-> > > +			compatible = "shared-dma-pool";
-> > > +			reg = <0x41000000 0x01000000>;
-> > > +			no-map;
-> > > +		};
-> > > +
-> > > +		audio_reserved: rproc@42000000 {
-> > > +			compatible = "shared-dma-pool";
-> > > +			reg = <0x42000000 0x01000000>;
-> > > +			no-map;
-> > > +		};
-> > > +
-> > > +		dmu_reserved: rproc@43000000 {
-> > > +			compatible = "shared-dma-pool";
-> > > +			reg = <0x43000000 0x01000000>;
-> > > +			no-map;
-> > > +		};
-> > 
-> > I don't believe these reserved memory ranges are correct for audio_reserved and dmu_reserved.
-> > 
-> > For example my vid_firmware-stih407.elf is linked at 0x41c00000 base address and my
-> > audio_firmware-bd-stih407.elf is linked at 0x40c00000.
-> > 
-> > So with all the st231 rproc nodes enabled I guess it would still work. But
-> > currently I think st231_gp0 is reserving the memory region for st231_audio,
-> > and st231-gp1 is reserving the memory region for st231_dmu.
-> 
-> These addresses are taken from internally tested code. 
+It looks good to me.
 
-Yes I did check the internal kernel, it would appear to be wrong there as
-well. One of the joys of mailing list code review I guess :-)
+Reviewed-by: Julien Chauveau <chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> I don't have
-> access to the LMI layout documentation (if it even exists) so can't
-> check for myself.
-
->  Isn't this just DDR anyway? 
-
-Yes it is DDR
-
-> So in theory we can
-> configure each devices' slice where ever we feel is appropriate? 
-
-Nope. The st231 audio and video firmwares are provided by ST as binary blobs and
-aren't AFAIK compiled as position independent code. So the reserved-memory region
-needs to match where the firmware has been linked to run from.
-
-> How
-> is memory allocated to the DMU and Audio drivers?  Do you have scripts
-> which link the aforementioned binaries?
-
-I don't have any scripts, firmware source code or even a st200 toolset.
-
-> 
-> If you think there is an issue, I suggest the best thing to do is ping
-> Ludovic, since he is the author of the original code.
-
-Ok I will ping Ludovic and point him at this thread.
-
-I think maybe the internal kernel rproc driver was only used to reserve memory,
-manage clocks, and co-processor reset / power lines, and multicom actually
-loaded the firmware elf file.
-
-The reason for coming to that conclusion is that if rproc driver was loading the
-firmware I can't see how you would end up with a correctly booted co-processor
-with a reserved-memory node which doesn't match up with where the firmware is linked to
-run from.
-
-Did you manage to boot audio or video co-pro successfully with the dt nodes as
-they currently are in this patch?
-
-regards,
-
-Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
