@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v4 5/8] arm64: dts: rockchip: Clean up gpio-keys nodes
-Date: Wed, 16 Mar 2016 14:58:43 +0100
-Message-ID: <1458136727-32075-6-git-send-email-afaerber@suse.de>
+Subject: [PATCH v4 6/8] arm64: dts: rockchip: Add power key to GeekBox
+Date: Wed, 16 Mar 2016 14:58:44 +0100
+Message-ID: <1458136727-32075-7-git-send-email-afaerber@suse.de>
 References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -14,60 +14,30 @@ Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linu
 	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Drop superfluous #address-cells and #size-cells.
-Use KEY_POWER define for 116.
-Rename sub-nodes to avoid new dtc warnings.
-
-Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
 Cc: Julien Chauveau <chauveau.julien@gmail.com>
 Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
  v3 -> v4:
- * Renamed sub-node names (Julien)
+ * Renamed power button sub-node name (Julien)
 =20
- v3: New (Julien)
+ v2 -> v3:
+ * Adopted wakeup-source instead of gpio-key,wakeup (Julien)
+ * Dropped gpio-keys #address-cells and #size-cells properties (Julien)
+ * Dropped power button reg property (Julien)
+ * Adopted KEY_POWER (Julien)
+ * Fixed power button pinctrl pull setting (Julien)
 =20
- arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi | 7 +++----
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts  | 7 +++----
- 2 files changed, 6 insertions(+), 8 deletions(-)
+ v2: New
+=20
+ arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 +++++++++++++++++=
++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/=
-boot/dts/rockchip/rk3368-evb.dtsi
-index e4c91e86e9b6..bd4f2cf326b2 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
-@@ -40,6 +40,7 @@
-  *     OTHER DEALINGS IN THE SOFTWARE.
-  */
-=20
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pwm/pwm.h>
- #include "rk3368.dtsi"
-=20
-@@ -105,16 +106,14 @@
-=20
- 	keys: gpio-keys {
- 		compatible =3D "gpio-keys";
--		#address-cells =3D <1>;
--		#size-cells =3D <0>;
- 		pinctrl-names =3D "default";
- 		pinctrl-0 =3D <&pwr_key>;
-=20
--		button@0 {
-+		power {
- 			wakeup-source;
- 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
- 			label =3D "GPIO Power";
--			linux,code =3D <116>;
-+			linux,code =3D <KEY_POWER>;
- 		};
- 	};
-=20
-diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/b=
-oot/dts/rockchip/rk3368-r88.dts
-index 5c63f8982128..5ea68c493400 100644
---- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/arm=
+64/boot/dts/rockchip/rk3368-geekbox.dts
+index cef4c12bda48..46cdddfcea6c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
 @@ -42,6 +42,7 @@
 =20
  /dts-v1/;
@@ -75,25 +45,39 @@ index 5c63f8982128..5ea68c493400 100644
 +#include <dt-bindings/input/input.h>
 =20
  / {
- 	model =3D "Rockchip R88";
-@@ -65,16 +66,14 @@
+ 	model =3D "GeekBox";
+@@ -70,6 +71,19 @@
+ 		pinctrl-0 =3D <&ir_int>;
+ 	};
 =20
- 	keys: gpio-keys {
- 		compatible =3D "gpio-keys";
--		#address-cells =3D <1>;
--		#size-cells =3D <0>;
- 		pinctrl-names =3D "default";
- 		pinctrl-0 =3D <&pwr_key>;
-=20
--		button@0 {
++	keys: gpio-keys {
++		compatible =3D "gpio-keys";
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pwr_key>;
++
 +		power {
- 			wakeup-source;
- 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
- 			label =3D "GPIO Power";
--			linux,code =3D <116>;
++			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
++			label =3D "GPIO Power";
 +			linux,code =3D <KEY_POWER>;
++			wakeup-source;
++		};
++	};
++
+ 	leds: gpio-leds {
+ 		compatible =3D "gpio-leds";
+=20
+@@ -265,6 +279,12 @@
  		};
  	};
 =20
++	keys {
++		pwr_key: pwr-key {
++			rockchip,pins =3D <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	pmic {
+ 		pmic_sleep: pmic-sleep {
+ 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
 --=20
 2.6.2
