@@ -1,147 +1,52 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 1/3] dt-bindings: add multidomain support to i.MX GPC DT binding
-Date: Wed, 16 Mar 2016 12:41:52 +0100
-Message-ID: <1458128514-9560-1-git-send-email-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Wed, 16 Mar 2016 17:00:49 +0530
+Message-ID: <56E943E9.5020503@nvidia.com>
+References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com> <20160229174751.GQ21240@tuxbot> <20160301022326.GC18327@sirena.org.uk> <56D5111E.6090606@nvidia.com> <20160302033833.GV18327@sirena.org.uk> <56D65F7E.3090907@nvidia.com> <20160302043506.GC18327@sirena.org.uk> <56E81103.8010903@nvidia.com> <20160315144822.GP2566@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160315144822.GP2566@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, bjorn.andersson@sonymobile.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds a new binding for the Freescale i.MX GPC block, which allows
-to describe multiple power domains in a more natural way. The driver
-will continue to support the old binding for existing DTBs, but new
-features like the additional domains present on i.MX6SX will only be
-usable with the new binding.
 
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-v2: clarify the number of interrupts (1)
----
- .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
- 1 file changed, 54 insertions(+), 27 deletions(-)
+On Tuesday 15 March 2016 08:18 PM, Mark Brown wrote:
+> * PGP Signed by an unknown key
+>
+> On Tue, Mar 15, 2016 at 07:11:23PM +0530, Laxman Dewangan wrote:
+>
+>> So here we will need two parameters:
+>> advertised-ramp-delay for PMIC configurations and
+>> ramp-delay which is measured one.
+>> Most of time, advertised-ramp-delay is same as ramp-delay and hence =
+one
+>> value from DT will be sufficient.
+>> If there is difference then both value can be provided and
+>> advertised-ramp-delay  will be used for PMIC configuration and rest =
+of
+>> calculation about delay will be from ramp-delay.
+> This sounds more like the difference between typical and maximum spec
+> values than anything else, we are looking for maxima in Linux.
+>
 
-diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-index 65cc0345747d..e5b660018d63 100644
---- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-+++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-@@ -1,22 +1,41 @@
- Freescale i.MX General Power Controller
- =======================================
- 
--The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
--counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
--domains.
-+The i.MX6 General Power Control (GPC) block contains DVFS load tracking
-+counters and Power Gating Control (PGC).
- 
- Required properties:
- - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
- - reg: should be register base and length as documented in the
-   datasheet
--- interrupts: Should contain GPC interrupt request 1
--- pu-supply: Link to the LDO regulator powering the PU power domain
--- clocks: Clock phandles to devices in the PU power domain that need
--	  to be enabled during domain power-up for reset propagation.
--- #power-domain-cells: Should be 1, see below:
-+- interrupts: Should contain one interrupt specifier for the GPC interrupt
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - ipg
-+- pgc: a list of child nodes describing the SoC power domains controlled by the
-+  power gating controller.
- 
--The gpc node is a power-controller as documented by the generic power domain
--bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-+The power domains are generic power domain providers as documented in
-+Documentation/devicetree/bindings/power/power_domain.txt. They are described as
-+subnodes of the GPC and should contain the following
-+
-+Required properties:
-+- reg: the DOMAIN_INDEX as used by the client devices to refer to this
-+  power domain
-+  The following DOMAIN_INDEX values are valid for i.MX6Q:
-+  ARM_DOMAIN     0
-+  PU_DOMAIN      1
-+  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-+  DISPLAY_DOMAIN 2
-+
-+- #power-domain-cells: Should be 0
-+
-+Optional properties:
-+- clocks: a number of phandles to clocks that need to be enabled during domain
-+  power-up sequencing to ensure reset propagation into devices located inside
-+  this power domain
-+- domain-supply: a phandle to the regulator powering this domain
- 
- Example:
- 
-@@ -25,14 +44,29 @@ Example:
- 		reg = <0x020dc000 0x4000>;
- 		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
- 			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
--		pu-supply = <&reg_pu>;
--		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
--			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
--			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
--			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
--			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
--			 <&clks IMX6QDL_CLK_VPU_AXI>;
--		#power-domain-cells = <1>;
-+		clocks = <&clks IMX6QDL_CLK_IPG>;
-+		clock-names = "ipg";
-+		
-+		pgc {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			power-domain@0 {
-+				reg = <0>;
-+				#power-domain-cells = <0>;
-+			};
-+			pd_pu: power-domain@1 {
-+				reg = <1>;
-+				#power-domain-cells = <0>;
-+				domain-supply = <&reg_pu>;
-+				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-+				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-+				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
-+				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
-+				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
-+				         <&clks IMX6QDL_CLK_VPU_AXI>;
-+			};
-+		};
- 	};
- 
- 
-@@ -40,20 +74,13 @@ Specifying power domain for IP modules
- ======================================
- 
- IP cores belonging to a power domain should contain a 'power-domains' property
--that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
--the power domain the device belongs to.
-+that is a phandle pointing to the power domain the device belongs to.
- 
- Example of a device that is part of the PU power domain:
- 
- 	vpu: vpu@02040000 {
- 		reg = <0x02040000 0x3c000>;
- 		/* ... */
--		power-domains = <&gpc 1>;
-+		power-domains = <&pd_pu>;
- 		/* ... */
- 	};
--
--The following DOMAIN_INDEX values are valid for i.MX6Q:
--ARM_DOMAIN     0
--PU_DOMAIN      1
--The following additional DOMAIN_INDEX value is valid for i.MX6SL:
--DISPLAY_DOMAIN 2
--- 
-2.7.0
+Maxim datasheet does not say about the typical/maximum. It has only one=
+=20
+value and that is typical.
+However, it has note on the advertised values as:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Note 20.
+During a soft-start event or a DVS transition, the regulators output=20
+current will increase by COUT*dV/dt. In the event that the load current=
+=20
+plus the additional current imposed by the soft-start or DVS transition=
+,=20
+reach the regulator=C2=92s current limit, the current limit will be enf=
+orced.=20
+When the current limit is enforced, the advertised transition rate=20
+(dV/dt) will not occur.
