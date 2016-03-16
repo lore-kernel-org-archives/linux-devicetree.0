@@ -1,110 +1,99 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH v5 7/7] ARM: STiH407: Move over to using
- the 'reserved-memory' API for obtaining DMA memory
-Date: Wed, 16 Mar 2016 16:55:26 +0000
-Message-ID: <20160316165526.GZ13692@x1>
-References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
- <1452602781-22424-8-git-send-email-lee.jones@linaro.org>
- <20160316163508.GA8396@griffinp-ThinkPad-X1-Carbon-2nd>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
+ device access
+Date: Wed, 16 Mar 2016 18:57:01 +0200
+Message-ID: <20160316185440-mutt-send-email-mst@redhat.com>
+References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160316163508.GA8396@griffinp-ThinkPad-X1-Carbon-2nd>
+In-Reply-To: <20160308183050.GJ2049-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org
+To: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Mar 2016, Peter Griffin wrote:
+On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
+> Allowing for the future possibility of implementing AML-based
+> (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> acquire the global ACPI lock when accessing the device on behalf
+> of the guest-side sysfs driver, to prevent any potential race
+> conditions.
+> 
+> Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
 
-> Hi Lee,
->=20
-> On Tue, 12 Jan 2016, Lee Jones wrote:
->=20
-> > Doing so saves quite a bit of code in the driver.
-> >=20
-> > For more information on the 'reserved-memory' bindings see:
-> >=20
-> >   Documentation/devicetree/bindings/reserved-memory/reserved-memory=
-=2Etxt
-> >=20
-> > Suggested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/stih407-family.dtsi | 46 +++++++++++++++++++++++=
-++++++------
-> >  1 file changed, 38 insertions(+), 8 deletions(-)
-> >=20
-> > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/=
-dts/stih407-family.dtsi
-> > index 15c20b6..27b8efc 100644
-> > --- a/arch/arm/boot/dts/stih407-family.dtsi
-> > +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> > @@ -15,6 +15,36 @@
-> >  	#address-cells =3D <1>;
-> >  	#size-cells =3D <1>;
-> > =20
-> > +	reserved-memory {
-> > +		#address-cells =3D <1>;
-> > +		#size-cells =3D <1>;
-> > +		ranges;
-> > +
-> > +		gp0_reserved: rproc@40000000 {
-> > +			compatible =3D "shared-dma-pool";
-> > +			reg =3D <0x40000000 0x01000000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		gp1_reserved: rproc@41000000 {
-> > +			compatible =3D "shared-dma-pool";
-> > +			reg =3D <0x41000000 0x01000000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		audio_reserved: rproc@42000000 {
-> > +			compatible =3D "shared-dma-pool";
-> > +			reg =3D <0x42000000 0x01000000>;
-> > +			no-map;
-> > +		};
-> > +
-> > +		dmu_reserved: rproc@43000000 {
-> > +			compatible =3D "shared-dma-pool";
-> > +			reg =3D <0x43000000 0x01000000>;
-> > +			no-map;
-> > +		};
->=20
-> I don't believe these reserved memory ranges are correct for audio_re=
-served and dmu_reserved.
->=20
-> For example my vid_firmware-stih407.elf is linked at 0x41c00000 base =
-address and my
-> audio_firmware-bd-stih407.elf is linked at 0x40c00000.
->=20
-> So with all the st231 rproc nodes enabled I guess it would still work=
-=2E But
-> currently I think st231_gp0 is reserving the memory region for st231_=
-audio,
-> and st231-gp1 is reserving the memory region for st231_dmu.
+So this patch makes sense of course.
 
-These addresses are taken from internally tested code.  I don't have
-access to the LMI layout documentation (if it even exists) so can't
-check for myself.  Isn't this just DDR anyway?  So in theory we can
-configure each devices' slice where ever we feel is appropriate?  How
-is memory allocated to the DMU and Audio drivers?  Do you have scripts
-which link the aforementioned binaries?
 
-If you think there is an issue, I suggest the best thing to do is ping
-Ludovic, since he is the author of the original code.
+Given the recent discussion on QEMU mailing list,
+I think there is an additional patch that we need:
+filter the files exposed to userspace by "opt/" prefix.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+This will ensure that we can change all other fw cfg files
+at will without breaking guest scripts.
+
+Gabriel, could you code this up? Or do you see a
+pressing need to expose internal QEMU registers to
+userspace?
+
+> ---
+> 
+> Changes since v1:
+> 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
+> 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
+> 	  and only throw a warning/error message otherwise.
+> 
+> 	- didn't get any *negative* feedback from the QEMU crowd, so
+> 	  this is now a bona-fide "please apply this", rather than just
+> 	  an RFC :)
+> 
+> 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
+> 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
+> 
+> Thanks much,
+>   --Gabriel
+> 
+>  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> index 7bba76c..a44dc32 100644
+> --- a/drivers/firmware/qemu_fw_cfg.c
+> +++ b/drivers/firmware/qemu_fw_cfg.c
+> @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+>  static inline void fw_cfg_read_blob(u16 key,
+>  				    void *buf, loff_t pos, size_t count)
+>  {
+> +	u32 glk;
+> +	acpi_status status;
+> +
+> +	/* If we have ACPI, ensure mutual exclusion against any potential
+> +	 * device access by the firmware, e.g. via AML methods:
+> +	 */
+> +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
+> +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
+> +		/* Should never get here */
+> +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
+> +		memset(buf, 0, count);
+> +		return;
+> +	}
+> +
+>  	mutex_lock(&fw_cfg_dev_lock);
+>  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
+>  	while (pos-- > 0)
+>  		ioread8(fw_cfg_reg_data);
+>  	ioread8_rep(fw_cfg_reg_data, buf, count);
+>  	mutex_unlock(&fw_cfg_dev_lock);
+> +
+> +	acpi_release_global_lock(glk);
+>  }
+>  
+>  /* clean up fw_cfg device i/o */
+> -- 
+> 2.4.3
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
