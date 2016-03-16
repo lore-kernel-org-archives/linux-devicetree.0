@@ -1,49 +1,67 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun6i: Add serial0 alias and
- stdout-path to a31s-primo81.dts
-Date: Wed, 16 Mar 2016 15:19:22 +0100
-Message-ID: <1458137962-27714-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V2 2/3] vfio, platform: make reset driver a requirement
+Date: Wed, 16 Mar 2016 10:27:24 -0400
+Message-ID: <56E96D4C.3080008@codeaurora.org>
+References: <1457715275-11925-1-git-send-email-okaya@codeaurora.org>
+ <1457715275-11925-3-git-send-email-okaya@codeaurora.org>
+ <56E5A271.6000408@codeaurora.org> <56E8E2CD.3020604@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB4WWUW3QKGQERG75OFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E8E2CD.3020604-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Cc: shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Baptiste Reynal <b.reynal-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-u-boot uses the kernel as the canonical source for its sunxi dts files
-and u-boot needs these.
+Hi Baptiste,
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31s-primo81.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+>> I couldn't see a reset function for AMBA devices.
+>>
+>> Is there anyway to write reset function for it? I have no experience with 
+>> AMBA devices.
+> To my knowledge only the PL330 DMA controller (drivers/dma/pl330.c) was
+> passthrough'ed at some point, rather for development purpose than
+> production purpose. This was done by Virtual Open Systems (ask Baptiste
+> for more details). But I don't think this is really used.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-index 68b479b..379746a 100644
---- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-+++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
-@@ -53,6 +53,14 @@
- / {
- 	model = "MSI Primo81 tablet";
- 	compatible = "msi,primo81", "allwinner,sun6i-a31s";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
- };
- 
- &cpu0 {
+Are you OK with requiring reset driver for AMBA devices too? The PL330 
+driver won't work until a reset driver is submitted for it.
+
+>>
+>> Would you include a reset needed flag and just not require it for AMBA? 
+>> (I honestly don't like this idea)
+>>
+> I think the requirement also makes sense for AMBA.
+> 
+> Maybe an option would be to add a module parameter that would allow to
+> use the vfio platform/amba driver without reset module (with explicit
+> opt-in from the user). Maybe this can be done later on.
+
+I can see this flag useful for testing purposes but it should not be used in 
+production.
+
+How about I add a module parameter which is not set by default? When set,
+I don't perform the reset requirement check.
+
+> 
+> FYI I will not have access to my mailbox until the end of the week.
+
+OK, no rush.
+
+> 
+> Best Regards
+> 
+> Eric
+> 
+
+
 -- 
-2.7.2
+Sinan Kaya
+Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
