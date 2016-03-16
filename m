@@ -1,52 +1,71 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Wed, 16 Mar 2016 17:00:49 +0530
-Message-ID: <56E943E9.5020503@nvidia.com>
-References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com> <20160229174751.GQ21240@tuxbot> <20160301022326.GC18327@sirena.org.uk> <56D5111E.6090606@nvidia.com> <20160302033833.GV18327@sirena.org.uk> <56D65F7E.3090907@nvidia.com> <20160302043506.GC18327@sirena.org.uk> <56E81103.8010903@nvidia.com> <20160315144822.GP2566@sirena.org.uk>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v2] Documentation: devicetree: Clean up gpio-keys example
+Date: Wed, 16 Mar 2016 12:53:29 +0100
+Message-ID: <1458129209-15449-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160315144822.GP2566@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, bjorn.andersson@sonymobile.com, swarren@wwwdotorg.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Julien Chauveau <chauveau.julien@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Drop #address-cells and #size-cells, which are not required by the
+gpio-keys binding documentation, as button sub-nodes are not devices.
 
-On Tuesday 15 March 2016 08:18 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Tue, Mar 15, 2016 at 07:11:23PM +0530, Laxman Dewangan wrote:
->
->> So here we will need two parameters:
->> advertised-ramp-delay for PMIC configurations and
->> ramp-delay which is measured one.
->> Most of time, advertised-ramp-delay is same as ramp-delay and hence =
-one
->> value from DT will be sufficient.
->> If there is difference then both value can be provided and
->> advertised-ramp-delay  will be used for PMIC configuration and rest =
-of
->> calculation about delay will be from ramp-delay.
-> This sounds more like the difference between typical and maximum spec
-> values than anything else, we are looking for maxima in Linux.
->
+Rename sub-nodes to avoid new dtc unit address warnings when copied.
 
-Maxim datasheet does not say about the typical/maximum. It has only one=
+While at it, adopt the dashes convention for the node name.
+
+Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+Cc: Julien Chauveau <chauveau.julien@gmail.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+---
+ v1 -> v2:
+ * Changed node name from underscore to dash
+ * Inserted white lines
+ * Renamed sub-nodes (Geert, Julien)
 =20
-value and that is typical.
-However, it has note on the advertised values as:
+ Documentation/devicetree/bindings/input/gpio-keys.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Note 20.
-During a soft-start event or a DVS transition, the regulators output=20
-current will increase by COUT*dV/dt. In the event that the load current=
+diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Do=
+cumentation/devicetree/bindings/input/gpio-keys.txt
+index 21641236c095..a94940481e55 100644
+--- a/Documentation/devicetree/bindings/input/gpio-keys.txt
++++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+@@ -32,17 +32,17 @@ Optional subnode-properties:
 =20
-plus the additional current imposed by the soft-start or DVS transition=
-,=20
-reach the regulator=C2=92s current limit, the current limit will be enf=
-orced.=20
-When the current limit is enforced, the advertised transition rate=20
-(dV/dt) will not occur.
+ Example nodes:
+=20
+-	gpio_keys {
++	gpio-keys {
+ 			compatible =3D "gpio-keys";
+-			#address-cells =3D <1>;
+-			#size-cells =3D <0>;
+ 			autorepeat;
+-			button@21 {
++
++			up {
+ 				label =3D "GPIO Key UP";
+ 				linux,code =3D <103>;
+ 				gpios =3D <&gpio1 0 1>;
+ 			};
+-			button@22 {
++
++			down {
+ 				label =3D "GPIO Key DOWN";
+ 				linux,code =3D <108>;
+ 				interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH 7>;
+--=20
+2.6.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
