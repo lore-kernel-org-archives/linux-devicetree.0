@@ -1,65 +1,69 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pci: tegra: Update for per-lane PHYs
-Date: Wed, 16 Mar 2016 10:51:58 -0600
-Message-ID: <56E98F2E.5010307@wwwdotorg.org>
-References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+From: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: dra7xx: Fix compatible string for PCF8575 chip
+Date: Wed, 16 Mar 2016 16:52:30 +0000
+Message-ID: <1458147150.20441.2.camel@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457452094-5409-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: CT kernel <linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2016 08:48 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> Changes to the pad controller device tree binding have required that
-> each lane be associated with a separate PHY.
+The binding definition for the PCF857x GPIO expanders doesn't mention
+a "ti,pcf8575" compatible string.  This is apparently because TI is
+only a second source - there is no functional difference between
+PCF8575 chips manufactured by TI and NXP, and the same board might be
+populated with either depending on availability.
 
-I still don't think this has anything to do with DT bindings. Rather, 
-the definition of a PHY (in HW and the Linux PHY subsystem) is a single 
-lane. That fact then requires drivers to support a PHY per lane rather 
-than a single multi-lane PHY, and equally means the DT bindings must be 
-written according to the correct definition of a PHY.
+This is not a problem in practice because the I2C core uses
+of_modalias_node() before matching drivers and this strips the
+manufacturer name.
 
-Still, I suppose the commit description is fine as is.
+Signed-off-by: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+---
+v2: Correct the claim that this is a practical problem.
 
-> Update the PCI host bridge
-> device tree binding to allow each root port to define the list of PHYs
-> required to drive the lanes associated with it.
+ arch/arm/boot/dts/dra7-evm.dts  | 2 +-
+ arch/arm/boot/dts/dra72-evm.dts | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra20-pcie.txt
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index cfc24e52244e..3907c9d2c12e 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -539,7 +539,7 @@
+ 	};
+ 
+ 	pcf_gpio_21: gpio@21 {
+-		compatible = "ti,pcf8575";
++		compatible = "nxp,pcf8575";
+ 		reg = <0x21>;
+ 		lines-initial-states = <0x1408>;
+ 		gpio-controller;
+diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+index 00b12002c07c..7ec42bda3afb 100644
+--- a/arch/arm/boot/dts/dra72-evm.dts
++++ b/arch/arm/boot/dts/dra72-evm.dts
+@@ -422,7 +422,7 @@
+ 	};
+ 
+ 	pcf_gpio_21: gpio@21 {
+-		compatible = "ti,pcf8575";
++		compatible = "nxp,pcf8575";
+ 		reg = <0x21>;
+ 		lines-initial-states = <0x1408>;
+ 		gpio-controller;
 
-> +Required properties for Tegra124 and later:
-> +- phys: Must contain an phandle to a PHY for each entry in phy-names.
-> +- phy-names: Must include an entry for each active lane. Note that the number
-> +  of entries does not have to (though usually will) be equal to the specified
-> +  number of lanes in the nvidia,num-lanes property. Entries are of the form
-> +  "pcie-N": where N ranges from 0 to the value specified in nvidia,num-lanes.
 
-When would the number of PHYs not equal the number of lanes? I thought 
-the whole point of this patch was to switch to per-lane PHYs? Perhaps 
-I'm just misremembering some exception, so there may be no need to 
-change this.
 
->   Example:
->
->   SoC DTSI:
-> @@ -169,6 +179,9 @@ SoC DTSI:
->   			ranges;
->
->   			nvidia,num-lanes = <2>;
-> +
-> +			phys = <&{/padctl@0,7009f000/pads/pcie/pcie-4}>;
-> +			phy-names = "pcie-0";
->   		};
+-- 
+Ben Hutchings
+Software Developer, Codethink Ltd.
 
-The example shows a Tegra20 PCIe controller, yet includes 
-Tegra124-or-greater properties. That seems a bit odd. Should the changes 
-to the example be dropped, or does "Required properties for Tegra124 and 
-later" mean "Required for T124+, optional for earlier chips"?
 
-Conceptually this change is fine by me though.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
