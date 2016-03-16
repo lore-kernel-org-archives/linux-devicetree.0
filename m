@@ -1,105 +1,68 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: r8a7795: Add Cortex-A57 CPU cores
-Date: Wed, 16 Mar 2016 14:36:21 +0900
-Message-ID: <20160316053621.GA24138@verge.net.au>
-References: <1449236333-4410-1-git-send-email-dirk.behme@gmail.com>
- <1449236333-4410-2-git-send-email-dirk.behme@gmail.com>
- <20151211230751.GD6496@verge.net.au>
- <CANqRtoSeibffbaoVGV7Y_gyuXxCOu+1PmRf3imQ8OKhV6VoAMQ@mail.gmail.com>
- <566FD3EE.8040908@gmail.com>
- <20160316011901.GB23687@verge.net.au>
- <56E8D6C6.2000306@rvc.renesas.com>
+From: Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] Syscon support for iProc touchscreen driver
+Date: Wed, 16 Mar 2016 11:53:15 +0530
+Message-ID: <CAAFb_vrP3YmbqvmkDbhnPkt9Y3DBSSYcTJUMMJnyM+35uQx6SQ@mail.gmail.com>
+References: <1456556396-4759-1-git-send-email-raveendra.padasalagi@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56E8D6C6.2000306@rvc.renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Khiem Nguyen <khiem.nguyen.xt@rvc.renesas.com>
-Cc: Dirk Behme <dirk.behme@gmail.com>, Magnus Damm <magnus.damm@gmail.com>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gaku Inami <gaku.inami.xw@bp.renesas.com>, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Toru Oishi <toru.oishi.zj@rvc.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456556396-4759-1-git-send-email-raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jonathan Richardson <jonathar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Raveendra Padasalagi <raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 10:45:10AM +0700, Khiem Nguyen wrote:
-> Hi Simon, Dirk, Magnus,
-> 
-> On 3/16/2016 8:19 AM, Simon Horman wrote:
-> >Hi Dirk,
-> >
-> >On Tue, Dec 15, 2015 at 09:48:46AM +0100, Dirk Behme wrote:
-> >>On 15.12.2015 09:38, Magnus Damm wrote:
-> >>>Hi Simon,
-> >>>
-> >>>On Sat, Dec 12, 2015 at 8:07 AM, Simon Horman <horms@verge.net.au> wrote:
-> >>>>On Fri, Dec 04, 2015 at 02:38:52PM +0100, Dirk Behme wrote:
-> >>>>>From: Gaku Inami <gaku.inami.xw@bp.renesas.com>
-> >>>>>
-> >>>>>Add Cortex-A57 CPU cores to r8a7795 SoC for a total of 4 x Cortex-A57.
-> >>>>>
-> >>>>>Signed-off-by: Gaku Inami <gaku.inami.xw@bp.renesas.com>
-> >>>>>Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
-> >>>>>Sigend-off-by: Dirk Behme <dirk.behme@gmail.com>
-> >>>>
-> >>>>Thanks, I have queued this up for v4.5.
-> >>>
-> >>>Thanks. May I ask if CPU hotplug is known to work?
-> >>
-> >>
-> >>I didn't test that.
-> >
-> >As a follow-up I am wondering if you subsequently observed CPU hotplug
-> >working. My recent testing on v4.5 indicates that it isn't working in my
-> >environment. It would be quite valuable to know if it has ever been known
-> >to work.
-> >
-> >>>Also, which version
-> >>>of the boot loader stack is required?
-> 
-> Yes. CPUHotplug will be supported in boot loader stack released by Dec 2015
-> and later.
+Hi Dmitry, Arnd,
 
-Thanks, that sounds positive.
+Do you have any comments on this patch set [PATCH v4 0/3] ?
 
-As Dec 2015 has already passed I wonder if a boot loader stack that
-supports CPU Hotplug is currently available. Perhaps internally?
-If so I think it would be good to verify v4.5.
+Thanks,
+Raveendra
 
-> >>I've the U-Boot / boot loader stack from BSP v3.0.2 on the board. I haven't
-> >>tested v3.0.3, yet.
-> >
-> >For reference my environment is as follows:
-> >
-> >
-> >     NOTICE:  BL2: R-Car H3 Loader Rev.1.0.1
-> >     NOTICE:  BL2: DDR1600(rev.0.10)
-> >     NOTICE:  BL2: DRAM Split is 4ch
-> >     NOTICE:  BL2: QoS is Gfx Oriented(rev.0.24A)
-> >     NOTICE:  BL2: v1.1(release):41099f4
-> >     NOTICE:  BL2: Built : 11:47:26, Nov 19 2015
-> >     NOTICE:  BL2: Normal boot
-> >     NOTICE:  BL2: memdrv_block_read dst=0xe630e0b0 src=0x8180000 len=36(0x24)
-> >     NOTICE:  BL2: memdrv_block_read dst=0x43f00000 src=0x8180400 len=3072(0xc00)
-> >     NOTICE:  BL2: memdrv_block_read dst=0x44000000 src=0x81c0000 len=65536(0x10000)
-> >     NOTICE:  BL2: memdrv_block_read dst=0x44100000 src=0x8200000 len=524288(0x80000)
-> >     NOTICE:  BL2: memdrv_block_read dst=0x49000000 src=0x8640000 len=1048576(0x100000)
-> >
-> >     U-Boot 2015.04 (Nov 19 2015 - 11:47:49)
-> >
-> >     CPU: Renesas Electronics CPU rev 1.0
-> >     Board: Salvator-X
-> >     DRAM:  896 MiB
-> >     MMC:   sh-sdhi: 0, sh-sdhi: 1, sh-sdhi: 2
-> >     In:    serial
-> >     Out:   serial
-> >     Err:   serial
-> >     Net:   ravb
-> >--
-> >To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> >the body of a message to majordomo@vger.kernel.org
-> >More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
-> 
-> 
-> -- 
-> Best regards,
-> KHIEM Nguyen
-> 
+On Sat, Feb 27, 2016 at 12:29 PM, Raveendra Padasalagi
+<raveendra.padasalagi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> This patchset is based on v4.5-rc3 tag and its tested on
+> Broadcom Cygnus SoC.
+>
+> The patches can be fetched from iproc-tsc-v4 branch of
+> https://github.com/Broadcom/arm64-linux.git
+>
+> Changes since v3:
+>  - Renamed touchscreen node "tsc" to "touchscreen" in dt binding document
+>  - Added support for syscon only based register access in touch screen
+>    driver and removed "regs" based register access. Updated dt binding
+>    document to reflect the changes.
+>  - Removed "brcm,iproc-touchscreen-syscon" compatible string support in
+>    dt binding document and touchscreen driver implementation.
+>
+> Changes since v2:
+>  - Omitted '0x' in "tsc node" definition in dt documentation file
+>  - Omitted '0x' in "ts_adc_syscon" definition in dt documentation file
+>  - Added "brcm,iproc-ts-adc-syscon" compatible string in "ts_adc_syscon"
+>    node. Updated dt documentation file to reflect this change.
+>
+> Changes since v1:
+>  - Enhanced touchscreen driver to handle syscon based register access if
+>    "brcm,iproc-touchscreen-syscon" compatible string is provided in dt
+>  - Normal register access is handled through readl and writel API's if
+>    "brcm,iproc-touchscreen" compatible string is provided.
+>  - Updated touchscreen dt node document to reflect the new changes.
+>  - Updated change logs in each patchset to reflect the new changes
+>
+> Raveendra Padasalagi (3):
+>   input: cygnus-update touchscreen dt node document
+>   input: syscon support in bcm_iproc_tsc driver
+>   ARM: dts: use syscon in cygnus touchscreen dt node
+>
+>  .../input/touchscreen/brcm,iproc-touchscreen.txt   | 21 ++++--
+>  arch/arm/boot/dts/bcm-cygnus.dtsi                  | 11 ++-
+>  drivers/input/touchscreen/bcm_iproc_tsc.c          | 79 ++++++++++++----------
+>  3 files changed, 69 insertions(+), 42 deletions(-)
+>
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
