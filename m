@@ -1,41 +1,70 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v3 0/3] clk: clock driver for the Marvell Armada AP806
-Date: Wed, 16 Mar 2016 14:16:45 +0100
-Message-ID: <20160316141645.458f6f30@free-electrons.com>
-References: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/2] power: reset: support for Atmel alternative Shutdown Controller
+Date: Wed, 16 Mar 2016 14:19:48 +0100
+Message-ID: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1457096275-7581-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org
-Cc: Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Michael, Stephen,
+This is a series to add driver for a new Atmel Shutdown Controller. This new IP
+is extensible and some features will be added later (see the TODO section).
+Its extensible nature led to write a new binding so that wake-up sources can be
+described easily.
 
-On Fri,  4 Mar 2016 13:57:52 +0100, Thomas Petazzoni wrote:
-> Michael, Stephen,
-> 
-> Here is a new version of the clock driver and its DT binding for the
-> Marvell Armada AP806. As you will see, there is no longer any
-> reference to the DFX Server and changes in the clock tree compared to
-> the v2. This is due to the fact that the HW has changed from this
-> point of view between the test chips and the final revision, and this
-> new version aims at supporting only the final revision.
+Changes in v5:
+- Instead of the "alternate shdwc" we choose a more specific
+  "sama5d2-compatible shdwc" wording. Change file name, in Kconfig, and the
+  MAINTAINERS file:
+  at91-shdwc.c -> at91-sama5d2_shdwc.c
+  "ATMEL AT91 Alternative Shutdown Controller" -> "ATMEL AT91 SAMA5D2-Compatible
+  Shutdown Controller"
+- fix one indentation mismatch
 
-This third version of the patch series has received the ACK from Rob as
-the DT binding maintainer, and from Gregory as the mvebu platform
-maintainer.
+Changes in v4:
+- change property to debounce-delay-us so that we can use a generic property
+  and we can have the unit explicitly included it the name according to
+  Documentation/devicetree/bindings/property-units.txt.
+- move to atmel,wakeup-active-high boolean property instead of a "high", "low"
+  string comparison.
+- fix warning found by 0-day robot: large integer implicitly truncated to
+  unsigned type [-Woverflow]
+- move to the property debounce-delay-us
+- move to atmel,wakeup-active-high boolean
+- add entry in MAINTAINERS file
 
-Do you have any other concern about this series, or can it be applied
-soon?
+Changes in v3:
+- get and use slow clock and specify its handler in binding
+- add the slow clock handle as the IP uses it
+- remove useless protection at the beginning of pm_power_off handler
+- allow to compile it as a module
+- add COMPILE_TEST directive in Kconfig
+- update description in file header
 
-Thanks,
+Changes in v2:
+- add MODULE_DEVICE_TABLE as advised by Sebastian Reichel
+- review indentation and braces to correct errors pointed out by checkpatch
 
-Thomas
+Nicolas Ferre (2):
+  ARM: dts: at91: shdwc binding: add new shutdown controller
+    documentation
+  power: reset: at91-shdwc: add new shutdown controller driver
+
+ .../devicetree/bindings/arm/atmel-at91.txt         |  59 +++++
+ MAINTAINERS                                        |   5 +
+ drivers/power/reset/Kconfig                        |   8 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/at91-sama5d2_shdwc.c           | 282 +++++++++++++++++++++
+ 5 files changed, 355 insertions(+)
+ create mode 100644 drivers/power/reset/at91-sama5d2_shdwc.c
+
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+2.1.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
