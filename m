@@ -1,88 +1,99 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] ARM64: dts: amlogic: Clean up Vega S95 /memory nodes
-Date: Thu, 17 Mar 2016 00:10:53 +0100
-Message-ID: <1458169854-26127-1-git-send-email-afaerber@suse.de>
+From: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mwifiex: parse hscfg_gpio info from device tree
+Date: Thu, 17 Mar 2016 10:26:01 +1100
+Message-ID: <CAGRGNgWvt7OUaiyfK2a17cfTCx=N4tPkeojhvahxOfvK3aBKRQ@mail.gmail.com>
+References: <1448618297-19803-1-git-send-email-akarwar@marvell.com>
+ <87vb855qpe.fsf@kamboji.qca.qualcomm.com> <f65e448bfd344867afbf6c002cdfc2bf@SC-EXCH04.marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f65e448bfd344867afbf6c002cdfc2bf-uAViF8V/CPOq90oVIqnETxL4W9x8LtSr@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Resolve the following warnings from new dtc by adding the unit address:
+Hi Amitkumar,
 
-    DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dtb
-  Warning (unit_address_vs_reg): Node /memory has a reg or ranges prope=
-rty, but no unit name
-    DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dtb
-  Warning (unit_address_vs_reg): Node /memory has a reg or ranges prope=
-rty, but no unit name
-    DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dtb
-  Warning (unit_address_vs_reg): Node /memory has a reg or ranges prope=
-rty, but no unit name
+On Fri, Dec 11, 2015 at 8:23 PM, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Kalle,
+>
+>> -----Original Message-----
+>> From: Kalle Valo [mailto:kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org]
+>> Sent: Friday, December 11, 2015 2:04 PM
+>> To: Amitkumar Karwar
+>> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Nishant Sarmukadam; Xinming Hu;
+>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Subject: Re: [PATCH] mwifiex: parse hscfg_gpio info from device tree
+>>
+>> + devicetree list
+>>
+>> Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> writes:
+>>
+>> > From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> >
+>> > This patch reads hscfg_gpio from device tree and update internal
+>> > variable
+>> >
+>> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>> > ---
+>> >  drivers/net/wireless/marvell/mwifiex/sta_cmd.c | 11 +++++++++++
+>> >  1 file changed, 11 insertions(+)
+>> >
+>> > diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+>> > b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+>> > index e486867..d28a53f 100644
+>> > --- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+>> > +++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+>> > @@ -1459,10 +1459,21 @@ int mwifiex_dnld_dt_cfgdata(struct
+>> > mwifiex_private *priv,  #ifdef CONFIG_OF
+>> >     struct property *prop;
+>> >     size_t len = strlen(prefix);
+>> > +   u32 data;
+>> >     int ret;
+>> >
+>> >     /* look for all matching property names */
+>> >     for_each_property_of_node(node, prop) {
+>> > +           if (!strncmp(prop->name, "marvell,hscfg_gpio",
+>> > +                        strlen("marvell,hscfg_gpio"))) {
+>> > +                   if (!of_property_read_u32(priv->adapter->dt_node,
+>> > +                                             prop->name, &data)) {
+>> > +                           dev_dbg(priv->adapter->dev,
+>> > +                                   "hscfg gpio = 0x%x\n", data);
+>> > +                           priv->adapter->hs_cfg.gpio = data;
+>> > +                   }
+>> > +           }
+>>
+>> I don't see this documented in Documentation/devicetree/bindings. Please
+>> create a binding document and review it with the device tree
+>> maintainers.
+>>
+>> Actually when looking mwifiex close I see that it uses more undocumented
+>> device tree interfaces:
+>>
+>> marvell_cfgdata
+>> marvell,caldata
+>> marvell,00_txpwrlimit
+>>
+>> I think these all should be properly documented and reviewed. But I'll
+>> let the device tree people chime in what's the best way.
+>>
+>
+> Thanks for the review.
+> Sure. We will document existing DT interfaces and create updated version of this patch which includes documentation in bindings.
 
-=46ixes: cc733bc90636 ("ARM64: dts: amlogic: Add Tronsmart Vega S95 con=
-figs")
-Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts  | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts   | 2 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+It's been a while since this was reviewed. Do you have an updated
+version of this patch?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts b=
-/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
-index 399aff9e7975..62fb4968d680 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
-@@ -48,7 +48,7 @@
- 	compatible =3D "tronsmart,vega-s95-meta", "tronsmart,vega-s95", "amlo=
-gic,meson-gxbb";
- 	model =3D "Tronsmart Vega S95 Meta";
-=20
--	memory {
-+	memory@0 {
- 		device_type =3D "memory";
- 		reg =3D <0x0 0x0 0x0 0x80000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts b/=
-arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
-index ac5a241b5ec2..9a9663abdf5c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
-@@ -48,7 +48,7 @@
- 	compatible =3D "tronsmart,vega-s95-pro", "tronsmart,vega-s95", "amlog=
-ic,meson-gxbb";
- 	model =3D "Tronsmart Vega S95 Pro";
-=20
--	memory {
-+	memory@0 {
- 		device_type =3D "memory";
- 		reg =3D <0x0 0x0 0x0 0x40000000>;
- 	};
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts =
-b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
-index fff7bfa2aa39..2fe167b2609d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
-@@ -48,7 +48,7 @@
- 	compatible =3D "tronsmart,vega-s95-telos", "tronsmart,vega-s95", "aml=
-ogic,meson-gxbb";
- 	model =3D "Tronsmart Vega S95 Telos";
-=20
--	memory {
-+	memory@0 {
- 		device_type =3D "memory";
- 		reg =3D <0x0 0x0 0x0 0x80000000>;
- 	};
---=20
-2.6.2
+Thanks,
 
+-- 
+Julian Calaby
+
+Email: julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Profile: http://www.google.com/profiles/julian.calaby/
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
