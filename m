@@ -1,56 +1,99 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v4 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Wed, 16 Mar 2016 14:58:38 +0100
-Message-ID: <1458136727-32075-1-git-send-email-afaerber@suse.de>
+Subject: [PATCH v4 5/8] arm64: dts: rockchip: Clean up gpio-keys nodes
+Date: Wed, 16 Mar 2016 14:58:43 +0100
+Message-ID: <1458136727-32075-6-git-send-email-afaerber@suse.de>
+References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458136727-32075-1-git-send-email-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, devicetree@vger.kernel.org
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Julien Chauveau <chauveau.julien@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Drop superfluous #address-cells and #size-cells.
+Use KEY_POWER define for 116.
+Rename sub-nodes to avoid new dtc warnings.
 
-This series adds initial support for the RK3368 based GeekBox.
+Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+Cc: Julien Chauveau <chauveau.julien@gmail.com>
+Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+---
+ v3 -> v4:
+ * Renamed sub-node names (Julien)
+=20
+ v3: New (Julien)
+=20
+ arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi | 7 +++----
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts  | 7 +++----
+ 2 files changed, 6 insertions(+), 8 deletions(-)
 
-v4 does small cleanups and decouples us again from the stmmac discussio=
-ns v3 kicked off.
-
-stmmac patches have been proposed to fix GMAC issues in linux-next (and=
- v4.5):
-
-https://patchwork.ozlabs.org/patch/598331/
-https://patchwork.ozlabs.org/patch/598332/
-
-Regards,
-Andreas
-
-Cc: devicetree@vger.kernel.org
-
-Andreas F=C3=A4rber (8):
-  arm64: dts: rockchip: Clean up /memory nodes
-  Documentation: devicetree: Add vendor prefix for GeekBuying.com
-  Documentation: devicetree: rockchip: Document GeekBox
-  arm64: dts: rockchip: Add GeekBox config
-  arm64: dts: rockchip: Clean up gpio-keys nodes
-  arm64: dts: rockchip: Add power key to GeekBox
-  Documentation: devicetree: rockchip: Document Landingship
-  arm64: dts: rockchip: Add Landingship config
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   9 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm64/boot/dts/rockchip/Makefile              |   2 +
- arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi       |   9 +-
- .../dts/rockchip/rk3368-geekbox-landingship.dts    |  57 ++++
- arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts    | 319 +++++++++++++=
-++++++++
- arch/arm64/boot/dts/rockchip/rk3368-r88.dts        |   9 +-
- 7 files changed, 396 insertions(+), 10 deletions(-)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-geekbox-landing=
-ship.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/=
+boot/dts/rockchip/rk3368-evb.dtsi
+index e4c91e86e9b6..bd4f2cf326b2 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
+@@ -40,6 +40,7 @@
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+=20
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pwm/pwm.h>
+ #include "rk3368.dtsi"
+=20
+@@ -105,16 +106,14 @@
+=20
+ 	keys: gpio-keys {
+ 		compatible =3D "gpio-keys";
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+ 		pinctrl-names =3D "default";
+ 		pinctrl-0 =3D <&pwr_key>;
+=20
+-		button@0 {
++		power {
+ 			wakeup-source;
+ 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+ 			label =3D "GPIO Power";
+-			linux,code =3D <116>;
++			linux,code =3D <KEY_POWER>;
+ 		};
+ 	};
+=20
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/b=
+oot/dts/rockchip/rk3368-r88.dts
+index 5c63f8982128..5ea68c493400 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -42,6 +42,7 @@
+=20
+ /dts-v1/;
+ #include "rk3368.dtsi"
++#include <dt-bindings/input/input.h>
+=20
+ / {
+ 	model =3D "Rockchip R88";
+@@ -65,16 +66,14 @@
+=20
+ 	keys: gpio-keys {
+ 		compatible =3D "gpio-keys";
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+ 		pinctrl-names =3D "default";
+ 		pinctrl-0 =3D <&pwr_key>;
+=20
+-		button@0 {
++		power {
+ 			wakeup-source;
+ 			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+ 			label =3D "GPIO Power";
+-			linux,code =3D <116>;
++			linux,code =3D <KEY_POWER>;
+ 		};
+ 	};
+=20
 --=20
 2.6.2
