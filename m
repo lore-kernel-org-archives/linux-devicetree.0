@@ -1,71 +1,86 @@
-From: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 13/13] ARM: sunxi: Add Kconfig for sunxi clocks
-Date: Thu, 17 Mar 2016 00:04:36 +0800
-Message-ID: <1458144276-31108-14-git-send-email-vishnupatekar0510@gmail.com>
-References: <1458144276-31108-1-git-send-email-vishnupatekar0510@gmail.com>
-Reply-To: vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v5 7/7] ARM: STiH407: Move over to using
+ the 'reserved-memory' API for obtaining DMA memory
+Date: Wed, 16 Mar 2016 16:35:08 +0000
+Message-ID: <20160316163508.GA8396@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
+ <1452602781-22424-8-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD64TFVR3YIBBJEJU23QKGQE4UDLZCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1458144276-31108-1-git-send-email-vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org
-Cc: jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1452602781-22424-8-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Kconfig for sunxi clocks.
-Currently, only sun8i-apb0 and sun9i-cpus clocks are added.
-It'll help to use common clocks across different SOCs.
-We can switch to kconfig for other clocks in future.
+Hi Lee,
 
-Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/clk/Kconfig        | 1 +
- drivers/clk/sunxi/Kconfig  | 5 +++++
- drivers/clk/sunxi/Makefile | 4 ++--
- 3 files changed, 8 insertions(+), 2 deletions(-)
- create mode 100644 drivers/clk/sunxi/Kconfig
+On Tue, 12 Jan 2016, Lee Jones wrote:
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index eca8e01..f9f42e6 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -210,3 +210,4 @@ source "drivers/clk/mvebu/Kconfig"
- 
- source "drivers/clk/samsung/Kconfig"
- source "drivers/clk/tegra/Kconfig"
-+source "drivers/clk/sunxi/Kconfig"
-diff --git a/drivers/clk/sunxi/Kconfig b/drivers/clk/sunxi/Kconfig
-new file mode 100644
-index 0000000..3e8ede4
---- /dev/null
-+++ b/drivers/clk/sunxi/Kconfig
-@@ -0,0 +1,5 @@
-+config CLK_SUN8I_APB0
-+	def_bool MACH_SUN9I || MACH_SUN8I
-+
-+config CLK_SUN9I_CPUS
-+	def_bool MACH_SUN9I || MACH_SUN8I
-diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-index 3fd7901..38dfca8 100644
---- a/drivers/clk/sunxi/Makefile
-+++ b/drivers/clk/sunxi/Makefile
-@@ -17,8 +17,8 @@ obj-y += clk-sun9i-core.o
- obj-y += clk-sun9i-mmc.o
- obj-y += clk-usb.o
- 
--obj-$(CONFIG_MACH_SUN9I) += clk-sun8i-apb0.o
--obj-$(CONFIG_MACH_SUN9I) += clk-sun9i-cpus.o
-+obj-$(CONFIG_CLK_SUN8I_APB0) += clk-sun8i-apb0.o
-+obj-$(CONFIG_CLK_SUN9I_CPUS) += clk-sun9i-cpus.o
- 
- obj-$(CONFIG_MFD_SUN6I_PRCM) += \
- 	clk-sun6i-ar100.o clk-sun6i-apb0.o clk-sun6i-apb0-gates.o \
--- 
-1.9.1
+> Doing so saves quite a bit of code in the driver.
+> 
+> For more information on the 'reserved-memory' bindings see:
+> 
+>   Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> 
+> Suggested-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/stih407-family.dtsi | 46 +++++++++++++++++++++++++++++------
+>  1 file changed, 38 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
+> index 15c20b6..27b8efc 100644
+> --- a/arch/arm/boot/dts/stih407-family.dtsi
+> +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> @@ -15,6 +15,36 @@
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		gp0_reserved: rproc@40000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x40000000 0x01000000>;
+> +			no-map;
+> +		};
+> +
+> +		gp1_reserved: rproc@41000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x41000000 0x01000000>;
+> +			no-map;
+> +		};
+> +
+> +		audio_reserved: rproc@42000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x42000000 0x01000000>;
+> +			no-map;
+> +		};
+> +
+> +		dmu_reserved: rproc@43000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x43000000 0x01000000>;
+> +			no-map;
+> +		};
+
+I don't believe these reserved memory ranges are correct for audio_reserved and dmu_reserved.
+
+For example my vid_firmware-stih407.elf is linked at 0x41c00000 base address and my
+audio_firmware-bd-stih407.elf is linked at 0x40c00000.
+
+So with all the st231 rproc nodes enabled I guess it would still work. But
+currently I think st231_gp0 is reserving the memory region for st231_audio,
+and st231-gp1 is reserving the memory region for st231_dmu.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
