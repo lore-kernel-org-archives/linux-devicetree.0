@@ -1,99 +1,71 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
- device access
-Date: Wed, 16 Mar 2016 18:57:01 +0200
-Message-ID: <20160316185440-mutt-send-email-mst@redhat.com>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] PCI: tegra: Support per-lane PHYs
+Date: Wed, 16 Mar 2016 11:01:19 -0600
+Message-ID: <56E9915F.9040608@wwwdotorg.org>
+References: <1457452094-5409-1-git-send-email-thierry.reding@gmail.com>
+ <1457452094-5409-2-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160308183050.GJ2049-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457452094-5409-2-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
-> Allowing for the future possibility of implementing AML-based
-> (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> acquire the global ACPI lock when accessing the device on behalf
-> of the guest-side sysfs driver, to prevent any potential race
-> conditions.
-> 
-> Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+On 03/08/2016 08:48 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> The current XUSB pad controller bindings are insufficient to describe
+> PHY devices attached to USB controllers. New bindings have been created
+> to overcome these restrictions. As a side-effect each root port now is
+> assigned a set of PHY devices, one for each lane associated with the
+> root port. This has the benefit of allowing fine-grained control of the
+> power management for each lane.
 
-So this patch makes sense of course.
+> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
 
-
-Given the recent discussion on QEMU mailing list,
-I think there is an additional patch that we need:
-filter the files exposed to userspace by "opt/" prefix.
-
-This will ensure that we can change all other fw cfg files
-at will without breaking guest scripts.
-
-Gabriel, could you code this up? Or do you see a
-pressing need to expose internal QEMU registers to
-userspace?
-
-> ---
-> 
-> Changes since v1:
-> 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
-> 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
-> 	  and only throw a warning/error message otherwise.
-> 
-> 	- didn't get any *negative* feedback from the QEMU crowd, so
-> 	  this is now a bona-fide "please apply this", rather than just
-> 	  an RFC :)
-> 
-> 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
-> 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
-> 
-> Thanks much,
->   --Gabriel
-> 
->  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> index 7bba76c..a44dc32 100644
-> --- a/drivers/firmware/qemu_fw_cfg.c
-> +++ b/drivers/firmware/qemu_fw_cfg.c
-> @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
->  static inline void fw_cfg_read_blob(u16 key,
->  				    void *buf, loff_t pos, size_t count)
->  {
-> +	u32 glk;
-> +	acpi_status status;
+> +static int tegra_pcie_port_phy_power_on(struct tegra_pcie_port *port)
+> +{
+> +	struct device *dev = port->pcie->dev;
+> +	unsigned int i;
+> +	int err;
 > +
-> +	/* If we have ACPI, ensure mutual exclusion against any potential
-> +	 * device access by the firmware, e.g. via AML methods:
-> +	 */
-> +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> +		/* Should never get here */
-> +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
-> +		memset(buf, 0, count);
-> +		return;
-> +	}
+> +	for (i = 0; i < port->lanes; i++) {
+> +		err = phy_power_on(port->phys[i]);
+
+This assume the number of array entries is precisely the number of 
+lanes. That seems to contradict the binding update which said the number 
+might not match. Perhaps there's an expectation that phy_power_on() is a 
+no-op for some "invalid" values like NULL or an error-pointer value? But...
+
+> +static struct phy *devm_of_phy_optional_get_index(struct device *dev,
+> +						  struct device_node *np,
+> +						  const char *consumer,
+> +						  unsigned int index)
+> +{
+> +	struct phy *phy;
+> +	char *name;
 > +
->  	mutex_lock(&fw_cfg_dev_lock);
->  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
->  	while (pos-- > 0)
->  		ioread8(fw_cfg_reg_data);
->  	ioread8_rep(fw_cfg_reg_data, buf, count);
->  	mutex_unlock(&fw_cfg_dev_lock);
+> +	name = kasprintf(GFP_KERNEL, "%s-%u", consumer, index);
+> +	if (!name)
+> +		return ERR_PTR(-ENOMEM);
 > +
-> +	acpi_release_global_lock(glk);
->  }
->  
->  /* clean up fw_cfg device i/o */
-> -- 
-> 2.4.3
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	phy = devm_of_phy_get(dev, np, name);
+> +	kfree(name);
+> +
+> +	if (IS_ERR(phy) && PTR_ERR(phy) == -ENODEV)
+> +		phy = NULL;
+> +
+> +	return phy;
+> +}
+
+The error-handling there looks wrong. The function generally returns 
+either a valid PHY or an error pointer. However, in the case of -ENODEV, 
+NULL is returned. Subsystems are supposed to encode their handles as, 
+and functions are supposed to return, either NULL or an error pointer 
+for error cases, not both/either. Is the PHY API broken in this regard? 
+If so, then this code is fine, but if not it might need a fix.
+
+Aside from that, this patch looks fine.
