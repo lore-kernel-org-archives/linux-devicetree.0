@@ -1,70 +1,110 @@
-From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 5/5] ARM: at91/dt: sama5d2_xplained: add fast_restart node
-Date: Wed, 16 Mar 2016 14:58:09 +0800
-Message-ID: <1458111489-23774-6-git-send-email-wenyou.yang@atmel.com>
-References: <1458111489-23774-1-git-send-email-wenyou.yang@atmel.com>
+From: Ian Campbell <ijc@debian.org>
+Subject: dtbs_install recursing on subdirs-y and dtbs-subdir leading to race?
+Date: Wed, 16 Mar 2016 08:54:34 +0000
+Message-ID: <1458118474.28250.54.camel@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458111489-23774-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <bounce-debian-kernel=glddk-debian-kernel=m.gmane.org@lists.debian.org>
+Sender: ijc@hellion.org.uk
+Resent-Message-ID: <UJWhOppGVIP.A.lGH.e9R6WB@bendel>
+List-URL: <https://lists.debian.org/debian-kernel/>
+List-Post: <mailto:debian-kernel@lists.debian.org>
+List-Help: <mailto:debian-kernel-request@lists.debian.org?subject=help>
+List-Subscribe: <mailto:debian-kernel-request@lists.debian.org?subject=subscribe>
+List-Unsubscribe: <mailto:debian-kernel-request@lists.debian.org?subject=unsubscribe>
+List-Archive: https://lists.debian.org/msgid-search/1458118474.28250.54.camel@debian.org
+To: linux-kbuild@vger.kernel.org, Michal Marek <mmarek@suse.cz>
+Cc: devicetree@vger.kernel.org, debian-kernel <debian-kernel@lists.debian.org>, linux-arm-kernel@lists.infradead.org, Ben Hutchings <ben@decadent.org.uk>, Robert Richter <rrichter@cavium.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add fast_restart node as a pmc's child node to support fast startup
-signal configuration.
+Hello,
 
-Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
+As part of an automated build of the Debian Linux kernel packages I
+think we have observed a race (or at least some unexpected extra
+recursion) in the handling of dtb-subdirs vs subdirs-y in
+arch/arm64/boot/dts when using make -j<N>.
 
-Changes in v5:
- - due to the DT property expression change, update the fast restart
-   node's property.
+Looking at the log at [0] and removing the unrelated stuff happening
+due to other parallelism we see:
 
-Changes in v4:
- - add fast_restart node to the DT file.
+    make[8]: Nothing to be done for '__dtbs_install'.
+mv: cannot stat '/=ABPKGBUILDDIR=BB/debian/linux-image-4.5.0-rc7-arm64/us=
+r/lib/linux-image-4.5.0-rc7-arm64': No such file or directory
+mv: cannot stat '/=ABPKGBUILDDIR=BB/debian/linux-image-4.5.0-rc7-arm64/us=
+r/lib/linux-image-4.5.0-rc7-arm64': No such file or directory
+/=ABPKGBUILDDIR=BB/scripts/Makefile.dtbinst:26: recipe for target '__dtbs=
+_install_prep' failed
+make[8]: *** [__dtbs_install_prep] Error 1
+/=ABPKGBUILDDIR=BB/scripts/Makefile.dtbinst:26: recipe for target '__dtbs=
+_install_prep' failed
+make[8]: *** [__dtbs_install_prep] Error 1
+  INSTALL net/bridge/netfilter/ebtable_nat.ko
+/=ABPKGBUILDDIR=BB/scripts/Makefile.dtbinst:46: recipe for target 'apm' f=
+ailed
+make[7]: *** [apm] Error 2
+make[7]: *** Waiting for unfinished jobs....
+/=ABPKGBUILDDIR=BB/scripts/Makefile.dtbinst:46: recipe for target 'arm' f=
+ailed
+make[7]: *** [arm] Error 2
+make[8]: Nothing to be done for '__dtbs_install'.
+arch/arm64/Makefile:103: recipe for target 'dtbs_install' failed
+make[6]: *** [dtbs_install] Error 2
+Makefile:146: recipe for target 'sub-make' failed
+make[5]: *** [sub-make] Error 2
+Makefile:24: recipe for target '__sub-make' failed
+make[4]: *** [__sub-make] Error 2
+make[4]: Leaving directory '/=ABPKGBUILDDIR=BB/debian/build/build_arm64_n=
+one_arm64'
+debian/rules.real:394: recipe for target 'install-image_arm64_none_arm64_=
+dt' failed
+make[3]: *** [install-image_arm64_none_arm64_dt] Error 2
+make[3]: Leaving directory '/=ABPKGBUILDDIR=BB'
+debian/rules.real:362: recipe for target 'install-image_arm64_none_arm64'=
+ failed
+make[2]: *** [install-image_arm64_none_arm64] Error 2
+make[2]: *** Waiting for unfinished jobs....
 
-Changes in v3: None
-Changes in v2: None
+Where it appears that multiple instance of __dtbs_install_prep have
+been running in parallel at least the apm and arm subdirectories of
+arch/arm64/boot/dts, with both of them then racing in the=A0
+    $(Q)if [ -d $(INSTALL_DTBS_PATH) ]; then mv $(INSTALL_DTBS_PATH) $(IN=
+STALL_DTBS_PATH).old; fi
+rule since apparently $(INSTALL_DTBS_PATH) existed during the "-d"
+check but had gone by the time of the move. The build is in an
+automated buildd pristine environment with INSTALL_DTBS_PATH pointing
+to a brand new directory, so for $(INSTALL_DTBS_PATH) to exist at all
+there must have been a third instance of __dtbs_install_prep earlier
+which created it.
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+I understand that the mv bit of the rule in question is likely to be
+removed quite soon[1] but I think the underlying race / extra recursion
+still exits and might have other implications.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 21c780f..31df6e8 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -110,6 +110,25 @@
- 		};
- 
- 		apb {
-+			pmc: pmc@f0014000 {
-+				pmc_fast_restart {
-+					compatible = "atmel,sama5d2-pmc-fast-startup";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					atmel,wakeup-rtc-timer;
-+
-+					wkpin: input@0 {
-+						reg = <0>;
-+					};
-+
-+					gmac_wol: input@10 {
-+						reg = <10>;
-+						atmel,wakeup-active-high;
-+					};
-+				};
-+			};
-+
- 			spi0: spi@f8000000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_spi0_default>;
--- 
-1.7.9.5
+Ben and I have hypothesised that this is because
+arch/arm64/boot/dts/Makefile has:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    subdir-y=A0=A0=A0=A0=A0=A0=A0=A0:=3D $(dts-dirs)
+
+which means that dtbs_install recurses twice, once due to the dts-dirs
+handling in scripts/Makefile.dtbinst rules (via $(dtbsinst-dirs)) and
+once again for the (generic) subdir-y handling. BTW many of the subdir
+Makefiles have the same construct, I'm not sure why since they have no
+sub-sub-dirs, although it seems more harmless in that context.
+
+By my reading the __dtbs_install_prep rule is supposed to run once as
+part of arch/*/boot/dts/Makefile and not as part of any each of the
+subdirectories.
+
+I've experimented with removing the subdir-y assignment, but that seems
+to break the dtbs and clean rules.
+
+I'm not sure how else this can/should be fixed with Kbuild. Any ideas?
+
+Thanks,
+Ian.
+
+[0]=A0https://buildd.debian.org/status/fetch.php?pkg=3Dlinux&arch=3Darm64=
+&ver=3D4.5~rc7-1~exp1&stamp=3D1457444794
+[1]=A0https://git.kernel.org/cgit/linux/kernel/git/mmarek/kbuild.git/comm=
+it/?id=3D5399eb9b39081d6d2fc1a13d4ea85f1ceb2c8b44
