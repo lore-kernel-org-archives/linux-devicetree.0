@@ -1,46 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] net: arc_emac: add phy reset is optional for
- device tree
-Date: Wed, 16 Mar 2016 16:57:42 +0300
-Message-ID: <56E96656.5000101@cogentembedded.com>
-References: <1457942520-12859-1-git-send-email-wxt@rock-chips.com>
- <1457942520-12859-3-git-send-email-wxt@rock-chips.com>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v4 1/8] arm64: dts: rockchip: Clean up /memory nodes
+Date: Wed, 16 Mar 2016 14:58:39 +0100
+Message-ID: <1458136727-32075-2-git-send-email-afaerber@suse.de>
+References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457942520-12859-3-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458136727-32075-1-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+A dtc update results in warnings for nodes with reg property but withou=
+t
+unit address in the node name, so rename /memory to /memory@0.
 
-On 3/14/2016 11:01 AM, Caesar Wang wrote:
+Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+---
+ v4: New - complements GeekBox patch 4/8
+=20
+ arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi | 2 +-
+ arch/arm64/boot/dts/rockchip/rk3368-r88.dts  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> This patch adds the following property for arc_emac.
->
-> 1) phy-reset-gpios:
-> The phy-reset-gpio is an optional property for arc emac device tree boot.
-> Change the binding document to match the driver code.
->
-> 2) phy-reset-duration:
-> Different boards may require different phy reset duration. Add property
-> phy-reset-duration for device tree probe, so that the boards that need
-> a longer reset duration can specify it in their device tree.
->
-> Anyway, we can add the above property for arc emac.
->
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-   Could you have a look at drivers/net/ethernet/cadence/macb/? It seems to be 
-the only driver which places the PHY's "reset-gpios" prop correctly, into the 
-PHY subnode? I'm currently working on adding support of this prop into phylib...
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi b/arch/arm64/=
+boot/dts/rockchip/rk3368-evb.dtsi
+index 06bbe421db37..e4c91e86e9b6 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3368-evb.dtsi
+@@ -48,7 +48,7 @@
+ 		stdout-path =3D "serial2:115200n8";
+ 	};
+=20
+-	memory {
++	memory@0 {
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x40000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts b/arch/arm64/b=
+oot/dts/rockchip/rk3368-r88.dts
+index a1d1aa9c16fe..5c63f8982128 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3368-r88.dts
+@@ -51,7 +51,7 @@
+ 		stdout-path =3D "serial2:115200n8";
+ 	};
+=20
+-	memory {
++	memory@0 {
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x40000000>;
+ 	};
+--=20
+2.6.2
