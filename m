@@ -1,88 +1,88 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: dra7xx: Fix compatible string for PCF8575
- chip
-Date: Wed, 16 Mar 2016 17:31:53 -0500
-Message-ID: <56E9DED9.6020909@ti.com>
-References: <1458147150.20441.2.camel@codethink.co.uk>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH] ARM64: dts: amlogic: Clean up Vega S95 /memory nodes
+Date: Thu, 17 Mar 2016 00:10:53 +0100
+Message-ID: <1458169854-26127-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458147150.20441.2.camel-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: CT kernel <linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/16/2016 11:52 AM, Ben Hutchings wrote:
-> The binding definition for the PCF857x GPIO expanders doesn't mention
-> a "ti,pcf8575" compatible string.  This is apparently because TI is
-> only a second source - there is no functional difference between
-> PCF8575 chips manufactured by TI and NXP, and the same board might be
-> populated with either depending on availability.
-> 
-> This is not a problem in practice because the I2C core uses
-> of_modalias_node() before matching drivers and this strips the
-> manufacturer name.
-> 
+Resolve the following warnings from new dtc by adding the unit address:
 
-Yeah - thanks for catching this.. was planning on fixing this, but anyways..
-f56de327b4c4 ARM: dts: dra72-evm: Add extcon nodes for USB
-87517d26d888 ARM: dts: dra7-evm: Add extcon nodes for USB
+    DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dtb
+  Warning (unit_address_vs_reg): Node /memory has a reg or ranges prope=
+rty, but no unit name
+    DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dtb
+  Warning (unit_address_vs_reg): Node /memory has a reg or ranges prope=
+rty, but no unit name
+    DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dtb
+  Warning (unit_address_vs_reg): Node /memory has a reg or ranges prope=
+rty, but no unit name
 
-Are the patches that introduce the "ti," binding... Roger: since this is
-introduced by your patches... Ccying you as well. weird since checkpatch
-does not complain..
+=46ixes: cc733bc90636 ("ARM64: dts: amlogic: Add Tronsmart Vega S95 con=
+figs")
+Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts  | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts   | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-> Signed-off-by: Ben Hutchings <ben.hutchings-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-> ---
-> v2: Correct the claim that this is a practical problem.
-> 
->  arch/arm/boot/dts/dra7-evm.dts  | 2 +-
->  arch/arm/boot/dts/dra72-evm.dts | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-> index cfc24e52244e..3907c9d2c12e 100644
-> --- a/arch/arm/boot/dts/dra7-evm.dts
-> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> @@ -539,7 +539,7 @@
->  	};
->  
->  	pcf_gpio_21: gpio@21 {
-> -		compatible = "ti,pcf8575";
-> +		compatible = "nxp,pcf8575";
->  		reg = <0x21>;
->  		lines-initial-states = <0x1408>;
->  		gpio-controller;
-> diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
-> index 00b12002c07c..7ec42bda3afb 100644
-> --- a/arch/arm/boot/dts/dra72-evm.dts
-> +++ b/arch/arm/boot/dts/dra72-evm.dts
-> @@ -422,7 +422,7 @@
->  	};
->  
->  	pcf_gpio_21: gpio@21 {
-> -		compatible = "ti,pcf8575";
-> +		compatible = "nxp,pcf8575";
->  		reg = <0x21>;
->  		lines-initial-states = <0x1408>;
->  		gpio-controller;
-> 
-> 
-> 
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts b=
+/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+index 399aff9e7975..62fb4968d680 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+@@ -48,7 +48,7 @@
+ 	compatible =3D "tronsmart,vega-s95-meta", "tronsmart,vega-s95", "amlo=
+gic,meson-gxbb";
+ 	model =3D "Tronsmart Vega S95 Meta";
+=20
+-	memory {
++	memory@0 {
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x80000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts b/=
+arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+index ac5a241b5ec2..9a9663abdf5c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+@@ -48,7 +48,7 @@
+ 	compatible =3D "tronsmart,vega-s95-pro", "tronsmart,vega-s95", "amlog=
+ic,meson-gxbb";
+ 	model =3D "Tronsmart Vega S95 Pro";
+=20
+-	memory {
++	memory@0 {
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x40000000>;
+ 	};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts =
+b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+index fff7bfa2aa39..2fe167b2609d 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+@@ -48,7 +48,7 @@
+ 	compatible =3D "tronsmart,vega-s95-telos", "tronsmart,vega-s95", "aml=
+ogic,meson-gxbb";
+ 	model =3D "Tronsmart Vega S95 Telos";
+=20
+-	memory {
++	memory@0 {
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x80000000>;
+ 	};
+--=20
+2.6.2
 
-
-While at it, do you want to fix up (+Seb):
-a) Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt which
-also seems to refer to ti,pcf in example (introduced by df2634f43f51
-x86: dtb: Add a device tree for CE4100 )
-b) arch/x86/platform/ce4100/falconfalls.dts as well?
-
--- 
-Regards,
-Nishanth Menon
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
