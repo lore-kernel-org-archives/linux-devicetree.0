@@ -1,66 +1,248 @@
-From: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V2 2/3] vfio, platform: make reset driver a requirement
-Date: Wed, 16 Mar 2016 10:27:24 -0400
-Message-ID: <56E96D4C.3080008@codeaurora.org>
-References: <1457715275-11925-1-git-send-email-okaya@codeaurora.org>
- <1457715275-11925-3-git-send-email-okaya@codeaurora.org>
- <56E5A271.6000408@codeaurora.org> <56E8E2CD.3020604@linaro.org>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: k2*: Rename the k2* files to keystone-k2* files
+Date: Wed, 16 Mar 2016 09:39:10 -0500
+Message-ID: <1458139150-30382-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E8E2CD.3020604-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Cc: shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Baptiste Reynal <b.reynal-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Baptiste,
+As reported in [1], rename the k2* dts files to keystone-* files
+this will force consistency throughout.
 
->> I couldn't see a reset function for AMBA devices.
->>
->> Is there anyway to write reset function for it? I have no experience with 
->> AMBA devices.
-> To my knowledge only the PL330 DMA controller (drivers/dma/pl330.c) was
-> passthrough'ed at some point, rather for development purpose than
-> production purpose. This was done by Virtual Open Systems (ask Baptiste
-> for more details). But I don't think this is really used.
+Script for the same (and hand modified for Makefile and MAINTAINERS
+files):
+for i in arch/arm/boot/dts/k2*
+do
+	b=`basename $i`;
+	git mv $i arch/arm/boot/dts/keystone-$b;
+	sed -i -e "s/$b/keystone-$b/g" arch/arm/boot/dts/*[si]
+done
 
-Are you OK with requiring reset driver for AMBA devices too? The PL330 
-driver won't work until a reset driver is submitted for it.
+NOTE: bootloaders that depend on older dtb names will need to be
+updated as well.
 
->>
->> Would you include a reset needed flag and just not require it for AMBA? 
->> (I honestly don't like this idea)
->>
-> I think the requirement also makes sense for AMBA.
-> 
-> Maybe an option would be to add a module parameter that would allow to
-> use the vfio platform/amba driver without reset module (with explicit
-> opt-in from the user). Maybe this can be done later on.
+[1] http://marc.info/?l=linux-arm-kernel&m=145637407804754&w=2
 
-I can see this flag useful for testing purposes but it should not be used in 
-production.
+Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+---
 
-How about I add a module parameter which is not set by default? When set,
-I don't perform the reset requirement check.
+Based on next-20160316
+Ignored:
+ - all the build warnings reported in http://www.spinics.net/lists/arm-kernel/msg490058.html
+ - k2g* files which for some reason appears in linux-next, but not part of pull request:
+ 	http://marc.info/?l=linux-arm-kernel&m=145643709430175&w=2
 
-> 
-> FYI I will not have access to my mailbox until the end of the week.
+ MAINTAINERS                                                       | 2 +-
+ arch/arm/boot/dts/Makefile                                        | 6 +++---
+ arch/arm/boot/dts/{k2e-clocks.dtsi => keystone-k2e-clocks.dtsi}   | 0
+ arch/arm/boot/dts/{k2e-evm.dts => keystone-k2e-evm.dts}           | 2 +-
+ arch/arm/boot/dts/{k2e-netcp.dtsi => keystone-k2e-netcp.dtsi}     | 0
+ arch/arm/boot/dts/{k2e.dtsi => keystone-k2e.dtsi}                 | 4 ++--
+ arch/arm/boot/dts/{k2hk-clocks.dtsi => keystone-k2hk-clocks.dtsi} | 0
+ arch/arm/boot/dts/{k2hk-evm.dts => keystone-k2hk-evm.dts}         | 2 +-
+ arch/arm/boot/dts/{k2hk-netcp.dtsi => keystone-k2hk-netcp.dtsi}   | 0
+ arch/arm/boot/dts/{k2hk.dtsi => keystone-k2hk.dtsi}               | 4 ++--
+ arch/arm/boot/dts/{k2l-clocks.dtsi => keystone-k2l-clocks.dtsi}   | 0
+ arch/arm/boot/dts/{k2l-evm.dts => keystone-k2l-evm.dts}           | 2 +-
+ arch/arm/boot/dts/{k2l-netcp.dtsi => keystone-k2l-netcp.dtsi}     | 0
+ arch/arm/boot/dts/{k2l.dtsi => keystone-k2l.dtsi}                 | 4 ++--
+ 14 files changed, 13 insertions(+), 13 deletions(-)
+ rename arch/arm/boot/dts/{k2e-clocks.dtsi => keystone-k2e-clocks.dtsi} (100%)
+ rename arch/arm/boot/dts/{k2e-evm.dts => keystone-k2e-evm.dts} (98%)
+ rename arch/arm/boot/dts/{k2e-netcp.dtsi => keystone-k2e-netcp.dtsi} (100%)
+ rename arch/arm/boot/dts/{k2e.dtsi => keystone-k2e.dtsi} (97%)
+ rename arch/arm/boot/dts/{k2hk-clocks.dtsi => keystone-k2hk-clocks.dtsi} (100%)
+ rename arch/arm/boot/dts/{k2hk-evm.dts => keystone-k2hk-evm.dts} (99%)
+ rename arch/arm/boot/dts/{k2hk-netcp.dtsi => keystone-k2hk-netcp.dtsi} (100%)
+ rename arch/arm/boot/dts/{k2hk.dtsi => keystone-k2hk.dtsi} (96%)
+ rename arch/arm/boot/dts/{k2l-clocks.dtsi => keystone-k2l-clocks.dtsi} (100%)
+ rename arch/arm/boot/dts/{k2l-evm.dts => keystone-k2l-evm.dts} (98%)
+ rename arch/arm/boot/dts/{k2l-netcp.dtsi => keystone-k2l-netcp.dtsi} (100%)
+ rename arch/arm/boot/dts/{k2l.dtsi => keystone-k2l.dtsi} (96%)
 
-OK, no rush.
-
-> 
-> Best Regards
-> 
-> Eric
-> 
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 3c0be602d57c..a00233edbe83 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1260,7 +1260,7 @@ M:	Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+ L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+ S:	Maintained
+ F:	arch/arm/mach-keystone/
+-F:	arch/arm/boot/dts/k2*
++F:	arch/arm/boot/dts/keystone-*
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git
+ 
+ ARM/TEXAS INSTRUMENT KEYSTONE CLOCK FRAMEWORK
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 0d6bf2875cc7..f06b4b849db2 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -158,9 +158,9 @@ dtb-$(CONFIG_ARCH_INTEGRATOR) += \
+ 	integratorap.dtb \
+ 	integratorcp.dtb
+ dtb-$(CONFIG_ARCH_KEYSTONE) += \
+-	k2hk-evm.dtb \
+-	k2l-evm.dtb \
+-	k2e-evm.dtb \
++	keystone-k2hk-evm.dtb \
++	keystone-k2l-evm.dtb \
++	keystone-k2e-evm.dtb \
+ 	keystone-k2g-evm.dtb
+ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+ 	kirkwood-b3.dtb \
+diff --git a/arch/arm/boot/dts/k2e-clocks.dtsi b/arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/k2e-clocks.dtsi
+rename to arch/arm/boot/dts/keystone-k2e-clocks.dtsi
+diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
+similarity index 98%
+rename from arch/arm/boot/dts/k2e-evm.dts
+rename to arch/arm/boot/dts/keystone-k2e-evm.dts
+index b7e99807f5c2..4c32ebc1425a 100644
+--- a/arch/arm/boot/dts/k2e-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
+@@ -10,7 +10,7 @@
+ /dts-v1/;
+ 
+ #include "keystone.dtsi"
+-#include "k2e.dtsi"
++#include "keystone-k2e.dtsi"
+ 
+ / {
+ 	compatible = "ti,k2e-evm", "ti,k2e", "ti,keystone";
+diff --git a/arch/arm/boot/dts/k2e-netcp.dtsi b/arch/arm/boot/dts/keystone-k2e-netcp.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/k2e-netcp.dtsi
+rename to arch/arm/boot/dts/keystone-k2e-netcp.dtsi
+diff --git a/arch/arm/boot/dts/k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+similarity index 97%
+rename from arch/arm/boot/dts/k2e.dtsi
+rename to arch/arm/boot/dts/keystone-k2e.dtsi
+index 1097dada56d2..96b349fb0430 100644
+--- a/arch/arm/boot/dts/k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -44,7 +44,7 @@
+ 	};
+ 
+ 	soc {
+-		/include/ "k2e-clocks.dtsi"
++		/include/ "keystone-k2e-clocks.dtsi"
+ 
+ 		usb: usb@2680000 {
+ 			interrupts = <GIC_SPI 152 IRQ_TYPE_EDGE_RISING>;
+@@ -145,6 +145,6 @@
+ 			clock-names = "fck";
+ 			bus_freq	= <2500000>;
+ 		};
+-		/include/ "k2e-netcp.dtsi"
++		/include/ "keystone-k2e-netcp.dtsi"
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/k2hk-clocks.dtsi b/arch/arm/boot/dts/keystone-k2hk-clocks.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/k2hk-clocks.dtsi
+rename to arch/arm/boot/dts/keystone-k2hk-clocks.dtsi
+diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+similarity index 99%
+rename from arch/arm/boot/dts/k2hk-evm.dts
+rename to arch/arm/boot/dts/keystone-k2hk-evm.dts
+index 8161bf53271b..b38b3441818b 100644
+--- a/arch/arm/boot/dts/k2hk-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
+@@ -10,7 +10,7 @@
+ /dts-v1/;
+ 
+ #include "keystone.dtsi"
+-#include "k2hk.dtsi"
++#include "keystone-k2hk.dtsi"
+ 
+ / {
+ 	compatible =  "ti,k2hk-evm", "ti,k2hk", "ti,keystone";
+diff --git a/arch/arm/boot/dts/k2hk-netcp.dtsi b/arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/k2hk-netcp.dtsi
+rename to arch/arm/boot/dts/keystone-k2hk-netcp.dtsi
+diff --git a/arch/arm/boot/dts/k2hk.dtsi b/arch/arm/boot/dts/keystone-k2hk.dtsi
+similarity index 96%
+rename from arch/arm/boot/dts/k2hk.dtsi
+rename to arch/arm/boot/dts/keystone-k2hk.dtsi
+index ada4c7ac96e7..8f67fa8df936 100644
+--- a/arch/arm/boot/dts/k2hk.dtsi
++++ b/arch/arm/boot/dts/keystone-k2hk.dtsi
+@@ -44,7 +44,7 @@
+ 	};
+ 
+ 	soc {
+-		/include/ "k2hk-clocks.dtsi"
++		/include/ "keystone-k2hk-clocks.dtsi"
+ 
+ 		dspgpio0: keystone_dsp_gpio@02620240 {
+ 			compatible = "ti,keystone-dsp-gpio";
+@@ -112,6 +112,6 @@
+ 			clock-names = "fck";
+ 			bus_freq	= <2500000>;
+ 		};
+-		/include/ "k2hk-netcp.dtsi"
++		/include/ "keystone-k2hk-netcp.dtsi"
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/k2l-clocks.dtsi b/arch/arm/boot/dts/keystone-k2l-clocks.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/k2l-clocks.dtsi
+rename to arch/arm/boot/dts/keystone-k2l-clocks.dtsi
+diff --git a/arch/arm/boot/dts/k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
+similarity index 98%
+rename from arch/arm/boot/dts/k2l-evm.dts
+rename to arch/arm/boot/dts/keystone-k2l-evm.dts
+index 00861244d788..7f9c2e94d605 100644
+--- a/arch/arm/boot/dts/k2l-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
+@@ -10,7 +10,7 @@
+ /dts-v1/;
+ 
+ #include "keystone.dtsi"
+-#include "k2l.dtsi"
++#include "keystone-k2l.dtsi"
+ 
+ / {
+ 	compatible = "ti,k2l-evm", "ti,k2l", "ti,keystone";
+diff --git a/arch/arm/boot/dts/k2l-netcp.dtsi b/arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+similarity index 100%
+rename from arch/arm/boot/dts/k2l-netcp.dtsi
+rename to arch/arm/boot/dts/keystone-k2l-netcp.dtsi
+diff --git a/arch/arm/boot/dts/k2l.dtsi b/arch/arm/boot/dts/keystone-k2l.dtsi
+similarity index 96%
+rename from arch/arm/boot/dts/k2l.dtsi
+rename to arch/arm/boot/dts/keystone-k2l.dtsi
+index 4446da72b0ae..ff22ffc3dee7 100644
+--- a/arch/arm/boot/dts/k2l.dtsi
++++ b/arch/arm/boot/dts/keystone-k2l.dtsi
+@@ -32,7 +32,7 @@
+ 	};
+ 
+ 	soc {
+-		/include/ "k2l-clocks.dtsi"
++		/include/ "keystone-k2l-clocks.dtsi"
+ 
+ 		uart2: serial@02348400 {
+ 			compatible = "ns16550a";
+@@ -92,7 +92,7 @@
+ 			clock-names = "fck";
+ 			bus_freq	= <2500000>;
+ 		};
+-		/include/ "k2l-netcp.dtsi"
++		/include/ "keystone-k2l-netcp.dtsi"
+ 	};
+ };
+ 
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.7.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
