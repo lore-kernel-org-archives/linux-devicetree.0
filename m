@@ -1,33 +1,35 @@
-From: Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
-Subject: [PATCH 0/2] auxdisplay: Introduce driver for ht16k33 LED controller
-Date: Wed, 16 Mar 2016 16:52:07 +0100
-Message-ID: <cover.1458140954.git.robin@protonic.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin van der Gracht <robin-/Q/L1SwJa3aEVqv0pETR8A@public.gmane.org>
+From: Robin van der Gracht <robin@protonic.nl>
+Subject: [PATCH 1/2] of: add vendor prefix for Holtek Semiconductor
+Date: Wed, 16 Mar 2016 16:52:08 +0100
+Message-ID: <81209392e3cdf566aa03b208b5e31a19c93e7b40.1458140954.git.robin@protonic.nl>
+References: <cover.1458140954.git.robin@protonic.nl>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1458140954.git.robin@protonic.nl>
+In-Reply-To: <cover.1458140954.git.robin@protonic.nl>
+References: <cover.1458140954.git.robin@protonic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Stefan Wahren <stefan.wahren@i2se.com>, Philipp Zabel <philipp.zabel@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robin van der Gracht <robin@protonic.nl>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds a driver for the ht16k33 LED controller and a
-new vendor prefix for Holtek Semiconductor Inc.
+This patch introduces a vendor prefix for Holtek Semiconductor Inc.
 
-Robin van der Gracht (2):
-  of: add vendor prefix for Holtek Semiconductor
-  auxdisplay: ht16k33: Driver for LED controller
+Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/display/ht16k33.txt        |  42 ++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/auxdisplay/Kconfig                         |   9 +
- drivers/auxdisplay/Makefile                        |   1 +
- drivers/auxdisplay/ht16k33.c                       | 563 +++++++++++++++++++++
- 5 files changed, 616 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ht16k33.txt
- create mode 100644 drivers/auxdisplay/ht16k33.c
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index dd72e05..fa70359d 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -108,6 +108,7 @@ hitex	Hitex Development Tools
+ holt	Holt Integrated Circuits, Inc.
+ honeywell	Honeywell
+ hp	Hewlett Packard
++ht	Holtek Semiconductor Inc.
+ i2se	I2SE GmbH
+ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
