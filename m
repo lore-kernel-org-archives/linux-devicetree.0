@@ -1,108 +1,118 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 0/4] Add AXP209 GPIO driver
-Date: Wed, 16 Mar 2016 11:38:51 +0100
-Message-ID: <56E937BB.5020706@redhat.com>
-References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
- <56E0146E.6050102@redhat.com> <20160309152822.GQ8418@lukather>
- <56E044C1.7080300@redhat.com>
- <CACRpkdZUJsqCG=dd9XdwxaAHxEHXgrZncH+DqtPYta4a30v87w@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 6/8] arm64: dts: rockchip: Add power key to GeekBox
+Date: Wed, 16 Mar 2016 11:58:11 +0100
+Message-ID: <56E93C43.1060500@suse.de>
+References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
+ <1457294038-14243-7-git-send-email-afaerber@suse.de>
+ <6BD669A2-4971-4702-8742-77C9994AA4E9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZUJsqCG=dd9XdwxaAHxEHXgrZncH+DqtPYta4a30v87w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Alexandre Courbot <gnurou@gmail.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <6BD669A2-4971-4702-8742-77C9994AA4E9@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julien Chauveau <chauveau.julien@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Heiko Stuebner <heiko@sntech.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 16-03-16 11:10, Linus Walleij wrote:
-> On Wed, Mar 9, 2016 at 4:44 PM, Hans de Goede <hdegoede@redhat.com> wrote:
->>> On Wed, Mar 09, 2016 at 01:17:50PM +0100, Hans de Goede wrote:
->
->>> Eventually, yes, it needs both. But they don't even have to be the
->>> same driver, since they provide two different features. The only
->>> reason we have that construct in the pio case is because they share
->>> the same address space, but in the AXP case, the regmap and our mfd
->>> take care of that already.
+Am 11.03.2016 um 00:04 schrieb Julien Chauveau:
+>> Le 6 mars 2016 =C3=A0 20:53, Andreas F=C3=A4rber <afaerber@suse.de> =
+a =C3=A9crit :
 >>
->> Hmm, so your suggesting to have mfd instantiate 2 platform devices
->> for this, a gpio and a pinctrl device, each with their own
->> driver. Yes that would work, but I'm a bit worried about the 2
->> racing or some such since they both will end up touching
->> bit 0-2 of register 0x90 / 0x92, more-over since they are both
->> touching the exact same bits I've the feeling that this really
->> should be one driver.
->
-> We can put the driver in drivers/pinctrl/pinctrl-axp209.c from day
-> one, add in comments stating that it only implements GPIO
-> for now and that the GPIO portion must call
-> pinctrl_request_gpio() and the pin controller must implement
-> .gpio_request_enable() the day it is added so the GPIOs do
-> not conflict with other use of the pins.
->
-> Requireing a huge slew of upfront code is a bit hard on simple
-> drivers I think.
->
-> Also we have the solution in drivers/mfd/stmpe.c that just add
-> a simple mux code when pins on mixsigs or simple expanders
-> can just mux some two-three different functions, then I think
-> pin control may be a bit too thick overhead. (Not sure where
-> the limit is though.)
+>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
+>> ---
+>> v2 -> v3:
+>> * Adopted wakeup-source instead of gpio-key,wakeup (Julien)
+>> * Dropped gpio-keys #address-cells and #size-cells properties (Julie=
+n)
+>> * Dropped power button reg property (Julien)
+>> * Adopted KEY_POWER (Julien)
+>> * Fixed power button pinctrl pull setting (Julien)
+>>
+>> v2: New
+>>
+>> arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts | 20 +++++++++++++++=
++++++
+>> 1 file changed, 20 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts b/arch/=
+arm64/boot/dts/rockchip/rk3368-geekbox.dts
+>> index 098be3700a6f..7036b49c9206 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3368-geekbox.dts
+>> @@ -42,6 +42,7 @@
+>>
+>> /dts-v1/;
+>> #include "rk3368.dtsi"
+>> +#include <dt-bindings/input/input.h>
+>>
+>> / {
+>> 	model =3D "GeekBox";
+>> @@ -70,6 +71,19 @@
+>> 		pinctrl-0 =3D <&ir_int>;
+>> 	};
+>>
+>> +	keys: gpio-keys {
+>=20
+> I think you don't need the "keys" label, because there=E2=80=99s no p=
+handle that refers to this.
 
-I actually found out this weekend, that we already have
-a problem here. Regulator on/off is implemented as
-2 mux settings, just like gpio high/low/input are mux settings:
+As discussed elsewhere, there are four additional keys on the
+Landingship (you proposed as sub-node names key1-key4).
+I prefer preparing the label now over adding it in a later patch.
 
-On the axp209 the gpio pin mux bit table looks like this:
+>> +		compatible =3D "gpio-keys";
+>> +		pinctrl-names =3D "default";
+>> +		pinctrl-0 =3D <&pwr_key>;
+>> +
+>> +		button@0 {
+>=20
+> Here you should use "power" instead of "button@0".
 
-000: low output
-001: output (3.3V)
-010: universal input function
-011: low noise LDO5
-100: ADC input
-1XX: floating
+Done.
 
-And on the axp221 / axp223:
+>> +			gpios =3D <&gpio0 2 GPIO_ACTIVE_LOW>;
+>> +			label =3D "GPIO Power";
+>> +			linux,code =3D <KEY_POWER>;
+>=20
+> According to Documentation/input/event-codes.txt, there=E2=80=99s a s=
+pecial event type for the power button.
+> Should we use it here for that purpose?
+>=20
+> 			linux,input-type =3D <EV_PWR>
 
-000: output low
-001: output high (3.3V)
-010: input
-011: LDOIO0 off
-100: LDOIO0 on
-1XX: floating
+The other RK3368 boards don't, so unless you can give a justification t=
+o
+convert all boards yet again and test how this makes a difference, I'd
+rather not do experiments here but leave that to someone who knows what
+they're doing and then do it consistently...
 
-Note the LDOIO0 off / LDOIO0 on being 2 different mux
-settings, and then existing axp20x regulator driver for
-LD05 / LDOIO0 actually already implements regulator on / off
-by changing the mux for both axp209 and axp22x.
+Thanks for the detailed review,
 
-This results in the following potentially happening.
+Andreas
 
-0) kernel boots
+>> +			wakeup-source;
+>> +		};
+>> +	};
+>> +
+>> 	leds: gpio-leds {
+>> 		compatible =3D "gpio-leds";
+>>
+>> @@ -265,6 +279,12 @@
+>> 		};
+>> 	};
+>>
+>> +	keys {
+>> +		pwr_key: pwr-key {
+>> +			rockchip,pins =3D <0 2 RK_FUNC_GPIO &pcfg_pull_none>;
+>> +		};
+>> +	};
+>> +
+>> 	pmic {
+>> 		pmic_sleep: pmic-sleep {
+>> 			rockchip,pins =3D <0 0 RK_FUNC_2 &pcfg_pull_none>;
 
-1) The gpio driver is in use for these pins, sets the pin
-to say output low
-
-2) kernel is ready to start init, calls the regulators
-subsys late_init call, which disables any unused regulators,
-this results in the mux getting set to 7 (axp209) resp
-4 (axp22x), and the gpio is no longer driven low as
-the intend of the driver using the pin was.
-
-So we really need either some coordination here, or a way
-to tell the regulator-driver to not register ldo5 / ldoio#
-at all, so that the regulator-core won't try to turn them
-off changing the mux.
-
-I've submitted a patch series this weekend which allows
-putting "status = disabled" in regulator child-dts-nodes, which
-will then result in not registering a regulator at all,
-which would fix that. But that series has not received any
-feedback yet...
-
-Regards,
-
-Hans
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
+ N=C3=BCrnberg)
