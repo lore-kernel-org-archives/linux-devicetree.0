@@ -1,64 +1,48 @@
-From: Lloyd's TSB Bank Plc <info-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: lening bieden 1,5%
-Date: Wed, 16 Mar 2016 04:54:05 -0700
-Message-ID: <cb818d8bb2a45596f84ec0cf9123dbb8__27233.2686152824$1458129279$gmane$org@multivision.com.ve>
-Reply-To: <lloyds26tsb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] pinctrl: sunxi: Fix A33 external interrupts
+ not working
+Date: Wed, 16 Mar 2016 13:05:49 +0100
+Message-ID: <CACRpkdZF-hiwGaHdyORzdj06vqmceZ_5ko1LDYJoCMXC216hTg@mail.gmail.com>
+References: <1457808297-12300-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBHMYUW3QKGQEW7RGBQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1457808297-12300-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Mar 12, 2016 at 7:44 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
+> pinctrl-sun8i-a33.c (and the dts) declare only 2 interrupt banks,
+> where as the closely related a23 has 3 banks. This matches with the
+> datasheet for the A33 where only interrupt banks B and G are specified
+> where as the A23 has banks A, B and G.
+>
+> However the A33 being the A23 derative it is means that the interrupt
+> configure/status io-addresses for the 2 banks it has are not changed
+> from the A23, iow they have the same address as if bank A was still
+> present. Where as the sunxi pinctrl currently tries to use the A23 bank
+> A addresses for bank B, since the pinctrl code does not know about the
+> removed bank A.
+>
+> Add a irq_bank_base parameter and use this where appropriate to take
+> the missing bank A into account.
+>
+> This fixes external interrupts not working on the A33 (tested with
+> an i2c touchscreen controller which uses an external interrupt).
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
---=20
-Goede dag,
+Patch applied, tagged for stable.
 
-  Dit is Lloyd's TSB Bank plc leningen aan te bieden.
-
-    Lloyds TSB biedt flexibele en betaalbare leningen voor welk doel u=20
-te helpen uw doelen te bereiken. we lening tegen lage rente van 1,5%.=20
-Hier zijn een aantal belangrijke kenmerken van de persoonlijke lening=20
-aangeboden door Lloyd's TSB. Hier zijn de Loan Factoren we werken met d=
-e=20
-toonaangevende Britse makelaars die toegang hebben tot de top=20
-kredietverstrekkers hebben en in staat zijn om de beste financi=C3=ABle=
-=20
-oplossing tegen een betaalbare price.Please vinden als u ge=C3=AFnteres=
-seerd=20
-bent vriendelijk contact met ons op via deze e-mail:=20
-lloyds25tsb-7LTueJnf2jnQT0dZR+AlfA@public.gmane.org
-
-
-Na de reactie, zal u een aanvraag voor een lening te vullen ontvangen.=20
-Geen sociale zekerheid en geen credit check, 100% gegarandeerd.
-
-Het zal ons een eer zijn als u ons toelaten om u van dienst zijn.
-
-
-GEGEVENS NODIG
-
-Jullie namen:
-Adres: ...........
-Telefoon: ...........
-Benodigd ........
-Duur: ...............
-Bezetting: ...........
-Maandelijks Inkomen Level: ........
-Geslacht: ...............
-Geboortedatum: ........
-Staat: ..................
-Land: ..........
-Doel: .........
-
-Ontmoeting uw financi=C3=ABle behoeften is onze trots.
-
-
-Dr.John Mahama.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
