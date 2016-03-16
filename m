@@ -1,71 +1,64 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v2] Documentation: devicetree: Clean up gpio-keys example
-Date: Wed, 16 Mar 2016 12:53:29 +0100
-Message-ID: <1458129209-15449-1-git-send-email-afaerber@suse.de>
+From: Lloyd's TSB Bank Plc <info-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: lening bieden 1,5%
+Date: Wed, 16 Mar 2016 04:54:05 -0700
+Message-ID: <cb818d8bb2a45596f84ec0cf9123dbb8__27233.2686152824$1458129279$gmane$org@multivision.com.ve>
+Reply-To: <lloyds26tsb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Julien Chauveau <chauveau.julien@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Drop #address-cells and #size-cells, which are not required by the
-gpio-keys binding documentation, as button sub-nodes are not devices.
 
-Rename sub-nodes to avoid new dtc unit address warnings when copied.
 
-While at it, adopt the dashes convention for the node name.
-
-Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
-Cc: Julien Chauveau <chauveau.julien@gmail.com>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
----
- v1 -> v2:
- * Changed node name from underscore to dash
- * Inserted white lines
- * Renamed sub-nodes (Geert, Julien)
-=20
- Documentation/devicetree/bindings/input/gpio-keys.txt | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Do=
-cumentation/devicetree/bindings/input/gpio-keys.txt
-index 21641236c095..a94940481e55 100644
---- a/Documentation/devicetree/bindings/input/gpio-keys.txt
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-@@ -32,17 +32,17 @@ Optional subnode-properties:
-=20
- Example nodes:
-=20
--	gpio_keys {
-+	gpio-keys {
- 			compatible =3D "gpio-keys";
--			#address-cells =3D <1>;
--			#size-cells =3D <0>;
- 			autorepeat;
--			button@21 {
-+
-+			up {
- 				label =3D "GPIO Key UP";
- 				linux,code =3D <103>;
- 				gpios =3D <&gpio1 0 1>;
- 			};
--			button@22 {
-+
-+			down {
- 				label =3D "GPIO Key DOWN";
- 				linux,code =3D <108>;
- 				interrupts =3D <1 IRQ_TYPE_LEVEL_HIGH 7>;
 --=20
-2.6.2
+Goede dag,
 
+  Dit is Lloyd's TSB Bank plc leningen aan te bieden.
+
+    Lloyds TSB biedt flexibele en betaalbare leningen voor welk doel u=20
+te helpen uw doelen te bereiken. we lening tegen lage rente van 1,5%.=20
+Hier zijn een aantal belangrijke kenmerken van de persoonlijke lening=20
+aangeboden door Lloyd's TSB. Hier zijn de Loan Factoren we werken met d=
+e=20
+toonaangevende Britse makelaars die toegang hebben tot de top=20
+kredietverstrekkers hebben en in staat zijn om de beste financi=C3=ABle=
+=20
+oplossing tegen een betaalbare price.Please vinden als u ge=C3=AFnteres=
+seerd=20
+bent vriendelijk contact met ons op via deze e-mail:=20
+lloyds25tsb-7LTueJnf2jnQT0dZR+AlfA@public.gmane.org
+
+
+Na de reactie, zal u een aanvraag voor een lening te vullen ontvangen.=20
+Geen sociale zekerheid en geen credit check, 100% gegarandeerd.
+
+Het zal ons een eer zijn als u ons toelaten om u van dienst zijn.
+
+
+GEGEVENS NODIG
+
+Jullie namen:
+Adres: ...........
+Telefoon: ...........
+Benodigd ........
+Duur: ...............
+Bezetting: ...........
+Maandelijks Inkomen Level: ........
+Geslacht: ...............
+Geboortedatum: ........
+Staat: ..................
+Land: ..........
+Doel: .........
+
+Ontmoeting uw financi=C3=ABle behoeften is onze trots.
+
+
+Dr.John Mahama.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
