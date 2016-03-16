@@ -1,36 +1,81 @@
-From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH v5 3/7] remoteproc: debugfs: Add ability
- to boot remote processor using debugfs
-Date: Wed, 16 Mar 2016 16:44:22 +0000
-Message-ID: <20160316164422.GD9595@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
- <1452602781-22424-4-git-send-email-lee.jones@linaro.org>
+From: Ben Hutchings <ben.hutchings@codethink.co.uk>
+Subject: [PATCH v2] x86: dts: ce4100: Use defined compatible string for
+ PCF8575 chip
+Date: Wed, 16 Mar 2016 16:51:20 +0000
+Message-ID: <1458147080.20441.1.camel@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1452602781-22424-4-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Nathan_Lynch-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Jiang Liu <jiang.liu@linux.intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Jan 2016, Lee Jones wrote:
+The binding definition for the PCF857x GPIO expanders doesn't mention
+a "ti,pcf8575" compatible string.  This is apparently because TI is
+only a second source - there is no functional difference between
+PCF8575 chips manufactured by TI and NXP, and the same board might be
+populated with either depending on availability.
 
-> This functionality is especially useful during the testing phase.  When
-> used in conjunction with Mailbox's Test Framework we can trivially conduct
-> end-to-end testing i.e. boot co-processor, send and receive messages to
-> the co-processor, then shut it down again (repeat as required).
-> 
-> Signed-off-by: Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/remoteproc/remoteproc_debugfs.c | 34 +++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+This is not a problem in practice because the I2C core uses
+of_modalias_node() before matching drivers and this strips the
+manufacturer name.
 
-Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+---
+v2: Correct the claim that this is a practical problem.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt | 4 ++--
+ arch/x86/platform/ce4100/falconfalls.dts                     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt b/Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt
+index 569b16248514..1ff6f8487a2d 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa-pci-ce4100.txt
+@@ -71,7 +71,7 @@ This is an example which is used on FalconFalls:
+ 			/* This I2C controller has one gpio controller */
+ 			gpio@26 {
+ 				#gpio-cells = <2>;
+-				compatible = "ti,pcf8575";
++				compatible = "nxp,pcf8575";
+ 				reg = <0x26>;
+ 				gpio-controller;
+ 			};
+@@ -85,7 +85,7 @@ This is an example which is used on FalconFalls:
+ 
+ 			gpio@26 {
+ 				#gpio-cells = <2>;
+-				compatible = "ti,pcf8575";
++				compatible = "nxp,pcf8575";
+ 				reg = <0x26>;
+ 				gpio-controller;
+ 			};
+diff --git a/arch/x86/platform/ce4100/falconfalls.dts b/arch/x86/platform/ce4100/falconfalls.dts
+index ce874f872cc6..4958e0045c34 100644
+--- a/arch/x86/platform/ce4100/falconfalls.dts
++++ b/arch/x86/platform/ce4100/falconfalls.dts
+@@ -252,7 +252,7 @@
+ 
+ 						gpio@26 {
+ 							#gpio-cells = <2>;
+-							compatible = "ti,pcf8575";
++							compatible = "nxp,pcf8575";
+ 							reg = <0x26>;
+ 							gpio-controller;
+ 						};
+@@ -266,7 +266,7 @@
+ 
+ 						gpio@26 {
+ 							#gpio-cells = <2>;
+-							compatible = "ti,pcf8575";
++							compatible = "nxp,pcf8575";
+ 							reg = <0x26>;
+ 							gpio-controller;
+ 						};
+
+
+-- 
+Ben Hutchings
+Software Developer, Codethink Ltd.
