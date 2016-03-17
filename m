@@ -1,97 +1,142 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: at91/dt: sama5d2: add SFR node
-Date: Thu, 17 Mar 2016 17:06:56 +0100
-Message-ID: <20160317160656.GA2831@piout.net>
-References: <1458230640-26049-1-git-send-email-ludovic.desroches@atmel.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v5 1/5] ARM: at91: pm: create a separate procedure for
+ the ULP0 mode
+Date: Thu, 17 Mar 2016 17:14:06 +0100
+Message-ID: <20160317161406.GB2831@piout.net>
+References: <1458111489-23774-1-git-send-email-wenyou.yang@atmel.com>
+ <1458111489-23774-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458230640-26049-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+In-Reply-To: <1458111489-23774-2-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/03/2016 at 17:04:00 +0100, Ludovic Desroches wrote :
-> From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On 16/03/2016 at 14:58:05 +0800, Wenyou Yang wrote :
+> To make the code more legible and prepare to add the ULP1 mode
+> support in the future, create a separate procedure for the ULP0 mode.
 > 
-> This SFR node is looked up by the I2S controller driver to tune the
-> SFR_I2SCLKSEL register.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 
 > ---
->  Documentation/devicetree/bindings/arm/atmel-at91.txt |  2 +-
->  arch/arm/boot/dts/sama5d2.dtsi                       |  5 +++++
->  include/soc/at91/atmel-sfr.h                         | 18 ++++++++++++++++++
->  3 files changed, 24 insertions(+), 1 deletion(-)
->  create mode 100644 include/soc/at91/atmel-sfr.h
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> index 7fd64ec..550fd66 100644
-> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
-> @@ -155,7 +155,7 @@ elsewhere.
+> Changes in v5: None
+> Changes in v4: None
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm/mach-at91/pm_suspend.S |   65 ++++++++++++++++++++++++---------------
+>  1 file changed, 40 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/arm/mach-at91/pm_suspend.S b/arch/arm/mach-at91/pm_suspend.S
+> index a25defd..5fcffdc 100644
+> --- a/arch/arm/mach-at91/pm_suspend.S
+> +++ b/arch/arm/mach-at91/pm_suspend.S
+> @@ -107,7 +107,7 @@ ENTRY(at91_pm_suspend_in_sram)
 >  
->  required properties:
->  - compatible: Should be "atmel,<chip>-sfr", "syscon".
-> -  <chip> can be "sama5d3" or "sama5d4".
-> +  <chip> can be "sama5d3", "sama5d4" or "sama5d2".
->  - reg: Should contain registers location and length
+>  	ldr	r0, .pm_mode
+>  	tst	r0, #AT91_PM_SLOW_CLOCK
+> -	beq	skip_disable_main_clock
+> +	beq	standby_mode
 >  
->  	sfr@f0038000 {
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index 78996bd..36bb29c 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -973,6 +973,11 @@
->  				status = "disabled";
->  			};
+>  	ldr	pmc, .pmc_base
 >  
-> +			sfr: sfr@f8030000 {
-> +				compatible = "atmel,sama5d2-sfr", "syscon";
-> +				reg = <0xf8030000 0x98>;
-> +			};
+> @@ -131,32 +131,13 @@ ENTRY(at91_pm_suspend_in_sram)
+>  	orr	tmp1, tmp1, #(1 << 29)		/* bit 29 always set */
+>  	str	tmp1, [pmc, #AT91_CKGR_PLLAR]
+>  
+> -	/* Turn off the main oscillator */
+> -	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+> -	bic	tmp1, tmp1, #AT91_PMC_MOSCEN
+> -	orr	tmp1, tmp1, #AT91_PMC_KEY
+> -	str	tmp1, [pmc, #AT91_CKGR_MOR]
+> -
+> -skip_disable_main_clock:
+> -	ldr	pmc, .pmc_base
+> -
+> -	/* Wait for interrupt */
+> -	at91_cpu_idle
+> -
+> -	ldr	r0, .pm_mode
+> -	tst	r0, #AT91_PM_SLOW_CLOCK
+> -	beq	skip_enable_main_clock
+> +ulp0_mode:
+> +	bl	at91_pm_ulp0_mode
+> +	b	ulp_exit
+>  
+> +ulp_exit:
+>  	ldr	pmc, .pmc_base
+>  
+> -	/* Turn on the main oscillator */
+> -	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+> -	orr	tmp1, tmp1, #AT91_PMC_MOSCEN
+> -	orr	tmp1, tmp1, #AT91_PMC_KEY
+> -	str	tmp1, [pmc, #AT91_CKGR_MOR]
+> -
+> -	wait_moscrdy
+> -
+>  	/* Restore PLLA setting */
+>  	ldr	tmp1, .saved_pllar
+>  	str	tmp1, [pmc, #AT91_CKGR_PLLAR]
+> @@ -177,7 +158,15 @@ skip_disable_main_clock:
+>  
+>  	wait_mckrdy
+>  
+> -skip_enable_main_clock:
+> +	b	pm_exit
 > +
->  			flx0: flexcom@f8034000 {
->  				compatible = "atmel,sama5d2-flexcom";
->  				reg = <0xf8034000 0x200>;
-> diff --git a/include/soc/at91/atmel-sfr.h b/include/soc/at91/atmel-sfr.h
-> new file mode 100644
-> index 0000000..2f9bb98
-> --- /dev/null
-> +++ b/include/soc/at91/atmel-sfr.h
-> @@ -0,0 +1,18 @@
+> +standby_mode:
+> +	ldr	pmc, .pmc_base
+> +
+> +	/* Wait for interrupt */
+> +	at91_cpu_idle
+> +
+> +pm_exit:
+>  	/* Exit the self-refresh mode */
+>  	mov	r0, #SRAMC_SELF_FRESH_EXIT
+>  	bl	at91_sramc_self_refresh
+> @@ -311,6 +300,32 @@ exit_sramc_sf:
+>  	mov	pc, lr
+>  ENDPROC(at91_sramc_self_refresh)
+>  
 > +/*
-> + * Atmel SFR (Special Function Registers) register offsets and bit definitions.
-> + *
-> + * Copyright (C) 2016 Atmel
-> + *
-> + * Author: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * void at91_pm_ulp0_mode(void)
 > + */
+> +ENTRY(at91_pm_ulp0_mode)
+> +	ldr	pmc, .pmc_base
 > +
-> +#ifndef _LINUX_MFD_SYSCON_ATMEL_SFR_H
-> +#define _LINUX_MFD_SYSCON_ATMEL_SFR_H
+> +	/* Turn off the crystal oscillator */
+> +	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+> +	bic	tmp1, tmp1, #AT91_PMC_MOSCEN
+> +	orr	tmp1, tmp1, #AT91_PMC_KEY
+> +	str	tmp1, [pmc, #AT91_CKGR_MOR]
 > +
-> +#define AT91_SFR_I2SCLKSEL	0x90	/* I2SC Register */
+> +	/* Wait for interrupt */
+> +	at91_cpu_idle
 > +
-> +#endif /* _LINUX_MFD_SYSCON_ATMEL_SFR_H */
+> +	/* Turn on the crystal oscillator */
+> +	ldr	tmp1, [pmc, #AT91_CKGR_MOR]
+> +	orr	tmp1, tmp1, #AT91_PMC_MOSCEN
+> +	orr	tmp1, tmp1, #AT91_PMC_KEY
+> +	str	tmp1, [pmc, #AT91_CKGR_MOR]
+> +
+> +	wait_moscrdy
+> +
+> +	mov	pc, lr
+> +ENDPROC(at91_pm_ulp0_mode)
+> +
+>  .pmc_base:
+>  	.word 0
+>  .sramc_base:
 > -- 
-> 2.5.0
+> 1.7.9.5
 > 
 
 -- 
 Alexandre Belloni, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
