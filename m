@@ -1,92 +1,70 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V3 1/2] Documentation: dt: mailbox: Add TI Message Manager
-Date: Wed, 16 Mar 2016 19:23:13 -0500
-Message-ID: <1458174194-22320-2-git-send-email-nm@ti.com>
-References: <1458174194-22320-1-git-send-email-nm@ti.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] mailbox: Introduce TI message manager driver
+Date: Wed, 16 Mar 2016 19:29:49 -0500
+Message-ID: <56E9FA7D.9050801@ti.com>
+References: <1456525452-30638-1-git-send-email-nm@ti.com>
+ <1456525452-30638-3-git-send-email-nm@ti.com>
+ <CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
+ <56D987FF.1040607@ti.com>
+ <CABb+yY1a-6V=9C+di7ZdQHDQG_M_jbYshoLqxaLiCZTqM4TfHg@mail.gmail.com>
+ <56DDD41E.2050409@ti.com>
+ <CABb+yY2A35=uG9dk_VHVHbEBUsguw6414KeyQJxxp-Jnsq-0dw@mail.gmail.com>
+ <CAGo_u6pHLDhqoHD-V9xKbKkr6-NpdH+vTUufXQGvoMK7C-yj9Q@mail.gmail.com>
+ <CABb+yY3ZqM1Do5TdYCU_MGzk0dottaASo3qCdeKJ6TbGf2D8+Q@mail.gmail.com>
+ <CAGo_u6qwCFXH-sHijZHcC3iBTEAzqrkGf439DC5=7k39PS-+kg@mail.gmail.com>
+ <CABb+yY1S52aK63coeNuiH+Ca8GERq=ukCPFidcitUEMhHVdsyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458174194-22320-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jassisinghbrar@gmail.com
-Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org, fcooper@ti.com, s-anna@ti.com, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY1S52aK63coeNuiH+Ca8GERq=ukCPFidcitUEMhHVdsyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Message Manager is a hardware block used to communicate with various
-processor systems within certain Texas Instrument's Keystone
-generation SoCs.
+Hi Jassi,
 
-This hardware engine is used to transfer messages from various compute
-entities(or processors) within the SoC. It is designed to be self
-contained without needing software initialization for operation.
+On 03/16/2016 12:16 AM, Jassi Brar wrote:
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes in V3:
-	- Just picked up Rob's ack from v2
-V2: https://patchwork.kernel.org/patch/8442641/
-V1: https://patchwork.kernel.org/patch/8237111/
+[...]
+>> Alright, i will drop this check since it is causing a lot more
+>> confusion
+>>
+> It's confusing because you check ti_msgmgr_queue_get_num_messages()
+> also in ti_msgmgr_last_tx_done() which doesn't make sense because the
+> former accounts for messages from other senders also (as you say there
+> could be multiple senders).
 
- .../bindings/mailbox/ti,message-manager.txt        | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
 
-diff --git a/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
-new file mode 100644
-index 000000000000..b449d025049f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/ti,message-manager.txt
-@@ -0,0 +1,50 @@
-+Texas Instruments' Message Manager Driver
-+========================================
-+
-+The Texas Instruments' Message Manager is a mailbox controller that has
-+configurable queues selectable at SoC(System on Chip) integration. The Message
-+manager is broken up into queues in different address regions that are called
-+"proxies" - each instance is unidirectional and is instantiated at SoC
-+integration level to indicate receive or transmit path.
-+
-+Message Manager Device Node:
-+===========================
-+Required properties:
-+--------------------
-+- compatible:		Shall be: "ti,k2g-message-manager"
-+- reg-names 		queue_proxy_region - Map the queue proxy region.
-+			queue_state_debug_region - Map the queue state debug
-+			region.
-+- reg:			Contains the register map per reg-names.
-+- #mbox-cells		Shall be 2. Contains the queue ID and proxy ID in that
-+		        order referring to the transfer path.
-+- interrupt-names:	Contains interrupt names matching the rx transfer path
-+			for a given SoC. Receive interrupts shall be of the
-+			format: "rx_<QID>_<PID>".
-+			For ti,k2g-message-manager, this shall contain:
-+				"rx_005_002", "rx_057_002"
-+- interrupts:		Contains the interrupt information corresponding to
-+			interrupt-names property.
-+
-+Example(K2G):
-+------------
-+
-+	msgmgr: msgmgr@02a00000 {
-+		compatible = "ti,k2g-message-manager";
-+		#mbox-cells = <2>;
-+		reg-names = "queue_proxy_region", "queue_state_debug_region";
-+		reg = <0x02a00000 0x400000>, <0x028c3400 0x400>;
-+		interrupt-names = "rx_005", "rx_057";
-+		interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pmmc: pmmc {
-+		[...]
-+		mbox-names = "rx", "tx";
-+		# RX queue ID is 5, proxy ID is 2
-+		# TX queue ID is 0, proxy ID is 0
-+		mboxes= <&msgmgr 5 2>,
-+			<&msgmgr 0 0>;
-+		[...]
-+	};
+True -> I will drop it for now. I will see if the case I was trying to
+protect is actually possible to be hit in the first place. And if proven
+to be required, I will introduce it back with a better explanation and
+the usecase where this is needed.
+
+>> that that is worth. we can introduce it when we finally do
+>> hit an issue eventually with multiple processors trying to transmit on
+>> the same queue manager. that is not a concern at the very immediate
+>> time, so we should be good to drop.
+>>
+>> please let me know if you are ok with this.
+>>
+> I am ok with whatever you assert is needed for your platform. I just
+> point out what I think are inconsistencies in your assumptions. I'll
+> pick the next revision however it is.
+
+
+Thanks for your patience and guidance with this series. I have tried to
+incorporate all the alignment we have had on this thread as part of
+V3[1] of the series.
+
+
+[1] http://marc.info/?l=linux-arm-kernel&m=145817434531691&w=2
+
 -- 
-2.8.0.rc3
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
