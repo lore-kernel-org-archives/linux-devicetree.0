@@ -1,79 +1,60 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: MediaTek: Add binding document for the
- AUXADC
-Date: Thu, 17 Mar 2016 16:39:44 +0100
-Message-ID: <56EACFC0.5000300@gmail.com>
-References: <1455866326-15095-1-git-send-email-s.hauer@pengutronix.de>
- <20160223203254.GA14660@rob-hp-laptop> <56CDBFFE.9050406@gmail.com>
- <20160224151204.GP3939@pengutronix.de> <56CDF7AB.7050201@gmail.com>
- <20160307065233.GA21851@pengutronix.de>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 08/15] genirq: Add runtime power management support for
+ IRQ chips
+Date: Thu, 17 Mar 2016 15:46:08 +0000
+Message-ID: <56EAD140.3090709@nvidia.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+ <1458224359-32665-9-git-send-email-jonathanh@nvidia.com>
+ <alpine.DEB.2.11.1603171556020.3978@nanos>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160307065233.GA21851-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.11.1603171556020.3978@nanos>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sascha,
 
-On 07/03/16 07:52, Sascha Hauer wrote:
-> On Wed, Feb 24, 2016 at 07:34:19PM +0100, Matthias Brugger wrote:
->>
->>
->> On 24/02/16 16:12, Sascha Hauer wrote:
->>> Hi Matthias,
->>>
->>> On Wed, Feb 24, 2016 at 03:36:46PM +0100, Matthias Brugger wrote:
->>>>
->>>>
->>>> On 23/02/16 21:32, Rob Herring wrote:
->>>>> On Fri, Feb 19, 2016 at 08:18:46AM +0100, Sascha Hauer wrote:
->>>>>> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>>>>> ---
->>>>>>
->>>>>> This is a supplement to the MTK Thermal series which was lacking the
->>>>>> description for the AUXADC.
->>>>>
->>>>> So it will be applied with that I presume.
->>>>>
->>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>
->>>>
->>>> Well the basic problem that I see is, that the auxadc has some more
->>>> registers (at least in mt6589) for the touch screen registers.
->>>> So this makes it a candidate for syscon and regmap.
->>>> But this needs a patch in the thermal driver first...
->>>
->>> When we want to have a driver for the auxadc we are free to write one.
->>> No need to use syscon and/or regmap for it.
->>>
->>> Note that the auxadc is not used by the thermal *driver*, it's used by
->>> the thermal *hardware*. It's the hardware that directly reads/writes
->>> auxadc registers. If MTK did it right then a real auxadc driver should
->>> not be disturbed by the thermal controller accesses. At least from
->>
->> Right, didn't realize this.
->>
->>> checking the datasheet the registers the thermal controller accesses
->>> are completely orthogonal to the ones a auxadc driver would use.
->>>
->>
->> As you already explained, syscon/regmap is not needed here. Just for
->> completion: we already had completely orthogonal registers for the reset
->> controller, and we decided to use regmap there as well.
->> We should stay consistent on this.
->
-> Matthias, is this some kind of action topic for me? We can use regmap
-> for the AUXADC driver if we want to, I have no problem with that.
->
+On 17/03/16 15:02, Thomas Gleixner wrote:
+> On Thu, 17 Mar 2016, Jon Hunter wrote:
+>>  /**
+>>   * struct irq_chip - hardware interrupt chip descriptor
+>>   *
+>> + * @parent:		pointer to associated device
+> 
+> That's really a bad name. parent suggests that this is a parent interrupt chip
+> and your explanation sucks as well. What's an associated device? Network card? 
 
-No, no need for that, I will take the patch as is. I will let you know 
-when it got queued.
+Linus, can you re-iterate your concerns here about just using 'dev' for
+the name?
 
-Sorry for the delay.
+>>  #include <linux/irqdesc.h>
+>>  #include <linux/kernel_stat.h>
+>> +#include <linux/pm_runtime.h>
+>>  
+>>  #ifdef CONFIG_SPARSE_IRQ
+>>  # define IRQ_BITMAP_BITS	(NR_IRQS + 8196)
+>> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+>> index b2a93a37f772..65878e7c7c82 100644
+>> --- a/kernel/irq/manage.c
+>> +++ b/kernel/irq/manage.c
+>> @@ -1114,6 +1114,10 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+>>  	if (!try_module_get(desc->owner))
+>>  		return -ENODEV;
+>>  
+>> +	ret = irq_chip_pm_get(&desc->irq_data);
+>> +	if (ret < 0)
+>> +		goto out_mput;
+> 
+> So this call nests inside the chip_bus_lock() region. Is that intentional?
+
+Hmm ... I was trying to simplify the call paths, but yes I think it
+would be safer to move outside. Ok, will fix that.
+
+Cheers
+Jon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
