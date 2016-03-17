@@ -1,55 +1,53 @@
-From: Martin Sperl <kernel@martin.sperl.org>
-Subject: Re: [PATCH 2/8] clk: bcm2835: add missing PLL clock divider
-Date: Thu, 17 Mar 2016 18:38:51 +0100
-Message-ID: <C5EA56E8-F1A1-453D-A421-3E29853F3127@martin.sperl.org>
-References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org> <1456760642-2412-3-git-send-email-kernel@martin.sperl.org> <87y49hjb4l.fsf@eliezer.anholt.net>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <87y49hjb4l.fsf@eliezer.anholt.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Eric Anholt <eric@anholt.net>
-Cc: Jonathan Corbet <corbet@lwn.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regmap: fix documentation to match code
+Date: Thu, 17 Mar 2016 17:40:19 +0000
+Message-ID: <20160317174019.GJ2566@sirena.org.uk>
+References: <1458235427-3856540-1-git-send-email-arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="UD9uuWeujuEvWfkY"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1458235427-3856540-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Xiubo Li <Li.Xiubo-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-> On 17.03.2016, at 17:57, Eric Anholt <eric@anholt.net> wrote:
->=20
->=20
-> These don't exist on the hardware as far as I've been able to find.  =
-"I
-> found it in a header file somewhere" is not sufficient justification =
-to
-> expose it.
->=20
-> I'm working on getting a series of all of these reviewed and ready, s=
-o
-> I'm just dropping these PLLB hunks.
+--UD9uuWeujuEvWfkY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-=46ine with that - my test shows that these are not configured by the f=
-irmware.
+On Thu, Mar 17, 2016 at 06:23:40PM +0100, Arnd Bergmann wrote:
 
-As for headers: my experience is that these are the better resource
-compared to all the public available documentation=E2=80=A6
+> I think this got lost when you fixed the code for 4.6, and the current
+> documentation still has the initial text you wrote back in January
+> that doesn't actually explain what happens.=20
 
-If you remember the =E2=80=9Cfrac=E2=80=9D bit discussion where you sai=
-d:
+It didn't get lost, you never actually submitted the patch.  You did
+paste something into a reply to a message but never sent anything with a
+signoff.  I'm definitely not going to apply anything that doesn't get
+sent with a signoff.
 
-  Once again, trusting the docs turns out to be a bad idea.  You're rig=
-ht,
-  the non-MASH clocks *do* have a bit 9 to enable fractional mode.  Sig=
-h.
+--UD9uuWeujuEvWfkY
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Also my understanding is that those headers are still used by the firmw=
-are
-developers, so I guess that these are pretty stable and well maintained
-(even if the ones available are by now a bit dated).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-They even contain ifdefs for some earlier versions of the chip -=20
-see the dma-channels and their interrupts=E2=80=A6
-I.e: BCM2708A0 which does not have the DMA channels 9 to 15
+iQEcBAEBCAAGBQJW6uwCAAoJECTWi3JdVIfQMosH+wd9r76JAZh0RU3Xc4R/av7q
+g2fLiIjq0CHlSzQ0IZ6+nEh0sp1vU5vSZ/wcUpDkrps9oMQOdoENuFDMbC7JueuJ
+8o/lk8LhJHqI5b6ADr+ydAy0w2GTNnSb+QjQuu17LkfEjIHPX6Nsaci8L41ErN+0
+wC9U4qMSplVAywDpX+OqZILmD1T3lmZRF44Xz8u2kcLtDH5kGqb4odKKLtVOp+gF
+0ipBe0eAXWvn59vBHM3TlY6B2FUqoZdicrHVJ+S8ozYXSuSFNhUUaLhpwlXBmw3X
+zoS9I9TOj8DTZZMYX2AITKhHuyLwjXd1HOMPlIrnfSdtchufivQklnENJd2Yv4U=
+=GcfX
+-----END PGP SIGNATURE-----
 
-So I would not discount all those pieces of information as totally
-irrelevant.
-
+--UD9uuWeujuEvWfkY--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
