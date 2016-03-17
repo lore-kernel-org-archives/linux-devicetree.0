@@ -1,53 +1,189 @@
 From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 04/18] MIPS: dts: qca: ar9132_tl_wr1043nd_v1.dts: drop unused alias node
-Date: Thu, 17 Mar 2016 06:34:11 +0300
-Message-ID: <1458185665-4521-5-git-send-email-antonynpavlov@gmail.com>
+Subject: [PATCH v2 10/18] MIPS: dts: qca: introduce AR9331 devicetree
+Date: Thu, 17 Mar 2016 06:34:17 +0300
+Message-ID: <1458185665-4521-11-git-send-email-antonynpavlov@gmail.com>
 References: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The TP-LINK TL-WR1043ND board has only one serial port,
-so replacing the default of 0 with 0 does nothing useful.
-
-Moreover, the correct name for aliases node is "aliases" not "alias".
-
-An overview of the "aliases" node usage can be found
-on the device tree usage page at devicetree.org [1].
-
-Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
-
-[1] http://devicetree.org/Device_Tree_Usage#aliases_Node
-[2] https://www.power.org/documentation/epapr-version-1-1/
+This patch introduces devicetree for Atheros AR9331 SoC (AKA Hornet).
+The AR9331 chip is a Wi-Fi System-On-Chip (WiSOC),
+typically used in very cheap Access Points and Routers.
 
 Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/mips/boot/dts/qca/ar9331.dtsi | 155 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 155 insertions(+)
 
-diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index e535ee3..c3069c3 100644
---- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-+++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -9,10 +9,6 @@
- 	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
- 	model = "TP-Link TL-WR1043ND Version 1";
- 
--	alias {
--		serial0 = "/ahb/apb/uart@18020000";
--	};
--
- 	memory@0 {
- 		device_type = "memory";
- 		reg = <0x0 0x2000000>;
+diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
+new file mode 100644
+index 0000000..cf47ed4
+--- /dev/null
++++ b/arch/mips/boot/dts/qca/ar9331.dtsi
+@@ -0,0 +1,155 @@
++#include <dt-bindings/clock/ath79-clk.h>
++
++/ {
++	compatible = "qca,ar9331";
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "mips,mips24Kc";
++			clocks = <&pll ATH79_CLK_CPU>;
++			reg = <0>;
++		};
++	};
++
++	cpuintc: interrupt-controller {
++		compatible = "qca,ar7100-cpu-intc";
++
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		qca,ddr-wb-channel-interrupts = <2>, <3>;
++		qca,ddr-wb-channels = <&ddr_ctrl 3>, <&ddr_ctrl 2>;
++	};
++
++	ref: ref {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++	};
++
++	ahb {
++		compatible = "simple-bus";
++		ranges;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		interrupt-parent = <&cpuintc>;
++
++		apb {
++			compatible = "simple-bus";
++			ranges;
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			interrupt-parent = <&miscintc>;
++
++			ddr_ctrl: memory-controller@18000000 {
++				compatible = "qca,ar7240-ddr-controller";
++				reg = <0x18000000 0x100>;
++
++				#qca,ddr-wb-channel-cells = <1>;
++			};
++
++			uart: uart@18020000 {
++				compatible = "qca,ar9330-uart";
++				reg = <0x18020000 0x14>;
++
++				interrupts = <3>;
++
++				clocks = <&ref>;
++				clock-names = "uart";
++
++				status = "disabled";
++			};
++
++			gpio: gpio@18040000 {
++				compatible = "qca,ar7100-gpio";
++				reg = <0x18040000 0x34>;
++				interrupts = <2>;
++
++				ngpios = <30>;
++
++				gpio-controller;
++				#gpio-cells = <2>;
++
++				interrupt-controller;
++				#interrupt-cells = <2>;
++
++				status = "disabled";
++			};
++
++			pll: pll-controller@18050000 {
++				compatible = "qca,ar9330-pll";
++				reg = <0x18050000 0x100>;
++
++				clocks = <&ref>;
++				clock-names = "ref";
++
++				#clock-cells = <1>;
++			};
++
++			miscintc: interrupt-controller@18060010 {
++				compatible = "qca,ar7240-misc-intc";
++				reg = <0x18060010 0x4>;
++
++				interrupt-parent = <&cpuintc>;
++				interrupts = <6>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++
++			rst: reset-controller@1806001c {
++				compatible = "qca,ar7100-reset";
++				reg = <0x1806001c 0x4>;
++
++				#reset-cells = <1>;
++			};
++		};
++
++		usb: usb@1b000100 {
++			compatible = "chipidea,usb2";
++			reg = <0x1b000000 0x200>;
++
++			interrupts = <3>;
++			resets = <&rst 5>;
++
++			phy-names = "usb-phy";
++			phys = <&usb_phy>;
++
++			status = "disabled";
++		};
++
++		spi: spi@1f000000 {
++			compatible = "qca,ar7100-spi";
++			reg = <0x1f000000 0x10>;
++
++			clocks = <&pll ATH79_CLK_AHB>;
++			clock-names = "ahb";
++
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			status = "disabled";
++		};
++	};
++
++	usb_phy: usb-phy {
++		compatible = "qca,ar7100-usb-phy";
++
++		reset-names = "usb-phy", "usb-suspend-override";
++		resets = <&rst 4>, <&rst 3>;
++
++		#phy-cells = <0>;
++
++		status = "disabled";
++	};
++};
 -- 
 2.7.0
 
