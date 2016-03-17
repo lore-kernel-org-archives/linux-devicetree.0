@@ -1,108 +1,74 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/8] clk: bcm2835: add missing PLL clock divider
-Date: Thu, 17 Mar 2016 09:57:14 -0700
-Message-ID: <87y49hjb4l.fsf@eliezer.anholt.net>
-References: <1456760642-2412-1-git-send-email-kernel@martin.sperl.org> <1456760642-2412-3-git-send-email-kernel@martin.sperl.org>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH 4/5] pwm: pwm-tipwmss: Update documentation to use empty
+ range property
+Date: Thu, 17 Mar 2016 11:56:29 -0500
+Message-ID: <56EAE1BD.9040601@ti.com>
+References: <1457380318-15452-1-git-send-email-fcooper@ti.com>
+ <1457380318-15452-5-git-send-email-fcooper@ti.com>
+ <20160317150140.GA25775@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1456760642-2412-3-git-send-email-kernel@martin.sperl.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Martin Sperl <kernel@martin.sperl.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160317150140.GA25775@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
 
-kernel@martin.sperl.org writes:
 
-> From: Martin Sperl <kernel@martin.sperl.org>
+On 03/17/2016 10:01 AM, Rob Herring wrote:
+> On Mon, Mar 07, 2016 at 01:51:57PM -0600, Franklin S Cooper Jr wrote:
+>> Since the PWMSS and its subdevices (eCAP and ePWM) use the same address
+>> space then the range property should be empty. Update the documentation
+>> to show the correct usage.
+> Why does it matter? An empty ranges is generally not preferred.
+
+Someone pointed out that ranges should probably be empty. I
+double checked it with what is in the ePAPR doc and based on
+the definition it should be set to empty. I also checked
+against the am33xx.dtsi and saw that both USB and ethernet
+uses an empty value for ranges.
+
+Can you elaborate on why this isn't preferable?
+
 >
-> Add the missing pll clock divider definitions.
->
-> Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-> ---
->  drivers/clk/bcm/clk-bcm2835.c       |   50 +++++++++++++++++++++++++++++++++++
->  include/dt-bindings/clock/bcm2835.h |    8 ++++++
->  2 files changed, 58 insertions(+)
->
-> diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
-> index 01a48cb..710cf15 100644
-> --- a/drivers/clk/bcm/clk-bcm2835.c
-> +++ b/drivers/clk/bcm/clk-bcm2835.c
-> @@ -1497,6 +1497,22 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
->  		.load_mask = CM_PLLA_LOADPER,
->  		.hold_mask = CM_PLLA_HOLDPER,
->  		.fixed_divider = 1),
-> +	[BCM2835_PLLA_DSI0]	= REGISTER_PLL_DIV(
-> +		.name = "plla_dsi0",
-> +		.source_pll = "plla",
-> +		.cm_reg = CM_PLLA,
-> +		.a2w_reg = A2W_PLLA_DSI0,
-> +		.load_mask = CM_PLLA_LOADDSI0,
-> +		.hold_mask = CM_PLLA_HOLDDSI0,
-> +		.fixed_divider = 1),
-> +	[BCM2835_PLLA_CCP2]	= REGISTER_PLL_DIV(
-> +		.name = "plla_ccp2",
-> +		.source_pll = "plla",
-> +		.cm_reg = CM_PLLA,
-> +		.a2w_reg = A2W_PLLA_DSI0,
-> +		.load_mask = CM_PLLA_LOADCCP2,
-> +		.hold_mask = CM_PLLA_HOLDCCP2,
-> +		.fixed_divider = 1),
->
->  	/* PLLB is used for the ARM's clock. */
->  	[BCM2835_PLLB]		= REGISTER_PLL(
-> @@ -1521,6 +1537,24 @@ static const struct bcm2835_clk_desc clk_desc_array[] = {
->  		.load_mask = CM_PLLB_LOADARM,
->  		.hold_mask = CM_PLLB_HOLDARM,
->  		.fixed_divider = 1),
-> +	[BCM2835_PLLB_SP0]	= REGISTER_PLL_DIV(
-> +		.name = "pllb_sp0",
-> +		.source_pll = "pllb",
-> +		.cm_reg = CM_PLLB,
-> +		.a2w_reg = A2W_PLLB_SP0,
-> +		.fixed_divider = 1),
-> +	[BCM2835_PLLB_SP1]	= REGISTER_PLL_DIV(
-> +		.name = "pllb_sp1",
-> +		.source_pll = "pllb",
-> +		.cm_reg = CM_PLLB,
-> +		.a2w_reg = A2W_PLLB_SP1,
-> +		.fixed_divider = 1),
-> +	[BCM2835_PLLB_SP2]	= REGISTER_PLL_DIV(
-> +		.name = "pllb_sp2",
-> +		.source_pll = "pllb",
-> +		.cm_reg = CM_PLLB,
-> +		.a2w_reg = A2W_PLLB_SP2,
-> +		.fixed_divider = 1),
-
-These don't exist on the hardware as far as I've been able to find.  "I
-found it in a header file somewhere" is not sufficient justification to
-expose it.
-
-I'm working on getting a series of all of these reviewed and ready, so
-I'm just dropping these PLLB hunks.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJW6uHqAAoJELXWKTbR/J7oqRoP/2POKOSZUwSdl9cxXYaCaSVc
-IwwoeStF/bGYAS9xHLJnxY1elVo8Jb9IdnkIywtnHSZqqIVzdu5d7IdTQyad+QjM
-GV3BaslFr0YL9Au7cm65aBmbmTLmbLGvU8aIAfw5GemyeYdmHEPy3UKhkfDyF95r
-r+gooD7ER4k0TtMkv6X1WgQHSort+RhSi+aAQgM4CeJsrSf8W135KCIHk8ehcB9z
-rbgatus4jSRkIcWoNtMijq37c4tdal+6X/CTGaYdONYesM8nKskwzdoTEPMquDJb
-X5waLptC37NA61uRa4UCVJ02IoMAMPgEhhxH8I9G1B8gSVV3eYtwyZLdTJ0DP6Oo
-I8Cly9wiC/cDtyJeNHsbUUU7gua4/Izz/exz1XPvtH+oTcS4HYBz7Av8drmaqOI+
-abMnChdm0NLwFTO4V9dWxK16wlVAKTokKp+Nhk264j05a+nIuoQLVwnqAFmGrNX7
-SzBHjkOtydQu01O0wEWrqUfmPupEGczj28w3mE1wzLGCQDhZl3Ht/1fIPR7YlHNG
-mcPZ1hLVrWPsSh/zspsV9qUr6r0wGbMGMTPVPLhl8HtD+KYW55LSXAS8Dadi+j9Q
-CUktTLtNf8/P+pUX7/VS9nrL6O547hdSvdeOlBQflEL69QmYkZ3O6V4IRpOSpD+K
-Emb5bvauqG023DQtyFab
-=W/xB
------END PGP SIGNATURE-----
---=-=-=--
+>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt | 12 ++++--------
+>>  1 file changed, 4 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt b/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+>> index f7eae77..672fa71 100644
+>> --- a/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+>> @@ -7,11 +7,9 @@ Required properties:
+>>  		  Should set to 1.
+>>  - size-cells: specify number of u32 entries needed to specify child nodes size
+>>  		in reg property. Should set to 1.
+>> -- ranges: describes the address mapping of a memory-mapped bus. Should set to
+>> -	   physical address map of child's base address, physical address within
+>> -	   parent's address  space and length of the address map. For am33xx,
+>> -	   3 set of child register maps present, ECAP register space, EQEP
+>> -	   register space, EHRPWM register space.
+>> +- ranges: describes the address mapping of a memory-mapped bus. Its value
+>> +	  should be empty since no address translation is needed between the
+>> +	  parent and the child.
+>>  
+>>  Also child nodes should also populated under PWMSS DT node.
+>>  
+>> @@ -23,9 +21,7 @@ pwmss0: pwmss@48300000 {
+>>  	#address-cells = <1>;
+>>  	#size-cells = <1>;
+>>  	status = "disabled";
+>> -	ranges = <0x48300100 0x48300100 0x80   /* ECAP */
+>> -		  0x48300180 0x48300180 0x80   /* EQEP */
+>> -		  0x48300200 0x48300200 0x80>; /* EHRPWM */
+>> +	ranges;
+>>  
+>>  	/* child nodes go here */
+>>  };
+>> -- 
+>> 2.7.0
+>>
