@@ -1,107 +1,69 @@
-From: Caesar Wang <caesar.upstream@gmail.com>
-Subject: Re: [PATCH v3 2/9] net: arc_emac: add phy reset is optional for
- device tree
-Date: Thu, 17 Mar 2016 18:02:47 +0800
-Message-ID: <56EA80C7.30303@gmail.com>
-References: <1457942520-12859-1-git-send-email-wxt@rock-chips.com>
- <1457942520-12859-3-git-send-email-wxt@rock-chips.com>
- <56E96656.5000101@cogentembedded.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v7 3/6] ASoC: hdmi-codec: Add audio abort() callback for video
+ side to use
+Date: Thu, 17 Mar 2016 12:03:45 +0200
+Message-ID: <47206922b9580db740fcdf2d09186a27d1e5f1bf.1458207661.git.jsarha@ti.com>
+References: <cover.1458207661.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <56E96656.5000101@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, keescook@google.com, leozwang@google.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1458207661.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org
+Cc: peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, arnaud.pouliquen@st.com, Jyri Sarha <jsarha@ti.com>, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-=E5=9C=A8 2016=E5=B9=B403=E6=9C=8816=E6=97=A5 21:57, Sergei Shtylyov =E5=
-=86=99=E9=81=93:
-> Hello.
->
-> On 3/14/2016 11:01 AM, Caesar Wang wrote:
->
->> This patch adds the following property for arc_emac.
->>
->> 1) phy-reset-gpios:
->> The phy-reset-gpio is an optional property for arc emac device tree=20
->> boot.
->> Change the binding document to match the driver code.
->>
->> 2) phy-reset-duration:
->> Different boards may require different phy reset duration. Add prope=
-rty
->> phy-reset-duration for device tree probe, so that the boards that ne=
-ed
->> a longer reset duration can specify it in their device tree.
->>
->> Anyway, we can add the above property for arc emac.
->>
->> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
->
->   Could you have a look at drivers/net/ethernet/cadence/macb/? It=20
-> seems to be the only driver which places the PHY's "reset-gpios" prop=
-=20
-> correctly, into the PHY subnode? I'm currently working on adding=20
-> support of this prop into phylib...
-
-I see the driver on now.
-
-
-     /* Power up the PHY if there is a GPIO reset */
-     phy_node =3D  of_get_next_available_child(np, NULL);
-     if (phy_node) {
-         int gpio =3D of_get_named_gpio(phy_node, "reset-gpios", 0);
-         if (gpio_is_valid(gpio))
-             bp->reset_gpio =3D gpio_to_desc(gpio);
-         gpiod_set_value(bp->reset_gpio, GPIOD_OUT_HIGH);
-     }
-     of_node_put(phy_node);
-=2E..
-
-=46rankly, I don't like this way in device drivers.
-That's seem same with the /drivers/mmc/core/pwrseq_simple.c,  power up=20
-the device.
-Is it not really reset hardware PHY from the gpio reset pin?  Just powe=
-r up.
-
-Of course, I hope to see and test it if you improve the PHY framework t=
-o=20
-support the phy reset.:-)
-
----
-
-Anyway,  David had applied this series patches into net branch.
-
-Although the clock and dts patches should be applied into Heiko branch,=
- =20
-I'm glad to see David's way.
-
-Heiko branch:
-https://git.kernel.org/cgit/linux/kernel/git/mmind/linux-rockchip.git/
-
-
-I wish won't destory Heiko to merge in the future.
-
-
--Caesar
-
-
-
->
-> MBR, Sergei
->
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
-
-
---=20
-Thanks,
-Caesar
+QWRkIGF1ZGlvIGFib3J0KCkgY2FsbGJhY2ssIHRoYXQgaXMgcHJvdmlkZWQgYXQgYXVkaW8gc3Ry
+ZWFtIHN0YXJ0LApmb3IgdmlkZW8gc2lkZS4gVGhpcyBpcyBmb3IgdmlkZW8gc2lkZSB0byB1c2Ug
+aW4gY2FzZSB0aGVyZSBpcyBhCnByZXNzaW5nIG5lZWQgdG8gdGVhciBkb3duIHRoZSBhdWRpbyBw
+bGF5YmFjayBmb3Igc29tZSByZWFzb24uCgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2Fy
+aGFAdGkuY29tPgotLS0KIGluY2x1ZGUvc291bmQvaGRtaS1jb2RlYy5oICAgIHwgIDggKysrKysr
+LS0KIHNvdW5kL3NvYy9jb2RlY3MvaGRtaS1jb2RlYy5jIHwgMjAgKysrKysrKysrKysrKysrKysr
+Ky0KIDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS9pbmNsdWRlL3NvdW5kL2hkbWktY29kZWMuaCBiL2luY2x1ZGUvc291bmQvaGRt
+aS1jb2RlYy5oCmluZGV4IGZjM2E0ODEuLjE1ZmU3MGYgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvc291
+bmQvaGRtaS1jb2RlYy5oCisrKyBiL2luY2x1ZGUvc291bmQvaGRtaS1jb2RlYy5oCkBAIC01NSwx
+MCArNTUsMTQgQEAgc3RydWN0IGhkbWlfY29kZWNfcGFyYW1zIHsKIAogc3RydWN0IGhkbWlfY29k
+ZWNfb3BzIHsKIAkvKgotCSAqIENhbGxlZCB3aGVuIEFTb0Mgc3RhcnRzIGFuIGF1ZGlvIHN0cmVh
+bSBzZXR1cC4KKwkgKiBDYWxsZWQgd2hlbiBBU29DIHN0YXJ0cyBhbiBhdWRpbyBzdHJlYW0gc2V0
+dXAuIFRoZSBjYWxsCisJICogcHJvdmlkZXMgYW4gYXVkaW8gYWJvcnQgY2FsbGJhY2sgZm9yIHN0
+b3BpbmcgYW4gb25nb2luZworCSAqIHN0cmVhbSBmcm9tIHZpZGVvIHNpZGUgZHJpdmVyIGlmIHRo
+ZSBIRE1JIGF1ZGlvIGJlY29tZXMKKwkgKiB1bmF2YWlsYWJsZS4KIAkgKiBPcHRpb25hbAogCSAq
+LwotCWludCAoKmF1ZGlvX3N0YXJ0dXApKHN0cnVjdCBkZXZpY2UgKmRldik7CisJaW50ICgqYXVk
+aW9fc3RhcnR1cCkoc3RydWN0IGRldmljZSAqZGV2LAorCQkJICAgICB2b2lkICgqYWJvcnRfY2Ip
+KHN0cnVjdCBkZXZpY2UgKmRldikpOwogCiAJLyoKIAkgKiBDb25maWd1cmVzIEhETUktZW5jb2Rl
+ciBmb3IgYXVkaW8gc3RyZWFtLgpkaWZmIC0tZ2l0IGEvc291bmQvc29jL2NvZGVjcy9oZG1pLWNv
+ZGVjLmMgYi9zb3VuZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYwppbmRleCBiYzQ3YjlhLi5jYzA4
+MDk3IDEwMDY0NAotLS0gYS9zb3VuZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYworKysgYi9zb3Vu
+ZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYwpAQCAtNDcsNiArNDcsMjMgQEAgZW51bSB7CiAJREFJ
+X0lEX1NQRElGLAogfTsKIAorc3RhdGljIHZvaWQgaGRtaV9jb2RlY19hYm9ydChzdHJ1Y3QgZGV2
+aWNlICpkZXYpCit7CisJc3RydWN0IGhkbWlfY29kZWNfcHJpdiAqaGNwID0gZGV2X2dldF9kcnZk
+YXRhKGRldik7CisKKwlkZXZfZGJnKGRldiwgIiVzKClcbiIsIF9fZnVuY19fKTsKKworCW11dGV4
+X2xvY2soJmhjcC0+Y3VycmVudF9zdHJlYW1fbG9jayk7CisJaWYgKGhjcC0+Y3VycmVudF9zdHJl
+YW0gJiYgaGNwLT5jdXJyZW50X3N0cmVhbS0+cnVudGltZSAmJgorCSAgICBzbmRfcGNtX3J1bm5p
+bmcoaGNwLT5jdXJyZW50X3N0cmVhbSkpIHsKKwkJZGV2X2luZm8oZGV2LCAiSERNSSBhdWRpbyBw
+bGF5YmFjayBhYm9ydGVkXG4iKTsKKwkJc25kX3BjbV9zdHJlYW1fbG9ja19pcnEoaGNwLT5jdXJy
+ZW50X3N0cmVhbSk7CisJCXNuZF9wY21fc3RvcChoY3AtPmN1cnJlbnRfc3RyZWFtLCBTTkRSVl9Q
+Q01fU1RBVEVfRElTQ09OTkVDVEVEKTsKKwkJc25kX3BjbV9zdHJlYW1fdW5sb2NrX2lycShoY3At
+PmN1cnJlbnRfc3RyZWFtKTsKKwl9CisJbXV0ZXhfdW5sb2NrKCZoY3AtPmN1cnJlbnRfc3RyZWFt
+X2xvY2spOworfQorCiBzdGF0aWMgaW50IGhkbWlfY29kZWNfbmV3X3N0cmVhbShzdHJ1Y3Qgc25k
+X3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKIAkJCQkgc3RydWN0IHNuZF9zb2NfZGFpICpkYWkp
+CiB7CkBAIC03OCw3ICs5NSw4IEBAIHN0YXRpYyBpbnQgaGRtaV9jb2RlY19zdGFydHVwKHN0cnVj
+dCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLAogCQlyZXR1cm4gcmV0OwogCiAJaWYgKGhj
+cC0+aGNkLm9wcy0+YXVkaW9fc3RhcnR1cCkgewotCQlyZXQgPSBoY3AtPmhjZC5vcHMtPmF1ZGlv
+X3N0YXJ0dXAoZGFpLT5kZXYtPnBhcmVudCk7CisJCXJldCA9IGhjcC0+aGNkLm9wcy0+YXVkaW9f
+c3RhcnR1cChkYWktPmRldi0+cGFyZW50LAorCQkJCQkJICBoZG1pX2NvZGVjX2Fib3J0KTsKIAkJ
+aWYgKHJldCkgewogCQkJbXV0ZXhfbG9jaygmaGNwLT5jdXJyZW50X3N0cmVhbV9sb2NrKTsKIAkJ
+CWhjcC0+Y3VycmVudF9zdHJlYW0gPSBOVUxMOwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
