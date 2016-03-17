@@ -1,63 +1,129 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 04/15] irqchip/gic: WARN if setting the interrupt type
- fails
-Date: Thu, 17 Mar 2016 15:18:00 +0000
-Message-ID: <20160317151800.GH1184@io.lakedaemon.net>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-5-git-send-email-jonathanh@nvidia.com>
- <alpine.DEB.2.11.1603171550200.3978@nanos>
- <56EAC761.1040801@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56EAC761.1040801@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Subject: [PATCH 0/3] dmaengine: bcm2835: support dma channel 11 to 14
+Date: Thu, 17 Mar 2016 15:24:30 +0000
+Message-ID: <1458228273-15591-1-git-send-email-kernel@martin.sperl.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 03:04:01PM +0000, Jon Hunter wrote:
-> 
-> On 17/03/16 14:51, Thomas Gleixner wrote:
-> > On Thu, 17 Mar 2016, Jon Hunter wrote:
-> > 
-> >> Setting the interrupt type for private peripheral interrupts (PPIs) may
-> >> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
-> >> whether this is allowed. There is no way to know if setting the type is
-> >> supported for a given GIC and so the value written is read back to
-> >> verify it matches the desired configuration. If it does not match then
-> >> an error is return.
-> >>
-> >> There are cases where the interrupt configuration read from firmware
-> >> (such as a device-tree blob), has been incorrect and hence
-> >> gic_configure_irq() has returned an error. This error has gone
-> >> undetected because the error code returned was ignored but the interrupt
-> >> still worked fine because the configuration for the interrupt could not
-> >> be overwritten.
-> >>
-> >> Given that this has done undetected and we should only fail to set the
-> >> type for PPIs whose configuration cannot be changed anyway, don't return
-> >> an error and simply WARN if this fails. This will allows us to fix up any
-> >> places in the kernel where we should be checking the return status and
-> >> maintain back compatibility with firmware images that may have incorrect
-> >> interrupt configurations.
-> > 
-> > Though silently returning 0 is really the wrong thing to do. You can add the
-> > warn, but why do you want to return success?
-> 
-> Yes that would be the correct thing to do I agree. However, the problem
-> is that if we do this, then after the patch "irqdomain: Don't set type
-> when mapping an IRQ" is applied, we may break interrupts for some
-> existing device-tree binaries that have bad configuration (such as omap4
-> and tegra20/30 ... see patches 1 and 2) that have gone unnoticed. So it
-> is a back compatibility issue.
+From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
 
-This sounds like a textbook case for adding a boolean dt property.  If
-"can-set-ppi-type" is absent (old DT blobs and new blobs without the
-ability), warn and return zero.  If it's present, the driver can set the
-type, returning errors as encountered.
+Right now the dma engine officially supports dma channel 11 and 12.
+But the use of dma channel 12 immediately stalls the system.
 
-thx,
+The reason is that the interrupt assigned right now to dma channel 11
+is actually a shared interrupt for dma channels 11 to 12.
+So whenever the dma channel 12, 13 or 14 is used, it triggers the interrupt
+for dma 11 which only clears the interrupt flag for dma channel 11.
+This results in the interrupt 11 is triggered all the time.
 
-Jason.
+On top the requesting dma channel12 (and the corresponding irq) triggers
+an immeditate stall of the system, because for the 12th interrupt
+any dma channel will trigger also this interrupt - even if the dma channel
+is controlled by the firmware.
+
+As the description in the default device-tree is (for the above reasons)
+wrong a new means had to get devised that allows correct representation
+of the mapping between interrupts and dma channels.
+
+For this the existing (but unused) device-tree property "interrupt-names"
+is used to define the mapping.
+
+Implementing shared interrupts is another necessity when using dma channel
+11 to 14, so it is a part of this patch.
+
+This patchset requires: [PATCH 0/8 v4] bcm2835 DMA slave support
+to be applied.
+
+Tested playing BigBuckBunny on:
+* fb-tft device (fb_st7735r)
+  - via spi-bcm2835 using slave_sg dma
+* I2S Hifiberry DAC (snd_soc_hifiberry_dac)
+  - via bcm2835-i2s using cyclic dma
+(with a few pending patches to make i2s work propperly)
+
+Interrupt statistics after playing Big Buck Bunny:
+root@raspcm:~# cat /proc/interrupts
+           CPU0
+ 17:          0  ARMCTRL-level   1 Edge      2000b880.mailbox
+ 27:      47685  ARMCTRL-level  35 Edge      timer
+ 33:    6042130  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:usb1
+ 40:      13250  ARMCTRL-level  48 Edge      DMA IRQ
+ 42:      13250  ARMCTRL-level  50 Edge      DMA IRQ
+ 44:      19087  ARMCTRL-level  52 Edge      DMA IRQ
+ 45:          0  ARMCTRL-level  53 Edge      DMA IRQ
+ 73:          0  ARMCTRL-level  81 Edge      20200000.gpio:bank0
+ 74:          0  ARMCTRL-level  82 Edge      20200000.gpio:bank1
+ 77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c, 20805000.i2c
+ 78:          0  ARMCTRL-level  86 Edge      20204000.spi
+ 81:        708  ARMCTRL-level  89 Edge      uart-pl011
+ 86:     277629  ARMCTRL-level  94 Edge      mmc0
+Err:          0
+
+Tested also with the following property set:
+  brcm,dma-channel-mask = <0x7800>;
+which results in only dma channels 11-14 being available
+and thus all using the single shared irq.
+
+Interrupt statistics for this case:
+           CPU0
+ 17:          0  ARMCTRL-level   1 Edge      2000b880.mailbox
+ 27:      46843  ARMCTRL-level  35 Edge      timer
+ 33:    5412801  ARMCTRL-level  41 Edge      20980000.usb, dwc2_hsotg:usb1
+ 51:      45502  ARMCTRL-level  59 Edge      DMA IRQ, DMA IRQ, DMA IRQ, DMA IRQ
+ 73:          0  ARMCTRL-level  81 Edge      20200000.gpio:bank0
+ 74:          0  ARMCTRL-level  82 Edge      20200000.gpio:bank1
+ 77:          0  ARMCTRL-level  85 Edge      20205000.i2c, 20804000.i2c, 20805000.i2c
+ 78:          0  ARMCTRL-level  86 Edge      20204000.spi
+ 81:        706  ARMCTRL-level  89 Edge      uart-pl011
+ 86:     297235  ARMCTRL-level  94 Edge      mmc0
+Err:          0
+
+Note that support for more interrupts than irq 0 to 14
+is not implemented (and this value is also hard-coded).
+
+Allowing dma channel 15 to get controlled well would require
+further extensive changes to the device-tree (separate register region).
+
+Also as mentioned above dma-channel 15 is used by the firmware
+and is - for all practical purposes - not available to
+the kernel.
+
+Only when this situation changes a valid effort can get made.
+
+One major concern here is the fact that we have no dedicated interrupt
+for dma channel 15. There is only the "catch all" interrupt, which - as
+mentioned above - also triggers for dma channels used by the firmware,
+which leads to an unnecessary amount of interrupts and can result
+in system lockups...
+
+The only potential usage would be for dma transfers where we do
+not need an interrupt, but that may require further changes
+to the dmaengine and more to support correctly.
+
+One such "candidate" for the use of dma channel 15 could be
+the tx-dma of spi-bcm2835, as for this specifically we only need
+to get the interrupt when the rx-dma finishes, but that is a
+very special case.
+
+Avoiding the interrupt for the spi-tx-dma is still something that
+could get investigated in a different patch-set.
+
+Martin Sperl (3):
+  dt/bindings: bcm2835: add interrupt-names property
+  dmaengine: bcm2835: use platform_get_irq_byname
+  ARM: bcm2835: add interrupt-names and apply correct mapping
+
+ .../devicetree/bindings/dma/brcm,bcm2835-dma.txt   | 24 +++++++
+ arch/arm/boot/dts/bcm283x.dtsi                     | 22 ++++++-
+ drivers/dma/bcm2835-dma.c                          | 77 ++++++++++++++++++----
+ 3 files changed, 108 insertions(+), 15 deletions(-)
+
+--
+2.1.4
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
