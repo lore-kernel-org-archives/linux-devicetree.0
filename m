@@ -1,37 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/7] QE: Add uqe_serial document to bindings
-Date: Thu, 17 Mar 2016 11:27:49 -0500
-Message-ID: <20160317162749.GA7872@rob-hp-laptop>
-References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
- <1457486494-11377-3-git-send-email-qiang.zhao@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/3] bindings: spi: Add devicetree binding for
+ spi-xilinx
+Date: Thu, 17 Mar 2016 11:32:28 -0500
+Message-ID: <20160317163228.GA8920@rob-hp-laptop>
+References: <1457513242-11202-1-git-send-email-shubhraj@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457486494-11377-3-git-send-email-qiang.zhao@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhao Qiang <qiang.zhao@nxp.com>
-Cc: oss@buserror.net, leoyang.li@nxp.com, xiaobo.xie@nxp.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+In-Reply-To: <1457513242-11202-1-git-send-email-shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shubhrajyoti Datta <shubhrajyoti.datta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 09:21:30AM +0800, Zhao Qiang wrote:
-> Add uqe_serial document to
-> Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+On Wed, Mar 09, 2016 at 02:17:20PM +0530, Shubhrajyoti Datta wrote:
+> Add a binding document for the spi/spi-xilinx
 > 
-> Signed-off-by: Zhao Qiang <qiang.zhao@nxp.com>
+> Signed-off-by: Shubhrajyoti Datta <shubhraj-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
-> Changes for v2
-> 	- modify tx/rx-clock-name specification
-> Changes for v3
-> 	- NA 
-> Changes for v4
-> 	- drop device_type
-> 	- modify to SoC specific compatible 
-> Changes for v5
-> 	- add fsl to compatible as prefix 
+>  .../devicetree/bindings/spi/spi-xilinx.txt         |   22 ++++++++++++++++++++
+>  1 files changed, 22 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-xilinx.txt
 > 
->  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt         | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> diff --git a/Documentation/devicetree/bindings/spi/spi-xilinx.txt b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+> new file mode 100644
+> index 0000000..c7b7856
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-xilinx.txt
+> @@ -0,0 +1,22 @@
+> +Xilinx SPI controller Device Tree Bindings
+> +-------------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,xps-spi-2.00.a" or "xlnx,xps-spi-2.00.b"
+> +- reg			: Physical base address and size of SPI registers map.
+> +- interrupts		: Property with a value describing the interrupt
+> +			  number.
+> +- interrupt-parent	: Must be core interrupt controller
+> +
+> +Optional properties:
+> +- xlnx,num-ss-bits	: Number of chip selects used.
 
-Acked-by: Rob Herring <robh@kernel.org>
+There's a standard property for this.
+
+> +
+> +Example:
+> +	axi_quad_spi@41e00000 {
+
+Use generic spi@...
+
+> +			compatible = "xlnx,xps-spi-2.00.a";
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <0 31 1>;
+> +			reg = <0x41e00000 0x10000>;
+> +			xlnx,num-ss-bits = <0x1>;
+> +	};
+> +
+> -- 
+> 1.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
