@@ -1,147 +1,54 @@
-From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Thu, 17 Mar 2016 13:59:44 +0100
-Message-ID: <CAJZ5v0jw=R4n7qMk4ibZAeC=tkat6O-cgWiQnRb4o02Hy6ehpA@mail.gmail.com>
-References: <1458208636-12960-1-git-send-email-zhaoshenglong@huawei.com>
-	<1458208636-12960-2-git-send-email-zhaoshenglong@huawei.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: WARNING: DT compatible string vendor "mips" appears un-documented
+Date: Thu, 17 Mar 2016 08:04:43 -0500
+Message-ID: <CAL_JsqLGKW1beZET0brr7DDXbrz1ufi8i=OT-+drUu5cPkYLCw@mail.gmail.com>
+References: <20160317060223.e14ebbdf05224845279843c3@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458208636-12960-2-git-send-email-zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20160317060223.e14ebbdf05224845279843c3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, julien.grall-5wv7dgnIgG8@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ian.campbell-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 10:57 AM, Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Wed, Mar 16, 2016 at 10:02 PM, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi all,
 >
-> ACPI 6.0 introduces a new table STAO to list the devices which are used
-> by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
-> UART is used by Xen. So here it hides UART from Dom0.
+> checkpatch.pl notes that DT compatible string vendor "mips" appears un-documented.
 >
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> CC: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> (supporter:ACPI)
-> CC: Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (supporter:ACPI)
-> CC: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:ACPI)
-> ---
->  drivers/acpi/scan.c | 63 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
+> On the one hand there are several users of this vendor string:
 >
-> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> index 5f28cf7..55ceb69 100644
-> --- a/drivers/acpi/scan.c
-> +++ b/drivers/acpi/scan.c
-> @@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
->  DEFINE_MUTEX(acpi_device_lock);
->  LIST_HEAD(acpi_wakeup_device_list);
->  static DEFINE_MUTEX(acpi_hp_context_lock);
-> +static u64 spcr_uart_addr;
+>     linux$ git grep \"mips,
+>     Documentation/devicetree/bindings/mips/img/xilfpga.txt: - compatible: Must be "mips,m14Kc".
+>     Documentation/devicetree/bindings/mips/img/xilfpga.txt:                 compatible = "mips,m14Kc";
+>     arch/mips/boot/dts/lantiq/danube.dtsi:                  compatible = "mips,mips24Kc";
+>     arch/mips/boot/dts/qca/ar9132.dtsi:                     compatible = "mips,mips24Kc";
+>     arch/mips/boot/dts/ralink/mt7620a.dtsi:                 compatible = "mips,mips24KEc";
+>     arch/mips/boot/dts/ralink/rt2880.dtsi:                  compatible = "mips,mips4KEc";
+>     arch/mips/boot/dts/ralink/rt3050.dtsi:                  compatible = "mips,mips24KEc";
+>     arch/mips/boot/dts/ralink/rt3883.dtsi:                  compatible = "mips,mips74Kc";
+>     arch/mips/boot/dts/xilfpga/microAptiv.dtsi:                     compatible = "mips,m14Kc";
 >
->  struct acpi_dep_data {
->         struct list_head node;
-> @@ -1453,6 +1454,41 @@ static int acpi_add_single_object(struct acpi_device **child,
->         return 0;
->  }
+> On the other hand we already have the "mti" vendor string:
 >
-> +static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
-> +                                           void *context)
-> +{
-> +       struct resource *res = context;
-> +
-> +       if (acpi_dev_resource_memory(ares, res))
-> +               return AE_CTRL_TERMINATE;
-> +
-> +       return AE_OK;
-> +}
-> +
-> +static bool acpi_device_should_be_hidden(acpi_handle handle)
-> +{
-> +       acpi_status status;
-> +       struct resource res;
-> +
-> +       /* Check if it should ignore the UART device */
-> +       if (spcr_uart_addr != 0) {
-> +               if (!acpi_has_method(handle, METHOD_NAME__CRS))
-> +                       return false;
-> +
-> +               status = acpi_walk_resources(handle, METHOD_NAME__CRS,
-> +                                            acpi_get_resource_memory, &res);
-> +               if (ACPI_FAILURE(status))
-> +                       return false;
-> +
-> +               if (res.start == spcr_uart_addr) {
-> +                       printk(KERN_INFO PREFIX "The UART device in SPCR table will be hidden\n");
-> +                       return true;
-> +               }
-> +       }
-> +
-> +       return false;
-> +}
-> +
->  static int acpi_bus_type_and_status(acpi_handle handle, int *type,
->                                     unsigned long long *sta)
->  {
-> @@ -1466,6 +1502,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
->         switch (acpi_type) {
->         case ACPI_TYPE_ANY:             /* for ACPI_ROOT_OBJECT */
->         case ACPI_TYPE_DEVICE:
-> +               if (acpi_device_should_be_hidden(handle))
-> +                       return -ENODEV;
-> +
->                 *type = ACPI_BUS_TYPE_DEVICE;
->                 status = acpi_bus_get_status_handle(handle, sta);
->                 if (ACPI_FAILURE(status))
-> @@ -1919,6 +1958,8 @@ static int acpi_bus_scan_fixed(void)
->  int __init acpi_scan_init(void)
->  {
->         int result;
-> +       acpi_status status;
-> +       struct acpi_table_stao *stao_ptr;
+>     linux$ grep MIPS Documentation/devicetree/bindings/vendor-prefixes.txt
+>     mti    Imagination Technologies Ltd. (formerly MIPS Technologies Inc.)
 >
->         acpi_pci_root_init();
->         acpi_pci_link_init();
-> @@ -1934,6 +1975,28 @@ int __init acpi_scan_init(void)
->
->         acpi_scan_add_handler(&generic_device_handler);
->
-> +       /*
-> +        * If there is STAO table, check whether it needs to ignore the UART
-> +        * device in SPCR table.
-> +        */
-> +       status = acpi_get_table(ACPI_SIG_STAO, 0,
-> +                               (struct acpi_table_header **)&stao_ptr);
-> +       if (ACPI_SUCCESS(status)) {
-> +               if (stao_ptr->header.length > sizeof(struct acpi_table_stao))
-> +                       printk(KERN_INFO PREFIX "STAO Name List not yet supported.");
-> +
-> +               if (stao_ptr->ignore_uart) {
-> +                       struct acpi_table_spcr *spcr_ptr;
-> +
-> +                       status = acpi_get_table(ACPI_SIG_SPCR, 0,
-> +                                       (struct acpi_table_header **)&spcr_ptr);
-> +                       if (ACPI_SUCCESS(status))
-> +                               spcr_uart_addr = spcr_ptr->serial_port.address;
-> +                       else
-> +                               printk(KERN_WARNING PREFIX "STAO table present, but SPCR is missing\n");
-> +               }
-> +       }
+> Can we add an another one vendor string for MIPS?
 
-I'd put the above part into a separate function and call that from
-here.  You'd be able to reduce the indentation level then slightly
-without using gotos.
+No.
 
-Apart from this minor point the patch is fine by me.
+It is called checkpatch.pl, not checkfile.pl (yes, I know it can check
+files too). There are many warnings if you look at the tree as a
+whole. The main point of the checks (at least for DT) is to not
+introduce new warnings.
 
-> +
->         mutex_lock(&acpi_scan_lock);
->         /*
->          * Enumerate devices in the ACPI namespace.
-> --
+So mips is deprecated and shouldn't be used for new bindings (perhaps
+mti is too as img? should be used now). Continuing to use the existing
+strings is fine.
 
-Thanks,
-Rafael
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
