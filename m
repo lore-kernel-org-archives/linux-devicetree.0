@@ -1,73 +1,100 @@
-From: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Subject: Re: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
-Date: Fri, 18 Mar 2016 09:44:21 +1100
-Message-ID: <20160317224421.GA9185@gwshan>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_JsqJydgmkU=SGcr-0JHsYG8wXk5GEQCQXY7y+FHH2A0LZkw@mail.gmail.com>
- <20160219031655.GA10818@gwshan>
- <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
- <20160308005633.GA30023@gwshan>
- <CAL_Jsq+2M3iLMCwJhttiL3BTvefUa_5tUiYqvzp3Aix4uK7exw@mail.gmail.com>
-Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
+Date: Thu, 17 Mar 2016 17:54:43 -0500
+Message-ID: <CAL_JsqLAxUttFPsSdwWg0Phh0HdyxT8TJcPFOFMrjmD8vLT_Ww@mail.gmail.com>
+References: <1457104420-18350-1-git-send-email-robh@kernel.org>
+ <CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
+ <CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA@mail.gmail.com> <CAOesGMjkk-Ow=VnVhgJk8cERre_Jm7Q14wmLAsVb0GufyFBF+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+2M3iLMCwJhttiL3BTvefUa_5tUiYqvzp3Aix4uK7exw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMjkk-Ow=VnVhgJk8cERre_Jm7Q14wmLAsVb0GufyFBF+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 08:31:16AM -0500, Rob Herring wrote:
->On Mon, Mar 7, 2016 at 6:56 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->> On Tue, Mar 01, 2016 at 08:40:12PM -0600, Rob Herring wrote:
->>>On Thu, Feb 18, 2016 at 9:16 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->>>> On Wed, Feb 17, 2016 at 08:59:53AM -0600, Rob Herring wrote:
->>>>>On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->>>>>> This renames unflatten_dt_node() to unflatten_dt_nodes() as it
->>>>>> populates multiple device nodes from FDT blob. No logical changes
->>>>>> introduced.
->>>>>>
->>>>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>>>>> ---
->>>>>>  drivers/of/fdt.c | 14 +++++++-------
->>>>>>  1 file changed, 7 insertions(+), 7 deletions(-)
->>>>>
->>>>>Acked-by: Rob Herring <robh@kernel.org>
->>>>>
->>>>>I'm happy to take patches 40-42 for 4.6 if the rest of the series
->>>>>doesn't go in given they fix a separate problem. I just need to know
->>>>>soon (or at least they need to go into -next soon).
->>>>>
+On Tue, Mar 8, 2016 at 10:22 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> Hi,
+>
+> On Mon, Mar 7, 2016 at 11:37 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Mon, Mar 7, 2016 at 5:10 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> On Fri, Mar 4, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
+>>>> fdt_node_check_compatible()"). This adds the following commits from
+>>>> upstream:
 >>>>
->>>> Thanks for quick response, Rob. It depends how much comments I will
->>>> receive for the powerpc/powernv part. Except that, all parts including
->>>> this one have been ack'ed. I can discuss it with Michael Ellerman.
->>>> By the way, how soon you need the decision to merge 40-42? If that's
->>>> one or two weeks later, I don't think the reivew on the whole series
->>>> can be done.
+>>>> 53bf130 libfdt: simplify fdt_node_check_compatible()
+>>>> c9d9121 Warn on node name unit-address presence/absence mismatch
+>>>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
+>>>>
+>>>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>> ---
+>>>> As usual, this is just an automated copy of upstream dtc into the kernel
+>>>> tree. The changeset is small enough that I have left it here.
+>>>>
+>>>> The main reason for this sync is to pick-up the new unit-address
+>>>> warnings.
 >>>
->>>Well, it's been 2 weeks now. I need to know this week.
->>>
->>>> Also, I think you probably can merge 40-44 as they're all about
->>>> fdt.c. If they can be merged at one time, I needn't bother (cc)
->>>> you again if I need send a updated revision. Thanks for your
->>>> review.
->>>
->>>I did not include 43 and 44 as they are only needed for the rest of your series.
->>>
+>>> This spews a crazy amount of warnings on a multi_v7_defconfig build.
 >>
->> Rob, sorry for late reponse. I really expect this series to be merged to 4.6 and
->> I was checking reviewers' bandwidth to review it. Unfortunately, I didn't receive
->> any comments except yours until now. That means this series has to miss 4.6. Please
->> pick/merge 41 and 42 if no body has objection. Thanks again for your time on this.
+>> Shocking, huh? And I've got more checks in the works. :)
+>>
+>>> I'd prefer to see most of those warnings fixed _before_ we introduce
+>>> it by default. Otherwise we just add a huge amount of noise that will
+>>> hide any real valid warnings that are now brought up.
+>>
+>> How do you propose to do that? If it is not enabled, then no one will
+>> see them nor care. I don't intend to fix everyone's stuff myself.
 >
->Too late for 4.6.
+> Right, but pushing a change on everyone that makes the build
+> near-unusable as a tool to see if you're introducing a new error is
+> also not a good way to do it. However:
 >
+>> We could hide the check behind COMPILE_TEST perhaps.
+>
+> Putting it behind an option sounds like a suitable approach. Would it
+> be possible to plumb in under "make C=1" / "make C=2" instead? That's
+> closer in meaning to what you're doing here than COMPILE_TEST, which
+> is more about turning on drivers that might not make sense on your
+> platform to get compile coverage.
 
-Yeah, Sorry about that, Rob.
+C=1/2 is only designed to run on C files, so it would be a bit of work
+to extend it. However, "W=1" seems like a better match and easy to
+add:
 
-Thanks,
-Gavin
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index ad50d58..417d8c2 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -271,6 +271,10 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n
+-f -9 > $@) || \
+ # ---------------------------------------------------------------------------
+ DTC ?= $(objtree)/scripts/dtc/dtc
+
++ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
++DTC_FLAGS += -Wno-unit_address_vs_reg
++endif
++
+ # Generate an assembly file to wrap the output of the device tree compiler
+ quiet_cmd_dt_S_dtb= DTB     $@
+ cmd_dt_S_dtb=                                          \
+
+
+> This would make people aware of the tool, give them an easy way to run
+> it to do the cleanups. Nag maintainers when they post new code without
+> having paid attention to the old sources/cleanup, and with some amount
+> of time most of it might be fixed.
+
+I added the ability to do "make DTC=my/dtc", so there already is a way
+for people to run it if they want to. Of course, they'd have to fetch
+and build dtc compared to the above. Still, with either option it is
+dependent on people running something they don't likely run normally.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
