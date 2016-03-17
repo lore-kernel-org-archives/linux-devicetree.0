@@ -1,78 +1,52 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v4 03/13] clk: sunxi: Add APB1 clock for A83T
-Date: Thu, 17 Mar 2016 11:41:24 +0100
-Message-ID: <20160317104124.GL30977@lukather>
-References: <1458144276-31108-1-git-send-email-vishnupatekar0510@gmail.com>
- <1458144276-31108-4-git-send-email-vishnupatekar0510@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 10/11] usb: musb: da8xx: Use devm in probe
+Date: Thu, 17 Mar 2016 14:07:39 +0300
+Message-ID: <56EA8FFB.6060506@cogentembedded.com>
+References: <1458181615-27782-1-git-send-email-david@lechnology.com>
+ <1458181615-27782-11-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GDLQamdgIxhPcIwq"
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458144276-31108-4-git-send-email-vishnupatekar0510@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: robh+dt@kernel.org, corbet@lwn.net, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, emilio@elopez.com.ar, jenskuske@gmail.com, hdegoede@redhat.com, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, linux-gpio@vger.kernel.org, linus.walleij@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, patchesrdh@mveas.com, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458181615-27782-11-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---GDLQamdgIxhPcIwq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 3/17/2016 5:26 AM, David Lechner wrote:
 
-On Thu, Mar 17, 2016 at 12:04:26AM +0800, Vishnu Patekar wrote:
-> APB1 is similar to sun4i-a10-apb0-clk, except different dividers.
->=20
-> This adds support for apb1 on A83T.
->=20
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Simplify things a bit by using devm functions where possible.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->  drivers/clk/sunxi/clk-sunxi.c                     | 13 +++++++++++++
->  2 files changed, 14 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Document=
-ation/devicetree/bindings/clock/sunxi.txt
-> index cba9fe55..291d366 100644
-> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
-> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-> @@ -51,6 +51,7 @@ Required properties:
->  	"allwinner,sun8i-h3-apb0-gates-clk" - for the APB0 gates on H3
->  	"allwinner,sun9i-a80-apb0-gates-clk" - for the APB0 gates on A80
->  	"allwinner,sun4i-a10-apb1-clk" - for the APB1 clock
-> ++	"allwinner,sun8i-a83t-apb1-clk" - for the APB1 clock on A83T
+>
+> v2 changes: This is part of a previous patch that was split. No changes from
+> previous version.
+>
+>
+>   drivers/usb/musb/da8xx.c | 28 ++++++++--------------------
+>   1 file changed, 8 insertions(+), 20 deletions(-)
+>
+> diff --git a/drivers/usb/musb/da8xx.c b/drivers/usb/musb/da8xx.c
+> index b03d3b8..50f07a5 100644
+> --- a/drivers/usb/musb/da8xx.c
+> +++ b/drivers/usb/musb/da8xx.c
+> @@ -489,32 +489,27 @@ static int da8xx_probe(struct platform_device *pdev)
+>   	struct platform_device		*musb;
+>   	struct da8xx_glue		*glue;
+>   	struct platform_device_info	pinfo;
+> -	struct clk			*clk;
 
-There's one '+' too many
+    I wouldn't remove this variable to minimize the patch.
 
-Maxime
+[...]
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+MBR, Sergei
 
---GDLQamdgIxhPcIwq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJW6onUAAoJEBx+YmzsjxAg2EwP/0xt7aSDsenIcLIibB9u5qn6
-f1UG1xsLX9v4HQxUu7B8x1NmdgoM0htl6cLgntX0d3nV4jjadjRf/K0eUw/1V2XT
-WpWRD+WbTmrPaSzuibSzAenuIOQSOYMj9IJqbZpswjH3oBhyi9/hGwga6FDPXeAK
-duF5bo3Z10WfWi7P6/1/mnJ1aMRwwUskfg1ryZihH8AL91B+nLMGRvK7nR+aBZwv
-7wMuTeQmER1ymWaf3iVt4hPAHHPoohOhAvHDFz4hy8XsOZuC4ti2sMuvQcV90IS/
-fWWeEYTmMJYBF37l/2Z1Y//6Q1NhGIVRUNUmat01F3uYKRpMCSGM+JwVejLoyuZQ
-oFtp/RHuQpP6AGwzlJY/2YYeuJJPeXoEST+k6wgH4snDRiTIVYi4JCKnX3RtRgtk
-5DM5UoBJ5cyIIKQmas76HXVIdhuRjxNqPfKAKSTBDQ5FeT7tpBOhAF5mCJHzoGqn
-WkkVeGIaPZAQcXV80GRi2cczpSjnR1v+5CKlmJafWaBdBWZ/KTa8tx7P1Ow0iYxP
-8xCePI2G6HM4S7Z+Ns3YxFnxjg5D1KH5MvN4ZIVypbADL2p+Gtm+3pafexlI2iZW
-fvtOEc1k6/g+CYNE+HLq+DOy9A2xtaXn3VJSUnL7CpgTIjIhkRDrCjdzPpP8DfGy
-Bbj0oSU9tyHG6u8XWfWZ
-=nXWR
------END PGP SIGNATURE-----
-
---GDLQamdgIxhPcIwq--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
