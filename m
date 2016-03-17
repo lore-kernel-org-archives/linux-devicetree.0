@@ -1,41 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] gpio: Add AXP209 GPIO driver
-Date: Thu, 17 Mar 2016 14:10:58 -0500
-Message-ID: <20160317191058.GA31052@rob-hp-laptop>
-References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
- <1457520614-32239-2-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
+ ADV7533
+Date: Thu, 17 Mar 2016 14:12:48 -0500
+Message-ID: <20160317191248.GA32431@rob-hp-laptop>
+References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
+ <1457521038-5906-1-git-send-email-architt@codeaurora.org>
+ <1457521038-5906-8-git-send-email-architt@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDJIP47K7MERBR4CVS3QKGQEYIHQ3LA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1457520614-32239-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1457521038-5906-8-git-send-email-architt@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, andy.green@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 11:50:11AM +0100, Maxime Ripard wrote:
-> The AXP209 PMIC has a bunch of GPIOs accessible, that are usually used to
-> control LEDs or backlight.
-> 
-> Add a driver for them
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpio/gpio-axp209.txt       |  30 ++++
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/gpio/Kconfig                               |   6 +
->  drivers/gpio/Makefile                              |   1 +
->  drivers/gpio/gpio-axp209.c                         | 166 +++++++++++++++++++++
->  4 files changed, 203 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
->  create mode 100644 drivers/gpio/gpio-axp209.c
+T24gV2VkLCBNYXIgMDksIDIwMTYgYXQgMDQ6Mjc6MThQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
+cm90ZToKPiBBZGQgZGVzY3JpcHRpb24gb2YgQURWNzUzMy4gQWRkIHRoZSByZXF1aXJlZCBhbmQg
+b3B0aW9uYWwgcHJvcGVydGllcyB0aGF0Cj4gYXJlIHNwZWNpZmljIHRvIGl0Lgo+IAo+IENjOiBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9y
+YS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50
+eHQgICAgICAgIHwgMjUgKysrKysrKysrKysrKysrKystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwg
+MjAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8
+cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
