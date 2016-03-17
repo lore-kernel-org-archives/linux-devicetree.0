@@ -1,34 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 7/8] Documentation: devicetree: rockchip: Document
- Landingship
-Date: Thu, 17 Mar 2016 09:46:22 -0500
-Message-ID: <20160317144622.GA16386@rob-hp-laptop>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
- <1457294038-14243-8-git-send-email-afaerber@suse.de>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] dt-bindings: Correct path for ARM GIC documentation
+Date: Thu, 17 Mar 2016 14:47:57 +0000
+Message-ID: <1458226077-7179-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457294038-14243-8-git-send-email-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-rockchip@lists.infradead.org, Julien Chauveau <chauveau.julien@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Rockchip SoC support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 06, 2016 at 08:53:56PM +0100, Andreas F=E4rber wrote:
-> Use "geekbuying,geekbox-landingship" compatible string, plus those of
-> the GeekBox module.
->=20
-> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
-> ---
->  v2 -> v3:
->  * Changed compatible string to include geekbox- (Heiko)
->    and clarify that this is for GeekBox module
-> =20
->  v2: New
-> =20
->  Documentation/devicetree/bindings/arm/rockchip.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+Commit eb3fcf007fff ("dt-bindings: consolidate interrupt controller
+bindings") moved the binding documentation for the ARM GIC from
+arm/gic.txt to interrupt-controller/arm,gic.txt. However, there are
+still some binding documents referring to the old path. Update these
+binding documents to use the correct location.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: eb3fcf007fff ("dt-bindings: consolidate interrupt controller bindings")
+
+Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/omap/crossbar.txt                | 3 ++-
+ Documentation/devicetree/bindings/arm/ux500/boards.txt                 | 2 +-
+ .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt       | 3 +--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+index a9b28d74d902..bb5727ae004a 100644
+--- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
++++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+@@ -42,7 +42,8 @@ Examples:
+ Consumer:
+ ========
+ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
+-Documentation/devicetree/bindings/arm/gic.txt for further details.
++Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt for
++further details.
+ 
+ An interrupt consumer on an SoC using crossbar will use:
+ 	interrupts = <GIC_SPI request_number interrupt_level>
+diff --git a/Documentation/devicetree/bindings/arm/ux500/boards.txt b/Documentation/devicetree/bindings/arm/ux500/boards.txt
+index b8737a8de718..7334c24625fc 100644
+--- a/Documentation/devicetree/bindings/arm/ux500/boards.txt
++++ b/Documentation/devicetree/bindings/arm/ux500/boards.txt
+@@ -23,7 +23,7 @@ scu:
+ 	see binding for arm/scu.txt
+ 
+ interrupt-controller:
+-	see binding for arm/gic.txt
++	see binding for interrupt-controller/arm,gic.txt
+ 
+ timer:
+ 	see binding for arm/twd.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+index b8e1674c7837..8cf564d083d2 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+@@ -16,8 +16,7 @@ Required properties:
+ 	"mediatek,mt6577-sysirq"
+ 	"mediatek,mt2701-sysirq"
+ - interrupt-controller : Identifies the node as an interrupt controller
+-- #interrupt-cells : Use the same format as specified by GIC in
+-  Documentation/devicetree/bindings/arm/gic.txt
++- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+ - interrupt-parent: phandle of irq parent for sysirq. The parent must
+   use the same interrupt-cells format as GIC.
+ - reg: Physical base address of the intpol registers and length of memory
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
