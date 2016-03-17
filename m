@@ -1,52 +1,55 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2] rtc: s3c: Document in binding that only s3c6410 needs
- a src clk
-Date: Thu, 17 Mar 2016 23:31:53 +0100
-Message-ID: <20160317223153.GI2831@piout.net>
-References: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
- <20160218143853.GF9654@rob-hp-laptop>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH v5 1/6] pwms: pwm-ti*: Get the clock from the PWMSS
+ (parent)
+Date: Thu, 17 Mar 2016 17:37:18 -0500
+Message-ID: <56EB319E.3050502@ti.com>
+References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
+ <1457400224-24797-2-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160218143853.GF9654@rob-hp-laptop>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1457400224-24797-2-git-send-email-fcooper@ti.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Gentle ping on this
 
-On 18/02/2016 at 08:38:53 -0600, Rob Herring wrote :
-> On Mon, Feb 15, 2016 at 11:11:06AM -0300, Javier Martinez Canillas wrote:
-> > The S3C binding doc says that the RTC and RTC source clocks are required
-> > but the S3C driver supports different HW IP and only the s3c6410 needs a
-> > source clock.
-> > 
-> > Fix the binding explaining that the source clock is only needed for the
-> > s3c6410-rtc compatible controller.
-> > 
-> > Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> > Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> > Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > 
-> > ---
-> > Hello,
-> > 
-> > This patch depends on a previous one that was picked by Rob Herring so
-> > this one has to go through his tree again and not through the RTC tree
-> > to avoid conflicts.
-> 
-> Ugg, sent pull request today. It should be in Linus' tree now.
-> 
-> This can go thru rtc tree if you prefer. Otherwise, I'll queue it up for 
-> 4.6.
-> 
-
-Do you plan to send that one to Linus for 4.6? Else, I still have a few
-patches to send before the end of the merge window.
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+On 03/07/2016 07:23 PM, Franklin S Cooper Jr wrote:
+> The eCAP and ePWM doesn't have their own separate clocks. They simply
+> utilize the clock provided directly by the PWMSS. Therefore, they simply
+> need to grab a reference to their parent's clock.
+>
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+>  drivers/pwm/pwm-tiecap.c   | 2 +-
+>  drivers/pwm/pwm-tiehrpwm.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+> index 616af76..9418159 100644
+> --- a/drivers/pwm/pwm-tiecap.c
+> +++ b/drivers/pwm/pwm-tiecap.c
+> @@ -212,7 +212,7 @@ static int ecap_pwm_probe(struct platform_device *pdev)
+>  	if (!pc)
+>  		return -ENOMEM;
+>  
+> -	clk = devm_clk_get(&pdev->dev, "fck");
+> +	clk = devm_clk_get(pdev->dev.parent, "fck");
+>  	if (IS_ERR(clk)) {
+>  		dev_err(&pdev->dev, "failed to get clock\n");
+>  		return PTR_ERR(clk);
+> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
+> index 6a41e66..09dc1bc 100644
+> --- a/drivers/pwm/pwm-tiehrpwm.c
+> +++ b/drivers/pwm/pwm-tiehrpwm.c
+> @@ -443,7 +443,7 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+>  	if (!pc)
+>  		return -ENOMEM;
+>  
+> -	clk = devm_clk_get(&pdev->dev, "fck");
+> +	clk = devm_clk_get(pdev->dev.parent, "fck");
+>  	if (IS_ERR(clk)) {
+>  		dev_err(&pdev->dev, "failed to get clock\n");
+>  		return PTR_ERR(clk);
