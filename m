@@ -1,7 +1,7 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v14 04/17] drm: bridge: analogix/dp: fix some obvious code style
-Date: Thu, 17 Mar 2016 22:48:49 +0100
-Message-ID: <5288069.sdD3NZfROG@diego>
+Subject: [PATCH v14.1 04/17] drm: bridge: analogix/dp: fix some obvious code style
+Date: Thu, 17 Mar 2016 22:50 +0100
+Message-ID: <3743656.5lb5B2Ugqa@diego>
 References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com> <1455534599-1636-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
