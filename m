@@ -1,70 +1,217 @@
-From: Leo Li <pku.leo@gmail.com>
-Subject: Re: [v6, 3/5] dt: move guts devicetree doc out of powerpc directory
-Date: Thu, 17 Mar 2016 16:33:35 -0500
-Message-ID: <CADRPPNRPP0cxrJT13OR+dAWuw8m0mr0=VJLY+JyTO=QsB_vVUw@mail.gmail.com>
-References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
-	<1457518131-11339-4-git-send-email-yangbo.lu@nxp.com>
-	<20160317170640.GB21009@rob-hp-laptop>
-	<4107975.rId64mooHz@wuerfel>
-	<CAL_JsqL8NkEQx2NoVHSUGYhtNsybCo-yfBCde+_OuMmfwbhYEw@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: juno/vexpress: fix node name unit-address
+ presence warnings
+Date: Thu, 17 Mar 2016 16:44:50 -0500
+Message-ID: <CAL_JsqJeeZ58at95gSRwOMnce_DjDsXVRYH_bMKaX=uDHtZAAA@mail.gmail.com>
+References: <1457352735-24453-1-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL8NkEQx2NoVHSUGYhtNsybCo-yfBCde+_OuMmfwbhYEw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Ulf Hansson <ulf.hansson@linaro.org>, Zhao Qiang <qiang.zhao@freescale.com>, xiaobo.xie@nxp.com, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Joerg Roedel <joro@8bytes.org>, scott.wood@nxp.com, Claudiu Manoil <claudiu.manoil@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Li Yang <leoyang.li@nxp.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, Kumar Gala <galak@codeauro>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457352735-24453-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 12:57 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Mar 17, 2016 at 12:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> On Thursday 17 March 2016 12:06:40 Rob Herring wrote:
->>> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt b/Documentation/devicetree/bindings/soc/fsl/guts.txt
->>> > similarity index 91%
->>> > rename from Documentation/devicetree/bindings/powerpc/fsl/guts.txt
->>> > rename to Documentation/devicetree/bindings/soc/fsl/guts.txt
->>> > index b71b203..07adca9 100644
->>> > --- a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt
->>> > +++ b/Documentation/devicetree/bindings/soc/fsl/guts.txt
->>> > @@ -25,6 +25,9 @@ Recommended properties:
->>> >   - fsl,liodn-bits : Indicates the number of defined bits in the LIODN
->>> >     registers, for those SOCs that have a PAMU device.
->>> >
->>> > + - little-endian : Indicates that the global utilities block is little
->>> > +   endian. The default is big endian.
->>>
->>> The default is "the native endianness of the system".
->>
->> This may be what is currently documented, but not what we are doing
->> in practice, as there is no "native endianess" for either PowerPC or
->> ARM -- both allow running big-endian or little-endian kernels and the
->> device registers are fixed.
+On Mon, Mar 7, 2016 at 6:12 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> Commit fa38a82096a1 ("scripts/dtc: Update to upstream version
+> 53bf130b1cdd") added warnings on node name unit-address presence/absence
+> mismatch in device trees.
 >
-> Notice I said system, not architecture. The way the device registers
-> are fixed is what I mean by native endianness.
-
-I think sometimes it's also hard to define the native endianess of the
-system too.  For whatever reason, we have hardware that having
-big-endian registers on some on-chip devices but using little-endian
-registers on other devices.  Even if all the devices on certain
-hardware use registers of the same endianess, it is also hard for the
-device driver to know what the native endianess really is.
-
+> This patch fixes those warning on all the juno/vexpress platforms where
+> unit-address is present in node name while the reg/ranges property is
+> not present.
 >
-> If the purpose of adding this property now is to support GUTS on the
-> ARM SoCs, then I'd argue using this property is probably wrong. If the
-> PPC systems are designed with BE device registers and ARM systems with
-> LE, then this property is not needed.
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/arm/foundation-v8.dtsi         |  2 +-
+>  arch/arm64/boot/dts/arm/juno-base.dtsi             | 14 +++++-----
+>  arch/arm64/boot/dts/arm/juno-motherboard.dtsi      | 30 +++++++++++-----------
+>  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts         |  2 +-
+>  arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi   | 14 +++++-----
+>  .../boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts      | 10 ++++----
+>  6 files changed, 36 insertions(+), 36 deletions(-)
 >
->> I think the property here is fine.
+> Hi Rob,
 >
-> Unless you have studied the FSL ARM based SoCs, then there is not
-> enough information here to tell.
+> I am not sure if the intention of commit fa38a82096a1 is to fix even
+> existing warnings or not. I saw warning with today's -next branch.
 
-Recent FSL ARM SoCs seems to have more weird endianess issue. :( The
-same IP could have registers of different endianess on different ARM
-SoCs.  That why we need to define the endianess explicitly in device
-tree.
+Yes. I'm dropping it for 4.6 though.
 
-Regards,
-Leo
+> Let me know.
+>
+> Regards,
+> Sudeep
+>
+> diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+> index 9314f3943269..ba03c934a861 100644
+> --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+> +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+> @@ -89,7 +89,7 @@
+>                              <0 63 4>;
+>         };
+>
+> -       smb {
+> +       smb@0,08000000 {
+
+Drop the comma and leading zeros. Comma is for distinct fields like
+bus,dev,func on PCI.
+
+This is the next warning I'm working on...
+
+>                 compatible = "arm,vexpress,v2m-p1", "simple-bus";
+>                 arm,v2m-memory-map = "rs1";
+>                 #address-cells = <2>; /* SMB chipselect number and offset */
+> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> index 4b6172b0f2cb..3841e82fa6f8 100644
+> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+> @@ -105,13 +105,13 @@
+>                 clocks {
+>                         compatible = "arm,scpi-clocks";
+>
+> -                       scpi_dvfs: scpi_clocks@0 {
+> +                       scpi_dvfs: scpi-clocks-0 {
+>                                 compatible = "arm,scpi-dvfs-clocks";
+>                                 #clock-cells = <1>;
+>                                 clock-indices = <0>, <1>, <2>;
+>                                 clock-output-names = "atlclk", "aplclk","gpuclk";
+>                         };
+> -                       scpi_clk: scpi_clocks@3 {
+> +                       scpi_clk: scpi-clocks-1 {
+>                                 compatible = "arm,scpi-variable-clocks";
+>                                 #clock-cells = <1>;
+>                                 clock-indices = <3>;
+> @@ -154,7 +154,7 @@
+>                 clock-names = "pxlclk";
+>
+>                 port {
+> -                       hdlcd1_output: endpoint@0 {
+> +                       hdlcd1_output: endpoint0 {
+
+Just "endpoint" or add the reg property if there is another endpoint.
+
+>                                 remote-endpoint = <&tda998x_1_input>;
+>                         };
+>                 };
+> @@ -168,7 +168,7 @@
+>                 clock-names = "pxlclk";
+>
+>                 port {
+> -                       hdlcd0_output: endpoint@0 {
+> +                       hdlcd0_output: endpoint0 {
+>                                 remote-endpoint = <&tda998x_0_input>;
+>                         };
+>                 };
+> @@ -196,7 +196,7 @@
+>                         compatible = "nxp,tda998x";
+>                         reg = <0x70>;
+>                         port {
+> -                               tda998x_0_input: endpoint@0 {
+> +                               tda998x_0_input: endpoint0 {
+>                                         remote-endpoint = <&hdlcd0_output>;
+>                                 };
+>                         };
+> @@ -206,7 +206,7 @@
+>                         compatible = "nxp,tda998x";
+>                         reg = <0x71>;
+>                         port {
+> -                               tda998x_1_input: endpoint@0 {
+> +                               tda998x_1_input: endpoint0 {
+>                                         remote-endpoint = <&hdlcd1_output>;
+>                                 };
+>                         };
+> @@ -243,7 +243,7 @@
+>                       <0x00000008 0x80000000 0x1 0x80000000>;
+>         };
+>
+> -       smb {
+> +       smb@0,08000000 {
+>                 compatible = "simple-bus";
+>                 #address-cells = <2>;
+>                 #size-cells = <1>;
+> diff --git a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+> index 413f1b9ebcd4..3d4af126df6e 100644
+> --- a/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+> +++ b/arch/arm64/boot/dts/arm/juno-motherboard.dtsi
+> @@ -46,7 +46,7 @@
+>                         arm,vexpress,site = <0>;
+>                         arm,v2m-memory-map = "rs1";
+>
+> -                       mb_fixed_3v3: fixedregulator@0 {
+> +                       mb_fixed_3v3: fixedregulator0 {
+
+fixed-regulator-0 perhaps.
+
+>                                 compatible = "regulator-fixed";
+>                                 regulator-name = "MCC_SB_3V3";
+>                                 regulator-min-microvolt = <3300000>;
+> @@ -59,42 +59,42 @@
+>                                 #address-cells = <1>;
+>                                 #size-cells = <0>;
+>
+> -                               button@1 {
+> +                               button1 {
+>                                         debounce_interval = <50>;
+>                                         wakeup-source;
+>                                         linux,code = <116>;
+>                                         label = "POWER";
+>                                         gpios = <&iofpga_gpio0 0 0x4>;
+>                                 };
+> -                               button@2 {
+> +                               button2 {
+>                                         debounce_interval = <50>;
+>                                         wakeup-source;
+>                                         linux,code = <102>;
+>                                         label = "HOME";
+>                                         gpios = <&iofpga_gpio0 1 0x4>;
+>                                 };
+> -                               button@3 {
+> +                               button3 {
+>                                         debounce_interval = <50>;
+>                                         wakeup-source;
+>                                         linux,code = <152>;
+>                                         label = "RLOCK";
+>                                         gpios = <&iofpga_gpio0 2 0x4>;
+>                                 };
+> -                               button@4 {
+> +                               button4 {
+>                                         debounce_interval = <50>;
+>                                         wakeup-source;
+>                                         linux,code = <115>;
+>                                         label = "VOL+";
+>                                         gpios = <&iofpga_gpio0 3 0x4>;
+>                                 };
+> -                               button@5 {
+> +                               button5 {
+>                                         debounce_interval = <50>;
+>                                         wakeup-source;
+>                                         linux,code = <114>;
+>                                         label = "VOL-";
+>                                         gpios = <&iofpga_gpio0 4 0x4>;
+>                                 };
+> -                               button@6 {
+> +                               button6 {
+>                                         debounce_interval = <50>;
+>                                         wakeup-source;
+>                                         linux,code = <99>;
+> @@ -159,7 +159,7 @@
+>                                         compatible = "syscon", "simple-mfd";
+>                                         reg = <0x010000 0x1000>;
+>
+> -                                       led@08.0 {
+> +                                       led0 {
+
+In hindsight, we probably should have done "reg = <0x8 0>" for
+register and bit offsets.
+
+Is "0" the best description of this led (i.e. is there some h/w defined name)?
+
+>                                                 compatible = "register-bit-led";
+>                                                 offset = <0x08>;
+>                                                 mask = <0x01>;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
