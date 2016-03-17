@@ -1,75 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v11 5/6] add TC G210 platform driver
-Date: Thu, 17 Mar 2016 09:55:51 -0500
-Message-ID: <20160317145551.GA22021@rob-hp-laptop>
-References: <f12dcbcb9b83881a5f71460e2d6e1ab0f1e326d8.1457352207.git.jpinto@synopsys.com>
- <09d60ef0a991150a2eba77f627f292f3c2c827fd.1457352207.git.jpinto@synopsys.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH 07/15] irqdomain: Don't set type when mapping an IRQ
+Date: Thu, 17 Mar 2016 15:55:18 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1603171553170.3978@nanos>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com> <1458224359-32665-8-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <09d60ef0a991150a2eba77f627f292f3c2c827fd.1457352207.git.jpinto@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, arnd@arndb.de, mark.rutland@arm.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458224359-32665-8-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?ISO-8859-15?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 07, 2016 at 12:09:20PM +0000, Joao Pinto wrote:
-> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
-> 
-> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
-> ---
-> Changes v10->v11 (Arnd Bergmann):
-> - vops structs are now passed in .data
-> Changes v0->v10:
-> - This patch only appeared in v10
-> 
->  .../devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt |  26 +++++
->  drivers/scsi/ufs/Kconfig                           |   9 ++
->  drivers/scsi/ufs/Makefile                          |   1 +
->  drivers/scsi/ufs/tc-dwc-g210-pltfrm.c              | 113 +++++++++++++++++++++
->  4 files changed, 149 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
->  create mode 100644 drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
-> new file mode 100644
-> index 0000000..6ec9647
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
-> @@ -0,0 +1,26 @@
-> +* Universal Flash Storage (UFS) DesignWare Host Controller
+On Thu, 17 Mar 2016, Jon Hunter wrote:
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -1117,6 +1117,13 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
+>  	new->irq = irq;
+>  
+>  	/*
+> +	 * If the trigger type is not specified by the caller,
+> +	 * then use the default for this interrupt.
+> +	 */
+> +	if (!(new->flags & IRQF_TRIGGER_MASK))
+> +		new->flags |= irqd_get_trigger_type(&desc->irq_data);
 > +
-> +DWC_UFS nodes are defined to describe on-chip UFS host controllers and MPHY.
-> +Each UFS controller instance should have its own node.
-> +
-> +Required properties:
-> +- compatible	: compatible list must contain the PHY type & version:
-> +			"snps, g210-tc-6.00-20bit"
-> +			"snps, g210-tc-6.00-40bit"
-drop the spaces               ^
 
+This change is independent of the irqdomain part and should be in a seperate
+patch because it affects all callers.
 
-> +		  complemented with the Controller IP version:
-> +			"snps, dwc-ufshcd-1.40a"
+Thanks,
 
-ditto
-
-> +		  complemented with the JEDEC version:
-> +			"jedec,ufs-1.1"
-> +			"jedec,ufs-2.0"
-> +
-> +- reg		: <registers mapping>
-> +- interrupts	: <interrupt mapping for UFS host controller IRQ>
-> +
-> +Example for a setup using a 1.40a DWC Controller with a 6.00 G210 40-bit TC:
-> +	dwc_ufs@d0000000 {
-> +		compatible = "snps, g210-tc-6.00-40bit",
-> +			     "snps, dwc-ufshcd-1.40a",
-
-ditto
-
-> +			     "jedec,ufs-2.0";
-> +		reg = < 0xd0000000 0x10000 >;
-> +		interrupts = < 24 >;
-> +	};
+	tglx
