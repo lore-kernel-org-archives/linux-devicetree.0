@@ -1,43 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/7] PM / Domains: Add DT bindings for the R-Car
- System Controller
-Date: Thu, 17 Mar 2016 14:17:07 -0500
-Message-ID: <20160317191707.GA2713@rob-hp-laptop>
-References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be>
- <1457551122-21838-2-git-send-email-geert+renesas@glider.be>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 02/18] dt-bindings: timer: sp804: add timer-width
+ property
+Date: Thu, 17 Mar 2016 19:21:23 +0000
+Message-ID: <56EB03B3.3070106@arm.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+ <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
+ <1457519060-6038-3-git-send-email-narmstrong@baylibre.com>
+ <20160317170926.GA28934@rob-hp-laptop> <56EAF212.7020700@arm.com>
+ <CAL_JsqKRjFDNmGjkPfJ-BKXG8ekNzUgear3uLzsFYbZU7Zph7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457551122-21838-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKRjFDNmGjkPfJ-BKXG8ekNzUgear3uLzsFYbZU7Zph7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 08:18:36PM +0100, Geert Uytterhoeven wrote:
-> The Renesas R-Car System Controller provides power management for the
-> CPU cores and various coprocessors, following the generic PM domain
-> bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-> 
-> This supports R-Car Gen1 (H1), Gen2, and Gen3.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v3:
->   - Move power area hierarchy from DT to C (cfr. DT bindings for Renesas
->     CPG/MSSR), and switch to "#power-domain-cells = <1>",
->   - Drop fallback compatibility strings, as the bindings are
->     SoC-specific,
->   - Rename from renesas,sysc-rcar.txt to renesas,rcar-sysc.txt,
-> 
-> v2:
->   - Add R-Car H3 (r8a7795) support,
->   - Use "renesas,<type>-sysc" instead of "renesas,sysc-<type>",
->   - Add fallback compatibility strings for R-Car Gen2 and Gen3.
-> ---
->  .../bindings/power/renesas,rcar-sysc.txt           | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+On 17/03/16 19:00, Rob Herring wrote:
+> On Thu, Mar 17, 2016 at 1:06 PM, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Hi Rob,
+>>
+>> On 17/03/16 17:09, Rob Herring wrote:
+>>>
+>>> On Wed, Mar 09, 2016 at 11:24:04AM +0100, Neil Armstrong wrote:
+>>>>
+>>>> Add timer-width optional property to specify a different vendor
+>>>> specific timer counter bit-width.
+>>>>
+>>>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/timer/arm,sp804.txt | 2 ++
+>>>>    1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/timer/arm,sp804.txt
+>>>> b/Documentation/devicetree/bindings/timer/arm,sp804.txt
+>>>> index 5cd8eee7..141e143 100644
+>>>> --- a/Documentation/devicetree/bindings/timer/arm,sp804.txt
+>>>> +++ b/Documentation/devicetree/bindings/timer/arm,sp804.txt
+>>>> @@ -17,6 +17,8 @@ Optional properties:
+>>>>    - arm,sp804-has-irq = <#>: In the case of only 1 timer irq line
+>>>> connected, this
+>>>>          specifies if the irq connection is for timer 1 or timer 2. A
+>>>> value of 1
+>>>>          or 2 should be used.
+>>>> +- arm,timer-width: Should contain the width in number of bits of the
+>>>> counter,
+>>>> +       is considered by default 32 but can be changed for vendor
+>>>> variants.
+>>>
+>>>
+>>> That would not be an SP804 nor would the vendor be ARM in that case. So
+>>> add a new compatible string for the vendor that decided to hack up ARM's
+>>> IP block.
+>>
+>>
+>> By all accounts this is some ancient reference design[1] which later evolved
+>> _into_ the SP804, so that vendor would probably still be ARM ;)
+>
+> Right.
+>
+>> A separate compatible string would indeed make more sense, though. Both
+>> semantically and in terms of letting the driver account for the differences
+>> automatically.
+>>
+>> Robin.
+>>
+>> [1]:http://infocenter.arm.com/help/topic/com.arm.doc.ddi0170a/I350250.html
+>
+> Humm, same as integrator timers perhaps?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Having had a quick look, what the Integrator/AP manual describes 
+certainly smells like the same basic block as the "AMBA Timer" - 16 bit 
+counters and the same control register layout - albeit in a mutant 
+triple-timer version with a bigger offset between each register set. 
+Integrator/CP, on the other hand, looks much more SP804-like.
+
+Robin.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
