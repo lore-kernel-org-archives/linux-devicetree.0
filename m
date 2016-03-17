@@ -1,70 +1,27 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] mailbox: Introduce TI message manager driver
-Date: Wed, 16 Mar 2016 19:29:49 -0500
-Message-ID: <56E9FA7D.9050801@ti.com>
-References: <1456525452-30638-1-git-send-email-nm@ti.com>
- <1456525452-30638-3-git-send-email-nm@ti.com>
- <CABb+yY1hK4T6KAQcqNKF3D_pkLCcDVN=+T18ueV35jXbpLR+kg@mail.gmail.com>
- <56D987FF.1040607@ti.com>
- <CABb+yY1a-6V=9C+di7ZdQHDQG_M_jbYshoLqxaLiCZTqM4TfHg@mail.gmail.com>
- <56DDD41E.2050409@ti.com>
- <CABb+yY2A35=uG9dk_VHVHbEBUsguw6414KeyQJxxp-Jnsq-0dw@mail.gmail.com>
- <CAGo_u6pHLDhqoHD-V9xKbKkr6-NpdH+vTUufXQGvoMK7C-yj9Q@mail.gmail.com>
- <CABb+yY3ZqM1Do5TdYCU_MGzk0dottaASo3qCdeKJ6TbGf2D8+Q@mail.gmail.com>
- <CAGo_u6qwCFXH-sHijZHcC3iBTEAzqrkGf439DC5=7k39PS-+kg@mail.gmail.com>
- <CABb+yY1S52aK63coeNuiH+Ca8GERq=ukCPFidcitUEMhHVdsyg@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v1 3/3] ARM64: dts: rk3368: Add mailbox device nodes
+Date: Thu, 17 Mar 2016 01:30:46 +0100
+Message-ID: <2297866.IOc3CjEvaT@diego>
+References: <1445931106-683-1-git-send-email-wxt@rock-chips.com> <1445931106-683-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY1S52aK63coeNuiH+Ca8GERq=ukCPFidcitUEMhHVdsyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1445931106-683-4-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, frank.wang@rock-chips.com, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Am Dienstag, 27. Oktober 2015, 15:31:46 schrieb Caesar Wang:
+> This adds mailbox device nodes in dts.
+> 
+> Mailbox is used by the Rockchip CPU cores to communicate
+> requests to MCU processor.
+> 
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 
-On 03/16/2016 12:16 AM, Jassi Brar wrote:
+applied to my dts64 branch for 4.7
 
-[...]
->> Alright, i will drop this check since it is causing a lot more
->> confusion
->>
-> It's confusing because you check ti_msgmgr_queue_get_num_messages()
-> also in ti_msgmgr_last_tx_done() which doesn't make sense because the
-> former accounts for messages from other senders also (as you say there
-> could be multiple senders).
-
-
-True -> I will drop it for now. I will see if the case I was trying to
-protect is actually possible to be hit in the first place. And if proven
-to be required, I will introduce it back with a better explanation and
-the usecase where this is needed.
-
->> that that is worth. we can introduce it when we finally do
->> hit an issue eventually with multiple processors trying to transmit on
->> the same queue manager. that is not a concern at the very immediate
->> time, so we should be good to drop.
->>
->> please let me know if you are ok with this.
->>
-> I am ok with whatever you assert is needed for your platform. I just
-> point out what I think are inconsistencies in your assumptions. I'll
-> pick the next revision however it is.
-
-
-Thanks for your patience and guidance with this series. I have tried to
-incorporate all the alignment we have had on this thread as part of
-V3[1] of the series.
-
-
-[1] http://marc.info/?l=linux-arm-kernel&m=145817434531691&w=2
-
--- 
-Regards,
-Nishanth Menon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Heiko
