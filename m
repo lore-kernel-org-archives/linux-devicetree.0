@@ -1,38 +1,75 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Correct path for ARM GIC documentation
-Date: Thu, 17 Mar 2016 15:54:51 +0100
-Message-ID: <CACRpkdYAR0tzHkSd9aDt0Wqf-t7=8hHWQMsN56wVWBP__t2ePA@mail.gmail.com>
-References: <1458226077-7179-1-git-send-email-jonathanh@nvidia.com>
-	<56EAC404.9090606@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v11 5/6] add TC G210 platform driver
+Date: Thu, 17 Mar 2016 09:55:51 -0500
+Message-ID: <20160317145551.GA22021@rob-hp-laptop>
+References: <f12dcbcb9b83881a5f71460e2d6e1ab0f1e326d8.1457352207.git.jpinto@synopsys.com>
+ <09d60ef0a991150a2eba77f627f292f3c2c827fd.1457352207.git.jpinto@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56EAC404.9090606-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <09d60ef0a991150a2eba77f627f292f3c2c827fd.1457352207.git.jpinto@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, arnd@arndb.de, mark.rutland@arm.com, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 3:49 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+On Mon, Mar 07, 2016 at 12:09:20PM +0000, Joao Pinto wrote:
+> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
+> 
+> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+> ---
+> Changes v10->v11 (Arnd Bergmann):
+> - vops structs are now passed in .data
+> Changes v0->v10:
+> - This patch only appeared in v10
+> 
+>  .../devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt |  26 +++++
+>  drivers/scsi/ufs/Kconfig                           |   9 ++
+>  drivers/scsi/ufs/Makefile                          |   1 +
+>  drivers/scsi/ufs/tc-dwc-g210-pltfrm.c              | 113 +++++++++++++++++++++
+>  4 files changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+>  create mode 100644 drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+> new file mode 100644
+> index 0000000..6ec9647
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+> @@ -0,0 +1,26 @@
+> +* Universal Flash Storage (UFS) DesignWare Host Controller
+> +
+> +DWC_UFS nodes are defined to describe on-chip UFS host controllers and MPHY.
+> +Each UFS controller instance should have its own node.
+> +
+> +Required properties:
+> +- compatible	: compatible list must contain the PHY type & version:
+> +			"snps, g210-tc-6.00-20bit"
+> +			"snps, g210-tc-6.00-40bit"
+drop the spaces               ^
 
-> Adding Linus for ux500 ...
->
-> On 17/03/16 14:47, Jon Hunter wrote:
->> Commit eb3fcf007fff ("dt-bindings: consolidate interrupt controller
->> bindings") moved the binding documentation for the ARM GIC from
->> arm/gic.txt to interrupt-controller/arm,gic.txt. However, there are
->> still some binding documents referring to the old path. Update these
->> binding documents to use the correct location.
->>
->> Fixes: eb3fcf007fff ("dt-bindings: consolidate interrupt controller bindings")
->>
->> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> +		  complemented with the Controller IP version:
+> +			"snps, dwc-ufshcd-1.40a"
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ditto
+
+> +		  complemented with the JEDEC version:
+> +			"jedec,ufs-1.1"
+> +			"jedec,ufs-2.0"
+> +
+> +- reg		: <registers mapping>
+> +- interrupts	: <interrupt mapping for UFS host controller IRQ>
+> +
+> +Example for a setup using a 1.40a DWC Controller with a 6.00 G210 40-bit TC:
+> +	dwc_ufs@d0000000 {
+> +		compatible = "snps, g210-tc-6.00-40bit",
+> +			     "snps, dwc-ufshcd-1.40a",
+
+ditto
+
+> +			     "jedec,ufs-2.0";
+> +		reg = < 0xd0000000 0x10000 >;
+> +		interrupts = < 24 >;
+> +	};
