@@ -1,36 +1,39 @@
 From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/5] rtc: jz4740_rtc: Add support for acting as the
- system power controller
-Date: Thu, 17 Mar 2016 13:20:58 +0100
-Message-ID: <20160317122058.GE3362@piout.net>
+Subject: Re: [PATCH 5/5] MIPS: jz4740: Use the jz4740-rtc driver as the power
+ controller
+Date: Thu, 17 Mar 2016 13:22:25 +0100
+Message-ID: <20160317122225.GF3362@piout.net>
 References: <1457217531-26064-1-git-send-email-paul@crapouillou.net>
- <1457217531-26064-4-git-send-email-paul@crapouillou.net>
+ <1457217531-26064-5-git-send-email-paul@crapouillou.net>
+ <20160314015353.GB29020@linux-mips.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457217531-26064-4-git-send-email-paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+In-Reply-To: <20160314015353.GB29020-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/2016 at 23:38:50 +0100, Paul Cercueil wrote :
-> +	if (of_device_is_system_power_controller(pdev->dev.of_node)) {
-> +		if (!pm_power_off) {
-> +			/* Default: 60ms */
-> +			rtc->reset_pin_assert_time = 60;
-> +			device_property_read_u32(&pdev->dev,
+Hi,
 
-It is probably more efficient to use of_property_read_u32 directly. Any
-particular reason to use device_property_read_u32?
+On 14/03/2016 at 02:53:53 +0100, Ralf Baechle wrote :
+> On Sat, Mar 05, 2016 at 11:38:51PM +0100, Paul Cercueil wrote:
+> 
+> > Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+> > ---
+> >  arch/mips/boot/dts/ingenic/jz4740.dtsi |  2 ++
+> >  arch/mips/jz4740/reset.c               | 64 ----------------------------------
+> 
+> Acked-by: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+> 
+> Feel free to funnel this patch upstream through the RTC tree.  Or I can
+> carry the whole series, just lemme know.
+> 
 
-> +		} else {
-> +			dev_err(&pdev->dev,
-> +					"Poweroff handler already present!\n");
-
-I'm not found of that alignement, it is probably better to let the
-string go over 80 chars. checkpatch will not complain.
+I made a few minor comments. I'll take the series once it has been
+resent.
 
 -- 
 Alexandre Belloni, Free Electrons
