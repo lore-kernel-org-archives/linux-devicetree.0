@@ -1,44 +1,84 @@
-From: Paolo Bonzini <pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
- device access
-Date: Thu, 17 Mar 2016 14:13:54 +0100
-Message-ID: <56EAAD92.10007@redhat.com>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
- <20160316185440-mutt-send-email-mst@redhat.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] mwifiex: parse hscfg_gpio info from device tree
+Date: Thu, 17 Mar 2016 13:26:20 +0000
+Message-ID: <7cf3ebcd17c04399bfe5b23a3118cd4c@SC-EXCH04.marvell.com>
+References: <1448618297-19803-1-git-send-email-akarwar@marvell.com>
+ <87vb855qpe.fsf@kamboji.qca.qualcomm.com>
+ <f65e448bfd344867afbf6c002cdfc2bf@SC-EXCH04.marvell.com>
+ <CAGRGNgWvt7OUaiyfK2a17cfTCx=N4tPkeojhvahxOfvK3aBKRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160316185440-mutt-send-email-mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGRGNgWvt7OUaiyfK2a17cfTCx=N4tPkeojhvahxOfvK3aBKRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 16/03/2016 17:57, Michael S. Tsirkin wrote:
-> On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
->> Allowing for the future possibility of implementing AML-based
->> (i.e., firmware-triggered) access to the QEMU fw_cfg device,
->> acquire the global ACPI lock when accessing the device on behalf
->> of the guest-side sysfs driver, to prevent any potential race
->> conditions.
->>
->> Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-> 
-> So this patch makes sense of course.
-> 
-> 
-> Given the recent discussion on QEMU mailing list,
-> I think there is an additional patch that we need:
-> filter the files exposed to userspace by "opt/" prefix.
-> 
-> This will ensure that we can change all other fw cfg files
-> at will without breaking guest scripts.
-
-That makes no sense, all other fw_cfg files are firmware ABI so we
-cannot change them anyway.
-
-Paolo
+SGkgSnVsaWFuLA0KDQo+IEZyb206IEp1bGlhbiBDYWxhYnkgW21haWx0bzpqdWxpYW4uY2FsYWJ5
+QGdtYWlsLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE1hcmNoIDE3LCAyMDE2IDQ6NTYgQU0NCj4g
+VG86IEFtaXRrdW1hciBLYXJ3YXINCj4gQ2M6IEthbGxlIFZhbG87IGxpbnV4LXdpcmVsZXNzQHZn
+ZXIua2VybmVsLm9yZzsgTmlzaGFudCBTYXJtdWthZGFtOw0KPiBYaW5taW5nIEh1OyBkZXZpY2V0
+cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBtd2lmaWV4OiBwYXJz
+ZSBoc2NmZ19ncGlvIGluZm8gZnJvbSBkZXZpY2UgdHJlZQ0KPiANCj4gSGkgQW1pdGt1bWFyLA0K
+PiANCj4gT24gRnJpLCBEZWMgMTEsIDIwMTUgYXQgODoyMyBQTSwgQW1pdGt1bWFyIEthcndhciA8
+YWthcndhckBtYXJ2ZWxsLmNvbT4NCj4gd3JvdGU6DQo+ID4gSGkgS2FsbGUsDQo+ID4NCj4gPj4g
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogS2FsbGUgVmFsbyBbbWFpbHRv
+Omt2YWxvQGNvZGVhdXJvcmEub3JnXQ0KPiA+PiBTZW50OiBGcmlkYXksIERlY2VtYmVyIDExLCAy
+MDE1IDI6MDQgUE0NCj4gPj4gVG86IEFtaXRrdW1hciBLYXJ3YXINCj4gPj4gQ2M6IGxpbnV4LXdp
+cmVsZXNzQHZnZXIua2VybmVsLm9yZzsgTmlzaGFudCBTYXJtdWthZGFtOyBYaW5taW5nIEh1Ow0K
+PiA+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENI
+XSBtd2lmaWV4OiBwYXJzZSBoc2NmZ19ncGlvIGluZm8gZnJvbSBkZXZpY2UgdHJlZQ0KPiA+Pg0K
+PiA+PiArIGRldmljZXRyZWUgbGlzdA0KPiA+Pg0KPiA+PiBBbWl0a3VtYXIgS2Fyd2FyIDxha2Fy
+d2FyQG1hcnZlbGwuY29tPiB3cml0ZXM6DQo+ID4+DQo+ID4+ID4gRnJvbTogWGlubWluZyBIdSA8
+aHV4bUBtYXJ2ZWxsLmNvbT4NCj4gPj4gPg0KPiA+PiA+IFRoaXMgcGF0Y2ggcmVhZHMgaHNjZmdf
+Z3BpbyBmcm9tIGRldmljZSB0cmVlIGFuZCB1cGRhdGUgaW50ZXJuYWwNCj4gPj4gPiB2YXJpYWJs
+ZQ0KPiA+PiA+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogWGlubWluZyBIdSA8aHV4bUBtYXJ2ZWxs
+LmNvbT4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBBbWl0a3VtYXIgS2Fyd2FyIDxha2Fyd2FyQG1h
+cnZlbGwuY29tPg0KPiA+PiA+IC0tLQ0KPiA+PiA+ICBkcml2ZXJzL25ldC93aXJlbGVzcy9tYXJ2
+ZWxsL213aWZpZXgvc3RhX2NtZC5jIHwgMTEgKysrKysrKysrKysNCj4gPj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4gPj4gPg0KPiA+PiA+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL213aWZpZXgvc3RhX2NtZC5jDQo+ID4+ID4gYi9kcml2
+ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL213aWZpZXgvc3RhX2NtZC5jDQo+ID4+ID4gaW5kZXgg
+ZTQ4Njg2Ny4uZDI4YTUzZiAxMDA2NDQNCj4gPj4gPiAtLS0gYS9kcml2ZXJzL25ldC93aXJlbGVz
+cy9tYXJ2ZWxsL213aWZpZXgvc3RhX2NtZC5jDQo+ID4+ID4gKysrIGIvZHJpdmVycy9uZXQvd2ly
+ZWxlc3MvbWFydmVsbC9td2lmaWV4L3N0YV9jbWQuYw0KPiA+PiA+IEBAIC0xNDU5LDEwICsxNDU5
+LDIxIEBAIGludCBtd2lmaWV4X2RubGRfZHRfY2ZnZGF0YShzdHJ1Y3QNCj4gPj4gPiBtd2lmaWV4
+X3ByaXZhdGUgKnByaXYsICAjaWZkZWYgQ09ORklHX09GDQo+ID4+ID4gICAgIHN0cnVjdCBwcm9w
+ZXJ0eSAqcHJvcDsNCj4gPj4gPiAgICAgc2l6ZV90IGxlbiA9IHN0cmxlbihwcmVmaXgpOw0KPiA+
+PiA+ICsgICB1MzIgZGF0YTsNCj4gPj4gPiAgICAgaW50IHJldDsNCj4gPj4gPg0KPiA+PiA+ICAg
+ICAvKiBsb29rIGZvciBhbGwgbWF0Y2hpbmcgcHJvcGVydHkgbmFtZXMgKi8NCj4gPj4gPiAgICAg
+Zm9yX2VhY2hfcHJvcGVydHlfb2Zfbm9kZShub2RlLCBwcm9wKSB7DQo+ID4+ID4gKyAgICAgICAg
+ICAgaWYgKCFzdHJuY21wKHByb3AtPm5hbWUsICJtYXJ2ZWxsLGhzY2ZnX2dwaW8iLA0KPiA+PiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICBzdHJsZW4oIm1hcnZlbGwsaHNjZmdfZ3BpbyIpKSkg
+ew0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihw
+cml2LT5hZGFwdGVyLQ0KPiA+ZHRfbm9kZSwNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgcHJvcC0+bmFtZSwgJmRhdGEpKSB7DQo+ID4+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcocHJpdi0+YWRhcHRlci0+ZGV2LA0KPiA+
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJoc2NmZyBncGlvID0gMHgl
+eFxuIiwgZGF0YSk7DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIHByaXYtPmFk
+YXB0ZXItPmhzX2NmZy5ncGlvID0gZGF0YTsNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgIH0N
+Cj4gPj4gPiArICAgICAgICAgICB9DQo+ID4+DQo+ID4+IEkgZG9uJ3Qgc2VlIHRoaXMgZG9jdW1l
+bnRlZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MuDQo+ID4+IFBsZWFzZSBj
+cmVhdGUgYSBiaW5kaW5nIGRvY3VtZW50IGFuZCByZXZpZXcgaXQgd2l0aCB0aGUgZGV2aWNlIHRy
+ZWUNCj4gPj4gbWFpbnRhaW5lcnMuDQo+ID4+DQo+ID4+IEFjdHVhbGx5IHdoZW4gbG9va2luZyBt
+d2lmaWV4IGNsb3NlIEkgc2VlIHRoYXQgaXQgdXNlcyBtb3JlDQo+ID4+IHVuZG9jdW1lbnRlZCBk
+ZXZpY2UgdHJlZSBpbnRlcmZhY2VzOg0KPiA+Pg0KPiA+PiBtYXJ2ZWxsX2NmZ2RhdGENCj4gPj4g
+bWFydmVsbCxjYWxkYXRhDQo+ID4+IG1hcnZlbGwsMDBfdHhwd3JsaW1pdA0KPiA+Pg0KPiA+PiBJ
+IHRoaW5rIHRoZXNlIGFsbCBzaG91bGQgYmUgcHJvcGVybHkgZG9jdW1lbnRlZCBhbmQgcmV2aWV3
+ZWQuIEJ1dA0KPiA+PiBJJ2xsIGxldCB0aGUgZGV2aWNlIHRyZWUgcGVvcGxlIGNoaW1lIGluIHdo
+YXQncyB0aGUgYmVzdCB3YXkuDQo+ID4+DQo+ID4NCj4gPiBUaGFua3MgZm9yIHRoZSByZXZpZXcu
+DQo+ID4gU3VyZS4gV2Ugd2lsbCBkb2N1bWVudCBleGlzdGluZyBEVCBpbnRlcmZhY2VzIGFuZCBj
+cmVhdGUgdXBkYXRlZA0KPiB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2ggd2hpY2ggaW5jbHVkZXMgZG9j
+dW1lbnRhdGlvbiBpbiBiaW5kaW5ncy4NCj4gDQo+IEl0J3MgYmVlbiBhIHdoaWxlIHNpbmNlIHRo
+aXMgd2FzIHJldmlld2VkLiBEbyB5b3UgaGF2ZSBhbiB1cGRhdGVkDQo+IHZlcnNpb24gb2YgdGhp
+cyBwYXRjaD8NCj4gDQoNCldlIHdpbGwgYmUgc3VibWl0dGluZyB1cGRhdGVkIHZlcnNpb24gb2Yg
+YmVsb3cgcGF0Y2ggc2VyaWVzIGluIGEgZGF5IG9yIHR3by4gSGVuY2UgdXBkYXRlZCB2ZXJzaW9u
+IG9mIHRoaXMgcGF0Y2ggaXMgbm90IG5lZWRlZC4NCg0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIw
+MTYvMi8yOS8zOTQNCg0KUmVnYXJkcywNCkFtaXRrdW1hcg0K
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
