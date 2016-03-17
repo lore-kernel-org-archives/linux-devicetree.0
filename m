@@ -1,40 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [v6, 3/5] dt: move guts devicetree doc out of powerpc directory
-Date: Thu, 17 Mar 2016 18:11:57 +0100
-Message-ID: <4107975.rId64mooHz@wuerfel>
-References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com> <1457518131-11339-4-git-send-email-yangbo.lu@nxp.com> <20160317170640.GB21009@rob-hp-laptop>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v5 3/5] ARM: at91: pm: configure PMC fast startup signals
+Date: Thu, 17 Mar 2016 18:14:33 +0100
+Message-ID: <20160317171433.GD2831@piout.net>
+References: <1458111489-23774-1-git-send-email-wenyou.yang@atmel.com>
+ <1458111489-23774-4-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160317170640.GB21009@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Yangbo Lu <yangbo.lu@nxp.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org, iommu@lists.linux-foundation.org, netdev@vger.kernel.org, linux-mmc@vger.kernel.org, scott.wood@nxp.com, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, ulf.hansson@linaro.org, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Zhao Qiang <qiang.zhao@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, leoyang.li@nxp.com, xiaobo.xie@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458111489-23774-4-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 March 2016 12:06:40 Rob Herring wrote:
-> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt b/Documentation/devicetree/bindings/soc/fsl/guts.txt
-> > similarity index 91%
-> > rename from Documentation/devicetree/bindings/powerpc/fsl/guts.txt
-> > rename to Documentation/devicetree/bindings/soc/fsl/guts.txt
-> > index b71b203..07adca9 100644
-> > --- a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt
-> > +++ b/Documentation/devicetree/bindings/soc/fsl/guts.txt
-> > @@ -25,6 +25,9 @@ Recommended properties:
-> >   - fsl,liodn-bits : Indicates the number of defined bits in the LIODN
-> >     registers, for those SOCs that have a PAMU device.
-> >  
-> > + - little-endian : Indicates that the global utilities block is little
-> > +   endian. The default is big endian.
+On 16/03/2016 at 14:58:07 +0800, Wenyou Yang wrote :
+> The fast startup signal is used as wake up sources for ULP1 mode.
+> As soon as a fast startup signal is asserted, the embedded 12 MHz
+> RC oscillator restarts automatically.
 > 
-> The default is "the native endianness of the system".
+> This patch is to configure the fast startup signals, which signal
+> is enabled to trigger the PMC to wake up the system from ULP1 mode
+> should be configured via the DT.
+> 
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
 
-This may be what is currently documented, but not what we are doing
-in practice, as there is no "native endianess" for either PowerPC or
-ARM -- both allow running big-endian or little-endian kernels and the
-device registers are fixed.
+I would actually avoid doing that from the PMC driver and do that
+configuration from the aic5 driver. It has all the information you need,
+it knows what kind of level or edge is needed to wake up and what are
+the wakeup interrupts to enable. This will allow you to stop introducing
+a new binding. Also, this will avoid discrepancies between what is
+configured in the DT and what the user really wants (for exemple
+differences between the edge direction configured for the PIOBu in
+userspace versus what is in the device tree or wakeonlan
+activation/deactivation).
 
-I think the property here is fine.
+You can get the PMC syscon from irq-atmel-aic5.c and then use a table to
+map the hwirq to the offset in PMC_FSMR. Use it in aic5_set_type to set
+the polarity and then in aic5_suspend to enable the wakeup.
 
-	Arnd
+Maybe we could even go further and avoid ulp1 if no ulp1 compatbile
+wakeup sources are defined but there are ulp0 wakeup sources.
+
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
