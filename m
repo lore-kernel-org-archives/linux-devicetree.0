@@ -1,65 +1,38 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 02/18] dt-bindings: timer: sp804: add timer-width
- property
-Date: Thu, 17 Mar 2016 18:06:10 +0000
-Message-ID: <56EAF212.7020700@arm.com>
-References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
- <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
- <1457519060-6038-3-git-send-email-narmstrong@baylibre.com>
- <20160317170926.GA28934@rob-hp-laptop>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] pinctrl: amlogic: Make driver independent from
+ two-domain configuration
+Date: Thu, 17 Mar 2016 19:15:24 +0100
+Message-ID: <CAOQ7t2YjS5nAb3xxpdH-H11+2Y8WeCkxdKJE9yUKzkbVYMYfEw@mail.gmail.com>
+References: <1456869876-19320-1-git-send-email-carlo@caione.org>
+	<1456869876-19320-3-git-send-email-carlo@caione.org>
+	<CAOi56cWN-iPVh6Ace-SXUFoX4POnSyT0OmG8gyqivNpQTo9u4A@mail.gmail.com>
+	<CAOQ7t2Ykgej4uyDLUvuSZyjiJwK1TF4RGYJQhXWubk69d1xA_Q@mail.gmail.com>
+	<7h7fh1t8vu.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160317170926.GA28934@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, daniel.lezcano@linaro.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, rmk+kernel@arm.linux.org.uk, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7h7fh1t8vu.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Thu, Mar 17, 2016 at 4:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-On 17/03/16 17:09, Rob Herring wrote:
-> On Wed, Mar 09, 2016 at 11:24:04AM +0100, Neil Armstrong wrote:
->> Add timer-width optional property to specify a different vendor
->> specific timer counter bit-width.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>   Documentation/devicetree/bindings/timer/arm,sp804.txt | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/timer/arm,sp804.txt b/Documentation/devicetree/bindings/timer/arm,sp804.txt
->> index 5cd8eee7..141e143 100644
->> --- a/Documentation/devicetree/bindings/timer/arm,sp804.txt
->> +++ b/Documentation/devicetree/bindings/timer/arm,sp804.txt
->> @@ -17,6 +17,8 @@ Optional properties:
->>   - arm,sp804-has-irq = <#>: In the case of only 1 timer irq line connected, this
->>   	specifies if the irq connection is for timer 1 or timer 2. A value of 1
->>   	or 2 should be used.
->> +- arm,timer-width: Should contain the width in number of bits of the counter,
->> +	is considered by default 32 but can be changed for vendor variants.
+> Do you have an ack now?  or are you still waiting?
+
+Still waiting for Rob.
+
+>> What's the fastest way to land the DTS changes in mainline at this point?
 >
-> That would not be an SP804 nor would the vendor be ARM in that case. So
-> add a new compatible string for the vendor that decided to hack up ARM's
-> IP block.
+> When you've collected the acks, send a pull request through arm-soc so
+> we can get it in via our fixes branch.
 
-By all accounts this is some ancient reference design[1] which later 
-evolved _into_ the SP804, so that vendor would probably still be ARM ;)
+ok
 
-A separate compatible string would indeed make more sense, though. Both 
-semantically and in terms of letting the driver account for the 
-differences automatically.
-
-Robin.
-
-[1]:http://infocenter.arm.com/help/topic/com.arm.doc.ddi0170a/I350250.html
-
->
-> Rob
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
