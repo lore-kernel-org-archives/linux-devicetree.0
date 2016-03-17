@@ -1,29 +1,31 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: Add binding docs for V3D.
-Date: Thu, 17 Mar 2016 06:53:42 -0500
-Message-ID: <20160317115342.GB1405@rob-hp-laptop>
-References: <1457123528-13482-1-git-send-email-eric@anholt.net>
- <1457123528-13482-2-git-send-email-eric@anholt.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCH v2 1/2] dt/bindings: Add bindings for PIC32 SPI
+ peripheral
+Date: Thu, 17 Mar 2016 07:00:42 -0500
+Message-ID: <20160317120042.GA4744@rob-hp-laptop>
+References: <1457238927-16120-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1457123528-13482-2-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+In-Reply-To: <1457238927-16120-1-git-send-email-purna.mandal@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Purna Chandra Mandal <purna.mandal@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Joshua Henderson <digitalpeer@digitalpeer.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 12:32:06PM -0800, Eric Anholt wrote:
-> This was missed in the upstreaming process.
+On Sun, Mar 06, 2016 at 10:05:26AM +0530, Purna Chandra Mandal wrote:
+> Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
 > 
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> 
+> Changes in v2:
+>  - fix indentation
+>  - add space after comma
+>  - moved 'cs-gpios' section under 'required' properties.
+> 
+>  .../bindings/spi/microchip,spi-pic32.txt           | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
