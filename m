@@ -1,56 +1,63 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] iio: dac: Add support for the AD5592R/AD5593R
- ADCs/DACs
-Date: Thu, 17 Mar 2016 09:58:37 -0500
-Message-ID: <20160317145837.GA24226@rob-hp-laptop>
-References: <1457354915-30831-1-git-send-email-michael.hennerich@analog.com>
+Subject: Re: [PATCH 4/5] pwm: pwm-tipwmss: Update documentation to use empty
+ range property
+Date: Thu, 17 Mar 2016 10:01:40 -0500
+Message-ID: <20160317150140.GA25775@rob-hp-laptop>
+References: <1457380318-15452-1-git-send-email-fcooper@ti.com>
+ <1457380318-15452-5-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1457354915-30831-1-git-send-email-michael.hennerich@analog.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: michael.hennerich@analog.com
-Cc: jic23@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, lars@metafoo.de, knaack.h@gmx.de, paul.cercueil@analog.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+In-Reply-To: <1457380318-15452-5-git-send-email-fcooper@ti.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 07, 2016 at 01:48:35PM +0100, michael.hennerich@analog.com wrote:
-> From: Paul Cercueil <paul.cercueil@analog.com>
+On Mon, Mar 07, 2016 at 01:51:57PM -0600, Franklin S Cooper Jr wrote:
+> Since the PWMSS and its subdevices (eCAP and ePWM) use the same address
+> space then the range property should be empty. Update the documentation
+> to show the correct usage.
+
+Why does it matter? An empty ranges is generally not preferred.
+
 > 
-> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
-> ADC/DAC devices.
-> 
-> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> 
-> Changes since v1:
-> 	* Fix mutex usage
-> 	* Remove unnecessary NULL pointer guards
-> 	* Add comment explaining the invalid data read
-> 	* AD5593R Remove surplus adc readback
-> 
-> Changes since v2:
-> 	* Use child nodes to describe channels
-> 	* Fix probe return and driver remove path
-> 	* Move locking closer to where its used
-> 	* Remove WARN_ON but return error
-> 	* Remove OPEN DRAIN configuration option
-> 
-> Changes since v3:
-> 	* Documentation: Add missing vendor prefixes in the examples
-> 	* Minor function reordering in remove() to match the reverse of probe()
-> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 > ---
->  .../devicetree/bindings/iio/dac/ad5592r.txt        | 143 +++++
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/iio/dac/Kconfig                            |  27 +
->  drivers/iio/dac/Makefile                           |   3 +
->  drivers/iio/dac/ad5592r-base.c                     | 702 +++++++++++++++++++++
->  drivers/iio/dac/ad5592r-base.h                     |  78 +++
->  drivers/iio/dac/ad5592r.c                          | 164 +++++
->  drivers/iio/dac/ad5593r.c                          | 131 ++++
->  include/dt-bindings/iio/adi,ad5592r.h              |  16 +
->  8 files changed, 1264 insertions(+)
-
+>  Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt | 12 ++++--------
+>  1 file changed, 4 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt b/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+> index f7eae77..672fa71 100644
+> --- a/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+> @@ -7,11 +7,9 @@ Required properties:
+>  		  Should set to 1.
+>  - size-cells: specify number of u32 entries needed to specify child nodes size
+>  		in reg property. Should set to 1.
+> -- ranges: describes the address mapping of a memory-mapped bus. Should set to
+> -	   physical address map of child's base address, physical address within
+> -	   parent's address  space and length of the address map. For am33xx,
+> -	   3 set of child register maps present, ECAP register space, EQEP
+> -	   register space, EHRPWM register space.
+> +- ranges: describes the address mapping of a memory-mapped bus. Its value
+> +	  should be empty since no address translation is needed between the
+> +	  parent and the child.
+>  
+>  Also child nodes should also populated under PWMSS DT node.
+>  
+> @@ -23,9 +21,7 @@ pwmss0: pwmss@48300000 {
+>  	#address-cells = <1>;
+>  	#size-cells = <1>;
+>  	status = "disabled";
+> -	ranges = <0x48300100 0x48300100 0x80   /* ECAP */
+> -		  0x48300180 0x48300180 0x80   /* EQEP */
+> -		  0x48300200 0x48300200 0x80>; /* EHRPWM */
+> +	ranges;
+>  
+>  	/* child nodes go here */
+>  };
+> -- 
+> 2.7.0
+> 
