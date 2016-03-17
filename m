@@ -1,29 +1,66 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: Add serial0 alias and
- stdout-path to a31s-primo81.dts
-Date: Thu, 17 Mar 2016 14:28:03 +0800
-Message-ID: <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA@mail.gmail.com>
-References: <1458137962-27714-1-git-send-email-hdegoede@redhat.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] pinctrl: amlogic: Make driver independent from
+ two-domain configuration
+Date: Thu, 17 Mar 2016 08:09:28 +0100
+Message-ID: <CAOQ7t2Ykgej4uyDLUvuSZyjiJwK1TF4RGYJQhXWubk69d1xA_Q@mail.gmail.com>
+References: <1456869876-19320-1-git-send-email-carlo@caione.org>
+	<1456869876-19320-3-git-send-email-carlo@caione.org>
+	<CAOi56cWN-iPVh6Ace-SXUFoX4POnSyT0OmG8gyqivNpQTo9u4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBCU5VG3QKGQE2QU5PVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1458137962-27714-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOi56cWN-iPVh6Ace-SXUFoX4POnSyT0OmG8gyqivNpQTo9u4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 10:19 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> u-boot uses the kernel as the canonical source for its sunxi dts files
-> and u-boot needs these.
+On Thu, Mar 17, 2016 at 4:31 AM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Carlo
 >
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> On Tue, Mar 1, 2016 at 2:04 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
+>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>>
+>> In the Amlogic Meson8 / Meson8b platforms we have two different buses:
+>> cbus and aobus, corresponding to 2 different power domains (regular and
+>> always-on). On each bus a different set of registers is mapped to manage
+>> muxes, GPIOs and in general to control a clear subset of the pins.
+>>
+>> Considering this architecture, having two different pinctrl devices, one
+>> for each bus / power domain, makes much more sense than just having one
+>> single device.
+>>
+>> Right now we have one single pin controller driver that uses two
+>> different domains (represented by 'gpio' and 'gpio-ao' sub-nodes in the
+>> DTS) to manage the set of registers on the two buses. This dual-domain
+>> configuration is hardcoded into the driver that strictly requires one
+>> domain for each bus in the same pin controller device.
+>>
+>> With this patch we refactor the driver to allow splitting the driver in
+>> two parts. This change is needed to have a proper description of the HW
+>> in the device-tree where we want to introduce aobus and cbus.
+>>
+>> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> kernelci.org detected that the meson8b-odroidc1 started failing boot
+> test in mainline[1] and I bisected it down to this patch, which is in
+> mainline in he form of  commit 9dab1868ec0d (pinctrl: amlogic: Make
+> driver independent from two-domain configuration.)
+>
+> I confirmed that reverting this patch on top of Linus' master branch
+> (commit 9256d5a308c9) gets the odroid-c1 booting again.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Yes, this is expected. Thank you for pointing this out.
+The problem is that the driver changes ended up in mainline before I
+could pull the DTS changes (waiting for the Rob's ACK on
+documentation).
+What's the fastest way to land the DTS changes in mainline at this point?
+
+Thanks,
+
+-- 
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
