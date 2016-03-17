@@ -1,55 +1,49 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v5 1/6] pwms: pwm-ti*: Get the clock from the PWMSS
- (parent)
-Date: Thu, 17 Mar 2016 17:37:18 -0500
-Message-ID: <56EB319E.3050502@ti.com>
-References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
- <1457400224-24797-2-git-send-email-fcooper@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC 1/5] serial: sh-sci: Update DT binding documentation
+ for GPIO modem lines
+Date: Fri, 18 Mar 2016 07:43:36 +0900
+Message-ID: <20160317224336.GD23806@verge.net.au>
+References: <1458222449-12324-1-git-send-email-geert+renesas@glider.be>
+ <1458222449-12324-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1457400224-24797-2-git-send-email-fcooper@ti.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458222449-12324-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Gentle ping on this
-
-On 03/07/2016 07:23 PM, Franklin S Cooper Jr wrote:
-> The eCAP and ePWM doesn't have their own separate clocks. They simply
-> utilize the clock provided directly by the PWMSS. Therefore, they simply
-> need to grab a reference to their parent's clock.
->
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+On Thu, Mar 17, 2016 at 02:47:25PM +0100, Geert Uytterhoeven wrote:
+> Amend the DT bindings for the Renesas SCI driver to allow describing
+> optional GPIO-controlled modem lines, which can be used where dedicated
+> modem lines are not available.
+> 
+> The property naming is dictated by the SERIAL_MCTRL_GPIO helpers.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: devicetree@vger.kernel.org
 > ---
->  drivers/pwm/pwm-tiecap.c   | 2 +-
->  drivers/pwm/pwm-tiehrpwm.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
-> index 616af76..9418159 100644
-> --- a/drivers/pwm/pwm-tiecap.c
-> +++ b/drivers/pwm/pwm-tiecap.c
-> @@ -212,7 +212,7 @@ static int ecap_pwm_probe(struct platform_device *pdev)
->  	if (!pc)
->  		return -ENOMEM;
+>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> index 528c3b90f23cb04b..f8d7b36742967163 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> @@ -76,6 +76,9 @@ Optional properties:
+>    - dmas: Must contain a list of two references to DMA specifiers, one for
+>  	  transmission, and one for reception.
+>    - dma-names: Must contain a list of two DMA names, "tx" and "rx".
+> +  - {cts,dsr,dcd,rng,rts,dtr,out1,out2}-gpios: Must contain a GPIO specifier,
+> +    referring to the GPIO pin to be used as the UART's CTS, DSR, DCD, RNG, RTS,
+> +    DTR, OUT1, or OUT2 line.
 >  
-> -	clk = devm_clk_get(&pdev->dev, "fck");
-> +	clk = devm_clk_get(pdev->dev.parent, "fck");
->  	if (IS_ERR(clk)) {
->  		dev_err(&pdev->dev, "failed to get clock\n");
->  		return PTR_ERR(clk);
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 6a41e66..09dc1bc 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -443,7 +443,7 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
->  	if (!pc)
->  		return -ENOMEM;
->  
-> -	clk = devm_clk_get(&pdev->dev, "fck");
-> +	clk = devm_clk_get(pdev->dev.parent, "fck");
->  	if (IS_ERR(clk)) {
->  		dev_err(&pdev->dev, "failed to get clock\n");
->  		return PTR_ERR(clk);
+>  Example:
+>  	aliases {
+
+Hi Geert,
+
+I do not feel strongly about this but I wonder if it
+would make sense to update the example with the new properties.
