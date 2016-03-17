@@ -1,86 +1,29 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Correct path for ARM GIC documentation
-Date: Thu, 17 Mar 2016 14:49:40 +0000
-Message-ID: <56EAC404.9090606@nvidia.com>
-References: <1458226077-7179-1-git-send-email-jonathanh@nvidia.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v4 01/13] pinctrl: sunxi: Add A83T R_PIO controller
+Date: Thu, 17 Mar 2016 15:51:15 +0100
+Message-ID: <CACRpkdaFekCnRKoYQ=Fq1LT0FcH7RobwkLi_G1YfXJAb=4RTHQ@mail.gmail.com>
+References: <1458144276-31108-1-git-send-email-vishnupatekar0510@gmail.com>
+	<1458144276-31108-2-git-send-email-vishnupatekar0510@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458226077-7179-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1458144276-31108-2-git-send-email-vishnupatekar0510@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vishnu Patekar <vishnupatekar0510@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Jon Corbet <corbet@lwn.net>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>R
 List-Id: devicetree@vger.kernel.org
 
-Adding Linus for ux500 ...
+On Wed, Mar 16, 2016 at 5:04 PM, Vishnu Patekar
+<vishnupatekar0510@gmail.com> wrote:
 
-On 17/03/16 14:47, Jon Hunter wrote:
-> Commit eb3fcf007fff ("dt-bindings: consolidate interrupt controller
-> bindings") moved the binding documentation for the ARM GIC from
-> arm/gic.txt to interrupt-controller/arm,gic.txt. However, there are
-> still some binding documents referring to the old path. Update these
-> binding documents to use the correct location.
-> 
-> Fixes: eb3fcf007fff ("dt-bindings: consolidate interrupt controller bindings")
-> 
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/omap/crossbar.txt                | 3 ++-
->  Documentation/devicetree/bindings/arm/ux500/boards.txt                 | 2 +-
->  .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt       | 3 +--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> index a9b28d74d902..bb5727ae004a 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-> @@ -42,7 +42,8 @@ Examples:
->  Consumer:
->  ========
->  See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
-> -Documentation/devicetree/bindings/arm/gic.txt for further details.
-> +Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt for
-> +further details.
->  
->  An interrupt consumer on an SoC using crossbar will use:
->  	interrupts = <GIC_SPI request_number interrupt_level>
-> diff --git a/Documentation/devicetree/bindings/arm/ux500/boards.txt b/Documentation/devicetree/bindings/arm/ux500/boards.txt
-> index b8737a8de718..7334c24625fc 100644
-> --- a/Documentation/devicetree/bindings/arm/ux500/boards.txt
-> +++ b/Documentation/devicetree/bindings/arm/ux500/boards.txt
-> @@ -23,7 +23,7 @@ scu:
->  	see binding for arm/scu.txt
->  
->  interrupt-controller:
-> -	see binding for arm/gic.txt
-> +	see binding for interrupt-controller/arm,gic.txt
->  
->  timer:
->  	see binding for arm/twd.txt
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> index b8e1674c7837..8cf564d083d2 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> @@ -16,8 +16,7 @@ Required properties:
->  	"mediatek,mt6577-sysirq"
->  	"mediatek,mt2701-sysirq"
->  - interrupt-controller : Identifies the node as an interrupt controller
-> -- #interrupt-cells : Use the same format as specified by GIC in
-> -  Documentation/devicetree/bindings/arm/gic.txt
-> +- #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
->  - interrupt-parent: phandle of irq parent for sysirq. The parent must
->    use the same interrupt-cells format as GIC.
->  - reg: Physical base address of the intpol registers and length of memory
-> 
+> The A83T has R_PIO pin controller, it's same as A23, execpt A83T
+> interrupt bit is 6th and A83T has one extra pin PL12.
+>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I think I already merged this?
+
+Yours,
+Linus Walleij
