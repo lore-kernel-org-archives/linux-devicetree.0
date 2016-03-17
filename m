@@ -1,99 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: Update to upstream version 53bf130b1cdd
-Date: Thu, 17 Mar 2016 17:54:43 -0500
-Message-ID: <CAL_JsqLAxUttFPsSdwWg0Phh0HdyxT8TJcPFOFMrjmD8vLT_Ww@mail.gmail.com>
-References: <1457104420-18350-1-git-send-email-robh@kernel.org>
- <CAOesGMhCMMf_3g-pT4G_fB9NHx1=TLwU_qKK+UjO_GJYMjSEAA@mail.gmail.com>
- <CAL_JsqKpZ7FgtH6zyanbnrq3u76RK23s1TQhvnaH_by_NtktCA@mail.gmail.com> <CAOesGMjkk-Ow=VnVhgJk8cERre_Jm7Q14wmLAsVb0GufyFBF+g@mail.gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: linux-4.4-rc3/scripts/dtc/libfdt/fdt.c:88: code that relies on
+ undefined behaviour ?
+Date: Thu, 17 Mar 2016 17:57:50 -0500
+Message-ID: <CAL_Jsq+gEpp+O_Q-k15kyyPuoQQhLVenRhhRMmQCdC_jg5-60Q@mail.gmail.com>
+References: <DUB128-W60BE88653C27C6610D81059C000@phx.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMjkk-Ow=VnVhgJk8cERre_Jm7Q14wmLAsVb0GufyFBF+g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <DUB128-W60BE88653C27C6610D81059C000-MsuGFMq8XAE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: David Binderman <dcb314-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 8, 2016 at 10:22 AM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
-> Hi,
++devicetree-compiler list
+
+On Mon, Nov 30, 2015 at 12:02 PM, David Binderman <dcb314-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hello there,
 >
-> On Mon, Mar 7, 2016 at 11:37 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Mon, Mar 7, 2016 at 5:10 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
->>> Hi,
->>>
->>> On Fri, Mar 4, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>> Sync to upstream dtc commit 53bf130b1cdd ("libfdt: simplify
->>>> fdt_node_check_compatible()"). This adds the following commits from
->>>> upstream:
->>>>
->>>> 53bf130 libfdt: simplify fdt_node_check_compatible()
->>>> c9d9121 Warn on node name unit-address presence/absence mismatch
->>>> 2e53f9d Catch unsigned 32bit overflow when parsing flattened device tree offsets
->>>>
->>>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> ---
->>>> As usual, this is just an automated copy of upstream dtc into the kernel
->>>> tree. The changeset is small enough that I have left it here.
->>>>
->>>> The main reason for this sync is to pick-up the new unit-address
->>>> warnings.
->>>
->>> This spews a crazy amount of warnings on a multi_v7_defconfig build.
->>
->> Shocking, huh? And I've got more checks in the works. :)
->>
->>> I'd prefer to see most of those warnings fixed _before_ we introduce
->>> it by default. Otherwise we just add a huge amount of noise that will
->>> hide any real valid warnings that are now brought up.
->>
->> How do you propose to do that? If it is not enabled, then no one will
->> see them nor care. I don't intend to fix everyone's stuff myself.
+> [linux-4.4-rc3/scripts/dtc/libfdt/fdt.c:88]: (warning) Invalid test for overflow 'p+len<p'. Condition is always false unless there is overflow, and overflow is UB.
+
+Upstream dtc needs to be fixed first. Patches welcome.
+
 >
-> Right, but pushing a change on everyone that makes the build
-> near-unusable as a tool to see if you're introducing a new error is
-> also not a good way to do it. However:
+> Source code is
 >
->> We could hide the check behind COMPILE_TEST perhaps.
+>     if (p + len < p)
+>         return NULL;
 >
-> Putting it behind an option sounds like a suitable approach. Would it
-> be possible to plumb in under "make C=1" / "make C=2" instead? That's
-> closer in meaning to what you're doing here than COMPILE_TEST, which
-> is more about turning on drivers that might not make sense on your
-> platform to get compile coverage.
-
-C=1/2 is only designed to run on C files, so it would be a bit of work
-to extend it. However, "W=1" seems like a better match and easy to
-add:
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index ad50d58..417d8c2 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -271,6 +271,10 @@ cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n
--f -9 > $@) || \
- # ---------------------------------------------------------------------------
- DTC ?= $(objtree)/scripts/dtc/dtc
-
-+ifeq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
-+DTC_FLAGS += -Wno-unit_address_vs_reg
-+endif
-+
- # Generate an assembly file to wrap the output of the device tree compiler
- quiet_cmd_dt_S_dtb= DTB     $@
- cmd_dt_S_dtb=                                          \
-
-
-> This would make people aware of the tool, give them an easy way to run
-> it to do the cleanups. Nag maintainers when they post new code without
-> having paid attention to the old sources/cleanup, and with some amount
-> of time most of it might be fixed.
-
-I added the ability to do "make DTC=my/dtc", so there already is a way
-for people to run it if they want to. Of course, they'd have to fetch
-and build dtc compared to the above. Still, with either option it is
-dependent on people running something they don't likely run normally.
-
-Rob
+> Suggest code rework.
+>
+> Regards
+>
+> David Binderman
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
