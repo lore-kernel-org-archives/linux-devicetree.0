@@ -1,103 +1,86 @@
-From: "Franklin S Cooper Jr." <fcooper@ti.com>
-Subject: Re: [PATCH v5 6/6] ARM: dts: DRA7: Add dt nodes for PWMSS
-Date: Thu, 17 Mar 2016 10:53:57 -0500
-Message-ID: <56EAD315.1030307@ti.com>
-References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
- <1457400224-24797-7-git-send-email-fcooper@ti.com>
- <20160317151147.GA29802@rob-hp-laptop>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [RESEND PATCH] ARM: at91/dt: sama5d2: add SFR node
+Date: Thu, 17 Mar 2016 17:04:00 +0100
+Message-ID: <1458230640-26049-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20160317151147.GA29802@rob-hp-laptop>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, paul@pwsan.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vigneshr@ti.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
+This SFR node is looked up by the I2S controller driver to tune the
+SFR_I2SCLKSEL register.
 
-On 03/17/2016 10:11 AM, Rob Herring wrote:
-> On Mon, Mar 07, 2016 at 07:23:44PM -0600, Franklin S Cooper Jr wrote:
->> From: Vignesh R <vigneshr@ti.com>
->>
->> Add PWMSS device tree nodes for DRA7 SoC family and add documentation
->> for dt bindings.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> [fcooper@ti.com: Add eCAP and use updated bindings for PWMSS and ePWM]
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->> Version 5 changes:
->> Add DT node for eCAP and update eCAP binding documentation
->>
->> Version 4 changes:
->> Updated link to the latest documentation
->>
->>  .../devicetree/bindings/pwm/pwm-tiecap.txt         |  9 +++
->>  .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |  9 +++
->>  .../devicetree/bindings/pwm/pwm-tipwmss.txt        | 15 +++-
->>  arch/arm/boot/dts/dra7.dtsi                        | 84 ++++++++++++++++++++++
->>  4 files changed, 116 insertions(+), 1 deletion(-)
->
->> +			ehrpwm1: pwm@48440200 {
->> +				compatible = "ti,dra7xx-ehrpwm",
->> +					     "ti,am33xx-ehrpwm";
->> +				#pwm-cells = <3>;
->> +				reg = <0x48440200 0x80>;
->> +				clocks = <&ehrpwm1_tbclk>;
->> +				clock-names = "tbclk";
->> +				status = "disabled";
->> +			};
->> +
->> +			ecap1: ecap@48440100 {
-> This also is a PWM? Then it should also be pwm@...
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/atmel-at91.txt |  2 +-
+ arch/arm/boot/dts/sama5d2.dtsi                       |  5 +++++
+ include/soc/at91/atmel-sfr.h                         | 18 ++++++++++++++++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
+ create mode 100644 include/soc/at91/atmel-sfr.h
 
-The enhanced capture module primary purpose is to measure
-time between external signals which is called capture mode.
-It also has a PWM mode. So I wouldn't recommend generalizing
-the entire node to pwm.
->
->> +				compatible = "ti,dra7xx-ecap",
->> +					     "ti,am33xx-ecap";
->> +				#pwm-cells = <3>;
->> +				reg = <0x48440100 0x80>;
->> +				status = "disabled";
->> +			};
->> +		};
->> +
->> +		epwmss2: epwmss@48442000 {
->> +			compatible = "ti,dra7xx-pwmss", "ti,am33xx-pwmss";
->> +			reg = <0x48442000 0x30>;
->> +			ti,hwmods = "epwmss2";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +			status = "disabled";
->> +			ranges;
->> +
->> +			ehrpwm2: pwm@48442200 {
->> +				compatible = "ti,dra7xx-ehrpwm",
->> +					     "ti,am33xx-ehrpwm";
->> +				#pwm-cells = <3>;
->> +				reg = <0x48442200 0x80>;
->> +				clocks = <&ehrpwm2_tbclk>;
->> +				clock-names = "tbclk";
->> +				status = "disabled";
->> +			};
->> +
->> +			ecap2: ecap@48442100 {
-> And here.
->
->> +				compatible = "ti,dra7xx-ecap",
->> +					     "ti,am33xx-ecap";
->> +				#pwm-cells = <3>;
->> +				reg = <0x48442100 0x80>;
->> +				status = "disabled";
->> +			};
->> +		};
->>  	};
->>  
->>  	thermal_zones: thermal-zones {
->> -- 
->> 2.7.0
->>
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+index 7fd64ec..550fd66 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -155,7 +155,7 @@ elsewhere.
+ 
+ required properties:
+ - compatible: Should be "atmel,<chip>-sfr", "syscon".
+-  <chip> can be "sama5d3" or "sama5d4".
++  <chip> can be "sama5d3", "sama5d4" or "sama5d2".
+ - reg: Should contain registers location and length
+ 
+ 	sfr@f0038000 {
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 78996bd..36bb29c 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -973,6 +973,11 @@
+ 				status = "disabled";
+ 			};
+ 
++			sfr: sfr@f8030000 {
++				compatible = "atmel,sama5d2-sfr", "syscon";
++				reg = <0xf8030000 0x98>;
++			};
++
+ 			flx0: flexcom@f8034000 {
+ 				compatible = "atmel,sama5d2-flexcom";
+ 				reg = <0xf8034000 0x200>;
+diff --git a/include/soc/at91/atmel-sfr.h b/include/soc/at91/atmel-sfr.h
+new file mode 100644
+index 0000000..2f9bb98
+--- /dev/null
++++ b/include/soc/at91/atmel-sfr.h
+@@ -0,0 +1,18 @@
++/*
++ * Atmel SFR (Special Function Registers) register offsets and bit definitions.
++ *
++ * Copyright (C) 2016 Atmel
++ *
++ * Author: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _LINUX_MFD_SYSCON_ATMEL_SFR_H
++#define _LINUX_MFD_SYSCON_ATMEL_SFR_H
++
++#define AT91_SFR_I2SCLKSEL	0x90	/* I2SC Register */
++
++#endif /* _LINUX_MFD_SYSCON_ATMEL_SFR_H */
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
