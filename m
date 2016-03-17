@@ -1,190 +1,195 @@
-From: Antony Pavlov <antonynpavlov@gmail.com>
-Subject: [PATCH v2 11/18] MIPS: ath79: update devicetree clock support for AR9331
-Date: Thu, 17 Mar 2016 06:34:18 +0300
-Message-ID: <1458185665-4521-12-git-send-email-antonynpavlov@gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 05/18] MIPS: dts: qca: ar9132: use short references for dt nodes
+Date: Thu, 17 Mar 2016 06:34:12 +0300
+Message-ID: <1458185665-4521-6-git-send-email-antonynpavlov@gmail.com>
 References: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Gabor Juhos <juhosg@openwrt.org>, Alban Bedel <albeu@free.fr>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Gabor Juhos <juhosg@openwrt.org>
-Cc: Alban Bedel <albeu@free.fr>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-clk@vger.kernel.org
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
----
- arch/mips/ath79/clock.c | 120 +++++++++++++++++++++++++++++-------------------
- 1 file changed, 74 insertions(+), 46 deletions(-)
+Here are some Sascha Hauer's arguments for using aliases in the dts
+files:
 
-diff --git a/arch/mips/ath79/clock.c b/arch/mips/ath79/clock.c
-index 79fb8b4..3cfc5ec 100644
---- a/arch/mips/ath79/clock.c
-+++ b/arch/mips/ath79/clock.c
-@@ -137,15 +137,68 @@ static void __init ar724x_clocks_init(void)
- 	clk_add_alias("uart", NULL, "ahb", NULL);
- }
+ - using aliases reduces the number of indentations in dts files;
+
+ - dts files become independent of the layout of the dtsi files
+   (it becomes possible to introduce another bus {} hierarchy between
+   a toplevel bus and the devices when you have to);
+
+ - less chances for typos. if &i2c2 does not exist you get an error.
+   If instead you duplicate the whole path in the dts file a typo
+   in the path will just create another node.
+
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ arch/mips/boot/dts/qca/ar9132.dtsi               |  8 +-
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 94 ++++++++++++------------
+ 2 files changed, 49 insertions(+), 53 deletions(-)
+
+diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
+index 3c2ed9e..3bff63b 100644
+--- a/arch/mips/boot/dts/qca/ar9132.dtsi
++++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+@@ -52,7 +52,7 @@
+ 				#qca,ddr-wb-channel-cells = <1>;
+ 			};
  
-+static void __init ar9330_clk_init(struct clk *ref_clk, void __iomem *pll_base)
-+{
-+	u32 clock_ctrl;
-+	u32 ref_div;
-+	u32 ninit_mul;
-+	u32 out_div;
-+
-+	u32 cpu_div;
-+	u32 ddr_div;
-+	u32 ahb_div;
-+
-+	clock_ctrl = __raw_readl(pll_base + AR933X_PLL_CLOCK_CTRL_REG);
-+	if (clock_ctrl & AR933X_PLL_CLOCK_CTRL_BYPASS) {
-+		ref_div = 1;
-+		ninit_mul = 1;
-+		out_div = 1;
-+
-+		cpu_div = 1;
-+		ddr_div = 1;
-+		ahb_div = 1;
-+	} else {
-+		u32 cpu_config;
-+		u32 t;
-+
-+		cpu_config = __raw_readl(pll_base + AR933X_PLL_CPU_CONFIG_REG);
-+
-+		t = (cpu_config >> AR933X_PLL_CPU_CONFIG_REFDIV_SHIFT) &
-+		    AR933X_PLL_CPU_CONFIG_REFDIV_MASK;
-+		ref_div = t;
-+
-+		ninit_mul = (cpu_config >> AR933X_PLL_CPU_CONFIG_NINT_SHIFT) &
-+		    AR933X_PLL_CPU_CONFIG_NINT_MASK;
-+
-+		t = (cpu_config >> AR933X_PLL_CPU_CONFIG_OUTDIV_SHIFT) &
-+		    AR933X_PLL_CPU_CONFIG_OUTDIV_MASK;
-+		if (t == 0)
-+			t = 1;
-+
-+		out_div = (1 << t);
-+
-+		cpu_div = ((clock_ctrl >> AR933X_PLL_CLOCK_CTRL_CPU_DIV_SHIFT) &
-+		     AR933X_PLL_CLOCK_CTRL_CPU_DIV_MASK) + 1;
-+
-+		ddr_div = ((clock_ctrl >> AR933X_PLL_CLOCK_CTRL_DDR_DIV_SHIFT) &
-+		      AR933X_PLL_CLOCK_CTRL_DDR_DIV_MASK) + 1;
-+
-+		ahb_div = ((clock_ctrl >> AR933X_PLL_CLOCK_CTRL_AHB_DIV_SHIFT) &
-+		     AR933X_PLL_CLOCK_CTRL_AHB_DIV_MASK) + 1;
-+	}
-+
-+	clks[ATH79_CLK_CPU] = ath79_reg_ffclk("cpu", "ref",
-+					ninit_mul, ref_div * out_div * cpu_div);
-+	clks[ATH79_CLK_DDR] = ath79_reg_ffclk("ddr", "ref",
-+					ninit_mul, ref_div * out_div * ddr_div);
-+	clks[ATH79_CLK_AHB] = ath79_reg_ffclk("ahb", "ref",
-+					ninit_mul, ref_div * out_div * ahb_div);
-+}
-+
- static void __init ar933x_clocks_init(void)
- {
-+	struct clk *ref_clk;
- 	unsigned long ref_rate;
--	unsigned long cpu_rate;
--	unsigned long ddr_rate;
--	unsigned long ahb_rate;
--	u32 clock_ctrl;
--	u32 cpu_config;
--	u32 freq;
- 	u32 t;
+-			uart@18020000 {
++			uart: uart@18020000 {
+ 				compatible = "ns8250";
+ 				reg = <0x18020000 0x20>;
+ 				interrupts = <3>;
+@@ -94,7 +94,7 @@
+ 				clock-output-names = "cpu", "ddr", "ahb";
+ 			};
  
- 	t = ath79_reset_rr(AR933X_RESET_REG_BOOTSTRAP);
-@@ -154,46 +207,14 @@ static void __init ar933x_clocks_init(void)
- 	else
- 		ref_rate = (25 * 1000 * 1000);
+-			wdt@18060008 {
++			wdt: wdt@18060008 {
+ 				compatible = "qca,ar7130-wdt";
+ 				reg = <0x18060008 0x8>;
  
--	clock_ctrl = ath79_pll_rr(AR933X_PLL_CLOCK_CTRL_REG);
--	if (clock_ctrl & AR933X_PLL_CLOCK_CTRL_BYPASS) {
--		cpu_rate = ref_rate;
--		ahb_rate = ref_rate;
--		ddr_rate = ref_rate;
--	} else {
--		cpu_config = ath79_pll_rr(AR933X_PLL_CPU_CONFIG_REG);
-+	ref_clk = ath79_add_sys_clkdev("ref", ref_rate);
+@@ -125,7 +125,7 @@
+ 			};
+ 		};
  
--		t = (cpu_config >> AR933X_PLL_CPU_CONFIG_REFDIV_SHIFT) &
--		    AR933X_PLL_CPU_CONFIG_REFDIV_MASK;
--		freq = ref_rate / t;
-+	ar9330_clk_init(ref_clk, ath79_pll_base);
+-		usb@1b000100 {
++		usb: usb@1b000100 {
+ 			compatible = "qca,ar7100-ehci", "generic-ehci";
+ 			reg = <0x1b000100 0x100>;
  
--		t = (cpu_config >> AR933X_PLL_CPU_CONFIG_NINT_SHIFT) &
--		    AR933X_PLL_CPU_CONFIG_NINT_MASK;
--		freq *= t;
+@@ -140,7 +140,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		spi@1f000000 {
++		spi: spi@1f000000 {
+ 			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
+ 			reg = <0x1f000000 0x10>;
+ 
+diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+index c3069c3..eb632a2 100644
+--- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
++++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+@@ -20,55 +20,6 @@
+ 		clock-frequency = <40000000>;
+ 	};
+ 
+-	ahb {
+-		apb {
+-			uart@18020000 {
+-				status = "okay";
+-			};
 -
--		t = (cpu_config >> AR933X_PLL_CPU_CONFIG_OUTDIV_SHIFT) &
--		    AR933X_PLL_CPU_CONFIG_OUTDIV_MASK;
--		if (t == 0)
--			t = 1;
+-			pll-controller@18050000 {
+-				clocks = <&extosc>;
+-			};
+-		};
 -
--		freq >>= t;
+-		usb@1b000100 {
+-			status = "okay";
+-		};
 -
--		t = ((clock_ctrl >> AR933X_PLL_CLOCK_CTRL_CPU_DIV_SHIFT) &
--		     AR933X_PLL_CLOCK_CTRL_CPU_DIV_MASK) + 1;
--		cpu_rate = freq / t;
+-		spi@1f000000 {
+-			status = "okay";
+-			num-cs = <1>;
 -
--		t = ((clock_ctrl >> AR933X_PLL_CLOCK_CTRL_DDR_DIV_SHIFT) &
--		      AR933X_PLL_CLOCK_CTRL_DDR_DIV_MASK) + 1;
--		ddr_rate = freq / t;
+-			flash@0 {
+-				#address-cells = <1>;
+-				#size-cells = <1>;
+-				compatible = "s25sl064a";
+-				reg = <0>;
+-				spi-max-frequency = <25000000>;
 -
--		t = ((clock_ctrl >> AR933X_PLL_CLOCK_CTRL_AHB_DIV_SHIFT) &
--		     AR933X_PLL_CLOCK_CTRL_AHB_DIV_MASK) + 1;
--		ahb_rate = freq / t;
--	}
+-				partition@0 {
+-					label = "u-boot";
+-					reg = <0x000000 0x020000>;
+-				};
 -
--	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	/* just make happy plat_time_init() from arch/mips/ath79/setup.c */
-+	clk_register_clkdev(clks[ATH79_CLK_CPU], "cpu", NULL);
-+	clk_register_clkdev(clks[ATH79_CLK_DDR], "ddr", NULL);
-+	clk_register_clkdev(clks[ATH79_CLK_AHB], "ahb", NULL);
- 
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-@@ -460,7 +481,6 @@ static void __init ath79_clocks_init_dt(struct device_node *np)
- 
- CLK_OF_DECLARE(ar7100, "qca,ar7100-pll", ath79_clocks_init_dt);
- CLK_OF_DECLARE(ar7240, "qca,ar7240-pll", ath79_clocks_init_dt);
--CLK_OF_DECLARE(ar9330, "qca,ar9330-pll", ath79_clocks_init_dt);
- CLK_OF_DECLARE(ar9340, "qca,ar9340-pll", ath79_clocks_init_dt);
- CLK_OF_DECLARE(ar9550, "qca,qca9550-pll", ath79_clocks_init_dt);
- 
-@@ -482,7 +502,14 @@ static void __init ath79_clocks_init_dt_ng(struct device_node *np)
- 		goto err_clk;
- 	}
- 
--	ar724x_clk_init(ref_clk, pll_base);
-+	if (of_device_is_compatible(np, "qca,ar9130-pll"))
-+		ar724x_clk_init(ref_clk, pll_base);
-+	else if (of_device_is_compatible(np, "qca,ar9330-pll"))
-+		ar9330_clk_init(ref_clk, pll_base);
-+	else {
-+		pr_err("%s: could not find any appropriate clk_init()\n", dnfn);
-+		goto err_clk;
-+	}
- 
- 	if (of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data)) {
- 		pr_err("%s: could not register clk provider\n", dnfn);
-@@ -498,4 +525,5 @@ err:
- 	return;
- }
- CLK_OF_DECLARE(ar9130_clk, "qca,ar9130-pll", ath79_clocks_init_dt_ng);
-+CLK_OF_DECLARE(ar9330_clk, "qca,ar9330-pll", ath79_clocks_init_dt_ng);
- #endif
+-				partition@1 {
+-					label = "firmware";
+-					reg = <0x020000 0x7D0000>;
+-				};
+-
+-				partition@2 {
+-					label = "art";
+-					reg = <0x7F0000 0x010000>;
+-					read-only;
+-				};
+-			};
+-		};
+-	};
+-
+-	usb-phy {
+-		status = "okay";
+-	};
+-
+ 	gpio-keys {
+ 		compatible = "gpio-keys-polled";
+ 		#address-cells = <1>;
+@@ -114,3 +65,48 @@
+ 		};
+ 	};
+ };
++
++&uart {
++	status = "okay";
++};
++
++&pll {
++	clocks = <&extosc>;
++};
++
++&usb {
++	status = "okay";
++};
++
++&usb_phy {
++	status = "okay";
++};
++
++&spi {
++	status = "okay";
++	num-cs = <1>;
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "s25sl064a";
++		reg = <0>;
++		spi-max-frequency = <25000000>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x000000 0x020000>;
++		};
++
++		partition@1 {
++			label = "firmware";
++			reg = <0x020000 0x7D0000>;
++		};
++
++		partition@2 {
++			label = "art";
++			reg = <0x7F0000 0x010000>;
++			read-only;
++		};
++	};
++};
 -- 
 2.7.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
