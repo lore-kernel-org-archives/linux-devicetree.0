@@ -1,90 +1,103 @@
-From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v8 3/6] ASoC: hdmi-codec: Add audio abort() callback for video side to use
-Date: Thu, 17 Mar 2016 14:22:31 +0200
-Message-ID: <47206922b9580db740fcdf2d09186a27d1e5f1bf.1458214526.git.jsarha@ti.com>
-References: <cover.1458214526.git.jsarha@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
+Date: Thu, 17 Mar 2016 15:38:57 +0300
+Message-ID: <56EAA561.8010408@cogentembedded.com>
+References: <1458181615-27782-1-git-send-email-david@lechnology.com>
+ <1458181615-27782-7-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1458214526.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458181615-27782-7-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add audio abort() callback, that is provided at audio stream start,
-for video side. This is for video side to use in case there is a
-pressing need to tear down the audio playback for some reason.
+On 3/17/2016 5:26 AM, David Lechner wrote:
 
-Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
----
- include/sound/hdmi-codec.h    |  8 ++++++--
- sound/soc/codecs/hdmi-codec.c | 20 +++++++++++++++++++-
- 2 files changed, 25 insertions(+), 3 deletions(-)
+> This is a new phy driver for the SoC USB controllers on the TI DA8XX
 
-diff --git a/include/sound/hdmi-codec.h b/include/sound/hdmi-codec.h
-index fc3a481..15fe70f 100644
---- a/include/sound/hdmi-codec.h
-+++ b/include/sound/hdmi-codec.h
-@@ -55,10 +55,14 @@ struct hdmi_codec_params {
- 
- struct hdmi_codec_ops {
- 	/*
--	 * Called when ASoC starts an audio stream setup.
-+	 * Called when ASoC starts an audio stream setup. The call
-+	 * provides an audio abort callback for stoping an ongoing
-+	 * stream from video side driver if the HDMI audio becomes
-+	 * unavailable.
- 	 * Optional
- 	 */
--	int (*audio_startup)(struct device *dev);
-+	int (*audio_startup)(struct device *dev,
-+			     void (*abort_cb)(struct device *dev));
- 
- 	/*
- 	 * Configures HDMI-encoder for audio stream.
-diff --git a/sound/soc/codecs/hdmi-codec.c b/sound/soc/codecs/hdmi-codec.c
-index bc47b9a..cc08097 100644
---- a/sound/soc/codecs/hdmi-codec.c
-+++ b/sound/soc/codecs/hdmi-codec.c
-@@ -47,6 +47,23 @@ enum {
- 	DAI_ID_SPDIF,
- };
- 
-+static void hdmi_codec_abort(struct device *dev)
-+{
-+	struct hdmi_codec_priv *hcp = dev_get_drvdata(dev);
-+
-+	dev_dbg(dev, "%s()\n", __func__);
-+
-+	mutex_lock(&hcp->current_stream_lock);
-+	if (hcp->current_stream && hcp->current_stream->runtime &&
-+	    snd_pcm_running(hcp->current_stream)) {
-+		dev_info(dev, "HDMI audio playback aborted\n");
-+		snd_pcm_stream_lock_irq(hcp->current_stream);
-+		snd_pcm_stop(hcp->current_stream, SNDRV_PCM_STATE_DISCONNECTED);
-+		snd_pcm_stream_unlock_irq(hcp->current_stream);
-+	}
-+	mutex_unlock(&hcp->current_stream_lock);
-+}
-+
- static int hdmi_codec_new_stream(struct snd_pcm_substream *substream,
- 				 struct snd_soc_dai *dai)
- {
-@@ -78,7 +95,8 @@ static int hdmi_codec_startup(struct snd_pcm_substream *substream,
- 		return ret;
- 
- 	if (hcp->hcd.ops->audio_startup) {
--		ret = hcp->hcd.ops->audio_startup(dai->dev->parent);
-+		ret = hcp->hcd.ops->audio_startup(dai->dev->parent,
-+						  hdmi_codec_abort);
- 		if (ret) {
- 			mutex_lock(&hcp->current_stream_lock);
- 			hcp->current_stream = NULL;
--- 
-1.9.1
+    DA8xx, please.
+
+> family of microcontrollers. The USB 1.1 PHY is just a simple on/off.
+> The USB 2.0 PHY also allows overriding the VBUS and ID pins.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+[...]
+
+> diff --git a/drivers/phy/phy-da8xx-usb.c b/drivers/phy/phy-da8xx-usb.c
+> new file mode 100644
+> index 0000000..93a5f4d
+> --- /dev/null
+> +++ b/drivers/phy/phy-da8xx-usb.c
+> @@ -0,0 +1,295 @@
+[...]
+> +static inline u32 da8xx_usbphy_readl(void __iomem *base)
+> +{
+> +	return readl(base);
+> +}
+> +
+> +static inline void da8xx_usbphy_writel(void __iomem *base, u32 value)
+> +{
+> +	writel(value, base);
+
+    Why wrap them at all?
+
+> +}
+> +
+> +static int da8xx_usb11_phy_init(struct phy *phy)
+> +{
+> +	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = clk_prepare_enable(d_phy->usb11_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	val = da8xx_usbphy_readl(d_phy->phy_ctrl);
+> +	val |= USB1SUSPENDM;
+> +	da8xx_usbphy_writel(d_phy->phy_ctrl, val);
+
+    Hum, I'd think this needs to be done in the power_on() method...
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int da8xx_usb11_phy_shutdown(struct phy *phy)
+> +{
+> +	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
+> +	u32 val;
+> +
+> +	val = da8xx_usbphy_readl(d_phy->phy_ctrl);
+> +	val &= ~USB1SUSPENDM;
+> +	da8xx_usbphy_writel(d_phy->phy_ctrl, val);
+
+    And this in power_off()...
+
+> +
+> +	clk_disable_unprepare(d_phy->usb11_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops da8xx_usb11_phy_ops = {
+> +	.power_on	= da8xx_usb11_phy_init,
+> +	.power_off	= da8xx_usb11_phy_shutdown,
+
+    Aha, it's just that the names don't match...
+    Please call the implementations da8xx_usb11_phy_power_{on|off}().
+The same with USB 2.0 PHY.
+
+[...]
+
+    Looks good otherwise on my superficial review. :-)
+
+MBR, Sergei
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
