@@ -1,53 +1,53 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] regmap: fix documentation to match code
-Date: Thu, 17 Mar 2016 17:40:19 +0000
-Message-ID: <20160317174019.GJ2566@sirena.org.uk>
-References: <1458235427-3856540-1-git-send-email-arnd@arndb.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [v6, 3/5] dt: move guts devicetree doc out of powerpc directory
+Date: Thu, 17 Mar 2016 12:57:49 -0500
+Message-ID: <CAL_JsqL8NkEQx2NoVHSUGYhtNsybCo-yfBCde+_OuMmfwbhYEw@mail.gmail.com>
+References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
+ <1457518131-11339-4-git-send-email-yangbo.lu@nxp.com> <20160317170640.GB21009@rob-hp-laptop>
+ <4107975.rId64mooHz@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UD9uuWeujuEvWfkY"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1458235427-3856540-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Xiubo Li <Li.Xiubo-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <4107975.rId64mooHz@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Yangbo Lu <yangbo.lu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, netdev <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, scott.wood@nxp.com, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Zhao Qiang <qiang.zhao@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@ker>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 17, 2016 at 12:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thursday 17 March 2016 12:06:40 Rob Herring wrote:
+>> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt b/Documentation/devicetree/bindings/soc/fsl/guts.txt
+>> > similarity index 91%
+>> > rename from Documentation/devicetree/bindings/powerpc/fsl/guts.txt
+>> > rename to Documentation/devicetree/bindings/soc/fsl/guts.txt
+>> > index b71b203..07adca9 100644
+>> > --- a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt
+>> > +++ b/Documentation/devicetree/bindings/soc/fsl/guts.txt
+>> > @@ -25,6 +25,9 @@ Recommended properties:
+>> >   - fsl,liodn-bits : Indicates the number of defined bits in the LIODN
+>> >     registers, for those SOCs that have a PAMU device.
+>> >
+>> > + - little-endian : Indicates that the global utilities block is little
+>> > +   endian. The default is big endian.
+>>
+>> The default is "the native endianness of the system".
+>
+> This may be what is currently documented, but not what we are doing
+> in practice, as there is no "native endianess" for either PowerPC or
+> ARM -- both allow running big-endian or little-endian kernels and the
+> device registers are fixed.
 
---UD9uuWeujuEvWfkY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Notice I said system, not architecture. The way the device registers
+are fixed is what I mean by native endianness.
 
-On Thu, Mar 17, 2016 at 06:23:40PM +0100, Arnd Bergmann wrote:
+If the purpose of adding this property now is to support GUTS on the
+ARM SoCs, then I'd argue using this property is probably wrong. If the
+PPC systems are designed with BE device registers and ARM systems with
+LE, then this property is not needed.
 
-> I think this got lost when you fixed the code for 4.6, and the current
-> documentation still has the initial text you wrote back in January
-> that doesn't actually explain what happens.=20
+> I think the property here is fine.
 
-It didn't get lost, you never actually submitted the patch.  You did
-paste something into a reply to a message but never sent anything with a
-signoff.  I'm definitely not going to apply anything that doesn't get
-sent with a signoff.
+Unless you have studied the FSL ARM based SoCs, then there is not
+enough information here to tell.
 
---UD9uuWeujuEvWfkY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW6uwCAAoJECTWi3JdVIfQMosH+wd9r76JAZh0RU3Xc4R/av7q
-g2fLiIjq0CHlSzQ0IZ6+nEh0sp1vU5vSZ/wcUpDkrps9oMQOdoENuFDMbC7JueuJ
-8o/lk8LhJHqI5b6ADr+ydAy0w2GTNnSb+QjQuu17LkfEjIHPX6Nsaci8L41ErN+0
-wC9U4qMSplVAywDpX+OqZILmD1T3lmZRF44Xz8u2kcLtDH5kGqb4odKKLtVOp+gF
-0ipBe0eAXWvn59vBHM3TlY6B2FUqoZdicrHVJ+S8ozYXSuSFNhUUaLhpwlXBmw3X
-zoS9I9TOj8DTZZMYX2AITKhHuyLwjXd1HOMPlIrnfSdtchufivQklnENJd2Yv4U=
-=GcfX
------END PGP SIGNATURE-----
-
---UD9uuWeujuEvWfkY--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
