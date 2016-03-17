@@ -1,29 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 01/13] pinctrl: sunxi: Add A83T R_PIO controller
-Date: Thu, 17 Mar 2016 15:51:15 +0100
-Message-ID: <CACRpkdaFekCnRKoYQ=Fq1LT0FcH7RobwkLi_G1YfXJAb=4RTHQ@mail.gmail.com>
-References: <1458144276-31108-1-git-send-email-vishnupatekar0510@gmail.com>
-	<1458144276-31108-2-git-send-email-vishnupatekar0510@gmail.com>
+From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Subject: Re: [PATCH 04/15] irqchip/gic: WARN if setting the interrupt type
+ fails
+Date: Thu, 17 Mar 2016 15:51:35 +0100 (CET)
+Message-ID: <alpine.DEB.2.11.1603171550200.3978@nanos>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com> <1458224359-32665-5-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1458144276-31108-2-git-send-email-vishnupatekar0510@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vishnu Patekar <vishnupatekar0510@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Jon Corbet <corbet@lwn.net>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Emilio Lopez <emilio@elopez.com.ar>, Jens Kuske <jenskuske@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>R
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458224359-32665-5-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?ISO-8859-15?Q?Beno=EEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 5:04 PM, Vishnu Patekar
-<vishnupatekar0510@gmail.com> wrote:
+On Thu, 17 Mar 2016, Jon Hunter wrote:
 
-> The A83T has R_PIO pin controller, it's same as A23, execpt A83T
-> interrupt bit is 6th and A83T has one extra pin PL12.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510@gmail.com>
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+> Setting the interrupt type for private peripheral interrupts (PPIs) may
+> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
+> whether this is allowed. There is no way to know if setting the type is
+> supported for a given GIC and so the value written is read back to
+> verify it matches the desired configuration. If it does not match then
+> an error is return.
+> 
+> There are cases where the interrupt configuration read from firmware
+> (such as a device-tree blob), has been incorrect and hence
+> gic_configure_irq() has returned an error. This error has gone
+> undetected because the error code returned was ignored but the interrupt
+> still worked fine because the configuration for the interrupt could not
+> be overwritten.
+> 
+> Given that this has done undetected and we should only fail to set the
+> type for PPIs whose configuration cannot be changed anyway, don't return
+> an error and simply WARN if this fails. This will allows us to fix up any
+> places in the kernel where we should be checking the return status and
+> maintain back compatibility with firmware images that may have incorrect
+> interrupt configurations.
 
-I think I already merged this?
+Though silently returning 0 is really the wrong thing to do. You can add the
+warn, but why do you want to return success?
 
-Yours,
-Linus Walleij
+Thanks,
+
+	tglx
+
+ 
