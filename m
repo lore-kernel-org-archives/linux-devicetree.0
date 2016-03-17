@@ -1,84 +1,64 @@
-From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] mwifiex: parse hscfg_gpio info from device tree
-Date: Thu, 17 Mar 2016 13:26:20 +0000
-Message-ID: <7cf3ebcd17c04399bfe5b23a3118cd4c@SC-EXCH04.marvell.com>
-References: <1448618297-19803-1-git-send-email-akarwar@marvell.com>
- <87vb855qpe.fsf@kamboji.qca.qualcomm.com>
- <f65e448bfd344867afbf6c002cdfc2bf@SC-EXCH04.marvell.com>
- <CAGRGNgWvt7OUaiyfK2a17cfTCx=N4tPkeojhvahxOfvK3aBKRQ@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
+Date: Thu, 17 Mar 2016 08:31:16 -0500
+Message-ID: <CAL_Jsq+2M3iLMCwJhttiL3BTvefUa_5tUiYqvzp3Aix4uK7exw@mail.gmail.com>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqJydgmkU=SGcr-0JHsYG8wXk5GEQCQXY7y+FHH2A0LZkw@mail.gmail.com>
+ <20160219031655.GA10818@gwshan> <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
+ <20160308005633.GA30023@gwshan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGRGNgWvt7OUaiyfK2a17cfTCx=N4tPkeojhvahxOfvK3aBKRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julian Calaby <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20160308005633.GA30023@gwshan>
+Sender: linux-pci-owner@vger.kernel.org
+To: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSnVsaWFuLA0KDQo+IEZyb206IEp1bGlhbiBDYWxhYnkgW21haWx0bzpqdWxpYW4uY2FsYWJ5
-QGdtYWlsLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIE1hcmNoIDE3LCAyMDE2IDQ6NTYgQU0NCj4g
-VG86IEFtaXRrdW1hciBLYXJ3YXINCj4gQ2M6IEthbGxlIFZhbG87IGxpbnV4LXdpcmVsZXNzQHZn
-ZXIua2VybmVsLm9yZzsgTmlzaGFudCBTYXJtdWthZGFtOw0KPiBYaW5taW5nIEh1OyBkZXZpY2V0
-cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBtd2lmaWV4OiBwYXJz
-ZSBoc2NmZ19ncGlvIGluZm8gZnJvbSBkZXZpY2UgdHJlZQ0KPiANCj4gSGkgQW1pdGt1bWFyLA0K
-PiANCj4gT24gRnJpLCBEZWMgMTEsIDIwMTUgYXQgODoyMyBQTSwgQW1pdGt1bWFyIEthcndhciA8
-YWthcndhckBtYXJ2ZWxsLmNvbT4NCj4gd3JvdGU6DQo+ID4gSGkgS2FsbGUsDQo+ID4NCj4gPj4g
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4gRnJvbTogS2FsbGUgVmFsbyBbbWFpbHRv
-Omt2YWxvQGNvZGVhdXJvcmEub3JnXQ0KPiA+PiBTZW50OiBGcmlkYXksIERlY2VtYmVyIDExLCAy
-MDE1IDI6MDQgUE0NCj4gPj4gVG86IEFtaXRrdW1hciBLYXJ3YXINCj4gPj4gQ2M6IGxpbnV4LXdp
-cmVsZXNzQHZnZXIua2VybmVsLm9yZzsgTmlzaGFudCBTYXJtdWthZGFtOyBYaW5taW5nIEh1Ow0K
-PiA+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiA+PiBTdWJqZWN0OiBSZTogW1BBVENI
-XSBtd2lmaWV4OiBwYXJzZSBoc2NmZ19ncGlvIGluZm8gZnJvbSBkZXZpY2UgdHJlZQ0KPiA+Pg0K
-PiA+PiArIGRldmljZXRyZWUgbGlzdA0KPiA+Pg0KPiA+PiBBbWl0a3VtYXIgS2Fyd2FyIDxha2Fy
-d2FyQG1hcnZlbGwuY29tPiB3cml0ZXM6DQo+ID4+DQo+ID4+ID4gRnJvbTogWGlubWluZyBIdSA8
-aHV4bUBtYXJ2ZWxsLmNvbT4NCj4gPj4gPg0KPiA+PiA+IFRoaXMgcGF0Y2ggcmVhZHMgaHNjZmdf
-Z3BpbyBmcm9tIGRldmljZSB0cmVlIGFuZCB1cGRhdGUgaW50ZXJuYWwNCj4gPj4gPiB2YXJpYWJs
-ZQ0KPiA+PiA+DQo+ID4+ID4gU2lnbmVkLW9mZi1ieTogWGlubWluZyBIdSA8aHV4bUBtYXJ2ZWxs
-LmNvbT4NCj4gPj4gPiBTaWduZWQtb2ZmLWJ5OiBBbWl0a3VtYXIgS2Fyd2FyIDxha2Fyd2FyQG1h
-cnZlbGwuY29tPg0KPiA+PiA+IC0tLQ0KPiA+PiA+ICBkcml2ZXJzL25ldC93aXJlbGVzcy9tYXJ2
-ZWxsL213aWZpZXgvc3RhX2NtZC5jIHwgMTEgKysrKysrKysrKysNCj4gPj4gPiAgMSBmaWxlIGNo
-YW5nZWQsIDExIGluc2VydGlvbnMoKykNCj4gPj4gPg0KPiA+PiA+IGRpZmYgLS1naXQgYS9kcml2
-ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL213aWZpZXgvc3RhX2NtZC5jDQo+ID4+ID4gYi9kcml2
-ZXJzL25ldC93aXJlbGVzcy9tYXJ2ZWxsL213aWZpZXgvc3RhX2NtZC5jDQo+ID4+ID4gaW5kZXgg
-ZTQ4Njg2Ny4uZDI4YTUzZiAxMDA2NDQNCj4gPj4gPiAtLS0gYS9kcml2ZXJzL25ldC93aXJlbGVz
-cy9tYXJ2ZWxsL213aWZpZXgvc3RhX2NtZC5jDQo+ID4+ID4gKysrIGIvZHJpdmVycy9uZXQvd2ly
-ZWxlc3MvbWFydmVsbC9td2lmaWV4L3N0YV9jbWQuYw0KPiA+PiA+IEBAIC0xNDU5LDEwICsxNDU5
-LDIxIEBAIGludCBtd2lmaWV4X2RubGRfZHRfY2ZnZGF0YShzdHJ1Y3QNCj4gPj4gPiBtd2lmaWV4
-X3ByaXZhdGUgKnByaXYsICAjaWZkZWYgQ09ORklHX09GDQo+ID4+ID4gICAgIHN0cnVjdCBwcm9w
-ZXJ0eSAqcHJvcDsNCj4gPj4gPiAgICAgc2l6ZV90IGxlbiA9IHN0cmxlbihwcmVmaXgpOw0KPiA+
-PiA+ICsgICB1MzIgZGF0YTsNCj4gPj4gPiAgICAgaW50IHJldDsNCj4gPj4gPg0KPiA+PiA+ICAg
-ICAvKiBsb29rIGZvciBhbGwgbWF0Y2hpbmcgcHJvcGVydHkgbmFtZXMgKi8NCj4gPj4gPiAgICAg
-Zm9yX2VhY2hfcHJvcGVydHlfb2Zfbm9kZShub2RlLCBwcm9wKSB7DQo+ID4+ID4gKyAgICAgICAg
-ICAgaWYgKCFzdHJuY21wKHByb3AtPm5hbWUsICJtYXJ2ZWxsLGhzY2ZnX2dwaW8iLA0KPiA+PiA+
-ICsgICAgICAgICAgICAgICAgICAgICAgICBzdHJsZW4oIm1hcnZlbGwsaHNjZmdfZ3BpbyIpKSkg
-ew0KPiA+PiA+ICsgICAgICAgICAgICAgICAgICAgaWYgKCFvZl9wcm9wZXJ0eV9yZWFkX3UzMihw
-cml2LT5hZGFwdGVyLQ0KPiA+ZHRfbm9kZSwNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgcHJvcC0+bmFtZSwgJmRhdGEpKSB7DQo+ID4+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIGRldl9kYmcocHJpdi0+YWRhcHRlci0+ZGV2LA0KPiA+
-PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJoc2NmZyBncGlvID0gMHgl
-eFxuIiwgZGF0YSk7DQo+ID4+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgIHByaXYtPmFk
-YXB0ZXItPmhzX2NmZy5ncGlvID0gZGF0YTsNCj4gPj4gPiArICAgICAgICAgICAgICAgICAgIH0N
-Cj4gPj4gPiArICAgICAgICAgICB9DQo+ID4+DQo+ID4+IEkgZG9uJ3Qgc2VlIHRoaXMgZG9jdW1l
-bnRlZCBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MuDQo+ID4+IFBsZWFzZSBj
-cmVhdGUgYSBiaW5kaW5nIGRvY3VtZW50IGFuZCByZXZpZXcgaXQgd2l0aCB0aGUgZGV2aWNlIHRy
-ZWUNCj4gPj4gbWFpbnRhaW5lcnMuDQo+ID4+DQo+ID4+IEFjdHVhbGx5IHdoZW4gbG9va2luZyBt
-d2lmaWV4IGNsb3NlIEkgc2VlIHRoYXQgaXQgdXNlcyBtb3JlDQo+ID4+IHVuZG9jdW1lbnRlZCBk
-ZXZpY2UgdHJlZSBpbnRlcmZhY2VzOg0KPiA+Pg0KPiA+PiBtYXJ2ZWxsX2NmZ2RhdGENCj4gPj4g
-bWFydmVsbCxjYWxkYXRhDQo+ID4+IG1hcnZlbGwsMDBfdHhwd3JsaW1pdA0KPiA+Pg0KPiA+PiBJ
-IHRoaW5rIHRoZXNlIGFsbCBzaG91bGQgYmUgcHJvcGVybHkgZG9jdW1lbnRlZCBhbmQgcmV2aWV3
-ZWQuIEJ1dA0KPiA+PiBJJ2xsIGxldCB0aGUgZGV2aWNlIHRyZWUgcGVvcGxlIGNoaW1lIGluIHdo
-YXQncyB0aGUgYmVzdCB3YXkuDQo+ID4+DQo+ID4NCj4gPiBUaGFua3MgZm9yIHRoZSByZXZpZXcu
-DQo+ID4gU3VyZS4gV2Ugd2lsbCBkb2N1bWVudCBleGlzdGluZyBEVCBpbnRlcmZhY2VzIGFuZCBj
-cmVhdGUgdXBkYXRlZA0KPiB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2ggd2hpY2ggaW5jbHVkZXMgZG9j
-dW1lbnRhdGlvbiBpbiBiaW5kaW5ncy4NCj4gDQo+IEl0J3MgYmVlbiBhIHdoaWxlIHNpbmNlIHRo
-aXMgd2FzIHJldmlld2VkLiBEbyB5b3UgaGF2ZSBhbiB1cGRhdGVkDQo+IHZlcnNpb24gb2YgdGhp
-cyBwYXRjaD8NCj4gDQoNCldlIHdpbGwgYmUgc3VibWl0dGluZyB1cGRhdGVkIHZlcnNpb24gb2Yg
-YmVsb3cgcGF0Y2ggc2VyaWVzIGluIGEgZGF5IG9yIHR3by4gSGVuY2UgdXBkYXRlZCB2ZXJzaW9u
-IG9mIHRoaXMgcGF0Y2ggaXMgbm90IG5lZWRlZC4NCg0KaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIw
-MTYvMi8yOS8zOTQNCg0KUmVnYXJkcywNCkFtaXRrdW1hcg0K
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Mar 7, 2016 at 6:56 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+> On Tue, Mar 01, 2016 at 08:40:12PM -0600, Rob Herring wrote:
+>>On Thu, Feb 18, 2016 at 9:16 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>> On Wed, Feb 17, 2016 at 08:59:53AM -0600, Rob Herring wrote:
+>>>>On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>>>> This renames unflatten_dt_node() to unflatten_dt_nodes() as it
+>>>>> populates multiple device nodes from FDT blob. No logical changes
+>>>>> introduced.
+>>>>>
+>>>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>>> ---
+>>>>>  drivers/of/fdt.c | 14 +++++++-------
+>>>>>  1 file changed, 7 insertions(+), 7 deletions(-)
+>>>>
+>>>>Acked-by: Rob Herring <robh@kernel.org>
+>>>>
+>>>>I'm happy to take patches 40-42 for 4.6 if the rest of the series
+>>>>doesn't go in given they fix a separate problem. I just need to know
+>>>>soon (or at least they need to go into -next soon).
+>>>>
+>>>
+>>> Thanks for quick response, Rob. It depends how much comments I will
+>>> receive for the powerpc/powernv part. Except that, all parts including
+>>> this one have been ack'ed. I can discuss it with Michael Ellerman.
+>>> By the way, how soon you need the decision to merge 40-42? If that's
+>>> one or two weeks later, I don't think the reivew on the whole series
+>>> can be done.
+>>
+>>Well, it's been 2 weeks now. I need to know this week.
+>>
+>>> Also, I think you probably can merge 40-44 as they're all about
+>>> fdt.c. If they can be merged at one time, I needn't bother (cc)
+>>> you again if I need send a updated revision. Thanks for your
+>>> review.
+>>
+>>I did not include 43 and 44 as they are only needed for the rest of your series.
+>>
+>
+> Rob, sorry for late reponse. I really expect this series to be merged to 4.6 and
+> I was checking reviewers' bandwidth to review it. Unfortunately, I didn't receive
+> any comments except yours until now. That means this series has to miss 4.6. Please
+> pick/merge 41 and 42 if no body has objection. Thanks again for your time on this.
+
+Too late for 4.6.
+
+Rob
