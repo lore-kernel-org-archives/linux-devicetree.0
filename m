@@ -1,128 +1,115 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
- device access
-Date: Thu, 17 Mar 2016 16:03:43 +0200
-Message-ID: <20160317155025-mutt-send-email-mst@redhat.com>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
- <20160316185440-mutt-send-email-mst@redhat.com>
- <20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 6/7] mtd: nand: sunxi: add support for DMA
+ assisted operations
+Date: Thu, 17 Mar 2016 15:06:19 +0100
+Message-ID: <20160317150619.7d6b5f37@bbrezillon>
+References: <1457435715-24740-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1457435715-24740-7-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160317133340.GJ12454-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBXXTVK3QKGQEI4MP3ZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1457435715-24740-7-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 09:33:40AM -0400, Gabriel L. Somlo wrote:
-> On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
-> > On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
-> > > Allowing for the future possibility of implementing AML-based
-> > > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> > > acquire the global ACPI lock when accessing the device on behalf
-> > > of the guest-side sysfs driver, to prevent any potential race
-> > > conditions.
-> > > 
-> > > Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > > Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-> > 
-> > So this patch makes sense of course.
-> > 
-> > 
-> > Given the recent discussion on QEMU mailing list,
-> > I think there is an additional patch that we need:
-> > filter the files exposed to userspace by "opt/" prefix.
-> > 
-> > This will ensure that we can change all other fw cfg files
-> > at will without breaking guest scripts.
-> > 
-> > Gabriel, could you code this up? Or do you see a
-> > pressing need to expose internal QEMU registers to
-> > userspace?
-> 
-> I'd be happy to update the docs to (better) emphasisze that:
-> 
->         1 the only way to guarantee any particular item shows up in
->           guest-side fw_cfg sysfs is manually putting it there via the
->           host-side command line
-> 
->                 - and BTW, unless you prefixed it with "opt/..." you
->                   are off the reservation, and it might collide with
->                   qemu->firmware communications.
-> 
->         2 anything one didn't place there themselves via the qemu
->           command line is informational only, might change or go away
->           at any time, and developing expectations about it based on
->           past observation is done at the observer's own risk.
-> 
-> While I don't *personally* care about items outside of "opt/", I'm a bit
-> uncomfortable actively *hiding* them from userspace -- I could easily
-> imagine the ability to see (read-only) fw_cfg content from userspace
-> being a handy debugging/troubleshooting tool. It's back to separating
-> between mechanism and policy: hiding things from userspace would IMHO
-> fall into the policy enforcement side of things, and I'm still unclear
-> about the failure scenario we'd be trying to prevent, and its likelihood.
-> 
-> Thanks,
-> --Gabriel
+On Tue,  8 Mar 2016 12:15:14 +0100
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-We are changing QEMU design right now.  Let's converge on that first.
+> The sunxi NAND controller is able to pipeline ECC operations only when
+> operated in DMA mode, which improves a lot NAND throughput while keeping
+> CPU usage low.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/mtd/nand/sunxi_nand.c | 301 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 297 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/sunxi_nand.c b/drivers/mtd/nand/sunxi_nand.c
+> index 07c3af7..7ba285e 100644
+> --- a/drivers/mtd/nand/sunxi_nand.c
+> +++ b/drivers/mtd/nand/sunxi_nand.c
+
+[...]
+
+> +static int sunxi_nfc_hw_ecc_write_page_dma(struct mtd_info *mtd,
+> +					   struct nand_chip *chip,
+> +					   const u8 *buf,
+> +					   int oob_required,
+> +					   int page)
+> +{
+> +	struct nand_chip *nand = mtd_to_nand(mtd);
+> +	struct sunxi_nfc *nfc = to_sunxi_nfc(nand->controller);
+> +	struct nand_ecc_ctrl *ecc = &nand->ecc;
+> +	struct sg_table sgt;
+> +	int ret, i;
+> +
+> +	ret = sunxi_nfc_wait_cmd_fifo_empty(nfc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = sunxi_nfc_dma_op_prepare(mtd, buf, ecc->size, ecc->steps,
+> +				       DMA_TO_DEVICE, &sgt);
+> +	if (ret)
+> +		goto pio_fallback;
+> +
+> +	for (i = 0; i < ecc->steps; i++) {
+> +		const u8 *oob = nand->oob_poi + (i * (ecc->bytes + 4));
+> +
+> +		sunxi_nfc_hw_ecc_set_prot_oob_bytes(mtd, oob, i, !i, page);
+> +	}
+> +
+> +	sunxi_nfc_hw_ecc_enable(mtd);
+> +	sunxi_nfc_randomizer_config(mtd, page, false);
+> +	sunxi_nfc_randomizer_enable(mtd);
+> +
+> +	writel((NAND_CMD_RNDIN << 8) | NAND_CMD_PAGEPROG,
+> +	       nfc->regs + NFC_REG_RCMD_SET);
+> +
+> +	dma_async_issue_pending(nfc->dmac);
+> +
+> +	writel(NFC_PAGE_OP | NFC_DATA_SWAP_METHOD |
+> +	       NFC_DATA_TRANS | NFC_ACCESS_DIR,
+> +	       nfc->regs + NFC_REG_CMD);
+> +
+> +	ret = sunxi_nfc_wait_events(nfc, NFC_CMD_INT_FLAG, true, 0);
+> +	if (ret)
+> +		dmaengine_terminate_all(nfc->dmac);
+> +
+> +	sunxi_nfc_randomizer_disable(mtd);
+> +	sunxi_nfc_hw_ecc_disable(mtd);
+> +
+> +	sunxi_nfc_dma_op_cleanup(mtd, DMA_FROM_DEVICE, &sgt);
+
+		Should be DMA_TO_DEVICE here ^
+
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (oob_required || (chip->options & NAND_NEED_SCRAMBLING))
+> +		/* TODO: use DMA to transfer extra OOB bytes ? */
+> +		sunxi_nfc_hw_ecc_write_extra_oob(mtd, chip->oob_poi,
+> +						 NULL, page);
+> +
+> +	return 0;
+> +
+> +pio_fallback:
+> +	return sunxi_nfc_hw_ecc_write_page(mtd, chip, buf, oob_required, page);
+> +}
 
 
-> > > ---
-> > > 
-> > > Changes since v1:
-> > > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
-> > > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
-> > > 	  and only throw a warning/error message otherwise.
-> > > 
-> > > 	- didn't get any *negative* feedback from the QEMU crowd, so
-> > > 	  this is now a bona-fide "please apply this", rather than just
-> > > 	  an RFC :)
-> > > 
-> > > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
-> > > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
-> > > 
-> > > Thanks much,
-> > >   --Gabriel
-> > > 
-> > >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> > > index 7bba76c..a44dc32 100644
-> > > --- a/drivers/firmware/qemu_fw_cfg.c
-> > > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> > >  static inline void fw_cfg_read_blob(u16 key,
-> > >  				    void *buf, loff_t pos, size_t count)
-> > >  {
-> > > +	u32 glk;
-> > > +	acpi_status status;
-> > > +
-> > > +	/* If we have ACPI, ensure mutual exclusion against any potential
-> > > +	 * device access by the firmware, e.g. via AML methods:
-> > > +	 */
-> > > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> > > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> > > +		/* Should never get here */
-> > > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
-> > > +		memset(buf, 0, count);
-> > > +		return;
-> > > +	}
-> > > +
-> > >  	mutex_lock(&fw_cfg_dev_lock);
-> > >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-> > >  	while (pos-- > 0)
-> > >  		ioread8(fw_cfg_reg_data);
-> > >  	ioread8_rep(fw_cfg_reg_data, buf, count);
-> > >  	mutex_unlock(&fw_cfg_dev_lock);
-> > > +
-> > > +	acpi_release_global_lock(glk);
-> > >  }
-> > >  
-> > >  /* clean up fw_cfg device i/o */
-> > > -- 
-> > > 2.4.3
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
