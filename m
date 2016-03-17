@@ -1,43 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 3/6] ARM: AM335x/AM437x: hwmod: Remove eQEP, ePWM and
- eCAP hwmod entries
-Date: Thu, 17 Mar 2016 14:04:07 -0500
-Message-ID: <CAL_Jsq+mEPzt3DZLSWhnSuGdqErWQLEv_rGcu2zcn67HfUkMew@mail.gmail.com>
-References: <1457400224-24797-1-git-send-email-fcooper@ti.com>
- <1457400224-24797-4-git-send-email-fcooper@ti.com> <20160317150619.GA28105@rob-hp-laptop>
- <56EAD137.1080502@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] gpio: Add AXP209 GPIO driver
+Date: Thu, 17 Mar 2016 14:10:58 -0500
+Message-ID: <20160317191058.GA31052@rob-hp-laptop>
+References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1457520614-32239-2-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <56EAD137.1080502@ti.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: "Franklin S Cooper Jr." <fcooper@ti.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "paul@pwsan.com" <paul@pwsan.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Vignesh R <vigneshr@ti.com>
+Return-path: <linux-sunxi+bncBDJIP47K7MERBR4CVS3QKGQEYIHQ3LA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1457520614-32239-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 10:45 AM, Franklin S Cooper Jr. <fcooper@ti.com> wrote:
->
->
-> On 03/17/2016 10:06 AM, Rob Herring wrote:
->> On Mon, Mar 07, 2016 at 07:23:41PM -0600, Franklin S Cooper Jr wrote:
->>> Devices that utilize the OCP registers and/or PRCM registers and
->>> register bit fields should be modelled using hwmod. Since eQEP, ePWM and
->> s/modelled/modeled/
->
-> Will fix.
->>
->>> eCAP don't fall under this category, remove their hwmod entries.
->>>
->>> Instead these clocks simply use the clock that is pass through by its
->>> parent PWMSS. Therefore, PWMSS handles the clock for itself and its
->>> subdevices.
->> Are you breaking compatibility with old DTs here?
->
-> No. The first patch makes sure that the ecap and ehrpwm get
-> their clocks from their parent which is all they care about.
-> Old dtbs will have hwmod entries for ecap and ehrpwm which
-> will end up not doing anything.
+On Wed, Mar 09, 2016 at 11:50:11AM +0100, Maxime Ripard wrote:
+> The AXP209 PMIC has a bunch of GPIOs accessible, that are usually used to
+> control LEDs or backlight.
+> 
+> Add a driver for them
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-axp209.txt       |  30 ++++
 
-Okay.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+>  drivers/gpio/Kconfig                               |   6 +
+>  drivers/gpio/Makefile                              |   1 +
+>  drivers/gpio/gpio-axp209.c                         | 166 +++++++++++++++++++++
+>  4 files changed, 203 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-axp209.txt
+>  create mode 100644 drivers/gpio/gpio-axp209.c
