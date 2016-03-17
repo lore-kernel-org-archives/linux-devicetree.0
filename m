@@ -1,68 +1,140 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 14/18] gpio: vf610: add support for WKPU unit
-Date: Thu, 17 Mar 2016 15:00:54 -0500
-Message-ID: <20160317200054.GA3799@rob-hp-laptop>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
- <1457576219-7971-15-git-send-email-stefan@agner.ch>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] ARM: dts: at91: shdwc binding: add new shutdown
+ controller documentation
+Date: Thu, 17 Mar 2016 21:14:03 +0100
+Message-ID: <20160317201403.GG2831@piout.net>
+References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
+ <1458134390-23847-2-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457576219-7971-15-git-send-email-stefan@agner.ch>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <1458134390-23847-2-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 06:16:55PM -0800, Stefan Agner wrote:
-> WKPU unit support within the VF610 GPIO driver. The WKPU unit allows
-> some GPIO to be the wakeup source from lowest power modes LPSTOPx.
-> The relationship between the GPIO banks and the WKPU GPIO numbering
-> can be derived from the device tree property fsl,gpio-wakeup.
+On 16/03/2016 at 14:19:49 +0100, Nicolas Ferre wrote :
+> The new shutdown controller compatible with sama5d2 has a new binding
+> documentation and properties.
 > 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> 
+> doc
+> 
+
+with that spurious "doc" removed,
+
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+
+
 > ---
->  .../devicetree/bindings/gpio/gpio-vf610.txt        |   6 +
->  drivers/gpio/gpio-vf610.c                          | 151 +++++++++++++++++++++
->  2 files changed, 157 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-> index 436cc99..985ddfd 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
-> @@ -22,6 +22,12 @@ Required properties for GPIO node:
->        4 = active high level-sensitive.
->        8 = active low level-sensitive.
+> Changes in v5:
+> - change naming for this driver: instead of the "alternate shdwc" we choose a
+>   more specific "sama5d2-compatible shdwc" wording.
+> 
+> Changes in v4:
+> - change property to debounce-delay-us so that we can use a generic property
+>   and we can have the unit explicitly included it the name according to
+>   Documentation/devicetree/bindings/property-units.txt.
+> - move to atmel,wakeup-active-high boolean property instead of a "high", "low"
+>   string comparison.
+> 
+> Changes in v3:
+> - get and use slow clock and specify its handler in binding
+> 
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/arm/atmel-at91.txt         | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> index 7fd64ec9ee1d..2f5a07b32fb7 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> @@ -147,6 +147,65 @@ Example:
+>  		clocks = <&clk32k>;
+>  	};
 >  
-> +Option properties:
-
-Optional
-
-> +- fsl,gpio-wakeup : map GPIOs to WKPU unit, 3 argument cells per phandle
-
-phandle to what?
-
-> +      cell 1: First GPIO (relative to the GPIO block)
-> +      cell 2: First GPIO of the WKPU unit
-> +      cell 3: Number of consecutive GPIO's
-
-An interrupt-map could work here instead even though I'm guessing you 
-don't make the WKPU an interrupt parent. Your table would look something 
-like this:
-
-<WKPU# <&gpio> GPIO#>
-
+> +SHDWC SAMA5D2-Compatible Shutdown Controller
 > +
->  Note: Each GPIO port should have an alias correctly numbered in "aliases"
->  node.
+> +1) shdwc node
+> +
+> +required properties:
+> +- compatible: should be "atmel,sama5d2-shdwc".
+> +- reg: should contain registers location and length
+> +- clocks: phandle to input clock.
+> +- #address-cells: should be one. The cell is the wake-up input index.
+> +- #size-cells: should be zero.
+> +
+> +optional properties:
+> +
+> +- debounce-delay-us: minimum wake-up inputs debouncer period in
+> +  microseconds. It's usually a board-related property.
+> +- atmel,wakeup-rtc-timer: boolean to enable Real-Time Clock wake-up.
+> +
+> +The node contains child nodes for each wake-up input that the platform uses.
+> +
+> +2) input nodes
+> +
+> +Wake-up input nodes are usually described in the "board" part of the Device
+> +Tree. Note also that input 0 is linked to the wake-up pin and is frequently
+> +used.
+> +
+> +Required properties:
+> +- reg: should contain the wake-up input index [0 - 15].
+> +
+> +Optional properties:
+> +- atmel,wakeup-active-high: boolean, the corresponding wake-up input described
+> +  by the child, forces the wake-up of the core power supply on a high level.
+> +  The default is to be active low.
+> +
+> +Example:
+> +
+> +On the SoC side:
+> +	shdwc@f8048010 {
+> +		compatible = "atmel,sama5d2-shdwc";
+> +		reg = <0xf8048010 0x10>;
+> +		clocks = <&clk32k>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		atmel,wakeup-rtc-timer;
+> +	};
+> +
+> +On the board side:
+> +	shdwc@f8048010 {
+> +		debounce-delay-us = <976>;
+> +
+> +		input@0 {
+> +			reg = <0>;
+> +		};
+> +
+> +		input@1 {
+> +			reg = <1>;
+> +			atmel,wakeup-active-high;
+> +		};
+> +	};
+> +
+>  Special Function Registers (SFR)
 >  
-> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
-> index 1a022be..650a41a 100644
-> --- a/drivers/gpio/gpio-vf610.c
-> +++ b/drivers/gpio/gpio-vf610.c
+>  Special Function Registers (SFR) manage specific aspects of the integrated
+> -- 
+> 2.1.3
+> 
 
-The WKPU seems to purely be an interrupt controller. Perhaps you should 
-use stacked irq domain here. Then it would not be tied into the GPIO 
-controller at all.
-
-Rob
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
