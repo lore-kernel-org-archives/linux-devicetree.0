@@ -1,39 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 7/7] dt-bindings: drm/bridge: Update bindings for
- ADV7533
-Date: Thu, 17 Mar 2016 14:12:48 -0500
-Message-ID: <20160317191248.GA32431@rob-hp-laptop>
-References: <1441625800-1858-1-git-send-email-architt@codeaurora.org>
- <1457521038-5906-1-git-send-email-architt@codeaurora.org>
- <1457521038-5906-8-git-send-email-architt@codeaurora.org>
+Subject: Re: [PATCH v3 1/7] PM / Domains: Add DT bindings for the R-Car
+ System Controller
+Date: Thu, 17 Mar 2016 14:17:07 -0500
+Message-ID: <20160317191707.GA2713@rob-hp-laptop>
+References: <1457551122-21838-1-git-send-email-geert+renesas@glider.be>
+ <1457551122-21838-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1457521038-5906-8-git-send-email-architt@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, andy.green@linaro.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, treding@nvidia.com, amit.kucheria@linaro.org
+In-Reply-To: <1457551122-21838-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBNYXIgMDksIDIwMTYgYXQgMDQ6Mjc6MThQTSArMDUzMCwgQXJjaGl0IFRhbmVqYSB3
-cm90ZToKPiBBZGQgZGVzY3JpcHRpb24gb2YgQURWNzUzMy4gQWRkIHRoZSByZXF1aXJlZCBhbmQg
-b3B0aW9uYWwgcHJvcGVydGllcyB0aGF0Cj4gYXJlIHNwZWNpZmljIHRvIGl0Lgo+IAo+IENjOiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IENjOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9y
-YS5vcmc+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9hZGksYWR2NzUxMS50
-eHQgICAgICAgIHwgMjUgKysrKysrKysrKysrKysrKystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwg
-MjAgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMoLSkKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8
-cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+On Wed, Mar 09, 2016 at 08:18:36PM +0100, Geert Uytterhoeven wrote:
+> The Renesas R-Car System Controller provides power management for the
+> CPU cores and various coprocessors, following the generic PM domain
+> bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> 
+> This supports R-Car Gen1 (H1), Gen2, and Gen3.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v3:
+>   - Move power area hierarchy from DT to C (cfr. DT bindings for Renesas
+>     CPG/MSSR), and switch to "#power-domain-cells = <1>",
+>   - Drop fallback compatibility strings, as the bindings are
+>     SoC-specific,
+>   - Rename from renesas,sysc-rcar.txt to renesas,rcar-sysc.txt,
+> 
+> v2:
+>   - Add R-Car H3 (r8a7795) support,
+>   - Use "renesas,<type>-sysc" instead of "renesas,sysc-<type>",
+>   - Add fallback compatibility strings for R-Car Gen2 and Gen3.
+> ---
+>  .../bindings/power/renesas,rcar-sysc.txt           | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/renesas,rcar-sysc.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
