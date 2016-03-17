@@ -1,123 +1,39 @@
-From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
- device access
-Date: Thu, 17 Mar 2016 09:33:40 -0400
-Message-ID: <20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
- <20160316185440-mutt-send-email-mst@redhat.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 00/11] da8xx USB clocks
+Date: Thu, 17 Mar 2016 16:39:24 +0300
+Message-ID: <56EAB38C.9070905@cogentembedded.com>
+References: <1458181615-27782-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160316185440-mutt-send-email-mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458181615-27782-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
-> On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
-> > Allowing for the future possibility of implementing AML-based
-> > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> > acquire the global ACPI lock when accessing the device on behalf
-> > of the guest-side sysfs driver, to prevent any potential race
-> > conditions.
-> > 
-> > Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-> 
-> So this patch makes sense of course.
-> 
-> 
-> Given the recent discussion on QEMU mailing list,
-> I think there is an additional patch that we need:
-> filter the files exposed to userspace by "opt/" prefix.
-> 
-> This will ensure that we can change all other fw cfg files
-> at will without breaking guest scripts.
-> 
-> Gabriel, could you code this up? Or do you see a
-> pressing need to expose internal QEMU registers to
-> userspace?
+On 3/17/2016 5:26 AM, David Lechner wrote:
 
-I'd be happy to update the docs to (better) emphasisze that:
+> OK, ready for round two.
 
-        1 the only way to guarantee any particular item shows up in
-          guest-side fw_cfg sysfs is manually putting it there via the
-          host-side command line
+    You're quick... :-)
 
-                - and BTW, unless you prefixed it with "opt/..." you
-                  are off the reservation, and it might collide with
-                  qemu->firmware communications.
+> I've added a new callback in the davinci clocks so that they can properly
+> handle clock muxing. The clock functions are pretty much the same as in the
+> previous patch set other than clk_set_parent() now works.
+>
+> The next new thing is a phy driver for the CFGCHIP2 register that controls the
+> SoC USB PHY (both USB 1.1 and USB 2.0). The ohci and musb drivers have been
+> updated to use this new phy driver.
 
-        2 anything one didn't place there themselves via the qemu
-          command line is informational only, might change or go away
-          at any time, and developing expectations about it based on
-          past observation is done at the observer's own risk.
+    Fantastic! At least there's some breakthru on this front.
 
-While I don't *personally* care about items outside of "opt/", I'm a bit
-uncomfortable actively *hiding* them from userspace -- I could easily
-imagine the ability to see (read-only) fw_cfg content from userspace
-being a handy debugging/troubleshooting tool. It's back to separating
-between mechanism and policy: hiding things from userspace would IMHO
-fall into the policy enforcement side of things, and I'm still unclear
-about the failure scenario we'd be trying to prevent, and its likelihood.
+[...]
 
-Thanks,
---Gabriel
- 
-> > ---
-> > 
-> > Changes since v1:
-> > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
-> > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
-> > 	  and only throw a warning/error message otherwise.
-> > 
-> > 	- didn't get any *negative* feedback from the QEMU crowd, so
-> > 	  this is now a bona-fide "please apply this", rather than just
-> > 	  an RFC :)
-> > 
-> > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
-> > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
-> > 
-> > Thanks much,
-> >   --Gabriel
-> > 
-> >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> > 
-> > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> > index 7bba76c..a44dc32 100644
-> > --- a/drivers/firmware/qemu_fw_cfg.c
-> > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> >  static inline void fw_cfg_read_blob(u16 key,
-> >  				    void *buf, loff_t pos, size_t count)
-> >  {
-> > +	u32 glk;
-> > +	acpi_status status;
-> > +
-> > +	/* If we have ACPI, ensure mutual exclusion against any potential
-> > +	 * device access by the firmware, e.g. via AML methods:
-> > +	 */
-> > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> > +		/* Should never get here */
-> > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
-> > +		memset(buf, 0, count);
-> > +		return;
-> > +	}
-> > +
-> >  	mutex_lock(&fw_cfg_dev_lock);
-> >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-> >  	while (pos-- > 0)
-> >  		ioread8(fw_cfg_reg_data);
-> >  	ioread8_rep(fw_cfg_reg_data, buf, count);
-> >  	mutex_unlock(&fw_cfg_dev_lock);
-> > +
-> > +	acpi_release_global_lock(glk);
-> >  }
-> >  
-> >  /* clean up fw_cfg device i/o */
-> > -- 
-> > 2.4.3
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
