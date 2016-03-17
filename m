@@ -1,64 +1,55 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
-Date: Thu, 17 Mar 2016 08:31:16 -0500
-Message-ID: <CAL_Jsq+2M3iLMCwJhttiL3BTvefUa_5tUiYqvzp3Aix4uK7exw@mail.gmail.com>
-References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
- <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
- <CAL_JsqJydgmkU=SGcr-0JHsYG8wXk5GEQCQXY7y+FHH2A0LZkw@mail.gmail.com>
- <20160219031655.GA10818@gwshan> <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
- <20160308005633.GA30023@gwshan>
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: Re: [PATCH 3/5] rtc: rtc-jz4740: Add support for devicetree
+Date: Thu, 17 Mar 2016 13:33:04 +0000
+Message-ID: <56EAB210.70900@imgtec.com>
+References: <1457217531-26064-1-git-send-email-paul@crapouillou.net>
+ <1457217531-26064-3-git-send-email-paul@crapouillou.net>
+ <20160317120804.GD3362@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20160308005633.GA30023@gwshan>
-Sender: linux-pci-owner@vger.kernel.org
-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160317120804.GD3362@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Alessandro Zummo <a.zummo@towertech.it>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, rtc-linux@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 7, 2016 at 6:56 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
-> On Tue, Mar 01, 2016 at 08:40:12PM -0600, Rob Herring wrote:
->>On Thu, Feb 18, 2016 at 9:16 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->>> On Wed, Feb 17, 2016 at 08:59:53AM -0600, Rob Herring wrote:
->>>>On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
->>>>> This renames unflatten_dt_node() to unflatten_dt_nodes() as it
->>>>> populates multiple device nodes from FDT blob. No logical changes
->>>>> introduced.
->>>>>
->>>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
->>>>> ---
->>>>>  drivers/of/fdt.c | 14 +++++++-------
->>>>>  1 file changed, 7 insertions(+), 7 deletions(-)
->>>>
->>>>Acked-by: Rob Herring <robh@kernel.org>
->>>>
->>>>I'm happy to take patches 40-42 for 4.6 if the rest of the series
->>>>doesn't go in given they fix a separate problem. I just need to know
->>>>soon (or at least they need to go into -next soon).
->>>>
->>>
->>> Thanks for quick response, Rob. It depends how much comments I will
->>> receive for the powerpc/powernv part. Except that, all parts including
->>> this one have been ack'ed. I can discuss it with Michael Ellerman.
->>> By the way, how soon you need the decision to merge 40-42? If that's
->>> one or two weeks later, I don't think the reivew on the whole series
->>> can be done.
+Hi Alexandre,
+
+On 17/03/16 12:08, Alexandre Belloni wrote:
+> On 05/03/2016 at 23:38:49 +0100, Paul Cercueil wrote :
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>   drivers/rtc/rtc-jz4740.c | 16 +++++++++++++++-
+>>   1 file changed, 15 insertions(+), 1 deletion(-)
 >>
->>Well, it's been 2 weeks now. I need to know this week.
+>> diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
+>> index 47617bd..3914b1c 100644
+>> --- a/drivers/rtc/rtc-jz4740.c
+>> +++ b/drivers/rtc/rtc-jz4740.c
+>> @@ -17,6 +17,7 @@
+>>   #include <linux/io.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/rtc.h>
+>>   #include <linux/slab.h>
+>> @@ -245,6 +246,13 @@ void jz4740_rtc_poweroff(struct device *dev)
+>>   }
+>>   EXPORT_SYMBOL_GPL(jz4740_rtc_poweroff);
 >>
->>> Also, I think you probably can merge 40-44 as they're all about
->>> fdt.c. If they can be merged at one time, I needn't bother (cc)
->>> you again if I need send a updated revision. Thanks for your
->>> review.
->>
->>I did not include 43 and 44 as they are only needed for the rest of your series.
->>
+>> +static const struct of_device_id jz4740_rtc_of_match[] = {
+>> +	{ .compatible = "ingenic,jz4740-rtc", .data = (void *) ID_JZ4740 },
+>> +	{ .compatible = "ingenic,jz4780-rtc", .data = (void *) ID_JZ4780 },
 >
-> Rob, sorry for late reponse. I really expect this series to be merged to 4.6 and
-> I was checking reviewers' bandwidth to review it. Unfortunately, I didn't receive
-> any comments except yours until now. That means this series has to miss 4.6. Please
-> pick/merge 41 and 42 if no body has objection. Thanks again for your time on this.
+> ingenic is not in Documentation/devicetree/bindings/vendor-prefixes.txt,
+> you have to add it there before using it.
 
-Too late for 4.6.
+Ingenic is in vendor-prefixes.txt - it was added by Commit f289cc7 
+("devicetree/bindings: add Ingenic Semiconductor vendor prefix").
 
-Rob
+Thanks,
+
+Harvey
