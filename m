@@ -1,58 +1,85 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2 1/3] clk: ti: am335x/am4372: Add tbclk to pwm node
-Date: Thu, 17 Mar 2016 17:07:41 -0500
-Message-ID: <1458252463-8821-2-git-send-email-fcooper@ti.com>
-References: <1458252463-8821-1-git-send-email-fcooper@ti.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1458252463-8821-1-git-send-email-fcooper@ti.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 14/18] gpio: vf610: add support for WKPU unit
+Date: Thu, 17 Mar 2016 15:12:24 -0700
+Message-ID: <752bcc77253ae252c5a9928116b96b44@agner.ch>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-15-git-send-email-stefan@agner.ch>
+ <20160317200054.GA3799@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160317200054.GA3799@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add tblck to the pwm nodes. This insures that the ehrpwm driver has access
-to the time-based clk.
+Hi Rob,
 
-Do not remove similar entries for ehrpwm node. Later patches will switch
-from using ehrpwm node name to pwm. But to maintain ABI compatibility we
-shouldn't remove the old entries.
+On 2016-03-17 13:00, Rob Herring wrote:
+> On Wed, Mar 09, 2016 at 06:16:55PM -0800, Stefan Agner wrote:
+>> WKPU unit support within the VF610 GPIO driver. The WKPU unit allows
+>> some GPIO to be the wakeup source from lowest power modes LPSTOPx.
+>> The relationship between the GPIO banks and the WKPU GPIO numbering
+>> can be derived from the device tree property fsl,gpio-wakeup.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  .../devicetree/bindings/gpio/gpio-vf610.txt        |   6 +
+>>  drivers/gpio/gpio-vf610.c                          | 151 +++++++++++++++++++++
+>>  2 files changed, 157 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+>> index 436cc99..985ddfd 100644
+>> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
+>> @@ -22,6 +22,12 @@ Required properties for GPIO node:
+>>        4 = active high level-sensitive.
+>>        8 = active low level-sensitive.
+>>
+>> +Option properties:
+> 
+> Optional
+> 
+>> +- fsl,gpio-wakeup : map GPIOs to WKPU unit, 3 argument cells per phandle
+> 
+> phandle to what?
+> 
+>> +      cell 1: First GPIO (relative to the GPIO block)
+>> +      cell 2: First GPIO of the WKPU unit
+>> +      cell 3: Number of consecutive GPIO's
+> 
+> An interrupt-map could work here instead even though I'm guessing you 
+> don't make the WKPU an interrupt parent. Your table would look something 
+> like this:
+> 
+> <WKPU# <&gpio> GPIO#>
+> 
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- drivers/clk/ti/clk-33xx.c | 3 +++
- drivers/clk/ti/clk-43xx.c | 6 ++++++
- 2 files changed, 9 insertions(+)
+Hm, that would need two interrupt parents since the main interrupt for
+the GPIO's would still be GIC...
 
-diff --git a/drivers/clk/ti/clk-33xx.c b/drivers/clk/ti/clk-33xx.c
-index ef2ec64..0e47d95 100644
---- a/drivers/clk/ti/clk-33xx.c
-+++ b/drivers/clk/ti/clk-33xx.c
-@@ -108,6 +108,9 @@ static struct ti_dt_clk am33xx_clks[] = {
- 	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
- 	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
- 	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
-+	DT_CLK("48300200.pwm", "tbclk", "ehrpwm0_tbclk"),
-+	DT_CLK("48302200.pwm", "tbclk", "ehrpwm1_tbclk"),
-+	DT_CLK("48304200.pwm", "tbclk", "ehrpwm2_tbclk"),
- 	{ .node_name = NULL },
- };
- 
-diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-index 097fc90..7255aa8 100644
---- a/drivers/clk/ti/clk-43xx.c
-+++ b/drivers/clk/ti/clk-43xx.c
-@@ -115,6 +115,12 @@ static struct ti_dt_clk am43xx_clks[] = {
- 	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
- 	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
- 	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
-+	DT_CLK("48300200.pwm", "tbclk", "ehrpwm0_tbclk"),
-+	DT_CLK("48302200.pwm", "tbclk", "ehrpwm1_tbclk"),
-+	DT_CLK("48304200.pwm", "tbclk", "ehrpwm2_tbclk"),
-+	DT_CLK("48306200.pwm", "tbclk", "ehrpwm3_tbclk"),
-+	DT_CLK("48308200.pwm", "tbclk", "ehrpwm4_tbclk"),
-+	DT_CLK("4830a200.pwm", "tbclk", "ehrpwm5_tbclk"),
- 	{ .node_name = NULL },
- };
- 
--- 
-2.7.0
+
+>> +
+>>  Note: Each GPIO port should have an alias correctly numbered in "aliases"
+>>  node.
+>>
+>> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
+>> index 1a022be..650a41a 100644
+>> --- a/drivers/gpio/gpio-vf610.c
+>> +++ b/drivers/gpio/gpio-vf610.c
+> 
+> The WKPU seems to purely be an interrupt controller. Perhaps you should 
+> use stacked irq domain here. Then it would not be tied into the GPIO 
+> controller at all.
+
+It actually allows to configure pull-up/downs, that is why I chose to
+implement it as a GPIO controller. Although the pull-up/down part is not
+implemented yet.
+
+But when I think about it, it actually is probably more a pinctrl with
+interrupt capabilities?
+
+--
+Stefan
