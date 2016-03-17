@@ -1,85 +1,52 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 14/18] gpio: vf610: add support for WKPU unit
-Date: Thu, 17 Mar 2016 15:12:24 -0700
-Message-ID: <752bcc77253ae252c5a9928116b96b44@agner.ch>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
- <1457576219-7971-15-git-send-email-stefan@agner.ch>
- <20160317200054.GA3799@rob-hp-laptop>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v2] rtc: s3c: Document in binding that only s3c6410 needs
+ a src clk
+Date: Thu, 17 Mar 2016 23:31:53 +0100
+Message-ID: <20160317223153.GI2831@piout.net>
+References: <1455545466-25709-1-git-send-email-javier@osg.samsung.com>
+ <20160218143853.GF9654@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160317200054.GA3799@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160218143853.GF9654@rob-hp-laptop>
+Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: shawnguo@kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, rtc-linux@googlegroups.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
 
-On 2016-03-17 13:00, Rob Herring wrote:
-> On Wed, Mar 09, 2016 at 06:16:55PM -0800, Stefan Agner wrote:
->> WKPU unit support within the VF610 GPIO driver. The WKPU unit allows
->> some GPIO to be the wakeup source from lowest power modes LPSTOPx.
->> The relationship between the GPIO banks and the WKPU GPIO numbering
->> can be derived from the device tree property fsl,gpio-wakeup.
->>
->> Signed-off-by: Stefan Agner <stefan@agner.ch>
->> ---
->>  .../devicetree/bindings/gpio/gpio-vf610.txt        |   6 +
->>  drivers/gpio/gpio-vf610.c                          | 151 +++++++++++++++++++++
->>  2 files changed, 157 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
->> index 436cc99..985ddfd 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.txt
->> @@ -22,6 +22,12 @@ Required properties for GPIO node:
->>        4 = active high level-sensitive.
->>        8 = active low level-sensitive.
->>
->> +Option properties:
+On 18/02/2016 at 08:38:53 -0600, Rob Herring wrote :
+> On Mon, Feb 15, 2016 at 11:11:06AM -0300, Javier Martinez Canillas wrote:
+> > The S3C binding doc says that the RTC and RTC source clocks are required
+> > but the S3C driver supports different HW IP and only the s3c6410 needs a
+> > source clock.
+> > 
+> > Fix the binding explaining that the source clock is only needed for the
+> > s3c6410-rtc compatible controller.
+> > 
+> > Reported-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> > Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> > Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > 
+> > ---
+> > Hello,
+> > 
+> > This patch depends on a previous one that was picked by Rob Herring so
+> > this one has to go through his tree again and not through the RTC tree
+> > to avoid conflicts.
 > 
-> Optional
+> Ugg, sent pull request today. It should be in Linus' tree now.
 > 
->> +- fsl,gpio-wakeup : map GPIOs to WKPU unit, 3 argument cells per phandle
-> 
-> phandle to what?
-> 
->> +      cell 1: First GPIO (relative to the GPIO block)
->> +      cell 2: First GPIO of the WKPU unit
->> +      cell 3: Number of consecutive GPIO's
-> 
-> An interrupt-map could work here instead even though I'm guessing you 
-> don't make the WKPU an interrupt parent. Your table would look something 
-> like this:
-> 
-> <WKPU# <&gpio> GPIO#>
+> This can go thru rtc tree if you prefer. Otherwise, I'll queue it up for 
+> 4.6.
 > 
 
-Hm, that would need two interrupt parents since the main interrupt for
-the GPIO's would still be GIC...
+Do you plan to send that one to Linus for 4.6? Else, I still have a few
+patches to send before the end of the merge window.
 
-
->> +
->>  Note: Each GPIO port should have an alias correctly numbered in "aliases"
->>  node.
->>
->> diff --git a/drivers/gpio/gpio-vf610.c b/drivers/gpio/gpio-vf610.c
->> index 1a022be..650a41a 100644
->> --- a/drivers/gpio/gpio-vf610.c
->> +++ b/drivers/gpio/gpio-vf610.c
-> 
-> The WKPU seems to purely be an interrupt controller. Perhaps you should 
-> use stacked irq domain here. Then it would not be tied into the GPIO 
-> controller at all.
-
-It actually allows to configure pull-up/downs, that is why I chose to
-implement it as a GPIO controller. Although the pull-up/down part is not
-implemented yet.
-
-But when I think about it, it actually is probably more a pinctrl with
-interrupt capabilities?
-
---
-Stefan
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
