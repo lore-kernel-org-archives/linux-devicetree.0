@@ -1,55 +1,123 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: Re: [PATCH 3/5] rtc: rtc-jz4740: Add support for devicetree
-Date: Thu, 17 Mar 2016 13:33:04 +0000
-Message-ID: <56EAB210.70900@imgtec.com>
-References: <1457217531-26064-1-git-send-email-paul@crapouillou.net>
- <1457217531-26064-3-git-send-email-paul@crapouillou.net>
- <20160317120804.GD3362@piout.net>
+From: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
+Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
+ device access
+Date: Thu, 17 Mar 2016 09:33:40 -0400
+Message-ID: <20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
+References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
+ <20160316185440-mutt-send-email-mst@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160317120804.GD3362@piout.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ralf Baechle <ralf@linux-mips.org>, Alessandro Zummo <a.zummo@towertech.it>, Paul Burton <paul.burton@imgtec.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, rtc-linux@googlegroups.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160316185440-mutt-send-email-mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
+> On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
+> > Allowing for the future possibility of implementing AML-based
+> > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> > acquire the global ACPI lock when accessing the device on behalf
+> > of the guest-side sysfs driver, to prevent any potential race
+> > conditions.
+> > 
+> > Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+> 
+> So this patch makes sense of course.
+> 
+> 
+> Given the recent discussion on QEMU mailing list,
+> I think there is an additional patch that we need:
+> filter the files exposed to userspace by "opt/" prefix.
+> 
+> This will ensure that we can change all other fw cfg files
+> at will without breaking guest scripts.
+> 
+> Gabriel, could you code this up? Or do you see a
+> pressing need to expose internal QEMU registers to
+> userspace?
 
-On 17/03/16 12:08, Alexandre Belloni wrote:
-> On 05/03/2016 at 23:38:49 +0100, Paul Cercueil wrote :
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> ---
->>   drivers/rtc/rtc-jz4740.c | 16 +++++++++++++++-
->>   1 file changed, 15 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
->> index 47617bd..3914b1c 100644
->> --- a/drivers/rtc/rtc-jz4740.c
->> +++ b/drivers/rtc/rtc-jz4740.c
->> @@ -17,6 +17,7 @@
->>   #include <linux/io.h>
->>   #include <linux/kernel.h>
->>   #include <linux/module.h>
->> +#include <linux/of_device.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/rtc.h>
->>   #include <linux/slab.h>
->> @@ -245,6 +246,13 @@ void jz4740_rtc_poweroff(struct device *dev)
->>   }
->>   EXPORT_SYMBOL_GPL(jz4740_rtc_poweroff);
->>
->> +static const struct of_device_id jz4740_rtc_of_match[] = {
->> +	{ .compatible = "ingenic,jz4740-rtc", .data = (void *) ID_JZ4740 },
->> +	{ .compatible = "ingenic,jz4780-rtc", .data = (void *) ID_JZ4780 },
->
-> ingenic is not in Documentation/devicetree/bindings/vendor-prefixes.txt,
-> you have to add it there before using it.
+I'd be happy to update the docs to (better) emphasisze that:
 
-Ingenic is in vendor-prefixes.txt - it was added by Commit f289cc7 
-("devicetree/bindings: add Ingenic Semiconductor vendor prefix").
+        1 the only way to guarantee any particular item shows up in
+          guest-side fw_cfg sysfs is manually putting it there via the
+          host-side command line
+
+                - and BTW, unless you prefixed it with "opt/..." you
+                  are off the reservation, and it might collide with
+                  qemu->firmware communications.
+
+        2 anything one didn't place there themselves via the qemu
+          command line is informational only, might change or go away
+          at any time, and developing expectations about it based on
+          past observation is done at the observer's own risk.
+
+While I don't *personally* care about items outside of "opt/", I'm a bit
+uncomfortable actively *hiding* them from userspace -- I could easily
+imagine the ability to see (read-only) fw_cfg content from userspace
+being a handy debugging/troubleshooting tool. It's back to separating
+between mechanism and policy: hiding things from userspace would IMHO
+fall into the policy enforcement side of things, and I'm still unclear
+about the failure scenario we'd be trying to prevent, and its likelihood.
 
 Thanks,
-
-Harvey
+--Gabriel
+ 
+> > ---
+> > 
+> > Changes since v1:
+> > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
+> > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
+> > 	  and only throw a warning/error message otherwise.
+> > 
+> > 	- didn't get any *negative* feedback from the QEMU crowd, so
+> > 	  this is now a bona-fide "please apply this", rather than just
+> > 	  an RFC :)
+> > 
+> > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
+> > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
+> > 
+> > Thanks much,
+> >   --Gabriel
+> > 
+> >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> > 
+> > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> > index 7bba76c..a44dc32 100644
+> > --- a/drivers/firmware/qemu_fw_cfg.c
+> > +++ b/drivers/firmware/qemu_fw_cfg.c
+> > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+> >  static inline void fw_cfg_read_blob(u16 key,
+> >  				    void *buf, loff_t pos, size_t count)
+> >  {
+> > +	u32 glk;
+> > +	acpi_status status;
+> > +
+> > +	/* If we have ACPI, ensure mutual exclusion against any potential
+> > +	 * device access by the firmware, e.g. via AML methods:
+> > +	 */
+> > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
+> > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
+> > +		/* Should never get here */
+> > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
+> > +		memset(buf, 0, count);
+> > +		return;
+> > +	}
+> > +
+> >  	mutex_lock(&fw_cfg_dev_lock);
+> >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
+> >  	while (pos-- > 0)
+> >  		ioread8(fw_cfg_reg_data);
+> >  	ioread8_rep(fw_cfg_reg_data, buf, count);
+> >  	mutex_unlock(&fw_cfg_dev_lock);
+> > +
+> > +	acpi_release_global_lock(glk);
+> >  }
+> >  
+> >  /* clean up fw_cfg device i/o */
+> > -- 
+> > 2.4.3
