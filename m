@@ -1,89 +1,86 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 08/15] genirq: Add runtime power management support for
- IRQ chips
-Date: Thu, 17 Mar 2016 15:28:33 +0000
-Message-ID: <56EACD21.20309@arm.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-9-git-send-email-jonathanh@nvidia.com>
- <56EAC6E8.1070806@arm.com> <56EAC98A.7090405@nvidia.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: at91/dt: sama5d2: add SFR node
+Date: Thu, 17 Mar 2016 16:34:22 +0100
+Message-ID: <1458228862-25582-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56EAC98A.7090405@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/03/16 15:13, Jon Hunter wrote:
-> Hi Marc,
-> 
-> On 17/03/16 15:02, Marc Zyngier wrote:
->> Hi Jon,
->>
->> On 17/03/16 14:19, Jon Hunter wrote:
->>> Some IRQ chips may be located in a power domain outside of the CPU
->>> subsystem and hence will require device specific runtime power
->>> management. In order to support such IRQ chips, add a pointer for a
->>> device structure to the irq_chip structure, and if this pointer is
->>> populated by the IRQ chip driver and CONFIG_PM is selected in the kernel
->>> configuration, then the pm_runtime_get/put APIs for this chip will be
->>> called when an IRQ is requested/freed, respectively.
->>>
->>> When entering system suspend and each interrupt is disabled if there is
->>> no wake-up set for that interrupt. For an IRQ chip that utilises runtime
->>> power management, print a warning message for each active interrupt that
->>> has no wake-up set because these interrupts may be unnecessarily keeping
->>> the IRQ chip enabled during system suspend.
->>>
->>> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->>> ---
->>>  include/linux/irq.h    |  5 +++++
->>>  kernel/irq/chip.c      | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++
->>>  kernel/irq/internals.h |  1 +
->>>  kernel/irq/manage.c    | 14 +++++++++++---
->>>  kernel/irq/pm.c        |  3 +++
->>>  5 files changed, 72 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/include/linux/irq.h b/include/linux/irq.h
->>> index c4de62348ff2..82f36390048d 100644
->>> --- a/include/linux/irq.h
->>> +++ b/include/linux/irq.h
->>> @@ -315,6 +315,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->>>  /**
->>>   * struct irq_chip - hardware interrupt chip descriptor
->>>   *
->>> + * @parent:		pointer to associated device
->>>   * @name:		name for /proc/interrupts
->>>   * @irq_startup:	start up the interrupt (defaults to ->enable if NULL)
->>>   * @irq_shutdown:	shut down the interrupt (defaults to ->disable if NULL)
->>> @@ -354,6 +355,7 @@ static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
->>>   * @flags:		chip specific flags
->>>   */
->>>  struct irq_chip {
->>> +	struct device	*parent;
->>
->> Nit: Please don't call this just "parent". We have parent fields in
->> irq_data and irq_domain structures, and they always are a pointer to the
->> same type, indicating some form of stacking. Here, we're pointing to a
->> different type altogether...
->>
->> How about calling it "dev", or "device" instead? It would make it much
->> clearer that when crossing that pointer, we're in another subsystem
->> altogether.
-> 
-> I will defer to Linus W here, as it was his request we make this
-> 'parent' and not 'dev'. See ...
-> 
-> http://marc.info/?l=linux-kernel&m=145035839623442&w=2
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-Well, that contradicts the way use use the word "parent" in the IRQ
-subsystem, I guess. I'd settle for parent_device or something along
-those lines (but keep in mind I'm really bad at naming things).
+This SFR node is looked up by the I2S controller driver to tune the
+SFR_I2SCLKSEL register.
 
-Anyway, enough bikeshedding... ;-)
+Signed-off-by: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/atmel-at91.txt |  2 +-
+ arch/arm/boot/dts/sama5d2.dtsi                       |  5 +++++
+ include/linux/mfd/syscon/atmel-sfr.h                 | 18 ++++++++++++++++++
+ 3 files changed, 24 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/mfd/syscon/atmel-sfr.h
 
-	M.
+diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+index 7fd64ec..550fd66 100644
+--- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
++++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+@@ -155,7 +155,7 @@ elsewhere.
+ 
+ required properties:
+ - compatible: Should be "atmel,<chip>-sfr", "syscon".
+-  <chip> can be "sama5d3" or "sama5d4".
++  <chip> can be "sama5d3", "sama5d4" or "sama5d2".
+ - reg: Should contain registers location and length
+ 
+ 	sfr@f0038000 {
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 78996bd..36bb29c 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -973,6 +973,11 @@
+ 				status = "disabled";
+ 			};
+ 
++			sfr: sfr@f8030000 {
++				compatible = "atmel,sama5d2-sfr", "syscon";
++				reg = <0xf8030000 0x98>;
++			};
++
+ 			flx0: flexcom@f8034000 {
+ 				compatible = "atmel,sama5d2-flexcom";
+ 				reg = <0xf8034000 0x200>;
+diff --git a/include/linux/mfd/syscon/atmel-sfr.h b/include/linux/mfd/syscon/atmel-sfr.h
+new file mode 100644
+index 0000000..2f9bb98
+--- /dev/null
++++ b/include/linux/mfd/syscon/atmel-sfr.h
+@@ -0,0 +1,18 @@
++/*
++ * Atmel SFR (Special Function Registers) register offsets and bit definitions.
++ *
++ * Copyright (C) 2016 Atmel
++ *
++ * Author: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef _LINUX_MFD_SYSCON_ATMEL_SFR_H
++#define _LINUX_MFD_SYSCON_ATMEL_SFR_H
++
++#define AT91_SFR_I2SCLKSEL	0x90	/* I2SC Register */
++
++#endif /* _LINUX_MFD_SYSCON_ATMEL_SFR_H */
 -- 
-Jazz is not dead. It just smells funny...
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
