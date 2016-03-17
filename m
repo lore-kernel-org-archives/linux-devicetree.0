@@ -1,123 +1,213 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFD] Sharing GPIOs for input (buttons) and output (LEDs)
-Date: Thu, 17 Mar 2016 11:18:28 +0100
-Message-ID: <CACRpkdb1J+-_9szuv6xWhrD7+NFeCjug+cqaYsHDYyLUYbLw1w@mail.gmail.com>
-References: <CAMuHMdWbpj=ZnFqh1uWZSCojvrM+NB=Bbzw=UebodTr+vAKy7g@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH v5 7/7] ARM: STiH407: Move over to using
+ the 'reserved-memory' API for obtaining DMA memory
+Date: Thu, 17 Mar 2016 10:18:28 +0000
+Message-ID: <20160317101828.GA13692@x1>
+References: <1452602781-22424-1-git-send-email-lee.jones@linaro.org>
+ <1452602781-22424-8-git-send-email-lee.jones@linaro.org>
+ <20160316163508.GA8396@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20160316165526.GZ13692@x1>
+ <20160316201051.GA10042@griffinp-ThinkPad-X1-Carbon-2nd>
+ <D0C04901035AEF47BB4C8387F4AA41F5359967@SAFEX1NODE23.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWbpj=ZnFqh1uWZSCojvrM+NB=Bbzw=UebodTr+vAKy7g@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <D0C04901035AEF47BB4C8387F4AA41F5359967@SAFEX1NODE23.st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Loic PALLARDY <loic.pallardy@st.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, "ohad@wizery.com" <ohad@wizery.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "kernel@stlinux.com" <kernel@stlinux.com>, "Nathan_Lynch@mentor.com" <Nathan_Lynch@mentor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "s-anna@ti.com" <s-anna@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 22, 2016 at 1:14 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
+On Thu, 17 Mar 2016, Loic PALLARDY wrote:
 
-> On the Renesas Salvator-X development board, 3 GPIO pins are connected to both
-> push buttons and LEDs.
->   - If the GPIO is configured for output, it can control the LED,
->   - If the GPIO is configured for input, the push button status can be
->     read. Note that the LED is on if the push button is not pressed; it is
->     turned off while holding the button.
+> Hi Lee, Pete,
+>=20
+> The coprocessor memory map defined below is for test. Addresses have
+> been arbitrary fixed.
+> The audio and video firmware you want to use are for product
+> configuration.
+> For sure memory mapping must be adapted or firmware recompiled.
+>=20
+> About coherency between firmware characteristics (linked address,
+> position independent or not, size) and DT definition, you're right,
+> some checks are missing in this version. It shouldn't be possible to
+> load/start a firmware if DT reserved memory is not aligned with
+> firmware resource table and firmware start address.
+>=20
+> Lee, I propose to have a short discussion during next ST LT weekly
+> meeting to list missing features and identify ST internal remoteproc
+> patches for upstream.
 
-Have you asked the hardware engineer who did this construction
-what s/he was thinking? And I mean seriously: what was the
-usecase? Did they really design the LEDs to be used to flicker
-with or just as an indication as to whether the button was being
-pushed or not?
+Sounds good to me.
 
-Your approach seems dedicated to use it for both usecases (also
-as a stand-alone heartbeat or whatever) but was that really
-intended?
+=46YI: This is only the first patch-set submission, which only provides
+basic support.  There are subsequent sets, which I will start to
+refine after the merge-window closes.  Perhaps the internal patches
+you speak of are already part of this set?
 
->         keyboard {
->                 compatible = "gpio-keys";
->
->                 key-a {
->                         gpios = <&gpio6 11 GPIO_ACTIVE_LOW>;
->                         label = "SW20";
->                         wakeup-source;
->                         linux,code = <KEY_A>;
->                 };
->                 key-b {
->                         gpios = <&gpio6 12 GPIO_ACTIVE_LOW>;
->                         label = "SW21";
->                         wakeup-source;
->                         linux,code = <KEY_B>;
->                 };
->                 key-c {
->                         gpios = <&gpio6 13 GPIO_ACTIVE_LOW>;
->                         label = "SW22";
->                         wakeup-source;
->                         linux,code = <KEY_C>;
->                 };
->         };
+> > -----Original Message-----
+> > From: Peter Griffin [mailto:peter.griffin@linaro.org]
+> > Sent: Wednesday, March 16, 2016 9:11 PM
+> > To: Lee Jones <lee.jones@linaro.org>
+> > Cc: ohad@wizery.com; devicetree@vger.kernel.org; f.fainelli@gmail.c=
+om;
+> > kernel@stlinux.com; Nathan_Lynch@mentor.com; linux-
+> > kernel@vger.kernel.org; s-anna@ti.com; linux-arm-
+> > kernel@lists.infradead.org
+> > Subject: Re: [STLinux Kernel] [PATCH v5 7/7] ARM: STiH407: Move ove=
+r to
+> > using the 'reserved-memory' API for obtaining DMA memory
+> >=20
+> > Hi Lee,
+> >=20
+> > On Wed, 16 Mar 2016, Lee Jones wrote:
+> >=20
+> > > On Wed, 16 Mar 2016, Peter Griffin wrote:
+> > >
+> > > > Hi Lee,
+> > > >
+> > > > On Tue, 12 Jan 2016, Lee Jones wrote:
+> > > >
+> > > > > Doing so saves quite a bit of code in the driver.
+> > > > >
+> > > > > For more information on the 'reserved-memory' bindings see:
+> > > > >
+> > > > >
+> > > > > Documentation/devicetree/bindings/reserved-memory/reserved-
+> > memory.
+> > > > > txt
+> > > > >
+> > > > > Suggested-by: Suman Anna <s-anna@ti.com>
+> > > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > > ---
+> > > > >  arch/arm/boot/dts/stih407-family.dtsi | 46
+> > > > > +++++++++++++++++++++++++++++------
+> > > > >  1 file changed, 38 insertions(+), 8 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm/boot/dts/stih407-family.dtsi
+> > > > > b/arch/arm/boot/dts/stih407-family.dtsi
+> > > > > index 15c20b6..27b8efc 100644
+> > > > > --- a/arch/arm/boot/dts/stih407-family.dtsi
+> > > > > +++ b/arch/arm/boot/dts/stih407-family.dtsi
+> > > > > @@ -15,6 +15,36 @@
+> > > > >  	#address-cells =3D <1>;
+> > > > >  	#size-cells =3D <1>;
+> > > > >
+> > > > > +	reserved-memory {
+> > > > > +		#address-cells =3D <1>;
+> > > > > +		#size-cells =3D <1>;
+> > > > > +		ranges;
+> > > > > +
+> > > > > +		gp0_reserved: rproc@40000000 {
+> > > > > +			compatible =3D "shared-dma-pool";
+> > > > > +			reg =3D <0x40000000 0x01000000>;
+> > > > > +			no-map;
+> > > > > +		};
+> > > > > +
+> > > > > +		gp1_reserved: rproc@41000000 {
+> > > > > +			compatible =3D "shared-dma-pool";
+> > > > > +			reg =3D <0x41000000 0x01000000>;
+> > > > > +			no-map;
+> > > > > +		};
+> > > > > +
+> > > > > +		audio_reserved: rproc@42000000 {
+> > > > > +			compatible =3D "shared-dma-pool";
+> > > > > +			reg =3D <0x42000000 0x01000000>;
+> > > > > +			no-map;
+> > > > > +		};
+> > > > > +
+> > > > > +		dmu_reserved: rproc@43000000 {
+> > > > > +			compatible =3D "shared-dma-pool";
+> > > > > +			reg =3D <0x43000000 0x01000000>;
+> > > > > +			no-map;
+> > > > > +		};
+> > > >
+> > > > I don't believe these reserved memory ranges are correct for
+> > audio_reserved and dmu_reserved.
+> > > >
+> > > > For example my vid_firmware-stih407.elf is linked at 0x41c00000=
+ base
+> > > > address and my audio_firmware-bd-stih407.elf is linked at 0x40c=
+00000.
+> > > >
+> > > > So with all the st231 rproc nodes enabled I guess it would stil=
+l
+> > > > work. But currently I think st231_gp0 is reserving the memory r=
+egion
+> > > > for st231_audio, and st231-gp1 is reserving the memory region f=
+or
+> > st231_dmu.
+> > >
+> > > These addresses are taken from internally tested code.
+> >=20
+> > Yes I did check the internal kernel, it would appear to be wrong th=
+ere as well.
+> > One of the joys of mailing list code review I guess :-)
+> >=20
+> > > I don't have
+> > > access to the LMI layout documentation (if it even exists) so can=
+'t
+> > > check for myself.
+> >=20
+> > >  Isn't this just DDR anyway?
+> >=20
+> > Yes it is DDR
+> >=20
+> > > So in theory we can
+> > > configure each devices' slice where ever we feel is appropriate?
+> >=20
+> > Nope. The st231 audio and video firmwares are provided by ST as bin=
+ary
+> > blobs and aren't AFAIK compiled as position independent code. So th=
+e
+> > reserved-memory region needs to match where the firmware has been
+> > linked to run from.
+> >=20
+> > > How
+> > > is memory allocated to the DMU and Audio drivers?  Do you have sc=
+ripts
+> > > which link the aforementioned binaries?
+> >=20
+> > I don't have any scripts, firmware source code or even a st200 tool=
+set.
+> >=20
+> > >
+> > > If you think there is an issue, I suggest the best thing to do is=
+ ping
+> > > Ludovic, since he is the author of the original code.
+> >=20
+> > Ok I will ping Ludovic and point him at this thread.
+> >=20
+> > I think maybe the internal kernel rproc driver was only used to res=
+erve
+> > memory, manage clocks, and co-processor reset / power lines, and mu=
+lticom
+> > actually loaded the firmware elf file.
+> >=20
+> > The reason for coming to that conclusion is that if rproc driver wa=
+s loading the
+> > firmware I can't see how you would end up with a correctly booted c=
+o-
+> > processor with a reserved-memory node which doesn't match up with
+> > where the firmware is linked to run from.
+> >=20
+> > Did you manage to boot audio or video co-pro successfully with the =
+dt nodes
+> > as they currently are in this patch?
+> >=20
+> > regards,
+> >=20
+> > Peter.
+> >=20
+> > _______________________________________________
+> > Kernel mailing list
+> > Kernel@stlinux.com
+> > http://www.stlinux.com/mailman/listinfo/kernel
 
-I suspect that in this usecase, the GPIO should be flagged
-GPIO_OPEN_DRAIN rather than GPIO_ACTIVE_LOW,
-as the construction with the LED draws current fron the line.
-
-> There exist device tree bindings for LEDs connected to GPIOs, and the
-> following also works:
->
->         leds {
->                 compatible = "gpio-leds";
->
->                 led4 {
->                         gpios = <&gpio6 11 GPIO_ACTIVE_HIGH>;
->                         label = "LED4";
->                 };
->                 led5 {
->                         gpios = <&gpio6 12 GPIO_ACTIVE_HIGH>;
->                         label = "LED5";
->                 };
->                 led6 {
->                         gpios = <&gpio6 13 GPIO_ACTIVE_HIGH>;
->                         label = "LED6";
->                 };
->         };
-
-OK
-
-> If a GPIO is found busy during initialization, and if it's already in
-> use by the other half of the driver, the driver switches to a special
-> "polled-key-and-LED" mode. I.e. during polling, it does:
->   - Save the GPIO output state,
->   - Switch the GPIO to input mode,
->   - Wait 5 ms (else it will read the old output state, depending on
->     e.g. hardware capacitance),
->   - Read the GPIO input state,
->   - Switch the GPIO to output mode,
->   - Restore the GPIO output state.
->
-> And it works, the LEDs can be controlled, and the push button states can
-> be read!
-
-Why go to such troubles of switching the line from output to
-input to read it?
-
-Especially when a line is OPEN_DRAIN it should be perfectly legal
-to read it's value even if it is set as output, but AFAICT that is
-always working no matter whether the line is set as output.
-
-> However, due to the 5 ms delay, there's a visible flickering of LEDs
-> that are supposed to be turned off (remember, when the GPIO is
-> configured for input and the button is not pressed, the LED is lit).
->
-> If we go this route, adding support for non-polled GPIOs (if the GPIO is
-> not shared with an LED) and wake-up should be doable.
-
-I think this actually implies OPEN_DRAIN and if you flag it as such
-the core should be happy using it as input and output at the same
-time.
-
-If the hardware has a problem with reading the value from a line
-that is set to output, it needs a workaround hack in the driver to
-support reading and output line, *NOT* changes to gpiolib,
-because the lib assumes this is always possible, i.e. it will
-call the driver .get() callback no matter what.
-
-Yours,
-Linus Walleij
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
