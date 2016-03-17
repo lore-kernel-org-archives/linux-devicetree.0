@@ -1,70 +1,75 @@
-From: Antony Pavlov <antonynpavlov@gmail.com>
-Subject: [PATCH v2 06/18] MIPS: dts: qca: ar9132_tl_wr1043nd_v1.dts: use "ref" for reference clock name
-Date: Thu, 17 Mar 2016 06:34:13 +0300
-Message-ID: <1458185665-4521-7-git-send-email-antonynpavlov@gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 01/18] dt-bindings: clock: qca,ath79-pll: fix copy-paste typos
+Date: Thu, 17 Mar 2016 06:34:08 +0300
+Message-ID: <1458185665-4521-2-git-send-email-antonynpavlov@gmail.com>
 References: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Alban Bedel <albeu@free.fr>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Current ath79 clock.c code does not read reference clock and
-pll setup from devicetree. The ar724x_clocks_init() function
-recreates the clocks from scratch so devicetree clock
-information is dropped. After adding the code which picked up
-reference clock from devicetree I have found
-that kernel does not boot anymore. The SPI and UART drivers
-can't get clk; here are the bootlog error messages:
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-    of_serial: probe of 18020000.uart failed with error -22
-    ath79-spi: probe of 1f000000.spi failed with error -22
-
-The problem is that clock code assumes that reference clock
-name is "ref" but current dts-file uses another name: "oscillator".
-
-This patch fixes the problem by changing external oscillator
-dt node name to "ref".
-
-Please note that there is an alternative solution for the problem:
-
-    > --- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-    > +++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-    > @@ -16,6 +16,7 @@
-    >
-    >         extosc: oscillator {
-    >                 compatible = "fixed-clock";
-    > +               clock-output-names = "ref";
-    >                 #clock-cells = <0>;
-    >                 clock-frequency = <40000000>;
-    >         };
-
-Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Alban Bedel <albeu@free.fr>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: linux-clk@vger.kernel.org
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
 ---
- arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes since v1:
+  * dt-bindings: clock: qca,ath79-pll: fix copy-paste
 
-diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-index eb632a2..3c3b7ce 100644
---- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-+++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
-@@ -14,7 +14,7 @@
- 		reg = <0x0 0x2000000>;
- 	};
+v1:
+Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/clock/qca,ath79-pll.txt | 6 +++---
+ arch/mips/boot/dts/qca/ar9132.dtsi                        | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+index e0fc2c1..241fb05 100644
+--- a/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
++++ b/Documentation/devicetree/bindings/clock/qca,ath79-pll.txt
+@@ -3,7 +3,7 @@ Binding for Qualcomm Atheros AR7xxx/AR9XXX PLL controller
+ The PPL controller provides the 3 main clocks of the SoC: CPU, DDR and AHB.
  
--	extosc: oscillator {
-+	extosc: ref {
- 		compatible = "fixed-clock";
- 		#clock-cells = <0>;
- 		clock-frequency = <40000000>;
+ Required Properties:
+-- compatible: has to be "qca,<soctype>-cpu-intc" and one of the following
++- compatible: has to be "qca,<soctype>-pll" and one of the following
+   fallbacks:
+   - "qca,ar7100-pll"
+   - "qca,ar7240-pll"
+@@ -21,8 +21,8 @@ Optional properties:
+ 
+ Example:
+ 
+-	memory-controller@18050000 {
+-		compatible = "qca,ar9132-ppl", "qca,ar9130-pll";
++	pll-controller@18050000 {
++		compatible = "qca,ar9132-pll", "qca,ar9130-pll";
+ 		reg = <0x18050000 0x20>;
+ 
+ 		clock-names = "ref";
+diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
+index 3ad4ba9..3c2ed9e 100644
+--- a/arch/mips/boot/dts/qca/ar9132.dtsi
++++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+@@ -83,7 +83,7 @@
+ 			};
+ 
+ 			pll: pll-controller@18050000 {
+-				compatible = "qca,ar9132-ppl",
++				compatible = "qca,ar9132-pll",
+ 						"qca,ar9130-pll";
+ 				reg = <0x18050000 0x20>;
+ 
 -- 
 2.7.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
