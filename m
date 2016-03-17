@@ -1,49 +1,73 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC 1/5] serial: sh-sci: Update DT binding documentation
- for GPIO modem lines
-Date: Fri, 18 Mar 2016 07:43:36 +0900
-Message-ID: <20160317224336.GD23806@verge.net.au>
-References: <1458222449-12324-1-git-send-email-geert+renesas@glider.be>
- <1458222449-12324-2-git-send-email-geert+renesas@glider.be>
+From: Gavin Shan <gwshan@linux.vnet.ibm.com>
+Subject: Re: [PATCH v8 42/45] drivers/of: Rename unflatten_dt_node()
+Date: Fri, 18 Mar 2016 09:44:21 +1100
+Message-ID: <20160317224421.GA9185@gwshan>
+References: <1455680668-23298-1-git-send-email-gwshan@linux.vnet.ibm.com>
+ <1455680668-23298-43-git-send-email-gwshan@linux.vnet.ibm.com>
+ <CAL_JsqJydgmkU=SGcr-0JHsYG8wXk5GEQCQXY7y+FHH2A0LZkw@mail.gmail.com>
+ <20160219031655.GA10818@gwshan>
+ <CAL_JsqJFacEMD6jwi=YsT83BTVp5Asjmw4nYU6Msct-DcR2W9Q@mail.gmail.com>
+ <20160308005633.GA30023@gwshan>
+ <CAL_Jsq+2M3iLMCwJhttiL3BTvefUa_5tUiYqvzp3Aix4uK7exw@mail.gmail.com>
+Reply-To: Gavin Shan <gwshan@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458222449-12324-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, linux-serial@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAL_Jsq+2M3iLMCwJhttiL3BTvefUa_5tUiYqvzp3Aix4uK7exw@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Gavin Shan <gwshan@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michael Ellerman <mpe@ellerman.id.au>, aik@ozlabs.ru, dja@axtens.net, Bjorn Helgaas <bhelgaas@google.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 02:47:25PM +0100, Geert Uytterhoeven wrote:
-> Amend the DT bindings for the Renesas SCI driver to allow describing
-> optional GPIO-controlled modem lines, which can be used where dedicated
-> modem lines are not available.
-> 
-> The property naming is dictated by the SERIAL_MCTRL_GPIO helpers.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> index 528c3b90f23cb04b..f8d7b36742967163 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -76,6 +76,9 @@ Optional properties:
->    - dmas: Must contain a list of two references to DMA specifiers, one for
->  	  transmission, and one for reception.
->    - dma-names: Must contain a list of two DMA names, "tx" and "rx".
-> +  - {cts,dsr,dcd,rng,rts,dtr,out1,out2}-gpios: Must contain a GPIO specifier,
-> +    referring to the GPIO pin to be used as the UART's CTS, DSR, DCD, RNG, RTS,
-> +    DTR, OUT1, or OUT2 line.
->  
->  Example:
->  	aliases {
+On Thu, Mar 17, 2016 at 08:31:16AM -0500, Rob Herring wrote:
+>On Mon, Mar 7, 2016 at 6:56 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>> On Tue, Mar 01, 2016 at 08:40:12PM -0600, Rob Herring wrote:
+>>>On Thu, Feb 18, 2016 at 9:16 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>>> On Wed, Feb 17, 2016 at 08:59:53AM -0600, Rob Herring wrote:
+>>>>>On Tue, Feb 16, 2016 at 9:44 PM, Gavin Shan <gwshan@linux.vnet.ibm.com> wrote:
+>>>>>> This renames unflatten_dt_node() to unflatten_dt_nodes() as it
+>>>>>> populates multiple device nodes from FDT blob. No logical changes
+>>>>>> introduced.
+>>>>>>
+>>>>>> Signed-off-by: Gavin Shan <gwshan@linux.vnet.ibm.com>
+>>>>>> ---
+>>>>>>  drivers/of/fdt.c | 14 +++++++-------
+>>>>>>  1 file changed, 7 insertions(+), 7 deletions(-)
+>>>>>
+>>>>>Acked-by: Rob Herring <robh@kernel.org>
+>>>>>
+>>>>>I'm happy to take patches 40-42 for 4.6 if the rest of the series
+>>>>>doesn't go in given they fix a separate problem. I just need to know
+>>>>>soon (or at least they need to go into -next soon).
+>>>>>
+>>>>
+>>>> Thanks for quick response, Rob. It depends how much comments I will
+>>>> receive for the powerpc/powernv part. Except that, all parts including
+>>>> this one have been ack'ed. I can discuss it with Michael Ellerman.
+>>>> By the way, how soon you need the decision to merge 40-42? If that's
+>>>> one or two weeks later, I don't think the reivew on the whole series
+>>>> can be done.
+>>>
+>>>Well, it's been 2 weeks now. I need to know this week.
+>>>
+>>>> Also, I think you probably can merge 40-44 as they're all about
+>>>> fdt.c. If they can be merged at one time, I needn't bother (cc)
+>>>> you again if I need send a updated revision. Thanks for your
+>>>> review.
+>>>
+>>>I did not include 43 and 44 as they are only needed for the rest of your series.
+>>>
+>>
+>> Rob, sorry for late reponse. I really expect this series to be merged to 4.6 and
+>> I was checking reviewers' bandwidth to review it. Unfortunately, I didn't receive
+>> any comments except yours until now. That means this series has to miss 4.6. Please
+>> pick/merge 41 and 42 if no body has objection. Thanks again for your time on this.
+>
+>Too late for 4.6.
+>
 
-Hi Geert,
+Yeah, Sorry about that, Rob.
 
-I do not feel strongly about this but I wonder if it
-would make sense to update the example with the new properties.
+Thanks,
+Gavin
