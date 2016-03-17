@@ -1,53 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [v6, 3/5] dt: move guts devicetree doc out of powerpc directory
-Date: Thu, 17 Mar 2016 12:57:49 -0500
-Message-ID: <CAL_JsqL8NkEQx2NoVHSUGYhtNsybCo-yfBCde+_OuMmfwbhYEw@mail.gmail.com>
-References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
- <1457518131-11339-4-git-send-email-yangbo.lu@nxp.com> <20160317170640.GB21009@rob-hp-laptop>
- <4107975.rId64mooHz@wuerfel>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 4/5] gpio: of: Add support to have multiple gpios in gpio-hog
+Date: Thu, 17 Mar 2016 23:14:33 +0530
+Message-ID: <56EAED01.4070107@nvidia.com>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com> <56E05AA9.8000503@wwwdotorg.org> <56E11D34.60401@nvidia.com> <2337414.ntEtcfKnX0@hermes> <56E16053.60802@nvidia.com> <20160317154656.GA9444@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <4107975.rId64mooHz@wuerfel>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Yangbo Lu <yangbo.lu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, netdev <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, scott.wood@nxp.com, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Zhao Qiang <qiang.zhao@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@ker>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160317154656.GA9444@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Markus Pargmann <mpa@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 12:11 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 17 March 2016 12:06:40 Rob Herring wrote:
->> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt b/Documentation/devicetree/bindings/soc/fsl/guts.txt
->> > similarity index 91%
->> > rename from Documentation/devicetree/bindings/powerpc/fsl/guts.txt
->> > rename to Documentation/devicetree/bindings/soc/fsl/guts.txt
->> > index b71b203..07adca9 100644
->> > --- a/Documentation/devicetree/bindings/powerpc/fsl/guts.txt
->> > +++ b/Documentation/devicetree/bindings/soc/fsl/guts.txt
->> > @@ -25,6 +25,9 @@ Recommended properties:
->> >   - fsl,liodn-bits : Indicates the number of defined bits in the LIODN
->> >     registers, for those SOCs that have a PAMU device.
->> >
->> > + - little-endian : Indicates that the global utilities block is little
->> > +   endian. The default is big endian.
->>
->> The default is "the native endianness of the system".
+
+On Thursday 17 March 2016 09:16 PM, Rob Herring wrote:
+> On Thu, Mar 10, 2016 at 05:23:55PM +0530, Laxman Dewangan wrote:
+>>>> On this case, we have already property "line-name" and passed the name
+>>>> of the gpio via this property.
+>>>> The property names is "line-name" which is good for one string. We can
+>>>> support other property "line-names" with multiple string per GPIO index.
+>>>>
+>>>> line-names = "wlan-reset", "wlan-enable";
+> Then what happens when someone wants to selectively disable gpio hogs?
 >
-> This may be what is currently documented, but not what we are doing
-> in practice, as there is no "native endianess" for either PowerPC or
-> ARM -- both allow running big-endian or little-endian kernels and the
-> device registers are fixed.
+> status = "okay", "disabled", "okay";
+>
+> While I often push things to fewer nodes and more compact descriptions,
+> I don't think that is the right direction in this case.
 
-Notice I said system, not architecture. The way the device registers
-are fixed is what I mean by native endianness.
+I dont think we need to support the individual gpio to be enable/disable 
+by status.
+We need to support the status property at node level only. if individual 
+gpio need to be enabled/disabled by status then it need to break in 
+different hog nodes.
 
-If the purpose of adding this property now is to support GUTS on the
-ARM SoCs, then I'd argue using this property is probably wrong. If the
-PPC systems are designed with BE device registers and ARM systems with
-LE, then this property is not needed.
+This is same as like we have in pincontrol where we can provide the list 
+of pin names for some configuration under same node.
 
-> I think the property here is fine.
 
-Unless you have studied the FSL ARM based SoCs, then there is not
-enough information here to tell.
+>>> There is currently a discussion about the future bindings for subnodes in GPIO
+>>> controller nodes. Please have a look at these two mail threads:
+>>>
+>>> 	"Device tree binding documentation for gpio-switch"
+>>> 	"gpio: of: Add support to have multiple gpios in gpio-hog"
+>> Second one is this patch only. Is it by intention?
+>>
+>> The binding details about the gpio-switch and names are given by property
+>> "lable". I think property "label" is standard way of going forward i.e. I
+>> post similar patch for gpio-keys device name from DT after got review
+>> comment.
+>>
+>> So here,  we can have the gpio names  under property "label" or "labels".
+> label is standard. labels you just made up.
 
-Rob
+Yaah, lables for plural only. Otherwise no issue with "label".
+
+>
+>> Or am I missing anything?
+> The point is the more one off changes I see that are all inter-related,
+> the less willing I am to accept any that don't consider all the cases.
+> The inter-relationship here is how do we describe gpio lines that don't
+> otherwise have a connection to another node and how to deal with them if
+> that changes.
