@@ -1,61 +1,76 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 08/15] genirq: Add runtime power management support for
- IRQ chips
-Date: Thu, 17 Mar 2016 15:46:08 +0000
-Message-ID: <56EAD140.3090709@nvidia.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-9-git-send-email-jonathanh@nvidia.com>
- <alpine.DEB.2.11.1603171556020.3978@nanos>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/5] gpio: of: Add support to have multiple gpios in
+ gpio-hog
+Date: Thu, 17 Mar 2016 10:46:56 -0500
+Message-ID: <20160317154656.GA9444@rob-hp-laptop>
+References: <1457438528-29054-1-git-send-email-ldewangan@nvidia.com>
+ <56E05AA9.8000503@wwwdotorg.org>
+ <56E11D34.60401@nvidia.com>
+ <2337414.ntEtcfKnX0@hermes>
+ <56E16053.60802@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.11.1603171556020.3978@nanos>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56E16053.60802@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Markus Pargmann <mpa@pengutronix.de>, Stephen Warren <swarren@wwwdotorg.org>, linus.walleij@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, treding@nvidia.com, Benoit Parrot <bparrot@ti.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 17/03/16 15:02, Thomas Gleixner wrote:
-> On Thu, 17 Mar 2016, Jon Hunter wrote:
->>  /**
->>   * struct irq_chip - hardware interrupt chip descriptor
->>   *
->> + * @parent:		pointer to associated device
+On Thu, Mar 10, 2016 at 05:23:55PM +0530, Laxman Dewangan wrote:
 > 
-> That's really a bad name. parent suggests that this is a parent interrupt chip
-> and your explanation sucks as well. What's an associated device? Network card? 
+> On Thursday 10 March 2016 04:46 PM, Markus Pargmann wrote:
+> >On Thursday 10 March 2016 12:37:32 Laxman Dewangan wrote:
+> >>On Wednesday 09 March 2016 10:47 PM, Stephen Warren wrote:
+> >>>On 03/09/2016 06:20 AM, Laxman Dewangan wrote:
+> >>>The problem with that is the description used when acquiring the GPIO
+> >>>is just "wlan_input", "wlan_output", or "wlan_control". There's
+> >>>nothing to indicate what those individual pins do (perhaps one is a
+> >>>reset signal, one is a regulator enable, etc.?) By requiring separate
+> >>>nodes for each GPIO, then the node name can provide a meaningful
+> >>>semantic name/description for each GPIO, which provides much more
+> >>>information.
 
-Linus, can you re-iterate your concerns here about just using 'dev' for
-the name?
+I agree.
 
->>  #include <linux/irqdesc.h>
->>  #include <linux/kernel_stat.h>
->> +#include <linux/pm_runtime.h>
->>  
->>  #ifdef CONFIG_SPARSE_IRQ
->>  # define IRQ_BITMAP_BITS	(NR_IRQS + 8196)
->> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
->> index b2a93a37f772..65878e7c7c82 100644
->> --- a/kernel/irq/manage.c
->> +++ b/kernel/irq/manage.c
->> @@ -1114,6 +1114,10 @@ __setup_irq(unsigned int irq, struct irq_desc *desc, struct irqaction *new)
->>  	if (!try_module_get(desc->owner))
->>  		return -ENODEV;
->>  
->> +	ret = irq_chip_pm_get(&desc->irq_data);
->> +	if (ret < 0)
->> +		goto out_mput;
+> >>On this case, we have already property "line-name" and passed the name
+> >>of the gpio via this property.
+> >>The property names is "line-name" which is good for one string. We can
+> >>support other property "line-names" with multiple string per GPIO index.
+> >>
+> >>line-names = "wlan-reset", "wlan-enable";
+
+Then what happens when someone wants to selectively disable gpio hogs?
+
+status = "okay", "disabled", "okay";
+
+While I often push things to fewer nodes and more compact descriptions, 
+I don't think that is the right direction in this case.
+
+> >There is currently a discussion about the future bindings for subnodes in GPIO
+> >controller nodes. Please have a look at these two mail threads:
+> >
+> >	"Device tree binding documentation for gpio-switch"
+> >	"gpio: of: Add support to have multiple gpios in gpio-hog"
 > 
-> So this call nests inside the chip_bus_lock() region. Is that intentional?
+> Second one is this patch only. Is it by intention?
+> 
+> The binding details about the gpio-switch and names are given by property
+> "lable". I think property "label" is standard way of going forward i.e. I
+> post similar patch for gpio-keys device name from DT after got review
+> comment.
+> 
+> So here,  we can have the gpio names  under property "label" or "labels".
 
-Hmm ... I was trying to simplify the call paths, but yes I think it
-would be safer to move outside. Ok, will fix that.
+label is standard. labels you just made up.
 
-Cheers
-Jon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Or am I missing anything?
+
+The point is the more one off changes I see that are all inter-related, 
+the less willing I am to accept any that don't consider all the cases. 
+The inter-relationship here is how do we describe gpio lines that don't 
+otherwise have a connection to another node and how to deal with them if 
+that changes.
+
+Rob
