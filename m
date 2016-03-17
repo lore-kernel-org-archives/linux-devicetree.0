@@ -1,181 +1,57 @@
-From: Antony Pavlov <antonynpavlov@gmail.com>
-Subject: [PATCH v2 07/18] MIPS: ath79: introduce <dt-bindings/clock/ath79-clk.h>
-Date: Thu, 17 Mar 2016 06:34:14 +0300
-Message-ID: <1458185665-4521-8-git-send-email-antonynpavlov@gmail.com>
+From: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 04/18] MIPS: dts: qca: ar9132_tl_wr1043nd_v1.dts: drop unused alias node
+Date: Thu, 17 Mar 2016 06:34:11 +0300
+Message-ID: <1458185665-4521-5-git-send-email-antonynpavlov@gmail.com>
 References: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-mips@linux-mips.org
-Cc: Gabor Juhos <juhosg@openwrt.org>, Alban Bedel <albeu@free.fr>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458185665-4521-1-git-send-email-antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The include/dt-bindings/clock/ath79-clk.h header file
-is introduced so we can use symbolic identifiers for SoC clocks.
+The TP-LINK TL-WR1043ND board has only one serial port,
+so replacing the default of 0 with 0 does nothing useful.
 
-Signed-off-by: Antony Pavlov <antonynpavlov@gmail.com>
-Cc: Gabor Juhos <juhosg@openwrt.org>
-Cc: Alban Bedel <albeu@free.fr>
-Cc: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: linux-mips@linux-mips.org
-Cc: linux-clk@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Moreover, the correct name for aliases node is "aliases" not "alias".
+
+An overview of the "aliases" node usage can be found
+on the device tree usage page at devicetree.org [1].
+
+Also please see chapter 3.3 ("Aliases node") of the ePAPR 1.1 [2].
+
+[1] http://devicetree.org/Device_Tree_Usage#aliases_Node
+[2] https://www.power.org/documentation/epapr-version-1-1/
+
+Signed-off-by: Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
- arch/mips/ath79/clock.c               | 33 +++++++++++++++++----------------
- arch/mips/boot/dts/qca/ar9132.dtsi    |  8 +++++---
- include/dt-bindings/clock/ath79-clk.h | 19 +++++++++++++++++++
- 3 files changed, 41 insertions(+), 19 deletions(-)
+ arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/mips/ath79/clock.c b/arch/mips/ath79/clock.c
-index 618dfd7..c3a94ea 100644
---- a/arch/mips/ath79/clock.c
-+++ b/arch/mips/ath79/clock.c
-@@ -18,6 +18,7 @@
- #include <linux/clk.h>
- #include <linux/clkdev.h>
- #include <linux/clk-provider.h>
-+#include <dt-bindings/clock/ath79-clk.h>
+diff --git a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+index e535ee3..c3069c3 100644
+--- a/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
++++ b/arch/mips/boot/dts/qca/ar9132_tl_wr1043nd_v1.dts
+@@ -9,10 +9,6 @@
+ 	compatible = "tplink,tl-wr1043nd-v1", "qca,ar9132";
+ 	model = "TP-Link TL-WR1043ND Version 1";
  
- #include <asm/div64.h>
- 
-@@ -28,7 +29,7 @@
- #define AR71XX_BASE_FREQ	40000000
- #define AR724X_BASE_FREQ	40000000
- 
--static struct clk *clks[3];
-+static struct clk *clks[ATH79_CLK_END];
- static struct clk_onecell_data clk_data = {
- 	.clks = clks,
- 	.clk_num = ARRAY_SIZE(clks),
-@@ -78,9 +79,9 @@ static void __init ar71xx_clocks_init(void)
- 	ahb_rate = cpu_rate / div;
- 
- 	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
-+	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
-+	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ahb", NULL);
-@@ -114,9 +115,9 @@ static void __init ar724x_clocks_init(void)
- 	ahb_rate = cpu_rate / div;
- 
- 	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
-+	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
-+	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ahb", NULL);
-@@ -176,9 +177,9 @@ static void __init ar933x_clocks_init(void)
- 	}
- 
- 	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
-+	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
-+	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-@@ -310,9 +311,9 @@ static void __init ar934x_clocks_init(void)
- 		ahb_rate = cpu_pll / (postdiv + 1);
- 
- 	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
-+	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
-+	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ref", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-@@ -397,9 +398,9 @@ static void __init qca955x_clocks_init(void)
- 		ahb_rate = cpu_pll / (postdiv + 1);
- 
- 	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[0] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[1] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[2] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
-+	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
-+	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ref", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
-index 3bff63b..2f9a3ee 100644
---- a/arch/mips/boot/dts/qca/ar9132.dtsi
-+++ b/arch/mips/boot/dts/qca/ar9132.dtsi
-@@ -1,3 +1,5 @@
-+#include <dt-bindings/clock/ath79-clk.h>
-+
- / {
- 	compatible = "qca,ar9132";
- 
-@@ -57,7 +59,7 @@
- 				reg = <0x18020000 0x20>;
- 				interrupts = <3>;
- 
--				clocks = <&pll 2>;
-+				clocks = <&pll ATH79_CLK_AHB>;
- 				clock-names = "uart";
- 
- 				reg-io-width = <4>;
-@@ -100,7 +102,7 @@
- 
- 				interrupts = <4>;
- 
--				clocks = <&pll 2>;
-+				clocks = <&pll ATH79_CLK_AHB>;
- 				clock-names = "wdt";
- 			};
- 
-@@ -144,7 +146,7 @@
- 			compatible = "qca,ar9132-spi", "qca,ar7100-spi";
- 			reg = <0x1f000000 0x10>;
- 
--			clocks = <&pll 2>;
-+			clocks = <&pll ATH79_CLK_AHB>;
- 			clock-names = "ahb";
- 
- 			status = "disabled";
-diff --git a/include/dt-bindings/clock/ath79-clk.h b/include/dt-bindings/clock/ath79-clk.h
-new file mode 100644
-index 0000000..27359ad
---- /dev/null
-+++ b/include/dt-bindings/clock/ath79-clk.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (C) 2014, 2016 Antony Pavlov <antonynpavlov@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#ifndef __DT_BINDINGS_ATH79_CLK_H
-+#define __DT_BINDINGS_ATH79_CLK_H
-+
-+#define ATH79_CLK_CPU		0
-+#define ATH79_CLK_DDR		1
-+#define ATH79_CLK_AHB		2
-+
-+#define ATH79_CLK_END		3
-+
-+#endif /* __DT_BINDINGS_ATH79_CLK_H */
+-	alias {
+-		serial0 = "/ahb/apb/uart@18020000";
+-	};
+-
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
 -- 
 2.7.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
