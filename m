@@ -1,62 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
-Date: Fri, 18 Mar 2016 15:26:36 -0500
-Message-ID: <20160318202636.GA8849@rob-hp-laptop>
-References: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: gk20a: Fix typo in compatible name
+Date: Fri, 18 Mar 2016 15:31:40 -0500
+Message-ID: <20160318203140.GA10337@rob-hp-laptop>
+References: <1458010724-10945-1-git-send-email-acourbot@nvidia.com>
+ <1458010724-10945-2-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nicolassaenzj@gmail.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+In-Reply-To: <1458010724-10945-2-git-send-email-acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 14, 2016 at 11:32:10PM +0000, Nicolas Saenz Julienne wrote:
-> The chip is also an 8 bit shift register which works out of the box as a GPO
-> expander with this patch
+On Tue, Mar 15, 2016 at 11:58:40AM +0900, Alexandre Courbot wrote:
+> The correct compatible name is "nvidia,gk20a".
 > 
-> Signed-off-by: Nicolas Saenz Julienne <nicolassaenzj@gmail.com>
+> Signed-off-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-74x164.txt | 4 +++-
->  drivers/gpio/gpio-74x164.c                             | 1 +
->  2 files changed, 4 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/gpu/nvidia,gk20a.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> index cc26080..ce1b223 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-74x164.txt
-> @@ -1,7 +1,9 @@
->  * Generic 8-bits shift register GPIO driver
->  
->  Required properties:
-> -- compatible : Should be "fairchild,74hc595"
-> +- compatible: Should contain one of the following:
-> +    "fairchild,74hc595"
-> +    "nxp,74lvc594"
->  - reg : chip select number
->  - gpio-controller : Marks the device node as a gpio controller.
->  - #gpio-cells : Should be two.  The first cell is the pin number and
-> diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
-> index c81224f..ebd0d1a 100644
-> --- a/drivers/gpio/gpio-74x164.c
-> +++ b/drivers/gpio/gpio-74x164.c
-> @@ -153,6 +153,7 @@ static int gen_74x164_remove(struct spi_device *spi)
->  
->  static const struct of_device_id gen_74x164_dt_ids[] = {
->  	{ .compatible = "fairchild,74hc595" },
-> +	{ .compatible = "nxp,74lvc594" },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, gen_74x164_dt_ids);
-> -- 
-> 2.5.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This may be what is used, but having the SoC name would be preferred 
+assuming gk20a is in multiple SoCs.
+
+Rob
