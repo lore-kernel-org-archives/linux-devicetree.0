@@ -1,228 +1,79 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/3] ARM: OMAP3: hwmod data: Merge and remove the McBSP sidetone related data
-Date: Fri, 18 Mar 2016 12:28:48 +0200
-Message-ID: <1458296929-718-3-git-send-email-peter.ujfalusi@ti.com>
-References: <1458296929-718-1-git-send-email-peter.ujfalusi@ti.com>
+From: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: juno/vexpress: fix node name
+ unit-address presence warnings
+Date: Fri, 18 Mar 2016 10:32:16 +0000
+Message-ID: <1458297136.2812.7.camel@linaro.org>
+References: <1457352735-24453-1-git-send-email-sudeep.holla@arm.com>
+	 <CAL_JsqJeeZ58at95gSRwOMnce_DjDsXVRYH_bMKaX=uDHtZAAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458296929-718-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jarkko Nikula <jarkko.nikula@bitmer.com>, Paul Walmsley <paul@pwsan.com>
-Cc: Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJeeZ58at95gSRwOMnce_DjDsXVRYH_bMKaX=uDHtZAAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-McBSP2 and 3 have integrated sidetone block. The sidetone alone can not
-operate, can not be enabled separately from the McBSP it is attached to.
-The sidetone is enabled via McBSP register(s) and it is using the McBSP
-module's iclk as clock. While the sidetone block of McBSP does have it's
-SYSCONFIG registers to enable/disable AUTOIDLE (of McBSP_ICLK) this alone
-does not mean that we should have dedicated hwmod for McBSP internal
-blocks. Note: The AUTOIDLE bit is set after reset and hwmod is not changing
-it in runtime.
-The sidetone can not be enabled separately from McBSP, it can only enabled
-when McBSP is in use.
-Furthermore the sidetone data is specifying the exact same prcm registers
-and bits as the McBSP hwmod it is attached to.
-As one of the main function of the sidetone hwmod data is to convey the
-address and irq number to the main mcbsp hwmod, move them directly to the
-corresponding McBSP's hwmod data.
----
- arch/arm/mach-omap2/omap_hwmod_3xxx_data.c | 120 ++++-------------------------
- 1 file changed, 14 insertions(+), 106 deletions(-)
+On Thu, 2016-03-17 at 16:44 -0500, Rob Herring wrote:
+> On Mon, Mar 7, 2016 at 6:12 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> > Commit fa38a82096a1 ("scripts/dtc: Update to upstream version
+> > 53bf130b1cdd") added warnings on node name unit-address presence/absence
+> > mismatch in device trees.
+> >
+> > This patch fixes those warning on all the juno/vexpress platforms where
+> > unit-address is present in node name while the reg/ranges property is
+> > not present.
+> >
+> > Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/arm/foundation-v8.dtsi         |  2 +-
+> >  arch/arm64/boot/dts/arm/juno-base.dtsi             | 14 +++++-----
+> >  arch/arm64/boot/dts/arm/juno-motherboard.dtsi      | 30 +++++++++++-----------
+> >  arch/arm64/boot/dts/arm/rtsm_ve-aemv8a.dts         |  2 +-
+> >  arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi   | 14 +++++-----
+> >  .../boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts      | 10 ++++----
+> >  6 files changed, 36 insertions(+), 36 deletions(-)
+> >
+> > Hi Rob,
+> >
+> > I am not sure if the intention of commit fa38a82096a1 is to fix even
+> > existing warnings or not. I saw warning with today's -next branch.
+> 
+> Yes. I'm dropping it for 4.6 though.
+> 
+> > Let me know.
+> >
+> > Regards,
+> > Sudeep
+> >
+> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+> > index 9314f3943269..ba03c934a861 100644
+> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
+> > @@ -89,7 +89,7 @@
+> >                              <0 63 4>;
+> >         };
+> >
+> > -       smb {
+> > +       smb@0,08000000 {
+> 
+> Drop the comma and leading zeros. Comma is for distinct fields like
+> bus,dev,func on PCI.
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-index 9869a75c5d96..317e9b816a02 100644
---- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-+++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
-@@ -1175,13 +1175,10 @@ static struct omap_hwmod_irq_info omap3xxx_mcbsp2_irqs[] = {
- 	{ .name = "common", .irq = 17 + OMAP_INTC_START, },
- 	{ .name = "tx", .irq = 62 + OMAP_INTC_START, },
- 	{ .name = "rx", .irq = 63 + OMAP_INTC_START, },
-+	{ .name = "sidetone", .irq = 4 + OMAP_INTC_START, },
- 	{ .irq = -1 },
- };
- 
--static struct omap_mcbsp_dev_attr omap34xx_mcbsp2_dev_attr = {
--	.sidetone	= "mcbsp2_sidetone",
--};
--
- static struct omap_hwmod omap3xxx_mcbsp2_hwmod = {
- 	.name		= "mcbsp2",
- 	.class		= &omap3xxx_mcbsp_hwmod_class,
-@@ -1199,7 +1196,6 @@ static struct omap_hwmod omap3xxx_mcbsp2_hwmod = {
- 	},
- 	.opt_clks	= mcbsp234_opt_clks,
- 	.opt_clks_cnt	= ARRAY_SIZE(mcbsp234_opt_clks),
--	.dev_attr	= &omap34xx_mcbsp2_dev_attr,
- };
- 
- /* mcbsp3 */
-@@ -1207,13 +1203,10 @@ static struct omap_hwmod_irq_info omap3xxx_mcbsp3_irqs[] = {
- 	{ .name = "common", .irq = 22 + OMAP_INTC_START, },
- 	{ .name = "tx", .irq = 89 + OMAP_INTC_START, },
- 	{ .name = "rx", .irq = 90 + OMAP_INTC_START, },
-+	{ .name = "sidetone", .irq = 5 + OMAP_INTC_START, },
- 	{ .irq = -1 },
- };
- 
--static struct omap_mcbsp_dev_attr omap34xx_mcbsp3_dev_attr = {
--	.sidetone	= "mcbsp3_sidetone",
--};
--
- static struct omap_hwmod omap3xxx_mcbsp3_hwmod = {
- 	.name		= "mcbsp3",
- 	.class		= &omap3xxx_mcbsp_hwmod_class,
-@@ -1231,7 +1224,6 @@ static struct omap_hwmod omap3xxx_mcbsp3_hwmod = {
- 	},
- 	.opt_clks	= mcbsp234_opt_clks,
- 	.opt_clks_cnt	= ARRAY_SIZE(mcbsp234_opt_clks),
--	.dev_attr	= &omap34xx_mcbsp3_dev_attr,
- };
- 
- /* mcbsp4 */
-@@ -1300,62 +1292,6 @@ static struct omap_hwmod omap3xxx_mcbsp5_hwmod = {
- 	.opt_clks_cnt	= ARRAY_SIZE(mcbsp15_opt_clks),
- };
- 
--/* 'mcbsp sidetone' class */
--static struct omap_hwmod_class_sysconfig omap3xxx_mcbsp_sidetone_sysc = {
--	.sysc_offs	= 0x0010,
--	.sysc_flags	= SYSC_HAS_AUTOIDLE,
--	.sysc_fields	= &omap_hwmod_sysc_type1,
--};
--
--static struct omap_hwmod_class omap3xxx_mcbsp_sidetone_hwmod_class = {
--	.name = "mcbsp_sidetone",
--	.sysc = &omap3xxx_mcbsp_sidetone_sysc,
--};
--
--/* mcbsp2_sidetone */
--static struct omap_hwmod_irq_info omap3xxx_mcbsp2_sidetone_irqs[] = {
--	{ .name = "irq", .irq = 4 + OMAP_INTC_START, },
--	{ .irq = -1 },
--};
--
--static struct omap_hwmod omap3xxx_mcbsp2_sidetone_hwmod = {
--	.name		= "mcbsp2_sidetone",
--	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
--	.mpu_irqs	= omap3xxx_mcbsp2_sidetone_irqs,
--	.main_clk	= "mcbsp2_fck",
--	.prcm		= {
--		.omap2 = {
--			.prcm_reg_id = 1,
--			 .module_bit = OMAP3430_EN_MCBSP2_SHIFT,
--			.module_offs = OMAP3430_PER_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_MCBSP2_SHIFT,
--		},
--	},
--};
--
--/* mcbsp3_sidetone */
--static struct omap_hwmod_irq_info omap3xxx_mcbsp3_sidetone_irqs[] = {
--	{ .name = "irq", .irq = 5 + OMAP_INTC_START, },
--	{ .irq = -1 },
--};
--
--static struct omap_hwmod omap3xxx_mcbsp3_sidetone_hwmod = {
--	.name		= "mcbsp3_sidetone",
--	.class		= &omap3xxx_mcbsp_sidetone_hwmod_class,
--	.mpu_irqs	= omap3xxx_mcbsp3_sidetone_irqs,
--	.main_clk	= "mcbsp3_fck",
--	.prcm		= {
--		.omap2 = {
--			.prcm_reg_id = 1,
--			.module_bit = OMAP3430_EN_MCBSP3_SHIFT,
--			.module_offs = OMAP3430_PER_MOD,
--			.idlest_reg_id = 1,
--			.idlest_idle_bit = OMAP3430_ST_MCBSP3_SHIFT,
--		},
--	},
--};
--
- /* SR common */
- static struct omap_hwmod_sysc_fields omap34xx_sr_sysc_fields = {
- 	.clkact_shift	= 20,
-@@ -3108,6 +3044,12 @@ static struct omap_hwmod_addr_space omap3xxx_mcbsp2_addrs[] = {
- 		.pa_end		= 0x490220ff,
- 		.flags		= ADDR_TYPE_RT
- 	},
-+	{
-+		.name		= "sidetone",
-+		.pa_start	= 0x49028000,
-+		.pa_end		= 0x490280ff,
-+		.flags		= ADDR_TYPE_RT
-+	},
- 	{ }
- };
- 
-@@ -3127,6 +3069,12 @@ static struct omap_hwmod_addr_space omap3xxx_mcbsp3_addrs[] = {
- 		.pa_end		= 0x490240ff,
- 		.flags		= ADDR_TYPE_RT
- 	},
-+	{
-+		.name		= "sidetone",
-+		.pa_start	= 0x4902A000,
-+		.pa_end		= 0x4902A0ff,
-+		.flags		= ADDR_TYPE_RT
-+	},
- 	{ }
- };
- 
-@@ -3177,44 +3125,6 @@ static struct omap_hwmod_ocp_if omap3xxx_l4_core__mcbsp5 = {
- 	.user		= OCP_USER_MPU | OCP_USER_SDMA,
- };
- 
--static struct omap_hwmod_addr_space omap3xxx_mcbsp2_sidetone_addrs[] = {
--	{
--		.name		= "sidetone",
--		.pa_start	= 0x49028000,
--		.pa_end		= 0x490280ff,
--		.flags		= ADDR_TYPE_RT
--	},
--	{ }
--};
--
--/* l4_per -> mcbsp2_sidetone */
--static struct omap_hwmod_ocp_if omap3xxx_l4_per__mcbsp2_sidetone = {
--	.master		= &omap3xxx_l4_per_hwmod,
--	.slave		= &omap3xxx_mcbsp2_sidetone_hwmod,
--	.clk		= "mcbsp2_ick",
--	.addr		= omap3xxx_mcbsp2_sidetone_addrs,
--	.user		= OCP_USER_MPU,
--};
--
--static struct omap_hwmod_addr_space omap3xxx_mcbsp3_sidetone_addrs[] = {
--	{
--		.name		= "sidetone",
--		.pa_start	= 0x4902A000,
--		.pa_end		= 0x4902A0ff,
--		.flags		= ADDR_TYPE_RT
--	},
--	{ }
--};
--
--/* l4_per -> mcbsp3_sidetone */
--static struct omap_hwmod_ocp_if omap3xxx_l4_per__mcbsp3_sidetone = {
--	.master		= &omap3xxx_l4_per_hwmod,
--	.slave		= &omap3xxx_mcbsp3_sidetone_hwmod,
--	.clk		= "mcbsp3_ick",
--	.addr		= omap3xxx_mcbsp3_sidetone_addrs,
--	.user		= OCP_USER_MPU,
--};
--
- /* l4_core -> mailbox */
- static struct omap_hwmod_ocp_if omap3xxx_l4_core__mailbox = {
- 	.master		= &omap3xxx_l4_core_hwmod,
-@@ -3651,8 +3561,6 @@ static struct omap_hwmod_ocp_if *omap3xxx_hwmod_ocp_ifs[] __initdata = {
- 	&omap3xxx_l4_per__mcbsp3,
- 	&omap3xxx_l4_per__mcbsp4,
- 	&omap3xxx_l4_core__mcbsp5,
--	&omap3xxx_l4_per__mcbsp2_sidetone,
--	&omap3xxx_l4_per__mcbsp3_sidetone,
- 	&omap34xx_l4_core__mcspi1,
- 	&omap34xx_l4_core__mcspi2,
- 	&omap34xx_l4_core__mcspi3,
+So what is the correct way of representing 2 cell addresses? Not just
+those that are logically 64-bit addresses, (which I guess could be just
+a single number), but things like vexpress motherboard where we have
+Chip-select and Offset values?
+
+I looked at ePAPR but it just says 'The unit-address must
+match the first address specified in the reg property of the node.' and
+lists valid characters for unit address, which includes ,._+-
+
 -- 
-2.7.3
+Tixy
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
