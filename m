@@ -1,50 +1,62 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: add new dt entry for pre calibration in
- qcom,ath10k.txt
-Date: Fri, 18 Mar 2016 11:18:23 -0500
-Message-ID: <20160318161823.GA5558@rob-hp-laptop>
-References: <1457604724-14378-1-git-send-email-rmani@qti.qualcomm.com>
+Subject: Re: [PATCH 5/5] dt/bindings: sound: new chip added into TAS571x
+ binding
+Date: Fri, 18 Mar 2016 11:20:39 -0500
+Message-ID: <20160318162039.GA9378@rob-hp-laptop>
+References: <1457609100-17164-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457604724-14378-1-git-send-email-rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+In-Reply-To: <1457609100-17164-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
-Cc: kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 10, 2016 at 03:42:04PM +0530, Raja Mani wrote:
-> There two things done in this patch,
+On Thu, Mar 10, 2016 at 12:25:00PM +0100, Petr Kulhavy wrote:
+> This adds the TAS5721 into the TAS571x binding.
 > 
-> 1) Existing device tree entry 'qcom,ath10k-calibration-data' carries
->    not only calibration data, it carries board specific data too.
->    So, make appropriate update in doc.
-> 
-> 2) ipq4019 wifi needs new devie tree entry to carry calibration
->    data alone (called pre cal data, it doesn't include any other info).
->    Using 'qcom,ath10k-calibration-data' for ipq4019 would alter
->    the purpose of it. Hence, add new device tree entry called
->    'qcom,ath10k-pre-calibration-data' to carry only pre calibration data.
-> 
-> Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/sound/tas571x.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
-> Below patches covers the corresponding changes in the ath10k driver.
-> It's posted separately to ath10k and linux-wireless mailing list.
+> diff --git a/Documentation/devicetree/bindings/sound/tas571x.txt b/Documentation/devicetree/bindings/sound/tas571x.txt
+> index 0ac31d8..f1aade3 100644
+> --- a/Documentation/devicetree/bindings/sound/tas571x.txt
+> +++ b/Documentation/devicetree/bindings/sound/tas571x.txt
+> @@ -1,4 +1,4 @@
+> -Texas Instruments TAS5711/TAS5717/TAS5719 stereo power amplifiers
+> +Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 stereo power amplifiers
+>  
+>  The codec is controlled through an I2C interface.  It also has two other
+>  signals that can be wired up to GPIOs: reset (strongly recommended), and
+> @@ -6,7 +6,7 @@ powerdown (optional).
+>  
+>  Required properties:
+>  
+> -- compatible: "ti,tas5711", "ti,tas5717", or "ti,tas5719"
+> +- compatible: "ti,tas5711", "ti,tas5717", or "ti,tas5719", "ti,tas5721"
 
-Generally the series should be posted together. The rest should not be 
-merged until this patch is accepted.
+The "or" is in the wrong place. Please reformat to 1 compatible per 
+line (unless more than 1 in the DT is valid).
 
+>  - reg: The I2C address of the device
+>  - #sound-dai-cells: must be equal to 0
+>  
+> @@ -25,6 +25,8 @@ Optional properties:
+>  - PVDD_B-supply: regulator phandle for the PVDD_B supply (5711)
+>  - PVDD_C-supply: regulator phandle for the PVDD_C supply (5711)
+>  - PVDD_D-supply: regulator phandle for the PVDD_D supply (5711)
+> +- DRVDD-supply: regulator phandle for the DRVDD supply (5721)
+> +- PVDD-supply: regulator phandle for the PVDD supply (5721)
+>  
+>  Example:
+>  
+> -- 
+> 1.9.1
 > 
->   1) ath10k: pass cal data location as an argument to ath10k_download_cal_{file|dt}
->   2) ath10k: move cal data len to hw_params
->   3) ath10k: incorporate qca4019 cal data download sequence
-> 
->  .../bindings/net/wireless/qcom,ath10k.txt          | 23 +++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
