@@ -1,52 +1,25 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v14 0/17] Add Analogix Core Display Port Driver
-Date: Fri, 18 Mar 2016 15:53:14 -0700
-Message-ID: <CAD=FV=XXESzA6n6MNEGH1Kbh7CeL8xWX8CifFLVf91+0JyFcJQ@mail.gmail.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
-	<56EBA305.8030202@gmail.com>
+From: Scott Wood <scott.wood@nxp.com>
+Subject: Re: [v6, 2/5] soc: fsl: add GUTS driver for QorIQ platforms
+Date: Fri, 18 Mar 2016 22:54:46 +0000
+Message-ID: <DB5PR0401MB1928302BB0DDE8D9B47E4361918C0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
+References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
+ <1457518131-11339-3-git-send-email-yangbo.lu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56EBA305.8030202@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, David Airlie <airlied@linux.ie>
-Cc: Yakir Yang <ykk@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, emil.l.velikov@gmail.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Kishon Vijay Abraham I <kishon@ti.com>, Kukjin Kim <kgene@kernel.>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Yangbo Lu <yangbo.lu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Zhao Qiang <qiang.zhao@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 03/09/2016 04:18 AM, Yangbo Lu wrote:
+> +#ifdef CONFIG_FSL_GUTS
+> +u32 fsl_guts_get_svr(void);
+> +int fsl_guts_init(void);
+> +#endif
 
-On Thu, Mar 17, 2016 at 11:41 PM, Caesar Wang <caesar.upstream@gmail.com> wrote:
-> Hi all,
->
-> I pick this series up and test on C101PA chromebook, after Heiko update the
-> 3 patches.
->
-> [v14.1,09/17] drm: rockchip: dp: add rockchip platform dp driver
-> [v14.1,04/17] drm: bridge: analogix/dp: fix some obvious code style
-> [v14.1,01/17] drm: bridge: analogix/dp: split exynos dp driver to bridge
-> directory
->
-> C101PA chromebook:
-> http://www.amazon.co.uk/10-1-Inch-Chromebook-Rockchip-Integrated-Graphics/dp/B0107N7WT6/ref=lp_758129031_1_4?s=computers&ie=UTF8&qid=1458282912&sr=1-4
->
-> So, verified for the rockchip eDp contrller on my github.
-> https://github.com/Caesar-github/rockchip/tree/veyron/next-stable-chromeos
+Don't ifdef prototypes (when not providing a stub alternative).
 
-I did similar to Caesar but I tested on veyron-jerry instead of
-veyron-mickey.  Like Caesar, I picked these together Heiko's v14.1
-patches to resolve merge conflicts.  I also picked into a slightly
-different tree (mine was a 4.4-based tree with backports, including
-Heiko's latest eDP device tree patches).
-
-Tough I haven't reviewed the code and am not a graphics expert, I'd
-very much love to see this landed, presumably right after the merge
-window closes.  Yakir's first patch
-<https://patchwork.kernel.org/patch/6959211/> is nearly 1 year old and
-it really seems like if there were any major objections left they'd
-have been stated by now.  v14 appears to be about 1 month old with no
-major comments.
-
-Tested-by: Douglas Anderson <dianders@chromium.org>
-
-
--Doug
+-Scott
