@@ -1,55 +1,31 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: at91/dt: sama5d2: add chipid node
-Date: Fri, 18 Mar 2016 11:34:40 +0100
-Message-ID: <20160318103440.GC2531@piout.net>
-References: <1458285681-25684-1-git-send-email-ludovic.desroches@atmel.com>
- <1458285681-25684-3-git-send-email-ludovic.desroches@atmel.com>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH v7] rtc: rewrite DS1302 using SPI
+Date: Fri, 18 Mar 2016 13:38:15 +0300
+Message-ID: <1458297495.3499.29.camel@gmail.com>
+References: <1456105286-28598-1-git-send-email-ynvich@gmail.com>
+	 <1456224900-4877-1-git-send-email-ynvich@gmail.com>
+	 <20160315001844.GJ28277@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1458285681-25684-3-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20160315001844.GJ28277@piout.net>
+Sender: linux-sh-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux@googlegroups.com>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/03/2016 at 08:21:21 +0100, Ludovic Desroches wrote :
-> Add node for chipid device in order to have access to the CIDR and EXID
-> values.
+On Tue, 2016-03-15 at 01:18 +0100, Alexandre Belloni wrote:
+> I would like to have a solution for secureedge5410 even if it is
+> untested. Else, we are breaking an existing platform without any
+> solution.
 > 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> I've put the sh maintainers in copy, maybe they have an opinion. Else
+> I'll let your patch sit in linux-next for the next cycle.
 
-> ---
->  arch/arm/boot/dts/sama5d2.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index 78996bd..173e3d7 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -1193,6 +1193,11 @@
->  				clock-names = "tdes_clk";
->  				status = "okay";
->  			};
-> +
-> +			chipid@fc069000 {
-> +				compatible = "atmel,sama5d2-chipid";
-> +				reg = <0xfc069000 0x8>;
-> +			};
->  		};
->  	};
->  };
-> -- 
-> 2.5.0
-> 
+secureedge5410 will need an SPI host driver. The driver will be similar
+to the one I did for lp8841. I can make a clone for secureedge5410, but
+I cannot test it.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The only reason, I didn't file the patch for secureedge5410, is I
+thought SPI people won't accept an untested patch.
