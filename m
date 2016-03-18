@@ -1,63 +1,39 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 00/10] ARM: dts: rockchip: enable edp functionality
-Date: Fri, 18 Mar 2016 10:08:51 +0800
-Message-ID: <56EB6333.3040104@rock-chips.com>
-References: <1458265206-15733-1-git-send-email-heiko@sntech.de>
+From: Zhiqiang Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v4 1/2] Documentation: DT: Add entry for Freescale
+ LS1043a-QDS board
+Date: Fri, 18 Mar 2016 02:09:02 +0000
+Message-ID: <AM4PR04MB21483DC9FB7C2A092C9735DA848C0@AM4PR04MB2148.eurprd04.prod.outlook.com>
+References: <1457403939-12080-1-git-send-email-Zhiqiang.Hou@nxp.com>
+ <20160317151334.GA32689@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458265206-15733-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20160317151334.GA32689@rob-hp-laptop>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mingkai Hu <mingkai.hu-3arQi8VN3Tc@public.gmane.org>, Shaohui Xie <shaohui.xie-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 03/18/2016 09:39 AM, Heiko Stuebner wrote:
-> This is the companion series to Yakir's rework of the analogix-dp
-> driver used both by Exynos and Rockchip.
->
-> These patches have been sitting in my tree for some time, and already
-> got tested (and thus refined) by a number of people.
->
-> So I'll post them now, to get applied after the driver-side gets
-> accepted hopefully soonish.
-Thanks very much about this cool work ;)
-
-- Yakir
->
-> Caesar Wang (1):
->    ARM: dts: rockchip: add rk3288-veyron-jaq backlight and panel
->      overrides
->
-> Heiko Stuebner (9):
->    ARM: dts: rockchip: add rk3288 edp-phy node
->    ARM: dts: rockchip: add rk3288 displayport controller node
->    ARM: dts: rockchip: move edp-hpd pin definition into common location
->    ARM: dts: rockchip: add startup delay to rk3288-veyron
->      panel-regulators
->    ARM: dts: rockchip: add core rk3288-veyron backlight and panel nodes
->    ARM: dts: rockchip: add rk3288-veyron-minnie backlight and panel
->      settings
->    ARM: dts: rockchip: override edp hpd handling on veyron-pinky and
->      speedy
->    ARM: dts: rockchip: simple panel and backlight supplies on veyron
->      boards
->    ARM: dts: rockchip: enable the eDP on rk3288 veyron devices
->
->   arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 100 ++++++++++++++++++++++++
->   arch/arm/boot/dts/rk3288-veyron-jaq.dts         |  49 ++++++++++--
->   arch/arm/boot/dts/rk3288-veyron-jerry.dts       |   9 +++
->   arch/arm/boot/dts/rk3288-veyron-minnie.dts      |  44 +++++++++++
->   arch/arm/boot/dts/rk3288-veyron-pinky.dts       |   7 ++
->   arch/arm/boot/dts/rk3288-veyron-speedy.dts      |  16 ++++
->   arch/arm/boot/dts/rk3288.dtsi                   |  59 ++++++++++++++
->   7 files changed, 278 insertions(+), 6 deletions(-)
->
-
-
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE2xOoz1MIxN8jVIDIzOjE0
+DQo+IFRvOiBaaGlxaWFuZyBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogZGV2aWNl
+dHJlZUB2Z2VyLmtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBwYXdlbC5tb2xsQGFy
+bS5jb207DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBnYWxha0Bjb2RlYXVyb3Jh
+Lm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgY2F0YWxpbi5t
+YXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207DQo+IFNjb3R0IFdvb2QgPHNjb3R0
+Lndvb2RAbnhwLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IE1pbmdrYWkgSHUNCj4gPG1pbmdr
+YWkuaHVAbnhwLmNvbT47IFNoYW9odWkgWGllIDxzaGFvaHVpLnhpZUBueHAuY29tPg0KPiBTdWJq
+ZWN0OiBSZTogW1BBVENIIHY0IDEvMl0gRG9jdW1lbnRhdGlvbjogRFQ6IEFkZCBlbnRyeSBmb3Ig
+RnJlZXNjYWxlIExTMTA0M2EtDQo+IFFEUyBib2FyZA0KPiANCj4gT24gVHVlLCBNYXIgMDgsIDIw
+MTYgYXQgMTA6MjU6MzhBTSArMDgwMCwgWmhpcWlhbmcgSG91IHdyb3RlOg0KPiA+IEZyb206IEhv
+dSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0KPiA+IC0tLQ0KPiA+IHY0LXYy
+Og0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gDQo+IEkgYWxyZWFkeSBhY2tlZCB2Mi4gUGxlYXNlIGFk
+ZCBhY2tzIHdoZW4geW91IHNlbmQgc3Vic2VxdWVudCB2ZXJzaW9ucy4NCj4gDQo+IEFja2VkLWJ5
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KDQpZZXMsIGFuZCB0aGFua3MuDQoNCi0g
+WmhpcWlhbmcNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
