@@ -1,40 +1,60 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH V4] PM / clk: Add support for obtaining clocks from device-tree
-Date: Fri, 18 Mar 2016 01:46:17 +0100
-Message-ID: <1724113.VnPWaRLGz3@vostro.rjw.lan>
-References: <1458041620-27066-1-git-send-email-jonathanh@nvidia.com> <CAMuHMdV_PVnZ11BJ3FHe9Gc5nH-yk1u-NuHntOnRiQ4npVkd8g@mail.gmail.com>
+From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH v5 3/7] QE: Add uqe_serial document to bindings
+Date: Fri, 18 Mar 2016 00:48:57 +0000
+Message-ID: <AM3PR04MB118502C29D83E6251367E4E8918C0@AM3PR04MB1185.eurprd04.prod.outlook.com>
+References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
+ <1457486494-11377-3-git-send-email-qiang.zhao@nxp.com>
+ <20160317162749.GA7872@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdV_PVnZ11BJ3FHe9Gc5nH-yk1u-NuHntOnRiQ4npVkd8g@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Jon Hunter <jonathanh@nvidia.com>
-Cc: Linux PM list <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160317162749.GA7872@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, March 15, 2016 01:15:16 PM Geert Uytterhoeven wrote:
-> On Tue, Mar 15, 2016 at 12:33 PM, Jon Hunter <jonathanh@nvidia.com> wrote:
-> > The PM clocks framework requires clients to pass either a con-id or a
-> > valid clk pointer in order to add a clock to a device. Add a new
-> > function of_pm_clk_add_clks() to allows device clocks to be retrieved
-> > from device-tree and populated for a given device. Note that it is
-> > not necessary to make the compilation of this new function dependent
-> > upon CONFIG_OF because there are stubs functions for the device-tree
-> > APIs used.
-> >
-> > In order to handle errors encountered when adding clocks from
-> > device-tree, add a function pm_clk_remove_clk() to remove any clocks
-> > (using a pointer to the clk structure) that have been added
-> > successfully before the error occurred.
-> >
-> > Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
+
+On Fri, Mar 18, 2016 at 12:28AM, Rob Herring wrote:
+> -----Original Message-----
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Friday, March 18, 2016 12:28 AM
+> To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; Xiaobo Xie
+> <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Subject: Re: [PATCH v5 3/7] QE: Add uqe_serial document to bindings
 > 
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> On Wed, Mar 09, 2016 at 09:21:30AM +0800, Zhao Qiang wrote:
+> > Add uqe_serial document to
+> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
+> >
+> > Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
+> > ---
+> > Changes for v2
+> > 	- modify tx/rx-clock-name specification Changes for v3
+> > 	- NA
+> > Changes for v4
+> > 	- drop device_type
+> > 	- modify to SoC specific compatible
+> > Changes for v5
+> > 	- add fsl to compatible as prefix
+> >
+> >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt         | 18
+> ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
 > 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Applied.
+Thank you for reviewing!
 
-Thanks,
-Rafael
-
+BR
+-Zhao Qiang
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
