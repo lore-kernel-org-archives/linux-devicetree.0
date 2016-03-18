@@ -1,67 +1,59 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 1/5] serial: sh-sci: Update DT binding documentation
- for GPIO modem lines
-Date: Fri, 18 Mar 2016 16:18:54 +0100
-Message-ID: <CAMuHMdUM=budxsERr7MhvJCJ=wgSsWBiPiqwrnBrONrCq9XKxg@mail.gmail.com>
-References: <1458222449-12324-1-git-send-email-geert+renesas@glider.be>
-	<1458222449-12324-2-git-send-email-geert+renesas@glider.be>
-	<20160317224336.GD23806@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160317224336.GD23806@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Alexandre TORGUE <alexandre.torgue@gmail.com>
+Subject: [PATCH v5 0/4] Add Ethernet support on STM32F429
+Date: Fri, 18 Mar 2016 16:37:04 +0100
+Message-ID: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, manabian@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+STM32F429 Chip embeds a Synopsys 3.50a MAC IP.
+This series:
+ -enhance current stmmac driver to control it (code already
+available) and adds basic glue for STM32F429 chip.
+ -Enable basic Net config in kernel.
 
-On Thu, Mar 17, 2016 at 11:43 PM, Simon Horman <horms@verge.net.au> wrote:
-> On Thu, Mar 17, 2016 at 02:47:25PM +0100, Geert Uytterhoeven wrote:
->> Amend the DT bindings for the Renesas SCI driver to allow describing
->> optional GPIO-controlled modem lines, which can be used where dedicated
->> modem lines are not available.
->>
->> The property naming is dictated by the SERIAL_MCTRL_GPIO helpers.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Cc: devicetree@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> index 528c3b90f23cb04b..f8d7b36742967163 100644
->> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
->> @@ -76,6 +76,9 @@ Optional properties:
->>    - dmas: Must contain a list of two references to DMA specifiers, one for
->>         transmission, and one for reception.
->>    - dma-names: Must contain a list of two DMA names, "tx" and "rx".
->> +  - {cts,dsr,dcd,rng,rts,dtr,out1,out2}-gpios: Must contain a GPIO specifier,
->> +    referring to the GPIO pin to be used as the UART's CTS, DSR, DCD, RNG, RTS,
->> +    DTR, OUT1, or OUT2 line.
->>
->>  Example:
->>       aliases {
->
-> Hi Geert,
->
-> I do not feel strongly about this but I wonder if it
-> would make sense to update the example with the new properties.
+Note that DT patches are not present because STM32 pinctrl code is not
+yet avalaible.
 
-These are meant to be added to the board .dts file, not to the .dtsi files.
-I can add an example if you like, let's hope nobody copies it blindly to a
-.dtsi file...
+Changes since v4:
+ -Fix dirty copy/past in bindings documentation patch.
 
-Gr{oetje,eeting}s,
+Changes since v3:
+ -Fix "tx-clk" and "rx-clk" as required clocks. Driver and bindings are
+modified.
 
-                        Geert
+Changes since v2:
+ -Fix alphabetic order in Kconfig and Makefile.
+ -Improve code according to Joachim review.
+ -Binding: remove useless entry.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Changes since v1:
+ -Fix Kbuild issue in Kconfig.
+ -Remove init/exit callbacks. Suspend/Resume and remove driver is no more
+driven in stmmac_pltfr but directly in dwmac-stm32 glue driver.
+ -Take into account Joachim review.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards.
+
+Alexandre.
+
+Alexandre TORGUE (4):
+  net: ethernet: dwmac: add Ethernet glue logic for stm32 chip
+  Documentation: Bindings: Add STM32 DWMAC glue
+  net: ethernet: stmmac: add support of Synopsys 3.50a MAC IP
+  ARM: STM32: Enable Ethernet in stm32_defconfig
+
+ .../devicetree/bindings/net/stm32-dwmac.txt        |  32 ++++
+ arch/arm/configs/stm32_defconfig                   |   9 +
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 ++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c  | 193 +++++++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/stmmac_platform.c  |   1 +
+ 6 files changed, 248 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/stm32-dwmac.txt
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+
+-- 
+1.9.1
