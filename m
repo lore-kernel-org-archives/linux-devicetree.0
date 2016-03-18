@@ -1,69 +1,67 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 08/15] genirq: Add runtime power management support for
- IRQ chips
-Date: Fri, 18 Mar 2016 14:56:25 +0000
-Message-ID: <56EC1719.5020408@nvidia.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-9-git-send-email-jonathanh@nvidia.com>
- <56EBE244.6070400@ti.com> <56EBF447.8070808@nvidia.com>
- <56EC0F7D.8050106@ti.com> <56EC1362.2000005@nvidia.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 1/5] serial: sh-sci: Update DT binding documentation
+ for GPIO modem lines
+Date: Fri, 18 Mar 2016 16:18:54 +0100
+Message-ID: <CAMuHMdUM=budxsERr7MhvJCJ=wgSsWBiPiqwrnBrONrCq9XKxg@mail.gmail.com>
+References: <1458222449-12324-1-git-send-email-geert+renesas@glider.be>
+	<1458222449-12324-2-git-send-email-geert+renesas@glider.be>
+	<20160317224336.GD23806@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56EC1362.2000005-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160317224336.GD23806@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Peter Hurley <peter@hurleysoftware.com>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Simon,
 
-On 18/03/16 14:40, Jon Hunter wrote:
-> On 18/03/16 14:23, Grygorii Strashko wrote:
->> On 03/18/2016 02:27 PM, Jon Hunter wrote:
->>>
->>> On 18/03/16 11:11, Grygorii Strashko wrote:
-
-[snip]
-
->> oh :( That will require updating of all drivers (and if it will be taken into account that
->> wakeup can be configured from sysfs + devm_ - it will be painful).
-> 
-> Will it? I know that there are a few gpio chips that have some hacked
-> ways to get around the PM issue, but I wonder how many drivers this
-> really impacts. What sysfs entries are you referring too?
-
-Thinking about this some more, yes I guess it would impact all drivers
-that use a gpio but don't use it for a wake-up. I could see that could
-be a few drivers indeed.
-
->>> but it would avoid every irqchip having to
->>> handle this themselves and having a custom handler.
+On Thu, Mar 17, 2016 at 11:43 PM, Simon Horman <horms@verge.net.au> wrote:
+> On Thu, Mar 17, 2016 at 02:47:25PM +0100, Geert Uytterhoeven wrote:
+>> Amend the DT bindings for the Renesas SCI driver to allow describing
+>> optional GPIO-controlled modem lines, which can be used where dedicated
+>> modem lines are not available.
 >>
->> irqchip like TI OMAP GPIO will need custom handling any way even if it's not expected
->> to be Powered off during Suspend or deep CPUIdle states, simply because its state
->> in suspend is unknown - PM state managed automatically (and depends on many factors)
->> and wakeup can be handled by special HW in case if GPIO bank was really switched off.
+>> The property naming is dictated by the SERIAL_MCTRL_GPIO helpers.
 >>
->>>> I propose do not touch common/generic suspend code now. Any common code can be always
->>>> refactored later once there will be real drivers updated to use irqchip RPM
->>>> and which will support Suspend.
->>>
->>> If this is strongly opposed, I would concede to making this a pr_debug()
->>> as I think it could be useful.
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
 >>
->> Probably yes, because most of the drivers now and IRQ PM core are not ready
->> for this approach. 
-> 
-> May be this calls for a new flag to not WARN if non-wakeup IRQs are not
-> freed when entering suspend.
+>> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+>> index 528c3b90f23cb04b..f8d7b36742967163 100644
+>> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+>> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+>> @@ -76,6 +76,9 @@ Optional properties:
+>>    - dmas: Must contain a list of two references to DMA specifiers, one for
+>>         transmission, and one for reception.
+>>    - dma-names: Must contain a list of two DMA names, "tx" and "rx".
+>> +  - {cts,dsr,dcd,rng,rts,dtr,out1,out2}-gpios: Must contain a GPIO specifier,
+>> +    referring to the GPIO pin to be used as the UART's CTS, DSR, DCD, RNG, RTS,
+>> +    DTR, OUT1, or OUT2 line.
+>>
+>>  Example:
+>>       aliases {
+>
+> Hi Geert,
+>
+> I do not feel strongly about this but I wonder if it
+> would make sense to update the example with the new properties.
 
-Flag or pr_debug()?
+These are meant to be added to the board .dts file, not to the .dtsi files.
+I can add an example if you like, let's hope nobody copies it blindly to a
+.dtsi file...
 
-Jon
+Gr{oetje,eeting}s,
 
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
