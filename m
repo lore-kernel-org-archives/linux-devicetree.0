@@ -1,42 +1,46 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: amlogic: Split pinctrl device for Meson8 /
- Meson8b
-Date: Fri, 18 Mar 2016 18:36:44 +0100
-Message-ID: <56EC3CAC.6040904@suse.de>
-References: <1456869876-19320-1-git-send-email-carlo@caione.org>
- <1456869876-19320-4-git-send-email-carlo@caione.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun6i: Add serial0 alias and
+ stdout-path to a31s-primo81.dts
+Date: Fri, 18 Mar 2016 18:48:39 +0100
+Message-ID: <20160318174839.GQ30977@lukather>
+References: <1458137962-27714-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456869876-19320-4-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NAuYj0K7Umiq33rm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6H6WC3QKGQEG3FMSEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 01.03.2016 um 23:04 schrieb Carlo Caione:
-> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->=20
-> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/meson8.dtsi  | 57 ++++++++++++++++++++++++--------=
-----------
->  arch/arm/boot/dts/meson8b.dtsi | 12 +++++++--
->  2 files changed, 42 insertions(+), 27 deletions(-)
+--NAuYj0K7Umiq33rm
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Looks sane to me,
+On Thu, Mar 17, 2016 at 02:28:03PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Mar 16, 2016 at 10:19 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> > u-boot uses the kernel as the canonical source for its sunxi dts files
+> > and u-boot needs these.
+> >
+> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> 
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Reviewed-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Queued, thanks!
+Maxime
 
-Andreas
-
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--NAuYj0K7Umiq33rm--
