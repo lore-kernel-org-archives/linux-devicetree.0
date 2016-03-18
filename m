@@ -1,236 +1,73 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3] ARC: [dts] Introduce Timer bindings
-Date: Fri, 18 Mar 2016 10:56:29 +0530
-Message-ID: <1458278789-18924-1-git-send-email-vgupta@synopsys.com>
-References: <20160317162421.GA21947@rob-hp-laptop>
+From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v8] mtd: spi-nor: add hisilicon spi-nor flash controller
+ driver
+Date: Fri, 18 Mar 2016 14:37:44 +0800
+Message-ID: <56EBA238.9050902@huawei.com>
+References: <1457682114-1667-1-git-send-email-xuejiancheng@huawei.com>
+ <56E27C29.2040904@openedev.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160317162421.GA21947@rob-hp-laptop>
+In-Reply-To: <56E27C29.2040904-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org, juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, shijie.huang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, furquan-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, han.xu-KZfg59tc24xl57MIdRCFDg@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yanhaifeng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, yanghongwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suwenping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, raojun-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, ml.yang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, gaofei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, zhangzhenxing-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ARC Timers have historically been probed directly.
-As precursor to start probing Timers thru DT introduce these bindings
-Note that to keep series bisectable, these bindings are not yet used in
-code.
+Hi Jagan,
+	Thank you for comments. I'll modify in next version.
 
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
-v3:
- - Renamed Node name to avoid new warnings when unit address used w/o regs [Rob]
-v2:
- - http://lists.infradead.org/pipermail/linux-snps-arc/2016-March/000653.html
- - snps,arc-timer[0-1] folded into single snps-arc-timer	[Rob]
- - Node name in DT example fixed:				[Rob]
-     "timer1: timer_clksrc {" -> timer@1 {
- - Introduced 64bit RTC in skeleton_hs.dtsi			[Vineet]
-v1:
- - http://lists.infradead.org/pipermail/linux-snps-arc/2016-February/000447.html
----
- .../devicetree/bindings/timer/snps,arc-timer.txt   | 32 ++++++++++++++++++++++
- .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 ++++++++++
- .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 ++++++++++
- arch/arc/boot/dts/abilis_tb10x.dtsi                | 14 ++++++++++
- arch/arc/boot/dts/skeleton.dtsi                    | 14 ++++++++++
- arch/arc/boot/dts/skeleton_hs.dtsi                 | 20 ++++++++++++++
- arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 14 ++++++++++
- 7 files changed, 122 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
- create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+Regards,
+Jiancheng
 
-diff --git a/Documentation/devicetree/bindings/timer/snps,arc-timer.txt b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
-new file mode 100644
-index 000000000000..29ba64432ad7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/snps,arc-timer.txt
-@@ -0,0 +1,32 @@
-+Synopsys ARC Local Timer with Interrupt Capabilities
-+- Found on all ARC CPUs (ARC700/ARCHS)
-+- Can be optionally programmed to interrupt on Limit
-+- Two idential copies TIMER0 and TIMER1 exist in ARC cores and historically
-+  TIMER0 used as clockevent provider (true for all ARC cores)
-+  TIMER1 used for clocksource (mandatory for ARC700, optional for ARC HS)
-+
-+Required properties:
-+
-+- compatible : should be "snps,arc-timer"
-+- interrupts : single Interrupt going into parent intc
-+	       (16 for ARCHS cores, 3 for ARC700 cores)
-+- clocks     : phandle to the source clock
-+
-+Optional properties:
-+
-+- interrupt-parent : phandle to parent intc
-+
-+Example:
-+
-+	timer0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <3>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+
-+	timer1 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&core_clk>;
-+	};
-diff --git a/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
-new file mode 100644
-index 000000000000..b6cd1b3922de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
-@@ -0,0 +1,14 @@
-+Synopsys ARC Free Running 64-bit Global Timer for ARC HS CPUs
-+- clocksource provider for SMP SoC
-+
-+Required properties:
-+
-+- compatible : should be "snps,archs-gfrc"
-+- clocks     : phandle to the source clock
-+
-+Example:
-+
-+	gfrc {
-+		compatible = "snps,archs-gfrc";
-+		clocks = <&core_clk>;
-+	};
-diff --git a/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
-new file mode 100644
-index 000000000000..47bd7a702f3f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
-@@ -0,0 +1,14 @@
-+Synopsys ARC Free Running 64-bit Local Timer for ARC HS CPUs
-+- clocksource provider for UP SoC
-+
-+Required properties:
-+
-+- compatible : should be "snps,archs-rtc"
-+- clocks     : phandle to the source clock
-+
-+Example:
-+
-+	rtc {
-+		compatible = "snps,arc-rtc";
-+		clocks = <&core_clk>;
-+	};
-diff --git a/arch/arc/boot/dts/abilis_tb10x.dtsi b/arch/arc/boot/dts/abilis_tb10x.dtsi
-index cfb5052239a1..663671f22680 100644
---- a/arch/arc/boot/dts/abilis_tb10x.dtsi
-+++ b/arch/arc/boot/dts/abilis_tb10x.dtsi
-@@ -35,6 +35,20 @@
- 		};
- 	};
- 
-+	/* TIMER0 with interrupt for clockevent */
-+	timer0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <3>;
-+		interrupt-parent = <&intc>;
-+		clocks = <&cpu_clk>;
-+	};
-+
-+	/* TIMER1 for free running clocksource */
-+	timer1 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&cpu_clk>;
-+	};
-+
- 	soc100 {
- 		#address-cells	= <1>;
- 		#size-cells	= <1>;
-diff --git a/arch/arc/boot/dts/skeleton.dtsi b/arch/arc/boot/dts/skeleton.dtsi
-index 296d371a335c..3a10cc633e2b 100644
---- a/arch/arc/boot/dts/skeleton.dtsi
-+++ b/arch/arc/boot/dts/skeleton.dtsi
-@@ -30,6 +30,20 @@
- 		};
- 	};
- 
-+	/* TIMER0 with interrupt for clockevent */
-+	timer0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <3>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* TIMER1 for free running clocksource */
-+	timer1 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&core_clk>;
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;	/* 256M */
-diff --git a/arch/arc/boot/dts/skeleton_hs.dtsi b/arch/arc/boot/dts/skeleton_hs.dtsi
-index a53876669030..71fd308a9298 100644
---- a/arch/arc/boot/dts/skeleton_hs.dtsi
-+++ b/arch/arc/boot/dts/skeleton_hs.dtsi
-@@ -25,6 +25,26 @@
- 		};
- 	};
- 
-+	/* TIMER0 with interrupt for clockevent */
-+	timer0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <16>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* 64-bit Local RTC: preferred clocksource for UP */
-+	rtc {
-+		compatible = "snps,archs-timer-rtc";
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* TIMER1 for free running clocksource: Fallback if rtc not found */
-+	timer1 {
-+		compatible = "snps,arc-timer";
-+		clocks = <&core_clk>;
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;	/* 256M */
-diff --git a/arch/arc/boot/dts/skeleton_hs_idu.dtsi b/arch/arc/boot/dts/skeleton_hs_idu.dtsi
-index 74898d017f7a..d1cb25a66989 100644
---- a/arch/arc/boot/dts/skeleton_hs_idu.dtsi
-+++ b/arch/arc/boot/dts/skeleton_hs_idu.dtsi
-@@ -25,6 +25,20 @@
- 		};
- 	};
- 
-+	/* TIMER0 with interrupt for clockevent */
-+	timer0 {
-+		compatible = "snps,arc-timer";
-+		interrupts = <16>;
-+		interrupt-parent = <&core_intc>;
-+		clocks = <&core_clk>;
-+	};
-+
-+	/* 64-bit Global Free Running Counter */
-+	gfrc {
-+		compatible = "snps,archs-timer-gfrc";
-+		clocks = <&core_clk>;
-+	};
-+
- 	memory {
- 		device_type = "memory";
- 		reg = <0x80000000 0x10000000>;	/* 256M */
--- 
-2.5.0
+On 2016/3/11 16:04, Jagan Teki wrote:
+> 
+> 
+> On Friday 11 March 2016 01:11 PM, Jiancheng Xue wrote:
+>> Add hisilicon spi-nor flash controller driver
+>>
+>> Signed-off-by: Binquan Peng <pengbinquan-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+>> ---
+[...]
+>> +static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
+>> +            size_t len, size_t *retlen, const u_char *write_buf)
+>> +{
+>> +    struct hifmc_priv *priv = nor->priv;
+>> +    struct hifmc_host *host = priv->host;
+>> +    const unsigned char *ptr = write_buf;
+>> +    size_t num;
+>> +
+>> +    while (len > 0) {
+>> +        if (to & HIFMC_DMA_MASK)
+>> +            num = (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK))
+>> +                >= len    ? len
+>> +                : (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK));
+>> +        else
+>> +            num = (len >= HIFMC_DMA_MAX_LEN)
+>> +                ? HIFMC_DMA_MAX_LEN : len;
+> 
+> Since num is the actual length bytes to read Better to rename num to actual_len for proper meaning here.
+> 
+>> +        memcpy(host->buffer, ptr, num);
+>> +        hisi_spi_nor_dma_transfer(nor, to, host->dma_buffer, num,
+>> +                FMC_OP_WRITE);
+>> +        to += num;
+>> +        ptr += num;
+>> +        len -= num;
+>> +    }
+>> +    *retlen += (size_t)(ptr - write_buf);
+> 
+> Please avoid this type casting and do *retlen += num inside while.
+> 
+> -- 
+> Jagan
+> 
+> .
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
