@@ -1,159 +1,55 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add multidomain support to i.MX GPC
- DT binding
-Date: Fri, 18 Mar 2016 16:25:06 -0500
-Message-ID: <20160318212506.GA5916@rob-hp-laptop>
-References: <1458128514-9560-1-git-send-email-l.stach@pengutronix.de>
+Subject: Re: [PATCH v5 1/2] ARM: dts: at91: shdwc binding: add new shutdown
+ controller documentation
+Date: Fri, 18 Mar 2016 16:29:03 -0500
+Message-ID: <20160318212903.GA9179@rob-hp-laptop>
+References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
+ <1458134390-23847-2-git-send-email-nicolas.ferre@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458128514-9560-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1458134390-23847-2-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 12:41:52PM +0100, Lucas Stach wrote:
-> This adds a new binding for the Freescale i.MX GPC block, which allows
-> to describe multiple power domains in a more natural way. The driver
-> will continue to support the old binding for existing DTBs, but new
-> features like the additional domains present on i.MX6SX will only be
-> usable with the new binding.
+On Wed, Mar 16, 2016 at 02:19:49PM +0100, Nicolas Ferre wrote:
+> The new shutdown controller compatible with sama5d2 has a new binding
+> documentation and properties.
 > 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> 
+> doc
+> 
 > ---
-> v2: clarify the number of interrupts (1)
-> ---
->  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
->  1 file changed, 54 insertions(+), 27 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> index 65cc0345747d..e5b660018d63 100644
-> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
-> @@ -1,22 +1,41 @@
->  Freescale i.MX General Power Controller
->  =======================================
->  
-> -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
-> -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
-> -domains.
-> +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
-> +counters and Power Gating Control (PGC).
->  
->  Required properties:
->  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
->  - reg: should be register base and length as documented in the
->    datasheet
-> -- interrupts: Should contain GPC interrupt request 1
-> -- pu-supply: Link to the LDO regulator powering the PU power domain
-> -- clocks: Clock phandles to devices in the PU power domain that need
-> -	  to be enabled during domain power-up for reset propagation.
-> -- #power-domain-cells: Should be 1, see below:
-> +- interrupts: Should contain one interrupt specifier for the GPC interrupt
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
-> +- clock-names: Must include the following entries:
-> +  - ipg
-> +- pgc: a list of child nodes describing the SoC power domains controlled by the
-> +  power gating controller.
-
-Why do you need this when you can iterate over the child nodes?
-
->  
-> -The gpc node is a power-controller as documented by the generic power domain
-> -bindings in Documentation/devicetree/bindings/power/power_domain.txt.
-> +The power domains are generic power domain providers as documented in
-> +Documentation/devicetree/bindings/power/power_domain.txt. They are described as
-> +subnodes of the GPC and should contain the following
-> +
-> +Required properties:
-> +- reg: the DOMAIN_INDEX as used by the client devices to refer to this
-> +  power domain
-> +  The following DOMAIN_INDEX values are valid for i.MX6Q:
-> +  ARM_DOMAIN     0
-> +  PU_DOMAIN      1
-> +  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-> +  DISPLAY_DOMAIN 2
-
-This shouldn't be needed now as cells is 0.
-
-> +
-> +- #power-domain-cells: Should be 0
-> +
-> +Optional properties:
-> +- clocks: a number of phandles to clocks that need to be enabled during domain
-> +  power-up sequencing to ensure reset propagation into devices located inside
-> +  this power domain
-> +- domain-supply: a phandle to the regulator powering this domain
->  
->  Example:
->  
-> @@ -25,14 +44,29 @@ Example:
->  		reg = <0x020dc000 0x4000>;
->  		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
->  			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
-> -		pu-supply = <&reg_pu>;
-> -		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> -			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> -			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> -			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> -			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> -			 <&clks IMX6QDL_CLK_VPU_AXI>;
-> -		#power-domain-cells = <1>;
-> +		clocks = <&clks IMX6QDL_CLK_IPG>;
-> +		clock-names = "ipg";
-> +		
-> +		pgc {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			power-domain@0 {
-> +				reg = <0>;
-> +				#power-domain-cells = <0>;
-> +			};
-> +			pd_pu: power-domain@1 {
-> +				reg = <1>;
-> +				#power-domain-cells = <0>;
-> +				domain-supply = <&reg_pu>;
-> +				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> +				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> +				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> +				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> +				         <&clks IMX6QDL_CLK_VPU_AXI>;
-> +			};
-> +		};
->  	};
->  
->  
-> @@ -40,20 +74,13 @@ Specifying power domain for IP modules
->  ======================================
->  
->  IP cores belonging to a power domain should contain a 'power-domains' property
-> -that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
-> -the power domain the device belongs to.
-> +that is a phandle pointing to the power domain the device belongs to.
->  
->  Example of a device that is part of the PU power domain:
->  
->  	vpu: vpu@02040000 {
->  		reg = <0x02040000 0x3c000>;
->  		/* ... */
-> -		power-domains = <&gpc 1>;
-> +		power-domains = <&pd_pu>;
->  		/* ... */
->  	};
-> -
-> -The following DOMAIN_INDEX values are valid for i.MX6Q:
-> -ARM_DOMAIN     0
-> -PU_DOMAIN      1
-> -The following additional DOMAIN_INDEX value is valid for i.MX6SL:
-> -DISPLAY_DOMAIN 2
-> -- 
-> 2.7.0
+> Changes in v5:
+> - change naming for this driver: instead of the "alternate shdwc" we choose a
+>   more specific "sama5d2-compatible shdwc" wording.
 > 
+> Changes in v4:
+> - change property to debounce-delay-us so that we can use a generic property
+>   and we can have the unit explicitly included it the name according to
+>   Documentation/devicetree/bindings/property-units.txt.
+> - move to atmel,wakeup-active-high boolean property instead of a "high", "low"
+>   string comparison.
+> 
+> Changes in v3:
+> - get and use slow clock and specify its handler in binding
+> 
+> Changes in v2: None
+> 
+>  .../devicetree/bindings/arm/atmel-at91.txt         | 59 ++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
