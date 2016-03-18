@@ -1,79 +1,68 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: juno/vexpress: fix node name unit-address
- presence warnings
-Date: Fri, 18 Mar 2016 09:52:51 -0500
-Message-ID: <CAL_JsqJNUaoTrce2wuF+qG_QDF8TGx=puy9e=-xLn6rdjJ+MvQ@mail.gmail.com>
-References: <1457352735-24453-1-git-send-email-sudeep.holla@arm.com>
- <CAL_JsqJeeZ58at95gSRwOMnce_DjDsXVRYH_bMKaX=uDHtZAAA@mail.gmail.com>
- <1458297136.2812.7.camel@linaro.org> <CAL_JsqJEA9rVOzD=wC8TJnzm+ou=mnRLrkNU2zgrH402=pm3Tw@mail.gmail.com>
- <1458310539.2812.16.camel@linaro.org>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 08/15] genirq: Add runtime power management support for
+ IRQ chips
+Date: Fri, 18 Mar 2016 14:56:25 +0000
+Message-ID: <56EC1719.5020408@nvidia.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+ <1458224359-32665-9-git-send-email-jonathanh@nvidia.com>
+ <56EBE244.6070400@ti.com> <56EBF447.8070808@nvidia.com>
+ <56EC0F7D.8050106@ti.com> <56EC1362.2000005@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458310539.2812.16.camel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <56EC1362.2000005-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 9:15 AM, Jon Medhurst (Tixy) <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 2016-03-18 at 08:09 -0500, Rob Herring wrote:
->> On Fri, Mar 18, 2016 at 5:32 AM, Jon Medhurst (Tixy) <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > On Thu, 2016-03-17 at 16:44 -0500, Rob Herring wrote:
->> >> On Mon, Mar 7, 2016 at 6:12 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-> [...]
->> >> > Let me know.
->> >> >
->> >> > Regards,
->> >> > Sudeep
->> >> >
->> >> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
->> >> > index 9314f3943269..ba03c934a861 100644
->> >> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
->> >> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
->> >> > @@ -89,7 +89,7 @@
->> >> >                              <0 63 4>;
->> >> >         };
->> >> >
->> >> > -       smb {
->> >> > +       smb@0,08000000 {
->> >>
->> >> Drop the comma and leading zeros. Comma is for distinct fields like
->> >> bus,dev,func on PCI.
->> >
->> > So what is the correct way of representing 2 cell addresses? Not just
->> > those that are logically 64-bit addresses, (which I guess could be just
->> > a single number), but things like vexpress motherboard where we have
->> > Chip-select and Offset values?
->>
->> 64-bit address is just a single number.
->> 2 cells with distinct fields should generally be ...@<cell1>,<cell2>
->>
->> If you have your own bus type, you can devise whatever you like as
->> long as it is reviewed.
->>
->> > I looked at ePAPR but it just says 'The unit-address must
->> > match the first address specified in the reg property of the node.' and
->> > lists valid characters for unit address, which includes ,._+-
->>
->> Yes, we need to clarify this some.
->
-> Yes, because there is already quite a bit of use of @X,Y for two cell
-> 64-bit addresses (Tegra mostly, I assume they're 64-bit addresses).
 
-That is because briefly we were telling folks to do that until Ben H
-clarified when commas are appropriate.
+On 18/03/16 14:40, Jon Hunter wrote:
+> On 18/03/16 14:23, Grygorii Strashko wrote:
+>> On 03/18/2016 02:27 PM, Jon Hunter wrote:
+>>>
+>>> On 18/03/16 11:11, Grygorii Strashko wrote:
 
-> And for 32-bit addresses lots of use of leading zeros to pad address to
-> consistence number of digits, both in unit names and in reg properties.
->
-> $ grep '@0[^ ^,]' -R arch/arm/boot/dts | wc -l
-> 1300
+[snip]
 
-I'm working on dtc checks for both. I also learned yesterday some TI
-DTs use the full address rather than the local untranslated address.
+>> oh :( That will require updating of all drivers (and if it will be taken into account that
+>> wakeup can be configured from sysfs + devm_ - it will be painful).
+> 
+> Will it? I know that there are a few gpio chips that have some hacked
+> ways to get around the PM issue, but I wonder how many drivers this
+> really impacts. What sysfs entries are you referring too?
 
-Rob
+Thinking about this some more, yes I guess it would impact all drivers
+that use a gpio but don't use it for a wake-up. I could see that could
+be a few drivers indeed.
+
+>>> but it would avoid every irqchip having to
+>>> handle this themselves and having a custom handler.
+>>
+>> irqchip like TI OMAP GPIO will need custom handling any way even if it's not expected
+>> to be Powered off during Suspend or deep CPUIdle states, simply because its state
+>> in suspend is unknown - PM state managed automatically (and depends on many factors)
+>> and wakeup can be handled by special HW in case if GPIO bank was really switched off.
+>>
+>>>> I propose do not touch common/generic suspend code now. Any common code can be always
+>>>> refactored later once there will be real drivers updated to use irqchip RPM
+>>>> and which will support Suspend.
+>>>
+>>> If this is strongly opposed, I would concede to making this a pr_debug()
+>>> as I think it could be useful.
+>>
+>> Probably yes, because most of the drivers now and IRQ PM core are not ready
+>> for this approach. 
+> 
+> May be this calls for a new flag to not WARN if non-wakeup IRQs are not
+> freed when entering suspend.
+
+Flag or pr_debug()?
+
+Jon
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
