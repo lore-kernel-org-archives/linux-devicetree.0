@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 07/10] ARM: dts: rockchip: add rk3288-veyron-minnie backlight and panel settings
-Date: Fri, 18 Mar 2016 02:40:03 +0100
-Message-ID: <1458265206-15733-8-git-send-email-heiko@sntech.de>
+Subject: [PATCH 03/10] ARM: dts: rockchip: move edp-hpd pin definition into common location
+Date: Fri, 18 Mar 2016 02:39:59 +0100
+Message-ID: <1458265206-15733-4-git-send-email-heiko@sntech.de>
 References: <1458265206-15733-1-git-send-email-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1458265206-15733-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
@@ -10,76 +10,49 @@ To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pwm for Minnie's backlight needs to be above 1%, so adapt the start
-of non-zero brightness accordingly. Minnie is also using a different
-panel, so re-set the compatible property.
+The edp hotplug pin is fixed on the soc side, anybody wanting to use it
+will need the same definition anyway, so move it to a common location.
 
 Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288-veyron-minnie.dts | 43 ++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+ arch/arm/boot/dts/rk3288-veyron-jaq.dts | 6 ------
+ arch/arm/boot/dts/rk3288.dtsi           | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-index 8b16f37..f72d616 100644
---- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-+++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
-@@ -87,6 +87,44 @@
+diff --git a/arch/arm/boot/dts/rk3288-veyron-jaq.dts b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+index c2f52cf..5c97e31 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-jaq.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-jaq.dts
+@@ -142,12 +142,6 @@
+ 		};
  	};
- };
  
-+&backlight {
-+	/* Minnie panel PWM must be >= 1%, so start non-zero brightness at 3 */
-+	brightness-levels = <
-+			  0   3   4   5   6   7
-+			  8   9  10  11  12  13  14  15
-+			 16  17  18  19  20  21  22  23
-+			 24  25  26  27  28  29  30  31
-+			 32  33  34  35  36  37  38  39
-+			 40  41  42  43  44  45  46  47
-+			 48  49  50  51  52  53  54  55
-+			 56  57  58  59  60  61  62  63
-+			 64  65  66  67  68  69  70  71
-+			 72  73  74  75  76  77  78  79
-+			 80  81  82  83  84  85  86  87
-+			 88  89  90  91  92  93  94  95
-+			 96  97  98  99 100 101 102 103
-+			104 105 106 107 108 109 110 111
-+			112 113 114 115 116 117 118 119
-+			120 121 122 123 124 125 126 127
-+			128 129 130 131 132 133 134 135
-+			136 137 138 139 140 141 142 143
-+			144 145 146 147 148 149 150 151
-+			152 153 154 155 156 157 158 159
-+			160 161 162 163 164 165 166 167
-+			168 169 170 171 172 173 174 175
-+			176 177 178 179 180 181 182 183
-+			184 185 186 187 188 189 190 191
-+			192 193 194 195 196 197 198 199
-+			200 201 202 203 204 205 206 207
-+			208 209 210 211 212 213 214 215
-+			216 217 218 219 220 221 222 223
-+			224 225 226 227 228 229 230 231
-+			232 233 234 235 236 237 238 239
-+			240 241 242 243 244 245 246 247
-+			248 249 250 251 252 253 254 255>;
-+	power-supply = <&backlight_regulator>;
-+};
-+
- &emmc {
- 	/delete-property/mmc-hs200-1_8v;
- };
-@@ -136,6 +174,11 @@
- 	};
- };
+-	edp {
+-		edp_hpd: edp_hpd {
+-			rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_down>;
+-		};
+-	};
+-
+ 	hdmi {
+ 		vcc50_hdmi_en: vcc50-hdmi-en {
+ 			rockchip,pins = <5 19 RK_FUNC_GPIO &pcfg_pull_none>;
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 26cdcee..f11a28f 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1211,6 +1211,12 @@
+ 			};
+ 		};
  
-+&panel {
-+	compatible = "auo,b101ean01", "simple-panel";
-+	power-supply= <&panel_regulator>;
-+};
++		edp {
++			edp_hpd: edp-hpd {
++				rockchip,pins = <7 11 RK_FUNC_2 &pcfg_pull_down>;
++			};
++		};
 +
- &rk808 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pmic_int_l &dvs_1 &dvs_2>;
+ 		i2c0 {
+ 			i2c0_xfer: i2c0-xfer {
+ 				rockchip,pins = <0 15 RK_FUNC_1 &pcfg_pull_none>,
 -- 
 2.6.4
 
