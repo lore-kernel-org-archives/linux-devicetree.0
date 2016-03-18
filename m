@@ -1,42 +1,74 @@
-From: HS Liao <hs.liao@mediatek.com>
-Subject: [RFC v3 3/3] arm64: dts: mt8173: Add GCE node
-Date: Fri, 18 Mar 2016 19:27:14 +0800
-Message-ID: <1458300434-14438-4-git-send-email-hs.liao@mediatek.com>
-References: <1458300434-14438-1-git-send-email-hs.liao@mediatek.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 14/15] dt-bindings: arm-gic: Drop 'clock-names' from
+ binding document
+Date: Fri, 18 Mar 2016 13:05:24 +0100
+Message-ID: <CAMuHMdUkGiX6YWzbRVJaJ4BNskE8PUXq-7Zob40f=CEZyjtJiA@mail.gmail.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+	<1458224359-32665-15-git-send-email-jonathanh@nvidia.com>
+	<CAMuHMdV0QiWR0bML44zhAx+MStmQhQWKd=b_TMKnEdu_hw_ReA@mail.gmail.com>
+	<56EBD4E5.1060002@nvidia.com>
+	<CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw@mail.gmail.com>
+	<56EBDEFA.30102@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458300434-14438-1-git-send-email-hs.liao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Josh-YC Liu <josh-yc.liu@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, HS Liao <hs.liao@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56EBDEFA.30102-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device node of the GCE hardware for CMDQ module.
+Hi Jon,
 
-Signed-off-by: HS Liao <hs.liao@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
+On Fri, Mar 18, 2016 at 11:56 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 18/03/16 10:52, Geert Uytterhoeven wrote:
+>> On Fri, Mar 18, 2016 at 11:13 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>> On 18/03/16 09:13, Geert Uytterhoeven wrote:
+>>>> On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>> Commit afbbd2338176 ("irqchip/gic: Document optional Clock and Power
+>>>>> Domain properties") documented optional clock and power-dmoain properties
+>>>>> for the ARM GIC. Currently, there are no users of these and for the
+>>>>> Tegra210 Audio GIC (based upon the GIC-400) there are two clocks, a
+>>>>> functional clock and interface clock, that need to be enabled.
+>>>>
+>>>> The reason that there are no users for this is twofold:
+>>>>   1. The GIC driver doesn't have Runtime PM support yet,
+>>>>   2. There was no clean way to prevent the GIC's clock from being disabled.
+>>>> Due to this, adding the clocks to the DTSes would mean that they will be
+>>>> disabled during boot up as unused clocks, leading to a system lock-up.
+>>>>
+>>>> I had hoped your series would fix part 1. I gave it a try on r8a7791/koelsch,
+>>>> but unfortunately it seems the platform driver only supports non-root
+>>>> controllers, while the r8a7791 GIC is the primary one...
+>>>
+>>> Can you try making the following change ...
+>>
+>> Thanks! I gave it a try, but no difference.
+>
+> I assume you added the appropriate compatible flag? Any more details you
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index ec135ea..6089095 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -283,6 +283,14 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		gce: gce@10212000 {
-+			compatible = "mediatek,mt8173-gce";
-+			reg = <0 0x10212000 0 0x1000>;
-+			interrupts = <GIC_SPI 135 IRQ_TYPE_LEVEL_LOW>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
-+		};
-+
- 		gic: interrupt-controller@10220000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
--- 
-1.7.9.5
+Doh... bad assumption... Silly me.
+
+> can share about why it is not working? Is it not registered early enough?
+
+With
+
++       { .compatible = "arm,gic-400", },
+
+the kernel no longer crashes due to accessing the GIC registers while the
+GIC module clock is disabled.
+
+However, the system doesn't boot completely, and time outs on SPI transfers
+make me believe interrupts are not working.
+Both with and without "the following change".
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
