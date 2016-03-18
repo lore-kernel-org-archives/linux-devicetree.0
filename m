@@ -1,60 +1,45 @@
-From: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH v5 3/7] QE: Add uqe_serial document to bindings
-Date: Fri, 18 Mar 2016 00:48:57 +0000
-Message-ID: <AM3PR04MB118502C29D83E6251367E4E8918C0@AM3PR04MB1185.eurprd04.prod.outlook.com>
-References: <1457486494-11377-1-git-send-email-qiang.zhao@nxp.com>
- <1457486494-11377-3-git-send-email-qiang.zhao@nxp.com>
- <20160317162749.GA7872@rob-hp-laptop>
+From: "Franklin S Cooper Jr." <fcooper@ti.com>
+Subject: Re: [PATCH v2 2/3] ARM: DTS: da850/am4372/am33xx: Use generic node
+ name for ehrpwm
+Date: Thu, 17 Mar 2016 20:00:13 -0500
+Message-ID: <56EB531D.7050406@ti.com>
+References: <1458252463-8821-3-git-send-email-fcooper@ti.com>
+ <201603180818.rtawXhxL%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160317162749.GA7872@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org" <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <201603180818.rtawXhxL%fengguang.wu@intel.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Fri, Mar 18, 2016 at 12:28AM, Rob Herring wrote:
-> -----Original Message-----
-> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> Sent: Friday, March 18, 2016 12:28 AM
-> To: Qiang Zhao <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> Cc: oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org; Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>; Xiaobo Xie
-> <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Subject: Re: [PATCH v5 3/7] QE: Add uqe_serial document to bindings
-> 
-> On Wed, Mar 09, 2016 at 09:21:30AM +0800, Zhao Qiang wrote:
-> > Add uqe_serial document to
-> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> >
-> > Signed-off-by: Zhao Qiang <qiang.zhao-3arQi8VN3Tc@public.gmane.org>
-> > ---
-> > Changes for v2
-> > 	- modify tx/rx-clock-name specification Changes for v3
-> > 	- NA
-> > Changes for v4
-> > 	- drop device_type
-> > 	- modify to SoC specific compatible
-> > Changes for v5
-> > 	- add fsl to compatible as prefix
-> >
-> >  .../bindings/powerpc/fsl/cpm_qe/uqe_serial.txt         | 18
-> ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/powerpc/fsl/cpm_qe/uqe_serial.txt
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Thank you for reviewing!
+On 03/17/2016 07:27 PM, kbuild test robot wrote:
+> Hi Franklin,
+>
+> [auto build test ERROR on pwm/for-next]
+> [also build test ERROR on v4.5 next-20160317]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Franklin-S-Cooper-Jr/clk-ti-am335x-am4372-Add-tbclk-to-pwm-node/20160318-060938
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/thierry.reding/linux-pwm for-next
+> config: arm-multi_v7_defconfig (attached as .config)
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm 
+>
+> All errors (new ones prefixed by >>):
+>
+>    ERROR (duplicate_label): Duplicate label 'ehrpwm1' on /ocp/epwmss@48302000/ehrpwm@48302200 and /ocp/epwmss@48302000/pwm@48302200
 
-BR
--Zhao Qiang
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok I see that I missed also updating am335x-shc.dts. I'll
+send a v3
+>>> ERROR: Input tree has errors, aborting (use -f to force output)
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
