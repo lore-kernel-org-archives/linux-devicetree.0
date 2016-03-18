@@ -1,24 +1,25 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] dt: document NXP LPC1850 DAC driver bindings
-Date: Fri, 18 Mar 2016 15:12:49 -0500
-Message-ID: <20160318201249.GA2045@rob-hp-laptop>
-References: <1457785817-32328-1-git-send-email-manabian@gmail.com>
- <1457785817-32328-5-git-send-email-manabian@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] i2c: rk3x: add support for rk3228
+Date: Fri, 18 Mar 2016 15:16:00 -0500
+Message-ID: <20160318201600.GA3317@rob-hp-laptop>
+References: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1457785817-32328-5-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1457924955-29996-1-git-send-email-ykk@rock-chips.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Yakir Yang <ykk@rock-chips.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Heiko Stuebner <heiko@sntech.de>, Kumar Gala <galak@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 12, 2016 at 01:30:17PM +0100, Joachim Eastwood wrote:
-> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon, Mar 14, 2016 at 11:09:15AM +0800, Yakir Yang wrote:
+> Enable the I2C core for this SoC.
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 > ---
->  .../devicetree/bindings/iio/dac/lpc1850-dac.txt      | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/lpc1850-dac.txt
+>  Documentation/devicetree/bindings/i2c/i2c-rk3x.txt | 4 ++--
+>  drivers/i2c/busses/i2c-rk3x.c                      | 1 +
+>  2 files changed, 3 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
