@@ -1,81 +1,75 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH v15 1/6] efi: ARM/arm64: ignore DT memory nodes instead of
- removing them
-Date: Fri, 18 Mar 2016 13:31:59 +0100
-Message-ID: <CAKv+Gu8STa=tF0o1qje6LorYxzBon704Q_O2U=cvigg9v53hZw@mail.gmail.com>
-References: <1457481587-8976-1-git-send-email-ddaney.cavm@gmail.com>
-	<1457481587-8976-2-git-send-email-ddaney.cavm@gmail.com>
-	<20160318122609.GS2619@codeblueprint.co.uk>
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 14/15] dt-bindings: arm-gic: Drop 'clock-names' from
+ binding document
+Date: Fri, 18 Mar 2016 12:42:41 +0000
+Message-ID: <56EBF7C1.6030100@nvidia.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+ <1458224359-32665-15-git-send-email-jonathanh@nvidia.com>
+ <CAMuHMdV0QiWR0bML44zhAx+MStmQhQWKd=b_TMKnEdu_hw_ReA@mail.gmail.com>
+ <56EBD4E5.1060002@nvidia.com>
+ <CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw@mail.gmail.com>
+ <56EBDEFA.30102@nvidia.com>
+ <CAMuHMdUkGiX6YWzbRVJaJ4BNskE8PUXq-7Zob40f=CEZyjtJiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160318122609.GS2619@codeblueprint.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: David Daney <ddaney.cavm@gmail.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ganapatrao Kulkarni <gkulkarni@caviumnetworks.com>, Robert Richter <rrichter@cavium.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Daney <david.daney@cavium.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdUkGiX6YWzbRVJaJ4BNskE8PUXq-7Zob40f=CEZyjtJiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 March 2016 at 13:26, Matt Fleming <matt@codeblueprint.co.uk> wrote:
-> On Tue, 08 Mar, at 03:59:42PM, David Daney wrote:
->> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>
->> There are two problems with the UEFI stub DT memory node removal
->> routine:
->> - it deletes nodes as it traverses the tree, which happens to work
->>   but is not supported, as deletion invalidates the node iterator;
->> - deleting memory nodes entirely may discard annotations in the form
->>   of additional properties on the nodes.
->>
->> Since the discovery of DT memory nodes occurs strictly before the
->> UEFI init sequence, we can simply clear the memblock memory table
->> before parsing the UEFI memory map. This way, it is no longer
->> necessary to remove the nodes, so we can remove that logic from the
->> stub as well.
->>
->> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> ---
->>  drivers/firmware/efi/arm-init.c    |  8 ++++++++
->>  drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
->>  2 files changed, 9 insertions(+), 23 deletions(-)
->
-> I've not delved into the rest of the series too deeply, but this looks
-> like a straight forward change.
->
-> Reviewed-by: Matt Fleming <matt@codeblueprint.co.uk>
->
->> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
->> index 9e15d57..40c9d85 100644
->> --- a/drivers/firmware/efi/arm-init.c
->> +++ b/drivers/firmware/efi/arm-init.c
->> @@ -143,6 +143,14 @@ static __init void reserve_regions(void)
->>       if (efi_enabled(EFI_DBG))
->>               pr_info("Processing EFI memory map:\n");
->>
->> +     /*
->> +      * Discard memblocks discovered so far: if there are any at this
->> +      * point, they originate from memory nodes in the DT, and UEFI
->> +      * uses its own memory map instead.
->> +      */
->> +     memblock_dump_all();
->> +     memblock_remove(0, ULLONG_MAX);
->> +
->>       for_each_efi_memory_desc(&memmap, md) {
->>               paddr = md->phys_addr;
->>               npages = md->num_pages;
->
-> Out of curiosity, could some kind person explain (or point me at a
-> previous explanation for) why we may have both DT memory nodes and a
-> UEFI memory map and why they're not compatible enough to co-exist?
 
-Typically, the UEFI memory map is more restrictive, since it does not
-only describe where the memory lives, but also which parts of it the
-firmware has claimed for its own use. So if both memory nodes and the
-UEFI memory map are available, we must use the latter anyway, and so
-it makes sense to ignore the former. Alternatively, we could sanity
-check the memory nodes against the memory map, but it is simpler just
-to ignore them.
+On 18/03/16 12:05, Geert Uytterhoeven wrote:
+> Hi Jon,
+> 
+> On Fri, Mar 18, 2016 at 11:56 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 18/03/16 10:52, Geert Uytterhoeven wrote:
+>>> On Fri, Mar 18, 2016 at 11:13 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> On 18/03/16 09:13, Geert Uytterhoeven wrote:
+>>>>> On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>>> Commit afbbd2338176 ("irqchip/gic: Document optional Clock and Power
+>>>>>> Domain properties") documented optional clock and power-dmoain properties
+>>>>>> for the ARM GIC. Currently, there are no users of these and for the
+>>>>>> Tegra210 Audio GIC (based upon the GIC-400) there are two clocks, a
+>>>>>> functional clock and interface clock, that need to be enabled.
+>>>>>
+>>>>> The reason that there are no users for this is twofold:
+>>>>>   1. The GIC driver doesn't have Runtime PM support yet,
+>>>>>   2. There was no clean way to prevent the GIC's clock from being disabled.
+>>>>> Due to this, adding the clocks to the DTSes would mean that they will be
+>>>>> disabled during boot up as unused clocks, leading to a system lock-up.
+>>>>>
+>>>>> I had hoped your series would fix part 1. I gave it a try on r8a7791/koelsch,
+>>>>> but unfortunately it seems the platform driver only supports non-root
+>>>>> controllers, while the r8a7791 GIC is the primary one...
+>>>>
+>>>> Can you try making the following change ...
+>>>
+>>> Thanks! I gave it a try, but no difference.
+>>
+>> I assume you added the appropriate compatible flag? Any more details you
+> 
+> Doh... bad assumption... Silly me.
+> 
+>> can share about why it is not working? Is it not registered early enough?
+> 
+> With
+> 
+> +       { .compatible = "arm,gic-400", },
+> 
+> the kernel no longer crashes due to accessing the GIC registers while the
+> GIC module clock is disabled.
+> 
+> However, the system doesn't boot completely, and time outs on SPI transfers
+> make me believe interrupts are not working.
+> Both with and without "the following change".
 
-However, that caused some problems in the past, since discovering the
-memory nodes occurs before the EFI entry point is invoked, and so it
-was decided that we strip the memory nodes rather than ignore them.
+Yes, I recall now why I did not support primary controllers and it is
+because you need to call set_smp_cross_call() (for SMP) and
+set_handle_irq(). Both of which are located in the __init section and
+need to be called early during boot. So to make this work for primary
+controllers, more work would need to be done.
+
+Jon
