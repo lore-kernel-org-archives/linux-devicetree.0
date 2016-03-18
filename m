@@ -1,46 +1,38 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: Add serial0 alias and
- stdout-path to a31s-primo81.dts
-Date: Fri, 18 Mar 2016 18:48:39 +0100
-Message-ID: <20160318174839.GQ30977@lukather>
-References: <1458137962-27714-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sai Gurrappadi <sgurrappadi@nvidia.com>
+Subject: Re: [PATCH v4 2/8] Documentation: arm: define DT cpu capacity bindings
+Date: Fri, 18 Mar 2016 10:49:18 -0700
+Message-ID: <56EC3F9E.4050209@nvidia.com>
+References: <1458311054-13524-1-git-send-email-juri.lelli@arm.com> <1458311054-13524-3-git-send-email-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NAuYj0K7Umiq33rm"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6H6WC3QKGQEG3FMSEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458311054-13524-3-git-send-email-juri.lelli@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>, linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@lixom.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Paul Walmsley <paul@pwsan.com>, Linus Walleij <linus.walleij@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, pboonstoppel@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
---NAuYj0K7Umiq33rm
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Hi Juri,
 
-On Thu, Mar 17, 2016 at 02:28:03PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Mar 16, 2016 at 10:19 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > u-boot uses the kernel as the canonical source for its sunxi dts files
-> > and u-boot needs these.
-> >
-> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> 
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On 03/18/2016 07:24 AM, Juri Lelli wrote:
 
-Queued, thanks!
-Maxime
+<snip>
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---NAuYj0K7Umiq33rm--
+> +
+> +==========================================
+> +2 - CPU capacity definition
+> +==========================================
+> +
+> +CPU capacity is a number that provides the scheduler information about CPUs
+> +heterogeneity. Such heterogeneity can come from micro-architectural differences
+> +(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
+> +(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
+> +context is about differing performance characteristics; this binding tries to
+> +capture a first-order approximation of the relative performance of CPUs.
+
+Any reason why this capacity number is not dynamically generated based on the
+max frequency for each CPU? The DT property would then instead specify just
+the micro-architectural differences between the CPU types.
+
+-Sai
