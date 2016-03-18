@@ -1,66 +1,122 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] ARM: dts: sh73a0: Correct interrupt type for ARM TWD
-Date: Fri, 18 Mar 2016 11:19:20 +0100
-Message-ID: <1458296361-4468-2-git-send-email-geert+renesas@glider.be>
-References: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Jon Hunter <jonathanh@nvidia.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 04/15] irqchip/gic: WARN if setting the interrupt type fails
+Date: Fri, 18 Mar 2016 11:22:59 +0100
+Message-ID: <CAMuHMdV9H5_uV_KFAYg10NHhB4t1z18_zNo-uuOC4L_yyedK4Q@mail.gmail.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+	<1458224359-32665-5-git-send-email-jonathanh@nvidia.com>
+	<alpine.DEB.2.11.1603171550200.3978@nanos>
+	<56EAC761.1040801@nvidia.com>
+	<20160317151800.GH1184@io.lakedaemon.net>
+	<56EAD93B.7040105@nvidia.com>
+	<CAMuHMdU8PDUVZ8=S04fkahez1dh7JHjpj2-3w+Vfz05X=ZFMUQ@mail.gmail.com>
+	<56EBD061.6030502@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56EBD061.6030502-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ARM TWD interrupt is a private peripheral interrupt (PPI), and per
-the ARM GIC documentation, whether the type for PPIs can be set is
-IMPLEMENTATION DEFINED.
+Hi Jon,
 
-For SH-Mobile AG5 devices the PPI type cannot be set, and so when we
-attempt to set the type for the ARM TWD interrupt it fails.  This has
-gone unnoticed because it fails silently, and because we cannot
-re-configure the type it has had no impact. Nevertheless fix the type
-for the TWD interrupt so that it matches the hardware configuration.
+On Fri, Mar 18, 2016 at 10:54 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 18/03/16 09:20, Geert Uytterhoeven wrote:
+>> On Thu, Mar 17, 2016 at 5:20 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>> On 17/03/16 15:18, Jason Cooper wrote:
+>>>> On Thu, Mar 17, 2016 at 03:04:01PM +0000, Jon Hunter wrote:
+>>>>> On 17/03/16 14:51, Thomas Gleixner wrote:
+>>>>>> On Thu, 17 Mar 2016, Jon Hunter wrote:
+>>>>>>> Setting the interrupt type for private peripheral interrupts (PPIs) may
+>>>>>>> not be supported by a given GIC because it is IMPLEMENTATION DEFINED
+>>>>>>> whether this is allowed. There is no way to know if setting the type is
+>>>>>>> supported for a given GIC and so the value written is read back to
+>>>>>>> verify it matches the desired configuration. If it does not match then
+>>>>>>> an error is return.
+>>>>>>>
+>>>>>>> There are cases where the interrupt configuration read from firmware
+>>>>>>> (such as a device-tree blob), has been incorrect and hence
+>>>>>>> gic_configure_irq() has returned an error. This error has gone
+>>>>>>> undetected because the error code returned was ignored but the interrupt
+>>>>>>> still worked fine because the configuration for the interrupt could not
+>>>>>>> be overwritten.
+>>>>>>>
+>>>>>>> Given that this has done undetected and we should only fail to set the
+>>>>>>> type for PPIs whose configuration cannot be changed anyway, don't return
+>>>>>>> an error and simply WARN if this fails. This will allows us to fix up any
+>>>>>>> places in the kernel where we should be checking the return status and
+>>>>>>> maintain back compatibility with firmware images that may have incorrect
+>>>>>>> interrupt configurations.
+>>>>>>
+>>>>>> Though silently returning 0 is really the wrong thing to do. You can add the
+>>>>>> warn, but why do you want to return success?
+>>>>>
+>>>>> Yes that would be the correct thing to do I agree. However, the problem
+>>>>> is that if we do this, then after the patch "irqdomain: Don't set type
+>>>>> when mapping an IRQ" is applied, we may break interrupts for some
+>>>>> existing device-tree binaries that have bad configuration (such as omap4
+>>>>> and tegra20/30 ... see patches 1 and 2) that have gone unnoticed. So it
+>>>>> is a back compatibility issue.
+>>
+>> Indeed (also for sh73a0 and r8a7779).
+>
+> Thanks. I was wondering if there are others. Do you know what the
+> correct setting should be? Ie. should it be IRQ_TYPE_EDGE_RISING as
+> well? I can then include this with OMAP and Tegra.
 
-Based on patches by Jon Hunter for Tegra20/30 and OMAP4.
+The warnings went away when using IRQ_TYPE_EDGE_RISING.
+Patches sent.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Exposed by Jon Hunter's "[PATCH 04/15] irqchip/gic: WARN if setting the
-interrupt type fails":
+>>>> This sounds like a textbook case for adding a boolean dt property.  If
+>>>> "can-set-ppi-type" is absent (old DT blobs and new blobs without the
+>>>> ability), warn and return zero.  If it's present, the driver can set the
+>>>> type, returning errors as encountered.
+>>>
+>>> True. However, if we did have this "can-set-ppi-type" property set for a
+>>> device, it really should never fail (unless someone specified it
+>>> incorrectly). So I am trying to understand the value in adding a new DT
+>>> property.
+>>
+>> Do we really want to add properties that basically indicate that a description
+>> in DT is correct?
+>>
+>> Alternatively, it can be fixed in the kernel in a DT quirk (if SoC == xxx then
+>> fix TWD).
+>
+> I am not sure I fully understand your proposal, but please note that it
 
-WARNING: CPU: 0 PID: 0 at drivers/irqchip/irq-gic-common.c:61 gic_configure_irq+0x64/0x7c()
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 4.5.0-kzm9g-00426-g226dd0f378de2fe5-dirty #721
-Hardware name: Generic SH73A0 (Flattened Device Tree)
-[<c010e570>] (unwind_backtrace) from [<c010acc0>] (show_stack+0x10/0x14)
-[<c010acc0>] (show_stack) from [<c02de4dc>] (dump_stack+0xa4/0xdc)
-[<c02de4dc>] (dump_stack) from [<c011fdb4>] (warn_slowpath_common+0x84/0xb0)
-[<c011fdb4>] (warn_slowpath_common) from [<c011fe70>] (warn_slowpath_null+0x18/0x20)
-[<c011fe70>] (warn_slowpath_null) from [<c02fd2d8>] (gic_configure_irq+0x64/0x7c)
-[<c02fd2d8>] (gic_configure_irq) from [<c02fc98c>] (gic_set_type+0x48/0x60)
-[<c02fc98c>] (gic_set_type) from [<c016f934>] (__irq_set_trigger+0x64/0x13c)
-[<c016f934>] (__irq_set_trigger) from [<c016fd50>] (__setup_irq+0x344/0x5d8)
-[<c016fd50>] (__setup_irq) from [<c01702d0>] (request_percpu_irq+0x98/0xe0)
-[<c01702d0>] (request_percpu_irq) from [<c0802f84>] (twd_local_timer_common_register+0x38/0x1ac)
-[<c0802f84>] (twd_local_timer_common_register) from [<c0803140>] (twd_local_timer_of_register+0x48/0x70)
-[<c0803140>] (twd_local_timer_of_register) from [<c08180b4>] (clocksource_probe+0x48/0x88)
-[<c08180b4>] (clocksource_probe) from [<c0800b04>] (start_kernel+0x250/0x374)
-[<c0800b04>] (start_kernel) from [<4000807c>] (0x4000807c)
----
- arch/arm/boot/dts/sh73a0.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The kernel can modify the DT in early startup code if it detects that the
+TWD's interrupt type is wrong.
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index bf825ca4f6f7912a..3d41fb97689e6a49 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -43,7 +43,7 @@
- 	timer@f0000600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0xf0000600 0x20>;
--		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_EDGE_RISING)>;
- 		clocks = <&twd_clk>;
- 	};
- 
--- 
-1.9.1
+> may not be just limited to the TWD (although this does appear to be the
+> one client that is wrong for a lot of SoCs). PPIs are also used for the
+> armv7/8 timers as well.
+
+True.
+
+> The problem is that we have a lot of SoCs with twd-timers and I have no
+> way to test all of these to know which could be a problem. So I thought
+> that warning would be a good first step to fixing them.
+
+Definitely.
+
+> However, I am still trying to see the real value in returning an error
+> in this case. May be I am the only one with that perspective?
+
+Given the above, we cannot start returning an error until all problems are
+fixed.
+
+Even after that, we have to care about stable DT ABIs. In this case it's not
+really an ABI change, but a real buggy description in DTS.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
