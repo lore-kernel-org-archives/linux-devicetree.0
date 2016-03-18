@@ -1,44 +1,50 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/4] pinctrl: amlogic: Make driver independent from two-domain configuration
-Date: Fri, 18 Mar 2016 09:14:07 -0700
-Message-ID: <7hzitvsr00.fsf@baylibre.com>
-References: <1456869876-19320-1-git-send-email-carlo@caione.org>
-	<1456869876-19320-3-git-send-email-carlo@caione.org>
-	<CAOi56cWN-iPVh6Ace-SXUFoX4POnSyT0OmG8gyqivNpQTo9u4A@mail.gmail.com>
-	<CAOQ7t2Ykgej4uyDLUvuSZyjiJwK1TF4RGYJQhXWubk69d1xA_Q@mail.gmail.com>
-	<7h7fh1t8vu.fsf@baylibre.com>
-	<CAOQ7t2YjS5nAb3xxpdH-H11+2Y8WeCkxdKJE9yUKzkbVYMYfEw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: add new dt entry for pre calibration in
+ qcom,ath10k.txt
+Date: Fri, 18 Mar 2016 11:18:23 -0500
+Message-ID: <20160318161823.GA5558@rob-hp-laptop>
+References: <1457604724-14378-1-git-send-email-rmani@qti.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOQ7t2YjS5nAb3xxpdH-H11+2Y8WeCkxdKJE9yUKzkbVYMYfEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Carlo Caione's message of "Thu, 17 Mar 2016 19:15:24 +0100")
+Content-Disposition: inline
+In-Reply-To: <1457604724-14378-1-git-send-email-rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Tyler Baker <tyler.baker-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+Cc: kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
+On Thu, Mar 10, 2016 at 03:42:04PM +0530, Raja Mani wrote:
+> There two things done in this patch,
+> 
+> 1) Existing device tree entry 'qcom,ath10k-calibration-data' carries
+>    not only calibration data, it carries board specific data too.
+>    So, make appropriate update in doc.
+> 
+> 2) ipq4019 wifi needs new devie tree entry to carry calibration
+>    data alone (called pre cal data, it doesn't include any other info).
+>    Using 'qcom,ath10k-calibration-data' for ipq4019 would alter
+>    the purpose of it. Hence, add new device tree entry called
+>    'qcom,ath10k-pre-calibration-data' to carry only pre calibration data.
+> 
+> Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+> ---
+> 
+> Below patches covers the corresponding changes in the ath10k driver.
+> It's posted separately to ath10k and linux-wireless mailing list.
 
-> On Thu, Mar 17, 2016 at 4:35 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->
->> Do you have an ack now?  or are you still waiting?
->
-> Still waiting for Rob.
->
->>> What's the fastest way to land the DTS changes in mainline at this point?
->>
->> When you've collected the acks, send a pull request through arm-soc so
->> we can get it in via our fixes branch.
->
-> ok
+Generally the series should be posted together. The rest should not be 
+merged until this patch is accepted.
 
-If the Ack is not forthcoming ASAP, you should probably revert the
-change so that mainline/arm-soc/linux-next are not broken.  For future
-reference, it's better to wait until all dependencies can be merged
-together.
+> 
+>   1) ath10k: pass cal data location as an argument to ath10k_download_cal_{file|dt}
+>   2) ath10k: move cal data len to hw_params
+>   3) ath10k: incorporate qca4019 cal data download sequence
+> 
+>  .../bindings/net/wireless/qcom,ath10k.txt          | 23 +++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
 
-Kevin
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
