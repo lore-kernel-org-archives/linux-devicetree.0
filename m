@@ -1,42 +1,67 @@
-From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: rockchip: Add mdio node to ethernet node
-Date: Fri, 18 Mar 2016 12:20:56 +0100
-Message-ID: <1458300056-6174-1-git-send-email-tomeu.vizoso@collabora.com>
+From: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [RFC v3 0/3] Mediatek MT8173 CMDQ support
+Date: Fri, 18 Mar 2016 19:27:11 +0800
+Message-ID: <1458300434-14438-1-git-send-email-hs.liao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-So the dwmac device manages to probe again.
 
-Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Fixes: 88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression")
----
- arch/arm/boot/dts/rk3288-rock2-som.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi,
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-index 1ece66f3e162..4ba7ddecb478 100644
---- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-@@ -101,6 +101,14 @@
- 	snps,reset-delays-us = <0 10000 30000>;
- 	rx_delay = <0x10>;
- 	tx_delay = <0x30>;
-+	mdio0 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,dwmac-mdio";
-+		ethphy1: ethernet-phy@1 {
-+			reg = <1>;
-+		};
-+	};
- };
- 
- &i2c0 {
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help read/write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
+
+These patches have a build dependency on top of v4.5-rc1.
+
+Changes since v2:
+ - use cmdq instead of cqctx
+ - document cmdq_code
+ - use cmdq thread base instead of thread id, so remove thread id
+ - remove buffer pool and let linux manage memory
+ - remove task_free_list
+ - merge cmdq_task_exec_async_impl into cmdq_task_exec_async
+ - use list_for_each_entry_safe instead of list_for_each_safe
+ - merge cmdq_dev_init into cmdq_probe
+ - use cmdq record(rec) instead of cmdq handle
+ - use cmdq command instead of cmdq desc
+ - remove unused interfaces
+ - set IRQF_TRIGGER_LOW in device tree
+ - remove event array and related code since client should clear event
+   before wait it
+ - report status to callback function
+ - remove some debug code
+ - remove some protection code, e.g. suspend/resume
+ - rewrite some code to shrink code size
+
+Best regards,
+HS Liao
+
+HS Liao (3):
+  dt-bindings: soc: Add documentation for the MediaTek GCE unit
+  CMDQ: Mediatek CMDQ driver
+  arm64: dts: mt8173: Add GCE node
+
+ .../devicetree/bindings/soc/mediatek/gce.txt       |   34 +
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi           |    8 +
+ drivers/soc/mediatek/Kconfig                       |   10 +
+ drivers/soc/mediatek/Makefile                      |    1 +
+ drivers/soc/mediatek/mtk-cmdq.c                    | 1805 ++++++++++++++++++++
+ include/soc/mediatek/cmdq.h                        |  181 ++
+ 6 files changed, 2039 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq.c
+ create mode 100644 include/soc/mediatek/cmdq.h
+
 -- 
-2.5.0
+1.7.9.5
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
