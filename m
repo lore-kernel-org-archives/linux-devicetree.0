@@ -1,84 +1,106 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [v6, 5/5] mmc: sdhci-of-esdhc: fix host version for
- T4240-R1.0-R2.0
-Date: Fri, 18 Mar 2016 18:28:05 +0000
-Message-ID: <DB5PR0401MB1928DA88B03970E1EACFB1FF918C0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
- <DB5PR0401MB19286B2D23D07F5C60DB799D91880@DB5PR0401MB1928.eurprd04.prod.outlook.com>
- <20160317170101.GA21009@rob-hp-laptop> <3706958.XeRFmKM0K5@wuerfel>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH 14/15] dt-bindings: arm-gic: Drop 'clock-names' from
+ binding document
+Date: Fri, 18 Mar 2016 20:36:02 +0200
+Message-ID: <56EC4A92.2090908@ti.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+ <1458224359-32665-15-git-send-email-jonathanh@nvidia.com>
+ <CAMuHMdV0QiWR0bML44zhAx+MStmQhQWKd=b_TMKnEdu_hw_ReA@mail.gmail.com>
+ <56EBD4E5.1060002@nvidia.com>
+ <CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw@mail.gmail.com>
+ <56EBDEFA.30102@nvidia.com>
+ <CAMuHMdUkGiX6YWzbRVJaJ4BNskE8PUXq-7Zob40f=CEZyjtJiA@mail.gmail.com>
+ <56EBF8E0.8020700@ti.com>
+ <CAMuHMdVQSm3209URvxHWgHs8grqXHap413+9kHyDwvKACOcaLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh@kernel.org>
-Cc: Yangbo Lu <yangbo.lu@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Zhao Qiang <qiang.zhao@freescale.com>, Russell King <linux@arm.linux.org.uk>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, Kumar Gala <galak@codeaurora.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, Santosh Shilimkar <ssantosh@kernel.org>, Xiaobo Xie <xiaobo.xie@nxp.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVQSm3209URvxHWgHs8grqXHap413+9kHyDwvKACOcaLA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Jon Hunter <jonathanh@nvidia.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/17/2016 12:06 PM, Arnd Bergmann wrote:
-> On Thursday 17 March 2016 12:01:01 Rob Herring wrote:
->> On Mon, Mar 14, 2016 at 05:45:43PM +0000, Scott Wood wrote:
->=20
->>>>> This makes the driver non-portable. Better identify the specific
->>>>> workarounds based on the compatible string for this device, or ad=
-d a
->>>>> boolean DT property for the quirk.
+On 03/18/2016 03:02 PM, Geert Uytterhoeven wrote:
+> Hi Grygorii,
+> 
+> On Fri, Mar 18, 2016 at 1:47 PM, Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+>> On 03/18/2016 02:05 PM, Geert Uytterhoeven wrote:
+>>> On Fri, Mar 18, 2016 at 11:56 AM, Jon Hunter <jonathanh@nvidia.com> wrote:
+>>>> On 18/03/16 10:52, Geert Uytterhoeven wrote:
+>>>>> On Fri, Mar 18, 2016 at 11:13 AM, Jon Hunter <jonathanh@nvidia.com> wrote:
+>>>>>> On 18/03/16 09:13, Geert Uytterhoeven wrote:
+>>>>>>> On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh@nvidia.com> wrote:
+>>>>>>>> Commit afbbd2338176 ("irqchip/gic: Document optional Clock and Power
+>>>>>>>> Domain properties") documented optional clock and power-dmoain properties
+>>>>>>>> for the ARM GIC. Currently, there are no users of these and for the
+>>>>>>>> Tegra210 Audio GIC (based upon the GIC-400) there are two clocks, a
+>>>>>>>> functional clock and interface clock, that need to be enabled.
+>>>>>>>
+>>>>>>> The reason that there are no users for this is twofold:
+>>>>>>>     1. The GIC driver doesn't have Runtime PM support yet,
+>>>>>>>     2. There was no clean way to prevent the GIC's clock from being disabled.
+>>>>>>> Due to this, adding the clocks to the DTSes would mean that they will be
+>>>>>>> disabled during boot up as unused clocks, leading to a system lock-up.
+>>>>>>>
+>>>>>>> I had hoped your series would fix part 1. I gave it a try on r8a7791/koelsch,
+>>>>>>> but unfortunately it seems the platform driver only supports non-root
+>>>>>>> controllers, while the r8a7791 GIC is the primary one...
+>>>>>>
+>>>>>> Can you try making the following change ...
 >>>>>
->>>>>    Arnd
+>>>>> Thanks! I gave it a try, but no difference.
 >>>>
->>>> [Lu Yangbo-B47093] Hi Arnd, we did have a discussion about using D=
-TS in v1 before.
->>>> https://patchwork.kernel.org/patch/6834221/
->>>>
->>>> We don=92t have a separate DTS file for each revision of an SOC an=
-d if we did, we'd constantly have people using the wrong one.
->>>> In addition, the device tree is stable ABI and errata are often di=
-scovered after device tree are deployed.
->>>> See the link for details.
->>>>
->>>> So we decide to read SVR from the device-config/guts MMIO block ot=
-her than using DTS.
->>>> Thanks.
+>>>> I assume you added the appropriate compatible flag? Any more details you
 >>>
->>> Also note that this driver is already only for fsl-specific hardwar=
-e,
->>> and it will still work even if fsl_guts doesn't find anything to bi=
-nd to
->>> -- it just wouldn't be able to detect errata based on SVR in that c=
-ase.
+>>> Doh... bad assumption... Silly me.
+>>>
+>>>> can share about why it is not working? Is it not registered early enough?
+>>>
+>>> With
+>>>
+>>> +       { .compatible = "arm,gic-400", },
+>>>
+>>> the kernel no longer crashes due to accessing the GIC registers while the
+>>> GIC module clock is disabled.
+>>>
+>>> However, the system doesn't boot completely, and time outs on SPI transfers
+>>> make me believe interrupts are not working.
+>>> Both with and without "the following change".
+>>>
 >>
->> IIRC, it is the same IP block as i.MX and Arnd's point is this won't=
-=20
->> even compile on !PPC. It is things like this that prevent sharing th=
-e=20
->> driver.
+>> Is my assumption correct that you are trying to enable RPM for primary GIC controller?
+> 
+> That's correct.
+> 
+>> If yes it may help to take a look on clocksource drivers which use early_platform_device/driver
+>> sh_cmt.c sh_mtu2.c sh_tmu.c
+>>
+>> The primary interrupt controller is initialized very early init_IRQ->irqchip_init->of_irq_init()
+>> (IRQCHIP_DECLARE) and, at least as i can see from st_xxx code, the same case is valid for
+>> clocksource devices and it was solved using early_platform_device/drive staff.
+> 
+> The GIC now depends on the clock driver, which may be a real platform driver,
+> not initialized from CLK_OF_DECLARE().
 
-The whole point of using the MMIO SVR instead of the PPC SPR is so that
-it will work on ARM...  The guts driver should build on any platform as
-long as OF is enabled, and if it doesn't find a node to bind to it will
-return 0 for SVR, and the eSDHC driver will continue (after printing an
-error that should be removed) without the ability to test for errata
-based on SVR.
+Clock need to be accessible, but, seems, there is another issue -
+if you will try to use gic_driver by just adding compatible string then,
+most probably, gic_init_bases() will be called twice:
+1: init_IRQ->irqchip_init->of_irq_init()->__gic_init_bases()->gic_init_bases()
+2: gic_probe->gic_init_bases()
 
-> I think the first four patches take care of building for ARM,
-> but the problem remains if you want to enable COMPILE_TEST as
-> we need for certain automated checking.
 
-What specific problem is there with COMPILE_TEST?
+And GIC data will be replaced on the fly ;P
 
->> Dealing with Si revs is a common problem. We should have a=20
->> common solution. There is soc_device for this purpose.
->=20
-> Exactly. The last time this came up, I think we agreed to implement a
-> helper using glob_match() on the soc_device strings. Unfortunately
-> this hasn't happened then, but I'd still prefer that over yet another
-> vendor-specific way of dealing with the generic issue.
+> 
+> Or do you mean to make the clock driver an early platform driver?
 
-soc_device would require encoding the SVR as a string and then decoding
-the string, which is more complicated and error prone than having
-platform-specific code test a platform-specific number.  And when would
-it get registered on arm64, which doesn't have platform code?
+I can't say definitely - I've just studied it some time ago, but did not try it by myself.
 
--Scott
 
+
+-- 
+regards,
+-grygorii
