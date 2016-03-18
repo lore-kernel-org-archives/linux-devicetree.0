@@ -1,64 +1,71 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
- driver
-Date: Fri, 18 Mar 2016 14:14:58 -0500
-Message-ID: <20160318191458.GA3656@rob-hp-laptop>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
+Subject: Re: [PATCH 2/6] net: arc_emac: add phy-reset-* are optional for
+ device tree
+Date: Fri, 18 Mar 2016 14:21:17 -0500
+Message-ID: <20160318192116.GA5224@rob-hp-laptop>
+References: <1457693731-6966-1-git-send-email-wxt@rock-chips.com>
+ <1457693731-6966-3-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+In-Reply-To: <1457693731-6966-3-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keescook-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, leozwang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 09:29:45AM +0100, Petr Kulhavy wrote:
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
+On Fri, Mar 11, 2016 at 06:55:27PM +0800, Caesar Wang wrote:
+> This patch adds the following property for arc_emac.
 > 
-> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> 1) phy-reset-gpios:
+> The phy-reset-gpios is an optional property for arc emac device tree boot.
+> Change the binding document to match the driver code.
+> 
+> 2) phy-reset-duration:
+> Different boards may require different phy reset duration. Add property
+> phy-reset-duration for device tree probe, so that the boards that need
+> a longer reset duration can specify it in their device tree.
+> 
+> 3) phy-reset-active-high:
+> We need that for a custom hardware that needs the reverse reset
+> sequence.
+> 
+> Anyway, we can add the above property for arc emac.
+> 
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
-> v1: <initial>
 > 
-> v2:
->  - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
->  - using "ti," prefix instead of "da8xx," for specific property names
->  - no wildcards in compatibility string
+>  Documentation/devicetree/bindings/net/arc_emac.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> v3:
->  - added "reg", "interrupts" and "interrupt-names" properties
->  - wildcards in compatibility string
-> 
-> v4:
->  - compatibility string set to "ti,da830-musb"
->  - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
->  - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
->  - removed "ti,hwmods"
-> 
-> v5:
->  - "ti,phy20-refclock-frequency" property made mandatory
-> 
-> v6:
->  - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
-> 
-> v7:
->  - removed the "mentor,power" property; hard coded to 500mA in the code
-> 
-> v8:
->  - "ti,usb2-phy-refclock-frequency" renamed to "ti,usb2-phy-refclock-hz" and description amended
->  - "ti,usb2-phy-clkmux-pll" changed to "ti,usb2-phy-clkmux-refclkin" to reflect the more common case
->  - USB maximum power modelled via a regulator "vbus-supply"
-> 
-> v9: <no change>
-> v10: <no change>
-> 
->  .../devicetree/bindings/usb/da8xx-usb.txt          | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
+> diff --git a/Documentation/devicetree/bindings/net/arc_emac.txt b/Documentation/devicetree/bindings/net/arc_emac.txt
+> index a1d71eb..6389b00 100644
+> --- a/Documentation/devicetree/bindings/net/arc_emac.txt
+> +++ b/Documentation/devicetree/bindings/net/arc_emac.txt
+> @@ -7,6 +7,16 @@ Required properties:
+>  - max-speed: see ethernet.txt file in the same directory.
+>  - phy: see ethernet.txt file in the same directory.
+>  
+> +Optional properties:
+> +- phy-reset-gpios : Should specify the gpio for phy reset
+> +- phy-reset-duration : Reset duration in milliseconds.  Should present
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Append units please (-msec).
+
+> +  only if property "phy-reset-gpios" is available.  Missing the property
+> +  will have the duration be 1 millisecond.  Numbers greater than 1000 are
+> +  invalid and 1 millisecond will be used instead.
+> +- phy-reset-active-high : If present then the reset sequence using the GPIO
+> +  specified in the "phy-reset-gpios" property is reversed (H=reset state,
+> +  L=operation state).
+
+These are really all properties of the phy, not the mac, so they would 
+be more appropriately be in the phy node even though it is the mac 
+driver that wants to control the gpio.
+
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
