@@ -1,74 +1,68 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 14/15] dt-bindings: arm-gic: Drop 'clock-names' from
- binding document
-Date: Fri, 18 Mar 2016 13:05:24 +0100
-Message-ID: <CAMuHMdUkGiX6YWzbRVJaJ4BNskE8PUXq-7Zob40f=CEZyjtJiA@mail.gmail.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
-	<1458224359-32665-15-git-send-email-jonathanh@nvidia.com>
-	<CAMuHMdV0QiWR0bML44zhAx+MStmQhQWKd=b_TMKnEdu_hw_ReA@mail.gmail.com>
-	<56EBD4E5.1060002@nvidia.com>
-	<CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw@mail.gmail.com>
-	<56EBDEFA.30102@nvidia.com>
+From: Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
+Subject: Re: [PATCH v15 1/6] efi: ARM/arm64: ignore DT memory nodes instead
+ of removing them
+Date: Fri, 18 Mar 2016 12:26:09 +0000
+Message-ID: <20160318122609.GS2619@codeblueprint.co.uk>
+References: <1457481587-8976-1-git-send-email-ddaney.cavm@gmail.com>
+ <1457481587-8976-2-git-send-email-ddaney.cavm@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56EBDEFA.30102-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457481587-8976-2-git-send-email-ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Daney <ddaney.cavm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ganapatrao Kulkarni <gkulkarni-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Robert Richter <rrichter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+On Tue, 08 Mar, at 03:59:42PM, David Daney wrote:
+> From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> There are two problems with the UEFI stub DT memory node removal
+> routine:
+> - it deletes nodes as it traverses the tree, which happens to work
+>   but is not supported, as deletion invalidates the node iterator;
+> - deleting memory nodes entirely may discard annotations in the form
+>   of additional properties on the nodes.
+> 
+> Since the discovery of DT memory nodes occurs strictly before the
+> UEFI init sequence, we can simply clear the memblock memory table
+> before parsing the UEFI memory map. This way, it is no longer
+> necessary to remove the nodes, so we can remove that logic from the
+> stub as well.
+> 
+> Signed-off-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/firmware/efi/arm-init.c    |  8 ++++++++
+>  drivers/firmware/efi/libstub/fdt.c | 24 +-----------------------
+>  2 files changed, 9 insertions(+), 23 deletions(-)
+ 
+I've not delved into the rest of the series too deeply, but this looks
+like a straight forward change.
 
-On Fri, Mar 18, 2016 at 11:56 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On 18/03/16 10:52, Geert Uytterhoeven wrote:
->> On Fri, Mar 18, 2016 at 11:13 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>> On 18/03/16 09:13, Geert Uytterhoeven wrote:
->>>> On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>>> Commit afbbd2338176 ("irqchip/gic: Document optional Clock and Power
->>>>> Domain properties") documented optional clock and power-dmoain properties
->>>>> for the ARM GIC. Currently, there are no users of these and for the
->>>>> Tegra210 Audio GIC (based upon the GIC-400) there are two clocks, a
->>>>> functional clock and interface clock, that need to be enabled.
->>>>
->>>> The reason that there are no users for this is twofold:
->>>>   1. The GIC driver doesn't have Runtime PM support yet,
->>>>   2. There was no clean way to prevent the GIC's clock from being disabled.
->>>> Due to this, adding the clocks to the DTSes would mean that they will be
->>>> disabled during boot up as unused clocks, leading to a system lock-up.
->>>>
->>>> I had hoped your series would fix part 1. I gave it a try on r8a7791/koelsch,
->>>> but unfortunately it seems the platform driver only supports non-root
->>>> controllers, while the r8a7791 GIC is the primary one...
->>>
->>> Can you try making the following change ...
->>
->> Thanks! I gave it a try, but no difference.
->
-> I assume you added the appropriate compatible flag? Any more details you
+Reviewed-by: Matt Fleming <matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org>
 
-Doh... bad assumption... Silly me.
+> diff --git a/drivers/firmware/efi/arm-init.c b/drivers/firmware/efi/arm-init.c
+> index 9e15d57..40c9d85 100644
+> --- a/drivers/firmware/efi/arm-init.c
+> +++ b/drivers/firmware/efi/arm-init.c
+> @@ -143,6 +143,14 @@ static __init void reserve_regions(void)
+>  	if (efi_enabled(EFI_DBG))
+>  		pr_info("Processing EFI memory map:\n");
+>  
+> +	/*
+> +	 * Discard memblocks discovered so far: if there are any at this
+> +	 * point, they originate from memory nodes in the DT, and UEFI
+> +	 * uses its own memory map instead.
+> +	 */
+> +	memblock_dump_all();
+> +	memblock_remove(0, ULLONG_MAX);
+> +
+>  	for_each_efi_memory_desc(&memmap, md) {
+>  		paddr = md->phys_addr;
+>  		npages = md->num_pages;
 
-> can share about why it is not working? Is it not registered early enough?
-
-With
-
-+       { .compatible = "arm,gic-400", },
-
-the kernel no longer crashes due to accessing the GIC registers while the
-GIC module clock is disabled.
-
-However, the system doesn't boot completely, and time outs on SPI transfers
-make me believe interrupts are not working.
-Both with and without "the following change".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Out of curiosity, could some kind person explain (or point me at a
+previous explanation for) why we may have both DT memory nodes and a
+UEFI memory map and why they're not compatible enough to co-exist?
