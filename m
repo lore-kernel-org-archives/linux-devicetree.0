@@ -1,71 +1,188 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 06/15] irqdomain: Ensure type settings match for an
- existing mapping
-Date: Fri, 18 Mar 2016 10:33:26 +0000
-Message-ID: <56EBD976.7090107@nvidia.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-7-git-send-email-jonathanh@nvidia.com>
- <56EAF4E1.5020201@nvidia.com> <56EBD272.1040404@ti.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: at91: use chipid device for soc detection
+Date: Fri, 18 Mar 2016 11:34:18 +0100
+Message-ID: <20160318103418.GA2531@piout.net>
+References: <1458285681-25684-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56EBD272.1040404-l0cyMroinI0@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1458285681-25684-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 18/03/16 10:03, Grygorii Strashko wrote:
-> On 03/17/2016 08:18 PM, Jon Hunter wrote:
->>
->> On 17/03/16 14:19, Jon Hunter wrote:
->>> When mapping an IRQ, if a mapping already exists, then we simply return
->>> the virtual IRQ number. However, we do not check that the type settings
->>> for the existing mapping match those for the mapping that is about to be
->>> created. It may be unlikely that the type settings would not match, but
->>> check for this and don't return a valid IRQ mapping if the type settings
->>> do not match.
->>>
->>> WARN if the type return by irq_domain_translate() has bits outside the
->>> sense mask set and then clear these bits. If these bits are not cleared
->>> then this will cause the comparision of the type settings for an
->>> existing mapping to fail with that of the new mapping even if the sense
->>> bit themselves match. The reason being is that the existing type
->>> settings are read by calling irq_get_trigger_type() which will clear
->>> any bits outside the sense mask. This will allow us to detect irqchips
->>> that are not correctly clearing these bits and fix them.
->>>
->>> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>   kernel/irq/irqdomain.c | 59
->>> ++++++++++++++++++++++++++++++++++++--------------
->>>   1 file changed, 43 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
->>> index 3a519a01118b..0ea285baa619 100644
->>> --- a/kernel/irq/irqdomain.c
->>> +++ b/kernel/irq/irqdomain.c
->>> @@ -549,6 +549,13 @@ static int irq_domain_translate(struct
->>> irq_domain *d,
->>>                        fwspec->param, fwspec->param_count,
->>>                        hwirq, type);
->>>
+On 18/03/2016 at 08:21:19 +0100, Ludovic Desroches wrote :
+> So far, the CIDR and EXID registers were in the DBGU interface. This device
+> has disappeared with the SAMA5D2 family. These registers are exposed
+> through a new device called chipid.
 > 
-> 
->>> +    /*
->>> +     * WARN if the irqchip returns a type with bits
->>> +     * outside the sense mask set and clear these bits.
->>> +     */
->>> +    if (WARN_ON(*type & ~IRQ_TYPE_SENSE_MASK))
->>> +        *type &= IRQ_TYPE_SENSE_MASK;
-> 
-> Not sure that this warn and in this place make sense.
-> type will come unchanged here from caller irq_create_fwspec_mapping()
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: remove useless warnings]
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Yes you are right. I missed the return statement. I can move to
-irq_create_fwspec_mapping().
+> ---
+>  .../devicetree/bindings/arm/atmel-at91.txt         |  4 ++
+>  arch/arm/mach-at91/soc.c                           | 81 +++++++++++++++++-----
+>  2 files changed, 67 insertions(+), 18 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.txt b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> index 7fd64ec..0b1fcbf 100644
+> --- a/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> +++ b/Documentation/devicetree/bindings/arm/atmel-at91.txt
+> @@ -41,6 +41,10 @@ compatible: must be one of:
+>         - "atmel,sama5d43"
+>         - "atmel,sama5d44"
+>  
+> +Chipid required properties:
+> +- compatible: Should be "atmel,sama5d2-chipid"
+> +- reg : Should contain registers location and length
+> +
+>  PIT Timer required properties:
+>  - compatible: Should be "atmel,at91sam9260-pit"
+>  - reg: Should contain registers location and length
+> diff --git a/arch/arm/mach-at91/soc.c b/arch/arm/mach-at91/soc.c
+> index 54343ff..034d563 100644
+> --- a/arch/arm/mach-at91/soc.c
+> +++ b/arch/arm/mach-at91/soc.c
+> @@ -22,48 +22,93 @@
+>  #include "soc.h"
+>  
+>  #define AT91_DBGU_CIDR			0x40
+> -#define AT91_DBGU_CIDR_VERSION(x)	((x) & 0x1f)
+> -#define AT91_DBGU_CIDR_EXT		BIT(31)
+> -#define AT91_DBGU_CIDR_MATCH_MASK	0x7fffffe0
+>  #define AT91_DBGU_EXID			0x44
+> +#define AT91_CHIPID_CIDR		0x00
+> +#define AT91_CHIPID_EXID		0x04
+> +#define AT91_CIDR_VERSION(x)		((x) & 0x1f)
+> +#define AT91_CIDR_EXT			BIT(31)
+> +#define AT91_CIDR_MATCH_MASK		0x7fffffe0
+>  
+> -struct soc_device * __init at91_soc_init(const struct at91_soc *socs)
+> +int __init at91_get_cidr_exid_from_dbgu(u32 *cidr, u32 *exid)
+>  {
+> -	struct soc_device_attribute *soc_dev_attr;
+> -	const struct at91_soc *soc;
+> -	struct soc_device *soc_dev;
+>  	struct device_node *np;
+>  	void __iomem *regs;
+> -	u32 cidr, exid;
+>  
+>  	np = of_find_compatible_node(NULL, NULL, "atmel,at91rm9200-dbgu");
+>  	if (!np)
+>  		np = of_find_compatible_node(NULL, NULL,
+>  					     "atmel,at91sam9260-dbgu");
+> +	if (!np)
+> +		return -ENODEV;
+>  
+> -	if (!np) {
+> -		pr_warn("Could not find DBGU node");
+> -		return NULL;
+> +	regs = of_iomap(np, 0);
+> +	of_node_put(np);
+> +
+> +	if (!regs) {
+> +		pr_warn("Could not map DBGU iomem range");
+> +		return -ENXIO;
+>  	}
+>  
+> +	*cidr = readl(regs + AT91_DBGU_CIDR);
+> +	*exid = readl(regs + AT91_DBGU_EXID);
+> +
+> +	iounmap(regs);
+> +
+> +	return 0;
+> +}
+> +
+> +int __init at91_get_cidr_exid_from_chipid(u32 *cidr, u32 *exid)
+> +{
+> +	struct device_node *np;
+> +	void __iomem *regs;
+> +
+> +	np = of_find_compatible_node(NULL, NULL, "atmel,sama5d2-chipid");
+> +	if (!np)
+> +		return -ENODEV;
+> +
+>  	regs = of_iomap(np, 0);
+>  	of_node_put(np);
+>  
+>  	if (!regs) {
+>  		pr_warn("Could not map DBGU iomem range");
+> -		return NULL;
+> +		return -ENXIO;
+>  	}
+>  
+> -	cidr = readl(regs + AT91_DBGU_CIDR);
+> -	exid = readl(regs + AT91_DBGU_EXID);
+> +	*cidr = readl(regs + AT91_CHIPID_CIDR);
+> +	*exid = readl(regs + AT91_CHIPID_EXID);
+>  
+>  	iounmap(regs);
+>  
+> +	return 0;
+> +}
+> +
+> +struct soc_device * __init at91_soc_init(const struct at91_soc *socs)
+> +{
+> +	struct soc_device_attribute *soc_dev_attr;
+> +	const struct at91_soc *soc;
+> +	struct soc_device *soc_dev;
+> +	u32 cidr, exid;
+> +	int ret;
+> +
+> +	/*
+> +	 * With SAMA5D2 and later SoCs, CIDR and EXID registers are no more
+> +	 * in the dbgu device but in the chipid device whose purpose is only
+> +	 * to expose these two registers.
+> +	 */
+> +	ret = at91_get_cidr_exid_from_dbgu(&cidr, &exid);
+> +	if (ret)
+> +		ret = at91_get_cidr_exid_from_chipid(&cidr, &exid);
+> +	if (ret) {
+> +		if (ret == -ENODEV)
+> +			pr_warn("Could not find identification node");
+> +		return NULL;
+> +	}
+> +
+>  	for (soc = socs; soc->name; soc++) {
+> -		if (soc->cidr_match != (cidr & AT91_DBGU_CIDR_MATCH_MASK))
+> +		if (soc->cidr_match != (cidr & AT91_CIDR_MATCH_MASK))
+>  			continue;
+>  
+> -		if (!(cidr & AT91_DBGU_CIDR_EXT) || soc->exid_match == exid)
+> +		if (!(cidr & AT91_CIDR_EXT) || soc->exid_match == exid)
+>  			break;
+>  	}
+>  
+> @@ -79,7 +124,7 @@ struct soc_device * __init at91_soc_init(const struct at91_soc *socs)
+>  	soc_dev_attr->family = soc->family;
+>  	soc_dev_attr->soc_id = soc->name;
+>  	soc_dev_attr->revision = kasprintf(GFP_KERNEL, "%X",
+> -					   AT91_DBGU_CIDR_VERSION(cidr));
+> +					   AT91_CIDR_VERSION(cidr));
+>  	soc_dev = soc_device_register(soc_dev_attr);
+>  	if (IS_ERR(soc_dev)) {
+>  		kfree(soc_dev_attr->revision);
+> @@ -91,7 +136,7 @@ struct soc_device * __init at91_soc_init(const struct at91_soc *socs)
+>  	if (soc->family)
+>  		pr_info("Detected SoC family: %s\n", soc->family);
+>  	pr_info("Detected SoC: %s, revision %X\n", soc->name,
+> -		AT91_DBGU_CIDR_VERSION(cidr));
+> +		AT91_CIDR_VERSION(cidr));
+>  
+>  	return soc_dev;
+>  }
+> -- 
+> 2.5.0
+> 
 
-Cheers
-Jon
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
