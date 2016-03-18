@@ -1,56 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] ARM: dts: at91: shdwc binding: add new shutdown
- controller documentation
-Date: Fri, 18 Mar 2016 16:29:03 -0500
-Message-ID: <20160318212903.GA9179@rob-hp-laptop>
-References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
- <1458134390-23847-2-git-send-email-nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v4 7/8] Documentation: devicetree: rockchip: Document
+ Landingship
+Date: Fri, 18 Mar 2016 16:30:31 -0500
+Message-ID: <20160318213031.GA10729@rob-hp-laptop>
+References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
+ <1458136727-32075-8-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458134390-23847-2-git-send-email-nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1458136727-32075-8-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 02:19:49PM +0100, Nicolas Ferre wrote:
-> The new shutdown controller compatible with sama5d2 has a new binding
-> documentation and properties.
-> 
-> Signed-off-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> 
-> doc
-> 
+On Wed, Mar 16, 2016 at 02:58:45PM +0100, Andreas F=E4rber wrote:
+> Use "geekbuying,geekbox-landingship" compatible string, plus those of
+> the GeekBox module.
+>=20
+> Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > ---
-> 
-> Changes in v5:
-> - change naming for this driver: instead of the "alternate shdwc" we choose a
->   more specific "sama5d2-compatible shdwc" wording.
-> 
-> Changes in v4:
-> - change property to debounce-delay-us so that we can use a generic property
->   and we can have the unit explicitly included it the name according to
->   Documentation/devicetree/bindings/property-units.txt.
-> - move to atmel,wakeup-active-high boolean property instead of a "high", "low"
->   string comparison.
-> 
-> Changes in v3:
-> - get and use slow clock and specify its handler in binding
-> 
-> Changes in v2: None
-> 
->  .../devicetree/bindings/arm/atmel-at91.txt         | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
+>  v3 -> v4: Unchanged
+> =20
+>  v2 -> v3:
+>  * Changed compatible string to include geekbox- (Heiko)
+>    and clarify that this is for GeekBox module
+> =20
+>  v2: New
+> =20
+>  Documentation/devicetree/bindings/arm/rockchip.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+
+Think I already acked v3, but:
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
