@@ -1,117 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [GIT PULL] DeviceTree updates for 4.6
-Date: Fri, 18 Mar 2016 10:58:40 -0500
-Message-ID: <CAL_JsqLNrUJoJuyvS4-oHTYejvYhi+6arBOjxpQWKF+E=hPm8Q@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Sat, 19 Mar 2016 00:00:22 +0800
+Message-ID: <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com> <1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458315428-10081-3-git-send-email-alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi,
 
-Please pull DeviceTree updates for 4.6. Details below.
+On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+<alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> new file mode 100644
+> index 0000000..ada2aa4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> @@ -0,0 +1,32 @@
+> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+> +
+> +This file documents platform glue layer for stmmac.
+> +Please see stmmac.txt for the other unchanged properties.
+> +
+> +The device node has following properties.
+> +
+> +Required properties:
+> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+> +              "snps,dwmac-3.50a" to select IP vesrion.
 
-Rob
+If you need have sort of hardware glue, then it is not compatible.
 
+ChenYu
 
-The following changes since commit 92e963f50fc74041b5e9e744c330dca48e04f08d:
-
-  Linux 4.5-rc1 (2016-01-24 13:06:47 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-for-4.6
-
-for you to fetch changes up to 5027e19db8cee24e189f8afa53b548e1ac5d0c1d:
-
-  of: Add vendor prefix for eGalax_eMPIA Technology Inc (2016-03-18
-09:38:22 -0500)
-
-----------------------------------------------------------------
-DeviceTree updates for 4.6:
-
-- New tool dtx_diff to diff DT files.
-
-- Sync kernel's dtc/libfdt to current dtc repo master.
-
-- Fix for reserved memory regions located in highmem.
-
-- Document standard unit suffixes for DT properties.
-
-- Various DT binding doc updates.
-
-----------------------------------------------------------------
-Alexander Stein (1):
-      Input: ads7846: Add description how to use internal reference (ADS7846)
-
-Amitoj Kaur Chawla (1):
-      of: resolver: Add missing of_node_get and of_node_put
-
-David Rivshin (1):
-      of: add 'const' for of_property_*_string*() parameter '*np'
-
-Fabio Estevam (2):
-      serial: fsl-imx-uart: Fix typo in fsl,dte-mode description
-      of: Add vendor prefix for eGalax_eMPIA Technology Inc
-
-Frank Rowand (2):
-      dtc: create tool to diff device trees
-      scripts/dtc: dtx_diff - add info to error message
-
-Geert Uytterhoeven (1):
-      devicetree: bindings: ARM: Use "uV" for micro-volt
-
-Linus Walleij (1):
-      ARM: realview: add EB syscon variants to bindings
-
-Maciej S. Szmigiero (1):
-      of: Add United Radiant Technology Corporation vendor prefix
-
-Rob Herring (4):
-      ARM: boot: Add an implementation of strnlen for libfdt
-      scripts/dtc: Update to upstream commit b06e55c88b9b
-      dt/bindings: add documentation on standard property unit suffixes
-      kbuild: Allow using host dtc instead of kernel's copy
-
-Sergey Senozhatsky (1):
-      of/unittest: fix infinite loop in of_unittest_destroy_tracked_overlays()
-
-Vinayak Menon (1):
-      of: alloc anywhere from memblock if range not specified
-
- Documentation/devicetree/bindings/arm/arm-boards   |   4 +-
- Documentation/devicetree/bindings/arm/cpus.txt     |   2 +-
- .../devicetree/bindings/input/ads7846.txt          |   2 +
- .../devicetree/bindings/property-units.txt         |  39 +++
- .../devicetree/bindings/serial/fsl-imx-uart.txt    |   2 +-
- .../devicetree/bindings/vendor-prefixes.txt        |   2 +
- arch/arm/boot/compressed/string.c                  |   9 +
- drivers/of/base.c                                  |  15 +-
- drivers/of/of_reserved_mem.c                       |   4 +-
- drivers/of/resolver.c                              |   7 +-
- drivers/of/unittest.c                              |   5 +
- include/linux/of.h                                 |  18 +-
- scripts/Makefile.lib                               |   3 +-
- scripts/dtc/checks.c                               |   2 +-
- scripts/dtc/dtc-lexer.l                            |  39 ++-
- scripts/dtc/dtc-lexer.lex.c_shipped                | 101 +++---
- scripts/dtc/dtc-parser.tab.c_shipped               |  84 ++---
- scripts/dtc/dtc-parser.y                           |  20 +-
- scripts/dtc/dtc.c                                  |  62 +++-
- scripts/dtc/dtx_diff                               | 349 +++++++++++++++++++++
- scripts/dtc/libfdt/fdt.c                           |  13 +-
- scripts/dtc/libfdt/fdt_ro.c                        | 100 ++++++
- scripts/dtc/libfdt/fdt_rw.c                        |   2 +
- scripts/dtc/libfdt/libfdt.h                        |  73 ++++-
- scripts/dtc/util.c                                 |   3 +-
- scripts/dtc/version_gen.h                          |   2 +-
- 26 files changed, 828 insertions(+), 134 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/property-units.txt
- create mode 100755 scripts/dtc/dtx_diff
+> +- clocks: Must contain a phandle for each entry in clock-names.
+> +- clock-names: Should be "stmmaceth" for the host clock.
+> +              Should be "tx-clk" for the MAC TX clock.
+> +              Should be "rx-clk" for the MAC RX clock.
+> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> +             encompases the glue register, and the offset of the control register.
+> +Example:
+> +
+> +               ethernet0: dwmac@40028000 {
+> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> +                       status = "disabled";
+> +                       reg = <0x40028000 0x8000>;
+> +                       reg-names = "stmmaceth";
+> +                       interrupts = <0 61 0>, <0 62 0>;
+> +                       interrupt-names = "macirq", "eth_wake_irq";
+> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> +                       st,syscon = <&syscfg 0x4>;
+> +                       snps,pbl = <8>;
+> +                       snps,mixed-burst;
+> +                       dma-ranges;
+> +               };
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
