@@ -1,25 +1,81 @@
-From: Scott Wood <scott.wood@nxp.com>
-Subject: Re: [v6, 2/5] soc: fsl: add GUTS driver for QorIQ platforms
-Date: Fri, 18 Mar 2016 22:54:46 +0000
-Message-ID: <DB5PR0401MB1928302BB0DDE8D9B47E4361918C0@DB5PR0401MB1928.eurprd04.prod.outlook.com>
-References: <1457518131-11339-1-git-send-email-yangbo.lu@nxp.com>
- <1457518131-11339-3-git-send-email-yangbo.lu@nxp.com>
+From: Andreas Dannenberg <dannenberg@ti.com>
+Subject: [PATCH 1/2] ASoC: codecs: add TA5720 digital amplifier
+	DT bindings
+Date: Fri, 18 Mar 2016 18:27:57 -0500
+Message-ID: <1458343678-4086-2-git-send-email-dannenberg@ti.com>
+References: <1458343678-4086-1-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Yangbo Lu <yangbo.lu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Jochen Friedrich <jochen@scram.de>, Joerg Roedel <joro@8bytes.org>, Claudiu Manoil <claudiu.manoil@freescale.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Bhupesh Sharma <bhupesh.sharma@freescale.com>, Zhao Qiang <qiang.zhao@freescale.com>, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <ssantosh@kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, Xiaobo Xie <xiaobo.xie@nxp.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1458343678-4086-1-git-send-email-dannenberg@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Andreas Dannenberg <dannenberg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09/2016 04:18 AM, Yangbo Lu wrote:
-> +#ifdef CONFIG_FSL_GUTS
-> +u32 fsl_guts_get_svr(void);
-> +int fsl_guts_init(void);
-> +#endif
+The Texas Instruments TAS5720L/M device is a high-efficiency mono
+Class-D audio power amplifier optimized for high transient power
+capability to use the dynamic power headroom of small loudspeakers.
+Its digital time division multiplexed (TDM) interface enables up to
+16 devices to share the same bus.
 
-Don't ifdef prototypes (when not providing a stub alternative).
+Signed-off-by: Andreas Dannenberg <dannenberg@ti.com>
+---
+ .../devicetree/bindings/sound/tas5720.txt          | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
 
--Scott
+diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
+new file mode 100644
+index 0000000..3775a3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/tas5720.txt
+@@ -0,0 +1,37 @@
++Texas Instruments TAS5720 Mono Audio amplifier
++
++The TAS5720 serial control bus communicates through the I2C protocol only.
++
++Required properties:
++
++- compatible : "ti,tas5720"
++- reg : I2C slave address
++
++Optional properties:
++
++- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
++- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
++- interrupts-extended : reference to a GPIO pin connected to the TAS5720
++                        FAULTZ pin for error reporting purposes
++
++Note that in case of codec errors the driver relies on the TAS5720 datasheet-
++proposed "Auto Recovery Circuit" (connection between the FAULTZ and SDZ device
++pins) for continued operation. This connection should always be made independent
++of whether the optional interrupt-based fault-reporting feature is used.
++
++For more product information please see the links below:
++
++http://www.ti.com/product/TAS5720L
++http://www.ti.com/product/TAS5720M
++
++Example:
++
++tas5720: tas5720@6c {
++	status = "okay";
++	compatible = "ti,tas5720";
++	reg = <0x6c>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&tas572x_int_pin>;
++	interrupts-extended = <&gpio1 28 IRQ_TYPE_EDGE_FALLING>;
++};
+-- 
+2.6.4
