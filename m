@@ -1,68 +1,160 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] usb: phy: mxs: Add DT bindings to configure TX
- settings
-Date: Fri, 18 Mar 2016 16:19:36 -0500
-Message-ID: <20160318211936.GA4158@rob-hp-laptop>
-References: <1457040571-7775-1-git-send-email-jaret.cantu@timesys.com>
- <1458060853-15115-1-git-send-email-jaret.cantu@timesys.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add multidomain support to i.MX GPC
+ DT binding
+Date: Fri, 18 Mar 2016 16:25:06 -0500
+Message-ID: <20160318212506.GA5916@rob-hp-laptop>
+References: <1458128514-9560-1-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458060853-15115-1-git-send-email-jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+In-Reply-To: <1458128514-9560-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 12:54:13PM -0400, Jaret Cantu wrote:
-> The TX settings can be calibrated for particular hardware.  The
-> phy is reset by Linux, so this cannot be handled by the bootloader.
+On Wed, Mar 16, 2016 at 12:41:52PM +0100, Lucas Stach wrote:
+> This adds a new binding for the Freescale i.MX GPC block, which allows
+> to describe multiple power domains in a more natural way. The driver
+> will continue to support the old binding for existing DTBs, but new
+> features like the additional domains present on i.MX6SX will only be
+> usable with the new binding.
 > 
-> The TRM mentions that the maximum resistance should be used for the
-> DN/DP calibration in order to pass USB certification.
-> 
-> The values for the TX registers are poorly described in the TRM.
-> The meanings of the register values were taken from another
-> Freescale-provided document:
-> https://community.freescale.com/message/566147#comment-566912
-> 
-> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
-> v2. Copying devicetree list
->     Removed prettifying extra whitespace
->     Removed unnecessary register rewrite on resume
->     Use min and max constants for clarity
+> v2: clarify the number of interrupts (1)
+> ---
+>  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
+>  1 file changed, 54 insertions(+), 27 deletions(-)
 > 
->  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
->  drivers/usb/phy/phy-mxs-usb.c                      |   58 ++++++++++++++++++++
->  2 files changed, 68 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> index 379b84a..2f11e27 100644
-> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> @@ -12,6 +12,16 @@ Required properties:
->  - interrupts: Should contain phy interrupt
->  - fsl,anatop: phandle for anatop register, it is only for imx6 SoC series
+> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> index 65cc0345747d..e5b660018d63 100644
+> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> @@ -1,22 +1,41 @@
+>  Freescale i.MX General Power Controller
+>  =======================================
 >  
-> +Optional properties:
-> +- fsl,tx-cal-45-dn: Integer [30-55]. Resistance (in ohms) of switchable
-> +  high-speed trimming resistor connected in parallel with the 45 ohm resistor
-> +  that terminates the DN output signal. Default: 45
-> +- fsl,tx-cal-45-dp: Integer [30-55]. Resistance (in ohms) of switchable
-> +  high-speed trimming resistor connected in parallel with the 45 ohm resistor
-> +  that terminates the DP output signal. Default: 45
+> -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
+> -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
+> -domains.
+> +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
+> +counters and Power Gating Control (PGC).
+>  
+>  Required properties:
+>  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
+>  - reg: should be register base and length as documented in the
+>    datasheet
+> -- interrupts: Should contain GPC interrupt request 1
+> -- pu-supply: Link to the LDO regulator powering the PU power domain
+> -- clocks: Clock phandles to devices in the PU power domain that need
+> -	  to be enabled during domain power-up for reset propagation.
+> -- #power-domain-cells: Should be 1, see below:
+> +- interrupts: Should contain one interrupt specifier for the GPC interrupt
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - ipg
+> +- pgc: a list of child nodes describing the SoC power domains controlled by the
+> +  power gating controller.
 
-Add unit suffix (-ohms)
+Why do you need this when you can iterate over the child nodes?
 
-> +- fsl,tx-d-cal: Integer [79-119]. Current trimming value (as a percentage) of
-> +  the 17.78mA TX reference current. Default: 100
+>  
+> -The gpc node is a power-controller as documented by the generic power domain
+> -bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> +The power domains are generic power domain providers as documented in
+> +Documentation/devicetree/bindings/power/power_domain.txt. They are described as
+> +subnodes of the GPC and should contain the following
 > +
+> +Required properties:
+> +- reg: the DOMAIN_INDEX as used by the client devices to refer to this
+> +  power domain
+> +  The following DOMAIN_INDEX values are valid for i.MX6Q:
+> +  ARM_DOMAIN     0
+> +  PU_DOMAIN      1
+> +  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> +  DISPLAY_DOMAIN 2
+
+This shouldn't be needed now as cells is 0.
+
+> +
+> +- #power-domain-cells: Should be 0
+> +
+> +Optional properties:
+> +- clocks: a number of phandles to clocks that need to be enabled during domain
+> +  power-up sequencing to ensure reset propagation into devices located inside
+> +  this power domain
+> +- domain-supply: a phandle to the regulator powering this domain
+>  
 >  Example:
->  usbphy1: usbphy@020c9000 {
->  	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+>  
+> @@ -25,14 +44,29 @@ Example:
+>  		reg = <0x020dc000 0x4000>;
+>  		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
+> -		pu-supply = <&reg_pu>;
+> -		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> -			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> -			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> -			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> -			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> -			 <&clks IMX6QDL_CLK_VPU_AXI>;
+> -		#power-domain-cells = <1>;
+> +		clocks = <&clks IMX6QDL_CLK_IPG>;
+> +		clock-names = "ipg";
+> +		
+> +		pgc {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			power-domain@0 {
+> +				reg = <0>;
+> +				#power-domain-cells = <0>;
+> +			};
+> +			pd_pu: power-domain@1 {
+> +				reg = <1>;
+> +				#power-domain-cells = <0>;
+> +				domain-supply = <&reg_pu>;
+> +				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> +				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> +				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> +				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> +				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> +				         <&clks IMX6QDL_CLK_VPU_AXI>;
+> +			};
+> +		};
+>  	};
+>  
+>  
+> @@ -40,20 +74,13 @@ Specifying power domain for IP modules
+>  ======================================
+>  
+>  IP cores belonging to a power domain should contain a 'power-domains' property
+> -that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+> -the power domain the device belongs to.
+> +that is a phandle pointing to the power domain the device belongs to.
+>  
+>  Example of a device that is part of the PU power domain:
+>  
+>  	vpu: vpu@02040000 {
+>  		reg = <0x02040000 0x3c000>;
+>  		/* ... */
+> -		power-domains = <&gpc 1>;
+> +		power-domains = <&pd_pu>;
+>  		/* ... */
+>  	};
+> -
+> -The following DOMAIN_INDEX values are valid for i.MX6Q:
+> -ARM_DOMAIN     0
+> -PU_DOMAIN      1
+> -The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> -DISPLAY_DOMAIN 2
+> -- 
+> 2.7.0
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
