@@ -1,51 +1,109 @@
-From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 14/15] dt-bindings: arm-gic: Drop 'clock-names' from
- binding document
-Date: Fri, 18 Mar 2016 10:56:58 +0000
-Message-ID: <56EBDEFA.30102@nvidia.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-15-git-send-email-jonathanh@nvidia.com>
- <CAMuHMdV0QiWR0bML44zhAx+MStmQhQWKd=b_TMKnEdu_hw_ReA@mail.gmail.com>
- <56EBD4E5.1060002@nvidia.com>
- <CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw@mail.gmail.com>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
+Date: Fri, 18 Mar 2016 04:03:51 -0700
+Message-ID: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-On 18/03/16 10:52, Geert Uytterhoeven wrote:
-> Hi Jon,
-> 
-> On Fri, Mar 18, 2016 at 11:13 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 18/03/16 09:13, Geert Uytterhoeven wrote:
->>> On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->>>> Commit afbbd2338176 ("irqchip/gic: Document optional Clock and Power
->>>> Domain properties") documented optional clock and power-dmoain properties
->>>> for the ARM GIC. Currently, there are no users of these and for the
->>>> Tegra210 Audio GIC (based upon the GIC-400) there are two clocks, a
->>>> functional clock and interface clock, that need to be enabled.
->>>
->>> The reason that there are no users for this is twofold:
->>>   1. The GIC driver doesn't have Runtime PM support yet,
->>>   2. There was no clean way to prevent the GIC's clock from being disabled.
->>> Due to this, adding the clocks to the DTSes would mean that they will be
->>> disabled during boot up as unused clocks, leading to a system lock-up.
->>>
->>> I had hoped your series would fix part 1. I gave it a try on r8a7791/koelsch,
->>> but unfortunately it seems the platform driver only supports non-root
->>> controllers, while the r8a7791 GIC is the primary one...
->>
->> Can you try making the following change ...
-> 
-> Thanks! I gave it a try, but no difference.
+Add device tree binding documentation for MARVELL's sd8xxx
+(sd8897 and sd8997) wlan chip.
 
-I assume you added the appropriate compatible flag? Any more details you
-can share about why it is not working? Is it not registered early enough?
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+Listing changelist for both 1/2 and 2/2 patches
+v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
 
-Jon
+v4: a)Corrected the 'name' and 'compatible' property names.(Arnd Bergmann and Rob
+    Herring)
+    b)Patch description wraped in 72 columns(Rob Herring)
+    c)Moved DT binding file to bindings/net/wireless/(Rob Herring)
+    d)Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
+    Arnd Bergmann)
+    e)Replaced #ifdef with __maybe_unused(Arnd Bergmann)
+
+v5: a)Removed wildcards from compatible string(Arnd Bergmann)
+    b)Prepared single patch for all binding changes(Rob Herring)
+    c)Specified our node as a subnode of SDIO controller. With this approach, we
+    don't need to register new platform driver. (Rob herring)
+---
+ .../bindings/net/wireless/marvell-sd8xxx.txt       | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+new file mode 100644
+index 0000000..c43d488
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+@@ -0,0 +1,56 @@
++Marvell 8897/8997 (sd8897/sd8997) SDIO devices
++------
++
++This node provides properties for controlling the marvell sdio wireless device.
++The node is expected to be specified as a child node to the SDIO controller that
++connects the device to the system.
++
++Required properties:
++
++  - compatible : should be one of the following:
++	* "marvell,sd8897"
++	* "marvell,sd8997"
++
++Optional properties:
++
++  - marvell,caldata* : A series of properties with marvell,caldata prefix,
++  		      represent Calibration data downloaded to the device during
++		      initialization. This is an array of unsigned values.
++  - marvell,wakeup-pin : 'wakeuppin' is a wakeup pin number of wifi chip which will
++  		      be configured to firmware. firmware will wakeup host side use
++  		      the pin during suspend/resume stage.
++  - interrupt-parent: phandle of the parent interrupt controller
++  - interrupts : interrupt pin number to the cpu. driver will request an irq based on
++  		 this interrupt number. during system suspend, the irq will be enabled
++  		 as system wakeup source, so that the wifi chip can wakeup host
++  		 platform under certain condition. during system resume, the irq will
++  		 be disabled to make sure unnecessary interrupt is not received.
++
++Example:
++
++Tx power limit calibration data is configured in below example.
++The calibration data is an array of unsigned values, the length
++can vary between hw versions.
++IRQ pin 38 is used as system wakeup source interrupt. wakeup pin 3 is configured
++so that firmware can wakeup host using this device side pin.
++
++&mmc3 {
++	status = "okay";
++	vmmc-supply = <&wlan_en_reg>;
++	bus-width = <4>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mwifiex: mwifiex@3 {
++		compatible = "marvell,sd8897";
++		reg = <1>;
++		interrupt-parent = <&pio>;
++		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
++
++		marvell,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
++	0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01>;
++		marvell,wakeup-pin = <3>;
++	};
++};
+-- 
+1.8.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
