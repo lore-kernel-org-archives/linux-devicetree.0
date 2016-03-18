@@ -1,32 +1,64 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 7/7] ARM: OMAP2+: Update GPMC and NAND DT binding
- documentation
-Date: Fri, 18 Mar 2016 14:13:15 -0500
-Message-ID: <20160318191315.GA20951@rob-hp-laptop>
-References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
- <1457654203-20856-8-git-send-email-fcooper@ti.com>
+Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
+ driver
+Date: Fri, 18 Mar 2016 14:14:58 -0500
+Message-ID: <20160318191458.GA3656@rob-hp-laptop>
+References: <1457684989-13318-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457654203-20856-8-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1457684989-13318-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 10, 2016 at 05:56:43PM -0600, Franklin S Cooper Jr wrote:
-> Add additional details to the GPMC NAND documentation to clarify
-> what is needed to enable NAND DMA prefetch.
+On Fri, Mar 11, 2016 at 09:29:45AM +0100, Petr Kulhavy wrote:
+> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx MUSB driver.
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/bus/ti-gpmc.txt   | 7 ++++++-
->  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 2 +-
->  2 files changed, 7 insertions(+), 2 deletions(-)
+> v1: <initial>
+> 
+> v2:
+>  - using standard properties "dr_mode", "mentor,power", "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits"
+>  - using "ti," prefix instead of "da8xx," for specific property names
+>  - no wildcards in compatibility string
+> 
+> v3:
+>  - added "reg", "interrupts" and "interrupt-names" properties
+>  - wildcards in compatibility string
+> 
+> v4:
+>  - compatibility string set to "ti,da830-musb"
+>  - "mentor,num-eps", "mentor,multipoint", "mentor,ram-bits" properties removed and hardcoded
+>  - "ti,phy20-clkmux-cfg" renamed to "ti,phy20-clkmux-pll" and changed to boolean
+>  - removed "ti,hwmods"
+> 
+> v5:
+>  - "ti,phy20-refclock-frequency" property made mandatory
+> 
+> v6:
+>  - using "ti,usb2-phy-" prefix instead of "ti,phy20-" for the specific properties
+> 
+> v7:
+>  - removed the "mentor,power" property; hard coded to 500mA in the code
+> 
+> v8:
+>  - "ti,usb2-phy-refclock-frequency" renamed to "ti,usb2-phy-refclock-hz" and description amended
+>  - "ti,usb2-phy-clkmux-pll" changed to "ti,usb2-phy-clkmux-refclkin" to reflect the more common case
+>  - USB maximum power modelled via a regulator "vbus-supply"
+> 
+> v9: <no change>
+> v10: <no change>
+> 
+>  .../devicetree/bindings/usb/da8xx-usb.txt          | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/da8xx-usb.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
