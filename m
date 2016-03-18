@@ -1,43 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 7/8] Documentation: devicetree: rockchip: Document
- Landingship
-Date: Fri, 18 Mar 2016 16:30:31 -0500
-Message-ID: <20160318213031.GA10729@rob-hp-laptop>
-References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
- <1458136727-32075-8-git-send-email-afaerber@suse.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] of: add vendor prefix for Holtek Semiconductor
+Date: Fri, 18 Mar 2016 16:32:59 -0500
+Message-ID: <20160318213259.GA11477@rob-hp-laptop>
+References: <cover.1458140954.git.robin@protonic.nl>
+ <81209392e3cdf566aa03b208b5e31a19c93e7b40.1458140954.git.robin@protonic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458136727-32075-8-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <81209392e3cdf566aa03b208b5e31a19c93e7b40.1458140954.git.robin@protonic.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin van der Gracht <robin@protonic.nl>
+Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Stefan Wahren <stefan.wahren@i2se.com>, Philipp Zabel <philipp.zabel@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 02:58:45PM +0100, Andreas F=E4rber wrote:
-> Use "geekbuying,geekbox-landingship" compatible string, plus those of
-> the GeekBox module.
->=20
-> Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+On Wed, Mar 16, 2016 at 04:52:08PM +0100, Robin van der Gracht wrote:
+> This patch introduces a vendor prefix for Holtek Semiconductor Inc.
+> 
+> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
 > ---
->  v3 -> v4: Unchanged
-> =20
->  v2 -> v3:
->  * Changed compatible string to include geekbox- (Heiko)
->    and clarify that this is for GeekBox module
-> =20
->  v2: New
-> =20
->  Documentation/devicetree/bindings/arm/rockchip.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index dd72e05..fa70359d 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -108,6 +108,7 @@ hitex	Hitex Development Tools
+>  holt	Holt Integrated Circuits, Inc.
+>  honeywell	Honeywell
+>  hp	Hewlett Packard
+> +ht	Holtek Semiconductor Inc.
 
-Think I already acked v3, but:
+I think holtek being a bit longer would be better here.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  i2se	I2SE GmbH
+>  ibm	International Business Machines (IBM)
+>  idt	Integrated Device Technologies, Inc.
+> -- 
+> 2.5.0
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
