@@ -1,31 +1,57 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v7] rtc: rewrite DS1302 using SPI
-Date: Fri, 18 Mar 2016 13:38:15 +0300
-Message-ID: <1458297495.3499.29.camel@gmail.com>
-References: <1456105286-28598-1-git-send-email-ynvich@gmail.com>
-	 <1456224900-4877-1-git-send-email-ynvich@gmail.com>
-	 <20160315001844.GJ28277@piout.net>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 14/15] dt-bindings: arm-gic: Drop 'clock-names' from
+ binding document
+Date: Fri, 18 Mar 2016 11:52:17 +0100
+Message-ID: <CAMuHMdWXqS9cru74Ckr47gFVTf2MkmjZUtMt4MeXW_1V7x+KHw@mail.gmail.com>
+References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
+	<1458224359-32665-15-git-send-email-jonathanh@nvidia.com>
+	<CAMuHMdV0QiWR0bML44zhAx+MStmQhQWKd=b_TMKnEdu_hw_ReA@mail.gmail.com>
+	<56EBD4E5.1060002@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20160315001844.GJ28277@piout.net>
-Sender: linux-sh-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Alessandro Zummo <a.zummo@towertech.it>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux@googlegroups.com>, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56EBD4E5.1060002-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2016-03-15 at 01:18 +0100, Alexandre Belloni wrote:
-> I would like to have a solution for secureedge5410 even if it is
-> untested. Else, we are breaking an existing platform without any
-> solution.
-> 
-> I've put the sh maintainers in copy, maybe they have an opinion. Else
-> I'll let your patch sit in linux-next for the next cycle.
+Hi Jon,
 
-secureedge5410 will need an SPI host driver. The driver will be similar
-to the one I did for lp8841. I can make a clone for secureedge5410, but
-I cannot test it.
+On Fri, Mar 18, 2016 at 11:13 AM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 18/03/16 09:13, Geert Uytterhoeven wrote:
+>> On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+>>> Commit afbbd2338176 ("irqchip/gic: Document optional Clock and Power
+>>> Domain properties") documented optional clock and power-dmoain properties
+>>> for the ARM GIC. Currently, there are no users of these and for the
+>>> Tegra210 Audio GIC (based upon the GIC-400) there are two clocks, a
+>>> functional clock and interface clock, that need to be enabled.
+>>
+>> The reason that there are no users for this is twofold:
+>>   1. The GIC driver doesn't have Runtime PM support yet,
+>>   2. There was no clean way to prevent the GIC's clock from being disabled.
+>> Due to this, adding the clocks to the DTSes would mean that they will be
+>> disabled during boot up as unused clocks, leading to a system lock-up.
+>>
+>> I had hoped your series would fix part 1. I gave it a try on r8a7791/koelsch,
+>> but unfortunately it seems the platform driver only supports non-root
+>> controllers, while the r8a7791 GIC is the primary one...
+>
+> Can you try making the following change ...
 
-The only reason, I didn't file the patch for secureedge5410, is I
-thought SPI people won't accept an untested patch.
+Thanks! I gave it a try, but no difference.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
