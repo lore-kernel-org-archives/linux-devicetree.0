@@ -1,133 +1,273 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: dt: reset: Add syscon reset binding
-Date: Fri, 18 Mar 2016 12:02:21 -0500
-Message-ID: <56EC349D.3040100@ti.com>
-References: <1457646365-1723-1-git-send-email-afd@ti.com>
- <1457646365-1723-2-git-send-email-afd@ti.com>
- <20160318163918.GA13101@rob-hp-laptop>
+From: Wei-Ning Huang <wnhuang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] mwifiex: add platform specific wakeup interrupt support
+Date: Sat, 19 Mar 2016 01:18:23 +0800
+Message-ID: <CABicQ-W-dPcsfFQO_Ef67vriZw7kwHMrVo_EPabwXPcXb7Ew7A@mail.gmail.com>
+References: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
+	<1458299032-31929-2-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160318163918.GA13101@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458299032-31929-2-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Reviewed-by: Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Tested-by: Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-On 03/18/2016 11:39 AM, Rob Herring wrote:
-> On Thu, Mar 10, 2016 at 03:46:04PM -0600, Andrew F. Davis wrote:
->> Add syscon reset controller binding. This will hook to the reset
->> framework and use syscon/regmap to set reset bits. This allows
->> reset control of individual SoC subsytems and devices with
->> memory-mapped reset registers in a common register memory
->> space.
->>
->> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
->> [s-anna-l0cyMroinI0@public.gmane.org: revise the binding format]
->> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/reset/syscon-reset.txt     | 114 +++++++++++++++++++++
->>  include/dt-bindings/reset/syscon.h                 |  23 +++++
->>  2 files changed, 137 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/syscon-reset.txt
->>  create mode 100644 include/dt-bindings/reset/syscon.h
->>
->> diff --git a/Documentation/devicetree/bindings/reset/syscon-reset.txt b/Documentation/devicetree/bindings/reset/syscon-reset.txt
->> new file mode 100644
->> index 0000000..02bc9e3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/syscon-reset.txt
->> @@ -0,0 +1,114 @@
->> +SysCon Reset Controller
->> +=======================
->> +
->> +Almost all SoCs have hardware modules that require reset control in addition
->> +to clock and power control for their functionality. The reset control is
->> +typically provided by means of memory-mapped I/O registers. These registers are
->> +sometimes a part of a larger register space region implementing various
->> +functionalities. This register range is best represented as a syscon node to
->> +allow multiple entities to access their relevant registers in the common
->> +register space.
->> +
->> +A SysCon Reset Controller node defines a device that uses a syscon node
->> +and provides reset management functionality for various hardware modules
->> +present on the SoC.
->> +
->> +SysCon Reset Controller Node
->> +============================
->> +Each of the reset provider/controller nodes should be a child of a syscon
->> +node and have the following properties.
->> +
->> +Required properties:
->> +--------------------
->> + - compatible		: Should be "syscon-reset"
->> + - #reset-cells		: Should be 1. Please see the reset consumer node below
->> +			  for usage details
->> + - #address-cells	: Should be 1
->> + - #size-cells		: Should be 0
->> +
->> +SysCon Reset Child Node
->> +============================
->> +Each reset provider/controller node should have a child node for each reset
->> +it would like to expose to consumers.
-> 
-> A node per register bit... Now I'm only more convinced this is too low 
-> level.
+On Fri, Mar 18, 2016 at 7:03 PM, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>=
+ wrote:
+> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>
+> On some arm-based platforms, we need to configure platform specific
+> parameters by device tree node and also define our node as a child
+> node of parent SDIO host controller.
+> This patch parses these parameters from device tree. It includes
+> calibration data dowoload to firmware, wakeup pin configured to firmw=
+are,
+> and soc specific wake up gpio, which will be set as wakeup interrupt =
+pin.
+>
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/net/wireless/marvell/mwifiex/main.h    | 11 ++++
+>  drivers/net/wireless/marvell/mwifiex/sdio.c    | 77 ++++++++++++++++=
+++++++++++
+>  drivers/net/wireless/marvell/mwifiex/sdio.h    |  7 +++
+>  drivers/net/wireless/marvell/mwifiex/sta_cmd.c | 14 ++++-
+>  4 files changed, 106 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/ne=
+t/wireless/marvell/mwifiex/main.h
+> index eb2c90c..9da27cf 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/main.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/main.h
+> @@ -37,6 +37,17 @@
+>  #include <linux/idr.h>
+>  #include <linux/inetdevice.h>
+>  #include <linux/devcoredump.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
+> +#include <linux/gfp.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/slab.h>
+> +#include <linux/of_irq.h>
+>
+>  #include "decl.h"
+>  #include "ioctl.h"
+> diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.c b/drivers/ne=
+t/wireless/marvell/mwifiex/sdio.c
+> index 901c064..c55e69b 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/sdio.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/sdio.c
+> @@ -73,6 +73,66 @@ static struct memory_type_mapping mem_type_mapping=
+_tbl[] =3D {
+>         {"EXTLAST", NULL, 0, 0xFE},
+>  };
+>
+> +static const struct of_device_id mwifiex_sdio_of_match_table[] =3D {
+> +       { .compatible =3D "marvell,sd8897" },
+> +       { .compatible =3D "marvell,sd8997" },
+> +       { }
+> +};
+> +
+> +static irqreturn_t mwifiex_wake_irq_wifi(int irq, void *priv)
+> +{
+> +       struct mwifiex_plt_wake_cfg *cfg =3D priv;
+> +
+> +       if (cfg->irq_wifi >=3D 0) {
+> +               pr_info("%s: wake by wifi", __func__);
+> +               cfg->wake_by_wifi =3D true;
+> +               disable_irq_nosync(irq);
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +/* This function parse device tree node using mmc subnode devicetree=
+ API.
+> + * The device node is saved in card->plt_of_node.
+> + * if the device tree node exist and include interrupts attributes, =
+this
+> + * function will also request platform specific wakeup interrupt.
+> + */
+> +static int mwifiex_sdio_probe_of(struct device *dev, struct sdio_mmc=
+_card *card)
+> +{
+> +       struct mwifiex_plt_wake_cfg *cfg;
+> +       int ret;
+> +
+> +       if (!dev->of_node ||
+> +           !of_match_node(mwifiex_sdio_of_match_table, dev->of_node)=
+) {
+> +               pr_err("sdio platform data not available");
+> +               return -1;
+> +       }
+> +
+> +       card->plt_of_node =3D dev->of_node;
+> +       card->plt_wake_cfg =3D devm_kzalloc(dev, sizeof(*card->plt_wa=
+ke_cfg),
+> +                                         GFP_KERNEL);
+> +       cfg =3D card->plt_wake_cfg;
+> +       if (cfg && card->plt_of_node) {
+> +               cfg->irq_wifi =3D irq_of_parse_and_map(card->plt_of_n=
+ode, 0);
+> +               if (!cfg->irq_wifi) {
+> +                       dev_err(dev, "fail to parse irq_wifi from dev=
+ice tree");
+> +               } else {
+> +                       ret =3D devm_request_irq(dev, cfg->irq_wifi,
+> +                                              mwifiex_wake_irq_wifi,
+> +                                              IRQF_TRIGGER_LOW,
+> +                                              "wifi_wake", cfg);
+> +                       if (ret) {
+> +                               dev_err(dev,
+> +                                       "Failed to request irq_wifi %=
+d (%d)\n",
+> +                                       cfg->irq_wifi, ret);
+> +                       }
+> +                       disable_irq(cfg->irq_wifi);
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+>  /*
+>   * SDIO probe.
+>   *
+> @@ -127,6 +187,9 @@ mwifiex_sdio_probe(struct sdio_func *func, const =
+struct sdio_device_id *id)
+>                 return -EIO;
+>         }
+>
+> +       /* device tree node parsing and platform specific configurati=
+on*/
+> +       mwifiex_sdio_probe_of(&func->dev, card);
+> +
+>         if (mwifiex_add_card(card, &add_remove_card_sem, &sdio_ops,
+>                              MWIFIEX_SDIO)) {
+>                 pr_err("%s: add card failed\n", __func__);
+> @@ -183,6 +246,13 @@ static int mwifiex_sdio_resume(struct device *de=
+v)
+>         mwifiex_cancel_hs(mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_=
+STA),
+>                           MWIFIEX_SYNC_CMD);
+>
+> +       /* Disable platform specific wakeup interrupt */
+> +       if (card->plt_wake_cfg && card->plt_wake_cfg->irq_wifi >=3D 0=
+) {
+> +               disable_irq_wake(card->plt_wake_cfg->irq_wifi);
+> +               if (!card->plt_wake_cfg->wake_by_wifi)
+> +                       disable_irq(card->plt_wake_cfg->irq_wifi);
+> +       }
+> +
+>         return 0;
+>  }
+>
+> @@ -262,6 +332,13 @@ static int mwifiex_sdio_suspend(struct device *d=
+ev)
+>
+>         adapter =3D card->adapter;
+>
+> +       /* Enable platform specific wakeup interrupt */
+> +       if (card->plt_wake_cfg && card->plt_wake_cfg->irq_wifi >=3D 0=
+) {
+> +               card->plt_wake_cfg->wake_by_wifi =3D false;
+> +               enable_irq(card->plt_wake_cfg->irq_wifi);
+> +               enable_irq_wake(card->plt_wake_cfg->irq_wifi);
+> +       }
+> +
+>         /* Enable the Host Sleep */
+>         if (!mwifiex_enable_hs(adapter)) {
+>                 mwifiex_dbg(adapter, ERROR,
+> diff --git a/drivers/net/wireless/marvell/mwifiex/sdio.h b/drivers/ne=
+t/wireless/marvell/mwifiex/sdio.h
+> index b9fbc5c..db837f1 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/sdio.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/sdio.h
+> @@ -154,6 +154,11 @@
+>         a->mpa_rx.start_port =3D 0;                                  =
+     \
+>  } while (0)
+>
+> +struct mwifiex_plt_wake_cfg {
+> +       int irq_wifi;
+> +       bool wake_by_wifi;
+> +};
+> +
+>  /* data structure for SDIO MPA TX */
+>  struct mwifiex_sdio_mpa_tx {
+>         /* multiport tx aggregation buffer pointer */
+> @@ -237,6 +242,8 @@ struct mwifiex_sdio_card_reg {
+>  struct sdio_mmc_card {
+>         struct sdio_func *func;
+>         struct mwifiex_adapter *adapter;
+> +       struct device_node *plt_of_node;
+> +       struct mwifiex_plt_wake_cfg *plt_wake_cfg;
+>
+>         const char *firmware;
+>         const struct mwifiex_sdio_card_reg *reg;
+> diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers=
+/net/wireless/marvell/mwifiex/sta_cmd.c
+> index 30f1526..930495b 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+> @@ -2134,6 +2134,7 @@ int mwifiex_sta_init_cmd(struct mwifiex_private=
+ *priv, u8 first_sta, bool init)
+>         enum state_11d_t state_11d;
+>         struct mwifiex_ds_11n_tx_cfg tx_cfg;
+>         u8 sdio_sp_rx_aggr_enable;
+> +       int data;
+>
+>         if (first_sta) {
+>                 if (priv->adapter->iface_type =3D=3D MWIFIEX_PCIE) {
+> @@ -2154,9 +2155,16 @@ int mwifiex_sta_init_cmd(struct mwifiex_privat=
+e *priv, u8 first_sta, bool init)
+>                  * The cal-data can be read from device tree and/or
+>                  * a configuration file and downloaded to firmware.
+>                  */
+> -               adapter->dt_node =3D
+> -                               of_find_node_by_name(NULL, "marvell_c=
+fgdata");
+> -               if (adapter->dt_node) {
+> +               if (priv->adapter->iface_type =3D=3D MWIFIEX_SDIO &&
+> +                   adapter->dev->of_node) {
+> +                       adapter->dt_node =3D adapter->dev->of_node;
+> +                       if (of_property_read_u32(adapter->dt_node,
+> +                                                "marvell,wakeup-pin"=
+,
+> +                                                &data) =3D=3D 0) {
+> +                               pr_debug("Wakeup pin =3D 0x%x\n", dat=
+a);
+> +                               adapter->hs_cfg.gpio =3D data;
+> +                       }
+> +
+>                         ret =3D mwifiex_dnld_dt_cfgdata(priv, adapter=
+->dt_node,
+>                                                       "marvell,caldat=
+a");
+>                         if (ret)
+> --
+> 1.8.1.4
+>
 
-Thanks for the review/comments. So, what's your recommendation here -
-add the reset info to driver match data and use SoC-specific
-compatibles? That will also work, we just didn't go that route as it
-appeared to be adding hardware data to a driver.
 
->> +
->> +Required properties:
->> +--------------------
->> + - reg			: This reset's number, this will be used to reference
->> +			  this reset by consumers of this reset
-> 
-> Now you have a made up index unrelated to anything in the h/w. Sometimes 
-> that's unavoidable, but your prior version did.
 
-We have made this change to avoid adding the reset data in the consumer
-nodes as was done in v1, and provide it in the controller node itself.
-We still need a way for consumers to match a specific reset. This is
-unavoidable if the controller were to encode all the reset data (even if
-we go with coding up the resets in the driver using SoC-specific
-compatibles, and use a dt-include header file to mark the indices).
-
-regards
-Suman
-
-> 
->> + - reset-control	: Contains the reset control register information
->> +			  Should contain 3 cells defined as:
->> +			    Cell #1 : register offset of the reset
->> +			              control/status register from the syscon
->> +			              register base
->> +			    Cell #2 : bit shift value for the reset in the
->> +			              respective reset control/status register
->> +			    Cell #3 : polarity of the reset bit. Should be 1 or
->> +				      RESET_ASSERT_SET for resets that are
->> +				      asserted when the bit is set, 0 or
->> +				      RESET_ASSERT_CLEAR for resets that are
->> +				      asserted when the bit is cleared
->> +
->> +Optional properties:
->> +--------------------
->> + - reset-status		: Contains the reset status register information. The
->> +			  contents of this property are the equivalent to
->> +			  reset-control as defined above. If this property is
->> +			  not present and the toggle flag is not set, the
->> +			  reset register is assumed to be the same as the
->> +			  control register
->> + - toggle		: Mark this reset as a toggle only reset, this is used
->> +			  when no status register is available.
-> 
-
+--=20
+Wei-Ning Huang, =E9=BB=83=E5=81=89=E5=AF=A7 | Software Engineer, Google=
+ Inc., Taiwan |
+wnhuang-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org | Cell: +886 910-380678
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireles=
+s" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
