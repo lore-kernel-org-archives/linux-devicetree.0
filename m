@@ -1,77 +1,51 @@
-From: "Jon Medhurst (Tixy)" <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm64: dts: juno/vexpress: fix node name
- unit-address presence warnings
-Date: Fri, 18 Mar 2016 14:15:39 +0000
-Message-ID: <1458310539.2812.16.camel@linaro.org>
-References: <1457352735-24453-1-git-send-email-sudeep.holla@arm.com>
-	 <CAL_JsqJeeZ58at95gSRwOMnce_DjDsXVRYH_bMKaX=uDHtZAAA@mail.gmail.com>
-	 <1458297136.2812.7.camel@linaro.org>
-	 <CAL_JsqJEA9rVOzD=wC8TJnzm+ou=mnRLrkNU2zgrH402=pm3Tw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJEA9rVOzD=wC8TJnzm+ou=mnRLrkNU2zgrH402=pm3Tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: [PATCH v4 1/8] ARM: initialize cpu_scale to its default
+Date: Fri, 18 Mar 2016 14:24:07 +0000
+Message-ID: <1458311054-13524-2-git-send-email-juri.lelli@arm.com>
+References: <1458311054-13524-1-git-send-email-juri.lelli@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458311054-13524-1-git-send-email-juri.lelli@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2016-03-18 at 08:09 -0500, Rob Herring wrote:
-> On Fri, Mar 18, 2016 at 5:32 AM, Jon Medhurst (Tixy) <tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Thu, 2016-03-17 at 16:44 -0500, Rob Herring wrote:
-> >> On Mon, Mar 7, 2016 at 6:12 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-[...]
-> >> > Let me know.
-> >> >
-> >> > Regards,
-> >> > Sudeep
-> >> >
-> >> > diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> >> > index 9314f3943269..ba03c934a861 100644
-> >> > --- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> >> > +++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-> >> > @@ -89,7 +89,7 @@
-> >> >                              <0 63 4>;
-> >> >         };
-> >> >
-> >> > -       smb {
-> >> > +       smb@0,08000000 {
-> >>
-> >> Drop the comma and leading zeros. Comma is for distinct fields like
-> >> bus,dev,func on PCI.
-> >
-> > So what is the correct way of representing 2 cell addresses? Not just
-> > those that are logically 64-bit addresses, (which I guess could be just
-> > a single number), but things like vexpress motherboard where we have
-> > Chip-select and Offset values?
-> 
-> 64-bit address is just a single number.
-> 2 cells with distinct fields should generally be ...@<cell1>,<cell2>
-> 
-> If you have your own bus type, you can devise whatever you like as
-> long as it is reviewed.
-> 
-> > I looked at ePAPR but it just says 'The unit-address must
-> > match the first address specified in the reg property of the node.' and
-> > lists valid characters for unit address, which includes ,._+-
-> 
-> Yes, we need to clarify this some.
+Instead of looping through all cpus calling set_capacity_scale, we can
+initialise cpu_scale per-cpu variables to SCHED_CAPACITY_SCALE with their
+definition.
 
-Yes, because there is already quite a bit of use of @X,Y for two cell
-64-bit addresses (Tegra mostly, I assume they're 64-bit addresses).
+Cc: Russell King <linux@arm.linux.org.uk>
+Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
+Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+---
 
-And for 32-bit addresses lots of use of leading zeros to pad address to
-consistence number of digits, both in unit names and in reg properties.
+ Applied:
+ http://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=8497/1
+---
+ arch/arm/kernel/topology.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-$ grep '@0[^ ^,]' -R arch/arm/boot/dts | wc -l
-1300
-
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 08b7847..ec279d1 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -40,7 +40,7 @@
+  * to run the rebalance_domains for all idle cores and the cpu_capacity can be
+  * updated during this sequence.
+  */
+-static DEFINE_PER_CPU(unsigned long, cpu_scale);
++static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
+ 
+ unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
+ {
+@@ -306,8 +306,6 @@ void __init init_cpu_topology(void)
+ 		cpu_topo->socket_id = -1;
+ 		cpumask_clear(&cpu_topo->core_sibling);
+ 		cpumask_clear(&cpu_topo->thread_sibling);
+-
+-		set_capacity_scale(cpu, SCHED_CAPACITY_SCALE);
+ 	}
+ 	smp_wmb();
+ 
 -- 
-Tixy
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.0
