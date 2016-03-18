@@ -1,46 +1,64 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] of: add vendor prefix for Holtek Semiconductor
-Date: Fri, 18 Mar 2016 16:32:59 -0500
-Message-ID: <20160318213259.GA11477@rob-hp-laptop>
-References: <cover.1458140954.git.robin@protonic.nl>
- <81209392e3cdf566aa03b208b5e31a19c93e7b40.1458140954.git.robin@protonic.nl>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add mdio node to ethernet node
+Date: Fri, 18 Mar 2016 22:34:07 +0100
+Message-ID: <56EC744F.90308@suse.de>
+References: <1458300056-6174-1-git-send-email-tomeu.vizoso@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <81209392e3cdf566aa03b208b5e31a19c93e7b40.1458140954.git.robin@protonic.nl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin van der Gracht <robin@protonic.nl>
-Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Stefan Wahren <stefan.wahren@i2se.com>, Philipp Zabel <philipp.zabel@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458300056-6174-1-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 04:52:08PM +0100, Robin van der Gracht wrote:
-> This patch introduces a vendor prefix for Holtek Semiconductor Inc.
-> 
-> Signed-off-by: Robin van der Gracht <robin@protonic.nl>
+Am 18.03.2016 um 12:20 schrieb Tomeu Vizoso:
+> So the dwmac device manages to probe again.
+>=20
+> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Fixes: 88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression")
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index dd72e05..fa70359d 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -108,6 +108,7 @@ hitex	Hitex Development Tools
->  holt	Holt Integrated Circuits, Inc.
->  honeywell	Honeywell
->  hp	Hewlett Packard
-> +ht	Holtek Semiconductor Inc.
+>  arch/arm/boot/dts/rk3288-rock2-som.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/=
+dts/rk3288-rock2-som.dtsi
+> index 1ece66f3e162..4ba7ddecb478 100644
+> --- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+> @@ -101,6 +101,14 @@
+>  	snps,reset-delays-us =3D <0 10000 30000>;
+>  	rx_delay =3D <0x10>;
+>  	tx_delay =3D <0x30>;
+> +	mdio0 {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +		compatible =3D "snps,dwmac-mdio";
+> +		ethphy1: ethernet-phy@1 {
+> +			reg =3D <1>;
+> +		};
+> +	};
 
-I think holtek being a bit longer would be better here.
+This is a) ugly for lack of white lines in between, b) unnecessary sinc=
+e
+this is being fixed in the stmmac driver where it will benefit more tha=
+n
+just this one SoM.
 
->  i2se	I2SE GmbH
->  ibm	International Business Machines (IBM)
->  idt	Integrated Device Technologies, Inc.
-> -- 
-> 2.5.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Andreas
+
+>  };
+> =20
+>  &i2c0 {
+
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
+rnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
