@@ -1,82 +1,94 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] driver: input :touchscreen : add Raydium I2C touch driver
-Date: Fri, 18 Mar 2016 16:04:50 -0500
-Message-ID: <20160318210450.GA28913@rob-hp-laptop>
-References: <1458031457-1315-1-git-send-email-jeffrey.lin@rad-ic.com>
+Subject: Re: [PATCH v3] can: rcar_canfd: Add Renesas R-Car CAN FD driver
+Date: Fri, 18 Mar 2016 16:07:29 -0500
+Message-ID: <20160318210729.GA30163@rob-hp-laptop>
+References: <1457019515-21158-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458031457-1315-1-git-send-email-jeffrey.lin@rad-ic.com>
-Sender: linux-input-owner@vger.kernel.org
-To: "jeffrey.lin" <yajohn@gmail.com>
-Cc: pawel.moll@arm.com, mark.rutland@arm.com, jc+devicetree@hellion.org.uk, galak@codeaurora.org, treding@nvidia.com, inki.dae@samsung.com, djkurtz@chromium.org, dusonlin@emc.com.tw, ajaykumar.rs@samsung.com, jeesw@melfas.com, dmitry.torokhov@gmail.com, rydberg@euromail.se, grant.likely@linaro.org, bleung@chromium.org, scott.liu@emc.com.tw, jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1458035294-8150-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: mkl@pengutronix.de, wg@grandegger.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, corbet@lwn.net, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, linux-doc@vger.kernel.org, geert+renesas@glider.be, chris.paterson2@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 04:44:17PM +0800, jeffrey.lin wrote:
-> Raydium I2C touch driver.
+On Tue, Mar 15, 2016 at 09:48:14AM +0000, Ramesh Shanmugasundaram wrote:
+> This patch adds support for the CAN FD controller found in Renesas R-Car
+> SoCs. The controller operates in CAN FD only mode by default.
 > 
-> Signed-off-by: jeffrey.lin <jeffrey.lin@rad-ic.com>
+> CAN FD mode supports both Classical CAN & CAN FD frame formats. The
+> controller supports ISO 11898-1:2015 CAN FD format only.
+> 
+> This controller supports two channels and the driver can enable either
+> or both of the channels.
+> 
+> Driver uses Rx FIFOs (one per channel) for reception & Common FIFOs (one
+> per channel) for transmission. Rx filter rules are configured to the
+> minimum (one per channel) and it accepts Standard, Extended, Data &
+> Remote Frame combinations.
+> 
+> Note: There are few documentation errors in R-Car Gen3 Hardware User
+> Manual v0.5E with respect to CAN FD controller. They are listed below:
+> 
+> 1. CAN FD interrupt numbers 29 & 30 are listed as per channel
+> interrupts. However, they are common to both channels (i.e.) they are
+> global and channel interrupts respectively.
+> 
+> 2. CANFD clock is derived from PLL1. This is not documented.
+> 
+> 3. CANFD clock is further divided by (1/2) within the CAN FD controller.
+> This is not documented.
+> 
+> 4. The minimum value of NTSEG1 in RSCFDnCFDCmNCFG register is 2 Tq. It
+> is specified 4 Tq in the manual.
+> 
+> 5. The maximum number of message RAM area the controller can use is 3584
+> bytes. It is specified 10752 bytes in the manual.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 > ---
->  .../devicetree/bindings/input/raydium_i2c_ts.txt   |  23 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-
-It is generally preferred to split bindings from driver changes.
-
->  drivers/input/touchscreen/Kconfig                  |  12 +
->  drivers/input/touchscreen/Makefile                 |   1 +
->  drivers/input/touchscreen/raydium_i2c_ts.c         | 932 +++++++++++++++++++++
->  5 files changed, 969 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
->  create mode 100644 drivers/input/touchscreen/raydium_i2c_ts.c
+> Hi All,
 > 
-> diff --git a/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt b/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
-> new file mode 100644
-> index 0000000..329864d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
-> @@ -0,0 +1,23 @@
-> +Raydium I2C touchscreen
-> +
-> +Required properties:
-> +- compatible:
-> +    "raydium,rm31100"
-> +
-> +- reg: The I2C address of the device
-> +- interrupts: interrupt to which the chip is connected
-> +    See ../interrupt-controller/interrupts.txt
-> +Optional property:
-> + - avdd-supply	: Analog power supply needed to power device
-> + - vccio-supply: IO Power source
-> +
-> +Example:
-> +
-> +	raydium_i2c@0x39 {
-
-touchscreen@39
-
-Otherwise,
+>    Thanks for the review comments.
+> 
+>    This updated patch is based on linux-can-next tag (linux-can-next-for-4.6-20160310).
+> 
+>    This patch depends on
+> 
+>    [RFC] [PATCH v3] can: fix handling of unmodifiable configuration options
+>    (http://comments.gmane.org/gmane.linux.can/9126)
+> 
+> Changes since v2:
+> 	* Rebased to latest tag (linux-can-next-for-4.6-20160310)
+> 	* Cleaned up leftover debugfs code (Thanks Oliver H)
+> 	* Revised devicetree documentation text (as suggested by Rob H)
+> 	  (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg01597.html)
+> 	* Used new can subsystem api to set static configuration & removed check in rcar_canfd_start (as suggested by Oliver H)
+> 	  (Refer: http://comments.gmane.org/gmane.linux.can/9126 &
+> 	   https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg01867.html)
+> 	* Clubbed Renesas controller drivers to driver/net/can/rcar dir (as suggested by Oliver H)
+> 	* Updated commit message
+> 
+> Changes since v1:
+> 	* Removed testmodes & debugfs code (suggested by Oliver H)
+> 	* Fixed tx path race issue by introducing lock (suggested by Marc K)
+> 	* Removed __maybe_unused attribute of rcar_canfd_of_table
+> ---
+>  .../devicetree/bindings/net/can/rcar_canfd.txt     |   89 ++
 
 Acked-by: Rob Herring <robh@kernel.org>
 
-
-> +		compatible = "raydium,rm31100";
-> +		avdd-supply = <&pm8226_l19>;
-> +		vccio-supply = <&pm8226_lvs1>;
-> +		reg = <0x39>;
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <0x0 IRQ_TYPE_EDGE_FALLING>;
-> +	};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index af49e0f..5b6224b 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -126,6 +126,7 @@ radxa	Radxa
->  raidsonic	RaidSonic Technology GmbH
->  ralink	Mediatek/Ralink Technology Corp.
->  ramtron	Ramtron International
-> +raydium Raydium Semiconductor Corp.
->  realtek Realtek Semiconductor Corp.
->  renesas	Renesas Electronics Corporation
->  ricoh	Ricoh Co. Ltd.
-
+>  drivers/net/can/Kconfig                            |   11 +-
+>  drivers/net/can/Makefile                           |    2 +-
+>  drivers/net/can/rcar/Kconfig                       |   19 +
+>  drivers/net/can/rcar/Makefile                      |    6 +
+>  drivers/net/can/{ => rcar}/rcar_can.c              |    0
+>  drivers/net/can/rcar/rcar_canfd.c                  | 1614 ++++++++++++++++++++
+>  7 files changed, 1730 insertions(+), 11 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+>  create mode 100644 drivers/net/can/rcar/Kconfig
+>  create mode 100644 drivers/net/can/rcar/Makefile
+>  rename drivers/net/can/{ => rcar}/rcar_can.c (100%)
+>  create mode 100644 drivers/net/can/rcar/rcar_canfd.c
