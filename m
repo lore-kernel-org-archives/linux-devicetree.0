@@ -1,45 +1,42 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 0/5] drm/vc4: DPI panel support
-Date: Fri, 18 Mar 2016 19:42:41 -0700
-Message-ID: <1458355366-7073-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 5/5] ARM: bcm2835: Add the DPI hardware to the device tree.
+Date: Fri, 18 Mar 2016 19:42:46 -0700
+Message-ID: <1458355366-7073-6-git-send-email-eric@anholt.net>
+References: <1458355366-7073-1-git-send-email-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1458355366-7073-1-git-send-email-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rpi-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation for working on DSI panel support, I wrote the much
-simpler support for DPI panels.  I've tested it on the 7" DPI panel
-from Adafruit, with panel-simple support included here.
-
-Eric Anholt (5):
-  of: Add vendor prefix for On Tat Industrial Company.
-  panel-simple: Add the 7" DPI panel from Adafruit.
-  drm: Add an encoder and connector type enum for DPI.
-  drm/vc4: Add DPI driver
-  ARM: bcm2835: Add the DPI hardware to the device tree.
-
- .../devicetree/bindings/display/brcm,bcm-vc4.txt   |  67 +++
- .../bindings/display/panel/ontat,yx700wv03.txt     |   7 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/bcm283x.dtsi                     |  11 +
- drivers/gpu/drm/drm_crtc.c                         |   2 +
- drivers/gpu/drm/panel/panel-simple.c               |  33 ++
- drivers/gpu/drm/vc4/Kconfig                        |   1 +
- drivers/gpu/drm/vc4/Makefile                       |   1 +
- drivers/gpu/drm/vc4/vc4_debugfs.c                  |   1 +
- drivers/gpu/drm/vc4/vc4_dpi.c                      | 518 +++++++++++++++++++++
- drivers/gpu/drm/vc4/vc4_drv.c                      |   1 +
- drivers/gpu/drm/vc4/vc4_drv.h                      |   5 +
- include/uapi/drm/drm_mode.h                        |   2 +
- 13 files changed, 650 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/ontat,yx700wv03.txt
- create mode 100644 drivers/gpu/drm/vc4/vc4_dpi.c
-
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SXQncyBjdXJyZW50bHkgbWFya2VkIGRpc2FibGVkLCBhcyBpdCdzIG5vdCB1c2VmdWwgd2l0aG91
+dCBhIHBhbmVsCmFzc29jaWF0ZWQgd2l0aCBpdCBhbmQgdGhlIEdQSU8gcGlucyByb3V0ZWQgdG8g
+QUxUMi4KClNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Ci0tLQog
+YXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzeC5kdHNpIHwgMTEgKysrKysrKysrKysKIDEgZmlsZSBj
+aGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
+YmNtMjgzeC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzeC5kdHNpCmluZGV4IGJiZTRl
+YWIuLmQxZTYzNDAgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4M3guZHRzaQor
+KysgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODN4LmR0c2kKQEAgLTE2Niw2ICsxNjYsMTcgQEAK
+IAkJCWludGVycnVwdHMgPSA8MiAxND47IC8qIHB3YTEgKi8KIAkJfTsKIAorCQlkcGk6IGRwaUA3
+ZTIwODAwMCB7CisJCQljb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS1kcGkiOworCQkJcmVnID0g
+PDB4N2UyMDgwMDAgMHg4Yz47CisJCQljbG9ja3MgPSA8JmNsb2NrcyBCQ00yODM1X0NMT0NLX1ZQ
+VT4sCisJCQkJIDwmY2xvY2tzIEJDTTI4MzVfQ0xPQ0tfRFBJPjsKKwkJCWNsb2NrLW5hbWVzID0g
+ImNvcmUiLCAicGl4ZWwiOworCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CisJCQkjc2l6ZS1jZWxs
+cyA9IDwwPjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJCX07CisKIAkJYXV4OiBhdXhAMHg3
+ZTIxNTAwMCB7CiAJCQljb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS1hdXgiOwogCQkJI2Nsb2Nr
+LWNlbGxzID0gPDE+OwotLSAKMi43LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
