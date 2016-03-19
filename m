@@ -1,41 +1,80 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] arm64: dts: rockchip: Clean up /memory nodes
-Date: Sat, 19 Mar 2016 09:04:08 +0100
-Message-ID: <2027561.JLzKLXOoFO@phil>
-References: <1458136727-32075-1-git-send-email-afaerber@suse.de> <1458136727-32075-2-git-send-email-afaerber@suse.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Sat, 19 Mar 2016 14:05:36 +0530
+Message-ID: <56ED0F58.7060005@nvidia.com>
+References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com>	<20160229174751.GQ21240@tuxbot>	<20160301022326.GC18327@sirena.org.uk>	<56D5111E.6090606@nvidia.com>	<20160302033833.GV18327@sirena.org.uk>	<56D65F7E.3090907@nvidia.com>	<20160302043506.GC18327@sirena.org.uk>	<56E81103.8010903@nvidia.com> <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458136727-32075-2-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Mark Brown <broonie@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 16. M=E4rz 2016, 14:58:39 schrieb Andreas F=E4rber:
-> A dtc update results in warnings for nodes with reg property but with=
-out
-> unit address in the node name, so rename /memory to /memory@0.
->=20
-> Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-applied to a dts64-fixes branch for 4.6, after changing the commit mess=
-age to
-----
-A dtc update results in warnings for nodes with reg property but withou=
-t
-unit address in the node name, so rename /memory to /memory@startaddres=
-s
-(memory starts at 0 in the case of the rk3368).
-----
+On Saturday 19 March 2016 10:01 AM, Bjorn Andersson wrote:
+> On Tue, Mar 15, 2016 at 6:41 AM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+>> On Wednesday 02 March 2016 10:05 AM, Mark Brown wrote:
+>>> * PGP Signed by an unknown key
+>>>
+>>> On Wed, Mar 02, 2016 at 09:05:26AM +0530, Laxman Dewangan wrote:
+>>>> On Wednesday 02 March 2016 09:08 AM, Mark Brown wrote:
+>>>>> You're not trying to scale the value here, you're trying to replace the
+>>>>> value because the PMIC is incapable of delivering the advertised ramp
+>>>>> rate.  Trying to express this as a multiple of the advertised ramp rate
+>>>>> is just adding complexity.
+>>>> So should we provide absolute ramp value here for platform specific?
+>>> Yes, otherwise if the PMIC vendor respecifies their ramp rates to
+>>> reflect reality and the driver is updated then your DT will be broken.
+>>>
+>>>> Or any other suggestion to handle this situation as this is very common
+>>>> and
+>>>> almost all our boards have this slowness on ramp.
+>>> Perhaps time to have a chat with your PMIC vendors...
+>>>
+>> I had discussion with our HW team to get more information about this
+>> variation.
+>> They said that Maxim advertise the ramp time with given condition in
+>> interface i.e. capacitance etc which is very generic.
+>> We did the experiment with Maxim recommendation about the rail and its
+>> capacitance (2.2uF) and found that measured value is same as what they
+>> advertise in datasheet.
+>>
+>> When chip team use this PMIC with Tegra hardware specs and did the circuit
+>> simulation to ensures how our boards should be designed for signal integrity
+>> they suggested that the rail capacitance should be more than what Maxim
+>> recommending in general to work with our silicon. So here condition get
+>> changed and hence the effective ramp time.
+>>
+>> So here we will need two parameters:
+>> advertised-ramp-delay for PMIC configurations and
+>> ramp-delay which is measured one.
+>>
+>> Most of time, advertised-ramp-delay is same as ramp-delay and hence one
+>> value from DT will be sufficient.
+>> If there is difference then both value can be provided and
+>> advertised-ramp-delay  will be used for PMIC configuration and rest of
+>> calculation about delay will be from ramp-delay.
+>>
+> Generally the device driver should describe the PMIC and the device
+> tree should describe the board. So the Maxim's numbers should (if
+> specified at all) go into the driver and the measures/calculated
+> characteristics for your board should be specified in the dt.
+>
+> The ramp properties in the generic regulator binding is used to inform
+> the OS about the board's ramp properties.
+>
+>
+> If I understand you correctly the Maxim PMIC can be configured to
+> drive the change at different speed, this should be configured through
+> a Maxim specific property. It should not reuse the generic properties
+> for ramp delays.
+>
 
-To clarify that the @0 is not arbitary chosen.
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ramp delay configurations are seen on other vendor's PMIC devices also.
+Therefore, I like o me generic property rather than specific to Maxim. 
+Parsing can be done in the core framework and applied during setting 
+machine constraints.
