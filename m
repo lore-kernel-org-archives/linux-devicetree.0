@@ -1,65 +1,35 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v3 7/8] ARM: dts: Add exynos3250-artik5 dtsi file for
- ARTIK5 module
-Date: Sat, 19 Mar 2016 20:44:00 +0900
-Message-ID: <CAGTfZH2FCzzJ77e9z7nYgo-S4M77cg3ay4wfOWaN0FTJs5cjZA@mail.gmail.com>
-References: <1458027490-13787-1-git-send-email-cw00.choi@samsung.com>
-	<1458027490-13787-8-git-send-email-cw00.choi@samsung.com>
-	<20160318210127.GA21185@rob-hp-laptop>
-Reply-To: cw00.choi@samsung.com
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Add dts file for Dserve DSRV9703C tablet
+Date: Sat, 19 Mar 2016 23:18:59 +0800
+Message-ID: <CAGb2v66Hw8_Ckmw0f5GMzP2+73aNbSoOs2MLYu7C85bjUL9huw@mail.gmail.com>
+References: <1458374032-10077-1-git-send-email-hdegoede@redhat.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20160318210127.GA21185@rob-hp-laptop>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, "jh80.chung@samsung.com" <jh80.chung@samsung.com>, andi.shyti@samsung.com, "inki.dae@samsung.com" <inki.dae@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, "pankaj.dubey@samsung.com" <pankaj.dubey@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB663WW3QKGQE22ZU4LI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1458374032-10077-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Sat, Mar 19, 2016 at 6:01 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Mar 15, 2016 at 04:38:09PM +0900, Chanwoo Choi wrote:
->> This patch adds the support for Device Tree source for Samsung ARTIK5 module[1]
->> based on Exynos3250 SoC. The ARTIK5 module includes the follwoing devices:
+On Sat, Mar 19, 2016 at 3:53 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The Dserve DSRV9703C is a 9.7" A10 tablet with a 1024x768 ips LCD,
+> 1G RAM, 4GB flash, a Focaltech FT5406EE8 touchscreen and rtl8188ctv wifi.
 >
-> s/follwoing/following/
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-I'll fix it.
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
+> ---
+>  arch/arm/boot/dts/Makefile                       |   1 +
+>  arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts | 281 +++++++++++++++++++++++
+>  2 files changed, 282 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts
 >
->> - Application Processor (Samsung Exynos3250)
->> - WiFi/BT Combo chip (Broadcom4354)
->> - PMIC (Samsung S2MPS14)
->> - eMMC (4GB)
->> - DRAM LPDDR3 (512MB)
->> - Connectors pin (60 Pins x 3 set)
->>
->> Also, this patch adds the ARTIK5 evaluation board[2] dts file which includes
->> the ARTIK5 module[1] and have the devices such as sound codec, sd card port,
->> ethernet port, uart port and so on.
->>
->> [1] https://www.artik.io/hardware/artik-5
->> [2] http://www.digikey.com/product-search/en?FV=ffecca14
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
->> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> ---
->>  .../bindings/arm/samsung/samsung-boards.txt        |   2 +
->>  arch/arm/boot/dts/Makefile                         |   1 +
->>  arch/arm/boot/dts/exynos3250-artik5-eval.dts       |  26 ++
->>  arch/arm/boot/dts/exynos3250-artik5.dtsi           | 334 +++++++++++++++++++++
->>  4 files changed, 363 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/exynos3250-artik5-eval.dts
->>  create mode 100644 arch/arm/boot/dts/exynos3250-artik5.dtsi
->
-> Otherwise,
->
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Thanks for your review.
-
-Best Regards,
-Chanwoo Choi
