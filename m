@@ -1,13 +1,13 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/8] ARM: dts: sun8i: Add usbphy and usb host
- controller nodes
-Date: Sun, 20 Mar 2016 17:00:31 +0100
-Message-ID: <1458489636-2825-4-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 6/8] ARM: dts: sun8i: Add leds and switches on
+ Orangepi Plus boards
+Date: Sun, 20 Mar 2016 17:00:34 +0100
+Message-ID: <1458489636-2825-7-git-send-email-hdegoede@redhat.com>
 References: <1458489636-2825-1-git-send-email-hdegoede@redhat.com>
 Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBOESXO3QKGQEI3GXRMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBRESXO3QKGQELX4BRAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458489636-2825-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,130 +17,114 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+From: Krzysztof Adamski <k@japko.eu>
 
-Add nodes describing the H3's usbphy and usb host controller nodes.
+OrangePi Plus board has two leds - green ("pwr") and red ("status")
+and two switches ("sw4" and "sw2"). This patch describes them in
+devicetree.
 
-Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Krzysztof Adamski <k@japko.eu>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 101 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 101 insertions(+)
+Changes in v6 (hdegoede):
+-Merge leds and r_leds nodes into one
+-Fix led labels to be in <board>:<colour>:<role> form
+-Alphabetically sort the added nodes
+-Add support for sw2 (this is the small reset-like button)
+---
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 3a2e6e2..4a4926b 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -389,6 +389,107 @@
- 			#size-cells = <0>;
- 		};
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+index a680b1f..a7cdfd0 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+@@ -45,6 +45,7 @@
+ #include "sunxi-common-regulators.dtsi"
  
-+		usbphy: phy@01c19400 {
-+			compatible = "allwinner,sun8i-h3-usb-phy";
-+			reg = <0x01c19400 0x2c>,
-+			      <0x01c1a800 0x4>,
-+			      <0x01c1b800 0x4>,
-+			      <0x01c1c800 0x4>,
-+			      <0x01c1d800 0x4>;
-+			reg-names = "phy_ctrl",
-+				    "pmu0",
-+				    "pmu1",
-+				    "pmu2",
-+				    "pmu3";
-+			clocks = <&usb_clk 8>,
-+				 <&usb_clk 9>,
-+				 <&usb_clk 10>,
-+				 <&usb_clk 11>;
-+			clock-names = "usb0_phy",
-+				      "usb1_phy",
-+				      "usb2_phy",
-+				      "usb3_phy";
-+			resets = <&usb_clk 0>,
-+				 <&usb_clk 1>,
-+				 <&usb_clk 2>,
-+				 <&usb_clk 3>;
-+			reset-names = "usb0_reset",
-+				      "usb1_reset",
-+				      "usb2_reset",
-+				      "usb3_reset";
-+			status = "disabled";
-+			#phy-cells = <1>;
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ #include <dt-bindings/pinctrl/sun4i-a10.h>
+ 
+ / {
+@@ -59,6 +60,43 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
++	gpio_keys {
++		compatible = "gpio-keys";
++		input-name = "sw4";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_opc>;
++
++		sw2@0 {
++			label = "sw2";
++			linux,code = <BTN_1>;
++			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
 +		};
 +
-+		ehci1: usb@01c1b000 {
-+			compatible = "allwinner,sun8i-h3-ehci", "generic-ehci";
-+			reg = <0x01c1b000 0x100>;
-+			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 25>, <&bus_gates 29>;
-+			resets = <&ahb_rst 25>, <&ahb_rst 29>;
-+			phys = <&usbphy 1>;
-+			phy-names = "usb";
-+			status = "disabled";
++		sw4@0 {
++			label = "sw4";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
++
++		status_led {
++			label = "orangepi-plus:red:status";
++			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
 +		};
 +
-+		ohci1: usb@01c1b400 {
-+			compatible = "allwinner,sun8i-h3-ohci", "generic-ohci";
-+			reg = <0x01c1b400 0x100>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 29>, <&bus_gates 25>,
-+				 <&usb_clk 17>;
-+			resets = <&ahb_rst 29>, <&ahb_rst 25>;
-+			phys = <&usbphy 1>;
-+			phy-names = "usb";
-+			status = "disabled";
++		pwr_led {
++			label = "orangepi-plus:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
 +		};
++	};
 +
-+		ehci2: usb@01c1c000 {
-+			compatible = "allwinner,sun8i-h3-ehci", "generic-ehci";
-+			reg = <0x01c1c000 0x100>;
-+			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 26>, <&bus_gates 30>;
-+			resets = <&ahb_rst 26>, <&ahb_rst 30>;
-+			phys = <&usbphy 2>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
+ 	reg_usb3_vbus: usb3-vbus {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
+@@ -72,6 +110,31 @@
+ 	};
+ };
+ 
++&pio {
++	leds_opc: led_pins@0 {
++		allwinner,pins = "PA15";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
 +
-+		ohci2: usb@01c1c400 {
-+			compatible = "allwinner,sun8i-h3-ohci", "generic-ohci";
-+			reg = <0x01c1c400 0x100>;
-+			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 30>, <&bus_gates 26>,
-+				 <&usb_clk 18>;
-+			resets = <&ahb_rst 30>, <&ahb_rst 26>;
-+			phys = <&usbphy 2>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
++&r_pio {
++	leds_r_opc: led_pins@0 {
++		allwinner,pins = "PL10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
 +
-+		ehci3: usb@01c1d000 {
-+			compatible = "allwinner,sun8i-h3-ehci", "generic-ehci";
-+			reg = <0x01c1d000 0x100>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 27>, <&bus_gates 31>;
-+			resets = <&ahb_rst 27>, <&ahb_rst 31>;
-+			phys = <&usbphy 3>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
++	sw_r_opc: key_pins@0 {
++		allwinner,pins = "PL03", "PL04";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
 +
-+		ohci3: usb@01c1d400 {
-+			compatible = "allwinner,sun8i-h3-ohci", "generic-ohci";
-+			reg = <0x01c1d400 0x100>;
-+			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&bus_gates 31>, <&bus_gates 27>,
-+				 <&usb_clk 19>;
-+			resets = <&ahb_rst 31>, <&ahb_rst 27>;
-+			phys = <&usbphy 3>;
-+			phy-names = "usb";
-+			status = "disabled";
-+		};
-+
- 		pio: pinctrl@01c20800 {
- 			compatible = "allwinner,sun8i-h3-pinctrl";
- 			reg = <0x01c20800 0x400>;
+ &ehci1 {
+ 	status = "okay";
+ };
 -- 
 2.7.3
