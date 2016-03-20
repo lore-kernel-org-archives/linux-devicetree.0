@@ -1,52 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ARC: [dts] Introduce Timer bindings
-Date: Sat, 19 Mar 2016 19:42:12 -0500
-Message-ID: <20160320004212.GA8061@rob-hp-laptop>
-References: <20160317162421.GA21947@rob-hp-laptop>
- <1458278789-18924-1-git-send-email-vgupta@synopsys.com>
+Subject: Re: [PATCH 1/3] ARM: at91: use chipid device for soc detection
+Date: Sat, 19 Mar 2016 19:45:37 -0500
+Message-ID: <20160320004537.GA9151@rob-hp-laptop>
+References: <1458285681-25684-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458278789-18924-1-git-send-email-vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1458285681-25684-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 10:56:29AM +0530, Vineet Gupta wrote:
-> ARC Timers have historically been probed directly.
-> As precursor to start probing Timers thru DT introduce these bindings
-> Note that to keep series bisectable, these bindings are not yet used in
-> code.
+On Fri, Mar 18, 2016 at 08:21:19AM +0100, Ludovic Desroches wrote:
+> So far, the CIDR and EXID registers were in the DBGU interface. This device
+> has disappeared with the SAMA5D2 family. These registers are exposed
+> through a new device called chipid.
 > 
-> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: remove useless warnings]
 > ---
-> v3:
->  - Renamed Node name to avoid new warnings when unit address used w/o regs [Rob]
-> v2:
->  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-March/000653.html
->  - snps,arc-timer[0-1] folded into single snps-arc-timer	[Rob]
->  - Node name in DT example fixed:				[Rob]
->      "timer1: timer_clksrc {" -> timer@1 {
->  - Introduced 64bit RTC in skeleton_hs.dtsi			[Vineet]
-> v1:
->  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-February/000447.html
-> ---
->  .../devicetree/bindings/timer/snps,arc-timer.txt   | 32 ++++++++++++++++++++++
->  .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 ++++++++++
->  .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 ++++++++++
->  arch/arc/boot/dts/abilis_tb10x.dtsi                | 14 ++++++++++
->  arch/arc/boot/dts/skeleton.dtsi                    | 14 ++++++++++
->  arch/arc/boot/dts/skeleton_hs.dtsi                 | 20 ++++++++++++++
->  arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 14 ++++++++++
->  7 files changed, 122 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
+>  .../devicetree/bindings/arm/atmel-at91.txt         |  4 ++
+>  arch/arm/mach-at91/soc.c                           | 81 +++++++++++++++++-----
+>  2 files changed, 67 insertions(+), 18 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
