@@ -1,32 +1,163 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V15 0/4] dma: add Qualcomm Technologies HIDMA driver
-Date: Sun, 20 Mar 2016 15:09:27 +0530
-Message-ID: <20160320093926.GM2490@localhost>
-References: <1457732994-11175-1-git-send-email-okaya@codeaurora.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] iio:magnetometer:ak8975: fix missing
+ regulator_disable
+Date: Sun, 20 Mar 2016 11:07:04 +0000
+Message-ID: <56EE8458.1030707@kernel.org>
+References: <cover.1458231723.git.gregor.boirie@parrot.com>
+ <058df1d45949ea5ee606d9b872acb0f2771a5f99.1458231723.git.gregor.boirie@parrot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457732994-11175-1-git-send-email-okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <058df1d45949ea5ee606d9b872acb0f2771a5f99.1458231723.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 04:49:50PM -0500, Sinan Kaya wrote:
+On 17/03/16 16:43, Gregor Boirie wrote:
+> Ensure optional regulator is properly disabled when present.
 > 
-> Sinan Kaya (4):
->   dma: qcom_hidma: implement lower level hardware interface
->   dma: qcom_hidma: add debugfs hooks
->   dma: qcom_hidma: add support for object hierarchy
->   dma: qcom_hidma: read the channel id from HW
+> Fixes: 63d5d525cbbc ("iio:magnetometer:ak8975: power regulator support")
+> Signed-off-by: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Applied to the togreg branch of iio.git
 
-Any reason why you insist on using subsystem name as dma even when asked to
-change..
+Thanks,
 
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+>  drivers/iio/magnetometer/ak8975.c | 78 ++++++++++++++++++++++++++++++---------
+>  1 file changed, 60 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/iio/magnetometer/ak8975.c b/drivers/iio/magnetometer/ak8975.c
+> index 72c03d9..48d127a 100644
+> --- a/drivers/iio/magnetometer/ak8975.c
+> +++ b/drivers/iio/magnetometer/ak8975.c
+> @@ -370,8 +370,40 @@ struct ak8975_data {
+>  	wait_queue_head_t	data_ready_queue;
+>  	unsigned long		flags;
+>  	u8			cntl_cache;
+> +	struct regulator	*vdd;
+>  };
+>  
+> +/* Enable attached power regulator if any. */
+> +static int ak8975_power_on(struct i2c_client *client)
+> +{
+> +	const struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct ak8975_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	data->vdd = devm_regulator_get(&client->dev, "vdd");
+> +	if (IS_ERR_OR_NULL(data->vdd)) {
+> +		ret = PTR_ERR(data->vdd);
+> +		if (ret == -ENODEV)
+> +			ret = 0;
+> +	} else {
+> +		ret = regulator_enable(data->vdd);
+> +	}
+> +
+> +	if (ret)
+> +		dev_err(&client->dev, "failed to enable Vdd supply: %d\n", ret);
+> +	return ret;
+> +}
+> +
+> +/* Disable attached power regulator if any. */
+> +static void ak8975_power_off(const struct i2c_client *client)
+> +{
+> +	const struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	const struct ak8975_data *data = iio_priv(indio_dev);
+> +
+> +	if (!IS_ERR_OR_NULL(data->vdd))
+> +		regulator_disable(data->vdd);
+> +}
+> +
+>  /*
+>   * Return 0 if the i2c device is the one we expect.
+>   * return a negative error number otherwise
+> @@ -380,23 +412,8 @@ static int ak8975_who_i_am(struct i2c_client *client,
+>  			   enum asahi_compass_chipset type)
+>  {
+>  	u8 wia_val[2];
+> -	struct regulator *vdd = devm_regulator_get_optional(&client->dev,
+> -							    "vdd");
+>  	int ret;
+>  
+> -	/* Enable attached regulator if any. */
+> -	if (!IS_ERR(vdd)) {
+> -		ret = regulator_enable(vdd);
+> -		if (ret) {
+> -			dev_err(&client->dev, "Failed to enable Vdd supply\n");
+> -			return ret;
+> -		}
+> -	} else {
+> -		ret = PTR_ERR(vdd);
+> -		if (ret != -ENODEV)
+> -			return ret;
+> -	}
+> -
+>  	/*
+>  	 * Signature for each device:
+>  	 * Device   |  WIA1      |  WIA2
+> @@ -804,10 +821,15 @@ static int ak8975_probe(struct i2c_client *client,
+>  	}
+>  
+>  	data->def = &ak_def_array[chipset];
+> +
+> +	err = ak8975_power_on(client);
+> +	if (err)
+> +		return err;
+> +
+>  	err = ak8975_who_i_am(client, data->def->type);
+>  	if (err < 0) {
+>  		dev_err(&client->dev, "Unexpected device\n");
+> -		return err;
+> +		goto power_off;
+>  	}
+>  	dev_dbg(&client->dev, "Asahi compass chip %s\n", name);
+>  
+> @@ -815,7 +837,7 @@ static int ak8975_probe(struct i2c_client *client,
+>  	err = ak8975_setup(client);
+>  	if (err < 0) {
+>  		dev_err(&client->dev, "%s initialization fails\n", name);
+> -		return err;
+> +		goto power_off;
+>  	}
+>  
+>  	mutex_init(&data->lock);
+> @@ -825,7 +847,26 @@ static int ak8975_probe(struct i2c_client *client,
+>  	indio_dev->info = &ak8975_info;
+>  	indio_dev->modes = INDIO_DIRECT_MODE;
+>  	indio_dev->name = name;
+> -	return devm_iio_device_register(&client->dev, indio_dev);
+> +
+> +	err = iio_device_register(indio_dev);
+> +	if (err)
+> +		goto power_off;
+> +
+> +	return 0;
+> +
+> +power_off:
+> +	ak8975_power_off(client);
+> +	return err;
+> +}
+> +
+> +static int ak8975_remove(struct i2c_client *client)
+> +{
+> +	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +
+> +	iio_device_unregister(indio_dev);
+> +	ak8975_power_off(client);
+> +
+> +	return 0;
+>  }
+>  
+>  static const struct i2c_device_id ak8975_id[] = {
+> @@ -859,6 +900,7 @@ static struct i2c_driver ak8975_driver = {
+>  		.acpi_match_table = ACPI_PTR(ak_acpi_match),
+>  	},
+>  	.probe		= ak8975_probe,
+> +	.remove		= ak8975_remove,
+>  	.id_table	= ak8975_id,
+>  };
+>  module_i2c_driver(ak8975_driver);
+> 
