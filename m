@@ -1,32 +1,124 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: at91: use chipid device for soc detection
-Date: Sat, 19 Mar 2016 19:45:37 -0500
-Message-ID: <20160320004537.GA9151@rob-hp-laptop>
-References: <1458285681-25684-1-git-send-email-ludovic.desroches@atmel.com>
+Subject: Re: [PATCH v5 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
+Date: Sat, 19 Mar 2016 19:50:39 -0500
+Message-ID: <20160320005039.GA10937@rob-hp-laptop>
+References: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458285681-25684-1-git-send-email-ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1458299032-31929-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 08:21:19AM +0100, Ludovic Desroches wrote:
-> So far, the CIDR and EXID registers were in the DBGU interface. This device
-> has disappeared with the SAMA5D2 family. These registers are exposed
-> through a new device called chipid.
+On Fri, Mar 18, 2016 at 04:03:51AM -0700, Amitkumar Karwar wrote:
+> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: remove useless warnings]
+> Add device tree binding documentation for MARVELL's sd8xxx
+> (sd8897 and sd8997) wlan chip.
+> 
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../devicetree/bindings/arm/atmel-at91.txt         |  4 ++
->  arch/arm/mach-at91/soc.c                           | 81 +++++++++++++++++-----
->  2 files changed, 67 insertions(+), 18 deletions(-)
+> Listing changelist for both 1/2 and 2/2 patches
+> v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
+> 
+> v4: a)Corrected the 'name' and 'compatible' property names.(Arnd Bergmann and Rob
+>     Herring)
+>     b)Patch description wraped in 72 columns(Rob Herring)
+>     c)Moved DT binding file to bindings/net/wireless/(Rob Herring)
+>     d)Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
+>     Arnd Bergmann)
+>     e)Replaced #ifdef with __maybe_unused(Arnd Bergmann)
+> 
+> v5: a)Removed wildcards from compatible string(Arnd Bergmann)
+>     b)Prepared single patch for all binding changes(Rob Herring)
+>     c)Specified our node as a subnode of SDIO controller. With this approach, we
+>     don't need to register new platform driver. (Rob herring)
+> ---
+>  .../bindings/net/wireless/marvell-sd8xxx.txt       | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> new file mode 100644
+> index 0000000..c43d488
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> @@ -0,0 +1,56 @@
+> +Marvell 8897/8997 (sd8897/sd8997) SDIO devices
+> +------
+> +
+> +This node provides properties for controlling the marvell sdio wireless device.
+> +The node is expected to be specified as a child node to the SDIO controller that
+> +connects the device to the system.
+> +
+> +Required properties:
+> +
+> +  - compatible : should be one of the following:
+> +	* "marvell,sd8897"
+> +	* "marvell,sd8997"
+> +
+> +Optional properties:
+> +
+> +  - marvell,caldata* : A series of properties with marvell,caldata prefix,
+> +  		      represent Calibration data downloaded to the device during
+> +		      initialization. This is an array of unsigned values.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+You need to list out the specific property names and size of the data.
+
+> +  - marvell,wakeup-pin : 'wakeuppin' is a wakeup pin number of wifi chip which will
+> +  		      be configured to firmware. firmware will wakeup host side use
+> +  		      the pin during suspend/resume stage.
+> +  - interrupt-parent: phandle of the parent interrupt controller
+> +  - interrupts : interrupt pin number to the cpu. driver will request an irq based on
+> +  		 this interrupt number. during system suspend, the irq will be enabled
+> +  		 as system wakeup source, so that the wifi chip can wakeup host
+> +  		 platform under certain condition. during system resume, the irq will
+> +  		 be disabled to make sure unnecessary interrupt is not received.
+> +
+> +Example:
+> +
+> +Tx power limit calibration data is configured in below example.
+> +The calibration data is an array of unsigned values, the length
+> +can vary between hw versions.
+> +IRQ pin 38 is used as system wakeup source interrupt. wakeup pin 3 is configured
+> +so that firmware can wakeup host using this device side pin.
+> +
+> +&mmc3 {
+> +	status = "okay";
+> +	vmmc-supply = <&wlan_en_reg>;
+> +	bus-width = <4>;
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	mwifiex: mwifiex@3 {
+
+The unit address and reg value don't match. IIRC, the correct value is 
+the SDIO function number.
+
+> +		compatible = "marvell,sd8897";
+> +		reg = <1>;
+> +		interrupt-parent = <&pio>;
+> +		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +		marvell,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
+> +	0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01>;
+> +		marvell,wakeup-pin = <3>;
+> +	};
+> +};
+> -- 
+> 1.8.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
