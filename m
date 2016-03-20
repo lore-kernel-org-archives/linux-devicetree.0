@@ -1,34 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] pwm: pwm-tiehrpwm: Update dt binding document to
- use generic node name
-Date: Sat, 19 Mar 2016 19:40:18 -0500
-Message-ID: <20160320004018.GA7611@rob-hp-laptop>
-References: <1458263723-25770-1-git-send-email-fcooper@ti.com>
- <1458263723-25770-4-git-send-email-fcooper@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3] ARC: [dts] Introduce Timer bindings
+Date: Sat, 19 Mar 2016 19:42:12 -0500
+Message-ID: <20160320004212.GA8061@rob-hp-laptop>
+References: <20160317162421.GA21947@rob-hp-laptop>
+ <1458278789-18924-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458263723-25770-4-git-send-email-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: thierry.reding@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, t-kristo@ti.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+In-Reply-To: <1458278789-18924-1-git-send-email-vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 08:15:23PM -0500, Franklin S Cooper Jr wrote:
-> Now that the node name has been changed from ehrpwm to pwm the document
-> should show this proper usage. Also change the unit address in the example
-> from 0 to the proper physical address value that should be used.
+On Fri, Mar 18, 2016 at 10:56:29AM +0530, Vineet Gupta wrote:
+> ARC Timers have historically been probed directly.
+> As precursor to start probing Timers thru DT introduce these bindings
+> Note that to keep series bisectable, these bindings are not yet used in
+> code.
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 > ---
-> Version 3 changes:
-> N/A
-> 
-> Version 2 changes:
-> Changed the unit address for da850 to match the value in the reg property.
-> 
->  Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> v3:
+>  - Renamed Node name to avoid new warnings when unit address used w/o regs [Rob]
+> v2:
+>  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-March/000653.html
+>  - snps,arc-timer[0-1] folded into single snps-arc-timer	[Rob]
+>  - Node name in DT example fixed:				[Rob]
+>      "timer1: timer_clksrc {" -> timer@1 {
+>  - Introduced 64bit RTC in skeleton_hs.dtsi			[Vineet]
+> v1:
+>  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-February/000447.html
+> ---
+>  .../devicetree/bindings/timer/snps,arc-timer.txt   | 32 ++++++++++++++++++++++
+>  .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 ++++++++++
+>  .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 ++++++++++
+>  arch/arc/boot/dts/abilis_tb10x.dtsi                | 14 ++++++++++
+>  arch/arc/boot/dts/skeleton.dtsi                    | 14 ++++++++++
+>  arch/arc/boot/dts/skeleton_hs.dtsi                 | 20 ++++++++++++++
+>  arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 14 ++++++++++
+>  7 files changed, 122 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
+>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
