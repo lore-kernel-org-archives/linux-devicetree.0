@@ -1,130 +1,95 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 6/8] ARM: dts: sun8i: Add leds and switches on
- Orangepi Plus boards
-Date: Sun, 20 Mar 2016 17:00:34 +0100
-Message-ID: <1458489636-2825-7-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 4/8] ARM: dts: sun8i: Enable USB host controllers on Orangepi Plus boards
+Date: Sun, 20 Mar 2016 17:00:32 +0100
+Message-ID: <1458489636-2825-5-git-send-email-hdegoede@redhat.com>
 References: <1458489636-2825-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBRESXO3QKGQELX4BRAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1458489636-2825-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Krzysztof Adamski <k@japko.eu>
+From: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-OrangePi Plus board has two leds - green ("pwr") and red ("status")
-and two switches ("sw4" and "sw2"). This patch describes them in
-devicetree.
+Enable the 2 USB host controllers used on the Orange Pi Plus
+and add the necessary regulators.
 
-Signed-off-by: Krzysztof Adamski <k@japko.eu>
+Signed-off-by: Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Changes in v6 (hdegoede):
--Merge leds and r_leds nodes into one
--Fix led labels to be in <board>:<colour>:<role> form
--Alphabetically sort the added nodes
--Add support for sw2 (this is the small reset-like button)
----
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 44 ++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index a680b1f..a7cdfd0 100644
+index e67df59..1cb6c66 100644
 --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
 +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -45,6 +45,7 @@
- #include "sunxi-common-regulators.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
-@@ -59,6 +60,43 @@
+@@ -58,6 +58,35 @@
+ 	chosen {
  		stdout-path = "serial0:115200n8";
  	};
- 
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		input-name = "sw4";
 +
++	reg_usb3_vbus: usb3-vbus {
++		compatible = "regulator-fixed";
 +		pinctrl-names = "default";
-+		pinctrl-0 = <&sw_r_opc>;
-+
-+		sw2@0 {
-+			label = "sw2";
-+			linux,code = <BTN_1>;
-+			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sw4@0 {
-+			label = "sw4";
-+			linux,code = <BTN_0>;
-+			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-+		};
++		pinctrl-0 = <&usb3_vbus_pin_a>;
++		regulator-name = "usb3-vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++		enable-active-high;
++		gpio = <&pio 6 11 GPIO_ACTIVE_HIGH>;
 +	};
++};
 +
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
++&ehci1 {
++	status = "okay";
++};
 +
-+		status_led {
-+			label = "orangepi-plus:red:status";
-+			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
-+		};
++&ehci3 {
++	status = "okay";
++};
 +
-+		pwr_led {
-+			label = "orangepi-plus:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
++&pio {
++	usb3_vbus_pin_a: usb3_vbus_pin@0 {
++		allwinner,pins = "PG11";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 +	};
-+
- 	reg_usb3_vbus: usb3-vbus {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -72,6 +110,31 @@
- 	};
  };
  
-+&pio {
-+	leds_opc: led_pins@0 {
-+		allwinner,pins = "PA15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&r_pio {
-+	leds_r_opc: led_pins@0 {
-+		allwinner,pins = "PL10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	sw_r_opc: key_pins@0 {
-+		allwinner,pins = "PL03", "PL04";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
- &ehci1 {
+ &mmc0 {
+@@ -70,8 +99,23 @@
  	status = "okay";
  };
+ 
++&reg_usb1_vbus {
++	gpio = <&pio 6 13 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+ 	status = "okay";
+ };
++
++&usb1_vbus_pin_a {
++	allwinner,pins = "PG13";
++};
++
++&usbphy {
++	usb1_vbus-supply = <&reg_usb1_vbus>;
++	usb3_vbus-supply = <&reg_usb3_vbus>;
++	status = "okay";
++};
 -- 
 2.7.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
