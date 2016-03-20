@@ -1,91 +1,125 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
-Date: Sat, 19 Mar 2016 19:50:39 -0500
-Message-ID: <20160320005039.GA10937@rob-hp-laptop>
-References: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless
+ device
+Date: Sat, 19 Mar 2016 19:55:35 -0500
+Message-ID: <20160320005535.GA13586@rob-hp-laptop>
+References: <1458299084-31976-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458299032-31929-1-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1458299084-31976-1-git-send-email-akarwar@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amitkumar Karwar <akarwar@marvell.com>
+Cc: linux-bluetooth@vger.kernel.org, Cathy Luo <cluo@marvell.com>, linux-kernel@vger.kernel.org, Nishant Sarmukadam <nishants@marvell.com>, devicetree@vger.kernel.org, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 04:03:51AM -0700, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+On Fri, Mar 18, 2016 at 04:04:43AM -0700, Amitkumar Karwar wrote:
+> From: Xinming Hu <huxm@marvell.com>
 > 
-> Add device tree binding documentation for MARVELL's sd8xxx
-> (sd8897 and sd8997) wlan chip.
+> Add device tree binding documentation for MARVELL's bluetooth sdio
+> (sd8897 and sd8997) chip.
 > 
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Xinming Hu <huxm@marvell.com>
+> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
 > ---
-> Listing changelist for both 1/2 and 2/2 patches
-> v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
+> Listing changelist for both 1/2 and 2/2 here
+> v2: Fixed build error reported by kbuild test robot
+> drivers/bluetooth/btmrvl_platform.c:141:22: error:
+> 'btmrvl_plt_pm_ops' undeclared here (not in a function)
 > 
-> v4: a)Corrected the 'name' and 'compatible' property names.(Arnd Bergmann and Rob
->     Herring)
->     b)Patch description wraped in 72 columns(Rob Herring)
->     c)Moved DT binding file to bindings/net/wireless/(Rob Herring)
->     d)Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
->     Arnd Bergmann)
->     e)Replaced #ifdef with __maybe_unused(Arnd Bergmann)
+> v3: Add NULL check for 'btmrvl_plt_dev'
 > 
-> v5: a)Removed wildcards from compatible string(Arnd Bergmann)
->     b)Prepared single patch for all binding changes(Rob Herring)
->     c)Specified our node as a subnode of SDIO controller. With this approach, we
->     don't need to register new platform driver. (Rob herring)
+> v4: Moved the bindings file to bindings/net/
+>     Corrected the name of 'name' and 'compatible' properties(Rob Herring)
+> 
+> v5: Comments for wlan patches were applicable here as well. Like all binding
+>     changes in single file, specifying node as a child of SDIO controller.
 > ---
->  .../bindings/net/wireless/marvell-sd8xxx.txt       | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+>  Documentation/devicetree/bindings/btmrvl.txt       | 29 ------------
+>  .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 55 ++++++++++++++++++++++
+>  2 files changed, 55 insertions(+), 29 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/btmrvl.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+> diff --git a/Documentation/devicetree/bindings/btmrvl.txt b/Documentation/devicetree/bindings/btmrvl.txt
+> deleted file mode 100644
+> index 58f964b..0000000
+> --- a/Documentation/devicetree/bindings/btmrvl.txt
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -btmrvl
+> -------
+> -
+> -Required properties:
+> -
+> -  - compatible : must be "btmrvl,cfgdata"
+> -
+> -Optional properties:
+> -
+> -  - btmrvl,cal-data : Calibration data downloaded to the device during
+> -		      initialization. This is an array of 28 values(u8).
+> -
+> -  - btmrvl,gpio-gap : gpio and gap (in msecs) combination to be
+> -		      configured.
+> -
+> -Example:
+> -
+> -GPIO pin 13 is configured as a wakeup source and GAP is set to 100 msecs
+> -in below example.
+> -
+> -btmrvl {
+> -	compatible = "btmrvl,cfgdata";
+> -
+> -	btmrvl,cal-data = /bits/ 8 <
+> -		0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
+> -		0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
+> -		0x00 0x00 0xf0 0x00>;
+> -	btmrvl,gpio-gap = <0x0d64>;
+> -};
+> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
 > new file mode 100644
-> index 0000000..c43d488
+> index 0000000..b031431
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
-> @@ -0,0 +1,56 @@
-> +Marvell 8897/8997 (sd8897/sd8997) SDIO devices
+> +++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> @@ -0,0 +1,55 @@
+> +Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
 > +------
-> +
-> +This node provides properties for controlling the marvell sdio wireless device.
-> +The node is expected to be specified as a child node to the SDIO controller that
-> +connects the device to the system.
 > +
 > +Required properties:
 > +
 > +  - compatible : should be one of the following:
-> +	* "marvell,sd8897"
-> +	* "marvell,sd8997"
+> +	* "marvell,bt-sd8897"
+> +	* "marvell,bt-sd8997"
+
+<chip>-bt would be preferred order.
+
 > +
 > +Optional properties:
 > +
-> +  - marvell,caldata* : A series of properties with marvell,caldata prefix,
-> +  		      represent Calibration data downloaded to the device during
-> +		      initialization. This is an array of unsigned values.
+> +  - btmrvl,cal-data : Calibration data downloaded to the device during
+> +		      initialization. This is an array of 28 values(u8).
+> +
+> +  - btmrvl,wakeuppin-gap : wakeup pin and gap (in msecs) combination to be
+> +		      configured to firmware. 'wakeuppin' is a wakeup pin number
+> +		      of bluetooth chip. 'gap' is a wakeup latency of a host platform.
+> +		      This is needed to work chip's sleep feature as expected.
 
-You need to list out the specific property names and size of the data.
+Make this 2 properties.
 
-> +  - marvell,wakeup-pin : 'wakeuppin' is a wakeup pin number of wifi chip which will
-> +  		      be configured to firmware. firmware will wakeup host side use
-> +  		      the pin during suspend/resume stage.
 > +  - interrupt-parent: phandle of the parent interrupt controller
 > +  - interrupts : interrupt pin number to the cpu. driver will request an irq based on
 > +  		 this interrupt number. during system suspend, the irq will be enabled
-> +  		 as system wakeup source, so that the wifi chip can wakeup host
+> +  		 as system wakeup source, so that the bluetooth chip can wakeup host
 > +  		 platform under certain condition. during system resume, the irq will
 > +  		 be disabled to make sure unnecessary interrupt is not received.
 > +
 > +Example:
 > +
-> +Tx power limit calibration data is configured in below example.
-> +The calibration data is an array of unsigned values, the length
-> +can vary between hw versions.
-> +IRQ pin 38 is used as system wakeup source interrupt. wakeup pin 3 is configured
-> +so that firmware can wakeup host using this device side pin.
+> +IRQ pin 119 is used as system wakeup source interrupt.
+> +wakeuppin 13 and gap 100ms are configured so that firmware can wakeup host
+> +using this device side pin and wakeup latency.
+> +calibration data is also available in below example.
 > +
 > +&mmc3 {
 > +	status = "okay";
@@ -96,29 +130,27 @@ You need to list out the specific property names and size of the data.
 > +
 > +	#address-cells = <1>;
 > +	#size-cells = <0>;
-> +	mwifiex: mwifiex@3 {
+> +	btmrvl: btmrvl@3 {
+> +		compatible = "marvell,bt-sd8897";
+> +		reg = <2>;
 
-The unit address and reg value don't match. IIRC, the correct value is 
-the SDIO function number.
+Same unit-address and reg mismatch.
 
-> +		compatible = "marvell,sd8897";
-> +		reg = <1>;
 > +		interrupt-parent = <&pio>;
-> +		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
 > +
-> +		marvell,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
-> +	0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01>;
-> +		marvell,wakeup-pin = <3>;
+> +		btmrvl,cal-data = /bits/ 8 <
+> +			0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
+> +			0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
+> +			0x00 0x00 0xf0 0x00>;
+> +		btmrvl,wakeuppin-gap = <0x0d64>;
 > +	};
 > +};
+> +
 > -- 
 > 1.8.1.4
 > 
 > --
 > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
