@@ -1,156 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless
- device
-Date: Sat, 19 Mar 2016 19:55:35 -0500
-Message-ID: <20160320005535.GA13586@rob-hp-laptop>
-References: <1458299084-31976-1-git-send-email-akarwar@marvell.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v3 1/3] dt-bindings: soc: Add documentation for the
+ MediaTek GCE unit
+Date: Sat, 19 Mar 2016 19:58:12 -0500
+Message-ID: <20160320005812.GA16265@rob-hp-laptop>
+References: <1458300434-14438-1-git-send-email-hs.liao@mediatek.com>
+ <1458300434-14438-2-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458299084-31976-1-git-send-email-akarwar@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amitkumar Karwar <akarwar@marvell.com>
-Cc: linux-bluetooth@vger.kernel.org, Cathy Luo <cluo@marvell.com>, linux-kernel@vger.kernel.org, Nishant Sarmukadam <nishants@marvell.com>, devicetree@vger.kernel.org, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>
+In-Reply-To: <1458300434-14438-2-git-send-email-hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Josh-YC Liu <josh-yc.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Glory Hung <glory.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jiaguang Zhang <jiaguang.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 04:04:43AM -0700, Amitkumar Karwar wrote:
-> From: Xinming Hu <huxm@marvell.com>
+On Fri, Mar 18, 2016 at 07:27:12PM +0800, HS Liao wrote:
+> This adds documentation for the MediaTek Global Command Engine (GCE) unit
+> found in MT8173 SoCs.
 > 
-> Add device tree binding documentation for MARVELL's bluetooth sdio
-> (sd8897 and sd8997) chip.
-> 
-> Signed-off-by: Xinming Hu <huxm@marvell.com>
-> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
+> Signed-off-by: HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
-> Listing changelist for both 1/2 and 2/2 here
-> v2: Fixed build error reported by kbuild test robot
-> drivers/bluetooth/btmrvl_platform.c:141:22: error:
-> 'btmrvl_plt_pm_ops' undeclared here (not in a function)
-> 
-> v3: Add NULL check for 'btmrvl_plt_dev'
-> 
-> v4: Moved the bindings file to bindings/net/
->     Corrected the name of 'name' and 'compatible' properties(Rob Herring)
-> 
-> v5: Comments for wlan patches were applicable here as well. Like all binding
->     changes in single file, specifying node as a child of SDIO controller.
-> ---
->  Documentation/devicetree/bindings/btmrvl.txt       | 29 ------------
->  .../devicetree/bindings/net/marvell-bt-sd8xxx.txt  | 55 ++++++++++++++++++++++
->  2 files changed, 55 insertions(+), 29 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/btmrvl.txt
->  create mode 100644 Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/btmrvl.txt b/Documentation/devicetree/bindings/btmrvl.txt
-> deleted file mode 100644
-> index 58f964b..0000000
-> --- a/Documentation/devicetree/bindings/btmrvl.txt
-> +++ /dev/null
-> @@ -1,29 +0,0 @@
-> -btmrvl
-> -------
-> -
-> -Required properties:
-> -
-> -  - compatible : must be "btmrvl,cfgdata"
-> -
-> -Optional properties:
-> -
-> -  - btmrvl,cal-data : Calibration data downloaded to the device during
-> -		      initialization. This is an array of 28 values(u8).
-> -
-> -  - btmrvl,gpio-gap : gpio and gap (in msecs) combination to be
-> -		      configured.
-> -
-> -Example:
-> -
-> -GPIO pin 13 is configured as a wakeup source and GAP is set to 100 msecs
-> -in below example.
-> -
-> -btmrvl {
-> -	compatible = "btmrvl,cfgdata";
-> -
-> -	btmrvl,cal-data = /bits/ 8 <
-> -		0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
-> -		0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
-> -		0x00 0x00 0xf0 0x00>;
-> -	btmrvl,gpio-gap = <0x0d64>;
-> -};
-> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> new file mode 100644
-> index 0000000..b031431
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
-> @@ -0,0 +1,55 @@
-> +Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
-> +------
-> +
-> +Required properties:
-> +
-> +  - compatible : should be one of the following:
-> +	* "marvell,bt-sd8897"
-> +	* "marvell,bt-sd8997"
+>  .../devicetree/bindings/soc/mediatek/gce.txt       |   34 ++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/gce.txt
 
-<chip>-bt would be preferred order.
+I already acked this. Please add acks when posting subsequent versions.
 
-> +
-> +Optional properties:
-> +
-> +  - btmrvl,cal-data : Calibration data downloaded to the device during
-> +		      initialization. This is an array of 28 values(u8).
-> +
-> +  - btmrvl,wakeuppin-gap : wakeup pin and gap (in msecs) combination to be
-> +		      configured to firmware. 'wakeuppin' is a wakeup pin number
-> +		      of bluetooth chip. 'gap' is a wakeup latency of a host platform.
-> +		      This is needed to work chip's sleep feature as expected.
-
-Make this 2 properties.
-
-> +  - interrupt-parent: phandle of the parent interrupt controller
-> +  - interrupts : interrupt pin number to the cpu. driver will request an irq based on
-> +  		 this interrupt number. during system suspend, the irq will be enabled
-> +  		 as system wakeup source, so that the bluetooth chip can wakeup host
-> +  		 platform under certain condition. during system resume, the irq will
-> +  		 be disabled to make sure unnecessary interrupt is not received.
-> +
-> +Example:
-> +
-> +IRQ pin 119 is used as system wakeup source interrupt.
-> +wakeuppin 13 and gap 100ms are configured so that firmware can wakeup host
-> +using this device side pin and wakeup latency.
-> +calibration data is also available in below example.
-> +
-> +&mmc3 {
-> +	status = "okay";
-> +	vmmc-supply = <&wlan_en_reg>;
-> +	bus-width = <4>;
-> +	cap-power-off-card;
-> +	keep-power-in-suspend;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	btmrvl: btmrvl@3 {
-> +		compatible = "marvell,bt-sd8897";
-> +		reg = <2>;
-
-Same unit-address and reg mismatch.
-
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
-> +
-> +		btmrvl,cal-data = /bits/ 8 <
-> +			0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
-> +			0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
-> +			0x00 0x00 0xf0 0x00>;
-> +		btmrvl,wakeuppin-gap = <0x0d64>;
-> +	};
-> +};
-> +
-> -- 
-> 1.8.1.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
