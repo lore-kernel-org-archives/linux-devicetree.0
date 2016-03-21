@@ -1,82 +1,130 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/5] drm/vc4: Add DPI driver
-Date: Mon, 21 Mar 2016 07:57:45 -0500
-Message-ID: <20160321125745.GA16407@rob-hp-laptop>
-References: <1458355366-7073-1-git-send-email-eric@anholt.net>
- <1458355366-7073-5-git-send-email-eric@anholt.net>
+Subject: Re: [PATCH 2/4 v3] drm: Add DT bindings documentation for ARC PGU
+ display controller
+Date: Mon, 21 Mar 2016 08:04:19 -0500
+Message-ID: <20160321130419.GA23913@rob-hp-laptop>
+References: <1457710959-9562-1-git-send-email-abrodkin@synopsys.com>
+ <1457710959-9562-3-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458355366-7073-5-git-send-email-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1457710959-9562-3-git-send-email-abrodkin@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMTgsIDIwMTYgYXQgMDc6NDI6NDVQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gVGhlIERQSSBpbnRlcmZhY2UgaW52b2x2ZXMgdGFraW5nIGEgdG9uIG9mIG91ciBHUElP
-cyB0byBiZSB1c2VkIGFzCj4gb3V0cHV0cywgYW5kIHJvdXRpbmcgZGlzcGxheSBzaWduYWxzIG92
-ZXIgdGhlbSBpbiBwYXJhbGxlbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJp
-Y0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-Y20sYmNtLXZjNC50eHQgICB8ICA2NyArKysKPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmln
-ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0L01h
-a2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS92
-YzQvdmM0X2RlYnVnZnMuYyAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUv
-ZHJtL3ZjNC92YzRfZHBpLmMgICAgICAgICAgICAgICAgICAgICAgfCA1MTggKysrKysrKysrKysr
-KysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jICAgICAgICAgICAgICAg
-ICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmggICAgICAgICAg
-ICAgICAgICAgICAgfCAgIDUgKwo+ICA3IGZpbGVzIGNoYW5nZWQsIDU5NCBpbnNlcnRpb25zKCsp
-Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcGkuYwo+IAo+
-IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmNtLGJjbS12YzQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJjbSxiY20tdmM0LnR4dAo+IGluZGV4IDU2YTk2MWEuLjE3ODJjM2YgMTAwNjQ0Cj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0
-LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
-Y20sYmNtLXZjNC50eHQKPiBAQCAtMzUsNiArMzUsNDQgQEAgT3B0aW9uYWwgcHJvcGVydGllcyBm
-b3IgSERNSToKPiAgCQkgIGFzIGFuIGludGVycnVwdC9zdGF0dXMgYml0IGluIHRoZSBIRE1JIGNv
-bnRyb2xsZXIKPiAgCQkgIGl0c2VsZikuICBTZWUgYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTI4
-MzUtZ3Bpby50eHQKPiAgCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIERQSToKPiArLSBjb21w
-YXRpYmxlOgkJU2hvdWxkIGJlICJicmNtLGJjbTI4MzUtZHBpIgo+ICstIHJlZzoJCQlQaHlzaWNh
-bCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXJzCj4gKy0gY2xvY2tzOgkJ
-YSkgY29yZTogVGhlIGNvcmUgY2xvY2sgdGhlIHVuaXQgcnVucyBvbgo+ICsJCQliKSBwaXhlbDog
-VGhlIHBpeGVsIGNsb2NrIHRoYXQgZmVlZHMgdGhlIHBpeGVsdmFsdmUKPiArLSBwb3J0OgkJCVBv
-cnQgbm9kZSB3aXRoIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5lY3RpbmcgdG8gdGhlCj4gKwkJCSAg
-cGFuZWwgZGV2aWNlLCBhcyBkZWZpbmVkIGluIFsxXQo+ICstIGJyY20sb3V0cHV0LWZvcm1hdDoJ
-T3V0cHV0IGRhdGEgZm9ybWF0LCBtdXN0IGJlIG9uZSBvZjoKPiArCQkJMCkgZGlzYWJsZWQKPiAr
-CQkJMSkgMDAwMDAwMDBycnJycmdnZ2dnZ2JiYmJiCj4gKwkJCTIpIDAwMHJycnJyMDBnZ2dnZ2cw
-MDBiYmJiYgo+ICsJCQkzKSAwMHJycnJyMDAwZ2dnZ2dnMDBiYmJiYjAKPiArCQkJNCkgMDAwMDAw
-cnJycnJyZ2dnZ2dnYmJiYmJiCj4gKwkJCTUpIDAwcnJycnJyMDBnZ2dnZ2cwMGJiYmJiYgo+ICsJ
-CQk2KSBycnJycnJycmdnZ2dnZ2dnYmJiYmJiYmIKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXMg
-Zm9yIERQSToKPiArLSBicmNtLHJnYi1vcmRlcjoJCVJHQiByZW9yZGVyaW5nLCBtdXN0IGJlIG9u
-ZSBvZjoKPiArCQkJCTApIFJHQgo+ICsJCQkJMSkgQkdSCj4gKwkJCQkyKSBHUkIKPiArCQkJCTMp
-IEJSRwoKPiArLSBicmNtLGhzeW5jLWRpc2FibGU6CQlEaXNhYmxlcyB0aGUgaHN5bmMgc2lnbmFs
-Cj4gKy0gYnJjbSx2c3luYy1kaXNhYmxlOgkJRGlzYWJsZXMgdGhlIHZzeW5jIHNpZ25hbAo+ICst
-IGJyY20sb3V0cHV0LWVuYWJsZS1kaXNhYmxlOglEaXNhYmxlcyB0aGUgb3V0cHV0IGVuYWJsZSBz
-aWduYWwKPiArLSBicmNtLGhzeW5jLWZhbGxpbmc6CQlPdXRwdXRzIHRoZSBoc3luYyBzaWduYWwg
-b24gdGhlIGZhbGxpbmcgY2xrIGVkZ2UKPiArLSBicmNtLHZzeW5jLWZhbGxpbmc6CQlPdXRwdXRz
-IHRoZSB2c3luYyBzaWduYWwgb24gdGhlIGZhbGxpbmcgY2xrIGVkZ2UKPiArLSBicmNtLG91dHB1
-dC1lbmFibGUtZmFsbGluZzoJT3V0cHV0cyB0aGUgb3V0cHV0IGVuYWJsZSBzaWduYWwgb24gdGhl
-Cj4gKwkJCQkgIGZhbGxpbmcgY2xrIGVkZ2UKPiArLSBicmNtLG91dHB1dC1lbmFibGUtaW52ZXJ0
-OglJbnZlcnRzIHRoZSBwb2xhcml0eSBvZiB0aGUgb3V0cHV0IGVuYWJsZQo+ICsJCQkJICBzaWdu
-YWwKPiArLSBicmNtLHBpeGVsLWNsay1pbnZlcnQ6CUludmVydHMgdGhlIHBvbGFyaXR5IG9mIHRo
-ZSBwaXhlbCBjbGsgc2lnbmFsCj4gKy0gYnJjbSxvdXRwdXQtZW5hYmxlLW1vZGU6CVNldHMgb3V0
-cHV0IGVuYWJsZSB3aGVuICh2c3luYyB8IGhzeW5jKQo+ICsJCQkJICBpbnN0ZWFkIG9mIChoYWN0
-aXZlICYgdmFjdGl2ZSkKClRoZXNlIGFyZSBhbGwgcmVhbGx5IHByb3BlcnRpZXMgb2Ygd2hhdCB0
-aGUgcGFuZWwgcmVxdWlyZXMgYW5kIHdlIAphbHJlYWR5IGhhdmUgdmlkZW8gdGltaW5ncyBiaW5k
-aW5nIHRoYXQgd291bGQgY292ZXIgc29tZSBvZiB0aGVzZS4KCkFsc28sIGRvIHlvdSBoYXZlIGFj
-dHVhbCB1c2Vycz8gU29tZSBvZiB0aGVzZSBzZWVtIGxpa2UgdGhleSB3b3VsZCBiZSAKcmFyZSBv
-ciBuZXZlci4gSSd2ZSBub3Qgc2VlbiBwYW5lbHMgY2FyaW5nIGFib3V0IHdoaWNoIGNsb2NrIGVk
-Z2UgdGhlIApzeW5jIHNpZ25hbHMgYXJlIG9uLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Mar 11, 2016 at 06:42:37PM +0300, Alexey Brodkin wrote:
+> This add DT bindings documentation for ARC PGU display controller.
+> 
+> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-snps-arc@lists.infradead.org
+> ---
+> 
+> Changes v2 -> v3:
+>  * Reverted back to initial larger version of example
+>    with minor fixes (thanks Rob for spotting those).
+> 
+> Changes v1 -> v2:
+>  * Removed everything except PGU node itself.
+> 
+>  .../devicetree/bindings/display/snps,arcpgu.txt    | 72 ++++++++++++++++++++++
+>  1 file changed, 72 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
+> new file mode 100644
+> index 0000000..b130924
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
+> @@ -0,0 +1,72 @@
+> +ARC PGU
+> +
+> +This is a display controller found on several development boards produced
+> +by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
+> +framebuffer and sends it to a single digital encoder (usually HDMI).
+> +
+> +Required properties:
+> +  - compatible: "snps,arcpgu"
+> +  - reg: Physical base address and length of the controller's registers.
+> +  - clocks: A list of phandle + clock-specifier pairs, one for each
+> +    entry in 'clock-names'.
+> +  - clock-names: A list of clock names. For ARC PGU it should contain:
+> +      - "pxlclk" for the clock feeding the output PLL of the controller.
+> +  - encoder-slave: Phandle of encoder chip.
+
+Drop this as discussed.
+
+> +
+> +Required sub-nodes:
+> +  - port: The PGU connection to an encoder chip.
+> +
+> +Example:
+> +
+> +/ {
+> +	...
+> +
+> +	pgu@XXXXXXXX {
+> +		compatible = "snps,arcpgu";
+> +		reg = <0xXXXXXXXX 0x400>;
+> +		clocks = <&clock_node>;
+> +		clock-names = "pxlclk";
+> +		encoder-slave = <&encoder_node>;
+> +
+> +		port {
+> +			pgu_output: endpoint {
+> +				remote-endpoint = <&hdmi_enc_input>;
+> +			};
+> +		};
+> +	};
+> +
+> +	/* HDMI encoder on I2C bus */
+> +	i2c@XXXXXXXX {
+> +		compatible = "...";
+> +
+> +		encoder_node:encoder_node@0xXX{
+
+Don't use underscores in node names. Just "hdmi@xx"
+
+> +			compatible="...";
+> +
+> +			ports {
+> +				port@0 {
+> +					reg = <0>;
+> +					hdmi_enc_input:endpoint {
+> +						remote-endpoint = <&pgu_output>;
+> +					};
+> +				};
+> +
+> +				port@1 {
+> +					reg = <1>;
+> +					hdmi_enc_output:endpoint {
+> +						remote-endpoint = <&hdmi_connector_in>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +	}
+> +
+> +	hdmi0: connector {
+> +		compatible = "hdmi-connector";
+> +
+> +		port {
+> +			hdmi_connector_in: endpoint {
+> +				remote-endpoint = <&hdmi_enc_output>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.5.0
+> 
