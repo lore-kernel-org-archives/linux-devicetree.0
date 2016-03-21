@@ -1,104 +1,180 @@
-From: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: Add mdio node to ethernet node
-Date: Mon, 21 Mar 2016 09:32:58 +0100
-Message-ID: <CAOf5uw=jUeh0YDQu2SFjMsRzVH-WaXeZoq5mAbAQwD_dwttjnA@mail.gmail.com>
-References: <1458300056-6174-1-git-send-email-tomeu.vizoso@collabora.com>
-	<56EC744F.90308@suse.de>
-	<CAAObsKBXuTw37YJb+Fhq_NgZw2rjPQ14phF1yRG+N2mEu9uBmw@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup
+	for sidetone
+Date: Mon, 21 Mar 2016 10:38:52 +0200
+Message-ID: <56EFB31C.9090103@ti.com>
+References: <1458296929-718-1-git-send-email-peter.ujfalusi@ti.com>
+ <alpine.DEB.2.02.1603191908070.6629@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAObsKBXuTw37YJb+Fhq_NgZw2rjPQ14phF1yRG+N2mEu9uBmw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <alpine.DEB.2.02.1603191908070.6629@utopia.booyaka.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Jarkko Nikula <jarkko.nikula@bitmer.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Paul,
 
-On Mon, Mar 21, 2016 at 9:23 AM, Tomeu Vizoso
-<tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
-> On 18 March 2016 at 22:34, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wro=
-te:
->> Am 18.03.2016 um 12:20 schrieb Tomeu Vizoso:
->>> So the dwmac device manages to probe again.
->>>
->>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>> Fixes: 88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression")
->>> ---
->>>  arch/arm/boot/dts/rk3288-rock2-som.dtsi | 8 ++++++++
->>>  1 file changed, 8 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boo=
-t/dts/rk3288-rock2-som.dtsi
->>> index 1ece66f3e162..4ba7ddecb478 100644
->>> --- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
->>> +++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
->>> @@ -101,6 +101,14 @@
->>>       snps,reset-delays-us =3D <0 10000 30000>;
->>>       rx_delay =3D <0x10>;
->>>       tx_delay =3D <0x30>;
->>> +     mdio0 {
->>> +             #address-cells =3D <1>;
->>> +             #size-cells =3D <0>;
->>> +             compatible =3D "snps,dwmac-mdio";
->>> +             ethphy1: ethernet-phy@1 {
->>> +                     reg =3D <1>;
->>> +             };
->>> +     };
->>
->> This is a) ugly for lack of white lines in between, b) unnecessary s=
-ince
->> this is being fixed in the stmmac driver where it will benefit more =
-than
->> just this one SoM.
->
-> So is this redundant information, or just not necessary with the
-> present kernel driver because of some assumption in its current
-> implementation?
->
+On 03/19/16 21:31, Paul Walmsley wrote:
+> On Fri, 18 Mar 2016, Peter Ujfalusi wrote:
+> =
 
-I have the same fix on my firefly tree. Look likes correct and describe=
- the
-connection
+>> The series addresses a long standing issue with McBSP2/3 regarding to hw=
+mod
+>> setup. When booting with DT a warning is printed that mcbsp2/3 is using =
+two
+>> hwmod.
+>> The root of the issue is the way how the hwmod data was constructed in t=
+he first
+>> place for OMAP3 McBSP2/3.
+>> After re-reading the TRM it is clear that the sidetone should not have i=
+t's
+>> own hwmod data as it is not a separate IP, it is part of the McBSP modul=
+e.
+> =
 
-Michael
+> Odd.  I come to exactly the opposite conclusion from reading the TRM.
 
-> Thanks,
->
-> Tomeu
->
->> Regards,
->> Andreas
->>
->>>  };
->>>
->>>  &i2c0 {
->>
->> --
->> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
->> GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 =
-(AG N=C3=BCrnberg)
->
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+I was looking at the Figure 21-2 in chapter 21.1.2 SIDETONE core:
+McBSP2/3 module consist of McBSP core + SIDETONE core.
 
+In fact the SIDETONE blocks clearly should be hwmods, according to the
+> documentation.
+> =
 
+> Consider:
+> =
 
---=20
-| Michael Nazzareno Trimarchi                     Amarula Solutions BV =
-|
-| COO  -  Founder                                      Cruquiuskade 47 =
-|
-| +31(0)851119172                                 Amsterdam 1018 AM NL =
-|
-|                  [`as] http://www.amarulasolutions.com               =
-|
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1. The SIDETONE blocks have their own L4 ports - as documented in the =
+
+> OMAP36xx public TRM rev Z,  Table 2-5 "L4-Peripheral Memory Space".
+
+The SIDETONE feature is an addition on top of 'standard' McBSP
+
+> 2. The SIDETONE blocks have different register access width restrictions =
+
+> from the McBSP.  Ibid., Table 2-7 "Register Access Restrictions".
+
+Yes, this is odd. McBSP is 32bits and the McBSP sidetone is 8/16/32bits
+
+> 3. The SIDETONE blocks have distinct L4-Per firewall region IDs from thei=
+r =
+
+> corresponding McBSP IP blocks.  Ibid., Table 9-114 "Region Allocation for =
+
+> L4-Per Interconnect".
+
+This is also interesting:
+McBSP2 sidetone is in region 39 and 40 (module and L4 interconnect) which is
+unique in case of OMAP34xx and OMAP35xx, but it is overlapping with GPIO6 on
+OMAP36xx. Not sure what are the implications.
+
+> 4. The SIDETONE blocks have their own L4 target interconnect agents.  =
+
+> Table 9-128 "L4-Per Instance Summary"
+
+As they are different in the memory map.
+
+> 5. The SIDETONE blocks have their own MPU IRQ lines, distinct from the =
+
+> McBSP block IRQ lines.  Table 12-4 "Interrupt Mapping to the MPU =
+
+> Subsystem"
+
+Well, all McBSP have 3 distinct MPU IRQ lines: combined, RX, TX (McBSP2:
+combined: 17, TX: 62, RX: 63 for example). This does not make the McBSP RX =
+and
+TX different IP block.
+
+> 6. The SIDETONE IP block register target space is distinct from the =
+
+> corresponding McBSP address ranges.  Table 21-36 "McBSP Instance Summary"
+
+Yes, they are as it is an additional feature integrated into only McBSP2/3 =
+module.
+
+> 7. The SIDETONE IP blocks have their own "TI OCP" integration registers.  =
+
+> Table 21-134 "ST_REV_REG", Table 21-136 "ST_SYSCONFIG_REG".
+
+Which does not work in a way it is supposed to work.
+As per the TRM (SWPU177T - OMAP36xx) 21.3.2.2.6:
+McBSPi.ST_SYSCONFIG_REG[0] AUTOIDLE bit:
+- When this bit is asserted (set to 1), the McBSPi_ICLK clock auto-gating is
+enabled and this clock is disabled internally to the SIDETONE feature, thus
+reducing power consumption, but not to the McBSP module that contains this
+feature.
+After reset, the automatic clock gating is enabled; thus, this bit must be
+disabled by software for activated SIDETONE feature.
+- When this bit is set to 0, the McBSPi_ICLK clock auto-gating is disabled =
+and
+this clock is enabled. The SIDETONE feature can be used normally.
+
+The important part being: "When this bit is asserted (set to 1), the
+McBSPi_ICLK clock auto-gating is enabled and this clock is disabled interna=
+lly
+to the SIDETONE feature"
+
+In my reading the McBSPi.ST_SYSCONFIG_REG[0] AUTOIDLE is internal to McBSP
+module and it will not affect the PRCM level of gating the McBSP2/3_ICLK. M=
+ost
+likely the actual plan was that by setting this bit the McBSP core should
+prevent the ICLK auto gating, but it is - as you know - not working that wa=
+y.
+
+> A better solution to the warnings you mention at the top of the message i=
+s =
+
+> to provide a separate low-level McBSP SIDETONE IP block device driver, =
+
+> distinct from the existing McBSP low-level IP block driver.
+
+If we treat the McBSP sidetone as a distinct module (which is not) of OMAP3:
+we will have two hwmods and two drivers poking with the same PRCM registers=
+ as
+we need this for the sidetone: if it is enabled we need to disable the
+autoidle for the McBSP_ICLK for the given McBSP module the sidetone is part=
+ of.
+The sidetone can be enabled/disabled any time when McBSP is active so if we
+have McBSP running and we enable the sidetone the McBSP_ICLK should not idl=
+e,
+when the sidetone is disabled and McBSP is still in use we can not disable =
+the
+McBSP in PRCM level, but we can enable the ICLK autoidle.
+
+>> It can not affect PRCM either since it's SYSCONFIG register's AUTOIDLE =
+
+>> bit is only sets the autoidle from the internal McBSP_iclk clock to the =
+
+>> sidetone block of the same McBSP.
+> =
+
+> Can't parse this - could you try again?  Are you referring to the erratum =
+
+> where someone forgot to hook up the SIDETONE idle signals to the PRCM, an=
+d =
+
+> the MCBSP_ICLK has to be manually kept active when the SIDETONE block is =
+
+> active?
+
+Probably there is an errata for this, but 21.3.2.2.6 tells that the
+McBSPi.ST_SYSCONFIG[0] AUTOIDLE is working internally to the SIDETONE featu=
+re.
+The intention must have been that in case the SIDETONE is in use, the McBSP
+module itself should prevent the autoidle, but it is not. We all know that
+this is not going to be fixed by new revision.
+
+-- =
+
+P=E9ter
