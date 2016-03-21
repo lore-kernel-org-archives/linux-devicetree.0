@@ -1,12 +1,13 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v2 1/5] clk: sunxi: mod1 clock should modify it's parent
-Date: Mon, 21 Mar 2016 17:10:38 +0100
-Message-ID: <1458576642-4078-2-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v2 3/5] ARM: dts: sunxi: Add the SPDIF to the A10
+ and A20
+Date: Mon, 21 Mar 2016 17:10:40 +0100
+Message-ID: <1458576642-4078-4-git-send-email-codekipper@gmail.com>
 References: <1458576642-4078-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBBV2YC3QKGQEC6PBHRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBCN2YC3QKGQEBSYLYFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458576642-4078-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -16,30 +17,103 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrea Venturi <ennesimamail.av-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-add CLK_SET_RATE_PARENT to modify the rate on clk upstream
+Add the SPDIF transceiver controller and clock to the A10 and
+A20 dtsi.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/clk/sunxi/clk-a10-mod1.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/sun4i-a10.dtsi | 24 ++++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 24 ++++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
 
-diff --git a/drivers/clk/sunxi/clk-a10-mod1.c b/drivers/clk/sunxi/clk-a10-mod1.c
-index e9d870d..e2819fa 100644
---- a/drivers/clk/sunxi/clk-a10-mod1.c
-+++ b/drivers/clk/sunxi/clk-a10-mod1.c
-@@ -62,7 +62,7 @@ static void __init sun4i_mod1_clk_setup(struct device_node *node)
- 	clk = clk_register_composite(NULL, clk_name, parents, i,
- 				     &mux->hw, &clk_mux_ops,
- 				     NULL, NULL,
--				     &gate->hw, &clk_gate_ops, 0);
-+				     &gate->hw, &clk_gate_ops, CLK_SET_RATE_PARENT);
- 	if (IS_ERR(clk))
- 		goto err_free_gate;
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 0483640..be5f2b2 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -477,6 +477,17 @@
+ 			clock-output-names = "ir1";
+ 		};
  
++		spdif_clk: clk@01c200c0 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod1-clk";
++			reg = <0x01c200c0 0x4>;
++			clocks = <&pll2 SUN4I_A10_PLL2_8X>,
++				 <&pll2 SUN4I_A10_PLL2_4X>,
++				 <&pll2 SUN4I_A10_PLL2_2X>,
++				 <&pll2 SUN4I_A10_PLL2_1X>;
++			clock-output-names = "spdif";
++		};
++
+ 		usb_clk: clk@01c200cc {
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+@@ -1055,6 +1066,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		spdif: spdif@01c21000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun4i-a10-spdif";
++			reg = <0x01c21000 0x400>;
++			interrupts = <13>;
++			clocks = <&apb0_gates 1>, <&spdif_clk>;
++			clock-names = "apb", "spdif";
++			dmas = <&dma SUN4I_DMA_NORMAL 2>,
++			       <&dma SUN4I_DMA_NORMAL 2>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		ir0: ir@01c21800 {
+ 			compatible = "allwinner,sun4i-a10-ir";
+ 			clocks = <&apb0_gates 6>, <&ir0_clk>;
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 7264d5e..ebce332 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -476,6 +476,17 @@
+ 			clock-output-names = "ir1";
+ 		};
+ 
++		spdif_clk: clk@01c200c0 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-mod1-clk";
++			reg = <0x01c200c0 0x4>;
++			clocks = <&pll2 SUN4I_A10_PLL2_8X>,
++				 <&pll2 SUN4I_A10_PLL2_4X>,
++				 <&pll2 SUN4I_A10_PLL2_2X>,
++				 <&pll2 SUN4I_A10_PLL2_1X>;
++			clock-output-names = "spdif";
++		};
++
+ 		keypad_clk: clk@01c200c4 {
+ 			#clock-cells = <0>;
+ 			compatible = "allwinner,sun4i-a10-mod0-clk";
+@@ -1247,6 +1258,19 @@
+ 			status = "disabled";
+ 		};
+ 
++		spdif: spdif@01c21000 {
++			#sound-dai-cells = <0>;
++			compatible = "allwinner,sun4i-a10-spdif";
++			reg = <0x01c21000 0x400>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&apb0_gates 1>, <&spdif_clk>;
++			clock-names = "apb", "spdif";
++			dmas = <&dma SUN4I_DMA_NORMAL 2>,
++			       <&dma SUN4I_DMA_NORMAL 2>;
++			dma-names = "rx", "tx";
++			status = "disabled";
++		};
++
+ 		ir0: ir@01c21800 {
+ 			compatible = "allwinner,sun4i-a10-ir";
+ 			clocks = <&apb0_gates 6>, <&ir0_clk>;
 -- 
 2.7.4
