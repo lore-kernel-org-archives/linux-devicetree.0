@@ -1,109 +1,90 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v7] ARM: dts: sun8i: Add leds and
- switches on Orangepi Plus boards
-Date: Mon, 21 Mar 2016 12:57:47 +0100
-Message-ID: <56EFE1BB.2010500@redhat.com>
-References: <1458500102-11071-1-git-send-email-hdegoede@redhat.com>
- <20160321075930.GA30977@lukather>
+From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Mon, 21 Mar 2016 13:11:35 +0100
+Message-ID: <CAGhQ9Vzuhj7_Pdq80ij0jFNTPK-3VSFD_2eQCifiQnUdMeKNSg@mail.gmail.com>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
+	<1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
+	<CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
+	<CAJgp7zxyQGrSSvNszawBQfS+omgKi1i35uW-eDyLdW-jP7oRjg@mail.gmail.com>
+	<CAGb2v64V_Km+i62L=L3nuzANX1eMhC2eBvKCZuVqEFdWqeTHLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160321075930.GA30977@lukather>
+In-Reply-To: <CAGb2v64V_Km+i62L=L3nuzANX1eMhC2eBvKCZuVqEFdWqeTHLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Alexandre Torgue <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chen-Yu,
 
-On 21-03-16 08:59, Maxime Ripard wrote:
-> Hi,
->
-> On Sun, Mar 20, 2016 at 07:55:02PM +0100, Hans de Goede wrote:
->> From: Krzysztof Adamski <k@japko.eu>
+On 21 March 2016 at 12:08, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> On Mon, Mar 21, 2016 at 6:45 PM, Alexandre Torgue
+> <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi,
 >>
->> OrangePi Plus board has two leds - green ("pwr") and red ("status")
->> and two switches ("sw4" and "sw2"). This patch describes them in
->> devicetree.
+>> 2016-03-18 17:00 GMT+01:00 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
+>>> Hi,
+>>>
+>>> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+>>> <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>>>> new file mode 100644
+>>>> index 0000000..ada2aa4
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>>>> @@ -0,0 +1,32 @@
+>>>> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+>>>> +
+>>>> +This file documents platform glue layer for stmmac.
+>>>> +Please see stmmac.txt for the other unchanged properties.
+>>>> +
+>>>> +The device node has following properties.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+>>>> +              "snps,dwmac-3.50a" to select IP vesrion.
+
+s/vesrion/version
+
+>>>
+>>> If you need have sort of hardware glue, then it is not compatible.
+>>>
 >>
->> Signed-off-by: Krzysztof Adamski <k@japko.eu>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> We could have the case where the glue is set by a bootloader.
+>> In this case, we will select IP version in compatible and we will use
+>> generic dwmac glue to probe stmmac driver.
 >
-> An earlier version has already been sent for 4.6, please base your
-> changes on top of this one.
-
-Ah, I missed that one because it is not in your for-next branch!
-
-It is only in sunxi-dt-for-4.6.
-
-> And there's a bunch of things I didn't catch at that time :/
-
-I'll cherry-pick the patch you've in sunxi-dt-for-4.6 into
-my tree and send a fixup patch to apply on top.
-
-Regards,
-
-Hans
-
-
-
-
+> It seems most platforms using DWMAC follow this design set by
+> the original stmmac bindings. I'm arguing that the requirement
+> of setting up the glue makes them incompatible.
 >
->> ---
->> Changes in v6 (hdegoede):
->> -Merge leds and r_leds nodes into one
->> -Fix led labels to be in <board>:<colour>:<role> form
->> -Alphabetically sort the added nodes
->> -Add support for sw2 (this is the small reset-like button)
->> Changes in v7 (hdegoede):
->> -Use PL3 / PL4 in the pinctrl node, not PL03 / PL04
->> ---
->>   arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
->>   1 file changed, 63 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> index a680b1f..9d8c038 100644
->> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> @@ -45,6 +45,7 @@
->>   #include "sunxi-common-regulators.dtsi"
->>
->>   #include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/input/input.h>
->>   #include <dt-bindings/pinctrl/sun4i-a10.h>
->>
->>   / {
->> @@ -59,6 +60,43 @@
->>   		stdout-path = "serial0:115200n8";
->>   	};
->>
->> +	gpio_keys {
->> +		compatible = "gpio-keys";
->> +		input-name = "sw4";
+> What happens when the bootloader didn't setup the glue? And one
+> forgets to build the STM32 driver, only the generic one? The
+> generic driver even matches to some, but not all, version
+> strings.
 >
-> This is an undocumented (and apparently unused) property
->
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&sw_r_opc>;
->> +
->> +		sw2@0 {
->
-> You shouldn't have a unit-address here
->
->> +			label = "sw2";
->> +			linux,code = <BTN_1>;
->> +			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		sw4@0 {
->
-> Ditto.
->
-> Thanks!
-> Maxime
->
+> Maybe it would've been better if the versioned strings were
+> only used to indicate functionality, and not used to bind
+> the drivers. But the bindings were set some time ago.
+
+Since Alexandre has not added "snps,dwmac-3.50a" to dwmac-generic
+doesn't he use it as you suggest here?
+
+Note that we can not remove all the generic compatible strings from
+dwmac-generic because there is one platform that depend on one of
+them.
+(see arch/arm/boot/dts/exynos5440.dtsi:190)
+
+So we can not remove "snps,dwmac-3.70a" from the dwmac-generic driver
+if we want to keep backwards compatibility with exynos5440. But I
+guess we could remove the others if we want to.
+
+
+regards,
+Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
