@@ -1,74 +1,45 @@
-From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 7/8] ARM: dts: sun4i: Add SPDIF to the Mele A1000
-Date: Mon, 21 Mar 2016 21:01:05 +0100
-Message-ID: <1458590466-12572-8-git-send-email-codekipper@gmail.com>
-References: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
-Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
+Date: Mon, 21 Mar 2016 13:21:07 -0700
+Message-ID: <20160321202107.GO9329@atomide.com>
+References: <1458296929-718-1-git-send-email-peter.ujfalusi@ti.com>
+ <alpine.DEB.2.02.1603191908070.6629@utopia.booyaka.com>
+ <56EFB31C.9090103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBDVGYG3QKGQEHOWF3CI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1458590466-12572-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56EFB31C.9090103-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hi,
 
-Enable the S/PDIF transmitter that is present on the A1000.
+* Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> [160321 01:39]:
+> 
+> This is also interesting:
+> McBSP2 sidetone is in region 39 and 40 (module and L4 interconnect) which is
+> unique in case of OMAP34xx and OMAP35xx, but it is overlapping with GPIO6 on
+> OMAP36xx. Not sure what are the implications.
 
-Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10-a1000.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Hmm GPIO6 is in a different L4 segment though? Maybe
+you did not account for the segments?
 
-diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-index 97570cb..c92a1ae 100644
---- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
-+++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
-@@ -87,6 +87,24 @@
- 		enable-active-high;
- 		gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;
- 	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board SPDIF";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&spdif>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&spdif_out>;
-+		};
-+	};
-+
-+	spdif_out: spdif-out {
-+		#sound-dai-cells = <0>;
-+		compatible = "linux,spdif-dit";
-+	};
- };
- 
- &ahci {
-@@ -188,6 +206,12 @@
- 	status = "okay";
- };
- 
-+&spdif {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spdif_tx_pins_a>;
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.7.4
+0x49000000 + 0x20000 + 0x2000/0x4000/0x6000 for McBSP
+0x49000000 + 0x50000 + 0x8000 for GPIO6
+
+Or maybe I don't understand at which physical address the
+overlap is? :)
+
+Let me know if you need me to dump out the IO ranges for
+you from the AP table for 34xx and 36xx.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
