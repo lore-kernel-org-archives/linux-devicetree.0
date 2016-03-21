@@ -1,106 +1,70 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v7] ARM: dts: sun8i: Add leds and
- switches on Orangepi Plus boards
-Date: Mon, 21 Mar 2016 23:16:08 +0100
-Message-ID: <56F072A8.7060305@redhat.com>
-References: <1458500102-11071-1-git-send-email-hdegoede@redhat.com>
- <20160321075930.GA30977@lukather>
+From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] iio:magnetometer:ak8975: mounting matrix support
+Date: Mon, 21 Mar 2016 23:21:50 +0100
+Message-ID: <20160321222150.GA1787@geburah.sephiroth>
+References: <cover.1458231723.git.gregor.boirie@parrot.com>
+ <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie@parrot.com>
+ <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160321075930.GA30977@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Rob,
 
-On 21-03-16 08:59, Maxime Ripard wrote:
-> Hi,
+On Mon, Mar 21, 2016 at 09:58:46AM -0500, Rob Herring wrote:
+> On Thu, Mar 17, 2016 at 11:43 AM, Gregor Boirie
+> <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> wrote:
+> > Expose a rotation matrix to indicate userspace the chip placement with
+> > respect to the overall hardware system. This is needed to adjust
+> > coordinates sampled from a magnetometer chip when its position deviates
+> > from the main hardware system.
+> >
+> > Final coordinates computation is delegated to userspace since:
+> > * computation may involve floating point arithmetics ;
+> > * it allows an application to combine adjustments with arbitrary
+> >   transformations.
+> >
+> > This 3 dimentional space rotation matrix is expressed as 3x3 array of
+> > strings to support floating point numbers. It may be retrieved from a
+> > "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
+> > entry as a "matrix" property.
 >
-> On Sun, Mar 20, 2016 at 07:55:02PM +0100, Hans de Goede wrote:
->> From: Krzysztof Adamski <k@japko.eu>
->>
->> OrangePi Plus board has two leds - green ("pwr") and red ("status")
->> and two switches ("sw4" and "sw2"). This patch describes them in
->> devicetree.
->>
->> Signed-off-by: Krzysztof Adamski <k@japko.eu>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->
-> An earlier version has already been sent for 4.6, please base your
-> changes on top of this one.
->
-> And there's a bunch of things I didn't catch at that time :/
-
-As promised I will send a fixup patch for this, I was wondering
-if you can push your current queue, where you've already merged
-my other orangepi-plus patches somewhere, so that I can base this
-fixup patch on top of it ?
-
-Regards,
-
-Hans
-
+> Why is the sysfs interface specific to ak8975?
+AFAIK, this is just the first IIO driver implementation relying on floating
+point numbers. Should a single driver be enough to justify a "generic" API,
+I suppose code could be factored out in a similar way to over sampling rate
+support. People could call this on a per-driver basis.
 
 >
->> ---
->> Changes in v6 (hdegoede):
->> -Merge leds and r_leds nodes into one
->> -Fix led labels to be in <board>:<colour>:<role> form
->> -Alphabetically sort the added nodes
->> -Add support for sw2 (this is the small reset-like button)
->> Changes in v7 (hdegoede):
->> -Use PL3 / PL4 in the pinctrl node, not PL03 / PL04
->> ---
->>   arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
->>   1 file changed, 63 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> index a680b1f..9d8c038 100644
->> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
->> @@ -45,6 +45,7 @@
->>   #include "sunxi-common-regulators.dtsi"
->>
->>   #include <dt-bindings/gpio/gpio.h>
->> +#include <dt-bindings/input/input.h>
->>   #include <dt-bindings/pinctrl/sun4i-a10.h>
->>
->>   / {
->> @@ -59,6 +60,43 @@
->>   		stdout-path = "serial0:115200n8";
->>   	};
->>
->> +	gpio_keys {
->> +		compatible = "gpio-keys";
->> +		input-name = "sw4";
+> Furthermore, why is it specific to magnetometer? Couldn't
+> accelerometers need the same thing? There's a thread discussing a
+> similar matrix on android-x86[1].
+Same may apply to gyro / accelero / imu and magnetometers at least.
+inv_mpu_core.c already implements such a rotation matrix exposed as 3x3 integers
+array. Should we be smart enough to keep this compatible with existing userspace
+apps ?
+
 >
-> This is an undocumented (and apparently unused) property
+> > diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > index 34a3206..f936f86 100644
+> > --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+> > @@ -9,6 +9,7 @@ Optional properties:
+> >
+> >    - gpios : should be device tree identifier of the magnetometer DRDY pin
+> >    - vdd-supply: an optional regulator that needs to be on to provide VDD
+> > +  - matrix: an optional 3x3 mounting rotation matrix
 >
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&sw_r_opc>;
->> +
->> +		sw2@0 {
->
-> You shouldn't have a unit-address here
->
->> +			label = "sw2";
->> +			linux,code = <BTN_1>;
->> +			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
->> +		};
->> +
->> +		sw4@0 {
->
-> Ditto.
->
-> Thanks!
-> Maxime
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Perhaps "rotation-matrx" would be a better name in case there's ever
+> any other matrix needed.
+What about "mounting-matrix" ?
+> 
+> Rob
+> 
+> [1] https://groups.google.com/forum/#!msg/android-x86/LaKhV8cT69o/G1rrVU0_JAAJ
