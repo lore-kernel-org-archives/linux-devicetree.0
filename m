@@ -1,69 +1,88 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Mon, 21 Mar 2016 17:28:38 +0800
-Message-ID: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Yakir Yang <ykk@rock-chips.com>
+Subject: [RFC PATCH v1 1/4] drm: rockchip: add a common subdrv interfaces
+Date: Mon, 21 Mar 2016 17:38:03 +0800
+Message-ID: <1458553083-26535-1-git-send-email-ykk@rock-chips.com>
+References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi, Mark and all.
-
-This patch set would add the RGA direct rendering based 2d graphics
-acceleration module.
-
-This patch set is based on git repository below:
-git://people.freedesktop.org/~airlied/linux drm-next
-commit id: 568d7c764ae01f3706085ac8f0d8a8ac7e826bd7
-
-And the RGA driver is based on Exynos G2D driver, it only manages the
-command lists received from user, so user should make the command list
-to data and registers needed by operation to use.
-
-I have prepared an userspace demo application for testing:
-	https://github.com/yakir-Yang/libdrm-rockchip
-That is a rockchip libdrm library, and I have write a simple test case
-"rockchip_rga_test" that would test the below RGA features:
-- solid
-- copy
-- rotation
-- flip
-- window clip
-- dithering
-
-Thanks,
-- Yakir
-
-
-Yakir Yang (4):
-  drm: rockchip: add a common subdrv interfaces
-  drm: rockchip: add RGA driver support
-  ARM: dts: rockchip: add RGA device node for RK3288
-  ARM: dst: rockchip: enable RGA support on veyron devices
-
- .../bindings/display/rockchip/rockchip-rga.txt     |  36 +
- arch/arm/boot/dts/rk3288-veyron.dtsi               |   4 +
- arch/arm/boot/dts/rk3288.dtsi                      |  13 +
- drivers/gpu/drm/rockchip/Kconfig                   |   9 +
- drivers/gpu/drm/rockchip/Makefile                  |   1 +
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  82 ++
- drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |  19 +
- drivers/gpu/drm/rockchip/rockchip_drm_rga.c        | 977 +++++++++++++++++++++
- drivers/gpu/drm/rockchip/rockchip_drm_rga.h        | 108 +++
- include/uapi/drm/rockchip_drm.h                    |  63 ++
- 10 files changed, 1312 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rga.txt
- create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_rga.c
- create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_rga.h
- create mode 100644 include/uapi/drm/rockchip_drm.h
-
--- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SW50cm9kdWNlIGEgY29tbW9uIHN1YmRydiByZWdpc3Rlci91bnJlZ2lzdGVyIGludGVyZmFjZXMs
+IGhlbHAKZXh0ZXJuYWwgZHJpdmVyIHRvIGhvb2sgdGhlIGRybSBvcGVuL2Nsb3NlIGV2ZW50LgoK
+U2lnbmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgotLS0KIGRyaXZl
+cnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMgfCA0OSArKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9k
+cnYuaCB8IDE1ICsrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspCgpk
+aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuYyBi
+L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fZHJ2LmMKaW5kZXggODk2ZGEw
+OS4uNGUwZmViMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlw
+X2RybV9kcnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Ry
+di5jCkBAIC0zNiw2ICszNiw4IEBACiAjZGVmaW5lIERSSVZFUl9NQUpPUgkxCiAjZGVmaW5lIERS
+SVZFUl9NSU5PUgkwCiAKK3N0YXRpYyBMSVNUX0hFQUQocm9ja2NoaXBfZHJtX3N1YmRydl9saXN0
+KTsKKwogLyoKICAqIEF0dGFjaCBhIChjb21wb25lbnQpIGRldmljZSB0byB0aGUgc2hhcmVkIGRy
+bSBkbWEgbWFwcGluZyBmcm9tIG1hc3RlciBkcm0KICAqIGRldmljZS4gIFRoaXMgaXMgdXNlZCBi
+eSB0aGUgVk9QcyB0byBtYXAgR0VNIGJ1ZmZlcnMgdG8gYSBjb21tb24gRE1BCkBAIC0yNTEsNiAr
+MjUzLDUxIEBAIHN0YXRpYyBpbnQgcm9ja2NoaXBfZHJtX3VubG9hZChzdHJ1Y3QgZHJtX2Rldmlj
+ZSAqZHJtX2RldikKIAlyZXR1cm4gMDsKIH0KIAoraW50IHJvY2tjaGlwX3JlZ2lzdGVyX3N1YmRy
+dihzdHJ1Y3QgZHJtX3JvY2tjaGlwX3N1YmRydiAqc3ViZHJ2KQoreworCWlmICghc3ViZHJ2KQor
+CQlyZXR1cm4gLUVJTlZBTDsKKworCWxpc3RfYWRkX3RhaWwoJnN1YmRydi0+bGlzdCwgJnJvY2tj
+aGlwX2RybV9zdWJkcnZfbGlzdCk7CisKKwlyZXR1cm4gMDsKK30KK0VYUE9SVF9TWU1CT0xfR1BM
+KHJvY2tjaGlwX3JlZ2lzdGVyX3N1YmRydik7CisKK2ludCByb2NrY2hpcF91bnJlZ2lzdGVyX3N1
+YmRydihzdHJ1Y3QgZHJtX3JvY2tjaGlwX3N1YmRydiAqc3ViZHJ2KQoreworCWlmICghc3ViZHJ2
+KQorCQlyZXR1cm4gLUVJTlZBTDsKKworCWxpc3RfZGVsKCZzdWJkcnYtPmxpc3QpOworCisJcmV0
+dXJuIDA7Cit9CitFWFBPUlRfU1lNQk9MX0dQTChyb2NrY2hpcF91bnJlZ2lzdGVyX3N1YmRydik7
+CisKK3N0YXRpYyBpbnQgcm9ja2NoaXBfZHJtX29wZW4oc3RydWN0IGRybV9kZXZpY2UgKmRldiwg
+c3RydWN0IGRybV9maWxlICpmaWxlKQoreworCXN0cnVjdCBkcm1fcm9ja2NoaXBfc3ViZHJ2ICpz
+dWJkcnY7CisJaW50IHJldCA9IDA7CisKKwlsaXN0X2Zvcl9lYWNoX2VudHJ5KHN1YmRydiwgJnJv
+Y2tjaGlwX2RybV9zdWJkcnZfbGlzdCwgbGlzdCkgeworCQlyZXQgPSBzdWJkcnYtPm9wZW4oZGV2
+LCBzdWJkcnYtPmRldiwgZmlsZSk7CisJCWlmIChyZXQpCisJCQlyZXR1cm4gcmV0OworCX0KKwor
+CXJldHVybiAwOworfQorCitzdGF0aWMgdm9pZCByb2NrY2hpcF9kcm1fcHJlY2xvc2Uoc3RydWN0
+IGRybV9kZXZpY2UgKmRldiwKKwkJCQkgIHN0cnVjdCBkcm1fZmlsZSAqZmlsZSkKK3sKKwlzdHJ1
+Y3QgZHJtX3JvY2tjaGlwX3N1YmRydiAqc3ViZHJ2OworCisJbGlzdF9mb3JfZWFjaF9lbnRyeShz
+dWJkcnYsICZyb2NrY2hpcF9kcm1fc3ViZHJ2X2xpc3QsIGxpc3QpCisJCXN1YmRydi0+Y2xvc2Uo
+ZGV2LCBzdWJkcnYtPmRldiwgZmlsZSk7Cit9CisKIHZvaWQgcm9ja2NoaXBfZHJtX2xhc3RjbG9z
+ZShzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQogewogCXN0cnVjdCByb2NrY2hpcF9kcm1fcHJpdmF0
+ZSAqcHJpdiA9IGRldi0+ZGV2X3ByaXZhdGU7CkBAIC0yODEsNiArMzI4LDggQEAgc3RhdGljIHN0
+cnVjdCBkcm1fZHJpdmVyIHJvY2tjaGlwX2RybV9kcml2ZXIgPSB7CiAJCQkJICBEUklWRVJfUFJJ
+TUUgfCBEUklWRVJfQVRPTUlDLAogCS5sb2FkCQkJPSByb2NrY2hpcF9kcm1fbG9hZCwKIAkudW5s
+b2FkCQkJPSByb2NrY2hpcF9kcm1fdW5sb2FkLAorCS5vcGVuCQkJPSByb2NrY2hpcF9kcm1fb3Bl
+biwKKwkucHJlY2xvc2UJCT0gcm9ja2NoaXBfZHJtX3ByZWNsb3NlLAogCS5sYXN0Y2xvc2UJCT0g
+cm9ja2NoaXBfZHJtX2xhc3RjbG9zZSwKIAkuZ2V0X3ZibGFua19jb3VudGVyCT0gZHJtX3ZibGFu
+a19ub19od19jb3VudGVyLAogCS5lbmFibGVfdmJsYW5rCQk9IHJvY2tjaGlwX2RybV9jcnRjX2Vu
+YWJsZV92YmxhbmssCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2No
+aXBfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYu
+aAppbmRleCAzNTI5ZjY5Li41ZWE1ZmNiIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9y
+b2NrY2hpcF9kcm1fZHJ2LmgKQEAgLTQyLDYgKzQyLDE3IEBAIHN0cnVjdCByb2NrY2hpcF9jcnRj
+X2Z1bmNzIHsKIAl2b2lkICgqd2FpdF9mb3JfdXBkYXRlKShzdHJ1Y3QgZHJtX2NydGMgKmNydGMp
+OwogfTsKIAorc3RydWN0IGRybV9yb2NrY2hpcF9zdWJkcnYgeworCXN0cnVjdCBsaXN0X2hlYWQg
+bGlzdDsKKwlzdHJ1Y3QgZGV2aWNlICpkZXY7CisJc3RydWN0IGRybV9kZXZpY2UgKmRybV9kZXY7
+CisKKwlpbnQgKCpvcGVuKShzdHJ1Y3QgZHJtX2RldmljZSAqZHJtX2Rldiwgc3RydWN0IGRldmlj
+ZSAqZGV2LAorCQkgICAgc3RydWN0IGRybV9maWxlICpmaWxlKTsKKwl2b2lkICgqY2xvc2UpKHN0
+cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LCBzdHJ1Y3QgZGV2aWNlICpkZXYsCisJCSAgICAgIHN0
+cnVjdCBkcm1fZmlsZSAqZmlsZSk7Cit9OworCiBzdHJ1Y3Qgcm9ja2NoaXBfYXRvbWljX2NvbW1p
+dCB7CiAJc3RydWN0IHdvcmtfc3RydWN0CXdvcms7CiAJc3RydWN0IGRybV9hdG9taWNfc3RhdGUg
+KnN0YXRlOwpAQCAtNzMsNCArODQsOCBAQCBpbnQgcm9ja2NoaXBfZHJtX2RtYV9hdHRhY2hfZGV2
+aWNlKHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAogCQkJCSAgIHN0cnVjdCBkZXZpY2UgKmRl
+dik7CiB2b2lkIHJvY2tjaGlwX2RybV9kbWFfZGV0YWNoX2RldmljZShzdHJ1Y3QgZHJtX2Rldmlj
+ZSAqZHJtX2RldiwKIAkJCQkgICAgc3RydWN0IGRldmljZSAqZGV2KTsKKworaW50IHJvY2tjaGlw
+X3JlZ2lzdGVyX3N1YmRydihzdHJ1Y3QgZHJtX3JvY2tjaGlwX3N1YmRydiAqc3ViZHJ2KTsKK2lu
+dCByb2NrY2hpcF91bnJlZ2lzdGVyX3N1YmRydihzdHJ1Y3QgZHJtX3JvY2tjaGlwX3N1YmRydiAq
+c3ViZHJ2KTsKKwogI2VuZGlmIC8qIF9ST0NLQ0hJUF9EUk1fRFJWX0hfICovCi0tIAoxLjkuMQoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
