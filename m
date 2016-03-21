@@ -1,12 +1,12 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 4/8] ARM: dts: sun7i: Add the SPDIF clk to the A20
-Date: Mon, 21 Mar 2016 21:01:02 +0100
-Message-ID: <1458590466-12572-5-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v3 2/8] ARM: dts :sun7i: Add SPDIF TX pin to the A20
+Date: Mon, 21 Mar 2016 21:01:00 +0100
+Message-ID: <1458590466-12572-3-git-send-email-codekipper@gmail.com>
 References: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBCVGYG3QKGQEXGFYOAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBB5GYG3QKGQE6LDKCNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458590466-12572-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -21,34 +21,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the SPDIF clock to the A20 dtsi.
+Add the SPDIF TX pin to the A20 dtsi.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/sun7i-a20.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 0c207d0..108cad4 100644
+index 0940a78..0c207d0 100644
 --- a/arch/arm/boot/dts/sun7i-a20.dtsi
 +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -476,6 +476,17 @@
- 			clock-output-names = "ir1";
+@@ -1193,6 +1193,13 @@
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
++
++			spdif_tx_pins_a: spdif@0 {
++				allwinner,pins = "PB13";
++				allwinner,function = "spdif";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++			};
  		};
  
-+		spdif_clk: clk@01c200c0 {
-+			#clock-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-mod1-clk";
-+			reg = <0x01c200c0 0x4>;
-+			clocks = <&pll2 SUN4I_A10_PLL2_8X>,
-+				 <&pll2 SUN4I_A10_PLL2_4X>,
-+				 <&pll2 SUN4I_A10_PLL2_2X>,
-+				 <&pll2 SUN4I_A10_PLL2_1X>;
-+			clock-output-names = "spdif";
-+		};
-+
- 		keypad_clk: clk@01c200c4 {
- 			#clock-cells = <0>;
- 			compatible = "allwinner,sun4i-a10-mod0-clk";
+ 		timer@01c20c00 {
 -- 
 2.7.4
