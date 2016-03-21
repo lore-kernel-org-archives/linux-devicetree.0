@@ -1,92 +1,182 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to the driver
-Date: Mon, 21 Mar 2016 18:17:48 +0200
-Message-ID: <3681371.njDCZ2OU0Q@avalon>
-References: <1440690558-39822-1-git-send-email-anuragku@xilinx.com> <20150921155712.GN2381@localhost> <3802E9A6666DF54886E2B9CBF743BA9801C08CA1@XAP-PVEXMBX01.xlnx.xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3802E9A6666DF54886E2B9CBF743BA9801C08CA1@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Dan Williams <dan.j.williams@intel.com>, "afaerber@suse.de" <afaerber@suse.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
+From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX settings
+Date: Mon, 21 Mar 2016 12:32:27 -0400
+Message-ID: <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
+References: <20160318211936.GA4158@rob-hp-laptop>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160318211936.GA4158@rob-hp-laptop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anurag,
+The TX settings can be calibrated for particular hardware.  The
+phy is reset by Linux, so this cannot be handled by the bootloader.
 
-On Wednesday 23 Sep 2015 15:12:36 Anurag Kumar Vulisha wrote:
-> On Monday, September 21, 2015 9:27 PM Vinod Koul wrote:
-> > On Thu, Aug 27, 2015 at 09:19:18PM +0530, Anurag Kumar Vulisha wrote:
-> >> This VDMA  is a soft ip, which can be programmed to support
-> >> 32 bit addressing or greater than 32 bit addressing.
-> >> 
-> >> When the VDMA ip is configured for 32 bit address space the transfer
-> >> start address is specified by a single register.
-> > 
-> > would be good to specfiy which one
-> 
-> Will change  this in v3
+The TRM mentions that the maximum resistance should be used for the
+DN/DP calibration in order to pass USB certification.
 
-What happened to v3 ? :-)
+The values for the TX registers are poorly described in the TRM.
+The meanings of the register values were taken from another
+Freescale-provided document:
+https://community.freescale.com/message/566147#comment-566912
 
-> >> When the  VDMA core is configured for an address space greater than 32
-> >> then each start address is specified by a combination of two
-> >> registers. The first register specifies the LSB 32 bits of address,
-> >> while the next register specifies the MSB 32 bits of address.For
-> >> example,5Ch will specify the LSB 32 bits while 60h will specify the
-> >> MSB 32 bits of the first start address.So we need to program two
-> >> registers at a time.
-> > 
-> > can we have spaces after full stops and commas!
-> 
-> Will take care of this in v3 patch.
-> 
-> >> +/* Since vdma driver is trying to write to a register offset which is
-> >> +not a
-> >> + * multiple of 64 bits(ex : 0x5c), we are writing as two separate 32
-> >> +bits
-> >> + * instead of a single 64 bit register write.
-> >> + */
-> > 
-> > This is not kernel style for multi-lines, pls refer to
-> > Documentation/CodingStyle
-> 
-> Will address this in v3 patch
-> 
-> >> +
-> >> +static inline void vdma_desc_write_64(struct xilinx_vdma_chan *chan,
-> >> u32 reg,
-> >> +                            u32 value_lsb, u32 value_msb)
-> >> +{
-> >> +   /* Write the lsb 32 bits*/
-> >> +   writel(value_lsb, chan->xdev->regs + chan->desc_offset + reg);
-> >> +
-> >> +   /* Write the msb 32 bits */
-> >> +   writel(value_msb, chan->xdev->regs + chan->desc_offset + reg + 4);
-> > 
-> > why not writeq
-> 
-> We are trying to write at a register address(ex:0x5c) which is not aligned
-> on 8 bytes  boundary.So if I try to use 64 bit write on it,unalignment 
-> fault is getting  generated.To avoid that we are using two separate 32  bit
-> writes. We had this discussion in previous versions of this patch with
-> Laurent Pinchart .I have also added this exaplanation in the comments above
-> this function.
->
-> >> +   err = of_property_read_u32(node, "xlnx,addrwidth", &addr_width);
-> >> +
-> >> +   if (err < 0) {
-> >> +           /* Setting addr_width property to default 32 bits */
-> >> +           addr_width = 32;
-> >> +   }
-> > 
-> > braces for a single line statement! Also space is redandant before if
-> > condition
->
-> Will take care of this in v3 patch
+Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+---
+v3. Added unit suffix (-ohms) to tx-cal-45-d*
 
+v2. Copying devicetree list
+    Removed prettifying extra whitespace
+    Removed unnecessary register rewrite on resume
+    Use min and max constants for clarity
+
+ .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+ drivers/usb/phy/phy-mxs-usb.c                      |   58 ++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+index 379b84a..1d25b04 100644
+--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+@@ -12,6 +12,16 @@ Required properties:
+ - interrupts: Should contain phy interrupt
+ - fsl,anatop: phandle for anatop register, it is only for imx6 SoC series
+ 
++Optional properties:
++- fsl,tx-cal-45-dn-ohms: Integer [30-55]. Resistance (in ohms) of switchable
++  high-speed trimming resistor connected in parallel with the 45 ohm resistor
++  that terminates the DN output signal. Default: 45
++- fsl,tx-cal-45-dp-ohms: Integer [30-55]. Resistance (in ohms) of switchable
++  high-speed trimming resistor connected in parallel with the 45 ohm resistor
++  that terminates the DP output signal. Default: 45
++- fsl,tx-d-cal: Integer [79-119]. Current trimming value (as a percentage) of
++  the 17.78mA TX reference current. Default: 100
++
+ Example:
+ usbphy1: usbphy@020c9000 {
+ 	compatible = "fsl,imx6q-usbphy", "fsl,imx23-usbphy";
+diff --git a/drivers/usb/phy/phy-mxs-usb.c b/drivers/usb/phy/phy-mxs-usb.c
+index 00bfea0..6c6b12c 100644
+--- a/drivers/usb/phy/phy-mxs-usb.c
++++ b/drivers/usb/phy/phy-mxs-usb.c
+@@ -27,6 +27,7 @@
+ #define DRIVER_NAME "mxs_phy"
+ 
+ #define HW_USBPHY_PWD				0x00
++#define HW_USBPHY_TX				0x10
+ #define HW_USBPHY_CTRL				0x30
+ #define HW_USBPHY_CTRL_SET			0x34
+ #define HW_USBPHY_CTRL_CLR			0x38
+@@ -38,6 +39,10 @@
+ #define HW_USBPHY_IP_SET			0x94
+ #define HW_USBPHY_IP_CLR			0x98
+ 
++#define GM_USBPHY_TX_TXCAL45DP(x)            (((x) & 0xf) << 16)
++#define GM_USBPHY_TX_TXCAL45DN(x)            (((x) & 0xf) << 8)
++#define GM_USBPHY_TX_D_CAL(x)                (((x) & 0xf) << 0)
++
+ #define BM_USBPHY_CTRL_SFTRST			BIT(31)
+ #define BM_USBPHY_CTRL_CLKGATE			BIT(30)
+ #define BM_USBPHY_CTRL_OTG_ID_VALUE		BIT(27)
+@@ -115,6 +120,12 @@
+  */
+ #define MXS_PHY_NEED_IP_FIX			BIT(3)
+ 
++/* Minimum and maximum values for device tree entries */
++#define MXS_PHY_TX_CAL45_MIN			30
++#define MXS_PHY_TX_CAL45_MAX			55
++#define MXS_PHY_TX_D_CAL_MIN			79
++#define MXS_PHY_TX_D_CAL_MAX			119
++
+ struct mxs_phy_data {
+ 	unsigned int flags;
+ };
+@@ -164,6 +175,8 @@ struct mxs_phy {
+ 	const struct mxs_phy_data *data;
+ 	struct regmap *regmap_anatop;
+ 	int port_id;
++	u32 tx_reg_set;
++	u32 tx_reg_mask;
+ };
+ 
+ static inline bool is_imx6q_phy(struct mxs_phy *mxs_phy)
+@@ -185,6 +198,20 @@ static void mxs_phy_clock_switch_delay(void)
+ 	usleep_range(300, 400);
+ }
+ 
++static void mxs_phy_tx_init(struct mxs_phy *mxs_phy)
++{
++	void __iomem *base = mxs_phy->phy.io_priv;
++	u32 phytx;
++
++	/* Update TX register if there is anything to write */
++	if (mxs_phy->tx_reg_mask) {
++		phytx = readl(base + HW_USBPHY_TX);
++		phytx &= ~mxs_phy->tx_reg_mask;
++		phytx |= mxs_phy->tx_reg_set;
++		writel(phytx, base + HW_USBPHY_TX);
++	}
++}
++
+ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ {
+ 	int ret;
+@@ -214,6 +241,8 @@ static int mxs_phy_hw_init(struct mxs_phy *mxs_phy)
+ 	if (mxs_phy->data->flags & MXS_PHY_NEED_IP_FIX)
+ 		writel(BM_USBPHY_IP_FIX, base + HW_USBPHY_IP_SET);
+ 
++	mxs_phy_tx_init(mxs_phy);
++
+ 	return 0;
+ }
+ 
+@@ -459,6 +488,7 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 	int ret;
+ 	const struct of_device_id *of_id;
+ 	struct device_node *np = pdev->dev.of_node;
++	u32 val;
+ 
+ 	of_id = of_match_device(mxs_phy_dt_ids, &pdev->dev);
+ 	if (!of_id)
+@@ -491,6 +521,34 @@ static int mxs_phy_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	/* Precompute which bits of the TX register are to be updated, if any */
++	if (!of_property_read_u32(np, "fsl,tx-cal-45-dn-ohms", &val) &&
++	    val >= MXS_PHY_TX_CAL45_MIN && val <= MXS_PHY_TX_CAL45_MAX) {
++		/* scale to 4-bit value */
++		val = (MXS_PHY_TX_CAL45_MAX - val) * 0xF
++			/ (MXS_PHY_TX_CAL45_MAX - MXS_PHY_TX_CAL45_MIN);
++		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_TXCAL45DN(~0);
++		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_TXCAL45DN(val);
++	}
++
++	if (!of_property_read_u32(np, "fsl,tx-cal-45-dp-ohms", &val) &&
++	    val >= MXS_PHY_TX_CAL45_MIN && val <= MXS_PHY_TX_CAL45_MAX) {
++		/* scale to 4-bit value */
++		val = (MXS_PHY_TX_CAL45_MAX - val) * 0xF
++			/ (MXS_PHY_TX_CAL45_MAX - MXS_PHY_TX_CAL45_MIN);
++		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_TXCAL45DP(~0);
++		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_TXCAL45DP(val);
++	}
++
++	if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
++	    val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
++		/* scale to 4-bit value */
++		val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
++			/ (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
++		mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
++		mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
++	}
++
+ 	ret = of_alias_get_id(np, "usbphy");
+ 	if (ret < 0)
+ 		dev_dbg(&pdev->dev, "failed to get alias id, errno %d\n", ret);
 -- 
-Regards,
+1.7.10.4
 
-Laurent Pinchart
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
