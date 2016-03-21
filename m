@@ -1,84 +1,104 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 3/3] ASoC: omap-mcbsp: Enable/disable
- sidetone block auto clock gating for omap3
-Date: Mon, 21 Mar 2016 10:44:38 +0200
-Message-ID: <56EFB476.70709@ti.com>
-References: <1458296929-718-1-git-send-email-peter.ujfalusi@ti.com>
- <1458296929-718-4-git-send-email-peter.ujfalusi@ti.com>
- <alpine.DEB.2.02.1603191932240.6629@utopia.booyaka.com>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 4/7] clk: mediatek: Add MT2701 clock support
+Date: Mon, 21 Mar 2016 16:45:44 +0800
+Message-ID: <1458549944.21625.6.camel@mtksdaap41>
+References: <1454665050-37776-1-git-send-email-jamesjj.liao@mediatek.com>
+	 <1454665050-37776-5-git-send-email-jamesjj.liao@mediatek.com>
+	 <20160210200853.26445.15165@quark.deferred.io>
+	 <1455527982.29688.8.camel@mtksdaap41>
+	 <20160224212533.2278.7597@quark.deferred.io>
+	 <1456381477.22545.24.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <alpine.DEB.2.02.1603191932240.6629@utopia.booyaka.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Paul Walmsley <paul@pwsan.com>, Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Jarkko Nikula <jarkko.nikula@bitmer.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1456381477.22545.24.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Paul,
+Hi Mike,
 
-On 03/19/16 21:37, Paul Walmsley wrote:
-> On Fri, 18 Mar 2016, Peter Ujfalusi wrote:
-> =
+Sorry to use this old email to ask questions. Do you have any concern to
+apply this patch series into next version of kernel? Or do you really
+need a new patch series with less CLK_OF_DECLARE()?
 
->> OMAP3's McBSP2 and McBSP3 module have integrated sidetone block with
->> dedicated SYSCONFIG register. The sidetone is operating from the maain
->> McBSP module's ICLK. For normal operation the sidetone clock auto idle
->> support needs to be disabled when it is activated.
->> Note: This is not enough to avoid choppy sidetone because this AUTOIDLE
->> bit is controlling only the clock auto idle from the McBSP to the sideto=
-ne
->> block. If the McBSP_ICLK is idling, the sidetone clock is going to do the
->> same.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> =
 
-> Mark, please drop this patch for the time being, until the SoC integratio=
-n =
+Best regards,
 
-> issues can be sorted out first.  It's best to wait a little while before =
+James
 
-> applying patches like these so folks have a chance to comment on their =
 
-> correctness first.
-> =
+On Thu, 2016-02-25 at 14:24 +0800, James Liao wrote:
+> Hi Mike,
+> 
+> On Wed, 2016-02-24 at 13:25 -0800, Michael Turquette wrote:
+> > Hi James,
+> > 
+> > Quoting James Liao (2016-02-15 01:19:42)
+> > > Hi Mike,
+> > > 
+> > > On Wed, 2016-02-10 at 12:08 -0800, Michael Turquette wrote:
+> > > > Quoting James Liao (2016-02-05 01:37:27)
+> > > > > +CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
+> > > > > +CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
+> > > > > +CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
+> > > > > +CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt2701-mmsys", mtk_mmsys_init);
+> > > > > +CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt2701-imgsys", mtk_imgsys_init);
+> > > > > +CLK_OF_DECLARE(mtk_vdecsys, "mediatek,mt2701-vdecsys", mtk_vdecsys_init);
+> > > > > +CLK_OF_DECLARE(mtk_hifsys, "mediatek,mt2701-hifsys", mtk_hifsys_init);
+> > > > > +CLK_OF_DECLARE(mtk_ethsys, "mediatek,mt2701-ethsys", mtk_ethsys_init);
+> > > > > +CLK_OF_DECLARE(mtk_bdpsys, "mediatek,mt2701-bdpsys", mtk_bdpsys_init);
+> > > > > +CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
+> > > > 
+> > > > :-/
+> > > > 
+> > > > This is way too much CLK_OF_DECLARE and not enough Linux Driver Model.
+> > > > 
+> > > > I understand that some platforms really must initialize some clocks very
+> > > > early, but can we please separate those into one table and call
+> > > > CLK_OF_DECLARE on only that set, and then register the rest through a
+> > > > platform_driver later on?
+> > > 
+> > > I know CLK_OF_DECLARE is much earlier than platform_driver, so it can
+> > > ensure all drivers lookup their clocks successfully during
+> > > platform_driver probe. Is there anything different to init these clock
+> > > providers in CLK_OF_DECLARE and platform_driver?
+> > 
+> > This a common pattern we're seeing right now. Joachim did a nice job of
+> > supporting early clocks with CLK_OF_DECLARE, and also using a proper
+> > driver in his lpc18xx implementation:
+> > 
+> > http://marc.info/?l=devicetree&m=145618160610001
+> 
+> Do you mean we should keep most clock init in platform_driver_probe and
+> use CLK_OF_DECLARE for some early clocks only?
+> 
+> Using CLK_OF_DECLARE() for all clock providers is convenient. The
+> convenience includes coding structure and driver init order. The coding
+> structure means we can use a consistency way to add clock providers, so
+> we can reduce errors and apply code generator on clock drivers.
+> 
+> The driver init order is another issue. In lpc18xx driver you mentioned
+> in [1], it uses ERR_PTR(-EPROBE_DEFER) to be the place holder for
+> non-early clocks in arch_init (CLK_OF_DECLARE), and then register early
+> and non-early clocks again in module_init. The EPROBE_DEFER place holder
+> is an interesting idea to resolve init order issue. But to register
+> clocks twice on the same clock provider seems not a good idea, although
+> it can still work in current CCF implementation.
+> 
+> Is it important to move clock init into platform_driver? If not, I
+> prefer to keep current implementation on MT2701, and look for a better
+> way to init clocks in platform_driver in new SoCs.
+> 
+> 
+> [1] http://marc.info/?l=devicetree&m=145618160610001
+> 
+> 
 
-> We used to handle this problem in the OMAP hwmod SoC integration layer =
 
-> with a flag that forced the interface clock to stay active as long as the =
-
-> underlying IP blocks were active.  However I can't find that flag right =
-
-> now in the current data, so maybe it got accidentally or inadvertently =
-
-> removed at some point in time in the past.  The right way to fix this =
-
-> would be to add that flag back in, rather than messing with the SoC =
-
-> integration registers from the McBSP drivers.
-
-I can not recall such a flag. We had both hwmods attached to the given McBSP
-mkodule via dev_attr and we dealt with the McBSP_ICLK autoidle enable/disab=
-le
-via callbacks provided to the driver via platform data.
-arch/arm/mach-omap2/mcbsp.c: omap3_enable_st_clock() In there we use
-omap2_clk_deny_idle()/omap2_clk_allow_idle() to make sure that the ICLK is =
-not
-gated when the ST is enabled in the given McBSP module.
-But this only works when we boot in legacy mode. The DT boot is broken in t=
-his
-regards as long we have first booted OMAP3 with DT.
-
--- =
-
-P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
