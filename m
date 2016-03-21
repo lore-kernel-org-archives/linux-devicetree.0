@@ -1,12 +1,14 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 0/8] ARM: sunxi: Add SPDIF playback support
-Date: Mon, 21 Mar 2016 21:00:58 +0100
-Message-ID: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v3 1/8] ARM: dts :sunxi: Add SPDIF TX pin to the A10
+Date: Mon, 21 Mar 2016 21:00:59 +0100
+Message-ID: <1458590466-12572-2-git-send-email-codekipper@gmail.com>
+References: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBBFGYG3QKGQEAD2NA2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBBNGYG3QKGQEWSOXAVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1458590466-12572-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,39 +21,30 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Hi All,
+Add the SPDIF TX pin to the A10 dtsi.
 
-now that the sun4i-spdif driver has made it into linux-next then this patch
-series completes what is needed to have SPDIF working on both A10 and A20
-devices.
-
-Enjoy,
-CK
-
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Changes since v2:
-- Split the patches up, added and removed some newlines, removed unused spdif
-  pins
+ arch/arm/boot/dts/sun4i-a10.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Changes since v1:
-- Added defines to the dma properties and changed reg length to cover the entire
-  spdif memory area.
-
-Marcus Cooper (8):
-  ARM: dts :sunxi: Add SPDIF TX pin to the A10
-  ARM: dts :sun7i: Add SPDIF TX pin to the A20
-  ARM: dts: sun4i: Add the SPDIF clk to the A10
-  ARM: dts: sun7i: Add the SPDIF clk to the A20
-  ARM: dts: sun4i: Add the SPDIF block to the A10
-  ARM: dts: sun7i: Add the SPDIF block to the A20
-  ARM: dts: sun4i: Add SPDIF to the Mele A1000
-  ARM: dts: sun7i: Add SPDIF to the Itead Ibox
-
- arch/arm/boot/dts/sun4i-a10-a1000.dts      | 24 +++++++++++++++++++++++
- arch/arm/boot/dts/sun4i-a10.dtsi           | 31 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 +++++++++++++++++++++++
- arch/arm/boot/dts/sun7i-a20.dtsi           | 31 ++++++++++++++++++++++++++++++
- 4 files changed, 110 insertions(+)
-
+diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+index 2c8f5e6..62fcef9 100644
+--- a/arch/arm/boot/dts/sun4i-a10.dtsi
++++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+@@ -1006,6 +1006,13 @@
+ 				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 			};
++
++			spdif_tx_pins_a: spdif@0 {
++				allwinner,pins = "PB13";
++				allwinner,function = "spdif";
++				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++			};
+ 		};
+ 
+ 		timer@01c20c00 {
 -- 
 2.7.4
