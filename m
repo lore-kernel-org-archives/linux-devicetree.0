@@ -1,48 +1,81 @@
-From: Andreas Dannenberg <dannenberg@ti.com>
-Subject: Re: [PATCH 1/2] ASoC: codecs: add TA5720 digital
- amplifier DT bindings
-Date: Mon, 21 Mar 2016 09:06:03 -0500
-Message-ID: <20160321140603.GN20025@borg.dal.design.ti.com>
-References: <1458343678-4086-1-git-send-email-dannenberg@ti.com>
- <1458343678-4086-2-git-send-email-dannenberg@ti.com>
- <20160321124555.GA12693@rob-hp-laptop>
+From: Michael Hennerich <michael.hennerich@analog.com>
+Subject: Re: [PATCH v3] iio: dac: Add support for the AD5592R/AD5593R
+ ADCs/DACs
+Date: Mon, 21 Mar 2016 14:48:38 +0100
+Message-ID: <56EFFBB6.40806@analog.com>
+References: <1457009883-4017-1-git-send-email-michael.hennerich@analog.com>
+ <56DAEDF4.6040008@kernel.org> <56DD7548.8050306@analog.com>
+ <CACRpkdY=n30A5UkRX7avP7eWrPffh3faF8K_Ey2f2cs1GRZP7g@mail.gmail.com>
+Reply-To: <michael.hennerich@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20160321124555.GA12693@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY=n30A5UkRX7avP7eWrPffh3faF8K_Ey2f2cs1GRZP7g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Paul Cercueil <paul.cercueil@analog.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 21, 2016 at 07:45:55AM -0500, Rob Herring wrote:
-> > +Optional properties:
-> > +
-> > +- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
-> > +- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
-> > +- interrupts-extended : reference to a GPIO pin connected to the TAS5720
-> > +                        FAULTZ pin for error reporting purposes
-> 
-> There's no point in having interrupts-extended here with a single 
-> interrupt. It is fine to use, but really that's outside the scope of 
-> this binding. So I'd just document "interrupts" here as that is what 
-> most docs do, and that implies interrupts-extended could be used.
+On 03/11/2016 05:37 PM, Linus Walleij wrote:
+> On Mon, Mar 7, 2016 at 7:34 PM, Michael Hennerich
+> <michael.hennerich@analog.com> wrote:
+>> On 03/05/2016 03:32 PM, Jonathan Cameron wrote:
+>
+>>>> Changes since v2:
+>>>>          * Use child nodes to describe channels
+>>>>          * Fix probe return and driver remove path
+>>>>          * Move locking closer to where its used
+>>>>          * Remove WARN_ON but return error
+>>>>          * Remove OPEN DRAIN configuration option
+>>>
+>>> Why? I don't particularly mind as of course you aren't obliged to support
+>>> every option in a driver, but I'm curious ;)
+>>
+>> I'm not aware that someone asked for that feature.
+>> Supporting it the proper way requires a new GPIOF flag for gpiolib, which we
+>> can still discuss later, in case someone asks for it.
+>
+> We have:
+> include/dt-bindings/gpio/gpio.h
+>
+> /*
+>   * Open Drain/Collector is the combination of single-ended active low,
+>   * Open Source/Emitter is the combination of single-ended active high.
+>   */
+> #define GPIO_OPEN_DRAIN (GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW)
+> #define GPIO_OPEN_SOURCE (GPIO_SINGLE_ENDED | GPIO_ACTIVE_HIGH)
+>
+> So consumers can ask (in DT) for a line in open drain mode.
+>
+> FLAG_OPEN_DRAIN will be set internally in gpiolibs gpio_desc
+> in of_find_gpio() as a result and it will behave as expected.
+>
+> Yours,
+> Linus Walleij
+>
 
-Hi Rob,
-Good point. Will remove it for v2.
+Hi Linus,
 
-Regards,
+The thing is that the device directly supports an OPEN DRAIN mode.
+
+If the consumer asks for open drain mode - everything works as expected.
+However instead of utilizing the on-chip feature, GPIOLIB will emulate 
+open drain behaviour by configuring the chip for input when someone 
+writes logic high.
+
+So the comment above was really meant to say -
+remove on-chip OPEN DRAIN mode, consumers should use the GPIOLIB 
+implementation if required.
+
+
+
+-- 
+Greetings,
+Michael
 
 --
-Andreas Dannenberg
-Texas Instruments Inc
+Analog Devices GmbH      Wilhelm-Wagenfeld-Str. 6      80807 Muenchen
+Sitz der Gesellschaft: Muenchen; Registergericht: Muenchen HRB 40368;
+Geschaeftsfuehrer:Dr.Carsten Suckrow, Thomas Wessel, William A. Martin,
+Margaret Seif
