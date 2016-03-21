@@ -1,60 +1,67 @@
-From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3] ARC: [dts] Introduce Timer bindings
-Date: Mon, 21 Mar 2016 05:02:36 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA23075F4E90A92@us01wembx1.internal.synopsys.com>
-References: <20160317162421.GA21947@rob-hp-laptop>
- <1458278789-18924-1-git-send-email-vgupta@synopsys.com>
- <20160320004212.GA8061@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun6i: Add serial0 alias and
+ stdout-path to a31s-primo81.dts
+Date: Mon, 21 Mar 2016 08:50:21 +0100
+Message-ID: <20160321075021.GY30977@lukather>
+References: <1458137962-27714-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA@mail.gmail.com>
+ <20160318174839.GQ30977@lukather>
+ <56ED184B.9000609@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hU50fLDIZPaBYjJk"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPWPX23QKGQEYUEPSVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <56ED184B.9000609-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 20 March 2016 06:12 AM, Rob Herring wrote:
-> On Fri, Mar 18, 2016 at 10:56:29AM +0530, Vineet Gupta wrote:
->> ARC Timers have historically been probed directly.
->> As precursor to start probing Timers thru DT introduce these bindings
->> Note that to keep series bisectable, these bindings are not yet used in
->> code.
->>
->> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
->> ---
->> v3:
->>  - Renamed Node name to avoid new warnings when unit address used w/o regs [Rob]
->> v2:
->>  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-March/000653.html
->>  - snps,arc-timer[0-1] folded into single snps-arc-timer	[Rob]
->>  - Node name in DT example fixed:				[Rob]
->>      "timer1: timer_clksrc {" -> timer@1 {
->>  - Introduced 64bit RTC in skeleton_hs.dtsi			[Vineet]
->> v1:
->>  - http://lists.infradead.org/pipermail/linux-snps-arc/2016-February/000447.html
->> ---
->>  .../devicetree/bindings/timer/snps,arc-timer.txt   | 32 ++++++++++++++++++++++
->>  .../devicetree/bindings/timer/snps,archs-gfrc.txt  | 14 ++++++++++
->>  .../devicetree/bindings/timer/snps,archs-rtc.txt   | 14 ++++++++++
->>  arch/arc/boot/dts/abilis_tb10x.dtsi                | 14 ++++++++++
->>  arch/arc/boot/dts/skeleton.dtsi                    | 14 ++++++++++
->>  arch/arc/boot/dts/skeleton_hs.dtsi                 | 20 ++++++++++++++
->>  arch/arc/boot/dts/skeleton_hs_idu.dtsi             | 14 ++++++++++
->>  7 files changed, 122 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/timer/snps,arc-timer.txt
->>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-gfrc.txt
->>  create mode 100644 Documentation/devicetree/bindings/timer/snps,archs-rtc.txt
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--hU50fLDIZPaBYjJk
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Thx a bunch Rob !
+On Sat, Mar 19, 2016 at 10:13:47AM +0100, Hans de Goede wrote:
+> Hi,
+> 
+> On 18-03-16 18:48, Maxime Ripard wrote:
+> >On Thu, Mar 17, 2016 at 02:28:03PM +0800, Chen-Yu Tsai wrote:
+> >>On Wed, Mar 16, 2016 at 10:19 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> >>>u-boot uses the kernel as the canonical source for its sunxi dts files
+> >>>and u-boot needs these.
+> >>>
+> >>>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>
+> >>Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >
+> >Queued, thanks!
+> 
+> I just got an of-list mail from Karsten Merker that you nacked the addition
+> if this during the initial submission, because there are no accessible uart
+> test pads on this tablet.
+> 
+> In that case the proper fix would be to change the u-boot defconfig to have:
+> 
+> # CONFIG_REQUIRE_SERIAL_CONSOLE is not set
+> 
+> Which will stop u-boot from panicking (with nowhere to print the panic msg)
+> when it has no stdout-path.
+> 
+> Can you unqueue this one until we've figured out what the best fix is ?
 
--Vineet
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Done, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--hU50fLDIZPaBYjJk--
