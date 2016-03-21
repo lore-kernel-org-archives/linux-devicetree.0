@@ -1,13 +1,12 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 6/8] ARM: dts: sun7i: Add the SPDIF block to
- the A20
-Date: Mon, 21 Mar 2016 21:01:04 +0100
-Message-ID: <1458590466-12572-7-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v3 8/8] ARM: dts: sun7i: Add SPDIF to the Itead Ibox
+Date: Mon, 21 Mar 2016 21:01:06 +0100
+Message-ID: <1458590466-12572-9-git-send-email-codekipper@gmail.com>
 References: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBDFGYG3QKGQEVU4NO7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBD5GYG3QKGQE7T4IJ4I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458590466-12572-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,36 +21,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the SPDIF transceiver controller block to the A20 dtsi.
+Enable the S/PDIF transmitter that is present on the Itead Ibox.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 108cad4..9944496 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1244,6 +1244,19 @@
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+index a512581..9542865 100644
+--- a/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
++++ b/arch/arm/boot/dts/sun7i-a20-itead-ibox.dts
+@@ -65,6 +65,24 @@
+ 			default-state = "on";
  		};
- 
-+		spdif: spdif@01c21000 {
-+			#sound-dai-cells = <0>;
-+			compatible = "allwinner,sun4i-a10-spdif";
-+			reg = <0x01c21000 0x400>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&apb0_gates 1>, <&spdif_clk>;
-+			clock-names = "apb", "spdif";
-+			dmas = <&dma SUN4I_DMA_NORMAL 2>,
-+			       <&dma SUN4I_DMA_NORMAL 2>;
-+			dma-names = "rx", "tx";
-+			status = "disabled";
+ 	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "On-board SPDIF";
++
++		simple-audio-card,cpu {
++			sound-dai = <&spdif>;
 +		};
 +
- 		ir0: ir@01c21800 {
- 			compatible = "allwinner,sun4i-a10-ir";
- 			clocks = <&apb0_gates 6>, <&ir0_clk>;
++		simple-audio-card,codec {
++			sound-dai = <&spdif_out>;
++		};
++	};
++
++	spdif_out: spdif-out {
++		#sound-dai-cells = <0>;
++		compatible = "linux,spdif-dit";
++	};
+ };
+ 
+ &ahci {
+@@ -131,6 +149,12 @@
+ 	status = "okay";
+ };
+ 
++&spdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&spdif_tx_pins_a>;
++	status = "okay";
++};
++
+ &usbphy {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&usb0_id_detect_pin>;
 -- 
 2.7.4
