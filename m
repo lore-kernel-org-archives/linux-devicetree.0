@@ -1,87 +1,104 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [PATCH v8 6/6] ARM: dts: am335x-boneblack: Add
-	HDMI audio support
-Date: Mon, 21 Mar 2016 09:53:34 +0200
-Message-ID: <56EFA87E.9020209@ti.com>
-References: <cover.1458214526.git.jsarha@ti.com>
- <dd3484868647610840d4803dd3378014ce1c95b7.1458214526.git.jsarha@ti.com>
- <20160319073949.b8bcd213e92355353368fad5@free.fr>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7] ARM: dts: sun8i: Add leds and switches
+ on Orangepi Plus boards
+Date: Mon, 21 Mar 2016 08:59:30 +0100
+Message-ID: <20160321075930.GA30977@lukather>
+References: <1458500102-11071-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160319073949.b8bcd213e92355353368fad5@free.fr>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, airlied@linux.ie, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k7W93gQNhKgsYkEv"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBY6TX23QKGQEURSSEQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1458500102-11071-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/19/16 08:39, Jean-Francois Moine wrote:
-> On Thu, 17 Mar 2016 14:22:34 +0200
-> Jyri Sarha <jsarha@ti.com> wrote:
+--k7W93gQNhKgsYkEv
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Sun, Mar 20, 2016 at 07:55:02PM +0100, Hans de Goede wrote:
+> From: Krzysztof Adamski <k@japko.eu>
 > 
->> @@ -76,16 +87,22 @@
->>  };
->>  
->>  &i2c0 {
->> -	tda19988 {
->> +	tda19988: tda19988 {
->>  		compatible = "nxp,tda998x";
->>  		reg = <0x70>;
->> +
->>  		pinctrl-names = "default", "off";
->>  		pinctrl-0 = <&nxp_hdmi_bonelt_pins>;
->>  		pinctrl-1 = <&nxp_hdmi_bonelt_off_pins>;
->>  
->> -		port {
->> -			hdmi_0: endpoint@0 {
->> -				remote-endpoint = <&lcdc_0>;
->> +		#sound-dai-cells = <0>;
->> +		audio-ports = <	AFMT_I2S	0x03>;
->> +
->> +		ports {
->> +			port@0 {
->> +				hdmi_0: endpoint@0 {
->> +					remote-endpoint = <&lcdc_0>;
->> +				};
->>  			};
->>  		};
->>  	};
+> OrangePi Plus board has two leds - green ("pwr") and red ("status")
+> and two switches ("sw4" and "sw2"). This patch describes them in
+> devicetree.
 > 
-> Why did you add a 'ports' container? As there is only one port,
-> it is useless.
+> Signed-off-by: Krzysztof Adamski <k@japko.eu>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+An earlier version has already been sent for 4.6, please base your
+changes on top of this one.
+
+And there's a bunch of things I didn't catch at that time :/
+
+> ---
+> Changes in v6 (hdegoede):
+> -Merge leds and r_leds nodes into one
+> -Fix led labels to be in <board>:<colour>:<role> form
+> -Alphabetically sort the added nodes
+> -Add support for sw2 (this is the small reset-like button)
+> Changes in v7 (hdegoede):
+> -Use PL3 / PL4 in the pinctrl node, not PL03 / PL04
+> ---
+>  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
 > 
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> index a680b1f..9d8c038 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> @@ -45,6 +45,7 @@
+>  #include "sunxi-common-regulators.dtsi"
+>  
+>  #include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+>  #include <dt-bindings/pinctrl/sun4i-a10.h>
+>  
+>  / {
+> @@ -59,6 +60,43 @@
+>  		stdout-path = "serial0:115200n8";
+>  	};
+>  
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		input-name = "sw4";
 
-Well, I just left it there. The node parsing code should handle the
-container if it follows graph[1] binding. Putting the ports container
-node is equally correct as leaving it out, but surely I can leave it out
-next time (when ever it comes).
+This is an undocumented (and apparently unused) property
 
-> Also, you don't need '@0' in the 'port' and 'endpoint'.
-> If you want to keep it, you must add 'reg = 0;'s.
-> 
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sw_r_opc>;
+> +
+> +		sw2@0 {
 
-I am still not sure about the "must" part. From all that I have read[2]
-the unit number should be the same as reg property if possible. But then
-again if the reg property consists of multiple addresses, how do you put
-them in the unit address? To me no unit address at all is an analogue
-situation and I see no point in adding an artificial reg property if I
-need multiple nodes by same name. This actually happens quite often with
-sound-nodes when I have multiple audio devices in the same system.
+You shouldn't have a unit-address here
 
-But still, there is no need for the unit address here and it should be
-removed. I'll do that next time.
+> +			label = "sw2";
+> +			linux,code = <BTN_1>;
+> +			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		sw4@0 {
 
-Best regard,
-Jyri
+Ditto.
 
-[1] Documentation/devicetree/bindings/graph.txt
-[2] http://devicetree.org/Device_Tree_Usage
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--k7W93gQNhKgsYkEv--
