@@ -1,130 +1,77 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v7] ARM: dts: sun8i: Add leds and switches on
- Orangepi Plus boards
-Date: Sun, 20 Mar 2016 19:55:02 +0100
-Message-ID: <1458500102-11071-1-git-send-email-hdegoede@redhat.com>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Emil Bartczak <emilbart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] drivers/rtc/rtc-mcp795.c: add devicetree support
+Date: Mon, 21 Mar 2016 01:06:10 +0100
+Message-ID: <20160321000610.GA21979@emba-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBDXEXO3QKGQE5H552CI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Krzysztof Adamski <k@japko.eu>
+Add device tree support to the rtc-mcp795 driver.
 
-OrangePi Plus board has two leds - green ("pwr") and red ("status")
-and two switches ("sw4" and "sw2"). This patch describes them in
-devicetree.
-
-Signed-off-by: Krzysztof Adamski <k@japko.eu>
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Emil Bartczak <emilbart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-Changes in v6 (hdegoede):
--Merge leds and r_leds nodes into one
--Fix led labels to be in <board>:<colour>:<role> form
--Alphabetically sort the added nodes
--Add support for sw2 (this is the small reset-like button)
-Changes in v7 (hdegoede):
--Use PL3 / PL4 in the pinctrl node, not PL03 / PL04
----
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ Documentation/devicetree/bindings/rtc/maxim,mcp795.txt | 11 +++++++++++
+ drivers/rtc/rtc-mcp795.c                               | 10 ++++++++++
+ 2 files changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/maxim,mcp795.txt
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index a680b1f..9d8c038 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -45,6 +45,7 @@
- #include "sunxi-common-regulators.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/sun4i-a10.h>
- 
- / {
-@@ -59,6 +60,43 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		input-name = "sw4";
+diff --git a/Documentation/devicetree/bindings/rtc/maxim,mcp795.txt b/Documentation/devicetree/bindings/rtc/maxim,mcp795.txt
+new file mode 100644
+index 0000000..a59fdd8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/maxim,mcp795.txt
+@@ -0,0 +1,11 @@
++* Maxim MCP795		SPI Serial Real-Time Clock
 +
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sw_r_opc>;
++Required properties:
++- compatible: Should contain "maxim,mcp795".
++- reg: SPI address for chip
 +
-+		sw2@0 {
-+			label = "sw2";
-+			linux,code = <BTN_1>;
-+			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		sw4@0 {
-+			label = "sw4";
-+			linux,code = <BTN_0>;
-+			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-+		};
++Example:
++	mcp795: rtc@0 {
++		compatible = "maxim,mcp795";
++		reg = <0>;
 +	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
-+
-+		status_led {
-+			label = "orangepi-plus:red:status";
-+			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		pwr_led {
-+			label = "orangepi-plus:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "on";
-+		};
-+	};
-+
- 	reg_usb3_vbus: usb3-vbus {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -72,6 +110,31 @@
- 	};
- };
+diff --git a/drivers/rtc/rtc-mcp795.c b/drivers/rtc/rtc-mcp795.c
+index 1c91ce8..025bb33 100644
+--- a/drivers/rtc/rtc-mcp795.c
++++ b/drivers/rtc/rtc-mcp795.c
+@@ -20,6 +20,7 @@
+ #include <linux/printk.h>
+ #include <linux/spi/spi.h>
+ #include <linux/rtc.h>
++#include <linux/of.h>
  
-+&pio {
-+	leds_opc: led_pins@0 {
-+		allwinner,pins = "PA15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
+ /* MCP795 Instructions, see datasheet table 3-1 */
+ #define MCP795_EEREAD	0x03
+@@ -183,9 +184,18 @@ static int mcp795_probe(struct spi_device *spi)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id mcp795_of_match[] = {
++	{ .compatible = "maxim,mcp795" },
++	{ }
 +};
++MODULE_DEVICE_TABLE(of, mcp795_of_match);
++#endif
 +
-+&r_pio {
-+	leds_r_opc: led_pins@0 {
-+		allwinner,pins = "PL10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	sw_r_opc: key_pins@0 {
-+		allwinner,pins = "PL3", "PL4";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
- &ehci1 {
- 	status = "okay";
+ static struct spi_driver mcp795_driver = {
+ 		.driver = {
+ 				.name = "rtc-mcp795",
++				.of_match_table = of_match_ptr(mcp795_of_match),
+ 		},
+ 		.probe = mcp795_probe,
  };
 -- 
-2.7.3
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
