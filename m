@@ -1,81 +1,64 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH v4 2/8] Documentation: arm: define DT cpu capacity
- bindings
-Date: Mon, 21 Mar 2016 11:49:56 +0000
-Message-ID: <20160321114956.GD12319@e106622-lin>
-References: <1458311054-13524-1-git-send-email-juri.lelli@arm.com>
- <1458311054-13524-3-git-send-email-juri.lelli@arm.com>
- <56EC3F9E.4050209@nvidia.com>
- <20160321105330.GB12319@e106622-lin>
- <CAKfTPtDP3zMR+zbvvqJCBvJ5r44do8NS03wC7pAejxPd0zHTMA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] mfd: axp20x: Add AXP209 GPIO driver to
+ the mfd
+Date: Mon, 21 Mar 2016 11:54:10 +0000
+Message-ID: <20160321115410.GC4140@x1>
+References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1457520614-32239-3-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBZWBX63QKGQE2RHYYIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAKfTPtDP3zMR+zbvvqJCBvJ5r44do8NS03wC7pAejxPd0zHTMA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Sai Gurrappadi <sgurrappadi@nvidia.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, LAK <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Morten Rasmussen <morten.rasmussen@arm.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>, Mark Brown <broonie@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Olof Johansson <olof@l>
+In-Reply-To: <1457520614-32239-3-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vincent,
+On Wed, 09 Mar 2016, Maxime Ripard wrote:
 
-On 21/03/16 12:09, Vincent Guittot wrote:
-> On 21 March 2016 at 11:53, Juri Lelli <juri.lelli@arm.com> wrote:
-> > Hi Sai,
-> >
-> > On 18/03/16 10:49, Sai Gurrappadi wrote:
-> >> Hi Juri,
-> >>
-> >> On 03/18/2016 07:24 AM, Juri Lelli wrote:
-> >>
-> >> <snip>
-> >>
-> >> > +
-> >> > +==========================================
-> >> > +2 - CPU capacity definition
-> >> > +==========================================
-> >> > +
-> >> > +CPU capacity is a number that provides the scheduler information about CPUs
-> >> > +heterogeneity. Such heterogeneity can come from micro-architectural differences
-> >> > +(e.g., ARM big.LITTLE systems) or maximum frequency at which CPUs can run
-> >> > +(e.g., SMP systems with multiple frequency domains). Heterogeneity in this
-> >> > +context is about differing performance characteristics; this binding tries to
-> >> > +capture a first-order approximation of the relative performance of CPUs.
-> >>
-> >> Any reason why this capacity number is not dynamically generated based on the
-> >> max frequency for each CPU? The DT property would then instead specify just
-> >> the micro-architectural differences between the CPU types.
-> >>
-> >
-> > I'm not sure I clearly understand your question, so I'll try to
-> > reiterate it.
-> >
-> > Are you asking why we don't dynamically profile the system, at boot for
-> > example, to get this number? Or do you ask why this number couldn't be
-> > only describing micro-arch differences (so, if I get it right, we should
-> > then multiply it by max freq to get the capacity of a CPU)?
-> >
-> > We already played with the first option (please refer to v2 and v3), but
-> > we ended up agreeing that dynamic profiling adds overhead to the boot
-> > process (while a DT approach can provide information to speed up boot)
-> > and it is in general not repeatable/reliable (as numbers can vary from
-> > boot to boot for different reasons).
-> >
-> > The second option I think can be feasible, but I'm not sure what we gain
-> > in practice. We will still need to specify a per-platform number, right?
-> 
-> So could we use dt binding like dhrystone = <xyz> (with a unit like
-> DMIPS/Mhz)  which can then be combined with OPP table to gives a
-> 1st-order approximation of each CPU capacity ?
-> 
+> Now that we have a GPIO driver for the AXP209, we can add it to our MFD.
+>=20
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/mfd/axp20x.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-But we'll still need to normalize this w.r.t the highest score we get on
-a specific platform, right? And while we are at normalizing it, it is
-probably simpler if we keep the frequency component as part of the
-number, IMHO. But, maybe keeping the frequency component separate is
-more acceptable from a DT binding perspective?
+Applied, thanks.
 
-Thanks,
+> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> index a57d6e940610..89518ee3be33 100644
+> --- a/drivers/mfd/axp20x.c
+> +++ b/drivers/mfd/axp20x.c
+> @@ -430,6 +430,9 @@ static const struct regmap_irq_chip axp288_regmap_irq=
+_chip =3D {
+> =20
+>  static struct mfd_cell axp20x_cells[] =3D {
+>  	{
+> +		.name		=3D "axp20x-gpio",
+> +		.of_compatible	=3D "x-powers,axp209-gpio",
+> +	}, {
+>  		.name		=3D "axp20x-pek",
+>  		.num_resources	=3D ARRAY_SIZE(axp20x_pek_resources),
+>  		.resources	=3D axp20x_pek_resources,
 
-- Juri
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
