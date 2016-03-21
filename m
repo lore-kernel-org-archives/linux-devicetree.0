@@ -1,66 +1,85 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 08/15] genirq: Add runtime power management support for
- IRQ chips
-Date: Mon, 21 Mar 2016 10:09:12 +0000
-Message-ID: <56EFC848.6030301@nvidia.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
- <1458224359-32665-9-git-send-email-jonathanh@nvidia.com>
- <56EBE244.6070400@ti.com> <56EBF447.8070808@nvidia.com>
- <56EC0F7D.8050106@ti.com> <56EC1362.2000005@nvidia.com>
- <56EC1719.5020408@nvidia.com> <56EC404A.9060001@ti.com>
+From: Alexandre Torgue <alexandre.torgue@gmail.com>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Mon, 21 Mar 2016 11:45:12 +0100
+Message-ID: <CAJgp7zxyQGrSSvNszawBQfS+omgKi1i35uW-eDyLdW-jP7oRjg@mail.gmail.com>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
+	<1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
+	<CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56EC404A.9060001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Joachim Eastwood <manabian@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 18/03/16 17:52, Grygorii Strashko wrote:
-> On 03/18/2016 04:56 PM, Jon Hunter wrote:
+2016-03-18 17:00 GMT+01:00 Chen-Yu Tsai <wens@csie.org>:
+> Hi,
+>
+> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+> <alexandre.torgue@gmail.com> wrote:
+>> Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
 >>
->> On 18/03/16 14:40, Jon Hunter wrote:
->>> On 18/03/16 14:23, Grygorii Strashko wrote:
->>>> On 03/18/2016 02:27 PM, Jon Hunter wrote:
->>>>>
->>>>> On 18/03/16 11:11, Grygorii Strashko wrote:
->>
->> [snip]
->>
->>>> oh :( That will require updating of all drivers (and if it will be taken into account that
->>>> wakeup can be configured from sysfs + devm_ - it will be painful).
->>>
->>> Will it? I know that there are a few gpio chips that have some hacked
->>> ways to get around the PM issue, but I wonder how many drivers this
->>> really impacts. What sysfs entries are you referring too?
-> 
-> echo enabled > /sys/devices/platform/44000000.ocp/48020000.serial/tty/ttyS2/power/wakeup
-> 
->>
->> Thinking about this some more, yes I guess it would impact all drivers
->> that use a gpio but don't use it for a wake-up. I could see that could
->> be a few drivers indeed.
-> 
-> yep. I've just tested it
-> - gpio was requested through sysfs and configured as IRQ
-> - do suspend
-> 
-> the same is if GPIO is requested as IRQ only and not configured as wakeup source 
-> 
-> [  319.669760] PM: late suspend of devices complete after 0.213 msecs
-> [  319.671195] irq 191 has no wakeup set and has not been freed!
-> [  319.673453] PM: noirq suspend of devices complete after 2.258 msecs
-> 
-> this is very minimal configuration - the regular one is at ~30-50 devices
-> most of them will use IRQ and only ~10% are used as wakeup sources.
+>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>> new file mode 100644
+>> index 0000000..ada2aa4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>> @@ -0,0 +1,32 @@
+>> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+>> +
+>> +This file documents platform glue layer for stmmac.
+>> +Please see stmmac.txt for the other unchanged properties.
+>> +
+>> +The device node has following properties.
+>> +
+>> +Required properties:
+>> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+>> +              "snps,dwmac-3.50a" to select IP vesrion.
+>
+> If you need have sort of hardware glue, then it is not compatible.
+>
 
-Then it is working as intended :-)
+We could have the case where the glue is set by a bootloader.
+In this case, we will select IP version in compatible and we will use
+generic dwmac glue to probe stmmac driver.
 
-However, if this is too verbose for some irqchips, then as I mentioned
-we can have a flag to avoid these messages.
+Regards
 
-Cheers
-Jon
+Alex.
+
+> ChenYu
+>
+>> +- clocks: Must contain a phandle for each entry in clock-names.
+>> +- clock-names: Should be "stmmaceth" for the host clock.
+>> +              Should be "tx-clk" for the MAC TX clock.
+>> +              Should be "rx-clk" for the MAC RX clock.
+>> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+>> +             encompases the glue register, and the offset of the control register.
+>> +Example:
+>> +
+>> +               ethernet0: dwmac@40028000 {
+>> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+>> +                       status = "disabled";
+>> +                       reg = <0x40028000 0x8000>;
+>> +                       reg-names = "stmmaceth";
+>> +                       interrupts = <0 61 0>, <0 62 0>;
+>> +                       interrupt-names = "macirq", "eth_wake_irq";
+>> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+>> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+>> +                       st,syscon = <&syscfg 0x4>;
+>> +                       snps,pbl = <8>;
+>> +                       snps,mixed-burst;
+>> +                       dma-ranges;
+>> +               };
+>> --
+>> 1.9.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
