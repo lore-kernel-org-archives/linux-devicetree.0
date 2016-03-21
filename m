@@ -1,34 +1,74 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 2/3] arm64: dts: add Hi6220 pinctrl configuration nodes
-Date: Mon, 21 Mar 2016 09:18:34 +0100
-Message-ID: <CACRpkdaW1Rh_ZE0sJN_sy9K7NritXWF10i9LVp9Ui4p3FTenmA@mail.gmail.com>
-References: <1455883107-8411-1-git-send-email-guodong.xu@linaro.org>
-	<1455883107-8411-3-git-send-email-guodong.xu@linaro.org>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rockchip: Add mdio node to ethernet node
+Date: Mon, 21 Mar 2016 09:23:04 +0100
+Message-ID: <CAAObsKBXuTw37YJb+Fhq_NgZw2rjPQ14phF1yRG+N2mEu9uBmw@mail.gmail.com>
+References: <1458300056-6174-1-git-send-email-tomeu.vizoso@collabora.com> <56EC744F.90308@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1455883107-8411-3-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <56EC744F.90308-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Yiping Xu <xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bintian Wang <bintian.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Haojian Zhuang <haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wang Fei <w.f-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Dan Zhao <dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, zhongkaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 19, 2016 at 12:58 PM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-
-> From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On 18 March 2016 at 22:34, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org> wrote=
+:
+> Am 18.03.2016 um 12:20 schrieb Tomeu Vizoso:
+>> So the dwmac device manages to probe again.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> Fixes: 88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression")
+>> ---
+>>  arch/arm/boot/dts/rk3288-rock2-som.dtsi | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot=
+/dts/rk3288-rock2-som.dtsi
+>> index 1ece66f3e162..4ba7ddecb478 100644
+>> --- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+>> +++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
+>> @@ -101,6 +101,14 @@
+>>       snps,reset-delays-us =3D <0 10000 30000>;
+>>       rx_delay =3D <0x10>;
+>>       tx_delay =3D <0x30>;
+>> +     mdio0 {
+>> +             #address-cells =3D <1>;
+>> +             #size-cells =3D <0>;
+>> +             compatible =3D "snps,dwmac-mdio";
+>> +             ethphy1: ethernet-phy@1 {
+>> +                     reg =3D <1>;
+>> +             };
+>> +     };
 >
-> Add Hi6220 pinctrl configuration nodes
+> This is a) ugly for lack of white lines in between, b) unnecessary si=
+nce
+> this is being fixed in the stmmac driver where it will benefit more t=
+han
+> just this one SoM.
+
+So is this redundant information, or just not necessary with the
+present kernel driver because of some assumption in its current
+implementation?
+
+Thanks,
+
+Tomeu
+
+> Regards,
+> Andreas
 >
-> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-But actually: Haojian is the person who should be acking this, he
-engineered pinctrl-single for HiSilicon.
-
-Yours,
-Linus Walleij
+>>  };
+>>
+>>  &i2c0 {
+>
+> --
+> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+> GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (=
+AG N=C3=BCrnberg)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
