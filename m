@@ -1,33 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] panel-simple: Add the 7" DPI panel from Adafruit.
-Date: Mon, 21 Mar 2016 07:48:10 -0500
-Message-ID: <20160321124810.GA15878@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/5] drm/vc4: Add DPI driver
+Date: Mon, 21 Mar 2016 07:57:45 -0500
+Message-ID: <20160321125745.GA16407@rob-hp-laptop>
 References: <1458355366-7073-1-git-send-email-eric@anholt.net>
- <1458355366-7073-3-git-send-email-eric@anholt.net>
+ <1458355366-7073-5-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1458355366-7073-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+In-Reply-To: <1458355366-7073-5-git-send-email-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 07:42:43PM -0700, Eric Anholt wrote:
-> This is a basic TFT panel with a 40-pin FPC connector on it.  The
-> specification doesn't define timings, but the Adafruit instructions
-> were setting up 800x480 CVT.
-> 
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> ---
->  .../bindings/display/panel/ontat,yx700wv03.txt     |  7 +++++
->  drivers/gpu/drm/panel/panel-simple.c               | 33 ++++++++++++++++++++++
->  2 files changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/ontat,yx700wv03.txt
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBNYXIgMTgsIDIwMTYgYXQgMDc6NDI6NDVQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gVGhlIERQSSBpbnRlcmZhY2UgaW52b2x2ZXMgdGFraW5nIGEgdG9uIG9mIG91ciBHUElP
+cyB0byBiZSB1c2VkIGFzCj4gb3V0cHV0cywgYW5kIHJvdXRpbmcgZGlzcGxheSBzaWduYWxzIG92
+ZXIgdGhlbSBpbiBwYXJhbGxlbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9sdCA8ZXJp
+Y0BhbmhvbHQubmV0Pgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+Y20sYmNtLXZjNC50eHQgICB8ICA2NyArKysKPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICBkcml2ZXJzL2dwdS9kcm0vdmM0L01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS92
+YzQvdmM0X2RlYnVnZnMuYyAgICAgICAgICAgICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUv
+ZHJtL3ZjNC92YzRfZHBpLmMgICAgICAgICAgICAgICAgICAgICAgfCA1MTggKysrKysrKysrKysr
+KysrKysrKysrCj4gIGRyaXZlcnMvZ3B1L2RybS92YzQvdmM0X2Rydi5jICAgICAgICAgICAgICAg
+ICAgICAgIHwgICAxICsKPiAgZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHJ2LmggICAgICAgICAg
+ICAgICAgICAgICAgfCAgIDUgKwo+ICA3IGZpbGVzIGNoYW5nZWQsIDU5NCBpbnNlcnRpb25zKCsp
+Cj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kcGkuYwo+IAo+
+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmNtLGJjbS12YzQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJjbSxiY20tdmM0LnR4dAo+IGluZGV4IDU2YTk2MWEuLjE3ODJjM2YgMTAwNjQ0Cj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJjbSxiY20tdmM0
+LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Jy
+Y20sYmNtLXZjNC50eHQKPiBAQCAtMzUsNiArMzUsNDQgQEAgT3B0aW9uYWwgcHJvcGVydGllcyBm
+b3IgSERNSToKPiAgCQkgIGFzIGFuIGludGVycnVwdC9zdGF0dXMgYml0IGluIHRoZSBIRE1JIGNv
+bnRyb2xsZXIKPiAgCQkgIGl0c2VsZikuICBTZWUgYmluZGluZ3MvcGluY3RybC9icmNtLGJjbTI4
+MzUtZ3Bpby50eHQKPiAgCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIERQSToKPiArLSBjb21w
+YXRpYmxlOgkJU2hvdWxkIGJlICJicmNtLGJjbTI4MzUtZHBpIgo+ICstIHJlZzoJCQlQaHlzaWNh
+bCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXJzCj4gKy0gY2xvY2tzOgkJ
+YSkgY29yZTogVGhlIGNvcmUgY2xvY2sgdGhlIHVuaXQgcnVucyBvbgo+ICsJCQliKSBwaXhlbDog
+VGhlIHBpeGVsIGNsb2NrIHRoYXQgZmVlZHMgdGhlIHBpeGVsdmFsdmUKPiArLSBwb3J0OgkJCVBv
+cnQgbm9kZSB3aXRoIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5lY3RpbmcgdG8gdGhlCj4gKwkJCSAg
+cGFuZWwgZGV2aWNlLCBhcyBkZWZpbmVkIGluIFsxXQo+ICstIGJyY20sb3V0cHV0LWZvcm1hdDoJ
+T3V0cHV0IGRhdGEgZm9ybWF0LCBtdXN0IGJlIG9uZSBvZjoKPiArCQkJMCkgZGlzYWJsZWQKPiAr
+CQkJMSkgMDAwMDAwMDBycnJycmdnZ2dnZ2JiYmJiCj4gKwkJCTIpIDAwMHJycnJyMDBnZ2dnZ2cw
+MDBiYmJiYgo+ICsJCQkzKSAwMHJycnJyMDAwZ2dnZ2dnMDBiYmJiYjAKPiArCQkJNCkgMDAwMDAw
+cnJycnJyZ2dnZ2dnYmJiYmJiCj4gKwkJCTUpIDAwcnJycnJyMDBnZ2dnZ2cwMGJiYmJiYgo+ICsJ
+CQk2KSBycnJycnJycmdnZ2dnZ2dnYmJiYmJiYmIKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXMg
+Zm9yIERQSToKPiArLSBicmNtLHJnYi1vcmRlcjoJCVJHQiByZW9yZGVyaW5nLCBtdXN0IGJlIG9u
+ZSBvZjoKPiArCQkJCTApIFJHQgo+ICsJCQkJMSkgQkdSCj4gKwkJCQkyKSBHUkIKPiArCQkJCTMp
+IEJSRwoKPiArLSBicmNtLGhzeW5jLWRpc2FibGU6CQlEaXNhYmxlcyB0aGUgaHN5bmMgc2lnbmFs
+Cj4gKy0gYnJjbSx2c3luYy1kaXNhYmxlOgkJRGlzYWJsZXMgdGhlIHZzeW5jIHNpZ25hbAo+ICst
+IGJyY20sb3V0cHV0LWVuYWJsZS1kaXNhYmxlOglEaXNhYmxlcyB0aGUgb3V0cHV0IGVuYWJsZSBz
+aWduYWwKPiArLSBicmNtLGhzeW5jLWZhbGxpbmc6CQlPdXRwdXRzIHRoZSBoc3luYyBzaWduYWwg
+b24gdGhlIGZhbGxpbmcgY2xrIGVkZ2UKPiArLSBicmNtLHZzeW5jLWZhbGxpbmc6CQlPdXRwdXRz
+IHRoZSB2c3luYyBzaWduYWwgb24gdGhlIGZhbGxpbmcgY2xrIGVkZ2UKPiArLSBicmNtLG91dHB1
+dC1lbmFibGUtZmFsbGluZzoJT3V0cHV0cyB0aGUgb3V0cHV0IGVuYWJsZSBzaWduYWwgb24gdGhl
+Cj4gKwkJCQkgIGZhbGxpbmcgY2xrIGVkZ2UKPiArLSBicmNtLG91dHB1dC1lbmFibGUtaW52ZXJ0
+OglJbnZlcnRzIHRoZSBwb2xhcml0eSBvZiB0aGUgb3V0cHV0IGVuYWJsZQo+ICsJCQkJICBzaWdu
+YWwKPiArLSBicmNtLHBpeGVsLWNsay1pbnZlcnQ6CUludmVydHMgdGhlIHBvbGFyaXR5IG9mIHRo
+ZSBwaXhlbCBjbGsgc2lnbmFsCj4gKy0gYnJjbSxvdXRwdXQtZW5hYmxlLW1vZGU6CVNldHMgb3V0
+cHV0IGVuYWJsZSB3aGVuICh2c3luYyB8IGhzeW5jKQo+ICsJCQkJICBpbnN0ZWFkIG9mIChoYWN0
+aXZlICYgdmFjdGl2ZSkKClRoZXNlIGFyZSBhbGwgcmVhbGx5IHByb3BlcnRpZXMgb2Ygd2hhdCB0
+aGUgcGFuZWwgcmVxdWlyZXMgYW5kIHdlIAphbHJlYWR5IGhhdmUgdmlkZW8gdGltaW5ncyBiaW5k
+aW5nIHRoYXQgd291bGQgY292ZXIgc29tZSBvZiB0aGVzZS4KCkFsc28sIGRvIHlvdSBoYXZlIGFj
+dHVhbCB1c2Vycz8gU29tZSBvZiB0aGVzZSBzZWVtIGxpa2UgdGhleSB3b3VsZCBiZSAKcmFyZSBv
+ciBuZXZlci4gSSd2ZSBub3Qgc2VlbiBwYW5lbHMgY2FyaW5nIGFib3V0IHdoaWNoIGNsb2NrIGVk
+Z2UgdGhlIApzeW5jIHNpZ25hbHMgYXJlIG9uLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
