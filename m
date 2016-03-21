@@ -1,41 +1,65 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 1/3] clk: ti: am335x/am4372: Add tbclk to pwm node
-Date: Mon, 21 Mar 2016 21:34:23 +0200
-Message-ID: <56F04CBF.7080506@ti.com>
-References: <1458263723-25770-1-git-send-email-fcooper@ti.com>
- <1458263723-25770-2-git-send-email-fcooper@ti.com>
- <20160321184318.GS25972@codeaurora.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] iio:magnetometer:ak8975: mounting matrix support
+Date: Mon, 21 Mar 2016 19:01:17 +0000
+Message-ID: <56F044FD.6010206@kernel.org>
+References: <cover.1458231723.git.gregor.boirie@parrot.com>
+ <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie@parrot.com>
+ <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160321184318.GS25972@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Franklin S Cooper Jr <fcooper@ti.com>
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, mturquette@baylibre.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/21/2016 08:43 PM, Stephen Boyd wrote:
-> On 03/17, Franklin S Cooper Jr wrote:
->> Add tblck to the pwm nodes. This insures that the ehrpwm driver has access
->> to the time-based clk.
+Backed out patches 2 and 3 for now whilst discussion continues.
+
+On 21/03/16 14:58, Rob Herring wrote:
+> On Thu, Mar 17, 2016 at 11:43 AM, Gregor Boirie
+> <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> wrote:
+>> Expose a rotation matrix to indicate userspace the chip placement with
+>> respect to the overall hardware system. This is needed to adjust
+>> coordinates sampled from a magnetometer chip when its position deviates
+>> from the main hardware system.
 >>
->> Do not remove similar entries for ehrpwm node. Later patches will switch
->> from using ehrpwm node name to pwm. But to maintain ABI compatibility we
->> shouldn't remove the old entries.
+>> Final coordinates computation is delegated to userspace since:
+>> * computation may involve floating point arithmetics ;
+>> * it allows an application to combine adjustments with arbitrary
+>>   transformations.
 >>
->> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->> ---
->
-> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
->
-> Are there any plans to get off these DT_CLK entries entirely?
-
-The series that adds support for the hwmod clock type for OMAPs has a 
-support patch that should address this problem at least partially; I am 
-planning to post next rev of that set soonish. It should allow getting 
-rid of majority of the clock aliases, I will remove any aliases I can at 
-the same time.
-
--Tero
-
+>> This 3 dimentional space rotation matrix is expressed as 3x3 array of
+>> strings to support floating point numbers. It may be retrieved from a
+>> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
+>> entry as a "matrix" property.
+> 
+> Why is the sysfs interface specific to ak8975?
+> 
+> Furthermore, why is it specific to magnetometer? Couldn't
+> accelerometers need the same thing? There's a thread discussing a
+> similar matrix on android-x86[1].
+> 
+> 
+>> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>> index 34a3206..f936f86 100644
+>> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>> @@ -9,6 +9,7 @@ Optional properties:
+>>
+>>    - gpios : should be device tree identifier of the magnetometer DRDY pin
+>>    - vdd-supply: an optional regulator that needs to be on to provide VDD
+>> +  - matrix: an optional 3x3 mounting rotation matrix
+> 
+> Perhaps "rotation-matrx" would be a better name in case there's ever
+> any other matrix needed.
+> 
+> Rob
+> 
+> [1] https://groups.google.com/forum/#!msg/android-x86/LaKhV8cT69o/G1rrVU0_JAAJ
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
