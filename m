@@ -1,104 +1,63 @@
-From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v6 4/7] clk: mediatek: Add MT2701 clock support
-Date: Mon, 21 Mar 2016 16:45:44 +0800
-Message-ID: <1458549944.21625.6.camel@mtksdaap41>
-References: <1454665050-37776-1-git-send-email-jamesjj.liao@mediatek.com>
-	 <1454665050-37776-5-git-send-email-jamesjj.liao@mediatek.com>
-	 <20160210200853.26445.15165@quark.deferred.io>
-	 <1455527982.29688.8.camel@mtksdaap41>
-	 <20160224212533.2278.7597@quark.deferred.io>
-	 <1456381477.22545.24.camel@mtksdaap41>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
+Date: Mon, 21 Mar 2016 10:57:56 +0200
+Message-ID: <56EFB794.5010505@ti.com>
+References: <1458311007-19168-1-git-send-email-peter.ujfalusi@ti.com>
+ <alpine.DEB.2.02.1603191937430.6629@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456381477.22545.24.camel@mtksdaap41>
+In-Reply-To: <alpine.DEB.2.02.1603191937430.6629-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shunli Wang <shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Paul,
 
-Sorry to use this old email to ask questions. Do you have any concern to
-apply this patch series into next version of kernel? Or do you really
-need a new patch series with less CLK_OF_DECLARE()?
+On 03/19/16 21:38, Paul Walmsley wrote:
+> On Fri, 18 Mar 2016, Peter Ujfalusi wrote:
+>=20
+>> Hi,
+>>
+>> Chanes since v1:
+>> - removed the ASoC patch as Mark has applied it already
+>> - Added my signed-off to the hwmod patch
+>> - New patch to handle the case when the sidetone hwmod has been remo=
+ved for
+>>   legacy boot.
+>>
+>> The series addresses a long standing issue with McBSP2/3 regarding t=
+o hwmod
+>> setup. When booting with DT a warning is printed that mcbsp2/3 is us=
+ing two
+>> hwmod.
+>> The root of the issue is the way how the hwmod data was constructed =
+in the first
+>> place for OMAP3 McBSP2/3.
+>> After re-reading the TRM it is clear that the sidetone should not ha=
+ve it's
+>> own hwmod data as it is not a separate IP, it is part of the McBSP m=
+odule. It
+>> can not affect PRCM either since it's SYSCONFIG register's AUTOIDLE =
+bit is only
+>> sets the autoidle from the internal McBSP_iclk clock to the sidetone=
+ block of
+>> the same McBSP.
+>=20
+> NAK, at least without further discussion - see my comments on the v1 =
+0/3=20
+> introduction.
 
+Yes, I could have sent the first series as RFC, but I believe(d) that t=
+his is
+the correct way to fix the McBSP sidetone integration.
 
-Best regards,
-
-James
-
-
-On Thu, 2016-02-25 at 14:24 +0800, James Liao wrote:
-> Hi Mike,
-> 
-> On Wed, 2016-02-24 at 13:25 -0800, Michael Turquette wrote:
-> > Hi James,
-> > 
-> > Quoting James Liao (2016-02-15 01:19:42)
-> > > Hi Mike,
-> > > 
-> > > On Wed, 2016-02-10 at 12:08 -0800, Michael Turquette wrote:
-> > > > Quoting James Liao (2016-02-05 01:37:27)
-> > > > > +CLK_OF_DECLARE(mtk_topckgen, "mediatek,mt2701-topckgen", mtk_topckgen_init);
-> > > > > +CLK_OF_DECLARE(mtk_infrasys, "mediatek,mt2701-infracfg", mtk_infrasys_init);
-> > > > > +CLK_OF_DECLARE(mtk_pericfg, "mediatek,mt2701-pericfg", mtk_pericfg_init);
-> > > > > +CLK_OF_DECLARE(mtk_mmsys, "mediatek,mt2701-mmsys", mtk_mmsys_init);
-> > > > > +CLK_OF_DECLARE(mtk_imgsys, "mediatek,mt2701-imgsys", mtk_imgsys_init);
-> > > > > +CLK_OF_DECLARE(mtk_vdecsys, "mediatek,mt2701-vdecsys", mtk_vdecsys_init);
-> > > > > +CLK_OF_DECLARE(mtk_hifsys, "mediatek,mt2701-hifsys", mtk_hifsys_init);
-> > > > > +CLK_OF_DECLARE(mtk_ethsys, "mediatek,mt2701-ethsys", mtk_ethsys_init);
-> > > > > +CLK_OF_DECLARE(mtk_bdpsys, "mediatek,mt2701-bdpsys", mtk_bdpsys_init);
-> > > > > +CLK_OF_DECLARE(mtk_apmixedsys, "mediatek,mt2701-apmixedsys",
-> > > > 
-> > > > :-/
-> > > > 
-> > > > This is way too much CLK_OF_DECLARE and not enough Linux Driver Model.
-> > > > 
-> > > > I understand that some platforms really must initialize some clocks very
-> > > > early, but can we please separate those into one table and call
-> > > > CLK_OF_DECLARE on only that set, and then register the rest through a
-> > > > platform_driver later on?
-> > > 
-> > > I know CLK_OF_DECLARE is much earlier than platform_driver, so it can
-> > > ensure all drivers lookup their clocks successfully during
-> > > platform_driver probe. Is there anything different to init these clock
-> > > providers in CLK_OF_DECLARE and platform_driver?
-> > 
-> > This a common pattern we're seeing right now. Joachim did a nice job of
-> > supporting early clocks with CLK_OF_DECLARE, and also using a proper
-> > driver in his lpc18xx implementation:
-> > 
-> > http://marc.info/?l=devicetree&m=145618160610001
-> 
-> Do you mean we should keep most clock init in platform_driver_probe and
-> use CLK_OF_DECLARE for some early clocks only?
-> 
-> Using CLK_OF_DECLARE() for all clock providers is convenient. The
-> convenience includes coding structure and driver init order. The coding
-> structure means we can use a consistency way to add clock providers, so
-> we can reduce errors and apply code generator on clock drivers.
-> 
-> The driver init order is another issue. In lpc18xx driver you mentioned
-> in [1], it uses ERR_PTR(-EPROBE_DEFER) to be the place holder for
-> non-early clocks in arch_init (CLK_OF_DECLARE), and then register early
-> and non-early clocks again in module_init. The EPROBE_DEFER place holder
-> is an interesting idea to resolve init order issue. But to register
-> clocks twice on the same clock provider seems not a good idea, although
-> it can still work in current CCF implementation.
-> 
-> Is it important to move clock init into platform_driver? If not, I
-> prefer to keep current implementation on MT2701, and look for a better
-> way to init clocks in platform_driver in new SoCs.
-> 
-> 
-> [1] http://marc.info/?l=devicetree&m=145618160610001
-> 
-> 
-
-
+--=20
+P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
