@@ -1,67 +1,45 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun6i: Add serial0 alias and
- stdout-path to a31s-primo81.dts
-Date: Mon, 21 Mar 2016 08:50:21 +0100
-Message-ID: <20160321075021.GY30977@lukather>
-References: <1458137962-27714-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v67+V1JdaG2ypgj5sXyzxiwZhYC_z_1sye5HpnMvcE_QfA@mail.gmail.com>
- <20160318174839.GQ30977@lukather>
- <56ED184B.9000609@redhat.com>
+Subject: Re: [PATCH] ARM: dts: Add dts file for Dserve DSRV9703C tablet
+Date: Mon, 21 Mar 2016 08:52:43 +0100
+Message-ID: <20160321075243.GZ30977@lukather>
+References: <1458374032-10077-1-git-send-email-hdegoede@redhat.com>
+ <CAGb2v66Hw8_Ckmw0f5GMzP2+73aNbSoOs2MLYu7C85bjUL9huw@mail.gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hU50fLDIZPaBYjJk"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPWPX23QKGQEYUEPSVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="dClnwdpHIAy5TST4"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBTGQX23QKGQE3GTTYLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <56ED184B.9000609-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAGb2v66Hw8_Ckmw0f5GMzP2+73aNbSoOs2MLYu7C85bjUL9huw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---hU50fLDIZPaBYjJk
+--dClnwdpHIAy5TST4
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Sat, Mar 19, 2016 at 10:13:47AM +0100, Hans de Goede wrote:
-> Hi,
-> 
-> On 18-03-16 18:48, Maxime Ripard wrote:
-> >On Thu, Mar 17, 2016 at 02:28:03PM +0800, Chen-Yu Tsai wrote:
-> >>On Wed, Mar 16, 2016 at 10:19 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> >>>u-boot uses the kernel as the canonical source for its sunxi dts files
-> >>>and u-boot needs these.
-> >>>
-> >>>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >>
-> >>Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Sat, Mar 19, 2016 at 11:18:59PM +0800, Chen-Yu Tsai wrote:
+> On Sat, Mar 19, 2016 at 3:53 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> > The Dserve DSRV9703C is a 9.7" A10 tablet with a 1024x768 ips LCD,
+> > 1G RAM, 4GB flash, a Focaltech FT5406EE8 touchscreen and rtl8188ctv wifi.
 > >
-> >Queued, thanks!
+> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 > 
-> I just got an of-list mail from Karsten Merker that you nacked the addition
-> if this during the initial submission, because there are no accessible uart
-> test pads on this tablet.
-> 
-> In that case the proper fix would be to change the u-boot defconfig to have:
-> 
-> # CONFIG_REQUIRE_SERIAL_CONSOLE is not set
-> 
-> Which will stop u-boot from panicking (with nowhere to print the panic msg)
-> when it has no stdout-path.
-> 
-> Can you unqueue this one until we've figured out what the best fix is ?
+> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Done, thanks!
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---hU50fLDIZPaBYjJk--
+--dClnwdpHIAy5TST4--
