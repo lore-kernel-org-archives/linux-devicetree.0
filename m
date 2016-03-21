@@ -1,73 +1,97 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Mon, 21 Mar 2016 20:17:46 +0800
-Message-ID: <56EFE66A.8020404@rock-chips.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <1511371.I0NIYzh3kP@diego>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Mon, 21 Mar 2016 07:40:43 -0500
+Message-ID: <20160321124043.GA26873@rob-hp-laptop>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
+ <1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
+ <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1511371.I0NIYzh3kP@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Alexandre TORGUE <alexandre.torgue@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Joachim Eastwood <manabian@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Sat, Mar 19, 2016 at 12:00:22AM +0800, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+> <alexandre.torgue@gmail.com> wrote:
+> > Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> > new file mode 100644
+> > index 0000000..ada2aa4
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+> > @@ -0,0 +1,32 @@
+> > +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+> > +
+> > +This file documents platform glue layer for stmmac.
+> > +Please see stmmac.txt for the other unchanged properties.
+> > +
+> > +The device node has following properties.
+> > +
+> > +Required properties:
+> > +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+> > +              "snps,dwmac-3.50a" to select IP vesrion.
+> 
+> If you need have sort of hardware glue, then it is not compatible.
 
-On 03/21/2016 07:29 PM, Heiko St=FCbner wrote:
-> Hi Yakir,
->
-> Am Montag, 21. M=E4rz 2016, 17:28:38 schrieb Yakir Yang:
->> This patch set would add the RGA direct rendering based 2d graphics
->> acceleration module.
-> very cool to see that.
-;)
->> This patch set is based on git repository below:
->> git://people.freedesktop.org/~airlied/linux drm-next
->> commit id: 568d7c764ae01f3706085ac8f0d8a8ac7e826bd7
->>
->> And the RGA driver is based on Exynos G2D driver, it only manages th=
-e
->> command lists received from user, so user should make the command li=
-st
->> to data and registers needed by operation to use.
->>
->> I have prepared an userspace demo application for testing:
->> 	https://github.com/yakir-Yang/libdrm-rockchip
->> That is a rockchip libdrm library, and I have write a simple test ca=
-se
->> "rockchip_rga_test" that would test the below RGA features:
->> - solid
->> - copy
->> - rotation
->> - flip
->> - window clip
->> - dithering
-> Did you submit your libdrm changes as well?
->
-> Userspace-interfaces need to be stable so the other side must also ge=
-t
-> accepted - even before the kernel change if I remember correctly.
+Hence, the more specific compatible. Having the generic one is still 
+useful.
 
-Got it, and I just saw exynos_fimg2d already landed at mainline libdrm.=
-=20
-But I don't find the way to submit patches to libdrm, would you like=20
-share some helps here ;)
+> 
+> ChenYu
+> 
+> > +- clocks: Must contain a phandle for each entry in clock-names.
+> > +- clock-names: Should be "stmmaceth" for the host clock.
 
-- Yakir
+This doesn't sound like the clock input signal name...
 
->
-> Heiko
->
->
->
+> > +              Should be "tx-clk" for the MAC TX clock.
+> > +              Should be "rx-clk" for the MAC RX clock.
 
+How can other DWMAC blocks not have these clocks? The glue can't really 
+add these clocks. It could combine them into one or a new version of 
+DWMAC could have a different number of clock inputs. So if there is 
+variation here, then some of the bindings are probably wrong. I guess 
+the only change I'm suggesting is possibly moving these into common 
+binding doc.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+> > +             encompases the glue register, and the offset of the control register.
+> > +Example:
+> > +
+> > +               ethernet0: dwmac@40028000 {
+
+ethernet@...
+
+> > +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+> > +                       status = "disabled";
+> > +                       reg = <0x40028000 0x8000>;
+> > +                       reg-names = "stmmaceth";
+> > +                       interrupts = <0 61 0>, <0 62 0>;
+> > +                       interrupt-names = "macirq", "eth_wake_irq";
+> > +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+> > +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+> > +                       st,syscon = <&syscfg 0x4>;
+> > +                       snps,pbl = <8>;
+> > +                       snps,mixed-burst;
+> > +                       dma-ranges;
+> > +               };
+> > --
+> > 1.9.1
+> >
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
