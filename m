@@ -1,97 +1,62 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
-Date: Mon, 21 Mar 2016 07:40:43 -0500
-Message-ID: <20160321124043.GA26873@rob-hp-laptop>
-References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
- <1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
- <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: codecs: add TA5720 digital amplifier DT
+ bindings
+Date: Mon, 21 Mar 2016 07:45:55 -0500
+Message-ID: <20160321124555.GA12693@rob-hp-laptop>
+References: <1458343678-4086-1-git-send-email-dannenberg@ti.com>
+ <1458343678-4086-2-git-send-email-dannenberg@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Alexandre TORGUE <alexandre.torgue@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Joachim Eastwood <manabian@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1458343678-4086-2-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 19, 2016 at 12:00:22AM +0800, Chen-Yu Tsai wrote:
-> Hi,
+On Fri, Mar 18, 2016 at 06:27:57PM -0500, Andreas Dannenberg wrote:
+> The Texas Instruments TAS5720L/M device is a high-efficiency mono
+> Class-D audio power amplifier optimized for high transient power
+> capability to use the dynamic power headroom of small loudspeakers.
+> Its digital time division multiplexed (TDM) interface enables up to
+> 16 devices to share the same bus.
 > 
-> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
-> <alexandre.torgue@gmail.com> wrote:
-> > Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> > new file mode 100644
-> > index 0000000..ada2aa4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
-> > @@ -0,0 +1,32 @@
-> > +STMicroelectronics STM32 / MCU DWMAC glue layer controller
-> > +
-> > +This file documents platform glue layer for stmmac.
-> > +Please see stmmac.txt for the other unchanged properties.
-> > +
-> > +The device node has following properties.
-> > +
-> > +Required properties:
-> > +- compatible:  Should be "st,stm32-dwmac" to select glue, and
-> > +              "snps,dwmac-3.50a" to select IP vesrion.
+> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/tas5720.txt          | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
 > 
-> If you need have sort of hardware glue, then it is not compatible.
+> diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
+> new file mode 100644
+> index 0000000..3775a3f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tas5720.txt
+> @@ -0,0 +1,37 @@
+> +Texas Instruments TAS5720 Mono Audio amplifier
+> +
+> +The TAS5720 serial control bus communicates through the I2C protocol only.
+> +
+> +Required properties:
+> +
+> +- compatible : "ti,tas5720"
+> +- reg : I2C slave address
+> +
+> +Optional properties:
+> +
+> +- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
+> +- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
+> +- interrupts-extended : reference to a GPIO pin connected to the TAS5720
+> +                        FAULTZ pin for error reporting purposes
 
-Hence, the more specific compatible. Having the generic one is still 
-useful.
+There's no point in having interrupts-extended here with a single 
+interrupt. It is fine to use, but really that's outside the scope of 
+this binding. So I'd just document "interrupts" here as that is what 
+most docs do, and that implies interrupts-extended could be used.
 
-> 
-> ChenYu
-> 
-> > +- clocks: Must contain a phandle for each entry in clock-names.
-> > +- clock-names: Should be "stmmaceth" for the host clock.
-
-This doesn't sound like the clock input signal name...
-
-> > +              Should be "tx-clk" for the MAC TX clock.
-> > +              Should be "rx-clk" for the MAC RX clock.
-
-How can other DWMAC blocks not have these clocks? The glue can't really 
-add these clocks. It could combine them into one or a new version of 
-DWMAC could have a different number of clock inputs. So if there is 
-variation here, then some of the bindings are probably wrong. I guess 
-the only change I'm suggesting is possibly moving these into common 
-binding doc.
-
-> > +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
-> > +             encompases the glue register, and the offset of the control register.
-> > +Example:
-> > +
-> > +               ethernet0: dwmac@40028000 {
-
-ethernet@...
-
-> > +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
-> > +                       status = "disabled";
-> > +                       reg = <0x40028000 0x8000>;
-> > +                       reg-names = "stmmaceth";
-> > +                       interrupts = <0 61 0>, <0 62 0>;
-> > +                       interrupt-names = "macirq", "eth_wake_irq";
-> > +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
-> > +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
-> > +                       st,syscon = <&syscfg 0x4>;
-> > +                       snps,pbl = <8>;
-> > +                       snps,mixed-burst;
-> > +                       dma-ranges;
-> > +               };
-> > --
-> > 1.9.1
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
