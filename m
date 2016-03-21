@@ -1,95 +1,53 @@
-From: <tthayer@opensource.altera.com>
-Subject: [PATCHv3 5/9] EDAC, altera: Add register offset for ECC Error Inject
-Date: Mon, 21 Mar 2016 11:01:42 -0500
-Message-ID: <1458576106-24505-6-git-send-email-tthayer@opensource.altera.com>
-References: <1458576106-24505-1-git-send-email-tthayer@opensource.altera.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2 0/5] ARM: sunxi: Add SPDIF playback support
+Date: Mon, 21 Mar 2016 17:10:37 +0100
+Message-ID: <1458576642-4078-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1458576106-24505-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@opensource.altera.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBBN2YC3QKGQENPQGBIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@opensource.altera.com>
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-In preparation for the Arria10 peripheral ECCs, a register
-offset from the ECC base was added to the private data
-structure to index to the error injection register.
+Hi All,
 
-Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+now that the sun4i-spdif driver has made it into linux-next then this patch
+series completes what is needed to have SPDIF working on both A10 and A20
+devices.
+
+Enjoy,
+CK
+
 ---
-v2: Split large patch into smaller patches. Add an ECC
-    error inject offset to support the different register
-    layout of Arria10 peripheral ECCs.
-v3: Addition of offset defines (previously in ECC Enable
-    patch that was dropped).
----
- drivers/edac/altera_edac.c |    7 +++++--
- drivers/edac/altera_edac.h |    3 +++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+Changes since v1:
+- Added defines to the dma properties and changed reg length to cover the entire
+  spdif memory area.
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 0dbfa47..502bf1f 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -622,8 +622,9 @@ static ssize_t altr_edac_device_trig(struct file *file,
- 		if (ACCESS_ONCE(ptemp[i]))
- 			result = -1;
- 		/* Toggle Error bit (it is latched), leave ECC enabled */
--		writel(error_mask, drvdata->base);
--		writel(priv->ecc_enable_mask, drvdata->base);
-+		writel(error_mask, (drvdata->base + priv->set_err_ofst));
-+		writel(priv->ecc_enable_mask, (drvdata->base +
-+					       priv->set_err_ofst));
- 		ptemp[i] = i;
- 	}
- 	/* Ensure it has been written out */
-@@ -879,6 +880,7 @@ const struct edac_device_prv_data ocramecc_data = {
- 	.ecc_enable_mask = ALTR_OCR_ECC_EN,
- 	.ce_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJS),
- 	.ue_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJD),
-+	.set_err_ofst = ALTR_OCR_ECC_REG_OFFSET,
- 	.trig_alloc_sz = ALTR_TRIG_OCRAM_BYTE_SIZE,
- };
- 
-@@ -949,6 +951,7 @@ const struct edac_device_prv_data l2ecc_data = {
- 	.ecc_enable_mask = ALTR_L2_ECC_EN,
- 	.ce_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJS),
- 	.ue_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJD),
-+	.set_err_ofst = ALTR_L2_ECC_REG_OFFSET,
- 	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
- };
- 
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index 32c798a..d7ef94c 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -205,6 +205,7 @@ struct altr_sdram_mc_data {
- /******* Cyclone5 and Arria5 Defines *******/
- /* OCRAM ECC Management Group Defines */
- #define ALTR_MAN_GRP_OCRAM_ECC_OFFSET   0x04
-+#define ALTR_OCR_ECC_REG_OFFSET         0x00
- #define ALTR_OCR_ECC_EN                 BIT(0)
- #define ALTR_OCR_ECC_INJS               BIT(1)
- #define ALTR_OCR_ECC_INJD               BIT(2)
-@@ -213,6 +214,7 @@ struct altr_sdram_mc_data {
- 
- /* L2 ECC Management Group Defines */
- #define ALTR_MAN_GRP_L2_ECC_OFFSET      0x00
-+#define ALTR_L2_ECC_REG_OFFSET          0x00
- #define ALTR_L2_ECC_EN                  BIT(0)
- #define ALTR_L2_ECC_INJS                BIT(1)
- #define ALTR_L2_ECC_INJD                BIT(2)
-@@ -229,6 +231,7 @@ struct edac_device_prv_data {
- 	int ecc_enable_mask;
- 	int ce_set_mask;
- 	int ue_set_mask;
-+	int set_err_ofst;
- 	int trig_alloc_sz;
- };
- 
+Andrea Venturi (1):
+  clk: sunxi: mod1 clock should modify it's parent
+
+Marcus Cooper (4):
+  ARM: dts :sunxi: Add SPDIF pins to A10 and A20
+  ARM: dts: sunxi: Add the SPDIF to the A10 and A20
+  ARM: dts: sun4i: Add SPDIF to the Mele A1000
+  ARM: dts: sun7i: Add SPDIF to Itead Ibox
+
+ arch/arm/boot/dts/sun4i-a10-a1000.dts      | 23 +++++++++++++++
+ arch/arm/boot/dts/sun4i-a10.dtsi           | 45 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 ++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi           | 45 ++++++++++++++++++++++++++++++
+ drivers/clk/sunxi/clk-a10-mod1.c           |  2 +-
+ 5 files changed, 138 insertions(+), 1 deletion(-)
+
 -- 
-1.7.9.5
-
+2.7.4
