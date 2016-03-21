@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] ARM: dts: sunxi: Add the SPDIF to the
+Subject: Re: [PATCH v2 2/5] ARM: dts :sunxi: Add SPDIF pins to
  A10 and A20
-Date: Mon, 21 Mar 2016 19:19:43 +0100
-Message-ID: <20160321181943.GF30977@lukather>
+Date: Mon, 21 Mar 2016 19:20:45 +0100
+Message-ID: <20160321182045.GG30977@lukather>
 References: <1458576642-4078-1-git-send-email-codekipper@gmail.com>
- <1458576642-4078-4-git-send-email-codekipper@gmail.com>
+ <1458576642-4078-3-git-send-email-codekipper@gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="USsYc9q7w7YyGvrs"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSXWYC3QKGQEDWZEF6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="np6E2rbShIadjoVu"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCPXYC3QKGQEBXE4X6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1458576642-4078-4-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1458576642-4078-3-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,31 +23,60 @@ To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---USsYc9q7w7YyGvrs
+--np6E2rbShIadjoVu
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Mon, Mar 21, 2016 at 05:10:40PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+On Mon, Mar 21, 2016 at 05:10:39PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
 > From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> Add the SPDIF transceiver controller and clock to the A10 and
-> A20 dtsi.
+> Add the SPDIF pins to the A10 and A20 dtsi.
 > 
 > Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
 > ---
->  arch/arm/boot/dts/sun4i-a10.dtsi | 24 ++++++++++++++++++++++++
->  arch/arm/boot/dts/sun7i-a20.dtsi | 24 ++++++++++++++++++++++++
+>  arch/arm/boot/dts/sun4i-a10.dtsi | 21 +++++++++++++++++++++
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 21 +++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+> index 2c8f5e6..0483640 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -1006,6 +1006,27 @@
+>  				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>  				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>  			};
+> +
+> +			spdif_tx_pins_a: spdif@0 {
+> +				allwinner,pins = "PB13";
+> +				allwinner,function = "spdif";
+> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +			};
+> +
+> +			spdif_rx_pins_a: spdif@1 {
+> +				allwinner,pins = "PB12";
+> +				allwinner,function = "spdif";
+> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +			};
+> +
+> +			spdif_mclk_pins_a: spdif@2 {
+> +				allwinner,pins = "PB3";
+> +				allwinner,function = "spdif";
+> +				allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +				allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+> +			};
 
-Sorry, I missed that earlier, but please make separate patches for
-those two DTS.
+If you're not going to use these pins, please don't add them yet.
 
-It also applies for the other patches.
+In order to avoid bloating the DT uselessly, we try to not add unused nodes.
 
+Thanks!
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---USsYc9q7w7YyGvrs--
+--np6E2rbShIadjoVu--
