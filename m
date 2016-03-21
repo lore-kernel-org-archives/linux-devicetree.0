@@ -1,52 +1,110 @@
-From: Javi Merino <javi.merino@arm.com>
-Subject: Re: [PATCH v3 2/4] devicetree: bindings: let thermal-sensor point to
- other thermal zones
-Date: Mon, 21 Mar 2016 11:55:11 +0000
-Message-ID: <20160321115511.GA6590@e104805>
-References: <1448464186-26289-1-git-send-email-javi.merino@arm.com>
- <1448464186-26289-3-git-send-email-javi.merino@arm.com>
- <20160104141709.GB19256@pengutronix.de>
- <20160303032152.GD3379@localhost.localdomain>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v7] ARM: dts: sun8i: Add leds and
+ switches on Orangepi Plus boards
+Date: Mon, 21 Mar 2016 12:57:47 +0100
+Message-ID: <56EFE1BB.2010500@redhat.com>
+References: <1458500102-11071-1-git-send-email-hdegoede@redhat.com>
+ <20160321075930.GA30977@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160303032152.GD3379@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, rui.zang@intel.com, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160321075930.GA30977@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 02, 2016 at 07:21:53PM -0800, Eduardo Valentin wrote:
-> On Mon, Jan 04, 2016 at 03:17:09PM +0100, Sascha Hauer wrote:
-> > On Wed, Nov 25, 2015 at 03:09:44PM +0000, Javi Merino wrote:
-> > > The thermal-sensor property of the thermal zone node accepts phandles to
-> > > thermal sensors.  However, thermal zones can be created as an
-> > > +
-> > > +		thermal-sensors = <&cpu_thermal &gpu_thermal &lcd_thermal>
-> > 
-> > This seems inconsistent. Why can a thermal zone only have multiple
-> > thermal sensors when they are thermal zones themselves? Either we assume
-> > that one thermal zone has a single sensor or we assume that it can have
-> > multiple sensors, but this should not depend on the zone being a sub zone
-> > or not.
-> > 
-> > I think the thermal-sensors property should always point to one or
-> > multiple sensors. I see no point in "This property either points to
-> > exactly one sensor or multiple other thermal zones (from which we only
-> > use the temperature)"
-> 
-> 
-> Agreed here. In fact, if we are going to allow thermal zones to be
-> treated as sensors, it means there should be no limits on what you put
-> of there, as long as all items have #thermal-sensor-cells. So, mixing
-> one (or more) regular sensors, with other thermal zones shall be
-> allowed, if we agree in this semantics.
+Hi,
 
-Eduardo, thanks for the review.  There doesn't seem to be much
-interest in this and I currently have no time to work on it so I am
-dropping this series for the time being.  I'm happy for this to be
-picked up by somebody else (or who knows, maybe I will be able to work
-on it again in the future).
+On 21-03-16 08:59, Maxime Ripard wrote:
+> Hi,
+>
+> On Sun, Mar 20, 2016 at 07:55:02PM +0100, Hans de Goede wrote:
+>> From: Krzysztof Adamski <k@japko.eu>
+>>
+>> OrangePi Plus board has two leds - green ("pwr") and red ("status")
+>> and two switches ("sw4" and "sw2"). This patch describes them in
+>> devicetree.
+>>
+>> Signed-off-by: Krzysztof Adamski <k@japko.eu>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> An earlier version has already been sent for 4.6, please base your
+> changes on top of this one.
 
-Javi
+Ah, I missed that one because it is not in your for-next branch!
+
+It is only in sunxi-dt-for-4.6.
+
+> And there's a bunch of things I didn't catch at that time :/
+
+I'll cherry-pick the patch you've in sunxi-dt-for-4.6 into
+my tree and send a fixup patch to apply on top.
+
+Regards,
+
+Hans
+
+
+
+
+>
+>> ---
+>> Changes in v6 (hdegoede):
+>> -Merge leds and r_leds nodes into one
+>> -Fix led labels to be in <board>:<colour>:<role> form
+>> -Alphabetically sort the added nodes
+>> -Add support for sw2 (this is the small reset-like button)
+>> Changes in v7 (hdegoede):
+>> -Use PL3 / PL4 in the pinctrl node, not PL03 / PL04
+>> ---
+>>   arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
+>>   1 file changed, 63 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+>> index a680b1f..9d8c038 100644
+>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+>> @@ -45,6 +45,7 @@
+>>   #include "sunxi-common-regulators.dtsi"
+>>
+>>   #include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/input/input.h>
+>>   #include <dt-bindings/pinctrl/sun4i-a10.h>
+>>
+>>   / {
+>> @@ -59,6 +60,43 @@
+>>   		stdout-path = "serial0:115200n8";
+>>   	};
+>>
+>> +	gpio_keys {
+>> +		compatible = "gpio-keys";
+>> +		input-name = "sw4";
+>
+> This is an undocumented (and apparently unused) property
+>
+>> +
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&sw_r_opc>;
+>> +
+>> +		sw2@0 {
+>
+> You shouldn't have a unit-address here
+>
+>> +			label = "sw2";
+>> +			linux,code = <BTN_1>;
+>> +			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
+>> +		};
+>> +
+>> +		sw4@0 {
+>
+> Ditto.
+>
+> Thanks!
+> Maxime
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
