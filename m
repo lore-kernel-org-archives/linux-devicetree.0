@@ -1,50 +1,256 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
-Date: Mon, 21 Mar 2016 16:36:42 +0100
-Message-ID: <CAGhQ9VwS=YwgfeUuK+LzGjy3f9btVGV7bN=TATGHwQs+JW+iGA@mail.gmail.com>
-References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
-	<1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
-	<CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
-	<20160321124043.GA26873@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/7] scatterlist: add sg_alloc_table_from_buf()
+ helper
+Date: Mon, 21 Mar 2016 16:46:15 +0100
+Message-ID: <20160321164615.37453ed8@bbrezillon>
+References: <1457435715-24740-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1457435715-24740-5-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20160321124043.GA26873@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Alexandre TORGUE <alexandre.torgue@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBU5OYC3QKGQEK4P5BIA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1457435715-24740-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 March 2016 at 13:40, Rob Herring <robh@kernel.org> wrote:
-> On Sat, Mar 19, 2016 at 12:00:22AM +0800, Chen-Yu Tsai wrote:
->> Hi,
->>
->> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
->> <alexandre.torgue@gmail.com> wrote:
->> > +- clocks: Must contain a phandle for each entry in clock-names.
->> > +- clock-names: Should be "stmmaceth" for the host clock.
->
-> This doesn't sound like the clock input signal name...
->
->> > +              Should be "tx-clk" for the MAC TX clock.
->> > +              Should be "rx-clk" for the MAC RX clock.
->
-> How can other DWMAC blocks not have these clocks? The glue can't really
-> add these clocks. It could combine them into one or a new version of
-> DWMAC could have a different number of clock inputs. So if there is
-> variation here, then some of the bindings are probably wrong. I guess
-> the only change I'm suggesting is possibly moving these into common
-> binding doc.
+On Tue,  8 Mar 2016 12:15:12 +0100
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-The LPC18xx implementation probably have these clocks as well but the
-LPC1850 user manual only documents the main clock. Someone with access
-to the IP block doc from Synopsys should be able to check which clocks
-the MAC really needs.
+> sg_alloc_table_from_buf() provides an easy solution to create an sg_table
+> from a virtual address pointer. This function takes care of dealing with
+> vmallocated buffers, buffer alignment, or DMA engine limitations (maximum
+> DMA transfer size).
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  include/linux/scatterlist.h |  24 ++++++++
+>  lib/scatterlist.c           | 142 ++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 166 insertions(+)
+> 
+> diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
+> index 556ec1e..4a75362 100644
+> --- a/include/linux/scatterlist.h
+> +++ b/include/linux/scatterlist.h
+> @@ -41,6 +41,27 @@ struct sg_table {
+>  	unsigned int orig_nents;	/* original size of list */
+>  };
+>  
+> +/**
+> + * struct sg_constraints - SG constraints structure
+> + *
+> + * @max_chunk_len: maximum chunk buffer length. Each SG entry has to be smaller
+> + *		   than this value. Zero means no constraint.
+> + * @required_alignment: minimum alignment. Is used for both size and pointer
+> + *			alignment. If this constraint is not met, the function
+> + *			should return -EINVAL.
+> + * @preferred_alignment: preferred alignment. Mainly used to optimize
+> + *			 throughput when the DMA engine performs better when
+> + *			 doing aligned accesses.
+> + *
+> + * This structure is here to help sg_alloc_table_from_buf() create the optimal
+> + * SG list based on DMA engine constraints.
+> + */
+> +struct sg_constraints {
+> +	size_t max_chunk_len;
+> +	size_t required_alignment;
+> +	size_t preferred_alignment;
+> +};
+> +
 
-Rockchip bindings have two clocks named "mac_clk_rx" and "mac_clk_tx".
-These are probably the same as stm32 needs so maybe use these names
-and move them into the main doc and update the rockchip binding.
+Hm, we seem to have another case in NAND controller drivers. Some
+drivers do not support scattergather accesses and have to provide a
+single physically contiguous memory region to transfer the whole
+NAND page.
+
+Could we add a ->max_entries field to the sg_contraints struct to allow
+those drivers to use the generic mtd_map_buf() function, and fallback
+to a bounce buffer approach (or PIO access approach) when
+sg_alloc_table_from_buf() fails to fulfill this constraint.
+
+We could also define another 'non-sg' function to do the 'physically
+contiguous' check, but in any case, I'd like to avoid letting each
+driver code its own checking function.
+
+What do you think?
+
+>  /*
+>   * Notes on SG table design.
+>   *
+> @@ -265,6 +286,9 @@ int sg_alloc_table_from_pages(struct sg_table *sgt,
+>  	struct page **pages, unsigned int n_pages,
+>  	unsigned long offset, unsigned long size,
+>  	gfp_t gfp_mask);
+> +int sg_alloc_table_from_buf(struct sg_table *sgt, const void *buf, size_t len,
+> +			    const struct sg_constraints *constraints,
+> +			    gfp_t gfp_mask);
+>  
+>  size_t sg_copy_buffer(struct scatterlist *sgl, unsigned int nents, void *buf,
+>  		      size_t buflen, off_t skip, bool to_buffer);
+> diff --git a/lib/scatterlist.c b/lib/scatterlist.c
+> index bafa993..706b583 100644
+> --- a/lib/scatterlist.c
+> +++ b/lib/scatterlist.c
+> @@ -433,6 +433,148 @@ int sg_alloc_table_from_pages(struct sg_table *sgt,
+>  }
+>  EXPORT_SYMBOL(sg_alloc_table_from_pages);
+>  
+> +static size_t sg_buf_chunk_len(const void *buf, size_t len,
+> +			       const struct sg_constraints *cons)
+> +{
+> +	size_t chunk_len = len;
+> +
+> +	if (cons->max_chunk_len)
+> +		chunk_len = min_t(size_t, chunk_len, cons->max_chunk_len);
+> +
+> +	if (is_vmalloc_addr(buf))
+> +		chunk_len = min_t(size_t, chunk_len,
+> +				  PAGE_SIZE - offset_in_page(buf));
+> +
+> +	if (!IS_ALIGNED((unsigned long)buf, cons->preferred_alignment)) {
+> +		const void *aligned_buf = PTR_ALIGN(buf,
+> +						    cons->preferred_alignment);
+> +		size_t unaligned_len = (unsigned long)(aligned_buf - buf);
+> +
+> +		chunk_len = min_t(size_t, chunk_len, unaligned_len);
+> +	} else if (chunk_len > cons->preferred_alignment) {
+> +		chunk_len &= ~(cons->preferred_alignment - 1);
+> +	}
+> +
+> +	return chunk_len;
+> +}
+> +
+> +#define sg_for_each_chunk_in_buf(buf, len, chunk_len, constraints)	\
+> +	for (chunk_len = sg_buf_chunk_len(buf, len, constraints);	\
+> +	     len;							\
+> +	     len -= chunk_len, buf += chunk_len,			\
+> +	     chunk_len = sg_buf_chunk_len(buf, len, constraints))
+> +
+> +static int sg_check_constraints(struct sg_constraints *cons,
+> +				const void *buf, size_t len)
+> +{
+> +	if (!cons->required_alignment)
+> +		cons->required_alignment = 1;
+> +
+> +	if (!cons->preferred_alignment)
+> +		cons->preferred_alignment = cons->required_alignment;
+> +
+> +	/* Test if buf and len are properly aligned. */
+> +	if (!IS_ALIGNED((unsigned long)buf, cons->required_alignment) ||
+> +	    !IS_ALIGNED(len, cons->required_alignment))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * if the buffer has been vmallocated and required_alignment is
+> +	 * more than PAGE_SIZE we cannot guarantee it.
+> +	 */
+> +	if (is_vmalloc_addr(buf) && cons->required_alignment > PAGE_SIZE)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * max_chunk_len has to be aligned to required_alignment to
+> +	 * guarantee that all buffer chunks are aligned correctly.
+> +	 */
+> +	if (!IS_ALIGNED(cons->max_chunk_len, cons->required_alignment))
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * preferred_alignment has to be aligned to required_alignment
+> +	 * to avoid misalignment of buffer chunks.
+> +	 */
+> +	if (!IS_ALIGNED(cons->preferred_alignment, cons->required_alignment))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * sg_alloc_table_from_buf - create an SG table from a buffer
+> + *
+> + * @sgt: SG table
+> + * @buf: buffer you want to create this SG table from
+> + * @len: length of buf
+> + * @constraints: optional constraints to take into account when creating
+> + *		 the SG table. Can be NULL if no specific constraints are
+> + *		 required.
+> + * @gfp_mask: type of allocation to use when creating the table
+> + *
+> + * This function creates an SG table from a buffer, its length and some
+> + * SG constraints.
+> + *
+> + * Note: This function supports vmallocated buffers.
+> + */
+> +int sg_alloc_table_from_buf(struct sg_table *sgt, const void *buf, size_t len,
+> +			    const struct sg_constraints *constraints,
+> +			    gfp_t gfp_mask)
+> +{
+> +	struct sg_constraints cons = { };
+> +	size_t remaining, chunk_len;
+> +	const void *sg_buf;
+> +	int i, ret;
+> +
+> +	if (constraints)
+> +		cons = *constraints;
+> +
+> +	ret = sg_check_constraints(&cons, buf, len);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sg_buf = buf;
+> +	remaining = len;
+> +	i = 0;
+> +	sg_for_each_chunk_in_buf(sg_buf, remaining, chunk_len, &cons)
+> +		i++;
+> +
+> +	ret = sg_alloc_table(sgt, i, gfp_mask);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sg_buf = buf;
+> +	remaining = len;
+> +	i = 0;
+> +	sg_for_each_chunk_in_buf(sg_buf, remaining, chunk_len, &cons) {
+> +		if (is_vmalloc_addr(sg_buf)) {
+> +			struct page *vm_page;
+> +
+> +			vm_page = vmalloc_to_page(sg_buf);
+> +			if (!vm_page) {
+> +				ret = -ENOMEM;
+> +				goto err_free_table;
+> +			}
+> +
+> +			sg_set_page(&sgt->sgl[i], vm_page, chunk_len,
+> +				    offset_in_page(sg_buf));
+> +		} else {
+> +			sg_set_buf(&sgt->sgl[i], sg_buf, chunk_len);
+> +		}
+> +
+> +		i++;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_free_table:
+> +	sg_free_table(sgt);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(sg_alloc_table_from_buf);
+> +
+>  void __sg_page_iter_start(struct sg_page_iter *piter,
+>  			  struct scatterlist *sglist, unsigned int nents,
+>  			  unsigned long pgoffset)
 
 
-regards,
-Joachim Eastwood
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
