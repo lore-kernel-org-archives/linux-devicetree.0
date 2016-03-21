@@ -1,54 +1,59 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] iio:magnetometer:ak8975: mounting matrix support
-Date: Mon, 21 Mar 2016 09:58:46 -0500
-Message-ID: <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw@mail.gmail.com>
-References: <cover.1458231723.git.gregor.boirie@parrot.com> <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie@parrot.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] mtd: nand: omap2: Fix high memory dma prefetch
+ transfer
+Date: Mon, 21 Mar 2016 16:04:43 +0100
+Message-ID: <20160321160443.0a4165d1@bbrezillon>
+References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
+	<1457654203-20856-7-git-send-email-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457654203-20856-7-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 11:43 AM, Gregor Boirie
-<gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> wrote:
-> Expose a rotation matrix to indicate userspace the chip placement with
-> respect to the overall hardware system. This is needed to adjust
-> coordinates sampled from a magnetometer chip when its position deviates
-> from the main hardware system.
->
-> Final coordinates computation is delegated to userspace since:
-> * computation may involve floating point arithmetics ;
-> * it allows an application to combine adjustments with arbitrary
->   transformations.
->
-> This 3 dimentional space rotation matrix is expressed as 3x3 array of
-> strings to support floating point numbers. It may be retrieved from a
-> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
-> entry as a "matrix" property.
+Hi Franklin,
 
-Why is the sysfs interface specific to ak8975?
+On Thu, 10 Mar 2016 17:56:42 -0600
+Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org> wrote:
 
-Furthermore, why is it specific to magnetometer? Couldn't
-accelerometers need the same thing? There's a thread discussing a
-similar matrix on android-x86[1].
+> Based on DMA documentation and testing using high memory buffer when
+> doing dma transfers can lead to various issues including kernel
+> panics.
+
+I guess it all comes from the vmalloced buffer case, which are not
+guaranteed to be physically contiguous (one of the DMA requirement,
+unless you have an iommu).
+
+> 
+> To workaround this simply use cpu copy. The amount of high memory
+> buffers used are very uncommon so no noticeable performance hit should
+> be seen.
+
+Hm, that's not necessarily true. UBI and UBIFS allocate their buffers
+using vmalloc (vmalloced buffers fall in the high_memory region), and
+those are likely to be dis-contiguous if you have NANDs with pages > 4k.
+
+I recently posted patches to ease sg_table creation from any kind of
+virtual address [1][2]. Can you try them and let me know if it fixes
+your problem?
+
+Thanks,
+
+Boris
+
+[1]https://lkml.org/lkml/2016/3/8/276
+[2]https://lkml.org/lkml/2016/3/8/277
 
 
-> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> index 34a3206..f936f86 100644
-> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
-> @@ -9,6 +9,7 @@ Optional properties:
->
->    - gpios : should be device tree identifier of the magnetometer DRDY pin
->    - vdd-supply: an optional regulator that needs to be on to provide VDD
-> +  - matrix: an optional 3x3 mounting rotation matrix
-
-Perhaps "rotation-matrx" would be a better name in case there's ever
-any other matrix needed.
-
-Rob
-
-[1] https://groups.google.com/forum/#!msg/android-x86/LaKhV8cT69o/G1rrVU0_JAAJ
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
