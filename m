@@ -1,62 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: codecs: add TA5720 digital amplifier DT
- bindings
-Date: Mon, 21 Mar 2016 07:45:55 -0500
-Message-ID: <20160321124555.GA12693@rob-hp-laptop>
-References: <1458343678-4086-1-git-send-email-dannenberg@ti.com>
- <1458343678-4086-2-git-send-email-dannenberg@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] of: Add vendor prefix for On Tat Industrial Company.
+Date: Mon, 21 Mar 2016 07:47:03 -0500
+Message-ID: <20160321124703.GA15265@rob-hp-laptop>
+References: <1458355366-7073-1-git-send-email-eric@anholt.net>
+ <1458355366-7073-2-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1458343678-4086-2-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1458355366-7073-2-git-send-email-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 18, 2016 at 06:27:57PM -0500, Andreas Dannenberg wrote:
-> The Texas Instruments TAS5720L/M device is a high-efficiency mono
-> Class-D audio power amplifier optimized for high transient power
-> capability to use the dynamic power headroom of small loudspeakers.
-> Its digital time division multiplexed (TDM) interface enables up to
-> 16 devices to share the same bus.
-> 
-> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/tas5720.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/tas5720.txt b/Documentation/devicetree/bindings/sound/tas5720.txt
-> new file mode 100644
-> index 0000000..3775a3f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/tas5720.txt
-> @@ -0,0 +1,37 @@
-> +Texas Instruments TAS5720 Mono Audio amplifier
-> +
-> +The TAS5720 serial control bus communicates through the I2C protocol only.
-> +
-> +Required properties:
-> +
-> +- compatible : "ti,tas5720"
-> +- reg : I2C slave address
-> +
-> +Optional properties:
-> +
-> +- dvdd-supply : phandle to a 3.3-V supply for the digital circuitry
-> +- pvdd-supply : phandle to a supply used for the Class-D amp and the analog
-> +- interrupts-extended : reference to a GPIO pin connected to the TAS5720
-> +                        FAULTZ pin for error reporting purposes
-
-There's no point in having interrupts-extended here with a single 
-interrupt. It is fine to use, but really that's outside the scope of 
-this binding. So I'd just document "interrupts" here as that is what 
-most docs do, and that implies interrupts-extended could be used.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBNYXIgMTgsIDIwMTYgYXQgMDc6NDI6NDJQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gVGhpcyBpcyB0aGUgdmVuZG9yIGZvciBhIDciIERQSSBwYW5lbCBzb2xkIGJ5IEFkYWZy
+dWl0IHdoaWNoIEknZCBsaWtlCj4gdG8gZGVzY3JpYmUgaW4gRFQuCj4gCj4gU2lnbmVkLW9mZi1i
+eTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgfCAxICsKPiAgMSBmaWxlIGNo
+YW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
+Lm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
