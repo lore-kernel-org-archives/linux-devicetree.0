@@ -1,63 +1,69 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Mon, 21 Mar 2016 10:57:56 +0200
-Message-ID: <56EFB794.5010505@ti.com>
-References: <1458311007-19168-1-git-send-email-peter.ujfalusi@ti.com>
- <alpine.DEB.2.02.1603191937430.6629@utopia.booyaka.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RFC PATCH v1 0/4] Add Rockchip RGA support
+Date: Mon, 21 Mar 2016 17:28:38 +0800
+Message-ID: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1603191937430.6629-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Paul,
 
-On 03/19/16 21:38, Paul Walmsley wrote:
-> On Fri, 18 Mar 2016, Peter Ujfalusi wrote:
->=20
->> Hi,
->>
->> Chanes since v1:
->> - removed the ASoC patch as Mark has applied it already
->> - Added my signed-off to the hwmod patch
->> - New patch to handle the case when the sidetone hwmod has been remo=
-ved for
->>   legacy boot.
->>
->> The series addresses a long standing issue with McBSP2/3 regarding t=
-o hwmod
->> setup. When booting with DT a warning is printed that mcbsp2/3 is us=
-ing two
->> hwmod.
->> The root of the issue is the way how the hwmod data was constructed =
-in the first
->> place for OMAP3 McBSP2/3.
->> After re-reading the TRM it is clear that the sidetone should not ha=
-ve it's
->> own hwmod data as it is not a separate IP, it is part of the McBSP m=
-odule. It
->> can not affect PRCM either since it's SYSCONFIG register's AUTOIDLE =
-bit is only
->> sets the autoidle from the internal McBSP_iclk clock to the sidetone=
- block of
->> the same McBSP.
->=20
-> NAK, at least without further discussion - see my comments on the v1 =
-0/3=20
-> introduction.
+Hi, Mark and all.
 
-Yes, I could have sent the first series as RFC, but I believe(d) that t=
-his is
-the correct way to fix the McBSP sidetone integration.
+This patch set would add the RGA direct rendering based 2d graphics
+acceleration module.
 
---=20
-P=E9ter
+This patch set is based on git repository below:
+git://people.freedesktop.org/~airlied/linux drm-next
+commit id: 568d7c764ae01f3706085ac8f0d8a8ac7e826bd7
+
+And the RGA driver is based on Exynos G2D driver, it only manages the
+command lists received from user, so user should make the command list
+to data and registers needed by operation to use.
+
+I have prepared an userspace demo application for testing:
+	https://github.com/yakir-Yang/libdrm-rockchip
+That is a rockchip libdrm library, and I have write a simple test case
+"rockchip_rga_test" that would test the below RGA features:
+- solid
+- copy
+- rotation
+- flip
+- window clip
+- dithering
+
+Thanks,
+- Yakir
+
+
+Yakir Yang (4):
+  drm: rockchip: add a common subdrv interfaces
+  drm: rockchip: add RGA driver support
+  ARM: dts: rockchip: add RGA device node for RK3288
+  ARM: dst: rockchip: enable RGA support on veyron devices
+
+ .../bindings/display/rockchip/rockchip-rga.txt     |  36 +
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |   4 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  13 +
+ drivers/gpu/drm/rockchip/Kconfig                   |   9 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |  82 ++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |  19 +
+ drivers/gpu/drm/rockchip/rockchip_drm_rga.c        | 977 +++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_rga.h        | 108 +++
+ include/uapi/drm/rockchip_drm.h                    |  63 ++
+ 10 files changed, 1312 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-rga.txt
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_rga.c
+ create mode 100644 drivers/gpu/drm/rockchip/rockchip_drm_rga.h
+ create mode 100644 include/uapi/drm/rockchip_drm.h
+
+-- 
+1.9.1
+
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
