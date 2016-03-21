@@ -1,130 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4 v3] drm: Add DT bindings documentation for ARC PGU
- display controller
-Date: Mon, 21 Mar 2016 08:04:19 -0500
-Message-ID: <20160321130419.GA23913@rob-hp-laptop>
-References: <1457710959-9562-1-git-send-email-abrodkin@synopsys.com>
- <1457710959-9562-3-git-send-email-abrodkin@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regmap: fix documentation to match code
+Date: Mon, 21 Mar 2016 08:14:28 -0500
+Message-ID: <20160321131428.GA28046@rob-hp-laptop>
+References: <1458235427-3856540-1-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457710959-9562-3-git-send-email-abrodkin@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: linux-kernel@vger.kernel.org, linux-snps-arc@lists.infradead.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+In-Reply-To: <1458235427-3856540-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiubo Li <Li.Xiubo-3arQi8VN3Tc@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 06:42:37PM +0300, Alexey Brodkin wrote:
-> This add DT bindings documentation for ARC PGU display controller.
+On Thu, Mar 17, 2016 at 06:23:40PM +0100, Arnd Bergmann wrote:
+> The regmap binding talks about one thing, which is register
+> endianess, and it gets almost every aspect of it wrong.
 > 
-> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> ---
+> This replaces the current text of the file with a version
+> that makes more sense and that matches what we implement
+> now.
 > 
-> Changes v2 -> v3:
->  * Reverted back to initial larger version of example
->    with minor fixes (thanks Rob for spotting those).
-> 
-> Changes v1 -> v2:
->  * Removed everything except PGU node itself.
-> 
->  .../devicetree/bindings/display/snps,arcpgu.txt    | 72 ++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
-> new file mode 100644
-> index 0000000..b130924
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
-> @@ -0,0 +1,72 @@
-> +ARC PGU
-> +
-> +This is a display controller found on several development boards produced
-> +by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
-> +framebuffer and sends it to a single digital encoder (usually HDMI).
-> +
-> +Required properties:
-> +  - compatible: "snps,arcpgu"
-> +  - reg: Physical base address and length of the controller's registers.
-> +  - clocks: A list of phandle + clock-specifier pairs, one for each
-> +    entry in 'clock-names'.
-> +  - clock-names: A list of clock names. For ARC PGU it should contain:
-> +      - "pxlclk" for the clock feeding the output PLL of the controller.
-> +  - encoder-slave: Phandle of encoder chip.
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Fixes: a06c488da0b0 ("regmap: Add explict native endian flag to DT bindings")
+> Fixes: 275876e208e2 ("regmap: Add the DT binding documentation for endianness")
 
-Drop this as discussed.
+[...]
 
-> +
-> +Required sub-nodes:
-> +  - port: The PGU connection to an encoder chip.
-> +
-> +Example:
-> +
-> +/ {
-> +	...
-> +
-> +	pgu@XXXXXXXX {
-> +		compatible = "snps,arcpgu";
-> +		reg = <0xXXXXXXXX 0x400>;
-> +		clocks = <&clock_node>;
-> +		clock-names = "pxlclk";
-> +		encoder-slave = <&encoder_node>;
-> +
-> +		port {
-> +			pgu_output: endpoint {
-> +				remote-endpoint = <&hdmi_enc_input>;
-> +			};
-> +		};
-> +	};
-> +
-> +	/* HDMI encoder on I2C bus */
-> +	i2c@XXXXXXXX {
-> +		compatible = "...";
-> +
-> +		encoder_node:encoder_node@0xXX{
+> +Note:
+> +Regmap defaults to little-endian register access on MMIO based
+> +devices, this is by far the most common setting. On CPU
 
-Don't use underscores in node names. Just "hdmi@xx"
+This seems a bit Linux specific to me, but I guess if we are defining 
+the binding to be this way it is fine.
 
-> +			compatible="...";
-> +
-> +			ports {
-> +				port@0 {
-> +					reg = <0>;
-> +					hdmi_enc_input:endpoint {
-> +						remote-endpoint = <&pgu_output>;
-> +					};
-> +				};
-> +
-> +				port@1 {
-> +					reg = <1>;
-> +					hdmi_enc_output:endpoint {
-> +						remote-endpoint = <&hdmi_connector_in>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	}
-> +
-> +	hdmi0: connector {
-> +		compatible = "hdmi-connector";
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&hdmi_enc_output>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.5.0
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> +architectures that typically run big-endian operating systems
+> +(e.g. PowerPC), registers can be defined as big-endian and must
+> +be marked that way in the devicetree.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
