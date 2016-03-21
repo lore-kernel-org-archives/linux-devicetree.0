@@ -1,59 +1,50 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] mtd: nand: omap2: Fix high memory dma prefetch
- transfer
-Date: Mon, 21 Mar 2016 16:04:43 +0100
-Message-ID: <20160321160443.0a4165d1@bbrezillon>
-References: <1457654203-20856-1-git-send-email-fcooper@ti.com>
-	<1457654203-20856-7-git-send-email-fcooper@ti.com>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Mon, 21 Mar 2016 16:36:42 +0100
+Message-ID: <CAGhQ9VwS=YwgfeUuK+LzGjy3f9btVGV7bN=TATGHwQs+JW+iGA@mail.gmail.com>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
+	<1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
+	<CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
+	<20160321124043.GA26873@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457654203-20856-7-git-send-email-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20160321124043.GA26873@rob-hp-laptop>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Alexandre TORGUE <alexandre.torgue@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Franklin,
+On 21 March 2016 at 13:40, Rob Herring <robh@kernel.org> wrote:
+> On Sat, Mar 19, 2016 at 12:00:22AM +0800, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+>> <alexandre.torgue@gmail.com> wrote:
+>> > +- clocks: Must contain a phandle for each entry in clock-names.
+>> > +- clock-names: Should be "stmmaceth" for the host clock.
+>
+> This doesn't sound like the clock input signal name...
+>
+>> > +              Should be "tx-clk" for the MAC TX clock.
+>> > +              Should be "rx-clk" for the MAC RX clock.
+>
+> How can other DWMAC blocks not have these clocks? The glue can't really
+> add these clocks. It could combine them into one or a new version of
+> DWMAC could have a different number of clock inputs. So if there is
+> variation here, then some of the bindings are probably wrong. I guess
+> the only change I'm suggesting is possibly moving these into common
+> binding doc.
 
-On Thu, 10 Mar 2016 17:56:42 -0600
-Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org> wrote:
+The LPC18xx implementation probably have these clocks as well but the
+LPC1850 user manual only documents the main clock. Someone with access
+to the IP block doc from Synopsys should be able to check which clocks
+the MAC really needs.
 
-> Based on DMA documentation and testing using high memory buffer when
-> doing dma transfers can lead to various issues including kernel
-> panics.
-
-I guess it all comes from the vmalloced buffer case, which are not
-guaranteed to be physically contiguous (one of the DMA requirement,
-unless you have an iommu).
-
-> 
-> To workaround this simply use cpu copy. The amount of high memory
-> buffers used are very uncommon so no noticeable performance hit should
-> be seen.
-
-Hm, that's not necessarily true. UBI and UBIFS allocate their buffers
-using vmalloc (vmalloced buffers fall in the high_memory region), and
-those are likely to be dis-contiguous if you have NANDs with pages > 4k.
-
-I recently posted patches to ease sg_table creation from any kind of
-virtual address [1][2]. Can you try them and let me know if it fixes
-your problem?
-
-Thanks,
-
-Boris
-
-[1]https://lkml.org/lkml/2016/3/8/276
-[2]https://lkml.org/lkml/2016/3/8/277
+Rockchip bindings have two clocks named "mac_clk_rx" and "mac_clk_tx".
+These are probably the same as stm32 needs so maybe use these names
+and move them into the main doc and update the rockchip binding.
 
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+Joachim Eastwood
