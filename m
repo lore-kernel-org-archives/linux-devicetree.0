@@ -1,17 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7] ARM: dts: sun8i: Add leds and switches
- on Orangepi Plus boards
-Date: Mon, 21 Mar 2016 08:59:30 +0100
-Message-ID: <20160321075930.GA30977@lukather>
-References: <1458500102-11071-1-git-send-email-hdegoede@redhat.com>
+Subject: Re: [PATCH 0/8] ARM: dts: sun8i: Orangepi Plus dts improvements
+Date: Mon, 21 Mar 2016 09:03:48 +0100
+Message-ID: <20160321080348.GB30977@lukather>
+References: <1458489636-2825-1-git-send-email-hdegoede@redhat.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k7W93gQNhKgsYkEv"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBY6TX23QKGQEURSSEQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="cjXvCArabh/jFWdZ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBZOVX23QKGQEKSZWUVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1458500102-11071-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1458489636-2825-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,77 +21,32 @@ To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Krzysztof Adamski <k@japko.eu>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---k7W93gQNhKgsYkEv
+--cjXvCArabh/jFWdZ
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-Hi,
-
-On Sun, Mar 20, 2016 at 07:55:02PM +0100, Hans de Goede wrote:
-> From: Krzysztof Adamski <k@japko.eu>
+On Sun, Mar 20, 2016 at 05:00:28PM +0100, Hans de Goede wrote:
+> Hi Maxime and Chen-Yu,
 > 
-> OrangePi Plus board has two leds - green ("pwr") and red ("status")
-> and two switches ("sw4" and "sw2"). This patch describes them in
-> devicetree.
+> Here is a series with various improvements for the Orangepi Plus dts.
+> Some (most) of these patches have been submitted before, esp. the USB
+> ones have multiple revisions before. But I lost count of their version,
+> so I'm posting this as a "new" set.
 > 
-> Signed-off-by: Krzysztof Adamski <k@japko.eu>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-An earlier version has already been sent for 4.6, please base your
-changes on top of this one.
-
-And there's a bunch of things I didn't catch at that time :/
-
-> ---
-> Changes in v6 (hdegoede):
-> -Merge leds and r_leds nodes into one
-> -Fix led labels to be in <board>:<colour>:<role> form
-> -Alphabetically sort the added nodes
-> -Add support for sw2 (this is the small reset-like button)
-> Changes in v7 (hdegoede):
-> -Use PL3 / PL4 in the pinctrl node, not PL03 / PL04
-> ---
->  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 63 ++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
+> About the USB patches, these rely on the patches to add support for
+> multiple-reset controllers to ohci-platform / ehci-platform. These
+> patches are all acked up and will go upstream as soon as v4.6-rc1 is
+> released (they depend on changes which will go into v4.6-rc1).
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-> index a680b1f..9d8c038 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-> @@ -45,6 +45,7 @@
->  #include "sunxi-common-regulators.dtsi"
->  
->  #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
->  #include <dt-bindings/pinctrl/sun4i-a10.h>
->  
->  / {
-> @@ -59,6 +60,43 @@
->  		stdout-path = "serial0:115200n8";
->  	};
->  
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		input-name = "sw4";
+> The old ohci-platform / ehci-platform will only look at the first reset
+> specified in the dt and as such will fail to load with the new dt nodes
+> (because they cannot talk to the controller).
+> 
+> I've also included a v6 of Krzysztof Adamski <k@japko.eu> leds / switches
+> patch, fixing the comments you had in your review of v5. I've done this
+> to avoid conflicts with my other patches.
 
-This is an undocumented (and apparently unused) property
-
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sw_r_opc>;
-> +
-> +		sw2@0 {
-
-You shouldn't have a unit-address here
-
-> +			label = "sw2";
-> +			linux,code = <BTN_1>;
-> +			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		sw4@0 {
-
-Ditto.
+Applied all but patch 6, which was in already.
 
 Thanks!
 Maxime
@@ -101,4 +55,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
---k7W93gQNhKgsYkEv--
+--cjXvCArabh/jFWdZ--
