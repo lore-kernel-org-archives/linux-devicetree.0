@@ -1,77 +1,67 @@
-From: Emil Bartczak <emilbart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] drivers/rtc/rtc-mcp795.c: add devicetree support
-Date: Mon, 21 Mar 2016 01:06:10 +0100
-Message-ID: <20160321000610.GA21979@emba-laptop>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v5 3/5] ARM: at91: pm: configure PMC fast startup signals
+Date: Mon, 21 Mar 2016 02:24:32 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D643C03F@penmbx01>
+References: <1458111489-23774-1-git-send-email-wenyou.yang@atmel.com>
+ <1458111489-23774-4-git-send-email-wenyou.yang@atmel.com>
+ <20160317171433.GD2831@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160317171433.GD2831@piout.net>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to the rtc-mcp795 driver.
-
-Signed-off-by: Emil Bartczak <emilbart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/rtc/maxim,mcp795.txt | 11 +++++++++++
- drivers/rtc/rtc-mcp795.c                               | 10 ++++++++++
- 2 files changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/maxim,mcp795.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/maxim,mcp795.txt b/Documentation/devicetree/bindings/rtc/maxim,mcp795.txt
-new file mode 100644
-index 0000000..a59fdd8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/maxim,mcp795.txt
-@@ -0,0 +1,11 @@
-+* Maxim MCP795		SPI Serial Real-Time Clock
-+
-+Required properties:
-+- compatible: Should contain "maxim,mcp795".
-+- reg: SPI address for chip
-+
-+Example:
-+	mcp795: rtc@0 {
-+		compatible = "maxim,mcp795";
-+		reg = <0>;
-+	};
-diff --git a/drivers/rtc/rtc-mcp795.c b/drivers/rtc/rtc-mcp795.c
-index 1c91ce8..025bb33 100644
---- a/drivers/rtc/rtc-mcp795.c
-+++ b/drivers/rtc/rtc-mcp795.c
-@@ -20,6 +20,7 @@
- #include <linux/printk.h>
- #include <linux/spi/spi.h>
- #include <linux/rtc.h>
-+#include <linux/of.h>
- 
- /* MCP795 Instructions, see datasheet table 3-1 */
- #define MCP795_EEREAD	0x03
-@@ -183,9 +184,18 @@ static int mcp795_probe(struct spi_device *spi)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id mcp795_of_match[] = {
-+	{ .compatible = "maxim,mcp795" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, mcp795_of_match);
-+#endif
-+
- static struct spi_driver mcp795_driver = {
- 		.driver = {
- 				.name = "rtc-mcp795",
-+				.of_match_table = of_match_ptr(mcp795_of_match),
- 		},
- 		.probe = mcp795_probe,
- };
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQWxleGFuZHJlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFs
+ZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
+Y29tXQ0KPiBTZW50OiAyMDE2xOoz1MIxOMjVIDE6MTUNCj4gVG86IFlhbmcsIFdlbnlvdSA8V2Vu
+eW91LllhbmdAYXRtZWwuY29tPg0KPiBDYzogRmVycmUsIE5pY29sYXMgPE5pY29sYXMuRkVSUkVA
+YXRtZWwuY29tPjsgSmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLQ0KPiBWaWxsYXJkIDxwbGFnbmlv
+akBqY3Jvc29mdC5jb20+OyBSdXNzZWxsIEtpbmcgPGxpbnV4QGFybS5saW51eC5vcmcudWs+OyBs
+aW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWNsa0B2
+Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBQYXdl
+bCBNb2xsIDxwYXdlbC5tb2xsQGFybS5jb20+OyBNYXJrIEJyb3duDQo+IDxicm9vbmllQGtlcm5l
+bC5vcmc+OyBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrPjsgS3Vt
+YXINCj4gR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djUgMy81XSBBUk06IGF0OTE6IHBtOiBjb25maWd1cmUgUE1DIGZhc3Qgc3RhcnR1cCBzaWduYWxz
+DQo+IA0KPiBPbiAxNi8wMy8yMDE2IGF0IDE0OjU4OjA3ICswODAwLCBXZW55b3UgWWFuZyB3cm90
+ZSA6DQo+ID4gVGhlIGZhc3Qgc3RhcnR1cCBzaWduYWwgaXMgdXNlZCBhcyB3YWtlIHVwIHNvdXJj
+ZXMgZm9yIFVMUDEgbW9kZS4NCj4gPiBBcyBzb29uIGFzIGEgZmFzdCBzdGFydHVwIHNpZ25hbCBp
+cyBhc3NlcnRlZCwgdGhlIGVtYmVkZGVkIDEyIE1IeiBSQw0KPiA+IG9zY2lsbGF0b3IgcmVzdGFy
+dHMgYXV0b21hdGljYWxseS4NCj4gPg0KPiA+IFRoaXMgcGF0Y2ggaXMgdG8gY29uZmlndXJlIHRo
+ZSBmYXN0IHN0YXJ0dXAgc2lnbmFscywgd2hpY2ggc2lnbmFsIGlzDQo+ID4gZW5hYmxlZCB0byB0
+cmlnZ2VyIHRoZSBQTUMgdG8gd2FrZSB1cCB0aGUgc3lzdGVtIGZyb20gVUxQMSBtb2RlIHNob3Vs
+ZA0KPiA+IGJlIGNvbmZpZ3VyZWQgdmlhIHRoZSBEVC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+DQo+IA0KPiBJIHdvdWxkIGFjdHVh
+bGx5IGF2b2lkIGRvaW5nIHRoYXQgZnJvbSB0aGUgUE1DIGRyaXZlciBhbmQgZG8gdGhhdCBjb25m
+aWd1cmF0aW9uDQo+IGZyb20gdGhlIGFpYzUgZHJpdmVyLiBJdCBoYXMgYWxsIHRoZSBpbmZvcm1h
+dGlvbiB5b3UgbmVlZCwgaXQga25vd3Mgd2hhdCBraW5kIG9mIGxldmVsDQo+IG9yIGVkZ2UgaXMg
+bmVlZGVkIHRvIHdha2UgdXAgYW5kIHdoYXQgYXJlIHRoZSB3YWtldXAgaW50ZXJydXB0cyB0byBl
+bmFibGUuIFRoaXMNCj4gd2lsbCBhbGxvdyB5b3UgdG8gc3RvcCBpbnRyb2R1Y2luZyBhIG5ldyBi
+aW5kaW5nLiBBbHNvLCB0aGlzIHdpbGwgYXZvaWQgZGlzY3JlcGFuY2llcw0KPiBiZXR3ZWVuIHdo
+YXQgaXMgY29uZmlndXJlZCBpbiB0aGUgRFQgYW5kIHdoYXQgdGhlIHVzZXIgcmVhbGx5IHdhbnRz
+IChmb3IgZXhlbXBsZQ0KPiBkaWZmZXJlbmNlcyBiZXR3ZWVuIHRoZSBlZGdlIGRpcmVjdGlvbiBj
+b25maWd1cmVkIGZvciB0aGUgUElPQnUgaW4gdXNlcnNwYWNlDQo+IHZlcnN1cyB3aGF0IGlzIGlu
+IHRoZSBkZXZpY2UgdHJlZSBvciB3YWtlb25sYW4gYWN0aXZhdGlvbi9kZWFjdGl2YXRpb24pLg0K
+DQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2suDQoNCkJ1dCBzb21lIHdha2UtdXBzIHN1Y2gg
+YXMgV0tVUCBwaW4sIEFDQ19DRSwgUlhMUF9NQ0UsIGRvbid0IGhhdmUgdGhlIGNvcnJlc3BvbmRp
+bmcNCmludGVycnVwdCBudW1iZXIuIE1vcmVvdmVyLCBJIHRoaW5rLCB0aGUgVUxQMSBpcyB2ZXJ5
+IGRpZmZlcmVudCBmb3JtIHRoZSBVTFAwLCBpdCBpcyBub3Qgd29rZW4NCnVwIGJ5IHRoZSBpbnRl
+cnJ1cHQuIEl0IGlzIGZhbGxlbiBzbGVlcCBhbmQgd29rZW4gdXAgYnkgdGhlIHNvbWUgbWVjaGFu
+aXNtIGluIHRoZSBQTUMuIA0KDQpNYXliZSBJIHdhcyB3cm9uZy4gSSBzdGlsbCB0aGluayB0aGUg
+YWljNSBkcml2ZXIgc2hvdWxkIGJlIGRldm90ZWQgb24gdGhlIEFJQzUncyBiZWhhdmlvcnMuIA0K
+DQo+IA0KPiBZb3UgY2FuIGdldCB0aGUgUE1DIHN5c2NvbiBmcm9tIGlycS1hdG1lbC1haWM1LmMg
+YW5kIHRoZW4gdXNlIGEgdGFibGUgdG8gbWFwDQo+IHRoZSBod2lycSB0byB0aGUgb2Zmc2V0IGlu
+IFBNQ19GU01SLiBVc2UgaXQgaW4gYWljNV9zZXRfdHlwZSB0byBzZXQgdGhlIHBvbGFyaXR5DQo+
+IGFuZCB0aGVuIGluIGFpYzVfc3VzcGVuZCB0byBlbmFibGUgdGhlIHdha2V1cC4NCj4gDQo+IE1h
+eWJlIHdlIGNvdWxkIGV2ZW4gZ28gZnVydGhlciBhbmQgYXZvaWQgdWxwMSBpZiBubyB1bHAxIGNv
+bXBhdGJpbGUgd2FrZXVwDQo+IHNvdXJjZXMgYXJlIGRlZmluZWQgYnV0IHRoZXJlIGFyZSB1bHAw
+IHdha2V1cCBzb3VyY2VzLg0KPiANCj4gDQo+IC0tDQo+IEFsZXhhbmRyZSBCZWxsb25pLCBGcmVl
+IEVsZWN0cm9ucw0KPiBFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lkIGVuZ2luZWVy
+aW5nIGh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20NCg0KDQpCZXN0IFJlZ2FyZHMsDQpXZW55b3Ug
+WWFuZw0K
