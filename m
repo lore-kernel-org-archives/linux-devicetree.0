@@ -1,65 +1,57 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] iio:magnetometer:ak8975: mounting matrix support
-Date: Mon, 21 Mar 2016 19:01:17 +0000
-Message-ID: <56F044FD.6010206@kernel.org>
-References: <cover.1458231723.git.gregor.boirie@parrot.com>
- <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie@parrot.com>
- <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw@mail.gmail.com>
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v3 0/8] ARM: sunxi: Add SPDIF playback support
+Date: Mon, 21 Mar 2016 21:00:58 +0100
+Message-ID: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
+Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBBFGYG3QKGQEAD2NA2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Backed out patches 2 and 3 for now whilst discussion continues.
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-On 21/03/16 14:58, Rob Herring wrote:
-> On Thu, Mar 17, 2016 at 11:43 AM, Gregor Boirie
-> <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org> wrote:
->> Expose a rotation matrix to indicate userspace the chip placement with
->> respect to the overall hardware system. This is needed to adjust
->> coordinates sampled from a magnetometer chip when its position deviates
->> from the main hardware system.
->>
->> Final coordinates computation is delegated to userspace since:
->> * computation may involve floating point arithmetics ;
->> * it allows an application to combine adjustments with arbitrary
->>   transformations.
->>
->> This 3 dimentional space rotation matrix is expressed as 3x3 array of
->> strings to support floating point numbers. It may be retrieved from a
->> "in_magn_matrix" sysfs attribute file. It is declared into ak8975 DTS
->> entry as a "matrix" property.
-> 
-> Why is the sysfs interface specific to ak8975?
-> 
-> Furthermore, why is it specific to magnetometer? Couldn't
-> accelerometers need the same thing? There's a thread discussing a
-> similar matrix on android-x86[1].
-> 
-> 
->> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->> index 34a3206..f936f86 100644
->> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->> @@ -9,6 +9,7 @@ Optional properties:
->>
->>    - gpios : should be device tree identifier of the magnetometer DRDY pin
->>    - vdd-supply: an optional regulator that needs to be on to provide VDD
->> +  - matrix: an optional 3x3 mounting rotation matrix
-> 
-> Perhaps "rotation-matrx" would be a better name in case there's ever
-> any other matrix needed.
-> 
-> Rob
-> 
-> [1] https://groups.google.com/forum/#!msg/android-x86/LaKhV8cT69o/G1rrVU0_JAAJ
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Hi All,
+
+now that the sun4i-spdif driver has made it into linux-next then this patch
+series completes what is needed to have SPDIF working on both A10 and A20
+devices.
+
+Enjoy,
+CK
+
+---
+Changes since v2:
+- Split the patches up, added and removed some newlines, removed unused spdif
+  pins
+
+Changes since v1:
+- Added defines to the dma properties and changed reg length to cover the entire
+  spdif memory area.
+
+Marcus Cooper (8):
+  ARM: dts :sunxi: Add SPDIF TX pin to the A10
+  ARM: dts :sun7i: Add SPDIF TX pin to the A20
+  ARM: dts: sun4i: Add the SPDIF clk to the A10
+  ARM: dts: sun7i: Add the SPDIF clk to the A20
+  ARM: dts: sun4i: Add the SPDIF block to the A10
+  ARM: dts: sun7i: Add the SPDIF block to the A20
+  ARM: dts: sun4i: Add SPDIF to the Mele A1000
+  ARM: dts: sun7i: Add SPDIF to the Itead Ibox
+
+ arch/arm/boot/dts/sun4i-a10-a1000.dts      | 24 +++++++++++++++++++++++
+ arch/arm/boot/dts/sun4i-a10.dtsi           | 31 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20-itead-ibox.dts | 24 +++++++++++++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi           | 31 ++++++++++++++++++++++++++++++
+ 4 files changed, 110 insertions(+)
+
+-- 
+2.7.4
