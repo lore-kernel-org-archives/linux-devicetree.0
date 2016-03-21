@@ -1,34 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] of: Add vendor prefix for On Tat Industrial Company.
-Date: Mon, 21 Mar 2016 07:47:03 -0500
-Message-ID: <20160321124703.GA15265@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] panel-simple: Add the 7" DPI panel from Adafruit.
+Date: Mon, 21 Mar 2016 07:48:10 -0500
+Message-ID: <20160321124810.GA15878@rob-hp-laptop>
 References: <1458355366-7073-1-git-send-email-eric@anholt.net>
- <1458355366-7073-2-git-send-email-eric@anholt.net>
+ <1458355366-7073-3-git-send-email-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458355366-7073-2-git-send-email-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1458355366-7073-3-git-send-email-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBNYXIgMTgsIDIwMTYgYXQgMDc6NDI6NDJQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gVGhpcyBpcyB0aGUgdmVuZG9yIGZvciBhIDciIERQSSBwYW5lbCBzb2xkIGJ5IEFkYWZy
-dWl0IHdoaWNoIEknZCBsaWtlCj4gdG8gZGVzY3JpYmUgaW4gRFQuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgfCAxICsKPiAgMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Fri, Mar 18, 2016 at 07:42:43PM -0700, Eric Anholt wrote:
+> This is a basic TFT panel with a 40-pin FPC connector on it.  The
+> specification doesn't define timings, but the Adafruit instructions
+> were setting up 800x480 CVT.
+> 
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> ---
+>  .../bindings/display/panel/ontat,yx700wv03.txt     |  7 +++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 33 ++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/ontat,yx700wv03.txt
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
