@@ -1,123 +1,99 @@
-From: "Sricharan" <sricharan@codeaurora.org>
-Subject: RE: [RESEND PATCH V7 4/6] i2c: qup: Add bam dma capabilities
-Date: Mon, 21 Mar 2016 19:31:27 +0530
-Message-ID: <004901d1837a$2df9f620$89ede260$@codeaurora.org>
-References: <1456142895-32646-1-git-send-email-sricharan@codeaurora.org> <20160224101949.GB1391@katana>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
+Date: Mon, 21 Mar 2016 15:02:20 +0100
+Message-ID: <56EFFEEC.1010407@st.com>
+References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>	<1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>	<CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com> <CAJgp7zxyQGrSSvNszawBQfS+omgKi1i35uW-eDyLdW-jP7oRjg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20160224101949.GB1391@katana>
-Content-Language: en-us
-Sender: linux-i2c-owner@vger.kernel.org
-To: 'Wolfram Sang' <wsa@the-dreams.de>
-Cc: devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, ntelkar@codeaurora.org, galak@codeaurora.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, linux-i2c@vger.kernel.org, iivanov@mm-sol.com, agross@codeaurora.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJgp7zxyQGrSSvNszawBQfS+omgKi1i35uW-eDyLdW-jP7oRjg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Joachim Eastwood <manabian@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi wolfram,
+On 3/21/2016 11:45 AM, Alexandre Torgue wrote:
+> Hi,
+>
+> 2016-03-18 17:00 GMT+01:00 Chen-Yu Tsai <wens@csie.org>:
+>> Hi,
+>>
+>> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
+>> <alexandre.torgue@gmail.com> wrote:
+>>> Signed-off-by: Alexandre TORGUE <alexandre.torgue@gmail.com>
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>>> new file mode 100644
+>>> index 0000000..ada2aa4
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
+>>> @@ -0,0 +1,32 @@
+>>> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
+>>> +
+>>> +This file documents platform glue layer for stmmac.
+>>> +Please see stmmac.txt for the other unchanged properties.
+>>> +
+>>> +The device node has following properties.
+>>> +
+>>> +Required properties:
+>>> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
+>>> +              "snps,dwmac-3.50a" to select IP vesrion.
 
-> On Mon, Feb 22, 2016 at 05:38:15PM +0530, Sricharan R wrote:
-> > QUP cores can be attached to a BAM module, which acts as a dma engine
-> > for the QUP core. When DMA with BAM is enabled, the BAM consumer
-> pipe
-> > transmitted data is written to the output FIFO and the BAM producer
-> > pipe received data is read from the input FIFO.
-> >
-> > With BAM capabilities, qup-i2c core can transfer more than
-> > 256 bytes, without a 'stop' which is not possible otherwise.
-> >
-> > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> > Reviewed-by: Andy Gross <andy.gross@linaro.org>
-> > Tested-by: Archit Taneja <architt@codeaurora.org>
-> > Tested-by: Telkar Nagender <ntelkar@codeaurora.org>
-> 
-> Applied to for-next, thanks!
+Almost all the synp gmac chips have the HW capability register that is
+used for setting all the parameters at probe time.
+This will override fields passed from DT. In theory, it is not
+necessary to pass: "snps,dwmac-3.50a" from device tree at least there
+is either no HW cap reg or the glue has some w/a for a specific chip
+revision.
+To be honest, I like to see the "snps,dwmac-3.50a" as compatibility
+to also have a better readability (that's my personal view ;-) ).
 
-There is a bug with only this patch which comes out when CONFIG_DEBUG_SG
-option gets
-enabled.  I have patch like below to fix it, but wanted to ask you if it
-would correct to have this in the
-original patch or should I sent a separate fix ? Sorry for the mess on this.
-Not sure if the pull request is sent
-already.
+Peppe
 
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index 23eaabb..a1fae0c 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -595,9 +595,6 @@ static int qup_sg_set_buf(struct scatterlist *sg, void
-*buf,
- 	if (!ret)
- 		return -EINVAL;
- 
--	if (!map)
--		sg_dma_address(sg) = tg->addr + ((u8 *)buf - tg->start);
--
- 	return 0;
- }
- 
-@@ -1268,6 +1265,8 @@ static int qup_i2c_xfer_v2(struct i2c_adapter *adap,
- 		}
- 	}
- 
-+	idx = 0;
-+
- 	do {
- 		if (msgs[idx].len == 0) {
- 			ret = -EINVAL;
-@@ -1407,27 +1406,21 @@ static int qup_i2c_probe(struct platform_device
-*pdev)
- 
- 		/* 2 tag bytes for each block + 5 for start, stop tags */
- 		size = blocks * 2 + 5;
--		qup->dpool = dma_pool_create("qup_i2c-dma-pool", &pdev->dev,
--					     size, 4, 0);
- 
--		qup->start_tag.start = dma_pool_alloc(qup->dpool,
-GFP_KERNEL,
--						      &qup->start_tag.addr);
-+		qup->start_tag.start = devm_kzalloc(&pdev->dev,
-+						    size, GFP_KERNEL);
- 		if (!qup->start_tag.start) {
- 			ret = -ENOMEM;
- 			goto fail_dma;
- 		}
- 
--		qup->brx.tag.start = dma_pool_alloc(qup->dpool,
--						    GFP_KERNEL,
--						    &qup->brx.tag.addr);
-+		qup->brx.tag.start = devm_kzalloc(&pdev->dev, size,
-GFP_KERNEL);
- 		if (!qup->brx.tag.start) {
- 			ret = -ENOMEM;
- 			goto fail_dma;
- 		}
- 
--		qup->btx.tag.start = dma_pool_alloc(qup->dpool,
--						    GFP_KERNEL,
--						    &qup->btx.tag.addr);
-+		qup->btx.tag.start = devm_kzalloc(&pdev->dev, size,
-GFP_KERNEL);
- 		if (!qup->btx.tag.start) {
- 			ret = -ENOMEM;
- 			goto fail_dma;
-@@ -1566,13 +1559,6 @@ static int qup_i2c_remove(struct platform_device
-*pdev)
- 	struct qup_i2c_dev *qup = platform_get_drvdata(pdev);
- 
- 	if (qup->is_dma) {
--		dma_pool_free(qup->dpool, qup->start_tag.start,
--			      qup->start_tag.addr);
--		dma_pool_free(qup->dpool, qup->brx.tag.start,
--			      qup->brx.tag.addr);
--		dma_pool_free(qup->dpool, qup->btx.tag.start,
--			      qup->btx.tag.addr);
--		dma_pool_destroy(qup->dpool);
- 		dma_release_channel(qup->btx.dma);
- 		dma_release_channel(qup->brx.dma);
- 	}
---
-
-Regards,
- Sricharan
+>>
+>> If you need have sort of hardware glue, then it is not compatible.
+>>
+>
+> We could have the case where the glue is set by a bootloader.
+> In this case, we will select IP version in compatible and we will use
+> generic dwmac glue to probe stmmac driver.
+>
+> Regards
+>
+> Alex.
+>
+>> ChenYu
+>>
+>>> +- clocks: Must contain a phandle for each entry in clock-names.
+>>> +- clock-names: Should be "stmmaceth" for the host clock.
+>>> +              Should be "tx-clk" for the MAC TX clock.
+>>> +              Should be "rx-clk" for the MAC RX clock.
+>>> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon node which
+>>> +             encompases the glue register, and the offset of the control register.
+>>> +Example:
+>>> +
+>>> +               ethernet0: dwmac@40028000 {
+>>> +                       compatible = "st,stm32-dwmac", "snps,dwmac-3.50a";
+>>> +                       status = "disabled";
+>>> +                       reg = <0x40028000 0x8000>;
+>>> +                       reg-names = "stmmaceth";
+>>> +                       interrupts = <0 61 0>, <0 62 0>;
+>>> +                       interrupt-names = "macirq", "eth_wake_irq";
+>>> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
+>>> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
+>>> +                       st,syscon = <&syscfg 0x4>;
+>>> +                       snps,pbl = <8>;
+>>> +                       snps,mixed-burst;
+>>> +                       dma-ranges;
+>>> +               };
+>>> --
+>>> 1.9.1
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel@lists.infradead.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
