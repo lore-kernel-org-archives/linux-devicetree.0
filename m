@@ -1,13 +1,13 @@
 From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v3 5/8] ARM: dts: sun4i: Add the SPDIF block to
- the A10
-Date: Mon, 21 Mar 2016 21:01:03 +0100
-Message-ID: <1458590466-12572-6-git-send-email-codekipper@gmail.com>
+Subject: [PATCH v3 6/8] ARM: dts: sun7i: Add the SPDIF block to
+ the A20
+Date: Mon, 21 Mar 2016 21:01:04 +0100
+Message-ID: <1458590466-12572-7-git-send-email-codekipper@gmail.com>
 References: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
 Reply-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCHNXO4F7MHBBC5GYG3QKGQETDPKMCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCHNXO4F7MHBBDFGYG3QKGQEVU4NO7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458590466-12572-1-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,18 +22,18 @@ List-Id: devicetree@vger.kernel.org
 
 From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Add the SPDIF transceiver controller block to the A10 dtsi.
+Add the SPDIF transceiver controller block to the A20 dtsi.
 
 Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi | 13 +++++++++++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 13 +++++++++++++
  1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 5747522..7171a27 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -1052,6 +1052,19 @@
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 108cad4..9944496 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1244,6 +1244,19 @@
  			status = "disabled";
  		};
  
@@ -41,7 +41,7 @@ index 5747522..7171a27 100644
 +			#sound-dai-cells = <0>;
 +			compatible = "allwinner,sun4i-a10-spdif";
 +			reg = <0x01c21000 0x400>;
-+			interrupts = <13>;
++			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
 +			clocks = <&apb0_gates 1>, <&spdif_clk>;
 +			clock-names = "apb", "spdif";
 +			dmas = <&dma SUN4I_DMA_NORMAL 2>,
