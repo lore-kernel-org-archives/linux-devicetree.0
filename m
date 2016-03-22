@@ -1,168 +1,139 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] mtd: spi-nor: add an alternative method to support
- memory >16MiB
-Date: Tue, 22 Mar 2016 12:27:32 +0100
-Message-ID: <56F12C24.6040206@atmel.com>
-References: <1458556429-11741-1-git-send-email-cyrille.pitchen@atmel.com>
- <20160321170107.GG2545@google.com> <56F02C70.6050106@atmel.com>
- <20160321175537.GH2545@google.com>
+From: Lokesh Vutla <a0131933-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: am335x: Add initial support for ICEv2 board
+Date: Tue, 22 Mar 2016 16:59:36 +0530
+Message-ID: <56F12CA0.9010808@ti.com>
+References: <1458628657-30468-1-git-send-email-lokeshvutla@ti.com>
+ <1458628657-30468-2-git-send-email-lokeshvutla@ti.com>
+ <56F115F8.8040202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160321175537.GH2545-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <56F115F8.8040202-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 21/03/2016 18:55, Brian Norris a =E9crit :
-> On Mon, Mar 21, 2016 at 06:16:32PM +0100, Cyrille Pitchen wrote:
->> Le 21/03/2016 18:01, Brian Norris a =E9crit :
->>> On Mon, Mar 21, 2016 at 11:33:49AM +0100, Cyrille Pitchen wrote:
->>>> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kco=
-nfig
->>>> index d42c98e1f581..7fae36fc8526 100644
->>>> --- a/drivers/mtd/spi-nor/Kconfig
->>>> +++ b/drivers/mtd/spi-nor/Kconfig
->>>> @@ -29,6 +29,18 @@ config MTD_SPI_NOR_USE_4K_SECTORS
->>>>  	  Please note that some tools/drivers/filesystems may not work w=
-ith
->>>>  	  4096 B erase size (e.g. UBIFS requires 15 KiB as a minimum).
->>>> =20
->>>> +config MTD_SPI_NOR_USE_4B_OPCODES
->>>> +	bool "Use 4-byte address op codes"
->>>> +	default n
->>>> +	help
->>>> +	  This is an alternative to the "Enter/Exit 4-byte mode" command=
-s and
->>>> +	  Base Address Register (BAR) updates to support flash size abov=
-e 16MiB.
->>>> +	  Using dedicated 4-byte address op codes for (Fast) Read, Page =
-Program
->>>> +	  and Sector Erase operations avoids changing the internal state=
- of the
->>>> +	  SPI NOR memory. Hence if a CPU reset occurs, early bootloaders=
- can
->>>> +	  still use regular 3-byte address op codes and read from the ve=
-ry first
->>>> +	  16MiB of the flash memory.
->>>> +
->>>
->>> Why does this need to be a Kconfig option? Can't it just as well be
->>> supported by keeping entries in the ID table, to show which flash
->>> support these opcodes and which don't? Kconfig is really a bad mech=
-anism
->>> for trying to configure your flash.
+
+
+On Tuesday 22 March 2016 03:22 PM, Grygorii Strashko wrote:
+> On 03/22/2016 08:37 AM, Lokesh Vutla wrote:
+>> TI's Industrial Communication Engine EVM is a low cost hardware mainly
+>> developed for industrial communication type applications using serial
+>> or Ethernet based interfaces. This platform features TI's AM3359 with
+>> 800MHz single core Cortex-A8 processor, 256MB DDR3, 64MB SPI flash,
+>> 8MB NOR Flash, mmc, usb, can, dual Ethernet ports.
 >>
->> Well, the only reason why I've chosen a Kconfig option is to be as s=
-afe as
->> possible, if for some reason someone still wants to use the former
->> implementation. Honestly I don't know why one would do so but I'm ca=
-utious
->> so I also set "default n". This way no regression is introduced.
->=20
-> I think the main reason is that some manufacturers did not initially
-> support both methods. So we couldn't just say "all Micron" or "all
-> Macronix" should use these opcodes. Spansion was the only one to supp=
-ort
-> them consistently. See [1] for reference.
->=20
-> And actually, your Kconfig option is not "cautious", because you have=
- no
-> guarantee that people will make intelligent choices here. So you're
-> making a Kconfig that if someone accidentally turns it on, their flas=
-h
-> might not work any more. That's much less safe than properly labellin=
-g
-> which flash supports which feature.
->=20
->> If you think it's better to use a dedicated flag like SECT_4K or
->> SPI_NOR_QUAD_READ in the spi_nor_ids[] table, I'm perfectly fine wit=
-h it as
->> well.
->=20
-> I think that would be better. (Really, an opt-out would be the least
-> work in the long-run I think, since IIRC there were only a few
-> early-generation flash that were both large enough to need 4 byte
-> addressing and didn't support the dedicated opcodes. But it'll be har=
-d
-> to track those down now I think, so opt-in probably is most practical=
-=2E)
->=20
->> Just let me know your choice then I'll update my patch accordingly i=
-f needed.
->=20
-> Brian
->=20
-> [1]
-> commit 87c9511fba2bd069a35e1312587a29e112fc0cd6
-> Author: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date:   Thu Apr 11 01:34:57 2013 -0700
->=20
->     mtd: m25p80: utilize dedicated 4-byte addressing commands
->=20
+>> For more information, look at HW user guide[1], Data manual[2].
+>>
+>> Just add basic support for the moment.
+>>
+>> [1] http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_EVM_Rev2_1_HW_User_Guide
+>> [2] http://www.ti.com/lit/ds/symlink/am3359.pdf
+>>
+>> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+>>   arch/arm/boot/dts/Makefile                         |   1 +
+>>   arch/arm/boot/dts/am335x-icev2.dts                 | 303 +++++++++++++++++++++
+>>   3 files changed, 307 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/am335x-icev2.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+>> index 21e71a5..20f6d71 100644
+>> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
+>> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+>> @@ -133,6 +133,9 @@ Boards:
+>>   - AM335X Bone : Low cost community board
+>>     compatible = "ti,am335x-bone", "ti,am33xx", "ti,omap3"
+>>   
+>> +- AM3359 ICEv2 : Low cost Industrial Communication Engine EVM.
+>> +  compatible = "ti,am3359-icev2", "ti,am33xx", "ti,omap3"
+>> +
+>>   - AM335X OrionLXm : Substation Automation Platform
+>>     compatible = "novatech,am335x-lxm", "ti,am33xx"
+>>   
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 52b34a0..7dcf55e 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -486,6 +486,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+>>   	am335x-cm-t335.dtb \
+>>   	am335x-evm.dtb \
+>>   	am335x-evmsk.dtb \
+>> +	am335x-icev2.dtb \
+>>   	am335x-lxm.dtb \
+>>   	am335x-nano.dtb \
+>>   	am335x-pepper.dtb \
+>> diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
+>> new file mode 100644
+>> index 0000000..59c91e8
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/am335x-icev2.dts
+>> @@ -0,0 +1,303 @@
+>> +/*
+>> + * Copyright (C) 2016 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +/*
+>> + * AM335x ICE V2 board
+>> + * http://www.ti.com/tool/tmdsice3359
+>> + */
+>> +
+>> +/dts-v1/;
+>> +
+>> +#include "am33xx.dtsi"
+>> +
+>> +/ {
+>> +	model = "TI AM3359 ICE-V2";
+>> +	compatible = "ti,am3359-icev2", "ti,am33xx";
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x80000000 0x10000000>; /* 256 MB */
+>> +	};
+>> +
+>> +	vbat: fixedregulator@0 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vbat";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+>> +	vtt_fixed: fixedregulator@1 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vtt";
+>> +		regulator-min-microvolt = <1500000>;
+>> +		regulator-max-microvolt = <1500000>;
+>> +		gpio = <&gpio0 18 GPIO_ACTIVE_HIGH>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		enable-active-high;
+>> +	};
+>> +
+>> +	leds {
+> 
+> Could you split this node on two leds@0 and led@1 and and move
+> all tpic2810 leds under leds0 and  all gpio leds under leds@1?
+> 
+> otherwise gpio leds will not work because tpic2810 is
+> configured as module and so leds-gpio will be deferred until
+> tpic2810 is loaded (but it can be never loaded ;)
+> 
+> led@x numeration has to be started from 0 for each leds@Y.
 
-Indeed, your commit message is very interesting since it points out som=
-e issue
-I already face: for my test I'm currently using a Macronix MX25L25673G
-(JEDEC ID C22019). This memory *does* support the dedicated 4byte addre=
-ss op
-codes.
+Hmm I get your point. I was always doing insmod of tpic2810 before doing
+insmod of leds-gpio. Will fix it and repost.
 
-Then if I look at the datasheet for the Macronix MX25L25635E, this olde=
-r memory
-shares the exact same JEDEC ID, C22019 but *doesn't* support the 4byte =
-address
-op codes.
-
-None of these two memory types use ext id: the JEDEC ID is only 3byte l=
-ong.
-Anyway, in QPI mode, the QPIID command (0xAF), which replaces the regul=
-ar
-Read ID command (0x9f) only sends 3 bytes too.
-
-The memory table inside the spi-nor framework is indexed by JEDEC ID (+=
- ext id)
-but we've just pointed out a case where it is not possible to create tw=
-o
-different entries in this table, one for the 35E without the "4byte" fl=
-ag, the
-other for 73G with the "4byte" flag.
-
-So there is no mean for the software to discover at runtime what are th=
-e actual
-capabilities of the memory. Hence I think we should introduce a DT prop=
-erty
-which would clearly tell the spi-nor framework that we want to use the
-dedicated 4byte address op codes instead of entering the 4byte address =
-mode
-(still the default behaviour since older memories only support this mod=
-e).
-
-So what about a new DT named "m25p,4byte-opcodes" so the naming is cons=
-istent
-with the existing "m25p,fast-read"?
-
-=46or DT guys, I just sum the initial issue up: entering the 4byte addr=
-ess mode
-as currently done changes the internal state of the SPI memory. If a So=
-C reset
-occurs, some early bootloaders not supporting this 4byte address mode e=
-xpect
-to use only 3byte addresses for (Fast) Read operations =3D> the boot is=
- broken.
-Then using the dedicated 4byte address op codes fixes the issue as they=
- don't
-change the internal memory state so early bootloader can still use 3byt=
-e
-address op codes.
-
-Best regards,
-
-Cyrille
+Thanks and regards,
+Lokesh
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
