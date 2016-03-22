@@ -1,65 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFD] Sharing GPIOs for input (buttons) and output (LEDs)
-Date: Tue, 22 Mar 2016 15:18:17 +0100
-Message-ID: <CACRpkdZ=Xd3_T7paMif10P1zwOT5+p-qn_i1pYoUfvX1wi=EVQ@mail.gmail.com>
-References: <CAMuHMdWbpj=ZnFqh1uWZSCojvrM+NB=Bbzw=UebodTr+vAKy7g@mail.gmail.com>
-	<CACRpkdb1J+-_9szuv6xWhrD7+NFeCjug+cqaYsHDYyLUYbLw1w@mail.gmail.com>
-	<56F14FC2.8060804@linaro.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 02/18] dt-bindings: timer: sp804: add timer-width
+ property
+Date: Tue, 22 Mar 2016 15:29:46 +0100
+Message-ID: <56F156DA.3000602@baylibre.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+ <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
+ <1457519060-6038-3-git-send-email-narmstrong@baylibre.com>
+ <20160317170926.GA28934@rob-hp-laptop> <56EAF212.7020700@arm.com>
+ <CAL_JsqKRjFDNmGjkPfJ-BKXG8ekNzUgear3uLzsFYbZU7Zph7w@mail.gmail.com>
+ <56EB03B3.3070106@arm.com> <56F10E84.1080607@baylibre.com>
+ <56F13458.1080401@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <56F14FC2.8060804@linaro.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vaibhav Hiremath <vaibhav.hiremath@linaro.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56F13458.1080401@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 22, 2016 at 2:59 PM, Vaibhav Hiremath
-<vaibhav.hiremath@linaro.org> wrote:
-> On Thursday 17 March 2016 03:48 PM, Linus Walleij wrote:
+On 03/22/2016 01:02 PM, Robin Murphy wrote:
+> Hi Neil,
+>>>>
+>>>> Humm, same as integrator timers perhaps?
+>>>
+>>> Having had a quick look, what the Integrator/AP manual describes certainly smells like the same basic block as the "AMBA Timer" - 16 bit counters and the same control register layout - albeit in a mutant triple-timer version with a bigger offset between each register set. Integrator/CP, on the other hand, looks much more SP804-like.
+>>>
+>>> Robin.
+>>>
+>>
+>> Hi,
+>>
+>> I will switch to oxsemi,ox810se-rps-timer since it need a specific register width that will be handled by the driver.
+> 
+> By "needs a specific register width" do you mean the OxSemi implementation will give a bus error on a 32-bit access and requires 16-bit accessors? If so, I'd expect to see patch 1 changing readl()s to readw()s at least somewhere. Otherwise, if it's merely that the clocksource API needs to know the upper 16 bits of a word it reads are undefined, then since that's the standard behaviour I'd be inclined to add it to the driver as a canonical "arm,amba-timer" implementation, then have your implementation-specific compatible on top of that just in case.
 
-> but recently I came across another usecase of shared gpio,
->
-> Say, for example, we have multiple external I2C peripheral which share
-> interrupt line over gpio (ofcourse irq line is muxed onto single gpio).
->
-> Now in kernel I would have multiple instances of driver supporting each
-> peripheral but gpio can not be shared for registering irq.
->
-> Do you suggest MFD driver for such simple usecases ? Should gpiolib
-> support SHARED gpios, and gpiolib can define all the policies over
-> configuration
+No actually the bus access is 32bit but the counter is 24bit wide instead of 16bit, so the clocksource won't work and the system time will furiously drift. It's not the case of the clockevent since the delay fits in 24 bits.
 
-I don't see why you would want to use MFD at all.
+It also seems is ignores the 32BIT config bit, so it seems based on the initial 16bit only reference design.
 
-Not shared GPIOs but shared interrupt lines.
+How do you think I should implement this ?
 
-If you're using device tree is is pretty straight forward:
+Neil
 
-- Make sure the GPIOlib and irqchip portions of the driver
-  are totally orthogonal. (See Documentation/gpio/driver.txt
-  section "GPIO drivers providing IRQs")
-
-- Just use the irqchip side of the GPIO
-
-- Make sure your consumers check if the IRQ is theirs
-  and return IRQ_HANDLED vs NO_IRQ depending on
-  whether it's theirs or not.
-
-It is quite obvious from context that in this case all consumers
-are using an open drain (if active low) scheme. However
-since the GPIO is then used as input it has no effect, it is
-more a question for the consumers to assure their IRQ
-logic is not using push-pull but rather open drain or you will
-get a disaster in the totempole...
-
-> (input only, what about conflicts, bidirectional mode?)
-
-We thought about this, see Documentation/gpio/driver.txt section
-Locking IRQ usage".
-
-When the line is locked for IRQ usage, it cannot be switched to
-output.
-
-Yours,
-Linus Walleij
+> Robin.
+> 
+>>
+>> Thanks,
+>> Neil
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+> 
