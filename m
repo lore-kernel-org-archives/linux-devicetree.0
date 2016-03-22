@@ -1,125 +1,70 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: sun8i: Fix pio nodes Orangepi Plus dts
-Date: Tue, 22 Mar 2016 21:53:21 +0100
-Message-ID: <1458680002-15021-1-git-send-email-hdegoede@redhat.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 2/2] ARM: dts: sun8i: Orangepi plus gpio keys
+ fixes and improvements
+Date: Tue, 22 Mar 2016 21:53:22 +0100
+Message-ID: <1458680002-15021-2-git-send-email-hdegoede@redhat.com>
+References: <1458680002-15021-1-git-send-email-hdegoede@redhat.com>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBTHBY23QKGQEDNGHHBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1458680002-15021-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix sun8i-h3-orangepi-plus.dts:
-1) Having 2 pio nodes, by merging these into one
-2) Having the pio and r_pio nodes before the mmc nodes, while they
-   should be sorted by alphabet
+Fix the following issues with the gpio_keys node:
+1) Use of undocumented input-name property
+2) Use of a unit-address on the sw2 node
+3) Having "PL03" in the pinctrl node which does not exist, this should
+   be "PL3"
+
+And add support for the sw2 button on the board.
 
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 80 ++++++++++++++--------------
- 1 file changed, 39 insertions(+), 41 deletions(-)
+ arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-index 6273ddf..3d9996f 100644
+index 3d9996f..94f8b0b 100644
 --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
 +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
-@@ -125,47 +125,6 @@
- 	status = "okay";
- };
+@@ -79,12 +79,16 @@
  
--&pio {
--	usb3_vbus_pin_a: usb3_vbus_pin@0 {
--		allwinner,pins = "PG11";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--};
+ 	r_gpio_keys {
+ 		compatible = "gpio-keys";
+-		input-name = "sw4";
 -
--&pio {
--	leds_opc: led_pins@0 {
--		allwinner,pins = "PA15";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--};
--
--&r_pio {
--	leds_r_opc: led_pins@0 {
--		allwinner,pins = "PL10";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--
--	sw_r_opc: key_pins@0 {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sw_r_opc>;
+ 
+-		sw4@0 {
++		sw2 {
++			label = "sw2";
++			linux,code = <BTN_1>;
++			gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>;
++		};
++
++		sw4 {
+ 			label = "sw4";
+ 			linux,code = <BTN_0>;
+ 			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
+@@ -187,7 +191,7 @@
+ 	};
+ 
+ 	sw_r_opc: key_pins@0 {
 -		allwinner,pins = "PL03";
--		allwinner,function = "gpio_in";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--
--	wifi_pwrseq_pin_orangepi: wifi_pwrseq_pin@0 {
--		allwinner,pins = "PL7";
--		allwinner,function = "gpio_out";
--		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
--		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
--	};
--};
--
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-@@ -203,6 +162,45 @@
- 	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
- };
- 
-+&pio {
-+	leds_opc: led_pins@0 {
-+		allwinner,pins = "PA15";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	usb3_vbus_pin_a: usb3_vbus_pin@0 {
-+		allwinner,pins = "PG11";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
-+&r_pio {
-+	leds_r_opc: led_pins@0 {
-+		allwinner,pins = "PL10";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	sw_r_opc: key_pins@0 {
-+		allwinner,pins = "PL03";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
-+	wifi_pwrseq_pin_orangepi: wifi_pwrseq_pin@0 {
-+		allwinner,pins = "PL7";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+};
-+
- &reg_usb1_vbus {
- 	gpio = <&pio 6 13 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
++		allwinner,pins = "PL3", "PL4";
+ 		allwinner,function = "gpio_in";
+ 		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
 -- 
 2.7.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
