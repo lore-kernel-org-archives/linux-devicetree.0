@@ -1,36 +1,29 @@
-From: nicolas saenz julienne <nicolassaenzj@gmail.com>
-Subject: Re: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
-Date: Tue, 22 Mar 2016 11:42:08 +0100
-Message-ID: <20160322104207.GA2842@marie-Aspire-5600>
-References: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
- <CAMuHMdW5Owzv06wnV34W3cYp=ibrONcfBVV6WST5VyvQ1ENjsA@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/6] of/serial: move earlycon early_param handling to serial
+Date: Tue, 22 Mar 2016 06:15:10 -0500
+Message-ID: <CAL_JsqL+YU7qSze40c+M5AaOvpZDFgvg=SsRGmpT3k_=L6P8JQ@mail.gmail.com>
+References: <1458643595-14719-1-git-send-email-aleksey.makarov@linaro.org> <1458643595-14719-2-git-send-email-aleksey.makarov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW5Owzv06wnV34W3cYp=ibrONcfBVV6WST5VyvQ1ENjsA@mail.gmail.com>
+In-Reply-To: <1458643595-14719-2-git-send-email-aleksey.makarov@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Aleksey Makarov <aleksey.makarov@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, "Zheng, Lv" <lv.zheng@intel.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi sorry for the late response but I was on vacation.
-> 
-> Why did you choose the "lvc" variant?
-Well to be honest the HW people did and it's all I could test with.  I don't
-know much about these naming schemes, apart from the intuition it has to do
-with frequency and line levels.
+On Tue, Mar 22, 2016 at 5:46 AM, Aleksey Makarov
+<aleksey.makarov@linaro.org> wrote:
+> From: Leif Lindholm <leif.lindholm@linaro.org>
+>
+> We have multiple "earlycon" early_param handlers - merge the DT one into
+> the main earlycon one.  It's a cleanup that also will be useful
+> to decide if ACPI SPCR earlycon should be set up.
 
-> Ideally, you want to put the oldest "manuf,74x594" variant here.
-What do you mean by oldest? What would you suggest? it's funny because the chip
-is going to be used on a new product that is meant to be produced for years.
+How so? Isn't that determined by whether we have ACPI tables or a DT?
 
-> I once read it was Motorola who invented the 7459x parts, to interface with
-> SPI.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-Thanks for your comments!
-	Nicolas
+This goes against trying to limit places of FDT parsing and keeping
+the early scanning all within fdt.c. At least it is not in the arch
+code. That said, I'm okay with this change if it helps.
+
+Rob
