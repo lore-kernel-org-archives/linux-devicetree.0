@@ -1,71 +1,46 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] ARM: dts: shmobile: Correct interrupt type for ARM
- TWD
-Date: Tue, 22 Mar 2016 10:28:50 +0900
-Message-ID: <20160322012849.GA14367@verge.net.au>
-References: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] dt-bindings: Add documentation for GM20B GPU
+Date: Mon, 21 Mar 2016 20:41:33 -0500
+Message-ID: <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA@mail.gmail.com>
+References: <1458010724-10945-1-git-send-email-acourbot@nvidia.com>
+ <1458010724-10945-4-git-send-email-acourbot@nvidia.com> <20160318204748.GA20243@rob-hp-laptop>
+ <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Sun, Mar 20, 2016 at 1:55 AM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Sat, Mar 19, 2016 at 5:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, Mar 15, 2016 at 11:58:42AM +0900, Alexandre Courbot wrote:
+>>> GM20B's definition is mostly similar to GK20A's, but requires an
+>>> additional clock.
 
-On Fri, Mar 18, 2016 at 11:19:19AM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus, Jon,
-> 
-> This patch series corrects the interrupt type for ARM TWD timers on
-> SH-Mobile AG5 and R-Car H1.
-> 
-> The ARM TWD interrupt is a private peripheral interrupt (PPI), and per
-> the ARM GIC documentation, whether the type for PPIs can be set is
-> IMPLEMENTATION DEFINED.
-> 
-> For SH-Mobile AG5 and R-Car H1 devices the PPI type cannot be set, and
-> so when we attempt to set the type for the ARM TWD interrupt it fails.
-> This has gone unnoticed because it fails silently, and because we cannot
-> re-configure the type it has had no impact. Nevertheless fix the type
-> for the TWD interrupt so that it matches the hardware configuration.
-> 
-> This was exposed by Jon Hunter's "[PATCH 04/15] irqchip/gic: WARN if
-> setting the interrupt type fails" (https://lkml.org/lkml/2016/3/17/339),
-> which triggers:
-> 
->     WARNING: CPU: 0 PID: 0 at drivers/irqchip/irq-gic-common.c:61 gic_configure_irq+0x64/0x7c()
-> 
-> Other Renesas SoCs using private peripheral interrupts (R-Mobile APE6,
-> R-Car Gen2, and R-Car Gen3) seem to be fine.
-> 
-> Based on patches by Jon Hunter for Tegra20/30 and OMAP4.
+[...]
 
-Thanks for this. Do you think it would be best to queue these up
-for v4.7 or as fixes for v4.6?
+>>>       gpu@0,57000000 {
+>>>               compatible = "nvidia,gk20a";
+>>> @@ -45,3 +49,22 @@ Example:
+>>>               iommus = <&mc TEGRA_SWGROUP_GPU>;
+>>>               status = "disabled";
+>>>       };
+>>> +
+>>> +Example for GM20B:
+>>> +
+>>> +     gpu@0,57000000 {
+>>
+>> Drop the comma and leading zero.
+>
+> Even though this is how it appears in the actual DT?
 
-> Thanks!
-> 
-> Geert Uytterhoeven (2):
->   ARM: dts: sh73a0: Correct interrupt type for ARM TWD
->   ARM: dts: r8a7779: Correct interrupt type for ARM TWD
-> 
->  arch/arm/boot/dts/r8a7779.dtsi | 2 +-
->  arch/arm/boot/dts/sh73a0.dtsi  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 1.9.1
-> 
-> Gr{oetje,eeting}s,
-> 
-> 						Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
+Yes, those will need to get fixed, too.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
