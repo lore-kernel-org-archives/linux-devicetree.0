@@ -1,127 +1,43 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] Documentation: Bindings: Add STM32 DWMAC glue
-Date: Wed, 23 Mar 2016 00:27:04 +0800
-Message-ID: <CAGb2v67aOXk2bfa5iQ_an2_6o3CJuXhTvqu22XK5hu3QvxMCmQ@mail.gmail.com>
-References: <1458315428-10081-1-git-send-email-alexandre.torgue@gmail.com>
- <1458315428-10081-3-git-send-email-alexandre.torgue@gmail.com>
- <CAGb2v65SvVi0cJbaaD9cYrqC3pJ9eumwhTVk11_N7r_nTZhS9g@mail.gmail.com>
- <CAJgp7zxyQGrSSvNszawBQfS+omgKi1i35uW-eDyLdW-jP7oRjg@mail.gmail.com> <56EFFEEC.1010407@st.com>
+From: Aleksey Makarov <aleksey.makarov@linaro.org>
+Subject: Re: [PATCH v5 1/6] of/serial: move earlycon early_param handling to
+ serial
+Date: Tue, 22 Mar 2016 19:55:32 +0300
+Message-ID: <56F17904.3070202@linaro.org>
+References: <1458643595-14719-1-git-send-email-aleksey.makarov@linaro.org>
+ <1458643595-14719-2-git-send-email-aleksey.makarov@linaro.org>
+ <CAL_JsqL+YU7qSze40c+M5AaOvpZDFgvg=SsRGmpT3k_=L6P8JQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56EFFEEC.1010407-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: Alexandre Torgue <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL+YU7qSze40c+M5AaOvpZDFgvg=SsRGmpT3k_=L6P8JQ@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, "Zheng, Lv" <lv.zheng@intel.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 21, 2016 at 10:02 PM, Giuseppe CAVALLARO
-<peppe.cavallaro-qxv4g6HH51o@public.gmane.org> wrote:
-> On 3/21/2016 11:45 AM, Alexandre Torgue wrote:
->>
->> Hi,
->>
->> 2016-03-18 17:00 GMT+01:00 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>:
->>>
->>> Hi,
->>>
->>> On Fri, Mar 18, 2016 at 11:37 PM, Alexandre TORGUE
->>> <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>
->>>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.txt
->>>> b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
->>>> new file mode 100644
->>>> index 0000000..ada2aa4
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.txt
->>>> @@ -0,0 +1,32 @@
->>>> +STMicroelectronics STM32 / MCU DWMAC glue layer controller
->>>> +
->>>> +This file documents platform glue layer for stmmac.
->>>> +Please see stmmac.txt for the other unchanged properties.
->>>> +
->>>> +The device node has following properties.
->>>> +
->>>> +Required properties:
->>>> +- compatible:  Should be "st,stm32-dwmac" to select glue, and
->>>> +              "snps,dwmac-3.50a" to select IP vesrion.
->
->
-> Almost all the synp gmac chips have the HW capability register that is
-> used for setting all the parameters at probe time.
-> This will override fields passed from DT. In theory, it is not
-> necessary to pass: "snps,dwmac-3.50a" from device tree at least there
-> is either no HW cap reg or the glue has some w/a for a specific chip
-> revision.
-> To be honest, I like to see the "snps,dwmac-3.50a" as compatibility
-> to also have a better readability (that's my personal view ;-) ).
 
-I agree having the versioned strings is good for informational purposes,
-and to signal hardware capability. It is not so good for directly
-binding drivers in the implementation though.
 
-Unfortunately, as Joachim pointed out, exynos5440 uses it so we cannot
-change it.
+On 03/22/2016 02:15 PM, Rob Herring wrote:
+> On Tue, Mar 22, 2016 at 5:46 AM, Aleksey Makarov
+> <aleksey.makarov@linaro.org> wrote:
+>> From: Leif Lindholm <leif.lindholm@linaro.org>
+>>
+>> We have multiple "earlycon" early_param handlers - merge the DT one into
+>> the main earlycon one.  It's a cleanup that also will be useful
+>> to decide if ACPI SPCR earlycon should be set up.
+> 
+> How so? Isn't that determined by whether we have ACPI tables or a DT?
 
-ChenYu
+Oops, I missed this.  This patch was not only to do parsing in one place, 
+but also to allow addition of code that decide which of ACPI/DT should be used
+for earlycon initialization based on acpi_disabled.
 
-> Peppe
->
->
->>>
->>> If you need have sort of hardware glue, then it is not compatible.
->>>
->>
->> We could have the case where the glue is set by a bootloader.
->> In this case, we will select IP version in compatible and we will use
->> generic dwmac glue to probe stmmac driver.
->>
->> Regards
->>
->> Alex.
->>
->>> ChenYu
->>>
->>>> +- clocks: Must contain a phandle for each entry in clock-names.
->>>> +- clock-names: Should be "stmmaceth" for the host clock.
->>>> +              Should be "tx-clk" for the MAC TX clock.
->>>> +              Should be "rx-clk" for the MAC RX clock.
->>>> +- st,syscon : Should be phandle/offset pair. The phandle to the syscon
->>>> node which
->>>> +             encompases the glue register, and the offset of the
->>>> control register.
->>>> +Example:
->>>> +
->>>> +               ethernet0: dwmac@40028000 {
->>>> +                       compatible = "st,stm32-dwmac",
->>>> "snps,dwmac-3.50a";
->>>> +                       status = "disabled";
->>>> +                       reg = <0x40028000 0x8000>;
->>>> +                       reg-names = "stmmaceth";
->>>> +                       interrupts = <0 61 0>, <0 62 0>;
->>>> +                       interrupt-names = "macirq", "eth_wake_irq";
->>>> +                       clock-names = "stmmaceth", "tx-clk", "rx-clk";
->>>> +                       clocks = <&rcc 0 25>, <&rcc 0 26>, <&rcc 0 27>;
->>>> +                       st,syscon = <&syscfg 0x4>;
->>>> +                       snps,pbl = <8>;
->>>> +                       snps,mixed-burst;
->>>> +                       dma-ranges;
->>>> +               };
->>>> --
->>>> 1.9.1
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-arm-kernel mailing list
->>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->>
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will fix this, thank you.
+
+> This goes against trying to limit places of FDT parsing and keeping
+> the early scanning all within fdt.c. At least it is not in the arch
+> code. That said, I'm okay with this change if it helps.
+> 
+> Rob
+> 
