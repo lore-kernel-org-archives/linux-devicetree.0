@@ -1,47 +1,73 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM64: meson: GXBaby (S905) and Vega S95
- enablement
-Date: Tue, 22 Mar 2016 21:29:26 +0100
-Message-ID: <56F1AB26.8050200@suse.de>
-References: <1456886101-22967-1-git-send-email-afaerber@suse.de>
- <CAOi56cXFEUZuu0bJknUYNhfR2jL=LYUTbpnX9diZw2B5JfTaEQ@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [linux-sunxi] Re: [PATCH] musb: sunxi-glue: Fix sunxi-musb driver
+ not auto-loading
+Date: Tue, 22 Mar 2016 21:52:41 +0100
+Message-ID: <56F1B099.1000005@redhat.com>
+References: <1458598418-16959-1-git-send-email-hdegoede@redhat.com>
+ <56F1A748.6070808@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOi56cXFEUZuu0bJknUYNhfR2jL=LYUTbpnX9diZw2B5JfTaEQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <56F1A748.6070808-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 21.03.2016 um 23:36 schrieb Kevin Hilman:
-> On Tue, Mar 1, 2016 at 6:34 PM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org=
-> wrote:
->=20
->> Note: On the Vega S95 I need to change TEXT_OFFSET as follows,
->> in order to avoid the vendor U-Boot overwriting itself (fwiu);
->> for the Mini Mx that's reportedly not necessary.
->=20
-> FYI, the Amlogic P200 dev board also needs this hack with the factory=
- u-boot.
+Hi,
 
-I have meanwhile found that
+On 22-03-16 21:12, Andreas F=E4rber wrote:
+> Hi Hans,
+>
+> Am 21.03.2016 um 23:13 schrieb Hans de Goede:
+>> Add a missing MODULE_DEVICE_TABLE() line which was causing the
+>> sunxi-musb glue to not auto-load when build as a module.
+>
+> "built"
 
-mkimage -A arm64 -O linux -T kernel -C none -a 0x1080000 -e 0x1080000 \
--n linux-next -d arch/arm64/boot/Image ../uImage
+Thanks.
 
-and then using bootm instead of booti works even without the above hack
-on the Vega S95. Not a satisfactory solution yet, but better than
-patching the kernel in a distro-incompatible way.
+> Should this get a Fixes: header for backporting to stable?
+
+Actually while looking for the commit id, it looks like someone
+else has already beat me to it, and this is already fixes
+in Linus' tree, so self NACK for this one.
 
 Regards,
-Andreas
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
+Hans
+
+
+>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   drivers/usb/musb/sunxi.c | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/drivers/usb/musb/sunxi.c b/drivers/usb/musb/sunxi.c
+>> index 4b472b8..9af9431 100644
+>> --- a/drivers/usb/musb/sunxi.c
+>> +++ b/drivers/usb/musb/sunxi.c
+>> @@ -756,6 +756,7 @@ static const struct of_device_id sunxi_musb_matc=
+h[] =3D {
+>>   	{ .compatible =3D "allwinner,sun8i-a33-musb", },
+>>   	{}
+>>   };
+>> +MODULE_DEVICE_TABLE(of, sunxi_musb_match);
+>>
+>>   static struct platform_driver sunxi_musb_driver =3D {
+>>   	.probe =3D sunxi_musb_probe,
+>
+> Has anyone looked into my earlier report about the module filename no=
+t
+> having musb-? I did not see any response and haven't rechecked v4.5.0=
+=2E
+>
+> Regards,
+> Andreas
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
