@@ -1,33 +1,36 @@
-From: Pramod Gurav <gpramod-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH 0/2] Bypass BAM init if Remotely controlled
-Date: Tue, 22 Mar 2016 15:19:09 +0530
-Message-ID: <1458640151-15150-1-git-send-email-gpramod@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Pramod Gurav <gpramod-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Pramod Gurav <gpramod@codeaurora.org>
+Subject: [PATCH 1/2] dmaengine: qcom_bam_dma: Clear IRQ only if its set
+Date: Tue, 22 Mar 2016 15:19:10 +0530
+Message-ID: <1458640151-15150-2-git-send-email-gpramod@codeaurora.org>
+References: <1458640151-15150-1-git-send-email-gpramod@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1458640151-15150-1-git-send-email-gpramod@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org, linux-kernel@vger.kernel.org
+Cc: dmaengine@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, dan.j.williams@intel.com, vinod.koul@intel.com, okaya@codeaurora.org, architt@codeaurora.org, Pramod Gurav <gpramod@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On some QOCM platforms(eg 8996) BAM control registers are managed remotely
-hence can not be accessed by application processor for writes. So skip the bam_init
-for any such platform if DT property is set.
+Clear the BAM IRQ bit only if there is a BAM interrupt.
 
-Tested on 8996 (BAM Global control is through remote) and DB410C boards.
-Tested with i2c DMA on these targets which uses BAM as DMA controller.
+Signed-off-by: Pramod Gurav <gpramod@codeaurora.org>
+---
+ drivers/dma/qcom/bam_dma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Pramod Gurav (2):
-  dmaengine: qcom_bam_dma: Clear IRQ only if its set
-  dmaengine: qcom_bam_dma: Bypass BAM init if not managed locally
-
- .../devicetree/bindings/dma/qcom_bam_dma.txt        |  3 +++
- drivers/dma/qcom/bam_dma.c                          | 21 +++++++++++++--------
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
+diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+index d5e0a9c..0880345 100644
+--- a/drivers/dma/qcom/bam_dma.c
++++ b/drivers/dma/qcom/bam_dma.c
+@@ -807,7 +807,8 @@ static irqreturn_t bam_dma_irq(int irq, void *data)
+ 	/* don't allow reorder of the various accesses to the BAM registers */
+ 	mb();
+ 
+-	writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
++	if (srcs & BAM_IRQ)
++		writel_relaxed(clr_mask, bam_addr(bdev, 0, BAM_IRQ_CLR));
+ 
+ 	return IRQ_HANDLED;
+ }
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
