@@ -1,57 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
-Date: Tue, 22 Mar 2016 11:56:51 +0100
-Message-ID: <CAMuHMdWTteucxUgBU=d6=bckaZrn0vmr8LYW08UdULEtQYFzpg@mail.gmail.com>
-References: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
-	<CAMuHMdW5Owzv06wnV34W3cYp=ibrONcfBVV6WST5VyvQ1ENjsA@mail.gmail.com>
-	<20160322104207.GA2842@marie-Aspire-5600>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 1/9] dt-bindings: phy: Add NVIDIA Tegra XUSB pad
+ controller binding
+Date: Tue, 22 Mar 2016 12:01:58 +0100
+Message-ID: <CACRpkdYHqXWZeo=+zY2orRjHniyzcR_Z=o2ZMXtevEdxmHjWJA@mail.gmail.com>
+References: <1457108379-20794-1-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160322104207.GA2842@marie-Aspire-5600>
-Sender: linux-gpio-owner@vger.kernel.org
-To: nicolas saenz julienne <nicolassaenzj@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457108379-20794-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+On Fri, Mar 4, 2016 at 5:19 PM, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Tue, Mar 22, 2016 at 11:42 AM, nicolas saenz julienne
-<nicolassaenzj@gmail.com> wrote:
->> Why did you choose the "lvc" variant?
-> Well to be honest the HW people did and it's all I could test with.  I don't
-> know much about these naming schemes, apart from the intuition it has to do
-> with frequency and line levels.
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 >
->> Ideally, you want to put the oldest "manuf,74x594" variant here.
-> What do you mean by oldest? What would you suggest? it's funny because the chip
-> is going to be used on a new product that is meant to be produced for years.
+> The NVIDIA Tegra XUSB pad controller provides a set of pads, each with a
+> set of lanes that are used for PCIe, SATA and USB.
+>
+> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> ---
+> Changes in v10:
+> - clarify that the hardware documentation means something different when
+>   referring to a "port" (intra-SoC connectivity)
 
-For DT bindings, it doesn't matter who manufactured the part, or which
-technology was used (TTL, HC, LVC, ...).
+Thierry I'm a bit out of sync, so can you resend these patches with
+collected ACKs after -rc1?
 
-Logically, the shiny new parts are compatible with the old ones, from as early
-as the 1960s.
+Please send me the patches I can just merge into the pinctrl tree
+separately if possible, I encourage any DTS changes to go in
+orthogonally through ARM SoC. The DTS business I regard as
+kind of its own tree.
 
-Especially for standard logic glue, where you can source parts from several
-manufacturers, and which are available in many different technologies, it
-doesn't make much sense to have all combinations in the DT bindings.
-
-https://en.wikipedia.org/wiki/7400_series
-
-Now, which one to pick?
-Given the precedence set by the existing compatible value "fairchild,74hc595",
-perhaps the most logical one to add is "fairchild,74hc594"?
-
-Or can we just drop the manufacturer?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Yours,
+Linus Walleij
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
