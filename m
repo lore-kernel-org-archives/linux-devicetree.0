@@ -1,39 +1,88 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/15] irqchip/gic: Remove static irq_chip definition for eoimode1
-Date: Tue, 22 Mar 2016 12:49:16 +0100
-Message-ID: <CACRpkdaFuQ9eSXTj_LK0Vf9ufw_d2XA9zUF_Lj1gPjkGkqkGuQ@mail.gmail.com>
-References: <1458224359-32665-1-git-send-email-jonathanh@nvidia.com>
-	<1458224359-32665-11-git-send-email-jonathanh@nvidia.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 02/18] dt-bindings: timer: sp804: add timer-width
+ property
+Date: Tue, 22 Mar 2016 12:02:32 +0000
+Message-ID: <56F13458.1080401@arm.com>
+References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
+ <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
+ <1457519060-6038-3-git-send-email-narmstrong@baylibre.com>
+ <20160317170926.GA28934@rob-hp-laptop> <56EAF212.7020700@arm.com>
+ <CAL_JsqKRjFDNmGjkPfJ-BKXG8ekNzUgear3uLzsFYbZU7Zph7w@mail.gmail.com>
+ <56EB03B3.3070106@arm.com> <56F10E84.1080607@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458224359-32665-11-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-OMAP <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56F10E84.1080607@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 3:19 PM, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+Hi Neil,
 
-> There are only 3 differences (not including the name) in the definitions
-> of the gic_chip and gic_eoimode1_chip structures. Instead of statically
-> defining the gic_eoimode1_chip structure, remove it and populate the
-> eoimode1 functions dynamically for the appropriate GIC irqchips.
+On 22/03/16 09:21, Neil Armstrong wrote:
+> On 03/17/2016 08:21 PM, Robin Murphy wrote:
+>> On 17/03/16 19:00, Rob Herring wrote:
+>>> On Thu, Mar 17, 2016 at 1:06 PM, Robin Murphy <robin.murphy@arm.com> wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On 17/03/16 17:09, Rob Herring wrote:
+>>>>> That would not be an SP804 nor would the vendor be ARM in that case. So
+>>>>> add a new compatible string for the vendor that decided to hack up ARM's
+>>>>> IP block.
+>>>>
+>>>>
+>>>> By all accounts this is some ancient reference design[1] which later evolved
+>>>> _into_ the SP804, so that vendor would probably still be ARM ;)
+>>>
+>>> Right.
+>>>
+>>>> A separate compatible string would indeed make more sense, though. Both
+>>>> semantically and in terms of letting the driver account for the differences
+>>>> automatically.
+>>>>
+>>>> Robin.
+>>>>
+>>>> [1]:http://infocenter.arm.com/help/topic/com.arm.doc.ddi0170a/I350250.html
+>>>
+>>> Humm, same as integrator timers perhaps?
+>>
+>> Having had a quick look, what the Integrator/AP manual describes certainly smells like the same basic block as the "AMBA Timer" - 16 bit counters and the same control register layout - albeit in a mutant triple-timer version with a bigger offset between each register set. Integrator/CP, on the other hand, looks much more SP804-like.
+>>
+>> Robin.
+>>
 >
-> Signed-off-by: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Hi,
+>
+> I will switch to oxsemi,ox810se-rps-timer since it need a specific register width that will be handled by the driver.
 
->         if (static_key_true(&supports_deactivate) && gic_nr == 0) {
-> -               gic->chip = gic_eoimode1_chip;
-> +               gic->chip.irq_mask = gic_eoimode1_mask_irq;
-> +               gic->chip.irq_eoi = gic_eoimode1_eoi_irq;
-> +               gic->chip.irq_set_vcpu_affinity = gic_irq_set_vcpu_affinity;
-> +               gic->chip.name = kasprintf(GFP_KERNEL, "GICv2");
+By "needs a specific register width" do you mean the OxSemi 
+implementation will give a bus error on a 32-bit access and requires 
+16-bit accessors? If so, I'd expect to see patch 1 changing readl()s to 
+readw()s at least somewhere. Otherwise, if it's merely that the 
+clocksource API needs to know the upper 16 bits of a word it reads are 
+undefined, then since that's the standard behaviour I'd be inclined to 
+add it to the driver as a canonical "arm,amba-timer" implementation, 
+then have your implementation-specific compatible on top of that just in 
+case.
 
-I think you can just = "GICv2" there. No need to kasprintf()
+Robin.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+> Neil
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
