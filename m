@@ -1,46 +1,40 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: Add documentation for GM20B GPU
-Date: Mon, 21 Mar 2016 20:41:33 -0500
-Message-ID: <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA@mail.gmail.com>
-References: <1458010724-10945-1-git-send-email-acourbot@nvidia.com>
- <1458010724-10945-4-git-send-email-acourbot@nvidia.com> <20160318204748.GA20243@rob-hp-laptop>
- <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 1/2] ARM: dts: exynos: Add Security SubSystem node to Exynos4
+Date: Tue, 22 Mar 2016 11:00:02 +0900
+Message-ID: <1458612003-30284-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Vladimir Zapolskiy <vz@mleia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 20, 2016 at 1:55 AM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sat, Mar 19, 2016 at 5:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Tue, Mar 15, 2016 at 11:58:42AM +0900, Alexandre Courbot wrote:
->>> GM20B's definition is mostly similar to GK20A's, but requires an
->>> additional clock.
+Add Security SubSystem (SSS) node to Exynos4 which provides hardware
+acceleration of AES operations.
 
-[...]
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
->>>       gpu@0,57000000 {
->>>               compatible = "nvidia,gk20a";
->>> @@ -45,3 +49,22 @@ Example:
->>>               iommus = <&mc TEGRA_SWGROUP_GPU>;
->>>               status = "disabled";
->>>       };
->>> +
->>> +Example for GM20B:
->>> +
->>> +     gpu@0,57000000 {
->>
->> Drop the comma and leading zero.
->
-> Even though this is how it appears in the actual DT?
-
-Yes, those will need to get fixed, too.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index c679b3cc3c48..39000f9c6b86 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -969,6 +969,15 @@
+ 		#iommu-cells = <0>;
+ 	};
+ 
++	sss: sss@10830000 {
++		compatible = "samsung,exynos4210-secss";
++		reg = <0x10830000 0x300>;
++		interrupts = <0 112 0>;
++		clocks = <&clock CLK_SSS>;
++		clock-names = "secss";
++		status = "disabled";
++	};
++
+ 	prng: rng@10830400 {
+ 		compatible = "samsung,exynos4-rng";
+ 		reg = <0x10830400 0x200>;
+-- 
+2.5.0
