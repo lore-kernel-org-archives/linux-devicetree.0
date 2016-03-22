@@ -1,93 +1,57 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Tue, 22 Mar 2016 10:14:39 +0800
-Message-ID: <56F0AA8F.3050602@rock-chips.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <1511371.I0NIYzh3kP@diego> <56EFE66A.8020404@rock-chips.com>
- <1867694.1mDULrSexE@phil>
+From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] dt-bindings: Add documentation for GM20B GPU
+Date: Tue, 22 Mar 2016 13:00:53 +0900
+Message-ID: <56F0C375.1030907@nvidia.com>
+References: <1458010724-10945-1-git-send-email-acourbot@nvidia.com>
+ <1458010724-10945-4-git-send-email-acourbot@nvidia.com>
+ <20160318204748.GA20243@rob-hp-laptop>
+ <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A@mail.gmail.com>
+ <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1867694.1mDULrSexE@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 03/22/2016 08:42 AM, Heiko Stuebner wrote:
-> Hi Yakir,
+On 03/22/2016 10:41 AM, Rob Herring wrote:
+> On Sun, Mar 20, 2016 at 1:55 AM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sat, Mar 19, 2016 at 5:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> On Tue, Mar 15, 2016 at 11:58:42AM +0900, Alexandre Courbot wrote:
+>>>> GM20B's definition is mostly similar to GK20A's, but requires an
+>>>> additional clock.
 >
-> Am Montag, 21. M=E4rz 2016, 20:17:46 schrieb Yakir Yang:
->> On 03/21/2016 07:29 PM, Heiko St=FCbner wrote:
->>> Am Montag, 21. M=E4rz 2016, 17:28:38 schrieb Yakir Yang:
->>>> This patch set would add the RGA direct rendering based 2d graphic=
-s
->>>> acceleration module.
->>> very cool to see that.
->> ;)
->>
->>>> This patch set is based on git repository below:
->>>> git://people.freedesktop.org/~airlied/linux drm-next
->>>> commit id: 568d7c764ae01f3706085ac8f0d8a8ac7e826bd7
->>>>
->>>> And the RGA driver is based on Exynos G2D driver, it only manages =
-the
->>>> command lists received from user, so user should make the command =
-list
->>>> to data and registers needed by operation to use.
->>>>
->>>> I have prepared an userspace demo application for testing:
->>>> 	https://github.com/yakir-Yang/libdrm-rockchip
->>>>
->>>> That is a rockchip libdrm library, and I have write a simple test =
-case
->>>> "rockchip_rga_test" that would test the below RGA features:
->>>> - solid
->>>> - copy
->>>> - rotation
->>>> - flip
->>>> - window clip
->>>> - dithering
->>> Did you submit your libdrm changes as well?
+> [...]
+>
+>>>>        gpu@0,57000000 {
+>>>>                compatible = "nvidia,gk20a";
+>>>> @@ -45,3 +49,22 @@ Example:
+>>>>                iommus = <&mc TEGRA_SWGROUP_GPU>;
+>>>>                status = "disabled";
+>>>>        };
+>>>> +
+>>>> +Example for GM20B:
+>>>> +
+>>>> +     gpu@0,57000000 {
 >>>
->>> Userspace-interfaces need to be stable so the other side must also =
-get
->>> accepted - even before the kernel change if I remember correctly.
->> Got it, and I just saw exynos_fimg2d already landed at mainline libd=
-rm.
->> But I don't find the way to submit patches to libdrm, would you like
->> share some helps here ;)
-> Looking at the libdrm sources on cgit.freedesktop.org, I did not find=
- any
-> specific manual on submitting patches.
+>>> Drop the comma and leading zero.
+>>
+>> Even though this is how it appears in the actual DT?
 >
-> But looking at the dri-list archive, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org =
-is the
-> right list and looking at the libdrm history it looks like Emil Velik=
-ov
-> <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> seems to be doing maintenance-stuff in lib=
-drm.
-> And as a 3rd recipient, please also include the linux-rockchip list.
-Great, thanks, I would improve my libdrm changes, and submit them soon =
-:)
+> Yes, those will need to get fixed, too.
 
-- Yakir
-> @Emil, please shout if I read that wrong :-)
->
->
-> Hope that helps
-> Heiko
->
->
->
+Sorry, I just want to confirm that I understand why this needs to be 
+fixed. The parent node has #address-cells = <2>, and the practice of 
+specifying two cells in the node name is consistent with what I see in 
+http://www.devicetree.org/Device_Tree_Usage.
 
+However in the device tree usage example one can interpret the two cells 
+as being two different components of the address, whereas in our case we 
+are using two cells because the address is 64-bit - hence we should 
+specify it in the name as a single entity. Is this correct?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Alex.
