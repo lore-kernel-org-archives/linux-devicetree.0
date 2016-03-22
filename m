@@ -1,72 +1,62 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/2] mtd: spi-nor: add an alternative method to support memory >16MiB
-Date: Tue, 22 Mar 2016 16:13:54 +0100
-Message-ID: <cover.1458657802.git.cyrille.pitchen@atmel.com>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] devicetree: bindings: let thermal-sensor point to
+ other thermal zones
+Date: Tue, 22 Mar 2016 08:13:34 -0700
+Message-ID: <20160322151333.GA2977@localhost.localdomain>
+References: <1448464186-26289-1-git-send-email-javi.merino@arm.com>
+ <1448464186-26289-3-git-send-email-javi.merino@arm.com>
+ <20160104141709.GB19256@pengutronix.de>
+ <20160303032152.GD3379@localhost.localdomain>
+ <20160321115511.GA6590@e104805>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160321115511.GA6590@e104805>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+To: Javi Merino <javi.merino-5wv7dgnIgG8@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rui.zang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Mon, Mar 21, 2016 at 11:55:11AM +0000, Javi Merino wrote:
+> On Wed, Mar 02, 2016 at 07:21:53PM -0800, Eduardo Valentin wrote:
+> > On Mon, Jan 04, 2016 at 03:17:09PM +0100, Sascha Hauer wrote:
+> > > On Wed, Nov 25, 2015 at 03:09:44PM +0000, Javi Merino wrote:
+> > > > The thermal-sensor property of the thermal zone node accepts phandles to
+> > > > thermal sensors.  However, thermal zones can be created as an
+> > > > +
+> > > > +		thermal-sensors = <&cpu_thermal &gpu_thermal &lcd_thermal>
+> > > 
+> > > This seems inconsistent. Why can a thermal zone only have multiple
+> > > thermal sensors when they are thermal zones themselves? Either we assume
+> > > that one thermal zone has a single sensor or we assume that it can have
+> > > multiple sensors, but this should not depend on the zone being a sub zone
+> > > or not.
+> > > 
+> > > I think the thermal-sensors property should always point to one or
+> > > multiple sensors. I see no point in "This property either points to
+> > > exactly one sensor or multiple other thermal zones (from which we only
+> > > use the temperature)"
+> > 
+> > 
+> > Agreed here. In fact, if we are going to allow thermal zones to be
+> > treated as sensors, it means there should be no limits on what you put
+> > of there, as long as all items have #thermal-sensor-cells. So, mixing
+> > one (or more) regular sensors, with other thermal zones shall be
+> > allowed, if we agree in this semantics.
+> 
+> Eduardo, thanks for the review.  There doesn't seem to be much
+> interest in this and I currently have no time to work on it so I am
+> dropping this series for the time being.  I'm happy for this to be
+> picked up by somebody else (or who knows, maybe I will be able to work
+> on it again in the future).
 
-This patch was tested on a sama5d2 xplained board + Macronix mx25l25673g.
+Ok Javi, as this was one of the topics agreed for a change, I will take it over.
 
-It provides us with an alternative method to support SPI NOR memory above
-16MiB (128Mib). Indeed the previous method (still default) makes the
-memory enter it's 4byte-address method. However this mode has some
-annoying side effects for early bootloarders: it changes the internal
-state of the memory hence when using regular (Fast) Read op codes
-(0x03, 0x0b, 0x6b, ...) the memory now expects 4byte addresses whereas
-some bootloaders still use these op codes with 3byte addresses.
+Thanks for your help.
 
-The new method translates the 3byte address op codes into their 4byte
-address version:
-0x03 -> 0x13  Read
-0x0b -> 0x0c  Fast Read
-0x6b -> 0x6c  Fast Read 1-1-4
-0x02 -> 0x12  Page Program
-0xd8 -> 0xdc  Sector Erase
-...
-
-The internal state of the SPI NOR memory is left unchanged.
-
-However the 4byte address op codes are not supported by all memories.
-For instance Macronix mx25l25635e and mx25l25673g share the very same
-JEDEC ID (C22019) with no additional ext_id bytes to differentiate them.
-The 35e doesn't support the 4byte address op codes whereas the 73g does.
-So there is no mean for the software to discover at runtime whether the
-hardware supports these op codes. Hence this patch checks a new DT
-property, "m25p,4byte-opcoes", to select the proper method to deal with
-a >16MiB SPI NOR memory.
-
-
-Best regards,
-
-Cyrille
-
-
-ChangeLog:
-
-v1 -> v2:
-- remove the Kconfig option and use the new "m25p,4byte-opcodes" DT
-  property instead.
-
-Cyrille Pitchen (2):
-  mtd: spi-nor: add an alternative method to support memory >16MiB
-  doc: dt: mtd: add a DT property to enable the use of 4byte-address op
-    codes
-
- .../devicetree/bindings/mtd/jedec,spi-nor.txt      |  11 +++
- drivers/mtd/spi-nor/spi-nor.c                      | 100 ++++++++++++++++-----
- include/linux/mtd/spi-nor.h                        |  23 +++--
- 3 files changed, 107 insertions(+), 27 deletions(-)
-
--- 
-1.8.2.2
-
+> 
+> Javi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
