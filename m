@@ -1,61 +1,71 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Tue, 22 Mar 2016 01:42:50 +0100
-Message-ID: <1867694.1mDULrSexE@phil>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <1511371.I0NIYzh3kP@diego> <56EFE66A.8020404@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] ARM: dts: shmobile: Correct interrupt type for ARM
+ TWD
+Date: Tue, 22 Mar 2016 10:28:50 +0900
+Message-ID: <20160322012849.GA14367@verge.net.au>
+References: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <56EFE66A.8020404@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Emil Velikov <emil.l.velikov@gmail.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgWWFraXIsCgpBbSBNb250YWcsIDIxLiBNw6RyeiAyMDE2LCAyMDoxNzo0NiBzY2hyaWViIFlh
-a2lyIFlhbmc6Cj4gT24gMDMvMjEvMjAxNiAwNzoyOSBQTSwgSGVpa28gU3TDvGJuZXIgd3JvdGU6
-Cj4gPiBBbSBNb250YWcsIDIxLiBNw6RyeiAyMDE2LCAxNzoyODozOCBzY2hyaWViIFlha2lyIFlh
-bmc6Cj4gPj4gVGhpcyBwYXRjaCBzZXQgd291bGQgYWRkIHRoZSBSR0EgZGlyZWN0IHJlbmRlcmlu
-ZyBiYXNlZCAyZCBncmFwaGljcwo+ID4+IGFjY2VsZXJhdGlvbiBtb2R1bGUuCj4gPiAKPiA+IHZl
-cnkgY29vbCB0byBzZWUgdGhhdC4KPiAKPiA7KQo+IAo+ID4+IFRoaXMgcGF0Y2ggc2V0IGlzIGJh
-c2VkIG9uIGdpdCByZXBvc2l0b3J5IGJlbG93Ogo+ID4+IGdpdDovL3Blb3BsZS5mcmVlZGVza3Rv
-cC5vcmcvfmFpcmxpZWQvbGludXggZHJtLW5leHQKPiA+PiBjb21taXQgaWQ6IDU2OGQ3Yzc2NGFl
-MDFmMzcwNjA4NWFjOGYwZDhhOGFjN2U4MjZiZDcKPiA+PiAKPiA+PiBBbmQgdGhlIFJHQSBkcml2
-ZXIgaXMgYmFzZWQgb24gRXh5bm9zIEcyRCBkcml2ZXIsIGl0IG9ubHkgbWFuYWdlcyB0aGUKPiA+
-PiBjb21tYW5kIGxpc3RzIHJlY2VpdmVkIGZyb20gdXNlciwgc28gdXNlciBzaG91bGQgbWFrZSB0
-aGUgY29tbWFuZCBsaXN0Cj4gPj4gdG8gZGF0YSBhbmQgcmVnaXN0ZXJzIG5lZWRlZCBieSBvcGVy
-YXRpb24gdG8gdXNlLgo+ID4+IAo+ID4+IEkgaGF2ZSBwcmVwYXJlZCBhbiB1c2Vyc3BhY2UgZGVt
-byBhcHBsaWNhdGlvbiBmb3IgdGVzdGluZzoKPiA+PiAJaHR0cHM6Ly9naXRodWIuY29tL3lha2ly
-LVlhbmcvbGliZHJtLXJvY2tjaGlwCj4gPj4gCj4gPj4gVGhhdCBpcyBhIHJvY2tjaGlwIGxpYmRy
-bSBsaWJyYXJ5LCBhbmQgSSBoYXZlIHdyaXRlIGEgc2ltcGxlIHRlc3QgY2FzZQo+ID4+ICJyb2Nr
-Y2hpcF9yZ2FfdGVzdCIgdGhhdCB3b3VsZCB0ZXN0IHRoZSBiZWxvdyBSR0EgZmVhdHVyZXM6Cj4g
-Pj4gLSBzb2xpZAo+ID4+IC0gY29weQo+ID4+IC0gcm90YXRpb24KPiA+PiAtIGZsaXAKPiA+PiAt
-IHdpbmRvdyBjbGlwCj4gPj4gLSBkaXRoZXJpbmcKPiA+IAo+ID4gRGlkIHlvdSBzdWJtaXQgeW91
-ciBsaWJkcm0gY2hhbmdlcyBhcyB3ZWxsPwo+ID4gCj4gPiBVc2Vyc3BhY2UtaW50ZXJmYWNlcyBu
-ZWVkIHRvIGJlIHN0YWJsZSBzbyB0aGUgb3RoZXIgc2lkZSBtdXN0IGFsc28gZ2V0Cj4gPiBhY2Nl
-cHRlZCAtIGV2ZW4gYmVmb3JlIHRoZSBrZXJuZWwgY2hhbmdlIGlmIEkgcmVtZW1iZXIgY29ycmVj
-dGx5Lgo+IAo+IEdvdCBpdCwgYW5kIEkganVzdCBzYXcgZXh5bm9zX2ZpbWcyZCBhbHJlYWR5IGxh
-bmRlZCBhdCBtYWlubGluZSBsaWJkcm0uCj4gQnV0IEkgZG9uJ3QgZmluZCB0aGUgd2F5IHRvIHN1
-Ym1pdCBwYXRjaGVzIHRvIGxpYmRybSwgd291bGQgeW91IGxpa2UKPiBzaGFyZSBzb21lIGhlbHBz
-IGhlcmUgOykKCkxvb2tpbmcgYXQgdGhlIGxpYmRybSBzb3VyY2VzIG9uIGNnaXQuZnJlZWRlc2t0
-b3Aub3JnLCBJIGRpZCBub3QgZmluZCBhbnkgCnNwZWNpZmljIG1hbnVhbCBvbiBzdWJtaXR0aW5n
-IHBhdGNoZXMuCgpCdXQgbG9va2luZyBhdCB0aGUgZHJpLWxpc3QgYXJjaGl2ZSwgZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZyBpcyB0aGUgCnJpZ2h0IGxpc3QgYW5kIGxvb2tpbmcgYXQg
-dGhlIGxpYmRybSBoaXN0b3J5IGl0IGxvb2tzIGxpa2UgRW1pbCBWZWxpa292IAo8ZW1pbC5sLnZl
-bGlrb3ZAZ21haWwuY29tPiBzZWVtcyB0byBiZSBkb2luZyBtYWludGVuYW5jZS1zdHVmZiBpbiBs
-aWJkcm0uCkFuZCBhcyBhIDNyZCByZWNpcGllbnQsIHBsZWFzZSBhbHNvIGluY2x1ZGUgdGhlIGxp
-bnV4LXJvY2tjaGlwIGxpc3QuCgpARW1pbCwgcGxlYXNlIHNob3V0IGlmIEkgcmVhZCB0aGF0IHdy
-b25nIDotKQoKCkhvcGUgdGhhdCBoZWxwcwpIZWlrbwpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Geert,
+
+On Fri, Mar 18, 2016 at 11:19:19AM +0100, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus, Jon,
+> 
+> This patch series corrects the interrupt type for ARM TWD timers on
+> SH-Mobile AG5 and R-Car H1.
+> 
+> The ARM TWD interrupt is a private peripheral interrupt (PPI), and per
+> the ARM GIC documentation, whether the type for PPIs can be set is
+> IMPLEMENTATION DEFINED.
+> 
+> For SH-Mobile AG5 and R-Car H1 devices the PPI type cannot be set, and
+> so when we attempt to set the type for the ARM TWD interrupt it fails.
+> This has gone unnoticed because it fails silently, and because we cannot
+> re-configure the type it has had no impact. Nevertheless fix the type
+> for the TWD interrupt so that it matches the hardware configuration.
+> 
+> This was exposed by Jon Hunter's "[PATCH 04/15] irqchip/gic: WARN if
+> setting the interrupt type fails" (https://lkml.org/lkml/2016/3/17/339),
+> which triggers:
+> 
+>     WARNING: CPU: 0 PID: 0 at drivers/irqchip/irq-gic-common.c:61 gic_configure_irq+0x64/0x7c()
+> 
+> Other Renesas SoCs using private peripheral interrupts (R-Mobile APE6,
+> R-Car Gen2, and R-Car Gen3) seem to be fine.
+> 
+> Based on patches by Jon Hunter for Tegra20/30 and OMAP4.
+
+Thanks for this. Do you think it would be best to queue these up
+for v4.7 or as fixes for v4.6?
+
+> Thanks!
+> 
+> Geert Uytterhoeven (2):
+>   ARM: dts: sh73a0: Correct interrupt type for ARM TWD
+>   ARM: dts: r8a7779: Correct interrupt type for ARM TWD
+> 
+>  arch/arm/boot/dts/r8a7779.dtsi | 2 +-
+>  arch/arm/boot/dts/sh73a0.dtsi  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
+> Gr{oetje,eeting}s,
+> 
+> 						Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
