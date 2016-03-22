@@ -1,127 +1,223 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] Input: rotary_encoder - support binary encoding of states
-Date: Tue, 22 Mar 2016 22:08:34 +0100
-Message-ID: <1458680914-4533-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: kernel@pengutronix.de, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Rojhalat Ibrahim <imr@rtschenk.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun8i: Add Orange Pi PC support
+Date: Tue, 22 Mar 2016 22:37:29 +0100
+Message-ID: <1458682649-24104-1-git-send-email-hdegoede@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A plain binary encoding has some downsides compared to the usual Gray
-encoding, but that doesn't stop hardware engineers to eventually use it=
-=2E
-So implement support for this encoding in the rotary encoder driver.
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+The Orange Pi PC is an SBC based on the Allwinner H3 SoC with a uSD slot,
+3 USB ports directly from the SoC, a 10/100M ethernet port using the
+SoC's integrated PHY, USB OTG, HDMI, a TRRS headphone jack for stereo out
+and composite out, a microphone, an IR receiver, a CSI connector, 2 LEDs,
+a 3 pin UART header, and a 40-pin GPIO header.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
-Hello,
+Changes in v2 (hdegoede):
+-Add leds
+-Add gpio-keys
+-Add ir
+---
+ arch/arm/boot/dts/Makefile                 |   1 +
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 167 +++++++++++++++++++++++++++++
+ 2 files changed, 168 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
 
-an alternative to define this difference in the device tree is to use
-something like:
-
-	rotary-encoder,encoding =3D "binary";
-
-or
-
-	rotary-encoder,encoding =3D <ROTARY_ENCODER_ENCODING_BINARY>;
-
-instead of a property
-
-	rotary-encoder,encoding-binary;
-
-=2E While the two first solutions make it obvious that there can only b=
-e
-one encoding, they IMHO look ugly, so I went for the property without
-value. What do you think?
-
-Best regards
-Uwe
-
- .../devicetree/bindings/input/rotary-encoder.txt      |  2 ++
- drivers/input/misc/rotary_encoder.c                   | 19 +++++++++++=
-+++++---
- 2 files changed, 18 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt=
- b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index 6c9f0c8a846c..4a96e4a32503 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -20,6 +20,8 @@ Optional properties:
-   2: Half-period mode
-   4: Quarter-period mode
- - wakeup-source: Boolean, rotary encoder can wake up the system.
-+- rotary-encoder,encoding-binary: The device uses binary states instea=
-d of
-+  gray encoding (which is the default).
-=20
- Deprecated properties:
- - rotary-encoder,half-period: Makes the driver work on half-period mod=
-e.
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/r=
-otary_encoder.c
-index 96c486de49e0..ce43a59ca41a 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -28,6 +28,11 @@
-=20
- #define DRV_NAME "rotary-encoder"
-=20
-+enum rotary_encoder_encoding {
-+	ROTENC_GRAY,
-+	ROTENC_BINARY,
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 04f8881..31d50a4 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -699,6 +699,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+ 	sun8i-a33-sinlinx-sina33.dtb \
+ 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
+ 	sun8i-a83t-cubietruck-plus.dtb \
++	sun8i-h3-orangepi-pc.dtb \
+ 	sun8i-h3-orangepi-plus.dtb
+ dtb-$(CONFIG_MACH_SUN9I) += \
+ 	sun9i-a80-optimus.dtb \
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+new file mode 100644
+index 0000000..daf50b9a6
+--- /dev/null
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+@@ -0,0 +1,167 @@
++/*
++ * Copyright (C) 2015 Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++#include "sun8i-h3.dtsi"
++#include "sunxi-common-regulators.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/pinctrl/sun4i-a10.h>
++
++/ {
++	model = "Xunlong Orange Pi PC";
++	compatible = "xunlong,orangepi-pc", "allwinner,sun8i-h3";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_opc>, <&leds_r_opc>;
++
++		pwr_led {
++			label = "orangepi:green:pwr";
++			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++
++		status_led {
++			label = "orangepi:red:status";
++			gpios = <&pio 0 15 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	r_gpio_keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&sw_r_opc>;
++
++		sw4 {
++			label = "sw4";
++			linux,code = <BTN_0>;
++			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
++		};
++	};
 +};
 +
- struct rotary_encoder {
- 	struct input_dev *input;
-=20
-@@ -37,6 +42,7 @@ struct rotary_encoder {
- 	u32 axis;
- 	bool relative_axis;
- 	bool rollover;
-+	enum rotary_encoder_encoding encoding;
-=20
- 	unsigned int pos;
-=20
-@@ -57,9 +63,11 @@ static unsigned rotary_encoder_get_state(struct rota=
-ry_encoder *encoder)
-=20
- 	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
- 		int val =3D gpiod_get_value_cansleep(encoder->gpios->desc[i]);
--		/* convert from gray encoding to normal */
--		if (ret & 1)
--			val =3D !val;
++&ehci1 {
++	status = "okay";
++};
 +
-+		if (encoder->encoding =3D=3D ROTENC_GRAY)
-+			/* convert from gray encoding to normal */
-+			if (ret & 1)
-+				val =3D !val;
-=20
- 		ret =3D ret << 1 | val;
- 	}
-@@ -213,6 +221,11 @@ static int rotary_encoder_probe(struct platform_de=
-vice *pdev)
- 	encoder->rollover =3D
- 		device_property_read_bool(dev, "rotary-encoder,rollover");
-=20
-+	if (device_property_read_bool(dev, "rotary-encoder,encoding-binary"))
-+		encoder->encoding =3D ROTENC_BINARY;
-+	else
-+		encoder->encoding =3D ROTENC_GRAY;
++&ehci2 {
++	status = "okay";
++};
 +
- 	device_property_read_u32(dev, "linux,axis", &encoder->axis);
- 	encoder->relative_axis =3D
- 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
---=20
-2.7.0
++&ehci3 {
++	status = "okay";
++};
++
++&ir {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ir_pins_a>;
++	status = "okay";
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
++	cd-inverted;
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&ohci3 {
++	status = "okay";
++};
++
++&pio {
++	leds_opc: led_pins@0 {
++		allwinner,pins = "PA15";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&r_pio {
++	leds_r_opc: led_pins@0 {
++		allwinner,pins = "PL10";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
++	sw_r_opc: key_pins@0 {
++		allwinner,pins = "PL3";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&usbphy {
++	/* USB VBUS is always on */
++	status = "okay";
++};
+-- 
+2.7.3
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
