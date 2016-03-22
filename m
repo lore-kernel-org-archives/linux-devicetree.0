@@ -1,58 +1,73 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 02/18] dt-bindings: timer: sp804: add timer-width
- property
-Date: Tue, 22 Mar 2016 15:29:46 +0100
-Message-ID: <56F156DA.3000602@baylibre.com>
-References: <1457005210-18485-1-git-send-email-narmstrong@baylibre.com>
- <1457519060-6038-1-git-send-email-narmstrong@baylibre.com>
- <1457519060-6038-3-git-send-email-narmstrong@baylibre.com>
- <20160317170926.GA28934@rob-hp-laptop> <56EAF212.7020700@arm.com>
- <CAL_JsqKRjFDNmGjkPfJ-BKXG8ekNzUgear3uLzsFYbZU7Zph7w@mail.gmail.com>
- <56EB03B3.3070106@arm.com> <56F10E84.1080607@baylibre.com>
- <56F13458.1080401@arm.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] mtd: spi-nor: add an alternative method to support memory >16MiB
+Date: Tue, 22 Mar 2016 16:13:54 +0100
+Message-ID: <cover.1458657802.git.cyrille.pitchen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56F13458.1080401@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Russell King <rmk+kernel@arm.linux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/22/2016 01:02 PM, Robin Murphy wrote:
-> Hi Neil,
->>>>
->>>> Humm, same as integrator timers perhaps?
->>>
->>> Having had a quick look, what the Integrator/AP manual describes certainly smells like the same basic block as the "AMBA Timer" - 16 bit counters and the same control register layout - albeit in a mutant triple-timer version with a bigger offset between each register set. Integrator/CP, on the other hand, looks much more SP804-like.
->>>
->>> Robin.
->>>
->>
->> Hi,
->>
->> I will switch to oxsemi,ox810se-rps-timer since it need a specific register width that will be handled by the driver.
-> 
-> By "needs a specific register width" do you mean the OxSemi implementation will give a bus error on a 32-bit access and requires 16-bit accessors? If so, I'd expect to see patch 1 changing readl()s to readw()s at least somewhere. Otherwise, if it's merely that the clocksource API needs to know the upper 16 bits of a word it reads are undefined, then since that's the standard behaviour I'd be inclined to add it to the driver as a canonical "arm,amba-timer" implementation, then have your implementation-specific compatible on top of that just in case.
+Hi all,
 
-No actually the bus access is 32bit but the counter is 24bit wide instead of 16bit, so the clocksource won't work and the system time will furiously drift. It's not the case of the clockevent since the delay fits in 24 bits.
+This patch was tested on a sama5d2 xplained board + Macronix mx25l25673g.
 
-It also seems is ignores the 32BIT config bit, so it seems based on the initial 16bit only reference design.
+It provides us with an alternative method to support SPI NOR memory above
+16MiB (128Mib). Indeed the previous method (still default) makes the
+memory enter it's 4byte-address method. However this mode has some
+annoying side effects for early bootloarders: it changes the internal
+state of the memory hence when using regular (Fast) Read op codes
+(0x03, 0x0b, 0x6b, ...) the memory now expects 4byte addresses whereas
+some bootloaders still use these op codes with 3byte addresses.
 
-How do you think I should implement this ?
+The new method translates the 3byte address op codes into their 4byte
+address version:
+0x03 -> 0x13  Read
+0x0b -> 0x0c  Fast Read
+0x6b -> 0x6c  Fast Read 1-1-4
+0x02 -> 0x12  Page Program
+0xd8 -> 0xdc  Sector Erase
+...
 
-Neil
+The internal state of the SPI NOR memory is left unchanged.
 
-> Robin.
-> 
->>
->> Thanks,
->> Neil
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
-> 
+However the 4byte address op codes are not supported by all memories.
+For instance Macronix mx25l25635e and mx25l25673g share the very same
+JEDEC ID (C22019) with no additional ext_id bytes to differentiate them.
+The 35e doesn't support the 4byte address op codes whereas the 73g does.
+So there is no mean for the software to discover at runtime whether the
+hardware supports these op codes. Hence this patch checks a new DT
+property, "m25p,4byte-opcoes", to select the proper method to deal with
+a >16MiB SPI NOR memory.
+
+
+Best regards,
+
+Cyrille
+
+
+ChangeLog:
+
+v1 -> v2:
+- remove the Kconfig option and use the new "m25p,4byte-opcodes" DT
+  property instead.
+
+Cyrille Pitchen (2):
+  mtd: spi-nor: add an alternative method to support memory >16MiB
+  doc: dt: mtd: add a DT property to enable the use of 4byte-address op
+    codes
+
+ .../devicetree/bindings/mtd/jedec,spi-nor.txt      |  11 +++
+ drivers/mtd/spi-nor/spi-nor.c                      | 100 ++++++++++++++++-----
+ include/linux/mtd/spi-nor.h                        |  23 +++--
+ 3 files changed, 107 insertions(+), 27 deletions(-)
+
+-- 
+1.8.2.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
