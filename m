@@ -1,57 +1,62 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: Add documentation for GM20B GPU
-Date: Tue, 22 Mar 2016 13:00:53 +0900
-Message-ID: <56F0C375.1030907@nvidia.com>
-References: <1458010724-10945-1-git-send-email-acourbot@nvidia.com>
- <1458010724-10945-4-git-send-email-acourbot@nvidia.com>
- <20160318204748.GA20243@rob-hp-laptop>
- <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A@mail.gmail.com>
- <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA@mail.gmail.com>
+From: dawei chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH v6 0/3] thermal: mediatek: Add cpu dynamic power cooling
+ model.
+Date: Tue, 22 Mar 2016 13:13:06 +0800
+Message-ID: <1458623586.674.2.camel@mtksdaap41>
+References: <1450272556-29770-1-git-send-email-dawei.chien@mediatek.com>
+	 <20151217015231.GC3496@ubuntu> <1458017620.30412.3.camel@mtksdaap41>
+	 <20160315061709.GC13831@vireshk-mac-ubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160315061709.GC13831@vireshk-mac-ubuntu>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/22/2016 10:41 AM, Rob Herring wrote:
-> On Sun, Mar 20, 2016 at 1:55 AM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Sat, Mar 19, 2016 at 5:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Tue, Mar 15, 2016 at 11:58:42AM +0900, Alexandre Courbot wrote:
->>>> GM20B's definition is mostly similar to GK20A's, but requires an
->>>> additional clock.
->
-> [...]
->
->>>>        gpu@0,57000000 {
->>>>                compatible = "nvidia,gk20a";
->>>> @@ -45,3 +49,22 @@ Example:
->>>>                iommus = <&mc TEGRA_SWGROUP_GPU>;
->>>>                status = "disabled";
->>>>        };
->>>> +
->>>> +Example for GM20B:
->>>> +
->>>> +     gpu@0,57000000 {
->>>
->>> Drop the comma and leading zero.
->>
->> Even though this is how it appears in the actual DT?
->
-> Yes, those will need to get fixed, too.
+On Tue, 2016-03-15 at 13:17 +0700, Viresh Kumar wrote:
+> On 15-03-16, 12:53, dawei chien wrote:
+> > On Thu, 2015-12-17 at 09:52 +0800, Viresh Kumar wrote:
+> > > On 16-12-15, 21:29, Dawei Chien wrote:
+> > > > Use Intelligent Power Allocation (IPA) technical to add dynamic power model
+> > > > for binding CPU thermal zone. The power allocator governor allocates power
+> > > > budget to control CPU temperature.
+> > > >
+> > > > Power Allocator governor is able to keep SOC temperature within a defined
+> > > > temperature range to avoid SOC overheat and keep it's performance.
+> > > > mt8173-cpufreq.c need to register its' own power model with power allocator
+> > > > thermal governor, so that power allocator governor can allocates suitable
+> > > > power budget to control CPU temperature.
+> > > >
+> > > > Binding document is refer to this patchset
+> > > > https://lkml.org/lkml/2015/11/30/239
+> > > >
+> > > > Change since V5:
+> > > > 1. Remove thermal sensor ID from phandles
+> > > 
+> > > Though you should have included this in the new version, but still
+> > > 
+> > > Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > > 
+> > > --
+> > > viresh
+> > 
+> > Hi Viresh,
+> > Would you please pull this patch to your tree since following patch
+> > already pulled in, thank you.
+> > 
+> > https://lkml.org/lkml/2015/11/30/239
+> 
+> Its Rafael, who is going to apply this one.
+> 
+> Can you please resend it as he may not have it in patchworks?
+> 
 
-Sorry, I just want to confirm that I understand why this needs to be 
-fixed. The parent node has #address-cells = <2>, and the practice of 
-specifying two cells in the node name is consistent with what I see in 
-http://www.devicetree.org/Device_Tree_Usage.
+Hi Rafael,
+Would you merge this patch to your tee, thank you.
 
-However in the device tree usage example one can interpret the two cells 
-as being two different components of the address, whereas in our case we 
-are using two cells because the address is 64-bit - hence we should 
-specify it in the name as a single entity. Is this correct?
+BR,
+Dawei
 
-Thanks,
-Alex.
