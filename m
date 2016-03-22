@@ -1,74 +1,177 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: Add documentation for GM20B GPU
-Date: Tue, 22 Mar 2016 07:44:37 -0500
-Message-ID: <CAL_JsqKRm8cERK0JdvEym1e1SUgnis_MWW_t7Bfn5v6+qDfaew@mail.gmail.com>
-References: <1458010724-10945-1-git-send-email-acourbot@nvidia.com>
- <1458010724-10945-4-git-send-email-acourbot@nvidia.com> <20160318204748.GA20243@rob-hp-laptop>
- <CAAVeFuKQvjb20aEh9_MBnrzEUjKoVc8yQu3a4Ego6Qaqe70M6A@mail.gmail.com>
- <CAL_Jsq+SEOC1s_j8u3hMyDj5i9ROyAAN_-qmbsLrNvR3v2cXwA@mail.gmail.com> <56F0C375.1030907@nvidia.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add multidomain support to i.MX GPC
+ DT binding
+Date: Tue, 22 Mar 2016 14:02:31 +0100
+Message-ID: <1458651751.2171.5.camel@pengutronix.de>
+References: <1458128514-9560-1-git-send-email-l.stach@pengutronix.de>
+ <20160318212506.GA5916@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F0C375.1030907-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160318212506.GA5916@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 21, 2016 at 11:00 PM, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On 03/22/2016 10:41 AM, Rob Herring wrote:
->>
->> On Sun, Mar 20, 2016 at 1:55 AM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> wrote:
->>>
->>> On Sat, Mar 19, 2016 at 5:47 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>>>
->>>> On Tue, Mar 15, 2016 at 11:58:42AM +0900, Alexandre Courbot wrote:
->>>>>
->>>>> GM20B's definition is mostly similar to GK20A's, but requires an
->>>>> additional clock.
->>
->>
->> [...]
->>
->>>>>        gpu@0,57000000 {
->>>>>                compatible = "nvidia,gk20a";
->>>>> @@ -45,3 +49,22 @@ Example:
->>>>>                iommus = <&mc TEGRA_SWGROUP_GPU>;
->>>>>                status = "disabled";
->>>>>        };
->>>>> +
->>>>> +Example for GM20B:
->>>>> +
->>>>> +     gpu@0,57000000 {
->>>>
->>>>
->>>> Drop the comma and leading zero.
->>>
->>>
->>> Even though this is how it appears in the actual DT?
->>
->>
->> Yes, those will need to get fixed, too.
->
->
-> Sorry, I just want to confirm that I understand why this needs to be fixed.
-> The parent node has #address-cells = <2>, and the practice of specifying two
-> cells in the node name is consistent with what I see in
-> http://www.devicetree.org/Device_Tree_Usage.
->
-> However in the device tree usage example one can interpret the two cells as
-> being two different components of the address, whereas in our case we are
-> using two cells because the address is 64-bit - hence we should specify it
-> in the name as a single entity. Is this correct?
+Am Freitag, den 18.03.2016, 16:25 -0500 schrieb Rob Herring:
+> On Wed, Mar 16, 2016 at 12:41:52PM +0100, Lucas Stach wrote:
+> > This adds a new binding for the Freescale i.MX GPC block, which allows
+> > to describe multiple power domains in a more natural way. The driver
+> > will continue to support the old binding for existing DTBs, but new
+> > features like the additional domains present on i.MX6SX will only be
+> > usable with the new binding.
+> > 
+> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > ---
+> > v2: clarify the number of interrupts (1)
+> > ---
+> >  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
+> >  1 file changed, 54 insertions(+), 27 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> > index 65cc0345747d..e5b660018d63 100644
+> > --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> > +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> > @@ -1,22 +1,41 @@
+> >  Freescale i.MX General Power Controller
+> >  =======================================
+> >  
+> > -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
+> > -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
+> > -domains.
+> > +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
+> > +counters and Power Gating Control (PGC).
+> >  
+> >  Required properties:
+> >  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
+> >  - reg: should be register base and length as documented in the
+> >    datasheet
+> > -- interrupts: Should contain GPC interrupt request 1
+> > -- pu-supply: Link to the LDO regulator powering the PU power domain
+> > -- clocks: Clock phandles to devices in the PU power domain that need
+> > -	  to be enabled during domain power-up for reset propagation.
+> > -- #power-domain-cells: Should be 1, see below:
+> > +- interrupts: Should contain one interrupt specifier for the GPC interrupt
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
+> > +- clock-names: Must include the following entries:
+> > +  - ipg
+> > +- pgc: a list of child nodes describing the SoC power domains controlled by the
+> > +  power gating controller.
+> 
+> Why do you need this when you can iterate over the child nodes?
+> 
+The GPC has multiple functional units. One of them is the PGC (power
+gating control), but it also includes DVFS functional blocks. I would
+like to keep them separate also in the DT.
 
-Exactly, commas are for separating distinct fields like chip select
-and offset in the wiki example. A 64-bit address is a single field.
+> >  
+> > -The gpc node is a power-controller as documented by the generic power domain
+> > -bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> > +The power domains are generic power domain providers as documented in
+> > +Documentation/devicetree/bindings/power/power_domain.txt. They are described as
+> > +subnodes of the GPC and should contain the following
+> > +
+> > +Required properties:
+> > +- reg: the DOMAIN_INDEX as used by the client devices to refer to this
+> > +  power domain
+> > +  The following DOMAIN_INDEX values are valid for i.MX6Q:
+> > +  ARM_DOMAIN     0
+> > +  PU_DOMAIN      1
+> > +  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> > +  DISPLAY_DOMAIN 2
+> 
+> This shouldn't be needed now as cells is 0.
+> 
+This isn't the index to the domain cell anymore, but it redefines this
+enum to be the reg index for the child nodes. We are still matching the
+domains internally to add additional information, derived from the
+compatible, to them. The matching requires a unique index for the domain
+and rather than inventing unique names or such I've just opted to use a
+simple enum. Is this okay?
 
-The other reason to fix it is dtc is going to start warning for this.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +
+> > +- #power-domain-cells: Should be 0
+> > +
+> > +Optional properties:
+> > +- clocks: a number of phandles to clocks that need to be enabled during domain
+> > +  power-up sequencing to ensure reset propagation into devices located inside
+> > +  this power domain
+> > +- domain-supply: a phandle to the regulator powering this domain
+> >  
+> >  Example:
+> >  
+> > @@ -25,14 +44,29 @@ Example:
+> >  		reg = <0x020dc000 0x4000>;
+> >  		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+> >  			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
+> > -		pu-supply = <&reg_pu>;
+> > -		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> > -			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> > -			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> > -			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> > -			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> > -			 <&clks IMX6QDL_CLK_VPU_AXI>;
+> > -		#power-domain-cells = <1>;
+> > +		clocks = <&clks IMX6QDL_CLK_IPG>;
+> > +		clock-names = "ipg";
+> > +		
+> > +		pgc {
+> > +			#address-cells = <1>;
+> > +			#size-cells = <0>;
+> > +
+> > +			power-domain@0 {
+> > +				reg = <0>;
+> > +				#power-domain-cells = <0>;
+> > +			};
+> > +			pd_pu: power-domain@1 {
+> > +				reg = <1>;
+> > +				#power-domain-cells = <0>;
+> > +				domain-supply = <&reg_pu>;
+> > +				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> > +				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> > +				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> > +				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> > +				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> > +				         <&clks IMX6QDL_CLK_VPU_AXI>;
+> > +			};
+> > +		};
+> >  	};
+> >  
+> >  
+> > @@ -40,20 +74,13 @@ Specifying power domain for IP modules
+> >  ======================================
+> >  
+> >  IP cores belonging to a power domain should contain a 'power-domains' property
+> > -that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+> > -the power domain the device belongs to.
+> > +that is a phandle pointing to the power domain the device belongs to.
+> >  
+> >  Example of a device that is part of the PU power domain:
+> >  
+> >  	vpu: vpu@02040000 {
+> >  		reg = <0x02040000 0x3c000>;
+> >  		/* ... */
+> > -		power-domains = <&gpc 1>;
+> > +		power-domains = <&pd_pu>;
+> >  		/* ... */
+> >  	};
+> > -
+> > -The following DOMAIN_INDEX values are valid for i.MX6Q:
+> > -ARM_DOMAIN     0
+> > -PU_DOMAIN      1
+> > -The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> > -DISPLAY_DOMAIN 2
+> > -- 
+> > 2.7.0
+> > 
