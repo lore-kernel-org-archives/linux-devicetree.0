@@ -1,65 +1,62 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/2] doc: dt: mtd: add a DT property to enable the use
- of 4byte-address op codes
-Date: Wed, 23 Mar 2016 07:49:35 -0500
-Message-ID: <CAL_JsqKUMhPwxrhz50D8+UAaVPT_+=xJLm6A6fVy6RgpyOnq8w@mail.gmail.com>
-References: <cover.1458657802.git.cyrille.pitchen@atmel.com> <b6dff3f629497025be74207227b94807b64e0e9c.1458657802.git.cyrille.pitchen@atmel.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH] Input: rotary_encoder - support binary encoding of states
+Date: Wed, 23 Mar 2016 14:06:22 +0100
+Message-ID: <56F294CE.8060008@zonque.org>
+References: <1458680914-4533-1-git-send-email-u.kleine-koenig@pengutronix.de>
+ <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
+ <CAL_Jsq++0hPVuqZERsfGRM20F+2rzFUz2CDOR1Kioj0uOaskDQ@mail.gmail.com>
+ <20160323064930.GJ6191@pengutronix.de>
+ <CAL_JsqKumK8eAF+AFnR0r7V9tDECSPSv33qE_jZZE4Dz5jUyWg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b6dff3f629497025be74207227b94807b64e0e9c.1458657802.git.cyrille.pitchen@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Brian Norris <computersforpeace@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, boris brezillon <boris.brezillon@free-electrons.com>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKumK8eAF+AFnR0r7V9tDECSPSv33qE_jZZE4Dz5jUyWg@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 22, 2016 at 10:13 AM, Cyrille Pitchen
-<cyrille.pitchen@atmel.com> wrote:
-> This patch adds a new optional DT property which enables an alternative
-> way of supporting memory size above 16MiB (128Mib). This new mechanism
-> translates the regular 3byte-address op codes into their 4byte-address
-> version whereas the old/default mecanism makes the SPI memory enter its
-> 4byte-address mode, which has annoying side effects for early bootloaders.
->
-> We cannot discover at run time whether the SPI NOR memory supports the
-> 4byte-address op codes. For instance both Macronix MX25L25635E and
-> MX25L25673G share the same JEDEC ID (C22019 without any extension byte).
-> However the first one doesn't support 4byte-address op codes whereas the
-> second one does.
->
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> ---
->  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index 2c91c03e7eb0..8be610482089 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -66,6 +66,17 @@ Optional properties:
->                     Refer to your chips' datasheet to check if this is supported
->                     by your chip.
->
-> +- m25p,4byte-opcodes: For memory size above 16MiB (128Mib), use the dedicated
+On 03/23/2016 01:46 PM, Rob Herring wrote:
+> On Wed, Mar 23, 2016 at 1:49 AM, Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
 
-m25p is not a vendor. So drop it or m25p-4byte-opcodes.
+>>> Fine, but "rotary-encoder" is not a vendor I've ever heard of. Just
+>>> "encoding" is sufficient.
+>>
+>> I picked that to be consistent with rotary-encoder,steps and other
+>> already existing properties documented in
+>> Documentation/devicetree/bindings/input/rotary-encoder.txt.
+>=20
+> Uggg.
 
-> +                      4byte-address opcodes instead of entering the 4byte
-> +                      address mode. This mode changes the internal state of the
-> +                      chip so may conflict with some early boot loaders, which
-> +                      expect to use the regular (Fast) Read opcodes with 3byte
-> +                      address.
-> +                      However 4byte-address opcodes are not supported by all
-> +                      chips and support for them can not be detected at runtime.
+IIRC, the discussion back then concluded that there should be no
+properties without prefixes except for properties that are really
+generic, which wasn't an applicable argument for those of this driver.
+Then again, this goes back many years, and the rules might have changed=
+=2E
 
-s/can not/cannot/
+>> Should the prefix be dropped for these, too (with compat code)?
+>=20
+> On one hand, there's only one user of one property in the kernel, but
+> I'd guess there are others in the wild. Probably not worth carrying
+> both, so I guess just leave this for consistency.
 
-> +                      Refer to you chip's datasheet to check if this is
-> +                      supported by your chip.
-> +
->  Example:
->
->         flash: m25p80@0 {
-> --
-> 1.8.2.2
->
+Wasn't there a general agreement to *not* provide guarantees on the
+stability of TD bindings, in order to be able to refactor and unify
+them? Sorry, I haven't followed the discussion around all that for a
+while, so I'm just asking out of curiosity.
+
+As far as I'm concerned, I could live with any kind of such change and
+notify the users I know of personally so they can follow up. But I don'=
+t
+know about others of course.
+
+
+Thanks,
+Daniel
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
