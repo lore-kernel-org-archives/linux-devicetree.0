@@ -1,75 +1,75 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 0/4] mtd: nand: add enum nand_ecc_algo
-Date: Wed, 23 Mar 2016 11:43:57 +0100
-Message-ID: <20160323114357.377d82fc@bbrezillon>
-References: <1458728343-1234-1-git-send-email-zajec5@gmail.com>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
+Subject: [PATCH 1/2 v6] dt/bindings: Add bindings for Layerscape SCFG MSI
+Date: Wed, 23 Mar 2016 19:08:19 +0800
+Message-ID: <1458731300-13648-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458728343-1234-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Roy Zang <roy.zang@nxp.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Thomas Gleixner <tglx@linutronix.de>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Mar 2016 11:18:59 +0100
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Some Layerscape SoCs use a simple MSI controller implementation.
+It contains only two SCFG register to trigger and describe a
+group 32 MSI interrupts. The patch adds bindings to describe
+the controller.
 
-> Some time ago I started working on a new "nand-ecc-algo" property to =
-allow
-> specifying ECC algorithm for hardware ECC mode as well.
-> Boris pointed out it's becoming a bit messy that way as we already ha=
-ve value
-> NAND_ECC_SOFT_BCH.
-> I suggested deprecating "soft_bch" value from nand-ecc-mode property =
-and got
-> Boris agreed and no objections from others. So there is how I want to=
- implement
-> this.
-> If you agree on this way & apply my patches, I'll start modifying NAN=
-D drivers
-> (similarly to the nandsim) and then will try to drop NAND_ECC_SOFT_BC=
-H except
-> for handling backward compatibility.
-> Then finally we should be able to add "nand-ecc-algo" property suppor=
-t properly.
->=20
-> V2: Add of_get_nand_ecc_algo helper (in 2/4) instead of this slightly=
- hacky code
->     in nand_dt_init that would be replaced anyway.
+Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+---
+change log:
+v6-v4: no change
+v4: add interrupt-parent description
+v3-v1: no change
+ 
+ .../interrupt-controller/fsl,ls-scfg-msi.txt       | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
 
-This version looks good to me. If nobody disagree, I'll apply
-those patches on my future nand/next branch.
-
-Thanks,
-
-Boris
-
->=20
-> Rafa=C5=82 Mi=C5=82ecki (4):
->   mtd: nand: add new enum for storing ECC algorithm
->   of: mtd: prepare helper reading NAND ECC algo from DT
->   mtd: nand: set ECC algorithm in nand_dt_init
->   mtd: nand: nandsim: set ECC algorithm explicitly
->=20
->  drivers/mtd/nand/nand_base.c |  6 +++++-
->  drivers/mtd/nand/nandsim.c   |  2 ++
->  drivers/of/of_mtd.c          | 36 ++++++++++++++++++++++++++++++++++=
-++
->  include/linux/mtd/nand.h     |  7 +++++++
->  include/linux/of_mtd.h       |  6 ++++++
->  5 files changed, 56 insertions(+), 1 deletion(-)
->=20
-
-
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+new file mode 100644
+index 0000000..9e38949
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,ls-scfg-msi.txt
+@@ -0,0 +1,30 @@
++* Freescale Layerscape SCFG PCIe MSI controller
++
++Required properties:
++
++- compatible: should be "fsl,<soc-name>-msi" to identify
++	      Layerscape PCIe MSI controller block such as:
++              "fsl,1s1021a-msi"
++              "fsl,1s1043a-msi"
++- msi-controller: indicates that this is a PCIe MSI controller node
++- reg: physical base address of the controller and length of memory mapped.
++- interrupts: an interrupt to the parent interrupt controller.
++
++Optional properties:
++- interrupt-parent: the phandle to the parent interrupt controller.
++
++This interrupt controller hardware is a second level interrupt controller that
++is hooked to a parent interrupt controller: e.g: ARM GIC for ARM-based
++platforms. If interrupt-parent is not provided, the default parent interrupt
++controller will be used.
++Each PCIe node needs to have property msi-parent that points to
++MSI controller node
++
++Examples:
++
++	msi1: msi-controller@1571000 {
++		compatible = "fsl,1s1043a-msi";
++		reg = <0x0 0x1571000 0x0 0x8>,
++		msi-controller;
++		interrupts = <0 116 0x4>;
++	};
+-- 
+1.9.1
