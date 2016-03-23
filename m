@@ -1,46 +1,86 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 04/12] ARM: dts: dragonboard-600c: add board support with
- serial
-Date: Wed, 23 Mar 2016 20:30:08 +0000
-Message-ID: <56F2FCD0.1000708@linaro.org>
-References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762442-9492-1-git-send-email-srinivas.kandagatla@linaro.org>
- <56F2F78E.8050002@codeaurora.org>
+From: Laison-2WGxrPcL6/av+0K4mfL3GVAUjnlXr6A1@public.gmane.org, Computech-2WGxrPcL6/av+0K4mfL3GVAUjnlXr6A1@public.gmane.org,
+	"Inc <support"@ensuretech.com
+Subject: CISCO IP PHONES AND CPU's
+Date: Thu, 24 Mar 2016 01:44:55 +0700
+Message-ID: <20160323200854.3086AA688D__32446.4226760485$1458765066$gmane$org@seymour.toledo.br>
+Reply-To: sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <56F2F78E.8050002@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Description: Mail message body
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Recipients <support-lhT63EwJ3xcqDJ6do+/SaQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+Our Stock list.
 
-On 23/03/16 20:07, Stephen Boyd wrote:
-> On 03/23/2016 12:47 PM, Srinivas Kandagatla wrote:
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> new file mode 100644
->> index 0000000..e96aab6
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> @@ -0,0 +1,36 @@
->> +#include "qcom-apq8064-v2.0.dtsi"
->> +
->> +/ {
->> +	model = "Qualcomm Technologies, Inc. APQ8064 DragonBoard600c";
->> +	compatible = "qcom,apq8064-dragonboard600c", "qcom,apq8064";
->
-> Does the bootloader look at this string at all or is it using appended
-> DTB design? I'm mostly worried about having that
-Not at least on APQ8064 bootloaders, as they are still missing DT 
-support. Currently we append dtb to the kernel.
-> qcom,apq8064-dragonboard600c part. It should probably be
-> qcom,apq8064-sbc or something like that instead.
-Will do that in next version.
+Brand NEW
+96 x Cisco 7900 IP Phone
+87 x Unified IP Phone 6900
+12 x Unified IP Phone 8900
+76 x Unified IP Phone 9900
+55 x Unified IP Phone 8800
+67 x Cisco 1921
+67 x Cisco 1941
+56 x Cisco CP-7961G 7961G
+34 x Cisco CP-7971G-GE 7971G
+19 x Cisco Unified IP Conference Station 7937G Model: 7937 CP-7937G
+20 x Cisco CP-7975G 7975G
 
-thanks,
-srini
+Brand New Sealed :
 
->
+23 x  CISCO1921-SEC/K9
+Conditions: Brand New Sealed
+Description: CISCO 1921 Security Bundle w/SEC license PAK
+
+45 x CISCO1921/K9
+Conditions: Brand New Sealed
+Description: CISCO 1921 Modular Router, 2 GE, 2 EHWIC slots, 512DRAM, IP Base
+
+(1)  WS-C4500X-16SFP+
+Serial number:  JAE183501L3
+US&#36;2600
+
+(1)  WS-C3850-48PW-S
+Serial number:  FCW1823C0EW
+US&#36;2650
+
+(1)  WS-X6908-10G-2T
+Serial number:  SAL1620CKUB
+US&#36;3650
+
+(1)  ASR1000-ESP10
+Serial number:  JAE181306C3
+US&#36;3800
+
+(1)  AIR-CT5508-250-K9   (this is new but box is open!)
+Serial number:  FCW1521L038
+US&#36;4000
+
+CPUs part number below
+
+89 x  X5650
+
+975 x  X5660
+
+150 x  X5680
+
+265 x  X5690
+
+Kindly make your price offers.
+
+Sincerely
+Barbara Johnson
+Laison Computech
+210 N Scoring Ave,
+Rialto California, 92376
+Tel: +1-657-232-7047
+Fax: +1-347-214-0478
+Email: sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
