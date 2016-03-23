@@ -1,45 +1,71 @@
-From: Dave Airlie <airlied@gmail.com>
-Subject: Re: Who is going to merge it [Was: Re: [PATCH v14 0/17] Add Analogix
- Core Display Port Driver]
-Date: Wed, 23 Mar 2016 10:41:58 +1000
-Message-ID: <CAPM=9tz9_rbGJFuv-+YN=Sicfng++tHTDLrOX5Ohtwft+VnwtA@mail.gmail.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
-	<1919945.Y1tg0YzXlm@diego>
-	<56F1CAEB.3080701@samsung.com>
-	<8949624.HmxDpZAlt2@diego>
-	<56F1D0AD.8030905@samsung.com>
-	<20160322233906.GP19428@n2100.arm.linux.org.uk>
-	<56F1DB27.4040001@samsung.com>
-	<20160323000835.GQ19428@n2100.arm.linux.org.uk>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] Input: rotary_encoder - support binary encoding of states
+Date: Tue, 22 Mar 2016 19:47:06 -0500
+Message-ID: <CAL_Jsq++0hPVuqZERsfGRM20F+2rzFUz2CDOR1Kioj0uOaskDQ@mail.gmail.com>
+References: <1458680914-4533-1-git-send-email-u.kleine-koenig@pengutronix.de> <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20160323000835.GQ19428@n2100.arm.linux.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Inki Dae <inki.dae@samsung.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, David Airlie <airlied@linux.ie>, Mark Yao <mark.yao@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Doug Anderson <dianders@chromium.org>, Jingoo Han <jingoohan1@gmail.com>, Yakir Yang <ykk@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 22, 2016 at 5:50 PM, Ezequiel Garcia
+<ezequiel@vanguardiasur.com.ar> wrote:
+> (Adding DT people)
 >
->> So although it's small framework or just subdirectory, we would need
->> someone who can manage the framework to avoid further confusion if
->> necessary.
+> On 22 March 2016 at 18:08, Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+>> A plain binary encoding has some downsides compared to the usual Gra=
+y
+>> encoding, but that doesn't stop hardware engineers to eventually use=
+ it.
+>> So implement support for this encoding in the rotary encoder driver.
+>>
+>> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de=
 >
-> So maybe it just doesn't need a maintainer, and maybe those the owner
-> of the bridge driver should be responsible for choosing the tree which
-> it's merged through along with updates.  That's how dw-hdmi has been
-> managed on the whole.
+>> ---
+>> Hello,
+>>
+>> an alternative to define this difference in the device tree is to us=
+e
+>> something like:
+>>
+>>         rotary-encoder,encoding =3D "binary";
+>>
+>> or
+>>
+>>         rotary-encoder,encoding =3D <ROTARY_ENCODER_ENCODING_BINARY>=
+;
+>>
+>> instead of a property
+>>
+>>         rotary-encoder,encoding-binary;
+>>
+>> . While the two first solutions make it obvious that there can only =
+be
+>> one encoding, they IMHO look ugly, so I went for the property withou=
+t
+>> value. What do you think?
+>>
 >
-> It also means that the bridge driver maintainer is able to test changes
-> to the bridge driver, rather than having some over-arching bridge
-> subdirectory maintainer who doesn't have a clue whether the changes
-> work on the hardware.
+> Yes, picking something like:
 >
-> IMHO, having bridge driver authors/maintainers look after their own
-> code has many advantages.
+>   rotary-encoder,encoding =3D "binary";
+>
+> emphasizing the fact that only one encoding will be used,
+> will work better, scaling well if we need to introduce some
+> "foobar" encoding.
 
-The author just send me a pull request with acks from a git tree
-that hopefully both people agreed and tested from. No need to
-send this via another maintainer layer.
+=46ine, but "rotary-encoder" is not a vendor I've ever heard of. Just
+"encoding" is sufficient.
 
-Dave.
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
