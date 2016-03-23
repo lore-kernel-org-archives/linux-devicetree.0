@@ -1,61 +1,63 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 05/11] dt-bindings: Add bindings for phy-da8xx-usb
-Date: Wed, 23 Mar 2016 22:36:30 +0530
-Message-ID: <56F2CD16.9060106@ti.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v2 03/11] ARM: davinci: da850: use clk->set_parent for
+ async3
+Date: Wed, 23 Mar 2016 12:20:28 -0500
+Message-ID: <56F2D05C.8030909@lechnology.com>
 References: <1458181615-27782-1-git-send-email-david@lechnology.com>
- <1458181615-27782-6-git-send-email-david@lechnology.com>
+ <1458181615-27782-4-git-send-email-david@lechnology.com>
+ <56F2BCAB.3040404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1458181615-27782-6-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@kernel.org>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Petr Kulhavy <petr@barix.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Bin Liu <b-liu@ti.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56F2BCAB.3040404-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 March 2016 07:56 AM, David Lechner wrote:
-> Device tree binding for new phy-da8xx-usb driver.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
-> 
-> v2 changes: This is new patch in v2.
-> 
-> 
->  .../devicetree/bindings/phy/phy-da8xx-usb.txt      | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
-> new file mode 100644
-> index 0000000..ed6b710
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
-> @@ -0,0 +1,34 @@
-> +TI DaVinci DA8XX USB PHY
-> +
-> +Required properties:
-> + - compatible: must be "ti,da830-usbphy".
-> + - #phy-cells: must be 1.
-> + - reg : Address and length of the CFGCHIP2 register.
+On 03/23/2016 10:56 AM, Sekhar Nori wrote:
+> On Thursday 17 March 2016 07:56 AM, David Lechner wrote:
+>> The da850 family of processors has an async3 clock domain that can be
+>> muxed to either pll0_sysclk2 or pll1_sysclk2. Now that the davinci clocks
+>> have a set_parent callback, we can use this to control the async3 mux
+>> instead of a stand-alone function.
+>>
+>> This adds a new async3_clk and sets the appropriate child clocks. The
+>> default is use to pll1_sysclk2 since it is not affected by processor
+>> frequency scaling.
+>>
+>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>> ---
+>
+>> +static int da850_async3_set_parent(struct clk *clk, struct clk *parent)
+>> +{
+>> +	u32 __iomem *cfgchip3;
+>> +	u32 val;
+>> +
+>> +	/*
+>> +	 * Can't use DA8XX_SYSCFG0_VIRT() here since this can be called before
+>> +	 * da8xx_syscfg0_base is initialized.
+>> +	 */
+>> +	cfgchip3 = ioremap(DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP3_REG, 4);
+>
+> Is this just a theoretical possibility or have you seen this happen? I
+> would like to see if there are ways of avoiding this rather than throw
+> away usage of DA8XX_SYSCFG0_VIRT()
 
-I am not sure passing CFGCHIP2 register as reg property to the phy is
-future proof. At some point, we do want to move to common clock
-framework and at that point USB clocks controlled by CFGCHIP2 will be a
-separate driver needing access to the same register.
+Yes, it will not boot without this. The problem comes from the fact that 
+clocks are setup in davinci_common_init() which is called before 
+da8xx_syscfg0_base = ioremap(DA8XX_SYSCFG0_BASE, SZ_4K) in da850_init() 
+(and da830_init()). I also tried moving the ioremap() before 
+davinci_common_init(), but davinci_common_init() sets up the iomem, so 
+that doesn't work either.
 
-So I think the CFGCHIP2 access in USB phy driver should happen through a
-syscon phandle. This needs to happen now, not later since we cannot
-break DT backward-compatibility.
+So, if you want to use DA8XX_SYSCFG0_VIRT() here, the clock init would 
+have to be split out from davinci_common_init() which would affect all 
+davinci devices.
 
-Thanks,
-Sekhar
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
