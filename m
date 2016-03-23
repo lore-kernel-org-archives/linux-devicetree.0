@@ -1,78 +1,54 @@
-From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v4 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
-Date: Wed, 23 Mar 2016 19:12:55 +0530
-Message-ID: <1458740576-9168-1-git-send-email-purna.mandal@microchip.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: at91: use chipid device for soc detection
+Date: Wed, 23 Mar 2016 14:47:50 +0100
+Message-ID: <20160323134750.GC2570@piout.net>
+References: <1458285681-25684-1-git-send-email-ludovic.desroches@atmel.com>
+ <20160318103418.GA2531@piout.net>
+ <56F27C89.9070004@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56F27C89.9070004-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree bindings for the SPI peripheral found
-on Microchip PIC32 class devices.
+On 23/03/2016 at 12:22:49 +0100, Nicolas Ferre wrote :
+> Le 18/03/2016 11:34, Alexandre Belloni a =E9crit :
+> > On 18/03/2016 at 08:21:19 +0100, Ludovic Desroches wrote :
+> >> So far, the CIDR and EXID registers were in the DBGU interface. Th=
+is device
+> >> has disappeared with the SAMA5D2 family. These registers are expos=
+ed
+> >> through a new device called chipid.
+> >>
+> >> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: remove useless warnings]
+> > Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >=20
+> >> ---
+> >>  .../devicetree/bindings/arm/atmel-at91.txt         |  4 ++
+> >>  arch/arm/mach-at91/soc.c                           | 81 +++++++++=
+++++++++-----
+>=20
+> We may need to split this patch in 2 for going through separate arm-s=
+oc
+> branches: what do you think Alexandre?
+>=20
 
-Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I think the patch can go in as it is now, the documentation being in
+line with the code.
 
----
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
- - fix indentation
- - add space after comma
- - moved 'cs-gpios' section under 'required' properties.
-
- .../bindings/spi/microchip,spi-pic32.txt           | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
-new file mode 100644
-index 0000000..79de379f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
-@@ -0,0 +1,34 @@
-+Microchip PIC32 SPI Master controller
-+
-+Required properties:
-+- compatible: Should be "microchip,pic32mzda-spi".
-+- reg: Address and length of register space for the device.
-+- interrupts: Should contain all three spi interrupts in sequence
-+              of <fault-irq>, <receive-irq>, <transmit-irq>.
-+- interrupt-names: Should be "fault", "rx", "tx" in order.
-+- clocks: Phandle of the clock generating SPI clock on the bus.
-+- clock-names: Should be "mck0".
-+- cs-gpios: Specifies the gpio pins to be used for chipselects.
-+            See: Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional properties:
-+- dmas: Two or more DMA channel specifiers following the convention outlined
-+        in Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names: Names for the dma channels. There must be at least one channel
-+             named "spi-tx" for transmit and named "spi-rx" for receive.
-+
-+Example:
-+
-+spi1: spi@1f821000 {
-+        compatible = "microchip,pic32mzda-spi";
-+        reg = <0x1f821000 0x200>;
-+        interrupts = <109 IRQ_TYPE_LEVEL_HIGH>,
-+                     <110 IRQ_TYPE_LEVEL_HIGH>,
-+                     <111 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "fault", "rx", "tx";
-+        clocks = <&PBCLK2>;
-+        clock-names = "mck0";
-+        cs-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
-+        dmas = <&dma 134>, <&dma 135>;
-+        dma-names = "spi-rx", "spi-tx";
-+};
--- 
-1.8.3.1
-
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
