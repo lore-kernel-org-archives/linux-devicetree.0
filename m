@@ -1,35 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ASoC: codecs: add TA5720 digital amplifier DT
- bindings
-Date: Wed, 23 Mar 2016 09:55:27 -0500
-Message-ID: <20160323145527.GA9857@rob-hp-laptop>
-References: <1458580107-4632-1-git-send-email-dannenberg@ti.com>
- <1458580107-4632-2-git-send-email-dannenberg@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: am335x: Add initial support for ICEv2 board
+Date: Wed, 23 Mar 2016 10:03:39 -0500
+Message-ID: <20160323150339.GA10417@rob-hp-laptop>
+References: <1458628657-30468-1-git-send-email-lokeshvutla@ti.com>
+ <1458628657-30468-2-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458580107-4632-2-git-send-email-dannenberg-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1458628657-30468-2-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 21, 2016 at 12:08:26PM -0500, Andreas Dannenberg wrote:
-> The Texas Instruments TAS5720L/M device is a high-efficiency mono
-> Class-D audio power amplifier optimized for high transient power
-> capability to use the dynamic power headroom of small loudspeakers.
-> Its digital time division multiplexed (TDM) interface enables up to
-> 16 devices to share the same bus.
+On Tue, Mar 22, 2016 at 12:07:36PM +0530, Lokesh Vutla wrote:
+> TI's Industrial Communication Engine EVM is a low cost hardware mainly
+> developed for industrial communication type applications using serial
+> or Ethernet based interfaces. This platform features TI's AM3359 with
+> 800MHz single core Cortex-A8 processor, 256MB DDR3, 64MB SPI flash,
+> 8MB NOR Flash, mmc, usb, can, dual Ethernet ports.
 > 
-> Signed-off-by: Andreas Dannenberg <dannenberg-l0cyMroinI0@public.gmane.org>
+> For more information, look at HW user guide[1], Data manual[2].
+> 
+> Just add basic support for the moment.
+> 
+> [1] http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_EVM_Rev2_1_HW_User_Guide
+> [2] http://www.ti.com/lit/ds/symlink/am3359.pdf
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 > ---
->  .../devicetree/bindings/sound/tas5720.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/tas5720.txt
+>  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/am335x-icev2.dts                 | 303 +++++++++++++++++++++
+>  3 files changed, 307 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am335x-icev2.dts
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
