@@ -1,57 +1,62 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 0/4] mtd: nand: add enum nand_ecc_algo
-Date: Wed, 23 Mar 2016 11:18:59 +0100
-Message-ID: <1458728343-1234-1-git-send-email-zajec5@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 2/8] ARM: dts :sun7i: Add SPDIF TX pin to
+ the A20
+Date: Wed, 23 Mar 2016 18:28:09 +0800
+Message-ID: <CAGb2v64VRrM-_AAt5Xbgxc4y+-3-=mPWvuQubrHjmufUAKUA+w@mail.gmail.com>
+References: <1458590466-12572-1-git-send-email-codekipper@gmail.com> <1458590466-12572-3-git-send-email-codekipper@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBU67ZG3QKGQENVSWGAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1458590466-12572-3-git-send-email-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some time ago I started working on a new "nand-ecc-algo" property to al=
-low
-specifying ECC algorithm for hardware ECC mode as well.
-Boris pointed out it's becoming a bit messy that way as we already have=
- value
-NAND_ECC_SOFT_BCH.
-I suggested deprecating "soft_bch" value from nand-ecc-mode property an=
-d got
-Boris agreed and no objections from others. So there is how I want to i=
-mplement
-this.
-If you agree on this way & apply my patches, I'll start modifying NAND =
-drivers
-(similarly to the nandsim) and then will try to drop NAND_ECC_SOFT_BCH =
-except
-for handling backward compatibility.
-Then finally we should be able to add "nand-ecc-algo" property support =
-properly.
+On Tue, Mar 22, 2016 at 4:01 AM,  <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-V2: Add of_get_nand_ecc_algo helper (in 2/4) instead of this slightly h=
-acky code
-    in nand_dt_init that would be replaced anyway.
+nit: space should be after colon, not after dts, in subject.
+Same for the RX pin patch.
 
-Rafa=C5=82 Mi=C5=82ecki (4):
-  mtd: nand: add new enum for storing ECC algorithm
-  of: mtd: prepare helper reading NAND ECC algo from DT
-  mtd: nand: set ECC algorithm in nand_dt_init
-  mtd: nand: nandsim: set ECC algorithm explicitly
+ChenYu
 
- drivers/mtd/nand/nand_base.c |  6 +++++-
- drivers/mtd/nand/nandsim.c   |  2 ++
- drivers/of/of_mtd.c          | 36 ++++++++++++++++++++++++++++++++++++
- include/linux/mtd/nand.h     |  7 +++++++
- include/linux/of_mtd.h       |  6 ++++++
- 5 files changed, 56 insertions(+), 1 deletion(-)
-
---=20
-1.8.4.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Add the SPDIF TX pin to the A20 dtsi.
+>
+> Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index 0940a78..0c207d0 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -1193,6 +1193,13 @@
+>                                 allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+>                                 allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+>                         };
+> +
+> +                       spdif_tx_pins_a: spdif@0 {
+> +                               allwinner,pins = "PB13";
+> +                               allwinner,function = "spdif";
+> +                               allwinner,drive = <SUN4I_PINCTRL_10_MA>;
+> +                               allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
+> +                       };
+>                 };
+>
+>                 timer@01c20c00 {
+> --
+> 2.7.4
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
