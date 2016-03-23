@@ -1,122 +1,74 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 1/4] arm64: dts: marvell: Clean up armada-3720-db
-Date: Wed, 23 Mar 2016 23:24:18 +0100
-Message-ID: <1458771861-12392-2-git-send-email-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 4/4] arm64: dts: marvell: Rename armada-ap806 XOR nodes
+Date: Wed, 23 Mar 2016 23:24:21 +0100
+Message-ID: <1458771861-12392-5-git-send-email-afaerber@suse.de>
 References: <1458771861-12392-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458771861-12392-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458771861-12392-1-git-send-email-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of duplicating the SoC's node hierarchy, including a bus node
-named "internal-regs", reference the actually desired nodes by label,
-like Berlin already does. Add labels where necessary.
+Node names should not contain an instance number, the unit address
+serves to distinguish nodes of the same name. So rename the XOR nodes
+to just xor@address, using xorX as label instead.
 
-Drop an inconsistent white line while at it.
-
-=46ixes: adbc3695d9e4 ("arm64: dts: add the Marvell Armada 3700 family =
-and a development board")
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+=46ixes: ec7e5a569bce ("arm64: dts: marvell: add Device Tree files for =
+Armada 7K/8K")
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-db.dts | 35 +++++++++++-------=
---------
- arch/arm64/boot/dts/marvell/armada-372x.dtsi   |  1 -
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi   |  4 +--
- 3 files changed, 17 insertions(+), 23 deletions(-)
+ "marvell,mv-xor-v2" is not yet referenced from any driver in next-2016=
+0323.
+=20
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-db.dts b/arch/arm6=
-4/boot/dts/marvell/armada-3720-db.dts
-index 359050154511..48f97d14b057 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-db.dts
-@@ -60,27 +60,22 @@
- 		device_type =3D "memory";
- 		reg =3D <0x00000000 0x00000000 0x00000000 0x20000000>;
- 	};
-+};
-=20
--	soc {
--		internal-regs {
--			/*
--			* Exported on the micro USB connector CON32
--			* through an FTDI
--			*/
--			uart0: serial@12000 {
--				status =3D "okay";
--			};
--
--			/* CON31 */
--			usb3@58000 {
--				status =3D "okay";
--			};
-+/* CON3 */
-+&sata {
-+	status =3D "okay";
-+};
-=20
--			/* CON3 */
--			sata@e0000 {
--			       status =3D "okay";
--			};
--		};
--	};
-+/*
-+ * Exported on the micro USB connector CON32
-+ * through an FTDI
-+ */
-+&uart0 {
-+	status =3D "okay";
- };
-=20
-+/* CON31 */
-+&usb3 {
-+	status =3D "okay";
-+};
-diff --git a/arch/arm64/boot/dts/marvell/armada-372x.dtsi b/arch/arm64/=
-boot/dts/marvell/armada-372x.dtsi
-index f292a00ce97c..5120296596c2 100644
---- a/arch/arm64/boot/dts/marvell/armada-372x.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-372x.dtsi
-@@ -59,5 +59,4 @@
- 			enable-method =3D "psci";
- 		};
- 	};
--
- };
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/=
-boot/dts/marvell/armada-37xx.dtsi
-index ba9df7ff2a72..4328c2408a8a 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -105,14 +105,14 @@
- 				status =3D "disabled";
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64=
+/boot/dts/marvell/armada-ap806.dtsi
+index 3ecf9b1798fa..dd6e48a952ac 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -135,7 +135,7 @@
+ 				marvell,spi-base =3D <128>, <136>, <144>, <152>;
  			};
 =20
--			usb3@58000 {
-+			usb3: usb3@58000 {
- 				compatible =3D "generic-xhci";
- 				reg =3D <0x58000 0x4000>;
- 				interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 				status =3D "disabled";
+-			xor0@400000 {
++			xor0: xor@400000 {
+ 				compatible =3D "marvell,mv-xor-v2";
+ 				reg =3D <0x400000 0x1000>,
+ 				      <0x410000 0x1000>;
+@@ -143,7 +143,7 @@
+ 				dma-coherent;
  			};
 =20
--			sata@e0000 {
-+			sata: sata@e0000 {
- 				compatible =3D "marvell,armada-3700-ahci";
- 				reg =3D <0xe0000 0x2000>;
- 				interrupts =3D <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+-			xor1@420000 {
++			xor1: xor@420000 {
+ 				compatible =3D "marvell,mv-xor-v2";
+ 				reg =3D <0x420000 0x1000>,
+ 				      <0x430000 0x1000>;
+@@ -151,7 +151,7 @@
+ 				dma-coherent;
+ 			};
+=20
+-			xor2@440000 {
++			xor2: xor@440000 {
+ 				compatible =3D "marvell,mv-xor-v2";
+ 				reg =3D <0x440000 0x1000>,
+ 				      <0x450000 0x1000>;
+@@ -159,7 +159,7 @@
+ 				dma-coherent;
+ 			};
+=20
+-			xor3@460000 {
++			xor3: xor@460000 {
+ 				compatible =3D "marvell,mv-xor-v2";
+ 				reg =3D <0x460000 0x1000>,
+ 				      <0x470000 0x1000>;
 --=20
 2.6.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
