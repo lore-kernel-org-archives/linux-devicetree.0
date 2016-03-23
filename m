@@ -1,63 +1,148 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] ARM: davinci: da850: use clk->set_parent for
- async3
-Date: Wed, 23 Mar 2016 12:20:28 -0500
-Message-ID: <56F2D05C.8030909@lechnology.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
+Date: Wed, 23 Mar 2016 22:51:49 +0530
+Message-ID: <56F2D0AD.4040005@ti.com>
 References: <1458181615-27782-1-git-send-email-david@lechnology.com>
- <1458181615-27782-4-git-send-email-david@lechnology.com>
- <56F2BCAB.3040404@ti.com>
+ <1458181615-27782-7-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F2BCAB.3040404-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458181615-27782-7-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: Petr Kulhavy <petr@barix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bin Liu <b-liu@ti.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Tony Lindgren <tony@atomide.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2016 10:56 AM, Sekhar Nori wrote:
-> On Thursday 17 March 2016 07:56 AM, David Lechner wrote:
->> The da850 family of processors has an async3 clock domain that can be
->> muxed to either pll0_sysclk2 or pll1_sysclk2. Now that the davinci clocks
->> have a set_parent callback, we can use this to control the async3 mux
->> instead of a stand-alone function.
->>
->> This adds a new async3_clk and sets the appropriate child clocks. The
->> default is use to pll1_sysclk2 since it is not affected by processor
->> frequency scaling.
->>
->> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->> ---
->
->> +static int da850_async3_set_parent(struct clk *clk, struct clk *parent)
->> +{
->> +	u32 __iomem *cfgchip3;
->> +	u32 val;
->> +
->> +	/*
->> +	 * Can't use DA8XX_SYSCFG0_VIRT() here since this can be called before
->> +	 * da8xx_syscfg0_base is initialized.
->> +	 */
->> +	cfgchip3 = ioremap(DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP3_REG, 4);
->
-> Is this just a theoretical possibility or have you seen this happen? I
-> would like to see if there are ways of avoiding this rather than throw
-> away usage of DA8XX_SYSCFG0_VIRT()
+On Thursday 17 March 2016 07:56 AM, David Lechner wrote:
+> This is a new phy driver for the SoC USB controllers on the TI DA8XX
+> family of microcontrollers. The USB 1.1 PHY is just a simple on/off.
+> The USB 2.0 PHY also allows overriding the VBUS and ID pins.
+> 
+> Signed-off-by: David Lechner <david@lechnology.com>
 
-Yes, it will not boot without this. The problem comes from the fact that 
-clocks are setup in davinci_common_init() which is called before 
-da8xx_syscfg0_base = ioremap(DA8XX_SYSCFG0_BASE, SZ_4K) in da850_init() 
-(and da830_init()). I also tried moving the ioremap() before 
-davinci_common_init(), but davinci_common_init() sets up the iomem, so 
-that doesn't work either.
+> diff --git a/drivers/phy/phy-da8xx-usb.c b/drivers/phy/phy-da8xx-usb.c
+> new file mode 100644
+> index 0000000..93a5f4d
+> --- /dev/null
+> +++ b/drivers/phy/phy-da8xx-usb.c
+> @@ -0,0 +1,295 @@
+> +/*
+> + * phy-da8xx-usb - TI DaVinci DA8XX USB PHY driver
+> + *
+> + * Copyright (C) 2016 David Lechner <david@lechnology.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/gadget.h>
+> +#include <linux/usb/musb.h>
+> +#include <linux/usb/otg.h>
+> +
+> +/* DA8xx CFGCHIP2 (USB PHY Control) register bits */
+> +#define PHYCLKGD		(1 << 17)
+> +#define VBUSSENSE		(1 << 16)
+> +#define RESET			(1 << 15)
+> +#define OTGMODE_MASK		(3 << 13)
+> +#define NO_OVERRIDE		(0 << 13)
+> +#define FORCE_HOST		(1 << 13)
+> +#define FORCE_DEVICE		(2 << 13)
+> +#define FORCE_HOST_VBUS_LOW	(3 << 13)
+> +#define USB1PHYCLKMUX		(1 << 12)
+> +#define USB2PHYCLKMUX		(1 << 11)
+> +#define PHYPWRDN		(1 << 10)
+> +#define OTGPWRDN		(1 << 9)
+> +#define DATPOL			(1 << 8)
+> +#define USB1SUSPENDM		(1 << 7)
+> +#define PHY_PLLON		(1 << 6)
+> +#define SESENDEN		(1 << 5)
+> +#define VBDTCTEN		(1 << 4)
+> +#define REFFREQ_MASK		(0xf << 0)
+> +#define REFFREQ_12MHZ		(1 << 0)
+> +#define REFFREQ_24MHZ		(2 << 0)
+> +#define REFFREQ_48MHZ		(3 << 0)
+> +#define REFFREQ_19_2MHZ		(4 << 0)
+> +#define REFFREQ_38_4MHZ		(5 << 0)
+> +#define REFFREQ_13MHZ		(6 << 0)
+> +#define REFFREQ_26MHZ		(7 << 0)
+> +#define REFFREQ_20MHZ		(8 << 0)
+> +#define REFFREQ_40MHZ		(9 << 0)
 
-So, if you want to use DA8XX_SYSCFG0_VIRT() here, the clock init would 
-have to be split out from davinci_common_init() which would affect all 
-davinci devices.
+Many of these register bits are unused. I guess opinion varies around
+this, but I get confused with unnecessary bit definitions and register
+offsets. I tend to search for it and its sort of disappointing to see
+that its basically unused. Of course, you should wait for PHY
+maintainers preference.
 
+> +
+> +struct da8xx_usbphy {
+> +	struct phy_provider	*phy_provider;
+> +	struct phy		*usb11_phy;
+> +	struct phy		*usb20_phy;
+> +	struct clk		*usb11_clk;
+> +	struct clk		*usb20_clk;
+> +	void __iomem		*phy_ctrl;
+> +};
+> +
+> +static inline u32 da8xx_usbphy_readl(void __iomem *base)
+> +{
+> +	return readl(base);
+> +}
+> +
+> +static inline void da8xx_usbphy_writel(void __iomem *base, u32 value)
+> +{
+> +	writel(value, base);
+> +}
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Agree with Sergei that these don't add much value.
+
+> +int da8xx_usb20_phy_set_mode(struct phy *phy, enum musb_mode mode)
+> +{
+> +	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
+> +	u32 val;
+> +
+> +	val = da8xx_usbphy_readl(d_phy->phy_ctrl);
+> +
+> +	val &= ~OTGMODE_MASK;
+> +	switch (mode) {
+> +	case MUSB_HOST:		/* Force VBUS valid, ID = 0 */
+> +		val |= FORCE_HOST;
+> +		break;
+> +	case MUSB_PERIPHERAL:	/* Force VBUS valid, ID = 1 */
+> +		val |= FORCE_DEVICE;
+> +		break;
+> +	case MUSB_OTG:		/* Don't override the VBUS/ID comparators */
+> +		val |= NO_OVERRIDE;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	da8xx_usbphy_writel(d_phy->phy_ctrl, val);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
+
+Hmm, since this driver exports this symbol, I think it should also
+provide an include file in include/linux/phy for users of the symbol. Or
+perhaps there should be a generic API around this since it looks like
+most USB phys will need something similar?
+
+Thanks,
+Sekhar
