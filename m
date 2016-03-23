@@ -1,80 +1,85 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] power: reset: support for Atmel alternative
- Shutdown Controller
-Date: Wed, 23 Mar 2016 22:11:44 +0100
-Message-ID: <20160323211144.GA31473@earth>
-References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
- <56F27B96.5010406@atmel.com>
+From: Laison-2WGxrPcL6/av+0K4mfL3GVAUjnlXr6A1@public.gmane.org, Computech-2WGxrPcL6/av+0K4mfL3GVAUjnlXr6A1@public.gmane.org,
+	"Inc <support"@ensuretech.com
+Subject: CISCO IP PHONES AND CPU's
+Date: Thu, 24 Mar 2016 02:11:40 +0700
+Message-ID: <20160323203539.E1BA2A7B1C__43160.7410348535$1458768267$gmane$org@seymour.toledo.br>
+Reply-To: sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56F27B96.5010406-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Description: Mail message body
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+To: Recipients <support-lhT63EwJ3xcqDJ6do+/SaQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Our Stock list.
 
-Hi Nicolas,
+Brand NEW
+96 x Cisco 7900 IP Phone
+87 x Unified IP Phone 6900
+12 x Unified IP Phone 8900
+76 x Unified IP Phone 9900
+55 x Unified IP Phone 8800
+67 x Cisco 1921
+67 x Cisco 1941
+56 x Cisco CP-7961G 7961G
+34 x Cisco CP-7971G-GE 7971G
+19 x Cisco Unified IP Conference Station 7937G Model: 7937 CP-7937G
+20 x Cisco CP-7975G 7975G
 
-On Wed, Mar 23, 2016 at 12:18:46PM +0100, Nicolas Ferre wrote:
-> Le 16/03/2016 14:19, Nicolas Ferre a =E9crit :
-> > This is a series to add driver for a new Atmel Shutdown Controller. Thi=
-s new IP
-> > is extensible and some features will be added later (see the TODO secti=
-on).
-> > Its extensible nature led to write a new binding so that wake-up source=
-s can be
-> > described easily.
->=20
-> I have the feeling that this series is ready. What do you think?
+Brand New Sealed :
 
-I have see obvious problems with this series and plan to queue this
-after the merge window has closed. I give patches one more review
-while applying them, so at that point something might turn up.
+23 x  CISCO1921-SEC/K9
+Conditions: Brand New Sealed
+Description: CISCO 1921 Security Bundle w/SEC license PAK
 
-> So, do you want me to collect everybody's tags and send another version
-> or you can do it yourself?
+45 x CISCO1921/K9
+Conditions: Brand New Sealed
+Description: CISCO 1921 Modular Router, 2 GE, 2 EHWIC slots, 512DRAM, IP Base
 
-I can collect the tags myself.
+(1)  WS-C4500X-16SFP+
+Serial number:  JAE183501L3
+US&#36;2600
 
-> BTW, I will certainly send the device tree updates for the sama5d2 SoC,
-> but it will go through the AT91 then arm-soc git trees. No need for
-> further synchronization here.
+(1)  WS-C3850-48PW-S
+Serial number:  FCW1823C0EW
+US&#36;2650
 
-I will ignore the *.dts patches.
+(1)  WS-X6908-10G-2T
+Serial number:  SAL1620CKUB
+US&#36;3650
 
--- Sebastian
+(1)  ASR1000-ESP10
+Serial number:  JAE181306C3
+US&#36;3800
 
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
+(1)  AIR-CT5508-250-K9   (this is new but box is open!)
+Serial number:  FCW1521L038
+US&#36;4000
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+CPUs part number below
 
-iQIcBAEBCgAGBQJW8waMAAoJENju1/PIO/qahC8QAIwqO4cZXF4D7XmeiDP3dLS6
-9k6cEW8EvJ3DTUn5gorg1tS870NPhaBVF8hADaR4/g6SMFQDAcT/+NaN6lv71zOz
-DuUwcM2tL8WWQO3Wh+72WVfHfqox9+y52GLUmwpINlasaLeWMlp8TD8ojTQsh6+1
-HI0tcPXjCOcCLXqI/yDA/p5ff4H36jG6kchWeY1aaShD9inivZQsm6UUNbYuQQ2S
-DndTFU7RUs2PFxi72BUcDq2tWAI7KNgKQRx85HC3HqiZSTiwS8DmskB3NJkQoSgU
-iaxXQkJfqmtODaAU7778ntDn07KMfZeZW5mjRMbcZynhMpH2GK7TS1SLfdAy9v8b
-qHSEiDaJMRcqucJpjSJYtD1QW81Czoec/unZY2RRCgN02vYsOrn6LIUOKr9ZFy9Z
-IKRNPVYAFCo0qgjzEcgH2ldRrL/xZ/L4SF42OsIu/h4Fh8dKcRrB7CV8GQNfMiti
-wQ+NQXaTniffmEs5aYSr7g70Ui3Mt8fnmOqaOdBMfuJz2KK1yko9ow2TtdE6Sv4/
-3Pe8WUDwFGgiBBhBIk6mAbJLqbOV+M9ZxsjJMrjj88gT30plKCr1K95ruyMQh9qd
-YqPtrkDtOjdnHuF490+zZ8KHKaQJzKMnDNwxE/UujyuVJw1p98LnNVlBP+ExrO1z
-eQR8YnlYXKhPJaH63poc
-=Esz4
------END PGP SIGNATURE-----
+89 x  X5650
 
---SLDf9lqlvOQaIe6s--
+975 x  X5660
+
+150 x  X5680
+
+265 x  X5690
+
+Kindly make your price offers.
+
+Sincerely
+Barbara Johnson
+Laison Computech
+210 N Scoring Ave,
+Rialto California, 92376
+Tel: +1-657-232-7047
+Fax: +1-347-214-0478
+Email: sales-69Ibs8hIYaLnzTGioTClidREWwmQVq3b@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
