@@ -1,28 +1,36 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 03/11] ARM: davinci: da850: use clk->set_parent for
- async3
-Date: Wed, 23 Mar 2016 13:32:27 -0500
-Message-ID: <56F2E13B.4000407@lechnology.com>
-References: <1458181615-27782-1-git-send-email-david@lechnology.com>
- <1458181615-27782-4-git-send-email-david@lechnology.com>
- <56F2BCAB.3040404@ti.com> <56F2D05C.8030909@lechnology.com>
- <56F2D27F.6040001@ti.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] Split pinctrl device for Meson8 / Meson8b and update docs
+Date: Wed, 23 Mar 2016 12:12:43 -0700
+Message-ID: <7hio0dqa8k.fsf@baylibre.com>
+References: <1458724440-32228-1-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56F2D27F.6040001@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Petr Kulhavy <petr@barix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bin Liu <b-liu@ti.com>, Robert Jarzmik <robert.jarzmik@free.fr>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Tony Lindgren <tony@atomide.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458724440-32228-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> (Carlo
+	Caione's message of "Wed, 23 Mar 2016 10:13:58 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2016 12:29 PM, Sekhar Nori wrote:
->
-> Alright, I guess 'can be called' in the comment should have used
-> stronger language :) How about late registration of USB clocks as I
-> suggested. It should also help consolidate code across da830 and da850.
->
+Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
 
-What about the new async3 clock? It will require later registration too, 
-but it has many children that depend on it.
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>
+> With http://www.spinics.net/lists/devicetree/msg116771.html we split / refactor
+> the pinctrl driver to have two different pinctrl devices for each bus.
+>
+> Unfortunately these two patches still haven't found their way to mainline.
+> Reposting them as standalone patchset. Hopefully they can be ACKed as soon as
+> possible.
+
+Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+I confirm that this gets meson8b-odroidc1 booting again in mainline.
+
+Kevin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
