@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 4/4] arm64: dts: marvell: Rename armada-ap806 XOR nodes
-Date: Wed, 23 Mar 2016 23:24:21 +0100
-Message-ID: <1458771861-12392-5-git-send-email-afaerber@suse.de>
+Subject: [PATCH 3/4] arm64: dts: marvell: Clean up armada-7040-db
+Date: Wed, 23 Mar 2016 23:24:20 +0100
+Message-ID: <1458771861-12392-4-git-send-email-afaerber@suse.de>
 References: <1458771861-12392-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -14,61 +14,154 @@ Cc: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Thomas Petazzoni <thom
 	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Node names should not contain an instance number, the unit address
-serves to distinguish nodes of the same name. So rename the XOR nodes
-to just xor@address, using xorX as label instead.
+Instead of duplicating the node hierarchy, reference the nodes by label=
+,
+adding labels where necessary.
+
+Drop some trailing or inconsistent white lines while at it.
 
 =46ixes: ec7e5a569bce ("arm64: dts: marvell: add Device Tree files for =
 Armada 7K/8K")
 Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
 ---
- "marvell,mv-xor-v2" is not yet referenced from any driver in next-2016=
-0323.
+ Is it intentional that there are no aliases for the two serial nodes a=
+nd no /chosen/stdout-path?
 =20
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-7040-db.dts     | 52 ++++++++++----=
+--------
+ arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi |  1 -
+ arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi |  2 -
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |  7 +--
+ 4 files changed, 26 insertions(+), 36 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/marvell/armada-7040-db.dts b/arch/arm6=
+4/boot/dts/marvell/armada-7040-db.dts
+index 064a251346dd..ee5778395bea 100644
+--- a/arch/arm64/boot/dts/marvell/armada-7040-db.dts
++++ b/arch/arm64/boot/dts/marvell/armada-7040-db.dts
+@@ -55,38 +55,34 @@
+ 		device_type =3D "memory";
+ 		reg =3D <0x0 0x0 0x0 0x80000000>;
+ 	};
++};
+=20
+-	ap806 {
+-		config-space {
+-			spi@510600 {
+-				status =3D "okay";
+-
+-				spi-flash@0 {
+-					#address-cells =3D <1>;
+-					#size-cells =3D <1>;
+-					compatible =3D "n25q128a13";
+-					reg =3D <0>; /* Chip select 0 */
+-					spi-max-frequency =3D <10000000>;
++&i2c0 {
++	status =3D "okay";
++	clock-frequency =3D <100000>;
++};
+=20
+-					partition@0 {
+-						label =3D "U-Boot";
+-						reg =3D <0 0x200000>;
+-					};
+-					partition@400000 {
+-						label =3D "Filesystem";
+-						reg =3D <0x200000 0xce0000>;
+-					};
+-				};
+-			};
++&spi0 {
++	status =3D "okay";
+=20
+-			i2c@511000 {
+-				status =3D "okay";
+-				clock-frequency =3D <100000>;
+-			};
++	spi-flash@0 {
++		#address-cells =3D <1>;
++		#size-cells =3D <1>;
++		compatible =3D "n25q128a13";
++		reg =3D <0>; /* Chip select 0 */
++		spi-max-frequency =3D <10000000>;
+=20
+-			serial@512000 {
+-				status =3D "okay";
+-			};
++		partition@0 {
++			label =3D "U-Boot";
++			reg =3D <0 0x200000>;
++		};
++		partition@400000 {
++			label =3D "Filesystem";
++			reg =3D <0x200000 0xce0000>;
+ 		};
+ 	};
+ };
++
++&uart0 {
++	status =3D "okay";
++};
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi b/arch/=
+arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+index f25c5c17fad7..95a1ff60f6c1 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-dual.dtsi
+@@ -68,4 +68,3 @@
+ 		};
+ 	};
+ };
+-
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/=
+arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+index baa7d9a516b3..ba43a4357b89 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+@@ -79,6 +79,4 @@
+ 			enable-method =3D "psci";
+ 		};
+ 	};
+-
+ };
+-
 diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64=
 /boot/dts/marvell/armada-ap806.dtsi
-index 3ecf9b1798fa..dd6e48a952ac 100644
+index 556a92bcc2f6..3ecf9b1798fa 100644
 --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
 +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -135,7 +135,7 @@
- 				marvell,spi-base =3D <128>, <136>, <144>, <152>;
+@@ -59,7 +59,6 @@
+ 		method =3D "smc";
+ 	};
+=20
+-
+ 	ap806 {
+ 		#address-cells =3D <2>;
+ 		#size-cells =3D <2>;
+@@ -190,7 +189,7 @@
+ 				status =3D "disabled";
  			};
 =20
--			xor0@400000 {
-+			xor0: xor@400000 {
- 				compatible =3D "marvell,mv-xor-v2";
- 				reg =3D <0x400000 0x1000>,
- 				      <0x410000 0x1000>;
-@@ -143,7 +143,7 @@
- 				dma-coherent;
+-			serial@512000 {
++			uart0: serial@512000 {
+ 				compatible =3D "snps,dw-apb-uart";
+ 				reg =3D <0x512000 0x100>;
+ 				reg-shift =3D <2>;
+@@ -200,7 +199,7 @@
+ 				status =3D "disabled";
  			};
 =20
--			xor1@420000 {
-+			xor1: xor@420000 {
- 				compatible =3D "marvell,mv-xor-v2";
- 				reg =3D <0x420000 0x1000>,
- 				      <0x430000 0x1000>;
-@@ -151,7 +151,7 @@
- 				dma-coherent;
+-			serial@512100 {
++			uart1: serial@512100 {
+ 				compatible =3D "snps,dw-apb-uart";
+ 				reg =3D <0x512100 0x100>;
+ 				reg-shift =3D <2>;
+@@ -232,6 +231,4 @@
  			};
-=20
--			xor2@440000 {
-+			xor2: xor@440000 {
- 				compatible =3D "marvell,mv-xor-v2";
- 				reg =3D <0x440000 0x1000>,
- 				      <0x450000 0x1000>;
-@@ -159,7 +159,7 @@
- 				dma-coherent;
- 			};
-=20
--			xor3@460000 {
-+			xor3: xor@460000 {
- 				compatible =3D "marvell,mv-xor-v2";
- 				reg =3D <0x460000 0x1000>,
- 				      <0x470000 0x1000>;
+ 		};
+ 	};
+-
+ };
+-
 --=20
 2.6.2
