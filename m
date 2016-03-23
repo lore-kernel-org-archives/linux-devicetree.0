@@ -1,70 +1,112 @@
-From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] clk: Add Artpec-6 SoC support
-Date: Wed, 23 Mar 2016 09:41:13 +0100
-Message-ID: <56F256A9.6040405@axis.com>
-References: <cover.1456411894.git.larper@axis.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 2/2] documentation: Fix pinctrl documentation for Meson8 / Meson8b
+Date: Wed, 23 Mar 2016 10:14:00 +0100
+Message-ID: <1458724440-32228-3-git-send-email-carlo@caione.org>
+References: <1458724440-32228-1-git-send-email-carlo@caione.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1456411894.git.larper-VrBV9hrLPhE@public.gmane.org>
+In-Reply-To: <1458724440-32228-1-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Michael & Stephen,
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Should we resubmit this series for 4.7 ?
+Fix pin controller documentation introducing the new compatibles for
+the pinctrl drivers specific for aobus / cbus.
 
-Also to follow up on your previous request to use the platform driver 
-framework. We have noticed recent submissions use a style that mixes 
-early clocks registered with CLK_OF_DECLARE and the remaining clocks 
-registered through a platform driver. Is this the style we should 
-implement ?
+This is needed because we have changed the pin controller driver: we
+have now a single specialized pinctrl driver / compatible for each bus
+the controller is attached to, instead of one single driver dealing with
+all the controllers we have on different buses.
 
-Best Regards,
-  Lars Persson
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  | 38 ++++------------------
+ 1 file changed, 7 insertions(+), 31 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+index 3f6a524..32f4a2d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
+@@ -1,13 +1,16 @@
+ == Amlogic Meson pinmux controller ==
+ 
+ Required properties for the root node:
+- - compatible: "amlogic,meson8-pinctrl" or "amlogic,meson8b-pinctrl"
++ - compatible: one of "amlogic,meson8-cbus-pinctrl"
++		      "amlogic,meson8b-cbus-pinctrl"
++		      "amlogic,meson8-aobus-pinctrl"
++		      "amlogic,meson8b-aobus-pinctrl"
+  - reg: address and size of registers controlling irq functionality
+ 
+ === GPIO sub-nodes ===
+ 
+-The 2 power domains of the controller (regular and always-on) are
+-represented as sub-nodes and each of them acts as a GPIO controller.
++The GPIO bank for the controller is represented as a sub-node and it acts as a
++GPIO controller.
+ 
+ Required properties for sub-nodes are:
+  - reg: should contain address and size for mux, pull-enable, pull and
+@@ -18,10 +21,6 @@ Required properties for sub-nodes are:
+  - gpio-controller: identifies the node as a gpio controller
+  - #gpio-cells: must be 2
+ 
+-Valid sub-node names are:
+- - "banks" for the regular domain
+- - "ao-bank" for the always-on domain
+-
+ === Other sub-nodes ===
+ 
+ Child nodes without the "gpio-controller" represent some desired
+@@ -45,7 +44,7 @@ pinctrl-bindings.txt
+ === Example ===
+ 
+ 	pinctrl: pinctrl@c1109880 {
+-		compatible = "amlogic,meson8-pinctrl";
++		compatible = "amlogic,meson8-cbus-pinctrl";
+ 		reg = <0xc1109880 0x10>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -61,15 +60,6 @@ pinctrl-bindings.txt
+ 			#gpio-cells = <2>;
+                };
+ 
+-		gpio_ao: ao-bank@c1108030 {
+-			reg = <0xc8100014 0x4>,
+-			      <0xc810002c 0x4>,
+-			      <0xc8100024 0x8>;
+-			reg-names = "mux", "pull", "gpio";
+-			gpio-controller;
+-			#gpio-cells = <2>;
+-		};
+-
+ 		nand {
+ 			mux {
+ 				groups = "nand_io", "nand_io_ce0", "nand_io_ce1",
+@@ -79,18 +69,4 @@ pinctrl-bindings.txt
+ 				function = "nand";
+ 			};
+ 		};
+-
+-		uart_ao_a {
+-			mux {
+-				groups = "uart_tx_ao_a", "uart_rx_ao_a",
+-					 "uart_cts_ao_a", "uart_rts_ao_a";
+-				function = "uart_ao";
+-			};
+-
+-			conf {
+-				pins = "GPIOAO_0", "GPIOAO_1",
+-				       "GPIOAO_2", "GPIOAO_3";
+-				bias-disable;
+-			};
+-		};
+ 	};
+-- 
+2.5.0
 
-On 02/25/2016 03:58 PM, Lars Persson wrote:
-> Add clock support for the Artpec-6 SoC port. The ARM parts are in the series
-> "arm: Add Artpec-6 SoC" and it goes through the arm-soc tree.
->
-> Changes since v3:
-> - The binding was corrected to handle two fractional divider clocks as input to
->    the clock controller.
-> - Updated clk-artpec6.c to handle a distinct fractional divider input for each
->    i2s clock mux.
->
-> Changes since v2:
-> - Moved axis,artpec6-clkctrl.h to the first patch with the DT bindings.
->
-> Changes since v1:
->
-> - The driver now provides all clocks from the main clock controller block
->    through one DT node.
-> - Added a header file for the clock indexes.
-> - Refer to clock-bindings.txt in the bindings document.
->
-> A platform driver was not possible because the clocks are needed earlier in the
-> kernel startup.
->
-> Lars Persson (2):
->    clk: add device tree binding for Artpec-6 clock controller
->    clk: add artpec-6 clock controller
->
->   .../devicetree/bindings/clock/artpec6.txt          |  41 +++++
->   drivers/clk/Makefile                               |   1 +
->   drivers/clk/axis/Makefile                          |   1 +
->   drivers/clk/axis/clk-artpec6.c                     | 189 +++++++++++++++++++++
->   include/dt-bindings/clock/axis,artpec6-clkctrl.h   |  38 +++++
->   5 files changed, 270 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
->   create mode 100644 drivers/clk/axis/Makefile
->   create mode 100644 drivers/clk/axis/clk-artpec6.c
->   create mode 100644 include/dt-bindings/clock/axis,artpec6-clkctrl.h
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
