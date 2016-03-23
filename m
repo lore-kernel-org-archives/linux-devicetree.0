@@ -1,62 +1,146 @@
-From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
-Subject: Re: [PATCH] dt: bindings: add new dt entry for pre calibration in
- qcom,ath10k.txt
-Date: Wed, 23 Mar 2016 11:43:45 +0000
-Message-ID: <87twjxfmhb.fsf@kamboji.qca.qualcomm.com>
-References: <1457604724-14378-1-git-send-email-rmani@qti.qualcomm.com>
-	<20160318161823.GA5558@rob-hp-laptop>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] iommu/arm-smmu: Make use of phandle iterators in
+	device-tree device-tree parsing
+Date: Wed, 23 Mar 2016 12:47:07 +0100
+Message-ID: <20160323114707.GA17838@8bytes.org>
+References: <1458669509-7178-1-git-send-email-joro@8bytes.org>
+	<1458669509-7178-7-git-send-email-joro@8bytes.org>
+	<CAL_JsqLncSjd7gyyN0FxfaBOWDbWz+qS_NKmVTsH4g0S_2ysww@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160318161823.GA5558@rob-hp-laptop> (Rob Herring's message of
-	"Fri, 18 Mar 2016 11:18:23 -0500")
-Content-Language: en-US
-Content-ID: <1E767CB5F073EA479609EB7535C9B298-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLncSjd7gyyN0FxfaBOWDbWz+qS_NKmVTsH4g0S_2ysww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+On Tue, Mar 22, 2016 at 01:38:06PM -0500, Rob Herring wrote:
+> > +       struct of_phandle_iterator it;
+> > +       struct arm_smmu_phandle_args masterspec;
+> 
+> Isn't this a bit big to put on the stack being ~512 bytes?
 
-> On Thu, Mar 10, 2016 at 03:42:04PM +0530, Raja Mani wrote:
->> There two things done in this patch,
->> 
->> 1) Existing device tree entry 'qcom,ath10k-calibration-data' carries
->>    not only calibration data, it carries board specific data too.
->>    So, make appropriate update in doc.
->> 
->> 2) ipq4019 wifi needs new devie tree entry to carry calibration
->>    data alone (called pre cal data, it doesn't include any other info).
->>    Using 'qcom,ath10k-calibration-data' for ipq4019 would alter
->>    the purpose of it. Hence, add new device tree entry called
->>    'qcom,ath10k-pre-calibration-data' to carry only pre calibration data.
->> 
->> Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
->> ---
->> 
->> Below patches covers the corresponding changes in the ath10k driver.
->> It's posted separately to ath10k and linux-wireless mailing list.
->
-> Generally the series should be posted together. The rest should not be 
-> merged until this patch is accepted.
+Yeah, you might be right. I havn't seen any problems booting with this
+being allocated on the stack, but to be on the safe side I changed the
+patch to allocate the masterspec with kmalloc, patch below.
 
-I'll merge them together, this as the first patch.
 
->>   1) ath10k: pass cal data location as an argument to ath10k_download_cal_{file|dt}
->>   2) ath10k: move cal data len to hw_params
->>   3) ath10k: incorporate qca4019 cal data download sequence
->> 
->>  .../bindings/net/wireless/qcom,ath10k.txt          | 23 +++++++++++++++-------
->>  1 file changed, 16 insertions(+), 7 deletions(-)
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+	Joerg
 
-Thanks.
+>From 85995d1edea7f61aae3c31e0fbd3258622d0b5ae Mon Sep 17 00:00:00 2001
+From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Date: Wed, 16 Mar 2016 17:10:10 +0100
+Subject: [PATCH] iommu/arm-smmu: Make use of phandle iterators in device-tree
+ parsing
 
+Remove the usage of of_parse_phandle_with_args() and replace
+it by the phandle-iterator implementation so that we can
+parse out all of the potentially present 128 stream-ids.
+
+Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+---
+ drivers/iommu/arm-smmu.c | 41 +++++++++++++++++++++++++++++++++--------
+ 1 file changed, 33 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 59ee4b8..fa9b98c 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -48,7 +48,7 @@
+ #include "io-pgtable.h"
+ 
+ /* Maximum number of stream IDs assigned to a single device */
+-#define MAX_MASTER_STREAMIDS		MAX_PHANDLE_ARGS
++#define MAX_MASTER_STREAMIDS		128
+ 
+ /* Maximum number of context banks per SMMU */
+ #define ARM_SMMU_MAX_CBS		128
+@@ -349,6 +349,12 @@ struct arm_smmu_domain {
+ 	struct iommu_domain		domain;
+ };
+ 
++struct arm_smmu_phandle_args {
++	struct device_node *np;
++	int args_count;
++	uint32_t args[MAX_MASTER_STREAMIDS];
++};
++
+ static struct iommu_ops arm_smmu_ops;
+ 
+ static DEFINE_SPINLOCK(arm_smmu_devices_lock);
+@@ -458,7 +464,7 @@ static int insert_smmu_master(struct arm_smmu_device *smmu,
+ 
+ static int register_smmu_master(struct arm_smmu_device *smmu,
+ 				struct device *dev,
+-				struct of_phandle_args *masterspec)
++				struct arm_smmu_phandle_args *masterspec)
+ {
+ 	int i;
+ 	struct arm_smmu_master *master;
+@@ -1716,7 +1722,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+ 	struct arm_smmu_device *smmu;
+ 	struct device *dev = &pdev->dev;
+ 	struct rb_node *node;
+-	struct of_phandle_args masterspec;
++	struct of_phandle_iterator it;
++	struct arm_smmu_phandle_args *masterspec;
+ 	int num_irqs, i, err;
+ 
+ 	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+@@ -1777,20 +1784,38 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
+ 
+ 	i = 0;
+ 	smmu->masters = RB_ROOT;
+-	while (!of_parse_phandle_with_args(dev->of_node, "mmu-masters",
+-					   "#stream-id-cells", i,
+-					   &masterspec)) {
+-		err = register_smmu_master(smmu, dev, &masterspec);
++
++	err = -ENOMEM;
++	/* No need to zero the memory for masterspec */
++	masterspec = kmalloc(sizeof(*masterspec), GFP_KERNEL);
++	if (!masterspec)
++		goto out_put_masters;
++
++	of_for_each_phandle(&it, err, dev->of_node,
++			    "mmu-masters", "#stream-id-cells", 0) {
++		int count = of_phandle_iterator_args(&it, masterspec->args,
++						     MAX_MASTER_STREAMIDS);
++		masterspec->np		= of_node_get(it.node);
++		masterspec->args_count	= count;
++
++		err = register_smmu_master(smmu, dev, masterspec);
+ 		if (err) {
+ 			dev_err(dev, "failed to add master %s\n",
+-				masterspec.np->name);
++				masterspec->np->name);
++			kfree(masterspec);
+ 			goto out_put_masters;
+ 		}
+ 
+ 		i++;
+ 	}
++
++	if (i == 0)
++		goto out_put_masters;
++
+ 	dev_notice(dev, "registered %d master devices\n", i);
+ 
++	kfree(masterspec);
++
+ 	parse_driver_options(smmu);
+ 
+ 	if (smmu->version > ARM_SMMU_V1 &&
 -- 
-Kalle Valo--
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.4.3
