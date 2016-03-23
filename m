@@ -1,44 +1,80 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: am335x: Add initial support for ICEv2 board
-Date: Wed, 23 Mar 2016 10:03:39 -0500
-Message-ID: <20160323150339.GA10417@rob-hp-laptop>
-References: <1458628657-30468-1-git-send-email-lokeshvutla@ti.com>
- <1458628657-30468-2-git-send-email-lokeshvutla@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: input: add Raydium I2C touch driver bindings
+Date: Wed, 23 Mar 2016 10:06:35 -0500
+Message-ID: <20160323150635.GA14699@rob-hp-laptop>
+References: <1458628733-2277-1-git-send-email-jeffrey.lin@rad-ic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458628657-30468-2-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org
+In-Reply-To: <1458628733-2277-1-git-send-email-jeffrey.lin@rad-ic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "jeffrey.lin" <yajohn@gmail.com>
+Cc: pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, dmitry.torokhov@gmail.com, djkurtz@chromium.org, drinkcat@chromium.org, treding@nvidia.com, ajaykumar.rs@samsung.com, dusonlin@emc.com.tw, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jeffrey.lin@rad-ic.com, roger.yang@rad-ic.com, KP.li@rad-ic.com, albert.shieh@rad-ic.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 22, 2016 at 12:07:36PM +0530, Lokesh Vutla wrote:
-> TI's Industrial Communication Engine EVM is a low cost hardware mainly
-> developed for industrial communication type applications using serial
-> or Ethernet based interfaces. This platform features TI's AM3359 with
-> 800MHz single core Cortex-A8 processor, 256MB DDR3, 64MB SPI flash,
-> 8MB NOR Flash, mmc, usb, can, dual Ethernet ports.
-> 
-> For more information, look at HW user guide[1], Data manual[2].
-> 
-> Just add basic support for the moment.
-> 
-> [1] http://processors.wiki.ti.com/index.php/AM335x_Industrial_Communication_Engine_EVM_Rev2_1_HW_User_Guide
-> [2] http://www.ti.com/lit/ds/symlink/am3359.pdf
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+On Tue, Mar 22, 2016 at 02:38:53PM +0800, jeffrey.lin wrote:
+> Document the device tree binfings of Raydium I2C touch driver.
+
+Is there a driver too?
+
+> Signed-off-by: jeffrey.lin <jeffrey.lin@rad-ic.com>
 > ---
->  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+>  .../devicetree/bindings/input/raydium_i2c_ts.txt    | 21 +++++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt         |  1 +
+>  2 files changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt b/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
+> new file mode 100644
+> index 0000000..d7631d0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/raydium_i2c_ts.txt
+> @@ -0,0 +1,21 @@
+> +Raydium I2C touchscreen
+> +
+> +Required properties:
+> +- compatible:
+> +    "raydium,rm3xxxx"
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+No wildcards in compatible strings please.
 
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/am335x-icev2.dts                 | 303 +++++++++++++++++++++
->  3 files changed, 307 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am335x-icev2.dts
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- reg: The I2C address of the device
+> +- interrupts: interrupt to which the chip is connected
+> +    See ../interrupt-controller/interrupts.txt
+> +Optional property:
+
+properties
+
+> + - avdd-supply		: Analog power supply needed to power device
+> + - vccio-supply		: IO Power source
+> +
+> +Example:
+> +
+> +	raydium_i2c@39 {
+
+touchscreen@39
+
+> +		compatible = "raydium,rm3xxxx";\
+
+Drop the \
+
+> +		reg = <0x39>;
+> +		interrupt-parent = <&gpio>;
+> +		interrupts = <0x0 IRQ_TYPE_EDGE_FALLING>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index af49e0f..5b6224b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -126,6 +126,7 @@ radxa	Radxa
+>  raidsonic	RaidSonic Technology GmbH
+>  ralink	Mediatek/Ralink Technology Corp.
+>  ramtron	Ramtron International
+> +raydium Raydium Semiconductor Corp.
+>  realtek Realtek Semiconductor Corp.
+>  renesas	Renesas Electronics Corporation
+>  ricoh	Ricoh Co. Ltd.
+> -- 
+> 2.1.2
+> 
