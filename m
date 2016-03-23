@@ -1,62 +1,78 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH] Input: rotary_encoder - support binary encoding of states
-Date: Wed, 23 Mar 2016 14:06:22 +0100
-Message-ID: <56F294CE.8060008@zonque.org>
-References: <1458680914-4533-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
- <CAL_Jsq++0hPVuqZERsfGRM20F+2rzFUz2CDOR1Kioj0uOaskDQ@mail.gmail.com>
- <20160323064930.GJ6191@pengutronix.de>
- <CAL_JsqKumK8eAF+AFnR0r7V9tDECSPSv33qE_jZZE4Dz5jUyWg@mail.gmail.com>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v4 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
+Date: Wed, 23 Mar 2016 19:12:55 +0530
+Message-ID: <1458740576-9168-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKumK8eAF+AFnR0r7V9tDECSPSv33qE_jZZE4Dz5jUyWg@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2016 01:46 PM, Rob Herring wrote:
-> On Wed, Mar 23, 2016 at 1:49 AM, Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
+Document the devicetree bindings for the SPI peripheral found
+on Microchip PIC32 class devices.
 
->>> Fine, but "rotary-encoder" is not a vendor I've ever heard of. Just
->>> "encoding" is sufficient.
->>
->> I picked that to be consistent with rotary-encoder,steps and other
->> already existing properties documented in
->> Documentation/devicetree/bindings/input/rotary-encoder.txt.
->=20
-> Uggg.
+Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-IIRC, the discussion back then concluded that there should be no
-properties without prefixes except for properties that are really
-generic, which wasn't an applicable argument for those of this driver.
-Then again, this goes back many years, and the rules might have changed=
-=2E
+---
 
->> Should the prefix be dropped for these, too (with compat code)?
->=20
-> On one hand, there's only one user of one property in the kernel, but
-> I'd guess there are others in the wild. Probably not worth carrying
-> both, so I guess just leave this for consistency.
+Changes in v4: None
+Changes in v3: None
+Changes in v2:
+ - fix indentation
+ - add space after comma
+ - moved 'cs-gpios' section under 'required' properties.
 
-Wasn't there a general agreement to *not* provide guarantees on the
-stability of TD bindings, in order to be able to refactor and unify
-them? Sorry, I haven't followed the discussion around all that for a
-while, so I'm just asking out of curiosity.
+ .../bindings/spi/microchip,spi-pic32.txt           | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
 
-As far as I'm concerned, I could live with any kind of such change and
-notify the users I know of personally so they can follow up. But I don'=
-t
-know about others of course.
+diff --git a/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+new file mode 100644
+index 0000000..79de379f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+@@ -0,0 +1,34 @@
++Microchip PIC32 SPI Master controller
++
++Required properties:
++- compatible: Should be "microchip,pic32mzda-spi".
++- reg: Address and length of register space for the device.
++- interrupts: Should contain all three spi interrupts in sequence
++              of <fault-irq>, <receive-irq>, <transmit-irq>.
++- interrupt-names: Should be "fault", "rx", "tx" in order.
++- clocks: Phandle of the clock generating SPI clock on the bus.
++- clock-names: Should be "mck0".
++- cs-gpios: Specifies the gpio pins to be used for chipselects.
++            See: Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Optional properties:
++- dmas: Two or more DMA channel specifiers following the convention outlined
++        in Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: Names for the dma channels. There must be at least one channel
++             named "spi-tx" for transmit and named "spi-rx" for receive.
++
++Example:
++
++spi1: spi@1f821000 {
++        compatible = "microchip,pic32mzda-spi";
++        reg = <0x1f821000 0x200>;
++        interrupts = <109 IRQ_TYPE_LEVEL_HIGH>,
++                     <110 IRQ_TYPE_LEVEL_HIGH>,
++                     <111 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-names = "fault", "rx", "tx";
++        clocks = <&PBCLK2>;
++        clock-names = "mck0";
++        cs-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
++        dmas = <&dma 134>, <&dma 135>;
++        dma-names = "spi-rx", "spi-tx";
++};
+-- 
+1.8.3.1
 
-
-Thanks,
-Daniel
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
