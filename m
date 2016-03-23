@@ -1,41 +1,50 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add dts file for Dserve DSRV9703C tablet
-Date: Wed, 23 Mar 2016 18:29:34 +0800
-Message-ID: <CAGb2v65GPWxbzU9YBGVBgX2_Us4KOhCeeypuviPp9p-zoP86Xw@mail.gmail.com>
-References: <1458374032-10077-1-git-send-email-hdegoede@redhat.com>
- <CAGb2v66Hw8_Ckmw0f5GMzP2+73aNbSoOs2MLYu7C85bjUL9huw@mail.gmail.com> <20160321075243.GZ30977@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] documentation: Fix pinctrl documentation for
+ Meson8 / Meson8b
+Date: Wed, 23 Mar 2016 11:34:44 +0100
+Message-ID: <56F27144.9070805@suse.de>
+References: <1458724440-32228-1-git-send-email-carlo@caione.org>
+ <1458724440-32228-3-git-send-email-carlo@caione.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBJHAZG3QKGQEHP5IUPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160321075243.GZ30977@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458724440-32228-3-git-send-email-carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 21, 2016 at 3:52 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Sat, Mar 19, 2016 at 11:18:59PM +0800, Chen-Yu Tsai wrote:
->> On Sat, Mar 19, 2016 at 3:53 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> > The Dserve DSRV9703C is a 9.7" A10 tablet with a 1024x768 ips LCD,
->> > 1G RAM, 4GB flash, a Focaltech FT5406EE8 touchscreen and rtl8188ctv wifi.
->> >
->> > Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> Applied, thanks!
-> Maxime
+Am 23.03.2016 um 10:14 schrieb Carlo Caione:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>=20
+> Fix pin controller documentation introducing the new compatibles for
+> the pinctrl drivers specific for aobus / cbus.
+>=20
+> This is needed because we have changed the pin controller driver: we
+> have now a single specialized pinctrl driver / compatible for each bu=
+s
+> the controller is attached to, instead of one single driver dealing w=
+ith
+> all the controllers we have on different buses.
+>=20
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pinctrl/meson,pinctrl.txt  | 38 ++++--------=
+----------
+>  1 file changed, 7 insertions(+), 31 deletions(-)
 
-Just realized the commit message has no reference to the SoC family or sunxi.
+Reviewed-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-Maxime, could you add it when you rebase?
+Thanks,
+Andreas
 
-ChenYu
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
+rnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
