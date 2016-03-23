@@ -1,118 +1,28 @@
-From: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX settings
-Date: Wed, 23 Mar 2016 14:17:27 -0400
-Message-ID: <56F2DDB7.7070700@timesys.com>
-References: <20160318211936.GA4158@rob-hp-laptop> <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com> <20160323043638.GA18462@peterchendt> <56F2D43D.1040404@timesys.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 03/11] ARM: davinci: da850: use clk->set_parent for
+ async3
+Date: Wed, 23 Mar 2016 13:32:27 -0500
+Message-ID: <56F2E13B.4000407@lechnology.com>
+References: <1458181615-27782-1-git-send-email-david@lechnology.com>
+ <1458181615-27782-4-git-send-email-david@lechnology.com>
+ <56F2BCAB.3040404@ti.com> <56F2D05C.8030909@lechnology.com>
+ <56F2D27F.6040001@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F2D43D.1040404-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56F2D27F.6040001@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Petr Kulhavy <petr@barix.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bin Liu <b-liu@ti.com>, Robert Jarzmik <robert.jarzmik@free.fr>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Tony Lindgren <tony@atomide.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2016 01:37 PM, Jaret Cantu wrote:
-> On 03/23/2016 12:36 AM, Peter Chen wrote:
->> On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
->>> The TX settings can be calibrated for particular hardware.  The
->>> phy is reset by Linux, so this cannot be handled by the bootloader.
->>>
->>> The TRM mentions that the maximum resistance should be used for the
->>> DN/DP calibration in order to pass USB certification.
->>>
->>> The values for the TX registers are poorly described in the TRM.
->>> The meanings of the register values were taken from another
->>> Freescale-provided document:
->>> https://community.freescale.com/message/566147#comment-566912
->>>
->>> Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
->>> ---
->>> v3. Added unit suffix (-ohms) to tx-cal-45-d*
->>>
->>> v2. Copying devicetree list
->>>      Removed prettifying extra whitespace
->>>      Removed unnecessary register rewrite on resume
->>>      Use min and max constants for clarity
->>>
->>>   .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
->>>   drivers/usb/phy/phy-mxs-usb.c                      |   58
->>> ++++++++++++++++++++
->>>   2 files changed, 68 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->>> b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->>> index 379b84a..1d25b04 100644
->>> --- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->>> +++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->>> @@ -12,6 +12,16 @@ Required properties:
->>>   - interrupts: Should contain phy interrupt
->>>   - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
->>> series
->>>
->>> +
->>> +    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
->>> +        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
->>> +        /* scale to 4-bit value */
->>> +        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
->>> +            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
->>> +        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
->>> +        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
->>> +    }
->>> +
->>
->> I have tested "tx-d-cal", but it seems incorrect according to the xls you
->> have provided, would you please check it again or am I wrong?
+On 03/23/2016 12:29 PM, Sekhar Nori wrote:
 >
-> Gah! You're right. Some of the D_CAL values need to be rounded up to
-> match the xls.  And even then, the value for 86 still doesn't play nice.
->   I was really hoping to avoid using a table for these values.
+> Alright, I guess 'can be called' in the comment should have used
+> stronger language :) How about late registration of USB clocks as I
+> suggested. It should also help consolidate code across da830 and da850.
 >
-> The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
-> possible register values and so are unaffected by a similar issue.  I
-> rechecked their numbers just to be sure.
 
-The solution looks to be to scale D_CAL starting from 80 instead of 79. 
-  If you look at the xls listing, the jump from 79 to 83 is the only 
-time two adjacent register values result in a change greater than 2% or 3%.
-
-This will result in some code ugliness as the minimum allowed percentage 
-(79), per the Freescale document, and the point at which we are scaling 
-the percentage values to register values (80) are different.
-
-And, as mentioned before, the values will also have to be rounded up.
-
-This quick shell code confirms that these sorts of calculations match up 
-with the values in the spreadsheet:
-
-for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do 
-echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) )); d=$((d+1)); 
-done
-
-
-I can't find any formula which would hit all of those same percentages 
-without rounding up.
-
-
->
->>
->> dts changes:
->>
->> +&usbphy1 {
->> +       fsl,tx-d-cal = <109>;
->> +};
->> +
->> +&usbphy2 {
->> +       fsl,tx-d-cal = <106>;
->> +};
->> +
->>
->> The phy1's tx-d-cal is 0x3, and phy2's tx-d-cal is 0x4 after PHY
->> initialization,
->> but according to xls, it should be 0x4 and 0x5.
->>
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What about the new async3 clock? It will require later registration too, 
+but it has many children that depend on it.
