@@ -1,71 +1,57 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] Input: rotary_encoder - support binary encoding of states
-Date: Tue, 22 Mar 2016 19:47:06 -0500
-Message-ID: <CAL_Jsq++0hPVuqZERsfGRM20F+2rzFUz2CDOR1Kioj0uOaskDQ@mail.gmail.com>
-References: <1458680914-4533-1-git-send-email-u.kleine-koenig@pengutronix.de> <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] ARM: dts: shmobile: Correct interrupt type for ARM
+ TWD
+Date: Wed, 23 Mar 2016 09:48:03 +0900
+Message-ID: <20160323004803.GB5950@verge.net.au>
+References: <1458296361-4468-1-git-send-email-geert+renesas@glider.be>
+ <20160322012849.GA14367@verge.net.au>
+ <CAMuHMdXcew-NHGeb2x69CR4ZBeyf3hET3xtQYSkToSX9BD68uw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXcew-NHGeb2x69CR4ZBeyf3hET3xtQYSkToSX9BD68uw@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 22, 2016 at 5:50 PM, Ezequiel Garcia
-<ezequiel@vanguardiasur.com.ar> wrote:
-> (Adding DT people)
->
-> On 22 March 2016 at 18:08, Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
->> A plain binary encoding has some downsides compared to the usual Gra=
-y
->> encoding, but that doesn't stop hardware engineers to eventually use=
- it.
->> So implement support for this encoding in the rotary encoder driver.
->>
->> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de=
->
->> ---
->> Hello,
->>
->> an alternative to define this difference in the device tree is to us=
-e
->> something like:
->>
->>         rotary-encoder,encoding =3D "binary";
->>
->> or
->>
->>         rotary-encoder,encoding =3D <ROTARY_ENCODER_ENCODING_BINARY>=
-;
->>
->> instead of a property
->>
->>         rotary-encoder,encoding-binary;
->>
->> . While the two first solutions make it obvious that there can only =
-be
->> one encoding, they IMHO look ugly, so I went for the property withou=
-t
->> value. What do you think?
->>
->
-> Yes, picking something like:
->
->   rotary-encoder,encoding =3D "binary";
->
-> emphasizing the fact that only one encoding will be used,
-> will work better, scaling well if we need to introduce some
-> "foobar" encoding.
+On Tue, Mar 22, 2016 at 09:43:40AM +0100, Geert Uytterhoeven wrote:
+> Hi Simon,
+> 
+> On Tue, Mar 22, 2016 at 2:28 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Fri, Mar 18, 2016 at 11:19:19AM +0100, Geert Uytterhoeven wrote:
+> >> This patch series corrects the interrupt type for ARM TWD timers on
+> >> SH-Mobile AG5 and R-Car H1.
+> >>
+> >> The ARM TWD interrupt is a private peripheral interrupt (PPI), and per
+> >> the ARM GIC documentation, whether the type for PPIs can be set is
+> >> IMPLEMENTATION DEFINED.
+> >>
+> >> For SH-Mobile AG5 and R-Car H1 devices the PPI type cannot be set, and
+> >> so when we attempt to set the type for the ARM TWD interrupt it fails.
+> >> This has gone unnoticed because it fails silently, and because we cannot
+> >> re-configure the type it has had no impact. Nevertheless fix the type
+> >> for the TWD interrupt so that it matches the hardware configuration.
+> >>
+> >> This was exposed by Jon Hunter's "[PATCH 04/15] irqchip/gic: WARN if
+> >> setting the interrupt type fails" (https://lkml.org/lkml/2016/3/17/339),
+> >> which triggers:
+> >>
+> >>     WARNING: CPU: 0 PID: 0 at drivers/irqchip/irq-gic-common.c:61 gic_configure_irq+0x64/0x7c()
+> >>
+> >> Other Renesas SoCs using private peripheral interrupts (R-Mobile APE6,
+> >> R-Car Gen2, and R-Car Gen3) seem to be fine.
+> >>
+> >> Based on patches by Jon Hunter for Tegra20/30 and OMAP4.
+> >
+> > Thanks for this. Do you think it would be best to queue these up
+> > for v4.7 or as fixes for v4.6?
+> 
+> I don't know if/when Jon's patch will go in, but he's tracking the fixes for
+> various SoCs, as we don't know yet how many are affected.
+> 
+> So I think it's basically up to you.
 
-=46ine, but "rotary-encoder" is not a vendor I've ever heard of. Just
-"encoding" is sufficient.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks, got it.
+I will tentatively queue them up for v4.7.
