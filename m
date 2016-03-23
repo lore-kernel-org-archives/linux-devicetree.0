@@ -1,104 +1,158 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 17/19] drm: sun4i: tv: Add NTSC output standard
-Date: Wed, 23 Mar 2016 17:38:40 +0100
-Message-ID: <1458751122-23976-18-git-send-email-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 03/19] clk: sunxi: Add PLL3 clock
+Date: Wed, 23 Mar 2016 17:38:26 +0100
+Message-ID: <1458751122-23976-4-git-send-email-maxime.ripard@free-electrons.com>
 References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBGUNZO3QKGQEELEEMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1458751122-23976-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans de Goede <hdegoede@redhat.com>, Alexander Kaplan <alex@nextthing.co>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Rob Clark <robdclark@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the settings to support the NTSC standard.
+The A10 SoCs and relatives have a PLL controller to drive the PLL3 and
+PLL7, clocked from a 3MHz oscillator, that drives the display related
+clocks (GPU, display engine, TCON, etc.)
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Add a driver for it.
+
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_tv.c | 45 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+ drivers/clk/sunxi/Makefile                        |  1 +
+ drivers/clk/sunxi/clk-sun4i-pll3.c                | 98 +++++++++++++++++++++++
+ 3 files changed, 100 insertions(+)
+ create mode 100644 drivers/clk/sunxi/clk-sun4i-pll3.c
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
-index ccf275a90132..bc047f923508 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
-@@ -178,24 +178,69 @@ struct sun4i_tv {
- 	struct sun4i_drv	*drv;
- };
- 
-+struct video_levels ntsc_video_levels = {
-+	.black = 282,	.blank = 240,
-+};
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 50e212bc8923..0e1e2c0eee61 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -10,6 +10,7 @@ Required properties:
+ 	"allwinner,sun4i-a10-pll1-clk" - for the main PLL clock and PLL4
+ 	"allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
+ 	"allwinner,sun8i-a23-pll1-clk" - for the main PLL clock on A23
++	"allwinner,sun4i-a10-pll3-clk" - for the video PLL clock on A10
+ 	"allwinner,sun9i-a80-pll4-clk" - for the peripheral PLLs on A80
+ 	"allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
+ 	"allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
+diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+index 37a6a642a037..244defcfa5db 100644
+--- a/drivers/clk/sunxi/Makefile
++++ b/drivers/clk/sunxi/Makefile
+@@ -12,6 +12,7 @@ obj-y += clk-a20-gmac.o
+ obj-y += clk-mod0.o
+ obj-y += clk-simple-gates.o
+ obj-y += clk-sun4i-display.o
++obj-y += clk-sun4i-pll3.o
+ obj-y += clk-sun8i-bus-gates.o
+ obj-y += clk-sun8i-mbus.o
+ obj-y += clk-sun9i-core.o
+diff --git a/drivers/clk/sunxi/clk-sun4i-pll3.c b/drivers/clk/sunxi/clk-sun4i-pll3.c
+new file mode 100644
+index 000000000000..f66267e77d9c
+--- /dev/null
++++ b/drivers/clk/sunxi/clk-sun4i-pll3.c
+@@ -0,0 +1,98 @@
++/*
++ * Copyright 2015 Maxime Ripard
++ *
++ * Maxime Ripard <maxime.ripard@free-electrons.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- struct video_levels pal_video_levels = {
- 	.black = 252,	.blank = 252,
- };
- 
-+struct burst_levels ntsc_burst_levels = {
-+	.cb = 79,	.cr = 0,
-+};
++#include <linux/clk-provider.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
 +
- struct burst_levels pal_burst_levels = {
- 	.cb = 40,	.cr = 40,
- };
- 
-+struct color_gains ntsc_color_gains = {
-+	.cb = 160,	.cr = 160,
-+};
++#define SUN4I_A10_PLL3_GATE_BIT	31
++#define SUN4I_A10_PLL3_DIV_WIDTH	7
++#define SUN4I_A10_PLL3_DIV_SHIFT	0
 +
- struct color_gains pal_color_gains = {
- 	.cb = 224,	.cr = 224,
- };
- 
-+struct resync_parameters ntsc_resync_parameters = {
-+	.field = false,	.line = 14,	.pixel = 12,
-+};
++static DEFINE_SPINLOCK(sun4i_a10_pll3_lock);
 +
- struct resync_parameters pal_resync_parameters = {
- 	.field = true,	.line = 13,	.pixel = 12,
- };
- 
- struct tv_mode tv_modes[] = {
- 	{
-+		.name		= "NTSC",
-+		.mode		= SUN4I_TVE_CFG0_RES_480i,
-+		.chroma_freq	= 0x21f07c1f,
-+		.yc_en		= true,
-+		.dac3_en	= true,
-+		.dac_bit25_en	= true,
++static void __init sun4i_a10_pll3_setup(struct device_node *node)
++{
++	const char *clk_name = node->name, *parent;
++	struct clk_multiplier *mult;
++	struct clk_gate *gate;
++	struct resource res;
++	void __iomem *reg;
++	struct clk *clk;
++	int ret;
 +
-+		.back_porch	= 118,
-+		.front_porch	= 32,
-+		.line_number	= 525,
++	of_property_read_string(node, "clock-output-names", &clk_name);
++	parent = of_clk_get_parent_name(node, 0);
 +
-+		.hdisplay	= 720,
-+		.hfront_porch	= 18,
-+		.hsync_len	= 2,
-+		.hback_porch	= 118,
++	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
++	if (IS_ERR(reg)) {
++		pr_err("%s: Could not map the clock registers\n", clk_name);
++		return;
++	}
 +
-+		.vdisplay	= 480,
-+		.vfront_porch	= 26,
-+		.vsync_len	= 2,
-+		.vback_porch	= 17,
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate)
++		goto err_unmap;
 +
-+		.vblank_level	= 240,
++	gate->reg = reg;
++	gate->bit_idx = SUN4I_A10_PLL3_GATE_BIT;
++	gate->lock = &sun4i_a10_pll3_lock;
 +
-+		.color_gains	= &ntsc_color_gains,
-+		.burst_levels	= &ntsc_burst_levels,
-+		.video_levels	= &ntsc_video_levels,
-+		.resync_params	= &ntsc_resync_parameters,
-+	},
-+	{
- 		.name		= "PAL",
- 		.mode		= SUN4I_TVE_CFG0_RES_576i,
- 		.chroma_freq	= 0x2a098acb,
++	mult = kzalloc(sizeof(*mult), GFP_KERNEL);
++	if (!mult)
++		goto err_free_gate;
++
++	mult->reg = reg;
++	mult->shift = SUN4I_A10_PLL3_DIV_SHIFT;
++	mult->width = SUN4I_A10_PLL3_DIV_WIDTH;
++	mult->lock = &sun4i_a10_pll3_lock;
++
++	clk = clk_register_composite(NULL, clk_name,
++				     &parent, 1,
++				     NULL, NULL,
++				     &mult->hw, &clk_multiplier_ops,
++				     &gate->hw, &clk_gate_ops,
++				     0);
++	if (IS_ERR(clk)) {
++		pr_err("%s: Couldn't register the clock\n", clk_name);
++		goto err_free_mult;
++	}
++
++	ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
++	if (ret) {
++		pr_err("%s: Couldn't register DT provider\n",
++		       clk_name);
++		goto err_clk_unregister;
++	}
++
++	return;
++
++err_clk_unregister:
++	clk_unregister_composite(clk);
++err_free_mult:
++	kfree(mult);
++err_free_gate:
++	kfree(gate);
++err_unmap:
++	iounmap(reg);
++	of_address_to_resource(node, 0, &res);
++	release_mem_region(res.start, resource_size(&res));
++}
++
++CLK_OF_DECLARE(sun4i_a10_pll3, "allwinner,sun4i-a10-pll3-clk",
++	       sun4i_a10_pll3_setup);
 -- 
 2.7.3
