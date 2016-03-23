@@ -1,13 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 11/19] drm/panel: simple: Add timings for the
- Olimex LCD-OLinuXino-4.3TS
-Date: Wed, 23 Mar 2016 17:38:34 +0100
-Message-ID: <1458751122-23976-12-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 04/19] clk: sunxi: Add TCON channel1 clock
+Date: Wed, 23 Mar 2016 17:38:27 +0100
+Message-ID: <1458751122-23976-5-git-send-email-maxime.ripard@free-electrons.com>
 References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBHUNZO3QKGQEDVMFCMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBGENZO3QKGQEVGAQS2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458751122-23976-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,75 +19,352 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Olimex LCD-OLinuXino-4.3TS panel to the DRM simple
-panel driver.
+The TCON is a controller generating the timings to output videos signals,
+acting like both a CRTC and an encoder.
 
-It is a 480x272 panel connected through a 24-bits RGB interface.
+It has two channels depending on the output, each channel being driven by
+its own clock (and own clock controller).
+
+Add a driver for the channel 1 clock.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../display/panel/olimex,lcd-olinuxino-43-ts.txt   |  7 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
- 2 files changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino-43-ts.txt
+ Documentation/devicetree/bindings/clock/sunxi.txt |   1 +
+ drivers/clk/sunxi/Makefile                        |   1 +
+ drivers/clk/sunxi/clk-sun4i-tcon-ch1.c            | 300 ++++++++++++++++++++++
+ 3 files changed, 302 insertions(+)
+ create mode 100644 drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
 
-diff --git a/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino-43-ts.txt b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino-43-ts.txt
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index 0e1e2c0eee61..54192c1a98dc 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -76,6 +76,7 @@ Required properties:
+ 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
+ 	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
+ 	"allwinner,sun4i-a10-tcon-ch0-clk" - for the TCON channel 0 clock on the A10
++	"allwinner,sun4i-a10-tcon-ch1-clk" - for the TCON channel 1 clock on the A10
+ 	"allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
+ 	"allwinner,sun5i-a13-usb-clk" - for usb gates + resets on A13
+ 	"allwinner,sun6i-a31-usb-clk" - for usb gates + resets on A31
+diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+index 244defcfa5db..39d2044a1f49 100644
+--- a/drivers/clk/sunxi/Makefile
++++ b/drivers/clk/sunxi/Makefile
+@@ -13,6 +13,7 @@ obj-y += clk-mod0.o
+ obj-y += clk-simple-gates.o
+ obj-y += clk-sun4i-display.o
+ obj-y += clk-sun4i-pll3.o
++obj-y += clk-sun4i-tcon-ch1.o
+ obj-y += clk-sun8i-bus-gates.o
+ obj-y += clk-sun8i-mbus.o
+ obj-y += clk-sun9i-core.o
+diff --git a/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c b/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
 new file mode 100644
-index 000000000000..74540a090669
+index 000000000000..98a4582de56a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/olimex,lcd-olinuxino-43-ts.txt
-@@ -0,0 +1,7 @@
-+Olimex 4.3" TFT LCD panel
++++ b/drivers/clk/sunxi/clk-sun4i-tcon-ch1.c
+@@ -0,0 +1,300 @@
++/*
++ * Copyright 2015 Maxime Ripard
++ *
++ * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
-+Required properties:
-+- compatible: should be "olimex,lcd-olinuxino-43-ts"
++#include <linux/clk-provider.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/slab.h>
++#include <linux/spinlock.h>
 +
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index ceb20486dacf..f95abdbde147 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1084,6 +1084,29 @@ static const struct panel_desc okaya_rs800480t_7x0gp = {
- 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
- };
- 
-+static const struct drm_display_mode olimex_lcd_olinuxino_43ts_mode = {
-+	.clock = 9000,
-+	.hdisplay = 480,
-+	.hsync_start = 480 + 5,
-+	.hsync_end = 480 + 5 + 30,
-+	.htotal = 480 + 5 + 30 + 10,
-+	.vdisplay = 272,
-+	.vsync_start = 272 + 8,
-+	.vsync_end = 272 + 8 + 5,
-+	.vtotal = 272 + 8 + 5 + 3,
-+	.vrefresh = 60,
++#define TCON_CH1_SCLK2_PARENTS		4
++
++#define TCON_CH1_SCLK2_GATE_BIT		BIT(31)
++#define TCON_CH1_SCLK2_MUX_MASK		3
++#define TCON_CH1_SCLK2_MUX_SHIFT	24
++#define TCON_CH1_SCLK2_DIV_MASK		0xf
++#define TCON_CH1_SCLK2_DIV_SHIFT	0
++
++#define TCON_CH1_SCLK1_GATE_BIT		BIT(15)
++#define TCON_CH1_SCLK1_HALF_BIT		BIT(11)
++
++struct tcon_ch1_clk {
++	struct clk_hw	hw;
++	spinlock_t	lock;
++	void __iomem	*reg;
 +};
 +
-+static const struct panel_desc olimex_lcd_olinuxino_43ts = {
-+	.modes = &olimex_lcd_olinuxino_43ts_mode,
-+	.num_modes = 1,
-+	.size = {
-+		.width = 105,
-+		.height = 67,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
++#define hw_to_tclk(hw)	container_of(hw, struct tcon_ch1_clk, hw)
++
++static void tcon_ch1_disable(struct clk_hw *hw)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(&tclk->lock, flags);
++	reg = readl(tclk->reg);
++	reg &= ~(TCON_CH1_SCLK2_GATE_BIT | TCON_CH1_SCLK1_GATE_BIT);
++	writel(reg, tclk->reg);
++	spin_unlock_irqrestore(&tclk->lock, flags);
++}
++
++static int tcon_ch1_enable(struct clk_hw *hw)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(&tclk->lock, flags);
++	reg = readl(tclk->reg);
++	reg |= TCON_CH1_SCLK2_GATE_BIT | TCON_CH1_SCLK1_GATE_BIT;
++	writel(reg, tclk->reg);
++	spin_unlock_irqrestore(&tclk->lock, flags);
++
++	return 0;
++}
++
++static int tcon_ch1_is_enabled(struct clk_hw *hw)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	u32 reg;
++
++	reg = readl(tclk->reg);
++	return reg & (TCON_CH1_SCLK2_GATE_BIT | TCON_CH1_SCLK1_GATE_BIT);
++}
++
++static u8 tcon_ch1_get_parent(struct clk_hw *hw)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	int num_parents = clk_hw_get_num_parents(hw);
++	u32 reg;
++
++	reg = readl(tclk->reg) >> TCON_CH1_SCLK2_MUX_SHIFT;
++	reg &= reg >> TCON_CH1_SCLK2_MUX_MASK;
++
++	if (reg >= num_parents)
++		return -EINVAL;
++
++	return reg;
++}
++
++static int tcon_ch1_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	unsigned long flags;
++	u32 reg;
++
++	spin_lock_irqsave(&tclk->lock, flags);
++	reg = readl(tclk->reg);
++	reg &= ~(TCON_CH1_SCLK2_MUX_MASK << TCON_CH1_SCLK2_MUX_SHIFT);
++	reg |= index << TCON_CH1_SCLK2_MUX_SHIFT;
++	writel(reg, tclk->reg);
++	spin_unlock_irqrestore(&tclk->lock, flags);
++
++	return 0;
 +};
 +
- static const struct drm_display_mode ortustech_com43h4m85ulc_mode  = {
- 	.clock = 25000,
- 	.hdisplay = 480,
-@@ -1329,6 +1352,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "okaya,rs800480t-7x0gp",
- 		.data = &okaya_rs800480t_7x0gp,
- 	}, {
-+		.compatible = "olimex,lcd-olinuxino-43-ts",
-+		.data = &olimex_lcd_olinuxino_43ts,
-+	}, {
- 		.compatible = "ortustech,com43h4m85ulc",
- 		.data = &ortustech_com43h4m85ulc,
- 	}, {
++static unsigned long tcon_ch1_calc_divider(unsigned long rate,
++					   unsigned long parent_rate,
++					   u8 *div,
++					   bool *half)
++{
++	unsigned long best_rate = 0;
++	u8 best_m = 0, m;
++	bool is_double;
++
++	for (m = 1; m < 16; m++) {
++		u8 d;
++
++		for (d = 1; d < 3; d++) {
++			unsigned long tmp_rate;
++
++			tmp_rate = parent_rate / m / d;
++
++			if (tmp_rate > rate)
++				continue;
++
++			if (!best_rate ||
++			    (rate - tmp_rate) < (rate - best_rate)) {
++				best_rate = tmp_rate;
++				best_m = m;
++				is_double = d;
++			}
++		}
++	}
++
++	if (div && half) {
++		*div = best_m;
++		*half = is_double;
++	}
++
++	return best_rate;
++}
++
++static int tcon_ch1_determine_rate(struct clk_hw *hw,
++				   struct clk_rate_request *req)
++{
++	long best_rate = -EINVAL;
++	int i;
++
++	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
++		unsigned long parent_rate;
++		unsigned long tmp_rate;
++		struct clk_hw *parent;
++
++		parent = clk_hw_get_parent_by_index(hw, i);
++		if (!parent)
++			continue;
++
++		parent_rate = clk_hw_get_rate(parent);
++
++		tmp_rate = tcon_ch1_calc_divider(req->rate, parent_rate,
++						 NULL, NULL);
++
++		if (best_rate < 0 ||
++		    (req->rate - tmp_rate) < (req->rate - best_rate)) {
++			best_rate = tmp_rate;
++			req->best_parent_rate = parent_rate;
++			req->best_parent_hw = parent;
++		}
++	}
++
++	if (best_rate < 0)
++		return best_rate;
++
++	req->rate = best_rate;
++	return 0;
++}
++
++static unsigned long tcon_ch1_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	u32 reg;
++
++	reg = readl(tclk->reg);
++
++	parent_rate /= (reg & TCON_CH1_SCLK2_DIV_MASK) + 1;
++
++	if (reg & TCON_CH1_SCLK1_HALF_BIT)
++		parent_rate /= 2;
++
++	return parent_rate;
++}
++
++static int tcon_ch1_set_rate(struct clk_hw *hw, unsigned long rate,
++			     unsigned long parent_rate)
++{
++	struct tcon_ch1_clk *tclk = hw_to_tclk(hw);
++	unsigned long flags;
++	bool half;
++	u8 div_m;
++	u32 reg;
++
++	tcon_ch1_calc_divider(rate, parent_rate, &div_m, &half);
++
++	spin_lock_irqsave(&tclk->lock, flags);
++	reg = readl(tclk->reg);
++	reg &= ~(TCON_CH1_SCLK2_DIV_MASK | TCON_CH1_SCLK1_HALF_BIT);
++	reg |= (div_m - 1) & TCON_CH1_SCLK2_DIV_MASK;
++
++	if (half)
++		reg |= TCON_CH1_SCLK1_HALF_BIT;
++
++	writel(reg, tclk->reg);
++	spin_unlock_irqrestore(&tclk->lock, flags);
++
++	return 0;
++}
++
++static const struct clk_ops tcon_ch1_ops = {
++	.disable	= tcon_ch1_disable,
++	.enable		= tcon_ch1_enable,
++	.is_enabled	= tcon_ch1_is_enabled,
++
++	.get_parent	= tcon_ch1_get_parent,
++	.set_parent	= tcon_ch1_set_parent,
++
++	.determine_rate	= tcon_ch1_determine_rate,
++	.recalc_rate	= tcon_ch1_recalc_rate,
++	.set_rate	= tcon_ch1_set_rate,
++};
++
++static void __init tcon_ch1_setup(struct device_node *node)
++{
++	const char *parents[TCON_CH1_SCLK2_PARENTS];
++	const char *clk_name = node->name;
++	struct clk_init_data init;
++	struct tcon_ch1_clk *tclk;
++	struct resource res;
++	struct clk *clk;
++	void __iomem *reg;
++	int ret;
++
++	of_property_read_string(node, "clock-output-names", &clk_name);
++
++	reg = of_io_request_and_map(node, 0, of_node_full_name(node));
++	if (IS_ERR(reg)) {
++		pr_err("%s: Could not map the clock registers\n", clk_name);
++		return;
++	}
++
++	ret = of_clk_parent_fill(node, parents, TCON_CH1_SCLK2_PARENTS);
++	if (ret != TCON_CH1_SCLK2_PARENTS) {
++		pr_err("%s Could not retrieve the parents\n", clk_name);
++		goto err_unmap;
++	}
++
++	tclk = kzalloc(sizeof(*tclk), GFP_KERNEL);
++	if (!tclk)
++		goto err_unmap;
++
++	init.name = clk_name;
++	init.ops = &tcon_ch1_ops;
++	init.parent_names = parents;
++	init.num_parents = TCON_CH1_SCLK2_PARENTS;
++	init.flags = CLK_SET_RATE_PARENT;
++
++	tclk->reg = reg;
++	tclk->hw.init = &init;
++	spin_lock_init(&tclk->lock);
++
++	clk = clk_register(NULL, &tclk->hw);
++	if (IS_ERR(clk)) {
++		pr_err("%s: Couldn't register the clock\n", clk_name);
++		goto err_free_data;
++	}
++
++	ret = of_clk_add_provider(node, of_clk_src_simple_get, clk);
++	if (ret) {
++		pr_err("%s: Couldn't register our clock provider\n", clk_name);
++		goto err_unregister_clk;
++	}
++
++	return;
++
++err_unregister_clk:
++	clk_unregister(clk);
++err_free_data:
++	kfree(tclk);
++err_unmap:
++	iounmap(reg);
++	of_address_to_resource(node, 0, &res);
++	release_mem_region(res.start, resource_size(&res));
++}
++
++CLK_OF_DECLARE(tcon_ch1, "allwinner,sun4i-a10-tcon-ch1-clk",
++	       tcon_ch1_setup);
 -- 
 2.7.3
