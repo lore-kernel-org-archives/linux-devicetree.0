@@ -1,38 +1,42 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/6] of: Implement iterator for phandles
-Date: Wed, 23 Mar 2016 12:54:57 +0100
-Message-ID: <20160323115457.GC17838@8bytes.org>
-References: <1458669509-7178-1-git-send-email-joro@8bytes.org>
- <CAL_JsqJ8f0+qQk4QQxyKmwtqnejCDxdjmrZf8480j54YXUTkVg@mail.gmail.com>
+From: "Valo, Kalle" <kvalo-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org>
+Subject: Re: [PATCH] dt: bindings: add new dt entry for pre calibration in
+ qcom, ath10k.txt
+Date: Wed, 23 Mar 2016 12:07:49 +0000
+Message-ID: <87poulfld8.fsf@kamboji.qca.qualcomm.com>
+References: <1457604724-14378-1-git-send-email-rmani@qti.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ8f0+qQk4QQxyKmwtqnejCDxdjmrZf8480j54YXUTkVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1457604724-14378-1-git-send-email-rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org> (Raja
+	Mani's message of "Thu, 10 Mar 2016 15:42:04 +0530")
+Content-Language: en-US
+Content-ID: <58C490DB42889445B42B5F44F353681D-zC7DfRvBq/JWk0Htik3J/w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org> writes:
 
-On Tue, Mar 22, 2016 at 01:45:41PM -0500, Rob Herring wrote:
-> On Tue, Mar 22, 2016 at 12:58 PM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
-> > Please review. Patches are based on v4.5.
-> 
-> Other than my one comment, this looks good to me. For the series:
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> There two things done in this patch,
+>
+> 1) Existing device tree entry 'qcom,ath10k-calibration-data' carries
+>    not only calibration data, it carries board specific data too.
+>    So, make appropriate update in doc.
+>
+> 2) ipq4019 wifi needs new devie tree entry to carry calibration
+>    data alone (called pre cal data, it doesn't include any other info).
+>    Using 'qcom,ath10k-calibration-data' for ipq4019 would alter
+>    the purpose of it. Hence, add new device tree entry called
+>    'qcom,ath10k-pre-calibration-data' to carry only pre calibration data.
+>
+> Signed-off-by: Raja Mani <rmani-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org>
 
-Thanks a lot for your fast reply! I guess these patches will go through
-the DT tree, or should I carry them in the IOMMU tree? The DT tree
-probably makes more sense.
+Applied, thanks.
 
-
-
-	Joerg
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+-- 
+Kalle Valo--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
