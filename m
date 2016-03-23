@@ -1,68 +1,106 @@
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] documentation: Fix pinctrl documentation for
- Meson8 / Meson8b
-Date: Wed, 23 Mar 2016 17:04:19 +0100
-Message-ID: <CAL9uMOGaf5556KX5RJWbaW0d1zcTZu4S6FvoqEXQCWXg1QUDpg@mail.gmail.com>
-References: <1458724440-32228-1-git-send-email-carlo@caione.org>
-	<1458724440-32228-3-git-send-email-carlo@caione.org>
-	<20160323152052.GA20906@rob-hp-laptop>
+From: Jean-Michel Friedt <jmfriedt@femto-st.fr>
+Subject: [PATCH 1/1] ARM: dts: sun5i-a13-olinuxino-micro: enable USB DRC
+Date: Wed, 23 Mar 2016 17:28:48 +0100
+Message-ID: <1458750528-13180-1-git-send-email-jmfriedt@femto-st.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160323152052.GA20906@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Upstreaming Team <linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: JM Friedt <jmfriedt@femto-st.fr>, devicetree@vger.kernel.org, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 23, 2016 at 4:20 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 23, 2016 at 10:14:00AM +0100, Carlo Caione wrote:
->> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->>
->> Fix pin controller documentation introducing the new compatibles for
->> the pinctrl drivers specific for aobus / cbus.
->>
->> This is needed because we have changed the pin controller driver: we
->> have now a single specialized pinctrl driver / compatible for each bus
->> the controller is attached to, instead of one single driver dealing with
->> all the controllers we have on different buses.
->
-> Aren't you breaking compatibility with old DTs here? If so, you need to
-> be clear that you are and why you think that is okay.
+From: JM Friedt <jmfriedt@femto-st.fr>
 
-Rob,
-It's a bit too late to worry about breaking compatibility since the
-driver changes are already landed in mainline and currently Meson8 and
-Meson8b platforms are broken because of this.
-You can read the whole discussion here [1] and here [2]. Driver and DT
-changes were supposed to go in together but a bit of general
-misunderstanding caused this issue.
+Enable the OTG controller on the Olinuxino A13-micro. 
 
-We decided to break compatibility with the old DTs since the the
-platform support is still in the really early stage so I really don't
-think this is going to cause any problem and we have a lot of good
-reasons to split the pinctrl driver. First of all it makes sense from
-the hardware prospective, since we actually have two different pin
-controllers on two different buses. Splitting the driver allows us to
-introduce in the DTS both CBUS and AOBUS as simple buses. We need a
-clear description of the two buses in the DTS since several devices
-have a different register mapping depending on which bus they are
-attached to. Also as you can read here [3] we want to map the whole
-CBUS as a syscon device to be able to access several registers
-scattered inside CBUS.
+Signed-off-by: JM Friedt <jmfriedt@femto-st.fr>
+---
+ arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts | 41 +++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-As Andreas pointed out gxbb arch already models CBUS and AOBUS as
-simple-buses so we could reuse this driver also for that architecture.
-
-Thanks,
-
-[1] http://www.spinics.net/lists/arm-kernel/msg489730.html
-[2] http://www.spinics.net/lists/devicetree/msg116771.html
-[3] http://www.spinics.net/lists/devicetree/msg115019.html
-
+diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
+index ad84fe4..081329e 100644
+--- a/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
++++ b/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
+@@ -109,6 +109,10 @@
+ 	status = "okay";
+ };
+ 
++&otg_sram {
++	status = "okay";
++};
++
+ &pio {
+ 	mmc0_cd_pin_olinuxinom: mmc0_cd_pin@0 {
+ 		allwinner,pins = "PG0";
+@@ -124,6 +128,27 @@
+ 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
+ 	};
+ 
++	usb0_id_detect_pin: usb0_id_detect_pin@0 {
++		allwinner,pins = "PG2";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++	};
++
++	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
++		allwinner,pins = "PG1";
++		allwinner,function = "gpio_in";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
++	};
++
++	usb0_vbus_pin_olinuxinom: usb0_vbus_pin@0 {
++		allwinner,pins = "PG12";
++		allwinner,function = "gpio_out";
++		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
++		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
++	};
++
+ 	usb1_vbus_pin_olinuxinom: usb1_vbus_pin@0 {
+ 		allwinner,pins = "PG11";
+ 		allwinner,function = "gpio_out";
+@@ -132,6 +157,12 @@
+ 	};
+ };
+ 
++&reg_usb0_vbus {
++	pinctrl-0 = <&usb0_vbus_pin_olinuxinom>;
++	gpio = <&pio 6 12 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++};
++
+ &reg_usb1_vbus {
+ 	pinctrl-0 = <&usb1_vbus_pin_olinuxinom>;
+ 	gpio = <&pio 6 11 GPIO_ACTIVE_HIGH>;
+@@ -144,7 +175,17 @@
+ 	status = "okay";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
+ &usbphy {
++	pinctrl-names = "default";
++	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
++	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
++	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
++	usb0_vbus-supply = <&reg_usb0_vbus>;
+ 	usb1_vbus-supply = <&reg_usb1_vbus>;
+ 	status = "okay";
+ };
 -- 
-Carlo Caione  |  +39.340.80.30.096  |  Endless
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.6.4
