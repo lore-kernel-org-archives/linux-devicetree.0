@@ -1,80 +1,66 @@
 From: Matthew McClintock <mmcclint@codeaurora.org>
-Subject: [PATCH 17/17] qcom: ipq4019: add DMA nodes to ipq4019 SoC and DK01 device tree
-Date: Wed, 23 Mar 2016 17:05:12 -0500
-Message-ID: <1458770712-10880-18-git-send-email-mmcclint@codeaurora.org>
+Subject: [PATCH 13/17] qcom: ipq4019: add i2c node to ipq4019 SoC and DK01
+ device tree
+Date: Wed, 23 Mar 2016 17:05:08 -0500
+Message-ID: <1458770712-10880-14-git-send-email-mmcclint@codeaurora.org>
 References: <1458770712-10880-1-git-send-email-mmcclint@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1458770712-10880-1-git-send-email-mmcclint@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: qca-upstream.external@qca.qualcomm.com, Matthew McClintock <mmcclint@codeaurora.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Sricharan R <srichara@qti.qualcomm.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matthew McClintock <mmcclint@codeaurora.org>, open list <linux-kernel@vger.kernel.org>, qca-upstream.external@qca.qualcomm.com, David Brown <david.brown@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the blsp_dma node to the device tree and the required
-properties for using DMA with serial
+This will allow boards to enable the I2C bus
 
+CC: Sricharan R <srichara@qti.qualcomm.com>
 Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
 ---
- arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi |  4 ++++
- arch/arm/boot/dts/qcom-ipq4019.dtsi           | 15 +++++++++++++++
- 2 files changed, 19 insertions(+)
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-index 2c347ad..b9457dd2 100644
---- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-@@ -72,6 +72,10 @@
- 			};
- 		};
- 
-+		blsp_dma: dma@7884000 {
-+			status = "ok";
-+		};
-+
- 		spi_0: spi@78b5000 {
- 			pinctrl-0 = <&spi_0_pins>;
- 			pinctrl-names = "default";
 diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 3cd42c0..5c08d19 100644
+index 99e64f4..1937edf 100644
 --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
 +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -123,6 +123,17 @@
- 			interrupts = <0 208 0>;
+@@ -25,6 +25,7 @@
+ 
+ 	aliases {
+ 		spi0 = &spi_0;
++		i2c0 = &i2c_0;
+ 	};
+ 
+ 	cpus {
+@@ -126,6 +127,18 @@
+ 			status = "disabled";
  		};
  
-+		blsp_dma: dma@7884000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			reg = <0x07884000 0x23000>;
-+			interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
-+			clocks = <&gcc GCC_BLSP1_AHB_CLK>;
-+			clock-names = "bam_clk";
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
++		i2c_0: i2c@78b7000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0x78b7000 0x6000>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_BLSP1_AHB_CLK>,
++				 <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>;
++			clock-names = "iface", "core";
++			#address-cells = <1>;
++			#size-cells = <0>;
 +			status = "disabled";
 +		};
 +
- 		spi_0: spi@78b5000 {
- 			compatible = "qcom,spi-qup-v2.2.1";
- 			reg = <0x78b5000 0x600>;
-@@ -224,6 +235,8 @@
- 			clocks = <&gcc GCC_BLSP1_UART1_APPS_CLK>,
- 				<&gcc GCC_BLSP1_AHB_CLK>;
- 			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 1>, <&blsp_dma 0>;
-+			dma-names = "rx", "tx";
- 		};
- 
- 		serial@78b0000 {
-@@ -234,6 +247,8 @@
- 			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>,
- 				<&gcc GCC_BLSP1_AHB_CLK>;
- 			clock-names = "core", "iface";
-+			dmas = <&blsp_dma 3>, <&blsp_dma 2>;
-+			dma-names = "rx", "tx";
- 		};
- 
- 		watchdog@b017000 {
+                 acc0: clock-controller@b088000 {
+                         compatible = "qcom,kpss-acc-v1";
+                         reg = <0x0b088000 0x1000>, <0xb008000 0x1000>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
