@@ -1,96 +1,96 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH] Input: rotary_encoder - support binary encoding of states
-Date: Wed, 23 Mar 2016 07:49:30 +0100
-Message-ID: <20160323064930.GJ6191@pengutronix.de>
-References: <1458680914-4533-1-git-send-email-u.kleine-koenig@pengutronix.de>
- <CAAEAJfDAg9aW62O8zNG3cGf207_azZYFja8jUgf+5xDAtzfbyg@mail.gmail.com>
- <CAL_Jsq++0hPVuqZERsfGRM20F+2rzFUz2CDOR1Kioj0uOaskDQ@mail.gmail.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: amlogic: Clean up Vega S95 /memory nodes
+Date: Wed, 23 Mar 2016 08:58:40 +0100
+Message-ID: <CAOQ7t2acXkF5WAS+w=MbdA_BWokBJqT=D5sH0BDNsPQ5JfRH5A@mail.gmail.com>
+References: <1458169854-26127-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq++0hPVuqZERsfGRM20F+2rzFUz2CDOR1Kioj0uOaskDQ@mail.gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Daniel Mack <daniel@zonque.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458169854-26127-1-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-meson <linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <mbrugger-IBi9RG/b67k@public.gmane.org>, Nicolas Saenz <nicolassaenzj-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Ezequiel,
+On Thu, Mar 17, 2016 at 12:10 AM, Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org=
+> wrote:
+> Resolve the following warnings from new dtc by adding the unit addres=
+s:
+>
+>     DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dtb
+>   Warning (unit_address_vs_reg): Node /memory has a reg or ranges pro=
+perty, but no unit name
+>     DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dtb
+>   Warning (unit_address_vs_reg): Node /memory has a reg or ranges pro=
+perty, but no unit name
+>     DTC     arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dtb
+>   Warning (unit_address_vs_reg): Node /memory has a reg or ranges pro=
+perty, but no unit name
+>
+> Fixes: cc733bc90636 ("ARM64: dts: amlogic: Add Tronsmart Vega S95 con=
+figs")
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts  | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts   | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts=
+ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+> index 399aff9e7975..62fb4968d680 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-meta.dts
+> @@ -48,7 +48,7 @@
+>         compatible =3D "tronsmart,vega-s95-meta", "tronsmart,vega-s95=
+", "amlogic,meson-gxbb";
+>         model =3D "Tronsmart Vega S95 Meta";
+>
+> -       memory {
+> +       memory@0 {
+>                 device_type =3D "memory";
+>                 reg =3D <0x0 0x0 0x0 0x80000000>;
+>         };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts =
+b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+> index ac5a241b5ec2..9a9663abdf5c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-pro.dts
+> @@ -48,7 +48,7 @@
+>         compatible =3D "tronsmart,vega-s95-pro", "tronsmart,vega-s95"=
+, "amlogic,meson-gxbb";
+>         model =3D "Tronsmart Vega S95 Pro";
+>
+> -       memory {
+> +       memory@0 {
+>                 device_type =3D "memory";
+>                 reg =3D <0x0 0x0 0x0 0x40000000>;
+>         };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dt=
+s b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+> index fff7bfa2aa39..2fe167b2609d 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95-telos.dts
+> @@ -48,7 +48,7 @@
+>         compatible =3D "tronsmart,vega-s95-telos", "tronsmart,vega-s9=
+5", "amlogic,meson-gxbb";
+>         model =3D "Tronsmart Vega S95 Telos";
+>
+> -       memory {
+> +       memory@0 {
+>                 device_type =3D "memory";
+>                 reg =3D <0x0 0x0 0x0 0x80000000>;
+>         };
 
-On Tue, Mar 22, 2016 at 07:47:06PM -0500, Rob Herring wrote:
-> On Tue, Mar 22, 2016 at 5:50 PM, Ezequiel Garcia
-> <ezequiel@vanguardiasur.com.ar> wrote:
-> > (Adding DT people)
+Acked-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-Thanks. (I thought addressing the list was enough.)
-
-> > On 22 March 2016 at 18:08, Uwe Kleine-K=F6nig
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> >> A plain binary encoding has some downsides compared to the usual G=
-ray
-> >> encoding, but that doesn't stop hardware engineers to eventually u=
-se it.
-> >> So implement support for this encoding in the rotary encoder drive=
-r.
-> >>
-> >> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> >> ---
-> >> Hello,
-> >>
-> >> an alternative to define this difference in the device tree is to =
-use
-> >> something like:
-> >>
-> >>         rotary-encoder,encoding =3D "binary";
-> >>
-> >> or
-> >>
-> >>         rotary-encoder,encoding =3D <ROTARY_ENCODER_ENCODING_BINAR=
-Y>;
-> >>
-> >> instead of a property
-> >>
-> >>         rotary-encoder,encoding-binary;
-> >>
-> >> . While the two first solutions make it obvious that there can onl=
-y be
-> >> one encoding, they IMHO look ugly, so I went for the property with=
-out
-> >> value. What do you think?
-> >>
-> >
-> > Yes, picking something like:
-> >
-> >   rotary-encoder,encoding =3D "binary";
-> >
-> > emphasizing the fact that only one encoding will be used,
-> > will work better, scaling well if we need to introduce some
-> > "foobar" encoding.
-
-OK, then I stick to strings to not have to introduce magic constants or
-cpp symbols?
-
-> Fine, but "rotary-encoder" is not a vendor I've ever heard of. Just
-> "encoding" is sufficient.
-
-I picked that to be consistent with rotary-encoder,steps and other
-already existing properties documented in
-Documentation/devicetree/bindings/input/rotary-encoder.txt.
-
-Should the prefix be dropped for these, too (with compat code)?
-
-Best regards
-Uwe
+Thanks,
 
 --=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Carlo Caione
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
