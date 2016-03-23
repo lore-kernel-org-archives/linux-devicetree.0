@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 01/19] clk: composite: Add unregister function
-Date: Wed, 23 Mar 2016 17:38:24 +0100
-Message-ID: <1458751122-23976-2-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 17/19] drm: sun4i: tv: Add NTSC output standard
+Date: Wed, 23 Mar 2016 17:38:40 +0100
+Message-ID: <1458751122-23976-18-git-send-email-maxime.ripard@free-electrons.com>
 References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBF4NZO3QKGQEVKZBXZQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBGUNZO3QKGQEELEEMWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458751122-23976-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,55 +19,86 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The composite clock didn't have any unregistration function, which forced
-us to use clk_unregister directly on it.
-
-While it was already not great from an API point of view, it also meant
-that we were leaking the clk_composite structure allocated in
-clk_register_composite.
-
-Add a clk_unregister_composite function to fix this.
+Add the settings to support the NTSC standard.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/clk/clk-composite.c  | 15 +++++++++++++++
- include/linux/clk-provider.h |  1 +
- 2 files changed, 16 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_tv.c | 45 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/clk/clk-composite.c b/drivers/clk/clk-composite.c
-index 1f903e1f86a2..b0f3b84ebd13 100644
---- a/drivers/clk/clk-composite.c
-+++ b/drivers/clk/clk-composite.c
-@@ -286,3 +286,18 @@ err:
- 	kfree(composite);
- 	return clk;
- }
-+
-+void clk_unregister_composite(struct clk *clk)
-+{
-+	struct clk_composite *composite;
-+	struct clk_hw *hw;
-+
-+	hw = __clk_get_hw(clk);
-+	if (!hw)
-+		return;
-+
-+	composite = to_clk_composite(hw);
-+
-+	clk_unregister(clk);
-+	kfree(composite);
-+}
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index da95258127aa..26a8c9b7be71 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -603,6 +603,7 @@ struct clk *clk_register_composite(struct device *dev, const char *name,
- 		struct clk_hw *rate_hw, const struct clk_ops *rate_ops,
- 		struct clk_hw *gate_hw, const struct clk_ops *gate_ops,
- 		unsigned long flags);
-+void clk_unregister_composite(struct clk *clk);
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
+index ccf275a90132..bc047f923508 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+@@ -178,24 +178,69 @@ struct sun4i_tv {
+ 	struct sun4i_drv	*drv;
+ };
  
- /***
-  * struct clk_gpio_gate - gpio gated clock
++struct video_levels ntsc_video_levels = {
++	.black = 282,	.blank = 240,
++};
++
+ struct video_levels pal_video_levels = {
+ 	.black = 252,	.blank = 252,
+ };
+ 
++struct burst_levels ntsc_burst_levels = {
++	.cb = 79,	.cr = 0,
++};
++
+ struct burst_levels pal_burst_levels = {
+ 	.cb = 40,	.cr = 40,
+ };
+ 
++struct color_gains ntsc_color_gains = {
++	.cb = 160,	.cr = 160,
++};
++
+ struct color_gains pal_color_gains = {
+ 	.cb = 224,	.cr = 224,
+ };
+ 
++struct resync_parameters ntsc_resync_parameters = {
++	.field = false,	.line = 14,	.pixel = 12,
++};
++
+ struct resync_parameters pal_resync_parameters = {
+ 	.field = true,	.line = 13,	.pixel = 12,
+ };
+ 
+ struct tv_mode tv_modes[] = {
+ 	{
++		.name		= "NTSC",
++		.mode		= SUN4I_TVE_CFG0_RES_480i,
++		.chroma_freq	= 0x21f07c1f,
++		.yc_en		= true,
++		.dac3_en	= true,
++		.dac_bit25_en	= true,
++
++		.back_porch	= 118,
++		.front_porch	= 32,
++		.line_number	= 525,
++
++		.hdisplay	= 720,
++		.hfront_porch	= 18,
++		.hsync_len	= 2,
++		.hback_porch	= 118,
++
++		.vdisplay	= 480,
++		.vfront_porch	= 26,
++		.vsync_len	= 2,
++		.vback_porch	= 17,
++
++		.vblank_level	= 240,
++
++		.color_gains	= &ntsc_color_gains,
++		.burst_levels	= &ntsc_burst_levels,
++		.video_levels	= &ntsc_video_levels,
++		.resync_params	= &ntsc_resync_parameters,
++	},
++	{
+ 		.name		= "PAL",
+ 		.mode		= SUN4I_TVE_CFG0_RES_576i,
+ 		.chroma_freq	= 0x2a098acb,
 -- 
 2.7.3
