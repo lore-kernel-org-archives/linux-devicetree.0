@@ -1,12 +1,12 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 13/19] drm: sun4i: Add DT bindings documentation
-Date: Wed, 23 Mar 2016 17:38:36 +0100
-Message-ID: <1458751122-23976-14-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v3 16/19] drm: sun4i: tv: Add PAL output standard
+Date: Wed, 23 Mar 2016 17:38:39 +0100
+Message-ID: <1458751122-23976-17-git-send-email-maxime.ripard@free-electrons.com>
 References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBH4NZO3QKGQEMSLNDGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIUNZO3QKGQEDHOXUKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <1458751122-23976-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,276 +19,67 @@ To: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The display pipeline of the Allwinner A10 is involving several loosely
-coupled components.
-
-Add a documentation for the bindings.
+Now that we have support for the composite output, we can start adding new
+supported standards. Start with PAL, and we will add other eventually.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../bindings/display/sunxi/sun4i-drm.txt           | 254 +++++++++++++++++++++
- 1 file changed, 254 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+ drivers/gpu/drm/sun4i/sun4i_tv.c | 42 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-new file mode 100644
-index 000000000000..378edb919eae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -0,0 +1,254 @@
-+Allwinner A10 Display Pipeline
-+==============================
-+
-+The Allwinner A10 Display pipeline is composed of several components
-+that are going to be documented below:
-+
-+TV Encoder
-+----------
-+
-+The TV Encoder supports the composite and VGA output. It is one end of
-+the pipeline.
-+
-+Required properties:
-+ - compatible: value should be "allwinner,sun4i-a10-tv-encoder".
-+ - reg: base address and size of memory-mapped region
-+ - clocks: the clocks driving the TV encoder
-+ - resets: phandle to the reset controller driving the encoder
-+
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  first port should be the input endpoint.
-+
-+TCON
-+----
-+
-+The TCON acts as a timing controller for RGB, LVDS and TV interfaces.
-+
-+Required properties:
-+ - compatible: value should be "allwinner,sun5i-a13-tcon".
-+ - reg: base address and size of memory-mapped region
-+ - interrupts: interrupt associated to this IP
-+ - clocks: phandles to the clocks feeding the TCON. Three are needed:
-+   - 'ahb': the interface clocks
-+   - 'tcon-ch0': The clock driving the TCON channel 0
-+   - 'tcon-ch1': The clock driving the TCON channel 1
-+ - resets: phandles to the reset controllers driving the encoder
-+   - "lcd": the reset line for the TCON channel 0
-+
-+ - clock-names: the clock names mentioned above
-+ - reset-names: the reset names mentioned above
-+ - clock-output-names: Name of the pixel clock created
-+
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  first port should be the input endpoint, the second one the output
-+
-+Endpoints optional property:
-+  - allwinner,panel: boolean to indicate that the endpoint is a panel
-+
-+
-+Display Engine Backend
-+----------------------
-+
-+The display engine backend exposes layers and sprites to the
-+system.
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun5i-a13-display-backend
-+  - reg: base address and size of the memory-mapped region.
-+  - clocks: phandles to the clocks feeding the frontend and backend
-+    * ahb: the backend interface clock
-+    * mod: the backend module clock
-+    * ram: the backend DRAM clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandles to the reset controllers driving the backend
-+
-+- ports: A ports node with endpoint definitions as defined in
-+  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+  first port should be the input endpoints, the second one the output
-+
-+Display Engine Frontend
-+-----------------------
-+
-+The display engine frontend does formats conversion, scaling,
-+deinterlacing and color space conversion.
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun5i-a13-display-frontend
-+  - reg: base address and size of the memory-mapped region.
-+  - interrupts: interrupt associated to this IP
-+  - clocks: phandles to the clocks feeding the frontend and backend
-+    * ahb: the backend interface clock
-+    * mod: the backend module clock
-+    * ram: the backend DRAM clock
-+  - clock-names: the clock names mentioned above
-+  - resets: phandles to the reset controllers driving the backend
-+
-+Display Engine Pipeline
-+-----------------------
-+
-+The display engine pipeline (and its entry point, since it can be
-+either directly the backend or the frontend) is represented as an
-+extra node.
-+
-+Required properties:
-+  - compatible: value must be one of:
-+    * allwinner,sun5i-a13-display-engine
-+  - allwinner,pipelines: list of phandle to the entry points of the
-+    pipelines (either to the frontend or backend)
-+
-+Example:
-+
-+panel: panel {
-+	compatible = "olimex,lcd-olinuxino-43-ts";
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@0 {
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		panel_input: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&tcon0_out_panel>;
-+		};
-+	};
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
+index 78634dfc0f77..ccf275a90132 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+@@ -178,7 +178,49 @@ struct sun4i_tv {
+ 	struct sun4i_drv	*drv;
+ };
+ 
++struct video_levels pal_video_levels = {
++	.black = 252,	.blank = 252,
 +};
 +
-+tve0: tv-encoder@01c0a000 {
-+	compatible = "allwinner,sun4i-a10-tv-encoder";
-+	reg = <0x01c0a000 0x1000>;
-+	clocks = <&ahb_gates 34>;
-+	resets = <&tcon_ch0_clk 0>;
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		tve0_in_tcon0: endpoint@0 {
-+			reg = <0>;
-+			remote-endpoint = <&tcon0_out_tve0>;
-+		};
-+	};
++struct burst_levels pal_burst_levels = {
++	.cb = 40,	.cr = 40,
 +};
 +
-+tcon0: lcd-controller@01c0c000 {
-+	compatible = "allwinner,sun5i-a13-tcon";
-+	reg = <0x01c0c000 0x1000>;
-+	interrupts = <44>;
-+	resets = <&tcon_ch0_clk 1>;
-+	reset-names = "lcd";
-+	clocks = <&ahb_gates 36>,
-+		 <&tcon_ch0_clk>,
-+		 <&tcon_ch1_clk>;
-+	clock-names = "ahb",
-+		      "tcon-ch0",
-+		      "tcon-ch1";
-+	clock-output-names = "tcon-pixel-clock";
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		tcon0_in: port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			tcon0_in_be0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&be0_out_tcon0>;
-+			};
-+		};
-+
-+		tcon0_out: port@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			tcon0_out_tve0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tve0_in_tcon0>;
-+			};
-+
-+			tcon0_out_panel: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&panel_input>;
-+				allwinner,panel;
-+			};
-+		};
-+	};
++struct color_gains pal_color_gains = {
++	.cb = 224,	.cr = 224,
 +};
 +
-+fe0: display-frontend@01e00000 {
-+	compatible = "allwinner,sun5i-a13-display-frontend";
-+	reg = <0x01e00000 0x20000>;
-+	interrupts = <47>;
-+	clocks = <&ahb_gates 46>, <&de_fe_clk>,
-+		 <&dram_gates 25>;
-+	clock-names = "ahb", "mod",
-+		      "ram";
-+	resets = <&de_fe_clk>;
-+
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		fe0_out: port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			fe0_out_be0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&be0_in_fe0>;
-+			};
-+		};
-+	};
++struct resync_parameters pal_resync_parameters = {
++	.field = true,	.line = 13,	.pixel = 12,
 +};
 +
-+be0: display-backend@01e60000 {
-+	compatible = "allwinner,sun5i-a13-display-backend";
-+	reg = <0x01e60000 0x10000>;
-+	clocks = <&ahb_gates 44>, <&de_be_clk>,
-+		 <&dram_gates 26>;
-+	clock-names = "ahb", "mod",
-+		      "ram";
-+	resets = <&de_be_clk>;
+ struct tv_mode tv_modes[] = {
++	{
++		.name		= "PAL",
++		.mode		= SUN4I_TVE_CFG0_RES_576i,
++		.chroma_freq	= 0x2a098acb,
 +
-+	ports {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++		.back_porch	= 138,
++		.front_porch	= 24,
++		.line_number	= 625,
 +
-+		be0_in: port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
++		.hdisplay	= 720,
++		.hfront_porch	= 3,
++		.hsync_len	= 2,
++		.hback_porch	= 139,
 +
-+			be0_in_fe0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&fe0_out_be0>;
-+			};
-+		};
++		.vdisplay	= 576,
++		.vfront_porch	= 28,
++		.vsync_len	= 2,
++		.vback_porch	= 19,
 +
-+		be0_out: port@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
++		.vblank_level	= 252,
 +
-+			be0_out_tcon0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&tcon0_in_be0>;
-+			};
-+		};
-+	};
-+};
-+
-+display-engine {
-+	compatible = "allwinner,sun5i-a13-display-engine";
-+	pipelines = <&be0>;
-+};
++		.color_gains	= &pal_color_gains,
++		.burst_levels	= &pal_burst_levels,
++		.video_levels	= &pal_video_levels,
++		.resync_params	= &pal_resync_parameters,
++	},
+ };
+ 
+ static inline struct sun4i_tv *
 -- 
 2.7.3
