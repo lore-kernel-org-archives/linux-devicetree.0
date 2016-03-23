@@ -1,36 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH next 1/2] PCI: keystone: add pci error irq handler
-Date: Wed, 23 Mar 2016 10:10:27 -0500
-Message-ID: <20160323151027.GA17771@rob-hp-laptop>
-References: <1458676378-24377-1-git-send-email-m-karicheri2@ti.com>
+Subject: Re: [PATCH v5] iio: dac: Add support for the AD5592R/AD5593R
+ ADCs/DACs
+Date: Wed, 23 Mar 2016 10:15:20 -0500
+Message-ID: <20160323151520.GA19229@rob-hp-laptop>
+References: <1458721195-28915-1-git-send-email-michael.hennerich@analog.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1458676378-24377-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com
+In-Reply-To: <1458721195-28915-1-git-send-email-michael.hennerich@analog.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: michael.hennerich@analog.com
+Cc: jic23@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, lars@metafoo.de, knaack.h@gmx.de, paul.cercueil@analog.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 22, 2016 at 03:52:57PM -0400, Murali Karicheri wrote:
-> Keystone PCI hardware generates error interrupts at RC using platform
-> irq instead of standard msi/legacy irq. Add a simple error handler that
-> logs the fatal interrupt status to the console.
+On Wed, Mar 23, 2016 at 09:19:55AM +0100, michael.hennerich@analog.com wrote:
+> From: Paul Cercueil <paul.cercueil@analog.com>
 > 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
+> ADC/DAC/GPIO devices.
+> 
+> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
+> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
+> 
 > ---
->  .../devicetree/bindings/pci/pci-keystone.txt       |  1 +
+> 
+> Changes since v1:
+> 	* Fix mutex usage
+> 	* Remove unnecessary NULL pointer guards
+> 	* Add comment explaining the invalid data read
+> 	* AD5593R Remove surplus adc readback
+> 
+> Changes since v2:
+> 	* Use child nodes to describe channels
+> 	* Fix probe return and driver remove path
+> 	* Move locking closer to where its used
+> 	* Remove WARN_ON but return error
+> 	* Remove OPEN DRAIN configuration option
+> 
+> Changes since v3:
+> 	* Documentation: Add missing vendor prefixes in the examples
+> 	* Minor function reordering in remove() to match the reverse of probe()
+> 
+> Changes since v4:
+> 	* Documentation: Add missing gpio bindings
+> 	* Kconfig: Select GPIOLIB and remove ifdefs in code
+> 	* Remove surplus error check in ad5592r_gpio_request()
+> 	* Add comment about reset magic
+> ---
+>  .../devicetree/bindings/iio/dac/ad5592r.txt        | 152 +++++
 
 Acked-by: Rob Herring <robh@kernel.org>
 
->  drivers/pci/host/pci-keystone-dw.c                 | 46 ++++++++++++++++++++++
->  drivers/pci/host/pci-keystone.c                    | 32 +++++++++++++++
->  drivers/pci/host/pci-keystone.h                    |  6 +++
->  4 files changed, 85 insertions(+)
+>  drivers/iio/dac/Kconfig                            |  27 +
+>  drivers/iio/dac/Makefile                           |   3 +
+>  drivers/iio/dac/ad5592r-base.c                     | 694 +++++++++++++++++++++
+>  drivers/iio/dac/ad5592r-base.h                     |  78 +++
+>  drivers/iio/dac/ad5592r.c                          | 164 +++++
+>  drivers/iio/dac/ad5593r.c                          | 131 ++++
+>  include/dt-bindings/iio/adi,ad5592r.h              |  16 +
+>  8 files changed, 1265 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5592r.txt
+>  create mode 100644 drivers/iio/dac/ad5592r-base.c
+>  create mode 100644 drivers/iio/dac/ad5592r-base.h
+>  create mode 100644 drivers/iio/dac/ad5592r.c
+>  create mode 100644 drivers/iio/dac/ad5593r.c
+>  create mode 100644 include/dt-bindings/iio/adi,ad5592r.h
