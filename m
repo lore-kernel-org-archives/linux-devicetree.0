@@ -1,48 +1,146 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: Who is going to merge it [Was: Re: [PATCH v14 0/17] Add Analogix
- Core Display Port Driver]
-Date: Thu, 24 Mar 2016 15:00:32 +0000 (UTC)
-Message-ID: <5A08F152.40705__32430.2124245607$1458831632$gmane$org@rock-chips.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>	<1919945.Y1tg0YzXlm@diego>	<56F1CAEB.3080701@samsung.com>	<8949624.HmxDpZAlt2@diego>	<56F1D0AD.8030905@samsung.com>	<20160322233906.GP19428@n2100.arm.linux.org.uk>	<56F1DB27.4040001@samsung.com>	<20160323000835.GQ19428@n2100.arm.linux.org.uk>
- <CAPM=9tz9_rbGJFuv-+YN=Sicfng++tHTDLrOX5Ohtwft+VnwtA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v7 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Thu, 24 Mar 2016 16:08:23 +0100
+Message-ID: <CAJZ5v0iGHj1Hb3s=uJ34j0m88+3xtBQhbX47got=z1Ah_=LrkQ@mail.gmail.com>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
+	<1458830676-27075-2-git-send-email-shannon.zhao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Date: Sun, 12 Nov 2017 20:11:46 -0500
-In-Reply-To: <CAPM=9tz9_rbGJFuv-+YN=Sicfng++tHTDLrOX5Ohtwft+VnwtA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Dave Airlie <airlied@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo.padovan@collabora.co.uk>, Ajay Kumar <ajaykumar.rs@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Kukjin Kim <kgene@kernel.org>, Rob Herring <robherring2@gmail.com>, Thierry Reding <treding@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>"linux-arm-kernel@lists.infradead.org" <l>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1458830676-27075-2-git-send-email-shannon.zhao@linaro.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Shannon Zhao <shannon.zhao@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, stefano.stabellini@citrix.com, david.vrabel@citrix.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-efi@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, Shannon Zhao <zhaoshenglong@huawei.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDAzLzIyLzIwMTYgMDg6NDEgUE0sIERhdmUgQWlybGllIHdyb3RlOgo+Pj4gU28gYWx0aG91
-Z2ggaXQncyBzbWFsbCBmcmFtZXdvcmsgb3IganVzdCBzdWJkaXJlY3RvcnksIHdlIHdvdWxkIG5l
-ZWQKPj4+IHNvbWVvbmUgd2hvIGNhbiBtYW5hZ2UgdGhlIGZyYW1ld29yayB0byBhdm9pZCBmdXJ0
-aGVyIGNvbmZ1c2lvbiBpZgo+Pj4gbmVjZXNzYXJ5Lgo+PiBTbyBtYXliZSBpdCBqdXN0IGRvZXNu
-J3QgbmVlZCBhIG1haW50YWluZXIsIGFuZCBtYXliZSB0aG9zZSB0aGUgb3duZXIKPj4gb2YgdGhl
-IGJyaWRnZSBkcml2ZXIgc2hvdWxkIGJlIHJlc3BvbnNpYmxlIGZvciBjaG9vc2luZyB0aGUgdHJl
-ZSB3aGljaAo+PiBpdCdzIG1lcmdlZCB0aHJvdWdoIGFsb25nIHdpdGggdXBkYXRlcy4gIFRoYXQn
-cyBob3cgZHctaGRtaSBoYXMgYmVlbgo+PiBtYW5hZ2VkIG9uIHRoZSB3aG9sZS4KPj4KPj4gSXQg
-YWxzbyBtZWFucyB0aGF0IHRoZSBicmlkZ2UgZHJpdmVyIG1haW50YWluZXIgaXMgYWJsZSB0byB0
-ZXN0IGNoYW5nZXMKPj4gdG8gdGhlIGJyaWRnZSBkcml2ZXIsIHJhdGhlciB0aGFuIGhhdmluZyBz
-b21lIG92ZXItYXJjaGluZyBicmlkZ2UKPj4gc3ViZGlyZWN0b3J5IG1haW50YWluZXIgd2hvIGRv
-ZXNuJ3QgaGF2ZSBhIGNsdWUgd2hldGhlciB0aGUgY2hhbmdlcwo+PiB3b3JrIG9uIHRoZSBoYXJk
-d2FyZS4KPj4KPj4gSU1ITywgaGF2aW5nIGJyaWRnZSBkcml2ZXIgYXV0aG9ycy9tYWludGFpbmVy
-cyBsb29rIGFmdGVyIHRoZWlyIG93bgo+PiBjb2RlIGhhcyBtYW55IGFkdmFudGFnZXMuCj4gVGhl
-IGF1dGhvciBqdXN0IHNlbmQgbWUgYSBwdWxsIHJlcXVlc3Qgd2l0aCBhY2tzIGZyb20gYSBnaXQg
-dHJlZQo+IHRoYXQgaG9wZWZ1bGx5IGJvdGggcGVvcGxlIGFncmVlZCBhbmQgdGVzdGVkIGZyb20u
-IE5vIG5lZWQgdG8KPiBzZW5kIHRoaXMgdmlhIGFub3RoZXIgbWFpbnRhaW5lciBsYXllci4KPgo+
-IERhdmUuCj4KCldvdywgdGhhbmtzIGFsbCAhIHN1Y2ggY29vbCBuZXdzICA6LUQgIEknbGwgcHJl
-cGFyZSBteSBwdWxsIHJlcXVlc3Qgc29vbgoKCi0gWWFraXIKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Mar 24, 2016 at 3:44 PM, Shannon Zhao <shannon.zhao@linaro.org> wrote:
+> ACPI 6.0 introduces a new table STAO to list the devices which are used
+> by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> UART is used by Xen. So here it hides UART from Dom0.
+>
+> CC: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
+> CC: Len Brown <lenb@kernel.org> (supporter:ACPI)
+> CC: linux-acpi@vger.kernel.org (open list:ACPI)
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> ---
+>  drivers/acpi/scan.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 5f28cf7..e96a058 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
+>  DEFINE_MUTEX(acpi_device_lock);
+>  LIST_HEAD(acpi_wakeup_device_list);
+>  static DEFINE_MUTEX(acpi_hp_context_lock);
+> +static u64 spcr_uart_addr;
+>
+>  struct acpi_dep_data {
+>         struct list_head node;
+> @@ -1453,6 +1454,41 @@ static int acpi_add_single_object(struct acpi_device **child,
+>         return 0;
+>  }
+>
+> +static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
+> +                                           void *context)
+> +{
+> +       struct resource *res = context;
+> +
+> +       if (acpi_dev_resource_memory(ares, res))
+> +               return AE_CTRL_TERMINATE;
+> +
+> +       return AE_OK;
+> +}
+> +
+> +static bool acpi_device_should_be_hidden(acpi_handle handle)
+> +{
+> +       acpi_status status;
+> +       struct resource res;
+> +
+> +       /* Check if it should ignore the UART device */
+> +       if (spcr_uart_addr != 0) {
+> +               if (!acpi_has_method(handle, METHOD_NAME__CRS))
+> +                       return false;
+> +
+> +               status = acpi_walk_resources(handle, METHOD_NAME__CRS,
+> +                                            acpi_get_resource_memory, &res);
+> +               if (ACPI_FAILURE(status))
+> +                       return false;
+> +
+> +               if (res.start == spcr_uart_addr) {
+> +                       printk(KERN_INFO PREFIX "The UART device in SPCR table will be hidden\n");
+> +                       return true;
+> +               }
+> +       }
+> +
+> +       return false;
+> +}
+> +
+>  static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+>                                     unsigned long long *sta)
+>  {
+> @@ -1466,6 +1502,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+>         switch (acpi_type) {
+>         case ACPI_TYPE_ANY:             /* for ACPI_ROOT_OBJECT */
+>         case ACPI_TYPE_DEVICE:
+> +               if (acpi_device_should_be_hidden(handle))
+> +                       return -ENODEV;
+> +
+>                 *type = ACPI_BUS_TYPE_DEVICE;
+>                 status = acpi_bus_get_status_handle(handle, sta);
+>                 if (ACPI_FAILURE(status))
+> @@ -1916,9 +1955,24 @@ static int acpi_bus_scan_fixed(void)
+>         return result < 0 ? result : 0;
+>  }
+>
+> +static void acpi_get_spcr_uart_addr(void)
+
+static void __init acpi_get_spcr_uart_addr(void)
+
+I suppose?
+
+Apart from this it looks fine.
+
+> +{
+> +       acpi_status status;
+> +       struct acpi_table_spcr *spcr_ptr;
+> +
+> +       status = acpi_get_table(ACPI_SIG_SPCR, 0,
+> +                               (struct acpi_table_header **)&spcr_ptr);
+> +       if (ACPI_SUCCESS(status))
+> +               spcr_uart_addr = spcr_ptr->serial_port.address;
+> +       else
+> +               printk(KERN_WARNING PREFIX "STAO table present, but SPCR is missing\n");
+> +}
+> +
+>  int __init acpi_scan_init(void)
+>  {
+>         int result;
+> +       acpi_status status;
+> +       struct acpi_table_stao *stao_ptr;
+>
+>         acpi_pci_root_init();
+>         acpi_pci_link_init();
+> @@ -1934,6 +1988,20 @@ int __init acpi_scan_init(void)
+>
+>         acpi_scan_add_handler(&generic_device_handler);
+>
+> +       /*
+> +        * If there is STAO table, check whether it needs to ignore the UART
+> +        * device in SPCR table.
+> +        */
+> +       status = acpi_get_table(ACPI_SIG_STAO, 0,
+> +                               (struct acpi_table_header **)&stao_ptr);
+> +       if (ACPI_SUCCESS(status)) {
+> +               if (stao_ptr->header.length > sizeof(struct acpi_table_stao))
+> +                       printk(KERN_INFO PREFIX "STAO Name List not yet supported.");
+> +
+> +               if (stao_ptr->ignore_uart)
+> +                       acpi_get_spcr_uart_addr();
+> +       }
+> +
+>         mutex_lock(&acpi_scan_lock);
+>         /*
+>          * Enumerate devices in the ACPI namespace.
+> --
