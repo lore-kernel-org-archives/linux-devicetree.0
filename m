@@ -1,29 +1,46 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 1/5] of/serial: move earlycon early_param handling to serial
-Date: Thu, 24 Mar 2016 16:07:20 -0500
-Message-ID: <CAL_JsqJje4=U4+i3jfFDkRv2Px3cw5QzGHfq41OjRDNL6c_Q8Q@mail.gmail.com>
-References: <1458823925-19560-1-git-send-email-aleksey.makarov@linaro.org> <1458823925-19560-2-git-send-email-aleksey.makarov@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: veyron: enable the tsadc on pinky board
+Date: Thu, 24 Mar 2016 22:12:31 +0100
+Message-ID: <2324215.uYLQVgh5FL@diego>
+References: <1450607434-6733-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1458823925-19560-2-git-send-email-aleksey.makarov@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Aleksey Makarov <aleksey.makarov@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, "Zheng, Lv" <lv.zheng@intel.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1450607434-6733-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 24, 2016 at 7:51 AM, Aleksey Makarov
-<aleksey.makarov@linaro.org> wrote:
-> From: Leif Lindholm <leif.lindholm@linaro.org>
->
-> We have multiple "earlycon" early_param handlers - merge the DT one into
-> the main earlycon one.  It's a cleanup that also will be useful
-> to defer setting up DT console until ACPI/DT decision is made.
->
-> Rename the exported function to avoid clashing with the function from
-> arch/microblaze/kernel/prom.c
->
-> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
+Hi Caesar,
 
-Acked-by: Rob Herring <robh@kernel.org>
+Am Sonntag, 20. Dezember 2015, 18:30:34 schrieb Caesar Wang:
+> I think the tsadc is fakly hand on pinky board,
+> maybe that's fixed in newest kernel.
+> As the following patch is a example:
+> https://patchwork.kernel.org/patch/7472051/
+> 
+> I don't have meet this issue on pinky board.
+> Let me know if that's still hanging on pinky board.
+> 
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+I just gave that a try again on my pinky-rev2. And while the tsadc did produce 
+some results and didn't hang the system in my tries, the temperature values 
+seemed to be frozen (only changing once on every reboot).
+
+Running the same kernel on a Jerry produced the expected results of the 
+temperature changing over time and differing cpu frequencies.
+
+Pinky also is a sort of dinosaur and only you and me seem to still like them 
+:-) . And something is definitly strange here, and I'd tend to keep the tsadc 
+disabled for the time being. 
+
+
+Heiko
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
