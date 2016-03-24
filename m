@@ -1,56 +1,58 @@
 From: Shannon Zhao <shannon.zhao@linaro.org>
-Subject: [PATCH v7 09/17] xen/hvm/params: Add a new delivery type for event-channel in HVM_PARAM_CALLBACK_IRQ
-Date: Thu, 24 Mar 2016 22:44:28 +0800
-Message-ID: <1458830676-27075-10-git-send-email-shannon.zhao@linaro.org>
+Subject: [PATCH v7 08/17] Xen: public/hvm: sync changes of
+	HVM_PARAM_CALLBACK_VIA ABI from Xen
+Date: Thu, 24 Mar 2016 22:44:27 +0800
+Message-ID: <1458830676-27075-9-git-send-email-shannon.zhao@linaro.org>
 References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xen.org>
 In-Reply-To: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xen.org>
+List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
+List-Subscribe: <http://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xen.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
 To: linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com
-Cc: devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, zhaoshenglong@huawei.com, shannon.zhao@linaro.org
+Cc: devicetree@vger.kernel.org, linux-efi@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, peter.huangpeng@huawei.com, julien.grall@arm.com, shannon.zhao@linaro.org, zhaoshenglong@huawei.com, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-This new delivery type which is for ARM shares the same value with
-HVM_PARAM_CALLBACK_TYPE_VECTOR which is for x86.
-
-val[15:8] is flag: val[7:0] is a PPI.
-To the flag, bit 8 stands the interrupt mode is edge(1) or level(0) and
-bit 9 stands the interrupt polarity is active low(1) or high(0).
-
-Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-Acked-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
----
- include/xen/interface/hvm/params.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/include/xen/interface/hvm/params.h b/include/xen/interface/hvm/params.h
-index 70ad208..4d61fc5 100644
---- a/include/xen/interface/hvm/params.h
-+++ b/include/xen/interface/hvm/params.h
-@@ -47,11 +47,24 @@
-  * Domain = val[47:32], Bus = val[31:16] DevFn = val[15:8], IntX = val[1:0]
-  */
- 
-+#if defined(__i386__) || defined(__x86_64__)
- #define HVM_PARAM_CALLBACK_TYPE_VECTOR   2
- /*
-  * val[7:0] is a vector number.  Check for XENFEAT_hvm_callback_vector to know
-  * if this delivery method is available.
-  */
-+#elif defined(__arm__) || defined(__aarch64__)
-+#define HVM_PARAM_CALLBACK_TYPE_PPI      2
-+/*
-+ * val[55:16] needs to be zero.
-+ * val[15:8] is interrupt flag of the PPI used by event-channel:
-+ *  bit 8: the PPI is edge(1) or level(0) triggered
-+ *  bit 9: the PPI is active low(1) or high(0)
-+ * val[7:0] is a PPI number used by event-channel.
-+ * This is only used by ARM/ARM64 and masking/eoi the interrupt associated to
-+ * the notification is handled by the interrupt controller.
-+ */
-+#endif
- 
- #define HVM_PARAM_STORE_PFN    1
- #define HVM_PARAM_STORE_EVTCHN 2
--- 
-2.1.4
+U3luYyB0aGUgY2hhbmdlcyBvZiBIVk1fUEFSQU1fQ0FMTEJBQ0tfVklBIEFCSSBpbnRyb2R1Y2Vk
+IGJ5ClhlbiBjb21taXQgPGNhNWM1NGI2ZmYwNT4gKHB1YmxpYy9odm06IGV4cG9ydCB0aGUgSFZN
+X1BBUkFNX0NBTExCQUNLX1ZJQQpBQkkgaW4gdGhlIEFQSSkuCgpTaWduZWQtb2ZmLWJ5OiBTaGFu
+bm9uIFpoYW8gPHNoYW5ub24uemhhb0BsaW5hcm8ub3JnPgpBY2tlZC1ieTogU3RlZmFubyBTdGFi
+ZWxsaW5pIDxzdGVmYW5vLnN0YWJlbGxpbmlAZXUuY2l0cml4LmNvbT4KLS0tCiBpbmNsdWRlL3hl
+bi9pbnRlcmZhY2UvaHZtL3BhcmFtcy5oIHwgMjcgKysrKysrKysrKysrKysrKysrKysrLS0tLS0t
+CiAxIGZpbGUgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKCmRpZmYg
+LS1naXQgYS9pbmNsdWRlL3hlbi9pbnRlcmZhY2UvaHZtL3BhcmFtcy5oIGIvaW5jbHVkZS94ZW4v
+aW50ZXJmYWNlL2h2bS9wYXJhbXMuaAppbmRleCBhNmM3OTkxLi43MGFkMjA4IDEwMDY0NAotLS0g
+YS9pbmNsdWRlL3hlbi9pbnRlcmZhY2UvaHZtL3BhcmFtcy5oCisrKyBiL2luY2x1ZGUveGVuL2lu
+dGVyZmFjZS9odm0vcGFyYW1zLmgKQEAgLTI3LDE2ICsyNywzMSBAQAogICogUGFyYW1ldGVyIHNw
+YWNlIGZvciBIVk1PUF97c2V0LGdldH1fcGFyYW0uCiAgKi8KIAorI2RlZmluZSBIVk1fUEFSQU1f
+Q0FMTEJBQ0tfSVJRIDAKIC8qCiAgKiBIb3cgc2hvdWxkIENQVTAgZXZlbnQtY2hhbm5lbCBub3Rp
+ZmljYXRpb25zIGJlIGRlbGl2ZXJlZD8KLSAqIHZhbFs2Mzo1Nl0gPT0gMDogdmFsWzU1OjBdIGlz
+IGEgZGVsaXZlcnkgR1NJIChHbG9iYWwgU3lzdGVtIEludGVycnVwdCkuCi0gKiB2YWxbNjM6NTZd
+ID09IDE6IHZhbFs1NTowXSBpcyBhIGRlbGl2ZXJ5IFBDSSBJTlR4IGxpbmUsIGFzIGZvbGxvd3M6
+Ci0gKiAgICAgICAgICAgICAgICAgIERvbWFpbiA9IHZhbFs0NzozMl0sIEJ1cyAgPSB2YWxbMzE6
+MTZdLAotICogICAgICAgICAgICAgICAgICBEZXZGbiAgPSB2YWxbMTU6IDhdLCBJbnRYID0gdmFs
+WyAxOiAwXQotICogdmFsWzYzOjU2XSA9PSAyOiB2YWxbNzowXSBpcyBhIHZlY3RvciBudW1iZXIu
+CisgKgogICogSWYgdmFsID09IDAgdGhlbiBDUFUwIGV2ZW50LWNoYW5uZWwgbm90aWZpY2F0aW9u
+cyBhcmUgbm90IGRlbGl2ZXJlZC4KKyAqIElmIHZhbCAhPSAwLCB2YWxbNjM6NTZdIGVuY29kZXMg
+dGhlIHR5cGUsIGFzIGZvbGxvd3M6CisgKi8KKworI2RlZmluZSBIVk1fUEFSQU1fQ0FMTEJBQ0tf
+VFlQRV9HU0kgICAgICAwCisvKgorICogdmFsWzU1OjBdIGlzIGEgZGVsaXZlcnkgR1NJLiAgR1NJ
+IDAgY2Fubm90IGJlIHVzZWQsIGFzIGl0IGFsaWFzZXMgdmFsID09IDAsCisgKiBhbmQgZGlzYWJs
+ZXMgYWxsIG5vdGlmaWNhdGlvbnMuCisgKi8KKworI2RlZmluZSBIVk1fUEFSQU1fQ0FMTEJBQ0tf
+VFlQRV9QQ0lfSU5UWCAxCisvKgorICogdmFsWzU1OjBdIGlzIGEgZGVsaXZlcnkgUENJIElOVHgg
+bGluZToKKyAqIERvbWFpbiA9IHZhbFs0NzozMl0sIEJ1cyA9IHZhbFszMToxNl0gRGV2Rm4gPSB2
+YWxbMTU6OF0sIEludFggPSB2YWxbMTowXQorICovCisKKyNkZWZpbmUgSFZNX1BBUkFNX0NBTExC
+QUNLX1RZUEVfVkVDVE9SICAgMgorLyoKKyAqIHZhbFs3OjBdIGlzIGEgdmVjdG9yIG51bWJlci4g
+IENoZWNrIGZvciBYRU5GRUFUX2h2bV9jYWxsYmFja192ZWN0b3IgdG8ga25vdworICogaWYgdGhp
+cyBkZWxpdmVyeSBtZXRob2QgaXMgYXZhaWxhYmxlLgogICovCi0jZGVmaW5lIEhWTV9QQVJBTV9D
+QUxMQkFDS19JUlEgMAogCiAjZGVmaW5lIEhWTV9QQVJBTV9TVE9SRV9QRk4gICAgMQogI2RlZmlu
+ZSBIVk1fUEFSQU1fU1RPUkVfRVZUQ0hOIDIKLS0gCjIuMS40CgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4t
+ZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwOi8vbGlzdHMueGVuLm9yZy94ZW4tZGV2ZWwK
