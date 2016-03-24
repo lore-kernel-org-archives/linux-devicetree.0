@@ -1,350 +1,173 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v3 09/16] phy: da8xx-usb: new driver for DA8xx SoC USB PHY
-Date: Thu, 24 Mar 2016 18:51:34 -0500
-Message-ID: <1458863503-31121-10-git-send-email-david@lechnology.com>
+Subject: [PATCH v3 04/16] ARM: davinci: Move clock init after ioremap.
+Date: Thu, 24 Mar 2016 18:51:29 -0500
+Message-ID: <1458863503-31121-5-git-send-email-david@lechnology.com>
 References: <1458863503-31121-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1458863503-31121-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, David.Laight@ACULAB.COM, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, David Lechner <david@lechnology.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, open list <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, petr@barix.com, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, David.Laight@ACULAB.COM, Lee Jones <lee.jones@linaro.org>, sergei.shtylyov@cogentembedded.com, Bin Liu <b-liu@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a new phy driver for the SoC USB controllers on the TI DA8xx
-family of microcontrollers. The USB 1.1 PHY is just a simple on/off.
-The USB 2.0 PHY also allows overriding the VBUS and ID pins.
+Some clocks (such as the USB PHY clocks in DA8xx) will need to use iomem.
+The davinci_common_init() function must be called before the ioremap, so
+the clock init is now split out as separate function.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
-v3 changes:
-
-* Uses syscon device for CFGCHIP2 instead of using it directly.
-* Got rid of nop inline funtions
-* Correct suffix on funtions to match ops.*
-* Added header file for extern method.
+v3 changes: This is a new patch. It takes care of the issue of unwanted ioremap
+in clock set_parent functions.
 
 
- drivers/phy/Kconfig               |  10 ++
- drivers/phy/Makefile              |   1 +
- drivers/phy/phy-da8xx-usb.c       | 249 ++++++++++++++++++++++++++++++++++++++
- include/linux/phy/phy-da8xx-usb.h |  19 +++
- 4 files changed, 279 insertions(+)
- create mode 100644 drivers/phy/phy-da8xx-usb.c
- create mode 100644 include/linux/phy/phy-da8xx-usb.h
+ arch/arm/mach-davinci/clock.c  | 4 ++--
+ arch/arm/mach-davinci/clock.h  | 7 ++++++-
+ arch/arm/mach-davinci/common.c | 6 ------
+ arch/arm/mach-davinci/da830.c  | 2 ++
+ arch/arm/mach-davinci/da850.c  | 2 ++
+ arch/arm/mach-davinci/dm355.c  | 1 +
+ arch/arm/mach-davinci/dm365.c  | 1 +
+ arch/arm/mach-davinci/dm644x.c | 1 +
+ arch/arm/mach-davinci/dm646x.c | 1 +
+ 9 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 26566db..c1d315f 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -35,6 +35,16 @@ config ARMADA375_USBCLUSTER_PHY
- 	depends on OF && HAS_IOMEM
- 	select GENERIC_PHY
+diff --git a/arch/arm/mach-davinci/clock.c b/arch/arm/mach-davinci/clock.c
+index 3424eac6..a5c2629 100644
+--- a/arch/arm/mach-davinci/clock.c
++++ b/arch/arm/mach-davinci/clock.c
+@@ -560,7 +560,7 @@ EXPORT_SYMBOL(davinci_set_pllrate);
+  * than that used by default in <soc>.c file. The reference clock rate
+  * should be updated early in the boot process; ideally soon after the
+  * clock tree has been initialized once with the default reference clock
+- * rate (davinci_common_init()).
++ * rate (davinci_clk_init()).
+  *
+  * Returns 0 on success, error otherwise.
+  */
+@@ -581,7 +581,7 @@ int davinci_set_refclk_rate(unsigned long rate)
+ 	return 0;
+ }
  
-+config PHY_DA8XX_USB
-+	tristate "TI DA8xx USB PHY Driver"
-+	depends on ARCH_DAVINCI_DA8XX
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Enable this to support the USB PHY on DA8xx SoCs.
-+
-+	  This driver controls both the USB 1.1 PHY and the USB 2.0 PHY.
-+
- config PHY_DM816X_USB
- 	tristate "TI dm816x USB PHY driver"
- 	depends on ARCH_OMAP2PLUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 24596a9..722e01c 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -5,6 +5,7 @@
- obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
- obj-$(CONFIG_PHY_BERLIN_USB)		+= phy-berlin-usb.o
- obj-$(CONFIG_PHY_BERLIN_SATA)		+= phy-berlin-sata.o
-+obj-$(CONFIG_PHY_DA8XX_USB)		+= phy-da8xx-usb.o
- obj-$(CONFIG_PHY_DM816X_USB)		+= phy-dm816x-usb.o
- obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
- obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
-diff --git a/drivers/phy/phy-da8xx-usb.c b/drivers/phy/phy-da8xx-usb.c
-new file mode 100644
-index 0000000..687d9a0
---- /dev/null
-+++ b/drivers/phy/phy-da8xx-usb.c
-@@ -0,0 +1,249 @@
-+/*
-+ * phy-da8xx-usb - TI DaVinci DA8xx USB PHY driver
-+ *
-+ * Copyright (C) 2016 David Lechner <david@lechnology.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/mfd/da8xx-cfgchip.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/phy/phy.h>
-+#include <linux/phy/phy-da8xx-usb.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/usb/gadget.h>
-+#include <linux/usb/otg.h>
-+
-+struct da8xx_usbphy {
-+	struct phy_provider	*phy_provider;
-+	struct phy		*usb11_phy;
-+	struct phy		*usb20_phy;
-+	struct clk		*usb11_clk;
-+	struct clk		*usb20_clk;
-+	struct regmap		*regmap;
-+};
-+
-+static int da8xx_usb11_phy_power_on(struct phy *phy)
+-int __init davinci_clk_init(struct clk_lookup *clocks)
++int __init _davinci_clk_init(struct clk_lookup *clocks)
+ {
+ 	struct clk_lookup *c;
+ 	struct clk *clk;
+diff --git a/arch/arm/mach-davinci/clock.h b/arch/arm/mach-davinci/clock.h
+index 1e4e836..8b0fbbe 100644
+--- a/arch/arm/mach-davinci/clock.h
++++ b/arch/arm/mach-davinci/clock.h
+@@ -124,7 +124,12 @@ struct clk {
+ 		.clk = ck,	\
+ 	}			\
+ 
+-int davinci_clk_init(struct clk_lookup *clocks);
++int _davinci_clk_init(struct clk_lookup *clocks);
++static inline void davinci_clk_init(struct davinci_soc_info *soc_info)
 +{
-+	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(d_phy->usb11_clk);
-+	if (ret)
-+		return ret;
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP2_REG, CFGCHIP2_USB1SUSPENDM,
-+			  CFGCHIP2_USB1SUSPENDM);
-+
-+	return 0;
++	if (soc_info->cpu_clks && _davinci_clk_init(soc_info->cpu_clks))
++		panic("davinci_clk_init: Failed to init clocks.\n");
 +}
+ int davinci_set_pllrate(struct pll_data *pll, unsigned int prediv,
+ 				unsigned int mult, unsigned int postdiv);
+ int davinci_set_sysclk_rate(struct clk *clk, unsigned long rate);
+diff --git a/arch/arm/mach-davinci/common.c b/arch/arm/mach-davinci/common.c
+index f55ef2e..6bc8c22 100644
+--- a/arch/arm/mach-davinci/common.c
++++ b/arch/arm/mach-davinci/common.c
+@@ -103,12 +103,6 @@ void __init davinci_common_init(struct davinci_soc_info *soc_info)
+ 	if (ret < 0)
+ 		goto err;
+ 
+-	if (davinci_soc_info.cpu_clks) {
+-		ret = davinci_clk_init(davinci_soc_info.cpu_clks);
+-
+-		if (ret != 0)
+-			goto err;
+-	}
+ 
+ 	return;
+ 
+diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
+index 7187e7f..79d5fc3 100644
+--- a/arch/arm/mach-davinci/da830.c
++++ b/arch/arm/mach-davinci/da830.c
+@@ -1214,4 +1214,6 @@ void __init da830_init(void)
+ 
+ 	da8xx_syscfg0_base = ioremap(DA8XX_SYSCFG0_BASE, SZ_4K);
+ 	WARN(!da8xx_syscfg0_base, "Unable to map syscfg0 module");
 +
-+static int da8xx_usb11_phy_power_off(struct phy *phy)
-+{
-+	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
++	davinci_clk_init(&davinci_soc_info_da830);
+ }
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 97d8779..9f46706 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -1346,4 +1346,6 @@ void __init da850_init(void)
+ 	v = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
+ 	v &= ~CFGCHIP3_PLL1_MASTER_LOCK;
+ 	__raw_writel(v, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
 +
-+	regmap_write_bits(d_phy->regmap, CFGCHIP2_REG, CFGCHIP2_USB1SUSPENDM, 0);
-+
-+	clk_disable_unprepare(d_phy->usb11_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops da8xx_usb11_phy_ops = {
-+	.power_on	= da8xx_usb11_phy_power_on,
-+	.power_off	= da8xx_usb11_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int da8xx_usb20_phy_init(struct phy *phy)
-+{
-+	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = clk_prepare_enable(d_phy->usb20_clk);
-+	if (ret)
-+		return ret;
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP2_REG, CFGCHIP2_OTGPWRDN, 0);
-+
-+	return 0;
-+}
-+
-+static int da8xx_usb20_phy_shutdown(struct phy *phy)
-+{
-+	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP2_REG, CFGCHIP2_OTGPWRDN,
-+			  CFGCHIP2_OTGPWRDN);
-+
-+	clk_disable_unprepare(d_phy->usb20_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops da8xx_usb20_phy_ops = {
-+	.power_on	= da8xx_usb20_phy_init,
-+	.power_off	= da8xx_usb20_phy_shutdown,
-+	.owner		= THIS_MODULE,
-+};
-+
-+int da8xx_usb20_phy_set_mode(struct phy *phy, enum musb_mode mode)
-+{
-+	struct da8xx_usbphy *d_phy = phy_get_drvdata(phy);
-+	u32 val;
-+
-+	switch (mode) {
-+	case MUSB_HOST:		/* Force VBUS valid, ID = 0 */
-+		val = CFGCHIP2_FORCE_HOST;
-+		break;
-+	case MUSB_PERIPHERAL:	/* Force VBUS valid, ID = 1 */
-+		val = CFGCHIP2_FORCE_DEVICE;
-+		break;
-+	case MUSB_OTG:		/* Don't override the VBUS/ID comparators */
-+		val = CFGCHIP2_NO_OVERRIDE;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	regmap_write_bits(d_phy->regmap, CFGCHIP2_REG, CFGCHIP2_OTGMODE_MASK,
-+			  val);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
-+
-+static struct phy *da8xx_usbphy_of_xlate(struct device *dev,
-+					 struct of_phandle_args *args)
-+{
-+	struct da8xx_usbphy *d_phy = dev_get_drvdata(dev);
-+
-+	if (!d_phy)
-+		return ERR_PTR(-ENODEV);
-+
-+	switch (args->args[0]) {
-+	case 1:
-+		return d_phy->usb11_phy;
-+	case 2:
-+		return d_phy->usb20_phy;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+}
-+
-+static int da8xx_usbphy_probe(struct platform_device *pdev)
-+{
-+	struct device		*dev = &pdev->dev;
-+	struct device_node	*node = dev->of_node;
-+	struct da8xx_usbphy	*d_phy;
-+
-+	d_phy = devm_kzalloc(dev, sizeof(*d_phy), GFP_KERNEL);
-+	if (!d_phy)
-+		return -ENOMEM;
-+
-+	if (node)
-+		d_phy->regmap = syscon_regmap_lookup_by_compatible(
-+							"ti,da830-cfgchip");
-+	else
-+		d_phy->regmap = syscon_regmap_lookup_by_pdevname("syscon.0");
-+	if (IS_ERR(d_phy->regmap)) {
-+		dev_err(dev, "Failed to get syscon.\n");
-+		return PTR_ERR(d_phy->regmap);
-+	}
-+
-+	d_phy->usb11_clk = devm_clk_get(dev, "usb11_phy");
-+	if (IS_ERR(d_phy->usb11_clk)) {
-+		dev_err(dev, "Failed to get usb11_phy clock.\n");
-+		return PTR_ERR(d_phy->usb11_clk);
-+	}
-+
-+	d_phy->usb20_clk = devm_clk_get(dev, "usb20_phy");
-+	if (IS_ERR(d_phy->usb20_clk)) {
-+		dev_err(dev, "Failed to get usb20_phy clock.\n");
-+		return PTR_ERR(d_phy->usb20_clk);
-+	}
-+
-+	d_phy->usb11_phy = devm_phy_create(dev, node, &da8xx_usb11_phy_ops);
-+	if (IS_ERR(d_phy->usb11_phy)) {
-+		dev_err(dev, "Failed to create usb11 phy.\n");
-+		return PTR_ERR(d_phy->usb11_phy);
-+	}
-+
-+	d_phy->usb20_phy = devm_phy_create(dev, node, &da8xx_usb20_phy_ops);
-+	if (IS_ERR(d_phy->usb20_phy)) {
-+		dev_err(dev, "Failed to create usb20 phy.\n");
-+		return PTR_ERR(d_phy->usb20_phy);
-+	}
-+
-+	platform_set_drvdata(pdev, d_phy);
-+	phy_set_drvdata(d_phy->usb11_phy, d_phy);
-+	phy_set_drvdata(d_phy->usb20_phy, d_phy);
-+
-+	if (node) {
-+		d_phy->phy_provider = devm_of_phy_provider_register(dev,
-+							da8xx_usbphy_of_xlate);
-+		if (IS_ERR(d_phy->phy_provider)) {
-+			dev_err(dev, "Failed to create phy provider.\n");
-+			return PTR_ERR(d_phy->phy_provider);
-+		}
-+	} else {
-+		int ret;
-+
-+		ret = phy_create_lookup(d_phy->usb11_phy, "usbphy", "ohci.0");
-+		if (ret)
-+			dev_warn(dev, "Failed to create usb11 phy lookup .\n");
-+		ret = phy_create_lookup(d_phy->usb20_phy, "usbphy", "musb-da8xx");
-+		if (ret)
-+			dev_warn(dev, "Failed to create usb20 phy lookup .\n");
-+	}
-+
-+	return 0;
-+}
-+
-+static int da8xx_usbphy_remove(struct platform_device *pdev)
-+{
-+	struct da8xx_usbphy *d_phy = platform_get_drvdata(pdev);
-+
-+	if (!pdev->dev.of_node) {
-+		phy_remove_lookup(d_phy->usb20_phy, "usbphy", "musb-da8xx");
-+		phy_remove_lookup(d_phy->usb11_phy, "usbphy", "ohci.0");
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id da8xx_usbphy_ids[] = {
-+	{ .compatible = "ti,da830-usbphy" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, da8xx_usbphy_ids);
-+
-+static struct platform_driver da8xx_usbphy_driver = {
-+	.probe	= da8xx_usbphy_probe,
-+	.remove	= da8xx_usbphy_remove,
-+	.driver	= {
-+		.name	= "da8xx-usbphy",
-+		.of_match_table = da8xx_usbphy_ids,
-+	},
-+};
-+
-+module_platform_driver(da8xx_usbphy_driver);
-+
-+MODULE_ALIAS("platform:da8xx-usbphy");
-+MODULE_AUTHOR("David Lechner <david@lechnology.com>");
-+MODULE_DESCRIPTION("TI DA8xx USB PHY driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/phy/phy-da8xx-usb.h b/include/linux/phy/phy-da8xx-usb.h
-new file mode 100644
-index 0000000..5d1b39e
---- /dev/null
-+++ b/include/linux/phy/phy-da8xx-usb.h
-@@ -0,0 +1,19 @@
-+/*
-+ * phy-da8xx-usb.h - TI DA8xx USB PHY driver
-+ *
-+ * Copyright (C) 2016 David Lechner <david@lechnology.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#ifndef __PHY_DA8XX_USB_H
-+#define __PHY_DA8XX_USB_H
-+
-+#include <linux/usb/musb.h>
-+
-+extern int da8xx_usb20_phy_set_mode(struct phy *phy, enum musb_mode mode);
-+
-+#endif /* __PHY_DA8XX_USB_H */
++	davinci_clk_init(&davinci_soc_info_da850);
+ }
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index a0ecf49..b311b84 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -1052,6 +1052,7 @@ void __init dm355_init(void)
+ {
+ 	davinci_common_init(&davinci_soc_info_dm355);
+ 	davinci_map_sysmod();
++	davinci_clk_init(&davinci_soc_info_dm355);
+ }
+ 
+ int __init dm355_init_video(struct vpfe_config *vpfe_cfg,
+diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
+index 384d367..2338875 100644
+--- a/arch/arm/mach-davinci/dm365.c
++++ b/arch/arm/mach-davinci/dm365.c
+@@ -1176,6 +1176,7 @@ void __init dm365_init(void)
+ {
+ 	davinci_common_init(&davinci_soc_info_dm365);
+ 	davinci_map_sysmod();
++	davinci_clk_init(&davinci_soc_info_dm365);
+ }
+ 
+ static struct resource dm365_vpss_resources[] = {
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index b4b3a8b..5e672ed 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -932,6 +932,7 @@ void __init dm644x_init(void)
+ {
+ 	davinci_common_init(&davinci_soc_info_dm644x);
+ 	davinci_map_sysmod();
++	davinci_clk_init(&davinci_soc_info_dm644x);
+ }
+ 
+ int __init dm644x_init_video(struct vpfe_config *vpfe_cfg,
+diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
+index a43db0f..2840263 100644
+--- a/arch/arm/mach-davinci/dm646x.c
++++ b/arch/arm/mach-davinci/dm646x.c
+@@ -956,6 +956,7 @@ void __init dm646x_init(void)
+ {
+ 	davinci_common_init(&davinci_soc_info_dm646x);
+ 	davinci_map_sysmod();
++	davinci_clk_init(&davinci_soc_info_dm646x);
+ }
+ 
+ static int __init dm646x_init_devices(void)
 -- 
 1.9.1
