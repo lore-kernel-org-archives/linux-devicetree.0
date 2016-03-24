@@ -1,58 +1,76 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
- supplying SD card
-Date: Thu, 24 Mar 2016 18:33:20 +0900
-Message-ID: <56F3B460.9040306@samsung.com>
-References: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Subject: Re: [PATCH v2 1/8] i2c-mux: add common core data for every mux
+ instance
+Date: Thu, 24 Mar 2016 11:50:38 +0200
+Message-ID: <56F3B86E.4050002@mentor.com>
+References: <1452009438-27347-1-git-send-email-peda@lysator.liu.se>
+ <1452009438-27347-2-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1452009438-27347-2-git-send-email-peda@lysator.liu.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Adriana Reus <adriana.reus@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Nicholas Mc Guire <hofrat@osadl.org>Olli Salonen <oll>
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2016 05:12 PM, Krzysztof Kozlowski wrote:
-> The buck9 regulator of S2MPS11 PMIC had incorrect maximum voltage -
-> lower by 5 mV than specified by datasheet. This buck9 provides power to
-> other regulators, including LDO13 and LDO19 which supply the MMC2 (SD
-> card).
-> 
-> When constraints were applied, the depending regulators were not
-> providing enough power, leading to SD card detection errors:
-> 	mmc1: card never left busy state
-> 	mmc1: error -110 whilst initialising SD card
-> 
-> Fixes: 86a2d2ac5e5d ("ARM: dts: Add dts file for Odroid XU3 board")
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Hi Peter,
 
-Tested-by: Jaehoon Chung <jh80.chung@samsung.com>
+On 05.01.2016 17:57, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
+> 
+> The initial core mux structure starts off small with only the parent
+> adapter pointer, which all muxes have, and a priv pointer for mux
+> driver private data.
+> 
+> Add i2c_mux_alloc function to unify the creation of a mux.
+> 
+> Where appropriate, pass around the mux core structure instead of the
+> parent adapter or the driver private data.
+> 
+> Remove the parent adapter pointer from the driver private data for all
+> mux drivers.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 
-Best Regards,
-Jaehoon Chung
+is it still under review? If yes, please find one question from me below :)
 
-> 
-> ---
-> 
-> The issue can be reproduced on next-20160324 with
-> bae4fdc88d7f7dda1 (regulator: core: Ensure we are at least in bounds for our constraints).
-> ---
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> index 1bd507bfa750..82b2ba632cf6 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> @@ -299,7 +299,7 @@
->  			buck9_reg: BUCK9 {
->  				regulator-name = "vdd_2.8v_ldo";
->  				regulator-min-microvolt = <3000000>;
-> -				regulator-max-microvolt = <3750000>;
-> +				regulator-max-microvolt = <3755000>;
->  				regulator-always-on;
->  				regulator-boot-on;
->  			};
-> 
+[snip]
+
+> @@ -196,21 +195,21 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
+>  		dev_err(dev, "Cannot parse i2c-parent\n");
+>  		return -EINVAL;
+>  	}
+> -	arb->parent = of_get_i2c_adapter_by_node(parent_np);
+> +	muxc->parent = of_find_i2c_adapter_by_node(parent_np);
+
+why do you prefer here to use "unlocked" version of API?
+
+Foe example would it be safe/possible to unload an I2C bus device driver
+module or unbind I2C device itself in runtime?
+
+>  	of_node_put(parent_np);
+> -	if (!arb->parent) {
+> +	if (!muxc->parent) {
+>  		dev_err(dev, "Cannot find parent bus\n");
+>  		return -EPROBE_DEFER;
+>  	}
+>  
+>  	/* Actually add the mux adapter */
+> -	arb->child = i2c_add_mux_adapter(arb->parent, dev, arb, 0, 0, 0,
+> +	arb->child = i2c_add_mux_adapter(muxc, dev, arb, 0, 0, 0,
+>  					 i2c_arbitrator_select,
+>  					 i2c_arbitrator_deselect);
+>  	if (!arb->child) {
+>  		dev_err(dev, "Failed to add adapter\n");
+>  		ret = -ENODEV;
+> -		i2c_put_adapter(arb->parent);
+> +		i2c_put_adapter(muxc->parent);
+>  	}
+>  
+>  	return ret;
+
+--
+With best wishes,
+Vladimir
