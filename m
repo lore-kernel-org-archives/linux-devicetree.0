@@ -1,58 +1,46 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun8i: Base Orange Pi Plus
- dts on the Orange Pi 2 dts
-Date: Thu, 24 Mar 2016 12:15:52 +0100
-Message-ID: <56F3CC68.4010705@redhat.com>
-References: <1458771256-4069-1-git-send-email-hdegoede@redhat.com>
- <20160324075904.GU30977@lukather>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH 3/3] drm: bridge: anx78xx: Add anx78xx bridge driver
+ support.
+Date: Thu, 24 Mar 2016 14:28:18 +0300
+Message-ID: <20160324112818.GC5273@mwanda>
+References: <1458816106-11596-1-git-send-email-enric.balletbo@collabora.com>
+ <1458816106-11596-4-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160324075904.GU30977@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458816106-11596-4-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devel@driverdev.osuosl.org, treding@nvidia.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, airlied@linux.ie, gregkh@linuxfoundation.org, sjoerd.simons@collabora.co.uk, javier@dowhile0.org, span@analogixsemi.com, nathan.chung@mediatek.com, djkurtz@chromium.org, drinkcat@chromium.org, laurent.pinchart@ideasonboard.com, jb.tsai@mediatek.com, cawa.cheng@mediatek.com, eddie.huang@mediatek.com, cjiao@analogixsemi.com, emil.l.velikov@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+On Thu, Mar 24, 2016 at 11:41:46AM +0100, Enric Balletbo i Serra wrote:
+> +	/* Map slave addresses of ANX7814 */
+> +	for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
+> +		anx78xx->i2c_dummy[i] = i2c_new_dummy(client->adapter,
+> +						anx78xx_i2c_addresses[i] >> 1);
+> +		if (!anx78xx->i2c_dummy[i]) {
+> +			DRM_ERROR("Failed to reserve i2c bus %02x.\n",
+> +				  anx78xx_i2c_addresses[i]);
 
-On 24-03-16 08:59, Maxime Ripard wrote:
-> Hi,
->
-> On Wed, Mar 23, 2016 at 11:14:16PM +0100, Hans de Goede wrote:
->> The Orange Pi Plus really is an Orange Pi 2 extended with:
->> 1) A sata <-> usb bridge connected to ehci3
->> 2) An eMMC on mmc2
->> 3) An external gigabit ethernet phy instead of the integrated 100Mbit phy
->>
->> This commit changes the dts to reflect this by making it include
->> the Orange Pi 2 dts and then adding the extra bits.
->>
->> Note that the difference in ethernet phy is not taken into account
->> because we do not have an ethernet driver for the H3 yet.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->
-> Unfortunately, the patch doesn't apply anymore, and the merge doesn't
-> seem trivial.
->
-> I pushed my branch on my kernel.org repo, can you rebase your patch on
-> top and resend it?
+Missing error code here.
 
-The problem is that you forgot to apply:
-"ARM: dts: sun8i: Orangepi plus gpio keys fixes and improvements"
+> +			goto err_i2c;
+> +		}
 
-With that applied this one should apply unchanged too.
+I'm, of course, not a fan of the naming.  The name should be based on
+what the goto location does...  In this case it turns it off.  Which is
+slightly weird because we have not turned it on yet...  I always say
+that you should have multiple error labels and you only undo things
+which have been done.
 
-Regards,
+Having a common exit path for the other functions where it was "goto out"
+makes sense.  But again in those cases I would prefer a meaningful label
+name like "goto unlock;".  In the kernel "goto out;" is meaningless, it
+could do anything or everything or nothing.  A lot of people like it
+of course, but out: label code tends to be buggier than using a
+meaningful name.
 
-Hans
+regards,
+dan carpenter
