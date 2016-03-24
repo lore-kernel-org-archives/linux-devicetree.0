@@ -1,86 +1,116 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 04/12] ARM: dts: dragonboard-600c: add board support with
- serial
-Date: Wed, 23 Mar 2016 18:48:46 -0700
-Message-ID: <56F3477E.8090205@codeaurora.org>
-References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762442-9492-1-git-send-email-srinivas.kandagatla@linaro.org>
- <56F2F78E.8050002@codeaurora.org> <56F2FCD0.1000708@linaro.org>
- <CAOCOHw7TyzDf4jvAMChOFFEgsL4Z1+CcESLOuckT=Q7W9hQvCw@mail.gmail.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX
+ settings
+Date: Thu, 24 Mar 2016 10:21:17 +0800
+Message-ID: <20160324022117.GA5301@peterchendt>
+References: <20160318211936.GA4158@rob-hp-laptop>
+ <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
+ <20160323043638.GA18462@peterchendt>
+ <56F2D43D.1040404@timesys.com>
+ <56F2DDB7.7070700@timesys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOCOHw7TyzDf4jvAMChOFFEgsL4Z1+CcESLOuckT=Q7W9hQvCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56F2DDB7.7070700-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/23/2016 06:04 PM, Bjorn Andersson wrote:
-> On Wed, Mar 23, 2016 at 1:30 PM, Srinivas Kandagatla
-> <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>
->> On 23/03/16 20:07, Stephen Boyd wrote:
->>> On 03/23/2016 12:47 PM, Srinivas Kandagatla wrote:
->>>> diff --git a/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->>>> b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->>>> new file mode 100644
->>>> index 0000000..e96aab6
->>>> --- /dev/null
->>>> +++ b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->>>> @@ -0,0 +1,36 @@
->>>> +#include "qcom-apq8064-v2.0.dtsi"
->>>> +
->>>> +/ {
->>>> +       model = "Qualcomm Technologies, Inc. APQ8064 DragonBoard600c";
->>>> +       compatible = "qcom,apq8064-dragonboard600c", "qcom,apq8064";
->>>
->>> Does the bootloader look at this string at all or is it using appended
->>> DTB design? I'm mostly worried about having that
->> Not at least on APQ8064 bootloaders, as they are still missing DT support.
->> Currently we append dtb to the kernel.
->>> qcom,apq8064-dragonboard600c part. It should probably be
->>> qcom,apq8064-sbc or something like that instead.
->> Will do that in next version.
->>
-> This "sbc" isn't that just the abbreviation for "single board
-> computer"? I find it hard to believe this is _the_ 8064 sbc or the
-> only 8064 sbc.
+On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
+> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
+> >On 03/23/2016 12:36 AM, Peter Chen wrote:
+> >>On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
+> >>>The TX settings can be calibrated for particular hardware.  The
+> >>>phy is reset by Linux, so this cannot be handled by the bootloader.
+> >>>
+> >>>The TRM mentions that the maximum resistance should be used for the
+> >>>DN/DP calibration in order to pass USB certification.
+> >>>
+> >>>The values for the TX registers are poorly described in the TRM.
+> >>>The meanings of the register values were taken from another
+> >>>Freescale-provided document:
+> >>>https://community.freescale.com/message/566147#comment-566912
+> >>>
+> >>>Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> >>>---
+> >>>v3. Added unit suffix (-ohms) to tx-cal-45-d*
+> >>>
+> >>>v2. Copying devicetree list
+> >>>     Removed prettifying extra whitespace
+> >>>     Removed unnecessary register rewrite on resume
+> >>>     Use min and max constants for clarity
+> >>>
+> >>>  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+> >>>  drivers/usb/phy/phy-mxs-usb.c                      |   58
+> >>>++++++++++++++++++++
+> >>>  2 files changed, 68 insertions(+)
+> >>>
+> >>>diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>index 379b84a..1d25b04 100644
+> >>>--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>+++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >>>@@ -12,6 +12,16 @@ Required properties:
+> >>>  - interrupts: Should contain phy interrupt
+> >>>  - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
+> >>>series
+> >>>
+> >>>+
+> >>>+    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
+> >>>+        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
+> >>>+        /* scale to 4-bit value */
+> >>>+        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
+> >>>+            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
+> >>>+        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
+> >>>+        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
+> >>>+    }
+> >>>+
+> >>
+> >>I have tested "tx-d-cal", but it seems incorrect according to the xls you
+> >>have provided, would you please check it again or am I wrong?
+> >
+> >Gah! You're right. Some of the D_CAL values need to be rounded up to
+> >match the xls.  And even then, the value for 86 still doesn't play nice.
+> >  I was really hoping to avoid using a table for these values.
+> >
+> >The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
+> >possible register values and so are unaffected by a similar issue.  I
+> >rechecked their numbers just to be sure.
+> 
+> The solution looks to be to scale D_CAL starting from 80 instead of
+> 79.  If you look at the xls listing, the jump from 79 to 83 is the
+> only time two adjacent register values result in a change greater
+> than 2% or 3%.
+> 
+> This will result in some code ugliness as the minimum allowed
+> percentage (79), per the Freescale document, and the point at which
+> we are scaling the percentage values to register values (80) are
+> different.
+> 
+> And, as mentioned before, the values will also have to be rounded up.
+> 
+> This quick shell code confirms that these sorts of calculations
+> match up with the values in the spreadsheet:
+> 
+> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
+> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
+> d=$((d+1)); done
+> 
+> 
+> I can't find any formula which would hit all of those same
+> percentages without rounding up.
+> 
 
-I don't make up the names, but for other qcom sbc products the
-bootloader is looking for sbc there to make sure it picks the right dtb
-blob. So I guess this is _the_ qcom 8064 sbc? Definitely not _the_ 8064
-sbc though.
-
-If this device won't get those bootloaders that look for this then it
-doesn't really matter and I don't care what this is named. Please take a
-look at Documentation/devicetree/bindings/arm/qcom.txt for what I'm
-talking about though.
-
->
-> Also, if I make a product based of this board, with some minor
-> changes, is that still the sbc?
->
-> I think the compatible should be "qcom,apq8064-db600c",
-> "qcom,apq8064-sbc", "qcom,apq8064"
->
->
-
-I really hope that people don't keep using the qcom bootloader dtb
-picking design if they make a new product based off qcom boards with a
-slight variation. They should replace the vendor part of the compatible
-anyway with their own vendor prefix, and then the bootloader would need
-to be updated to look for that string or something else. I really don't
-want to get in the business of updating dtbTool for all the non-qcom
-designs that pop up because they keep using the qcom dtb identification
-scheme. It almost doesn't scale right now and that's just qcom designs.
+Then, we had to use table for it. Besides, IC team confirms the default 
+value and the step for TXCAL45DP/DN are changed at next generation SoCs,
+so I am wondering how we describe it at binding doc.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
-
+Best Regards,
+Peter Chen
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
