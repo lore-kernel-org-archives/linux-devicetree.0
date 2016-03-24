@@ -1,132 +1,92 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v3 3/8] clk: samsung: exynos3250: Add MMC2 clock
-Date: Fri, 25 Mar 2016 08:39:40 +0900
-Message-ID: <56F47ABC.7060006@samsung.com>
-References: <1458027490-13787-1-git-send-email-cw00.choi@samsung.com>
- <1458027490-13787-4-git-send-email-cw00.choi@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1458027490-13787-4-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: k.kozlowski@samsung.com, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: [PATCH v3 00/16] da8xx USB clocks
+Date: Thu, 24 Mar 2016 18:51:25 -0500
+Message-ID: <1458863503-31121-1-git-send-email-david@lechnology.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ping.
+This is a reworking of the v2 series based of feedback and review. There were
+very many suggestions, so hopefully I didn't miss any. Here are the highlights...
 
-Hi Sylwester,
+New stuff:
 
-Could you review this patch?
+* Fixed the davinci device tree declarations to use the preferred DT address
+  convention so that the items I have added can be correct too.
+* Moved that davinci clock init so that we don't have to call ioremap in the
+  clock mux functions.
+* Added a new "syscon" device for the CFGCHIP registers. This is used by the
+  USB PHY driver and will be used in the future in common clock framework
+  drivers.
 
-Regards,
-Chanwoo Choi
+Changed:
 
-On 2016=EB=85=84 03=EC=9B=94 15=EC=9D=BC 16:38, Chanwoo Choi wrote:
-> This patch add the MMC2 clocks (mux, divider, gate) of Exynos3250 SoC=
-=2E
->=20
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  drivers/clk/samsung/clk-exynos3250.c   | 9 +++++++++
->  include/dt-bindings/clock/exynos3250.h | 7 ++++++-
->  2 files changed, 15 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/samsung/clk-exynos3250.c b/drivers/clk/samsu=
-ng/clk-exynos3250.c
-> index bc60e399d1bc..16575ee874cb 100644
-> --- a/drivers/clk/samsung/clk-exynos3250.c
-> +++ b/drivers/clk/samsung/clk-exynos3250.c
-> @@ -302,6 +302,7 @@ static struct samsung_mux_clock mux_clks[] __init=
-data =3D {
-> =20
->  	/* SRC_FSYS */
->  	MUX(CLK_MOUT_TSADC, "mout_tsadc", group_sclk_p, SRC_FSYS, 28, 4),
-> +	MUX(CLK_MOUT_MMC2, "mout_mmc2", group_sclk_p, SRC_FSYS, 8, 4),
->  	MUX(CLK_MOUT_MMC1, "mout_mmc1", group_sclk_p, SRC_FSYS, 4, 4),
->  	MUX(CLK_MOUT_MMC0, "mout_mmc0", group_sclk_p, SRC_FSYS, 0, 4),
-> =20
-> @@ -390,6 +391,11 @@ static struct samsung_div_clock div_clks[] __ini=
-tdata =3D {
->  		CLK_SET_RATE_PARENT, 0),
->  	DIV(CLK_DIV_MMC0, "div_mmc0", "mout_mmc0", DIV_FSYS1, 0, 4),
-> =20
-> +	/* DIV_FSYS2 */
-> +	DIV_F(CLK_DIV_MMC2_PRE, "div_mmc2_pre", "div_mmc2", DIV_FSYS2, 8, 8=
-,
-> +		CLK_SET_RATE_PARENT, 0),
-> +	DIV(CLK_DIV_MMC2, "div_mmc2", "mout_mmc2", DIV_FSYS2, 0, 4),
-> +
->  	/* DIV_PERIL0 */
->  	DIV(CLK_DIV_UART2, "div_uart2", "mout_uart2", DIV_PERIL0, 8, 4),
->  	DIV(CLK_DIV_UART1, "div_uart1", "mout_uart1", DIV_PERIL0, 4, 4),
-> @@ -540,6 +546,8 @@ static struct samsung_gate_clock gate_clks[] __in=
-itdata =3D {
->  		GATE_SCLK_FSYS, 9, CLK_SET_RATE_PARENT, 0),
->  	GATE(CLK_SCLK_EBI, "sclk_ebi", "div_ebi",
->  		GATE_SCLK_FSYS, 6, CLK_SET_RATE_PARENT, 0),
-> +	GATE(CLK_SCLK_MMC2, "sclk_mmc2", "div_mmc2_pre",
-> +		GATE_SCLK_FSYS, 2, CLK_SET_RATE_PARENT, 0),
->  	GATE(CLK_SCLK_MMC1, "sclk_mmc1", "div_mmc1_pre",
->  		GATE_SCLK_FSYS, 1, CLK_SET_RATE_PARENT, 0),
->  	GATE(CLK_SCLK_MMC0, "sclk_mmc0", "div_mmc0_pre",
-> @@ -635,6 +643,7 @@ static struct samsung_gate_clock gate_clks[] __in=
-itdata =3D {
->  	GATE(CLK_USBOTG, "usbotg", "div_aclk_200", GATE_IP_FSYS, 13, 0, 0),
->  	GATE(CLK_USBHOST, "usbhost", "div_aclk_200", GATE_IP_FSYS, 12, 0, 0=
-),
->  	GATE(CLK_SROMC, "sromc", "div_aclk_200", GATE_IP_FSYS, 11, 0, 0),
-> +	GATE(CLK_SDMMC2, "sdmmc2", "div_aclk_200", GATE_IP_FSYS, 7, 0, 0),
->  	GATE(CLK_SDMMC1, "sdmmc1", "div_aclk_200", GATE_IP_FSYS, 6, 0, 0),
->  	GATE(CLK_SDMMC0, "sdmmc0", "div_aclk_200", GATE_IP_FSYS, 5, 0, 0),
->  	GATE(CLK_PDMA1, "pdma1", "div_aclk_200", GATE_IP_FSYS, 1, 0, 0),
-> diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bind=
-ings/clock/exynos3250.h
-> index ddb874130d86..c796ff02ceeb 100644
-> --- a/include/dt-bindings/clock/exynos3250.h
-> +++ b/include/dt-bindings/clock/exynos3250.h
-> @@ -80,6 +80,7 @@
->  #define CLK_MOUT_APLL			59
->  #define CLK_MOUT_ACLK_266_SUB		60
->  #define CLK_MOUT_UART2			61
-> +#define CLK_MOUT_MMC2			62
-> =20
->  /* Dividers */
->  #define CLK_DIV_GPL			64
-> @@ -129,6 +130,8 @@
->  #define CLK_DIV_HPM			108
->  #define CLK_DIV_COPY			109
->  #define CLK_DIV_UART2			110
-> +#define CLK_DIV_MMC2_PRE		111
-> +#define CLK_DIV_MMC2			112
-> =20
->  /* Gates */
->  #define CLK_ASYNC_G3D			128
-> @@ -226,6 +229,7 @@
->  #define CLK_BLOCK_CAM			220
->  #define CLK_SMIES			221
->  #define CLK_UART2			222
-> +#define CLK_SDMMC2			223
-> =20
->  /* Special clocks */
->  #define CLK_SCLK_JPEG			224
-> @@ -253,12 +257,13 @@
->  #define CLK_SCLK_UART1			246
->  #define CLK_SCLK_UART0			247
->  #define CLK_SCLK_UART2			248
-> +#define CLK_SCLK_MMC2			249
-> =20
->  /*
->   * Total number of clocks of main CMU.
->   * NOTE: Must be equal to last clock ID increased by one.
->   */
-> -#define CLK_NR_CLKS			249
-> +#define CLK_NR_CLKS			250
-> =20
->  /*
->   * CMU DMC
->=20
+* USB clocks are moved to a common file instead of having duplicated code.
+* PHY driver uses syscon for CFGCHIP registers instead of using them directly.
+
+David Lechner (16):
+  dt: davinci: use proper address after @
+  mfd: da8xx-cfgchip: New header file for CFGCHIP registers.
+  ARM: davinici: da8xx: move usb code to new file
+  ARM: davinci: Move clock init after ioremap.
+  ARM: davinci: add set_parent callback for mux clocks
+  ARM: davinci: da850: use clk->set_parent for async3
+  ARM: davinci: da8xx: add usb phy clocks
+  dt-bindings: Add bindings for phy-da8xx-usb
+  phy: da8xx-usb: new driver for DA8xx SoC USB PHY
+  ARM: davinci: da8xx: Add CFGCHIPn syscon platform declaration.
+  ARM: davinci: da8xx: Add USB PHY platform declaration
+  ARM: dt: da850: Add cfgchip syscon node
+  ARM: dt: da850: Add usb phy node
+  usb: ohci-da8xx: Remove code that references mach
+  usb: musb: da8xx: Use devm in probe
+  usb: musb: da8xx: Remove mach code
+
+ .../devicetree/bindings/phy/phy-da8xx-usb.txt      |  40 +++
+ arch/arm/boot/dts/da850-enbw-cmc.dts               |   8 +-
+ arch/arm/boot/dts/da850-evm.dts                    |  26 +-
+ arch/arm/boot/dts/da850.dtsi                       |  61 ++--
+ arch/arm/mach-davinci/Makefile                     |   4 +-
+ arch/arm/mach-davinci/board-da830-evm.c            |  52 ++-
+ arch/arm/mach-davinci/board-da850-evm.c            |   4 +
+ arch/arm/mach-davinci/board-mityomapl138.c         |   4 +
+ arch/arm/mach-davinci/board-omapl138-hawk.c        |  23 +-
+ arch/arm/mach-davinci/clock.c                      |  21 +-
+ arch/arm/mach-davinci/clock.h                      |   8 +-
+ arch/arm/mach-davinci/common.c                     |   6 -
+ arch/arm/mach-davinci/da830.c                      |   2 +
+ arch/arm/mach-davinci/da850.c                      |  84 +++--
+ arch/arm/mach-davinci/devices-da8xx.c              |  28 ++
+ arch/arm/mach-davinci/dm355.c                      |   1 +
+ arch/arm/mach-davinci/dm365.c                      |   1 +
+ arch/arm/mach-davinci/dm644x.c                     |   1 +
+ arch/arm/mach-davinci/dm646x.c                     |   1 +
+ arch/arm/mach-davinci/include/mach/da8xx.h         |   6 +
+ arch/arm/mach-davinci/usb-da8xx.c                  | 351 +++++++++++++++++++++
+ arch/arm/mach-davinci/usb.c                        |  74 +----
+ drivers/phy/Kconfig                                |  10 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-da8xx-usb.c                        | 249 +++++++++++++++
+ drivers/usb/host/Kconfig                           |   1 +
+ drivers/usb/host/ohci-da8xx.c                      | 102 +++---
+ drivers/usb/musb/Kconfig                           |   2 +-
+ drivers/usb/musb/da8xx.c                           | 160 +++-------
+ include/linux/mfd/da8xx-cfgchip.h                  | 160 ++++++++++
+ include/linux/phy/phy-da8xx-usb.h                  |  19 ++
+ include/linux/platform_data/usb-davinci.h          |  23 --
+ 32 files changed, 1137 insertions(+), 396 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
+ create mode 100644 arch/arm/mach-davinci/usb-da8xx.c
+ create mode 100644 drivers/phy/phy-da8xx-usb.c
+ create mode 100644 include/linux/mfd/da8xx-cfgchip.h
+ create mode 100644 include/linux/phy/phy-da8xx-usb.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
