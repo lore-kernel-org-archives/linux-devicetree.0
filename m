@@ -1,46 +1,77 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v3 12/16] ARM: dt: da850: Add cfgchip syscon node
-Date: Thu, 24 Mar 2016 18:51:37 -0500
-Message-ID: <1458863503-31121-13-git-send-email-david@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v3 08/16] dt-bindings: Add bindings for phy-da8xx-usb
+Date: Thu, 24 Mar 2016 18:51:33 -0500
+Message-ID: <1458863503-31121-9-git-send-email-david@lechnology.com>
 References: <1458863503-31121-1-git-send-email-david@lechnology.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458863503-31121-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, David.Laight@ACULAB.COM, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a syscon node for the SoC CFGCHIPn registers. This is needed for
-the new usb phy driver.
+Device tree binding for new phy-da8xx-usb driver.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
-v3 changes: This is a new patch.
+v3 changes:
+
+* added cfgchip info and example
+* correct usage of "DA8xx"
+* correct address after @
+* dropped 11 before @ in usb@
 
 
- arch/arm/boot/dts/da850.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/phy/phy-da8xx-usb.txt      | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
 
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 4294849..a360713 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -150,6 +150,10 @@
- 			};
- 
- 		};
-+		cfgchip: cfgchip@1417c {
-+			compatible = "ti,da830-cfgchip", "syscon";
-+			reg = <0x1417c 0x14>;
-+		};
- 		edma0: edma@0 {
- 			compatible = "ti,edma3-tpcc";
- 			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
+diff --git a/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
+new file mode 100644
+index 0000000..684c548
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-da8xx-usb.txt
+@@ -0,0 +1,40 @@
++TI DaVinci DA8xx USB PHY
++
++Required properties:
++ - compatible: must be "ti,da830-usbphy".
++ - #phy-cells: must be 1.
++
++This device controls the PHY for both the USB 1.1 OHCI and USB 2.0 OTG
++controllers on DA8xx SoCs. Consumers of this device should use index 1 for
++the USB 1.1 phy device and index 2 for the USB 2.0 phy device.
++
++It also requires a "syscon" node with compatible = "ti,da830-cfgchip", "syscon"
++to access the CFGCHIP2 register.
++
++Example:
++
++	cfgchip: cfgchip@1417c {
++		compatible = "ti,da830-cfgchip", "syscon";
++		reg = <0x1417c 0x14>;
++	};
++
++	usbphy: usbphy {
++		compatible = "ti,da830-usbphy";
++		#phy-cells = <1>;
++	};
++
++	usb11: usb@225000 {
++		compatible = "ti,da830-ohci";
++		reg = <0x225000 0x1000>;
++		interrupts = <59>;
++		phys = <&usbphy 1>;
++		phy-names = "usbphy";
++	};
++
++	usb20: usb@200000 {
++		compatible = "ti,da830-musb";
++		reg = <0x200000 0x1000>;
++		interrupts = <58>;
++		phys = <&usbphy 2>;
++		phy-names = "usbphy";
++	};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
