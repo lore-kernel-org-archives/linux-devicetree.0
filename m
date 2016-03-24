@@ -1,50 +1,47 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v6 1/4] dt-bindings: power: reset: add document for
- reboot-mode driver
-Date: Thu, 24 Mar 2016 16:47:52 +0900
-Message-ID: <56F39BA8.30104@samsung.com>
-References: <1458646525-491-1-git-send-email-andy.yan@rock-chips.com>
- <1458646592-540-1-git-send-email-andy.yan@rock-chips.com>
- <CAJKOXPdUW5f6_sz14NMU8LP+QoKStB9omXticMkQX4D866okWw@mail.gmail.com>
- <56F396FB.8030402@rock-chips.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/8] ARM: dts :sun7i: Add SPDIF TX pin to
+ the A20
+Date: Thu, 24 Mar 2016 08:51:09 +0100
+Message-ID: <20160324075109.GO30977@lukather>
+References: <1458590466-12572-1-git-send-email-codekipper@gmail.com>
+ <1458590466-12572-3-git-send-email-codekipper@gmail.com>
+ <CAGb2v64VRrM-_AAt5Xbgxc4y+-3-=mPWvuQubrHjmufUAKUA+w@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <56F396FB.8030402@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: robh+dt@kernel.org, sre@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, olof@lixom.net, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, matthias.bgg@gmail.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, mbrugger@suse.com, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, wxt@rock-chips.com, dwmw2@infradead.org, mark.rutland@arm.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vAlDtAs5WEb1aNYe"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB3VYZ23QKGQEEQAEQHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64VRrM-_AAt5Xbgxc4y+-3-=mPWvuQubrHjmufUAKUA+w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Code Kipper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24.03.2016 16:27, Andy Yan wrote:
->>> +- mode-normal: Normal reboot mode, system reboot with command "reboot".
->>> +- mode-recovery: Android Recovery mode, it is a mode to format the
->>> device or update a new image.
->>> +- mode-bootloader: Android fastboot mode, it's a mode to re-flash
->>> partitions on the Android based device.
->>> +- mode-loader: A bootloader mode, it's a mode used to download image
->>> on Rockchip platform,
->>> +              usually used in development.
->> The "bootloader" and "loader" examples are very confusing. Maybe just
->> name the first one as "mode-fastboot" and second as
->> "rockchip-download"? The term "loader" does not look for me as
->> anything related to uploading/downloading new firmware.
+--vAlDtAs5WEb1aNYe
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Wed, Mar 23, 2016 at 06:28:09PM +0800, Chen-Yu Tsai wrote:
+> On Tue, Mar 22, 2016 at 4:01 AM,  <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
->     About these two modes, we have a long discussion with Rob and John [0]
->     We keep them as what you see now to keep compatibility with exiting
-> devices.
-> 
->  [0] https://lkml.org/lkml/2016/2/2/128
+> nit: space should be after colon, not after dts, in subject.
+> Same for the RX pin patch.
 
-To me these names are non-obvious and I would rather expect choosing
-meaningful names when putting something into the mainline. The user
-(Android) will use this mainline kernel release in a year or more (3
-years for vendors?), so it will have plenty of time to adopt. :)
+I just fixed it.
 
-But this was already discussed and you got ack from Rob, so let's move
-on. I don't mind.
+Thanks!
+Maxime
 
-Best regards,
-Krzysztof
-
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--vAlDtAs5WEb1aNYe--
