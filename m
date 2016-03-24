@@ -1,47 +1,40 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 02/18] dt-bindings: timer: sp804: add new compatible for
- OX810SE SoC
-Date: Thu, 24 Mar 2016 17:49:59 +0100
-Message-ID: <1458838215-23314-3-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 16/18] dt-bindings: Add OXNAS bindings
+Date: Thu, 24 Mar 2016 17:50:13 +0100
+Message-ID: <1458838215-23314-17-git-send-email-narmstrong@baylibre.com>
 References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, rmk+kernel@arm.linux.org.uk, sudeep.holla@arm.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add new oxsemi,ox810se-rps-timer compatible string to support the
-PLX Technology OX810SE SoC Dual Timers variant.
-
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/timer/arm,sp804.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/oxnas.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/oxnas.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/arm,sp804.txt b/Documentation/devicetree/bindings/timer/arm,sp804.txt
-index 5cd8eee7..ebe8753 100644
---- a/Documentation/devicetree/bindings/timer/arm,sp804.txt
-+++ b/Documentation/devicetree/bindings/timer/arm,sp804.txt
-@@ -2,7 +2,7 @@ ARM sp804 Dual Timers
- ---------------------------------------
- 
- Required properties:
--- compatible: Should be "arm,sp804" & "arm,primecell"
-+- compatible: Should be "arm,sp804" & "arm,primecell", or "oxsemi,ox810se-rps-timer"
- - interrupts: Should contain the list of Dual Timer interrupts. This is the
- 	interrupt for timer 1 and timer 2. In the case of a single entry, it is
- 	the combined interrupt or if "arm,sp804-has-irq" is present that
+diff --git a/Documentation/devicetree/bindings/arm/oxnas.txt b/Documentation/devicetree/bindings/arm/oxnas.txt
+new file mode 100644
+index 0000000..f3567c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/oxnas.txt
+@@ -0,0 +1,9 @@
++PLX Technology OXNAS SoCs Family device tree bindings
++-------------------------------------------
++
++Boards with the OX810SE SoC shall have the following properties:
++  Required root node property:
++    compatible: "oxsemi,ox810se"
++
++Board compatible values:
++  - "wd,mbwe" (OX810SE)
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
