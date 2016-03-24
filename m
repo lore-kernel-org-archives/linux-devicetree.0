@@ -1,116 +1,151 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX
- settings
-Date: Thu, 24 Mar 2016 10:21:17 +0800
-Message-ID: <20160324022117.GA5301@peterchendt>
-References: <20160318211936.GA4158@rob-hp-laptop>
- <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
- <20160323043638.GA18462@peterchendt>
- <56F2D43D.1040404@timesys.com>
- <56F2DDB7.7070700@timesys.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] dt-bindings: power: reset: add document for
+ reboot-mode driver
+Date: Thu, 24 Mar 2016 11:27:34 +0900
+Message-ID: <CAJKOXPdUW5f6_sz14NMU8LP+QoKStB9omXticMkQX4D866okWw@mail.gmail.com>
+References: <1458646525-491-1-git-send-email-andy.yan@rock-chips.com>
+	<1458646592-540-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56F2DDB7.7070700-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458646592-540-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mbrugger-IBi9RG/b67k@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
-> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
-> >On 03/23/2016 12:36 AM, Peter Chen wrote:
-> >>On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
-> >>>The TX settings can be calibrated for particular hardware.  The
-> >>>phy is reset by Linux, so this cannot be handled by the bootloader.
-> >>>
-> >>>The TRM mentions that the maximum resistance should be used for the
-> >>>DN/DP calibration in order to pass USB certification.
-> >>>
-> >>>The values for the TX registers are poorly described in the TRM.
-> >>>The meanings of the register values were taken from another
-> >>>Freescale-provided document:
-> >>>https://community.freescale.com/message/566147#comment-566912
-> >>>
-> >>>Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-> >>>---
-> >>>v3. Added unit suffix (-ohms) to tx-cal-45-d*
-> >>>
-> >>>v2. Copying devicetree list
-> >>>     Removed prettifying extra whitespace
-> >>>     Removed unnecessary register rewrite on resume
-> >>>     Use min and max constants for clarity
-> >>>
-> >>>  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
-> >>>  drivers/usb/phy/phy-mxs-usb.c                      |   58
-> >>>++++++++++++++++++++
-> >>>  2 files changed, 68 insertions(+)
-> >>>
-> >>>diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>index 379b84a..1d25b04 100644
-> >>>--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>+++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
-> >>>@@ -12,6 +12,16 @@ Required properties:
-> >>>  - interrupts: Should contain phy interrupt
-> >>>  - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
-> >>>series
-> >>>
-> >>>+
-> >>>+    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
-> >>>+        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
-> >>>+        /* scale to 4-bit value */
-> >>>+        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
-> >>>+            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
-> >>>+        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
-> >>>+        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
-> >>>+    }
-> >>>+
-> >>
-> >>I have tested "tx-d-cal", but it seems incorrect according to the xls you
-> >>have provided, would you please check it again or am I wrong?
-> >
-> >Gah! You're right. Some of the D_CAL values need to be rounded up to
-> >match the xls.  And even then, the value for 86 still doesn't play nice.
-> >  I was really hoping to avoid using a table for these values.
-> >
-> >The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
-> >possible register values and so are unaffected by a similar issue.  I
-> >rechecked their numbers just to be sure.
-> 
-> The solution looks to be to scale D_CAL starting from 80 instead of
-> 79.  If you look at the xls listing, the jump from 79 to 83 is the
-> only time two adjacent register values result in a change greater
-> than 2% or 3%.
-> 
-> This will result in some code ugliness as the minimum allowed
-> percentage (79), per the Freescale document, and the point at which
-> we are scaling the percentage values to register values (80) are
-> different.
-> 
-> And, as mentioned before, the values will also have to be rounded up.
-> 
-> This quick shell code confirms that these sorts of calculations
-> match up with the values in the spreadsheet:
-> 
-> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
-> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
-> d=$((d+1)); done
-> 
-> 
-> I can't find any formula which would hit all of those same
-> percentages without rounding up.
-> 
+Interesting idea. While looking at the code I stumped over few things below:
 
-Then, we had to use table for it. Besides, IC team confirms the default 
-value and the step for TXCAL45DP/DN are changed at next generation SoCs,
-so I am wondering how we describe it at binding doc.
+On Tue, Mar 22, 2016 at 8:36 PM, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> add device tree bindings document for reboot-mode driver
 
--- 
-Best Regards,
-Peter Chen
+s/add/Add/
+Plus a full-stop at the end of sentence.
+
+>
+> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> binding
+
+What is that?
+
+>
+> ---
+>
+> Changes in v6:
+> - fix a typo with "property"
+> - describe property "mask" more clear
+>
+> Changes in v5:
+> - delete a unnecessary blank line in syscon-reboot-mode.txt
+> - rename mode-fastoboot to mode-bootloader in syscon-reboot-mode.txt
+> - rename macro BOOT_LOADER to BOOT_BL_DOWNLOAD, which gives a more clear mean
+>
+> Changes in v4:
+> - remove mode-maskrom
+> - rename mode-fastboot to mode-bootloader to keep compatible with the exiting Android device
+>
+> Changes in v3:
+> - descirbe all reboot mode as properity instead of subnode
+>
+> Changes in v2: None
+> Changes in v1: None
+>
+>  .../bindings/power/reset/reboot-mode.txt           | 24 +++++++++++++++
+>  .../bindings/power/reset/syscon-reboot-mode.txt    | 35 ++++++++++++++++++++++
+>  2 files changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+>  create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+>
+> diff --git a/Documentation/devicetree/bindings/power/reset/reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+> new file mode 100644
+> index 0000000..3457949
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/reboot-mode.txt
+> @@ -0,0 +1,24 @@
+> +Generic reboot mode core map driver
+> +
+> +This driver get reboot mode arguments and call the write
+> +interface to stores the magic value in special register
+s/stores/store/
+> +or ram . Then the bootloader can read it and take different
+
+s/ram ./ram./
+
+> +action according the argument stored.
+
+according to
+
+> +
+> +All mode properties are vendor specific, it is a indication to tell
+> +the bootloder what to do when the system reboot, and should be named
+
+s/bootloder/bootloader/
+s/reboot/reboots/
+
+> +as mode-xxx = <magic> (xxx is mode name).
+> +
+
+These are examples? If yes then add a note, like:
+
++For example modes common on Android platform:
+
+> +- mode-normal: Normal reboot mode, system reboot with command "reboot".
+> +- mode-recovery: Android Recovery mode, it is a mode to format the device or update a new image.
+> +- mode-bootloader: Android fastboot mode, it's a mode to re-flash partitions on the Android based device.
+> +- mode-loader: A bootloader mode, it's a mode used to download image on Rockchip platform,
+> +              usually used in development.
+
+The "bootloader" and "loader" examples are very confusing. Maybe just
+name the first one as "mode-fastboot" and second as
+"rockchip-download"? The term "loader" does not look for me as
+anything related to uploading/downloading new firmware.
+
+> +
+> +Example:
+> +       reboot-mode {
+> +               mode-normal = <BOOT_NORMAL>;
+> +               mode-recovery = <BOOT_RECOVERY>;
+> +               mode-bootloader = <BOOT_FASTBOOT>;
+> +               mode-loader = <BOOT_BL_DOWNLOAD>;
+> +       }
+> diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+> new file mode 100644
+> index 0000000..eb28469
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot-mode.txt
+> @@ -0,0 +1,35 @@
+> +SYSCON reboot mode driver
+> +
+> +This driver get reboot mode magic value form reboot-mode driver
+
+s/get/gets/
+
+> +and stores it in a SYSCON mapped register. Then the bootloader
+> +can read it and take different action according to the magic
+> +value stored.
+> +
+> +This DT node should be represented as a sub-node of a "syscon", "simple-mfd"
+> +node.
+> +
+> +Required properties:
+> +- compatible: should be "syscon-reboot-mode"
+> +- offset: offset in the register map for the storage register (in bytes)
+> +
+> +Optional property:
+> +- mask: bits mask of the bits in the register to store the reboot mode magic value,
+> +  default set to 0xffffffff if missing.
+> +
+> +The rest of the properties should follow the generic reboot-mode discription
+
+s/discription/description/
+
+Please, run the spell check...
+
+Best regards,
+Krzysztof
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
