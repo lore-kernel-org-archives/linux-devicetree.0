@@ -1,80 +1,349 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v3 05/16] ARM: davinci: add set_parent callback for mux clocks
-Date: Thu, 24 Mar 2016 18:51:30 -0500
-Message-ID: <1458863503-31121-6-git-send-email-david@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v3 01/16] dt: davinci: use proper address after @
+Date: Thu, 24 Mar 2016 18:51:26 -0500
+Message-ID: <1458863503-31121-2-git-send-email-david@lechnology.com>
 References: <1458863503-31121-1-git-send-email-david@lechnology.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458863503-31121-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, David.Laight@ACULAB.COM, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce a set_parent callback that will be used for mux clocks, such as
-the USB PHY muxes and the async3 clock domain mux.
+TI has been using the physical address in DT after the @ in device nodes.
+The device tree convention is to use the same address that is used for
+the reg property. This updates all davinci DT files to use the proper
+convention.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
-v3 changes: none.
+v3 changes: This is a new patch.
 
 
- arch/arm/mach-davinci/clock.c | 17 ++++++++++++++++-
- arch/arm/mach-davinci/clock.h |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/da850-enbw-cmc.dts |  8 +++---
+ arch/arm/boot/dts/da850-evm.dts      | 26 +++++++++---------
+ arch/arm/boot/dts/da850.dtsi         | 52 ++++++++++++++++++------------------
+ 3 files changed, 43 insertions(+), 43 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/clock.c b/arch/arm/mach-davinci/clock.c
-index a5c2629..dfc2eb3 100644
---- a/arch/arm/mach-davinci/clock.c
-+++ b/arch/arm/mach-davinci/clock.c
-@@ -195,6 +195,13 @@ int clk_set_parent(struct clk *clk, struct clk *parent)
- 		return -EINVAL;
+diff --git a/arch/arm/boot/dts/da850-enbw-cmc.dts b/arch/arm/boot/dts/da850-enbw-cmc.dts
+index 645549e..101d1a1 100644
+--- a/arch/arm/boot/dts/da850-enbw-cmc.dts
++++ b/arch/arm/boot/dts/da850-enbw-cmc.dts
+@@ -16,14 +16,14 @@
+ 	compatible = "enbw,cmc", "ti,da850";
+ 	model = "EnBW CMC";
  
- 	mutex_lock(&clocks_mutex);
-+	if (clk->set_parent) {
-+		int ret = clk->set_parent(clk, parent);
-+		if (ret) {
-+			mutex_unlock(&clocks_mutex);
-+			return ret;
-+		}
-+	}
- 	clk->parent = parent;
- 	list_del_init(&clk->childnode);
- 	list_add(&clk->childnode, &clk->parent->children);
-@@ -224,8 +231,16 @@ int clk_register(struct clk *clk)
+-	soc {
+-		serial0: serial@1c42000 {
++	soc@1c00000 {
++		serial0: serial@42000 {
+ 			status = "okay";
+ 		};
+-		serial1: serial@1d0c000 {
++		serial1: serial@10c000 {
+ 			status = "okay";
+ 		};
+-		serial2: serial@1d0d000 {
++		serial2: serial@10d000 {
+ 			status = "okay";
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index ef061e9..1a15db8 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -14,8 +14,8 @@
+ 	compatible = "ti,da850-evm", "ti,da850";
+ 	model = "DA850/AM1808/OMAP-L138 EVM";
  
- 	mutex_lock(&clocks_mutex);
- 	list_add_tail(&clk->node, &clocks);
--	if (clk->parent)
-+	if (clk->parent) {
-+		if (clk->set_parent) {
-+			int ret = clk->set_parent(clk, clk->parent);
-+			if (ret) {
-+				mutex_unlock(&clocks_mutex);
-+				return ret;
-+			}
-+		}
- 		list_add_tail(&clk->childnode, &clk->parent->children);
-+	}
- 	mutex_unlock(&clocks_mutex);
+-	soc {
+-		pmx_core: pinmux@1c14120 {
++	soc@1c00000 {
++		pmx_core: pinmux@14120 {
+ 			status = "okay";
  
- 	/* If rate is already set, use it */
-diff --git a/arch/arm/mach-davinci/clock.h b/arch/arm/mach-davinci/clock.h
-index 8b0fbbe..96a591f 100644
---- a/arch/arm/mach-davinci/clock.h
-+++ b/arch/arm/mach-davinci/clock.h
-@@ -106,6 +106,7 @@ struct clk {
- 	int (*reset) (struct clk *clk, bool reset);
- 	void (*clk_enable) (struct clk *clk);
- 	void (*clk_disable) (struct clk *clk);
-+	int (*set_parent) (struct clk *clk, struct clk *parent);
- };
+ 			mcasp0_pins: pinmux_mcasp0_pins {
+@@ -30,19 +30,19 @@
+ 				>;
+ 			};
+ 		};
+-		serial0: serial@1c42000 {
++		serial0: serial@42000 {
+ 			status = "okay";
+ 		};
+-		serial1: serial@1d0c000 {
++		serial1: serial@10c000 {
+ 			status = "okay";
+ 		};
+-		serial2: serial@1d0d000 {
++		serial2: serial@10d000 {
+ 			status = "okay";
+ 		};
+-		rtc0: rtc@1c23000 {
++		rtc0: rtc@23000 {
+ 			status = "okay";
+ 		};
+-		i2c0: i2c@1c22000 {
++		i2c0: i2c@22000 {
+ 			status = "okay";
+ 			clock-frequency = <100000>;
+ 			pinctrl-names = "default";
+@@ -66,17 +66,17 @@
+ 			};
  
- /* Clock flags: SoC-specific flags start at BIT(16) */
+ 		};
+-		wdt: wdt@1c21000 {
++		wdt: wdt@21000 {
+ 			status = "okay";
+ 		};
+-		mmc0: mmc@1c40000 {
++		mmc0: mmc@40000 {
+ 			max-frequency = <50000000>;
+ 			bus-width = <4>;
+ 			status = "okay";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&mmc0_pins>;
+ 		};
+-		spi1: spi@1f0e000 {
++		spi1: spi@30e000 {
+ 			status = "okay";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&spi1_pins &spi1_cs0_pin>;
+@@ -116,18 +116,18 @@
+ 				};
+ 			};
+ 		};
+-		mdio: mdio@1e24000 {
++		mdio: mdio@224000 {
+ 			status = "okay";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&mdio_pins>;
+ 			bus_freq = <2200000>;
+ 		};
+-		eth0: ethernet@1e20000 {
++		eth0: ethernet@220000 {
+ 			status = "okay";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&mii_pins>;
+ 		};
+-		gpio: gpio@1e26000 {
++		gpio: gpio@226000 {
+ 			status = "okay";
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 226cda7..4294849 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -15,7 +15,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+-		intc: interrupt-controller {
++		intc: interrupt-controller@fffee000 {
+ 			compatible = "ti,cp-intc";
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
+@@ -23,7 +23,7 @@
+ 			reg = <0xfffee000 0x2000>;
+ 		};
+ 	};
+-	soc {
++	soc@1c00000 {
+ 		compatible = "simple-bus";
+ 		model = "da850";
+ 		#address-cells = <1>;
+@@ -31,7 +31,7 @@
+ 		ranges = <0x0 0x01c00000 0x400000>;
+ 		interrupt-parent = <&intc>;
+ 
+-		pmx_core: pinmux@1c14120 {
++		pmx_core: pinmux@14120 {
+ 			compatible = "pinctrl-single";
+ 			reg = <0x14120 0x50>;
+ 			#address-cells = <1>;
+@@ -150,7 +150,7 @@
+ 			};
+ 
+ 		};
+-		edma0: edma@01c00000 {
++		edma0: edma@0 {
+ 			compatible = "ti,edma3-tpcc";
+ 			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
+ 			reg =	<0x0 0x8000>;
+@@ -161,19 +161,19 @@
+ 
+ 			ti,tptcs = <&edma0_tptc0 7>, <&edma0_tptc1 0>;
+ 		};
+-		edma0_tptc0: tptc@01c08000 {
++		edma0_tptc0: tptc@8000 {
+ 			compatible = "ti,edma3-tptc";
+ 			reg =	<0x8000 0x400>;
+ 			interrupts = <13>;
+ 			interrupt-names = "edm3_tcerrint";
+ 		};
+-		edma0_tptc1: tptc@01c08400 {
++		edma0_tptc1: tptc@8400 {
+ 			compatible = "ti,edma3-tptc";
+ 			reg =	<0x8400 0x400>;
+ 			interrupts = <32>;
+ 			interrupt-names = "edm3_tcerrint";
+ 		};
+-		edma1: edma@01e30000 {
++		edma1: edma@230000 {
+ 			compatible = "ti,edma3-tpcc";
+ 			/* eDMA3 CC1: 0x01e3 0000 - 0x01e3 7fff */
+ 			reg =	<0x230000 0x8000>;
+@@ -184,41 +184,41 @@
+ 
+ 			ti,tptcs = <&edma1_tptc0 7>;
+ 		};
+-		edma1_tptc0: tptc@01e38000 {
++		edma1_tptc0: tptc@238000 {
+ 			compatible = "ti,edma3-tptc";
+ 			reg =	<0x238000 0x400>;
+ 			interrupts = <95>;
+ 			interrupt-names = "edm3_tcerrint";
+ 		};
+-		serial0: serial@1c42000 {
++		serial0: serial@42000 {
+ 			compatible = "ns16550a";
+ 			reg = <0x42000 0x100>;
+ 			reg-shift = <2>;
+ 			interrupts = <25>;
+ 			status = "disabled";
+ 		};
+-		serial1: serial@1d0c000 {
++		serial1: serial@10c000 {
+ 			compatible = "ns16550a";
+ 			reg = <0x10c000 0x100>;
+ 			reg-shift = <2>;
+ 			interrupts = <53>;
+ 			status = "disabled";
+ 		};
+-		serial2: serial@1d0d000 {
++		serial2: serial@10d000 {
+ 			compatible = "ns16550a";
+ 			reg = <0x10d000 0x100>;
+ 			reg-shift = <2>;
+ 			interrupts = <61>;
+ 			status = "disabled";
+ 		};
+-		rtc0: rtc@1c23000 {
++		rtc0: rtc@23000 {
+ 			compatible = "ti,da830-rtc";
+ 			reg = <0x23000 0x1000>;
+ 			interrupts = <19
+ 				      19>;
+ 			status = "disabled";
+ 		};
+-		i2c0: i2c@1c22000 {
++		i2c0: i2c@22000 {
+ 			compatible = "ti,davinci-i2c";
+ 			reg = <0x22000 0x1000>;
+ 			interrupts = <15>;
+@@ -226,12 +226,12 @@
+ 			#size-cells = <0>;
+ 			status = "disabled";
+ 		};
+-		wdt: wdt@1c21000 {
++		wdt: wdt@21000 {
+ 			compatible = "ti,davinci-wdt";
+ 			reg = <0x21000 0x1000>;
+ 			status = "disabled";
+ 		};
+-		mmc0: mmc@1c40000 {
++		mmc0: mmc@40000 {
+ 			compatible = "ti,da830-mmc";
+ 			reg = <0x40000 0x1000>;
+ 			interrupts = <16>;
+@@ -239,7 +239,7 @@
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+-		mmc1: mmc@1e1b000 {
++		mmc1: mmc@21b000 {
+ 			compatible = "ti,da830-mmc";
+ 			reg = <0x21b000 0x1000>;
+ 			interrupts = <72>;
+@@ -247,37 +247,37 @@
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+-		ehrpwm0: ehrpwm@01f00000 {
++		ehrpwm0: ehrpwm@300000 {
+ 			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
+ 			#pwm-cells = <3>;
+ 			reg = <0x300000 0x2000>;
+ 			status = "disabled";
+ 		};
+-		ehrpwm1: ehrpwm@01f02000 {
++		ehrpwm1: ehrpwm@302000 {
+ 			compatible = "ti,da850-ehrpwm", "ti,am33xx-ehrpwm";
+ 			#pwm-cells = <3>;
+ 			reg = <0x302000 0x2000>;
+ 			status = "disabled";
+ 		};
+-		ecap0: ecap@01f06000 {
++		ecap0: ecap@306000 {
+ 			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x306000 0x80>;
+ 			status = "disabled";
+ 		};
+-		ecap1: ecap@01f07000 {
++		ecap1: ecap@307000 {
+ 			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x307000 0x80>;
+ 			status = "disabled";
+ 		};
+-		ecap2: ecap@01f08000 {
++		ecap2: ecap@308000 {
+ 			compatible = "ti,da850-ecap", "ti,am33xx-ecap";
+ 			#pwm-cells = <3>;
+ 			reg = <0x308000 0x80>;
+ 			status = "disabled";
+ 		};
+-		spi1: spi@1f0e000 {
++		spi1: spi@30e000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			compatible = "ti,da830-spi";
+@@ -289,13 +289,13 @@
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+-		mdio: mdio@1e24000 {
++		mdio: mdio@224000 {
+ 			compatible = "ti,davinci_mdio";
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			reg = <0x224000 0x1000>;
+ 		};
+-		eth0: ethernet@1e20000 {
++		eth0: ethernet@220000 {
+ 			compatible = "ti,davinci-dm6467-emac";
+ 			reg = <0x220000 0x4000>;
+ 			ti,davinci-ctrl-reg-offset = <0x3000>;
+@@ -309,7 +309,7 @@
+ 					36
+ 					>;
+ 		};
+-		gpio: gpio@1e26000 {
++		gpio: gpio@226000 {
+ 			compatible = "ti,dm6441-gpio";
+ 			gpio-controller;
+ 			reg = <0x226000 0x1000>;
+@@ -323,7 +323,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		mcasp0: mcasp@01d00000 {
++		mcasp0: mcasp@100000 {
+ 			compatible = "ti,da830-mcasp-audio";
+ 			reg = <0x100000 0x2000>,
+ 			      <0x102000 0x400000>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
