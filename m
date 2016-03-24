@@ -1,45 +1,30 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/4] Documentation: devicetree: amlogic: Document P20x and ODROID-C2 boards
-Date: Thu, 24 Mar 2016 11:05:13 -0700
-Message-ID: <1458842715-27066-3-git-send-email-khilman@baylibre.com>
-References: <1458842715-27066-1-git-send-email-khilman@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Priit Laes <Priit.Laes-FvMSrs6xSY+ptlylMvRsHA@public.gmane.org>
+Subject: [PATCH 0/2] ARM: sunxi: dt: Add missing DRAM gate clock for simplefb TV output
+Date: Thu, 24 Mar 2016 20:08:38 +0200
+Message-ID: <1458842920-30854-1-git-send-email-Priit.Laes@icefire.ee>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458842715-27066-1-git-send-email-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, afaerber-IBi9RG/b67k@public.gmane.org, carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add compatible strings for Amlogic S905/GXBB based boards: Hardkernel
-ODROID-C2, Amlogic P200 and Amlogic P201.
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Reviewed-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/amlogic.txt | 3 +++
- 1 file changed, 3 insertions(+)
+DRAM gating driver commit for sun[47]i seems to be missing DRAM gate bit 5 for
+simplefb TV output node. Add it.
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Docume=
-ntation/devicetree/bindings/arm/amlogic.txt
-index 8a5122ab19b0..fcc6f6c10803 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -25,3 +25,6 @@ Board compatible values:
-   - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
-   - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
-   - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
-+  - "hardkernel,odroid-c2" (Meson gxbb)
-+  - "amlogic,p200" (Meson gxbb)
-+  - "amlogic,p201" (Meson gxbb)
---=20
-2.7.4
+Priit Laes (2):
+  ARM: sun4i: dt: Enable dram gate 5 (tve0 clock) for simplefb TV output
+  ARM: sun7i: dt: Enable dram gate 5 (tve0 clock) for simplefb TV output
+
+ arch/arm/boot/dts/sun4i-a10.dtsi | 2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+-- 
+2.5.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
