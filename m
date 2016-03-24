@@ -1,76 +1,62 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v5 0/2] power: reset: support for Atmel alternative
- Shutdown Controller
-Date: Thu, 24 Mar 2016 17:52:55 +0100
-Message-ID: <20160324165254.GA31831@earth>
-References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
- <56F27B96.5010406@atmel.com>
- <20160323211144.GA31473@earth>
- <56F3AB12.20701@atmel.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 10/18] dt-bindings: Add PLX Technology OXNAS Standard Clocks bindings
+Date: Thu, 24 Mar 2016 17:50:07 +0100
+Message-ID: <1458838215-23314-11-git-send-email-narmstrong@baylibre.com>
+References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56F3AB12.20701@atmel.com>
+In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
+To: linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, sboyd@codeaurora.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/clock/plxtech,stdclk.txt   | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
 
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Mar 24, 2016 at 09:53:38AM +0100, Nicolas Ferre wrote:
-> Le 23/03/2016 22:11, Sebastian Reichel a =E9crit :
-> > Hi Nicolas,
-> >=20
-> > On Wed, Mar 23, 2016 at 12:18:46PM +0100, Nicolas Ferre wrote:
-> >> Le 16/03/2016 14:19, Nicolas Ferre a =E9crit :
-> >>> This is a series to add driver for a new Atmel Shutdown Controller. T=
-his new IP
-> >>> is extensible and some features will be added later (see the TODO sec=
-tion).
-> >>> Its extensible nature led to write a new binding so that wake-up sour=
-ces can be
-> >>> described easily.
-> >>
-> >> I have the feeling that this series is ready. What do you think?
-> >=20
-> > I have see obvious problems with this series and plan to queue this
->=20
-> I would be reassured if a "not" was actually missing in the sentence
-> above... ;-)
-
-Sorry, it's missing of course (I do not intent to queue stuff with
-obvious problems ;)).
-
--- Sebastian
-
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJW9BtkAAoJENju1/PIO/qaHFcP/3UC6THIg2c6Vafszq0fX2wF
-mK4XX7IoN7HbojX33BaTTVgboSFp8DMvIV3ecugnj5Yo8SdMsjH31K+srw2xz7MQ
-AwSO8MIJ41pmE3K6CriAvhSrepw6jxkGhrO3n+JDjvAKfUSVj4TyAelFxq+N9ofV
-bGKtu5o3bRKakNX62ij3OwN2cR+r8cc5AuBSeyhPLG2KxRaE6F+DkfSyNnt8qlXa
-YXemRk+Bbu4duax2mO2WlPS/Qu+61uBCRrewx6ev7FI+fAiHO7iVgbfyQlKvPSvP
-p3fALJNglxMzJNpHTAGSOwdVi0HSG9IhayQ/XvgnN9o+Ma2RhqXyIky5IBAXO/Qs
-uviQsbHtNCu+lFbp3lhS6GxmHolwxQxoG1ynHOVf/GHcpd4cC8m/U/KcDYee2Ph7
-N+h12O/JUW1JTvCHPiUDlwPLi5UQ9FNTBvQynWHUoWi0A/wYQdM4JZhyPaoBLOmH
-eD/JT87RTGZ5GfQVS0mur1hGf0cSP3CUYvAWkJ2lcY5IDLmDQ2Se+QimtO4c/FVe
-pna/7fIkVzGltrVM9Mn3hDmICG66QGDfeFtU0QUYDWuyDroy+Q7DRIhIelD34VkL
-iGQcP0ZARjg6PvwJGURSfJdvjaotwwgSonqLO8OXXwq9AFA6ffXohw8qb8M1Hyvp
-xYXDGw1hBKGA2x23TYPc
-=alk9
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
+diff --git a/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
+new file mode 100644
+index 0000000..c60b459
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/plxtech,stdclk.txt
+@@ -0,0 +1,35 @@
++PLX Technology OXNAS SoC Family Standard Clocks
++================================================
++
++Please also refer to clock-bindings.txt in this directory for common clock
++bindings usage.
++
++Required properties:
++- compatible: Should be "oxsemi,ox810se-stdclk"
++- #clock-cells: 1, see below
++
++Parent node should have the following properties :
++- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++
++For OX810SE, the clock indices are :
++ - 0: LEON
++ - 1: DMA_SGDMA
++ - 2: CIPHER
++ - 3: SATA
++ - 4: AUDIO
++ - 5: USBMPH
++ - 6: ETHA
++ - 7: PCIA
++ - 8: NAND
++
++example:
++
++sys: sys-ctrl@000000 {
++	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
++	reg = <0x000000 0x100000>;
++
++	stdclk: stdclk {
++		compatible = "oxsemi,ox810se-stdclk";
++		#clock-cells = <1>;
++	};
++};
+-- 
+1.9.1
