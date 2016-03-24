@@ -1,362 +1,48 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 15/18] arm: boot: dts: Add PLX Technology OX810SE dtsi
-Date: Thu, 24 Mar 2016 17:50:12 +0100
-Message-ID: <1458838215-23314-16-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v3 04/18] dt-bindings: irq: arm,
+ versatile-fpga: add compatible string for OX810SE SoC
+Date: Thu, 24 Mar 2016 17:50:01 +0100
+Message-ID: <1458838215-23314-5-git-send-email-narmstrong@baylibre.com>
 References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+Under the OX810SE, this same controller is used as "Reference Peripheral
+Specification" Interrupt Controller, so add new compatible string to support
+the PLX Technology OX810SE SoC Interrupt Controller.
+
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/ox810se.dtsi | 336 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 336 insertions(+)
- create mode 100644 arch/arm/boot/dts/ox810se.dtsi
+ .../devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
-new file mode 100644
-index 0000000..93286e9
---- /dev/null
-+++ b/arch/arm/boot/dts/ox810se.dtsi
-@@ -0,0 +1,336 @@
-+/*
-+ * ox810se.dtsi - Device tree file for Oxford Semiconductor OX810SE SoC
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "oxsemi,ox810se";
-+
-+	cpus {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+
-+		cpu {
-+			device_type = "cpu";
-+			compatible = "arm,arm926ej-s";
-+			clocks = <&armclk>;
-+		};
-+	};
-+
-+	memory {
-+		/* Max 256MB @ 0x48000000 */
-+		reg = <0x48000000 0x10000000>;
-+	};
-+
-+	clocks {
-+		osc: oscillator {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <25000000>;
-+		};
-+
-+		gmacclk: gmacclk {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <125000000>;
-+		};
-+
-+		rpsclk: rpsclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <1>;
-+			clock-mult = <1>;
-+			clocks = <&osc>;
-+		};
-+
-+		pll400: pll400 {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <733333333>;
-+		};
-+
-+		sysclk: sysclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <4>;
-+			clock-mult = <1>;
-+			clocks = <&pll400>;
-+		};
-+
-+		armclk: armclk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+			clocks = <&pll400>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		ranges;
-+		interrupt-parent = <&intc>;
-+
-+		apb-bridge@44000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x44000000 0x1000000>;
-+
-+			pinctrl: pinctrl {
-+				compatible = "oxsemi,ox810se-pinctrl";
-+
-+				/* Regmap for sys registers */
-+				plxtech,sys-ctrl = <&sys>;
-+
-+				pinctrl_uart0: uart0 {
-+					uart0a {
-+						pins = "gpio31";
-+						function = "fct3";
-+					};
-+					uart0b {
-+						pins = "gpio32";
-+						function = "fct3";
-+					};
-+				};
-+
-+				pinctrl_uart0_modem: uart0_modem {
-+					uart0c {
-+						pins = "gpio27";
-+						function = "fct3";
-+					};
-+					uart0d {
-+						pins = "gpio28";
-+						function = "fct3";
-+					};
-+					uart0e {
-+						pins = "gpio29";
-+						function = "fct3";
-+					};
-+					uart0f {
-+						pins = "gpio30";
-+						function = "fct3";
-+					};
-+					uart0g {
-+						pins = "gpio33";
-+						function = "fct3";
-+					};
-+					uart0h {
-+						pins = "gpio34";
-+						function = "fct3";
-+					};
-+				};
-+
-+				pinctrl_uart1: uart1 {
-+					uart1a {
-+						pins = "gpio20";
-+						function = "fct3";
-+					};
-+					uart1b {
-+						pins = "gpio22";
-+						function = "fct3";
-+					};
-+				};
-+
-+				pinctrl_uart1_modem: uart1_modem {
-+					uart1c {
-+						pins = "gpio8";
-+						function = "fct3";
-+					};
-+					uart1d {
-+						pins = "gpio9";
-+						function = "fct3";
-+					};
-+					uart1e {
-+						pins = "gpio23";
-+						function = "fct3";
-+					};
-+					uart1f {
-+						pins = "gpio24";
-+						function = "fct3";
-+					};
-+					uart1g {
-+						pins = "gpio25";
-+						function = "fct3";
-+					};
-+					uart1h {
-+						pins = "gpio26";
-+						function = "fct3";
-+					};
-+				};
-+
-+				pinctrl_uart2: uart2 {
-+					uart2a {
-+						pins = "gpio6";
-+						function = "fct3";
-+					};
-+					uart2b {
-+						pins = "gpio7";
-+						function = "fct3";
-+					};
-+				};
-+
-+				pinctrl_uart2_modem: uart2_modem {
-+					uart2c {
-+						pins = "gpio0";
-+						function = "fct3";
-+					};
-+					uart2d {
-+						pins = "gpio1";
-+						function = "fct3";
-+					};
-+					uart2e {
-+						pins = "gpio2";
-+						function = "fct3";
-+					};
-+					uart2f {
-+						pins = "gpio3";
-+						function = "fct3";
-+					};
-+					uart2g {
-+						pins = "gpio4";
-+						function = "fct3";
-+					};
-+					uart2h {
-+						pins = "gpio5";
-+						function = "fct3";
-+					};
-+				};
-+			};
-+
-+			gpio0: gpio@000000 {
-+				compatible = "oxsemi,ox810se-gpio";
-+				reg = <0x000000 0x100000>;
-+				interrupts = <21>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ngpios = <32>;
-+				plxtech,gpio-bank = <0>;
-+				gpio-ranges = <&pinctrl 0 0 32>;
-+			};
-+
-+			gpio1: gpio@100000 {
-+				compatible = "oxsemi,ox810se-gpio";
-+				reg = <0x100000 0x100000>;
-+				interrupts = <22>;
-+				#gpio-cells = <2>;
-+				gpio-controller;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				ngpios = <3>;
-+				plxtech,gpio-bank = <1>;
-+				gpio-ranges = <&pinctrl 0 32 3>;
-+			};
-+
-+			uart0: serial@200000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x200000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <23>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 17>;
-+			};
-+
-+			uart1: serial@300000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x300000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <24>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 18>;
-+			};
-+
-+			uart2: serial@900000 {
-+			       compatible = "ns16550a";
-+			       reg = <0x900000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <29>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 22>;
-+			};
-+
-+			uart3: serial@a00000 {
-+			       compatible = "ns16550a";
-+			       reg = <0xa00000 0x100000>;
-+			       clocks = <&sysclk>;
-+			       interrupts = <30>;
-+			       reg-shift = <0>;
-+			       fifo-size = <16>;
-+			       reg-io-width = <1>;
-+			       current-speed = <115200>;
-+			       no-loopback-test;
-+			       status = "disabled";
-+			       resets = <&reset 23>;
-+			};
-+		};
-+
-+		apb-bridge@45000000 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "simple-bus";
-+			ranges = <0 0x45000000 0x1000000>;
-+
-+			sys: sys-ctrl@000000 {
-+				compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
-+				reg = <0x000000 0x100000>;
-+
-+				reset: reset-controller {
-+					compatible = "oxsemi,ox810se-reset";
-+					#reset-cells = <1>;
-+				};
-+
-+				stdclk: stdclk {
-+					compatible = "oxsemi,ox810se-stdclk";
-+					#clock-cells = <1>;
-+				};
-+			};
-+
-+			rps@300000 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "simple-bus";
-+				ranges = <0 0x300000 0x100000>;
-+
-+				intc: interrupt-controller@0 {
-+					compatible = "oxsemi,ox810se-rps-irq";
-+					interrupt-controller;
-+					reg = <0 0x200>;
-+					#interrupt-cells = <1>;
-+					valid-mask = <0xFFFFFFFF>;
-+					clear-mask = <0>;
-+				};
-+
-+				timer0: timer@200 {
-+					compatible = "oxsemi,ox810se-rps-timer";
-+					reg = <0x200 0x40>;
-+					clocks = <&rpsclk>;
-+					interrupts = <4 5>;
-+				};
-+			};
-+		};
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
+index c9cf605..2a1d16b 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
+@@ -6,7 +6,7 @@ controllers are OR:ed together and fed to the CPU tile's IRQ input. Each
+ instance can handle up to 32 interrupts.
+ 
+ Required properties:
+-- compatible: "arm,versatile-fpga-irq"
++- compatible: "arm,versatile-fpga-irq" or "oxsemi,ox810se-rps-irq"
+ - interrupt-controller: Identifies the node as an interrupt controller
+ - #interrupt-cells: The number of cells to define the interrupts.  Must be 1
+   as the FPGA IRQ controller has no configuration options for interrupt
 -- 
 1.9.1
