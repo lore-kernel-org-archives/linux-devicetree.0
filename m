@@ -1,136 +1,58 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v2] Input: rotary_encoder - support binary encoding of states
-Date: Thu, 24 Mar 2016 08:57:12 +0100
-Message-ID: <1458806232-22403-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: Base Orange Pi Plus dts on
+ the Orange Pi 2 dts
+Date: Thu, 24 Mar 2016 08:59:04 +0100
+Message-ID: <20160324075904.GU30977@lukather>
+References: <1458771256-4069-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Rojhalat Ibrahim <imr@rtschenk.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, kernel@pengutronix.de, Daniel Mack <daniel@zonque.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NpqO7Ye/LGWn1vXh"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSN4Z23QKGQE3YCD2DA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1458771256-4069-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It's not advisable to use this encoding, but to support existing device=
-s
-add support for this to the driver.
+--NpqO7Ye/LGWn1vXh
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
+Hi,
 
-Notes:
-    Changes since (implicit) v1, sent with
-    Message-Id: 1458680914-4533-1-git-send-email-u.kleine-koenig@pengut=
-ronix.de
-   =20
-     - switch format of dt properties to use strings
+On Wed, Mar 23, 2016 at 11:14:16PM +0100, Hans de Goede wrote:
+> The Orange Pi Plus really is an Orange Pi 2 extended with:
+> 1) A sata <-> usb bridge connected to ehci3
+> 2) An eMMC on mmc2
+> 3) An external gigabit ethernet phy instead of the integrated 100Mbit phy
+> 
+> This commit changes the dts to reflect this by making it include
+> the Orange Pi 2 dts and then adding the extra bits.
+> 
+> Note that the difference in ethernet phy is not taken into account
+> because we do not have an ethernet driver for the H3 yet.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
- .../devicetree/bindings/input/rotary-encoder.txt   |  4 ++++
- drivers/input/misc/rotary_encoder.c                | 22 ++++++++++++++=
-+++++---
- 2 files changed, 23 insertions(+), 3 deletions(-)
+Unfortunately, the patch doesn't apply anymore, and the merge doesn't
+seem trivial.
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt=
- b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index 6c9f0c8a846c..e85ce3dea480 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -20,6 +20,8 @@ Optional properties:
-   2: Half-period mode
-   4: Quarter-period mode
- - wakeup-source: Boolean, rotary encoder can wake up the system.
-+- rotary-encoder,encoding: String, the method used to encode steps.
-+  Supported are "gray" (the default and more common) and "binary".
-=20
- Deprecated properties:
- - rotary-encoder,half-period: Makes the driver work on half-period mod=
-e.
-@@ -34,6 +36,7 @@ Example:
- 			compatible =3D "rotary-encoder";
- 			gpios =3D <&gpio 19 1>, <&gpio 20 0>; /* GPIO19 is inverted */
- 			linux,axis =3D <0>; /* REL_X */
-+			rotary-encoder,encoding =3D "gray";
- 			rotary-encoder,relative-axis;
- 		};
-=20
-@@ -42,5 +45,6 @@ Example:
- 			gpios =3D <&gpio 21 0>, <&gpio 22 0>;
- 			linux,axis =3D <1>; /* ABS_Y */
- 			rotary-encoder,steps =3D <24>;
-+			rotary-encoder,encoding =3D "binary";
- 			rotary-encoder,rollover;
- 		};
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/r=
-otary_encoder.c
-index 96c486de49e0..d226d69a174a 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -28,6 +28,11 @@
-=20
- #define DRV_NAME "rotary-encoder"
-=20
-+enum rotary_encoder_encoding {
-+	ROTENC_GRAY,
-+	ROTENC_BINARY,
-+};
-+
- struct rotary_encoder {
- 	struct input_dev *input;
-=20
-@@ -37,6 +42,7 @@ struct rotary_encoder {
- 	u32 axis;
- 	bool relative_axis;
- 	bool rollover;
-+	enum rotary_encoder_encoding encoding;
-=20
- 	unsigned int pos;
-=20
-@@ -57,9 +63,11 @@ static unsigned rotary_encoder_get_state(struct rota=
-ry_encoder *encoder)
-=20
- 	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
- 		int val =3D gpiod_get_value_cansleep(encoder->gpios->desc[i]);
--		/* convert from gray encoding to normal */
--		if (ret & 1)
--			val =3D !val;
-+
-+		if (encoder->encoding =3D=3D ROTENC_GRAY)
-+			/* convert from gray encoding to binary */
-+			if (ret & 1)
-+				val =3D !val;
-=20
- 		ret =3D ret << 1 | val;
- 	}
-@@ -183,6 +191,7 @@ static int rotary_encoder_probe(struct platform_dev=
-ice *pdev)
- 	struct device *dev =3D &pdev->dev;
- 	struct rotary_encoder *encoder;
- 	struct input_dev *input;
-+	const char *encoding;
- 	irq_handler_t handler;
- 	u32 steps_per_period;
- 	unsigned int i;
-@@ -213,6 +222,13 @@ static int rotary_encoder_probe(struct platform_de=
-vice *pdev)
- 	encoder->rollover =3D
- 		device_property_read_bool(dev, "rotary-encoder,rollover");
-=20
-+	err =3D device_property_read_string(dev, "rotary-encoder,encoding",
-+					  &encoding);
-+	if (!err && encoding[0] =3D=3D 'b')
-+		encoder->encoding =3D ROTENC_BINARY;
-+	else
-+		encoder->encoding =3D ROTENC_GRAY;
-+
- 	device_property_read_u32(dev, "linux,axis", &encoder->axis);
- 	encoder->relative_axis =3D
- 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
---=20
-2.7.0
+I pushed my branch on my kernel.org repo, can you rebase your patch on
+top and resend it?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--NpqO7Ye/LGWn1vXh--
