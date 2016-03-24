@@ -1,66 +1,58 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] power: reset: support for Atmel alternative
- Shutdown Controller
-Date: Thu, 24 Mar 2016 09:53:38 +0100
-Message-ID: <56F3AB12.20701@atmel.com>
-References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
- <56F27B96.5010406@atmel.com> <20160323211144.GA31473@earth>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
+ supplying SD card
+Date: Thu, 24 Mar 2016 18:33:20 +0900
+Message-ID: <56F3B460.9040306@samsung.com>
+References: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160323211144.GA31473@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 23/03/2016 22:11, Sebastian Reichel a =E9crit :
-> Hi Nicolas,
->=20
-> On Wed, Mar 23, 2016 at 12:18:46PM +0100, Nicolas Ferre wrote:
->> Le 16/03/2016 14:19, Nicolas Ferre a =E9crit :
->>> This is a series to add driver for a new Atmel Shutdown Controller.=
- This new IP
->>> is extensible and some features will be added later (see the TODO s=
-ection).
->>> Its extensible nature led to write a new binding so that wake-up so=
-urces can be
->>> described easily.
->>
->> I have the feeling that this series is ready. What do you think?
->=20
-> I have see obvious problems with this series and plan to queue this
+On 03/24/2016 05:12 PM, Krzysztof Kozlowski wrote:
+> The buck9 regulator of S2MPS11 PMIC had incorrect maximum voltage -
+> lower by 5 mV than specified by datasheet. This buck9 provides power to
+> other regulators, including LDO13 and LDO19 which supply the MMC2 (SD
+> card).
+> 
+> When constraints were applied, the depending regulators were not
+> providing enough power, leading to SD card detection errors:
+> 	mmc1: card never left busy state
+> 	mmc1: error -110 whilst initialising SD card
+> 
+> Fixes: 86a2d2ac5e5d ("ARM: dts: Add dts file for Odroid XU3 board")
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-I would be reassured if a "not" was actually missing in the sentence
-above... ;-)
+Tested-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-Bye,
+Best Regards,
+Jaehoon Chung
 
-> after the merge window has closed. I give patches one more review
-> while applying them, so at that point something might turn up.
->=20
->> So, do you want me to collect everybody's tags and send another vers=
-ion
->> or you can do it yourself?
->=20
-> I can collect the tags myself.
->=20
->> BTW, I will certainly send the device tree updates for the sama5d2 S=
-oC,
->> but it will go through the AT91 then arm-soc git trees. No need for
->> further synchronization here.
->=20
-> I will ignore the *.dts patches.
->=20
-> -- Sebastian
->=20
-
-
---=20
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> ---
+> 
+> The issue can be reproduced on next-20160324 with
+> bae4fdc88d7f7dda1 (regulator: core: Ensure we are at least in bounds for our constraints).
+> ---
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> index 1bd507bfa750..82b2ba632cf6 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
+> @@ -299,7 +299,7 @@
+>  			buck9_reg: BUCK9 {
+>  				regulator-name = "vdd_2.8v_ldo";
+>  				regulator-min-microvolt = <3000000>;
+> -				regulator-max-microvolt = <3750000>;
+> +				regulator-max-microvolt = <3755000>;
+>  				regulator-always-on;
+>  				regulator-boot-on;
+>  			};
+> 
