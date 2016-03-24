@@ -1,96 +1,108 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH] ARM: dts: sun8i: Base Orange Pi Plus
- dts on the Orange Pi 2 dts
-Date: Thu, 24 Mar 2016 12:26:25 +0100
-Message-ID: <20160324112625.GX30977@lukather>
-References: <1458771256-4069-1-git-send-email-hdegoede@redhat.com>
- <20160324075904.GU30977@lukather>
- <56F3CC68.4010705@redhat.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 3/5] ARM: at91: pm: configure PMC fast startup signals
+Date: Thu, 24 Mar 2016 12:24:52 +0100
+Message-ID: <20160324112452.GJ2570@piout.net>
+References: <1458111489-23774-1-git-send-email-wenyou.yang@atmel.com>
+ <1458111489-23774-4-git-send-email-wenyou.yang@atmel.com>
+ <20160317171433.GD2831@piout.net>
+ <B256D81BAE5131468A838E5D7A243641D643C03F@penmbx01>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GaddHwoxNckpDK3I"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56F3CC68.4010705-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <B256D81BAE5131468A838E5D7A243641D643C03F@penmbx01>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---GaddHwoxNckpDK3I
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Mar 24, 2016 at 12:15:52PM +0100, Hans de Goede wrote:
-> Hi Maxime,
+On 21/03/2016 at 02:24:32 +0000, Yang, Wenyou wrote :
+> Hi Alexandre,
 >=20
-> On 24-03-16 08:59, Maxime Ripard wrote:
-> >Hi,
-> >
-> >On Wed, Mar 23, 2016 at 11:14:16PM +0100, Hans de Goede wrote:
-> >>The Orange Pi Plus really is an Orange Pi 2 extended with:
-> >>1) A sata <-> usb bridge connected to ehci3
-> >>2) An eMMC on mmc2
-> >>3) An external gigabit ethernet phy instead of the integrated 100Mbit p=
-hy
-> >>
-> >>This commit changes the dts to reflect this by making it include
-> >>the Orange Pi 2 dts and then adding the extra bits.
-> >>
-> >>Note that the difference in ethernet phy is not taken into account
-> >>because we do not have an ethernet driver for the H3 yet.
-> >>
-> >>Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> >
-> >Unfortunately, the patch doesn't apply anymore, and the merge doesn't
-> >seem trivial.
-> >
-> >I pushed my branch on my kernel.org repo, can you rebase your patch on
-> >top and resend it?
+> > -----Original Message-----
+> > From: Alexandre Belloni [mailto:alexandre.belloni-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
+m]
+> > Sent: 2016=E5=B9=B43=E6=9C=8818=E6=97=A5 1:15
+> > To: Yang, Wenyou <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > Cc: Ferre, Nicolas <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>; Jean-Christophe Plagn=
+iol-
+> > Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>; Russell King <linux-lFZ/pmaqli4g9kffE6ERjg@public.gmane.org=
+uk>; linux-
+> > kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-
+> > kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rob Herring
+> > <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>; Mark Brown
+> > <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>;=
+ Kumar
+> > Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Subject: Re: [PATCH v5 3/5] ARM: at91: pm: configure PMC fast start=
+up signals
+> >=20
+> > On 16/03/2016 at 14:58:07 +0800, Wenyou Yang wrote :
+> > > The fast startup signal is used as wake up sources for ULP1 mode.
+> > > As soon as a fast startup signal is asserted, the embedded 12 MHz=
+ RC
+> > > oscillator restarts automatically.
+> > >
+> > > This patch is to configure the fast startup signals, which signal=
+ is
+> > > enabled to trigger the PMC to wake up the system from ULP1 mode s=
+hould
+> > > be configured via the DT.
+> > >
+> > > Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >=20
+> > I would actually avoid doing that from the PMC driver and do that c=
+onfiguration
+> > from the aic5 driver. It has all the information you need, it knows=
+ what kind of level
+> > or edge is needed to wake up and what are the wakeup interrupts to =
+enable. This
+> > will allow you to stop introducing a new binding. Also, this will a=
+void discrepancies
+> > between what is configured in the DT and what the user really wants=
+ (for exemple
+> > differences between the edge direction configured for the PIOBu in =
+userspace
+> > versus what is in the device tree or wakeonlan activation/deactivat=
+ion).
 >=20
-> The problem is that you forgot to apply:
-> "ARM: dts: sun8i: Orangepi plus gpio keys fixes and improvements"
+> Thank you for your feedback.
 >=20
-> With that applied this one should apply unchanged too.
+> But some wake-ups such as WKUP pin, ACC_CE, RXLP_MCE, don't have the =
+corresponding
 
-Damn, you're right... Sorry for the noise. I applied both.
+The WKUP pin can be configured from the shdwc driver, ACC_CE from the
+ACC driver, RXLP_MCE, from the RXLP driver because you will need
+drivers for those at some point anyway.
 
-Thanks!
-Maxime
+> interrupt number. Moreover, I think, the ULP1 is very different form =
+the ULP0, it is not woken
+> up by the interrupt. It is fallen sleep and woken up by the some mech=
+anism in the PMC.=20
+>=20
+
+Well, we don't really care about the mechanism. We only care about how
+the user is able to configure the wakeup sources.
+
+With your patch set, what happens when no ULP1 sources are defined but
+there are ULP0 sources? What happens when there are both ULP1 and ULP0
+sources?
+
+What would be good is to use ULP1 when only ULP1 sources are set up and
+ULP0 in the other cases. This will greatly help the user. Also, what I'=
+m
+suggesting actually allows to change the ULP1 sources at runtime from
+devices that are actually used which is quite better than setting them
+up statically from DT.
+
 
 --=20
-Maxime Ripard, Free Electrons
+Alexandre Belloni, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---GaddHwoxNckpDK3I
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJW887hAAoJEBx+YmzsjxAgnfMP/3zFLfzL52aprF1mq6luk8a6
-koRFCIMSa41b5fRVV1OEiyc1GQZe/ZHmUtY9jUyeORUG0VDOwvlA4wNRNk8E9IrJ
-SGln3PruEv+rQwSt9yqK+7FFi6cEkeDUnWsRlIQQA4h+TJqQTZOiXs/FWqxECM6V
-VH4yXdy85PYlPtvXLIkqJHN2nePCSSdQFPETSaaP78WJQ2jg7+gFoLbRqpe/Jx+F
-mTUStbvKdHJEi5nvxURHL0r5JDYSMZEtLazEfPw7jthioGRkRTymr+UmGz64P6je
-slhJIOsNbxmZ3TvLtcaMzlbB8lz5JLiBBfNa2HgO/G6AkTRPeKozKXTdaaRKuxgB
-webebFRqCgaZ9V0bpXwY7almlZ55iG2P7N4mv8E3/ggUYOeAySM6CRBrwELv+XgG
-R0+30Y+Cgm/yirLumMUKSAtFt7OAE/Apz2s9r0vRddZgji6X73ukTmmYJ3QvADqt
-8YXX08Dj5Hpxpgc/v01ro3xH6AxKafFIg8LS6Paa1inpIim47IDDmGZPsm5V/Iaf
-3CZAvsrW3sBJgk6mbeawpBQ/heUXDKRvAkPmXL/pJUX1o+9Plf1bbRZkUuLqKVh8
-N1ya2rco1UypBGfvlfse/W86RU0XHe9zC5YDvjdLZyvNznQso8nlegCJ2vyUr+fl
-102b6zDMi/9kPmu86EiL
-=hG4R
------END PGP SIGNATURE-----
-
---GaddHwoxNckpDK3I--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
