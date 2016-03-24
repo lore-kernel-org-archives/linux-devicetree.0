@@ -1,101 +1,99 @@
-From: Jean-Michel Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
-Subject: [PATCH v2 1/1] ARM: dts: sun5i-a13-olinuxino-micro: enable USB DRC
-Date: Thu, 24 Mar 2016 14:18:53 +0100
-Message-ID: <1458825533-13968-1-git-send-email-jmfriedt@femto-st.fr>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 2/2] phy: rockchip-emmc: should be a child device of the GRF
+Date: Thu, 24 Mar 2016 14:22:54 +0100
+Message-ID: <1458825774-9957-2-git-send-email-heiko@sntech.de>
+References: <1458825774-9957-1-git-send-email-heiko@sntech.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458825774-9957-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, JM Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
+To: kishon-l0cyMroinI0@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: JM Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
+The emmc-phy is fully enclosed in the general register files (GRF).
+Therefore as seen from the device-tree it shouldn't be a separate platform-
+device but instead a sub-device of the GRF - using the simply-mfd mechanism.
 
-Enable the OTG controller on the Olinuxino A13-micro. 
+The driver entered the kernel in the current merge-window, so we can still
+adapt the binding without needing a fallback, as the binding hasn't been
+released with a full kernel yet.
 
-Signed-off-by: Jean-Michel Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
-Changes v1 -> v2: 
-	* Full first name in SoB.
----
- arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts | 41 +++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+Hi Shawn, Kishon,
 
-diff --git a/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts b/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
-index ad84fe4..081329e 100644
---- a/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
-+++ b/arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts
-@@ -109,6 +109,10 @@
- 	status = "okay";
- };
+I didn't see this new phy driver until now, so I'd really like to get
+this sorted before the old binding solidifies :-).
+
+I'll convert the usbphy as well, but that has to have the fallback for
+the old binding, so is not as urgent as these two.
+
+As mentioned in the patch description above, this is meant as a fixup for
+kernel 4.6.
+
+
+One thing I noticed, the emmc phy is occupying the range 0xf780-0xf7a0,
+so shouldn't the reg property reflect that, like
+    reg = <0xf780 0x20>;
+to stay with common conventions?
+
+
+ .../devicetree/bindings/phy/rockchip-emmc-phy.txt     | 19 ++++++++++++-------
+ drivers/phy/phy-rockchip-emmc.c                       |  5 ++++-
+ 2 files changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+index 61916f1..d711259 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+@@ -3,17 +3,22 @@ Rockchip EMMC PHY
  
-+&otg_sram {
-+	status = "okay";
-+};
+ Required properties:
+  - compatible: rockchip,rk3399-emmc-phy
+- - rockchip,grf : phandle to the syscon managing the "general
+-   register files"
+  - #phy-cells: must be 0
+  - reg: PHY configure reg address offset in "general
+    register files"
+ 
+ Example:
+ 
+-emmcphy: phy {
+-	compatible = "rockchip,rk3399-emmc-phy";
+-	rockchip,grf = <&grf>;
+-	reg = <0xf780>;
+-	#phy-cells = <0>;
 +
- &pio {
- 	mmc0_cd_pin_olinuxinom: mmc0_cd_pin@0 {
- 		allwinner,pins = "PG0";
-@@ -124,6 +128,27 @@
- 		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
- 	};
- 
-+	usb0_id_detect_pin: usb0_id_detect_pin@0 {
-+		allwinner,pins = "PG2";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
++grf: syscon@ff770000 {
++	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
++
++...
++
++	emmcphy: phy@f780 {
++		compatible = "rockchip,rk3399-emmc-phy";
++		rockchip,grf = <&grf>;
++		reg = <0xf780>;
++		#phy-cells = <0>;
 +	};
-+
-+	usb0_vbus_detect_pin: usb0_vbus_detect_pin@0 {
-+		allwinner,pins = "PG1";
-+		allwinner,function = "gpio_in";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_PULL_DOWN>;
-+	};
-+
-+	usb0_vbus_pin_olinuxinom: usb0_vbus_pin@0 {
-+		allwinner,pins = "PG12";
-+		allwinner,function = "gpio_out";
-+		allwinner,drive = <SUN4I_PINCTRL_10_MA>;
-+		allwinner,pull = <SUN4I_PINCTRL_NO_PULL>;
-+	};
-+
- 	usb1_vbus_pin_olinuxinom: usb1_vbus_pin@0 {
- 		allwinner,pins = "PG11";
- 		allwinner,function = "gpio_out";
-@@ -132,6 +157,12 @@
- 	};
  };
+diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
+index 887b4c2..6ebcf3e 100644
+--- a/drivers/phy/phy-rockchip-emmc.c
++++ b/drivers/phy/phy-rockchip-emmc.c
+@@ -176,7 +176,10 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ 	struct regmap *grf;
+ 	unsigned int reg_offset;
  
-+&reg_usb0_vbus {
-+	pinctrl-0 = <&usb0_vbus_pin_olinuxinom>;
-+	gpio = <&pio 6 12 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
+-	grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
++	if (!dev->parent || !dev->parent->of_node)
++		return -ENODEV;
 +
- &reg_usb1_vbus {
- 	pinctrl-0 = <&usb1_vbus_pin_olinuxinom>;
- 	gpio = <&pio 6 11 GPIO_ACTIVE_HIGH>;
-@@ -144,7 +175,17 @@
- 	status = "okay";
- };
- 
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
- &usbphy {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb0_id_detect_pin>, <&usb0_vbus_detect_pin>;
-+	usb0_id_det-gpio = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
-+	usb0_vbus_det-gpio = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
-+	usb0_vbus-supply = <&reg_usb0_vbus>;
- 	usb1_vbus-supply = <&reg_usb1_vbus>;
- 	status = "okay";
- };
++	grf = syscon_node_to_regmap(dev->parent->of_node);
+ 	if (IS_ERR(grf)) {
+ 		dev_err(dev, "Missing rockchip,grf property\n");
+ 		return PTR_ERR(grf);
 -- 
-2.6.4
+2.7.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
