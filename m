@@ -1,48 +1,76 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 04/18] dt-bindings: irq: arm,
- versatile-fpga: add compatible string for OX810SE SoC
-Date: Thu, 24 Mar 2016 17:50:01 +0100
-Message-ID: <1458838215-23314-5-git-send-email-narmstrong@baylibre.com>
-References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v5 0/2] power: reset: support for Atmel alternative
+ Shutdown Controller
+Date: Thu, 24 Mar 2016 17:52:55 +0100
+Message-ID: <20160324165254.GA31831@earth>
+References: <1458134390-23847-1-git-send-email-nicolas.ferre@atmel.com>
+ <56F27B96.5010406@atmel.com>
+ <20160323211144.GA31473@earth>
+ <56F3AB12.20701@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56F3AB12.20701@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk
 List-Id: devicetree@vger.kernel.org
 
-Under the OX810SE, this same controller is used as "Reference Peripheral
-Specification" Interrupt Controller, so add new compatible string to support
-the PLX Technology OX810SE SoC Interrupt Controller.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--FL5UXtIhxfXey3p5
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
-index c9cf605..2a1d16b 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,versatile-fpga-irq.txt
-@@ -6,7 +6,7 @@ controllers are OR:ed together and fed to the CPU tile's IRQ input. Each
- instance can handle up to 32 interrupts.
- 
- Required properties:
--- compatible: "arm,versatile-fpga-irq"
-+- compatible: "arm,versatile-fpga-irq" or "oxsemi,ox810se-rps-irq"
- - interrupt-controller: Identifies the node as an interrupt controller
- - #interrupt-cells: The number of cells to define the interrupts.  Must be 1
-   as the FPGA IRQ controller has no configuration options for interrupt
--- 
-1.9.1
+Hi,
+
+On Thu, Mar 24, 2016 at 09:53:38AM +0100, Nicolas Ferre wrote:
+> Le 23/03/2016 22:11, Sebastian Reichel a =E9crit :
+> > Hi Nicolas,
+> >=20
+> > On Wed, Mar 23, 2016 at 12:18:46PM +0100, Nicolas Ferre wrote:
+> >> Le 16/03/2016 14:19, Nicolas Ferre a =E9crit :
+> >>> This is a series to add driver for a new Atmel Shutdown Controller. T=
+his new IP
+> >>> is extensible and some features will be added later (see the TODO sec=
+tion).
+> >>> Its extensible nature led to write a new binding so that wake-up sour=
+ces can be
+> >>> described easily.
+> >>
+> >> I have the feeling that this series is ready. What do you think?
+> >=20
+> > I have see obvious problems with this series and plan to queue this
+>=20
+> I would be reassured if a "not" was actually missing in the sentence
+> above... ;-)
+
+Sorry, it's missing of course (I do not intent to queue stuff with
+obvious problems ;)).
+
+-- Sebastian
+
+--FL5UXtIhxfXey3p5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJW9BtkAAoJENju1/PIO/qaHFcP/3UC6THIg2c6Vafszq0fX2wF
+mK4XX7IoN7HbojX33BaTTVgboSFp8DMvIV3ecugnj5Yo8SdMsjH31K+srw2xz7MQ
+AwSO8MIJ41pmE3K6CriAvhSrepw6jxkGhrO3n+JDjvAKfUSVj4TyAelFxq+N9ofV
+bGKtu5o3bRKakNX62ij3OwN2cR+r8cc5AuBSeyhPLG2KxRaE6F+DkfSyNnt8qlXa
+YXemRk+Bbu4duax2mO2WlPS/Qu+61uBCRrewx6ev7FI+fAiHO7iVgbfyQlKvPSvP
+p3fALJNglxMzJNpHTAGSOwdVi0HSG9IhayQ/XvgnN9o+Ma2RhqXyIky5IBAXO/Qs
+uviQsbHtNCu+lFbp3lhS6GxmHolwxQxoG1ynHOVf/GHcpd4cC8m/U/KcDYee2Ph7
+N+h12O/JUW1JTvCHPiUDlwPLi5UQ9FNTBvQynWHUoWi0A/wYQdM4JZhyPaoBLOmH
+eD/JT87RTGZ5GfQVS0mur1hGf0cSP3CUYvAWkJ2lcY5IDLmDQ2Se+QimtO4c/FVe
+pna/7fIkVzGltrVM9Mn3hDmICG66QGDfeFtU0QUYDWuyDroy+Q7DRIhIelD34VkL
+iGQcP0ZARjg6PvwJGURSfJdvjaotwwgSonqLO8OXXwq9AFA6ffXohw8qb8M1Hyvp
+xYXDGw1hBKGA2x23TYPc
+=alk9
+-----END PGP SIGNATURE-----
+
+--FL5UXtIhxfXey3p5--
