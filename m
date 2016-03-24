@@ -1,254 +1,142 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v3 02/16] mfd: da8xx-cfgchip: New header file for CFGCHIP
- registers.
-Date: Thu, 24 Mar 2016 18:51:27 -0500
-Message-ID: <1458863503-31121-3-git-send-email-david@lechnology.com>
+Subject: [PATCH v3 11/16] ARM: davinci: da8xx: Add USB PHY platform declaration
+Date: Thu, 24 Mar 2016 18:51:36 -0500
+Message-ID: <1458863503-31121-12-git-send-email-david@lechnology.com>
 References: <1458863503-31121-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1458863503-31121-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, David Lechner <david@lechnology.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, open list <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, petr@barix.com, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, David.Laight@ACULAB.COM, Lee Jones <lee.jones@linaro.org>, sergei.shtylyov@cogentembedded.com, Bin Liu <b-liu@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: petr@barix.com, sergei.shtylyov@cogentembedded.com, David.Laight@ACULAB.COM, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We will be using a generic syscon device for the TI DA8XX SoC CFGCHIPx
-retisters. This will be used by a number of planned drivers including a
-new USB PHY driver and common clock framework drivers.
-
-The same defines are removed from the platform_data header file since they
-are now redundant and they didn't really belong there anyway.
+There is now a proper phy driver for the DA8xx SoC USB PHY. This adds the
+platform device declarations needed to use it.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
 
-v3 changes: This is a new patch. It replaces the previous patch that just added
-some missing CFGCHIP2 registers to the platform_data/usb-davinci.h file.
-I took David Laight's advice and included all of the possible registers.
+v3 changes:
 
-Many of these registers will be used for clocks - hopefully in the near future. 
+* The declaration is now in the new usb-da8xx.c file.
 
+ arch/arm/mach-davinci/board-da830-evm.c     | 28 +++++-----------------------
+ arch/arm/mach-davinci/board-omapl138-hawk.c |  5 +++++
+ arch/arm/mach-davinci/include/mach/da8xx.h  |  1 +
+ arch/arm/mach-davinci/usb-da8xx.c           | 11 +++++++++++
+ 4 files changed, 22 insertions(+), 23 deletions(-)
 
-include/linux/mfd/da8xx-cfgchip.h         | 160 ++++++++++++++++++++++++++++++
- include/linux/platform_data/usb-davinci.h |  23 -----
- 2 files changed, 160 insertions(+), 23 deletions(-)
- create mode 100644 include/linux/mfd/da8xx-cfgchip.h
-
-diff --git a/include/linux/mfd/da8xx-cfgchip.h b/include/linux/mfd/da8xx-cfgchip.h
-new file mode 100644
-index 0000000..6940cf9
---- /dev/null
-+++ b/include/linux/mfd/da8xx-cfgchip.h
-@@ -0,0 +1,160 @@
-+/*
-+ * TI DaVinci DA8xx CHIPCFGx registers for syscon consumers.
-+ *
-+ * Copyright (C) 2016 David Lechner <david@lechnology.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __LINUX_MFD_DA8XX_CFGCHIP_H
-+#define __LINUX_MFD_DA8XX_CFGCHIP_H
-+
-+#include <linux/bitops.h>
-+
-+/* register offsets */
-+#define CFGCHIP_REG(n)				(n * 4)
-+#define CFGCHIP0_REG				CFGCHIP_REG(0)
-+#define CFGCHIP1_REG				CFGCHIP_REG(1)
-+#define CFGCHIP2_REG				CFGCHIP_REG(2)
-+#define CFGCHIP3_REG				CFGCHIP_REG(3)
-+#define CFGCHIP4_REG				CFGCHIP_REG(4)
-+
-+/* CFGCHIP0 (PLL0/EDMA3_0) register bits */
-+#define CFGCHIP0_PLL_MASTER_LOCK		BIT(4)
-+#define CFGCHIP0_EDMA30TC1DBS(n)		(n << 2)
-+#define CFGCHIP0_EDMA30TC1DBS_MASK		CFGCHIP0_EDMA30TC1DBS(0x3)
-+#define CFGCHIP0_EDMA30TC1DBS_16		CFGCHIP0_EDMA30TC1DBS(0x0)
-+#define CFGCHIP0_EDMA30TC1DBS_32		CFGCHIP0_EDMA30TC1DBS(0x1)
-+#define CFGCHIP0_EDMA30TC1DBS_64		CFGCHIP0_EDMA30TC1DBS(0x2)
-+#define CFGCHIP0_EDMA30TC0DBS(n)		(n << 0)
-+#define CFGCHIP0_EDMA30TC0DBS_MASK		CFGCHIP0_EDMA30TC0DBS(0x3)
-+#define CFGCHIP0_EDMA30TC0DBS_16		CFGCHIP0_EDMA30TC0DBS(0x0)
-+#define CFGCHIP0_EDMA30TC0DBS_32		CFGCHIP0_EDMA30TC0DBS(0x1)
-+#define CFGCHIP0_EDMA30TC0DBS_64		CFGCHIP0_EDMA30TC0DBS(0x2)
-+
-+/* CFGCHIP1 (eCAP/HPI/EDMA3_1/eHRPWM TBCLK/McASP0 AMUTEIN) register bits */
-+#define CFGCHIP1_CAP2SRC(n)			(n << 27)
-+#define CFGCHIP1_CAP2SRC_MASK			CFGCHIP1_CAP2SRC(0x1f)
-+#define CFGCHIP1_CAP2SRC_ECAP_PIN		CFGCHIP1_CAP2SRC(0x0)
-+#define CFGCHIP1_CAP2SRC_MCASP0_TX		CFGCHIP1_CAP2SRC(0x1)
-+#define CFGCHIP1_CAP2SRC_MCASP0_RX		CFGCHIP1_CAP2SRC(0x2)
-+#define CFGCHIP1_CAP2SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0x7)
-+#define CFGCHIP1_CAP2SRC_EMAC_C0_RX		CFGCHIP1_CAP2SRC(0x8)
-+#define CFGCHIP1_CAP2SRC_EMAC_C0_TX		CFGCHIP1_CAP2SRC(0x9)
-+#define CFGCHIP1_CAP2SRC_EMAC_C0_MISC		CFGCHIP1_CAP2SRC(0xa)
-+#define CFGCHIP1_CAP2SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0xb)
-+#define CFGCHIP1_CAP2SRC_EMAC_C1_RX		CFGCHIP1_CAP2SRC(0xc)
-+#define CFGCHIP1_CAP2SRC_EMAC_C1_TX		CFGCHIP1_CAP2SRC(0xd)
-+#define CFGCHIP1_CAP2SRC_EMAC_C1_MISC		CFGCHIP1_CAP2SRC(0xe)
-+#define CFGCHIP1_CAP2SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP2SRC(0xf)
-+#define CFGCHIP1_CAP2SRC_EMAC_C2_RX		CFGCHIP1_CAP2SRC(0x10)
-+#define CFGCHIP1_CAP2SRC_EMAC_C2_TX		CFGCHIP1_CAP2SRC(0x11)
-+#define CFGCHIP1_CAP2SRC_EMAC_C2_MISC		CFGCHIP1_CAP2SRC(0x12)
-+#define CFGCHIP1_CAP1SRC(n)			(n << 22)
-+#define CFGCHIP1_CAP1SRC_MASK			CFGCHIP1_CAP1SRC(0x1f)
-+#define CFGCHIP1_CAP1SRC_ECAP_PIN		CFGCHIP1_CAP1SRC(0x0)
-+#define CFGCHIP1_CAP1SRC_MCASP0_TX		CFGCHIP1_CAP1SRC(0x1)
-+#define CFGCHIP1_CAP1SRC_MCASP0_RX		CFGCHIP1_CAP1SRC(0x2)
-+#define CFGCHIP1_CAP1SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0x7)
-+#define CFGCHIP1_CAP1SRC_EMAC_C0_RX		CFGCHIP1_CAP1SRC(0x8)
-+#define CFGCHIP1_CAP1SRC_EMAC_C0_TX		CFGCHIP1_CAP1SRC(0x9)
-+#define CFGCHIP1_CAP1SRC_EMAC_C0_MISC		CFGCHIP1_CAP1SRC(0xa)
-+#define CFGCHIP1_CAP1SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0xb)
-+#define CFGCHIP1_CAP1SRC_EMAC_C1_RX		CFGCHIP1_CAP1SRC(0xc)
-+#define CFGCHIP1_CAP1SRC_EMAC_C1_TX		CFGCHIP1_CAP1SRC(0xd)
-+#define CFGCHIP1_CAP1SRC_EMAC_C1_MISC		CFGCHIP1_CAP1SRC(0xe)
-+#define CFGCHIP1_CAP1SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP1SRC(0xf)
-+#define CFGCHIP1_CAP1SRC_EMAC_C2_RX		CFGCHIP1_CAP1SRC(0x10)
-+#define CFGCHIP1_CAP1SRC_EMAC_C2_TX		CFGCHIP1_CAP1SRC(0x11)
-+#define CFGCHIP1_CAP1SRC_EMAC_C2_MISC		CFGCHIP1_CAP1SRC(0x12)
-+#define CFGCHIP1_CAP0SRC(n)			(n << 17)
-+#define CFGCHIP1_CAP0SRC_MASK			CFGCHIP1_CAP0SRC(0x1f)
-+#define CFGCHIP1_CAP0SRC_ECAP_PIN		CFGCHIP1_CAP0SRC(0x0)
-+#define CFGCHIP1_CAP0SRC_MCASP0_TX		CFGCHIP1_CAP0SRC(0x1)
-+#define CFGCHIP1_CAP0SRC_MCASP0_RX		CFGCHIP1_CAP0SRC(0x2)
-+#define CFGCHIP1_CAP0SRC_EMAC_C0_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0x7)
-+#define CFGCHIP1_CAP0SRC_EMAC_C0_RX		CFGCHIP1_CAP0SRC(0x8)
-+#define CFGCHIP1_CAP0SRC_EMAC_C0_TX		CFGCHIP1_CAP0SRC(0x9)
-+#define CFGCHIP1_CAP0SRC_EMAC_C0_MISC		CFGCHIP1_CAP0SRC(0xa)
-+#define CFGCHIP1_CAP0SRC_EMAC_C1_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0xb)
-+#define CFGCHIP1_CAP0SRC_EMAC_C1_RX		CFGCHIP1_CAP0SRC(0xc)
-+#define CFGCHIP1_CAP0SRC_EMAC_C1_TX		CFGCHIP1_CAP0SRC(0xd)
-+#define CFGCHIP1_CAP0SRC_EMAC_C1_MISC		CFGCHIP1_CAP0SRC(0xe)
-+#define CFGCHIP1_CAP0SRC_EMAC_C2_RX_THRESHOLD	CFGCHIP1_CAP0SRC(0xf)
-+#define CFGCHIP1_CAP0SRC_EMAC_C2_RX		CFGCHIP1_CAP0SRC(0x10)
-+#define CFGCHIP1_CAP0SRC_EMAC_C2_TX		CFGCHIP1_CAP0SRC(0x11)
-+#define CFGCHIP1_CAP0SRC_EMAC_C2_MISC		CFGCHIP1_CAP0SRC(0x12)
-+#define CFGCHIP1_HPIBYTEAD			BIT(16)
-+#define CFGCHIP1_HPIENA				BIT(15)
-+#define CFGCHIP0_EDMA31TC0DBS(n)		(n << 13)
-+#define CFGCHIP0_EDMA31TC0DBS_MASK		CFGCHIP0_EDMA31TC0DBS(0x3)
-+#define CFGCHIP0_EDMA31TC0DBS_16		CFGCHIP0_EDMA31TC0DBS(0x0)
-+#define CFGCHIP0_EDMA31TC0DBS_32		CFGCHIP0_EDMA31TC0DBS(0x1)
-+#define CFGCHIP0_EDMA31TC0DBS_64		CFGCHIP0_EDMA31TC0DBS(0x2)
-+#define CFGCHIP1_TBCLKSYNC			BIT(12)
-+#define CFGCHIP1_AMUTESEL0(n)			(n << 0)
-+#define CFGCHIP1_AMUTESEL0_MASK			CFGCHIP1_AMUTESEL0(0xf)
-+#define CFGCHIP1_AMUTESEL0_LOW			CFGCHIP1_AMUTESEL0(0x0)
-+#define CFGCHIP1_AMUTESEL0_BANK_0		CFGCHIP1_AMUTESEL0(0x1)
-+#define CFGCHIP1_AMUTESEL0_BANK_1		CFGCHIP1_AMUTESEL0(0x2)
-+#define CFGCHIP1_AMUTESEL0_BANK_2		CFGCHIP1_AMUTESEL0(0x3)
-+#define CFGCHIP1_AMUTESEL0_BANK_3		CFGCHIP1_AMUTESEL0(0x4)
-+#define CFGCHIP1_AMUTESEL0_BANK_4		CFGCHIP1_AMUTESEL0(0x5)
-+#define CFGCHIP1_AMUTESEL0_BANK_5		CFGCHIP1_AMUTESEL0(0x6)
-+#define CFGCHIP1_AMUTESEL0_BANK_6		CFGCHIP1_AMUTESEL0(0x7)
-+#define CFGCHIP1_AMUTESEL0_BANK_7		CFGCHIP1_AMUTESEL0(0x8)
-+
-+/* CFGCHIP2 (USB PHY) register bits */
-+#define CFGCHIP2_PHYCLKGD			BIT(17)
-+#define CFGCHIP2_VBUSSENSE			BIT(16)
-+#define CFGCHIP2_RESET				BIT(15)
-+#define CFGCHIP2_OTGMODE(n)			(n << 13)
-+#define CFGCHIP2_OTGMODE_MASK			CFGCHIP2_OTGMODE(0x3)
-+#define CFGCHIP2_OTGMODE_NO_OVERRIDE		CFGCHIP2_OTGMODE(0x0)
-+#define CFGCHIP2_OTGMODE_FORCE_HOST		CFGCHIP2_OTGMODE(0x1)
-+#define CFGCHIP2_OTGMODE_FORCE_DEVICE		CFGCHIP2_OTGMODE(0x2)
-+#define CFGCHIP2_OTGMODE_FORCE_HOST_VBUS_LOW	CFGCHIP2_OTGMODE(0x3)
-+#define CFGCHIP2_USB1PHYCLKMUX			BIT(12)
-+#define CFGCHIP2_USB2PHYCLKMUX			BIT(11)
-+#define CFGCHIP2_PHYPWRDN			BIT(10)
-+#define CFGCHIP2_OTGPWRDN			BIT(9)
-+#define CFGCHIP2_DATPOL				BIT(8)
-+#define CFGCHIP2_USB1SUSPENDM			BIT(7)
-+#define CFGCHIP2_PHY_PLLON			BIT(6)
-+#define CFGCHIP2_SESENDEN			BIT(5)
-+#define CFGCHIP2_VBDTCTEN			BIT(4)
-+#define CFGCHIP2_REFFREQ(n)			(n << 0)
-+#define CFGCHIP2_REFFREQ_MASK			CFGCHIP2_REFFREQ(0xf)
-+#define CFGCHIP2_REFFREQ_12MHZ			CFGCHIP2_REFFREQ(0x1)
-+#define CFGCHIP2_REFFREQ_24MHZ			CFGCHIP2_REFFREQ(0x2)
-+#define CFGCHIP2_REFFREQ_48MHZ			CFGCHIP2_REFFREQ(0x3)
-+#define CFGCHIP2_REFFREQ_19_2MHZ		CFGCHIP2_REFFREQ(0x4)
-+#define CFGCHIP2_REFFREQ_38_4MHZ		CFGCHIP2_REFFREQ(0x5)
-+#define CFGCHIP2_REFFREQ_13MHZ			CFGCHIP2_REFFREQ(0x6)
-+#define CFGCHIP2_REFFREQ_26MHZ			CFGCHIP2_REFFREQ(0x7)
-+#define CFGCHIP2_REFFREQ_20MHZ			CFGCHIP2_REFFREQ(0x8)
-+#define CFGCHIP2_REFFREQ_40MHZ			CFGCHIP2_REFFREQ(0x9)
-+
-+/* CFGCHIP3 (EMAC/uPP/PLL1/ASYNC3/PRU/DIV4.5/EMIFA) register bits */
-+
-+#define CFGCHIP3_RMII_SEL			BIT(8)
-+#define CFGCHIP3_UPP_TX_CLKSRC			BIT(6)
-+#define CFGCHIP3_PLL1_MASTER_LOCK		BIT(5)
-+#define CFGCHIP3_ASYNC3_CLKSRC			BIT(4)
-+#define CFGCHIP3_PRUEVTSEL			BIT(3)
-+#define CFGCHIP3_DIV45PENA			BIT(2)
-+#define CFGCHIP3_EMA_CLKSRC			BIT(1)
-+
-+/* CFGCHIP4 (McASP0 AMUNTEIN) register bits */
-+
-+#define CFGCHIP4_AMUTECLR0			BIT(0)
-+
-+#endif /* __LINUX_MFD_DA8XX_CFGCHIP_H */
-diff --git a/include/linux/platform_data/usb-davinci.h b/include/linux/platform_data/usb-davinci.h
-index e0bc4ab..7c6ce24 100644
---- a/include/linux/platform_data/usb-davinci.h
-+++ b/include/linux/platform_data/usb-davinci.h
-@@ -11,28 +11,6 @@
- #ifndef __ASM_ARCH_USB_H
- #define __ASM_ARCH_USB_H
+diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
+index 3051cb6..6421cfe 100644
+--- a/arch/arm/mach-davinci/board-da830-evm.c
++++ b/arch/arm/mach-davinci/board-da830-evm.c
+@@ -26,7 +26,6 @@
+ #include <linux/platform_data/mtd-davinci.h>
+ #include <linux/platform_data/mtd-davinci-aemif.h>
+ #include <linux/platform_data/spi-davinci.h>
+-#include <linux/platform_data/usb-davinci.h>
  
--/* DA8xx CFGCHIP2 (USB 2.0 PHY Control) register bits */
--#define CFGCHIP2_PHYCLKGD	(1 << 17)
--#define CFGCHIP2_VBUSSENSE	(1 << 16)
--#define CFGCHIP2_RESET		(1 << 15)
--#define CFGCHIP2_OTGMODE	(3 << 13)
--#define CFGCHIP2_NO_OVERRIDE	(0 << 13)
--#define CFGCHIP2_FORCE_HOST	(1 << 13)
--#define CFGCHIP2_FORCE_DEVICE 	(2 << 13)
--#define CFGCHIP2_FORCE_HOST_VBUS_LOW (3 << 13)
--#define CFGCHIP2_USB1PHYCLKMUX	(1 << 12)
--#define CFGCHIP2_USB2PHYCLKMUX	(1 << 11)
--#define CFGCHIP2_PHYPWRDN	(1 << 10)
--#define CFGCHIP2_OTGPWRDN	(1 << 9)
--#define CFGCHIP2_DATPOL 	(1 << 8)
--#define CFGCHIP2_USB1SUSPENDM	(1 << 7)
--#define CFGCHIP2_PHY_PLLON	(1 << 6)	/* override PLL suspend */
--#define CFGCHIP2_SESENDEN	(1 << 5)	/* Vsess_end comparator */
--#define CFGCHIP2_VBDTCTEN	(1 << 4)	/* Vbus comparator */
--#define CFGCHIP2_REFFREQ	(0xf << 0)
--#define CFGCHIP2_REFFREQ_12MHZ	(1 << 0)
--#define CFGCHIP2_REFFREQ_24MHZ	(2 << 0)
--#define CFGCHIP2_REFFREQ_48MHZ	(3 << 0)
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -106,30 +105,8 @@ static irqreturn_t da830_evm_usb_ocic_irq(int irq, void *dev_id)
  
- struct	da8xx_ohci_root_hub;
+ static __init void da830_evm_usb_init(void)
+ {
+-	u32 cfgchip2;
+ 	int ret;
  
-@@ -53,7 +31,6 @@ struct	da8xx_ohci_root_hub {
- 	/* Time from power on to power good (in 2 ms units) */
- 	u8	potpgt;
- };
+-	/*
+-	 * Set up USB clock/mode in the CFGCHIP2 register.
+-	 * FYI:  CFGCHIP2 is 0x0000ef00 initially.
+-	 */
+-	cfgchip2 = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
 -
- void davinci_setup_usb(unsigned mA, unsigned potpgt_ms);
+-	/*
+-	 * We have to override VBUS/ID signals when MUSB is configured into the
+-	 * host-only mode -- ID pin will float if no cable is connected, so the
+-	 * controller won't be able to drive VBUS thinking that it's a B-device.
+-	 * Otherwise, we want to use the OTG mode and enable VBUS comparators.
+-	 */
+-	cfgchip2 &= ~CFGCHIP2_OTGMODE;
+-#ifdef	CONFIG_USB_MUSB_HOST
+-	cfgchip2 |=  CFGCHIP2_FORCE_HOST;
+-#else
+-	cfgchip2 |=  CFGCHIP2_SESENDEN | CFGCHIP2_VBDTCTEN;
+-#endif
+-
+-	__raw_writel(cfgchip2, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP2_REG));
+-
+ 	/* USB_REFCLKIN is not used. */
+ 	ret = da8xx_register_usb20_phy_clk(false);
+ 	if (ret)
+@@ -141,6 +118,11 @@ static __init void da830_evm_usb_init(void)
+ 		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
+ 			__func__, ret);
  
- #endif	/* ifndef __ASM_ARCH_USB_H */
++	ret = da8xx_register_usbphy();
++	if (ret)
++		pr_warn("%s: USB PHY registration failed: %d\n",
++			__func__, ret);
++
+ 	ret = davinci_cfg_reg(DA830_USB0_DRVVBUS);
+ 	if (ret)
+ 		pr_warn("%s: USB 2.0 PinMux setup failed: %d\n", __func__, ret);
+diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
+index 8691a25..79aaa84 100644
+--- a/arch/arm/mach-davinci/board-omapl138-hawk.c
++++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
+@@ -260,6 +260,11 @@ static __init void omapl138_hawk_usb_init(void)
+ 		pr_warn("%s: USB 1.1 PHY CLK registration failed: %d\n",
+ 			__func__, ret);
+ 
++	ret = da8xx_register_usbphy();
++	if (ret)
++		pr_warn("%s: USB PHY registration failed: %d\n",
++			__func__, ret);
++
+ 	ret = gpio_request_one(DA850_USB1_VBUS_PIN,
+ 			GPIOF_DIR_OUT, "USB1 VBUS");
+ 	if (ret < 0) {
+diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+index c32444b..44ab55e 100644
+--- a/arch/arm/mach-davinci/include/mach/da8xx.h
++++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+@@ -92,6 +92,7 @@ int da8xx_register_watchdog(void);
+ int da8xx_register_usb_refclkin(int rate);
+ int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
+ int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
++int da8xx_register_usbphy(void);
+ int da8xx_register_usb20(unsigned mA, unsigned potpgt);
+ int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
+ int da8xx_register_emac(void);
+diff --git a/arch/arm/mach-davinci/usb-da8xx.c b/arch/arm/mach-davinci/usb-da8xx.c
+index aca5867..6bd0009 100644
+--- a/arch/arm/mach-davinci/usb-da8xx.c
++++ b/arch/arm/mach-davinci/usb-da8xx.c
+@@ -6,6 +6,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/mfd/da8xx-cfgchip.h>
++#include <linux/phy/phy.h>
+ #include <linux/usb/musb.h>
+ 
+ #include <asm/delay.h>
+@@ -231,6 +232,16 @@ int __init da8xx_register_usb11_phy_clk(bool use_usb_refclkin)
+ 	return ret;
+ }
+ 
++static struct platform_device da8xx_usbphy = {
++	.name		= "da8xx-usbphy",
++	.id		= 0,
++};
++
++int __init da8xx_register_usbphy(void)
++{
++	return platform_device_register(&da8xx_usbphy);
++}
++
+ #if IS_ENABLED(CONFIG_USB_MUSB_HDRC)
+ 
+ static struct musb_hdrc_eps_bits musb_eps[] = {
 -- 
 1.9.1
