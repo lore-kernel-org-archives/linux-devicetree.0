@@ -1,48 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
- supplying SD card
-Date: Thu, 24 Mar 2016 11:02:40 +0000
-Message-ID: <20160324110240.GU2566@sirena.org.uk>
-References: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
- <20160324095332.GS2566@sirena.org.uk>
- <CAJKOXPc03ksVFKAHo_Znw41wdzRmzJpFYfAEw2q3EfrQxevghg@mail.gmail.com>
+From: Peter Rosin <peda-SamgB31n2u5IcsJQ0EH25Q@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] i2c-mux: add common core data for every mux instance
+Date: Thu, 24 Mar 2016 12:05:50 +0100
+Message-ID: <56F3CA0E.60906@lysator.liu.se>
+References: <1452009438-27347-1-git-send-email-peda@lysator.liu.se> <1452009438-27347-2-git-send-email-peda@lysator.liu.se> <56F3B86E.4050002@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+EMqLL+3vmTi4N6E"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPc03ksVFKAHo_Znw41wdzRmzJpFYfAEw2q3EfrQxevghg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56F3B86E.4050002-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Adriana Reus <adriana.reus-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Srinivas Pandruvada <srinivas.pandruvada-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Nicholas Mc Guire <hofrat-Q945KHDl0DbYtjvyW6yDsg@public.gmane.org>Olli Salonen <oll>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vladimir,
 
---+EMqLL+3vmTi4N6E
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 2016-03-24 10:50, Vladimir Zapolskiy wrote:
+> Hi Peter,
+> 
+> On 05.01.2016 17:57, Peter Rosin wrote:
+>> From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>
+>> The initial core mux structure starts off small with only the parent
+>> adapter pointer, which all muxes have, and a priv pointer for mux
+>> driver private data.
+>>
+>> Add i2c_mux_alloc function to unify the creation of a mux.
+>>
+>> Where appropriate, pass around the mux core structure instead of the
+>> parent adapter or the driver private data.
+>>
+>> Remove the parent adapter pointer from the driver private data for all
+>> mux drivers.
+>>
+>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> 
+> is it still under review? If yes, please find one question from me below :)
 
-On Thu, Mar 24, 2016 at 07:25:35PM +0900, Krzysztof Kozlowski wrote:
+Yes, the series is still under review/testing, with an update planned in a
+week or so.
 
-> I'll look at it after weekend. For now I applied my patch to the
-> for-next, so the next should be fixed.
+> [snip]
+> 
+>> @@ -196,21 +195,21 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
+>>  		dev_err(dev, "Cannot parse i2c-parent\n");
+>>  		return -EINVAL;
+>>  	}
+>> -	arb->parent = of_get_i2c_adapter_by_node(parent_np);
+>> +	muxc->parent = of_find_i2c_adapter_by_node(parent_np);
+> 
+> why do you prefer here to use "unlocked" version of API?
+> 
+> Foe example would it be safe/possible to unload an I2C bus device driver
+> module or unbind I2C device itself in runtime?
 
-Oh, and please send this to Linus - the regulator change is fixing a
-problem some other boards noticed.
+I think you ask why I change from of_get_i2c_... to of_find_i2c_..., and that
+change was not intentional. It was the result of a bad merge during an early
+rebase.
 
---+EMqLL+3vmTi4N6E
-Content-Type: application/pgp-signature; name="signature.asc"
+Does that cover it?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW88lPAAoJECTWi3JdVIfQo5YH/jqaxGNXXdpAhEUPoQonAuhf
-V41C/dB3jaayLAv6l3t+9jsUYjFEPfRXkZyl6UQiuVfvR/HL4RrrTJidCaV5IdRU
-x/Qp6iU+PSJVWvnCvjVK/gpuTOoizOpQuqBYzW2cUw/Kn8n6StWsi3dMmqZIfcMj
-DUFusbKmLgD927oDTFx2gDv/FMsRnLQRLHQcyJlic5ajSRid5A30mKIEvKaAOvtU
-dF5CeD2cxcYm7dxkbqgqq/OWr6/ZCC/HGWiDsi6fFZMGQpm6/up1hxLLkzbEPCak
-H6roemh2j26YiEKDK+X+uU7WYlEE7SMQY7Ehi8hnQzpXBu59wi0tVfYMX+k7Oas=
-=Bmkr
------END PGP SIGNATURE-----
-
---+EMqLL+3vmTi4N6E--
+Cheers,
+Peter
