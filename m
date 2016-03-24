@@ -1,35 +1,90 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 08/19] ARM: sun5i: Add DRAM gates
-Date: Thu, 24 Mar 2016 12:31:13 +0800
-Message-ID: <CAGb2v66AV8FT7VLs-WV=QD-w-zYrOqgE--Gubq=+hnEUaqUH6g@mail.gmail.com>
-References: <1458751122-23976-1-git-send-email-maxime.ripard@free-electrons.com>
- <1458751122-23976-9-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBKG3ZW3QKGQE3AXR2SY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1458751122-23976-9-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Alexander Kaplan <alex-MflLfwwFzuz+yO7R74ARew@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 09/21] PM / devfreq: exynos: Add the detailed correlation
+ between sub-blocks and power line
+Date: Thu, 24 Mar 2016 13:25:18 +0900
+Message-ID: <1458793530-31897-10-git-send-email-cw00.choi@samsung.com>
+References: <1458793530-31897-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1458793530-31897-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 24, 2016 at 12:38 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The DRAM gates control whether the image / display devices on the SoC have
-> access to the DRAM clock or not.
->
-> Enable it.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+This patch adds the detailed corrleation between sub-blocks and power line
+for Exynos3250, Exynos4210 and Exynos4x12.
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/devfreq/exynos-bus.txt     | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-I assume you'll add another version for A10s, or move the whole thing
-to sun5i.dtsi later?
+diff --git a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+index 03f13d38f1a1..b098fa2ba5d4 100644
+--- a/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
++++ b/Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+@@ -53,6 +53,57 @@ Optional properties only for parent bus device:
+ - exynos,voltage-tolerance: the percentage value for bus voltage tolerance
+ 			which is used to calculate the max voltage.
+ 
++Detailed correlation between sub-blocks and power line according to Exynos SoC:
++- In case of Exynos3250, there are two power line as following:
++	VDD_MIF |--- DMC
++
++	VDD_INT |--- LEFTBUS (parent device)
++		|--- PERIL
++		|--- MFC
++		|--- G3D
++		|--- RIGHTBUS
++		|--- PERIR
++		|--- FSYS
++		|--- LCD0
++		|--- PERIR
++		|--- ISP
++		|--- CAM
++
++- In case of Exynos4210, there is one power line as following:
++	VDD_INT |--- DMC (parent device)
++		|--- LEFTBUS
++		|--- PERIL
++		|--- MFC(L)
++		|--- G3D
++		|--- TV
++		|--- LCD0
++		|--- RIGHTBUS
++		|--- PERIR
++		|--- MFC(R)
++		|--- CAM
++		|--- FSYS
++		|--- GPS
++		|--- LCD0
++		|--- LCD1
++
++- In case of Exynos4x12, there are two power line as following:
++	VDD_MIF |--- DMC
++
++	VDD_INT |--- LEFTBUS (parent device)
++		|--- PERIL
++		|--- MFC(L)
++		|--- G3D
++		|--- TV
++		|--- IMAGE
++		|--- RIGHTBUS
++		|--- PERIR
++		|--- MFC(R)
++		|--- CAM
++		|--- FSYS
++		|--- GPS
++		|--- LCD0
++		|--- ISP
++
+ Example1:
+ 	Show the AXI buses of Exynos3250 SoC. Exynos3250 divides the buses to
+ 	power line (regulator). The MIF (Memory Interface) AXI bus is used to
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
