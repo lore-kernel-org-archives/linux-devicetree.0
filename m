@@ -1,76 +1,52 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v2 1/8] i2c-mux: add common core data for every mux
- instance
-Date: Thu, 24 Mar 2016 11:50:38 +0200
-Message-ID: <56F3B86E.4050002@mentor.com>
-References: <1452009438-27347-1-git-send-email-peda@lysator.liu.se>
- <1452009438-27347-2-git-send-email-peda@lysator.liu.se>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
+ supplying SD card
+Date: Thu, 24 Mar 2016 09:53:32 +0000
+Message-ID: <20160324095332.GS2566@sirena.org.uk>
+References: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1452009438-27347-2-git-send-email-peda@lysator.liu.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Adriana Reus <adriana.reus@intel.com>, Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, Nicholas Mc Guire <hofrat@osadl.org>Olli Salonen <oll>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Y9+TIksX9Q+3VPs6"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
 
-On 05.01.2016 17:57, Peter Rosin wrote:
-> From: Peter Rosin <peda@axentia.se>
-> 
-> The initial core mux structure starts off small with only the parent
-> adapter pointer, which all muxes have, and a priv pointer for mux
-> driver private data.
-> 
-> Add i2c_mux_alloc function to unify the creation of a mux.
-> 
-> Where appropriate, pass around the mux core structure instead of the
-> parent adapter or the driver private data.
-> 
-> Remove the parent adapter pointer from the driver private data for all
-> mux drivers.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+--Y9+TIksX9Q+3VPs6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-is it still under review? If yes, please find one question from me below :)
+On Thu, Mar 24, 2016 at 05:12:05PM +0900, Krzysztof Kozlowski wrote:
 
-[snip]
+>  			buck9_reg: BUCK9 {
+>  				regulator-name = "vdd_2.8v_ldo";
+>  				regulator-min-microvolt = <3000000>;
+> -				regulator-max-microvolt = <3750000>;
+> +				regulator-max-microvolt = <3755000>;
+>  				regulator-always-on;
+>  				regulator-boot-on;
+>  			};
 
-> @@ -196,21 +195,21 @@ static int i2c_arbitrator_probe(struct platform_device *pdev)
->  		dev_err(dev, "Cannot parse i2c-parent\n");
->  		return -EINVAL;
->  	}
-> -	arb->parent = of_get_i2c_adapter_by_node(parent_np);
-> +	muxc->parent = of_find_i2c_adapter_by_node(parent_np);
+Why does this regulator even have voltage constraints configured?  Is
+there any intention that it should ever be varied at runtime?
 
-why do you prefer here to use "unlocked" version of API?
+--Y9+TIksX9Q+3VPs6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Foe example would it be safe/possible to unload an I2C bus device driver
-module or unbind I2C device itself in runtime?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
->  	of_node_put(parent_np);
-> -	if (!arb->parent) {
-> +	if (!muxc->parent) {
->  		dev_err(dev, "Cannot find parent bus\n");
->  		return -EPROBE_DEFER;
->  	}
->  
->  	/* Actually add the mux adapter */
-> -	arb->child = i2c_add_mux_adapter(arb->parent, dev, arb, 0, 0, 0,
-> +	arb->child = i2c_add_mux_adapter(muxc, dev, arb, 0, 0, 0,
->  					 i2c_arbitrator_select,
->  					 i2c_arbitrator_deselect);
->  	if (!arb->child) {
->  		dev_err(dev, "Failed to add adapter\n");
->  		ret = -ENODEV;
-> -		i2c_put_adapter(arb->parent);
-> +		i2c_put_adapter(muxc->parent);
->  	}
->  
->  	return ret;
+iQEcBAEBCAAGBQJW87kbAAoJECTWi3JdVIfQkaMH/i9SREeHV6CSf0u+8dGoxGCf
+HA4VvYu9ybY0ELcfMF7fy57v1pK1sKa+OLWU6KG/ulqvFtsPAoJ+7SNMpequs1Bb
+unoI3J/N2xtH1VQkcO5+VpVb8wHM7kTOrvja2TiXBNhxGPDD/C4/G4OSrSICF4b4
+qnqPsWC+vto/zOfSpyoeI3Q4QYfWWMiZOs+YyvrsZwLmG9eZpvXKlChqrDx94y4M
+E6EMyevM4ukYITpL6n3q9/K/+BcLsLlkN7pSHlv/9ULkEaGH1m332e1yPfGoZ2qo
+Q3oXl9uriO9dddNc8efd9yk0ovE8j8eNvBMJF0sH7L45XEj+0uxZwpML5muzCH8=
+=dPlc
+-----END PGP SIGNATURE-----
 
---
-With best wishes,
-Vladimir
+--Y9+TIksX9Q+3VPs6--
