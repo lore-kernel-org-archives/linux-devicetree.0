@@ -1,43 +1,93 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 1/4] arm64: dts: marvell: Clean up armada-3720-db
-Date: Thu, 24 Mar 2016 17:46:02 +0100
-Message-ID: <56F419CA.9010400@suse.de>
-References: <1458771861-12392-1-git-send-email-afaerber@suse.de>
- <1458771861-12392-2-git-send-email-afaerber@suse.de>
- <87zitnn9ds.fsf@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/5 v4] drm: Add support of ARC PGU display controller
+Date: Thu, 24 Mar 2016 19:48:31 +0300
+Message-ID: <1458838116-24954-1-git-send-email-abrodkin@synopsys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87zitnn9ds.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
+This series add support of ARC PGU display controller.
+ARC PGU is a quite simple byte streamer that gets data from the framebuffer
+and pushes it to hte connected encoder (DP or HDMI).
 
-Am 24.03.2016 um 17:11 schrieb Gregory CLEMENT:
->> +/*
->> + * Exported on the micro USB connector CON32
->> + * through an FTDI
->> + */
->=20
-> As the comment didn't start anymore from the middle of the line, we
-> could have it an a single line. We don't have to split in 2 lines.
+It was tested on ARC SDP boards (axs101/103 in particular).
 
-Sure. Should I change that along with 4/4 in a v2? It'll be after the
-Easter holidays.
+Note following series that introduces
+drm_connector_register_all()/drm_connector_unregister_all() is a prerequisite
+now: https://lkml.org/lkml/2016/3/23/61
 
-Regards,
-Andreas
+Changes v3 -> v4:
+ * Main driver author is now set properly (thanks Carlos for all your efforts)
+ * Implemented correct hsync and vsync setup (thanks Jose)
+ * Dummy call-backs were removed (as suggested by Daniel)
+ * Obsolete load()/unload() call-backs were removed (as suggested by Daniel)
+ * With above in mind we were able to adopt recently introduced
+   drm_connector_register_all()/drm_connector_unregister_all()
+ * Implemented setup of properties (uncached) for FB user-pages
+ * Minor clean-up in DT binding docs and axs10x_mb.dtsi
 
---=20
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG=
- N=C3=BCrnberg)
+Changes v2 -> v3:
+ * Improved failure path if arcpgu_connector wasn't allocated.
+ * Fixed driver building as module.
+ * Implemented uncached mapping of user-space FB pages.
+ * Again updated DT bindings docs.
+
+Changes v1 -> v2:
+ * Clean-up of DT bindings documentation.
+ * Added missing "pxlclk" clock in axs10x_mb.dtsi.
+
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Alexey Brodkin (4):
+  drm: Add DT bindings documentation for ARC PGU display controller
+  MAINTAINERS: Add maintainer for ARC PGU display controller
+  arc: Add our own implementation of fb_pgprotect()
+  arc: axs10x - add support of ARC PGU
+
+Carlos Palminha (1):
+  drm: Add support of ARC PGU display controller
+
+ .../devicetree/bindings/display/snps,arcpgu.txt    |  71 ++++++
+ MAINTAINERS                                        |   6 +
+ arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
+ arch/arc/include/asm/fb.h                          |  19 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/arc/Kconfig                        |  10 +
+ drivers/gpu/drm/arc/Makefile                       |   2 +
+ drivers/gpu/drm/arc/arcpgu.h                       |  50 ++++
+ drivers/gpu/drm/arc/arcpgu_crtc.c                  | 257 +++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_drv.c                   | 282 +++++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 201 +++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_regs.h                  |  40 +++
+ 13 files changed, 1002 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+ create mode 100644 arch/arc/include/asm/fb.h
+ create mode 100644 drivers/gpu/drm/arc/Kconfig
+ create mode 100644 drivers/gpu/drm/arc/Makefile
+ create mode 100644 drivers/gpu/drm/arc/arcpgu.h
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
+
+-- 
+2.5.0
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
