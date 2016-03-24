@@ -1,37 +1,34 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: sunxi: dt: Add missing DRAM gate clock for
- simplefb TV output
-Date: Thu, 24 Mar 2016 19:45:28 +0100
-Message-ID: <20160324184528.GZ30977@lukather>
-References: <1458842920-30854-1-git-send-email-Priit.Laes@icefire.ee>
+Subject: Re: [PATCH v2 1/1] ARM: dts: sun5i-a13-olinuxino-micro: enable USB
+ DRC
+Date: Thu, 24 Mar 2016 19:46:22 +0100
+Message-ID: <20160324184622.GA30977@lukather>
+References: <1458825533-13968-1-git-send-email-jmfriedt@femto-st.fr>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="opGwb9ZbHW/MEJRX"
+	protocol="application/pgp-signature"; boundary="lg1FBb3gfYCu9N66"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458842920-30854-1-git-send-email-Priit.Laes-FvMSrs6xSY+ptlylMvRsHA@public.gmane.org>
+In-Reply-To: <1458825533-13968-1-git-send-email-jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Priit Laes <Priit.Laes-FvMSrs6xSY+ptlylMvRsHA@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+To: Jean-Michel Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---opGwb9ZbHW/MEJRX
+--lg1FBb3gfYCu9N66
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Thu, Mar 24, 2016 at 08:08:38PM +0200, Priit Laes wrote:
-> From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+On Thu, Mar 24, 2016 at 02:18:53PM +0100, Jean-Michel Friedt wrote:
+> From: JM Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
 >=20
-> DRAM gating driver commit for sun[47]i seems to be missing DRAM gate bit =
-5 for
-> simplefb TV output node. Add it.
+> Enable the OTG controller on the Olinuxino A13-micro.=20
+>=20
+> Signed-off-by: Jean-Michel Friedt <jmfriedt-qPpMuP/vQ5RWj0EZb7rXcA@public.gmane.org>
 
-Thanks, could you please add the Fixes tag and Cc stable ?
-
+Applied, thanks!
 Maxime
 
 --=20
@@ -39,29 +36,29 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---opGwb9ZbHW/MEJRX
+--lg1FBb3gfYCu9N66
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJW9DXIAAoJEBx+YmzsjxAg86YP/1bd/9x54K/nj+FxYn1kyNFZ
-cS5im0hRTRHxjrfdRgMXiCXJqqmIKONHlyhkup1c970XXUtGdkXMb1fUiRSORDWv
-CIdusBOIbJKJ9Sw3UGpxem9wm1Umz0AubqecyI++BOmNfx50ciVGsXQQNDhfda8q
-oHY9QDA5A1tFGiFSXh1DXqwQm/lo5RE66kSY7xZNm2gC3fGA3LC0sYSM7ZvnxqFQ
-LtSXGUZ+/d8KMZNKn1i8pVShsuAmP/QWO4P0sGMhHqU6izVxFU/3hZlSm3BpRXye
-fTZKzrzYtlK84ggQNiVfj3tTP4YkZLrcooxZAYeoOUPM1vOSFtt0xQtnoNJOKduT
-VhycoA+Ag4c0fQdeDi9O2n2o0MJFJftmQU+eyT5A+3VI2hGcT04AxrhOMC5wNPx2
-P4HEcnmj3Wf/JfliDnhA+XFEMLpEz77KXVVRUErdVrEnyB3GBgz4fXzpwm2YY6bb
-4/YTtv/FhEmj07JtONYnE+CGfawyz5rdKr+qhvXZurtrhyBaU2Mg1PNWij7hU8YE
-z8ALXTEW1nZ/1jJEFs3wlPA7OHs8akXc7QA3+TChSLWTw4MCrCtD5rETiUNhKPD3
-90mbWP3I3LnRpe4GKTjPQbBCeyDV+i/t2qJ6+YH2Pg5oWnGWCGSp/VyGijm+pcDy
-tUpa37ksQHbW1D6miCKQ
-=zedT
+iQIcBAEBAgAGBQJW9DX+AAoJEBx+YmzsjxAgjFgP/AgEabwzPFTxlvZn7K6oGZKn
+ABAXC+qI6m9DWcZqFoG8wENruJXhg2+uTfug63m00peDt7urqifFUyb5DTkomT8w
+U+l1YddsxsGNbeUGN9tUFuzyM2Wdgsb7BuXnx0q1uYoyLV8BRB4iRCLf8ELmFxsE
+5jWyS9y45jqTzq9zgEgME7kWMnGuWnu8TbmdiyMpjnfMfpWCVQb4Ipy/Fl1epwdm
+r8Phjnqhll8HrJnxAD7AEYtA45tmaiaZ8nXY0QSRmesrgJ/Qd7Yt67aCG+jaLWfM
+6h5eULG9K4ZgUn8oxZUjWnDeMr+wLV+0EMwqz42/w+NI3qhiMKAXX7uxyjQOWjMh
+UMNLTJ2GvTSzl1ntHAwrNFjlaMfLpkIRYteI1itAmhk4AXVypTt05Lb7XM561Xy4
+FiWwgjgS6z6Q85dvaaEypfAe+3WBohCBoLg/Ex1UghT4OKqhE2tInCM8va7ePA9R
+EYg4oEr/eyoB65thbMEjpcHjfb3XWMhig0SVeP3aWOwxX+qcLOCoKO0qvg7p/v6r
+Br+Tr9T9zTuU7qPxhtoVevEy8pUrEvCmI3k1QfxaBXsb40jMCmvhOPTSNFHFQBT+
+n2ChjBFoDoiu2xQPdx91tbHXgD0ZiX3QccBikahO3gpRe2ntFTQ/xbrgV17EiUfD
+CP6xH6Guf4KSHLBhDlIe
+=osxN
 -----END PGP SIGNATURE-----
 
---opGwb9ZbHW/MEJRX--
+--lg1FBb3gfYCu9N66--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
