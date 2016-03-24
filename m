@@ -1,146 +1,362 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl and gpio bindings
-Date: Thu, 24 Mar 2016 17:50:09 +0100
-Message-ID: <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 15/18] arm: boot: dts: Add PLX Technology OX810SE dtsi
+Date: Thu, 24 Mar 2016 17:50:12 +0100
+Message-ID: <1458838215-23314-16-git-send-email-narmstrong@baylibre.com>
 References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl and gpio DT bindings for PLX Technology OXNAS SoC Family.
-This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
-
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- .../devicetree/bindings/gpio/gpio_oxnas.txt        | 47 ++++++++++++++++++
- .../bindings/pinctrl/plxtech,pinctrl.txt           | 57 ++++++++++++++++++++++
- 2 files changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
+ arch/arm/boot/dts/ox810se.dtsi | 336 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 336 insertions(+)
+ create mode 100644 arch/arm/boot/dts/ox810se.dtsi
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+diff --git a/arch/arm/boot/dts/ox810se.dtsi b/arch/arm/boot/dts/ox810se.dtsi
 new file mode 100644
-index 0000000..4530fa9
+index 0000000..93286e9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-@@ -0,0 +1,47 @@
-+* PLX Technology OXNAS SoC GPIO Controller
++++ b/arch/arm/boot/dts/ox810se.dtsi
+@@ -0,0 +1,336 @@
++/*
++ * ox810se.dtsi - Device tree file for Oxford Semiconductor OX810SE SoC
++ *
++ * Copyright (C) 2016 Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * Licensed under GPLv2 or later
++ */
 +
-+Required properties:
-+ - compatible: "oxsemi,ox810se-gpio"
-+ - reg: Base address and length for the device.
-+ - interrupts: The port interrupt shared by all pins.
-+ - gpio-controller: Marks the port as GPIO controller.
-+ - #gpio-cells: Two. The first cell is the pin number and
-+   the second cell is used to specify the gpio polarity as defined in
-+   defined in <dt-bindings/gpio/gpio.h>:
-+      0 = GPIO_ACTIVE_HIGH
-+      1 = GPIO_ACTIVE_LOW
-+ - interrupt-controller: Marks the device node as an interrupt controller.
-+ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
-+   is used to specify the trigger type as defined in
-+   <dt-bindings/interrupt-controller/irq.h>:
-+      IRQ_TYPE_EDGE_RISING
-+      IRQ_TYPE_EDGE_FALLING
-+      IRQ_TYPE_EDGE_BOTH
-+ - plxtech,gpio-bank: Specifies which bank a controller owns.
-+ - gpio-ranges: Interaction with the PINCTRL subsystem.
-+ - ngpios: Specifies the gpio lines count in this specific bank.
++/include/ "skeleton.dtsi"
 +
-+Example:
++/ {
++	compatible = "oxsemi,ox810se";
 +
-+gpio0: gpio@0 {
-+	compatible = "oxsemi,ox810se-gpio";
-+	reg = <0x000000 0x100000>;
-+	interrupts = <21>;
-+	#gpio-cells = <2>;
-+	gpio-controller;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	plxtech,gpio-bank = <0>;
-+	gpio-ranges = <&pinctrl 0 0 32>;
-+	ngpios = <32>;
-+};
++	cpus {
++		#address-cells = <0>;
++		#size-cells = <0>;
 +
-+keys {
-+	...
-+
-+	button@sw1 {
-+		label = "ESC";
-+		linux,code = <1>;
-+		gpios = <&gpio0 12 0>;
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
-new file mode 100644
-index 0000000..dc4907b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
-@@ -0,0 +1,57 @@
-+* PLX Technology OXNAS SoC Family Pin Controller
-+
-+Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
-+../interrupt-controller/interrupts.txt for generic information regarding
-+pin controller, GPIO, and interrupt bindings.
-+
-+OXNAS 'pin configuration node' is a node of a group of pins which can be
-+used for a specific device or function. This node represents configurations of
-+pins, optional function, and optional mux related configuration.
-+
-+Required properties for pin controller node:
-+ - compatible: "oxsemi,ox810se-pinctrl"
-+ - plxtech,sys-ctrl: a phandle to the system controller syscon node
-+
-+Required properties for pin configuration sub-nodes:
-+ - pins: List of pins to which the configuration applies.
-+
-+Optional properties for pin configuration sub-nodes:
-+----------------------------------------------------
-+ - function: Mux function for the specified pins.
-+ - bias-pull-up: Enable weak pull-up.
-+
-+Example:
-+
-+pinctrl: pinctrl {
-+	compatible = "oxsemi,ox810se-pinctrl";
-+
-+	/* Regmap for sys registers */
-+	plxtech,sys-ctrl = <&sys>;
-+
-+	pinctrl_uart2: pinctrl_uart2 {
-+		uart2a {
-+			pins = "gpio31";
-+			function = "fct3";
-+		};
-+		uart2b {
-+			pins = "gpio32";
-+			function = "fct3";
++		cpu {
++			device_type = "cpu";
++			compatible = "arm,arm926ej-s";
++			clocks = <&armclk>;
 +		};
 +	};
-+};
 +
-+uart2: serial@900000 {
-+	compatible = "ns16550a";
-+	reg = <0x900000 0x100000>;
-+	clocks = <&sysclk>;
-+	interrupts = <29>;
-+	reg-shift = <0>;
-+	fifo-size = <16>;
-+	reg-io-width = <1>;
-+	current-speed = <115200>;
-+	no-loopback-test;
-+	status = "disabled";
-+	resets = <&reset 22>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
++	memory {
++		/* Max 256MB @ 0x48000000 */
++		reg = <0x48000000 0x10000000>;
++	};
++
++	clocks {
++		osc: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++
++		gmacclk: gmacclk {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <125000000>;
++		};
++
++		rpsclk: rpsclk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <1>;
++			clocks = <&osc>;
++		};
++
++		pll400: pll400 {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <733333333>;
++		};
++
++		sysclk: sysclk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <4>;
++			clock-mult = <1>;
++			clocks = <&pll400>;
++		};
++
++		armclk: armclk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <2>;
++			clock-mult = <1>;
++			clocks = <&pll400>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++		interrupt-parent = <&intc>;
++
++		apb-bridge@44000000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "simple-bus";
++			ranges = <0 0x44000000 0x1000000>;
++
++			pinctrl: pinctrl {
++				compatible = "oxsemi,ox810se-pinctrl";
++
++				/* Regmap for sys registers */
++				plxtech,sys-ctrl = <&sys>;
++
++				pinctrl_uart0: uart0 {
++					uart0a {
++						pins = "gpio31";
++						function = "fct3";
++					};
++					uart0b {
++						pins = "gpio32";
++						function = "fct3";
++					};
++				};
++
++				pinctrl_uart0_modem: uart0_modem {
++					uart0c {
++						pins = "gpio27";
++						function = "fct3";
++					};
++					uart0d {
++						pins = "gpio28";
++						function = "fct3";
++					};
++					uart0e {
++						pins = "gpio29";
++						function = "fct3";
++					};
++					uart0f {
++						pins = "gpio30";
++						function = "fct3";
++					};
++					uart0g {
++						pins = "gpio33";
++						function = "fct3";
++					};
++					uart0h {
++						pins = "gpio34";
++						function = "fct3";
++					};
++				};
++
++				pinctrl_uart1: uart1 {
++					uart1a {
++						pins = "gpio20";
++						function = "fct3";
++					};
++					uart1b {
++						pins = "gpio22";
++						function = "fct3";
++					};
++				};
++
++				pinctrl_uart1_modem: uart1_modem {
++					uart1c {
++						pins = "gpio8";
++						function = "fct3";
++					};
++					uart1d {
++						pins = "gpio9";
++						function = "fct3";
++					};
++					uart1e {
++						pins = "gpio23";
++						function = "fct3";
++					};
++					uart1f {
++						pins = "gpio24";
++						function = "fct3";
++					};
++					uart1g {
++						pins = "gpio25";
++						function = "fct3";
++					};
++					uart1h {
++						pins = "gpio26";
++						function = "fct3";
++					};
++				};
++
++				pinctrl_uart2: uart2 {
++					uart2a {
++						pins = "gpio6";
++						function = "fct3";
++					};
++					uart2b {
++						pins = "gpio7";
++						function = "fct3";
++					};
++				};
++
++				pinctrl_uart2_modem: uart2_modem {
++					uart2c {
++						pins = "gpio0";
++						function = "fct3";
++					};
++					uart2d {
++						pins = "gpio1";
++						function = "fct3";
++					};
++					uart2e {
++						pins = "gpio2";
++						function = "fct3";
++					};
++					uart2f {
++						pins = "gpio3";
++						function = "fct3";
++					};
++					uart2g {
++						pins = "gpio4";
++						function = "fct3";
++					};
++					uart2h {
++						pins = "gpio5";
++						function = "fct3";
++					};
++				};
++			};
++
++			gpio0: gpio@000000 {
++				compatible = "oxsemi,ox810se-gpio";
++				reg = <0x000000 0x100000>;
++				interrupts = <21>;
++				#gpio-cells = <2>;
++				gpio-controller;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				ngpios = <32>;
++				plxtech,gpio-bank = <0>;
++				gpio-ranges = <&pinctrl 0 0 32>;
++			};
++
++			gpio1: gpio@100000 {
++				compatible = "oxsemi,ox810se-gpio";
++				reg = <0x100000 0x100000>;
++				interrupts = <22>;
++				#gpio-cells = <2>;
++				gpio-controller;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				ngpios = <3>;
++				plxtech,gpio-bank = <1>;
++				gpio-ranges = <&pinctrl 0 32 3>;
++			};
++
++			uart0: serial@200000 {
++			       compatible = "ns16550a";
++			       reg = <0x200000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <23>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 17>;
++			};
++
++			uart1: serial@300000 {
++			       compatible = "ns16550a";
++			       reg = <0x300000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <24>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 18>;
++			};
++
++			uart2: serial@900000 {
++			       compatible = "ns16550a";
++			       reg = <0x900000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <29>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 22>;
++			};
++
++			uart3: serial@a00000 {
++			       compatible = "ns16550a";
++			       reg = <0xa00000 0x100000>;
++			       clocks = <&sysclk>;
++			       interrupts = <30>;
++			       reg-shift = <0>;
++			       fifo-size = <16>;
++			       reg-io-width = <1>;
++			       current-speed = <115200>;
++			       no-loopback-test;
++			       status = "disabled";
++			       resets = <&reset 23>;
++			};
++		};
++
++		apb-bridge@45000000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "simple-bus";
++			ranges = <0 0x45000000 0x1000000>;
++
++			sys: sys-ctrl@000000 {
++				compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
++				reg = <0x000000 0x100000>;
++
++				reset: reset-controller {
++					compatible = "oxsemi,ox810se-reset";
++					#reset-cells = <1>;
++				};
++
++				stdclk: stdclk {
++					compatible = "oxsemi,ox810se-stdclk";
++					#clock-cells = <1>;
++				};
++			};
++
++			rps@300000 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "simple-bus";
++				ranges = <0 0x300000 0x100000>;
++
++				intc: interrupt-controller@0 {
++					compatible = "oxsemi,ox810se-rps-irq";
++					interrupt-controller;
++					reg = <0 0x200>;
++					#interrupt-cells = <1>;
++					valid-mask = <0xFFFFFFFF>;
++					clear-mask = <0>;
++				};
++
++				timer0: timer@200 {
++					compatible = "oxsemi,ox810se-rps-timer";
++					reg = <0x200 0x40>;
++					clocks = <&rpsclk>;
++					interrupts = <4 5>;
++				};
++			};
++		};
++	};
 +};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
