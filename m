@@ -1,48 +1,52 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
- supplying SD card
-Date: Thu, 24 Mar 2016 17:12:05 +0900
-Message-ID: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm64: dts: marvell: Rename armada-ap806 XOR nodes
+Date: Thu, 24 Mar 2016 09:17:26 +0100
+Message-ID: <20160324091726.6eaf83ec@free-electrons.com>
+References: <1458771861-12392-1-git-send-email-afaerber@suse.de>
+	<1458771861-12392-5-git-send-email-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458771861-12392-5-git-send-email-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas =?UTF-8?B?RsOkcmJlcg==?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The buck9 regulator of S2MPS11 PMIC had incorrect maximum voltage -
-lower by 5 mV than specified by datasheet. This buck9 provides power to
-other regulators, including LDO13 and LDO19 which supply the MMC2 (SD
-card).
+Hello,
 
-When constraints were applied, the depending regulators were not
-providing enough power, leading to SD card detection errors:
-	mmc1: card never left busy state
-	mmc1: error -110 whilst initialising SD card
+On Wed, 23 Mar 2016 23:24:21 +0100, Andreas F=C3=A4rber wrote:
+> Node names should not contain an instance number, the unit address
+> serves to distinguish nodes of the same name. So rename the XOR nodes
+> to just xor@address, using xorX as label instead.
+>=20
+> Fixes: ec7e5a569bce ("arm64: dts: marvell: add Device Tree files for =
+Armada 7K/8K")
+> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-Fixes: 86a2d2ac5e5d ("ARM: dts: Add dts file for Odroid XU3 board")
-Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Removing the instance number from the node name is obviously good.
+However, I don't think it's really needed to add labels. The XOR
+engines are purely "internal" devices, so they are always enabled at
+the SoC level.
 
----
+>  "marvell,mv-xor-v2" is not yet referenced from any driver in next-20=
+160323.
 
-The issue can be reproduced on next-20160324 with
-bae4fdc88d7f7dda1 (regulator: core: Ensure we are at least in bounds for our constraints).
----
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes. The driver has been submitted, but has received some comments that
+I need to address.
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 1bd507bfa750..82b2ba632cf6 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -299,7 +299,7 @@
- 			buck9_reg: BUCK9 {
- 				regulator-name = "vdd_2.8v_ldo";
- 				regulator-min-microvolt = <3000000>;
--				regulator-max-microvolt = <3750000>;
-+				regulator-max-microvolt = <3755000>;
- 				regulator-always-on;
- 				regulator-boot-on;
- 			};
--- 
-2.5.0
+Thanks!
 
+Thomas
+--=20
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
