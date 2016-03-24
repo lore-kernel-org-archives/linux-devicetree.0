@@ -1,52 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
- supplying SD card
-Date: Thu, 24 Mar 2016 09:53:32 +0000
-Message-ID: <20160324095332.GS2566@sirena.org.uk>
-References: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
+From: Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+Subject: Re: [PATCH v2] i2c: Add generic support passing secondary devices addresses
+Date: Thu, 24 Mar 2016 11:11:45 +0100
+Message-ID: <CAH-u=80AH6njdkc_2JOnHM21eFFDDdwsE1y=k31=J-6kTPXwPA@mail.gmail.com>
+References: <1454254380-9246-1-git-send-email-jean-michel.hautbois@veo-labs.com>
+ <20160201144608.GA26606@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Y9+TIksX9Q+3VPs6"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20160201144608.GA26606@rob-hp-laptop>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jean-Michel Hautbois <jhautbois@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, linux-i2c@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, wsa@the-dreams.de, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi !
 
---Y9+TIksX9Q+3VPs6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+2016-02-01 15:46 GMT+01:00 Rob Herring <robh@kernel.org>:
+> On Sun, Jan 31, 2016 at 04:33:00PM +0100, Jean-Michel Hautbois wrote:
+>> Some I2C devices have multiple addresses assigned, for example each address
+>> corresponding to a different internal register map page of the device.
+>> So far drivers which need support for this have handled this with a driver
+>> specific and non-generic implementation, e.g. passing the additional address
+>> via platform data.
+>>
+>> This patch provides a new helper function called i2c_new_secondary_device()
+>> which is intended to provide a generic way to get the secondary address
+>> as well as instantiate a struct i2c_client for the secondary address.
+>>
+>> The function expects a pointer to the primary i2c_client, a name
+>> for the secondary address and an optional default address. The name is used
+>> as a handle to specify which secondary address to get.
+>>
+>> The default address is used as a fallback in case no secondary address
+>> was explicitly specified. In case no secondary address and no default
+>> address were specified the function returns NULL.
+>>
+>> For now the function only supports look-up of the secondary address
+>> from devicetree, but it can be extended in the future
+>> to for example support board files and/or ACPI.
+>>
+>> Signed-off-by: Jean-Michel Hautbois <jean-michel.hautbois@veo-labs.com>
+>> ---
+>> v2: adding some DT bindings documentation (more than one year later...)
+>>
+>>  Documentation/devicetree/bindings/i2c/i2c.txt |  7 +++++
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>>  drivers/i2c/i2c-core.c                        | 42 +++++++++++++++++++++++++++
+>>  include/linux/i2c.h                           |  5 ++++
+>>  3 files changed, 54 insertions(+)
 
-On Thu, Mar 24, 2016 at 05:12:05PM +0900, Krzysztof Kozlowski wrote:
+Thanks Rob for your ack. What is the future of this patch ?
+I know the merge window is opened, so it will not be integrated now,
+but could be in the next version ?
 
->  			buck9_reg: BUCK9 {
->  				regulator-name = "vdd_2.8v_ldo";
->  				regulator-min-microvolt = <3000000>;
-> -				regulator-max-microvolt = <3750000>;
-> +				regulator-max-microvolt = <3755000>;
->  				regulator-always-on;
->  				regulator-boot-on;
->  			};
-
-Why does this regulator even have voltage constraints configured?  Is
-there any intention that it should ever be varied at runtime?
-
---Y9+TIksX9Q+3VPs6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW87kbAAoJECTWi3JdVIfQkaMH/i9SREeHV6CSf0u+8dGoxGCf
-HA4VvYu9ybY0ELcfMF7fy57v1pK1sKa+OLWU6KG/ulqvFtsPAoJ+7SNMpequs1Bb
-unoI3J/N2xtH1VQkcO5+VpVb8wHM7kTOrvja2TiXBNhxGPDD/C4/G4OSrSICF4b4
-qnqPsWC+vto/zOfSpyoeI3Q4QYfWWMiZOs+YyvrsZwLmG9eZpvXKlChqrDx94y4M
-E6EMyevM4ukYITpL6n3q9/K/+BcLsLlkN7pSHlv/9ULkEaGH1m332e1yPfGoZ2qo
-Q3oXl9uriO9dddNc8efd9yk0ovE8j8eNvBMJF0sH7L45XEj+0uxZwpML5muzCH8=
-=dPlc
------END PGP SIGNATURE-----
-
---Y9+TIksX9Q+3VPs6--
+Thanks,
+JM
