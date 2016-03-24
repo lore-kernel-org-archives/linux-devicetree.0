@@ -1,214 +1,46 @@
 From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v3 06/16] ARM: davinci: da850: use clk->set_parent for async3
-Date: Thu, 24 Mar 2016 18:51:31 -0500
-Message-ID: <1458863503-31121-7-git-send-email-david@lechnology.com>
+Subject: [PATCH v3 12/16] ARM: dt: da850: Add cfgchip syscon node
+Date: Thu, 24 Mar 2016 18:51:37 -0500
+Message-ID: <1458863503-31121-13-git-send-email-david@lechnology.com>
 References: <1458863503-31121-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1458863503-31121-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
 	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The da850 family of processors has an async3 clock domain that can be
-muxed to either pll0_sysclk2 or pll1_sysclk2. Now that the davinci clocks
-have a set_parent callback, we can use this to control the async3 mux
-instead of a stand-alone function.
-
-This adds a new async3_clk and sets the appropriate child clocks. The
-default is use to pll1_sysclk2 since it is not affected by processor
-frequency scaling.
+Add a syscon node for the SoC CFGCHIPn registers. This is needed for
+the new usb phy driver.
 
 Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 ---
 
-v3 changes: 
-
-* Does not use ioremap in da850_async3_set_parent(). This works now becuase the
-  clock init has been moved.
-* Fixed copy/paste error in a comment.
+v3 changes: This is a new patch.
 
 
+ arch/arm/boot/dts/da850.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- arch/arm/mach-davinci/da850.c | 82 ++++++++++++++++++-------------------------
- 1 file changed, 34 insertions(+), 48 deletions(-)
-
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 9f46706..10bfbed 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -34,9 +34,6 @@
- #include "clock.h"
- #include "mux.h"
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 4294849..a360713 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -150,6 +150,10 @@
+ 			};
  
--/* SoC specific clock flags */
--#define DA850_CLK_ASYNC3	BIT(16)
--
- #define DA850_PLL1_BASE		0x01e1a000
- #define DA850_TIMER64P2_BASE	0x01f0c000
- #define DA850_TIMER64P3_BASE	0x01f0d000
-@@ -161,6 +158,33 @@ static struct clk pll1_sysclk3 = {
- 	.div_reg	= PLLDIV3,
- };
- 
-+static int da850_async3_set_parent(struct clk *clk, struct clk *parent)
-+{
-+	u32 val;
-+
-+	val = readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
-+
-+	/* Set the Async3 clock domain mux based on the parent clock. */
-+	if (parent == &pll0_sysclk2)
-+		val &= ~CFGCHIP3_ASYNC3_CLKSRC;
-+	else if (parent == &pll1_sysclk2)
-+		val |= CFGCHIP3_ASYNC3_CLKSRC;
-+	else {
-+		pr_err("Bad parent on async3 clock mux.\n");
-+		return -EINVAL;
-+	}
-+
-+	writel(val, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
-+
-+	return 0;
-+}
-+
-+static struct clk async3_clk = {
-+	.name		= "async3",
-+	.parent		= &pll1_sysclk2,
-+	.set_parent	= da850_async3_set_parent,
-+};
-+
- static struct clk i2c0_clk = {
- 	.name		= "i2c0",
- 	.parent		= &pll0_aux_clk,
-@@ -234,18 +258,16 @@ static struct clk uart0_clk = {
- 
- static struct clk uart1_clk = {
- 	.name		= "uart1",
--	.parent		= &pll0_sysclk2,
-+	.parent		= &async3_clk,
- 	.lpsc		= DA8XX_LPSC1_UART1,
- 	.gpsc		= 1,
--	.flags		= DA850_CLK_ASYNC3,
- };
- 
- static struct clk uart2_clk = {
- 	.name		= "uart2",
--	.parent		= &pll0_sysclk2,
-+	.parent		= &async3_clk,
- 	.lpsc		= DA8XX_LPSC1_UART2,
- 	.gpsc		= 1,
--	.flags		= DA850_CLK_ASYNC3,
- };
- 
- static struct clk aintc_clk = {
-@@ -300,10 +322,9 @@ static struct clk emac_clk = {
- 
- static struct clk mcasp_clk = {
- 	.name		= "mcasp",
--	.parent		= &pll0_sysclk2,
-+	.parent		= &async3_clk,
- 	.lpsc		= DA8XX_LPSC1_McASP0,
- 	.gpsc		= 1,
--	.flags		= DA850_CLK_ASYNC3,
- };
- 
- static struct clk lcdc_clk = {
-@@ -355,10 +376,9 @@ static struct clk spi0_clk = {
- 
- static struct clk spi1_clk = {
- 	.name		= "spi1",
--	.parent		= &pll0_sysclk2,
-+	.parent		= &async3_clk,
- 	.lpsc		= DA8XX_LPSC1_SPI1,
- 	.gpsc		= 1,
--	.flags		= DA850_CLK_ASYNC3,
- };
- 
- static struct clk vpif_clk = {
-@@ -386,10 +406,9 @@ static struct clk dsp_clk = {
- 
- static struct clk ehrpwm_clk = {
- 	.name		= "ehrpwm",
--	.parent		= &pll0_sysclk2,
-+	.parent		= &async3_clk,
- 	.lpsc		= DA8XX_LPSC1_PWM,
- 	.gpsc		= 1,
--	.flags		= DA850_CLK_ASYNC3,
- };
- 
- #define DA8XX_EHRPWM_TBCLKSYNC	BIT(12)
-@@ -421,10 +440,9 @@ static struct clk ehrpwm_tbclk = {
- 
- static struct clk ecap_clk = {
- 	.name		= "ecap",
--	.parent		= &pll0_sysclk2,
-+	.parent		= &async3_clk,
- 	.lpsc		= DA8XX_LPSC1_ECAP,
- 	.gpsc		= 1,
--	.flags		= DA850_CLK_ASYNC3,
- };
- 
- static struct clk_lookup da850_clks[] = {
-@@ -442,6 +460,7 @@ static struct clk_lookup da850_clks[] = {
- 	CLK(NULL,		"pll1_aux",	&pll1_aux_clk),
- 	CLK(NULL,		"pll1_sysclk2",	&pll1_sysclk2),
- 	CLK(NULL,		"pll1_sysclk3",	&pll1_sysclk3),
-+	CLK(NULL,		"async3",	&async3_clk),
- 	CLK("i2c_davinci.1",	NULL,		&i2c0_clk),
- 	CLK(NULL,		"timer0",	&timerp64_0_clk),
- 	CLK("davinci-wdt",	NULL,		&timerp64_1_clk),
-@@ -909,30 +928,6 @@ static struct davinci_timer_info da850_timer_info = {
- 	.clocksource_id	= T0_TOP,
- };
- 
--static void da850_set_async3_src(int pllnum)
--{
--	struct clk *clk, *newparent = pllnum ? &pll1_sysclk2 : &pll0_sysclk2;
--	struct clk_lookup *c;
--	unsigned int v;
--	int ret;
--
--	for (c = da850_clks; c->clk; c++) {
--		clk = c->clk;
--		if (clk->flags & DA850_CLK_ASYNC3) {
--			ret = clk_set_parent(clk, newparent);
--			WARN(ret, "DA850: unable to re-parent clock %s",
--								clk->name);
--		}
--       }
--
--	v = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
--	if (pllnum)
--		v |= CFGCHIP3_ASYNC3_CLKSRC;
--	else
--		v &= ~CFGCHIP3_ASYNC3_CLKSRC;
--	__raw_writel(v, DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG));
--}
--
- #ifdef CONFIG_CPU_FREQ
- /*
-  * Notes:
-@@ -1328,15 +1323,6 @@ void __init da850_init(void)
- 	if (WARN(!da8xx_syscfg1_base, "Unable to map syscfg1 module"))
- 		return;
- 
--	/*
--	 * Move the clock source of Async3 domain to PLL1 SYSCLK2.
--	 * This helps keeping the peripherals on this domain insulated
--	 * from CPU frequency changes caused by DVFS. The firmware sets
--	 * both PLL0 and PLL1 to the same frequency so, there should not
--	 * be any noticeable change even in non-DVFS use cases.
--	 */
--	da850_set_async3_src(1);
--
- 	/* Unlock writing to PLL0 registers */
- 	v = __raw_readl(DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP0_REG));
- 	v &= ~CFGCHIP0_PLL_MASTER_LOCK;
+ 		};
++		cfgchip: cfgchip@1417c {
++			compatible = "ti,da830-cfgchip", "syscon";
++			reg = <0x1417c 0x14>;
++		};
+ 		edma0: edma@0 {
+ 			compatible = "ti,edma3-tpcc";
+ 			/* eDMA3 CC0: 0x01c0 0000 - 0x01c0 7fff */
 -- 
 1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
