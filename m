@@ -1,14 +1,16 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 1/3] phy: rockchip-dp: should be a child device of the GRF
-Date: Thu, 24 Mar 2016 22:29:01 +0100
-Message-ID: <1458854943-17388-1-git-send-email-heiko@sntech.de>
+Subject: [PATCH v2 2/3] phy: rockchip-emmc: should be a child device of the GRF
+Date: Thu, 24 Mar 2016 22:29:02 +0100
+Message-ID: <1458854943-17388-2-git-send-email-heiko@sntech.de>
+References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458854943-17388-1-git-send-email-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com
 Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, ykk@rock-chips.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-The displayport-phy is fully enclosed in the general register files (GRF).
+The emmc-phy is fully enclosed in the general register files (GRF).
 Therefore as seen from the device-tree it shouldn't be a separate platform-
 device but instead a sub-device of the GRF - using the simply-mfd mechanism.
 
@@ -16,78 +18,75 @@ The driver entered the kernel in the current merge-window, so we can still
 adapt the binding without needing a fallback, as the binding hasn't been
 released with a full kernel yet.
 
-While the edp phy is fully part of the GRF, it doesn't have any separate
-register set there, so doesn't get any register-area assigned.
-
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
-While one of my intermediate versions did include that conversion
-already, it looks like it was lost when the dp-phy got split out into
-its own series and I missed that dropped change.
+Hi Shawn, Kishon,
+
+I didn't see this new phy driver until now, so I'd really like to get
+this sorted before the old binding solidifies :-).
+
+I'll convert the usbphy as well, but that has to have the fallback for
+the old binding, so is not as urgent as these two.
 
 As mentioned in the patch description above, this is meant as a fixup for
 kernel 4.6.
 
- .../devicetree/bindings/phy/rockchip-dp-phy.txt        | 18 +++++++++++-------
- drivers/phy/phy-rockchip-dp.c                          |  7 +++++--
- 2 files changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-index 50c4f9b..e3b4809 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-@@ -8,15 +8,19 @@ Required properties:
- 	of memory mapped region.
- - clock-names: from common clock binding:
- 	Required elements: "24m"
--- rockchip,grf: phandle to the syscon managing the "general register files"
- - #phy-cells : from the generic PHY bindings, must be 0;
+changes in v2: drop forgotten rockchip,grf from example
+
+
+ .../devicetree/bindings/phy/rockchip-emmc-phy.txt     | 19 ++++++++++++-------
+ drivers/phy/phy-rockchip-emmc.c                       |  5 ++++-
+ 2 files changed, 16 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+index 61916f1..d711259 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
++++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+@@ -3,17 +3,21 @@ Rockchip EMMC PHY
+ 
+ Required properties:
+  - compatible: rockchip,rk3399-emmc-phy
+- - rockchip,grf : phandle to the syscon managing the "general
+-   register files"
+  - #phy-cells: must be 0
+  - reg: PHY configure reg address offset in "general
+    register files"
  
  Example:
  
--edp_phy: edp-phy {
--	compatible = "rockchip,rk3288-dp-phy";
+-emmcphy: phy {
+-	compatible = "rockchip,rk3399-emmc-phy";
 -	rockchip,grf = <&grf>;
--	clocks = <&cru SCLK_EDP_24M>;
--	clock-names = "24m";
+-	reg = <0xf780>;
 -	#phy-cells = <0>;
++
 +grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3288-grf", "syscon", "simple-mfd";
++	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
 +
 +...
 +
-+	edp_phy: edp-phy {
-+		compatible = "rockchip,rk3288-dp-phy";
-+		clocks = <&cru SCLK_EDP_24M>;
-+		clock-names = "24m";
++	emmcphy: phy@f780 {
++		compatible = "rockchip,rk3399-emmc-phy";
++		reg = <0xf780>;
 +		#phy-cells = <0>;
 +	};
  };
-diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
-index 77e2d02..793ecb6 100644
---- a/drivers/phy/phy-rockchip-dp.c
-+++ b/drivers/phy/phy-rockchip-dp.c
-@@ -86,6 +86,9 @@ static int rockchip_dp_phy_probe(struct platform_device *pdev)
- 	if (!np)
- 		return -ENODEV;
+diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
+index 887b4c2..6ebcf3e 100644
+--- a/drivers/phy/phy-rockchip-emmc.c
++++ b/drivers/phy/phy-rockchip-emmc.c
+@@ -176,7 +176,10 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
+ 	struct regmap *grf;
+ 	unsigned int reg_offset;
  
+-	grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
 +	if (!dev->parent || !dev->parent->of_node)
 +		return -ENODEV;
 +
- 	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
- 	if (IS_ERR(dp))
- 		return -ENOMEM;
-@@ -104,9 +107,9 @@ static int rockchip_dp_phy_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	dp->grf = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
-+	dp->grf = syscon_node_to_regmap(dev->parent->of_node);
- 	if (IS_ERR(dp->grf)) {
--		dev_err(dev, "rk3288-dp needs rockchip,grf property\n");
-+		dev_err(dev, "rk3288-dp needs the General Register Files syscon\n");
- 		return PTR_ERR(dp->grf);
- 	}
- 
++	grf = syscon_node_to_regmap(dev->parent->of_node);
+ 	if (IS_ERR(grf)) {
+ 		dev_err(dev, "Missing rockchip,grf property\n");
+ 		return PTR_ERR(grf);
 -- 
 2.7.0
