@@ -1,31 +1,41 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH v2 0/2] ARM: sunxi: dt: Add missing DRAM gate clock for simplefb TV output
-Date: Thu, 24 Mar 2016 21:52:15 +0200
-Message-ID: <1458849137-3883-1-git-send-email-plaes@plaes.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+From: Priit Laes <plaes@plaes.org>
+Subject: [PATCH v2 2/2] ARM: sun7i: dt: Enable dram gate 5 (tve0 clock) for simplefb TV output
+Date: Thu, 24 Mar 2016 21:52:17 +0200
+Message-ID: <1458849137-3883-3-git-send-email-plaes@plaes.org>
+References: <1458849137-3883-1-git-send-email-plaes@plaes.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458849137-3883-1-git-send-email-plaes@plaes.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Priit Laes <plaes@plaes.org>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DRAM gating driver commit for sun[47]i seems to be missing DRAM gate bit 5 for
-simplefb TV output node. Add it.
+Seems like dram_gate 5 was forgotten when DRAM gating driver was added.
 
-v2 changes:
- - Added Cc:stable and Fixes tags
+Add it.
 
-Priit Laes (2):
-  ARM: sun4i: dt: Enable dram gate 5 (tve0 clock) for simplefb TV output
-  ARM: sun7i: dt: Enable dram gate 5 (tve0 clock) for simplefb TV output
-
- arch/arm/boot/dts/sun4i-a10.dtsi | 2 +-
+Cc: stable@vger.kernel.org
+Fixes: 0b4bf5a5200b (ARM: dts: sun7i: Add DRAM gates)
+Signed-off-by: Priit Laes <plaes@plaes.org>
+---
  arch/arm/boot/dts/sun7i-a20.dtsi | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 0940a78..ee4e8e7 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -85,8 +85,9 @@
+ 			compatible = "allwinner,simple-framebuffer",
+ 				     "simple-framebuffer";
+ 			allwinner,pipeline = "de_be0-lcd0-tve0";
+-			clocks = <&pll5 1>, <&ahb_gates 34>, <&ahb_gates 36>,
+-				 <&ahb_gates 44>, <&dram_gates 26>;
++			clocks = <&pll5 1>,
++				 <&ahb_gates 34>, <&ahb_gates 36>, <&ahb_gates 44>,
++				 <&dram_gates 5>, <&dram_gates 26>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
