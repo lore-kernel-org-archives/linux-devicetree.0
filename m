@@ -1,37 +1,52 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 06/18] dt-bindings: Add Oxford Semiconductors to vendor prefixes
-Date: Thu, 24 Mar 2016 17:50:03 +0100
-Message-ID: <1458838215-23314-7-git-send-email-narmstrong@baylibre.com>
-References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Subject: Re: [PATCH 10/12] ARM: dts: dragonboard-600c: Add on board leds support
+Date: Thu, 24 Mar 2016 17:51:01 +0100
+Message-ID: <CAP71WjzdDRqtS4oJu_m_Y9kuZ4QprYnqMHop=5a6Vc6yypakhA@mail.gmail.com>
+References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org> <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Mar 23, 2016 at 8:48 PM, Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+> +                       led@1 {
+> +                               label = "dragonboard-600c:green:user1";
+> +                               gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
+> +                               linux,default-trigger = "heartbeat";
+> +                               default-state = "off";
+> +                       };
+> +
+> +                       led@2 {
+> +                               label = "dragonboard-600c:green:user2";
+> +                               gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
+> +                               linux,default-trigger = "mmc0";
+> +                               default-state = "off";
+> +                       };
+> +
+> +                       led@3 {
+> +                               label = "dragonboard-600c:green:user3";
+> +                               gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
+> +                               linux,default-trigger = "mmc1";
+> +                               default-state = "off";
+> +                       };
+> +
+> +                       led@4 {
+> +                               label = "apq8016-sbc:green:user4";
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 24b2100..57c04e4 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -175,6 +175,7 @@ option	Option NV
- ortustech	Ortus Technology Co., Ltd.
- ovti	OmniVision Technologies
- ORCL	Oracle Corporation
-+oxsemi	Oxford Semiconductors, Ltd.
- panasonic	Panasonic Corporation
- parade	Parade Technologies Inc.
- pericom	Pericom Technology Inc.
--- 
-1.9.1
+typo ^^
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                               gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
+> +                               linux,default-trigger = "none";
+> +                               default-state = "off";
+> +                       };
+
+also, if i read the 96boards specs correctly, the LED are labeled
+3-2-1-0 , if you look at the board with the LEDs on the bottom. With
+this DT config, you end up with 0-1-2-3 instead.
+
+also, they should be labeled 0 to 3, not 1 to 4.
