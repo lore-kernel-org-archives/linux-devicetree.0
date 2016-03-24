@@ -1,318 +1,518 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v6 2/4] power: reset: add reboot mode driver
-Date: Thu, 24 Mar 2016 11:50:52 +0900
-Message-ID: <CAJKOXPcKzGTAicbsXK-cC9WQT0vBhpSG_q2GCn37+72x2hdhsQ@mail.gmail.com>
-References: <1458646525-491-1-git-send-email-andy.yan@rock-chips.com>
-	<1458646642-591-1-git-send-email-andy.yan@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1458646642-591-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>
-Cc: robh+dt@kernel.org, sre@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, catalin.marinas@arm.com, olof@lixom.net, alexandre.belloni@free-electrons.com, dbaryshkov@gmail.com, jun.nie@linaro.org, pawel.moll@arm.com, will.deacon@arm.com, linux-rockchip@lists.infradead.org, matthias.bgg@gmail.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, f.fainelli@gmail.com, linux@arm.linux.org.uk, mbrugger@suse.com, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, moritz.fischer@ettus.com, linux-kernel@vger.kernel.org, wxt@rock-chips.com, dwmw2@infradead.org, mark.rutland@arm.com
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v5 01/21] PM / devfreq: exynos: Add generic exynos bus
+ frequency driver
+Date: Thu, 24 Mar 2016 13:25:10 +0900
+Message-ID: <1458793530-31897-2-git-send-email-cw00.choi@samsung.com>
+References: <1458793530-31897-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1458793530-31897-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org
+Cc: rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, tjakobi@math.uni-bielefeld.de, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cool work! Few comments below.
+This patch adds the generic exynos bus frequency driver for AMBA AXI bus
+of sub-blocks in exynos SoC with DEVFREQ framework. The Samsung Exynos SoC
+have the common architecture for bus between DRAM and sub-blocks in SoC.
+This driver can support the generic bus frequency driver for Exynos SoCs.
 
+In devicetree, Each bus block has a bus clock, regulator, operation-point
+and devfreq-event devices which measure the utilization of each bus block.
 
-On Tue, Mar 22, 2016 at 8:37 PM, Andy Yan <andy.yan@rock-chips.com> wrote:
-> This driver parse the reboot commands like "reboot loader"
-> and "reboot recovery" to get a boot mode described in the
-> device tree , then call the write interfae to store the boot
-> mode in some place like special register or sram , which can
-> be read by the bootloader after system reboot, then the bootloader
-> can take different action according to the mode stored.
->
-> This is commonly used on Android based devices, in order to
-> reboot the device into fastboot or recovery mode.
->
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> Reviewed-by: Moritz Fischer <moritz.fischer@ettus.com>
-> Tested-by: John Stultz <john.stultz@linaro.org>
-> Acked-by: John Stultz <john.stultz@linaro.org>
-> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
->
-> ---
->
-> Changes in v6: None
-> Changes in v5:
-> - use two blank space under help in Kconfig
-> - use unsigned int instead of int for member magic in struct mode_info
->
-> Changes in v4:
-> - make this driver depends on OF to avoid kbuild test error
->
-> Changes in v3:
-> - scan multi properities
-> - add mask value for some platform which only use some bits of the register
->   to store boot mode magic value
->
-> Changes in v2:
-> - move to dir drivers/power/reset/
-> - make syscon-reboot-mode a generic driver
->
-> Changes in v1:
-> - fix the embarrassed compile warning
-> - correct the maskrom magic number
-> - check for the normal reboot
->
->  drivers/power/reset/Kconfig              |  13 ++++
->  drivers/power/reset/Makefile             |   2 +
->  drivers/power/reset/reboot-mode.c        | 106 +++++++++++++++++++++++++++++++
->  drivers/power/reset/reboot-mode.h        |   6 ++
->  drivers/power/reset/syscon-reboot-mode.c |  65 +++++++++++++++++++
->  5 files changed, 192 insertions(+)
->  create mode 100644 drivers/power/reset/reboot-mode.c
->  create mode 100644 drivers/power/reset/reboot-mode.h
->  create mode 100644 drivers/power/reset/syscon-reboot-mode.c
->
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index 1131cf7..cf50630 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -173,5 +173,18 @@ config POWER_RESET_ZX
->         help
->           Reboot support for ZTE SoCs.
->
-> +config REBOOT_MODE
-> +       tristate
-> +
-> +config SYSCON_REBOOT_MODE
-> +       bool "Generic SYSCON regmap reboot mode driver"
-> +       depends on OF
-> +       select REBOOT_MODE
-> +       help
-> +         Say y here will enable reboot mode driver. This will
-> +         get reboot mode arguments and store it in SYSCON mapped
-> +         register, then the bootloader can read it to take different
-> +         action according to the mode.
-> +
->  endif
->
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index 096fa67..a63865b 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -20,3 +20,5 @@ obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
->  obj-$(CONFIG_POWER_RESET_SYSCON_POWEROFF) += syscon-poweroff.o
->  obj-$(CONFIG_POWER_RESET_RMOBILE) += rmobile-reset.o
->  obj-$(CONFIG_POWER_RESET_ZX) += zx-reboot.o
-> +obj-$(CONFIG_REBOOT_MODE) += reboot-mode.o
-> +obj-$(CONFIG_SYSCON_REBOOT_MODE) += syscon-reboot-mode.o
-> diff --git a/drivers/power/reset/reboot-mode.c b/drivers/power/reset/reboot-mode.c
-> new file mode 100644
-> index 0000000..9aa7b80
-> --- /dev/null
-> +++ b/drivers/power/reset/reboot-mode.c
-> @@ -0,0 +1,106 @@
-> +/*
-> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/reboot.h>
-> +#include "reboot-mode.h"
-> +
-> +#define PREFIX "mode-"
-> +
-> +struct mode_info {
-> +       char mode[32];
-> +       unsigned int magic;
-> +       struct list_head list;
-> +};
-> +
-> +struct reboot_mode_driver {
-> +       struct list_head head;
-> +       int (*write)(int magic);
-> +       struct notifier_block reboot_notifier;
-> +};
-> +
-> +static int get_reboot_mode_magic(struct reboot_mode_driver *reboot,
-> +                                const char *cmd)
-> +{
-> +       const char *normal = "normal";
-> +       int magic = 0;
-> +       struct mode_info *info;
-> +
-> +       if (!cmd)
-> +               cmd = normal;
-> +
-> +       list_for_each_entry(info, &reboot->head, list) {
-> +               if (!strcmp(info->mode, cmd)) {
-> +                       magic = info->magic;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       return magic;
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ drivers/devfreq/Kconfig      |  15 ++
+ drivers/devfreq/Makefile     |   1 +
+ drivers/devfreq/exynos-bus.c | 443 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 459 insertions(+)
+ create mode 100644 drivers/devfreq/exynos-bus.c
 
-In absence of 'normal' mode (it is not described as required property)
-the magic will be '0'. It would be nice to document that in bindings.
-Imagine someone forgets about this and will wonder why 0x0 is written
-to his precious register on normal reboot...
-
-It would be nice to document that 'mode-normal' has a special
-(hard-coded) meaning.
-
-> +}
-> +
-> +static int reboot_mode_notify(struct notifier_block *this,
-> +                             unsigned long mode, void *cmd)
-> +{
-> +       struct reboot_mode_driver *reboot;
-> +       int magic;
-> +
-> +       reboot = container_of(this, struct reboot_mode_driver, reboot_notifier);
-> +       magic = get_reboot_mode_magic(reboot, cmd);
-> +       if (magic)
-> +               reboot->write(magic);
-> +
-> +       return NOTIFY_DONE;
-> +}
-> +
-> +int reboot_mode_register(struct device *dev, int (*write)(int))
-> +{
-> +       struct reboot_mode_driver *reboot;
-> +       struct mode_info *info;
-> +       struct property *prop;
-> +       size_t len = strlen(PREFIX);
-> +       int ret;
-> +
-> +       reboot = devm_kzalloc(dev, sizeof(*reboot), GFP_KERNEL);
-> +       if (!reboot)
-> +               return -ENOMEM;
-> +
-> +       reboot->write = write;
-> +       INIT_LIST_HEAD(&reboot->head);
-> +       for_each_property_of_node(dev->of_node, prop) {
-> +               if (len > strlen(prop->name) || strncmp(prop->name, PREFIX, len))
-> +                       continue;
-
-New line please for readability.
-
-> +               info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-> +               if (!info)
-> +                       return -ENOMEM;
-
-Ditto.
-
-> +               strcpy(info->mode, prop->name + len);
-
-Ehm, and how do you protect that name of mode is shorter than 32 characters?
-
-> +               if (of_property_read_u32(dev->of_node, prop->name, &info->magic)) {
-> +                       dev_err(dev, "reboot mode %s without magic number\n",
-> +                               info->mode);
-> +                       devm_kfree(dev, info);
-> +                       continue;
-> +               }
-> +               list_add_tail(&info->list, &reboot->head);
-> +       }
-> +       reboot->reboot_notifier.notifier_call = reboot_mode_notify;
-> +       ret = register_reboot_notifier(&reboot->reboot_notifier);
-> +       if (ret)
-> +               dev_err(dev, "can't register reboot notifier\n");
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(reboot_mode_register);
-> +
-> +MODULE_AUTHOR("Andy Yan <andy.yan@rock-chips.com");
-> +MODULE_DESCRIPTION("System reboot mode driver");
-> +MODULE_LICENSE("GPL v2");
-> diff --git a/drivers/power/reset/reboot-mode.h b/drivers/power/reset/reboot-mode.h
-> new file mode 100644
-> index 0000000..44ed34f
-> --- /dev/null
-> +++ b/drivers/power/reset/reboot-mode.h
-> @@ -0,0 +1,6 @@
-> +#ifndef __REBOOT_MODE_H__
-> +#define __REBOOT_MODE_H__
-> +
-> +int reboot_mode_register(struct device *dev, int (*write)(int));
-
-Documentation would be appreciated. Although it is local header but
-you decoupled them and you are exporting the function.
-
-> +
-> +#endif
-> diff --git a/drivers/power/reset/syscon-reboot-mode.c b/drivers/power/reset/syscon-reboot-mode.c
-> new file mode 100644
-> index 0000000..d1521d8
-> --- /dev/null
-> +++ b/drivers/power/reset/syscon-reboot-mode.c
-> @@ -0,0 +1,65 @@
-> +/*
-> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/init.h>
-> +#include <linux/module.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-
-I don't see the need of of_address or am I missing something?
-
-> +#include <linux/platform_device.h>
-> +#include <linux/reboot.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/syscon.h>
-> +#include "reboot-mode.h"
-> +
-> +static struct regmap *map;
-> +static u32 offset;
-> +static u32 mask = 0xffffffff;
-
-Why this cannot be part of state container? I suppose usually there
-will be only one reboot mode handler, but:
-1. It is always nice to make things self-contained, so code could be
-easily used in different contexts. Depending on static variables
-prevents that.
-2. How do you protect against double binding (two reboot mode device
-nodes in DT)? The second binding (put by mistake... or whatever
-reason) will overwrite data used by previous device.
-
-> +
-> +static int syscon_reboot_mode_write(int magic)
-> +{
-> +       regmap_update_bits(map, offset, mask, magic);
-> +
-> +       return 0;
-
-Why ignoring return value of regmap_update_bits?
-
-> +}
-> +
-> +static int syscon_reboot_mode_probe(struct platform_device *pdev)
-> +{
-> +       int ret;
-> +
-> +       map = syscon_node_to_regmap(pdev->dev.parent->of_node);
-> +       if (IS_ERR(map))
-> +               return PTR_ERR(map);
-
-Empty line for readability.
-
-> +       if (of_property_read_u32(pdev->dev.of_node, "offset", &offset))
-> +               return -EINVAL;
-
-Empty line for readability.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index 64281bb2f650..55ec774f794c 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -66,6 +66,21 @@ config DEVFREQ_GOV_USERSPACE
+ 
+ comment "DEVFREQ Drivers"
+ 
++config ARM_EXYNOS_BUS_DEVFREQ
++	bool "ARM EXYNOS Generic Memory Bus DEVFREQ Driver"
++	depends on ARCH_EXYNOS
++	select DEVFREQ_GOV_SIMPLE_ONDEMAND
++	select DEVFREQ_EVENT_EXYNOS_PPMU
++	select PM_DEVFREQ_EVENT
++	select PM_OPP
++	help
++	  This adds the common DEVFREQ driver for Exynos Memory bus. Exynos
++	  Memory bus has one more group of memory bus (e.g, MIF and INT block).
++	  Each memory bus group could contain many memoby bus block. It reads
++	  PPMU counters of memory controllers by using DEVFREQ-event device
++	  and adjusts the operating frequencies and voltages with OPP support.
++	  This does not yet operate with optimal voltages.
++
+ config ARM_EXYNOS4_BUS_DEVFREQ
+ 	bool "ARM Exynos4210/4212/4412 Memory Bus DEVFREQ Driver"
+ 	depends on (CPU_EXYNOS4210 || SOC_EXYNOS4212 || SOC_EXYNOS4412) && !ARCH_MULTIPLATFORM
+diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+index 5134f9ee983d..8af8aaf922a8 100644
+--- a/drivers/devfreq/Makefile
++++ b/drivers/devfreq/Makefile
+@@ -6,6 +6,7 @@ obj-$(CONFIG_DEVFREQ_GOV_POWERSAVE)	+= governor_powersave.o
+ obj-$(CONFIG_DEVFREQ_GOV_USERSPACE)	+= governor_userspace.o
+ 
+ # DEVFREQ Drivers
++obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+ obj-$(CONFIG_ARM_EXYNOS4_BUS_DEVFREQ)	+= exynos/
+ obj-$(CONFIG_ARM_EXYNOS5_BUS_DEVFREQ)	+= exynos/
+ obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
+diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
+new file mode 100644
+index 000000000000..f79963187fa1
+--- /dev/null
++++ b/drivers/devfreq/exynos-bus.c
+@@ -0,0 +1,443 @@
++/*
++ * Generic Exynos Bus frequency driver with DEVFREQ Framework
++ *
++ * Copyright (c) 2015 Samsung Electronics Co., Ltd.
++ * Author : Chanwoo Choi <cw00.choi@samsung.com>
++ *
++ * This driver support Exynos Bus frequency feature by using
++ * DEVFREQ framework and is based on drivers/devfreq/exynos/exynos4_bus.c.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/clk.h>
++#include <linux/devfreq.h>
++#include <linux/devfreq-event.h>
++#include <linux/device.h>
++#include <linux/export.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/pm_opp.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++
++#define DEFAULT_SATURATION_RATIO	40
++#define DEFAULT_VOLTAGE_TOLERANCE	2
++
++struct exynos_bus {
++	struct device *dev;
++
++	struct devfreq *devfreq;
++	struct devfreq_event_dev **edev;
++	unsigned int edev_count;
++	struct mutex lock;
++
++	struct dev_pm_opp *curr_opp;
++
++	struct regulator *regulator;
++	struct clk *clk;
++	unsigned int voltage_tolerance;
++	unsigned int ratio;
++};
++
++/*
++ * Control the devfreq-event device to get the current state of bus
++ */
++#define exynos_bus_ops_edev(ops)				\
++static int exynos_bus_##ops(struct exynos_bus *bus)		\
++{								\
++	int i, ret;						\
++								\
++	for (i = 0; i < bus->edev_count; i++) {			\
++		if (!bus->edev[i])				\
++			continue;				\
++		ret = devfreq_event_##ops(bus->edev[i]);	\
++		if (ret < 0)					\
++			return ret;				\
++	}							\
++								\
++	return 0;						\
++}
++exynos_bus_ops_edev(enable_edev);
++exynos_bus_ops_edev(disable_edev);
++exynos_bus_ops_edev(set_event);
++
++static int exynos_bus_get_event(struct exynos_bus *bus,
++				struct devfreq_event_data *edata)
++{
++	struct devfreq_event_data event_data;
++	unsigned long load_count = 0, total_count = 0;
++	int i, ret = 0;
++
++	for (i = 0; i < bus->edev_count; i++) {
++		if (!bus->edev[i])
++			continue;
++
++		ret = devfreq_event_get_event(bus->edev[i], &event_data);
++		if (ret < 0)
++			return ret;
++
++		if (i == 0 || event_data.load_count > load_count) {
++			load_count = event_data.load_count;
++			total_count = event_data.total_count;
++		}
++	}
++
++	edata->load_count = load_count;
++	edata->total_count = total_count;
++
++	return ret;
++}
++
++/*
++ * Must necessary function for devfreq governor
++ */
++static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	struct dev_pm_opp *new_opp;
++	unsigned long old_freq, new_freq, old_volt, new_volt, tol;
++	int ret = 0;
++
++	/* Get new opp-bus instance according to new bus clock */
++	rcu_read_lock();
++	new_opp = devfreq_recommended_opp(dev, freq, flags);
++	if (IS_ERR_OR_NULL(new_opp)) {
++		dev_err(dev, "failed to get recommed opp instance\n");
++		rcu_read_unlock();
++		return PTR_ERR(new_opp);
++	}
++
++	new_freq = dev_pm_opp_get_freq(new_opp);
++	new_volt = dev_pm_opp_get_voltage(new_opp);
++	old_freq = dev_pm_opp_get_freq(bus->curr_opp);
++	old_volt = dev_pm_opp_get_voltage(bus->curr_opp);
++	rcu_read_unlock();
++
++	if (old_freq == new_freq)
++		return 0;
++	tol = new_volt * bus->voltage_tolerance / 100;
++
++	/* Change voltage and frequency according to new OPP level */
++	mutex_lock(&bus->lock);
++
++	if (old_freq < new_freq) {
++		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
++		if (ret < 0) {
++			dev_err(bus->dev, "failed to set voltage\n");
++			goto out;
++		}
++	}
++
++	ret = clk_set_rate(bus->clk, new_freq);
++	if (ret < 0) {
++		dev_err(dev, "failed to change clock of bus\n");
++		clk_set_rate(bus->clk, old_freq);
++		goto out;
++	}
++
++	if (old_freq > new_freq) {
++		ret = regulator_set_voltage_tol(bus->regulator, new_volt, tol);
++		if (ret < 0) {
++			dev_err(bus->dev, "failed to set voltage\n");
++			goto out;
++		}
++	}
++	bus->curr_opp = new_opp;
++
++	dev_dbg(dev, "Set the frequency of bus (%lukHz -> %lukHz)\n",
++			old_freq/1000, new_freq/1000);
++out:
++	mutex_unlock(&bus->lock);
++
++	return ret;
++}
++
++static int exynos_bus_get_dev_status(struct device *dev,
++				     struct devfreq_dev_status *stat)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	struct devfreq_event_data edata;
++	int ret;
++
++	rcu_read_lock();
++	stat->current_frequency = dev_pm_opp_get_freq(bus->curr_opp);
++	rcu_read_unlock();
++
++	ret = exynos_bus_get_event(bus, &edata);
++	if (ret < 0) {
++		stat->total_time = stat->busy_time = 0;
++		goto err;
++	}
++
++	stat->busy_time = (edata.load_count * 100) / bus->ratio;
++	stat->total_time = edata.total_count;
++
++	dev_dbg(dev, "Usage of devfreq-event : %lu/%lu\n", stat->busy_time,
++							stat->total_time);
++
++err:
++	ret = exynos_bus_set_event(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to set event to devfreq-event devices\n");
++		return ret;
++	}
++
++	return ret;
++}
++
++static void exynos_bus_exit(struct device *dev)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	int ret;
++
++	ret = exynos_bus_disable_edev(bus);
++	if (ret < 0)
++		dev_warn(dev, "failed to disable the devfreq-event devices\n");
++
++	if (bus->regulator)
++		regulator_disable(bus->regulator);
++
++	dev_pm_opp_of_remove_table(dev);
++}
++
++static int exynos_bus_parse_of(struct device_node *np,
++			      struct exynos_bus *bus)
++{
++	struct device *dev = bus->dev;
++	unsigned long rate;
++	int i, ret, count, size;
++
++	/* Get the clock to provide each bus with source clock */
++	bus->clk = devm_clk_get(dev, "bus");
++	if (IS_ERR(bus->clk)) {
++		dev_err(dev, "failed to get bus clock\n");
++		return PTR_ERR(bus->clk);
++	}
++
++	ret = clk_prepare_enable(bus->clk);
++	if (ret < 0) {
++		dev_err(dev, "failed to get enable clock\n");
++		return ret;
++	}
++
++	/* Get the freq/voltage OPP table to scale the bus frequency */
++	rcu_read_lock();
++	ret = dev_pm_opp_of_add_table(dev);
++	if (ret < 0) {
++		dev_err(dev, "failed to get OPP table\n");
++		rcu_read_unlock();
++		goto err_clk;
++	}
++
++	rate = clk_get_rate(bus->clk);
++	bus->curr_opp = dev_pm_opp_find_freq_ceil(dev, &rate);
++	if (IS_ERR(bus->curr_opp)) {
++		dev_err(dev, "failed to find dev_pm_opp\n");
++		rcu_read_unlock();
++		ret = PTR_ERR(bus->curr_opp);
++		goto err_opp;
++	}
++	rcu_read_unlock();
++
++	/* Get the regulator to provide each bus with the power */
++	bus->regulator = devm_regulator_get(dev, "vdd");
++	if (IS_ERR(bus->regulator)) {
++		dev_err(dev, "failed to get VDD regulator\n");
++		ret = PTR_ERR(bus->regulator);
++		goto err_opp;
++	}
++
++	ret = regulator_enable(bus->regulator);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable VDD regulator\n");
++		goto err_opp;
++	}
++
++	/*
++	 * Get the devfreq-event devices to get the current utilization of
++	 * buses. This raw data will be used in devfreq ondemand governor.
++	 */
++	count = devfreq_event_get_edev_count(dev);
++	if (count < 0) {
++		dev_err(dev, "failed to get the count of devfreq-event dev\n");
++		ret = count;
++		goto err_regulator;
++	}
++	bus->edev_count = count;
++
++	size = sizeof(*bus->edev) * count;
++	bus->edev = devm_kzalloc(dev, size, GFP_KERNEL);
++	if (!bus->edev) {
++		ret = -ENOMEM;
++		goto err_regulator;
++	}
++
++	for (i = 0; i < count; i++) {
++		bus->edev[i] = devfreq_event_get_edev_by_phandle(dev, i);
++		if (IS_ERR(bus->edev[i])) {
++			ret = -EPROBE_DEFER;
++			goto err_regulator;
++		}
++	}
++
++	/*
++	 * Optionally, Get the saturation ratio according to Exynos SoC
++	 * When measuring the utilization of each AXI bus with devfreq-event
++	 * devices, the measured real cycle might be much lower than the
++	 * total cycle of bus during sampling rate. In result, the devfreq
++	 * simple-ondemand governor might not decide to change the current
++	 * frequency due to too utilization (= real cycle/total cycle).
++	 * So, this property is used to adjust the utilization when calculating
++	 * the busy_time in exynos_bus_get_dev_status().
++	 */
++	if (of_property_read_u32(np, "exynos,saturation-ratio", &bus->ratio))
++		bus->ratio = DEFAULT_SATURATION_RATIO;
++
++	if (of_property_read_u32(np, "exynos,voltage-tolerance",
++					&bus->voltage_tolerance))
++		bus->voltage_tolerance = DEFAULT_VOLTAGE_TOLERANCE;
++
++	return 0;
++
++err_regulator:
++	regulator_disable(bus->regulator);
++err_opp:
++	dev_pm_opp_of_remove_table(dev);
++err_clk:
++	clk_disable_unprepare(bus->clk);
++
++	return ret;
++}
++
++static int exynos_bus_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct devfreq_dev_profile *profile;
++	struct devfreq_simple_ondemand_data *ondemand_data;
++	struct exynos_bus *bus;
++	int ret;
++
++	if (!np) {
++		dev_err(dev, "failed to find devicetree node\n");
++		return -EINVAL;
++	}
++
++	bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
++	if (!bus)
++		return -ENOMEM;
++	mutex_init(&bus->lock);
++	bus->dev = &pdev->dev;
++	platform_set_drvdata(pdev, bus);
++
++	/* Parse the device-tree to get the resource information */
++	ret = exynos_bus_parse_of(np, bus);
++	if (ret < 0)
++		return ret;
++
++	/* Initalize the struct profile and governor data */
++	profile = devm_kzalloc(dev, sizeof(*profile), GFP_KERNEL);
++	if (!profile)
++		return -ENOMEM;
++	profile->polling_ms = 50;
++	profile->target = exynos_bus_target;
++	profile->get_dev_status = exynos_bus_get_dev_status;
++	profile->exit = exynos_bus_exit;
++
++	ondemand_data = devm_kzalloc(dev, sizeof(*ondemand_data), GFP_KERNEL);
++	if (!ondemand_data)
++		return -ENOMEM;
++	ondemand_data->upthreshold = 40;
++	ondemand_data->downdifferential = 5;
++
++	/* Add devfreq device to monitor and handle the exynos bus */
++	bus->devfreq = devm_devfreq_add_device(dev, profile, "simple_ondemand",
++						ondemand_data);
++	if (IS_ERR_OR_NULL(bus->devfreq)) {
++		dev_err(dev, "failed to add devfreq device\n");
++		return  PTR_ERR(bus->devfreq);
++	}
++
++	/* Register opp_notifier to catch the change of OPP  */
++	ret = devm_devfreq_register_opp_notifier(dev, bus->devfreq);
++	if (ret < 0) {
++		dev_err(dev, "failed to register opp notifier\n");
++		return ret;
++	}
++
++	/*
++	 * Enable devfreq-event to get raw data which is used to determine
++	 * current bus load.
++	 */
++	ret = exynos_bus_enable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable devfreq-event devices\n");
++		return ret;
++	}
++
++	ret = exynos_bus_set_event(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to set event to devfreq-event devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int exynos_bus_resume(struct device *dev)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	int ret;
++
++	ret = exynos_bus_enable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable the devfreq-event devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int exynos_bus_suspend(struct device *dev)
++{
++	struct exynos_bus *bus = dev_get_drvdata(dev);
++	int ret;
++
++	ret = exynos_bus_disable_edev(bus);
++	if (ret < 0) {
++		dev_err(dev, "failed to disable the devfreq-event devices\n");
++		return ret;
++	}
++
++	return 0;
++}
++#endif
++
++static const struct dev_pm_ops exynos_bus_pm = {
++	SET_SYSTEM_SLEEP_PM_OPS(exynos_bus_suspend, exynos_bus_resume)
++};
++
++static const struct of_device_id exynos_bus_of_match[] = {
++	{ .compatible = "samsung,exynos-bus", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, exynos_bus_of_match);
++
++static struct platform_driver exynos_bus_platdrv = {
++	.probe		= exynos_bus_probe,
++	.driver = {
++		.name	= "exynos-bus",
++		.pm	= &exynos_bus_pm,
++		.of_match_table = of_match_ptr(exynos_bus_of_match),
++	},
++};
++module_platform_driver(exynos_bus_platdrv);
++
++MODULE_DESCRIPTION("Generic Exynos Bus frequency driver");
++MODULE_AUTHOR("Chanwoo Choi <cw00.choi@samsung.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+1.9.1
