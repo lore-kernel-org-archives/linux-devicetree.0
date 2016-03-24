@@ -1,92 +1,60 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 2/3] phy: rockchip-emmc: should be a child device of the GRF
-Date: Thu, 24 Mar 2016 22:29:02 +0100
-Message-ID: <1458854943-17388-2-git-send-email-heiko@sntech.de>
-References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH next 1/2] PCI: keystone: add pci error irq handler
+Date: Thu, 24 Mar 2016 17:36:59 -0400
+Message-ID: <56F45DFB.7030408@ti.com>
+References: <201603230621.h4pXMyFx%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458854943-17388-1-git-send-email-heiko@sntech.de>
+In-Reply-To: <201603230621.h4pXMyFx%fengguang.wu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: kishon@ti.com
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, ykk@rock-chips.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Heiko Stuebner <heiko@sntech.de>
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bhelgaas@google.com
 List-Id: devicetree@vger.kernel.org
 
-The emmc-phy is fully enclosed in the general register files (GRF).
-Therefore as seen from the device-tree it shouldn't be a separate platform-
-device but instead a sub-device of the GRF - using the simply-mfd mechanism.
+On 03/22/2016 06:23 PM, kbuild test robot wrote:
+> Hi Murali,
+> 
+> [auto build test ERROR on next-20160322]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Murali-Karicheri/PCI-keystone-add-pci-error-irq-handler/20160323-035516
+> config: arm-multi_v7_defconfig (attached as .config)
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/pci/host/pci-keystone.c: In function 'ks_pcie_probe':
+>>> drivers/pci/host/pci-keystone.c:410:16: error: 'node' undeclared (first use in this function)
+>      ks_pcie->np = node;
+>                    ^
+>    drivers/pci/host/pci-keystone.c:410:16: note: each undeclared identifier is reported only once for each function it appears in
+> 
+> vim +/node +410 drivers/pci/host/pci-keystone.c
+> 
+>    404			return PTR_ERR(reg_p);
+>    405		ks_pcie->device_id = readl(reg_p) >> 16;
+>    406		devm_iounmap(dev, reg_p);
+>    407		devm_release_mem_region(dev, res->start, resource_size(res));
+>    408	
+>    409		pp->dev = dev;
+>  > 410		ks_pcie->np = node;
+>    411		platform_set_drvdata(pdev, ks_pcie);
+>    412		ks_pcie->clk = devm_clk_get(dev, "pcie");
+>    413		if (IS_ERR(ks_pcie->clk)) {
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+I don't anything obvious to cause this failure. It builds from arm-pci with these patches applied
+and I have tried multi_v7_defconfig for arm as well. I will follow the instructions here and
+check if I can reproduce this and post a updated a patch.
 
-The driver entered the kernel in the current merge-window, so we can still
-adapt the binding without needing a fallback, as the binding hasn't been
-released with a full kernel yet.
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
-Hi Shawn, Kishon,
-
-I didn't see this new phy driver until now, so I'd really like to get
-this sorted before the old binding solidifies :-).
-
-I'll convert the usbphy as well, but that has to have the fallback for
-the old binding, so is not as urgent as these two.
-
-As mentioned in the patch description above, this is meant as a fixup for
-kernel 4.6.
-
-
-changes in v2: drop forgotten rockchip,grf from example
-
-
- .../devicetree/bindings/phy/rockchip-emmc-phy.txt     | 19 ++++++++++++-------
- drivers/phy/phy-rockchip-emmc.c                       |  5 ++++-
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-index 61916f1..d711259 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-@@ -3,17 +3,21 @@ Rockchip EMMC PHY
- 
- Required properties:
-  - compatible: rockchip,rk3399-emmc-phy
-- - rockchip,grf : phandle to the syscon managing the "general
--   register files"
-  - #phy-cells: must be 0
-  - reg: PHY configure reg address offset in "general
-    register files"
- 
- Example:
- 
--emmcphy: phy {
--	compatible = "rockchip,rk3399-emmc-phy";
--	rockchip,grf = <&grf>;
--	reg = <0xf780>;
--	#phy-cells = <0>;
-+
-+grf: syscon@ff770000 {
-+	compatible = "rockchip,rk3399-grf", "syscon", "simple-mfd";
-+
-+...
-+
-+	emmcphy: phy@f780 {
-+		compatible = "rockchip,rk3399-emmc-phy";
-+		reg = <0xf780>;
-+		#phy-cells = <0>;
-+	};
- };
-diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockchip-emmc.c
-index 887b4c2..6ebcf3e 100644
---- a/drivers/phy/phy-rockchip-emmc.c
-+++ b/drivers/phy/phy-rockchip-emmc.c
-@@ -176,7 +176,10 @@ static int rockchip_emmc_phy_probe(struct platform_device *pdev)
- 	struct regmap *grf;
- 	unsigned int reg_offset;
- 
--	grf = syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf");
-+	if (!dev->parent || !dev->parent->of_node)
-+		return -ENODEV;
-+
-+	grf = syscon_node_to_regmap(dev->parent->of_node);
- 	if (IS_ERR(grf)) {
- 		dev_err(dev, "Missing rockchip,grf property\n");
- 		return PTR_ERR(grf);
 -- 
-2.7.0
+Murali Karicheri
+Linux Kernel, Keystone
