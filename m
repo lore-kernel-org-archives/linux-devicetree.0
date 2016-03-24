@@ -1,7 +1,7 @@
 From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH 1/3] of: Add vendor prefix for Analogix Semiconductor
-Date: Thu, 24 Mar 2016 11:41:44 +0100
-Message-ID: <1458816106-11596-2-git-send-email-enric.balletbo@collabora.com>
+Subject: [PATCH 2/3] devicetree: Add ANX7814 bridge binding.
+Date: Thu, 24 Mar 2016 11:41:45 +0100
+Message-ID: <1458816106-11596-3-git-send-email-enric.balletbo@collabora.com>
 References: <1458816106-11596-1-git-send-email-enric.balletbo@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1458816106-11596-1-git-send-email-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
@@ -10,26 +10,62 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY
 Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, span-RZiUC8FWO7+l5r2w9Jh5Rg@public.gmane.org, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, jb.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cjiao-RZiUC8FWO7+l5r2w9Jh5Rg@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Analogix Semiconductor Inc. develops analog and mixed-signal devices for
-digital media and communications interconnect applications.
+The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+designed for portable devices.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ .../devicetree/bindings/video/bridge/anx7814.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 72e2c5a..c6eac94 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -21,6 +21,7 @@ amlogic	Amlogic, Inc.
- ampire	Ampire Co., Ltd.
- ams	AMS AG
- amstaos	AMS-Taos Inc.
-+analogix	Analogix Semiconductor, Inc.
- apm	Applied Micro Circuits Corporation (APM)
- aptina	Aptina Imaging
- arasan	Arasan Chip Systems
+diff --git a/Documentation/devicetree/bindings/video/bridge/anx7814.txt b/Documentation/devicetree/bindings/video/bridge/anx7814.txt
+new file mode 100644
+index 0000000..5a47a42
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/bridge/anx7814.txt
+@@ -0,0 +1,41 @@
++Analogix ANX7814 SlimPort (Full-HD Transmitter)
++-----------------------------------------------
++
++The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
++designed for portable devices.
++
++Required properties:
++
++ - compatible		: "analogix,anx7814"
++ - reg			: I2C address of the device
++ - interrupt-parent	: Should be the phandle of the interrupt controller
++			  that services interrupts for this device
++ - interrupts		: Should contain the INTP interrupt
++ - cable-det-gpios	: Which GPIO to use for cable detection
++ - pd-gpios		: Which GPIO to use for power down
++ - reset-gpios		: Which GPIO to use for reset
++
++Optional properties:
++
++ - v10-gpios		: Which GPIO to use for V10 control.
++ - Video port for HDMI output, using the DT bindings defined in [1].
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++	anx7814: anx7814@38 {
++		compatible = "analogix,anx7814";
++		reg = <0x38>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
++		cable-det-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
++		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
++		v10-gpios = <&pio 35 GPIO_ACTIVE_HIGH>;
++		port {
++			anx7814_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
 -- 
 2.1.0
 
