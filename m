@@ -1,160 +1,50 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 18/18] arm: boot: dts: Add Western Digital My Book World Edition device tree
-Date: Thu, 24 Mar 2016 17:50:15 +0100
-Message-ID: <1458838215-23314-19-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 05/18] dt-bindings: vendor-prefixes: Add PLX Technology
+Date: Thu, 24 Mar 2016 17:50:02 +0100
+Message-ID: <1458838215-23314-6-git-send-email-narmstrong@baylibre.com>
 References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Western Digital My Book World Edition device tree based on
-PLX Technology OX810SE SoC.
+Add PLX Technology vendor prefix.
+Fixed "pixdir" alphabetizing.
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/Makefile    |   2 +
- arch/arm/boot/dts/wd-mbwe.dts | 112 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 114 insertions(+)
- create mode 100644 arch/arm/boot/dts/wd-mbwe.dts
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 52b34a0..3290d4e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -530,6 +530,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
- 	orion5x-rd88f5182-nas.dtb
- dtb-$(CONFIG_ARCH_PRIMA2) += \
- 	prima2-evb.dtb
-+dtb-$(CONFIG_ARCH_OXNAS) += \
-+	wd-mbwe.dtb
- dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-apq8064-cm-qs600.dtb \
- 	qcom-apq8064-ifc6410.dtb \
-diff --git a/arch/arm/boot/dts/wd-mbwe.dts b/arch/arm/boot/dts/wd-mbwe.dts
-new file mode 100644
-index 0000000..ac3250a
---- /dev/null
-+++ b/arch/arm/boot/dts/wd-mbwe.dts
-@@ -0,0 +1,112 @@
-+/*
-+ * wd-mbwe.dtsi - Device tree file for Western Digital My Book World Edition
-+ *
-+ * Copyright (C) 2016 Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-+ *
-+ * Licensed under GPLv2 or later
-+ */
-+
-+/dts-v1/;
-+#include "ox810se.dtsi"
-+
-+/ {
-+	model = "Western Digital My Book World Edition";
-+
-+	compatible = "wd,mbwe", "oxsemi,ox810se";
-+
-+	chosen {
-+		bootargs = "console=ttyS1,115200n8 earlyprintk=serial";
-+	};
-+
-+	memory {
-+		/* 128Mbytes DDR */
-+		reg = <0x48000000 0x8000000>;
-+	};
-+
-+	aliases {
-+		serial1 = &uart1;
-+		gpio0 = &gpio0;
-+		gpio1 = &gpio1;
-+	};
-+
-+	gpio-keys-polled {
-+		compatible = "gpio-keys-polled";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		poll-interval = <100>;
-+
-+		power {
-+			label = "power";
-+			gpios = <&gpio0 0 1>;
-+			linux,code = <0x198>;
-+		};
-+
-+		recovery {
-+			label = "recovery";
-+			gpios = <&gpio0 4 1>;
-+			linux,code = <0xab>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		a0 {
-+			label = "activity0";
-+			gpios = <&gpio0 25 0>;
-+			default-state = "keep";
-+		};
-+
-+		a1 {
-+			label = "activity1";
-+			gpios = <&gpio0 26 0>;
-+			default-state = "keep";
-+		};
-+
-+		a2 {
-+			label = "activity2";
-+			gpios = <&gpio0 5 0>;
-+			default-state = "keep";
-+		};
-+
-+		a3 {
-+			label = "activity3";
-+			gpios = <&gpio0 6 0>;
-+			default-state = "keep";
-+		};
-+
-+		a4 {
-+			label = "activity4";
-+			gpios = <&gpio0 7 0>;
-+			default-state = "keep";
-+		};
-+
-+		a5 {
-+			label = "activity5";
-+			gpios = <&gpio1 2 0>;
-+			default-state = "keep";
-+		};
-+	};
-+
-+	i2c-gpio {
-+		compatible = "i2c-gpio";
-+		gpios = <&gpio0 3 0 /* sda */
-+			 &gpio0 2 0 /* scl */
-+			 >;
-+		i2c-gpio,delay-us = <2>;        /* ~100 kHz */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		rtc0: rtc@48 {
-+			compatible = "st,m41t00";
-+			reg = <0x68>;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 42adb41..24b2100 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -180,9 +180,10 @@ parade	Parade Technologies Inc.
+ pericom	Pericom Technology Inc.
+ phytec	PHYTEC Messtechnik GmbH
+ picochip	Picochip Ltd
++pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+ plathome	Plat'Home Co., Ltd.
+ plda	PLDA
+-pixcir  PIXCIR MICROELECTRONICS Co., Ltd
++plxtech	PLX Technology, Inc.
+ pulsedlight	PulsedLight, Inc
+ powervr	PowerVR (deprecated, use img)
+ qca	Qualcomm Atheros, Inc.
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
