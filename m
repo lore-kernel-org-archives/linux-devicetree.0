@@ -1,7 +1,7 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 3/5] drm: Add an encoder and connector type enum for DPI.
-Date: Thu, 24 Mar 2016 17:23:49 -0700
-Message-ID: <1458865431-30048-4-git-send-email-eric@anholt.net>
+Subject: [PATCH 5/5] ARM: bcm2835: Add the DPI hardware to the device tree.
+Date: Thu, 24 Mar 2016 17:23:51 -0700
+Message-ID: <1458865431-30048-6-git-send-email-eric@anholt.net>
 References: <1458865431-30048-1-git-send-email-eric@anholt.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1458865431-30048-1-git-send-email-eric@anholt.net>
@@ -10,66 +10,35 @@ To: linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-Right now exynos is exposing DPI as a TMDS encoder and VGA connector,
-which seems rather misleading.  This isn't just an internal detail,
-since xrandr actually exposes "VGA" as the output name.  Define some
-new enums so that vc4's DPI can have a more informative name.
-
-I considered other names for the connector as well.  For VC4, the
-Adafruit DPI kippah takes the 28 GPIO pins and routes them to a
-standard-ish 40-pin FPC connector, but "40-pin FPC" doesn't uniquely
-identify an ordering of pins (apparently some other orderings exist),
-doesn't explain things as well for the user (who, if anything, knows
-their product is a DPI kippah/panel combo), and actually doesn't have
-to exist (one could connect the 28 GPIOs directly to something else).
-Simply "DPI" seems like a good compromise name to distinguish from the
-HDMI, DSI, and TV connectors .
+It's currently marked disabled, as it's not useful without a panel
+associated with it and the GPIO pins routed to ALT2.
 
 Signed-off-by: Eric Anholt <eric@anholt.net>
 ---
- drivers/gpu/drm/drm_crtc.c  | 2 ++
- include/uapi/drm/drm_mode.h | 2 ++
- 2 files changed, 4 insertions(+)
+ arch/arm/boot/dts/bcm283x.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_crtc.c b/drivers/gpu/drm/drm_crtc.c
-index f619121..64bd954 100644
---- a/drivers/gpu/drm/drm_crtc.c
-+++ b/drivers/gpu/drm/drm_crtc.c
-@@ -168,6 +168,7 @@ static struct drm_conn_prop_enum_list drm_connector_enum_list[] = {
- 	{ DRM_MODE_CONNECTOR_eDP, "eDP" },
- 	{ DRM_MODE_CONNECTOR_VIRTUAL, "Virtual" },
- 	{ DRM_MODE_CONNECTOR_DSI, "DSI" },
-+	{ DRM_MODE_CONNECTOR_DPI, "DPI" },
- };
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index bbe4eab..d1e6340 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -166,6 +166,17 @@
+ 			interrupts = <2 14>; /* pwa1 */
+ 		};
  
- static const struct drm_prop_enum_list drm_encoder_enum_list[] = {
-@@ -179,6 +180,7 @@ static const struct drm_prop_enum_list drm_encoder_enum_list[] = {
- 	{ DRM_MODE_ENCODER_VIRTUAL, "Virtual" },
- 	{ DRM_MODE_ENCODER_DSI, "DSI" },
- 	{ DRM_MODE_ENCODER_DPMST, "DP MST" },
-+	{ DRM_MODE_ENCODER_DPI, "DPI" },
- };
- 
- static const struct drm_prop_enum_list drm_subpixel_enum_list[] = {
-diff --git a/include/uapi/drm/drm_mode.h b/include/uapi/drm/drm_mode.h
-index 50adb46..1eb85f7 100644
---- a/include/uapi/drm/drm_mode.h
-+++ b/include/uapi/drm/drm_mode.h
-@@ -202,6 +202,7 @@ struct drm_mode_get_plane_res {
- #define DRM_MODE_ENCODER_VIRTUAL 5
- #define DRM_MODE_ENCODER_DSI	6
- #define DRM_MODE_ENCODER_DPMST	7
-+#define DRM_MODE_ENCODER_DPI	8
- 
- struct drm_mode_get_encoder {
- 	__u32 encoder_id;
-@@ -241,6 +242,7 @@ struct drm_mode_get_encoder {
- #define DRM_MODE_CONNECTOR_eDP		14
- #define DRM_MODE_CONNECTOR_VIRTUAL      15
- #define DRM_MODE_CONNECTOR_DSI		16
-+#define DRM_MODE_CONNECTOR_DPI		17
- 
- struct drm_mode_get_connector {
- 
++		dpi: dpi@7e208000 {
++			compatible = "brcm,bcm2835-dpi";
++			reg = <0x7e208000 0x8c>;
++			clocks = <&clocks BCM2835_CLOCK_VPU>,
++				 <&clocks BCM2835_CLOCK_DPI>;
++			clock-names = "core", "pixel";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
++
+ 		aux: aux@0x7e215000 {
+ 			compatible = "brcm,bcm2835-aux";
+ 			#clock-cells = <1>;
 -- 
 2.7.0
