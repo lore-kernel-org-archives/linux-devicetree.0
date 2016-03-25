@@ -1,38 +1,66 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
 Subject: Re: [PATCH v3 01/16] dt: davinci: use proper address after @
-Date: Fri, 25 Mar 2016 10:14:25 -0500
-Message-ID: <CAL_Jsq+CrrNnbx9rGhDmjoOkBVo6wjPTVeUcOWSHdLOwWeiC6Q@mail.gmail.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com> <1458863503-31121-2-git-send-email-david@lechnology.com>
+Date: Fri, 25 Mar 2016 10:13:11 -0500
+Message-ID: <CAL_JsqKdVsJaWhKt6tSJNd+oev5qC+7_u=CFCgO980NZk-tdOA@mail.gmail.com>
+References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+ <1458863503-31121-2-git-send-email-david@lechnology.com>
+ <56F53D20.6030709@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56F53D20.6030709@cogentembedded.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, David Lechner <david@lechnology.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, open list <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Petr Kulhavy <petr@barix.com>, David.Laight@aculab.com, Alan Stern <stern@rowland.harvard.edu>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Bin Liu <b-liu@ti.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 24, 2016 at 6:51 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
-> TI has been using the physical address in DT after the @ in device nodes.
-> The device tree convention is to use the same address that is used for
-> the reg property. This updates all davinci DT files to use the proper
-> convention.
+On Fri, Mar 25, 2016 at 8:29 AM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+> Hello.
 >
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
+> On 03/25/2016 02:51 AM, David Lechner wrote:
 >
-> v3 changes: This is a new patch.
+>> TI has been using the physical address in DT after the @ in device nodes.
+>> The device tree convention is to use the same address that is used for
+>> the reg property. This updates all davinci DT files to use the proper
+>> convention.
+>>
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>
+> [...]
+>
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>> index 226cda7..4294849 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>> @@ -15,7 +15,7 @@
+>>                 #address-cells = <1>;
+>>                 #size-cells = <1>;
+>>                 ranges;
+>> -               intc: interrupt-controller {
+>> +               intc: interrupt-controller@fffee000 {
+>>                         compatible = "ti,cp-intc";
+>>                         interrupt-controller;
+>>                         #interrupt-cells = <1>;
+>> @@ -23,7 +23,7 @@
+>>                         reg = <0xfffee000 0x2000>;
+>>                 };
+>>         };
+>> -       soc {
+>> +       soc@1c00000 {
 >
 >
->  arch/arm/boot/dts/da850-enbw-cmc.dts |  8 +++---
->  arch/arm/boot/dts/da850-evm.dts      | 26 +++++++++---------
->  arch/arm/boot/dts/da850.dtsi         | 52 ++++++++++++++++++------------------
->  3 files changed, 43 insertions(+), 43 deletions(-)
+>    This node doesn't have the "reg" prop.
 
-Thanks for fixing.
+But probably has a ranges property which is correct.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
