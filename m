@@ -1,66 +1,155 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 01/16] dt: davinci: use proper address after @
-Date: Fri, 25 Mar 2016 19:36:33 +0300
-Message-ID: <56F56911.6020603@cogentembedded.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-2-git-send-email-david@lechnology.com>
- <56F53D20.6030709@cogentembedded.com>
- <CAL_JsqKdVsJaWhKt6tSJNd+oev5qC+7_u=CFCgO980NZk-tdOA@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v8 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Fri, 25 Mar 2016 18:00:03 +0100
+Message-ID: <7418231.W9aSFKr1zs@vostro.rjw.lan>
+References: <1458830676-27075-2-git-send-email-shannon.zhao@linaro.org> <1458893149-17388-1-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKdVsJaWhKt6tSJNd+oev5qC+7_u=CFCgO980NZk-tdOA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1458893149-17388-1-git-send-email-zhaoshenglong@huawei.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Friday, March 25, 2016 04:05:49 PM Shannon Zhao wrote:
+> From: Shannon Zhao <shannon.zhao@linaro.org>
+> 
+> ACPI 6.0 introduces a new table STAO to list the devices which are used
+> by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> UART is used by Xen. So here it hides UART from Dom0.
+> 
+> CC: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
+> CC: Len Brown <lenb@kernel.org> (supporter:ACPI)
+> CC: linux-acpi@vger.kernel.org (open list:ACPI)
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
 
-On 03/25/2016 06:13 PM, Rob Herring wrote:
+So I said it looked good, but now that I think about it, I have a question. ->
 
->>> TI has been using the physical address in DT after the @ in device nodes.
->>> The device tree convention is to use the same address that is used for
->>> the reg property. This updates all davinci DT files to use the proper
->>> convention.
->>>
->>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->>
->> [...]
->>
->>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->>> index 226cda7..4294849 100644
->>> --- a/arch/arm/boot/dts/da850.dtsi
->>> +++ b/arch/arm/boot/dts/da850.dtsi
->>> @@ -15,7 +15,7 @@
->>>                  #address-cells = <1>;
->>>                  #size-cells = <1>;
->>>                  ranges;
->>> -               intc: interrupt-controller {
->>> +               intc: interrupt-controller@fffee000 {
->>>                          compatible = "ti,cp-intc";
->>>                          interrupt-controller;
->>>                          #interrupt-cells = <1>;
->>> @@ -23,7 +23,7 @@
->>>                          reg = <0xfffee000 0x2000>;
->>>                  };
->>>          };
->>> -       soc {
->>> +       soc@1c00000 {
->>
->>
->>     This node doesn't have the "reg" prop.
+> ---
+>  drivers/acpi/scan.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+> 
+> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> index 5f28cf7..5420cc5 100644
+> --- a/drivers/acpi/scan.c
+> +++ b/drivers/acpi/scan.c
+> @@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
+>  DEFINE_MUTEX(acpi_device_lock);
+>  LIST_HEAD(acpi_wakeup_device_list);
+>  static DEFINE_MUTEX(acpi_hp_context_lock);
+> +static u64 spcr_uart_addr;
+>  
+>  struct acpi_dep_data {
+>  	struct list_head node;
+> @@ -1453,6 +1454,41 @@ static int acpi_add_single_object(struct acpi_device **child,
+>  	return 0;
+>  }
+>  
+> +static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
+> +					    void *context)
+> +{
+> +	struct resource *res = context;
+> +
+> +	if (acpi_dev_resource_memory(ares, res))
+> +		return AE_CTRL_TERMINATE;
 
-> But probably has a ranges property which is correct.
+-> It looks like this will terminate on the first memory resource found,
+but what if there are more of them?
 
-    Yes, it does. Didn't know that "ranges" can be used that way, thanks...
+Or is it guaranteed that there will be only one for the device objects in
+question?
 
-> Rob
+If not, then it would better to check res.start == spcr_uart_addr here too
+and only terminate if there's a match.
 
-MBR, Sergei
+> +
+> +	return AE_OK;
+> +}
+> +
+> +static bool acpi_device_should_be_hidden(acpi_handle handle)
+> +{
+> +	acpi_status status;
+> +	struct resource res;
+> +
+> +	/* Check if it should ignore the UART device */
+> +	if (spcr_uart_addr != 0) {
+> +		if (!acpi_has_method(handle, METHOD_NAME__CRS))
+> +			return false;
+> +
+> +		status = acpi_walk_resources(handle, METHOD_NAME__CRS,
+> +					     acpi_get_resource_memory, &res);
+> +		if (ACPI_FAILURE(status))
+> +			return false;
+> +
+> +		if (res.start == spcr_uart_addr) {
+> +			printk(KERN_INFO PREFIX "The UART device in SPCR table will be hidden\n");
+> +			return true;
+> +		}
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+>  				    unsigned long long *sta)
+>  {
+> @@ -1466,6 +1502,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+>  	switch (acpi_type) {
+>  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+>  	case ACPI_TYPE_DEVICE:
+> +		if (acpi_device_should_be_hidden(handle))
+> +			return -ENODEV;
+> +
+>  		*type = ACPI_BUS_TYPE_DEVICE;
+>  		status = acpi_bus_get_status_handle(handle, sta);
+>  		if (ACPI_FAILURE(status))
+> @@ -1916,9 +1955,24 @@ static int acpi_bus_scan_fixed(void)
+>  	return result < 0 ? result : 0;
+>  }
+>  
+> +static void __init acpi_get_spcr_uart_addr(void)
+> +{
+> +	acpi_status status;
+> +	struct acpi_table_spcr *spcr_ptr;
+> +
+> +	status = acpi_get_table(ACPI_SIG_SPCR, 0,
+> +				(struct acpi_table_header **)&spcr_ptr);
+> +	if (ACPI_SUCCESS(status))
+> +		spcr_uart_addr = spcr_ptr->serial_port.address;
+> +	else
+> +		printk(KERN_WARNING PREFIX "STAO table present, but SPCR is missing\n");
+> +}
+> +
+>  int __init acpi_scan_init(void)
+>  {
+>  	int result;
+> +	acpi_status status;
+> +	struct acpi_table_stao *stao_ptr;
+>  
+>  	acpi_pci_root_init();
+>  	acpi_pci_link_init();
+> @@ -1934,6 +1988,20 @@ int __init acpi_scan_init(void)
+>  
+>  	acpi_scan_add_handler(&generic_device_handler);
+>  
+> +	/*
+> +	 * If there is STAO table, check whether it needs to ignore the UART
+> +	 * device in SPCR table.
+> +	 */
+> +	status = acpi_get_table(ACPI_SIG_STAO, 0,
+> +				(struct acpi_table_header **)&stao_ptr);
+> +	if (ACPI_SUCCESS(status)) {
+> +		if (stao_ptr->header.length > sizeof(struct acpi_table_stao))
+> +			printk(KERN_INFO PREFIX "STAO Name List not yet supported.");
+> +
+> +		if (stao_ptr->ignore_uart)
+> +			acpi_get_spcr_uart_addr();
+> +	}
+> +
+>  	mutex_lock(&acpi_scan_lock);
+>  	/*
+>  	 * Enumerate devices in the ACPI namespace.
+> 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
