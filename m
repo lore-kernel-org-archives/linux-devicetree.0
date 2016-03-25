@@ -1,58 +1,73 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 01/16] dt: davinci: use proper address after @
-Date: Fri, 25 Mar 2016 16:29:04 +0300
-Message-ID: <56F53D20.6030709@cogentembedded.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-2-git-send-email-david@lechnology.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] documentation: Fix pinctrl documentation for
+ Meson8 / Meson8b
+Date: Fri, 25 Mar 2016 08:40:20 -0500
+Message-ID: <20160325134020.GA15177@rob-hp-laptop>
+References: <1458724440-32228-1-git-send-email-carlo@caione.org>
+ <1458724440-32228-3-git-send-email-carlo@caione.org>
+ <20160323152052.GA20906@rob-hp-laptop>
+ <CAL9uMOGaf5556KX5RJWbaW0d1zcTZu4S6FvoqEXQCWXg1QUDpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL9uMOGaf5556KX5RJWbaW0d1zcTZu4S6FvoqEXQCWXg1QUDpg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Upstreaming Team <linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Mar 23, 2016 at 05:04:19PM +0100, Carlo Caione wrote:
+> On Wed, Mar 23, 2016 at 4:20 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> > On Wed, Mar 23, 2016 at 10:14:00AM +0100, Carlo Caione wrote:
+> >> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> >>
+> >> Fix pin controller documentation introducing the new compatibles for
+> >> the pinctrl drivers specific for aobus / cbus.
+> >>
+> >> This is needed because we have changed the pin controller driver: we
+> >> have now a single specialized pinctrl driver / compatible for each bus
+> >> the controller is attached to, instead of one single driver dealing with
+> >> all the controllers we have on different buses.
+> >
+> > Aren't you breaking compatibility with old DTs here? If so, you need to
+> > be clear that you are and why you think that is okay.
+> 
+> Rob,
+> It's a bit too late to worry about breaking compatibility since the
+> driver changes are already landed in mainline and currently Meson8 and
+> Meson8b platforms are broken because of this.
+> You can read the whole discussion here [1] and here [2]. Driver and DT
+> changes were supposed to go in together but a bit of general
+> misunderstanding caused this issue.
 
-On 03/25/2016 02:51 AM, David Lechner wrote:
+My comment was the commit message needs to be clear that you are 
+breaking compatibility. That was true before part of this went in. 
+ 
+> We decided to break compatibility with the old DTs since the the
+> platform support is still in the really early stage so I really don't
+> think this is going to cause any problem and we have a lot of good
+> reasons to split the pinctrl driver. First of all it makes sense from
+> the hardware prospective, since we actually have two different pin
+> controllers on two different buses. Splitting the driver allows us to
+> introduce in the DTS both CBUS and AOBUS as simple buses. We need a
+> clear description of the two buses in the DTS since several devices
+> have a different register mapping depending on which bus they are
+> attached to. Also as you can read here [3] we want to map the whole
+> CBUS as a syscon device to be able to access several registers
+> scattered inside CBUS.
 
-> TI has been using the physical address in DT after the @ in device nodes.
-> The device tree convention is to use the same address that is used for
-> the reg property. This updates all davinci DT files to use the proper
-> convention.
->
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-[...]
+>From a quick glance, you mainly needed to keep the old compatible string 
+in the driver and just ignore ao-bank. Then only what depended on 
+ao-bank would break. Maybe that's less broken than completely breaking 
+the pinctrl driver...
 
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index 226cda7..4294849 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -15,7 +15,7 @@
->   		#address-cells = <1>;
->   		#size-cells = <1>;
->   		ranges;
-> -		intc: interrupt-controller {
-> +		intc: interrupt-controller@fffee000 {
->   			compatible = "ti,cp-intc";
->   			interrupt-controller;
->   			#interrupt-cells = <1>;
-> @@ -23,7 +23,7 @@
->   			reg = <0xfffee000 0x2000>;
->   		};
->   	};
-> -	soc {
-> +	soc@1c00000 {
+Anyway, merge the fix:
 
-    This node doesn't have the "reg" prop.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-[...]
-
-MBR, Sergei
-
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
