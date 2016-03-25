@@ -1,49 +1,73 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH 0/5 v2] drm/vc4: DPI panel support
-Date: Thu, 24 Mar 2016 17:23:46 -0700
-Message-ID: <1458865431-30048-1-git-send-email-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 2/5] panel-simple: Add the 7" DPI panel from Adafruit.
+Date: Thu, 24 Mar 2016 17:23:48 -0700
+Message-ID: <1458865431-30048-3-git-send-email-eric@anholt.net>
+References: <1458865431-30048-1-git-send-email-eric@anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1458865431-30048-1-git-send-email-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rpi-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is round 2 of the DPI panel support for vc4.  This time the
-custom properties are dropped in favor of
-connector->display_info.bus_formats[].
-
-Testable tree is at:
-
-https://github.com/anholt/linux/tree/drm-vc4-dpi-boot
-
-Eric Anholt (5):
-  of: Add vendor prefix for On Tat Industrial Company.
-  panel-simple: Add the 7" DPI panel from Adafruit.
-  drm: Add an encoder and connector type enum for DPI.
-  drm/vc4: Add DPI driver
-  ARM: bcm2835: Add the DPI hardware to the device tree.
-
- .../devicetree/bindings/display/brcm,bcm-vc4.txt   |  36 ++
- .../bindings/display/panel/ontat,yx700wv03.txt     |   7 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- arch/arm/boot/dts/bcm283x.dtsi                     |  11 +
- drivers/gpu/drm/drm_crtc.c                         |   2 +
- drivers/gpu/drm/panel/panel-simple.c               |  35 ++
- drivers/gpu/drm/vc4/Kconfig                        |   1 +
- drivers/gpu/drm/vc4/Makefile                       |   1 +
- drivers/gpu/drm/vc4/vc4_debugfs.c                  |   1 +
- drivers/gpu/drm/vc4/vc4_dpi.c                      | 520 +++++++++++++++++++++
- drivers/gpu/drm/vc4/vc4_drv.c                      |   1 +
- drivers/gpu/drm/vc4/vc4_drv.h                      |   5 +
- include/uapi/drm/drm_mode.h                        |   2 +
- 13 files changed, 623 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/ontat,yx700wv03.txt
- create mode 100644 drivers/gpu/drm/vc4/vc4_dpi.c
-
--- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBpcyBhIGJhc2ljIFRGVCBwYW5lbCB3aXRoIGEgNDAtcGluIEZQQyBjb25uZWN0b3Igb24g
+aXQuICBUaGUKc3BlY2lmaWNhdGlvbiBkb2Vzbid0IGRlZmluZSB0aW1pbmdzLCBidXQgdGhlIEFk
+YWZydWl0IGluc3RydWN0aW9ucwp3ZXJlIHNldHRpbmcgdXAgODAweDQ4MCBDVlQuCgp2MjogQWRk
+IC5idXNfZm9ybWF0IGFuZCB2c3luYy9oc3luYyBmbGFncy4KClNpZ25lZC1vZmYtYnk6IEVyaWMg
+QW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+CkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29udGF0LHl4NzAwd3YwMy50
+eHQgICAgIHwgIDcgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYyAg
+ICAgICAgICAgICAgIHwgMzUgKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2Vk
+LCA0MiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb250YXQseXg3MDB3djAzLnR4dAoKZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29u
+dGF0LHl4NzAwd3YwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9vbnRhdCx5eDcwMHd2MDMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
+IDAwMDAwMDAuLjNkOGE1ZTAKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vbnRhdCx5eDcwMHd2MDMudHh0CkBAIC0wLDAg
+KzEsNyBAQAorT24gVGF0IEluZHVzdHJpYWwgQ29tcGFueSA3IiBEUEkgVEZUIHBhbmVsLgorCitS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgIm9udGF0LHl4NzAw
+d3YwMyIKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2ltcGxlLXBhbmVs
+IGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlz
+IGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
+bGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRleCBmODhhNjMx
+Li42NDJjNWNhIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxl
+LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jCkBAIC0xMTc2LDYg
+KzExNzYsMzggQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIHNoZWxseV9zY2EwNzAx
+MF9iZm5fbG5uID0gewogCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I2NjZfMVgxOCwK
+IH07CiAKKy8qIDgwMHg0ODAgQ1ZULiAgVGhlIHBhbmVsIGFwcGVhcnMgdG8gYmUgcXVpdGUgYWNj
+ZXB0aW5nLCBhdCBsZWFzdCBhcworICogZmFyIGFzIHBpeGVsIGNsb2NrcywgYnV0IHRoaXMgaXMg
+dGhlIHRpbWluZyB0aGF0IHdhcyBiZWluZyB1c2VkIGluCisgKiB0aGUgQWRhZnJ1aXQgaW5zdGFs
+bGF0aW9uIGluc3RydWN0aW9ucy4KKyAqLworc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxh
+eV9tb2RlIG9udGF0X3l4NzAwd3YwM19tb2RlID0geworCS5jbG9jayA9IDI5NTAwLAorCS5oZGlz
+cGxheSA9IDgwMCwKKwkuaHN5bmNfc3RhcnQgPSA4MjQsCisJLmhzeW5jX2VuZCA9IDg5NiwKKwku
+aHRvdGFsID0gOTkyLAorCS52ZGlzcGxheSA9IDQ4MCwKKwkudnN5bmNfc3RhcnQgPSA0ODMsCisJ
+LnZzeW5jX2VuZCA9IDQ5MywKKwkudnRvdGFsID0gNTAwLAorCS52cmVmcmVzaCA9IDYwLAorCS5m
+bGFncyA9IERSTV9NT0RFX0ZMQUdfTlZTWU5DIHwgRFJNX01PREVfRkxBR19OSFNZTkMsCit9Owor
+CisvKiBTcGVjaWZpY2F0aW9uIGF0CisgKiBodHRwczovL3d3dy5hZGFmcnVpdC5jb20vaW1hZ2Vz
+L3Byb2R1Y3QtZmlsZXMvMjQwNi9jMzE2My5wZGYKKyAqLworc3RhdGljIGNvbnN0IHN0cnVjdCBw
+YW5lbF9kZXNjIG9udGF0X3l4NzAwd3YwMyA9IHsKKwkubW9kZXMgPSAmb250YXRfeXg3MDB3djAz
+X21vZGUsCisJLm51bV9tb2RlcyA9IDEsCisJLmJwYyA9IDgsCisJLnNpemUgPSB7CisJCS53aWR0
+aCA9IDE1NCwKKwkJLmhlaWdodCA9IDgzLAorCX0sCisJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNf
+Rk1UX1JHQjg4OF8xWDI0LAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+cGxhdGZvcm1fb2ZfbWF0Y2hbXSA9IHsKIAl7CiAJCS5jb21wYXRpYmxlID0gImFtcGlyZSxhbTgw
+MDQ4MHIzdG1xd2ExaCIsCkBAIC0xMjY1LDYgKzEyOTcsOSBAQCBzdGF0aWMgY29uc3Qgc3RydWN0
+IG9mX2RldmljZV9pZCBwbGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCQkuY29tcGF0aWJsZSA9ICJv
+a2F5YSxyczgwMDQ4MHQtN3gwZ3AiLAogCQkuZGF0YSA9ICZva2F5YV9yczgwMDQ4MHRfN3gwZ3As
+CiAJfSwgeworCQkuY29tcGF0aWJsZSA9ICJvbnRhdCx5eDcwMHd2MDMiLAorCQkuZGF0YSA9ICZv
+bnRhdF95eDcwMHd2MDMsCisJfSwgewogCQkuY29tcGF0aWJsZSA9ICJvcnR1c3RlY2gsY29tNDNo
+NG04NXVsYyIsCiAJCS5kYXRhID0gJm9ydHVzdGVjaF9jb200M2g0bTg1dWxjLAogCX0sIHsKLS0g
+CjIuNy4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
