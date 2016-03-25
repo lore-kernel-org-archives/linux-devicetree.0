@@ -1,16 +1,15 @@
-From: Yao Yuan <yao.yuan@nxp.com>
-Subject: RE: [PATCH v6 2/2] dts/ls2080a: update the DTS for QSPI and DSPI
- support
-Date: Fri, 25 Mar 2016 06:55:13 +0000
-Message-ID: <AM2PR04MB0722AF5197CA31F40804F7F389830@AM2PR04MB0722.eurprd04.prod.outlook.com>
-References: <1457518926-18518-1-git-send-email-yao.yuan@freescale.com>
- <1457518926-18518-3-git-send-email-yao.yuan@freescale.com>
+From: Markus Reichl <reichl@t-online.de>
+Subject: Re: [PATCH] ARM: dts: exynos: Fix invalid maximum voltage for buck9
+ supplying SD card
+Date: Fri, 25 Mar 2016 08:07:40 +0100
+Message-ID: <3355646.rVxAcJbDaQ@dell2.five-lan.de>
+References: <1458807125-13580-1-git-send-email-k.kozlowski@samsung.com>
+ <56F4D070.4020403@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1457518926-18518-3-git-send-email-yao.yuan@freescale.com>
-Content-Language: en-US
+In-Reply-To: <56F4D070.4020403@osg.samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,87 +19,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, Han Xu <han.xu@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
-
-Could you please help to review and merge this patch?
-
-Thanks.
-
-Best Regards,
-Yuan Yao
-
-
-On 03/09/2016 08:59 PM, Yao Yuan wrote:
-> 
-> Signed-off-by: Yuan Yao <yao.yuan@nxp.com>
-> Acked-by: Han xu <han.xu@nxp.com>
-> ---
-> Changed in v6:
-> No changes.
-> 
-> Changed in v5:
-> Resend base on arm-soc.
-> 
-> Changed in v4:
-> No changes.
-> 
-> Changed in v3:
-> No changes.
-> 
-> Changed in v2:
-> Update my email to <yao.yuan@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts | 9 ++++++++-
->  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi    | 4 ++--
->  2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> index 4cb996d..e8801fa 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts
-> @@ -178,7 +178,14 @@
-> 
->  &qspi {
->  	status = "okay";
-> -	qflash0: s25fl008k {
-> +	flash0: s25fl256s1@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "st,m25p80";
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +	};
-> +	flash2: s25fl256s1@2 {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		compatible = "st,m25p80";
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> index 2b23d03..65e612a 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi
-> @@ -318,7 +318,7 @@
-> 
->  		dspi: dspi@2100000 {
->  			status = "disabled";
-> -			compatible = "fsl,vf610-dspi";
-> +			compatible = "fsl,ls2080a-dspi", "fsl,ls2085a-dspi";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0x0 0x2100000 0x0 0x10000>;
-> @@ -444,7 +444,7 @@
-> 
->  		qspi: quadspi@20c0000 {
->  			status = "disabled";
-> -			compatible = "fsl,vf610-qspi";
-> +			compatible = "fsl,ls2080a-qspi", "fsl,ls1021a-qspi";
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <0x0 0x20c0000 0x0 0x10000>,
-> --
-> 2.1.0.27.g96db324
+SGkgSmF2aWVyLAoKQW0gRnJlaXRhZywgMjUuIE3DpHJ6IDIwMTYsIDAyOjQ1OjIwIHNjaHJpZWIg
+SmF2aWVyIE1hcnRpbmV6IENhbmlsbGFzOgo+IEhlbGxvIEtyenlzenRvZiwKPiAKPiBPbiAwMy8y
+NC8yMDE2IDA1OjEyIEFNLCBLcnp5c3p0b2YgS296bG93c2tpIHdyb3RlOgo+ID4gVGhlIGJ1Y2s5
+IHJlZ3VsYXRvciBvZiBTMk1QUzExIFBNSUMgaGFkIGluY29ycmVjdCBtYXhpbXVtIHZvbHRhZ2Ug
+LQo+ID4gbG93ZXIgYnkgNSBtViB0aGFuIHNwZWNpZmllZCBieSBkYXRhc2hlZXQuIFRoaXMgYnVj
+azkgcHJvdmlkZXMgcG93ZXIgdG8KPiA+IG90aGVyIHJlZ3VsYXRvcnMsIGluY2x1ZGluZyBMRE8x
+MyBhbmQgTERPMTkgd2hpY2ggc3VwcGx5IHRoZSBNTUMyIChTRAo+ID4gY2FyZCkuCj4gPiAKPiA+
+IFdoZW4gY29uc3RyYWludHMgd2VyZSBhcHBsaWVkLCB0aGUgZGVwZW5kaW5nIHJlZ3VsYXRvcnMg
+d2VyZSBub3QKPiA+IHByb3ZpZGluZyBlbm91Z2ggcG93ZXIsIGxlYWRpbmcgdG8gU0QgY2FyZCBk
+ZXRlY3Rpb24gZXJyb3JzOgo+ID4gCW1tYzE6IGNhcmQgbmV2ZXIgbGVmdCBidXN5IHN0YXRlCj4g
+PiAJbW1jMTogZXJyb3IgLTExMCB3aGlsc3QgaW5pdGlhbGlzaW5nIFNEIGNhcmQKPiA+IAo+ID4g
+Rml4ZXM6IDg2YTJkMmFjNWU1ZCAoIkFSTTogZHRzOiBBZGQgZHRzIGZpbGUgZm9yIE9kcm9pZCBY
+VTMgYm9hcmQiKQo+ID4gU2lnbmVkLW9mZi1ieTogS3J6eXN6dG9mIEtvemxvd3NraSA8ay5rb3ps
+b3dza2lAc2Ftc3VuZy5jb20+Cj4gPiAKPiA+IC0tLQo+ID4gCj4gPiBUaGUgaXNzdWUgY2FuIGJl
+IHJlcHJvZHVjZWQgb24gbmV4dC0yMDE2MDMyNCB3aXRoCj4gPiBiYWU0ZmRjODhkN2Y3ZGRhMSAo
+cmVndWxhdG9yOiBjb3JlOiBFbnN1cmUgd2UgYXJlIGF0IGxlYXN0IGluIGJvdW5kcyBmb3Igb3Vy
+IGNvbnN0cmFpbnRzKS4KPiA+IC0tLQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczU0MjIt
+b2Ryb2lkeHUzLWNvbW1vbi5kdHNpIHwgMiArLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2Vy
+dGlvbigrKSwgMSBkZWxldGlvbigtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9v
+dC9kdHMvZXh5bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kgYi9hcmNoL2FybS9ib290L2R0
+cy9leHlub3M1NDIyLW9kcm9pZHh1My1jb21tb24uZHRzaQo+ID4gaW5kZXggMWJkNTA3YmZhNzUw
+Li44MmIyYmE2MzJjZjYgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9leHlub3M1
+NDIyLW9kcm9pZHh1My1jb21tb24uZHRzaQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5
+bm9zNTQyMi1vZHJvaWR4dTMtY29tbW9uLmR0c2kKPiA+IEBAIC0yOTksNyArMjk5LDcgQEAKPiA+
+ICAJCQlidWNrOV9yZWc6IEJVQ0s5IHsKPiA+ICAJCQkJcmVndWxhdG9yLW5hbWUgPSAidmRkXzIu
+OHZfbGRvIjsKPiA+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzAwMDAwMD47Cj4g
+PiAtCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDM3NTAwMDA+Owo+ID4gKwkJCQlyZWd1
+bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwzNzU1MDAwPjsKPiA+ICAJCQkJcmVndWxhdG9yLWFsd2F5
+cy1vbjsKPiA+ICAJCQkJcmVndWxhdG9yLWJvb3Qtb247Cj4gPiAgCQkJfTsKPiA+IAo+IAo+IEkg
+dGVzdGVkIG5leHQtMjAxNjAzMjQgKyAkU1VCSkVDVCBvbiBhbiBPZHJvaWQgWFU0ICh3aXRoIGV4
+eW5vc19kZWZjb25maWcpCj4gYW5kIHdoaWxlIGl0J3MgdHJ1ZSB0aGF0IHRoZSBwYXRjaCBtYWtl
+cyB0aGUgU0QgY2FyZCBlcnJvciB0byBnbyBhd2F5LCBJIHNlZQo+IHRoYXQgdGhlIHMybXBzMTEg
+cmVndWxhdG9yIGRyaXZlciBmYWlscyB0byBwcm9iZSBkdWUgYW4gLUVJTlZBTCBiZWluZyByZXR1
+cm4KPiBieSBtYWNoaW5lX2NvbnN0cmFpbnRzX3ZvbHRhZ2UoKSAtPiBfcmVndWxhdG9yX2RvX3Nl
+dF92b2x0YWdlKCk6Cj4gCj4gWyAgICAxLjcxMDMwMF0gdmRkXzIuOHZfbGRvOiBmYWlsZWQgdG8g
+YXBwbHkgMzc1NTAwMC0zNzU1MDAwdVYgY29uc3RyYWludCgtMjIpCj4gWyAgICAxLjcxNjM4N10g
+czJtcHMxMS1wbWljIHMybXBzMTEtcmVndWxhdG9yOiByZWd1bGF0b3IgaW5pdCBmYWlsZWQgZm9y
+IDQ2Cj4gWyAgICAxLjczNDg3OF0gczJtcHMxMS1wbWljOiBwcm9iZSBvZiBzMm1wczExLXJlZ3Vs
+YXRvciBmYWlsZWQgd2l0aCBlcnJvciAtMjIKPiAKPiBJIHdvbmRlciBob3cgbmVpdGhlciBNYXJr
+dXMgbm9yIHlvdSBzYXcgdGhpcyBpc3N1ZSB3aGVuIHRlc3Rpbmcgc28gbWF5YmUgSSdtCj4gZG9p
+bmcgc29tZXRoaW5nIHdyb25nPyBTaW5jZSBBRkFJQ1QgaXQncyBvbmx5IHdvcmtpbmcgYmVjYXVz
+ZSB0aGUgZHJpdmVyIGZhaWxzCj4gdG8gcHJvYmUgc28gdGhlIHNhbWUgZWZmZWN0IGNhbiBiZSBh
+Y2hpZXZlZCBkaXNhYmxpbmcgQ09ORklHX1JFR1VMQVRPUl9TMk1QUzExLgo+IAo+IEJlc3QgcmVn
+YXJkcywKPiAKTXkgZmlyc3QgdGVzdCB5ZXN0ZXJkYXkgd2FzIHdpdGggbmV4dC0yMDE2MDMyNCAr
+ICRTVUJKRUNULCB0b28sIGFuZCBJIGVuY291bnRlcmVkIHRoZSBzYW1lCmVycm9yIG9mIHRoZSBy
+ZWd1bGF0b3Igc3lzdGVtIGFzIHlvdS4KQXMgd2l0aCBuZXh0LTIwMTYwMzI0IEkgY291bGQgbm90
+IGdldCB0aGUgZXRoZXJuZXQgY2hpcCBydW5uaW5nICh3aXRoIG9yIHdpdGhvdXQgJFNVQkpFQ1Qp
+IEkgc3dpdGNoZWQgYmFjayB0bwpuZXh0LTIwMTYwMzIzICsgJFNVQkpFQ1QgYW5kIHBvc3RlZCB0
+aGUgcmVzdWx0IGFib3ZlLgoKUmVnYXJkcywKLS0KTWFya3VzIAoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
