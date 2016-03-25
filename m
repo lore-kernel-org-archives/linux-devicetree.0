@@ -1,83 +1,58 @@
-From: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: Add dts for Orange Pi 2 SBC
-Date: Fri, 25 Mar 2016 12:53:42 +0100
-Message-ID: <20160325125342.2b4b6c9ec2e4922b51687ad3@free.fr>
-References: <1458728225-6922-1-git-send-email-hdegoede@redhat.com>
-Reply-To: moinejf-GANU6spQydw@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 01/16] dt: davinci: use proper address after @
+Date: Fri, 25 Mar 2016 16:29:04 +0300
+Message-ID: <56F53D20.6030709@cogentembedded.com>
+References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+ <1458863503-31121-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCV6DL6LYMNBBTWN2S3QKGQEMCRWTZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1458728225-6922-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458863503-31121-2-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Mar 2016 11:17:05 +0100
-Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+Hello.
 
-> The Orange Pi 2 is a SBC based on the Allwinner H3 SoC with a uSD slot,
-> 4 USB ports connected via a USB-2 hub, a 10/100M ethernet port using the
-> SoC's integrated PHY, Wifi via a RTL8189ETV sdio wifi chip, USB OTG, HDMI=
-,
-> a TRRS headphone jack for stereo out and composite out, a microphone,
-> an IR receiver, a CSI connector, 2 LEDs, a 3 pin UART header
-> and a 40-pin GPIO header.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile                |   1 +
->  arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 186 ++++++++++++++++++++++++=
-++++++
->  2 files changed, 187 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-	[snip]
-> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dt=
-s/sun8i-h3-orangepi-2.dts
-> new file mode 100644
-> index 0000000..f93f5d1
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-	[snip]
-> +&mmc0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin>;
-> +	vmmc-supply =3D <&reg_vcc3v3>;
-> +	bus-width =3D <4>;
-> +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-> +	cd-inverted;
-> +	status =3D "okay";
-> +};
-> +
-> +&mmc1 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&mmc1_pins_a>;
-> +	vmmc-supply =3D <&reg_vcc3v3>;
+On 03/25/2016 02:51 AM, David Lechner wrote:
 
-While still 3.3V, the power of the mmc1 if supplied by an other
-regulator.
+> TI has been using the physical address in DT after the @ in device nodes.
+> The device tree convention is to use the same address that is used for
+> the reg property. This updates all davinci DT files to use the proper
+> convention.
+>
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+[...]
 
-> +	mmc-pwrseq =3D <&wifi_pwrseq>;
-> +	bus-width =3D <4>;
-> +	non-removable;
-> +	status =3D "okay";
-> +};
-	[snip]
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 226cda7..4294849 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -15,7 +15,7 @@
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+>   		ranges;
+> -		intc: interrupt-controller {
+> +		intc: interrupt-controller@fffee000 {
+>   			compatible = "ti,cp-intc";
+>   			interrupt-controller;
+>   			#interrupt-cells = <1>;
+> @@ -23,7 +23,7 @@
+>   			reg = <0xfffee000 0x2000>;
+>   		};
+>   	};
+> -	soc {
+> +	soc@1c00000 {
 
---=20
-Ken ar c'henta=C3=B1	|	      ** Breizh ha Linux atav! **
-Jef		|		http://moinejf.free.fr/
+    This node doesn't have the "reg" prop.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+[...]
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
