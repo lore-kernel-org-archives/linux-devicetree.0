@@ -1,160 +1,121 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v3 10/16] ARM: davinci: da8xx: Add CFGCHIPn syscon platform declaration.
-Date: Thu, 24 Mar 2016 18:51:35 -0500
-Message-ID: <1458863503-31121-11-git-send-email-david@lechnology.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 4/5] drm/vc4: Add DPI driver
+Date: Thu, 24 Mar 2016 17:02:34 -0700
+Message-ID: <871t6za0h1.fsf@eliezer.anholt.net>
+References: <1458355366-7073-1-git-send-email-eric@anholt.net> <1458355366-7073-5-git-send-email-eric@anholt.net> <20160321125745.GA16407@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+In-Reply-To: <20160321125745.GA16407@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-	DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The CFGCHIPn registers are used by a number of devices, so using a syscon
-device to share them. The first consumer of this will by the phy-da8xx-usb
-driver.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
----
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-v3 changes: This is a new patch. There is one syscon device for all CFGCHIP
-registers.
+> On Fri, Mar 18, 2016 at 07:42:45PM -0700, Eric Anholt wrote:
+>> The DPI interface involves taking a ton of our GPIOs to be used as
+>> outputs, and routing display signals over them in parallel.
+>>=20
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/display/brcm,bcm-vc4.txt   |  67 +++
+>>  drivers/gpu/drm/vc4/Kconfig                        |   1 +
+>>  drivers/gpu/drm/vc4/Makefile                       |   1 +
+>>  drivers/gpu/drm/vc4/vc4_debugfs.c                  |   1 +
+>>  drivers/gpu/drm/vc4/vc4_dpi.c                      | 518 ++++++++++++++=
++++++++
+>>  drivers/gpu/drm/vc4/vc4_drv.c                      |   1 +
+>>  drivers/gpu/drm/vc4/vc4_drv.h                      |   5 +
+>>  7 files changed, 594 insertions(+)
+>>  create mode 100644 drivers/gpu/drm/vc4/vc4_dpi.c
+>>=20
+>> diff --git a/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt =
+b/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+>> index 56a961a..1782c3f 100644
+>> --- a/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+>> +++ b/Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt
+>> @@ -35,6 +35,44 @@ Optional properties for HDMI:
+>>  		  as an interrupt/status bit in the HDMI controller
+>>  		  itself).  See bindings/pinctrl/brcm,bcm2835-gpio.txt
+>>=20=20
+>> +Required properties for DPI:
+>> +- compatible:		Should be "brcm,bcm2835-dpi"
+>> +- reg:			Physical base address and length of the registers
+>> +- clocks:		a) core: The core clock the unit runs on
+>> +			b) pixel: The pixel clock that feeds the pixelvalve
+>> +- port:			Port node with a single endpoint connecting to the
+>> +			  panel device, as defined in [1]
+>> +- brcm,output-format:	Output data format, must be one of:
+>> +			0) disabled
+>> +			1) 00000000rrrrrggggggbbbbb
+>> +			2) 000rrrrr00gggggg000bbbbb
+>> +			3) 00rrrrr000gggggg00bbbbb0
+>> +			4) 000000rrrrrrggggggbbbbbb
+>> +			5) 00rrrrrr00gggggg00bbbbbb
+>> +			6) rrrrrrrrggggggggbbbbbbbb
+>> +
+>> +Optional properties for DPI:
+>> +- brcm,rgb-order:		RGB reordering, must be one of:
+>> +				0) RGB
+>> +				1) BGR
+>> +				2) GRB
+>> +				3) BRG
+>
+>> +- brcm,hsync-disable:		Disables the hsync signal
+>> +- brcm,vsync-disable:		Disables the vsync signal
+>> +- brcm,output-enable-disable:	Disables the output enable signal
+>> +- brcm,hsync-falling:		Outputs the hsync signal on the falling clk edge
+>> +- brcm,vsync-falling:		Outputs the vsync signal on the falling clk edge
+>> +- brcm,output-enable-falling:	Outputs the output enable signal on the
+>> +				  falling clk edge
+>> +- brcm,output-enable-invert:	Inverts the polarity of the output enable
+>> +				  signal
+>> +- brcm,pixel-clk-invert:	Inverts the polarity of the pixel clk signal
+>> +- brcm,output-enable-mode:	Sets output enable when (vsync | hsync)
+>> +				  instead of (hactive & vactive)
+>
+> These are all really properties of what the panel requires and we=20
+> already have video timings binding that would cover some of these.
+>
+> Also, do you have actual users? Some of these seem like they would be=20
+> rare or never. I've not seen panels caring about which clock edge the=20
+> sync signals are on.
 
+I was using output-format, rgb_order, output-enable-mode to get my panel
+to work.  I'm suspicious that the !output_enable_mode is not useful,
+though (Note: I had documented it backwards: false is hsync|vsync, true
+is hactive&vactive).  That just left me with output-format.  I think
+.bus_format in the panel_desc can cover that, so I've now dropped all of
+these brcm properties.
 
- arch/arm/mach-davinci/board-da830-evm.c     |  4 ++++
- arch/arm/mach-davinci/board-da850-evm.c     |  4 ++++
- arch/arm/mach-davinci/board-mityomapl138.c  |  4 ++++
- arch/arm/mach-davinci/board-omapl138-hawk.c |  4 ++++
- arch/arm/mach-davinci/devices-da8xx.c       | 28 ++++++++++++++++++++++++++++
- arch/arm/mach-davinci/include/mach/da8xx.h  |  2 ++
- 6 files changed, 46 insertions(+)
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/arch/arm/mach-davinci/board-da830-evm.c b/arch/arm/mach-davinci/board-da830-evm.c
-index 605d444..3051cb6 100644
---- a/arch/arm/mach-davinci/board-da830-evm.c
-+++ b/arch/arm/mach-davinci/board-da830-evm.c
-@@ -586,6 +586,10 @@ static __init void da830_evm_init(void)
- 	struct davinci_soc_info *soc_info = &davinci_soc_info;
- 	int ret;
- 
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
- 	ret = da830_register_gpio();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
-index 8e4539f..ec5cb10 100644
---- a/arch/arm/mach-davinci/board-da850-evm.c
-+++ b/arch/arm/mach-davinci/board-da850-evm.c
-@@ -1345,6 +1345,10 @@ static __init void da850_evm_init(void)
- {
- 	int ret;
- 
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
- 	ret = da850_register_gpio();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/board-mityomapl138.c b/arch/arm/mach-davinci/board-mityomapl138.c
-index d97c588..c04b45d 100644
---- a/arch/arm/mach-davinci/board-mityomapl138.c
-+++ b/arch/arm/mach-davinci/board-mityomapl138.c
-@@ -509,6 +509,10 @@ static void __init mityomapl138_init(void)
- {
- 	int ret;
- 
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
- 	/* for now, no special EDMA channels are reserved */
- 	ret = da850_register_edma(NULL);
- 	if (ret)
-diff --git a/arch/arm/mach-davinci/board-omapl138-hawk.c b/arch/arm/mach-davinci/board-omapl138-hawk.c
-index d4930b6..8691a25 100644
---- a/arch/arm/mach-davinci/board-omapl138-hawk.c
-+++ b/arch/arm/mach-davinci/board-omapl138-hawk.c
-@@ -294,6 +294,10 @@ static __init void omapl138_hawk_init(void)
- {
- 	int ret;
- 
-+	ret = da8xx_register_cfgchip();
-+	if (ret)
-+		pr_warn("%s: CFGCHIP registration failed: %d\n", __func__, ret);
-+
- 	ret = da850_register_gpio();
- 	if (ret)
- 		pr_warn("%s: GPIO init failed: %d\n", __func__, ret);
-diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-index 725e693..69d11a1 100644
---- a/arch/arm/mach-davinci/devices-da8xx.c
-+++ b/arch/arm/mach-davinci/devices-da8xx.c
-@@ -11,6 +11,7 @@
-  * (at your option) any later version.
-  */
- #include <linux/init.h>
-+#include <linux/platform_data/syscon.h>
- #include <linux/platform_device.h>
- #include <linux/dma-contiguous.h>
- #include <linux/serial_8250.h>
-@@ -1109,3 +1110,30 @@ int __init da850_register_sata(unsigned long refclkpn)
- 	return platform_device_register(&da850_sata_device);
- }
- #endif
-+
-+static struct syscon_platform_data da8xx_cfgchip_platform_data = {
-+	.label	= "cfgchip",
-+};
-+
-+static struct resource da8xx_cfgchip_resources[] = {
-+	{
-+		.start	= DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP0_REG,
-+		.end	= DA8XX_SYSCFG0_BASE + DA8XX_CFGCHIP4_REG + 3,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
-+
-+static struct platform_device da8xx_cfgchip_device = {
-+	.name	= "syscon",
-+	.id	= 0,
-+	.dev	= {
-+		.platform_data	= &da8xx_cfgchip_platform_data,
-+	},
-+	.num_resources	= ARRAY_SIZE(da8xx_cfgchip_resources),
-+	.resource	= da8xx_cfgchip_resources,
-+};
-+
-+int __init da8xx_register_cfgchip(void)
-+{
-+	return platform_device_register(&da8xx_cfgchip_device);
-+}
-diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-index c367530..c32444b 100644
---- a/arch/arm/mach-davinci/include/mach/da8xx.h
-+++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-@@ -61,6 +61,7 @@ extern unsigned int da850_max_speed;
- #define DA8XX_CFGCHIP1_REG	0x180
- #define DA8XX_CFGCHIP2_REG	0x184
- #define DA8XX_CFGCHIP3_REG	0x188
-+#define DA8XX_CFGCHIP4_REG	0x18c
- 
- #define DA8XX_SYSCFG1_BASE	(IO_PHYS + 0x22C000)
- #define DA8XX_SYSCFG1_VIRT(x)	(da8xx_syscfg1_base + (x))
-@@ -116,6 +117,7 @@ void da8xx_rproc_reserve_cma(void);
- int da8xx_register_rproc(void);
- int da850_register_gpio(void);
- int da830_register_gpio(void);
-+int da8xx_register_cfgchip(void);
- 
- extern struct platform_device da8xx_serial_device[];
- extern struct emac_platform_data da8xx_emac_pdata;
--- 
-1.9.1
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBCgAGBQJW9IAaAAoJELXWKTbR/J7o/LkP/01VVP/Cdr67QC+uG59foshJ
+NrmZh+dL2iMQDYTSHedhjEPZBTZ3XSXLG0or2NEfhS9MTmf900gemzCZC21LsRWN
+CyCS8wafoccCdbhb8NWST6WvM3rNW6Cm8V1X2S+toD/osMOfgwI01OhvovZ1T7pc
+JwUbIZ37Fct5QERYYspL3nfXW+NPGSEjfG87vQyVyFlD/jcngiwtkrzuUvTJYinI
+u/bGGe/W60zaepMNxl8USyDiKRjLK2RNWaAxddlyG0EiPG89tllrf0Wz5M9OHYXb
+OQ/yzW1EPd4VFtxQ05iVZ2wFs8hl3qAIKvQypKCqYH/IlXvVe26nKq+DqiJlieR/
+eCY82M3VBUExoXOqkraN7ChZ24Yl1CGzHkgqEEJ9C+V2qiMqB6OUmhPZxMPmcMvm
+E3wJaXUOzYYvzwRjRQIlttHdIc5o8ixW6i7lLrQAWoZbtpdP/O4XHSSciA7tFNps
+6E43U89vwqSQ6TVJGWsmQQi5Xk58DgqtttLhTNrzn1YXqEFI5tLJavz4h6lYU/ht
+fwcgFbaP3Tgc7qXIoCoBwweQ4XxKRPcC911QYzPUSQsHBdI5UH45f1z1ySguCnRp
+txyDirT0MZ9rZSM61BuaI4QEbj0+WYglRkiYd96dGt0N24RXwmczxoEP972m8rbd
+i3GkS9cZ2Oc923okg/lo
+=kE5S
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
