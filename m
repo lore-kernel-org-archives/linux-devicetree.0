@@ -1,100 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl
- and gpio bindings
-Date: Fri, 25 Mar 2016 09:48:34 -0500
-Message-ID: <20160325144834.GA27177@rob-hp-laptop>
-References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
- <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] Documentation: devicetree: amlogic: Document P20x
+ and ODROID-C2 boards
+Date: Fri, 25 Mar 2016 09:49:37 -0500
+Message-ID: <20160325144937.GA31275@rob-hp-laptop>
+References: <1458842715-27066-1-git-send-email-khilman@baylibre.com>
+ <1458842715-27066-3-git-send-email-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1458842715-27066-3-git-send-email-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, afaerber-IBi9RG/b67k@public.gmane.org, carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 24, 2016 at 05:50:09PM +0100, Neil Armstrong wrote:
-> Add pinctrl and gpio DT bindings for PLX Technology OXNAS SoC Family.
-> This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+On Thu, Mar 24, 2016 at 11:05:13AM -0700, Kevin Hilman wrote:
+> Add compatible strings for Amlogic S905/GXBB based boards: Hardkernel
+> ODROID-C2, Amlogic P200 and Amlogic P201.
+>=20
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Reviewed-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/gpio/gpio_oxnas.txt        | 47 ++++++++++++++++++
->  .../bindings/pinctrl/plxtech,pinctrl.txt           | 57 ++++++++++++++++++++++
->  2 files changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/plxtech,pinctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-> new file mode 100644
-> index 0000000..4530fa9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-> @@ -0,0 +1,47 @@
-> +* PLX Technology OXNAS SoC GPIO Controller
-> +
-> +Required properties:
-> + - compatible: "oxsemi,ox810se-gpio"
-> + - reg: Base address and length for the device.
-> + - interrupts: The port interrupt shared by all pins.
-> + - gpio-controller: Marks the port as GPIO controller.
-> + - #gpio-cells: Two. The first cell is the pin number and
-> +   the second cell is used to specify the gpio polarity as defined in
-> +   defined in <dt-bindings/gpio/gpio.h>:
-> +      0 = GPIO_ACTIVE_HIGH
-> +      1 = GPIO_ACTIVE_LOW
-> + - interrupt-controller: Marks the device node as an interrupt controller.
-> + - #interrupt-cells: Two. The first cell is the GPIO number and second cell
-> +   is used to specify the trigger type as defined in
-> +   <dt-bindings/interrupt-controller/irq.h>:
-> +      IRQ_TYPE_EDGE_RISING
-> +      IRQ_TYPE_EDGE_FALLING
-> +      IRQ_TYPE_EDGE_BOTH
-> + - plxtech,gpio-bank: Specifies which bank a controller owns.
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-How is this used?
-
-> + - gpio-ranges: Interaction with the PINCTRL subsystem.
-> + - ngpios: Specifies the gpio lines count in this specific bank.
-> +
-> +Example:
-> +
-> +gpio0: gpio@0 {
-> +	compatible = "oxsemi,ox810se-gpio";
-> +	reg = <0x000000 0x100000>;
-> +	interrupts = <21>;
-> +	#gpio-cells = <2>;
-> +	gpio-controller;
-> +	interrupt-controller;
-> +	#interrupt-cells = <2>;
-> +	plxtech,gpio-bank = <0>;
-> +	gpio-ranges = <&pinctrl 0 0 32>;
-> +	ngpios = <32>;
-
-Is 32 the max? It should not be needed then.
-
-> +};
-> +
-> +keys {
-> +	...
-> +
-> +	button@sw1 {
-
-sw1 is not a unit-address. Just do "sw1-button".
-
-> +		label = "ESC";
-> +		linux,code = <1>;
-> +		gpios = <&gpio0 12 0>;
-> +	};
-> +};
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
