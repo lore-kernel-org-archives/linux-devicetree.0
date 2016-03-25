@@ -1,50 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mtd: nand: denali: allow to override max_banks from DT
- property
-Date: Fri, 25 Mar 2016 09:37:59 -0500
-Message-ID: <20160325143759.GA24596@rob-hp-laptop>
-References: <1458822277-31428-1-git-send-email-yamada.masahiro@socionext.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/5 v4] drm: Add DT bindings documentation for ARC PGU
+ display controller
+Date: Fri, 25 Mar 2016 09:39:50 -0500
+Message-ID: <20160325143950.GA25362@rob-hp-laptop>
+References: <1458838116-24954-1-git-send-email-abrodkin@synopsys.com>
+ <1458838116-24954-3-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1458822277-31428-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1458838116-24954-3-git-send-email-abrodkin@synopsys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 24, 2016 at 09:24:37PM +0900, Masahiro Yamada wrote:
-> Commit 271707b1d817 ("mtd: nand: denali: max_banks calculation
-> changed in revision 5.1") supported the new encoding of the "n_banks"
-> bits of the "features" register, but there is an unfortunate case
-> that is not covered by that commit.
-> 
-> Panasonic (its System LSI division is now Socionext) bought several
-> versions of this IP.  The IP released for Panasonic around Feb. 2012
-> is revision 5 and uses the old encoding for n_banks (2 << n_banks).
-> While the one released around Nov. 2012 is also revision 5, but it
-> uses the new encoding (1 << n_banks).
-> 
-> The revision register cannot distinguish these two incompatible
-> hardware.  I guess this IP series is not well-organized.  I could not
-> find any alternative but giving max_banks from DT property.
-> 
-> This commit works around the problem by allowing DT to set the
-> max_banks forcibly.  Of course, this DT property can be optional if
-> the auto detection based on the hardware registers works well.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> ---
-> 
->  Documentation/devicetree/bindings/mtd/denali-nand.txt | 4 ++++
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  drivers/mtd/nand/denali.c                             | 3 ++-
->  drivers/mtd/nand/denali_dt.c                          | 3 +++
->  3 files changed, 9 insertions(+), 1 deletion(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBNYXIgMjQsIDIwMTYgYXQgMDc6NDg6MzNQTSArMDMwMCwgQWxleGV5IEJyb2RraW4g
+d3JvdGU6Cj4gVGhpcyBhZGQgRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgQVJDIFBHVSBk
+aXNwbGF5IGNvbnRyb2xsZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogQWxleGV5IEJyb2RraW4gPGFi
+cm9ka2luQHN5bm9wc3lzLmNvbT4KPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9y
+Zz4KPiBDYzogUGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPgo+IENjOiBNYXJrIFJ1dGxh
+bmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPgo+IENjOiBJYW4gQ2FtcGJlbGwgPGlqYytkZXZpY2V0
+cmVlQGhlbGxpb24ub3JnLnVrPgo+IENjOiBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9y
+Zz4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiBDYzogbGludXgtc25wcy1hcmNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwo+IC0tLQo+IAo+IENoYW5nZXMgdjMgLT4gdjQ6IChhZGRyZXNz
+aW5nIFJvYidzIGNvbW1lbnRzKQo+ICAqIFJlbW92ZWQgImVuY29kZXItc2xhdmUiIGZyb20gcmVx
+dWlyZWQgcHJvcGVydGllcwo+ICAqIFJlbW92ZWQgIjB4IiBmcm9tIG5vZGUgbmFtZXMKPiAKPiBD
+aGFuZ2VzIHYyIC0+IHYzOgo+ICAqIFJldmVydGVkIGJhY2sgdG8gaW5pdGlhbCBsYXJnZXIgdmVy
+c2lvbiBvZiBleGFtcGxlCj4gICAgd2l0aCBtaW5vciBmaXhlcyAodGhhbmtzIFJvYiBmb3Igc3Bv
+dHRpbmcgdGhvc2UpLgo+IAo+IENoYW5nZXMgdjEgLT4gdjI6Cj4gICogUmVtb3ZlZCBldmVyeXRo
+aW5nIGV4Y2VwdCBQR1Ugbm9kZSBpdHNlbGYuCj4gCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvc25wcyxhcmNwZ3UudHh0ICAgIHwgNzEgKysrKysrKysrKysrKysrKysrKysrKwo+
+ICAxIGZpbGUgY2hhbmdlZCwgNzEgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc25wcyxhcmNwZ3UudHh0
+Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3NucHMsYXJjcGd1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3NucHMsYXJjcGd1LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAw
+MDAwMC4uYjEyNjU3Nwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zbnBzLGFyY3BndS50eHQKPiBAQCAtMCwwICsxLDcxIEBA
+Cj4gK0FSQyBQR1UKPiArCj4gK1RoaXMgaXMgYSBkaXNwbGF5IGNvbnRyb2xsZXIgZm91bmQgb24g
+c2V2ZXJhbCBkZXZlbG9wbWVudCBib2FyZHMgcHJvZHVjZWQKPiArYnkgU3lub3BzeXMuIFRoZSBB
+UkMgUEdVIGlzIGFuIFJHQiBzdHJlYW1lciB0aGF0IHJlYWRzIHRoZSBkYXRhIGZyb20gYQo+ICtm
+cmFtZWJ1ZmZlciBhbmQgc2VuZHMgaXQgdG8gYSBzaW5nbGUgZGlnaXRhbCBlbmNvZGVyICh1c3Vh
+bGx5IEhETUkpLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6
+ICJzbnBzLGFyY3BndSIKPiArICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5n
+dGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCj4gKyAgLSBjbG9ja3M6IEEgbGlzdCBv
+ZiBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2gKPiArICAgIGVu
+dHJ5IGluICdjbG9jay1uYW1lcycuCj4gKyAgLSBjbG9jay1uYW1lczogQSBsaXN0IG9mIGNsb2Nr
+IG5hbWVzLiBGb3IgQVJDIFBHVSBpdCBzaG91bGQgY29udGFpbjoKPiArICAgICAgLSAicHhsY2xr
+IiBmb3IgdGhlIGNsb2NrIGZlZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIGNvbnRyb2xsZXIu
+Cj4gKwo+ICtSZXF1aXJlZCBzdWItbm9kZXM6Cj4gKyAgLSBwb3J0OiBUaGUgUEdVIGNvbm5lY3Rp
+b24gdG8gYW4gZW5jb2RlciBjaGlwLgo+ICsKPiArRXhhbXBsZToKPiArCj4gKy8gewo+ICsJLi4u
+Cj4gKwo+ICsJcGd1QFhYWFhYWFhYIHsKPiArCQljb21wYXRpYmxlID0gInNucHMsYXJjcGd1IjsK
+PiArCQlyZWcgPSA8MHhYWFhYWFhYWCAweDQwMD47Cj4gKwkJY2xvY2tzID0gPCZjbG9ja19ub2Rl
+PjsKPiArCQljbG9jay1uYW1lcyA9ICJweGxjbGsiOwo+ICsJCWVuY29kZXItc2xhdmUgPSA8JmVu
+Y29kZXJfbm9kZT47CgpTdGlsbCBpbiB0aGUgZXhhbXBsZS4uLgoKT3RoZXJ3aXNlLAoKQWNrZWQt
+Ynk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
