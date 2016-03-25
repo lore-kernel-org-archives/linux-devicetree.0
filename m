@@ -1,259 +1,119 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v3 1/2] dmaengine: vdma: Add 64 bit addressing support to the driver
-Date: Fri, 25 Mar 2016 14:46:18 +0530
-Message-ID: <1458897378-3852-1-git-send-email-appanad@xilinx.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to
+ the driver
+Date: Fri, 25 Mar 2016 09:17:03 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A56FFB3@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1440690558-39822-1-git-send-email-anuragku@xilinx.com>
+ <20150921155712.GN2381@localhost>
+ <3802E9A6666DF54886E2B9CBF743BA9801C08CA1@XAP-PVEXMBX01.xlnx.xilinx.com>
+ <3681371.njDCZ2OU0Q@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3681371.njDCZ2OU0Q@avalon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, anuragku@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, svemula@xilinx.com, anirudh@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, Dan Williams <dan.j.williams@intel.com>, "afaerber@suse.de" <afaerber@suse.de>, Maxime Ripard <maxime.ripard@free-electrons.com>, Anirudha Sarangi <anirudh@xilinx.com>, Srikanth Vemula <svemula@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This VDMA  is a soft ip, which can be programmed to support
-32 bit addressing or greater than 32 bit addressing.
+Hi Laurent Pinchart,
 
-When the VDMA ip is configured for 32 bit address space
-the buffer address is specified by a single register
-(0x5C for MM2S and 0xAC for S2MM channel).
+> -----Original Message-----
+> From: Laurent Pinchart [mailto:laurent.pinchart@ideasonboard.com]
+> Sent: Monday, March 21, 2016 9:48 PM
+> To: Anurag Kumar Vulisha
+> Cc: Vinod Koul; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar
+> Gala; Michal Simek; Soren Brinkmann; Dan Williams; afaerber@suse.de; Maxime
+> Ripard; Appana Durga Kedareswara Rao; Anirudha Sarangi; Srikanth Vemula;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> kernel@vger.kernel.org; dmaengine@vger.kernel.org
+> Subject: Re: [PATCH v2] dmaengine: vdma: Add 64 bit addressing support to the
+> driver
+> 
+> Hi Anurag,
+> 
+> On Wednesday 23 Sep 2015 15:12:36 Anurag Kumar Vulisha wrote:
+> > On Monday, September 21, 2015 9:27 PM Vinod Koul wrote:
+> > > On Thu, Aug 27, 2015 at 09:19:18PM +0530, Anurag Kumar Vulisha wrote:
+> > >> This VDMA  is a soft ip, which can be programmed to support
+> > >> 32 bit addressing or greater than 32 bit addressing.
+> > >>
+> > >> When the VDMA ip is configured for 32 bit address space the
+> > >> transfer start address is specified by a single register.
+> > >
+> > > would be good to specfiy which one
+> >
+> > Will change  this in v3
+> 
+> What happened to v3 ? :-)
 
-When the  VDMA core is configured for an address space greater
-than 32 then each buffer address is specified by a combination of
-two registers.
+I have sent it today.
 
-The first register specifies the LSB 32 bits of address,
-while the next register specifies the MSB 32 bits of address.
+Thanks,
+Kedar.
 
-For example, 5Ch will specify the LSB 32 bits while 60h will
-specify the MSB 32 bits of the first start address.
-So we need to program two registers at a time.
-
-This patch adds the 64 bit addressing support to the vdma driver.
-
-Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes for v3:
---> Improved commit message as suggested by vinod.
---> removed unnecessary braces for single line if conditions.
-Changes for v2:
----> Added dma-ranges property in device tree as suggested by Arnd Bergmann.
----> Added device tree property(xlnx,addrwidth) for an identification of whether
-     the IP block itself is configured in 64-bit or 32-bit mode as suggested by
-     Laurent Pinchart.
----> Modified the driver code based on the xlnx,addrwidth.
-
- .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |  4 ++
- drivers/dma/Kconfig                                |  2 +-
- drivers/dma/xilinx/xilinx_vdma.c                   | 73 +++++++++++++++++++---
- 3 files changed, 70 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-index e4c4d47..a86737c 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-@@ -8,6 +8,8 @@ Required properties:
- - #dma-cells: Should be <1>, see "dmas" property below
- - reg: Should contain VDMA registers location and length.
- - xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
-+- xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bits).
-+- dma-ranges: Should be as the following <dma_addr cpu_addr max_len>.
- - dma-channel child node: Should have at least one channel and can have up to
- 	two channels per device. This node specifies the properties of each
- 	DMA channel (see child node properties below).
-@@ -41,8 +43,10 @@ axi_vdma_0: axivdma@40030000 {
- 	compatible = "xlnx,axi-vdma-1.00.a";
- 	#dma_cells = <1>;
- 	reg = < 0x40030000 0x10000 >;
-+	dma-ranges = <0x00000000 0x00000000 0x40000000>;
- 	xlnx,num-fstores = <0x8>;
- 	xlnx,flush-fsync = <0x1>;
-+	xlnx,addrwidth = <0x20>;
- 	dma-channel@40030000 {
- 		compatible = "xlnx,axi-vdma-mm2s-channel";
- 		interrupts = < 0 54 4 >;
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index d96d87c..2846753 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -507,7 +507,7 @@ config XGENE_DMA
- 
- config XILINX_VDMA
- 	tristate "Xilinx AXI VDMA Engine"
--	depends on (ARCH_ZYNQ || MICROBLAZE)
-+	depends on (ARCH_ZYNQ || MICROBLAZE || ARM64)
- 	select DMA_ENGINE
- 	help
- 	  Enable support for Xilinx AXI VDMA Soft IP.
-diff --git a/drivers/dma/xilinx/xilinx_vdma.c b/drivers/dma/xilinx/xilinx_vdma.c
-index 0ee0321..abe915c 100644
---- a/drivers/dma/xilinx/xilinx_vdma.c
-+++ b/drivers/dma/xilinx/xilinx_vdma.c
-@@ -100,6 +100,7 @@
- #define XILINX_VDMA_FRMDLY_STRIDE_STRIDE_SHIFT	0
- 
- #define XILINX_VDMA_REG_START_ADDRESS(n)	(0x000c + 4 * (n))
-+#define XILINX_VDMA_REG_START_ADDRESS_64(n)	(0x000c + 8 * (n))
- 
- /* HW specific definitions */
- #define XILINX_VDMA_MAX_CHANS_PER_DEVICE	0x2
-@@ -144,7 +145,7 @@
-  * @next_desc: Next Descriptor Pointer @0x00
-  * @pad1: Reserved @0x04
-  * @buf_addr: Buffer address @0x08
-- * @pad2: Reserved @0x0C
-+ * @buf_addr_msb: MSB of Buffer address @0x0C
-  * @vsize: Vertical Size @0x10
-  * @hsize: Horizontal Size @0x14
-  * @stride: Number of bytes between the first
-@@ -154,7 +155,7 @@ struct xilinx_vdma_desc_hw {
- 	u32 next_desc;
- 	u32 pad1;
- 	u32 buf_addr;
--	u32 pad2;
-+	u32 buf_addr_msb;
- 	u32 vsize;
- 	u32 hsize;
- 	u32 stride;
-@@ -207,6 +208,7 @@ struct xilinx_vdma_tx_descriptor {
-  * @config: Device configuration info
-  * @flush_on_fsync: Flush on Frame sync
-  * @desc_pendingcount: Descriptor pending count
-+ * @ext_addr: Indicates 64 bit addressing is supported by dma channel
-  */
- struct xilinx_vdma_chan {
- 	struct xilinx_vdma_device *xdev;
-@@ -230,6 +232,7 @@ struct xilinx_vdma_chan {
- 	struct xilinx_vdma_config config;
- 	bool flush_on_fsync;
- 	u32 desc_pendingcount;
-+	bool ext_addr;
- };
- 
- /**
-@@ -240,6 +243,7 @@ struct xilinx_vdma_chan {
-  * @chan: Driver specific VDMA channel
-  * @has_sg: Specifies whether Scatter-Gather is present or not
-  * @flush_on_fsync: Flush on frame sync
-+ * @ext_addr: Indicates 64 bit addressing is supported by dma device
-  */
- struct xilinx_vdma_device {
- 	void __iomem *regs;
-@@ -248,6 +252,7 @@ struct xilinx_vdma_device {
- 	struct xilinx_vdma_chan *chan[XILINX_VDMA_MAX_CHANS_PER_DEVICE];
- 	bool has_sg;
- 	u32 flush_on_fsync;
-+	bool ext_addr;
- };
- 
- /* Macros */
-@@ -299,6 +304,27 @@ static inline void vdma_ctrl_set(struct xilinx_vdma_chan *chan, u32 reg,
- 	vdma_ctrl_write(chan, reg, vdma_ctrl_read(chan, reg) | set);
- }
- 
-+/**
-+ * vdma_desc_write_64 - 64-bit descriptor write
-+ * @chan: Driver specific VDMA channel
-+ * @reg: Register to write
-+ * @value_lsb: lower address of the descriptor.
-+ * @value_msb: upper address of the descriptor.
-+ *
-+ * Since vdma driver is trying to write to a register offset which is not a
-+ * multiple of 64 bits(ex : 0x5c), we are writing as two separate 32 bits
-+ * instead of a single 64 bit register write.
-+ */
-+static inline void vdma_desc_write_64(struct xilinx_vdma_chan *chan, u32 reg,
-+				      u32 value_lsb, u32 value_msb)
-+{
-+	/* Write the lsb 32 bits*/
-+	writel(value_lsb, chan->xdev->regs + chan->desc_offset + reg);
-+
-+	/* Write the msb 32 bits */
-+	writel(value_msb, chan->xdev->regs + chan->desc_offset + reg + 4);
-+}
-+
- /* -----------------------------------------------------------------------------
-  * Descriptors and segments alloc and free
-  */
-@@ -693,9 +719,16 @@ static void xilinx_vdma_start_transfer(struct xilinx_vdma_chan *chan)
- 		list_for_each_entry(desc, &chan->pending_list, node) {
- 			segment = list_first_entry(&desc->segments,
- 					   struct xilinx_vdma_tx_segment, node);
--			vdma_desc_write(chan,
-+			if (chan->ext_addr)
-+				vdma_desc_write_64(chan,
-+					XILINX_VDMA_REG_START_ADDRESS_64(i++),
-+					segment->hw.buf_addr,
-+					segment->hw.buf_addr_msb);
-+			else
-+				vdma_desc_write(chan,
- 					XILINX_VDMA_REG_START_ADDRESS(i++),
- 					segment->hw.buf_addr);
-+
- 			last = segment;
- 		}
- 
-@@ -987,10 +1020,21 @@ xilinx_vdma_dma_prep_interleaved(struct dma_chan *dchan,
- 	hw->stride |= chan->config.frm_dly <<
- 			XILINX_VDMA_FRMDLY_STRIDE_FRMDLY_SHIFT;
- 
--	if (xt->dir != DMA_MEM_TO_DEV)
--		hw->buf_addr = xt->dst_start;
--	else
--		hw->buf_addr = xt->src_start;
-+	if (xt->dir != DMA_MEM_TO_DEV) {
-+		if (chan->ext_addr) {
-+			hw->buf_addr = lower_32_bits(xt->dst_start);
-+			hw->buf_addr_msb = upper_32_bits(xt->dst_start);
-+		} else {
-+			hw->buf_addr = xt->dst_start;
-+		}
-+	} else {
-+		if (chan->ext_addr) {
-+			hw->buf_addr = lower_32_bits(xt->src_start);
-+			hw->buf_addr_msb = upper_32_bits(xt->src_start);
-+		} else {
-+			hw->buf_addr = xt->src_start;
-+		}
-+	}
- 
- 	/* Insert the segment into the descriptor segments list. */
- 	list_add_tail(&segment->node, &desc->segments);
-@@ -1140,6 +1184,7 @@ static int xilinx_vdma_chan_probe(struct xilinx_vdma_device *xdev,
- 	chan->xdev = xdev;
- 	chan->has_sg = xdev->has_sg;
- 	chan->desc_pendingcount = 0x0;
-+	chan->ext_addr = xdev->ext_addr;
- 
- 	spin_lock_init(&chan->lock);
- 	INIT_LIST_HEAD(&chan->pending_list);
-@@ -1254,7 +1299,7 @@ static int xilinx_vdma_probe(struct platform_device *pdev)
- 	struct xilinx_vdma_device *xdev;
- 	struct device_node *child;
- 	struct resource *io;
--	u32 num_frames;
-+	u32 num_frames, addr_width;
- 	int i, err;
- 
- 	/* Allocate and initialize the DMA engine structure */
-@@ -1284,6 +1329,18 @@ static int xilinx_vdma_probe(struct platform_device *pdev)
- 	if (err < 0)
- 		dev_warn(xdev->dev, "missing xlnx,flush-fsync property\n");
- 
-+	err = of_property_read_u32(node, "xlnx,addrwidth", &addr_width);
-+	if (err < 0)
-+		dev_warn(xdev->dev, "missing xlnx,addrwidth property\n");
-+
-+	if (addr_width > 32)
-+		xdev->ext_addr = true;
-+	else
-+		xdev->ext_addr = false;
-+
-+	/* Set the dma mask bits */
-+	dma_set_mask(xdev->dev, DMA_BIT_MASK(addr_width));
-+
- 	/* Initialize the DMA engine */
- 	xdev->common.dev = &pdev->dev;
- 
--- 
-2.1.2
+> 
+> > >> When the  VDMA core is configured for an address space greater than
+> > >> 32 then each start address is specified by a combination of two
+> > >> registers. The first register specifies the LSB 32 bits of address,
+> > >> while the next register specifies the MSB 32 bits of address.For
+> > >> example,5Ch will specify the LSB 32 bits while 60h will specify the
+> > >> MSB 32 bits of the first start address.So we need to program two
+> > >> registers at a time.
+> > >
+> > > can we have spaces after full stops and commas!
+> >
+> > Will take care of this in v3 patch.
+> >
+> > >> +/* Since vdma driver is trying to write to a register offset which
+> > >> +is not a
+> > >> + * multiple of 64 bits(ex : 0x5c), we are writing as two separate
+> > >> +32 bits
+> > >> + * instead of a single 64 bit register write.
+> > >> + */
+> > >
+> > > This is not kernel style for multi-lines, pls refer to
+> > > Documentation/CodingStyle
+> >
+> > Will address this in v3 patch
+> >
+> > >> +
+> > >> +static inline void vdma_desc_write_64(struct xilinx_vdma_chan
+> > >> +*chan,
+> > >> u32 reg,
+> > >> +                            u32 value_lsb, u32 value_msb) {
+> > >> +   /* Write the lsb 32 bits*/
+> > >> +   writel(value_lsb, chan->xdev->regs + chan->desc_offset + reg);
+> > >> +
+> > >> +   /* Write the msb 32 bits */
+> > >> +   writel(value_msb, chan->xdev->regs + chan->desc_offset + reg +
+> > >> + 4);
+> > >
+> > > why not writeq
+> >
+> > We are trying to write at a register address(ex:0x5c) which is not
+> > aligned on 8 bytes  boundary.So if I try to use 64 bit write on
+> > it,unalignment fault is getting  generated.To avoid that we are using
+> > two separate 32  bit writes. We had this discussion in previous
+> > versions of this patch with Laurent Pinchart .I have also added this
+> > exaplanation in the comments above this function.
+> >
+> > >> +   err = of_property_read_u32(node, "xlnx,addrwidth",
+> > >> + &addr_width);
+> > >> +
+> > >> +   if (err < 0) {
+> > >> +           /* Setting addr_width property to default 32 bits */
+> > >> +           addr_width = 32;
+> > >> +   }
+> > >
+> > > braces for a single line statement! Also space is redandant before
+> > > if condition
+> >
+> > Will take care of this in v3 patch
+> 
+> --
+> Regards,
+> 
+> Laurent Pinchart
