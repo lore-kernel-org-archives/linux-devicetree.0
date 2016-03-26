@@ -1,39 +1,77 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH V7 5/6] dts: msm8974: Add blsp2_bam dma node
-Date: Fri, 25 Mar 2016 21:26:12 -0500
-Message-ID: <20160326022612.GA3764@hector.attlocal.net>
-References: <1453197766-18976-1-git-send-email-sricharan@codeaurora.org>
- <1453197766-18976-6-git-send-email-sricharan@codeaurora.org>
- <CAJAp7Oi33=kraAiU337JdFJZbuKZEVoCtY4FfAv_RgiWVmz+sw@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] mtd: nand: denali: allow to override max_banks from DT property
+Date: Sat, 26 Mar 2016 13:27:50 +0900
+Message-ID: <CAK7LNATqVEMRwa+Ss4V9sBXYZwqKX=CpB_3Oox8bM6Yow0mkXA@mail.gmail.com>
+References: <1458822277-31428-1-git-send-email-yamada.masahiro@socionext.com>
+	<20160325154520.199b0863@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJAp7Oi33=kraAiU337JdFJZbuKZEVoCtY4FfAv_RgiWVmz+sw@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Sricharan R <sricharan@codeaurora.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Andy Gross <agross@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Kumar Gala <galak@codeaurora.org>, dmaengine@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, ntelkar@codeaurora.org, Archit Taneja <architt@codeaurora.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160325154520.199b0863@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: linux-mtd@lists.infradead.org, Graham Moore <grmoore@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 25, 2016 at 04:17:30PM -0700, Bjorn Andersson wrote:
-> On Tue, Jan 19, 2016 at 2:02 AM, Sricharan R <sricharan@codeaurora.org> wrote:
-> > Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> > Reviewed-by: Andy Gross <andy.gross@linaro.org>
+2016-03-25 23:45 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
+> On Thu, 24 Mar 2016 21:24:37 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>
+>> Commit 271707b1d817 ("mtd: nand: denali: max_banks calculation
+>> changed in revision 5.1") supported the new encoding of the "n_banks"
+>> bits of the "features" register, but there is an unfortunate case
+>> that is not covered by that commit.
+>>
+>> Panasonic (its System LSI division is now Socionext) bought several
+>> versions of this IP.  The IP released for Panasonic around Feb. 2012
+>> is revision 5 and uses the old encoding for n_banks (2 << n_banks).
+>> While the one released around Nov. 2012 is also revision 5, but it
+>> uses the new encoding (1 << n_banks).
+>>
+>> The revision register cannot distinguish these two incompatible
+>> hardware.  I guess this IP series is not well-organized.  I could not
+>> find any alternative but giving max_banks from DT property.
+>
+> Hm, shouldn't that be addressed with a new compatible instead of adding
+> a extra property?
+>
+>>
+>> This commit works around the problem by allowing DT to set the
+>> max_banks forcibly.  Of course, this DT property can be optional if
+>> the auto detection based on the hardware registers works well.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> ---
+>>
+>>  Documentation/devicetree/bindings/mtd/denali-nand.txt | 4 ++++
+>>  drivers/mtd/nand/denali.c                             | 3 ++-
+>>  drivers/mtd/nand/denali_dt.c                          | 3 +++
+>>  3 files changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> index 785b825..78c250d 100644
+>> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> @@ -7,6 +7,10 @@ Required properties:
+>>    - interrupts : The interrupt number.
+>>    - dma-mask : DMA bit mask
+>>
+>> +Optional properties:
+>> +  - max-banks : Maximum number of banks supported by hardware.  If not
+>> +    specified, it is determined based on the "features" register of hardware.
+>> +
+>
+> You might want to prefix that with "denali,".
+>
+>>  The device tree may optionally contain sub-nodes describing partitions of the
+>>  address space. See partition.txt for more detail.
 
-<snip>
 
-> > +               blsp2_dma: dma-controller@f9944000 {
-> > +                       compatible = "qcom,bam-v1.4.0";
-> > +                       reg = <0xf9944000 0x19000>;
-> > +                       interrupts = <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&gcc GCC_BLSP2_AHB_CLK>;
-> > +                       clock-names = "bam_clk";
-> > +                       #dma-cells = <1>;
-> > +                       qcom,ee = <0>;
-> 
-> Without "qcom,bam_ctrl_remote;" and
-> https://patchwork.kernel.org/patch/8639181/ the Xperia Honami board
-> fails to boot with this patch included.
+In which case, do we have to add a vendor prefix to DT properties?
 
-Ouch.  At least one set of pipes must be used by some other processor and TZ has
-locked down that BLSP.
+I do not know a clear rule about this.
+
+
+-- 
+Best Regards
+Masahiro Yamada
