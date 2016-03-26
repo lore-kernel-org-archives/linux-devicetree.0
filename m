@@ -1,77 +1,58 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] mtd: nand: denali: allow to override max_banks from DT property
-Date: Sat, 26 Mar 2016 13:27:50 +0900
-Message-ID: <CAK7LNATqVEMRwa+Ss4V9sBXYZwqKX=CpB_3Oox8bM6Yow0mkXA@mail.gmail.com>
-References: <1458822277-31428-1-git-send-email-yamada.masahiro@socionext.com>
-	<20160325154520.199b0863@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160325154520.199b0863@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-mtd@lists.infradead.org, Graham Moore <grmoore@opensource.altera.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Xing Zheng <zhengxing@rock-chips.com>
+Subject: [PATCH v5 0/4] Add more clock compatible features and support the RK3399 clock
+Date: Sat, 26 Mar 2016 14:37:52 +0800
+Message-ID: <1458974276-10325-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: heiko@sntech.de, huangtao@rock-chips.com, jay.xu@rock-chips.com, elaine.zhang@rock-chips.com, dianders@chromium.org, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2016-03-25 23:45 GMT+09:00 Boris Brezillon <boris.brezillon@free-electrons.com>:
-> On Thu, 24 Mar 2016 21:24:37 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
->> Commit 271707b1d817 ("mtd: nand: denali: max_banks calculation
->> changed in revision 5.1") supported the new encoding of the "n_banks"
->> bits of the "features" register, but there is an unfortunate case
->> that is not covered by that commit.
->>
->> Panasonic (its System LSI division is now Socionext) bought several
->> versions of this IP.  The IP released for Panasonic around Feb. 2012
->> is revision 5 and uses the old encoding for n_banks (2 << n_banks).
->> While the one released around Nov. 2012 is also revision 5, but it
->> uses the new encoding (1 << n_banks).
->>
->> The revision register cannot distinguish these two incompatible
->> hardware.  I guess this IP series is not well-organized.  I could not
->> find any alternative but giving max_banks from DT property.
->
-> Hm, shouldn't that be addressed with a new compatible instead of adding
-> a extra property?
->
->>
->> This commit works around the problem by allowing DT to set the
->> max_banks forcibly.  Of course, this DT property can be optional if
->> the auto detection based on the hardware registers works well.
->>
->> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->> ---
->>
->>  Documentation/devicetree/bindings/mtd/denali-nand.txt | 4 ++++
->>  drivers/mtd/nand/denali.c                             | 3 ++-
->>  drivers/mtd/nand/denali_dt.c                          | 3 +++
->>  3 files changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
->> index 785b825..78c250d 100644
->> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
->> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
->> @@ -7,6 +7,10 @@ Required properties:
->>    - interrupts : The interrupt number.
->>    - dma-mask : DMA bit mask
->>
->> +Optional properties:
->> +  - max-banks : Maximum number of banks supported by hardware.  If not
->> +    specified, it is determined based on the "features" register of hardware.
->> +
->
-> You might want to prefix that with "denali,".
->
->>  The device tree may optionally contain sub-nodes describing partitions of the
->>  address space. See partition.txt for more detail.
+
+Hi,
+  The patch series add support more mux parameters and multiple
+clock providers for the rockchip features of the clock framework,
+and support the clock controller for the RK3399.
 
 
-In which case, do we have to add a vendor prefix to DT properties?
+Changes in v5:
+- add some necessary clock IDs
+- keep PPLL independent into the part of the PMUCRU
+- fix PMUCRU IDs are out of range
+- add clock IDs to drivers reference
+- fix some important bugs
+- fix configuration for cpu tables
 
-I do not know a clear rule about this.
+Changes in v3:
+- rename pclkin_cif to pclkin_cifmux, add diagram and comment for
+  pclkin_cifmux
+- add the clk_test node
+- modify the cif_testout path
+- include two new patches that dt-bindings and header file from
+  Jianqun's patch series
 
+Changes in v2:
+- rename the aplll/apllb to lpll/bpll
+- add drv/sample clock nodes for sdmmc/sdio
+
+Xing Zheng (4):
+  clk: rockchip: fix big.LITTLE cores alternate reparent failed
+  dt-bindings: add bindings for rk3399 clock controller
+  clk: rockchip: add dt-binding header for rk3399
+  clk: rockchip: add clock controller for the RK3399
+
+ .../bindings/clock/rockchip,rk3399-cru.txt         |   83 ++
+ drivers/clk/rockchip/Makefile                      |    1 +
+ drivers/clk/rockchip/clk-cpu.c                     |   15 +-
+ drivers/clk/rockchip/clk-rk3399.c                  | 1550 ++++++++++++++++++++
+ drivers/clk/rockchip/clk.h                         |   24 +-
+ include/dt-bindings/clock/rk3399-cru.h             |  752 ++++++++++
+ 6 files changed, 2417 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+ create mode 100644 drivers/clk/rockchip/clk-rk3399.c
+ create mode 100644 include/dt-bindings/clock/rk3399-cru.h
 
 -- 
-Best Regards
-Masahiro Yamada
+1.7.9.5
+
+
