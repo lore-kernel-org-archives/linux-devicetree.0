@@ -1,152 +1,153 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] sh: add support for linking a builtin device tree blob in
- the kernel
-Date: Sat, 26 Mar 2016 10:01:43 +0100
-Message-ID: <CAMuHMdVgSAeE7CdqC8mwUkQWqkRwT9pVVhDupcDZRbTz-1Ertg@mail.gmail.com>
-References: <20160326014711.GA29106@brightrain.aerifal.cx>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v8 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Sat, 26 Mar 2016 12:44:31 +0000
+Message-ID: <alpine.DEB.2.02.1603261238130.18380@kaball.uk.xensource.com>
+References: <1458830676-27075-2-git-send-email-shannon.zhao@linaro.org>
+ <1458893149-17388-1-git-send-email-zhaoshenglong@huawei.com>
+ <20160325171547.GB29822@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20160326014711.GA29106@brightrain.aerifal.cx>
-Sender: linux-sh-owner@vger.kernel.org
-To: Rich Felker <dalias@libc.org>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160325171547.GB29822@localhost>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC devicetree
+On Fri, 25 Mar 2016, Bjorn Helgaas wrote:
+> On Fri, Mar 25, 2016 at 04:05:49PM +0800, Shannon Zhao wrote:
+> > From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > ACPI 6.0 introduces a new table STAO to list the devices which are used
+> > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+> > UART is used by Xen. So here it hides UART from Dom0.
+> > 
+> > CC: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> (supporter:ACPI)
+> > CC: Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (supporter:ACPI)
+> > CC: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:ACPI)
+> > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/acpi/scan.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 68 insertions(+)
+> > 
+> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+> > index 5f28cf7..5420cc5 100644
+> > --- a/drivers/acpi/scan.c
+> > +++ b/drivers/acpi/scan.c
+> > @@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
+> >  DEFINE_MUTEX(acpi_device_lock);
+> >  LIST_HEAD(acpi_wakeup_device_list);
+> >  static DEFINE_MUTEX(acpi_hp_context_lock);
+> > +static u64 spcr_uart_addr;
+> >  
+> >  struct acpi_dep_data {
+> >  	struct list_head node;
+> > @@ -1453,6 +1454,41 @@ static int acpi_add_single_object(struct acpi_device **child,
+> >  	return 0;
+> >  }
+> >  
+> > +static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
+> > +					    void *context)
+> > +{
+> > +	struct resource *res = context;
+> > +
+> > +	if (acpi_dev_resource_memory(ares, res))
+> > +		return AE_CTRL_TERMINATE;
+> > +
+> > +	return AE_OK;
+> > +}
+> > +
+> > +static bool acpi_device_should_be_hidden(acpi_handle handle)
+> > +{
+> > +	acpi_status status;
+> > +	struct resource res;
+> > +
+> > +	/* Check if it should ignore the UART device */
+> > +	if (spcr_uart_addr != 0) {
+> > +		if (!acpi_has_method(handle, METHOD_NAME__CRS))
+> > +			return false;
+> > +
+> > +		status = acpi_walk_resources(handle, METHOD_NAME__CRS,
+> > +					     acpi_get_resource_memory, &res);
+> > +		if (ACPI_FAILURE(status))
+> > +			return false;
+> > +
+> > +		if (res.start == spcr_uart_addr) {
+> > +			printk(KERN_INFO PREFIX "The UART device in SPCR table will be hidden\n");
+> 
+> Can we at least print out the ACPI device path and address here for
+> debugging purposes?  IMHO, kernel messages that contain only static
+> text are always dubious.  There's almost always a useful address, IRQ,
+> return value, etc., that could be included.
+>
+> > +			return true;
+> > +		}
+> > +	}
+> > +
+> > +	return false;
+> > +}
+> > +
+> >  static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+> >  				    unsigned long long *sta)
+> >  {
+> > @@ -1466,6 +1502,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+> >  	switch (acpi_type) {
+> >  	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+> >  	case ACPI_TYPE_DEVICE:
+> > +		if (acpi_device_should_be_hidden(handle))
+> > +			return -ENODEV;
+> > +
+> >  		*type = ACPI_BUS_TYPE_DEVICE;
+> >  		status = acpi_bus_get_status_handle(handle, sta);
+> >  		if (ACPI_FAILURE(status))
+> > @@ -1916,9 +1955,24 @@ static int acpi_bus_scan_fixed(void)
+> >  	return result < 0 ? result : 0;
+> >  }
+> >  
+> > +static void __init acpi_get_spcr_uart_addr(void)
+> > +{
+> > +	acpi_status status;
+> > +	struct acpi_table_spcr *spcr_ptr;
+> > +
+> > +	status = acpi_get_table(ACPI_SIG_SPCR, 0,
+> > +				(struct acpi_table_header **)&spcr_ptr);
+> > +	if (ACPI_SUCCESS(status))
+> > +		spcr_uart_addr = spcr_ptr->serial_port.address;
+> > +	else
+> > +		printk(KERN_WARNING PREFIX "STAO table present, but SPCR is missing\n");
+> > +}
+> > +
+> >  int __init acpi_scan_init(void)
+> >  {
+> >  	int result;
+> > +	acpi_status status;
+> > +	struct acpi_table_stao *stao_ptr;
+> >  
+> >  	acpi_pci_root_init();
+> >  	acpi_pci_link_init();
+> > @@ -1934,6 +1988,20 @@ int __init acpi_scan_init(void)
+> >  
+> >  	acpi_scan_add_handler(&generic_device_handler);
+> >  
+> > +	/*
+> > +	 * If there is STAO table, check whether it needs to ignore the UART
+> > +	 * device in SPCR table.
+> > +	 */
+> > +	status = acpi_get_table(ACPI_SIG_STAO, 0,
+> > +				(struct acpi_table_header **)&stao_ptr);
+> > +	if (ACPI_SUCCESS(status)) {
+> > +		if (stao_ptr->header.length > sizeof(struct acpi_table_stao))
+> > +			printk(KERN_INFO PREFIX "STAO Name List not yet supported.");
+> > +
+> > +		if (stao_ptr->ignore_uart)
+> > +			acpi_get_spcr_uart_addr();
+> > +	}
+> 
+> This all seems sort of ad hoc.  Are UARTs the only things that can be
+> listed in STAO?  If STAO can contain things other than UARTs, are we
+> going to see more patches adding special-case code like this?
 
-On Sat, Mar 26, 2016 at 2:47 AM, Rich Felker <dalias@libc.org> wrote:
-> Signed-off-by: Rich Felker <dalias@libc.org>
-> ---
->
-> I'd like to add this patch to the new device tree support to ease the
-> transition to device tree on legacy hardware where replacing the
-> bootloader with a new one that can pass a DTB may be extra work. Since
-> I'm not familiar with this kind of build system change, though, I'd
-> like some feedback on whether I'm doing it right.
-
-Alternatively, you could append the DTB to the boot image. Cfr.
-http://elinux.org/R-Car/Boards/Marzen
-http://elinux.org/Dragonboard/APQ8074
-
->  arch/sh/Kconfig             | 20 ++++++++++++++++++++
->  arch/sh/Makefile            |  2 ++
->  arch/sh/boards/of-generic.c | 15 ++++++++++++---
->  arch/sh/boot/dts/Makefile   |  3 +++
->  arch/sh/kernel/setup.c      |  4 ++++
->  5 files changed, 41 insertions(+), 3 deletions(-)
->  create mode 100644 arch/sh/boot/dts/Makefile
->
-> diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
-> index 9dec535..b6db094 100644
-> --- a/arch/sh/Kconfig
-> +++ b/arch/sh/Kconfig
-> @@ -755,6 +755,26 @@ endmenu
->
->  menu "Boot options"
->
-> +config USE_BUILTIN_DTB
-> +       bool "Use builtin DTB"
-> +       default n
-> +       depends on SH_DEVICE_TREE
-> +       help
-> +         Link a device tree blob for particular hardware into the kernel,
-> +         suppressing use of the DTB pointer provided by the bootloader.
-> +         This option should only be used with legacy bootloaders that are
-> +         not capable of providing a DTB to the kernel, or for experimental
-> +         hardware without stable device tree bindings.
-> +
-> +config BUILTIN_DTB_SOURCE
-> +       string "Source file for builtin DTB"
-> +       default ""
-> +       depends on USE_BUILTIN_DTB
-> +       help
-> +         Base name (without suffix, relative to arch/sh/boot/dts) for the
-> +         a DTS file that will be used to produce the DTB linked into the
-
-drop the first word "a"
-
-> +         kernel.
-> +
->  config ZERO_PAGE_OFFSET
->         hex
->         default "0x00010000" if PAGE_SIZE_64KB || SH_RTS7751R2D || \
-> diff --git a/arch/sh/Makefile b/arch/sh/Makefile
-> index 3566a759..0047666 100644
-> --- a/arch/sh/Makefile
-> +++ b/arch/sh/Makefile
-> @@ -131,6 +131,8 @@ head-y      := arch/sh/kernel/head_$(BITS).o
->  core-y                         += arch/sh/kernel/ arch/sh/mm/ arch/sh/boards/
->  core-$(CONFIG_SH_FPU_EMU)      += arch/sh/math-emu/
->
-> +core-$(CONFIG_USE_BUILTIN_DTB) += arch/sh/boot/dts/
-> +
->  # Mach groups
->  machdir-$(CONFIG_SOLUTION_ENGINE)              += mach-se
->  machdir-$(CONFIG_SH_HP6XX)                     += mach-hp6xx
-> diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
-> index bf3a166..57d45dc 100644
-> --- a/arch/sh/boards/of-generic.c
-> +++ b/arch/sh/boards/of-generic.c
-> @@ -126,13 +126,22 @@ static void __init sh_of_time_init(void)
->
->  static void __init sh_of_setup(char **cmdline_p)
->  {
-> +       struct device_node *root;
-> +
-> +#ifdef CONFIG_USE_BUILTIN_DTB
-> +       unflatten_and_copy_device_tree();
-> +#else
->         unflatten_device_tree();
-> +#endif
->
->         board_time_init = sh_of_time_init;
->
-> -       sh_mv.mv_name = of_flat_dt_get_machine_name();
-> -       if (!sh_mv.mv_name)
-> -               sh_mv.mv_name = "Unknown SH model";
-> +       sh_mv.mv_name = "Unknown SH model";
-> +       root = of_find_node_by_path("/");
-> +       if (root) {
-> +               of_property_read_string(root, "model", &sh_mv.mv_name);
-> +               of_node_put(root);
-> +       }
->
->         sh_of_smp_probe();
->  }
-> diff --git a/arch/sh/boot/dts/Makefile b/arch/sh/boot/dts/Makefile
-> new file mode 100644
-> index 0000000..e5ce3a0
-> --- /dev/null
-> +++ b/arch/sh/boot/dts/Makefile
-> @@ -0,0 +1,3 @@
-> +obj-$(CONFIG_USE_BUILTIN_DTB) += $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
-> +
-> +clean-files := *.dtb.S
-> diff --git a/arch/sh/kernel/setup.c b/arch/sh/kernel/setup.c
-> index efb60ce..ec7c99f 100644
-> --- a/arch/sh/kernel/setup.c
-> +++ b/arch/sh/kernel/setup.c
-> @@ -251,7 +251,11 @@ void __ref sh_fdt_init(phys_addr_t dt_phys)
->         /* Avoid calling an __init function on secondary cpus. */
->         if (done) return;
->
-> +#ifdef CONFIG_USE_BUILTIN_DTB
-> +       dt_virt = __dtb_start;
-> +#else
->         dt_virt = phys_to_virt(dt_phys);
-> +#endif
->
->         if (!dt_virt || !early_init_dt_scan(dt_virt)) {
->                 pr_crit("Error: invalid device tree blob"
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+The UART (specifically the UART described by the SPCR table) is the only
+object which needs special-casing. Everything else is covered by ACPI
+namespace paths (which is what the message above is about, given that it
+is not supported by this patch).
