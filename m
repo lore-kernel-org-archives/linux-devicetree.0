@@ -1,33 +1,67 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: Re: [PATCH V2 2/3] vfio, platform: make reset driver a requirement
-Date: Sun, 27 Mar 2016 13:55:21 -0400
-Message-ID: <56F81E89.1080807@codeaurora.org>
-References: <1457715275-11925-1-git-send-email-okaya@codeaurora.org>
- <1457715275-11925-3-git-send-email-okaya@codeaurora.org>
- <56E5A271.6000408@codeaurora.org> <56E8E2CD.3020604@linaro.org>
- <56E96D4C.3080008@codeaurora.org> <56F7FA8E.9000707@linaro.org>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v2 3/6] Documentation: DT: vdma: update binding doc for AXI DMA
+Date: Sun, 27 Mar 2016 23:36:05 +0530
+Message-ID: <1459101966-9932-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56F7FA8E.9000707@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Auger <eric.auger@linaro.org>, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Baptiste Reynal <b.reynal@virtualopensystems.com>
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, anuragku@xilinx.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, svemula@xilinx.com, anirudh@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/27/2016 11:21 AM, Eric Auger wrote:
->> How about I add a module parameter which is not set by default? When set,
->> > I don't perform the reset requirement check.
-> Yes that's what I meant
-> 
-> Best Regards
-> 
-> Eric
+This patch updates the device-tree binding doc for
+adding support for AXI DMA.
 
-Got it. I'll post something soon.
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes for v2:
+---> Modified commit message as suggested by Vinod.
+---> Moved the patch to forward in the series as suggested by vinod.
 
+ .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 22 +++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+index a86737c..5841421 100644
+--- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
++++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+@@ -3,8 +3,13 @@ It can be configured to have one channel or two channels. If configured
+ as two channels, one is to transmit to the video device and another is
+ to receive from the video device.
+ 
++Xilinx AXI DMA engine, it does transfers between memory and AXI4 stream
++target devices. It can be configured to have one channel or two channels.
++If configured as two channels, one is to transmit to the device and another
++is to receive from the device.
++
+ Required properties:
+-- compatible: Should be "xlnx,axi-vdma-1.00.a"
++- compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a"
+ - #dma-cells: Should be <1>, see "dmas" property below
+ - reg: Should contain VDMA registers location and length.
+ - xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
+@@ -59,6 +64,21 @@ axi_vdma_0: axivdma@40030000 {
+ 	} ;
+ } ;
+ 
++axi_dma_0: axidma@40400000 {
++	compatible = "xlnx,axi-dma-1.00.a";
++	#dma-cells = <1>;
++	reg = < 0x40400000 0x10000 >;
++	dma-channel@40400000 {
++		compatible = "xlnx,axi-dma-mm2s-channel";
++		interrupts = < 0 59 4 >;
++		xlnx,datawidth = <0x40>;
++	} ;
++	dma-channel@40400030 {
++		compatible = "xlnx,axi-dma-s2mm-channel";
++		interrupts = < 0 58 4 >;
++		xlnx,datawidth = <0x40>;
++	} ;
++} ;
+ 
+ * DMA client
+ 
 -- 
-Sinan Kaya
-Qualcomm Technologies, Inc. on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+2.1.2
