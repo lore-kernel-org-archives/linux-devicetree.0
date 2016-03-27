@@ -1,82 +1,153 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: veyron: enable the tsadc on pinky board
-Date: Sun, 27 Mar 2016 23:30:21 +0200
-Message-ID: <2666341.7YP6MciD7F@diego>
-References: <1450607434-6733-1-git-send-email-wxt@rock-chips.com> <2324215.uYLQVgh5FL@diego> <56F48D19.1050702@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F48D19.1050702-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 1/3] power: charger-manager: Replace deprecatd API of extcon
+Date: Mon, 28 Mar 2016 08:25:40 +0900
+Message-ID: <1459121142-3768-2-git-send-email-cw00.choi@samsung.com>
+References: <1459121142-3768-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1459121142-3768-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: sre@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, myungjoo.ham@samsung.com
+Cc: cw00.choi@samsung.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+This patch removes the deprecated notifier API of extcon framework and then use
+the new extcon API[2] with the unique id[1] to indicate the each external
+connector. Alter deprecated API as following:
+- extcon_register_interest() -> extcon_register_notifier()
+- extcon_unregister_interest() -> extcon_unregister_notifier()
 
-Am Freitag, 25. M=C3=A4rz 2016, 08:58:01 schrieb Caesar Wang:
-> =E5=9C=A8 2016=E5=B9=B403=E6=9C=8825=E6=97=A5 05:12, Heiko St=C3=BCbn=
-er =E5=86=99=E9=81=93:
-> > Am Sonntag, 20. Dezember 2015, 18:30:34 schrieb Caesar Wang:
-> >> I think the tsadc is fakly hand on pinky board,
-> >> maybe that's fixed in newest kernel.
-> >> As the following patch is a example:
-> >> https://patchwork.kernel.org/patch/7472051/
-> >>=20
-> >> I don't have meet this issue on pinky board.
-> >> Let me know if that's still hanging on pinky board.
-> >>=20
-> >> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> >=20
-> > I just gave that a try again on my pinky-rev2. And while the tsadc =
-did
-> > produce some results and didn't hang the system in my tries, the
-> > temperature values seemed to be frozen (only changing once on every
-> > reboot).
-> >=20
-> > Running the same kernel on a Jerry produced the expected results of=
- the
-> > temperature changing over time and differing cpu frequencies.
-> >=20
-> > Pinky also is a sort of dinosaur and only you and me seem to still =
-like
-> > them>=20
-> > :-) . And something is definitly strange here, and I'd tend to keep=
- the
-> > :tsadc>=20
-> > disabled for the time being.
->=20
-> I remember the same issue on
-> https://code.google.com/p/chrome-os-partner/issues/detail?id=3D35060 =
-in
-> the past
->=20
-> "thermal can 't work if  the hardware C1106 isn't removed in the
-> attachment."
->=20
-> So I think you can change this early board.
+And, extcon alters the name of USB charger connector in patch[3] as following:
+- EXTCON_CHG_USB_SDP /* Standard Downstream Port */
+- EXTCON_CHG_USB_DCP /* Dedicated Charging Port */
+- EXTCON_CHG_USB_CDP /* Charging Downstream Port */
+- EXTCON_CHG_USB_ACA /* Accessory Charger Adapter */
 
-As I'm a total noob when it comes to soldering (especially on such a ti=
-ny=20
-scale), I don't think that is an option ;-) .
+So, the name of external charger connector are changed as following:
+- "USB" -> "SDP"
+- "TA" -> "DCP"
 
-Reading that bug report again, brought back memories, that exactly this=
- was=20
-the issue why suspend didn't work correctly for me then.
+[1] Commit 2a9de9c0f08d61
+- ("extcon: Use the unique id for external connector instead of string)
+[2] Commit 046050f6e623e4
+- ("extcon: Update the prototype of extcon_register_notifier() with enum extcon
+[3] Commit 11eecf910bd81d
+- ("extcon: Modify the id and name of external connector")
 
-So I still think I'll keep the tsadc on pinky as it is now - as I said =
-before,=20
-it looks like you and me are the only people still caring for pinky and=
-=20
-everybody else most likely put theirs into the trash already, so nothin=
-g=20
-terrible important is affected by this :-)
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ .../bindings/power_supply/charger-manager.txt      |  4 +--
+ drivers/power/charger-manager.c                    | 31 ++++++++++++++--------
+ include/linux/power/charger-manager.h              |  4 +--
+ 3 files changed, 24 insertions(+), 15 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/power_supply/charger-manager.txt b/Documentation/devicetree/bindings/power_supply/charger-manager.txt
+index ec4fe9de3137..73193e380dc2 100644
+--- a/Documentation/devicetree/bindings/power_supply/charger-manager.txt
++++ b/Documentation/devicetree/bindings/power_supply/charger-manager.txt
+@@ -65,13 +65,13 @@ Example :
+ 		regulator@0 {
+ 			cm-regulator-name = "chg-reg";
+ 			cable@0 {
+-				cm-cable-name = "USB";
++				cm-cable-id = 5; /* EXTCON_CHG_USB_SDP */
+ 				cm-cable-extcon = "extcon-dev.0";
+ 				cm-cable-min = <475000>;
+ 				cm-cable-max = <500000>;
+ 			};
+ 			cable@1 {
+-				cm-cable-name = "TA";
++				cm-cable-id = 6; /* EXTCON_CHG_USB_DCP */
+ 				cm-cable-extcon = "extcon-dev.0";
+ 				cm-cable-min = <650000>;
+ 				cm-cable-max = <675000>;
+diff --git a/drivers/power/charger-manager.c b/drivers/power/charger-manager.c
+index e664ca7c0afd..ed63dc086eb6 100644
+--- a/drivers/power/charger-manager.c
++++ b/drivers/power/charger-manager.c
+@@ -1137,8 +1137,8 @@ static void charger_extcon_work(struct work_struct *work)
+ 		ret = regulator_set_current_limit(cable->charger->consumer,
+ 					cable->min_uA, cable->max_uA);
+ 		if (ret < 0) {
+-			pr_err("Cannot set current limit of %s (%s)\n",
+-			       cable->charger->regulator_name, cable->name);
++			pr_err("Cannot set current limit of %s (%d)\n",
++			       cable->charger->regulator_name, cable->id);
+ 			return;
+ 		}
+ 
+@@ -1207,11 +1207,18 @@ static int charger_extcon_init(struct charger_manager *cm,
+ 	 */
+ 	INIT_WORK(&cable->wq, charger_extcon_work);
+ 	cable->nb.notifier_call = charger_extcon_notifier;
+-	ret = extcon_register_interest(&cable->extcon_dev,
+-			cable->extcon_name, cable->name, &cable->nb);
++
++	cable->extcon_dev = extcon_get_extcon_dev(cable->extcon_name);
++	if (IS_ERR(cable->extcon_dev)) {
++		pr_err("Cannot get extcon_dev for %s\n", cable->extcon_name);
++		return PTR_ERR(cable->extcon_dev);
++	}
++
++	ret = extcon_register_notifier(cable->extcon_dev, cable->id,
++			&cable->nb);
+ 	if (ret < 0) {
+-		pr_info("Cannot register extcon_dev for %s(cable: %s)\n",
+-			cable->extcon_name, cable->name);
++		pr_info("Cannot register extcon_dev for %s(cable: %d)\n",
++			cable->extcon_name, cable->id);
+ 		ret = -EINVAL;
+ 	}
+ 
+@@ -1589,8 +1596,8 @@ static struct charger_desc *of_cm_parse_desc(struct device *dev)
+ 				chg_regs->cables = cables;
+ 
+ 				for_each_child_of_node(child, _child) {
+-					of_property_read_string(_child,
+-					"cm-cable-name", &cables->name);
++					of_property_read_u32(_child,
++					"cm-cable-id", &cables->id);
+ 					of_property_read_string(_child,
+ 					"cm-cable-extcon",
+ 					&cables->extcon_name);
+@@ -1833,8 +1840,9 @@ err_reg_extcon:
+ 		for (j = 0; j < charger->num_cables; j++) {
+ 			struct charger_cable *cable = &charger->cables[j];
+ 			/* Remove notifier block if only edev exists */
+-			if (cable->extcon_dev.edev)
+-				extcon_unregister_interest(&cable->extcon_dev);
++			if (cable->extcon_dev)
++				extcon_unregister_notifier(cable->extcon_dev,
++						cable->id, &cable->nb);
+ 		}
+ 
+ 		regulator_put(desc->charger_regulators[i].consumer);
+@@ -1865,7 +1873,8 @@ static int charger_manager_remove(struct platform_device *pdev)
+ 				= &desc->charger_regulators[i];
+ 		for (j = 0 ; j < charger->num_cables ; j++) {
+ 			struct charger_cable *cable = &charger->cables[j];
+-			extcon_unregister_interest(&cable->extcon_dev);
++			extcon_unregister_notifier(cable->extcon_dev,
++						cable->id, &cable->nb);
+ 		}
+ 	}
+ 
+diff --git a/include/linux/power/charger-manager.h b/include/linux/power/charger-manager.h
+index c4fa907c8f14..b3404bb825d6 100644
+--- a/include/linux/power/charger-manager.h
++++ b/include/linux/power/charger-manager.h
+@@ -63,10 +63,10 @@ enum cm_event_types {
+  */
+ struct charger_cable {
+ 	const char *extcon_name;
+-	const char *name;
++	unsigned int id;
+ 
+ 	/* The charger-manager use Extcon framework */
+-	struct extcon_specific_cable_nb extcon_dev;
++	struct extcon_dev *extcon_dev;
+ 	struct work_struct wq;
+ 	struct notifier_block nb;
+ 
+-- 
+1.9.1
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
