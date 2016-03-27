@@ -1,36 +1,45 @@
-From: okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH V15 0/4] dma: add Qualcomm Technologies HIDMA driver
-Date: Sun, 27 Mar 2016 09:11:52 -0400
-Message-ID: <5ecd8c6d2c59ca7e7eb8a5740a3c35c8@codeaurora.org>
-References: <1457732994-11175-1-git-send-email-okaya@codeaurora.org>
- <20160320093926.GM2490@localhost>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v5 00/21] PM / devferq: Add generic exynos bus frequency
+ driver and new passive governor
+Date: Sun, 27 Mar 2016 22:57:23 +0900
+Message-ID: <CAGTfZH3UYY1o6z=i5ADe0jNih6y6rkYT09Q==V2Yv+hA4Yx+ew@mail.gmail.com>
+References: <1458793530-31897-1-git-send-email-cw00.choi@samsung.com>
+	<56F36D65.6030504@samsung.com>
+	<CANAwSgTihXTNasXaSE-L2oZcwCcovUiat_yv=Opweo3zvMjZDg@mail.gmail.com>
+Reply-To: cw00.choi@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160320093926.GM2490@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CANAwSgTihXTNasXaSE-L2oZcwCcovUiat_yv=Opweo3zvMjZDg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2016-03-20 05:39, Vinod Koul wrote:
-> On Fri, Mar 11, 2016 at 04:49:50PM -0500, Sinan Kaya wrote:
->> 
->> Sinan Kaya (4):
->>   dma: qcom_hidma: implement lower level hardware interface
->>   dma: qcom_hidma: add debugfs hooks
->>   dma: qcom_hidma: add support for object hierarchy
->>   dma: qcom_hidma: read the channel id from HW
-> 
-> Any reason why you insist on using subsystem name as dma even when 
-> asked to
-> change..
+Hi Anand,
 
+On Sun, Mar 27, 2016 at 9:28 PM, Anand Moon <linux.amoon@gmail.com> wrote:
+> Hi Chanwoo Choi,
+>
+> On 24 March 2016 at 10:00, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> Dear Anand and Tobias,
+>>
+>> To Anand,
+>> First of all, thanks to your test on previous patchset.
+>> I removed the your tested-by tag from this version
+>> because I modified the devfreq core using DEVFREQ_TRANSITION_NOTIFIER notifier.
+>> I think that this patch-set need to test with this patchset.
+>> If you possible, could you please test this patch-set? Thanks in advance.
+>>
+> I have being following this series, I have tested this series on Odroid U3.
+>
+> Please feel free to add my Tested tag if needed
+>
+> Tested-by: Anand Moon <linux.amoon@gmail.com>
 
-Anything else, I should address?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for your test again.
+
+Best Regards,
+Chanwoo Choi
+
+[snip]
