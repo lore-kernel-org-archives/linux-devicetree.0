@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v4 4/5] dt-bindings: arm: add DT binding for Marvell CP110 system controller
-Date: Sun, 27 Mar 2016 11:26:16 +0200
-Message-ID: <1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v4 1/5] clk: unconditionally recurse into clk/mvebu/
+Date: Sun, 27 Mar 2016 11:26:13 +0200
+Message-ID: <1459070777-18049-2-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -10,110 +10,34 @@ To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT binding documentation for the Marvell CP110
-system controller, which is part of the CP110 HW block, itself used in
-the Marvell Armada 7K and 8K SoCs.
+The drivers/clk/mvebu directory is only being built when
+CONFIG_PLAT_ORION=y. As we are going to support additional mvebu
+platforms in drivers/clk/mvebu, which don't have CONFIG_PLAT_ORION=y,
+we need to recurse into this directory regardless of the value of
+CONFIG_PLAT_ORION.
+
+Since all files in drivers/clk/mvebu/ are already conditionally
+compiled depending on various Kconfig options, we can recurse
+unconditionally into drivers/clk/mvebu without any other change.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- .../arm/marvell/cp110-system-controller0.txt       | 88 ++++++++++++++++++++++
- 1 file changed, 88 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+ drivers/clk/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-new file mode 100644
-index 0000000..e8883da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-@@ -0,0 +1,88 @@
-+Marvell Armada CP110 System Controller 0
-+========================================
-+
-+The CP110 is one of the two core HW blocks of the Marvell Armada 7K/8K
-+SoCs. It contains two sets of system control registers, System
-+Controller 0 and System Controller 1. This Device Tree binding allows
-+to describe the first system controller, which provides registers to
-+configure various aspects of the SoC.
-+
-+The Device Tree node representing this System Controller 0 provides a
-+number of clocks:
-+
-+ - a set of core clocks
-+ - a set of gatable clocks
-+
-+Those clocks can be referenced by other Device Tree nodes using two
-+cells:
-+ - The first cell must be 0 or 1. 0 for the core clocks and 1 for the
-+   gatable clocks.
-+ - The second cell identifies the particular core clock or gatable
-+   clocks.
-+
-+The following clocks are available:
-+ - Core clocks
-+   - 0 0	APLL
-+   - 0 1	PPv2 core
-+   - 0 2	EIP
-+   - 0 3	Core
-+   - 0 4	NAND core
-+ - Gatable clocks
-+   - 1 0	Audio
-+   - 1 1	Comm Unit
-+   - 1 2	NAND
-+   - 1 3	PPv2
-+   - 1 4	SDIO
-+   - 1 5	MG Domain
-+   - 1 6	MG Core
-+   - 1 7	XOR1
-+   - 1 8	XOR0
-+   - 1 9	GOP DP
-+   - 1 11	PCIe x1 0
-+   - 1 12	PCIe x1 1
-+   - 1 13	PCIe x4
-+   - 1 14	PCIe / XOR
-+   - 1 15	SATA
-+   - 1 16	SATA USB
-+   - 1 18	GOP Macro
-+   - 1 22	USB3H0
-+   - 1 23	USB3H1
-+   - 1 24	USB3 Device
-+   - 1 25	EIP150
-+   - 1 26	EIP197
-+
-+Required properties:
-+
-+ - compatible: must be:
-+     "marvell,cp110-system-controller0", "syscon";
-+ - reg: register area of the CP110 system controller 0
-+ - #clock-cells: must be set to 2
-+ - core-clock-output-names must be set to:
-+    "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core"
-+ - gatable-clock-indices must be set to:
-+	<0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>, <8>,
-+	<9>, <11>, <12>, <13>, <14>, <15>, <16>, <18>,
-+	<22>, <23>, <24>, <25>, <26>
-+ - gatable-clock-output-names must be set to:
-+	"cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
-+	"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "cpm-pcie_x10",
-+	"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata", "cpm-sata-usb",
-+	"cpm-gop-macro", "cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150",
-+	"cpm-eip197"
-+
-+Example:
-+
-+	cpm_syscon0: system-controller@440000 {
-+		compatible = "marvell,cp110-system-controller0", "syscon";
-+		reg = <0x440000 0x1000>;
-+		#clock-cells = <2>;
-+		core-clock-output-names = "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core";
-+		gate-clock-indices = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>, <8>,
-+			<9>, <11>, <12>, <13>, <14>, <15>, <16>, <18>,
-+			<22>, <23>, <24>, <25>, <26>;
-+		gate-clock-output-names = "cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
-+			"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "cpm-pcie_x10",
-+			"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata", "cpm-sata-usb",
-+			"cpm-gop-macro", "cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150",
-+			"cpm-eip197";
-+	};
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 46869d69..f9ad66e 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -61,7 +61,7 @@ obj-$(CONFIG_ARCH_MEDIATEK)		+= mediatek/
+ ifeq ($(CONFIG_COMMON_CLK), y)
+ obj-$(CONFIG_ARCH_MMP)			+= mmp/
+ endif
+-obj-$(CONFIG_PLAT_ORION)		+= mvebu/
++obj-y					+= mvebu/
+ obj-$(CONFIG_ARCH_MESON)		+= meson/
+ obj-$(CONFIG_ARCH_MXS)			+= mxs/
+ obj-$(CONFIG_MACH_PISTACHIO)		+= pistachio/
 -- 
 2.6.4
 
