@@ -1,89 +1,57 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 10/12] ARM: dts: dragonboard-600c: Add on board leds
- support
-Date: Sat, 26 Mar 2016 22:50:12 -0700
-Message-ID: <20160327055012.GD8929@tuxbot>
-References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v4 0/5] clk: mvebu: clock drivers for Marvell Armada 7K/8K
+Date: Sun, 27 Mar 2016 11:26:12 +0200
+Message-ID: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 23 Mar 12:48 PDT 2016, Srinivas Kandagatla wrote:
+Hello,
 
-> This patch adds support to 4 user leds, wlan and bt led on board.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Here is a new version of the clock drivers for the Marvell Armada
+7K/8K. Changes since v3:
 
-I'm not fond of the overly complicated names; and I think it should at
-least be shortened to "db600c:...".
+ - Addition of a driver for the CP110 system controller, which
+   provides clocks. The CP110 is the other big HW block contained in
+   the Armada 7K/8K, next to the AP806.
 
-Tested this on my DB600c, seems to work, except the WiFi/BT triggers,
-see comments below.
+ - Everything rebase on v4.6-rc1.
 
-> +		leds {
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&user_leds>, <&mpp_leds>;
-> +
-> +			compatible = "gpio-leds";
-> +
-> +			led@1 {
-> +				label = "dragonboard-600c:green:user1";
-> +				gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger = "heartbeat";
-> +				default-state = "off";
-> +			};
-> +
-> +			led@2 {
-> +				label = "dragonboard-600c:green:user2";
-> +				gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger = "mmc0";
-> +				default-state = "off";
-> +			};
-> +
-> +			led@3 {
-> +				label = "dragonboard-600c:green:user3";
-> +				gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger = "mmc1";
-> +				default-state = "off";
-> +			};
-> +
-> +			led@4 {
-> +				label = "apq8016-sbc:green:user4";
-> +				gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger = "none";
-> +				default-state = "off";
-> +			};
-> +
-> +			led@5 {
-> +				label = "dragonboard-600c:yellow:wlan";
-> +				gpios = <&pm8921_mpps 7 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger = "wlan";
+ - Addition of Rob Herring Acked-by on the AP806 DT bindings.
 
-This should either be "phy0rx", "phy0tx", "phy0assoc" or "phy0radio". TX
-does not seem to work, so this should be debugged; "assoc" is probably
-the one that makes most sense.
+ - Minor adjustements to the A806 DT binding documentation: the
+   proposed clock names have been changed with a "ap-" suffix, so that
+   we don't have any naming conflicts between the clocks provided by
+   the AP806 and the clocks provided by the CP110. Since only the
+   proposed clock names were changed, I kept Rob Herring
+   Acked-by. Rob, let me know if there is any issue with this.
 
-> +				default-state = "off";
-> +			};
-> +
-> +			led@6 {
-> +				label = "dragonboard-600c:blue:bt";
-> +				gpios = <&pm8921_mpps 8 GPIO_ACTIVE_HIGH>;
-> +				linux,default-trigger = "bt";
+Thanks!
 
-This should be "hci0-power".
+Thomas
 
-> +				default-state = "off";
-> +			};
-> +		};
-> +
+Thomas Petazzoni (5):
+  clk: unconditionally recurse into clk/mvebu/
+  dt-bindings: arm: add DT binding for Marvell AP806 system controller
+  clk: mvebu: new driver for Armada AP806 system controller
+  dt-bindings: arm: add DT binding for Marvell CP110 system controller
+  clk: mvebu: new driver for Armada CP110 system controller
 
-Regards,
-Bjorn
+ .../arm/marvell/ap806-system-controller.txt        |  35 +++
+ .../arm/marvell/cp110-system-controller0.txt       |  88 +++++++
+ drivers/clk/Makefile                               |   2 +-
+ drivers/clk/mvebu/Kconfig                          |   6 +
+ drivers/clk/mvebu/Makefile                         |   2 +
+ drivers/clk/mvebu/ap806-system-controller.c        | 106 +++++++++
+ drivers/clk/mvebu/cp110-system-controller.c        | 265 +++++++++++++++++++++
+ 7 files changed, 503 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+ create mode 100644 drivers/clk/mvebu/ap806-system-controller.c
+ create mode 100644 drivers/clk/mvebu/cp110-system-controller.c
+
+-- 
+2.6.4
+
