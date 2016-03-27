@@ -1,84 +1,80 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] Documentation: DT: vdma: update binding doc for
- AXI CDMA
-Date: Sun, 27 Mar 2016 12:27:42 -0700
-Message-ID: <20160327192742.GJ19212@xsjsorenbubuntu>
-References: <1459101966-9932-1-git-send-email-appanad@xilinx.com>
- <1459101966-9932-2-git-send-email-appanad@xilinx.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: veyron: enable the tsadc on pinky board
+Date: Sun, 27 Mar 2016 23:30:21 +0200
+Message-ID: <2666341.7YP6MciD7F@diego>
+References: <1450607434-6733-1-git-send-email-wxt@rock-chips.com> <2324215.uYLQVgh5FL@diego> <56F48D19.1050702@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459101966-9932-2-git-send-email-appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <56F48D19.1050702-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kedareswara rao Appana <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, anuragku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2016-03-27 at 23:36:06 +0530, Kedareswara rao Appana wrote:
-> This patch updates the device-tree binding doc for
-> adding support for AXI CDMA.
+Hi Caesar,
+
+Am Freitag, 25. M=C3=A4rz 2016, 08:58:01 schrieb Caesar Wang:
+> =E5=9C=A8 2016=E5=B9=B403=E6=9C=8825=E6=97=A5 05:12, Heiko St=C3=BCbn=
+er =E5=86=99=E9=81=93:
+> > Am Sonntag, 20. Dezember 2015, 18:30:34 schrieb Caesar Wang:
+> >> I think the tsadc is fakly hand on pinky board,
+> >> maybe that's fixed in newest kernel.
+> >> As the following patch is a example:
+> >> https://patchwork.kernel.org/patch/7472051/
+> >>=20
+> >> I don't have meet this issue on pinky board.
+> >> Let me know if that's still hanging on pinky board.
+> >>=20
+> >> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >=20
+> > I just gave that a try again on my pinky-rev2. And while the tsadc =
+did
+> > produce some results and didn't hang the system in my tries, the
+> > temperature values seemed to be frozen (only changing once on every
+> > reboot).
+> >=20
+> > Running the same kernel on a Jerry produced the expected results of=
+ the
+> > temperature changing over time and differing cpu frequencies.
+> >=20
+> > Pinky also is a sort of dinosaur and only you and me seem to still =
+like
+> > them>=20
+> > :-) . And something is definitly strange here, and I'd tend to keep=
+ the
+> > :tsadc>=20
+> > disabled for the time being.
 >=20
-> Signed-off-by: Kedareswara rao Appana <appanad-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> ---> Modified commit message as suggested by Vinod.
-> ---> Moved the patch to forward in the series as suggested by vinod.
+> I remember the same issue on
+> https://code.google.com/p/chrome-os-partner/issues/detail?id=3D35060 =
+in
+> the past
 >=20
->  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt     | 18 ++++++++=
-+++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
+> "thermal can 't work if  the hardware C1106 isn't removed in the
+> attachment."
 >=20
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma=
-=2Etxt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> index 5841421..2b0c12b 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> @@ -8,8 +8,12 @@ target devices. It can be configured to have one cha=
-nnel or two channels.
->  If configured as two channels, one is to transmit to the device and =
-another
->  is to receive from the device.
-> =20
-> +Xilinx AXI CDMA engine, it does transfers between memory-mapped sour=
-ce
-> +address and a memory-mapped destination address.
-> +
->  Required properties:
-> -- compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00=
-=2Ea"
-> +- compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00=
-=2Ea" or
-> +	      "xlnx,axi-cdma-1.00.a""
->  - #dma-cells: Should be <1>, see "dmas" property below
->  - reg: Should contain VDMA registers location and length.
->  - xlnx,num-fstores: Should be the number of framebuffers as configur=
-ed in h/w.
-> @@ -80,6 +84,18 @@ axi_dma_0: axidma@40400000 {
->  	} ;
->  } ;
-> =20
-> +axi_cdma_0: axicdma@7e200000 {
-> +       compatible =3D "xlnx,axi-cdma-1.00.a";
-> +       #dma-cells =3D <1>;
-> +       reg =3D < 0x7e200000 0x10000 >;
-> +       xlnx,addrwidth =3D <0x20>;
-> +       dma-channel@7e200000 {
-> +               compatible =3D "xlnx,axi-dma-mm2s-channel";
-> +               interrupts =3D < 0 55 4 >;
-> +               xlnx,datawidth =3D <0x40>;
-> +       } ;
-> +} ;
+> So I think you can change this early board.
 
-As in the other patch, the node name should be 'dma-controller@...' and
-the inconsistend spacing could be fixed.
+As I'm a total noob when it comes to soldering (especially on such a ti=
+ny=20
+scale), I don't think that is an option ;-) .
 
-Also, it seems this adds pretty much identical examples that just diffe=
-r
-in the compat string. Is that really needed?
+Reading that bug report again, brought back memories, that exactly this=
+ was=20
+the issue why suspend didn't work correctly for me then.
 
-	S=C3=B6ren
+So I still think I'll keep the tsadc on pinky as it is now - as I said =
+before,=20
+it looks like you and me are the only people still caring for pinky and=
+=20
+everybody else most likely put theirs into the trash already, so nothin=
+g=20
+terrible important is affected by this :-)
 
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
