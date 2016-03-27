@@ -1,63 +1,67 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] pci: host: new driver for Marvell Armada 7K/8K PCIe
- controller
-Date: Sun, 27 Mar 2016 16:03:48 +0200
-Message-ID: <20160327140348.GA19498@lunn.ch>
-References: <1459071058-18328-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1459071058-18328-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Eric Auger <eric.auger@linaro.org>
+Subject: Re: [PATCH V2 2/3] vfio, platform: make reset driver a requirement
+Date: Sun, 27 Mar 2016 17:21:50 +0200
+Message-ID: <56F7FA8E.9000707@linaro.org>
+References: <1457715275-11925-1-git-send-email-okaya@codeaurora.org>
+ <1457715275-11925-3-git-send-email-okaya@codeaurora.org>
+ <56E5A271.6000408@codeaurora.org> <56E8E2CD.3020604@linaro.org>
+ <56E96D4C.3080008@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459071058-18328-3-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Yehuda Yitschak <yehuday@marvell.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <56E96D4C.3080008@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sinan Kaya <okaya@codeaurora.org>, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, Baptiste Reynal <b.reynal@virtualopensystems.com>
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +static irqreturn_t armada8k_pcie_irq_handler(int irq, void *arg)
-> +{
-> +	struct pcie_port *pp = arg;
-> +	struct armada8k_pcie *pcie = to_armada8k_pcie(pp);
-> +	void __iomem *base = pcie->base;
-> +	u32 val;
-> +
-> +	val = readl(base + PCIE_GLOBAL_INT_CAUSE1_REG);
-> +	writel(val, base + PCIE_GLOBAL_INT_CAUSE1_REG);
-> +
-> +	return IRQ_HANDLED;
+Hi Sinan,
+On 03/16/2016 03:27 PM, Sinan Kaya wrote:
+> Hi Baptiste,
+> 
+>>> I couldn't see a reset function for AMBA devices.
+>>>
+>>> Is there anyway to write reset function for it? I have no experience with 
+>>> AMBA devices.
+>> To my knowledge only the PL330 DMA controller (drivers/dma/pl330.c) was
+>> passthrough'ed at some point, rather for development purpose than
+>> production purpose. This was done by Virtual Open Systems (ask Baptiste
+>> for more details). But I don't think this is really used.
+> 
+> Are you OK with requiring reset driver for AMBA devices too? The PL330 
+> driver won't work until a reset driver is submitted for it.
+> 
+>>>
+>>> Would you include a reset needed flag and just not require it for AMBA? 
+>>> (I honestly don't like this idea)
+>>>
+>> I think the requirement also makes sense for AMBA.
+>>
+>> Maybe an option would be to add a module parameter that would allow to
+>> use the vfio platform/amba driver without reset module (with explicit
+>> opt-in from the user). Maybe this can be done later on.
+> 
+> I can see this flag useful for testing purposes but it should not be used in 
+> production.
+> 
+> How about I add a module parameter which is not set by default? When set,
+> I don't perform the reset requirement check.
+Yes that's what I meant
 
-Hi Thomas
+Best Regards
 
-Maybe a comment as to why you are just throwing them away.
-
-> +}
-> +
-> +static struct pcie_host_ops armada8k_pcie_host_ops = {
-> +	.link_up = armada8k_pcie_link_up,
-> +	.host_init = armada8k_pcie_host_init,
-> +};
-> +
-> +static int armada8k_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct armada8k_pcie *pcie;
-> +	struct pcie_port *pp;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *base;
-> +	int ret;
-> +
-> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-> +	if (!pcie)
-> +		return -ENOMEM;
-> +
-> +	pcie->main_clk = devm_clk_get(dev, "main");
-> +	if (!IS_ERR(pcie->main_clk))
-> +		clk_prepare_enable(pcie->main_clk);
-> +
-> +	pcie->lane_clk = devm_clk_get(dev, "port");
-> +	if (!IS_ERR(pcie->lane_clk))
-> +		clk_prepare_enable(pcie->lane_clk);
-
-Any need to handle -EPRODE_DEFERED here?
-
-    Andrew
+Eric
+> 
+>>
+>> FYI I will not have access to my mailbox until the end of the week.
+> 
+> OK, no rush.
+> 
+>>
+>> Best Regards
+>>
+>> Eric
+>>
+> 
+> 
