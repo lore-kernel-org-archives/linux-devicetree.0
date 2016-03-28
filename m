@@ -1,53 +1,93 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 09/17] watchdog: qcom: add kpss-standalone to device tree
- binding
-Date: Mon, 28 Mar 2016 11:15:44 -0700
-Message-ID: <20160328181544.GB29820@roeck-us.net>
-References: <1458770712-10880-1-git-send-email-mmcclint@codeaurora.org>
- <1458770712-10880-10-git-send-email-mmcclint@codeaurora.org>
- <20160325141521.GA12357@rob-hp-laptop>
- <0F389D09-1165-4686-98DF-0265351A086A@codeaurora.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
+Date: Mon, 28 Mar 2016 20:44:44 +0200
+Message-ID: <13797722.SiyveTZ1bB@diego>
+References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
+ <1867694.1mDULrSexE@phil>
+ <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <0F389D09-1165-4686-98DF-0265351A086A@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Matthew McClintock <mmcclint@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, qca-upstream.external@qca.qualcomm.com, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Emil Velikov <emil.l.velikov@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 28, 2016 at 12:02:47PM -0500, Matthew McClintock wrote:
-> On Mar 25, 2016, at 9:15 AM, Rob Herring <robh@kernel.org> wrote:
-> > 
-> > On Wed, Mar 23, 2016 at 05:05:04PM -0500, Matthew McClintock wrote:
-> >> Update the compatible string to add new device tree binding
-> >> 
-> >> CC: linux-watchdog@vger.kernel.org
-> >> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
-> >> ---
-> >> Documentation/devicetree/bindings/watchdog/qcom-wdt.txt | 1 +
-> >> 1 file changed, 1 insertion(+)
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> >> index 60bb2f98..45b37cf 100644
-> >> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> >> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
-> >> @@ -6,6 +6,7 @@ Required properties :
-> >> 
-> >> 			"qcom,kpss-timer"
-> >> 			"qcom,scss-timer"
-> >> +			"qcom,kpss-standalone"
-> > 
-> > What SoC(s) is this in. Use SoC specific compatible strings please.
-> 
-> So ipq4019 wins the race because we are the first to try to enable watchdog for this block?
-> 
-> qcom,kpss-ipq4019 ?
-> 
-It is a dedicated watchdog block, isn't it ? "qcom,kpss-ipq4019" would not
-refer to a specific block. Devicetree maintainers may have a better idea,
-but it seems to me that there should be 'wdt' or 'watchdog' in the property
-name.
-
-Guenter
+QW0gTW9udGFnLCAyOC4gTcOkcnogMjAxNiwgMTM6MjE6MDIgc2NocmllYiBFbWlsIFZlbGlrb3Y6
+Cj4gT24gMjIgTWFyY2ggMjAxNiBhdCAwMDo0MiwgSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVj
+aC5kZT4gd3JvdGU6Cj4gPiBIaSBZYWtpciwKPiA+IAo+ID4gQW0gTW9udGFnLCAyMS4gTcOkcnog
+MjAxNiwgMjA6MTc6NDYgc2NocmllYiBZYWtpciBZYW5nOgo+ID4+IE9uIDAzLzIxLzIwMTYgMDc6
+MjkgUE0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+ID4+ID4gQW0gTW9udGFnLCAyMS4gTcOkcnog
+MjAxNiwgMTc6Mjg6Mzggc2NocmllYiBZYWtpciBZYW5nOgo+ID4+ID4+IFRoaXMgcGF0Y2ggc2V0
+IHdvdWxkIGFkZCB0aGUgUkdBIGRpcmVjdCByZW5kZXJpbmcgYmFzZWQgMmQgZ3JhcGhpY3MKPiA+
+PiA+PiBhY2NlbGVyYXRpb24gbW9kdWxlLgo+ID4+ID4gCj4gPj4gPiB2ZXJ5IGNvb2wgdG8gc2Vl
+IHRoYXQuCj4gPj4gCj4gPj4gOykKPiA+PiAKPiA+PiA+PiBUaGlzIHBhdGNoIHNldCBpcyBiYXNl
+ZCBvbiBnaXQgcmVwb3NpdG9yeSBiZWxvdzoKPiA+PiA+PiBnaXQ6Ly9wZW9wbGUuZnJlZWRlc2t0
+b3Aub3JnL35haXJsaWVkL2xpbnV4IGRybS1uZXh0Cj4gPj4gPj4gY29tbWl0IGlkOiA1NjhkN2M3
+NjRhZTAxZjM3MDYwODVhYzhmMGQ4YThhYzdlODI2YmQ3Cj4gPj4gPj4gCj4gPj4gPj4gQW5kIHRo
+ZSBSR0EgZHJpdmVyIGlzIGJhc2VkIG9uIEV4eW5vcyBHMkQgZHJpdmVyLCBpdCBvbmx5IG1hbmFn
+ZXMgdGhlCj4gPj4gPj4gY29tbWFuZCBsaXN0cyByZWNlaXZlZCBmcm9tIHVzZXIsIHNvIHVzZXIg
+c2hvdWxkIG1ha2UgdGhlIGNvbW1hbmQgbGlzdAo+ID4+ID4+IHRvIGRhdGEgYW5kIHJlZ2lzdGVy
+cyBuZWVkZWQgYnkgb3BlcmF0aW9uIHRvIHVzZS4KPiA+PiA+PiAKPiA+PiA+PiBJIGhhdmUgcHJl
+cGFyZWQgYW4gdXNlcnNwYWNlIGRlbW8gYXBwbGljYXRpb24gZm9yIHRlc3Rpbmc6Cj4gPj4gPj4g
+ICAgaHR0cHM6Ly9naXRodWIuY29tL3lha2lyLVlhbmcvbGliZHJtLXJvY2tjaGlwCj4gPj4gPj4g
+Cj4gPj4gPj4gVGhhdCBpcyBhIHJvY2tjaGlwIGxpYmRybSBsaWJyYXJ5LCBhbmQgSSBoYXZlIHdy
+aXRlIGEgc2ltcGxlIHRlc3QgY2FzZQo+ID4+ID4+ICJyb2NrY2hpcF9yZ2FfdGVzdCIgdGhhdCB3
+b3VsZCB0ZXN0IHRoZSBiZWxvdyBSR0EgZmVhdHVyZXM6Cj4gPj4gPj4gLSBzb2xpZAo+ID4+ID4+
+IC0gY29weQo+ID4+ID4+IC0gcm90YXRpb24KPiA+PiA+PiAtIGZsaXAKPiA+PiA+PiAtIHdpbmRv
+dyBjbGlwCj4gPj4gPj4gLSBkaXRoZXJpbmcKPiA+PiA+IAo+ID4+ID4gRGlkIHlvdSBzdWJtaXQg
+eW91ciBsaWJkcm0gY2hhbmdlcyBhcyB3ZWxsPwo+ID4+ID4gCj4gPj4gPiBVc2Vyc3BhY2UtaW50
+ZXJmYWNlcyBuZWVkIHRvIGJlIHN0YWJsZSBzbyB0aGUgb3RoZXIgc2lkZSBtdXN0IGFsc28gZ2V0
+Cj4gPj4gPiBhY2NlcHRlZCAtIGV2ZW4gYmVmb3JlIHRoZSBrZXJuZWwgY2hhbmdlIGlmIEkgcmVt
+ZW1iZXIgY29ycmVjdGx5Lgo+ID4+IAo+ID4+IEdvdCBpdCwgYW5kIEkganVzdCBzYXcgZXh5bm9z
+X2ZpbWcyZCBhbHJlYWR5IGxhbmRlZCBhdCBtYWlubGluZSBsaWJkcm0uCj4gPj4gQnV0IEkgZG9u
+J3QgZmluZCB0aGUgd2F5IHRvIHN1Ym1pdCBwYXRjaGVzIHRvIGxpYmRybSwgd291bGQgeW91IGxp
+a2UKPiA+PiBzaGFyZSBzb21lIGhlbHBzIGhlcmUgOykKPiA+IAo+ID4gTG9va2luZyBhdCB0aGUg
+bGliZHJtIHNvdXJjZXMgb24gY2dpdC5mcmVlZGVza3RvcC5vcmcsIEkgZGlkIG5vdCBmaW5kIGFu
+eQo+ID4gc3BlY2lmaWMgbWFudWFsIG9uIHN1Ym1pdHRpbmcgcGF0Y2hlcy4KPiA+IAo+ID4gQnV0
+IGxvb2tpbmcgYXQgdGhlIGRyaS1saXN0IGFyY2hpdmUsIGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcgaXMKPiA+IHRoZQo+ID4gcmlnaHQgbGlzdCBhbmQgbG9va2luZyBhdCB0aGUgbGli
+ZHJtIGhpc3RvcnkgaXQgbG9va3MgbGlrZSBFbWlsIFZlbGlrb3YKPiA+IDxlbWlsLmwudmVsaWtv
+dkBnbWFpbC5jb20+IHNlZW1zIHRvIGJlIGRvaW5nIG1haW50ZW5hbmNlLXN0dWZmIGluIGxpYmRy
+bS4KPiA+IEFuZCBhcyBhIDNyZCByZWNpcGllbnQsIHBsZWFzZSBhbHNvIGluY2x1ZGUgdGhlIGxp
+bnV4LXJvY2tjaGlwIGxpc3QuCj4gPiAKPiA+IEBFbWlsLCBwbGVhc2Ugc2hvdXQgaWYgSSByZWFk
+IHRoYXQgd3JvbmcgOi0pCj4gCj4gWW91IGdvdCBpdCBzcG90IG9uIEhlaWtvLiBUaGVyZSBhcmUg
+YSBmZXcgbm90ZXMgdGhvdWdoLi4uCj4gCj4gQXMgb25lIHJldXNlcyB0aGUgZXhpc3RpbmcgaGFy
+ZHdhcmUvSVAgYmxvY2ssIGl0IHdvdWxkIGJlIGJldHRlciB0bwo+IGF2b2lkIGNvcHkvcGFzdGlu
+ZyBjb2RlIGFyb3VuZC4KPiBOYW1lbHk6Cj4gIC0gKGlmIHBvc3NpYmxlKSBmYWN0b3Igb3V0IHRo
+ZSBleHlub3MgZzJkIGtlcm5lbCBmdW5jdGlvbmFsaXR5IHRvIGEKPiBzZXBhcmF0ZSBrZXJuZWwg
+bW9kdWxlIGFuZCB3aXJlIHVwIHRoZSByb2NraGlwICh2aWEgZHQgPykgdG8gdXNlIGl0Cj4gIC0g
+ZmFjdG9yIG91dCB0aGUgZzJkIHNwZWNpZmljcyBvdXQgb2YgZXh5bm9zX2RybS5oIChpbnRvCj4g
+ZXh5bm9zX2cyZF9kcm0uaCBwZXJoYXBzID8pIGFuZCBtYWtlIHN1cmUgZXh5bm9zX2RybS5oIGlu
+Y2x1ZGVzIHRoZQo+IG5ldyBoZWFkZXIKCkkgdGhpbmsgdGhlIElQIGJsb2NrcyB0aGVtc2VsZiBh
+cmUgcXVpdGUgZGlmZmVyZW50IGJldHdlZW4gUm9ja2NoaXAncyBSR0EgYW5kIApTYW1zdW5nJ3Mg
+ZzJkIGFuZCBJIGd1ZXNzIHRoZSBzaW1pbGFyaXRpZXMgYXJlIG1vcmUgYWxvbmcgdGhlIGxpbmVz
+IG9uIGhvdyAKdGhhdCBnZXRzIGludGVncmF0ZWQgaW50byB0aGUgcmVzcGVjdGl2ZSBkcm0gZHJp
+dmVyIGFuZCB1c2Vyc3BhY2UuCgoKPiAgLSBpZiBuZWl0aGVyIG9mIHRoZXNlIGFyZSBwb3NzaWJs
+ZSwgdGhlbiBwbGVhc2UgZW5zdXJlIHRoYXQgdGhlIG5ldwo+IGhlYWRlciB1c2VzIGNvcnJlY3Qg
+dHlwZXMgKHNlZSB0aGUgZG9jcyBbMV0pLCB1c2UgTUlUL1gxMSBsaWNlbnNlIChpZgo+IHBvc3Np
+YmxlKSBhbmQgbGluayB3aGVyZSB1cHN0cmVhbSB1c2Vyc3BhY2UgaXMgaGFwcHkgd2l0aCB0aGUK
+PiBpbnRlcmZhY2UgKGlkZWFsbHkgbW9yZSB0aGFuIGEgc2ltcGxlIHRlc3QgYXBwIGxpa2UgbGli
+ZHJtKQo+IFRoZXNlIG1pZ2h0IHNvdW5kIGxpa2UgYW4gb3ZlcmtpbGwsIGFsdGhvdWdoIGdldHRp
+bmcgVUFQSSByaWdodCBhbmQKPiBtYWludGFpbmluZyBpdCBmb3JldmVyIGZvcmNlcyB1cyB0byBk
+byBzby4KCkFzIGZvciBhIHJlYWwtd29ybGQgdXNlY2FzZSwgbWF5YmUgdGhlIGFybXNvYyB4c2Vy
+dmVyIG1pZ2h0IGJlIHNvbWV3aGF0IGVhc3kgCnRvIHVzZS4gV2hpbGUgdGhlIGNvcmUgY2hhbmdl
+cyBJIGRpZCBhcmUgaW4gdGhlIGNvcmUgcHJvamVjdCBhbHJlYWR5LCBJJ20gCnN0aWxsIGtlZXBp
+bmcgdGhlIGFjdHVhbCBSb2NrY2hpcCBzdXBwb3J0IHNlcGFyYXRlIFswXSBkdWUgdG8gdGhlIG5v
+dC15ZXQtCnJlc29sdmVkIGNyZWF0ZV9nZW0gaW9jdGwuCgpBbnl3YXksIHRoZSBhcm1zb2MgeHNl
+cnZlciBoYXMgc29tZSBleGEgaW1wbGVtZW50YXRpb24gaG9va3Mgd2VyZSBJIGd1ZXNzIGl0IApt
+aWdodCBiZSByZWxhdGl2ZWx5IGVhc3kgdG8gaG9vayB1cCBzb2Mtc3BlY2lmaWMgdGhpbmdzLgoK
+WzBdIGh0dHBzOi8vZ2l0aHViLmNvbS9tbWluZC94Zjg2LXZpZGVvLWFybXNvYy90cmVlL2RldmVs
+L3JvY2tjaGlwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
