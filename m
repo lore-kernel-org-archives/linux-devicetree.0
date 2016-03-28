@@ -1,93 +1,86 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Mon, 28 Mar 2016 20:44:44 +0200
-Message-ID: <13797722.SiyveTZ1bB@diego>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <1867694.1mDULrSexE@phil>
- <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: ARC dw-mshc binding compat string
+Date: Mon, 28 Mar 2016 14:00:55 -0500
+Message-ID: <CAL_JsqL1asMFVFX_p3P+ov_+9prmcQ0PZJOiAX7D5iJ7GEssgQ@mail.gmail.com>
+References: <56F66121.8050507@denx.de> <56F6C639.5000301@mentor.com>
+ <56F6C71B.6070002@denx.de> <56F6CC68.5040408@mentor.com> <56F6D083.1020402@denx.de>
+ <56F6D1E9.3050606@mentor.com> <56F6E860.8070207@denx.de> <56F6ED41.5020908@mentor.com>
+ <56F6EFFD.9070007@denx.de> <1459157818.4785.5.camel@synopsys.com>
+ <56F908A1.3070701@samsung.com> <56F9287F.1020707@denx.de> <56F958DC.5010203@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56F958DC.5010203@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Marek Vasut <marex@denx.de>, Jaehoon Chung <jh80.chung@samsung.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTW9udGFnLCAyOC4gTcOkcnogMjAxNiwgMTM6MjE6MDIgc2NocmllYiBFbWlsIFZlbGlrb3Y6
-Cj4gT24gMjIgTWFyY2ggMjAxNiBhdCAwMDo0MiwgSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVj
-aC5kZT4gd3JvdGU6Cj4gPiBIaSBZYWtpciwKPiA+IAo+ID4gQW0gTW9udGFnLCAyMS4gTcOkcnog
-MjAxNiwgMjA6MTc6NDYgc2NocmllYiBZYWtpciBZYW5nOgo+ID4+IE9uIDAzLzIxLzIwMTYgMDc6
-MjkgUE0sIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+ID4+ID4gQW0gTW9udGFnLCAyMS4gTcOkcnog
-MjAxNiwgMTc6Mjg6Mzggc2NocmllYiBZYWtpciBZYW5nOgo+ID4+ID4+IFRoaXMgcGF0Y2ggc2V0
-IHdvdWxkIGFkZCB0aGUgUkdBIGRpcmVjdCByZW5kZXJpbmcgYmFzZWQgMmQgZ3JhcGhpY3MKPiA+
-PiA+PiBhY2NlbGVyYXRpb24gbW9kdWxlLgo+ID4+ID4gCj4gPj4gPiB2ZXJ5IGNvb2wgdG8gc2Vl
-IHRoYXQuCj4gPj4gCj4gPj4gOykKPiA+PiAKPiA+PiA+PiBUaGlzIHBhdGNoIHNldCBpcyBiYXNl
-ZCBvbiBnaXQgcmVwb3NpdG9yeSBiZWxvdzoKPiA+PiA+PiBnaXQ6Ly9wZW9wbGUuZnJlZWRlc2t0
-b3Aub3JnL35haXJsaWVkL2xpbnV4IGRybS1uZXh0Cj4gPj4gPj4gY29tbWl0IGlkOiA1NjhkN2M3
-NjRhZTAxZjM3MDYwODVhYzhmMGQ4YThhYzdlODI2YmQ3Cj4gPj4gPj4gCj4gPj4gPj4gQW5kIHRo
-ZSBSR0EgZHJpdmVyIGlzIGJhc2VkIG9uIEV4eW5vcyBHMkQgZHJpdmVyLCBpdCBvbmx5IG1hbmFn
-ZXMgdGhlCj4gPj4gPj4gY29tbWFuZCBsaXN0cyByZWNlaXZlZCBmcm9tIHVzZXIsIHNvIHVzZXIg
-c2hvdWxkIG1ha2UgdGhlIGNvbW1hbmQgbGlzdAo+ID4+ID4+IHRvIGRhdGEgYW5kIHJlZ2lzdGVy
-cyBuZWVkZWQgYnkgb3BlcmF0aW9uIHRvIHVzZS4KPiA+PiA+PiAKPiA+PiA+PiBJIGhhdmUgcHJl
-cGFyZWQgYW4gdXNlcnNwYWNlIGRlbW8gYXBwbGljYXRpb24gZm9yIHRlc3Rpbmc6Cj4gPj4gPj4g
-ICAgaHR0cHM6Ly9naXRodWIuY29tL3lha2lyLVlhbmcvbGliZHJtLXJvY2tjaGlwCj4gPj4gPj4g
-Cj4gPj4gPj4gVGhhdCBpcyBhIHJvY2tjaGlwIGxpYmRybSBsaWJyYXJ5LCBhbmQgSSBoYXZlIHdy
-aXRlIGEgc2ltcGxlIHRlc3QgY2FzZQo+ID4+ID4+ICJyb2NrY2hpcF9yZ2FfdGVzdCIgdGhhdCB3
-b3VsZCB0ZXN0IHRoZSBiZWxvdyBSR0EgZmVhdHVyZXM6Cj4gPj4gPj4gLSBzb2xpZAo+ID4+ID4+
-IC0gY29weQo+ID4+ID4+IC0gcm90YXRpb24KPiA+PiA+PiAtIGZsaXAKPiA+PiA+PiAtIHdpbmRv
-dyBjbGlwCj4gPj4gPj4gLSBkaXRoZXJpbmcKPiA+PiA+IAo+ID4+ID4gRGlkIHlvdSBzdWJtaXQg
-eW91ciBsaWJkcm0gY2hhbmdlcyBhcyB3ZWxsPwo+ID4+ID4gCj4gPj4gPiBVc2Vyc3BhY2UtaW50
-ZXJmYWNlcyBuZWVkIHRvIGJlIHN0YWJsZSBzbyB0aGUgb3RoZXIgc2lkZSBtdXN0IGFsc28gZ2V0
-Cj4gPj4gPiBhY2NlcHRlZCAtIGV2ZW4gYmVmb3JlIHRoZSBrZXJuZWwgY2hhbmdlIGlmIEkgcmVt
-ZW1iZXIgY29ycmVjdGx5Lgo+ID4+IAo+ID4+IEdvdCBpdCwgYW5kIEkganVzdCBzYXcgZXh5bm9z
-X2ZpbWcyZCBhbHJlYWR5IGxhbmRlZCBhdCBtYWlubGluZSBsaWJkcm0uCj4gPj4gQnV0IEkgZG9u
-J3QgZmluZCB0aGUgd2F5IHRvIHN1Ym1pdCBwYXRjaGVzIHRvIGxpYmRybSwgd291bGQgeW91IGxp
-a2UKPiA+PiBzaGFyZSBzb21lIGhlbHBzIGhlcmUgOykKPiA+IAo+ID4gTG9va2luZyBhdCB0aGUg
-bGliZHJtIHNvdXJjZXMgb24gY2dpdC5mcmVlZGVza3RvcC5vcmcsIEkgZGlkIG5vdCBmaW5kIGFu
-eQo+ID4gc3BlY2lmaWMgbWFudWFsIG9uIHN1Ym1pdHRpbmcgcGF0Y2hlcy4KPiA+IAo+ID4gQnV0
-IGxvb2tpbmcgYXQgdGhlIGRyaS1saXN0IGFyY2hpdmUsIGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcgaXMKPiA+IHRoZQo+ID4gcmlnaHQgbGlzdCBhbmQgbG9va2luZyBhdCB0aGUgbGli
-ZHJtIGhpc3RvcnkgaXQgbG9va3MgbGlrZSBFbWlsIFZlbGlrb3YKPiA+IDxlbWlsLmwudmVsaWtv
-dkBnbWFpbC5jb20+IHNlZW1zIHRvIGJlIGRvaW5nIG1haW50ZW5hbmNlLXN0dWZmIGluIGxpYmRy
-bS4KPiA+IEFuZCBhcyBhIDNyZCByZWNpcGllbnQsIHBsZWFzZSBhbHNvIGluY2x1ZGUgdGhlIGxp
-bnV4LXJvY2tjaGlwIGxpc3QuCj4gPiAKPiA+IEBFbWlsLCBwbGVhc2Ugc2hvdXQgaWYgSSByZWFk
-IHRoYXQgd3JvbmcgOi0pCj4gCj4gWW91IGdvdCBpdCBzcG90IG9uIEhlaWtvLiBUaGVyZSBhcmUg
-YSBmZXcgbm90ZXMgdGhvdWdoLi4uCj4gCj4gQXMgb25lIHJldXNlcyB0aGUgZXhpc3RpbmcgaGFy
-ZHdhcmUvSVAgYmxvY2ssIGl0IHdvdWxkIGJlIGJldHRlciB0bwo+IGF2b2lkIGNvcHkvcGFzdGlu
-ZyBjb2RlIGFyb3VuZC4KPiBOYW1lbHk6Cj4gIC0gKGlmIHBvc3NpYmxlKSBmYWN0b3Igb3V0IHRo
-ZSBleHlub3MgZzJkIGtlcm5lbCBmdW5jdGlvbmFsaXR5IHRvIGEKPiBzZXBhcmF0ZSBrZXJuZWwg
-bW9kdWxlIGFuZCB3aXJlIHVwIHRoZSByb2NraGlwICh2aWEgZHQgPykgdG8gdXNlIGl0Cj4gIC0g
-ZmFjdG9yIG91dCB0aGUgZzJkIHNwZWNpZmljcyBvdXQgb2YgZXh5bm9zX2RybS5oIChpbnRvCj4g
-ZXh5bm9zX2cyZF9kcm0uaCBwZXJoYXBzID8pIGFuZCBtYWtlIHN1cmUgZXh5bm9zX2RybS5oIGlu
-Y2x1ZGVzIHRoZQo+IG5ldyBoZWFkZXIKCkkgdGhpbmsgdGhlIElQIGJsb2NrcyB0aGVtc2VsZiBh
-cmUgcXVpdGUgZGlmZmVyZW50IGJldHdlZW4gUm9ja2NoaXAncyBSR0EgYW5kIApTYW1zdW5nJ3Mg
-ZzJkIGFuZCBJIGd1ZXNzIHRoZSBzaW1pbGFyaXRpZXMgYXJlIG1vcmUgYWxvbmcgdGhlIGxpbmVz
-IG9uIGhvdyAKdGhhdCBnZXRzIGludGVncmF0ZWQgaW50byB0aGUgcmVzcGVjdGl2ZSBkcm0gZHJp
-dmVyIGFuZCB1c2Vyc3BhY2UuCgoKPiAgLSBpZiBuZWl0aGVyIG9mIHRoZXNlIGFyZSBwb3NzaWJs
-ZSwgdGhlbiBwbGVhc2UgZW5zdXJlIHRoYXQgdGhlIG5ldwo+IGhlYWRlciB1c2VzIGNvcnJlY3Qg
-dHlwZXMgKHNlZSB0aGUgZG9jcyBbMV0pLCB1c2UgTUlUL1gxMSBsaWNlbnNlIChpZgo+IHBvc3Np
-YmxlKSBhbmQgbGluayB3aGVyZSB1cHN0cmVhbSB1c2Vyc3BhY2UgaXMgaGFwcHkgd2l0aCB0aGUK
-PiBpbnRlcmZhY2UgKGlkZWFsbHkgbW9yZSB0aGFuIGEgc2ltcGxlIHRlc3QgYXBwIGxpa2UgbGli
-ZHJtKQo+IFRoZXNlIG1pZ2h0IHNvdW5kIGxpa2UgYW4gb3ZlcmtpbGwsIGFsdGhvdWdoIGdldHRp
-bmcgVUFQSSByaWdodCBhbmQKPiBtYWludGFpbmluZyBpdCBmb3JldmVyIGZvcmNlcyB1cyB0byBk
-byBzby4KCkFzIGZvciBhIHJlYWwtd29ybGQgdXNlY2FzZSwgbWF5YmUgdGhlIGFybXNvYyB4c2Vy
-dmVyIG1pZ2h0IGJlIHNvbWV3aGF0IGVhc3kgCnRvIHVzZS4gV2hpbGUgdGhlIGNvcmUgY2hhbmdl
-cyBJIGRpZCBhcmUgaW4gdGhlIGNvcmUgcHJvamVjdCBhbHJlYWR5LCBJJ20gCnN0aWxsIGtlZXBp
-bmcgdGhlIGFjdHVhbCBSb2NrY2hpcCBzdXBwb3J0IHNlcGFyYXRlIFswXSBkdWUgdG8gdGhlIG5v
-dC15ZXQtCnJlc29sdmVkIGNyZWF0ZV9nZW0gaW9jdGwuCgpBbnl3YXksIHRoZSBhcm1zb2MgeHNl
-cnZlciBoYXMgc29tZSBleGEgaW1wbGVtZW50YXRpb24gaG9va3Mgd2VyZSBJIGd1ZXNzIGl0IApt
-aWdodCBiZSByZWxhdGl2ZWx5IGVhc3kgdG8gaG9vayB1cCBzb2Mtc3BlY2lmaWMgdGhpbmdzLgoK
-WzBdIGh0dHBzOi8vZ2l0aHViLmNvbS9tbWluZC94Zjg2LXZpZGVvLWFybXNvYy90cmVlL2RldmVs
-L3JvY2tjaGlwCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Mon, Mar 28, 2016 at 11:16 AM, Vladimir Zapolskiy
+<vladimir_zapolskiy@mentor.com> wrote:
+> Hi,
+>
+> On 28.03.2016 15:50, Marek Vasut wrote:
+>> On 03/28/2016 12:34 PM, Jaehoon Chung wrote:
+>>> Hi,
+>>
+>> Hi,
+>>
+>> [...]
+>>
+>>>>>>>>>> That said, I would rather prefer to see "snps,dw-mshc" prefix on description
+>>>>>>>>>> of an MMC controller found on SoCFPGA series, "altr,socfpga-dw-mshc" seems
+>>>>>>>>>> to be redundant.
+>>>
+>>> Yes..it's redundant..i should be combined to "snps,dw-mshc".
+>>
+>> Should the compat string be
+>>   compatible = "altr,socfpga-dw-mshc", "snps,dw-mshc";
+>> or just
+>>   compatible = "snps,dw-mshc";
+>> ?
+>>
+>> I am under the impression that a soc-specific identifier in addition to
+>> a generic one (used by the driver compat table) is a good idea, because
+>> it can help discerning the IP block from a generic one if needed at some
+>> future point in time. It will also not break the DT for systems
+>> which may depend on the non-generic compat, like *BSDs and such.
+>>
+>> What do you think ? (btw this is very much my question in this thread)
+>
+> IMO just 'compatible = "snps,dw-mshc"' is good enough, if it completely
+> describes the IP block on SoCFGPA --- and from what I get it is the case.
+> You can add a SoC-specific compatible if it is needed later on, and to my
+> taste only if SoC specific features can not be covered by properties.
+
+You can add the SoC-specific compatible string to the kernel later on.
+You may not be able to update your DTB later on. So the specific
+compatible strings need to be in the DT from the start.
+
+There's no set rule on properties vs. implied by a compatible string,
+but generally if it is fixed in the SoC, get the information based on
+the compatible string. If it is a board level decision or has to be
+tuned, then use a property.
+
+> The same sole "snps,dw-mshc" compatible is specified for NXP LPC18xx/43xx,
+> ZTE ZX and HiSilicon ARM SoCs.
+
+They should be fixed.
+
+> Another similar example is ARM PrimeCell PLxxx IP blocks, as far as
+> I know there is no SoC-specific compatibles/aliases for PrimeCell IP blocks.
+
+There are some for ST variants I think. PrimeCell blocks are a bit
+different in that they generally pretty simple blocks, have not
+changed much, and they
+have a standard ID register that has been sufficient for determining
+differences. And we have a standard way to override the ID register
+when it is wrong. Look at recent patches for Denali NAND controller if
+you want an example of why IP version registers (or compatible
+strings) can't be trusted.
+
+Once you get into IP blocks with lots of configuration options,
+complicated clocking, power domains, and with phys on the front end,
+then you hit all the integration differences.
+
+Rob
