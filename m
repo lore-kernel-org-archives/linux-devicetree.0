@@ -1,117 +1,80 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 5/5] arm64: dts: Add SATA3 AHCI and SATA3 PHY DT nodes for
- NS2
-Date: Mon, 28 Mar 2016 10:18:30 +0530
-Message-ID: <1459140510-5317-6-git-send-email-anup.patel@broadcom.com>
-References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v2 5/6] Documentation: DT: vdma: update binding doc for
+ AXI CDMA
+Date: Mon, 28 Mar 2016 05:27:01 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A570609@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1459101966-9932-1-git-send-email-appanad@xilinx.com>
+ <1459101966-9932-2-git-send-email-appanad@xilinx.com>
+ <20160327192742.GJ19212@xsjsorenbubuntu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Anup Patel <anup.patel@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160327192742.GJ19212@xsjsorenbubuntu>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Soren Brinkmann <sorenb@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Srikanth Vemula <svemula@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel>
 List-Id: devicetree@vger.kernel.org
 
-We have one dual-port SATA3 AHCI controller present in
-NS2 SoC.
-
-This patch enables SATA3 AHCI controller and SATA3 PHY
-for NS2 SoC in NS2 DT.
-
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <rjui@broadcom.com>
-Reviewed-by: Scott Branden <sbranden@broadcom.com>
----
- arch/arm64/boot/dts/broadcom/ns2-svk.dts | 12 +++++++++
- arch/arm64/boot/dts/broadcom/ns2.dtsi    | 43 ++++++++++++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-index ce0ab84..06cf9c5 100644
---- a/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-+++ b/arch/arm64/boot/dts/broadcom/ns2-svk.dts
-@@ -72,6 +72,18 @@
- 	status = "ok";
- };
- 
-+&sata_phy0 {
-+	status = "ok";
-+};
-+
-+&sata_phy1 {
-+	status = "ok";
-+};
-+
-+&sata {
-+	status = "ok";
-+};
-+
- &sdio0 {
- 	status = "ok";
- };
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index 6f81c9d..c8dccf8 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -413,6 +413,49 @@
- 			reg = <0x66220000 0x28>;
- 		};
- 
-+		sata_phy: sata_phy@663f0100 {
-+			compatible = "brcm,iproc-ns2-sata-phy";
-+			reg = <0x663f0100 0x1f00>,
-+			      <0x663f004c 0x10>;
-+			reg-names = "phy", "phy-ctrl";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			sata_phy0: sata-phy@0 {
-+				reg = <0>;
-+				#phy-cells = <0>;
-+				status = "disabled";
-+			};
-+
-+			sata_phy1: sata-phy@1 {
-+				reg = <1>;
-+				#phy-cells = <0>;
-+				status = "disabled";
-+			};
-+		};
-+
-+		sata: ahci@663f2000 {
-+			compatible = "brcm,iproc-ahci", "generic-ahci";
-+			reg = <0x663f2000 0x1000>;
-+			reg-names = "ahci";
-+			interrupts = <GIC_SPI 438 IRQ_TYPE_LEVEL_HIGH>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			sata0: sata-port@0 {
-+				reg = <0>;
-+				phys = <&sata_phy0>;
-+				phy-names = "sata-phy";
-+			};
-+
-+			sata1: sata-port@1 {
-+				reg = <1>;
-+				phys = <&sata_phy1>;
-+				phy-names = "sata-phy";
-+			};
-+		};
-+
- 		sdio0: sdhci@66420000 {
- 			compatible = "brcm,sdhci-iproc-cygnus";
- 			reg = <0x66420000 0x100>;
--- 
-1.9.1
+SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
+IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBN
+b25kYXksIE1hcmNoIDI4LCAyMDE2IDEyOjU4IEFNDQo+IFRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJl
+c3dhcmEgUmFvDQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsg
+bWFyay5ydXRsYW5kQGFybS5jb207DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBn
+YWxha0Bjb2RlYXVyb3JhLm9yZzsgTWljaGFsIFNpbWVrOw0KPiB2aW5vZC5rb3VsQGludGVsLmNv
+bTsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBBbnVyYWcgS3VtYXIgVnVsaXNoYTsgQXBwYW5h
+DQo+IER1cmdhIEtlZGFyZXN3YXJhIFJhbzsgbW9yaXR6LmZpc2NoZXJAZXR0dXMuY29tOw0KPiBs
+YXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb207IGx1aXNAZGViZXRoZW5jb3VydC5jb207
+IFNyaWthbnRoDQo+IFZlbXVsYTsgQW5pcnVkaGEgU2FyYW5naTsgZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4
+LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmcNCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCB2MiA1LzZdIERvY3VtZW50YXRpb246IERUOiB2ZG1hOiB1cGRh
+dGUgYmluZGluZyBkb2MgZm9yDQo+IEFYSSBDRE1BDQo+IA0KPiBPbiBTdW4sIDIwMTYtMDMtMjcg
+YXQgMjM6MzY6MDYgKzA1MzAsIEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgd3JvdGU6DQo+ID4gVGhp
+cyBwYXRjaCB1cGRhdGVzIHRoZSBkZXZpY2UtdHJlZSBiaW5kaW5nIGRvYyBmb3IgYWRkaW5nIHN1
+cHBvcnQgZm9yDQo+ID4gQVhJIENETUEuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBLZWRhcmVz
+d2FyYSByYW8gQXBwYW5hIDxhcHBhbmFkQHhpbGlueC5jb20+DQo+ID4gLS0tDQo+ID4gLS0tPiBN
+b2RpZmllZCBjb21taXQgbWVzc2FnZSBhcyBzdWdnZXN0ZWQgYnkgVmlub2QuDQo+ID4gLS0tPiBN
+b3ZlZCB0aGUgcGF0Y2ggdG8gZm9yd2FyZCBpbiB0aGUgc2VyaWVzIGFzIHN1Z2dlc3RlZCBieSB2
+aW5vZC4NCj4gPg0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hpbGlu
+eF92ZG1hLnR4dCAgICAgfCAxOA0KPiArKysrKysrKysrKysrKysrKy0NCj4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDE3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kbWEveGlsaW54L3hp
+bGlueF92ZG1hLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rt
+YS94aWxpbngveGlsaW54X3ZkbWEudHh0DQo+ID4gaW5kZXggNTg0MTQyMS4uMmIwYzEyYiAxMDA2
+NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlu
+eC94aWxpbnhfdmRtYS50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZG1hL3hpbGlueC94aWxpbnhfdmRtYS50eHQNCj4gPiBAQCAtOCw4ICs4LDEyIEBAIHRh
+cmdldCBkZXZpY2VzLiBJdCBjYW4gYmUgY29uZmlndXJlZCB0byBoYXZlIG9uZSBjaGFubmVsDQo+
+IG9yIHR3byBjaGFubmVscy4NCj4gPiAgSWYgY29uZmlndXJlZCBhcyB0d28gY2hhbm5lbHMsIG9u
+ZSBpcyB0byB0cmFuc21pdCB0byB0aGUgZGV2aWNlIGFuZA0KPiA+IGFub3RoZXIgIGlzIHRvIHJl
+Y2VpdmUgZnJvbSB0aGUgZGV2aWNlLg0KPiA+DQo+ID4gK1hpbGlueCBBWEkgQ0RNQSBlbmdpbmUs
+IGl0IGRvZXMgdHJhbnNmZXJzIGJldHdlZW4gbWVtb3J5LW1hcHBlZA0KPiA+ICtzb3VyY2UgYWRk
+cmVzcyBhbmQgYSBtZW1vcnktbWFwcGVkIGRlc3RpbmF0aW9uIGFkZHJlc3MuDQo+ID4gKw0KPiA+
+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGNvbXBhdGlibGU6IFNob3VsZCBiZSAieGxu
+eCxheGktdmRtYS0xLjAwLmEiIG9yICJ4bG54LGF4aS1kbWEtMS4wMC5hIg0KPiA+ICstIGNvbXBh
+dGlibGU6IFNob3VsZCBiZSAieGxueCxheGktdmRtYS0xLjAwLmEiIG9yICJ4bG54LGF4aS1kbWEt
+MS4wMC5hIiBvcg0KPiA+ICsJICAgICAgInhsbngsYXhpLWNkbWEtMS4wMC5hIiINCj4gPiAgLSAj
+ZG1hLWNlbGxzOiBTaG91bGQgYmUgPDE+LCBzZWUgImRtYXMiIHByb3BlcnR5IGJlbG93DQo+ID4g
+IC0gcmVnOiBTaG91bGQgY29udGFpbiBWRE1BIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3Ro
+Lg0KPiA+ICAtIHhsbngsbnVtLWZzdG9yZXM6IFNob3VsZCBiZSB0aGUgbnVtYmVyIG9mIGZyYW1l
+YnVmZmVycyBhcyBjb25maWd1cmVkIGluDQo+IGgvdy4NCj4gPiBAQCAtODAsNiArODQsMTggQEAg
+YXhpX2RtYV8wOiBheGlkbWFANDA0MDAwMDAgew0KPiA+ICAJfSA7DQo+ID4gIH0gOw0KPiA+DQo+
+ID4gK2F4aV9jZG1hXzA6IGF4aWNkbWFAN2UyMDAwMDAgew0KPiA+ICsgICAgICAgY29tcGF0aWJs
+ZSA9ICJ4bG54LGF4aS1jZG1hLTEuMDAuYSI7DQo+ID4gKyAgICAgICAjZG1hLWNlbGxzID0gPDE+
+Ow0KPiA+ICsgICAgICAgcmVnID0gPCAweDdlMjAwMDAwIDB4MTAwMDAgPjsNCj4gPiArICAgICAg
+IHhsbngsYWRkcndpZHRoID0gPDB4MjA+Ow0KPiA+ICsgICAgICAgZG1hLWNoYW5uZWxAN2UyMDAw
+MDAgew0KPiA+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInhsbngsYXhpLWRtYS1tbTJz
+LWNoYW5uZWwiOw0KPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPCAwIDU1IDQgPjsN
+Cj4gPiArICAgICAgICAgICAgICAgeGxueCxkYXRhd2lkdGggPSA8MHg0MD47DQo+ID4gKyAgICAg
+ICB9IDsNCj4gPiArfSA7DQo+IA0KPiBBcyBpbiB0aGUgb3RoZXIgcGF0Y2gsIHRoZSBub2RlIG5h
+bWUgc2hvdWxkIGJlICdkbWEtY29udHJvbGxlckAuLi4nIGFuZCB0aGUNCj4gaW5jb25zaXN0ZW5k
+IHNwYWNpbmcgY291bGQgYmUgZml4ZWQuDQoNCk9rIHdpbGwgZml4Li4uDQoNCj4gDQo+IEFsc28s
+IGl0IHNlZW1zIHRoaXMgYWRkcyBwcmV0dHkgbXVjaCBpZGVudGljYWwgZXhhbXBsZXMgdGhhdCBq
+dXN0IGRpZmZlciBpbiB0aGUNCj4gY29tcGF0IHN0cmluZy4gSXMgdGhhdCByZWFsbHkgbmVlZGVk
+Pw0KDQpNb3N0IG9mIHRoZSBwcm9wZXJ0aWVzIGFyZSBzYW1lIGFjcm9zcyB0aGUgdGhyZWUgRE1B
+J3MNCkZvciBBWEkgVkRNQSB0aGVyZSBhcmUgZmV3IHJlcXVpcmVkIHByb3BlcnRpZXMgdGhhdCBh
+cmUgbm90IHJlcXVpcmVkIGZvciBBWEkgRE1BL0NETUEuDQpUaGF0J3Mgd2h5IGFkZGVkIGV4YW1w
+bGUgZm9yIHRoZSBvdGhlciBJUCdzIGFzIHdlbGwgSSBtZWFuIGZvciBBWEkgRE1BIGFuZCBDRE1B
+Lg0KDQpSZWdhcmRzLA0KS2VkYXIuDQoNCj4gDQo+IAlTw7ZyZW4NCg0K
