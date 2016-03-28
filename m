@@ -1,291 +1,459 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: st_sensors: support open drain mode
-Date: Mon, 28 Mar 2016 10:12:50 +0100
-Message-ID: <56F8F592.9010807@kernel.org>
-References: <1458825486-17188-1-git-send-email-linus.walleij@linaro.org>
- <1458825486-17188-4-git-send-email-linus.walleij@linaro.org>
+From: Jiancheng Xue <xuejiancheng@huawei.com>
+Subject: Re: [RESEND PATCH v9] mtd: spi-nor: add hisilicon spi-nor flash
+ controller driver
+Date: Mon, 28 Mar 2016 17:15:28 +0800
+Message-ID: <56F8F630.5050008@huawei.com>
+References: <1458979861-3619-1-git-send-email-xuejiancheng@huawei.com>
+ <56F73BC9.5000300@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458825486-17188-4-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56F73BC9.5000300@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org
+Cc: robh+dt@kernel.org, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, juhosg@openwrt.org, furquan@google.com, suwenping@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, raojun@hisilicon.com, xuejiancheng@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, yanghongwei@hisilicon.com, zhangzhenxing@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On 24/03/16 13:18, Linus Walleij wrote:
-> Some types of ST Sensors can be connected to the same IRQ line
-> as other peripherals using open drain. Add a device tree binding
-> and a sensor data property to flip the right bit in the interrupt
-> control register to enable open drain mode on the INT line.
+Hi Marek,
+    Firstly, thank you very much for your comments.
+
+On 2016/3/27 9:47, Marek Vasut wrote:
+> On 03/26/2016 09:11 AM, Jiancheng Xue wrote:
+>> Add hisilicon spi-nor flash controller driver
+>>
+>> Signed-off-by: Binquan Peng <pengbinquan@huawei.com>
+>> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Reviewed-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+>> Reviewed-by: Jagan Teki <jteki@openedev.com>
+>> ---
+>> change log
+>> v9:
+>> Fixed issues pointed by Jagan Teki.
 > 
-> If the line is set to be open drain, also tag on IRQF_SHARED
-> to the IRQ flags when requesting the interrupt, as the whole
-> point of using open drain interrupt lines is to share them with
-> more than one peripheral (wire-or).
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>
-> Cc: Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Few comments inline but looks fine to me.  Ideally again an
-ack from Denis would be good. Mostly this one is stalled behind the earlier
-ones.
-
-Jonathan
-> ---
-> ChangeLog v2->v3:
-> - Rebase on top of the patches fixing the other issues (handling
->   IRQ status check and channel reading bug).
-> ChangeLog v1->v2:
-> - Rebased to fit the new patch order.
-> ---
->  Documentation/devicetree/bindings/iio/st-sensors.txt |  3 +++
->  drivers/iio/accel/st_accel_core.c                    |  8 ++++++++
->  drivers/iio/common/st_sensors/st_sensors_core.c      | 20 ++++++++++++++++++++
->  drivers/iio/common/st_sensors/st_sensors_trigger.c   | 13 +++++++++++++
->  drivers/iio/pressure/st_pressure_core.c              |  8 ++++++++
->  include/linux/iio/common/st_sensors.h                |  6 ++++++
->  include/linux/platform_data/st_sensors_pdata.h       |  2 ++
->  7 files changed, 60 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-> index d4b87cc1e446..accb5681fbbb 100644
-> --- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-> +++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-> @@ -16,6 +16,9 @@ Optional properties:
->  - st,drdy-int-pin: the pin on the package that will be used to signal
->    "data ready" (valid values: 1 or 2). This property is not configurable
->    on all sensors.
-> +- st,int-pin-open-drain: the interrupt/data ready line will be configured
-> +  as open drain, which is useful if several sensors share the same
-> +  interrupt line.
-Really feels like this one ought to be more generic.. Mind you so does
-drdy-int-pin!
-
-Hmm. Looks like most open drain controls are chip specific - other than
-your pinctrl ones and that doesn't really map to here I guess.
-
-
->  
->  Sensors may also have applicable pin control settings, those use the
->  standard bindings from pinctrl/pinctrl-bindings.txt.
-> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
-> index 4df4c278af23..f06f4329db5b 100644
-> --- a/drivers/iio/accel/st_accel_core.c
-> +++ b/drivers/iio/accel/st_accel_core.c
-> @@ -96,6 +96,8 @@
->  #define ST_ACCEL_2_DRDY_IRQ_INT2_MASK		0x10
->  #define ST_ACCEL_2_IHL_IRQ_ADDR			0x22
->  #define ST_ACCEL_2_IHL_IRQ_MASK			0x80
-> +#define ST_ACCEL_2_OD_IRQ_ADDR			0x22
-> +#define ST_ACCEL_2_OD_IRQ_MASK			0x40
->  #define ST_ACCEL_2_MULTIREAD_BIT		true
->  
->  /* CUSTOM VALUES FOR SENSOR 3 */
-> @@ -177,6 +179,8 @@
->  #define ST_ACCEL_5_DRDY_IRQ_INT2_MASK		0x20
->  #define ST_ACCEL_5_IHL_IRQ_ADDR			0x22
->  #define ST_ACCEL_5_IHL_IRQ_MASK			0x80
-> +#define ST_ACCEL_5_OD_IRQ_ADDR			0x22
-> +#define ST_ACCEL_5_OD_IRQ_MASK			0x40
->  #define ST_ACCEL_5_IG1_EN_ADDR			0x21
->  #define ST_ACCEL_5_IG1_EN_MASK			0x08
->  #define ST_ACCEL_5_MULTIREAD_BIT		false
-> @@ -368,6 +372,8 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
->  			.mask_int2 = ST_ACCEL_2_DRDY_IRQ_INT2_MASK,
->  			.addr_ihl = ST_ACCEL_2_IHL_IRQ_ADDR,
->  			.mask_ihl = ST_ACCEL_2_IHL_IRQ_MASK,
-> +			.addr_od = ST_ACCEL_2_OD_IRQ_ADDR,
-> +			.mask_od = ST_ACCEL_2_OD_IRQ_MASK,
->  			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
->  		},
->  		.multi_read_bit = ST_ACCEL_2_MULTIREAD_BIT,
-> @@ -557,6 +563,8 @@ static const struct st_sensor_settings st_accel_sensors_settings[] = {
->  			.mask_int2 = ST_ACCEL_5_DRDY_IRQ_INT2_MASK,
->  			.addr_ihl = ST_ACCEL_5_IHL_IRQ_ADDR,
->  			.mask_ihl = ST_ACCEL_5_IHL_IRQ_MASK,
-> +			.addr_od = ST_ACCEL_5_OD_IRQ_ADDR,
-> +			.mask_od = ST_ACCEL_5_OD_IRQ_MASK,
->  			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
->  		},
->  		.multi_read_bit = ST_ACCEL_5_MULTIREAD_BIT,
-> diff --git a/drivers/iio/common/st_sensors/st_sensors_core.c b/drivers/iio/common/st_sensors/st_sensors_core.c
-> index f5a2d445d0c0..2e03c1220d1f 100644
-> --- a/drivers/iio/common/st_sensors/st_sensors_core.c
-> +++ b/drivers/iio/common/st_sensors/st_sensors_core.c
-> @@ -301,6 +301,14 @@ static int st_sensors_set_drdy_int_pin(struct iio_dev *indio_dev,
->  		return -EINVAL;
->  	}
->  
-> +	if (pdata->open_drain) {
-> +		if (!sdata->sensor_settings->drdy_irq.addr_od)
-> +			dev_err(&indio_dev->dev,
-> +				"open drain requested but unsupported.\n");
-> +		else
-> +			sdata->int_pin_open_drain = true;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -321,6 +329,8 @@ static struct st_sensors_platform_data *st_sensors_of_probe(struct device *dev,
->  	else
->  		pdata->drdy_int_pin = defdata ? defdata->drdy_int_pin : 0;
->  
-> +	pdata->open_drain = of_property_read_bool(np, "st,int-pin-open-drain");
-> +
->  	return pdata;
->  }
->  #else
-> @@ -374,6 +384,16 @@ int st_sensors_init_sensor(struct iio_dev *indio_dev,
->  			return err;
->  	}
->  
-> +	if (sdata->int_pin_open_drain) {
-> +		dev_info(&indio_dev->dev,
-> +			 "set interrupt line to open drain mode\n");
-Hmm. Curriously I have a board with an lis3l02dq on it where the interrupt
-is shared, but doesn't explicitly support open drain. In that case it
-is done with some external circuitry.
-
-Anyhow - I guess when I actually add support for that I'll just add a sanity
-check in here that addr_od and mask_od are specified :)
-
-
-> +		err = st_sensors_write_data_with_mask(indio_dev,
-> +				sdata->sensor_settings->drdy_irq.addr_od,
-> +				sdata->sensor_settings->drdy_irq.mask_od, 1);
-> +		if (err < 0)
-> +			return err;
-> +	}
-> +
->  	err = st_sensors_set_axis_enable(indio_dev, ST_SENSORS_ENABLE_ALL_AXIS);
->  
->  	return err;
-> diff --git a/drivers/iio/common/st_sensors/st_sensors_trigger.c b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-> index 6a8c98327945..da72279fcf99 100644
-> --- a/drivers/iio/common/st_sensors/st_sensors_trigger.c
-> +++ b/drivers/iio/common/st_sensors/st_sensors_trigger.c
-> @@ -64,6 +64,19 @@ int st_sensors_allocate_trigger(struct iio_dev *indio_dev,
->  			"rising edge\n", irq_trig);
->  		irq_trig = IRQF_TRIGGER_RISING;
->  	}
-> +
-> +	/*
-> +	 * If the interrupt pin is Open Drain, by definition this
-> +	 * means that the interrupt line may be shared with other
-> +	 * peripherals. But to do this we also need to have a status
-> +	 * register and mask to figure out if this sensor was firing
-> +	 * the IRQ or not, so we can tell the interrupt handle that
-> +	 * it was "our" interrupt.
-> +	 */
-> +	if (sdata->int_pin_open_drain &&
-> +	    sdata->sensor_settings->drdy_irq.addr_stat_drdy)
-> +		irq_trig |= IRQF_SHARED;
-> +
->  	err = request_threaded_irq(irq,
->  			iio_trigger_generic_data_rdy_poll,
->  			NULL,
-> diff --git a/drivers/iio/pressure/st_pressure_core.c b/drivers/iio/pressure/st_pressure_core.c
-> index 1cd37eaa4a57..9e9b72a8f18f 100644
-> --- a/drivers/iio/pressure/st_pressure_core.c
-> +++ b/drivers/iio/pressure/st_pressure_core.c
-> @@ -64,6 +64,8 @@
->  #define ST_PRESS_LPS331AP_DRDY_IRQ_INT2_MASK	0x20
->  #define ST_PRESS_LPS331AP_IHL_IRQ_ADDR		0x22
->  #define ST_PRESS_LPS331AP_IHL_IRQ_MASK		0x80
-> +#define ST_PRESS_LPS331AP_OD_IRQ_ADDR		0x22
-> +#define ST_PRESS_LPS331AP_OD_IRQ_MASK		0x40
->  #define ST_PRESS_LPS331AP_MULTIREAD_BIT		true
->  #define ST_PRESS_LPS331AP_TEMP_OFFSET		42500
->  
-> @@ -104,6 +106,8 @@
->  #define ST_PRESS_LPS25H_DRDY_IRQ_INT2_MASK	0x10
->  #define ST_PRESS_LPS25H_IHL_IRQ_ADDR		0x22
->  #define ST_PRESS_LPS25H_IHL_IRQ_MASK		0x80
-> +#define ST_PRESS_LPS25H_OD_IRQ_ADDR		0x22
-> +#define ST_PRESS_LPS25H_OD_IRQ_MASK		0x40
->  #define ST_PRESS_LPS25H_MULTIREAD_BIT		true
->  #define ST_PRESS_LPS25H_TEMP_OFFSET		42500
->  #define ST_PRESS_LPS25H_OUT_XL_ADDR		0x28
-> @@ -226,6 +230,8 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
->  			.mask_int2 = ST_PRESS_LPS331AP_DRDY_IRQ_INT2_MASK,
->  			.addr_ihl = ST_PRESS_LPS331AP_IHL_IRQ_ADDR,
->  			.mask_ihl = ST_PRESS_LPS331AP_IHL_IRQ_MASK,
-> +			.addr_od = ST_PRESS_LPS331AP_OD_IRQ_ADDR,
-> +			.mask_od = ST_PRESS_LPS331AP_OD_IRQ_MASK,
->  			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
->  		},
->  		.multi_read_bit = ST_PRESS_LPS331AP_MULTIREAD_BIT,
-> @@ -313,6 +319,8 @@ static const struct st_sensor_settings st_press_sensors_settings[] = {
->  			.mask_int2 = ST_PRESS_LPS25H_DRDY_IRQ_INT2_MASK,
->  			.addr_ihl = ST_PRESS_LPS25H_IHL_IRQ_ADDR,
->  			.mask_ihl = ST_PRESS_LPS25H_IHL_IRQ_MASK,
-> +			.addr_od = ST_PRESS_LPS25H_OD_IRQ_ADDR,
-> +			.mask_od = ST_PRESS_LPS25H_OD_IRQ_MASK,
->  			.addr_stat_drdy = ST_SENSORS_DEFAULT_STAT_ADDR,
->  		},
->  		.multi_read_bit = ST_PRESS_LPS25H_MULTIREAD_BIT,
-> diff --git a/include/linux/iio/common/st_sensors.h b/include/linux/iio/common/st_sensors.h
-> index d8da075bfda0..d029ffac0d69 100644
-> --- a/include/linux/iio/common/st_sensors.h
-> +++ b/include/linux/iio/common/st_sensors.h
-> @@ -122,6 +122,8 @@ struct st_sensor_bdu {
->   * @mask_int2: mask to enable/disable IRQ on INT2 pin.
->   * @addr_ihl: address to enable/disable active low on the INT lines.
->   * @mask_ihl: mask to enable/disable active low on the INT lines.
-> + * @addr_od: address to enable/disable Open Drain on the INT lines.
-> + * @mask_od: mask to enable/disable Open Drain on the INT lines.
->   * @addr_stat_drdy: address to read status of DRDY (data ready) interrupt
->   * struct ig1 - represents the Interrupt Generator 1 of sensors.
->   * @en_addr: address of the enable ig1 register.
-> @@ -133,6 +135,8 @@ struct st_sensor_data_ready_irq {
->  	u8 mask_int2;
->  	u8 addr_ihl;
->  	u8 mask_ihl;
-> +	u8 addr_od;
-> +	u8 mask_od;
->  	u8 addr_stat_drdy;
->  	struct {
->  		u8 en_addr;
-> @@ -215,6 +219,7 @@ struct st_sensor_settings {
->   * @odr: Output data rate of the sensor [Hz].
->   * num_data_channels: Number of data channels used in buffer.
->   * @drdy_int_pin: Redirect DRDY on pin 1 (1) or pin 2 (2).
-> + * @int_pin_open_drain: Set the interrupt/DRDY to open drain.
->   * @get_irq_data_ready: Function to get the IRQ used for data ready signal.
->   * @tf: Transfer function structure used by I/O operations.
->   * @tb: Transfer buffers and mutex used by I/O operations.
-> @@ -236,6 +241,7 @@ struct st_sensor_data {
->  	unsigned int num_data_channels;
->  
->  	u8 drdy_int_pin;
-> +	bool int_pin_open_drain;
->  
->  	unsigned int (*get_irq_data_ready) (struct iio_dev *indio_dev);
->  
-> diff --git a/include/linux/platform_data/st_sensors_pdata.h b/include/linux/platform_data/st_sensors_pdata.h
-> index 753839187ba0..79b0e4cdb814 100644
-> --- a/include/linux/platform_data/st_sensors_pdata.h
-> +++ b/include/linux/platform_data/st_sensors_pdata.h
-> @@ -16,9 +16,11 @@
->   * @drdy_int_pin: Redirect DRDY on pin 1 (1) or pin 2 (2).
->   *	Available only for accelerometer and pressure sensors.
->   *	Accelerometer DRDY on LSM330 available only on pin 1 (see datasheet).
-> + * @open_drain: set the interrupt line to be open drain if possible.
->   */
->  struct st_sensors_platform_data {
->  	u8 drdy_int_pin;
-> +	bool open_drain;
->  };
->  
->  #endif /* ST_SENSORS_PDATA_H */
+> It'd be really great if you could list which exact issues you fixed.
 > 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK. I'll describe the history log more detailed in next version.
+
+>> v8:
+>> Fixed issues pointed by Ezequiel Garcia and Brian Norris.
+>> Moved dts binding file to mtd directory.
+>> Changed the compatible string more specific.
+> 
+> [...]
+> 
+>> +/* Hardware register offsets and field definitions */
+>> +#define FMC_CFG				0x00
+>> +#define SPI_NOR_ADDR_MODE		BIT(10)
+>> +#define FMC_GLOBAL_CFG			0x04
+>> +#define FMC_GLOBAL_CFG_WP_ENABLE	BIT(6)
+>> +#define FMC_SPI_TIMING_CFG		0x08
+>> +#define TIMING_CFG_TCSH(nr)		(((nr) & 0xf) << 8)
+>> +#define TIMING_CFG_TCSS(nr)		(((nr) & 0xf) << 4)
+>> +#define TIMING_CFG_TSHSL(nr)		((nr) & 0xf)
+>> +#define CS_HOLD_TIME			0x6
+>> +#define CS_SETUP_TIME			0x6
+>> +#define CS_DESELECT_TIME		0xf
+>> +#define FMC_INT				0x18
+>> +#define FMC_INT_OP_DONE			BIT(0)
+>> +#define FMC_INT_CLR			0x20
+>> +#define FMC_CMD				0x24
+>> +#define FMC_CMD_CMD1(_cmd)		((_cmd) & 0xff)
+> 
+> Drop the underscores in the argument names.
+> 
+OK.
+>> +#define FMC_ADDRL			0x2c
+>> +#define FMC_OP_CFG			0x30
+>> +#define OP_CFG_FM_CS(_cs)		((_cs) << 11)
+>> +#define OP_CFG_MEM_IF_TYPE(_type)	(((_type) & 0x7) << 7)
+>> +#define OP_CFG_ADDR_NUM(_addr)		(((_addr) & 0x7) << 4)
+>> +#define OP_CFG_DUMMY_NUM(_dummy)	((_dummy) & 0xf)
+>> +#define FMC_DATA_NUM			0x38
+>> +#define FMC_DATA_NUM_CNT(_n)		((_n) & 0x3fff)
+>> +#define FMC_OP				0x3c
+>> +#define FMC_OP_DUMMY_EN			BIT(8)
+>> +#define FMC_OP_CMD1_EN			BIT(7)
+>> +#define FMC_OP_ADDR_EN			BIT(6)
+>> +#define FMC_OP_WRITE_DATA_EN		BIT(5)
+>> +#define FMC_OP_READ_DATA_EN		BIT(2)
+>> +#define FMC_OP_READ_STATUS_EN		BIT(1)
+>> +#define FMC_OP_REG_OP_START		BIT(0)
+> 
+> [...]
+> 
+>> +enum hifmc_iftype {
+>> +	IF_TYPE_STD,
+>> +	IF_TYPE_DUAL,
+>> +	IF_TYPE_DIO,
+>> +	IF_TYPE_QUAD,
+>> +	IF_TYPE_QIO,
+>> +};
+>> +
+>> +struct hifmc_priv {
+>> +	int chipselect;
+> 
+> Can chipselect be set to < 0 values ?
+> 
+The type will be changed to u32.
+
+>> +	u32 clkrate;
+>> +	struct hifmc_host *host;
+>> +};
+>> +
+>> +#define HIFMC_MAX_CHIP_NUM		2
+> 
+> This does not scale very well, use dynamic allocation.
+> 
+OK. Dynamic allocation will be used in next version.
+>> +struct hifmc_host {
+>> +	struct device *dev;
+>> +	struct mutex lock;
+>> +
+>> +	void __iomem *regbase;
+>> +	void __iomem *iobase;
+>> +	struct clk *clk;
+>> +	void *buffer;
+>> +	dma_addr_t dma_buffer;
+>> +
+>> +	struct spi_nor	nor[HIFMC_MAX_CHIP_NUM];
+>> +	struct hifmc_priv priv[HIFMC_MAX_CHIP_NUM];
+>> +	int num_chip;
+>> +};
+>> +
+>> +static inline int wait_op_finish(struct hifmc_host *host)
+>> +{
+>> +	unsigned int reg;
+>> +
+>> +	return readl_poll_timeout(host->regbase + FMC_INT, reg,
+>> +		(reg & FMC_INT_OP_DONE), 0, FMC_WAIT_TIMEOUT);
+>> +}
+>> +
+>> +static int get_if_type(enum read_mode flash_read)
+>> +{
+>> +	enum hifmc_iftype if_type;
+>> +
+>> +	switch (flash_read) {
+>> +	case SPI_NOR_DUAL:
+>> +		if_type = IF_TYPE_DUAL;
+>> +		break;
+>> +	case SPI_NOR_QUAD:
+>> +		if_type = IF_TYPE_QUAD;
+>> +		break;
+>> +	case SPI_NOR_NORMAL:
+>> +	case SPI_NOR_FAST:
+>> +	default:
+>> +		if_type = IF_TYPE_STD;
+>> +		break;
+>> +	}
+>> +
+>> +	return if_type;
+>> +}
+>> +
+>> +static void hisi_spi_nor_init(struct hifmc_host *host)
+>> +{
+>> +	unsigned int reg;
+> 
+> Should be u32 here.
+> 
+OK.
+>> +	reg = TIMING_CFG_TCSH(CS_HOLD_TIME)
+>> +		| TIMING_CFG_TCSS(CS_SETUP_TIME)
+>> +		| TIMING_CFG_TSHSL(CS_DESELECT_TIME);
+>> +	writel(reg, host->regbase + FMC_SPI_TIMING_CFG);
+>> +}
+>> +
+>> +static int hisi_spi_nor_prep(struct spi_nor *nor, enum spi_nor_ops ops)
+>> +{
+>> +	struct hifmc_priv *priv = nor->priv;
+>> +	struct hifmc_host *host = priv->host;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&host->lock);
+> 
+> Why do you need the mutex lock here ? Let me guess -- SPI NOR framework
+> locks a mutex in struct spi_nor , but that's not enough if you have
+> multiple SPI NORs on the same bus, because concurrent access to multiple
+> SPI NOR flashes needs locking on the controller level, right ?
+> 
+Yes, you are quite right. The controller can connect with two SPI NOR flashes
+on one board. This lock is used on the controller level.
+
+>> +	ret = clk_set_rate(host->clk, priv->clkrate);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = clk_prepare_enable(host->clk);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	return 0;
+>> +
+>> +out:
+>> +	mutex_unlock(&host->lock);
+>> +	return ret;
+>> +}
+>> +
+>> +static void hisi_spi_nor_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
+>> +{
+>> +	struct hifmc_priv *priv = nor->priv;
+>> +	struct hifmc_host *host = priv->host;
+>> +
+>> +	clk_disable_unprepare(host->clk);
+>> +	mutex_unlock(&host->lock);
+>> +}
+>> +
+>> +static void hisi_spi_nor_cmd_prepare(struct hifmc_host *host, u8 cmd,
+>> +		u32 *opcfg)
+>> +{
+>> +	u32 reg;
+>> +
+>> +	*opcfg |= FMC_OP_CMD1_EN;
+>> +	switch (cmd) {
+>> +	case SPINOR_OP_RDID:
+>> +	case SPINOR_OP_RDSR:
+>> +	case SPINOR_OP_RDCR:
+>> +		*opcfg |= FMC_OP_READ_DATA_EN;
+>> +		break;
+>> +	case SPINOR_OP_WREN:
+>> +		reg = readl(host->regbase + FMC_GLOBAL_CFG);
+>> +		if (reg & FMC_GLOBAL_CFG_WP_ENABLE) {
+>> +			reg &= ~FMC_GLOBAL_CFG_WP_ENABLE;
+>> +			writel(reg, host->regbase + FMC_GLOBAL_CFG);
+>> +		}
+>> +		break;
+>> +	case SPINOR_OP_WRSR:
+>> +		*opcfg |= FMC_OP_WRITE_DATA_EN;
+>> +		break;
+>> +	case SPINOR_OP_BE_4K:
+>> +	case SPINOR_OP_BE_4K_PMC:
+>> +	case SPINOR_OP_SE_4B:
+>> +	case SPINOR_OP_SE:
+>> +		*opcfg |= FMC_OP_ADDR_EN;
+>> +		break;
+>> +	case SPINOR_OP_EN4B:
+>> +		reg = readl(host->regbase + FMC_CFG);
+>> +		reg |= SPI_NOR_ADDR_MODE;
+>> +		writel(reg, host->regbase + FMC_CFG);
+>> +		break;
+>> +	case SPINOR_OP_EX4B:
+>> +		reg = readl(host->regbase + FMC_CFG);
+>> +		reg &= ~SPI_NOR_ADDR_MODE;
+>> +		writel(reg, host->regbase + FMC_CFG);
+>> +		break;
+>> +	case SPINOR_OP_CHIP_ERASE:
+>> +	default:
+>> +		break;
+>> +	}
+> 
+> Won't the driver fail if we add new instructions into the SPI NOR core
+> which are not handled by this huge switch statement ?
+> 
+Only some of commands are needed to process in this stage for the controller.
+Others have no needs. So this function won't return failure.
+
+I'll combine SPINOR_OP_CHIP_ERASE into the default case in next version.
+
+>> +}
+> 
+> [...]
+> 
+>> +static void hisi_spi_nor_write(struct spi_nor *nor, loff_t to,
+>> +			size_t len, size_t *retlen, const u_char *write_buf)
+>> +{
+>> +	struct hifmc_priv *priv = nor->priv;
+>> +	struct hifmc_host *host = priv->host;
+>> +	const unsigned char *ptr = write_buf;
+>> +	size_t actual_len;
+>> +
+>> +	*retlen = 0;
+>> +	while (len > 0) {
+>> +		if (to & HIFMC_DMA_MASK)
+>> +			actual_len = (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK))
+>> +				>= len	? len
+>> +				: (HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK));
+> 
+> Rewrite this as something like the following snippet, for the sake of
+> readability:
+> 
+> actual_len = HIFMC_DMA_MAX_LEN - (to & HIFMC_DMA_MASK);
+> if (actual_len >= len)
+>    actual_len = len;
+> 
+OK. Thank you.
+>> +		else
+>> +			actual_len = (len >= HIFMC_DMA_MAX_LEN)
+>> +				? HIFMC_DMA_MAX_LEN : len;
+>> +		memcpy(host->buffer, ptr, actual_len);
+>> +		hisi_spi_nor_dma_transfer(nor, to, host->dma_buffer, actual_len,
+>> +				FMC_OP_WRITE);
+>> +		to += actual_len;
+>> +		ptr += actual_len;
+>> +		len -= actual_len;
+>> +		*retlen += actual_len;
+>> +	}
+>> +}
+>> +
+>> +static int hisi_spi_nor_erase(struct spi_nor *nor, loff_t offs)
+>> +{
+>> +	struct hifmc_priv *priv = nor->priv;
+>> +	struct hifmc_host *host = priv->host;
+>> +
+>> +	writel(offs, host->regbase + FMC_ADDRL);
+>> +
+>> +	return hisi_spi_nor_send_cmd(nor, nor->erase_opcode, 0);
+>> +}
+>> +
+>> +static int hisi_spi_nor_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +	struct hifmc_host *host;
+>> +	struct device_node *np;
+>> +	int ret, i = 0;
+>> +
+>> +	host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
+>> +	if (!host)
+>> +		return -ENOMEM;
+>> +
+>> +	platform_set_drvdata(pdev, host);
+>> +	host->dev = dev;
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "control");
+>> +	host->regbase = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(host->regbase))
+>> +		return PTR_ERR(host->regbase);
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "memory");
+>> +	host->iobase = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(host->iobase))
+>> +		return PTR_ERR(host->iobase);
+>> +
+>> +	host->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(host->clk))
+>> +		return PTR_ERR(host->clk);
+>> +
+>> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+>> +	if (ret) {
+>> +		dev_warn(dev, "Unable to set dma mask\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	host->buffer = dmam_alloc_coherent(dev, HIFMC_DMA_MAX_LEN,
+>> +			&host->dma_buffer, GFP_KERNEL);
+>> +	if (!host->buffer)
+>> +		return -ENOMEM;
+>> +
+>> +	mutex_init(&host->lock);
+>> +	clk_prepare_enable(host->clk);
+>> +	hisi_spi_nor_init(host);
+>> +
+>> +	for_each_available_child_of_node(dev->of_node, np) {
+>> +		struct spi_nor *nor = &host->nor[i];
+>> +		struct hifmc_priv *priv = &host->priv[i];
+>> +		struct mtd_info *mtd = &nor->mtd;
+>> +
+>> +		mtd->name = np->name;
+>> +		nor->dev = dev;
+>> +		spi_nor_set_flash_node(nor, np);
+>> +		ret = of_property_read_u32(np, "reg", &priv->chipselect);
+>> +		if (ret)
+>> +			goto fail;
+>> +		ret = of_property_read_u32(np, "spi-max-frequency",
+>> +				&priv->clkrate);
+>> +		if (ret)
+>> +			goto fail;
+>> +		priv->host = host;
+>> +		nor->priv = priv;
+>> +
+>> +		nor->prepare = hisi_spi_nor_prep;
+>> +		nor->unprepare = hisi_spi_nor_unprep;
+>> +		nor->read_reg = hisi_spi_nor_read_reg;
+>> +		nor->write_reg = hisi_spi_nor_write_reg;
+>> +		nor->read = hisi_spi_nor_read;
+>> +		nor->write = hisi_spi_nor_write;
+>> +		nor->erase = hisi_spi_nor_erase;
+>> +		ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
+>> +		if (ret)
+>> +			goto fail;
+>> +
+>> +		ret = mtd_device_register(mtd, NULL, 0);
+>> +		if (ret)
+>> +			goto fail;
+>> +
+>> +		i++;
+>> +		host->num_chip++;
+>> +		if (i == HIFMC_MAX_CHIP_NUM) {
+>> +			dev_warn(dev, "Flash device number exceeds the maximum chipselect number\n");
+>> +			break;
+>> +		}
+> 
+> Please factor this loop out into a separate function, so we can easily
+> locate the developing boilerplate.
+> 
+OK. I'll do it in next version.
+
+>> +	}
+>> +
+>> +	clk_disable_unprepare(host->clk);
+>> +	return 0;
+>> +
+>> +fail:
+>> +	for (i = 0; i < host->num_chip; i++)
+>> +		mtd_device_unregister(&host->nor[i].mtd);
+> 
+> Did you ever exercise this fail path ? I think if you call this without
+> registering all of the MTD devices, it will crash, but I might be wrong
+> on this one.
+> 
+Yes. Actually the host->num_chip means the number of successfully registered mtd devices.
+I'll change the name to host->actual_chip_num to make it more readable.
+
+>> +	clk_disable_unprepare(host->clk);
+>> +	mutex_destroy(&host->lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int hisi_spi_nor_remove(struct platform_device *pdev)
+>> +{
+>> +	struct hifmc_host *host = platform_get_drvdata(pdev);
+>> +	int i;
+>> +
+>> +	for (i = 0; i < host->num_chip; i++)
+>> +		mtd_device_unregister(&host->nor[i].mtd);
+>> +
+>> +	clk_disable_unprepare(host->clk);
+>> +	mutex_destroy(&host->lock);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id hisi_spi_nor_dt_ids[] = {
+>> +	{ .compatible = "hisilicon,fmc-spi-nor"},
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, hisi_spi_nor_dt_ids);
+>> +
+>> +static struct platform_driver hisi_spi_nor_driver = {
+>> +	.driver = {
+>> +		.name	= "hisi-sfc",
+>> +		.of_match_table = hisi_spi_nor_dt_ids,
+>> +	},
+>> +	.probe	= hisi_spi_nor_probe,
+>> +	.remove	= hisi_spi_nor_remove,
+>> +};
+>> +module_platform_driver(hisi_spi_nor_driver);
+>> +
+>> +MODULE_LICENSE("GPL v2");
+>> +MODULE_DESCRIPTION("HiSilicon SPI Nor Flash Controller Driver");
+>>
+> 
+> btw I also trimmed down the crazy CC list.
+> 
+Sorry about that and thank you again!
+
+Regards,
+Jiancheng
