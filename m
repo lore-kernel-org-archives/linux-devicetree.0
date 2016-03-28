@@ -1,85 +1,71 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v2 6/8] drm/fsl-dcu: add TCON driver
-Date: Tue, 29 Mar 2016 00:39:03 -0700
-Message-ID: <154ce63f6767c2fc6f15e2486c0753c1@agner.ch>
-References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
- <2234894.ri36D5MRrN@ws-stein> <57c86de8eca0aa16a5cdfc488977ca4e@agner.ch>
- <3752084.bcROvR6fvG@ws-stein>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 1/6] ALSA: pcm: add IEC958 channel status helper for
+ hw_params
+Date: Mon, 28 Mar 2016 12:38:01 -0700
+Message-ID: <20160328193801.GI2350@sirena.org.uk>
+References: <cover.1458214526.git.jsarha@ti.com>
+ <164484552294777b0b9b88d7982bd6bfb0da9a9f.1458214526.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3752084.bcROvR6fvG@ws-stein>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Stein <alexander.stein@systec-electronic.com>
-Cc: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, kernel@pengutronix.de, airlied@linux.ie, daniel.vetter@ffwll.ch, jianwei.wang.chn@gmail.com, alison.wang@freescale.com, meng.yi@nxp.com, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============1724348531=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <164484552294777b0b9b88d7982bd6bfb0da9a9f.1458214526.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, tomi.valkeinen@ti.com, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-03-29 00:26, Alexander Stein wrote:
-> On Tuesday 29 March 2016 00:11:13, Stefan Agner wrote:
->> >> --- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
->> >> +++ b/Documentation/devicetree/bindings/display/fsl,dcu.txt
->> >>
->> >> @@ -14,6 +14,7 @@ Required properties:
->> >>  Optional properties:
->> >>  - clocks:		Second handle for pixel clock.
->> >>  - clock-names:		Second name "pix" for pixel clock.
->> >>
->> >> +- fsl,tcon:		The phandle to the timing controller node.
->> >
->> > Maybe a comment this is (currently) only for Vybrid, but not LS1021A.
->>
->> IMHO, such references to SoCs in a peripheral binding is somewhat
->> misplaced. If we would start doing this, we would end up in lots of SoC
->> references, and nobody knows whether they are actually accurate and up
->> to date... And I think we should add tcon to LS1021a, more on that
->> below...
-> 
-> Well, I don't mind after all.
-> 
->> >> --- /dev/null
->> >> +++ b/drivers/gpu/drm/fsl-dcu/fsl_tcon.c
->> >> [...]
->> >> +struct fsl_tcon *fsl_tcon_init(struct device *dev)
->> >> +{
->> >> +	struct fsl_tcon *tcon;
->> >> +	struct device_node *np;
->> >> +	int ret;
->> >> +
->> >> +	tcon = devm_kzalloc(dev, sizeof(*tcon), GFP_KERNEL);
->> >> +	if (!tcon)
->> >> +		return NULL;
->> >> +
->> >> +	np = of_parse_phandle(dev->of_node, "fsl,tcon", 0);
->> >> +	if (!np) {
->> >> +		dev_warn(dev, "Couldn't find the tcon node\n");
->> >> +		return NULL;
->> >> +	}
->> >
->> > Maybe check for device tree node before allocating struct fsl_tcon? Also
->> > this should not be a warning, as on LS1021A this is to be expected.
->>
->> Agreed, definitely the smarter sequence.
->>
->> Afact LS1021a has also a TCON. At least in Jianwei Wangs initial patches
->> it was part of the driver, see:
->> https://lkml.org/lkml/2015/7/13/242
->>
->> Not sure how that driver can work without TCON support on LS1021a, maybe
->> the bootloader sets the TCON to bypass?
->>
->> Since I do not have a LS1021a, I hesitated to just add it to the LS1021s
->> dt's, but it should be fairly straight forward.
-> 
-> Interesting, but in Patch 3
-> (https://lists.freedesktop.org/archives/dri-devel/2015-July/086381.html)
-> no TCON node is added and using is still
-> optional. Yet, I don't find any TCON hardware in the LS1021A reference manual, 
-> e.g. in the memory map. I hard guess is that it doesn't require/use one. 
-> Without memory address it would be pretty hard to add one.
 
-Ok, maybe I am completely wrong on that. I thought I have seen it...
+--===============1724348531==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SdaPbLtAangIkrMZ"
+Content-Disposition: inline
 
-It could be that Jianwei added TCON support for Vybrid only, in this
-case I agree there shouldn't be a warning if TCON is missing. Maybe even
-the other way around, write a info message in case TCON has been found.
+
+--SdaPbLtAangIkrMZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Mar 17, 2016 at 02:22:29PM +0200, Jyri Sarha wrote:
+> Add IEC958 channel status helper that gets the audio properties from
+> snd_pcm_hw_params instead of snd_pcm_runtime. This is needed to
+> produce the channel status bits already in audio stream configuration
+> phase.
+
+Takashi?
+
+--SdaPbLtAangIkrMZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW+YgXAAoJECTWi3JdVIfQAs0H/RYb3o5zjgkQ3CYHI1U9rfcP
+82WbmTqYQvCoKB8ZGQvgh6em9aNNIiwmaWltx9ZswmxLxT3vWkoqmjp+EN3pkXN2
+k3cg9ZKSjzTBh749duR8J3nICbzhUc363ntypAOjYhQ5E4jNyhwh+AnR4vGC4/Sb
+SrY0WXi0JkKHRFce5LfbPYbdPhv76sRcTFVidetUtimTTJ9jNJ33CkmXEZ9NEAX9
+gajgQoeujmJ8Pjwb7k4oqeh8B8AcDgpBnVULEv0CDL3QkPfxqaNJl4DgKHDRqu2J
+Cbt5x5NTqH3+DM4zyHNbhOk4sFun0pczB8+zhv/CPWUwpcID18kCGhjXvIdCQso=
+=FhlN
+-----END PGP SIGNATURE-----
+
+--SdaPbLtAangIkrMZ--
+
+--===============1724348531==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1724348531==--
