@@ -1,178 +1,49 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: Re: [PATCH v5 2/4] dt-bindings: add bindings for rk3399 clock controller
-Date: Mon, 28 Mar 2016 10:51:36 +0800
-Message-ID: <56F89C38.5000107@rock-chips.com>
-References: <1458974276-10325-1-git-send-email-zhengxing@rock-chips.com> <1458974276-10325-3-git-send-email-zhengxing@rock-chips.com> <1507551.YPleCY5ZQt@phil>
+From: MyungJoo Ham <myungjoo.ham@samsung.com>
+Subject: Re: [PATCH v6 04/21] PM / devfreq: Add new DEVFREQ_TRANSITION_NOTIFIER
+ notifier
+Date: Mon, 28 Mar 2016 02:54:56 +0000 (GMT)
+Message-ID: <190611333.27621459133690582.JavaMail.weblogic@epmlwas02a>
+Reply-To: myungjoo.ham@samsung.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1507551.YPleCY5ZQt@phil>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, huangtao@rock-chips.com, jay.xu@rock-chips.com, elaine.zhang@rock-chips.com, dianders@chromium.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+MIME-version: 1.0
+Sender: linux-pm-owner@vger.kernel.org
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi@samsung.com>, =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park@samsung.com>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
+Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "m.reichl@fivetechno.de" <m.reichl@fivetechno.de>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, =?utf-8?Q?=EB=8C=80=EC=9D=B8=EA=B8=B0?= <inki.dae@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>"devicetree@vger.kernel.org" <devicetree@>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBuZXcgREVWRlJFUV9UUkFOU0lUSU9OX05PVElG
+SUVSIG5vdGlmaWVyIHRvIHNlbmQNCj4gdGhlIG5vdGlmaWNhdGlvbiB3aGVuIHRoZSBmcmVxdWVu
+Y3kgb2YgZGV2aWNlIGlzIGNoYW5nZWQuDQo+IFRoaXMgbm90aWZpZXIgaGFzIHR3byBzdGF0ZSBh
+cyBmb2xsb3dpbmc6DQo+IC0gREVWRlJFUV9QUkVDSEFOR0UgIDogTm90aWZ5IGl0IGJlZm9yZSBj
+aGFuaW5nIHRoZSBmcmVxdWVuY3kgb2YgZGV2aWNlDQo+IC0gREVWRlJFUV9QT1NUQ0hBTkdFIDog
+Tm90aWZ5IGl0IGFmdGVyIGNoYW5nZWQgdGhlIGZyZXF1ZW5jeSBvZiBkZXZpY2UNCj4gDQo+IEFu
+ZCB0aGlzIHBhdGNoIGFkZHMgdGhlIHJlc291cmNlZC1tYW5hZ2VkIGZ1bmN0aW9uIHRvIHJlbGVh
+c2UgdGhlIHJlc291cmNlDQo+IGF1dG9tYXRpY2FsbHkgd2hlbiBlcnJvciBoYXBwZW4uDQo+IA0K
+PiBTaWduZWQtb2ZmLWJ5OiBDaGFud29vIENob2kgPGN3MDAuY2hvaUBzYW1zdW5nLmNvbT4NCj4g
+W20ucmVpY2hsIGFuZCBsaW51eC5hbW9vbjogVGVzdGVkIGl0IG9uIGV4eW5vczQ0MTItb2Ryb2lk
+dTMgYm9hcmRdDQo+IFRlc3RlZC1ieTogTWFya3VzIFJlaWNobCA8bS5yZWljaGxAZml2ZXRlY2hu
+by5kZT4NCj4gVGVzdGVkLWJ5OiBBbmFuZCBNb29uIDxsaW51eC5hbW9vbkBnbWFpbC5jb20+DQo+
+IC0tLQ0KPiAgZHJpdmVycy9kZXZmcmVxL2RldmZyZXEuYyB8IDE2MyArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKystDQo+ICBpbmNsdWRlL2xpbnV4L2RldmZyZXEu
+aCAgIHwgIDU4ICsrKysrKysrKysrKysrKystDQo+ICAyIGZpbGVzIGNoYW5nZWQsIDIxOSBpbnNl
+cnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KDQpbXQ0KDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRl
+L2xpbnV4L2RldmZyZXEuaCBiL2luY2x1ZGUvbGludXgvZGV2ZnJlcS5oDQo+IGluZGV4IGFhMGI4
+NDI0ZWJjMy4uMTUyZWEzNDI1MjljIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L2RldmZy
+ZXEuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L2RldmZyZXEuaA0KPiBAQCAtMTksNiArMTksMTMg
+QEANCj4gIA0KPiAgI2RlZmluZSBERVZGUkVRX05BTUVfTEVOIDE2DQo+ICANCj4gKy8qIERFVkZS
+RVEgbm90aWZpZXIgaW50ZXJmYWNlICovDQo+ICsjZGVmaW5lIERFVkZSRVFfVFJBTlNJVElPTl9O
+T1RJRklFUgkoMCkNCj4gKw0KPiArLyogVHJhbnNpdGlvbiBub3RpZmllcnMgb2YgREVWRlJFUV9U
+UkFOU0lUSU9OX05PVElGSUVSICovDQo+ICsjZGVmaW5lCURFVkZSRVFfUFJFQ0hBTkdFCQkoMCkN
+Cj4gKyNkZWZpbmUgREVWRlJFUV9QT1NUQ0hBTkdFCQkoMSkNCj4gKw0KPiAgc3RydWN0IGRldmZy
+ZXE7DQo+ICANCj4gIC8qKg0KPiBAQCAtMTc3LDYgKzE4NCwxMyBAQCBzdHJ1Y3QgZGV2ZnJlcSB7
+DQo+ICAJdW5zaWduZWQgaW50ICp0cmFuc190YWJsZTsNCj4gIAl1bnNpZ25lZCBsb25nICp0aW1l
+X2luX3N0YXRlOw0KPiAgCXVuc2lnbmVkIGxvbmcgbGFzdF9zdGF0X3VwZGF0ZWQ7DQo+ICsNCj4g
+KwlzdHJ1Y3Qgc3JjdV9ub3RpZmllcl9oZWFkIHRyYW5zaXRpb25fbm90aWZpZXJfbGlzdDsNCj4g
+K307DQoNCkxpa2Ugb3RoZXIgcHJvcGVydGllcyBvZiBzdHJ1Y3QgZGV2ZnJlcSwgcGxlYXNlIGFk
+ZA0KZGVzY3JpcHRpb25zIGFib3ZlLiBPdGhlciB0aGFuIHRoYXQsIGl0IGxvb2tzIGdvb2QuDQoN
+Cg0KDQo=
 
-On 2016=E5=B9=B403=E6=9C=8828=E6=97=A5 07:52, Heiko St=C3=BCbner wrote:
-> Hi Xing,
->
-> Am Samstag, 26. M=C3=A4rz 2016, 14:37:54 schrieb Xing Zheng:
->> Add devicetree bindings for Rockchip cru which found on
->> Rockchip SoCs.
->>
->> Signed-off-by: Xing Zheng<zhengxing@rock-chips.com>
->> Signed-off-by: Jianqun Xu<jay.xu@rock-chips.com>
->> Acked-by: Rob Herring<robh@kernel.org>
->> ---
->>
->> Changes in v5: None
->> Changes in v3: None
->> Changes in v2: None
->>
->>   .../bindings/clock/rockchip,rk3399-cru.txt         |   83
->> ++++++++++++++++++++ 1 file changed, 83 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399=
--
-> cru.txt
->> b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt ne=
-w file
->> mode 100644
->> index 0000000..9427caa
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.tx=
-t
->> @@ -0,0 +1,83 @@
->> +* Rockchip RK3399 Clock and Reset Unit
->> +
->> +The RK3399 clock controller generates and supplies clock to various
->> +controllers within the SoC and also implements a reset controller f=
-or SoC
->> +peripherals.
->> +
->> +Required Properties:
->> +
->> +- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
->> +- compatible: CRU should be "rockchip,rk3399-cru"
->> +- reg: physical base address of the controller and length of memory
-> mapped
->> +  region.
->> +- #clock-cells: should be 1.
->> +- #reset-cells: should be 1.
->> +
->> +Optional Properties:
->> +
->> +- rockchip,grf: phandle to the syscon managing the "general registe=
-r
-> files"
->> +  If missing, pll rates are not changeable, due to the missing pll =
-lock
->> status. +
-> the rk3399 doesn't need the GRF, so we should drop this block for now
->
->> +Each clock is assigned an identifier and client nodes can use this
->> identifier +to specify the clock which they consume. All available c=
-locks
->> are defined as +preprocessor macros in the dt-bindings/clock/rk3399-=
-cru.h
->> headers and can be +used in device tree sources. Similar macros exis=
-t for
->> the reset sources in +these files.
->> +
->> +External clocks:
->> +
->> +There are several clocks that are generated outside the SoC. It is
-> expected
->> +that they are defined using standard clock bindings with following
->> +clock-output-names:
->> + - "xin24m" - crystal input - required,
->> + - "xin32k" - rtc clock - optional,
->> + - "ext_i2s" - external I2S clock - optional,
->> + - "ext_gmac" - external GMAC clock - optional
->> + - "ext_hsadc" - external HSADC clock - optional,
->> + - "ext_isp" - external ISP clock - optional,
->> + - "ext_jtag" - external JTAG clock - optional
->> + - "ext_vip" - external VIP clock - optional,
->> + - "usbotg_out" - output clock of the pll in the otg phy
-> external clock listing needs adjusting, something like
->
-> - clkin_i2s
-> - clkin_gmac
-> -->  remove ext_hsadc
-> - clkin_cif
-> -->  remove ext_jtag
-> -->  remove ext_vip
-> - clk_usbphy0_480m
-> - clk_usbphy0_480m
->
-> maybe?
-Thanks, now they like this:
-clock-output-names:
-- "xin24m" - crystal input - required,
-- "xin32k" - rtc clock - optional,
-- "clkin_gmac" - external GMAC clock - optional,
-- "gmac_phy_rx_clk" - external GMAC RX clock - optional,
-- "clkin_i2s" - external I2S clock - optional,
-- "pclkin_cif" - external ISP clock - optional,
-- "clk_usbphy0_480m" - output clock of the pll in the usbphy0
-- "clk_usbphy1_480m" - output clock of the pll in the usbphy1
->
->> +
->> +Example: General Register Files
->> +
->> +	pmugrf: syscon@ff320000 {
->> +		compatible =3D "rockchip,rk3399-pmugrf", "syscon";
->> +		reg =3D<0x0 0xff320000 0x0 0x1000>;
->> +	};
->> +
->> +	grf: syscon@ff770000 {
->> +		compatible =3D "rockchip,rk3399-grf", "syscon";
->> +		reg =3D<0x0 0xff770000 0x0 0x10000>;
->> +	};
->> +
->> +Example: Clock controller node:
->> +
->> +	pmucru: pmu-clock-controller@ff750000 {
->> +		compatible =3D "rockchip,rk3399-pmucru";
->> +		reg =3D<0x0 0xff750000 0x0 0x1000>;
->> +		rockchip,grf =3D<&pmugrf>;
->> +		#clock-cells =3D<1>;
->> +		#reset-cells =3D<1>;
->> +	};
->> +
->> +	cru: clock-controller@ff760000 {
->> +		compatible =3D "rockchip,rk3399-cru";
->> +		reg =3D<0x0 0xff760000 0x0 0x1000>;
->> +		rockchip,grf =3D<&grf>;
->> +		#clock-cells =3D<1>;
->> +		#reset-cells =3D<1>;
->> +	};
-> also here drop grf nodes and rockchip,grf properties?
-Done.
->
->
->> +
->> +Example: UART controller node that consumes the clock generated by =
-the
->> clock +  controller:
->> +
->> +	uart0: serial@ff1a0000 {
->> +		compatible =3D "rockchip,rk3399-uart", "snps,dw-apb-uart";
->> +		reg =3D<0x0 0xff180000 0x0 0x100>;
->> +		clocks =3D<&cru SCLK_UART0>,<&cru PCLK_UART0>;
->> +		clock-names =3D "baudclk", "apb_pclk";
->> +		interrupts =3D<GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
->> +		reg-shift =3D<2>;
->> +		reg-io-width =3D<4>;
->> +	};
->
->
-Thanks.
 
---=20
-- Xing Zheng
