@@ -1,132 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 4/5] dt-bindings: arm: add DT binding for Marvell
- CP110 system controller
-Date: Mon, 28 Mar 2016 14:47:56 -0500
-Message-ID: <20160328194756.GA28967@rob-hp-laptop>
-References: <1459070777-18049-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
+ 'ext-reset-output' dt prop
+Date: Mon, 28 Mar 2016 16:19:15 -0400
+Message-ID: <56F991C3.8030201@timesys.com>
+References: <1446758362-11702-1-git-send-email-akshay.bhat@timesys.com>
+ <1446758362-11702-2-git-send-email-akshay.bhat@timesys.com>
+ <20151105222325.GA26159@roeck-us.net>
+ <CAJ+vNU2fSxRJ7YvxOfNzoEoiKgzv-dHj=+eksKxH48ekHiUw2Q@mail.gmail.com>
+ <20151106220249.GA19791@roeck-us.net> <565F4244.7090502@timesys.com>
+ <CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com>
+ <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
+ <20151228162923.GA31680@spo001.leaseweb.nl> <56AA79DA.2010305@timesys.com>
+ <CAOMZO5DrTY3ho0Z_jXxeYMqbd6GmUKRwD1LB61vM1ZTGQAYOrg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459070777-18049-5-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5DrTY3ho0Z_jXxeYMqbd6GmUKRwD1LB61vM1ZTGQAYOrg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Mar 27, 2016 at 11:26:16AM +0200, Thomas Petazzoni wrote:
-> This commit adds the DT binding documentation for the Marvell CP110
-> system controller, which is part of the CP110 HW block, itself used in
-> the Marvell Armada 7K and 8K SoCs.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> ---
->  .../arm/marvell/cp110-system-controller0.txt       | 88 ++++++++++++++++++++++
->  1 file changed, 88 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-> new file mode 100644
-> index 0000000..e8883da
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-> @@ -0,0 +1,88 @@
-> +Marvell Armada CP110 System Controller 0
-> +========================================
-> +
-> +The CP110 is one of the two core HW blocks of the Marvell Armada 7K/8K
-> +SoCs. It contains two sets of system control registers, System
-> +Controller 0 and System Controller 1. This Device Tree binding allows
-> +to describe the first system controller, which provides registers to
-> +configure various aspects of the SoC.
-> +
-> +The Device Tree node representing this System Controller 0 provides a
-> +number of clocks:
-> +
-> + - a set of core clocks
-> + - a set of gatable clocks
-> +
-> +Those clocks can be referenced by other Device Tree nodes using two
-> +cells:
-> + - The first cell must be 0 or 1. 0 for the core clocks and 1 for the
-> +   gatable clocks.
-> + - The second cell identifies the particular core clock or gatable
-> +   clocks.
-> +
-> +The following clocks are available:
-> + - Core clocks
-> +   - 0 0	APLL
-> +   - 0 1	PPv2 core
-> +   - 0 2	EIP
-> +   - 0 3	Core
-> +   - 0 4	NAND core
-> + - Gatable clocks
-> +   - 1 0	Audio
-> +   - 1 1	Comm Unit
-> +   - 1 2	NAND
-> +   - 1 3	PPv2
-> +   - 1 4	SDIO
-> +   - 1 5	MG Domain
-> +   - 1 6	MG Core
-> +   - 1 7	XOR1
-> +   - 1 8	XOR0
-> +   - 1 9	GOP DP
-> +   - 1 11	PCIe x1 0
-> +   - 1 12	PCIe x1 1
-> +   - 1 13	PCIe x4
-> +   - 1 14	PCIe / XOR
-> +   - 1 15	SATA
-> +   - 1 16	SATA USB
-> +   - 1 18	GOP Macro
-> +   - 1 22	USB3H0
-> +   - 1 23	USB3H1
-> +   - 1 24	USB3 Device
-> +   - 1 25	EIP150
-> +   - 1 26	EIP197
-> +
-> +Required properties:
-> +
-> + - compatible: must be:
-> +     "marvell,cp110-system-controller0", "syscon";
+Hi Shawn,
 
-This block is really the same across SoCs? 
+On 02/28/2016 08:56 AM, Fabio Estevam wrote:
+> Rob,
+>
+> On Thu, Jan 28, 2016 at 6:28 PM, Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+>>> I have no objections against the idea and the code itself.
+>>> But as Guenter pointed out: it would be handy to get feedback from the
+>>> devicetree maintainers on the above discussion.
+>>>
+>>> Kind regards,
+>>> Wim.
+>>>
+>>
+>> Any suggestions on whether a vendor specific prefix is necessary?
+>
+> Any comments?
+>
 
-> + - reg: register area of the CP110 system controller 0
-> + - #clock-cells: must be set to 2
-> + - core-clock-output-names must be set to:
-> +    "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core"
-> + - gatable-clock-indices must be set to:
-> +	<0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>, <8>,
-> +	<9>, <11>, <12>, <13>, <14>, <15>, <16>, <18>,
-> +	<22>, <23>, <24>, <25>, <26>
+Is this something you can help with, since you are the iMX 
+architecture/devicetree maintainer? Appreciate any feedback.
 
-You aren't skipping very many spots. I'd just fill the unused names in 
-with "none" or something.
-
-> + - gatable-clock-output-names must be set to:
-> +	"cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
-> +	"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "cpm-pcie_x10",
-> +	"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata", "cpm-sata-usb",
-> +	"cpm-gop-macro", "cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150",
-> +	"cpm-eip197"
-> +
-> +Example:
-> +
-> +	cpm_syscon0: system-controller@440000 {
-> +		compatible = "marvell,cp110-system-controller0", "syscon";
-> +		reg = <0x440000 0x1000>;
-> +		#clock-cells = <2>;
-> +		core-clock-output-names = "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core";
-> +		gate-clock-indices = <0>, <1>, <2>, <3>, <4>, <5>, <6>, <7>, <8>,
-> +			<9>, <11>, <12>, <13>, <14>, <15>, <16>, <18>,
-> +			<22>, <23>, <24>, <25>, <26>;
-> +		gate-clock-output-names = "cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
-> +			"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "cpm-pcie_x10",
-> +			"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata", "cpm-sata-usb",
-> +			"cpm-gop-macro", "cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150",
-> +			"cpm-eip197";
-> +	};
-> -- 
-> 2.6.4
-> 
+Thanks,
+Akshay
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
