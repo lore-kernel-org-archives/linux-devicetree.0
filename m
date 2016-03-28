@@ -1,76 +1,88 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH v6 04/21] PM / devfreq: Add new DEVFREQ_TRANSITION_NOTIFIER
- notifier
-Date: Mon, 28 Mar 2016 12:35:21 +0900
-Message-ID: <56F8A679.5010009@samsung.com>
-References: <190611333.27621459133690582.JavaMail.weblogic@epmlwas02a>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v2 1/5] phy: Rename phy-brcmstb-sata driver to phy-brcm-sata
+ driver
+Date: Mon, 28 Mar 2016 10:18:26 +0530
+Message-ID: <1459140510-5317-2-git-send-email-anup.patel@broadcom.com>
+References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <190611333.27621459133690582.JavaMail.weblogic@epmlwas02a>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, =?UTF-8?B?67CV6rK966+8?= <kyungmin.park@samsung.com>, =?UTF-8?B?7YGs7Ims7Iuc7Yag7ZSE?= <k.kozlowski@samsung.com>, "kgene@kernel.org" <kgene@kernel.org>
-Cc: "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux.amoon@gmail.com" <linux.amoon@gmail.com>, "m.reichl@fivetechno.de" <m.reichl@fivetechno.de>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, =?UTF-8?B?64yA7J246riw?= <inki.dae@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2016=EB=85=84 03=EC=9B=94 28=EC=9D=BC 11:54, MyungJoo Ham wrote:
->>  =20
->>  This patch adds the new DEVFREQ_TRANSITION_NOTIFIER notifier to sen=
-d
->> the notification when the frequency of device is changed.
->> This notifier has two state as following:
->> - DEVFREQ_PRECHANGE  : Notify it before chaning the frequency of dev=
-ice
->> - DEVFREQ_POSTCHANGE : Notify it after changed the frequency of devi=
-ce
->>
->> And this patch adds the resourced-managed function to release the re=
-source
->> automatically when error happen.
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> [m.reichl and linux.amoon: Tested it on exynos4412-odroidu3 board]
->> Tested-by: Markus Reichl <m.reichl@fivetechno.de>
->> Tested-by: Anand Moon <linux.amoon@gmail.com>
->> ---
->>  drivers/devfreq/devfreq.c | 163 +++++++++++++++++++++++++++++++++++=
-++++++++++-
->>  include/linux/devfreq.h   |  58 ++++++++++++++++-
->>  2 files changed, 219 insertions(+), 2 deletions(-)
->=20
-> []
->=20
->> diff --git a/include/linux/devfreq.h b/include/linux/devfreq.h
->> index aa0b8424ebc3..152ea342529c 100644
->> --- a/include/linux/devfreq.h
->> +++ b/include/linux/devfreq.h
->> @@ -19,6 +19,13 @@
->> =20
->>  #define DEVFREQ_NAME_LEN 16
->> =20
->> +/* DEVFREQ notifier interface */
->> +#define DEVFREQ_TRANSITION_NOTIFIER	(0)
->> +
->> +/* Transition notifiers of DEVFREQ_TRANSITION_NOTIFIER */
->> +#define	DEVFREQ_PRECHANGE		(0)
->> +#define DEVFREQ_POSTCHANGE		(1)
->> +
->>  struct devfreq;
->> =20
->>  /**
->> @@ -177,6 +184,13 @@ struct devfreq {
->>  	unsigned int *trans_table;
->>  	unsigned long *time_in_state;
->>  	unsigned long last_stat_updated;
->> +
->> +	struct srcu_notifier_head transition_notifier_list;
->> +};
->=20
-> Like other properties of struct devfreq, please add
-> descriptions above. Other than that, it looks good.
-
-OK. I was missing the description. I'll add it.
-
-Best Regards,
-Chanwoo Choi
+Q3VycmVudGx5LCB3ZSBoYXZlIGEgY29tbW9uIFNBVEEzIFBIWSBkcml2ZXIgZm9yIGFsbCBCcm9h
+ZGNvbQpTVEIgU29Dcy4gVGhpcyBkcml2ZXIgY2FuIGJlIGV4dGVuZGVkIGFuZCByZS11c2VkIGZv
+ciBCcm9hZGNvbQppUHJvYyBTb0NzIGhhdmluZyBzYW1lIFNBVEEzIFBIWS4KClRoaXMgcGF0Y2gg
+cmVuYW1lcyBleGlzdGluZyBCcm9hZGNvbSBTVEIgU0FUQTMgUEhZIGRyaXZlciB0bwpjb21tb24g
+QnJvYWRjb20gU0FUQTMgUEhZIGRyaXZlciB0byBzaGFyZSB0aGlzIFBIWSBkcml2ZXIgYWNyb3Nz
+CkJyb2FkY29tIFNvQ3MuCgpTaWduZWQtb2ZmLWJ5OiBBbnVwIFBhdGVsIDxhbnVwLnBhdGVsQGJy
+b2FkY29tLmNvbT4KLS0tCiBkcml2ZXJzL3BoeS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAxOCArKysrKysrKystLS0tLS0tLS0KIGRyaXZlcnMvcGh5L01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL3BoeS97cGh5
+LWJyY21zdGItc2F0YS5jID0+IHBoeS1icmNtLXNhdGEuY30gfCAgOCArKysrLS0tLQogMyBmaWxl
+cyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKIHJlbmFtZSBkcml2
+ZXJzL3BoeS97cGh5LWJyY21zdGItc2F0YS5jID0+IHBoeS1icmNtLXNhdGEuY30gKDk3JSkKCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9LY29uZmlnIGIvZHJpdmVycy9waHkvS2NvbmZpZwppbmRl
+eCAyNjU2NmRiLi5jMDE4N2E3IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BoeS9LY29uZmlnCisrKyBi
+L2RyaXZlcnMvcGh5L0tjb25maWcKQEAgLTQwMywxNSArNDAzLDYgQEAgY29uZmlnIFBIWV9UVVNC
+MTIxMAogCWhlbHAKIAkgIFN1cHBvcnQgZm9yIFRJIFRVU0IxMjEwIFVTQiBVTFBJIFBIWS4KIAot
+Y29uZmlnIFBIWV9CUkNNU1RCX1NBVEEKLQl0cmlzdGF0ZSAiQnJvYWRjb20gU1RCIFNBVEEgUEhZ
+IGRyaXZlciIKLQlkZXBlbmRzIG9uIEFSQ0hfQlJDTVNUQiB8fCBCTUlQU19HRU5FUklDCi0JZGVw
+ZW5kcyBvbiBPRgotCXNlbGVjdCBHRU5FUklDX1BIWQotCWhlbHAKLQkgIEVuYWJsZSB0aGlzIHRv
+IHN1cHBvcnQgdGhlIFNBVEEzIFBIWSBvbiAyOG5tIG9yIDQwbm0gQnJvYWRjb20gU1RCIFNvQ3Mu
+Ci0JICBMaWtlbHkgdXNlZnVsIG9ubHkgd2l0aCBDT05GSUdfU0FUQV9CUkNNU1RCIGVuYWJsZWQu
+Ci0KIGNvbmZpZyBQSFlfQ1lHTlVTX1BDSUUKIAl0cmlzdGF0ZSAiQnJvYWRjb20gQ3lnbnVzIFBD
+SWUgUEhZIGRyaXZlciIKIAlkZXBlbmRzIG9uIE9GICYmIChBUkNIX0JDTV9DWUdOVVMgfHwgQ09N
+UElMRV9URVNUKQpAQCAtNDIxLDQgKzQxMiwxMyBAQCBjb25maWcgUEhZX0NZR05VU19QQ0lFCiAJ
+ICBFbmFibGUgdGhpcyB0byBzdXBwb3J0IHRoZSBCcm9hZGNvbSBDeWdudXMgUENJZSBQSFkuCiAJ
+ICBJZiB1bnN1cmUsIHNheSBOLgogCitjb25maWcgUEhZX0JSQ01fU0FUQQorCXRyaXN0YXRlICJC
+cm9hZGNvbSBTQVRBIFBIWSBkcml2ZXIiCisJZGVwZW5kcyBvbiBBUkNIX0JSQ01TVEIgfHwgQVJD
+SF9CQ01fSVBST0MgfHwgQk1JUFNfR0VORVJJQyB8fCBDT01QSUxFX1RFU1QKKwlkZXBlbmRzIG9u
+IE9GCisJc2VsZWN0IEdFTkVSSUNfUEhZCisJZGVmYXVsdCBBUkNIX0JDTV9JUFJPQworCWhlbHAK
+KwkgIEVuYWJsZSB0aGlzIHRvIHN1cHBvcnQgdGhlIEJyb2FkY29tIFNBVEEgUEhZLgorCSAgSWYg
+dW5zdXJlLCBzYXkgTi4KIGVuZG1lbnUKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L01ha2VmaWxl
+IGIvZHJpdmVycy9waHkvTWFrZWZpbGUKaW5kZXggMjQ1OTZhOS4uNTk2ZmFlOSAxMDA2NDQKLS0t
+IGEvZHJpdmVycy9waHkvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9waHkvTWFrZWZpbGUKQEAgLTQ5
+LDYgKzQ5LDYgQEAgb2JqLSQoQ09ORklHX1BIWV9RQ09NX1VGUykgCSs9IHBoeS1xY29tLXVmcy5v
+CiBvYmotJChDT05GSUdfUEhZX1FDT01fVUZTKSAJKz0gcGh5LXFjb20tdWZzLXFtcC0yMG5tLm8K
+IG9iai0kKENPTkZJR19QSFlfUUNPTV9VRlMpIAkrPSBwaHktcWNvbS11ZnMtcW1wLTE0bm0ubwog
+b2JqLSQoQ09ORklHX1BIWV9UVVNCMTIxMCkJCSs9IHBoeS10dXNiMTIxMC5vCi1vYmotJChDT05G
+SUdfUEhZX0JSQ01TVEJfU0FUQSkJCSs9IHBoeS1icmNtc3RiLXNhdGEubwogb2JqLSQoQ09ORklH
+X1BIWV9QSVNUQUNISU9fVVNCKQkJKz0gcGh5LXBpc3RhY2hpby11c2Iubwogb2JqLSQoQ09ORklH
+X1BIWV9DWUdOVVNfUENJRSkJCSs9IHBoeS1iY20tY3lnbnVzLXBjaWUubworb2JqLSQoQ09ORklH
+X1BIWV9CUkNNX1NBVEEpCQkrPSBwaHktYnJjbS1zYXRhLm8KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+cGh5L3BoeS1icmNtc3RiLXNhdGEuYyBiL2RyaXZlcnMvcGh5L3BoeS1icmNtLXNhdGEuYwpzaW1p
+bGFyaXR5IGluZGV4IDk3JQpyZW5hbWUgZnJvbSBkcml2ZXJzL3BoeS9waHktYnJjbXN0Yi1zYXRh
+LmMKcmVuYW1lIHRvIGRyaXZlcnMvcGh5L3BoeS1icmNtLXNhdGEuYwppbmRleCBhMjMxNzJmLi5j
+OTdiOWQ2IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BoeS9waHktYnJjbXN0Yi1zYXRhLmMKKysrIGIv
+ZHJpdmVycy9waHkvcGh5LWJyY20tc2F0YS5jCkBAIC0xLDcgKzEsNyBAQAogLyoKICAqIEJyb2Fk
+Y29tIFNBVEEzIEFIQ0kgQ29udHJvbGxlciBQSFkgRHJpdmVyCiAgKgotICogQ29weXJpZ2h0IMKp
+IDIwMDktMjAxNSBCcm9hZGNvbSBDb3Jwb3JhdGlvbgorICogQ29weXJpZ2h0IChDKSAyMDE2IEJy
+b2FkY29tCiAgKgogICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVk
+aXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKICAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
+R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5CkBAIC0yMzgsMTMgKzIz
+OCwxMyBAQCBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBicmNtX3NhdGFfcGh5X2RyaXZl
+ciA9IHsKIAkucHJvYmUJPSBicmNtX3NhdGFfcGh5X3Byb2JlLAogCS5kcml2ZXIJPSB7CiAJCS5v
+Zl9tYXRjaF90YWJsZQk9IGJyY21fc2F0YV9waHlfb2ZfbWF0Y2gsCi0JCS5uYW1lCQk9ICJicmNt
+c3RiLXNhdGEtcGh5IiwKKwkJLm5hbWUJCT0gImJyY20tc2F0YS1waHkiLAogCX0KIH07CiBtb2R1
+bGVfcGxhdGZvcm1fZHJpdmVyKGJyY21fc2F0YV9waHlfZHJpdmVyKTsKIAotTU9EVUxFX0RFU0NS
+SVBUSU9OKCJCcm9hZGNvbSBTVEIgU0FUQSBQSFkgZHJpdmVyIik7CitNT0RVTEVfREVTQ1JJUFRJ
+T04oIkJyb2FkY29tIFNBVEEgUEhZIGRyaXZlciIpOwogTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOwog
+TU9EVUxFX0FVVEhPUigiTWFyYyBDYXJpbm8iKTsKIE1PRFVMRV9BVVRIT1IoIkJyaWFuIE5vcnJp
+cyIpOwotTU9EVUxFX0FMSUFTKCJwbGF0Zm9ybTpwaHktYnJjbXN0Yi1zYXRhIik7CitNT0RVTEVf
+QUxJQVMoInBsYXRmb3JtOnBoeS1icmNtLXNhdGEiKTsKLS0gCjEuOS4xCgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
+aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
