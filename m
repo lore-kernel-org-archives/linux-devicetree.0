@@ -1,14 +1,11 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 1/5] phy: Rename phy-brcmstb-sata driver to phy-brcm-sata
- driver
-Date: Mon, 28 Mar 2016 10:18:26 +0530
-Message-ID: <1459140510-5317-2-git-send-email-anup.patel@broadcom.com>
-References: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH v2 0/5] Add SATA3 support for Broadcom NS2 SVK
+Date: Mon, 28 Mar 2016 10:18:25 +0530
+Message-ID: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459140510-5317-1-git-send-email-anup.patel@broadcom.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,67 +19,40 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.c
 Cc: Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Ray Jui <rjui@broadcom.com>, Jon Mason <jon.mason@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Q3VycmVudGx5LCB3ZSBoYXZlIGEgY29tbW9uIFNBVEEzIFBIWSBkcml2ZXIgZm9yIGFsbCBCcm9h
-ZGNvbQpTVEIgU29Dcy4gVGhpcyBkcml2ZXIgY2FuIGJlIGV4dGVuZGVkIGFuZCByZS11c2VkIGZv
-ciBCcm9hZGNvbQppUHJvYyBTb0NzIGhhdmluZyBzYW1lIFNBVEEzIFBIWS4KClRoaXMgcGF0Y2gg
-cmVuYW1lcyBleGlzdGluZyBCcm9hZGNvbSBTVEIgU0FUQTMgUEhZIGRyaXZlciB0bwpjb21tb24g
-QnJvYWRjb20gU0FUQTMgUEhZIGRyaXZlciB0byBzaGFyZSB0aGlzIFBIWSBkcml2ZXIgYWNyb3Nz
-CkJyb2FkY29tIFNvQ3MuCgpTaWduZWQtb2ZmLWJ5OiBBbnVwIFBhdGVsIDxhbnVwLnBhdGVsQGJy
-b2FkY29tLmNvbT4KLS0tCiBkcml2ZXJzL3BoeS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAxOCArKysrKysrKystLS0tLS0tLS0KIGRyaXZlcnMvcGh5L01ha2VmaWxl
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL3BoeS97cGh5
-LWJyY21zdGItc2F0YS5jID0+IHBoeS1icmNtLXNhdGEuY30gfCAgOCArKysrLS0tLQogMyBmaWxl
-cyBjaGFuZ2VkLCAxNCBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKIHJlbmFtZSBkcml2
-ZXJzL3BoeS97cGh5LWJyY21zdGItc2F0YS5jID0+IHBoeS1icmNtLXNhdGEuY30gKDk3JSkKCmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9LY29uZmlnIGIvZHJpdmVycy9waHkvS2NvbmZpZwppbmRl
-eCAyNjU2NmRiLi5jMDE4N2E3IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BoeS9LY29uZmlnCisrKyBi
-L2RyaXZlcnMvcGh5L0tjb25maWcKQEAgLTQwMywxNSArNDAzLDYgQEAgY29uZmlnIFBIWV9UVVNC
-MTIxMAogCWhlbHAKIAkgIFN1cHBvcnQgZm9yIFRJIFRVU0IxMjEwIFVTQiBVTFBJIFBIWS4KIAot
-Y29uZmlnIFBIWV9CUkNNU1RCX1NBVEEKLQl0cmlzdGF0ZSAiQnJvYWRjb20gU1RCIFNBVEEgUEhZ
-IGRyaXZlciIKLQlkZXBlbmRzIG9uIEFSQ0hfQlJDTVNUQiB8fCBCTUlQU19HRU5FUklDCi0JZGVw
-ZW5kcyBvbiBPRgotCXNlbGVjdCBHRU5FUklDX1BIWQotCWhlbHAKLQkgIEVuYWJsZSB0aGlzIHRv
-IHN1cHBvcnQgdGhlIFNBVEEzIFBIWSBvbiAyOG5tIG9yIDQwbm0gQnJvYWRjb20gU1RCIFNvQ3Mu
-Ci0JICBMaWtlbHkgdXNlZnVsIG9ubHkgd2l0aCBDT05GSUdfU0FUQV9CUkNNU1RCIGVuYWJsZWQu
-Ci0KIGNvbmZpZyBQSFlfQ1lHTlVTX1BDSUUKIAl0cmlzdGF0ZSAiQnJvYWRjb20gQ3lnbnVzIFBD
-SWUgUEhZIGRyaXZlciIKIAlkZXBlbmRzIG9uIE9GICYmIChBUkNIX0JDTV9DWUdOVVMgfHwgQ09N
-UElMRV9URVNUKQpAQCAtNDIxLDQgKzQxMiwxMyBAQCBjb25maWcgUEhZX0NZR05VU19QQ0lFCiAJ
-ICBFbmFibGUgdGhpcyB0byBzdXBwb3J0IHRoZSBCcm9hZGNvbSBDeWdudXMgUENJZSBQSFkuCiAJ
-ICBJZiB1bnN1cmUsIHNheSBOLgogCitjb25maWcgUEhZX0JSQ01fU0FUQQorCXRyaXN0YXRlICJC
-cm9hZGNvbSBTQVRBIFBIWSBkcml2ZXIiCisJZGVwZW5kcyBvbiBBUkNIX0JSQ01TVEIgfHwgQVJD
-SF9CQ01fSVBST0MgfHwgQk1JUFNfR0VORVJJQyB8fCBDT01QSUxFX1RFU1QKKwlkZXBlbmRzIG9u
-IE9GCisJc2VsZWN0IEdFTkVSSUNfUEhZCisJZGVmYXVsdCBBUkNIX0JDTV9JUFJPQworCWhlbHAK
-KwkgIEVuYWJsZSB0aGlzIHRvIHN1cHBvcnQgdGhlIEJyb2FkY29tIFNBVEEgUEhZLgorCSAgSWYg
-dW5zdXJlLCBzYXkgTi4KIGVuZG1lbnUKZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L01ha2VmaWxl
-IGIvZHJpdmVycy9waHkvTWFrZWZpbGUKaW5kZXggMjQ1OTZhOS4uNTk2ZmFlOSAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9waHkvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9waHkvTWFrZWZpbGUKQEAgLTQ5
-LDYgKzQ5LDYgQEAgb2JqLSQoQ09ORklHX1BIWV9RQ09NX1VGUykgCSs9IHBoeS1xY29tLXVmcy5v
-CiBvYmotJChDT05GSUdfUEhZX1FDT01fVUZTKSAJKz0gcGh5LXFjb20tdWZzLXFtcC0yMG5tLm8K
-IG9iai0kKENPTkZJR19QSFlfUUNPTV9VRlMpIAkrPSBwaHktcWNvbS11ZnMtcW1wLTE0bm0ubwog
-b2JqLSQoQ09ORklHX1BIWV9UVVNCMTIxMCkJCSs9IHBoeS10dXNiMTIxMC5vCi1vYmotJChDT05G
-SUdfUEhZX0JSQ01TVEJfU0FUQSkJCSs9IHBoeS1icmNtc3RiLXNhdGEubwogb2JqLSQoQ09ORklH
-X1BIWV9QSVNUQUNISU9fVVNCKQkJKz0gcGh5LXBpc3RhY2hpby11c2Iubwogb2JqLSQoQ09ORklH
-X1BIWV9DWUdOVVNfUENJRSkJCSs9IHBoeS1iY20tY3lnbnVzLXBjaWUubworb2JqLSQoQ09ORklH
-X1BIWV9CUkNNX1NBVEEpCQkrPSBwaHktYnJjbS1zYXRhLm8KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cGh5L3BoeS1icmNtc3RiLXNhdGEuYyBiL2RyaXZlcnMvcGh5L3BoeS1icmNtLXNhdGEuYwpzaW1p
-bGFyaXR5IGluZGV4IDk3JQpyZW5hbWUgZnJvbSBkcml2ZXJzL3BoeS9waHktYnJjbXN0Yi1zYXRh
-LmMKcmVuYW1lIHRvIGRyaXZlcnMvcGh5L3BoeS1icmNtLXNhdGEuYwppbmRleCBhMjMxNzJmLi5j
-OTdiOWQ2IDEwMDY0NAotLS0gYS9kcml2ZXJzL3BoeS9waHktYnJjbXN0Yi1zYXRhLmMKKysrIGIv
-ZHJpdmVycy9waHkvcGh5LWJyY20tc2F0YS5jCkBAIC0xLDcgKzEsNyBAQAogLyoKICAqIEJyb2Fk
-Y29tIFNBVEEzIEFIQ0kgQ29udHJvbGxlciBQSFkgRHJpdmVyCiAgKgotICogQ29weXJpZ2h0IMKp
-IDIwMDktMjAxNSBCcm9hZGNvbSBDb3Jwb3JhdGlvbgorICogQ29weXJpZ2h0IChDKSAyMDE2IEJy
-b2FkY29tCiAgKgogICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVk
-aXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKICAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
-R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5CkBAIC0yMzgsMTMgKzIz
-OCwxMyBAQCBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBicmNtX3NhdGFfcGh5X2RyaXZl
-ciA9IHsKIAkucHJvYmUJPSBicmNtX3NhdGFfcGh5X3Byb2JlLAogCS5kcml2ZXIJPSB7CiAJCS5v
-Zl9tYXRjaF90YWJsZQk9IGJyY21fc2F0YV9waHlfb2ZfbWF0Y2gsCi0JCS5uYW1lCQk9ICJicmNt
-c3RiLXNhdGEtcGh5IiwKKwkJLm5hbWUJCT0gImJyY20tc2F0YS1waHkiLAogCX0KIH07CiBtb2R1
-bGVfcGxhdGZvcm1fZHJpdmVyKGJyY21fc2F0YV9waHlfZHJpdmVyKTsKIAotTU9EVUxFX0RFU0NS
-SVBUSU9OKCJCcm9hZGNvbSBTVEIgU0FUQSBQSFkgZHJpdmVyIik7CitNT0RVTEVfREVTQ1JJUFRJ
-T04oIkJyb2FkY29tIFNBVEEgUEhZIGRyaXZlciIpOwogTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOwog
-TU9EVUxFX0FVVEhPUigiTWFyYyBDYXJpbm8iKTsKIE1PRFVMRV9BVVRIT1IoIkJyaWFuIE5vcnJp
-cyIpOwotTU9EVUxFX0FMSUFTKCJwbGF0Zm9ybTpwaHktYnJjbXN0Yi1zYXRhIik7CitNT0RVTEVf
-QUxJQVMoInBsYXRmb3JtOnBoeS1icmNtLXNhdGEiKTsKLS0gCjEuOS4xCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+The Broadcom NS2 SoC has a AHCI compliant SATA3 controller with
+two ports.
+
+This patchset adds common Broadcom SATA3 PHY driver and related
+DT bindings document. It also adds appropriate DT nodes in NS2 DT.
+
+The patchset is based on v4.6-rc1 tag and is available in branch
+ns2_sata3_v2 of https://github.com/Broadcom/arm64-linux.git
+
+All patches have been tested on Broadcom NS2 SVK.
+
+Changes since v1:
+ - Added ACKed by Rob for DT bindings related patches
+
+Anup Patel (5):
+  phy: Rename phy-brcmstb-sata driver to phy-brcm-sata driver
+  phy: Add support for NS2 SATA3 PHY in Broadcom SATA3 PHY driver
+  dt-bindings: phy: bindings document for common Broadcom SATA3 PHY
+    driver
+  dt-bindings: ata: add compatible string for iProc AHCI controller
+  arm64: dts: Add SATA3 AHCI and SATA3 PHY DT nodes for NS2
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |   1 +
+ ...brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} |  15 +-
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts           |  12 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  43 +++
+ drivers/phy/Kconfig                                |  18 +-
+ drivers/phy/Makefile                               |   2 +-
+ drivers/phy/phy-brcm-sata.c                        | 412 +++++++++++++++++++++
+ drivers/phy/phy-brcmstb-sata.c                     | 250 -------------
+ 8 files changed, 487 insertions(+), 266 deletions(-)
+ rename Documentation/devicetree/bindings/phy/{brcm,brcmstb-sata-phy.txt => brcm-sata-phy.txt} (69%)
+ create mode 100644 drivers/phy/phy-brcm-sata.c
+ delete mode 100644 drivers/phy/phy-brcmstb-sata.c
+
+-- 
+1.9.1
