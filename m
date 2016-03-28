@@ -1,63 +1,113 @@
-From: Xing Zheng <zhengxing@rock-chips.com>
-Subject: [PATCH v6 0/3] Add more clock compatible features and support the RK3399 clock
-Date: Mon, 28 Mar 2016 17:51:34 +0800
-Message-ID: <1459158697-8218-1-git-send-email-zhengxing@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: heiko@sntech.de, huangtao@rock-chips.com, jay.xu@rock-chips.com, elaine.zhang@rock-chips.com, dianders@chromium.org, Xing Zheng <zhengxing@rock-chips.com>, devicetree@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v6 1/3] dt-bindings: add bindings for rk3399 clock controller
+Date: Mon, 28 Mar 2016 17:51:35 +0800
+Message-ID: <1459158697-8218-2-git-send-email-zhengxing@rock-chips.com>
+References: <1459158697-8218-1-git-send-email-zhengxing@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459158697-8218-1-git-send-email-zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, elaine.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Add devicetree bindings for Rockchip cru which found on
+Rockchip SoCs.
 
-Hi,
-  The patch series add support more mux parameters and multiple
-clock providers for the rockchip features of the clock framework,
-and support the clock controller for the RK3399.
-
+Signed-off-by: Xing Zheng <zhengxing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Jianqun Xu <jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
 
 Changes in v6:
 - update some clock contents
-- fix the source of the pclkin_isp1_wrapper should be pclkin_cif
-- remove unused the GRF reference in the clock driver
-- use the frac mux type for spdif and i2s
-- remove useless defines RK3399_PMU_RSTNHOLD_CON and RK3399_PMU_GATEDIS_CON
 
-Changes in v5:
-- add some necessary clock IDs
-- keep PPLL independent into the part of the PMUCRU
-- fix PMUCRU IDs are out of range
-- add clock IDs to drivers reference
-- fix some important bugs
-- fix configuration for cpu tables
+Changes in v5: None
+Changes in v3: None
+Changes in v2: None
 
-Changes in v3:
-- rename pclkin_cif to pclkin_cifmux, add diagram and comment for
-  pclkin_cifmux
-- add the clk_test node
-- modify the cif_testout path
-- include two new patches that dt-bindings and header file from
-  Jianqun's patch series
-
-Changes in v2:
-- rename the aplll/apllb to lpll/bpll
-- add drv/sample clock nodes for sdmmc/sdio
-
-Xing Zheng (3):
-  dt-bindings: add bindings for rk3399 clock controller
-  clk: rockchip: add dt-binding header for rk3399
-  clk: rockchip: add clock controller for the RK3399
-
- .../bindings/clock/rockchip,rk3399-cru.txt         |   68 +
- drivers/clk/rockchip/Makefile                      |    1 +
- drivers/clk/rockchip/clk-rk3399.c                  | 1540 ++++++++++++++++++++
- drivers/clk/rockchip/clk.h                         |   22 +-
- include/dt-bindings/clock/rk3399-cru.h             |  752 ++++++++++
- 5 files changed, 2382 insertions(+), 1 deletion(-)
+ .../bindings/clock/rockchip,rk3399-cru.txt         |   68 ++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
- create mode 100644 drivers/clk/rockchip/clk-rk3399.c
- create mode 100644 include/dt-bindings/clock/rk3399-cru.h
 
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+new file mode 100644
+index 0000000..bb2687d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3399-cru.txt
+@@ -0,0 +1,68 @@
++* Rockchip RK3399 Clock and Reset Unit
++
++The RK3399 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
++
++Required Properties:
++
++- compatible: PMU for CRU should be "rockchip,rk3399-pmucru"
++- compatible: CRU should be "rockchip,rk3399-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing, pll rates are not changeable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3399-cru.h headers and can be
++used in device tree sources. Similar macros exist for the reset sources in
++these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "xin32k" - rtc clock - optional,
++ - "clkin_gmac" - external GMAC clock - optional,
++ - "gmac_phy_rx_clk" - external GMAC RX clock - optional,
++ - "clkin_i2s" - external I2S clock - optional,
++ - "pclkin_cif" - external ISP clock - optional,
++ - "clk_usbphy0_480m" - output clock of the pll in the usbphy0
++ - "clk_usbphy1_480m" - output clock of the pll in the usbphy1
++
++Example: Clock controller node:
++
++	pmucru: pmu-clock-controller@ff750000 {
++		compatible = "rockchip,rk3399-pmucru";
++		reg = <0x0 0xff750000 0x0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	cru: clock-controller@ff760000 {
++		compatible = "rockchip,rk3399-cru";
++		reg = <0x0 0xff760000 0x0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@ff1a0000 {
++		compatible = "rockchip,rk3399-uart", "snps,dw-apb-uart";
++		reg = <0x0 0xff180000 0x0 0x100>;
++		clocks = <&cru SCLK_UART0>, <&cru PCLK_UART0>;
++		clock-names = "baudclk", "apb_pclk";
++		interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <4>;
++	};
 -- 
 1.7.9.5
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
