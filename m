@@ -1,103 +1,96 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [PATCH v2 1/3] phy: rockchip-dp: should be a child device of the
- GRF
-Date: Mon, 28 Mar 2016 19:31:01 +0800
-Message-ID: <56F915F5.2000101@rock-chips.com>
-References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458854943-17388-1-git-send-email-heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, kishon@ti.com
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/5 v5] drm: Add support of ARC PGU display controller
+Date: Mon, 28 Mar 2016 14:36:34 +0300
+Message-ID: <1459164999-11850-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+This series add support of ARC PGU display controller.
+ARC PGU is a quite simple byte streamer that gets data from the framebuffer
+and pushes it to hte connected encoder (DP or HDMI).
 
-On 03/25/2016 05:29 AM, Heiko Stuebner wrote:
-> The displayport-phy is fully enclosed in the general register files (GRF).
-> Therefore as seen from the device-tree it shouldn't be a separate platform-
-> device but instead a sub-device of the GRF - using the simply-mfd mechanism.
->
-> The driver entered the kernel in the current merge-window, so we can still
-> adapt the binding without needing a fallback, as the binding hasn't been
-> released with a full kernel yet.
->
-> While the edp phy is fully part of the GRF, it doesn't have any separate
-> register set there, so doesn't get any register-area assigned.
->
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Thanks for your improved.
+It was tested on ARC SDP boards (axs101/103 in particular).
 
-Reviewed-by: Yakir Yang <ykk@rock-chips.com>
-> ---
-> While one of my intermediate versions did include that conversion
-> already, it looks like it was lost when the dp-phy got split out into
-> its own series and I missed that dropped change.
->
-> As mentioned in the patch description above, this is meant as a fixup for
-> kernel 4.6.
->
->   .../devicetree/bindings/phy/rockchip-dp-phy.txt        | 18 +++++++++++-------
->   drivers/phy/phy-rockchip-dp.c                          |  7 +++++--
->   2 files changed, 16 insertions(+), 9 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-> index 50c4f9b..e3b4809 100644
-> --- a/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/rockchip-dp-phy.txt
-> @@ -8,15 +8,19 @@ Required properties:
->   	of memory mapped region.
->   - clock-names: from common clock binding:
->   	Required elements: "24m"
-> -- rockchip,grf: phandle to the syscon managing the "general register files"
->   - #phy-cells : from the generic PHY bindings, must be 0;
->   
->   Example:
->   
-> -edp_phy: edp-phy {
-> -	compatible = "rockchip,rk3288-dp-phy";
-> -	rockchip,grf = <&grf>;
-> -	clocks = <&cru SCLK_EDP_24M>;
-> -	clock-names = "24m";
-> -	#phy-cells = <0>;
-> +grf: syscon@ff770000 {
-> +	compatible = "rockchip,rk3288-grf", "syscon", "simple-mfd";
-> +
-> +...
-> +
-> +	edp_phy: edp-phy {
-> +		compatible = "rockchip,rk3288-dp-phy";
-> +		clocks = <&cru SCLK_EDP_24M>;
-> +		clock-names = "24m";
-> +		#phy-cells = <0>;
-> +	};
->   };
-> diff --git a/drivers/phy/phy-rockchip-dp.c b/drivers/phy/phy-rockchip-dp.c
-> index 77e2d02..793ecb6 100644
-> --- a/drivers/phy/phy-rockchip-dp.c
-> +++ b/drivers/phy/phy-rockchip-dp.c
-> @@ -86,6 +86,9 @@ static int rockchip_dp_phy_probe(struct platform_device *pdev)
->   	if (!np)
->   		return -ENODEV;
->   
-> +	if (!dev->parent || !dev->parent->of_node)
-> +		return -ENODEV;
-> +
->   	dp = devm_kzalloc(dev, sizeof(*dp), GFP_KERNEL);
->   	if (IS_ERR(dp))
->   		return -ENOMEM;
-> @@ -104,9 +107,9 @@ static int rockchip_dp_phy_probe(struct platform_device *pdev)
->   		return ret;
->   	}
->   
-> -	dp->grf = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
-> +	dp->grf = syscon_node_to_regmap(dev->parent->of_node);
->   	if (IS_ERR(dp->grf)) {
-> -		dev_err(dev, "rk3288-dp needs rockchip,grf property\n");
-> +		dev_err(dev, "rk3288-dp needs the General Register Files syscon\n");
->   		return PTR_ERR(dp->grf);
->   	}
->   
+Note following series that introduces
+drm_connector_register_all()/drm_connector_unregister_all() is a prerequisite
+now: https://lkml.org/lkml/2016/3/23/61
+
+Changes v4 -> v5:
+ * Removed encode node from DT bindings example (as suggested by Rob)
+
+Changes v3 -> v4:
+ * Main driver author is now set properly (thanks Carlos for all your efforts)
+ * Implemented correct hsync and vsync setup (thanks Jose)
+ * Dummy call-backs were removed (as suggested by Daniel)
+ * Obsolete load()/unload() call-backs were removed (as suggested by Daniel)
+ * With above in mind we were able to adopt recently introduced
+   drm_connector_register_all()/drm_connector_unregister_all()
+ * Implemented setup of properties (uncached) for FB user-pages
+ * Minor clean-up in DT binding docs and axs10x_mb.dtsi
+
+Changes v2 -> v3:
+ * Improved failure path if arcpgu_connector wasn't allocated.
+ * Fixed driver building as module.
+ * Implemented uncached mapping of user-space FB pages.
+ * Again updated DT bindings docs.
+
+Changes v1 -> v2:
+ * Clean-up of DT bindings documentation.
+ * Added missing "pxlclk" clock in axs10x_mb.dtsi.
+
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Alexey Brodkin (4):
+  drm: Add DT bindings documentation for ARC PGU display controller
+  MAINTAINERS: Add maintainer for ARC PGU display controller
+  arc: Add our own implementation of fb_pgprotect()
+  arc: axs10x - add support of ARC PGU
+
+Carlos Palminha (1):
+  drm: Add support of ARC PGU display controller
+
+ .../devicetree/bindings/display/snps,arcpgu.txt    |  35 +++
+ MAINTAINERS                                        |   6 +
+ arch/arc/boot/dts/axs10x_mb.dtsi                   |  61 +++++
+ arch/arc/include/asm/fb.h                          |  19 ++
+ drivers/gpu/drm/Kconfig                            |   2 +
+ drivers/gpu/drm/Makefile                           |   1 +
+ drivers/gpu/drm/arc/Kconfig                        |  10 +
+ drivers/gpu/drm/arc/Makefile                       |   2 +
+ drivers/gpu/drm/arc/arcpgu.h                       |  50 ++++
+ drivers/gpu/drm/arc/arcpgu_crtc.c                  | 257 +++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_drv.c                   | 282 +++++++++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_hdmi.c                  | 201 +++++++++++++++
+ drivers/gpu/drm/arc/arcpgu_regs.h                  |  40 +++
+ 13 files changed, 966 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+ create mode 100644 arch/arc/include/asm/fb.h
+ create mode 100644 drivers/gpu/drm/arc/Kconfig
+ create mode 100644 drivers/gpu/drm/arc/Makefile
+ create mode 100644 drivers/gpu/drm/arc/arcpgu.h
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_crtc.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_drv.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_hdmi.c
+ create mode 100644 drivers/gpu/drm/arc/arcpgu_regs.h
+
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
