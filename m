@@ -1,106 +1,77 @@
-From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V3 2/3] vfio, platform: make reset driver a requirement by default
-Date: Mon, 28 Mar 2016 09:35:23 -0400
-Message-ID: <1459172124-6730-3-git-send-email-okaya@codeaurora.org>
-References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v14 3/4] ARM64: add SBSA Generic Watchdog device node in
+ amd-seattle-soc.dtsi
+Date: Mon, 28 Mar 2016 06:46:20 -0700
+Message-ID: <56F935AC.3020009@roeck-us.net>
+References: <1456735610-22012-1-git-send-email-fu.wei@linaro.org>
+ <1456735610-22012-4-git-send-email-fu.wei@linaro.org>
+ <CADyBb7shY-A-DTKEvNQS71SUtNmE6tkURfWDEb-_9eB-4htGWA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CADyBb7shY-A-DTKEvNQS71SUtNmE6tkURfWDEb-_9eB-4htGWA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Fu Wei <fu.wei@linaro.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, Richard Ruigrok <rruigrok@codeaurora.org>, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Timur Tabi <timur@codeaurora.org>, Dave Young <dyoung@redhat.com>, Pratyush Anand <panand@redhat.com>, G Gregory <graeme.gregory@linaro.org>, Al Stone <al.stone@linaro.org>, Hanjun Guo <hanjun.guo@linaro.org>, Jon Masters <jcm@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Leo Duran <leo.duran@amd.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The code was allowing platform devices to be used without a supporting VFIO
-reset driver. The hardware can be left in some inconsistent state after a
-guest machine abort.
+On 03/28/2016 06:12 AM, Fu Wei wrote:
+> Hi Wim, Guenter:
+>
+> Great thanks for reviewing and applying this patchset :-)
+> Now I can see almost all the patches of this patchset have been merged
+> into the master branch of mainline kernel.
+> But only this one is still out of any branch or repo. It seems that
+> it's applied on linux-watchdog for a while, then disappeared.
+>
+>
+> So any thing I can do for this patch? Do I need to resubmit it?
+> Maybe I miss it in some repo? Could you help me ?
+> Great thanks ! :-)
+>
 
-The reset driver will put the hardware back to safe state and disable
-interrupts before returning the control back to the host machine.
+If I recall correctly, it was supposed to go in through some other tree (arm-soc ?)
 
-Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
----
- drivers/vfio/platform/vfio_amba.c             | 5 +++++
- drivers/vfio/platform/vfio_platform.c         | 5 +++++
- drivers/vfio/platform/vfio_platform_common.c  | 8 +++++++-
- drivers/vfio/platform/vfio_platform_private.h | 1 +
- 4 files changed, 18 insertions(+), 1 deletion(-)
+Guenter
 
-diff --git a/drivers/vfio/platform/vfio_amba.c b/drivers/vfio/platform/vfio_amba.c
-index a66479b..7585902 100644
---- a/drivers/vfio/platform/vfio_amba.c
-+++ b/drivers/vfio/platform/vfio_amba.c
-@@ -23,6 +23,10 @@
- #define DRIVER_AUTHOR   "Antonios Motakis <a.motakis@virtualopensystems.com>"
- #define DRIVER_DESC     "VFIO for AMBA devices - User Level meta-driver"
- 
-+static bool reset_required = true;
-+module_param(reset_required, bool, 0644);
-+MODULE_PARM_DESC(reset_required, "override reset requirement (default: 1)");
-+
- /* probing devices from the AMBA bus */
- 
- static struct resource *get_amba_resource(struct vfio_platform_device *vdev,
-@@ -68,6 +72,7 @@ static int vfio_amba_probe(struct amba_device *adev, const struct amba_id *id)
- 	vdev->get_resource = get_amba_resource;
- 	vdev->get_irq = get_amba_irq;
- 	vdev->parent_module = THIS_MODULE;
-+	vdev->reset_required = reset_required;
- 
- 	ret = vfio_platform_probe_common(vdev, &adev->dev);
- 	if (ret) {
-diff --git a/drivers/vfio/platform/vfio_platform.c b/drivers/vfio/platform/vfio_platform.c
-index b1cc3a7..ef89146 100644
---- a/drivers/vfio/platform/vfio_platform.c
-+++ b/drivers/vfio/platform/vfio_platform.c
-@@ -23,6 +23,10 @@
- #define DRIVER_AUTHOR   "Antonios Motakis <a.motakis@virtualopensystems.com>"
- #define DRIVER_DESC     "VFIO for platform devices - User Level meta-driver"
- 
-+static bool reset_required = true;
-+module_param(reset_required, bool, 0644);
-+MODULE_PARM_DESC(reset_required, "override reset requirement (default: 1)");
-+
- /* probing devices from the linux platform bus */
- 
- static struct resource *get_platform_resource(struct vfio_platform_device *vdev,
-@@ -66,6 +70,7 @@ static int vfio_platform_probe(struct platform_device *pdev)
- 	vdev->get_resource = get_platform_resource;
- 	vdev->get_irq = get_platform_irq;
- 	vdev->parent_module = THIS_MODULE;
-+	vdev->reset_required = reset_required;
- 
- 	ret = vfio_platform_probe_common(vdev, &pdev->dev);
- 	if (ret)
-diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
-index c28883a..67a3163 100644
---- a/drivers/vfio/platform/vfio_platform_common.c
-+++ b/drivers/vfio/platform/vfio_platform_common.c
-@@ -637,7 +637,13 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
- 		return ret;
- 	}
- 
--	vfio_platform_get_reset(vdev);
-+	ret = vfio_platform_get_reset(vdev);
-+	if (ret && vdev->reset_required) {
-+		pr_err("vfio: no reset function found for device %s\n",
-+		       vdev->name);
-+		iommu_group_put(group);
-+		return ret;
-+	}
- 	mutex_init(&vdev->igate);
- 
- 	return 0;
-diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
-index 1b95adf..b5a699a 100644
---- a/drivers/vfio/platform/vfio_platform_private.h
-+++ b/drivers/vfio/platform/vfio_platform_private.h
-@@ -50,6 +50,7 @@ struct vfio_platform_region {
- };
- 
- struct vfio_platform_device {
-+	bool				reset_required;
- 	struct vfio_platform_region	*regions;
- 	u32				num_regions;
- 	struct vfio_platform_irq	*irqs;
--- 
-1.8.2.1
+> On 29 February 2016 at 16:46,  <fu.wei@linaro.org> wrote:
+>> From: Fu Wei <fu.wei@linaro.org>
+>>
+>> This can be a example of adding SBSA Generic Watchdog device node
+>> into some dts files for the Soc which contains SBSA Generic Watchdog.
+>>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+>> Signed-off-by: Fu Wei <fu.wei@linaro.org>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>>   arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 8 ++++++++
+>>   1 file changed, 8 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+>> index 2874d92..0a8ca1d 100644
+>> --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+>> +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+>> @@ -84,6 +84,14 @@
+>>                          clock-names = "uartclk", "apb_pclk";
+>>                  };
+>>
+>> +               watchdog0: watchdog@e0bb0000 {
+>> +                       compatible = "arm,sbsa-gwdt";
+>> +                       reg = <0x0 0xe0bc0000 0 0x1000>,
+>> +                               <0x0 0xe0bb0000 0 0x1000>;
+>> +                       interrupts = <0 337 4>;
+>> +                       timeout-sec = <15>;
+>> +               };
+>> +
+>>                  spi0: ssp@e1020000 {
+>>                          status = "disabled";
+>>                          compatible = "arm,pl022", "arm,primecell";
+>> --
+>> 2.5.0
+>>
+>
+>
+>
+
