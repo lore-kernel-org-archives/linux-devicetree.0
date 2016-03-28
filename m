@@ -1,66 +1,51 @@
-From: Fu Wei <fu.wei@linaro.org>
-Subject: Re: [PATCH v14 3/4] ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
-Date: Tue, 29 Mar 2016 01:16:58 +0800
-Message-ID: <CADyBb7v68k9kPxLT403nD=b3EVWb+_571HPGpfa9q5a21+VfDA@mail.gmail.com>
-References: <1456735610-22012-1-git-send-email-fu.wei@linaro.org>
-	<1456735610-22012-4-git-send-email-fu.wei@linaro.org>
-	<CADyBb7shY-A-DTKEvNQS71SUtNmE6tkURfWDEb-_9eB-4htGWA@mail.gmail.com>
-	<56F935AC.3020009@roeck-us.net>
-	<20160328141136.GA13855@dhcppc0.redhat.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 09/17] watchdog: qcom: add kpss-standalone to device tree binding
+Date: Mon, 28 Mar 2016 12:26:44 -0500
+Message-ID: <CAL_JsqJYgHYOSOUAK+Fp6Y_bh=mpt7OdbzW50gUy6ikz5k-j-Q@mail.gmail.com>
+References: <1458770712-10880-1-git-send-email-mmcclint@codeaurora.org>
+ <1458770712-10880-10-git-send-email-mmcclint@codeaurora.org>
+ <20160325141521.GA12357@rob-hp-laptop> <0F389D09-1165-4686-98DF-0265351A086A@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160328141136.GA13855@dhcppc0.redhat.com>
+In-Reply-To: <0F389D09-1165-4686-98DF-0265351A086A@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pratyush Anand <panand@redhat.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Wim Van Sebroeck <wim@iguana.be>, Jon Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linaro ACPI Mailman List <linaro-acpi@lists.linaro.org>, Richard Ruigrok <rruigrok@codeaurora.org>, "Abdulhamid, Harb" <harba@codeaurora.org>, Christopher Covington <cov@codeaurora.org>, Timur Tabi <timur@codeaurora.org>, Dave Young <dyoung@redhat.co>
+To: Matthew McClintock <mmcclint@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, qca-upstream.external@qca.qualcomm.com, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pratyush, Guenter,
-
-On 28 March 2016 at 22:11, Pratyush Anand <panand@redhat.com> wrote:
-> On 28/03/2016:06:46:20 AM, Guenter Roeck wrote:
->> On 03/28/2016 06:12 AM, Fu Wei wrote:
->> >Hi Wim, Guenter:
->> >
->> >Great thanks for reviewing and applying this patchset :-)
->> >Now I can see almost all the patches of this patchset have been merged
->> >into the master branch of mainline kernel.
->> >But only this one is still out of any branch or repo. It seems that
->> >it's applied on linux-watchdog for a while, then disappeared.
->> >
->> >
->> >So any thing I can do for this patch? Do I need to resubmit it?
->> >Maybe I miss it in some repo? Could you help me ?
->> >Great thanks ! :-)
->> >
+On Mon, Mar 28, 2016 at 12:02 PM, Matthew McClintock
+<mmcclint@codeaurora.org> wrote:
+> On Mar 25, 2016, at 9:15 AM, Rob Herring <robh@kernel.org> wrote:
 >>
->> If I recall correctly, it was supposed to go in through some other tree (arm-soc ?)
+>> On Wed, Mar 23, 2016 at 05:05:04PM -0500, Matthew McClintock wrote:
+>>> Update the compatible string to add new device tree binding
+>>>
+>>> CC: linux-watchdog@vger.kernel.org
+>>> Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
+>>> ---
+>>> Documentation/devicetree/bindings/watchdog/qcom-wdt.txt | 1 +
+>>> 1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>>> index 60bb2f98..45b37cf 100644
+>>> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>>> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.txt
+>>> @@ -6,6 +6,7 @@ Required properties :
+>>>
+>>>                      "qcom,kpss-timer"
+>>>                      "qcom,scss-timer"
+>>> +                    "qcom,kpss-standalone"
+>>
+>> What SoC(s) is this in. Use SoC specific compatible strings please.
 >
-> Yes, it should have gone through arm-soc tree. But, it seems it got missed.  The
-> other dt patch for foundation-v8 is there in v4.6 pull request
-> [https://lkml.org/lkml/2016/3/20/244].
+> So ipq4019 wins the race because we are the first to try to enable watchdog for this block?
 
-Yes, I thought it should be in arm-soc, but I have checked several
-branches in arm-soc repo, I can't find this patch.
-So can someone help to apply it.  I have applied it on the master
-branch of latest mainline kernel locally, I don't see any conflict.
+Yep, that's how it is supposed to work. Newer chips claim
+compatibility with older ones.
 
-Great thanks :-)
+> qcom,kpss-ipq4019 ?
 
->
-> ~Pratyush
+Yes, but generally <vendor>,<soc>-<block> is preferred order.
 
-
-
--- 
-Best regards,
-
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
+Rob
