@@ -1,137 +1,41 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Mon, 28 Mar 2016 23:07:59 +0100
-Message-ID: <CACvgo516ewfwGCpV=noX+re1x8t3Sp1t39Sha+A2-tQ5YsoihA@mail.gmail.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <13797722.SiyveTZ1bB@diego>
- <CACvgo52vL5_HQfgfnxRMzSJXYw-sWT3QozZaWswQXHr9-bwBSA@mail.gmail.com>
- <1571169.Hy8an0n7lM@diego>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v17 2/6] ARM: socfpga: add bindings document for fpga
+ bridge drivers
+Date: Mon, 28 Mar 2016 17:09:23 -0500
+Message-ID: <20160328220923.GA12212@rob-hp-laptop>
+References: <1456442711-29138-1-git-send-email-atull@opensource.altera.com>
+ <1456442711-29138-3-git-send-email-atull@opensource.altera.com>
+ <20160305043455.GA19011@rob-hp-laptop>
+ <alpine.DEB.2.02.1603151657110.24255@linuxheads99>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1571169.Hy8an0n7lM@diego>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
-Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1603151657110.24255@linuxheads99>
+Sender: linux-doc-owner@vger.kernel.org
+To: atull <atull@opensource.altera.com>
+Cc: pantelis.antoniou@konsulko.com, Moritz Fischer <moritz.fischer@ettus.com>, gregkh@linuxfoundation.org, monstr@monstr.eu, michal.simek@xilinx.com, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, delicious.quinoa@gmail.com, dinguyen@opensource.altera.com, Matthew Gerlach <mgerlach@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjggTWFyY2ggMjAxNiBhdCAyMjo0NiwgSGVpa28gU3TDvGJuZXIgPGhlaWtvQHNudGVjaC5k
-ZT4gd3JvdGU6Cj4gQW0gTW9udGFnLCAyOC4gTcOkcnogMjAxNiwgMjI6MzU6MzYgc2NocmllYiBF
-bWlsIFZlbGlrb3Y6Cj4+IE9uIDI4IE1hcmNoIDIwMTYgYXQgMTk6NDQsIEhlaWtvIFN0w7xibmVy
-IDxoZWlrb0BzbnRlY2guZGU+IHdyb3RlOgo+PiA+IEFtIE1vbnRhZywgMjguIE3DpHJ6IDIwMTYs
-IDEzOjIxOjAyIHNjaHJpZWIgRW1pbCBWZWxpa292Ogo+PiA+PiBPbiAyMiBNYXJjaCAyMDE2IGF0
-IDAwOjQyLCBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPiB3cm90ZToKPj4gPj4gPiBI
-aSBZYWtpciwKPj4gPj4gPgo+PiA+PiA+IEFtIE1vbnRhZywgMjEuIE3DpHJ6IDIwMTYsIDIwOjE3
-OjQ2IHNjaHJpZWIgWWFraXIgWWFuZzoKPj4gPj4gPj4gT24gMDMvMjEvMjAxNiAwNzoyOSBQTSwg
-SGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4+ID4+ID4+ID4gQW0gTW9udGFnLCAyMS4gTcOkcnogMjAx
-NiwgMTc6Mjg6Mzggc2NocmllYiBZYWtpciBZYW5nOgo+PiA+PiA+PiA+PiBUaGlzIHBhdGNoIHNl
-dCB3b3VsZCBhZGQgdGhlIFJHQSBkaXJlY3QgcmVuZGVyaW5nIGJhc2VkIDJkIGdyYXBoaWNzCj4+
-ID4+ID4+ID4+IGFjY2VsZXJhdGlvbiBtb2R1bGUuCj4+ID4+ID4+ID4KPj4gPj4gPj4gPiB2ZXJ5
-IGNvb2wgdG8gc2VlIHRoYXQuCj4+ID4+ID4+Cj4+ID4+ID4+IDspCj4+ID4+ID4+Cj4+ID4+ID4+
-ID4+IFRoaXMgcGF0Y2ggc2V0IGlzIGJhc2VkIG9uIGdpdCByZXBvc2l0b3J5IGJlbG93Ogo+PiA+
-PiA+PiA+PiBnaXQ6Ly9wZW9wbGUuZnJlZWRlc2t0b3Aub3JnL35haXJsaWVkL2xpbnV4IGRybS1u
-ZXh0Cj4+ID4+ID4+ID4+IGNvbW1pdCBpZDogNTY4ZDdjNzY0YWUwMWYzNzA2MDg1YWM4ZjBkOGE4
-YWM3ZTgyNmJkNwo+PiA+PiA+PiA+Pgo+PiA+PiA+PiA+PiBBbmQgdGhlIFJHQSBkcml2ZXIgaXMg
-YmFzZWQgb24gRXh5bm9zIEcyRCBkcml2ZXIsIGl0IG9ubHkgbWFuYWdlcwo+PiA+PiA+PiA+PiB0
-aGUKPj4gPj4gPj4gPj4gY29tbWFuZCBsaXN0cyByZWNlaXZlZCBmcm9tIHVzZXIsIHNvIHVzZXIg
-c2hvdWxkIG1ha2UgdGhlIGNvbW1hbmQKPj4gPj4gPj4gPj4gbGlzdAo+PiA+PiA+PiA+PiB0byBk
-YXRhIGFuZCByZWdpc3RlcnMgbmVlZGVkIGJ5IG9wZXJhdGlvbiB0byB1c2UuCj4+ID4+ID4+ID4+
-Cj4+ID4+ID4+ID4+IEkgaGF2ZSBwcmVwYXJlZCBhbiB1c2Vyc3BhY2UgZGVtbyBhcHBsaWNhdGlv
-biBmb3IgdGVzdGluZzoKPj4gPj4gPj4gPj4gICAgaHR0cHM6Ly9naXRodWIuY29tL3lha2lyLVlh
-bmcvbGliZHJtLXJvY2tjaGlwCj4+ID4+ID4+ID4+Cj4+ID4+ID4+ID4+IFRoYXQgaXMgYSByb2Nr
-Y2hpcCBsaWJkcm0gbGlicmFyeSwgYW5kIEkgaGF2ZSB3cml0ZSBhIHNpbXBsZSB0ZXN0Cj4+ID4+
-ID4+ID4+IGNhc2UKPj4gPj4gPj4gPj4gInJvY2tjaGlwX3JnYV90ZXN0IiB0aGF0IHdvdWxkIHRl
-c3QgdGhlIGJlbG93IFJHQSBmZWF0dXJlczoKPj4gPj4gPj4gPj4gLSBzb2xpZAo+PiA+PiA+PiA+
-PiAtIGNvcHkKPj4gPj4gPj4gPj4gLSByb3RhdGlvbgo+PiA+PiA+PiA+PiAtIGZsaXAKPj4gPj4g
-Pj4gPj4gLSB3aW5kb3cgY2xpcAo+PiA+PiA+PiA+PiAtIGRpdGhlcmluZwo+PiA+PiA+PiA+Cj4+
-ID4+ID4+ID4gRGlkIHlvdSBzdWJtaXQgeW91ciBsaWJkcm0gY2hhbmdlcyBhcyB3ZWxsPwo+PiA+
-PiA+PiA+Cj4+ID4+ID4+ID4gVXNlcnNwYWNlLWludGVyZmFjZXMgbmVlZCB0byBiZSBzdGFibGUg
-c28gdGhlIG90aGVyIHNpZGUgbXVzdCBhbHNvCj4+ID4+ID4+ID4gZ2V0Cj4+ID4+ID4+ID4gYWNj
-ZXB0ZWQgLSBldmVuIGJlZm9yZSB0aGUga2VybmVsIGNoYW5nZSBpZiBJIHJlbWVtYmVyIGNvcnJl
-Y3RseS4KPj4gPj4gPj4KPj4gPj4gPj4gR290IGl0LCBhbmQgSSBqdXN0IHNhdyBleHlub3NfZmlt
-ZzJkIGFscmVhZHkgbGFuZGVkIGF0IG1haW5saW5lCj4+ID4+ID4+IGxpYmRybS4KPj4gPj4gPj4g
-QnV0IEkgZG9uJ3QgZmluZCB0aGUgd2F5IHRvIHN1Ym1pdCBwYXRjaGVzIHRvIGxpYmRybSwgd291
-bGQgeW91IGxpa2UKPj4gPj4gPj4gc2hhcmUgc29tZSBoZWxwcyBoZXJlIDspCj4+ID4+ID4KPj4g
-Pj4gPiBMb29raW5nIGF0IHRoZSBsaWJkcm0gc291cmNlcyBvbiBjZ2l0LmZyZWVkZXNrdG9wLm9y
-ZywgSSBkaWQgbm90IGZpbmQKPj4gPj4gPiBhbnkKPj4gPj4gPiBzcGVjaWZpYyBtYW51YWwgb24g
-c3VibWl0dGluZyBwYXRjaGVzLgo+PiA+PiA+Cj4+ID4+ID4gQnV0IGxvb2tpbmcgYXQgdGhlIGRy
-aS1saXN0IGFyY2hpdmUsIGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcgaXMKPj4gPj4g
-PiB0aGUKPj4gPj4gPiByaWdodCBsaXN0IGFuZCBsb29raW5nIGF0IHRoZSBsaWJkcm0gaGlzdG9y
-eSBpdCBsb29rcyBsaWtlIEVtaWwgVmVsaWtvdgo+PiA+PiA+IDxlbWlsLmwudmVsaWtvdkBnbWFp
-bC5jb20+IHNlZW1zIHRvIGJlIGRvaW5nIG1haW50ZW5hbmNlLXN0dWZmIGluCj4+ID4+ID4gbGli
-ZHJtLgo+PiA+PiA+IEFuZCBhcyBhIDNyZCByZWNpcGllbnQsIHBsZWFzZSBhbHNvIGluY2x1ZGUg
-dGhlIGxpbnV4LXJvY2tjaGlwIGxpc3QuCj4+ID4+ID4KPj4gPj4gPiBARW1pbCwgcGxlYXNlIHNo
-b3V0IGlmIEkgcmVhZCB0aGF0IHdyb25nIDotKQo+PiA+Pgo+PiA+PiBZb3UgZ290IGl0IHNwb3Qg
-b24gSGVpa28uIFRoZXJlIGFyZSBhIGZldyBub3RlcyB0aG91Z2guLi4KPj4gPj4KPj4gPj4gQXMg
-b25lIHJldXNlcyB0aGUgZXhpc3RpbmcgaGFyZHdhcmUvSVAgYmxvY2ssIGl0IHdvdWxkIGJlIGJl
-dHRlciB0bwo+PiA+PiBhdm9pZCBjb3B5L3Bhc3RpbmcgY29kZSBhcm91bmQuCj4+ID4+Cj4+ID4+
-IE5hbWVseToKPj4gPj4gIC0gKGlmIHBvc3NpYmxlKSBmYWN0b3Igb3V0IHRoZSBleHlub3MgZzJk
-IGtlcm5lbCBmdW5jdGlvbmFsaXR5IHRvIGEKPj4gPj4KPj4gPj4gc2VwYXJhdGUga2VybmVsIG1v
-ZHVsZSBhbmQgd2lyZSB1cCB0aGUgcm9ja2hpcCAodmlhIGR0ID8pIHRvIHVzZSBpdAo+PiA+Pgo+
-PiA+PiAgLSBmYWN0b3Igb3V0IHRoZSBnMmQgc3BlY2lmaWNzIG91dCBvZiBleHlub3NfZHJtLmgg
-KGludG8KPj4gPj4KPj4gPj4gZXh5bm9zX2cyZF9kcm0uaCBwZXJoYXBzID8pIGFuZCBtYWtlIHN1
-cmUgZXh5bm9zX2RybS5oIGluY2x1ZGVzIHRoZQo+PiA+PiBuZXcgaGVhZGVyCj4+ID4KPj4gPiBJ
-IHRoaW5rIHRoZSBJUCBibG9ja3MgdGhlbXNlbGYgYXJlIHF1aXRlIGRpZmZlcmVudCBiZXR3ZWVu
-IFJvY2tjaGlwJ3MgUkdBCj4+ID4gYW5kIFNhbXN1bmcncyBnMmQgYW5kIEkgZ3Vlc3MgdGhlIHNp
-bWlsYXJpdGllcyBhcmUgbW9yZSBhbG9uZyB0aGUgbGluZXMKPj4gPiBvbiBob3cgdGhhdCBnZXRz
-IGludGVncmF0ZWQgaW50byB0aGUgcmVzcGVjdGl2ZSBkcm0gZHJpdmVyIGFuZCB1c2Vyc3BhY2Uu
-Cj4+IEluIHRoaXMgY2FzZSwgdGhlIGV4eW5vc19nMmRfZHJtLmggc2VlbXMgbGlrZSBhIGdvb2Qg
-aWRlYS4gQXMgSSdtCj4+IG9idmlvdXNseSBiaWFzZWQsIGl0J3MgYmV0dGVyIHRvIGNoZWNrIGhv
-dyBvdGhlcnMgZmVlbCBvbiB0aGUgdG9waWMuCj4+Cj4+ID4+ICAtIGlmIG5laXRoZXIgb2YgdGhl
-c2UgYXJlIHBvc3NpYmxlLCB0aGVuIHBsZWFzZSBlbnN1cmUgdGhhdCB0aGUgbmV3Cj4+ID4+Cj4+
-ID4+IGhlYWRlciB1c2VzIGNvcnJlY3QgdHlwZXMgKHNlZSB0aGUgZG9jcyBbMV0pLCB1c2UgTUlU
-L1gxMSBsaWNlbnNlIChpZgo+PiA+PiBwb3NzaWJsZSkgYW5kIGxpbmsgd2hlcmUgdXBzdHJlYW0g
-dXNlcnNwYWNlIGlzIGhhcHB5IHdpdGggdGhlCj4+ID4+IGludGVyZmFjZSAoaWRlYWxseSBtb3Jl
-IHRoYW4gYSBzaW1wbGUgdGVzdCBhcHAgbGlrZSBsaWJkcm0pCj4+ID4+IFRoZXNlIG1pZ2h0IHNv
-dW5kIGxpa2UgYW4gb3ZlcmtpbGwsIGFsdGhvdWdoIGdldHRpbmcgVUFQSSByaWdodCBhbmQKPj4g
-Pj4gbWFpbnRhaW5pbmcgaXQgZm9yZXZlciBmb3JjZXMgdXMgdG8gZG8gc28uCj4+ID4KPj4gPiBB
-cyBmb3IgYSByZWFsLXdvcmxkIHVzZWNhc2UsIG1heWJlIHRoZSBhcm1zb2MgeHNlcnZlciBtaWdo
-dCBiZSBzb21ld2hhdAo+PiA+IGVhc3kgdG8gdXNlLiBXaGlsZSB0aGUgY29yZSBjaGFuZ2VzIEkg
-ZGlkIGFyZSBpbiB0aGUgY29yZSBwcm9qZWN0Cj4+ID4gYWxyZWFkeSwgSSdtIHN0aWxsIGtlZXBp
-bmcgdGhlIGFjdHVhbCBSb2NrY2hpcCBzdXBwb3J0IHNlcGFyYXRlIFswXSBkdWUKPj4gPiB0byB0
-aGUgbm90LXlldC0gcmVzb2x2ZWQgY3JlYXRlX2dlbSBpb2N0bC4KPj4gPgo+PiA+IEFueXdheSwg
-dGhlIGFybXNvYyB4c2VydmVyIGhhcyBzb21lIGV4YSBpbXBsZW1lbnRhdGlvbiBob29rcyB3ZXJl
-IEkgZ3Vlc3MKPj4gPiBpdCBtaWdodCBiZSByZWxhdGl2ZWx5IGVhc3kgdG8gaG9vayB1cCBzb2Mt
-c3BlY2lmaWMgdGhpbmdzLgo+Pgo+PiBPdWNoIHRoZSBhcm1zb2MgZGR4Li4uIExhc3QgdGltZSBJ
-J3ZlIGNoZWNrZWQgaXQgZmVsdCBsaWtlIGEgcGxhY2UKPj4gd2hlcmUgZXZlcnlvbmUgaXMgZG9p
-bmcgaGlzIG93biB0aGluZywgd2l0aCBubyBhY3R1YWwgcmV2aWV3cyBhbmQvb3IKPj4gbWFpbnRh
-aW5lci4KPgo+IFRoZSBkZXZlbG9wbWVudCByYXRlIGlzIHByZXR0eSBsb3cgYW5kIG1haW50YWlu
-ZXJzaGlwIGlzIHVuY2xlYXIgYnV0IHRoZSBwZXItCj4gc29jIHZvb2RvbyBpcyBxdWl0ZSBsaW1p
-dGVkIHRvIHRoZSBHRU0tY3JlYXRpb24gYW5kIGV2ZXJ5dGhpbmcgZWxzZSBzZWVtcwo+IHNvbWV3
-aGF0IG5pY2Ugd2hlbiBjb21wYXJlZCBmb3IgZXhhbXBsZSB0byB0aGUgb2xkZXIgdmVyc2lvbnMg
-b2YgdGhlIGRkeC4KPgo+Cj4+IElpcmMgbW9zdC9hbGwgb2YgaXQncyBmdW5jdGlvbmFsaXR5IHdh
-cyBhY2hpZXZhYmxlIHdpdGgKPj4gbW9kZXNldHRpbmcgZGR4ICh3aXRoIG9yIHdpdGhvdXQgZ2xh
-bW9yKSA/IEkgdGFrZSBpdCB0aGF0IHRoaW5ncyBoYXZlCj4+IGNoYW5nZWQgYW5kL29yIEkgbWlz
-dW5kZXJzdG9vZCBzb21ldGhpbmcgPwo+Cj4gSSBkb24ndCByZWFsbHkgdW5kZXJzdGFuZCB0aGF0
-IHdob2xlIHN0YWNrIG9yIGhvdyB4c2VydmVycyB3b3JrIG9uIGEgd2hvbGUgOy0pCj4gSSB3YXMg
-bWVyZWx5IGFibGUgdG8gbWFrZSB0aGUgX2JpbmFyeV8gbWFsaS1kcml2ZXIgd29yayB3aXRoIHRo
-aXMgb25lIGFuZAo+IHJlbWVtYmVyZWQgdGhhdCB0aGVyZSB3ZXJlIGhvb2tzIGZvciBmdXR1cmUg
-cGVyLXNvYyBleGEgZnVuY3Rpb25zLgo+Cj4gSSBndWVzcyBmb3IgdGhhdCBnbGFtb3IgdGhpbmcg
-eW91J2QgbmVlZCBhbiBhY3R1YWwgZ3B1IGRyaXZlciBhbmQgbm90IHRoYXQKPiBsaWJHTC1vdmVy
-cmlkZSB2b29kb28gdGhvc2UgY3JhenkgYmluYXJ5IGRyaXZlcnMgZG8uCj4KPiBBdCBsZWFzdCB0
-aGUgbW9kZXNldHRpbmcgZGR4IGRpZG4ndCBsaWtlIG1hbGktYmluYXJ5LWRyaXZlci4KPgpBIHF1
-aWNrIHJ1bmRvd24gb2YgdGhlIHdob2xlIHRoaW5nIChzaW1wbGlmaWVkIGFuZCBtYXliZSBzbGln
-aHRseSBvZmYpCi0gdGhlIG1vZGVzZXR0aW5nIEREWCAobWVyZ2VkIGluIHhzZXJ2ZXIgZm9yIGEg
-ZmV3IHJlbGVhc2VzIG5vdyksCnJlbGllcyBvbiBHQk0gZm9yIGJ1ZmZlciBtYW5hZ2VtZW50IGFu
-ZCBHTHssRVN9IGZvciBhY2NlbGVyYXRpb24uIE9uCnRoZSBLTVMgc2lkZSBpdCdzIGFzIGdlbmVy
-aWMgYXMgYW55IG90aGVyIGRyaXZlciBzaG91bGQgYmUuCgpJJ20gbm90IHN1cmUgaG93IHdlbGwg
-bW9kZXNldHRpbmcgd29ya3Mgd2l0aG91dCBnYm0sIGJ1dCBpdCBzaG91bGQgYmUKYWJsZSB0byBi
-dWlsZCBhdCBsZWFzdC4gQWJvdXQgZ2V0dGluZyBpdCAob3Igb3RoZXJzKSB0byB3b3JrIHdpdGgK
-YmluYXJ5IGJsb2JzLi4uIEkgZ3Vlc3MgeW91IGtub3cgd2hhdCBteSBhbmQgb3RoZXJzJyB2aWV3
-IGlzLiBQbGFjZQp0aGUgZmFjdCB0aGF0IG9uZSB0cmllcyB0byB1cHN0cmVhbSBhIGtlcm5lbCBp
-bnRlcmZhY2Ugd2hpY2gsCmluZGlyZWN0bHksIGludGVyYWN0cyB3aXRoIHN1Y2ggYSBtb2R1bGUg
-bWFrZXMgdGhpbmdzIGV2ZW4gbW9yZSAuLi4KbG92ZWx5LgoKU29ycnkgdG8gYmUgdGhlIGJlYXJl
-ciBvZiBiYWQgbmV3cy4gSWYgeW91IGhhdmUgb3RoZXIgaWRlYXMgb3Igb3RoZXJzCmZlZWxzIGxp
-a2UgSSdtIG92ZXJseSBkcmFtYXRpYyBsZXQgbWUga25vdywgcGxlYXNlLgoKLUVtaWwKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Mar 15, 2016 at 05:04:53PM -0500, atull wrote:
+> On Sat, 5 Mar 2016, Rob Herring wrote:
+> 
+> > > +Example:
+> > > +	hps_fpgabridge0: fpgabridge@ff400000 {
+> > 
+> > No underscores.
+> > 
+> > fpga-bridge@...
+> 
+> Hi Rob,
+> 
+> The dtc is not letting me compile if I use a hyphen in the label.
+> I think we have to use hyphens in the node names and underscores
+> in the labels.  So it will end up being:
+> 
+> +	fpga_bridge0: fpga-bridge@ff400000 {
+
+Sorry, don't know what I was looking at. In labels, underscores are 
+fine. This looks fine.
+
+Rob
