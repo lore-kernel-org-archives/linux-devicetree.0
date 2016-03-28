@@ -1,82 +1,170 @@
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v14 3/4] ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
-Date: Mon, 28 Mar 2016 21:12:08 +0800
-Message-ID: <CADyBb7shY-A-DTKEvNQS71SUtNmE6tkURfWDEb-_9eB-4htGWA@mail.gmail.com>
-References: <1456735610-22012-1-git-send-email-fu.wei@linaro.org>
-	<1456735610-22012-4-git-send-email-fu.wei@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1456735610-22012-4-git-send-email-fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jon Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linaro ACPI Mailman List <linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Richard Ruigrok <rruigrok-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Abdulhamid, Harb" <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Pratyush Anand <panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, G Gregory <graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Al Stone <al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Leo Duran <leo.duran-5C7GfCeVMHo@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Sinan Kaya <okaya@codeaurora.org>
+Subject: [PATCH V3 3/3] vfio, platform: add QTI HIDMA reset driver
+Date: Mon, 28 Mar 2016 09:35:24 -0400
+Message-ID: <1459172124-6730-4-git-send-email-okaya@codeaurora.org>
+References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
+Return-path: <kvm-owner@vger.kernel.org>
+In-Reply-To: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
+Sender: kvm-owner@vger.kernel.org
+To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wim, Guenter:
+In situations where the userspace driver is stopped abnormally and the
+VFIO platform device is released, the assigned HW device currently is
+left running. As a consequence the HW device might continue issuing IRQs
+and performing DMA accesses.
 
-Great thanks for reviewing and applying this patchset :-)
-Now I can see almost all the patches of this patchset have been merged
-into the master branch of mainline kernel.
-But only this one is still out of any branch or repo. It seems that
-it's applied on linux-watchdog for a while, then disappeared.
+This patch is implementing a reset driver for HIDMA platform driver.
+This gets called by the VFIO platform reset interface.
 
+Reviewed-by: Eric Auger <eric.auger@linaro.org>
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ drivers/vfio/platform/reset/Kconfig                |   9 ++
+ drivers/vfio/platform/reset/Makefile               |   2 +
+ .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 101 +++++++++++++++++++++
+ 3 files changed, 112 insertions(+)
+ create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
 
-So any thing I can do for this patch? Do I need to resubmit it?
-Maybe I miss it in some repo? Could you help me ?
-Great thanks ! :-)
-
-On 29 February 2016 at 16:46,  <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> This can be a example of adding SBSA Generic Watchdog device node
-> into some dts files for the Soc which contains SBSA Generic Watchdog.
->
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-> Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> index 2874d92..0a8ca1d 100644
-> --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-> @@ -84,6 +84,14 @@
->                         clock-names = "uartclk", "apb_pclk";
->                 };
->
-> +               watchdog0: watchdog@e0bb0000 {
-> +                       compatible = "arm,sbsa-gwdt";
-> +                       reg = <0x0 0xe0bc0000 0 0x1000>,
-> +                               <0x0 0xe0bb0000 0 0x1000>;
-> +                       interrupts = <0 337 4>;
-> +                       timeout-sec = <15>;
-> +               };
-> +
->                 spi0: ssp@e1020000 {
->                         status = "disabled";
->                         compatible = "arm,pl022", "arm,primecell";
-> --
-> 2.5.0
->
-
-
-
+diff --git a/drivers/vfio/platform/reset/Kconfig b/drivers/vfio/platform/reset/Kconfig
+index 70cccc5..d02b3b5 100644
+--- a/drivers/vfio/platform/reset/Kconfig
++++ b/drivers/vfio/platform/reset/Kconfig
+@@ -13,3 +13,12 @@ config VFIO_PLATFORM_AMDXGBE_RESET
+ 	  Enables the VFIO platform driver to handle reset for AMD XGBE
+ 
+ 	  If you don't know what to do here, say N.
++
++config VFIO_PLATFORM_QCOMHIDMA_RESET
++	tristate "VFIO support for Qualcomm Technologies HIDMA reset"
++	depends on VFIO_PLATFORM
++	help
++	  Enables the VFIO platform driver to handle reset for Qualcomm Technologies
++	  HIDMA Channel.
++
++	  If you don't know what to do here, say N.
+diff --git a/drivers/vfio/platform/reset/Makefile b/drivers/vfio/platform/reset/Makefile
+index 93f4e23..ec7748a 100644
+--- a/drivers/vfio/platform/reset/Makefile
++++ b/drivers/vfio/platform/reset/Makefile
+@@ -1,7 +1,9 @@
+ vfio-platform-calxedaxgmac-y := vfio_platform_calxedaxgmac.o
+ vfio-platform-amdxgbe-y := vfio_platform_amdxgbe.o
++vfio-platform-qcomhidma-y := vfio_platform_qcomhidma.o
+ 
+ ccflags-y += -Idrivers/vfio/platform
+ 
+ obj-$(CONFIG_VFIO_PLATFORM_CALXEDAXGMAC_RESET) += vfio-platform-calxedaxgmac.o
++obj-$(CONFIG_VFIO_PLATFORM_QCOMHIDMA_RESET) += vfio-platform-qcomhidma.o
+ obj-$(CONFIG_VFIO_PLATFORM_AMDXGBE_RESET) += vfio-platform-amdxgbe.o
+diff --git a/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+new file mode 100644
+index 0000000..ef3491b
+--- /dev/null
++++ b/drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
+@@ -0,0 +1,101 @@
++/*
++ * Qualcomm Technologies HIDMA VFIO Reset Driver
++ *
++ * Copyright (c) 2016, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/module.h>
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/device.h>
++#include <linux/iopoll.h>
++
++#include "vfio_platform_private.h"
++
++#define TRCA_CTRLSTS_OFFSET		0x000
++#define EVCA_CTRLSTS_OFFSET		0x000
++
++#define CH_CONTROL_MASK		GENMASK(7, 0)
++#define CH_STATE_MASK			GENMASK(7, 0)
++#define CH_STATE_BIT_POS		0x8
++
++#define HIDMA_CH_STATE(val)	\
++	((val >> CH_STATE_BIT_POS) & CH_STATE_MASK)
++
++#define EVCA_IRQ_EN_OFFSET		0x110
++
++#define CH_RESET			9
++#define CH_DISABLED			0
++
++int vfio_platform_qcomhidma_reset(struct vfio_platform_device *vdev)
++{
++	struct vfio_platform_region *trreg;
++	struct vfio_platform_region *evreg;
++	u32 val;
++	int ret;
++
++	if (vdev->num_regions != 2)
++		return -ENODEV;
++
++	trreg = &vdev->regions[0];
++	if (!trreg->ioaddr) {
++		trreg->ioaddr =
++			ioremap_nocache(trreg->addr, trreg->size);
++		if (!trreg->ioaddr)
++			return -ENOMEM;
++	}
++
++	evreg = &vdev->regions[1];
++	if (!evreg->ioaddr) {
++		evreg->ioaddr =
++			ioremap_nocache(evreg->addr, evreg->size);
++		if (!evreg->ioaddr)
++			return -ENOMEM;
++	}
++
++	/* disable IRQ */
++	writel(0, evreg->ioaddr + EVCA_IRQ_EN_OFFSET);
++
++	/* reset both transfer and event channels */
++	val = readl(trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_RESET << 16;
++	writel(val, trreg->ioaddr + TRCA_CTRLSTS_OFFSET);
++
++	ret = readl_poll_timeout(trreg->ioaddr + TRCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	val = readl(evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
++	val &= ~(CH_CONTROL_MASK << 16);
++	val |= CH_RESET << 16;
++	writel(val, evreg->ioaddr + EVCA_CTRLSTS_OFFSET);
++
++	ret = readl_poll_timeout(evreg->ioaddr + EVCA_CTRLSTS_OFFSET, val,
++				 HIDMA_CH_STATE(val) == CH_DISABLED, 1000,
++				 10000);
++	if (ret)
++		return ret;
++
++	pr_info("HIDMA channel reset\n");
++	return 0;
++}
++module_vfio_reset_handler("qcom,hidma-1.0", "QCOM8061",
++			  vfio_platform_qcomhidma_reset);
++MODULE_ALIAS_VFIO_PLATFORM_RESET("qcom,hidma-1.0");
++MODULE_ALIAS_VFIO_PLATFORM_RESET("QCOM8061");
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Reset support for Qualcomm Technologies HIDMA device");
 -- 
-Best regards,
+1.8.2.1
 
-Fu Wei
-Software Engineer
-Red Hat Software (Beijing) Co.,Ltd.Shanghai Branch
-Ph: +86 21 61221326(direct)
-Ph: +86 186 2020 4684 (mobile)
-Room 1512, Regus One Corporate Avenue,Level 15,
-One Corporate Avenue,222 Hubin Road,Huangpu District,
-Shanghai,China 200021
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
