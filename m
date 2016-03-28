@@ -1,84 +1,69 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] power: charger-manager: Replace deprecatd API of
- extcon
-Date: Mon, 28 Mar 2016 16:07:37 -0500
-Message-ID: <20160328210737.GA21044@rob-hp-laptop>
-References: <1459121142-3768-1-git-send-email-cw00.choi@samsung.com>
- <1459121142-3768-2-git-send-email-cw00.choi@samsung.com>
+Subject: Re: [PATCH V2] ARM: dts: AM572x-IDK Initial Support
+Date: Mon, 28 Mar 2016 16:10:15 -0500
+Message-ID: <20160328211015.GA28249@rob-hp-laptop>
+References: <1459182909-23502-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1459121142-3768-2-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1459182909-23502-1-git-send-email-nm-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 28, 2016 at 08:25:40AM +0900, Chanwoo Choi wrote:
-> This patch removes the deprecated notifier API of extcon framework and then use
-> the new extcon API[2] with the unique id[1] to indicate the each external
-> connector. Alter deprecated API as following:
-> - extcon_register_interest() -> extcon_register_notifier()
-> - extcon_unregister_interest() -> extcon_unregister_notifier()
+On Mon, Mar 28, 2016 at 11:35:09AM -0500, Nishanth Menon wrote:
+> From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
 > 
-> And, extcon alters the name of USB charger connector in patch[3] as following:
-> - EXTCON_CHG_USB_SDP /* Standard Downstream Port */
-> - EXTCON_CHG_USB_DCP /* Dedicated Charging Port */
-> - EXTCON_CHG_USB_CDP /* Charging Downstream Port */
-> - EXTCON_CHG_USB_ACA /* Accessory Charger Adapter */
+> The AM572x-IDK board is a board based on TI's AM5728 SOC
+> which has a dual core 1.5GHz A15 processor. This board is a
+> development platform for the Industrial market with:
+> - 2GB of DDR3L
+> - Dual 1Gbps Ethernet
+> - HDMI,
+> - PRU-ICSS
+> - uSD
+> - 16GB eMMC
+> - CAN
+> - RS-485
+> - PCIe
+> - USB3.0
+> - Video Input Port
+> - Industrial IO port and expansion connector
 > 
-> So, the name of external charger connector are changed as following:
-> - "USB" -> "SDP"
-> - "TA" -> "DCP"
+> The link to the data sheet and TRM can be found here:
 > 
-> [1] Commit 2a9de9c0f08d61
-> - ("extcon: Use the unique id for external connector instead of string)
-> [2] Commit 046050f6e623e4
-> - ("extcon: Update the prototype of extcon_register_notifier() with enum extcon
-> [3] Commit 11eecf910bd81d
-> - ("extcon: Modify the id and name of external connector")
+> http://www.ti.com/product/AM5728
 > 
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> This patch creates a common dtsi file that will provide a common board
+> dtsi file to define the nodes that are common to AM57xx (including the
+> upcoming AM5718) IDK boards.
+> 
+> Initial support is only for basic peripherals
+> 
+> Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 > ---
->  .../bindings/power_supply/charger-manager.txt      |  4 +--
->  drivers/power/charger-manager.c                    | 31 ++++++++++++++--------
->  include/linux/power/charger-manager.h              |  4 +--
->  3 files changed, 24 insertions(+), 15 deletions(-)
+> based on v4.6-rc1
 > 
-> diff --git a/Documentation/devicetree/bindings/power_supply/charger-manager.txt b/Documentation/devicetree/bindings/power_supply/charger-manager.txt
-> index ec4fe9de3137..73193e380dc2 100644
-> --- a/Documentation/devicetree/bindings/power_supply/charger-manager.txt
-> +++ b/Documentation/devicetree/bindings/power_supply/charger-manager.txt
-> @@ -65,13 +65,13 @@ Example :
->  		regulator@0 {
->  			cm-regulator-name = "chg-reg";
->  			cable@0 {
-> -				cm-cable-name = "USB";
-> +				cm-cable-id = 5; /* EXTCON_CHG_USB_SDP */
+> Changes since V1:
+> 	- Renamed the led nodes
+> 	- Dropped unused src_clk_x1 node (will introduce when needed).
+> 
+> Test: http://pastebin.ubuntu.com/15540747/
+> 
+> V1: https://patchwork.kernel.org/patch/8665181/
+> 
+>  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/am572x-idk.dts                   |  85 ++++++
+>  arch/arm/boot/dts/am57xx-idk-common.dtsi           | 302 +++++++++++++++++++++
+>  4 files changed, 391 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am572x-idk.dts
+>  create mode 100644 arch/arm/boot/dts/am57xx-idk-common.dtsi
 
-Sorry, but delete the charger-manager binding and start over. It looks 
-designed around the needs of Linux, not what the h/w looks like. You're 
-changing the driver and having to change the DT in a non-compatible way 
-is the first clue.
-
->  				cm-cable-extcon = "extcon-dev.0";
-
-What is this!? The linux device name?
-
->  				cm-cable-min = <475000>;
->  				cm-cable-max = <500000>;
-
-This is set by the USB spec...
-
->  			};
->  			cable@1 {
-> -				cm-cable-name = "TA";
-> +				cm-cable-id = 6; /* EXTCON_CHG_USB_DCP */
->  				cm-cable-extcon = "extcon-dev.0";
->  				cm-cable-min = <650000>;
->  				cm-cable-max = <675000>;
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
