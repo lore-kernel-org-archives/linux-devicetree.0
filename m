@@ -1,100 +1,167 @@
-From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Subject: [PATCH 2/5 v5] drm: Add DT bindings documentation for ARC PGU display
- controller
-Date: Mon, 28 Mar 2016 14:36:36 +0300
-Message-ID: <1459164999-11850-3-git-send-email-abrodkin@synopsys.com>
-References: <1459164999-11850-1-git-send-email-abrodkin@synopsys.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: ARC dw-mshc binding compat string
+Date: Mon, 28 Mar 2016 20:44:48 +0900
+Message-ID: <56F91930.7020902@samsung.com>
+References: <56F66121.8050507@denx.de> <56F6C639.5000301@mentor.com>
+ <56F6C71B.6070002@denx.de> <56F6CC68.5040408@mentor.com>
+ <56F6D083.1020402@denx.de> <56F6D1E9.3050606@mentor.com>
+ <56F6E860.8070207@denx.de> <56F6ED41.5020908@mentor.com>
+ <56F6EFFD.9070007@denx.de> <1459157818.4785.5.camel@synopsys.com>
+ <56F908A1.3070701@samsung.com> <1459162537.4785.45.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459164999-11850-1-git-send-email-abrodkin@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-snps-arc@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1459162537.4785.45.camel@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "marex@denx.de" <marex@denx.de>, "vladimir_zapolskiy@mentor.com" <vladimir_zapolskiy@mentor.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This add DT bindings documentation for ARC PGU display controller.
+On 03/28/2016 07:55 PM, Alexey Brodkin wrote:
+> Hi Jaehoon,
+> 
+> On Mon, 2016-03-28 at 19:34 +0900, Jaehoon Chung wrote:
+>> Hi,
+> 
+> [snip]
+> 
+>>>>>>>>>
+>>>>>>>>> That said, I would rather prefer to see "snps,dw-mshc" prefix on description
+>>>>>>>>> of an MMC controller found on SoCFPGA series, "altr,socfpga-dw-mshc" seems
+>>>>>>>>> to be redundant.
+>> Yes..it's redundant..i should be combined to "snps,dw-mshc".
+> 
+> So for socfpga platform compat string should be something like "snps,dw-mshc-socfpga" then?
 
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-snps-arc@lists.infradead.org
-Acked-by: Rob Herring <robh@kernel.org>
----
+i think yes..since there is no SoC specific feature, isn't?
 
-Changes v4 -> v5: (addressing Rob's comment)
- * Added Rob's acked-by
- * Remove "encoder-slave" from the example as well.
-   Now only "pgu" node is mentioned in the example.
+> 
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>>
+>>>>>>>>
+>>>>>>>> According to drivers/mmc/host/dw_mmc-pltfm.c , the Altera SoCFPGA one
+>>>>>>>> "altr,socfpga-dw-mshc" and also Imagination Technology Pistacio one
+>>>>>>>> "img,pistachio-dw-mshc" need specialty bit (SDMMC_CMD_USE_HOLD_REG),
+>>>>>>>> while the stock one "snps,dw-mshc" does not. I am not sure if the ARC
+>>>>>>>> one needs it as well, but most likely yes.
+>>>>>>>>
+>>>>>>>> I wonder if that bit is needed on some particular version of the DWMMC
+>>>>>>>> core. In that case, should we have "snps,dw-mshc" and "snps,dw-mshc-vN"
+>>>>>>>> binding ? Or should we use DT property to discern the need for this bit ?
+>>>>>>>>
+>>>>>>> That's the most common way to take into account peculiarities, add
+>>>>>>> a property and handle it from the driver.
+>>>>>> And by "that" you mean which of those two I listed , the
+>>>>>> "snps,dw-mshc-vN" or adding new DT prop ?
+>>>>>>
+>>>>> I meant to add a new property, not a new compatible, but that's just
+>>>>> my experience.
+>>>>>
+>>>>> Let me say it __might__ happen that a particular change you need is
+>>>>> specific to a particular version of the DWMMC IP (query Synopsys
+>>>>> by the way), but more probably it might be e.g. the same IP version with
+>>>>> a different reduced or extended configuration or a minor fix/improvement
+>>>>> to the IP block without resulting version number bump.
+>>>>>
+>>>>> For example I don't remember that errata fixes in IP blocks result in
+>>>>> a new compatible, instead there are quite common optional "quirk"
+>>>>> properties for broken IPs -- e.g. check bindings/usb/dwc3.txt :)
+>>>> Right, this very much matches how I see it as well. Thanks for confirming.
+>>>>
+>>>> Alexey, can you tell us if the requirement for setting
+>>>> SDMMC_CMD_USE_HOLD_REG came with some new revision of the core or
+>>>> disappeared with some revision OR if this is some configuration
+>>>> option of the core during synthesis ?
+>>> Sorry for not following that discussion during my weekend but I'll try
+>>> to address all questions now.
+>> SDMMC_CMD_USE_HOLD_REG didn't come with new revision..It's using continuously.
+>> But it's difficult to use the generic feature..because it's considered the below things.
+>>
+>> If Card is SDR50/SDR104/DDR50 mode..
+>> 	1) and phase shift of cclk_in_drv is 0 then SDMMC_CMD_USE_HOLD_REG bit is set to 0,
+>> 	2) and phase shift of cclk_in_drv > 0 then SDMMC_CMD_USE_HOLD_REG bit is set to 1,
+>> If Card is SDR12/SDR25 mode, then this bit is set to 1.
+> 
+> So card type is also important here and for certain card type we don't need to
+> set SDMMC_CMD_USE_HOLD_REG, right?
 
-Changes v3 -> v4: (addressing Rob's comments)
- * Removed "encoder-slave" from required properties
- * Removed "0x" from node names
+If you means card-type is card's speed mode, right..it's important.
+In IP Databook, not mentioned about HS200 or HS400, but i thinks it doesn't need to set USE_HOLD_REG.
+Because higher speed mode than 50MHz should be required the lowest input hold time. (~0.8ns)
 
-Changes v2 -> v3:
- * Reverted back to initial larger version of example
-   with minor fixes (thanks Rob for spotting those).
+> 
+>> We need to check phase shift scheme..but as i knew, each SoC have been implemented differently for phase shift.
+>> (Phase shift have dependency to SoC.)
+> 
+> Given my assumption above we need to check 2 things:
+>  * Card type
+>  * SoC-specific implementation detail (phase shift scheme)
 
-Changes v1 -> v2:
- * Removed everything except PGU node itself.
+In Exynos's case, there is CLKSEL register in DWMMC IP register.(as Vendor specific register.)
+On other hands, rockchip is handling the phase sfiht with "clk_set_phase()"(as CMU.)
 
- .../devicetree/bindings/display/snps,arcpgu.txt    | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/snps,arcpgu.txt
+I can't know everything how they're implementing for shifting phase..
 
-diff --git a/Documentation/devicetree/bindings/display/snps,arcpgu.txt b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
-new file mode 100644
-index 0000000..c5c7dfd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/snps,arcpgu.txt
-@@ -0,0 +1,35 @@
-+ARC PGU
-+
-+This is a display controller found on several development boards produced
-+by Synopsys. The ARC PGU is an RGB streamer that reads the data from a
-+framebuffer and sends it to a single digital encoder (usually HDMI).
-+
-+Required properties:
-+  - compatible: "snps,arcpgu"
-+  - reg: Physical base address and length of the controller's registers.
-+  - clocks: A list of phandle + clock-specifier pairs, one for each
-+    entry in 'clock-names'.
-+  - clock-names: A list of clock names. For ARC PGU it should contain:
-+      - "pxlclk" for the clock feeding the output PLL of the controller.
-+
-+Required sub-nodes:
-+  - port: The PGU connection to an encoder chip.
-+
-+Example:
-+
-+/ {
-+	...
-+
-+	pgu@XXXXXXXX {
-+		compatible = "snps,arcpgu";
-+		reg = <0xXXXXXXXX 0x400>;
-+		clocks = <&clock_node>;
-+		clock-names = "pxlclk";
-+
-+		port {
-+			pgu_output: endpoint {
-+				remote-endpoint = <&hdmi_enc_input>;
-+			};
-+		};
-+	};
-+};
--- 
-2.5.0
+> 
+>> And it have to check HCON register..there is IMPLEMENT_HOLD_REG(bit[22]).
+>> (It described whether IP have hold register or not)
+> 
+> Ah actually 3 things
+>  + IMPLEMENT_HOLD_REG
+
+Almost all have IMPLEMENT_HOLD_REG...?
+
+If i will implement... in dw-mmc.c
+
+switch (ios->timing) {
+case SDR50/DDR50/.../
+	if (check cclk_in_drv > 0 for each SoC) {
+		SDMMC_CMD_USE_HOLD_REG is set to 1
+		break;
+	}
+case SDR12/SD25
+	SDMMC_CMD_USE_HOLD_REG is set to 1
+default:
+	SDMMC_CMD_USE_HOLD_REG is set to 0.
+}
+
+
+> 
+>> I didn't read this thread entirely.
+>> I'm not sure what you have discussed..but my understanding is right..i recommend to use "snps,dw-mshc" for ARC compat
+>> string.
+>> Otherwise it need to add "dw_mmc-<SoC>.c". dw_mmc-pltfm.c should provide the basic dw-mmc controller functionality.
+> 
+> Hm, interesting looks like you already made some changes here:
+> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=aaaaeb7a933471f6413ca44dd36efd57f2fa9429
+> 
+> So now driver checks if SoC has HOLD REG then SDMMC_CMD_USE_HOLD_REG will be set
+> (regardless card type).
+
+Yes, it's used by default..
+Except exynos, other SoCs need to set this bit until now..otherwise it will be occurred CRC error. (Rockchip, Socfpga..)
+
+> 
+> And what's interesting and connected to this discussion since mentioned commit
+> there's no point in having both "altr,socfpga-dw-mshc" and "img,pistachio-dw-mshc"
+> compat strings because the do nothing now. I.e. it's time to replace both mentioned
+> compat strings with generic "snps,dw-mshc".
+> 
+> Anybody volunteers for that .dts* cleanup?
+
+If have spare time to do cleanup, i will do for mshc compatible.
+
+Best Regards,
+Jaehoon Chung
+
+> 
+> -Alexey--
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
