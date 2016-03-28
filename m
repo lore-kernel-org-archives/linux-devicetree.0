@@ -1,95 +1,78 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/4] ARC: axs10x: Update defconfigs so that audio is enabled
-Date: Mon, 28 Mar 2016 10:41:50 +0100
-Message-ID: <88015401488eed4f253f49d5831be13e0007339f.1458839710.git.joabreu@synopsys.com>
-References: <cover.1458839710.git.joabreu@synopsys.com>
+From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH] arm: dts: mt2701: Add clock controller device nodes
+Date: Mon, 28 Mar 2016 11:47:32 +0200
+Message-ID: <56F8FDB4.8070105@openwrt.org>
+References: <201603281638.VIBfNFp6%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1458839710.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <cover.1458839710.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-References: <cover.1458839710.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <201603281638.VIBfNFp6%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, lgirdwoord-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, mjonker-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The defconfigs for the AXS boards were updated so that
-ALSA SoC is enabled and also the audio for the ADV7511
-HDMI transmitter.
-
-Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- arch/arc/configs/axs101_defconfig     | 3 +++
- arch/arc/configs/axs103_defconfig     | 5 +++++
- arch/arc/configs/axs103_smp_defconfig | 5 +++++
- 3 files changed, 13 insertions(+)
-
-diff --git a/arch/arc/configs/axs101_defconfig b/arch/arc/configs/axs101_defconfig
-index e359099..7c22163 100644
---- a/arch/arc/configs/axs101_defconfig
-+++ b/arch/arc/configs/axs101_defconfig
-@@ -113,3 +113,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_PREEMPT is not set
- # CONFIG_FTRACE is not set
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SOC=y
-diff --git a/arch/arc/configs/axs103_defconfig b/arch/arc/configs/axs103_defconfig
-index 323486d..d63aef0 100644
---- a/arch/arc/configs/axs103_defconfig
-+++ b/arch/arc/configs/axs103_defconfig
-@@ -76,12 +76,14 @@ CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_DRM=y
- # CONFIG_HWMON is not set
- CONFIG_FB=y
- # CONFIG_VGA_CONSOLE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
- CONFIG_LOGO=y
-+CONFIG_DRM_I2C_ADV7511=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- # CONFIG_LOGO_LINUX_CLUT224 is not set
-@@ -114,3 +116,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_PREEMPT is not set
- # CONFIG_FTRACE is not set
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SOC=y
-diff --git a/arch/arc/configs/axs103_smp_defconfig b/arch/arc/configs/axs103_smp_defconfig
-index 66191cd..f4b51ce 100644
---- a/arch/arc/configs/axs103_smp_defconfig
-+++ b/arch/arc/configs/axs103_smp_defconfig
-@@ -77,12 +77,14 @@ CONFIG_SERIAL_OF_PLATFORM=y
- CONFIG_I2C=y
- CONFIG_I2C_CHARDEV=y
- CONFIG_I2C_DESIGNWARE_PLATFORM=y
-+CONFIG_DRM=y
- # CONFIG_HWMON is not set
- CONFIG_FB=y
- # CONFIG_VGA_CONSOLE is not set
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_FRAMEBUFFER_CONSOLE_DETECT_PRIMARY=y
- CONFIG_LOGO=y
-+CONFIG_DRM_I2C_ADV7511=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- # CONFIG_LOGO_LINUX_CLUT224 is not set
-@@ -115,3 +117,6 @@ CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
- # CONFIG_SCHED_DEBUG is not set
- # CONFIG_DEBUG_PREEMPT is not set
- # CONFIG_FTRACE is not set
-+CONFIG_SOUND=y
-+CONFIG_SND=y
-+CONFIG_SND_SOC=y
--- 
-1.9.1
 
 
+On 28/03/2016 10:13, kbuild test robot wrote:
+> Hi James,
+> 
+> [auto build test ERROR on robh/for-next]
+> [also build test ERROR on v4.6-rc1 next-20160327]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improving the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/James-Liao/arm-dts-mt2701-Add-clock-controller-device-nodes/20160328-133113
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux for-next
+> config: arm-multi_v7_defconfig (attached as .config)
+> reproduce:
+>         wget https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from arch/arm/boot/dts/mt2701-evb.dts:16:0:
+>>> arch/arm/boot/dts/mt2701.dtsi:15:42: fatal error: dt-bindings/clock/mt2701-clk.h: No such file or directory
+>     #include <dt-bindings/clock/mt2701-clk.h>
+
+Hi James,
+
+looks like the mt2701 clock patches did not make it into v4.6-rc1. i had
+a few minor fixes i wanted to send this week for MT7623 support and
+noticed this last week already :(
+
+	John
+
+
+>                                              ^
+>    compilation terminated.
+> 
+> vim +15 arch/arm/boot/dts/mt2701.dtsi
+> 
+>      9	 * This program is distributed in the hope that it will be useful,
+>     10	 * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>     11	 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>     12	 * GNU General Public License for more details.
+>     13	 */
+>     14	
+>   > 15	#include <dt-bindings/clock/mt2701-clk.h>
+>     16	#include <dt-bindings/interrupt-controller/irq.h>
+>     17	#include <dt-bindings/interrupt-controller/arm-gic.h>
+>     18	#include "skeleton64.dtsi"
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+> 
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
