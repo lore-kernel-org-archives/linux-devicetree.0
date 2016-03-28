@@ -1,106 +1,49 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/3 v2] arc: axs10x: Add support for Designware I2S on DT
-Date: Mon, 28 Mar 2016 15:36:11 +0100
-Message-ID: <02e216b1c928bd939c81067346d2807fd38bf1a5.1459174494.git.joabreu@synopsys.com>
-References: <cover.1459174494.git.joabreu@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1459174494.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <cover.1459174494.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-References: <cover.1459174494.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: airlied-cv59FeDIM0c@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, ville.syrjala-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, nariman-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, alexander.deucher-5C7GfCeVMHo@public.gmane.org, Maruthi.Bayyavarapu-5C7GfCeVMHo@public.gmane.org, buyitian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yitian.bu-sf4bEIuTEZ8/jFmSBShxMA@public.gmane.org, Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v3 02/16] mfd: da8xx-cfgchip: New header file for CFGCHIP
+ registers.
+Date: Mon, 28 Mar 2016 10:02:10 -0500
+Message-ID: <56F94772.7070009@lechnology.com>
+References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+ <1458863503-31121-3-git-send-email-david@lechnology.com>
+ <56F573F3.90500@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56F573F3.90500-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Synopsys Designware ARC SDP boards support HDMI audio
-output using the ADV7511 HDMI transmitter.
+On 03/25/2016 12:22 PM, Sergei Shtylyov wrote:
+> On 03/25/2016 02:51 AM, David Lechner wrote:
+>> +/* register offsets */
+>> +#define CFGCHIP_REG(n)                (n * 4)
+>> +#define CFGCHIP0_REG                CFGCHIP_REG(0)
+>> +#define CFGCHIP1_REG                CFGCHIP_REG(1)
+>> +#define CFGCHIP2_REG                CFGCHIP_REG(2)
+>> +#define CFGCHIP3_REG                CFGCHIP_REG(3)
+>> +#define CFGCHIP4_REG                CFGCHIP_REG(4)
+>
+>     Why not just use CFGCHIP_REG(n) directly?
 
-This patchs enables audio output using Designware I2S
-driver, ALSA SoC simple audio card and ADV7511 codec.
+I considered that, but I went this way because A) the TRM uses, for 
+example, "CFGCHIP2", so I wanted to keep "CFGCHIP" and "2" together and 
+B) this tells you how many CFGCHIP registers there are, i.e. there is no 
+CFGCHIP5_REG.
 
-Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
+>> @@ -53,7 +31,6 @@ struct    da8xx_ohci_root_hub {
+>>       /* Time from power on to power good (in 2 ms units) */
+>>       u8    potpgt;
+>>   };
+>> -
+>
+>     Why?
 
-Changes v1 -> v2:
-* This change was introduced in v2.
-
- arch/arc/boot/dts/axs10x_mb.dtsi | 49 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 45 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
-index ab5d570..fc26ede 100644
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -138,12 +138,23 @@
- 			interrupts = <14>;
- 		};
- 
--		i2c@0x1e000 {
--			compatible = "snps,designware-i2c";
-+		i2s: i2s@1e000 {
-+			compatible = "snps,designware-i2s";
- 			reg = <0x1e000 0x100>;
--			clock-frequency = <400000>;
--			clocks = <&i2cclk>;
- 			interrupts = <15>;
-+			#sound-dai-cells = <0>;
-+		};
-+
-+		sound {
-+			compatible = "simple-audio-card";
-+			simple-audio-card,name = "AXS10X HDMI Audio";
-+			simple-audio-card,format = "i2s";
-+			simple-audio-card,cpu {
-+				sound-dai = <&i2s>;
-+			};
-+			simple-audio-card,codec {
-+				sound-dai = <&adv7511>;
-+			};
- 		};
- 
- 		i2c@0x1f000 {
-@@ -155,6 +166,36 @@
- 			clocks = <&i2cclk>;
- 			interrupts = <16>;
- 
-+			adv7511: adv7511@39 {
-+				compatible = "adi,adv7511";
-+				reg = <0x39>;
-+				interrupts = <23>;
-+				adi,input-depth = <8>;
-+				adi,input-colorspace = "rgb";
-+				adi,input-clock = "1x";
-+				adi,clock-delay = <0x03>;
-+				#sound-dai-cells = <0>;
-+
-+				ports {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					/* RGB/YUV input */
-+					port@0 {
-+						reg = <0>;
-+						adv7511_input: endpoint {
-+						};
-+					};
-+
-+					/* HDMI output */
-+					port@1 {
-+						reg = <1>;
-+						adv7511_output: endpoint {
-+						};
-+					};
-+				};
-+			};
-+
- 			eeprom@0x54{
- 				compatible = "24c01";
- 				reg = <0x54>;
--- 
-1.9.1
-
+Unintentional. Must have sneaked in through rebasing or something.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
