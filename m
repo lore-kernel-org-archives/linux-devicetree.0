@@ -1,75 +1,54 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun8i: Add dts for Orange Pi
- 2 SBC
-Date: Mon, 28 Mar 2016 14:36:31 +0200
-Message-ID: <56F9254F.9040306@redhat.com>
-References: <1458728225-6922-1-git-send-email-hdegoede@redhat.com>
- <20160325125342.2b4b6c9ec2e4922b51687ad3@free.fr>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH V4 0/3] Add support for Tegra210 ADMA
+Date: Mon, 28 Mar 2016 13:39:44 +0100
+Message-ID: <56F92610.9030209@nvidia.com>
+References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBV6K4S3QKGQEHHI4IAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160325125342.2b4b6c9ec2e4922b51687ad3-GANU6spQydw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458057390-20756-1-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Vinod,
 
-On 25-03-16 12:53, Jean-Francois Moine wrote:
-> On Wed, 23 Mar 2016 11:17:05 +0100
-> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->
->> The Orange Pi 2 is a SBC based on the Allwinner H3 SoC with a uSD slot,
->> 4 USB ports connected via a USB-2 hub, a 10/100M ethernet port using the
->> SoC's integrated PHY, Wifi via a RTL8189ETV sdio wifi chip, USB OTG, HDMI,
->> a TRRS headphone jack for stereo out and composite out, a microphone,
->> an IR receiver, a CSI connector, 2 LEDs, a 3 pin UART header
->> and a 40-pin GPIO header.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/Makefile                |   1 +
->>   arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 186 ++++++++++++++++++++++++++++++
->>   2 files changed, 187 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> 	[snip]
->> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
->> new file mode 100644
->> index 0000000..f93f5d1
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
-> 	[snip]
->> +&mmc0 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
->> +	vmmc-supply = <&reg_vcc3v3>;
->> +	bus-width = <4>;
->> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
->> +	cd-inverted;
->> +	status = "okay";
->> +};
->> +
->> +&mmc1 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&mmc1_pins_a>;
->> +	vmmc-supply = <&reg_vcc3v3>;
->
-> While still 3.3V, the power of the mmc1 if supplied by an other
-> regulator.
+Let me know if you have any comments on this.
 
-I do not have schematics for the OPi 2, on the OPi plus schematic the
-2 share a regulator. But even if it is another fixed 3.3V regulator,
-there is little use in modelling it as a separate regulator when we
-cannot control it.
+Cheers
+Jon
 
-Regards,
-
-Hans
+On 15/03/16 15:56, Jon Hunter wrote:
+> Add support for the Tegra210 Audio DMA (ADMA) controller which is part
+> of the Audio Processing Engine and used for transferring audio data.
+> 
+> V4 changes:
+> - Updated DT binding to include 'power-domains' entry for handling
+>   the APE power domain inconjunction with runtime-pm.
+> - Added missing clocks to the DT binding that were being handled by
+>   the bootloader.
+> - Added support for PM_CLK to simplify clock handling
+> 
+> V3 changes:
+> - Updated DT binding per feedback from Mark and Stephen
+> - Fixed up items mentioned by Vinod
+> 
+> V2 changes:
+> - Re-worked device-tree binding
+> 
+> Jon Hunter (3):
+>   Documentation: DT: Add binding documentation for NVIDIA ADMA
+>   dmaengine: tegra-adma: Add support for Tegra210 ADMA
+>   MAINTAINERS: Update Tegra DMA maintainers
+> 
+>  .../devicetree/bindings/dma/tegra210-adma.txt      |  61 ++
+>  MAINTAINERS                                        |   5 +-
+>  drivers/dma/Kconfig                                |  14 +
+>  drivers/dma/Makefile                               |   1 +
+>  drivers/dma/tegra210-adma.c                        | 869 +++++++++++++++++++++
+>  5 files changed, 948 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/tegra210-adma.txt
+>  create mode 100644 drivers/dma/tegra210-adma.c
+> 
