@@ -1,52 +1,44 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] ARM: dts: AM572x-IDK Initial Support
-Date: Mon, 28 Mar 2016 11:37:03 -0500
-Message-ID: <56F95DAF.1080901@ti.com>
-References: <1458858644-13800-1-git-send-email-nm@ti.com>
- <20160325150344.GA1268@rob-hp-laptop>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 02/16] mfd: da8xx-cfgchip: New header file for CFGCHIP
+ registers.
+Date: Mon, 28 Mar 2016 19:42:14 +0300
+Message-ID: <56F95EE6.1010403@cogentembedded.com>
+References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+ <1458863503-31121-3-git-send-email-david@lechnology.com>
+ <56F573F3.90500@cogentembedded.com> <56F94772.7070009@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160325150344.GA1268@rob-hp-laptop>
+In-Reply-To: <56F94772.7070009@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Schuyler Patton <spatton@ti.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: David Lechner <david@lechnology.com>
+Cc: petr@barix.com, David.Laight@ACULAB.COM, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Bin Liu <b-liu@ti.com>, Lee Jones <lee.jones@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/25/2016 10:03 AM, Rob Herring wrote:
-> On Thu, Mar 24, 2016 at 05:30:44PM -0500, Nishanth Menon wrote:
->> From: Schuyler Patton <spatton@ti.com>
-[...]
+Hello.
 
->> +- AM5728 IDK
->> +  compatible = "ti,am5728-idk", "ti,am5728", "ti,dra742", "ti,dra74", "ti,dra7"
-> 
-> Okay, but I think the TI folks have gone a bit crazy with all these 
-> compatible strings...
-> 
+On 03/28/2016 06:02 PM, David Lechner wrote:
 
-Sadly yes :( too many paper spins and trying to maintain requirements
-of exact match than wild cards is starting to look crazier over time :(
+>>> +/* register offsets */
+>>> +#define CFGCHIP_REG(n)                (n * 4)
+>>> +#define CFGCHIP0_REG                CFGCHIP_REG(0)
+>>> +#define CFGCHIP1_REG                CFGCHIP_REG(1)
+>>> +#define CFGCHIP2_REG                CFGCHIP_REG(2)
+>>> +#define CFGCHIP3_REG                CFGCHIP_REG(3)
+>>> +#define CFGCHIP4_REG                CFGCHIP_REG(4)
+>>
+>>     Why not just use CFGCHIP_REG(n) directly?
+>
+> I considered that, but I went this way because A) the TRM uses, for example,
+> "CFGCHIP2", so I wanted to keep "CFGCHIP" and "2" together
 
->> diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
->> new file mode 100644
->> index 000000000000..bb51f6de7b45
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/am572x-idk.dts
->> @@ -0,0 +1,85 @@
-[...]
+    I'd just drop the _REG suffix.
 
->> +	leds {
->> +		compatible = "gpio-leds";
->> +		led@0 {
-> 
-> Unit-address without reg is going to start warning in dtc. Use something 
-> like "cpu0-led" instead.
-> 
-Fixed. Thanks. Updated version posted
-https://patchwork.kernel.org/patch/8679861/
+> and B) this tells
+> you how many CFGCHIP registers there are, i.e. there is no CFGCHIP5_REG.
 
--- 
-Regards,
-Nishanth Menon
+    You can tell that in a comment. Having a parametrized macro and using it 
+to just #define more macros doesn't appeal to me at all...
+
+MBR, Sergei
