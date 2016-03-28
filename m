@@ -1,67 +1,80 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] drm: bridge: anx78xx: Add anx78xx bridge driver support.
-Date: Mon, 28 Mar 2016 13:03:48 +0100
-Message-ID: <CACvgo51Gs2EZM5=1f7p7BiRj2Ut5ZFQwWCWEzHe077ZCuLVvCw@mail.gmail.com>
-References: <1458816106-11596-1-git-send-email-enric.balletbo@collabora.com>
-	<1458816106-11596-4-git-send-email-enric.balletbo@collabora.com>
-	<20160324112818.GC5273@mwanda>
+From: Emil Velikov <emil.l.velikov@gmail.com>
+Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
+Date: Mon, 28 Mar 2016 13:21:02 +0100
+Message-ID: <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
+References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
+ <1511371.I0NIYzh3kP@diego> <56EFE66A.8020404@rock-chips.com>
+ <1867694.1mDULrSexE@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160324112818.GC5273@mwanda>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, span-RZiUC8FWO7+l5r2w9Jh5Rg@public.gmane.org, nathan.chung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, jb.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, cjiao@analogixsemi.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1867694.1mDULrSexE@phil>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-On 24 March 2016 at 11:28, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
-> On Thu, Mar 24, 2016 at 11:41:46AM +0100, Enric Balletbo i Serra wrote:
->> +     /* Map slave addresses of ANX7814 */
->> +     for (i = 0; i < I2C_NUM_ADDRESSES; i++) {
->> +             anx78xx->i2c_dummy[i] = i2c_new_dummy(client->adapter,
->> +                                             anx78xx_i2c_addresses[i] >> 1);
->> +             if (!anx78xx->i2c_dummy[i]) {
->> +                     DRM_ERROR("Failed to reserve i2c bus %02x.\n",
->> +                               anx78xx_i2c_addresses[i]);
->
-> Missing error code here.
->
->> +                     goto err_i2c;
->> +             }
->
-> I'm, of course, not a fan of the naming.  The name should be based on
-> what the goto location does...  In this case it turns it off.  Which is
-> slightly weird because we have not turned it on yet...  I always say
-> that you should have multiple error labels and you only undo things
-> which have been done.
->
-> Having a common exit path for the other functions where it was "goto out"
-> makes sense.  But again in those cases I would prefer a meaningful label
-> name like "goto unlock;".  In the kernel "goto out;" is meaningless, it
-> could do anything or everything or nothing.  A lot of people like it
-> of course, but out: label code tends to be buggier than using a
-> meaningful name.
->
-Dan, I'm so glad to see another like minded person on the topic. It
-seems that we're a minority though :-(
-
-Enric, if you want to increase the chances of this getting reviewed I
-would humbly suggest adding a per-patch changelog (must), explicitly
-Cc (in the commit message) the people who commented on your patch
-(highly recommended), and perhaps cutting down the 20+ people from the
-To/Cc list (nitpicking).
-
-Another option would be to assist/review similar (drm bridge) patches
-for other contributors, who should return with the same :-)
-
-Just some suggestions (my 2c as they say), seeing that this has been
-around for a while.
-
-Regards,
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjIgTWFyY2ggMjAxNiBhdCAwMDo0MiwgSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5k
+ZT4gd3JvdGU6Cj4gSGkgWWFraXIsCj4KPiBBbSBNb250YWcsIDIxLiBNw6RyeiAyMDE2LCAyMDox
+Nzo0NiBzY2hyaWViIFlha2lyIFlhbmc6Cj4+IE9uIDAzLzIxLzIwMTYgMDc6MjkgUE0sIEhlaWtv
+IFN0w7xibmVyIHdyb3RlOgo+PiA+IEFtIE1vbnRhZywgMjEuIE3DpHJ6IDIwMTYsIDE3OjI4OjM4
+IHNjaHJpZWIgWWFraXIgWWFuZzoKPj4gPj4gVGhpcyBwYXRjaCBzZXQgd291bGQgYWRkIHRoZSBS
+R0EgZGlyZWN0IHJlbmRlcmluZyBiYXNlZCAyZCBncmFwaGljcwo+PiA+PiBhY2NlbGVyYXRpb24g
+bW9kdWxlLgo+PiA+Cj4+ID4gdmVyeSBjb29sIHRvIHNlZSB0aGF0Lgo+Pgo+PiA7KQo+Pgo+PiA+
+PiBUaGlzIHBhdGNoIHNldCBpcyBiYXNlZCBvbiBnaXQgcmVwb3NpdG9yeSBiZWxvdzoKPj4gPj4g
+Z2l0Oi8vcGVvcGxlLmZyZWVkZXNrdG9wLm9yZy9+YWlybGllZC9saW51eCBkcm0tbmV4dAo+PiA+
+PiBjb21taXQgaWQ6IDU2OGQ3Yzc2NGFlMDFmMzcwNjA4NWFjOGYwZDhhOGFjN2U4MjZiZDcKPj4g
+Pj4KPj4gPj4gQW5kIHRoZSBSR0EgZHJpdmVyIGlzIGJhc2VkIG9uIEV4eW5vcyBHMkQgZHJpdmVy
+LCBpdCBvbmx5IG1hbmFnZXMgdGhlCj4+ID4+IGNvbW1hbmQgbGlzdHMgcmVjZWl2ZWQgZnJvbSB1
+c2VyLCBzbyB1c2VyIHNob3VsZCBtYWtlIHRoZSBjb21tYW5kIGxpc3QKPj4gPj4gdG8gZGF0YSBh
+bmQgcmVnaXN0ZXJzIG5lZWRlZCBieSBvcGVyYXRpb24gdG8gdXNlLgo+PiA+Pgo+PiA+PiBJIGhh
+dmUgcHJlcGFyZWQgYW4gdXNlcnNwYWNlIGRlbW8gYXBwbGljYXRpb24gZm9yIHRlc3Rpbmc6Cj4+
+ID4+ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS95YWtpci1ZYW5nL2xpYmRybS1yb2NrY2hpcAo+PiA+
+Pgo+PiA+PiBUaGF0IGlzIGEgcm9ja2NoaXAgbGliZHJtIGxpYnJhcnksIGFuZCBJIGhhdmUgd3Jp
+dGUgYSBzaW1wbGUgdGVzdCBjYXNlCj4+ID4+ICJyb2NrY2hpcF9yZ2FfdGVzdCIgdGhhdCB3b3Vs
+ZCB0ZXN0IHRoZSBiZWxvdyBSR0EgZmVhdHVyZXM6Cj4+ID4+IC0gc29saWQKPj4gPj4gLSBjb3B5
+Cj4+ID4+IC0gcm90YXRpb24KPj4gPj4gLSBmbGlwCj4+ID4+IC0gd2luZG93IGNsaXAKPj4gPj4g
+LSBkaXRoZXJpbmcKPj4gPgo+PiA+IERpZCB5b3Ugc3VibWl0IHlvdXIgbGliZHJtIGNoYW5nZXMg
+YXMgd2VsbD8KPj4gPgo+PiA+IFVzZXJzcGFjZS1pbnRlcmZhY2VzIG5lZWQgdG8gYmUgc3RhYmxl
+IHNvIHRoZSBvdGhlciBzaWRlIG11c3QgYWxzbyBnZXQKPj4gPiBhY2NlcHRlZCAtIGV2ZW4gYmVm
+b3JlIHRoZSBrZXJuZWwgY2hhbmdlIGlmIEkgcmVtZW1iZXIgY29ycmVjdGx5Lgo+Pgo+PiBHb3Qg
+aXQsIGFuZCBJIGp1c3Qgc2F3IGV4eW5vc19maW1nMmQgYWxyZWFkeSBsYW5kZWQgYXQgbWFpbmxp
+bmUgbGliZHJtLgo+PiBCdXQgSSBkb24ndCBmaW5kIHRoZSB3YXkgdG8gc3VibWl0IHBhdGNoZXMg
+dG8gbGliZHJtLCB3b3VsZCB5b3UgbGlrZQo+PiBzaGFyZSBzb21lIGhlbHBzIGhlcmUgOykKPgo+
+IExvb2tpbmcgYXQgdGhlIGxpYmRybSBzb3VyY2VzIG9uIGNnaXQuZnJlZWRlc2t0b3Aub3JnLCBJ
+IGRpZCBub3QgZmluZCBhbnkKPiBzcGVjaWZpYyBtYW51YWwgb24gc3VibWl0dGluZyBwYXRjaGVz
+Lgo+Cj4gQnV0IGxvb2tpbmcgYXQgdGhlIGRyaS1saXN0IGFyY2hpdmUsIGRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcgaXMgdGhlCj4gcmlnaHQgbGlzdCBhbmQgbG9va2luZyBhdCB0aGUg
+bGliZHJtIGhpc3RvcnkgaXQgbG9va3MgbGlrZSBFbWlsIFZlbGlrb3YKPiA8ZW1pbC5sLnZlbGlr
+b3ZAZ21haWwuY29tPiBzZWVtcyB0byBiZSBkb2luZyBtYWludGVuYW5jZS1zdHVmZiBpbiBsaWJk
+cm0uCj4gQW5kIGFzIGEgM3JkIHJlY2lwaWVudCwgcGxlYXNlIGFsc28gaW5jbHVkZSB0aGUgbGlu
+dXgtcm9ja2NoaXAgbGlzdC4KPgo+IEBFbWlsLCBwbGVhc2Ugc2hvdXQgaWYgSSByZWFkIHRoYXQg
+d3JvbmcgOi0pCj4KWW91IGdvdCBpdCBzcG90IG9uIEhlaWtvLiBUaGVyZSBhcmUgYSBmZXcgbm90
+ZXMgdGhvdWdoLi4uCgpBcyBvbmUgcmV1c2VzIHRoZSBleGlzdGluZyBoYXJkd2FyZS9JUCBibG9j
+aywgaXQgd291bGQgYmUgYmV0dGVyIHRvCmF2b2lkIGNvcHkvcGFzdGluZyBjb2RlIGFyb3VuZC4K
+TmFtZWx5OgogLSAoaWYgcG9zc2libGUpIGZhY3RvciBvdXQgdGhlIGV4eW5vcyBnMmQga2VybmVs
+IGZ1bmN0aW9uYWxpdHkgdG8gYQpzZXBhcmF0ZSBrZXJuZWwgbW9kdWxlIGFuZCB3aXJlIHVwIHRo
+ZSByb2NraGlwICh2aWEgZHQgPykgdG8gdXNlIGl0CiAtIGZhY3RvciBvdXQgdGhlIGcyZCBzcGVj
+aWZpY3Mgb3V0IG9mIGV4eW5vc19kcm0uaCAoaW50bwpleHlub3NfZzJkX2RybS5oIHBlcmhhcHMg
+PykgYW5kIG1ha2Ugc3VyZSBleHlub3NfZHJtLmggaW5jbHVkZXMgdGhlCm5ldyBoZWFkZXIKIC0g
+aWYgbmVpdGhlciBvZiB0aGVzZSBhcmUgcG9zc2libGUsIHRoZW4gcGxlYXNlIGVuc3VyZSB0aGF0
+IHRoZSBuZXcKaGVhZGVyIHVzZXMgY29ycmVjdCB0eXBlcyAoc2VlIHRoZSBkb2NzIFsxXSksIHVz
+ZSBNSVQvWDExIGxpY2Vuc2UgKGlmCnBvc3NpYmxlKSBhbmQgbGluayB3aGVyZSB1cHN0cmVhbSB1
+c2Vyc3BhY2UgaXMgaGFwcHkgd2l0aCB0aGUKaW50ZXJmYWNlIChpZGVhbGx5IG1vcmUgdGhhbiBh
+IHNpbXBsZSB0ZXN0IGFwcCBsaWtlIGxpYmRybSkKClRoZXNlIG1pZ2h0IHNvdW5kIGxpa2UgYW4g
+b3ZlcmtpbGwsIGFsdGhvdWdoIGdldHRpbmcgVUFQSSByaWdodCBhbmQKbWFpbnRhaW5pbmcgaXQg
+Zm9yZXZlciBmb3JjZXMgdXMgdG8gZG8gc28uCgpSZWdhcmRzLApFbWlsCgpbMV0gaHR0cHM6Ly9n
+aXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3Ry
+ZWUvRG9jdW1lbnRhdGlvbi9pb2N0bC9ib3RjaGluZy11cC1pb2N0bHMudHh0Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
