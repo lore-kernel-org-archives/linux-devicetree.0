@@ -1,42 +1,106 @@
 From: Sinan Kaya <okaya@codeaurora.org>
-Subject: [PATCH V3 0/3] vfio, platform: add HIDMA and ACPI support
-Date: Mon, 28 Mar 2016 09:35:21 -0400
-Message-ID: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH V3 2/3] vfio, platform: make reset driver a requirement by default
+Date: Mon, 28 Mar 2016 09:35:23 -0400
+Message-ID: <1459172124-6730-3-git-send-email-okaya@codeaurora.org>
+References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org
-Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>
+Cc: shankerd@codeaurora.org, vikrams@codeaurora.org, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, vinod.koul@intel.com, agross@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sinan Kaya <okaya@codeaurora.org>, Baptiste Reynal <b.reynal@virtualopensystems.com>, Alex Williamson <alex.williamson@redhat.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patchset makes three different changes.
-1. Add support for probing ACPI platform reset drivers.
-2. Make reset driver a requirement by default with an optional kernel
-command line override
-3. Add support for HIDMA reset driver.
+The code was allowing platform devices to be used without a supporting VFIO
+reset driver. The hardware can be left in some inconsistent state after a
+guest machine abort.
 
-Specific changes:
+The reset driver will put the hardware back to safe state and disable
+interrupts before returning the control back to the host machine.
 
-vfio, platform: make reset driver a requirement
-Changes from V2: (https://lkml.org/lkml/2016/3/11/463)
-* add reset_required kernel command line option to override the
-  requirement.
+Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+---
+ drivers/vfio/platform/vfio_amba.c             | 5 +++++
+ drivers/vfio/platform/vfio_platform.c         | 5 +++++
+ drivers/vfio/platform/vfio_platform_common.c  | 8 +++++++-
+ drivers/vfio/platform/vfio_platform_private.h | 1 +
+ 4 files changed, 18 insertions(+), 1 deletion(-)
 
-Sinan Kaya (3):
-  vfio, platform: add support for ACPI while detecting the reset driver
-  vfio, platform: make reset driver a requirement by default
-  vfio, platform: add QTI HIDMA reset driver
-
- drivers/vfio/platform/reset/Kconfig                |   9 ++
- drivers/vfio/platform/reset/Makefile               |   2 +
- .../vfio/platform/reset/vfio_platform_amdxgbe.c    |   4 +-
- .../platform/reset/vfio_platform_calxedaxgmac.c    |   4 +-
- .../vfio/platform/reset/vfio_platform_qcomhidma.c  | 101 ++++++++++++++++++
- drivers/vfio/platform/vfio_amba.c                  |   5 +
- drivers/vfio/platform/vfio_platform.c              |   5 +
- drivers/vfio/platform/vfio_platform_common.c       | 115 +++++++++++++++++----
- drivers/vfio/platform/vfio_platform_private.h      |  44 ++++----
- 9 files changed, 250 insertions(+), 39 deletions(-)
- create mode 100644 drivers/vfio/platform/reset/vfio_platform_qcomhidma.c
-
+diff --git a/drivers/vfio/platform/vfio_amba.c b/drivers/vfio/platform/vfio_amba.c
+index a66479b..7585902 100644
+--- a/drivers/vfio/platform/vfio_amba.c
++++ b/drivers/vfio/platform/vfio_amba.c
+@@ -23,6 +23,10 @@
+ #define DRIVER_AUTHOR   "Antonios Motakis <a.motakis@virtualopensystems.com>"
+ #define DRIVER_DESC     "VFIO for AMBA devices - User Level meta-driver"
+ 
++static bool reset_required = true;
++module_param(reset_required, bool, 0644);
++MODULE_PARM_DESC(reset_required, "override reset requirement (default: 1)");
++
+ /* probing devices from the AMBA bus */
+ 
+ static struct resource *get_amba_resource(struct vfio_platform_device *vdev,
+@@ -68,6 +72,7 @@ static int vfio_amba_probe(struct amba_device *adev, const struct amba_id *id)
+ 	vdev->get_resource = get_amba_resource;
+ 	vdev->get_irq = get_amba_irq;
+ 	vdev->parent_module = THIS_MODULE;
++	vdev->reset_required = reset_required;
+ 
+ 	ret = vfio_platform_probe_common(vdev, &adev->dev);
+ 	if (ret) {
+diff --git a/drivers/vfio/platform/vfio_platform.c b/drivers/vfio/platform/vfio_platform.c
+index b1cc3a7..ef89146 100644
+--- a/drivers/vfio/platform/vfio_platform.c
++++ b/drivers/vfio/platform/vfio_platform.c
+@@ -23,6 +23,10 @@
+ #define DRIVER_AUTHOR   "Antonios Motakis <a.motakis@virtualopensystems.com>"
+ #define DRIVER_DESC     "VFIO for platform devices - User Level meta-driver"
+ 
++static bool reset_required = true;
++module_param(reset_required, bool, 0644);
++MODULE_PARM_DESC(reset_required, "override reset requirement (default: 1)");
++
+ /* probing devices from the linux platform bus */
+ 
+ static struct resource *get_platform_resource(struct vfio_platform_device *vdev,
+@@ -66,6 +70,7 @@ static int vfio_platform_probe(struct platform_device *pdev)
+ 	vdev->get_resource = get_platform_resource;
+ 	vdev->get_irq = get_platform_irq;
+ 	vdev->parent_module = THIS_MODULE;
++	vdev->reset_required = reset_required;
+ 
+ 	ret = vfio_platform_probe_common(vdev, &pdev->dev);
+ 	if (ret)
+diff --git a/drivers/vfio/platform/vfio_platform_common.c b/drivers/vfio/platform/vfio_platform_common.c
+index c28883a..67a3163 100644
+--- a/drivers/vfio/platform/vfio_platform_common.c
++++ b/drivers/vfio/platform/vfio_platform_common.c
+@@ -637,7 +637,13 @@ int vfio_platform_probe_common(struct vfio_platform_device *vdev,
+ 		return ret;
+ 	}
+ 
+-	vfio_platform_get_reset(vdev);
++	ret = vfio_platform_get_reset(vdev);
++	if (ret && vdev->reset_required) {
++		pr_err("vfio: no reset function found for device %s\n",
++		       vdev->name);
++		iommu_group_put(group);
++		return ret;
++	}
+ 	mutex_init(&vdev->igate);
+ 
+ 	return 0;
+diff --git a/drivers/vfio/platform/vfio_platform_private.h b/drivers/vfio/platform/vfio_platform_private.h
+index 1b95adf..b5a699a 100644
+--- a/drivers/vfio/platform/vfio_platform_private.h
++++ b/drivers/vfio/platform/vfio_platform_private.h
+@@ -50,6 +50,7 @@ struct vfio_platform_region {
+ };
+ 
+ struct vfio_platform_device {
++	bool				reset_required;
+ 	struct vfio_platform_region	*regions;
+ 	u32				num_regions;
+ 	struct vfio_platform_irq	*irqs;
 -- 
 1.8.2.1
