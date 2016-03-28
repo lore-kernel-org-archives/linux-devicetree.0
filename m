@@ -1,88 +1,149 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v2 3/6] Documentation: DT: vdma: update binding doc for
- AXI DMA
-Date: Mon, 28 Mar 2016 05:27:04 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A570615@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1459101966-9932-1-git-send-email-appanad@xilinx.com>
- <20160327192600.GI19212@xsjsorenbubuntu>
+From: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] arm: dts: mt2701: Add clock controller device nodes
+Date: Mon, 28 Mar 2016 13:29:15 +0800
+Message-ID: <1459142955-33209-1-git-send-email-jamesjj.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160327192600.GI19212@xsjsorenbubuntu>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Soren Brinkmann <sorenb@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, Anirudha Sarangi <anirudh@xilinx.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "vinod.koul@intel.com" <vinod.koul@intel.com>, Srikanth Vemula <svemula@xilinx.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, "galak@codeaurora.org" <galak@codeaurora.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, linux-arm-kernel@l
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU29yZW4sDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU8O2cmVu
-IEJyaW5rbWFubiBbbWFpbHRvOnNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tXQ0KPiBTZW50OiBN
-b25kYXksIE1hcmNoIDI4LCAyMDE2IDEyOjU2IEFNDQo+IFRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJl
-c3dhcmEgUmFvDQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsg
-bWFyay5ydXRsYW5kQGFybS5jb207DQo+IGlqYytkZXZpY2V0cmVlQGhlbGxpb24ub3JnLnVrOyBn
-YWxha0Bjb2RlYXVyb3JhLm9yZzsgTWljaGFsIFNpbWVrOw0KPiB2aW5vZC5rb3VsQGludGVsLmNv
-bTsgZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tOyBBbnVyYWcgS3VtYXIgVnVsaXNoYTsgQXBwYW5h
-DQo+IER1cmdhIEtlZGFyZXN3YXJhIFJhbzsgbW9yaXR6LmZpc2NoZXJAZXR0dXMuY29tOw0KPiBs
-YXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb207IGx1aXNAZGViZXRoZW5jb3VydC5jb207
-IFNyaWthbnRoDQo+IFZlbXVsYTsgQW5pcnVkaGEgU2FyYW5naTsgZGV2aWNldHJlZUB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LWFybS0NCj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4
-LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRtYWVuZ2luZUB2Z2VyLmtlcm5lbC5vcmcNCj4g
-U3ViamVjdDogUmU6IFtQQVRDSCB2MiAzLzZdIERvY3VtZW50YXRpb246IERUOiB2ZG1hOiB1cGRh
-dGUgYmluZGluZyBkb2MgZm9yDQo+IEFYSSBETUENCj4gDQo+IE9uIFN1biwgMjAxNi0wMy0yNyBh
-dCAyMzozNjowNSArMDUzMCwgS2VkYXJlc3dhcmEgcmFvIEFwcGFuYSB3cm90ZToNCj4gPiBUaGlz
-IHBhdGNoIHVwZGF0ZXMgdGhlIGRldmljZS10cmVlIGJpbmRpbmcgZG9jIGZvciBhZGRpbmcgc3Vw
-cG9ydCBmb3INCj4gPiBBWEkgRE1BLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogS2VkYXJlc3dh
-cmEgcmFvIEFwcGFuYSA8YXBwYW5hZEB4aWxpbnguY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMg
-Zm9yIHYyOg0KPiA+IC0tLT4gTW9kaWZpZWQgY29tbWl0IG1lc3NhZ2UgYXMgc3VnZ2VzdGVkIGJ5
-IFZpbm9kLg0KPiA+IC0tLT4gTW92ZWQgdGhlIHBhdGNoIHRvIGZvcndhcmQgaW4gdGhlIHNlcmll
-cyBhcyBzdWdnZXN0ZWQgYnkgdmlub2QuDQo+ID4NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZG1hL3hpbGlueC94aWxpbnhfdmRtYS50eHQgfCAyMg0KPiA+ICsrKysrKysrKysrKysrKysr
-KysrKy0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
-LSkNCj4gPg0KPiA+IGRpZmYgLS1naXQNCj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kbWEveGlsaW54L3hpbGlueF92ZG1hLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2RtYS94aWxpbngveGlsaW54X3ZkbWEudHh0DQo+ID4gaW5kZXgg
-YTg2NzM3Yy4uNTg0MTQyMSAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZG1hL3hpbGlueC94aWxpbnhfdmRtYS50eHQNCj4gPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC94aWxpbnhfdmRtYS50eHQNCj4g
-PiBAQCAtMyw4ICszLDEzIEBAIEl0IGNhbiBiZSBjb25maWd1cmVkIHRvIGhhdmUgb25lIGNoYW5u
-ZWwgb3IgdHdvDQo+ID4gY2hhbm5lbHMuIElmIGNvbmZpZ3VyZWQgIGFzIHR3byBjaGFubmVscywg
-b25lIGlzIHRvIHRyYW5zbWl0IHRvIHRoZQ0KPiA+IHZpZGVvIGRldmljZSBhbmQgYW5vdGhlciBp
-cyAgdG8gcmVjZWl2ZSBmcm9tIHRoZSB2aWRlbyBkZXZpY2UuDQo+ID4NCj4gPiArWGlsaW54IEFY
-SSBETUEgZW5naW5lLCBpdCBkb2VzIHRyYW5zZmVycyBiZXR3ZWVuIG1lbW9yeSBhbmQgQVhJNA0K
-PiA+ICtzdHJlYW0gdGFyZ2V0IGRldmljZXMuIEl0IGNhbiBiZSBjb25maWd1cmVkIHRvIGhhdmUg
-b25lIGNoYW5uZWwgb3IgdHdvDQo+IGNoYW5uZWxzLg0KPiA+ICtJZiBjb25maWd1cmVkIGFzIHR3
-byBjaGFubmVscywgb25lIGlzIHRvIHRyYW5zbWl0IHRvIHRoZSBkZXZpY2UgYW5kDQo+ID4gK2Fu
-b3RoZXIgaXMgdG8gcmVjZWl2ZSBmcm9tIHRoZSBkZXZpY2UuDQo+ID4gKw0KPiA+ICBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGNvbXBhdGlibGU6IFNob3VsZCBiZSAieGxueCxheGktdmRt
-YS0xLjAwLmEiDQo+ID4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJ4bG54LGF4aS12ZG1hLTEu
-MDAuYSIgb3IgInhsbngsYXhpLWRtYS0xLjAwLmEiDQo+ID4gIC0gI2RtYS1jZWxsczogU2hvdWxk
-IGJlIDwxPiwgc2VlICJkbWFzIiBwcm9wZXJ0eSBiZWxvdw0KPiA+ICAtIHJlZzogU2hvdWxkIGNv
-bnRhaW4gVkRNQSByZWdpc3RlcnMgbG9jYXRpb24gYW5kIGxlbmd0aC4NCj4gPiAgLSB4bG54LG51
-bS1mc3RvcmVzOiBTaG91bGQgYmUgdGhlIG51bWJlciBvZiBmcmFtZWJ1ZmZlcnMgYXMgY29uZmln
-dXJlZCBpbg0KPiBoL3cuDQo+ID4gQEAgLTU5LDYgKzY0LDIxIEBAIGF4aV92ZG1hXzA6IGF4aXZk
-bWFANDAwMzAwMDAgew0KPiA+ICAJfSA7DQo+ID4gIH0gOw0KPiA+DQo+ID4gK2F4aV9kbWFfMDog
-YXhpZG1hQDQwNDAwMDAwIHsNCj4gDQo+IFRoZSBub2RlIG5hbWVzIHNob3VsZCBmb2xsb3cgdGhl
-IGdlbmVyaWMgbmFtZXMsIGhlbmNlICdkbWEtY29udHJvbGxlckAuLi4nLg0KDQpPayB3aWxsIGZp
-eCBpbiBuZXh0IHZlcnNpb24uLi4NCg0KPiANCj4gPiArCWNvbXBhdGlibGUgPSAieGxueCxheGkt
-ZG1hLTEuMDAuYSI7DQo+ID4gKwkjZG1hLWNlbGxzID0gPDE+Ow0KPiA+ICsJcmVnID0gPCAweDQw
-NDAwMDAwIDB4MTAwMDAgPjsNCj4gPiArCWRtYS1jaGFubmVsQDQwNDAwMDAwIHsNCj4gPiArCQlj
-b21wYXRpYmxlID0gInhsbngsYXhpLWRtYS1tbTJzLWNoYW5uZWwiOw0KPiA+ICsJCWludGVycnVw
-dHMgPSA8IDAgNTkgNCA+Ow0KPiA+ICsJCXhsbngsZGF0YXdpZHRoID0gPDB4NDA+Ow0KPiA+ICsJ
-fSA7DQo+ID4gKwlkbWEtY2hhbm5lbEA0MDQwMDAzMCB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJ4
-bG54LGF4aS1kbWEtczJtbS1jaGFubmVsIjsNCj4gPiArCQlpbnRlcnJ1cHRzID0gPCAwIDU4IDQg
-PjsNCj4gPiArCQl4bG54LGRhdGF3aWR0aCA9IDwweDQwPjsNCj4gDQo+IE5pdDogVGhlIHNwYWNp
-bmcgYXJvdW5kIHRoZSAnPCcgJz4nIGlzIGluY29uc2lzdGVudC4gSSdkIGp1c3QgcmVtb3ZlIGFs
-bCByZWR1bmRhbnQNCj4gc3BhY2VzLg0KDQpPayB3aWxsIGZpeCBpbiBuZXh0IHZlcnNpb24uLi4N
-Cg0KUmVnYXJkcywNCktlZGFyLg0KDQo+IA0KPiAJU8O2cmVuDQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add clock controller nodes for MT2701, include topckgen, infracfg,
+pericfg, apmixedsys, mmsys, imgsys, vdecsys, hifsys, ethsys and
+bdpsys. This patch also add two oscillators that provide clocks for
+MT2701.
+
+Signed-off-by: James Liao <jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+This patch is based on v4.6-rc1 and MT2701 clock patches [1]. This
+patch adds all clock provider nodes which are supported in [1].
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-February/004030.html
+
+ arch/arm/boot/dts/mt2701.dtsi | 78 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 8343768..c8fee33 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -12,6 +12,7 @@
+  * GNU General Public License for more details.
+  */
+ 
++#include <dt-bindings/clock/mt2701-clk.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include "skeleton64.dtsi"
+@@ -76,6 +77,20 @@
+ 		#clock-cells = <0>;
+ 	};
+ 
++	clk26m: oscillator@0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <26000000>;
++		clock-output-names = "clk26m";
++	};
++
++	rtc32k: oscillator@1 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <32000>;
++		clock-output-names = "rtc32k";
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupt-parent = <&gic>;
+@@ -85,6 +100,26 @@
+ 			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
++	topckgen: syscon@10000000 {
++		compatible = "mediatek,mt2701-topckgen", "syscon";
++		reg = <0 0x10000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	infracfg: syscon@10001000 {
++		compatible = "mediatek,mt2701-infracfg", "syscon";
++		reg = <0 0x10001000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++	pericfg: syscon@10003000 {
++		compatible = "mediatek,mt2701-pericfg", "syscon";
++		reg = <0 0x10003000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
+ 	watchdog: watchdog@10007000 {
+ 		compatible = "mediatek,mt2701-wdt",
+ 			     "mediatek,mt6589-wdt";
+@@ -109,6 +144,13 @@
+ 		reg = <0 0x10200100 0 0x1c>;
+ 	};
+ 
++	apmixedsys: syscon@10209000 {
++		compatible = "mediatek,mt2701-apmixedsys", "syscon";
++		reg = <0 0x10209000 0 0x1000>;
++		mediatek,hdmi-ibias = <0xa>;
++		#clock-cells = <1>;
++	};
++
+ 	gic: interrupt-controller@10211000 {
+ 		compatible = "arm,cortex-a7-gic";
+ 		interrupt-controller;
+@@ -155,4 +197,40 @@
+ 		clocks = <&uart_clk>;
+ 		status = "disabled";
+ 	};
++
++	mmsys: syscon@14000000 {
++		compatible = "mediatek,mt2701-mmsys", "syscon";
++		reg = <0 0x14000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	imgsys: syscon@15000000 {
++		compatible = "mediatek,mt2701-imgsys", "syscon";
++		reg = <0 0x15000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	vdecsys: syscon@16000000 {
++		compatible = "mediatek,mt2701-vdecsys", "syscon";
++		reg = <0 0x16000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	hifsys: syscon@1a000000 {
++		compatible = "mediatek,mt2701-hifsys", "syscon";
++		reg = <0 0x1a000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	ethsys: syscon@1b000000 {
++		compatible = "mediatek,mt2701-ethsys", "syscon";
++		reg = <0 0x1b000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
++
++	bdpsys: syscon@1c000000 {
++		compatible = "mediatek,mt2701-bdpsys", "syscon";
++		reg = <0 0x1c000000 0 0x1000>;
++		#clock-cells = <1>;
++	};
+ };
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
