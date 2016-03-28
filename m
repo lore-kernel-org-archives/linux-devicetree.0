@@ -1,185 +1,577 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] iio: ad5755: Add DT binding documentation
-Date: Mon, 28 Mar 2016 16:13:37 +0100
-Message-ID: <56F94A21.6070804@kernel.org>
-References: <1457705561-12253-1-git-send-email-sean.nyekjaer@prevas.dk>
- <1457705561-12253-2-git-send-email-sean.nyekjaer@prevas.dk>
- <56E3E121.9030400@kernel.org>
+Subject: Re: [PATCH v3 2/6] iio: pulse: add TI ECAP driver
+Date: Mon, 28 Mar 2016 16:30:00 +0100
+Message-ID: <56F94DF8.9010003@kernel.org>
+References: <1391626901-31684-1-git-send-email-mporter@linaro.org>
+ <1391626901-31684-3-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E3E121.9030400-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1391626901-31684-3-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux IIO List <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/03/16 09:28, Jonathan Cameron wrote:
-> On 11/03/16 14:12, Sean Nyekjaer wrote:
->> Signed-off-by: Sean Nyekjaer <sean.nyekjaer-rjjw5hvvQKZaa/9Udqfwiw@public.gmane.org>
-> Looks much better to me.
+On 05/02/14 19:01, Matt Porter wrote:
+> Adds support for capturing PWM signals using the TI ECAP peripheral.
+> This driver supports triggered buffer capture of pulses on multiple
+> ECAP instances. In addition, the driver supports configurable polarity
+> of the signal to be captured.
 > 
-> Looking for Acks from Lars and a device tree binding maintainer
-> on this one though.
-> (added CCs)
-Lars?
+> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Matt,
+
+Given I had a personal message asking about this a few weeks ago, I thought I'd
+ask... Any plans to resurrect this?
+> ---
+>  drivers/iio/pulse/Kconfig  |  20 ++
+>  drivers/iio/pulse/Makefile |   6 +
+>  drivers/iio/pulse/tiecap.c | 491 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 517 insertions(+)
+>  create mode 100644 drivers/iio/pulse/Kconfig
+>  create mode 100644 drivers/iio/pulse/Makefile
+>  create mode 100644 drivers/iio/pulse/tiecap.c
 > 
-> As an aside Device Tree bindings maintainers, do you prefer a personal cc
-> or just getting them directly from the devicetree list?
+> diff --git a/drivers/iio/pulse/Kconfig b/drivers/iio/pulse/Kconfig
+> new file mode 100644
+> index 0000000..9864d4b
+> --- /dev/null
+> +++ b/drivers/iio/pulse/Kconfig
+> @@ -0,0 +1,20 @@
+> +#
+> +# Pulse Capture Devices
+> +#
+> +# When adding new entries keep the list in alphabetical order
+> +
+> +menu "Pulse Capture Devices"
+> +
+> +config IIO_TIECAP
+> +	tristate "TI ECAP Pulse Capture"
+> +	depends on SOC_AM33XX
+> +	select IIO_BUFFER
+> +	select IIO_TRIGGERED_BUFFER
+> +	help
+> +	 If you say yes here you get support for the TI ECAP peripheral
+> +	 in pulse capture mode.
+> +
+> +	 This driver can also be built as a module.  If so, the module
+> +	 will be called tiecap
+> +
+> +endmenu
+> diff --git a/drivers/iio/pulse/Makefile b/drivers/iio/pulse/Makefile
+> new file mode 100644
+> index 0000000..94d4b00
+> --- /dev/null
+> +++ b/drivers/iio/pulse/Makefile
+> @@ -0,0 +1,6 @@
+> +#
+> +# Makefile for IIO PWM Capture Devices
+> +#
+> +
+> +# When adding new entries keep the list in alphabetical order
+> +obj-$(CONFIG_IIO_TIECAP)	+= tiecap.o
+> diff --git a/drivers/iio/pulse/tiecap.c b/drivers/iio/pulse/tiecap.c
+> new file mode 100644
+> index 0000000..fd96745
+> --- /dev/null
+> +++ b/drivers/iio/pulse/tiecap.c
+> @@ -0,0 +1,491 @@
+> +/*
+> + * ECAP IIO pulse capture driver
+> + *
+> + * Copyright (C) 2014 Linaro Limited
+> + * Author: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/io.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +#include "../../pwm/pwm-tipwmss.h"
+> +
+> +/* ECAP regs and bits */
+> +#define CAP1			0x08
+> +#define CAP2			0x0c
+> +#define ECCTL1			0x28
+> +#define ECCTL1_RUN_FREE		BIT(15)
+> +#define ECCTL1_CAPLDEN		BIT(8)
+> +#define ECCTL1_CAP2POL		BIT(2)
+> +#define ECCTL1_CTRRST1		BIT(1)
+> +#define ECCTL1_CAP1POL		BIT(0)
+> +#define ECCTL2			0x2a
+> +#define ECCTL2_SYNCO_SEL_DIS	BIT(7)
+> +#define ECCTL2_TSCTR_FREERUN	BIT(4)
+> +#define ECCTL2_REARM		BIT(3)
+> +#define ECCTL2_STOP_WRAP_2	BIT(1)
+> +#define ECEINT			0x2c
+> +#define ECFLG			0x2e
+> +#define ECCLR			0x30
+> +#define ECINT_CTRCMP		BIT(7)
+> +#define ECINT_CTRPRD		BIT(6)
+> +#define ECINT_CTROVF		BIT(5)
+> +#define ECINT_CEVT4		BIT(4)
+> +#define ECINT_CEVT3		BIT(3)
+> +#define ECINT_CEVT2		BIT(2)
+> +#define ECINT_CEVT1		BIT(1)
+> +#define ECINT_ALL		(ECINT_CTRCMP |	\
+> +				ECINT_CTRPRD |	\
+> +				ECINT_CTROVF |	\
+> +				ECINT_CEVT4 |	\
+> +				ECINT_CEVT3 |	\
+> +				ECINT_CEVT2 |	\
+> +				ECINT_CEVT1)
+> +
+> +/* ECAP driver flags */
+> +#define ECAP_POLARITY_HIGH	BIT(1)
+> +#define ECAP_ENABLED		BIT(0)
+> +
+> +struct ecap_context {
+> +	u32	cap1;
+> +	u32	cap2;
+> +	u16	ecctl1;
+> +	u16	ecctl2;
+> +	u16	eceint;
+> +};
+> +
+> +struct ecap_state {
+> +	unsigned long		flags;
+> +	unsigned int		clk_rate;
+> +	void __iomem		*regs;
+> +	u32			*buf;
+> +	struct ecap_context	ctx;
+> +};
+> +
+> +#define dev_to_ecap_state(d)	iio_priv(dev_to_iio_dev(d))
+> +
+> +static const struct iio_chan_spec ecap_channels[] = {
+> +	{
+> +		.type		= IIO_PULSE,
+> +		.info_mask_separate =
+> +			BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index	= 0,
+> +		.scan_type = {
+> +			.sign		= 'u',
+> +			.realbits	= 32,
+> +			.storagebits	= 32,
+> +			.endianness	= IIO_LE,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(1)
+> +};
+> +
+> +static ssize_t ecap_attr_show(struct device *dev,
+> +			      struct device_attribute *attr, char *buf)
+> +{
+> +	struct ecap_state *state = dev_to_ecap_state(dev);
+> +
+> +	return sprintf(buf, "%d\n",
+> +		       test_bit(ECAP_POLARITY_HIGH, &state->flags));
+> +}
+> +
+> +static ssize_t ecap_attr_store(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf,
+> +			       size_t len)
+> +{
+> +	int ret;
+> +	bool val;
+> +	struct ecap_state *state = dev_to_ecap_state(dev);
+> +
+> +	if (test_bit(ECAP_ENABLED, &state->flags))
+> +		return -EINVAL;
+> +
+> +	ret = strtobool(buf, &val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (val)
+> +		set_bit(ECAP_POLARITY_HIGH, &state->flags);
+> +	else
+> +		clear_bit(ECAP_POLARITY_HIGH, &state->flags);
+> +
+> +	return len;
+> +}
+> +
+> +static IIO_DEVICE_ATTR(pulse_polarity, S_IRUGO | S_IWUSR,
+> +	ecap_attr_show, ecap_attr_store, 0);
+> +
+> +static struct attribute *ecap_attributes[] = {
+> +	&iio_dev_attr_pulse_polarity.dev_attr.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group ecap_attribute_group = {
+> +	.attrs = ecap_attributes,
+> +};
+> +
+> +static int ecap_read_raw(struct iio_dev *idev,
+> +			struct iio_chan_spec const *ch, int *val,
+> +			int *val2, long mask)
+> +{
+> +	struct ecap_state *state = iio_priv(idev);
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		/*
+> +		 * Always return 0 as a pulse width sample
+> +		 * is only valid in a triggered condition
+> +		 */
+> +		*val = 0;
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		*val = 0;
+> +		*val2 = NSEC_PER_SEC / state->clk_rate;
+> +		return IIO_VAL_INT_PLUS_NANO;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct iio_info ecap_info = {
+> +	.driver_module = THIS_MODULE,
+> +	.attrs = &ecap_attribute_group,
+> +	.read_raw = &ecap_read_raw,
+> +};
+> +
+> +static irqreturn_t ecap_trigger_handler(int irq, void *private)
+> +{
+> +	struct iio_poll_func *pf = private;
+> +	struct iio_dev *idev = pf->indio_dev;
+> +	struct ecap_state *state = iio_priv(idev);
+> +
+> +	/* Read pulse counter value */
+> +	*state->buf = readl(state->regs + CAP2);
+> +
+> +	iio_push_to_buffers_with_timestamp(idev, state->buf, iio_get_time_ns());
+> +
+> +	iio_trigger_notify_done(idev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +};
+> +
+> +
+> +static const struct iio_trigger_ops iio_interrupt_trigger_ops = {
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static irqreturn_t ecap_interrupt_handler(int irq, void *private)
+> +{
+> +	struct iio_dev *idev = private;
+> +	struct ecap_state *state = iio_priv(idev);
+> +	u16 ints;
+> +
+> +	iio_trigger_poll(idev->trig, 0);
+> +
+> +	/* Clear CAP2 interrupt */
+> +	ints = readw(state->regs + ECFLG);
+> +	if (ints & ECINT_CEVT2)
+> +		writew(ECINT_CEVT2, state->regs + ECCLR);
+> +	else
+> +		dev_warn(&idev->dev, "unhandled interrupt flagged: %04x\n",
+> +			 ints);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ecap_buffer_predisable(struct iio_dev *idev)
+> +{
+> +	struct ecap_state *state = iio_priv(idev);
+> +	int ret = 0;
+> +	u16 ecctl2;
+> +
+> +	/* Stop capture */
+> +	clear_bit(ECAP_ENABLED, &state->flags);
+> +	ecctl2 = readw(state->regs + ECCTL2) & ~ECCTL2_TSCTR_FREERUN;
+> +	writew(ecctl2, state->regs + ECCTL2);
+> +
+> +	/* Disable and clear all interrupts */
+> +	writew(0, state->regs + ECEINT);
+> +	writew(ECINT_ALL, state->regs + ECCLR);
+> +
+> +	ret = iio_triggered_buffer_predisable(idev);
+> +
+> +	pm_runtime_put_sync(idev->dev.parent);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ecap_buffer_postenable(struct iio_dev *idev)
+> +{
+> +	struct ecap_state *state = iio_priv(idev);
+> +	int ret = 0;
+> +	u16 ecctl1, ecctl2;
+> +
+> +	pm_runtime_get_sync(idev->dev.parent);
+> +
+> +	/* Configure pulse polarity */
+> +	ecctl1 = readw(state->regs + ECCTL1);
+> +	if (test_bit(ECAP_POLARITY_HIGH, &state->flags)) {
+> +		/* CAP1 rising, CAP2 falling */
+> +		ecctl1 |= ECCTL1_CAP2POL;
+> +		ecctl1 &= ~ECCTL1_CAP1POL;
+> +	} else {
+> +		/* CAP1 falling, CAP2 rising */
+> +		ecctl1 &= ~ECCTL1_CAP2POL;
+> +		ecctl1 |= ECCTL1_CAP1POL;
+> +	}
+> +	writew(ecctl1, state->regs + ECCTL1);
+> +
+> +	/* Enable CAP2 interrupt */
+> +	writew(ECINT_CEVT2, state->regs + ECEINT);
+> +
+> +	/* Enable capture */
+> +	ecctl2 = readw(state->regs + ECCTL2);
+> +	ecctl2 |= ECCTL2_TSCTR_FREERUN | ECCTL2_REARM;
+> +	writew(ecctl2, state->regs + ECCTL2);
+> +	set_bit(ECAP_ENABLED, &state->flags);
+> +
+> +	ret = iio_triggered_buffer_postenable(idev);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_buffer_setup_ops ecap_buffer_setup_ops = {
+> +	.postenable = &ecap_buffer_postenable,
+> +	.predisable = &ecap_buffer_predisable,
+> +};
+> +
+> +static void ecap_init_hw(struct iio_dev *idev)
+> +{
+> +	struct ecap_state *state = iio_priv(idev);
+> +
+> +	clear_bit(ECAP_ENABLED, &state->flags);
+> +	set_bit(ECAP_POLARITY_HIGH, &state->flags);
+> +
+> +	writew(ECCTL1_RUN_FREE | ECCTL1_CAPLDEN |
+> +	       ECCTL1_CAP2POL | ECCTL1_CTRRST1,
+> +	       state->regs + ECCTL1);
+> +
+> +	writew(ECCTL2_SYNCO_SEL_DIS | ECCTL2_STOP_WRAP_2,
+> +	       state->regs + ECCTL2);
+> +}
+> +
+> +static const struct of_device_id ecap_of_ids[] = {
+> +	{ .compatible	= "ti,am33xx-ecap" },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, ecap_of_ids);
+> +
+> +static int ecap_probe(struct platform_device *pdev)
+> +{
+> +	int irq, ret;
+> +	struct iio_dev *idev;
+> +	struct ecap_state *state;
+> +	struct resource *r;
+> +	struct clk *clk;
+> +	struct iio_trigger *trig;
+> +	u16 status;
+> +
+> +	idev = devm_iio_device_alloc(&pdev->dev, sizeof(struct ecap_state));
+> +	if (!idev)
+> +		return -ENOMEM;
+> +
+> +	state = iio_priv(idev);
+> +
+> +	clk = devm_clk_get(&pdev->dev, "fck");
+> +	if (IS_ERR(clk)) {
+> +		dev_err(&pdev->dev, "failed to get clock\n");
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	state->clk_rate = clk_get_rate(clk);
+> +	if (!state->clk_rate) {
+> +		dev_err(&pdev->dev, "failed to get clock rate\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, idev);
+> +
+> +	idev->dev.parent = &pdev->dev;
+> +	idev->name = dev_name(&pdev->dev);
+> +	idev->modes = INDIO_DIRECT_MODE;
+> +	idev->info = &ecap_info;
+> +	idev->channels = ecap_channels;
+> +	/* One h/w capture and one s/w timestamp channel per instance */
+> +	idev->num_channels = ARRAY_SIZE(ecap_channels);
+> +
+> +	trig = devm_iio_trigger_alloc(&pdev->dev, "%s-dev%d",
+> +				      idev->name, idev->id);
+> +	if (!trig)
+> +		return -ENOMEM;
+> +	trig->dev.parent = idev->dev.parent;
+> +	iio_trigger_set_drvdata(trig, idev);
+> +	trig->ops = &iio_interrupt_trigger_ops;
+> +
+> +	ret = iio_trigger_register(trig);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register trigger\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = iio_triggered_buffer_setup(idev, NULL,
+> +					 &ecap_trigger_handler,
+> +					 &ecap_buffer_setup_ops);
+> +	if (ret)
+> +		return ret;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(&pdev->dev, "no irq is specified\n");
+> +		return irq;
+> +	}
+> +	ret = devm_request_irq(&pdev->dev, irq,
+> +				&ecap_interrupt_handler,
+> +				0, dev_name(&pdev->dev), idev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "unable to request irq\n");
+> +		goto uninit_buffer;
+> +	}
+> +
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	state->regs = devm_ioremap_resource(&pdev->dev, r);
+> +	if (IS_ERR(state->regs)) {
+> +		dev_err(&pdev->dev, "unable to remap registers\n");
+> +		ret = PTR_ERR(state->regs);
+> +		goto uninit_buffer;
+> +	};
+> +
+> +	ret = iio_device_register(idev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "unable to register device\n");
+> +		goto uninit_buffer;
+> +	}
+> +
+> +	state->buf = devm_kzalloc(&idev->dev, idev->scan_bytes, GFP_KERNEL);
+> +	if (!state->buf) {
+> +		ret = -ENOMEM;
+> +		goto uninit_buffer;
+> +	}
+> +
+> +	pm_runtime_enable(&pdev->dev);
+> +	pm_runtime_get_sync(&pdev->dev);
+> +
+> +	status = pwmss_submodule_state_change(pdev->dev.parent,
+> +			PWMSS_ECAPCLK_EN);
+> +	if (!(status & PWMSS_ECAPCLK_EN_ACK)) {
+> +		dev_err(&pdev->dev, "failed to enable PWMSS config space clock\n");
+> +		ret = -EINVAL;
+> +		goto pwmss_clk_failure;
+> +	}
+> +
+> +	ecap_init_hw(idev);
+> +
+> +	pm_runtime_put_sync(&pdev->dev);
+> +
+> +	return 0;
+> +
+> +pwmss_clk_failure:
+> +	pm_runtime_put_sync(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +	iio_device_unregister(idev);
+> +
+> +uninit_buffer:
+> +	iio_triggered_buffer_cleanup(idev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ecap_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *idev = platform_get_drvdata(pdev);
+> +
+> +	pm_runtime_get_sync(&pdev->dev);
+> +
+> +	pwmss_submodule_state_change(pdev->dev.parent, PWMSS_ECAPCLK_STOP_REQ);
+> +
+> +	pm_runtime_put_sync(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	iio_device_unregister(idev);
+> +	iio_triggered_buffer_cleanup(idev);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int ecap_suspend(struct device *dev)
+> +{
+> +	struct ecap_state *state = dev_to_ecap_state(dev);
+> +
+> +	pm_runtime_get_sync(dev);
+> +	state->ctx.cap1 = readl(state->regs + CAP1);
+> +	state->ctx.cap2 = readl(state->regs + CAP2);
+> +	state->ctx.eceint = readw(state->regs + ECEINT);
+> +	state->ctx.ecctl1 = readw(state->regs + ECCTL1);
+> +	state->ctx.ecctl2 = readw(state->regs + ECCTL2);
+> +	pm_runtime_put_sync(dev);
+> +
+> +	/* If capture was active, disable ECAP */
+> +	if (test_bit(ECAP_ENABLED, &state->flags))
+> +		pm_runtime_put_sync(dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ecap_resume(struct device *dev)
+> +{
+> +	struct ecap_state *state = dev_to_ecap_state(dev);
+> +
+> +	/* If capture was active, enable ECAP */
+> +	if (test_bit(ECAP_ENABLED, &state->flags))
+> +		pm_runtime_get_sync(dev);
+> +
+> +	pm_runtime_get_sync(dev);
+> +	writel(state->ctx.cap1, state->regs + CAP1);
+> +	writel(state->ctx.cap2, state->regs + CAP2);
+> +	writew(state->ctx.eceint, state->regs + ECEINT);
+> +	writew(state->ctx.ecctl1, state->regs + ECCTL1);
+> +	writew(state->ctx.ecctl2, state->regs + ECCTL2);
+> +	pm_runtime_put_sync(dev);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(ecap_pm_ops, ecap_suspend, ecap_resume);
+> +
+> +static struct platform_driver ecap_iio_driver = {
+> +	.driver = {
+> +		.name		= "ecap",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table = of_match_ptr(ecap_of_ids),
+> +		.pm		= &ecap_pm_ops,
+> +	},
+> +	.probe = ecap_probe,
+> +	.remove = ecap_remove,
+> +};
+> +
+> +module_platform_driver(ecap_iio_driver);
+> +
+> +MODULE_DESCRIPTION("ECAP IIO pulse capture driver");
+> +MODULE_AUTHOR("Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
 > 
-> Jonthan
->> ---
->> Changes since v4:
->> - Appended -hz to dc-dc-freq
->> - Added adi,dc-dc-max-microvolt
->> - Added reg property
->>
->> Changes since v3:
->> - replaced '_' with '-'
->> - Now used actual values instead of register values.
->>
->> Changes since v2:
->>  - Removed defines, alot easier to read
->>
->>  .../devicetree/bindings/iio/dac/ad5755.txt         | 124 +++++++++++++++++++++
->>  1 file changed, 124 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5755.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/dac/ad5755.txt b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->> new file mode 100644
->> index 0000000..f0bbd7e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/dac/ad5755.txt
->> @@ -0,0 +1,124 @@
->> +* Analog Device AD5755 IIO Multi-Channel DAC Linux Driver
->> +
->> +Required properties:
->> + - compatible: Has to contain one of the following:
->> +	adi,ad5755
->> +	adi,ad5755-1
->> +	adi,ad5757
->> +	adi,ad5735
->> +	adi,ad5737
->> +
->> + - reg: spi chip select number for the device
->> + - spi-cpha or spi-cpol: is the only modes that is supported
->> +
->> +Recommended properties:
->> + - spi-max-frequency: Definition as per
->> +		Documentation/devicetree/bindings/spi/spi-bus.txt
->> +
->> +Optional properties:
->> +See include/dt-bindings/iio/ad5755.h
->> + - adi,ext-dc-dc-compenstation-resistor: boolean set if the hardware have an
->> +					 external resistor and thereby bypasses
->> +					 the internal compensation resistor.
->> + - adi,dc-dc-phase:
->> +	Valid values for DC DC Phase control is:
->> +	0: All dc-to-dc converters clock on the same edge.
->> +	1: Channel A and Channel B clock on the same edge,
->> +	   Channel C and Channel D clock on opposite edges.
->> +	2: Channel A and Channel C clock on the same edge,
->> +	   Channel B and Channel D clock on opposite edges.
->> +	3: Channel A, Channel B, Channel C, and Channel D
->> +	   clock 90 degrees out of phase from each other.
->> + - adi,dc-dc-freq-hz:
->> +	Valid values for DC DC frequency is [Hz]:
->> +	250000
->> +	410000
->> +	650000
->> + - adi,dc-dc-max-microvolt:
->> +	Valid values for the maximum allowed Vboost voltage supplied by
->> +	the dc-to-dc converter is:
->> +	23000000
->> +	24500000
->> +	27000000
->> +	29500000
->> +
->> +Optional for every channel:
->> + - adi,mode:
->> +	Valid values for DAC modes is:
->> +	0: 0 V to 5 V voltage range.
->> +	1: 0 V to 10 V voltage range.
->> +	2: Plus minus 5 V voltage range.
->> +	3: Plus minus 10 V voltage range.
->> +	4: 4 mA to 20 mA current range.
->> +	5: 0 mA to 20 mA current range.
->> +	6: 0 mA to 24 mA current range.
->> + - adi,ext-current-sense-resistor: boolean set if the hardware a external
->> +				   current sense resistor.
->> + - adi,enable-voltage-overrange: boolean enable voltage overrange
->> + - adi,slew: Array of slewrate settings should contain 3 fields:
->> +	1: Should be either 0 or 1 in order to enable or disable slewrate.
->> +	2: Slew rate settings:
->> +		Valid values for the slew rate update frequency:
->> +		64000
->> +		32000
->> +		16000
->> +		8000
->> +		4000
->> +		2000
->> +		1000
->> +		500
->> +		250
->> +		125
->> +		64
->> +		32
->> +		16
->> +		8
->> +		4
->> +		0
->> +	3: Slew step size:
->> +		Valid values for the step size LSBs:
->> +		1
->> +		2
->> +		4
->> +		16
->> +		32
->> +		64
->> +		128
->> +		256
->> +
->> +Example:
->> +dac@0 {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	compatible = "adi,ad5755";
->> +	reg = <0>;
->> +	spi-max-frequency = <1000000>;
->> +	spi-cpha;
->> +	adi,dc-dc-phase = <0>;
->> +	adi,dc-dc-freq-hz = <410000>;
->> +	adi,dc-dc-max-microvolt = <23000000>;
->> +	channel@0 {
->> +		reg = <0>;
->> +		adi,mode = <4>;
->> +		adi,ext-current-sense-resistor;
->> +		adi,slew = <0 64000 1>;
->> +	};
->> +	channel@1 {
->> +		reg = <1>;
->> +		adi,mode = <4>;
->> +		adi,ext-current-sense-resistor;
->> +		adi,slew = <0 64000 1>;
->> +	};
->> +	channel@2 {
->> +		reg = <2>;
->> +		adi,mode = <4>;
->> +		adi,ext-current-sense-resistor;
->> +		adi,slew = <0 64000 1>;
->> +	};
->> +	channel@3 {
->> +		reg = <3>;
->> +		adi,mode = <4>;
->> +		adi,ext-current-sense-resistor;
->> +		adi,slew = <0 64000 1>;
->> +	};
->> +};
->>
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
