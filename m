@@ -1,80 +1,75 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Mon, 28 Mar 2016 13:21:02 +0100
-Message-ID: <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <1511371.I0NIYzh3kP@diego> <56EFE66A.8020404@rock-chips.com>
- <1867694.1mDULrSexE@phil>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun8i: Add dts for Orange Pi
+ 2 SBC
+Date: Mon, 28 Mar 2016 14:36:31 +0200
+Message-ID: <56F9254F.9040306@redhat.com>
+References: <1458728225-6922-1-git-send-email-hdegoede@redhat.com>
+ <20160325125342.2b4b6c9ec2e4922b51687ad3@free.fr>
+Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1867694.1mDULrSexE@phil>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBV6K4S3QKGQEHHI4IAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20160325125342.2b4b6c9ec2e4922b51687ad3-GANU6spQydw@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjIgTWFyY2ggMjAxNiBhdCAwMDo0MiwgSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5k
-ZT4gd3JvdGU6Cj4gSGkgWWFraXIsCj4KPiBBbSBNb250YWcsIDIxLiBNw6RyeiAyMDE2LCAyMDox
-Nzo0NiBzY2hyaWViIFlha2lyIFlhbmc6Cj4+IE9uIDAzLzIxLzIwMTYgMDc6MjkgUE0sIEhlaWtv
-IFN0w7xibmVyIHdyb3RlOgo+PiA+IEFtIE1vbnRhZywgMjEuIE3DpHJ6IDIwMTYsIDE3OjI4OjM4
-IHNjaHJpZWIgWWFraXIgWWFuZzoKPj4gPj4gVGhpcyBwYXRjaCBzZXQgd291bGQgYWRkIHRoZSBS
-R0EgZGlyZWN0IHJlbmRlcmluZyBiYXNlZCAyZCBncmFwaGljcwo+PiA+PiBhY2NlbGVyYXRpb24g
-bW9kdWxlLgo+PiA+Cj4+ID4gdmVyeSBjb29sIHRvIHNlZSB0aGF0Lgo+Pgo+PiA7KQo+Pgo+PiA+
-PiBUaGlzIHBhdGNoIHNldCBpcyBiYXNlZCBvbiBnaXQgcmVwb3NpdG9yeSBiZWxvdzoKPj4gPj4g
-Z2l0Oi8vcGVvcGxlLmZyZWVkZXNrdG9wLm9yZy9+YWlybGllZC9saW51eCBkcm0tbmV4dAo+PiA+
-PiBjb21taXQgaWQ6IDU2OGQ3Yzc2NGFlMDFmMzcwNjA4NWFjOGYwZDhhOGFjN2U4MjZiZDcKPj4g
-Pj4KPj4gPj4gQW5kIHRoZSBSR0EgZHJpdmVyIGlzIGJhc2VkIG9uIEV4eW5vcyBHMkQgZHJpdmVy
-LCBpdCBvbmx5IG1hbmFnZXMgdGhlCj4+ID4+IGNvbW1hbmQgbGlzdHMgcmVjZWl2ZWQgZnJvbSB1
-c2VyLCBzbyB1c2VyIHNob3VsZCBtYWtlIHRoZSBjb21tYW5kIGxpc3QKPj4gPj4gdG8gZGF0YSBh
-bmQgcmVnaXN0ZXJzIG5lZWRlZCBieSBvcGVyYXRpb24gdG8gdXNlLgo+PiA+Pgo+PiA+PiBJIGhh
-dmUgcHJlcGFyZWQgYW4gdXNlcnNwYWNlIGRlbW8gYXBwbGljYXRpb24gZm9yIHRlc3Rpbmc6Cj4+
-ID4+ICAgIGh0dHBzOi8vZ2l0aHViLmNvbS95YWtpci1ZYW5nL2xpYmRybS1yb2NrY2hpcAo+PiA+
-Pgo+PiA+PiBUaGF0IGlzIGEgcm9ja2NoaXAgbGliZHJtIGxpYnJhcnksIGFuZCBJIGhhdmUgd3Jp
-dGUgYSBzaW1wbGUgdGVzdCBjYXNlCj4+ID4+ICJyb2NrY2hpcF9yZ2FfdGVzdCIgdGhhdCB3b3Vs
-ZCB0ZXN0IHRoZSBiZWxvdyBSR0EgZmVhdHVyZXM6Cj4+ID4+IC0gc29saWQKPj4gPj4gLSBjb3B5
-Cj4+ID4+IC0gcm90YXRpb24KPj4gPj4gLSBmbGlwCj4+ID4+IC0gd2luZG93IGNsaXAKPj4gPj4g
-LSBkaXRoZXJpbmcKPj4gPgo+PiA+IERpZCB5b3Ugc3VibWl0IHlvdXIgbGliZHJtIGNoYW5nZXMg
-YXMgd2VsbD8KPj4gPgo+PiA+IFVzZXJzcGFjZS1pbnRlcmZhY2VzIG5lZWQgdG8gYmUgc3RhYmxl
-IHNvIHRoZSBvdGhlciBzaWRlIG11c3QgYWxzbyBnZXQKPj4gPiBhY2NlcHRlZCAtIGV2ZW4gYmVm
-b3JlIHRoZSBrZXJuZWwgY2hhbmdlIGlmIEkgcmVtZW1iZXIgY29ycmVjdGx5Lgo+Pgo+PiBHb3Qg
-aXQsIGFuZCBJIGp1c3Qgc2F3IGV4eW5vc19maW1nMmQgYWxyZWFkeSBsYW5kZWQgYXQgbWFpbmxp
-bmUgbGliZHJtLgo+PiBCdXQgSSBkb24ndCBmaW5kIHRoZSB3YXkgdG8gc3VibWl0IHBhdGNoZXMg
-dG8gbGliZHJtLCB3b3VsZCB5b3UgbGlrZQo+PiBzaGFyZSBzb21lIGhlbHBzIGhlcmUgOykKPgo+
-IExvb2tpbmcgYXQgdGhlIGxpYmRybSBzb3VyY2VzIG9uIGNnaXQuZnJlZWRlc2t0b3Aub3JnLCBJ
-IGRpZCBub3QgZmluZCBhbnkKPiBzcGVjaWZpYyBtYW51YWwgb24gc3VibWl0dGluZyBwYXRjaGVz
-Lgo+Cj4gQnV0IGxvb2tpbmcgYXQgdGhlIGRyaS1saXN0IGFyY2hpdmUsIGRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcgaXMgdGhlCj4gcmlnaHQgbGlzdCBhbmQgbG9va2luZyBhdCB0aGUg
-bGliZHJtIGhpc3RvcnkgaXQgbG9va3MgbGlrZSBFbWlsIFZlbGlrb3YKPiA8ZW1pbC5sLnZlbGlr
-b3ZAZ21haWwuY29tPiBzZWVtcyB0byBiZSBkb2luZyBtYWludGVuYW5jZS1zdHVmZiBpbiBsaWJk
-cm0uCj4gQW5kIGFzIGEgM3JkIHJlY2lwaWVudCwgcGxlYXNlIGFsc28gaW5jbHVkZSB0aGUgbGlu
-dXgtcm9ja2NoaXAgbGlzdC4KPgo+IEBFbWlsLCBwbGVhc2Ugc2hvdXQgaWYgSSByZWFkIHRoYXQg
-d3JvbmcgOi0pCj4KWW91IGdvdCBpdCBzcG90IG9uIEhlaWtvLiBUaGVyZSBhcmUgYSBmZXcgbm90
-ZXMgdGhvdWdoLi4uCgpBcyBvbmUgcmV1c2VzIHRoZSBleGlzdGluZyBoYXJkd2FyZS9JUCBibG9j
-aywgaXQgd291bGQgYmUgYmV0dGVyIHRvCmF2b2lkIGNvcHkvcGFzdGluZyBjb2RlIGFyb3VuZC4K
-TmFtZWx5OgogLSAoaWYgcG9zc2libGUpIGZhY3RvciBvdXQgdGhlIGV4eW5vcyBnMmQga2VybmVs
-IGZ1bmN0aW9uYWxpdHkgdG8gYQpzZXBhcmF0ZSBrZXJuZWwgbW9kdWxlIGFuZCB3aXJlIHVwIHRo
-ZSByb2NraGlwICh2aWEgZHQgPykgdG8gdXNlIGl0CiAtIGZhY3RvciBvdXQgdGhlIGcyZCBzcGVj
-aWZpY3Mgb3V0IG9mIGV4eW5vc19kcm0uaCAoaW50bwpleHlub3NfZzJkX2RybS5oIHBlcmhhcHMg
-PykgYW5kIG1ha2Ugc3VyZSBleHlub3NfZHJtLmggaW5jbHVkZXMgdGhlCm5ldyBoZWFkZXIKIC0g
-aWYgbmVpdGhlciBvZiB0aGVzZSBhcmUgcG9zc2libGUsIHRoZW4gcGxlYXNlIGVuc3VyZSB0aGF0
-IHRoZSBuZXcKaGVhZGVyIHVzZXMgY29ycmVjdCB0eXBlcyAoc2VlIHRoZSBkb2NzIFsxXSksIHVz
-ZSBNSVQvWDExIGxpY2Vuc2UgKGlmCnBvc3NpYmxlKSBhbmQgbGluayB3aGVyZSB1cHN0cmVhbSB1
-c2Vyc3BhY2UgaXMgaGFwcHkgd2l0aCB0aGUKaW50ZXJmYWNlIChpZGVhbGx5IG1vcmUgdGhhbiBh
-IHNpbXBsZSB0ZXN0IGFwcCBsaWtlIGxpYmRybSkKClRoZXNlIG1pZ2h0IHNvdW5kIGxpa2UgYW4g
-b3ZlcmtpbGwsIGFsdGhvdWdoIGdldHRpbmcgVUFQSSByaWdodCBhbmQKbWFpbnRhaW5pbmcgaXQg
-Zm9yZXZlciBmb3JjZXMgdXMgdG8gZG8gc28uCgpSZWdhcmRzLApFbWlsCgpbMV0gaHR0cHM6Ly9n
-aXQua2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3Ry
-ZWUvRG9jdW1lbnRhdGlvbi9pb2N0bC9ib3RjaGluZy11cC1pb2N0bHMudHh0Cl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On 25-03-16 12:53, Jean-Francois Moine wrote:
+> On Wed, 23 Mar 2016 11:17:05 +0100
+> Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>> The Orange Pi 2 is a SBC based on the Allwinner H3 SoC with a uSD slot,
+>> 4 USB ports connected via a USB-2 hub, a 10/100M ethernet port using the
+>> SoC's integrated PHY, Wifi via a RTL8189ETV sdio wifi chip, USB OTG, HDMI,
+>> a TRRS headphone jack for stereo out and composite out, a microphone,
+>> an IR receiver, a CSI connector, 2 LEDs, a 3 pin UART header
+>> and a 40-pin GPIO header.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/Makefile                |   1 +
+>>   arch/arm/boot/dts/sun8i-h3-orangepi-2.dts | 186 ++++++++++++++++++++++++++++++
+>>   2 files changed, 187 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> 	[snip]
+>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+>> new file mode 100644
+>> index 0000000..f93f5d1
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-2.dts
+> 	[snip]
+>> +&mmc0 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
+>> +	vmmc-supply = <&reg_vcc3v3>;
+>> +	bus-width = <4>;
+>> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
+>> +	cd-inverted;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&mmc1 {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&mmc1_pins_a>;
+>> +	vmmc-supply = <&reg_vcc3v3>;
+>
+> While still 3.3V, the power of the mmc1 if supplied by an other
+> regulator.
+
+I do not have schematics for the OPi 2, on the OPi plus schematic the
+2 share a regulator. But even if it is another fixed 3.3V regulator,
+there is little use in modelling it as a separate regulator when we
+cannot control it.
+
+Regards,
+
+Hans
