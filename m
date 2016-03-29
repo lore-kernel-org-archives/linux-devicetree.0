@@ -1,79 +1,50 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH 2/3] ata: ahci-platform: Add ports-implemented dt
- bindings.
-Date: Tue, 29 Mar 2016 18:10:03 +0100
-Message-ID: <56FAB6EB.6040802@linaro.org>
-References: <1459257075-21393-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1459257075-21393-3-git-send-email-srinivas.kandagatla@linaro.org>
- <CAL_JsqLhSz1qWj01mAAg4X89hb4LnYB-CjJ2d1JW=jJw66Oq=g@mail.gmail.com>
- <56FA947A.5080806@linaro.org>
- <CAL_JsqLR2GFuveVJj9u9RPAyHvgrF=TUPQXFVBH_BO3BXNx_vw@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: mvebu: correct the usb node name from usb@ to
+ ehci@
+Date: Tue, 29 Mar 2016 19:11:34 +0200
+Message-ID: <20160329191134.0aeee57b@free-electrons.com>
+References: <1459259813-5278-1-git-send-email-patrick@puiterwijk.org>
+	<1459259813-5278-2-git-send-email-patrick@puiterwijk.org>
+	<4079235.sABSXKnJCE@wuerfel>
+	<87zithutnn.fsf@free-electrons.com>
+	<CAJweMdbywGZF1qJF2Nv3RTJb_dULOS_JAQpsPJjYgG+5Y7HU3w@mail.gmail.com>
+	<20160329190648.1f37cbc3@free-electrons.com>
+	<CAJweMdZXSjichcbMkg9o8=+Ecjmqg1pNU8UTOL1uY6TJXzZvxw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLR2GFuveVJj9u9RPAyHvgrF=TUPQXFVBH_BO3BXNx_vw@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Tejun Heo <tj@kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Hans de Goede <hdegoede@redhat.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, jmaggard10@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJweMdZXSjichcbMkg9o8=+Ecjmqg1pNU8UTOL1uY6TJXzZvxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
+On Tue, 29 Mar 2016 17:09:11 +0000, Patrick Uiterwijk wrote:
 
-On 29/03/16 18:07, Rob Herring wrote:
-> On Tue, Mar 29, 2016 at 9:43 AM, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->>
->>
->> On 29/03/16 15:11, Rob Herring wrote:
->>>
->>> On Tue, Mar 29, 2016 at 8:11 AM, Srinivas Kandagatla
->>> <srinivas.kandagatla@linaro.org> wrote:
->>>>
->>>> On some SOCs PORTS_IMPL register value is never programmed by the BIOS
->>>
->>>
->>> s/BIOS/firmware/
->>
->> BIOS is the word used in the AHCI SPECS so want to stick to this.
->
-> The spec being Intel's also says it is a PCI device... BIOS is a type
-> of firmware.
-Ofcourse.
->
-> [...]
->
->>>> +       sata0: sata@29000000 { /* Qualcomm APQ8064 */
->>>
->>>
->>> Do you really need another example just for this?
->>>
->>>> +               compatible = "generic-ahci";
->>>
->>>
->>> Where's your chip specific compatible string? You would not require a
->>> DT update to fix this if you had that.
->>
->>
->> Possibly, But we really are not doing anything specific in the ahci driver
->> which is not generic, that might be the reason why we skipped this in the
->> first place.
->>
->> I agree we could solve this issue in more than one way, The only advantage
->> of this new bindings would be to other platforms benefiting from this
->> workaround would not have to keep adding a new compatible string into the
->> ahci-platform driver.
->>
->> Like Annapurna Alpine platform seems to have the same issue.
->>
->> Am ok to do it either way.
->
-> I'm saying do both. Adding ports-implemented is fine, but add an SoC
-> compatible string (in the dts, not the driver).
-That sounds Good, I will add compatible string in DT and implement 
-ports-implemented.
+> > On Tue, 29 Mar 2016 16:49:43 +0000, Patrick Uiterwijk wrote:
+> >
+> >> Thank you for this pointer, setting fdt_skip_update no did fix this
+> >> issue indeed.
+> >
+> > Hum, what should fix the problem is to set fdt_skip_update to "yes". If
+> > you set it to "no", then the Marvell U-Boot will do its funky DTB
+> > tweaks which are not necessarily compatible with the mainline kernel
+> > DT bindings.
+> 
+> Correct, I meant setting it to "yes" fixed the problem, sorry for the confusion.
 
---srini
->
-> Rob
->
+Ok, then it makes sense. It's amazing how much weird issues this
+Marvell U-Boot behavior has caused :-/
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
