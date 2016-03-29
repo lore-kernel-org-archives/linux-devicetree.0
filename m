@@ -1,120 +1,96 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH resend v5 2/3] ASoC: cygnus: Add Cygnus audio DAI driver
-Date: Tue, 29 Mar 2016 15:16:34 -0700
-Message-ID: <20160329221634.GQ2350@sirena.org.uk>
-References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
- <1459277192-10942-3-git-send-email-simran.rai@broadcom.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v4 8/8] arm64: dts: rockchip: Add Landingship config
+Date: Wed, 30 Mar 2016 00:18:58 +0200
+Message-ID: <56FAFF52.3000301@suse.de>
+References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
+ <1458136727-32075-9-git-send-email-afaerber@suse.de>
+ <3754303.PKl0CGdnnX@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="2fV3mxwFPWhsKHyX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459277192-10942-3-git-send-email-simran.rai@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simran Rai <simran.rai@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Simran Rai <ssimran@broadcom.com>, Lori Hikichi <lhikichi@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Arun Parameswaran <arunp@broadcom.com>, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3754303.PKl0CGdnnX@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Am 29.03.2016 um 22:18 schrieb Heiko St=FCbner:
+> This needs a commit message explaining the i2c1/i2c2 voodoo below - e=
+specially=20
+> as this is the only difference to the core geekbox board.
 
---2fV3mxwFPWhsKHyX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You're probably right about the commit message, but there is no voodoo
+about i2c2 below.
 
-On Tue, Mar 29, 2016 at 11:46:31AM -0700, Simran Rai wrote:
+Would you rather have i2c1 dropped for now? Having it disabled at least
+documents that the connectors are there.
 
-A few issues here, a lot of them are stylistic though there's what look
-like a couple of small bugs here too.
+=46rom a distro perspective I like dtb filename stability and not needi=
+ng
+to mess with filename changing from .dtb to -landingship.dtb, so I
+rather add it from the start than later as more nodes get added.
 
-> +static int cygnus_ssp_set_clocks(struct cygnus_aio_port *aio,
-> +			struct cygnus_audio *cygaud)
-> +{
-> +	u32 value, i = 0;
-> +	u32 mask = 0xf;
-> +	u32 sclk;
-> +	bool found = false;
-> +	const struct _ssp_clk_coeff *p_entry = NULL;
-> +
-> +	if ((!aio->lrclk) || (!aio->bit_per_frame)) {
-> +		dev_err(aio->cygaud->dev, "First set up port through hw_params()\n");
-> +		return -EINVAL;
-> +	}
+> And I'm still not fully convinced about having the landing ship separ=
+ate.
 
-This function is only ever called from one site in hw_prams().  What is
-this defending against?  A check like this seems very worrying, if it
-ever goes off that seems to indicate either something is seriously wrong
-or we should be recording something then coming back and trying again
-later.
+Separate would've been copy&paste! It's using the preprocessor
+specifically to avoid having them be separate.
 
-> +	for (i = 0; i < ARRAY_SIZE(ssp_clk_coeff); i++) {
-> +		p_entry = &ssp_clk_coeff[i];
-> +		if ((p_entry->rate == aio->lrclk) &&
-> +				(p_entry->sclk_rate == aio->bit_per_frame) &&
-> +				(p_entry->mclk == aio->mclk)) {
+> I guess I'll just go to the talk about "Portable Device Tree Connecto=
+r:=20
+> Painless Expansion Board Support" [0] on monday to help make up my mi=
+nd ;-) .
 
-Why the strange indentation here?
+This is not a random expansion board to exchange, it's a baseboard and
+as we found out one very specific to this module, so no reuse unlike
+Shields. As mentioned elsewhere, I2C are not the only difference,
+they're the only difference _for now_. USB-SATA bridge comes for free
+via USB node; there's four GPIO buttons to be figured out, an I2S codec
+somewhere, display options (that I cannot test myself) and additional
+regulator(s) needed.
 
-> +	/* Set sclk rate */
-> +	if (aio->port_type == PORT_TDM) {
+Do enjoy the talk and report your findings. The pure existence of
+overlays for Beagleboard is not convincing to me for dropping this patc=
+h
+though - we've had similar discussions among distro people before
+settling for EFI boot. Reality is messy, unfortunately. For an FPGA I'v=
+e
+grudgingly agreed that given a sane U-Boot one can use dtb commands to
+add a couple nodes via a boot.scr, sanitizing the matrix of hardware
+models x FPGA bitstreams to just the hardware models; however this
+Landingship board is actually sold in hardware and is the only sane
+rk3368 devboard to date rather than just some bitstream file, and we at
+openSUSE are looking to abandon boot.scr in favor of generic bootefi,
+running counter to that idea. Here I'm still dealing with a vendor
+U-Boot, so neither works for now, only supplying a feature-complete .dt=
+b
+in the resource image partition does, which I need to build from
+something - this patch. So no is not a solution. And it's not like
+you're swamped in rk3368 .dts files anyway.
 
-switch statment here for extensibility.
+Thanks for queuing the core bits,
 
-> +		/* Configure channels as mono or stereo */
-> +		if (params_channels(params) == 1) {
-> +			value = readl(aio->cygaud->audio +
-> +				aio->regs.bf_sourcech_cfg);
-> +			value |= BIT(BF_SRC_CFGX_SAMPLE_CH_MODE);
-> +			value &= ~BIT(BF_SRC_CFGX_BUFFER_PAIR_ENABLE);
-> +			writel(value, aio->cygaud->audio +
-> +				aio->regs.bf_sourcech_cfg);
-> +		} else {
-> +			value = readl(aio->cygaud->audio +
-> +				aio->regs.bf_sourcech_cfg);
-> +			value &= ~BIT(BF_SRC_CFGX_SAMPLE_CH_MODE);
-> +			writel(value, aio->cygaud->audio +
-> +				aio->regs.bf_sourcech_cfg);
-> +		}
+Andreas
 
-Either this should be a switch statement or the comment should say we
-support more than stereo.  It's also not clear to me how
-BUFFER_PAIR_ENABLE gets set again if we go from mono to stereo.
+> [0] http://openiotelc2016.sched.org/event/6DA4/portable-device-tree-c=
+onnector-painless-expansion-board-support-pantelis-antoniou-konsulko-gr=
+oup
+[...]
+>> +&i2c1 {
+>> +	status =3D "disabled";
+>> +};
+>> +
+>> +&i2c2 {
+>> +	status =3D "okay";
+>> +};
 
-> +	if (!aio->is_slave) {
-> +		if (aio->clk_trace.cap_clk_en)
-> +			clk_prepare_enable(aio->cygaud->
-> +					audio_clk[aio->pll_clk_num]);
-
-Should check the return value of clk_prepare_enable().
-
-> +	.playback = {
-> +		.channels_min = 2,
-> +		.channels_max = 2,
-> +		.rates = CYGNUS_TDM_RATE | SNDRV_PCM_RATE_88200 |
-> +			SNDRV_PCM_RATE_96000 | SNDRV_PCM_RATE_176400 |
-> +			SNDRV_PCM_RATE_192000,
-> +		.formats = SNDRV_PCM_FMTBIT_S16_LE |
-> +			SNDRV_PCM_FMTBIT_S32_LE,
-
-According to hw_params() the driver also supports S8 and S24.
-
-> +	if (port_type == PORT_TDM) {
-
-> +	} else { /* SPDIF case */
-
-switch statement...
-
---2fV3mxwFPWhsKHyX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW+v69AAoJECTWi3JdVIfQVRIH/jJDUHK7urUUrT/sk1YVKWIq
-mFzwJZ7LabExZHTZEh8aHzYh58egvje4us+mqOku995xIXxSO5VuE0uPBHzmZ7JV
-gb6/bZaQ5lthP4CXYowhvUjxqDs1f9oX/QnWQWBTQaUI5JxwUB99dPgO1h6PEdtC
-o9PfF+kmVDGlZL5C2utqPhtTFakb/nJSq1yhpSg3LDDjrbgZtv/hByH+e9f/CK1O
-npKLRM/abepOhZh7MZkUQ4E3kI24LaDkX2ey0qSKkj/I2+qPBlezUYcOQqRTvUrx
-S3xmQ0/nbypofWPui7BIaVZ9QMWiYR4rYEbV+FNarVdLEHHzKR1tqKs0cNqTXtM=
-=SyWT
------END PGP SIGNATURE-----
-
---2fV3mxwFPWhsKHyX--
+--=20
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton; HRB 21284 (AG N=FC=
+rnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
