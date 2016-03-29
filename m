@@ -1,119 +1,90 @@
-From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
-Subject: RE: [PATCH v2 3/6] Documentation: DT: vdma: update binding doc for
- AXI DMA
-Date: Tue, 29 Mar 2016 05:48:54 +0000
-Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A570B5F@XAP-PVEXMBX01.xlnx.xilinx.com>
-References: <1459101966-9932-1-git-send-email-appanad@xilinx.com>
- <20160328205255.GA12237@rob-hp-laptop>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH 1/2] usb: dwc2: Add reset control to dwc2
+Date: Tue, 29 Mar 2016 00:31:22 -0500
+Message-ID: <1459229483-26167-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160328205255.GA12237@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Anurag Kumar Vulisha <anuragku@xilinx.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Srikanth Vemula <svemula@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@list
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, March 29, 2016 2:23 AM
-> To: Appana Durga Kedareswara Rao
-> Cc: pawel.moll@arm.com; mark.rutland@arm.com;
-> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek; Soren
-> Brinkmann; vinod.koul@intel.com; dan.j.williams@intel.com; Anurag Kumar
-> Vulisha; Appana Durga Kedareswara Rao; moritz.fischer@ettus.com;
-> laurent.pinchart@ideasonboard.com; luis@debethencourt.com; Srikanth
-> Vemula; Anirudha Sarangi; dmaengine@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH v2 3/6] Documentation: DT: vdma: update binding doc for
-> AXI DMA
-> 
-> On Sun, Mar 27, 2016 at 11:36:05PM +0530, Kedareswara rao Appana wrote:
-> > This patch updates the device-tree binding doc for adding support for
-> > AXI DMA.
-> >
-> > Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
-> > ---
-> > Changes for v2:
-> > ---> Modified commit message as suggested by Vinod.
-> > ---> Moved the patch to forward in the series as suggested by vinod.
-> >
-> >  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 22
-> > +++++++++++++++++++++-
-> >  1 file changed, 21 insertions(+), 1 deletion(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > index a86737c..5841421 100644
-> > --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-> > @@ -3,8 +3,13 @@ It can be configured to have one channel or two
-> > channels. If configured  as two channels, one is to transmit to the
-> > video device and another is  to receive from the video device.
-> >
-> > +Xilinx AXI DMA engine, it does transfers between memory and AXI4
-> > +stream target devices. It can be configured to have one channel or two
-> channels.
-> > +If configured as two channels, one is to transmit to the device and
-> > +another is to receive from the device.
-> > +
-> >  Required properties:
-> > -- compatible: Should be "xlnx,axi-vdma-1.00.a"
-> > +- compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a"
-> 
-> Why the new compatible string? This is 2 different IP blocks? If so, is there really
-> much shared?
+Allow for platforms that have a reset controller driver in place to bring
+the USB IP out of reset.
 
-The support for the AXI DMA IP also added to the existing VDMA Linux driver
-In this series of patches.
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ drivers/usb/dwc2/core.h     |    1 +
+ drivers/usb/dwc2/platform.c |   15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-> 
-> >  - #dma-cells: Should be <1>, see "dmas" property below
-> >  - reg: Should contain VDMA registers location and length.
-> >  - xlnx,num-fstores: Should be the number of framebuffers as configured in
-> h/w.
-> > @@ -59,6 +64,21 @@ axi_vdma_0: axivdma@40030000 {
-> >  	} ;
-> >  } ;
-> >
-> > +axi_dma_0: axidma@40400000 {
-> 
-> dma@40400000
+diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+index 3c58d63..f748132 100644
+--- a/drivers/usb/dwc2/core.h
++++ b/drivers/usb/dwc2/core.h
+@@ -837,6 +837,7 @@ struct dwc2_hsotg {
+ 	void *priv;
+ 	int     irq;
+ 	struct clk *clk;
++	struct reset_control *reset;
+ 
+ 	unsigned int queuing_high_bandwidth:1;
+ 	unsigned int srp_success:1;
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 88629be..b1fa9dd 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -45,6 +45,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_data/s3c-hsotg.h>
++#include <linux/reset.h>
+ 
+ #include <linux/usb/of.h>
+ 
+@@ -337,6 +338,9 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+ {
+ 	int i, ret;
+ 
++	if(hsotg->reset)
++		reset_control_deassert(hsotg->reset);
++
+ 	/* Set default UTMI width */
+ 	hsotg->phyif = GUSBCFG_PHYIF16;
+ 
+@@ -434,6 +438,9 @@ static int dwc2_driver_remove(struct platform_device *dev)
+ 	if (hsotg->ll_hw_enabled)
+ 		dwc2_lowlevel_hw_disable(hsotg);
+ 
++	if (hsotg->reset)
++		reset_control_assert(hsotg->reset);
++
+ 	return 0;
+ }
+ 
+@@ -529,6 +536,14 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
+ 		(unsigned long)res->start, hsotg->regs);
+ 
++	hsotg->reset = devm_reset_control_get(&dev->dev, "dwc2");
++	if (IS_ERR(hsotg->reset)) {
++		dev_info(&dev->dev, "Could not get reset control!\n");
++		if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		hsotg->reset = NULL;
++	}
++
+ 	retval = dwc2_lowlevel_hw_init(hsotg);
+ 	if (retval)
+ 		return retval;
+-- 
+1.7.9.5
 
-Ok will fix in the next version 
-
-Thanks,
-Kedar.
-
-> 
-> > +	compatible = "xlnx,axi-dma-1.00.a";
-> > +	#dma-cells = <1>;
-> > +	reg = < 0x40400000 0x10000 >;
-> > +	dma-channel@40400000 {
-> > +		compatible = "xlnx,axi-dma-mm2s-channel";
-> > +		interrupts = < 0 59 4 >;
-> > +		xlnx,datawidth = <0x40>;
-> > +	} ;
-> > +	dma-channel@40400030 {
-> > +		compatible = "xlnx,axi-dma-s2mm-channel";
-> > +		interrupts = < 0 58 4 >;
-> > +		xlnx,datawidth = <0x40>;
-> > +	} ;
-> > +} ;
-> >
-> >  * DMA client
-> >
-> > --
-> > 2.1.2
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
