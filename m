@@ -1,142 +1,34 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 3/5] dt-binding: Add Qualcomm WCNSS control binding
-Date: Mon, 28 Mar 2016 21:35:24 -0700
-Message-ID: <1459226126-16725-3-git-send-email-bjorn.andersson@linaro.org>
-References: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH] thermal: rcar: Remove binding docs for r8a7794
+Date: Tue, 29 Mar 2016 14:07:45 +0900
+Message-ID: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-This binding describes the control interface for the Qualcomm WCNSS.
+The latest information that I have is that there is no thermal IP
+block present on the r8a7794 SoC so remove the corresponding binding.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 ---
+ Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 1 -
+ 1 file changed, 1 deletion(-)
 
-Got a reviewed-by from Andy and acked-by from Rob on the WiFi part of this
-binding. But during futher testing I spotted a timing issue, where the
-wcnss_ctrl driver must finish the uploading of NV to the core os of the wcnss
-before the wifi driver can initiate any communication with the wifi part
-(although available from the get-go).
-
-The sanest way I could figure to model this is to describe the core part as
-parent of the wifi and bt pieces.
-
- .../devicetree/bindings/soc/qcom/qcom,wcnss.txt    | 104 +++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
-new file mode 100644
-index 000000000000..5488904b6185
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
-@@ -0,0 +1,104 @@
-+Qualcomm WCNSS Binding
-+
-+This binding describes the Qualcomm WCNSS hardware. It consists of control
-+block and a BT, WiFi and FM radio block, all useing SMD as command channels.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be: "qcom,wcnss",
-+
-+- qcom,smd-channel:
-+	Usage: required
-+	Value type: <string>
-+	Definition: standard SMD property specifying the SMD channel used for
-+		    communication with the WiFi firmware
-+
-+= SUBNODES
-+The subnodes of the wcnss node are optional and describe the individual blocks in
-+the WCNSS.
-+
-+== Bluetooth
-+The following properties are defined to the bluetooth node:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be: "qcom,btqcomsmd"
-+
-+== WiFi
-+The following properties are defined to the WiFi node:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,wcn3620-wlan",
-+		    "qcom,wcn3660-wlan",
-+		    "qcom,wcn3680-wlan"
-+
-+- qcom,wcnss-mmio:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify base address and size of the WiFi related
-+		    registers of WCNSS
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the "rx" and "tx" interrupts
-+
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must contain "rx" and "tx"
-+
-+- qcom,state:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should reference the tx-enable and tx-rings-empty SMEM states
-+
-+- qcom,state-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must contain "tx-enable" and "tx-rings-empty"
-+
-+= EXAMPLE
-+The following example represents a SMD node, with one edge representing the
-+"pronto" subsystem, with the wcnss device and its wcn3680 BT and WiFi blocks
-+described; as found on the 8974 platform.
-+
-+smd {
-+	compatible = "qcom,smd";
-+
-+	pronto {
-+		interrupts = <0 142 1>;
-+
-+		qcom,ipc = <&apcs 8 17>;
-+		qcom,smd-edge = <6>;
-+
-+		wcnss {
-+			compatible = "qcom,wcnss";
-+			qcom,smd-channels = "WCNSS_CTRL";
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bt {
-+				compatible = "qcom,btqcomsmd";
-+			};
-+
-+			wifi {
-+				compatible = "qcom,wcn3680-wlan";
-+
-+				qcom,wcnss-mmio = <0xfb000000 0x21b000>;
-+
-+				interrupts = <0 145 0>, <0 146 0>;
-+				interrupt-names = "tx", "rx";
-+
-+				qcom,state = <&apps_smsm 10>, <&apps_smsm 9>;
-+				qcom,state-names = "tx-enable", "tx-rings-empty";
-+			};
-+		};
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+index e5ee3f159893..a8e52c8ccfcc 100644
+--- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+@@ -11,7 +11,6 @@ Required properties:
+ 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
+ 			    - "renesas,thermal-r8a7792" (R-Car V2H)
+ 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
+-			    - "renesas,thermal-r8a7794" (R-Car E2)
+ - reg			: Address range of the thermal registers.
+ 			  The 1st reg will be recognized as common register
+ 			  if it has "interrupts".
 -- 
-2.5.0
+2.1.4
+
