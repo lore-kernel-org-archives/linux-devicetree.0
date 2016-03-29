@@ -1,150 +1,122 @@
-From: "Winkler, Tomas" <tomas.winkler-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [RESEND] [PATCH v11 3/6] added support for DesignWare Controller
-Date: Tue, 29 Mar 2016 12:15:17 +0000
-Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B541CD517@hasmsx108.ger.corp.intel.com>
-References: <cover.1457111366.git.jpinto@synopsys.com>
- <a2f0601b03aad273819e7a8da2a65664759e2889.1457111366.git.jpinto@synopsys.com>
+From: okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH V3 1/3] vfio, platform: add support for ACPI while
+ detecting the reset driver
+Date: Tue, 29 Mar 2016 08:15:42 -0400
+Message-ID: <8f766d081b33d91f196e7bd5e13b6f33@codeaurora.org>
+References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org>
+ <98854818.NJS35fvhsb@wuerfel>
+ <e736f6bc775cdca8a4bb0dab20654823@codeaurora.org>
+ <147496989.L43SVC7xRY@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a2f0601b03aad273819e7a8da2a65664759e2889.1457111366.git.jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <147496989.L43SVC7xRY@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baptiste Reynal <b.reynal-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-03-29 07:25, Arnd Bergmann wrote:
+> On Tuesday 29 March 2016 06:59:15 okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
+>> On 2016-03-29 05:25, Arnd Bergmann wrote:
+>> > On Monday 28 March 2016 09:35:22 Sinan Kaya wrote:
+>> >> The code is using the compatible DT string to associate a reset d=
+river
+>> >> with
+>> >> the actual device itself. The compatible string does not exist on=
+ ACPI
+>> >> based systems. HID is the unique identifier for a device driver
+>> >> instead.
+>> >> The change allows a driver to register with DT compatible string =
+or
+>> >> ACPI
+>> >> HID and then match the object with one of these conditions.
+>> >>
+>> >> Rules for loading the reset driver are as follow:
+>> >> - ACPI HID needs match for ACPI systems
+>> >> - DT compat needs to match for OF systems
+>> >>
+>> >> Tested-by: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> (device tree only)
+>> >> Tested-by: Shanker Donthineni <shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (ACPI onl=
+y)
+>> >> Signed-off-by: Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> >>
+>> >
+>> >
+>> > This really feels wrong for two reasons:
+>> >
+>> > * device assignment of non-PCI devices is really special and doesn=
+'t
+>> >   seem to make sense on general purpose servers that would be the
+>> > target
+>> >   for ACPI normally
+>>=20
+>>=20
+>> Why is it special? Acpi is not equal to pci. Platform devices are=20
+>> first
+>> class devices too. Especially, _cls was introduced for this reason.
+>=20
+> It still feels like a hack. The normal design for a server is to have
+> all internal devices show up on the PCI host bridge, next to the PCIe
+> ports, to have a simple way to manage any device, both internal and
+> off-chip. Putting a device on random MMIO registers outside of the
+> discoverable buses and have the firmware work around the lack of
+> discoverability will always be inferior.
+>=20
 
-diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h index 2570d94..8b0cdf0 100644
---- a/drivers/scsi/ufs/ufshcd.h
-+++ b/drivers/scsi/ufs/ufshcd.h
-@@ -262,6 +262,7 @@ struct ufs_pwr_mode_info {
-  * @suspend: called during host controller PM callback
-  * @resume: called during host controller PM callback
-  * @dbg_register_dump: used to dump controller debug information
-+ * @custom_phy_initialization: used to initialize phys in DWC Cores
-  */
- struct ufs_hba_variant_ops {
- 	const char *name;
-@@ -283,6 +284,7 @@ struct ufs_hba_variant_ops {
- 	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
- 	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
- 	void	(*dbg_register_dump)(struct ufs_hba *hba);
-+	int	(*custom_phy_initialization)(struct ufs_hba *);
- };
-I think just drop custom_ prefix these handlers are for customization so this doesn't add any information 
-Also here, I prefer that infrastructure changes will be in separate patches and not mangled with a specific device patch.
+It is a HW implementation choice. Having everything as pci problem has=20
+been already solved. I would vote for it when we had SW pci bridge laye=
+r=20
+just to use usb and sata. Not anymore. Especially, _cls solves this=20
+problem
 
- 
- /* clock gating state  */
-diff --git a/drivers/scsi/ufs/ufshci-dwc.h b/drivers/scsi/ufs/ufshci-dwc.h new file mode 100644 index 0000000..947a75c
---- /dev/null
-+++ b/drivers/scsi/ufs/ufshci-dwc.h
-@@ -0,0 +1,42 @@
-+/*
-+ * UFS Host driver for Synopsys Designware Core
-+ *
-+ * Copyright (C) 2015-2016 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * Authors: Joao Pinto <jpinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef _UFSHCI_DWC_H
-+#define _UFSHCI_DWC_H
-+
-+/* DWC HC UFSHCI specific Registers */
-+enum dwc_specific_registers {
-+	DWC_UFS_REG_HCLKDIV	= 0xFC,
-+};
-+
-+/* Link Status*/
-+enum link_status {
-+	UFSHCD_LINK_IS_DOWN	= 1,
-+	UFSHCD_LINK_IS_UP	= 2,
-+};
 
-Is is designware specific ? Then should probably be DWC_ prefixed, if  not then shouldn't be defined here.
 
-+#endif /* End of Header */
-diff --git a/drivers/scsi/ufs/unipro.h b/drivers/scsi/ufs/unipro.h index 816a8a4..da16254 100644
---- a/drivers/scsi/ufs/unipro.h
-+++ b/drivers/scsi/ufs/unipro.h
+>> >
+>> > * If there is indeed a requirement for ACPI to handle something li=
+ke
+>> > this,
+>> >   it should be part of the ACPI spec, with a well-defined method o=
+f
+>> > handling
+>> >   reset, rather than having to add a device specific hack for each
+>> >   device separately.
+>> >
+>>=20
+>> I see. Normally, this is done by calling _rst method. AFAIK, Linux
+>> doesn=E2=80=99t support _rst. I can check its presence and call it i=
+f it is
+>> there.
+>=20
+> Yes, that sounds reasonable: In patch 2 where you check for the
+> presence of the reset method, just keep the existing logic for
+> DT based systems, and use _rst on ACPI based systems instead,
+> then you can drop both patches 1 and 3.
+>=20
 
-Should also go to a separate  patch ?
- 
-@@ -35,6 +35,10 @@
- #define TX_LCC_SEQUENCER			0x0032
- #define TX_MIN_ACTIVATETIME			0x0033
- #define TX_PWM_G6_G7_SYNC_LENGTH		0x0034
-+#define TX_REFCLKFREQ				0x00EB
-+#define TX_CFGCLKFREQVAL			0x00EC
-+#define	CFGEXTRATTR				0x00F0
-+#define DITHERCTRL2				0x00F1
- 
- /*
-  * M-RX Configuration Attributes
-@@ -48,8 +52,38 @@
- #define RX_ENTER_HIBERN8			0x00A7
- #define RX_BYPASS_8B10B_ENABLE			0x00A8
- #define RX_TERMINATION_FORCE_ENABLE		0x0089
-+#define RX_REFCLKFREQ				0x00EB
-+#define	RX_CFGCLKFREQVAL			0x00EC
-+#define CFGWIDEINLN				0x00F0
-+#define CFGRXCDR8				0x00BA
-+#define ENARXDIRECTCFG4				0x00F2
-+#define CFGRXOVR8				0x00BD
-+#define RXDIRECTCTRL2				0x00C7
-+#define ENARXDIRECTCFG3				0x00F3
-+#define RXCALCTRL				0x00B4
-+#define ENARXDIRECTCFG2				0x00F4
-+#define CFGRXOVR4				0x00E9
-+#define RXSQCTRL				0x00B5
-+#define CFGRXOVR6				0x00BF
- 
- #define is_mphy_tx_attr(attr)			(attr < RX_MODE)
-+
-+/*
-+ * Common Block Attributes
-+ */
-+#define TX_GLOBALHIBERNATE			UNIPRO_CB_OFFSET(0x002B)
-+#define REFCLKMODE				UNIPRO_CB_OFFSET(0x00BF)
-+#define DIRECTCTRL19				UNIPRO_CB_OFFSET(0x00CD)
-+#define DIRECTCTRL10				UNIPRO_CB_OFFSET(0x00E6)
-+#define CDIRECTCTRL6				UNIPRO_CB_OFFSET(0x00EA)
-+#define RTOBSERVESELECT				UNIPRO_CB_OFFSET(0x00F0)
-+#define CBDIVFACTOR				UNIPRO_CB_OFFSET(0x00F1)
-+#define CBDCOCTRL5				UNIPRO_CB_OFFSET(0x00F3)
-+#define CBPRGPLL2				UNIPRO_CB_OFFSET(0x00F8)
-+#define CBPRGTUNING				UNIPRO_CB_OFFSET(0x00FB)
-+
-+#define UNIPRO_CB_OFFSET(x)			(0x8000 | x)
-+
- /*
-  * PHY Adpater attributes
-  */
-@@ -110,6 +144,11 @@
- #define PA_STALLNOCONFIGTIME	0x15A3
- #define PA_SAVECONFIGTIME	0x15A4
- 
-+/*Other attributes*/
-+#define VS_MPHYCFGUPDT		0xD085
-+#define VS_DEBUGOMC		0xD09E
-+#define VS_POWERSTATE		0xD083
-+
- /* PA power modes */
- enum {
- 	FAST_MODE	= 1,
+I can certainly drop patch #3 and push the reset responsibility to acpi=
+=2E
+
+I never liked having a fragmented sw design across multiple drivers.
+
+I need something for patch #1. Compatible is a DT property not ACPI.but=
+=20
+then, I won't have a reset driver anymore.
+
+If we think about how vfio pci works, we pass the pci vendor and device=
+=20
+id to new_id file to find out which pci device needs to be pass thru.
+
+I can go to a similar route. This time we pass the object id through=20
+new_id and I call reset method on this object.
+
+Let me know what you think?
+
+> 	Arnd
 --
-1.8.1.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-scsi" in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
