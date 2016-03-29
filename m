@@ -1,114 +1,222 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 8/8] ARM: dts: vf610-colibri: enable display controller
-Date: Mon, 28 Mar 2016 19:00:02 -0700
-Message-ID: <1459216802-32094-9-git-send-email-stefan@agner.ch>
-References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459216802-32094-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, meng.yi-3arQi8VN3Tc@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Shawn Lin <shawn.lin@kernel-upstream.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mmc
+Date: Tue, 29 Mar 2016 10:22:29 +0800
+Message-ID: <56F9E6E5.9000100@kernel-upstream.org>
+References: <1457254062-22677-1-git-send-email-guodong.xu@linaro.org>
+ <1457254062-22677-2-git-send-email-guodong.xu@linaro.org>
+ <56DC3BAD.8020107@rock-chips.com>
+ <CAFGCpxz3GfFeduaz1Dkg0WvRJWs+GHdVu8uY0-wV=RGyRfBE=A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAFGCpxz3GfFeduaz1Dkg0WvRJWs+GHdVu8uY0-wV=RGyRfBE=A@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: robh+dt@kernel.org, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, jh80.chung@samsung.com, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable dcu node which is used by the DCU DRM driver. Assign the 5.7"
-EDT panel with VGA resolution which Toradex sells often with the
-evaluation board.
+=E5=9C=A8 2016/3/25 13:35, Guodong Xu =E5=86=99=E9=81=93:
+> Hi, Shawn
+>
+> Sorry I replied late. I added comments below.
+>
+> On 6 March 2016 at 22:16, Shawn Lin <shawn.lin@rock-chips.com
+> <mailto:shawn.lin@rock-chips.com>> wrote:
+>
+>     On 2016/3/6 16:47, Guodong Xu wrote:
+>
+>         mmc registers may in abnormal state if mmc is used in bootloa=
+der,
+>         eg. to support booting from eMMC. So we need reset mmc regist=
+ers
+>         when kernel boots up, instead of assuming mmc is in clean sta=
+te.
+>
+>         With this patch, user can add a 'resets' property into dw_mmc=
+ dts
+>         node. When driver parse_dt and probe, it calls reset API to
+>         deassert the 'reset' of dw_mmc host controller. When probe er=
+ror or
+>         remove, it calls reset API to assert it.
+>
+>         Please also refer to
+>         Documentation/devicetree/bindings/reset/reset.txt
+>
+>         Signed-off-by: Guodong Xu <guodong.xu@linaro.org
+>         <mailto:guodong.xu@linaro.org>>
+>         Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com
+>         <mailto:kong.kongxinwei@hisilicon.com>>
+>         Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org
+>         <mailto:zhangfei.gao@linaro.org>>
+>
+>
+>     Really should V2 and add the changelog.
+>
+>
+> Yes, will do. next version I sent will be labelled as V3.
+>
+>
+>
+>         ---
+>            drivers/mmc/host/dw_mmc.c | 22 +++++++++++++++++++++-
+>            1 file changed, 21 insertions(+), 1 deletion(-)
+>
+>         diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_=
+mmc.c
+>         index 242f9a0..281ea9c 100644
+>         --- a/drivers/mmc/host/dw_mmc.c
+>         +++ b/drivers/mmc/host/dw_mmc.c
+>         @@ -2878,6 +2878,14 @@ static struct dw_mci_board
+>         *dw_mci_parse_dt(struct dw_mci *host)
+>                  if (!pdata)
+>                          return ERR_PTR(-ENOMEM);
+>
+>         +       /* find reset controller when exist */
+>         +       pdata->rstc =3D devm_reset_control_get_optional(dev, =
+NULL);
+>         +       if (IS_ERR(pdata->rstc)) {
+>         +               if (PTR_ERR(pdata->rstc) =3D=3D -EPROBE_DEFER=
+)
+>         +                       return ERR_PTR(-EPROBE_DEFER);
+>         +               pdata->rstc =3D NULL;
+>
+>
+>     maybe we can remove "pdata->rstc =3D NULL", and directly
+>     use IS_ERR(..) for the following "if (host->pdata->rstc !=3D NULL=
+)"
+>     statement
+>
+>
+> Yes, will do.
+> I see your point, other lines in this file are using IS_ERR(!..), I w=
+ill
+> use this style too.
+>
+>         +       }
+>         +
+>                  /* find out number of slots supported */
+>                  of_property_read_u32(np, "num-slots", &pdata->num_sl=
+ots);
+>
+>         @@ -2949,7 +2957,9 @@ int dw_mci_probe(struct dw_mci *host)
+>
+>                  if (!host->pdata) {
+>                          host->pdata =3D dw_mci_parse_dt(host);
+>         -               if (IS_ERR(host->pdata)) {
+>         +               if (PTR_ERR(host->pdata) =3D=3D -EPROBE_DEFER=
+)
+>         +                       return -EPROBE_DEFER;
+>
+>
+>     please fix the coding style here.
+>
+>
+> Do you mean to add additional {} for this 'if' , like this?
+>
+>     +               if (PTR_ERR(host->pdata) =3D=3D -EPROBE_DEFER) {
+>     +                       return -EPROBE_DEFER;
+>
+>     +                }
+>
+> I will add {}.
+>
+>
+>
+>         +               else if (IS_ERR(host->pdata)) {
+>                                  dev_err(host->dev, "platform data no=
+t
+>         available\n");
+>                                  return -EINVAL;
+>                          }
+>         @@ -3012,6 +3022,9 @@ int dw_mci_probe(struct dw_mci *host)
+>                          }
+>                  }
+>
+>         +       if (host->pdata->rstc !=3D NULL)
+>         +               reset_control_deassert(host->pdata->rstc);
+>         +
+>
+>
+>     sorry, I can't follow your intention here. Shouldn't it be someth=
+ing
+>     like "assert mmc -> may need delay -> deassert mmc". As your curr=
+ent
+>     code, nothing happend right?
+>
+>
+> The chip exits from bootloader with this bit asserted. And when enter=
+ing
+> kernel, we only need to deassert.
+>
+> In my current code, the driver deassert mmc in _probe(), and assert m=
+mc
+> in _remove().
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
----
- arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 16 +++++++++++++++
- arch/arm/boot/dts/vf-colibri.dtsi         | 33 +++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+I catch your point. From the previous discussion, we add it to make sur=
+e
+dw_mmc in good state after leaving bootloader to kernel. But My real=20
+question is that you can assert it in  bootloader, so you can also
+dessert it in bootloaer to make sure dw_mmc work fine when probing
+in kernel. In that way, we don't need this patch?
 
-diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-index ed65e0f..f5d4c78 100644
---- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
-@@ -18,6 +18,11 @@
- 		clock-frequency = <16000000>;
- 	};
- 
-+	panel: panel {
-+		compatible = "edt,et057090dhu";
-+		backlight = <&bl>;
-+	};
-+
- 	regulators {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -53,6 +58,13 @@
- 	status  = "okay";
- };
- 
-+&dcu0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_dcu0_1>;
-+	fsl,panel = <&panel>;
-+	status = "okay";
-+};
-+
- &dspi1 {
- 	status = "okay";
- 
-@@ -100,6 +112,10 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index 6e556be..5f1847b 100644
---- a/arch/arm/boot/dts/vf-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -159,6 +159,39 @@
- 			>;
- 		};
- 
-+		pinctrl_dcu0_1: dcu0grp_1 {
-+			fsl,pins = <
-+				VF610_PAD_PTE0__DCU0_HSYNC	0x1902
-+				VF610_PAD_PTE1__DCU0_VSYNC	0x1902
-+				VF610_PAD_PTE2__DCU0_PCLK	0x1902
-+				VF610_PAD_PTE4__DCU0_DE		0x1902
-+				VF610_PAD_PTE5__DCU0_R0		0x1902
-+				VF610_PAD_PTE6__DCU0_R1		0x1902
-+				VF610_PAD_PTE7__DCU0_R2		0x1902
-+				VF610_PAD_PTE8__DCU0_R3		0x1902
-+				VF610_PAD_PTE9__DCU0_R4		0x1902
-+				VF610_PAD_PTE10__DCU0_R5	0x1902
-+				VF610_PAD_PTE11__DCU0_R6	0x1902
-+				VF610_PAD_PTE12__DCU0_R7	0x1902
-+				VF610_PAD_PTE13__DCU0_G0	0x1902
-+				VF610_PAD_PTE14__DCU0_G1	0x1902
-+				VF610_PAD_PTE15__DCU0_G2	0x1902
-+				VF610_PAD_PTE16__DCU0_G3	0x1902
-+				VF610_PAD_PTE17__DCU0_G4	0x1902
-+				VF610_PAD_PTE18__DCU0_G5	0x1902
-+				VF610_PAD_PTE19__DCU0_G6	0x1902
-+				VF610_PAD_PTE20__DCU0_G7	0x1902
-+				VF610_PAD_PTE21__DCU0_B0	0x1902
-+				VF610_PAD_PTE22__DCU0_B1	0x1902
-+				VF610_PAD_PTE23__DCU0_B2	0x1902
-+				VF610_PAD_PTE24__DCU0_B3	0x1902
-+				VF610_PAD_PTE25__DCU0_B4	0x1902
-+				VF610_PAD_PTE26__DCU0_B5	0x1902
-+				VF610_PAD_PTE27__DCU0_B6	0x1902
-+				VF610_PAD_PTE28__DCU0_B7	0x1902
-+			>;
-+		};
-+
- 		pinctrl_dspi1: dspi1grp {
- 			fsl,pins = <
- 				VF610_PAD_PTD5__DSPI1_CS0		0x33e2
--- 
-2.7.4
+More to think, Is it ok to match the behaviour of bootloader stage?
+My bootloader doesn't assert the reset pin of dw_mmc, so it seams if
+I want to fix you issue on kernel stage, I need a new round of
+assert->delay->deassert.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>
+>
+>
+>                  setup_timer(&host->cmd11_timer,
+>                              dw_mci_cmd11_timer, (unsigned long)host)=
+;
+>
+>         @@ -3164,6 +3177,9 @@ err_dmaunmap:
+>                  if (host->use_dma && host->dma_ops->exit)
+>                          host->dma_ops->exit(host);
+>
+>         +       if (host->pdata->rstc !=3D NULL)
+>         +               reset_control_assert(host->pdata->rstc);
+>         +
+>            err_clk_ciu:
+>                  if (!IS_ERR(host->ciu_clk))
+>                          clk_disable_unprepare(host->ciu_clk);
+>         @@ -3196,11 +3212,15 @@ void dw_mci_remove(struct dw_mci *hos=
+t)
+>                  if (host->use_dma && host->dma_ops->exit)
+>                          host->dma_ops->exit(host);
+>
+>         +       if (host->pdata->rstc !=3D NULL)
+>         +               reset_control_assert(host->pdata->rstc);
+>         +
+>                  if (!IS_ERR(host->ciu_clk))
+>                          clk_disable_unprepare(host->ciu_clk);
+>
+>                  if (!IS_ERR(host->biu_clk))
+>                          clk_disable_unprepare(host->biu_clk);
+>         +
+>            }
+>
+>
+>     unnecessary new line here.
+>
+>
+> Will fix.
+>
+> -Guodong
+>
+>
+>            EXPORT_SYMBOL(dw_mci_remove);
+>
+>
+>
+>
+>     --
+>     Best Regards
+>     Shawn Lin
+>
+>
+
