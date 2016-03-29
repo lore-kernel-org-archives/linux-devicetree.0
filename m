@@ -1,53 +1,142 @@
-From: fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Subject: [PATCH] ARM64: add SBSA Generic Watchdog device node in amd-seattle-soc.dtsi
-Date: Tue, 29 Mar 2016 12:22:57 +0800
-Message-ID: <1459225377-16317-1-git-send-email-fu.wei@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-acpi-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, panand-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, graeme.gregory-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, al.stone-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 3/5] dt-binding: Add Qualcomm WCNSS control binding
+Date: Mon, 28 Mar 2016 21:35:24 -0700
+Message-ID: <1459226126-16725-3-git-send-email-bjorn.andersson@linaro.org>
+References: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This binding describes the control interface for the Qualcomm WCNSS.
 
-This can be a example of adding SBSA Generic Watchdog device node
-into some dts files for the Soc which contains SBSA Generic Watchdog.
-
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>
-Signed-off-by: Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-Changelog:
-v1 :Re-upstream it, since this patch was missed when we upstreamed it with
-    the driver patchset: https://lkml.org/lkml/2016/3/28/226
 
- arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Got a reviewed-by from Andy and acked-by from Rob on the WiFi part of this
+binding. But during futher testing I spotted a timing issue, where the
+wcnss_ctrl driver must finish the uploading of NV to the core os of the wcnss
+before the wifi driver can initiate any communication with the wifi part
+(although available from the get-go).
 
-diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-index bd3adea..9798fd0 100644
---- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-+++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
-@@ -106,6 +106,14 @@
- 			clock-names = "uartclk", "apb_pclk";
- 		};
- 
-+		watchdog0: watchdog@e0bb0000 {
-+			compatible = "arm,sbsa-gwdt";
-+			reg = <0x0 0xe0bc0000 0 0x1000>,
-+				<0x0 0xe0bb0000 0 0x1000>;
-+			interrupts = <0 337 4>;
-+			timeout-sec = <15>;
-+		};
+The sanest way I could figure to model this is to describe the core part as
+parent of the wifi and bt pieces.
+
+ .../devicetree/bindings/soc/qcom/qcom,wcnss.txt    | 104 +++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+new file mode 100644
+index 000000000000..5488904b6185
+--- /dev/null
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.txt
+@@ -0,0 +1,104 @@
++Qualcomm WCNSS Binding
 +
- 		spi0: ssp@e1020000 {
- 			status = "disabled";
- 			compatible = "arm,pl022", "arm,primecell";
++This binding describes the Qualcomm WCNSS hardware. It consists of control
++block and a BT, WiFi and FM radio block, all useing SMD as command channels.
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be: "qcom,wcnss",
++
++- qcom,smd-channel:
++	Usage: required
++	Value type: <string>
++	Definition: standard SMD property specifying the SMD channel used for
++		    communication with the WiFi firmware
++
++= SUBNODES
++The subnodes of the wcnss node are optional and describe the individual blocks in
++the WCNSS.
++
++== Bluetooth
++The following properties are defined to the bluetooth node:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be: "qcom,btqcomsmd"
++
++== WiFi
++The following properties are defined to the WiFi node:
++
++- compatible:
++	Usage: required
++	Value type: <string>
++	Definition: must be one of:
++		    "qcom,wcn3620-wlan",
++		    "qcom,wcn3660-wlan",
++		    "qcom,wcn3680-wlan"
++
++- qcom,wcnss-mmio:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify base address and size of the WiFi related
++		    registers of WCNSS
++
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should specify the "rx" and "tx" interrupts
++
++- interrupt-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must contain "rx" and "tx"
++
++- qcom,state:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: should reference the tx-enable and tx-rings-empty SMEM states
++
++- qcom,state-names:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must contain "tx-enable" and "tx-rings-empty"
++
++= EXAMPLE
++The following example represents a SMD node, with one edge representing the
++"pronto" subsystem, with the wcnss device and its wcn3680 BT and WiFi blocks
++described; as found on the 8974 platform.
++
++smd {
++	compatible = "qcom,smd";
++
++	pronto {
++		interrupts = <0 142 1>;
++
++		qcom,ipc = <&apcs 8 17>;
++		qcom,smd-edge = <6>;
++
++		wcnss {
++			compatible = "qcom,wcnss";
++			qcom,smd-channels = "WCNSS_CTRL";
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bt {
++				compatible = "qcom,btqcomsmd";
++			};
++
++			wifi {
++				compatible = "qcom,wcn3680-wlan";
++
++				qcom,wcnss-mmio = <0xfb000000 0x21b000>;
++
++				interrupts = <0 145 0>, <0 146 0>;
++				interrupt-names = "tx", "rx";
++
++				qcom,state = <&apps_smsm 10>, <&apps_smsm 9>;
++				qcom,state-names = "tx-enable", "tx-rings-empty";
++			};
++		};
++	};
++};
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
