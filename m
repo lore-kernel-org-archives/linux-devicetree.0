@@ -1,40 +1,117 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/8] clk: samsung: exynos3250: Add MMC2 clock
-Date: Tue, 29 Mar 2016 10:48:22 +0900
-Message-ID: <56F9DEE6.8020203@samsung.com>
-References: <1458027490-13787-1-git-send-email-cw00.choi@samsung.com>
- <1458027490-13787-4-git-send-email-cw00.choi@samsung.com>
- <56F47ABC.7060006@samsung.com> <56F509E6.7080807@samsung.com>
- <56F87E83.7060100@samsung.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 2/3] phy: rockchip-emmc: should be a child device of
+ the GRF
+Date: Tue, 29 Mar 2016 09:53:14 +0800
+Message-ID: <56F9E00A.8040303@rock-chips.com>
+References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
+ <1458854943-17388-2-git-send-email-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <56F87E83.7060100-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=gbk;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1458854943-17388-2-git-send-email-heiko@sntech.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>, kishon@ti.com
+Cc: shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, ykk@rock-chips.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 28.03.2016 09:44, Chanwoo Choi wrote:
-> You mean that separate patch1 include only the new clock id about both UART2 and MMC2
-> and the patch2/patch3 just use the new clock id as following:
-> 
-> patch1 dt-bindings: Add the clock id of UART2 and MMC2 for Exynos3250
-> patch2 clk: samsung: exynos3250: Add UART2 clock
-> patch3 clk: samsung: exynos3250: Add MMC2 clock
-> 
-> As far as I understand it is that right?
-> If it is ok, I'll modify it on v4 patchset as you comment.
+=D4=DA 2016/3/25 5:29, Heiko Stuebner =D0=B4=B5=C0:
+> The emmc-phy is fully enclosed in the general register files (GRF).
+> Therefore as seen from the device-tree it shouldn't be a separate pla=
+tform-
+> device but instead a sub-device of the GRF - using the simply-mfd mec=
+hanism.
+>
+> The driver entered the kernel in the current merge-window, so we can =
+still
+> adapt the binding without needing a fallback, as the binding hasn't b=
+een
+> released with a full kernel yet.
+>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+> Hi Shawn, Kishon,
+>
+> I didn't see this new phy driver until now, so I'd really like to get
+> this sorted before the old binding solidifies :-).
+>
+> I'll convert the usbphy as well, but that has to have the fallback fo=
+r
+> the old binding, so is not as urgent as these two.
+>
+> As mentioned in the patch description above, this is meant as a fixup=
+ for
+> kernel 4.6.
+>
+>
 
-Hi Sylwester and Tomasz,
+Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
 
-Can you provide me a tag with these exynos3250 clock patches (after
-posting v4)? Of course you can also ack/review them and then I'll handle it.
+> changes in v2: drop forgotten rockchip,grf from example
+>
+>
+>   .../devicetree/bindings/phy/rockchip-emmc-phy.txt     | 19 ++++++++=
+++++-------
+>   drivers/phy/phy-rockchip-emmc.c                       |  5 ++++-
+>   2 files changed, 16 insertions(+), 8 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.=
+txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> index 61916f1..d711259 100644
+> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
+> @@ -3,17 +3,21 @@ Rockchip EMMC PHY
+>
+>   Required properties:
+>    - compatible: rockchip,rk3399-emmc-phy
+> - - rockchip,grf : phandle to the syscon managing the "general
+> -   register files"
+>    - #phy-cells: must be 0
+>    - reg: PHY configure reg address offset in "general
+>      register files"
+>
+>   Example:
+>
+> -emmcphy: phy {
+> -	compatible =3D "rockchip,rk3399-emmc-phy";
+> -	rockchip,grf =3D <&grf>;
+> -	reg =3D <0xf780>;
+> -	#phy-cells =3D <0>;
+> +
+> +grf: syscon@ff770000 {
+> +	compatible =3D "rockchip,rk3399-grf", "syscon", "simple-mfd";
+> +
+> +...
+> +
+> +	emmcphy: phy@f780 {
+> +		compatible =3D "rockchip,rk3399-emmc-phy";
+> +		reg =3D <0xf780>;
+> +		#phy-cells =3D <0>;
+> +	};
+>   };
+> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockch=
+ip-emmc.c
+> index 887b4c2..6ebcf3e 100644
+> --- a/drivers/phy/phy-rockchip-emmc.c
+> +++ b/drivers/phy/phy-rockchip-emmc.c
+> @@ -176,7 +176,10 @@ static int rockchip_emmc_phy_probe(struct platfo=
+rm_device *pdev)
+>   	struct regmap *grf;
+>   	unsigned int reg_offset;
+>
+> -	grf =3D syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf=
+");
+> +	if (!dev->parent || !dev->parent->of_node)
+> +		return -ENODEV;
+> +
+> +	grf =3D syscon_node_to_regmap(dev->parent->of_node);
+>   	if (IS_ERR(grf)) {
+>   		dev_err(dev, "Missing rockchip,grf property\n");
+>   		return PTR_ERR(grf);
+>
 
-BR,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--=20
+Best Regards
+Shawn Lin
