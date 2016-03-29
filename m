@@ -1,51 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 3/8] Documentation: devicetree: rockchip: Document GeekBox
-Date: Tue, 29 Mar 2016 23:21:51 +0200
-Message-ID: <1682289.HWd4yLL18I@diego>
-References: <1458136727-32075-1-git-send-email-afaerber@suse.de> <31070685.TnxqGeNupO@diego> <56FAE95E.6060900@suse.de>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] Sound: SOC: TAS571x: added missing register
+ literals
+Date: Tue, 29 Mar 2016 14:33:05 -0700
+Message-ID: <20160329213305.GO2350@sirena.org.uk>
+References: <1459237178-12920-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56FAE95E.6060900@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oDT6ON1uLKeoILhE"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459237178-12920-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 29. M=E4rz 2016, 22:45:18 schrieb Andreas F=E4rber:
-> Am 29.03.2016 um 22:13 schrieb Heiko St=FCbner:
-> > Am Mittwoch, 16. M=E4rz 2016, 14:58:41 schrieb Andreas F=E4rber:
-> >> Use "geekbuying,geekbox" compatible string.
-> >>=20
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> >> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
-> >=20
-> > I've folded this patch into the geekbox dts patch, carrying Rob's A=
-ck for
-> > the binding over.
->=20
-> Either you just made a mistake in my name or
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree=
-/Docume
-> ntation/devicetree/bindings/submitting-patches.txt needs an update. I=
-t
-> clearly says:
->=20
-> "1) The Documentation/ portion of the patch should be a separate patc=
-h."
->=20
-> That's why I always do it this way.
 
-looking at the dt-bindings git log, it seems that is handled in a varie=
-ty of=20
-ways :-) . Personally I'm doing completely new bindings separately but =
-the=20
-125th addition of a board just inside the dts patch.
+--oDT6ON1uLKeoILhE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But I guess we can also move it out again into a separate patch if you =
-prefer=20
-that :-) .
+On Tue, Mar 29, 2016 at 09:39:34AM +0200, Petr Kulhavy wrote:
 
+> The list of TAS571x registers was incomplete.
+> Added the missing register definitions up to register 0x25
 
-Heiko
+According to the driver the device has registers up to 0xff?
+
+>  /* device registers */
+> +#define TAS571X_CLK_CTRL_REG		0x00
+> +#define TAS571X_DEV_ID_REG		0x01
+> +#define TAS571X_ERR_STATUS_REG		0x02
+> +#define TAS571X_SYS_CTRL_1_REG		0x03
+
+These look like volatile registers but the device has a register cache
+and we're not adding a list of volatile registers (or readable registers
+for that matter).
+
+--oDT6ON1uLKeoILhE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW+vSQAAoJECTWi3JdVIfQ0hcH/j2A1pw2/5YeT0kd8I67ZYvn
+ZjgO+05xZlvbXk7pN3TsvlrbKLLmATUK8NUWwP8HiuU5fuPXNYSyzeKAwc6/6H2b
+0Qn/2S6K3SiLIk7tfpM/eNUiK2k84RNvPl+HCis5QigWeAV9236Hox4lCc50gnFd
+bM7TPPMzb1ZC/bm0oPQ7NtV9tHvTQ5lre6kbYHa1expIaAcD6BGrHu6ZdUavFNDu
+cem5gJFLiEW/rMjgTSncySLmr2uU3gMnHsfQbYnI8kLlbafqsEi1/FyCG54FA7Bh
+GUhHOYs47L1zU2y7VdzVRN+JVSibogfiBj3fygL/bluz/PnWL9eKdKsN59Hs9QI=
+=j+1O
+-----END PGP SIGNATURE-----
+
+--oDT6ON1uLKeoILhE--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
