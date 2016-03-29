@@ -1,78 +1,43 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ARM: mvebu: Add the hardware monitor to the NSA320 device tree
-Date: Tue, 29 Mar 2016 17:45:20 +0200
-Message-ID: <87poudwanj.fsf@free-electrons.com>
-References: <1457192097-32538-1-git-send-email-linux@baker-net.org.uk>
-	<1457192097-32538-4-git-send-email-linux@baker-net.org.uk>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v3 0/4] thermal: hisilicon: enable power allocator for
+ Hi6220
+Date: Tue, 29 Mar 2016 08:45:59 -0700
+Message-ID: <20160329154548.GE1855@localhost.localdomain>
+References: <1459250835-25561-1-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1457192097-32538-4-git-send-email-linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org> (Adam
-	Baker's message of "Sat, 5 Mar 2016 15:34:57 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, carl.wolfgang-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459250835-25561-1-git-send-email-leo.yan@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Adam,
- 
- On sam., mars 05 2016, Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org> wrote:
+On Tue, Mar 29, 2016 at 07:27:11PM +0800, Leo Yan wrote:
+> Hi6220 has octa-core so it has quite high power consumption when run
+> benchmark and introduces high temperature for SoC. So need enable
+> thermal governor to control temperature and also cannot hurt much for
+> performance after impose cooling operations on CPU.
+> 
+> This patch series is to enable power allocator for Hi6220. Patch 1 is to
+> change "hysteresis" as optional property for trip points, so when enable
+> power allocator governor we can ignore this property.
+> 
+> During profiling also found two issues for thermal sensor's driver. The
+> power allocator just uses only one sensor, so patch 2 is to fix sensor
+> driver to let it can initialize driver successfully with only enabling
+> one sensor; patch 3 is to dismiss warning of IRQ imbalance enabling.
+> 
+> After profiling on Hikey, the power model has been simplized with only
+> dynamic coefficient, and now it's convienence to pass it from CPU node.
+> So patch 4 and 5 bind sensor and pass power model parameters.
+> 
+> This patch series have been tested on 96boards Hikey.
 
-> Add an entry for the hardware monitoring MCU
->
-> Signed-off-by: Adam Baker <linux-u8Lxuz9p/S1csCcyGdaD/Q@public.gmane.org>
+Applied patches 1 and 2 in my fixes branch. Patches 3 and 4 need to go
+via the hisi platform tree. You may add my
 
-Applied on mvebu/dt, I only changed the tropic to "ARM: dts: kirkwood:
-Add the hardware monitor to the NSA320 device tree" as know requested
-by the arm-soc maintainer.
+Acked-by: Eduardo Valentin <edubezval@gmail.com>
 
-Thanks,
-
-Gregory
-
-> ---
-> This patch is unchanged from the version Gregory CLEMENT said
-> he would apply once the hwmon maintainers accept 2/3
-> ---
->  arch/arm/boot/dts/kirkwood-nsa320.dts | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/kirkwood-nsa320.dts b/arch/arm/boot/dts/kirkwood-nsa320.dts
-> index 24f686d..2a935e9 100644
-> --- a/arch/arm/boot/dts/kirkwood-nsa320.dts
-> +++ b/arch/arm/boot/dts/kirkwood-nsa320.dts
-> @@ -193,10 +193,19 @@
->  		};
->  	};
->  
-> +	hwmon {
-> +		compatible = "zyxel,nsa320-mcu";
-> +		pinctrl-0 = <&pmx_mcu_data &pmx_mcu_clk &pmx_mcu_act>;
-> +		pinctrl-names = "default";
-> +
-> +		data-gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +		clk-gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
-> +		act-gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
-> +	};
-> +
->  	/* The following pins are currently not assigned to a driver,
->  	   some of them should be configured as inputs.
-> -	pinctrl-0 = <&pmx_mcu_data &pmx_mcu_clk &pmx_mcu_act
-> -		     &pmx_htp &pmx_vid_b1
-> +	pinctrl-0 = <&pmx_htp &pmx_vid_b1
->  		     &pmx_power_resume_data &pmx_power_resume_clk>; */
->  };
->  
-> -- 
-> 2.1.4
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+on patches 3 and 4 if you want.
