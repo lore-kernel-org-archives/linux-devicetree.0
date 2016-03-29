@@ -1,46 +1,37 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v7 11/17] ARM: XEN: Move xen_early_init() before
- efi_init()
-Date: Tue, 29 Mar 2016 17:07:57 +0100
-Message-ID: <20160329160756.GG6745@arm.com>
-References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
- <1458830676-27075-12-git-send-email-shannon.zhao@linaro.org>
- <alpine.DEB.2.02.1603261252510.18380@kaball.uk.xensource.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend v2 4/9] regulator: axp20x: support
+ AXP809 variant
+Date: Tue, 29 Mar 2016 09:09:57 -0700
+Message-ID: <20160329160957.GO2350@sirena.org.uk>
+References: <1459243352-23344-1-git-send-email-wens@csie.org>
+ <1459243352-23344-5-git-send-email-wens@csie.org>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="XMHqbYJb993HXwLR"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBB4OR5K3QKGQEIIEL34Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.02.1603261252510.18380@kaball.uk.xensource.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
-Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, zhaoshenglong@huawei.com, shannon.zhao@linaro.org
+In-Reply-To: <1459243352-23344-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Mar 26, 2016 at 12:54:09PM +0000, Stefano Stabellini wrote:
-> are you OK with this patch?
+--XMHqbYJb993HXwLR
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Nothing against it, but the only arm64 bit is:
+On Tue, Mar 29, 2016 at 05:22:27PM +0800, Chen-Yu Tsai wrote:
+> The X-Powers AXP809 PMIC has a similar set of regulators as the AXP221,
+> though a few LDOs were removed, and a new switch output added. Like the
+> AXP221, AXP809 also has DC1SW and DC5LDO, which are internally chained
+> to DCDC1 and DCDC5, respectively.
 
-> > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-> > index 450987d..6cf5051 100644
-> > --- a/arch/arm64/kernel/setup.c
-> > +++ b/arch/arm64/kernel/setup.c
-> > @@ -313,6 +313,7 @@ void __init setup_arch(char **cmdline_p)
-> >  	 */
-> >  	local_async_enable();
-> >  
-> > +	xen_early_init();
-> >  	efi_init();
-> >  	arm64_memblock_init();
-> >  
-> > @@ -334,7 +335,6 @@ void __init setup_arch(char **cmdline_p)
-> >  	} else {
-> >  		psci_acpi_init();
-> >  	}
-> > -	xen_early_init();
-
-so it's difficult to care too much ;) I do hope that there won't be a
-need to split up efi_init() in future because some of it has to happen
-before xen_early_init, but that doesn't sound likely at the moment.
-
-Will
+Reviewed-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--XMHqbYJb993HXwLR--
