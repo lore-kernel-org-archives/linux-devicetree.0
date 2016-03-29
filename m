@@ -1,140 +1,77 @@
-From: "Winkler, Tomas" <tomas.winkler@intel.com>
-Subject: RE: [RESEND] [PATCH v11 2/6] added UFS 2.0 capabilities
-Date: Tue, 29 Mar 2016 10:41:37 +0000
-Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B541CD26F@hasmsx108.ger.corp.intel.com>
-References: <cover.1457111366.git.jpinto@synopsys.com>
- <fcc0aa6a294a02dcab590d56f7f43bcb2f9f18db.1457111366.git.jpinto@synopsys.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: Enable N950 keyboard sleep leds by default
+Date: Tue, 29 Mar 2016 12:51:28 +0200
+Message-ID: <20160329105128.GA30184@amd>
+References: <1457827580-16919-1-git-send-email-sre@kernel.org>
+ <1457827580-16919-5-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fcc0aa6a294a02dcab590d56f7f43bcb2f9f18db.1457111366.git.jpinto@synopsys.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc: "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "robh@kernel.org" <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1457827580-16919-5-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi!
 
-Adding UFS 2.0 support to the UFS core driver.
+For 1-3 in the series, Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 
-Signed-off-by: Joao Pinto <jpinto@synopsys.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes v8->v11:
-- Nothing changed (just to keep up with patch set version).
-Changes v7->v8:
-- Added "jedec, ufs-2.0" to the ufschd-platform compatibility strings Changes v0->v7:
-- Nothing changed (just to keep up with patch set version).
+> Like the Nokia N900, the N950 has leds to show
+> the state of sys_clkreq and sys_off_mode pins.
+> 
+> A detailed description for the LEDs and
+> OMAP's sleep states can be found in Tony's
+> commit for the Nokia N900:
+> 
+> c1be2032f66df9e1238bd5bc4ca666de88a62abc
 
- .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  4 +--
- drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++++++---
- drivers/scsi/ufs/ufshci.h                          |  1 +
- 3 files changed, 28 insertions(+), 6 deletions(-)
+I must say I've seen it on N900, and yes, it is useful, but no, I
+don't think this is right.
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-index 03c0e98..8d9a9d2 100644
---- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-@@ -4,8 +4,8 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
- Each UFS controller instance should have its own node.
- 
- Required properties:
--- compatible		: must contain "jedec,ufs-1.1", may also list one or more
--					  of the following:
-+- compatible		: must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
-+			  also list one or more of the following:
- 					  "qcom,msm8994-ufshc"
- 					  "qcom,msm8996-ufshc"
- 					  "qcom,ufshc"
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c index 85cd256..2b5f2bf 100644
+This is not a LED. This is a interface that changes meaning of two
+other LEDs. I guess it should go to debugfs somewhere.
 
-I think this should go in separate patch 
+Best regards,
+								Pavel
+								
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1223,6 +1223,7 @@ static int ufshcd_compose_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
- 			ret = -EINVAL;
- 		}
- 		break;
-+	case UTP_CMD_TYPE_UFS_STORAGE:
- 	case UTP_CMD_TYPE_DEV_MANAGE:
- 		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE);
- 		if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY) @@ -1287,6 +1288,7 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	struct ufshcd_lrb *lrbp;
- 	struct ufs_hba *hba;
- 	unsigned long flags;
-+	u32 upiu_flags;
- 	int tag;
- 	int err = 0;
- 
-@@ -1343,10 +1345,23 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
- 	lrbp->task_tag = tag;
- 	lrbp->lun = ufshcd_scsi_to_upiu_lun(cmd->device->lun);
- 	lrbp->intr_cmd = !ufshcd_is_intr_aggr_allowed(hba) ? true : false;
--	lrbp->command_type = UTP_CMD_TYPE_SCSI;
-+
-+	if (hba->ufs_version == UFSHCI_VERSION_20)
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_SCSI;
-This translation can be pushed to prepare_req_desc_hdr and you end up with  ~oneliner fix 
+> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> @@ -31,9 +31,27 @@
+>  		startup-delay-us = <150>;
+>  		enable-active-high;
+>  	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +
+> +		heartbeat {
+> +			label = "debug::sleep";
+> +			gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;  /* gpio92 */
+> +			linux,default-trigger = "default-on";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&debug_leds>;
+> +		};
+> +	};
+>  };
+>  
+>  &omap3_pmx_core {
+> +	debug_leds: pinmux_debug_led_pins {
+> +		pinctrl-single,pins = <
+> +			OMAP3_CORE1_IOPAD(0x2108, PIN_OUTPUT | MUX_MODE4)       /* dss_data22.gpio_92 */
+> +		>;
+> +	};
+> +
+>  	mmc2_pins: pinmux_mmc2_pins {
+>  		pinctrl-single,pins = <
+>  			OMAP3_CORE1_IOPAD(0x2158, PIN_INPUT_PULLUP | MUX_MODE0) /* sdmmc2_clk */
 
- 
- 	/* form UPIU before issuing the command */
--	ufshcd_compose_upiu(hba, lrbp);
-+	if (hba->ufs_version == UFSHCI_VERSION_20) {
-+		if (likely(lrbp->cmd)) {
-How this can be possible NULL, the code above will crash or I'm missing something ? 
-+			ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags,
-+					lrbp->cmd->sc_data_direction);
-+			ufshcd_prepare_utp_scsi_cmd_upiu(lrbp, upiu_flags);
-What is different her from the code in ufshcd_compose_upiu ?
-+		} else
-+			err = -EINVAL;
-+	} else
-+		ufshcd_compose_upiu(hba, lrbp);
-+
- 	err = ufshcd_map_sg(lrbp);
- 	if (err) {
- 		lrbp->cmd = NULL;
-@@ -1371,7 +1386,12 @@ static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
- 	lrbp->sense_buffer = NULL;
- 	lrbp->task_tag = tag;
- 	lrbp->lun = 0; /* device management cmd is not specific to any LUN */
--	lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-+
-+	if (hba->ufs_version == UFSHCI_VERSION_20)
-+		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
-+	else
-+		lrbp->command_type = UTP_CMD_TYPE_DEV_MANAGE;
-+
-This translation can be pushed to prepare_req_desc_hdr and you end up with ~ oneliner fix
-
- 	lrbp->intr_cmd = true; /* No interrupt aggregation */
- 	hba->dev_cmd.type = cmd_type;
- 
-@@ -3187,7 +3207,8 @@ static void ufshcd_transfer_req_compl(struct ufs_hba *hba)
- 			/* Do not touch lrbp after scsi done */
- 			cmd->scsi_done(cmd);
- 			__ufshcd_release(hba);
--		} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE) {
-+		} else if (lrbp->command_type == UTP_CMD_TYPE_DEV_MANAGE ||
-+			lrbp->command_type == UTP_CMD_TYPE_UFS_STORAGE) {
- 			if (hba->dev_cmd.complete)
- 				complete(hba->dev_cmd.complete);
- 		}
-diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h index 0ae0967..8dba0e7 100644
---- a/drivers/scsi/ufs/ufshci.h
-+++ b/drivers/scsi/ufs/ufshci.h
-@@ -273,6 +273,7 @@ enum {
- 	UTP_CMD_TYPE_SCSI		= 0x0,
- 	UTP_CMD_TYPE_UFS		= 0x1,
- 	UTP_CMD_TYPE_DEV_MANAGE		= 0x2,
-+	UTP_CMD_TYPE_UFS_STORAGE	= 0x11,
- };
- 
- enum {
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
-1.8.1.5
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
