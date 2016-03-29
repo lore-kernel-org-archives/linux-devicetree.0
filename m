@@ -1,72 +1,48 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 0/8] add TCON and Vybrid support
-Date: Mon, 28 Mar 2016 18:59:54 -0700
-Message-ID: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v2 1/8] ARM: imx: clk-vf610: fix DCU clock tree
+Date: Mon, 28 Mar 2016 18:59:55 -0700
+Message-ID: <1459216802-32094-2-git-send-email-stefan@agner.ch>
+References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459216802-32094-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
-Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
+Cc: kernel@pengutronix.de, airlied@linux.ie, daniel.vetter@ffwll.ch, jianwei.wang.chn@gmail.com, alison.wang@freescale.com, meng.yi@nxp.com, alexander.stein@systec-electronic.com, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaHNldCBhZGRzIHRoZSBtaXNzaW5nIHBpZWNlcyB0byBtYWtlIHRoZSBGcmVlc2Nh
-bGUKRENVIERSTSBkcml2ZXIgd29yayBvbiBGcmVlc2NhbGUgVnlicmlkLgoKRm9yZW1vc3QsIGl0
-IGFkZHMgc3VwcG9ydCBmb3IgdGhlIHRpbWluZyBjb250cm9sbGVyIChUQ09OKQptb2R1bGUuIFRo
-ZSBtb2R1bGUgaXMgYmV0d2VlbiB0aGUgRGlzcGxheSBDb250cm9sbGVyIGFuZCB0aGUKYWN0dWFs
-IG91dHB1dCBwaW5zLiBJdCBhbGxvd3MgdG8gYWx0ZXIgdGhlIHRpbWluZ3MgZm9yIFJBVwpURlQg
-ZGlzcGxheXMsIGJ1dCBjYW4gYWxzbyBvcGVyYXRlIGluIGEgYnlwYXNzIG1vZGUuIFRoaXMKY2hh
-bmdlIGhhcyBvbmx5IHN1cHBvcnQgZm9yIHRoZSBieXBhc3MgbW9kZS4KCkVhcmxpZXIgdmFyaWFu
-dHMgb2YgdGhlIERDVSBEUk0gZHJpdmVyIGNvbmZpZ3VyZWQgdGhlIFRDT04KbW9kdWxlIGluIGJ5
-cGFzcyBtb2RlLCBob3dldmVyIHRoaXMgaGFzIGJlZW4gcmVtb3ZlZCBhbmQKcG9zdHBvbmVkLiBU
-aGUgbGFzdCB2YXJpYW50IHdpdGggdGhlIFRDT04gY29kZSB3YXMgdjk6Cmh0dHBzOi8vbGttbC5v
-cmcvbGttbC8yMDE1LzcvMTMvMjQyCgpUaGUgcGF0Y2hzZXQgYWxzbyBmaXhlcyB0aGUgRENVIHJl
-bGF0ZWQgY2xvY2tzIGluIHRoZSBWeWJyaWQKY2xvY2sgdHJlZSBhbmQgbWFrZXMgdXNlIG9mIHRo
-ZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrIGZvcgp0aGUgcGl4ZWxjbG9jayBkaXZpZGVyLgoKVGVz
-dGluZyBvbiBMUzEwMjFhIHdlbGNvbWVpbmchCgpDaGFuZ2VzIHNpbmNlIHYxOgotIFByb3Blcmx5
-IGRpc2FibGUgY2xvY2tzIG9uIGVycm9ycwotIENyZWF0ZSBjbGVhciBzZXBlcmF0aW9uIG9mIHBp
-eGVsIGNsb2NrIGFuZCBidXMgY2xvY2sKLSBTaW1wbGlmaWVkIFRDT04gZHJpdmVyIGJ5IHJlbW92
-aW5nIHN1c3BlbmQvcmVzdW1lCiAgY2FwYWJpbGl0aWVzIChlbmNvZGVyIGRpc2FibGUvZW5hYmxl
-IG1ha2VzIHN1cmUgdGhhdAogIFRDT04gYnlwYXNzIGdldHMgZGlzYWJsZWQvcmVlbmFibGVkIG9u
-IHN1c3BlbmQpCi0gVXNlIGNvbW1vbiBjbG9jayBmcmFtZXdvcmsgdG8gY3JlYXRlIGEgZGl2aWRl
-ciBjbG9jawogIHdoaWNoIHJlcHJlc2VudHMgdGhlIERDVSBpbnRlcm5hbCBwaXhlbCBjbG9jayBk
-aXZpZGVyCgpTdGVmYW4gQWduZXIgKDgpOgogIEFSTTogaW14OiBjbGstdmY2MTA6IGZpeCBEQ1Ug
-Y2xvY2sgdHJlZQogIEFSTTogaW14OiBjbGstdmY2MTA6IGFkZCBUQ09OIGlwZyBjbG9jawogIGRy
-bS9mc2wtZGN1OiBkaXNhYmxlIGNsb2NrIG9uIGluaXRpYWxpemF0aW9uIGZhaWx1cmUgYW5kIHJl
-bW92ZQogIGRybS9mc2wtZGN1OiBhZGQgZXh0cmEgY2xvY2sgZm9yIHBpeGVsIGNsb2NrCiAgZHJt
-L2ZzbC1kY3U6IHVzZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrIGZvciBwaXhlbCBjbG9jayBkaXZp
-ZGVyCiAgZHJtL2ZzbC1kY3U6IGFkZCBUQ09OIGRyaXZlcgogIEFSTTogZHRzOiB2ZjYxMDogYWRk
-IGRpc3BsYXkgbm9kZXMKICBBUk06IGR0czogdmY2MTAtY29saWJyaTogZW5hYmxlIGRpc3BsYXkg
-Y29udHJvbGxlcgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQg
-ICAgICAgIHwgICA2ICsrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCx0Y29u
-LnR4dCAgICAgICB8ICAxOCArKysrCiBhcmNoL2FybS9ib290L2R0cy92Zi1jb2xpYnJpLWV2YWwt
-djMuZHRzaSAgICAgICAgICB8ICAxNiArKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3ZmLWNvbGlicmku
-ZHRzaSAgICAgICAgICAgICAgICAgIHwgIDMzICsrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3Zm
-eHh4LmR0c2kgICAgICAgICAgICAgICAgICAgICAgIHwgIDE5ICsrKysKIGRyaXZlcnMvY2xrL2lt
-eC9jbGstdmY2MTAuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dw
-dS9kcm0vZnNsLWRjdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgMyArLQogZHJpdmVy
-cy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fY3J0Yy5jICAgICAgICAgfCAgIDcgKy0KIGRy
-aXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jICAgICAgICAgIHwgIDczICsr
-KysrKysrKystLS0tCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuaCAg
-ICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9yZ2Iu
-YyAgICAgICAgICB8ICAxMSArKysKIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF90Y29uLmMg
-ICAgICAgICAgICAgICAgIHwgMTA4ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUv
-ZHJtL2ZzbC1kY3UvZnNsX3Rjb24uaCAgICAgICAgICAgICAgICAgfCAgMzMgKysrKysrKwogaW5j
-bHVkZS9kdC1iaW5kaW5ncy9jbG9jay92ZjYxMC1jbG9jay5oICAgICAgICAgICAgfCAgIDQgKy0K
-IDE0IGZpbGVzIGNoYW5nZWQsIDMxMSBpbnNlcnRpb25zKCspLCAyOSBkZWxldGlvbnMoLSkKIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9mc2wsdGNvbi50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRj
-dS9mc2xfdGNvbi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3Uv
-ZnNsX3Rjb24uaAoKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+Similar to an earlier fix for the SAI clocks, the DCU clock hierarchy
+mixes the bus clock with the display controllers pixel clock. Tests
+have shown that the gates in CCM_CCGR3/9 registers do not control
+the DCU pixel clock, but only the register access clock (bus clock).
+
+Fix this by defining the parent clock of VF610_CLK_DCUx to be the bus
+clock (ipg_bus).
+
+Since the clock has not been used far, there are no further changes
+needed.
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ drivers/clk/imx/clk-vf610.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
+index 0a94d96..426fde2 100644
+--- a/drivers/clk/imx/clk-vf610.c
++++ b/drivers/clk/imx/clk-vf610.c
+@@ -321,11 +321,11 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
+ 	clk[VF610_CLK_DCU0_SEL] = imx_clk_mux("dcu0_sel", CCM_CSCMR1, 28, 1, dcu_sels, 2);
+ 	clk[VF610_CLK_DCU0_EN] = imx_clk_gate("dcu0_en", "dcu0_sel", CCM_CSCDR3, 19);
+ 	clk[VF610_CLK_DCU0_DIV] = imx_clk_divider("dcu0_div", "dcu0_en", CCM_CSCDR3, 16, 3);
+-	clk[VF610_CLK_DCU0] = imx_clk_gate2("dcu0", "dcu0_div", CCM_CCGR3, CCM_CCGRx_CGn(8));
++	clk[VF610_CLK_DCU0] = imx_clk_gate2("dcu0", "ipg_bus", CCM_CCGR3, CCM_CCGRx_CGn(8));
+ 	clk[VF610_CLK_DCU1_SEL] = imx_clk_mux("dcu1_sel", CCM_CSCMR1, 29, 1, dcu_sels, 2);
+ 	clk[VF610_CLK_DCU1_EN] = imx_clk_gate("dcu1_en", "dcu1_sel", CCM_CSCDR3, 23);
+ 	clk[VF610_CLK_DCU1_DIV] = imx_clk_divider("dcu1_div", "dcu1_en", CCM_CSCDR3, 20, 3);
+-	clk[VF610_CLK_DCU1] = imx_clk_gate2("dcu1", "dcu1_div", CCM_CCGR9, CCM_CCGRx_CGn(8));
++	clk[VF610_CLK_DCU1] = imx_clk_gate2("dcu1", "ipg_bus", CCM_CCGR9, CCM_CCGRx_CGn(8));
+ 
+ 	clk[VF610_CLK_ESAI_SEL] = imx_clk_mux("esai_sel", CCM_CSCMR1, 20, 2, esai_sels, 4);
+ 	clk[VF610_CLK_ESAI_EN] = imx_clk_gate("esai_en", "esai_sel", CCM_CSCDR2, 30);
+-- 
+2.7.4
