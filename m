@@ -1,27 +1,38 @@
 From: Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
-Subject: [patch] ARM: mvebu: fix usb on Linksys Caiman
-Date: Tue, 29 Mar 2016 13:56:51 +0000
-Message-ID: <1459259813-5278-1-git-send-email-patrick@puiterwijk.org>
+Subject: [PATCH 2/2] ARM: mvebu: Correct unit address for linksys
+Date: Tue, 29 Mar 2016 13:56:53 +0000
+Message-ID: <1459259813-5278-3-git-send-email-patrick@puiterwijk.org>
+References: <1459259813-5278-1-git-send-email-patrick@puiterwijk.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459259813-5278-1-git-send-email-patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The USB2 port for Armada 38x is defined to be at 58000, not at
+50000.
 
-These patches fix the USB ports on Linksys Caiman (WRT1200AC) on 4.6rc1.
-After a lot of trial and error, I found out that if there's any unit
-with name "usb@58000" defined, none of the USB ports work, but if I
-change it to anything else, the USB3 port comes up. And if I then also
-bring the linksys.dtsi unit name in sync (and different from USB@58000),
-the USB2 port also comes up.
+Signed-off-by: Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-385-linksys.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I can change it to literally anything else: nonsense@58000 and usb@58001
-work, it's only usb@58000 that doesn't work as far as I have found.
-Since the ehci-orion documentation gives the example of ehci@50000, I just
-brought all of the Orion EHCI device tree definitions in sync with this.
-
+diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+index b328d94..94b8b0b 100644
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -117,7 +117,7 @@
+ 			};
+ 
+ 			/* USB part of the eSATA/USB 2.0 port */
+-			ehci@50000 {
++			ehci@58000 {
+ 				status = "okay";
+ 			};
+ 
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
