@@ -1,106 +1,88 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] hwmon: (adm1031) Add device tree support
-Date: Tue, 29 Mar 2016 02:14:36 -0700
-Message-ID: <56FA477C.8030607@roeck-us.net>
-References: <1459241443-28392-1-git-send-email-joel@jms.id.au>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH resend v2 0/9] mfd: axp20x: Add support for
+ AXP809 PMIC
+Date: Tue, 29 Mar 2016 17:22:23 +0800
+Message-ID: <1459243352-23344-1-git-send-email-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1459241443-28392-1-git-send-email-joel@jms.id.au>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org
-Cc: jk@ozlabs.org, linux-hwmon@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZES5G3QKGQE64SUCWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2016 01:50 AM, Joel Stanley wrote:
-> This adds a of_device_id table so we can probe the driver using the
-> device tree.
->
-The subject line does not match the driver being modified; it suggests adm1031
-while in reality the adm1275 driver is being modified.
+Hi everyone,
 
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
-> ---
->   Documentation/devicetree/bindings/hwmon/adm1276.txt | 21 +++++++++++++++++++++
+This is a resend of v2 of the AXP809 PMIC support series. This adds
+support for X-Powers' AXP809 PMIC. This is the primary PMIC accompanying
+Allwinner's A80 SoC. For now, only the power button (PEK) and regulators
+are supported. These are supported using existing axp20x drivers.
 
-The bindings file name doesn't match the driver file name.
+Driver patches are based on v4.6-rc1, while DT patches are based on
+Maxime's sunxi/dt-for-4.7 branch.
 
-Besides, this should already work, through trivial bindings.
-Is there a reason to believe that it does not already work ?
+Some regulator patches were merged into v4.6-rc1. Those have been
+dropped from this series. Other than that there are no changes.
 
-Guenter
+Patch 1 adds a MAINTAINERS entry for the X-Powers AXP PMICs.
+I list myself as the maintainer.
 
->   drivers/hwmon/pmbus/adm1275.c                       | 15 +++++++++++++++
->   2 files changed, 36 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/hwmon/adm1276.txt
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/adm1276.txt b/Documentation/devicetree/bindings/hwmon/adm1276.txt
-> new file mode 100644
-> index 000000000000..45eb51867c1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/adm1276.txt
-> @@ -0,0 +1,21 @@
-> +* Analog Devices ADM1275 and compatabile power monitors
-> +
-> +Required node properties:
-> +
-> + - compatible: manufacturer and chip name, one of
-> +
-> +    "adi,adm1075"
-> +    "adi,adm1275"
-> +    "adi,adm1276"
-> +    "adi,adm1278"
-> +    "adi,adm1293"
-> +    "adi,adm1294"
-> +
-> +- reg: I2C bus address of the device
-> +
-> +Example adm1275 node:
-> +
-> +power-sensor {
-> +	compatible = "adi,adm1278";
-> +	reg = <0x4c>;
-> +}
-> diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-> index 3baa4f4a8c5e..1476a127dbdb 100644
-> --- a/drivers/hwmon/pmbus/adm1275.c
-> +++ b/drivers/hwmon/pmbus/adm1275.c
-> @@ -22,6 +22,7 @@
->   #include <linux/slab.h>
->   #include <linux/i2c.h>
->   #include <linux/bitops.h>
-> +#include <linux/of.h>
->   #include "pmbus.h"
->
->   enum chips { adm1075, adm1275, adm1276, adm1278, adm1293, adm1294 };
-> @@ -344,6 +345,19 @@ static const struct i2c_device_id adm1275_id[] = {
->   };
->   MODULE_DEVICE_TABLE(i2c, adm1275_id);
->
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id adm1275_of_match[] = {
-> +	{ .compatible = "adi,adm1075" },
-> +	{ .compatible = "adi,adm1275" },
-> +	{ .compatible = "adi,adm1276" },
-> +	{ .compatible = "adi,adm1278" },
-> +	{ .compatible = "adi,adm1293" },
-> +	{ .compatible = "adi,adm1294" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, adm1275_of_match);
-> +#endif
-> +
->   static int adm1275_probe(struct i2c_client *client,
->   			 const struct i2c_device_id *id)
->   {
-> @@ -598,6 +612,7 @@ static int adm1275_probe(struct i2c_client *client,
->   static struct i2c_driver adm1275_driver = {
->   	.driver = {
->   		   .name = "adm1275",
-> +		   .of_match_table = of_match_ptr(adm1275_of_match),
->   		   },
->   	.probe = adm1275_probe,
->   	.remove = pmbus_do_remove,
->
+Patch 2 adds AXP809 to the axp20x bindings.
 
+Patch 3 adds AXP809 support to the axp20x mfd driver.
+
+Patch 4 adds AXP809 support to the axp20x regulator driver.
+This patch depends on patch 3.
+
+Patch 5 adds a dtsi file for AXP809.
+
+Patch 6 enables AXP809 support on the A80 Optimus board.
+
+Patch 7 enables AXP809 support on the Cubieboard 4.
+
+Patch 8 disables the dummy regulators from sunxi-common-regulators.dtsi
+on the A80 Optimus board. These aren't used in the board DTS anymore.
+
+Patch 9 disables the dummy regulators from sunxi-common-regulators.dtsi,
+on the Cubieboard4. These aren't used in the board DTS anymore.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (9):
+  MAINTAINERS: Add entry for X-Powers AXP family PMIC drivers
+  mfd: axp20x: Add bindings for AXP809 PMIC
+  mfd: axp20x: Add support for AXP809 PMIC
+  regulator: axp20x: support AXP809 variant
+  ARM: dts: sunxi: Add dtsi file for AXP809 PMIC
+  ARM: dts: sun9i: a80-optimus: Add AXP809 PMIC device node and
+    regulators
+  ARM: dts: sun9i: cubieboard4: Add AXP809 PMIC device node and
+    regulators
+  ARM: dts: sun9i: a80-optimus: Disable dummy regulators vcc3v0, vcc3v3,
+    vcc5v0
+  ARM: dts: sun9i: cubieboard4: Disable dummy regulators vcc3v0, vcc3v3,
+    vcc5v0
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt   |  31 ++++-
+ MAINTAINERS                                        |   6 +
+ .../dts/{sun9i-a80-cubieboard4.dts => axp809.dtsi} |  98 ++------------
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts        | 143 ++++++++++++++++++++-
+ arch/arm/boot/dts/sun9i-a80-optimus.dts            | 143 ++++++++++++++++++++-
+ drivers/mfd/axp20x-rsb.c                           |   1 +
+ drivers/mfd/axp20x.c                               |  79 ++++++++++++
+ drivers/regulator/axp20x-regulator.c               | 119 ++++++++++++-----
+ include/linux/mfd/axp20x.h                         |  59 +++++++++
+ 9 files changed, 554 insertions(+), 125 deletions(-)
+ copy arch/arm/boot/dts/{sun9i-a80-cubieboard4.dts => axp809.dtsi} (52%)
+
+-- 
+2.7.0
