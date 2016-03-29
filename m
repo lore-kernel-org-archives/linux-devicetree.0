@@ -1,88 +1,116 @@
-From: Shannon Zhao <zhaoshenglong@huawei.com>
-Subject: Re: [PATCH v8 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Tue, 29 Mar 2016 16:00:26 +0800
-Message-ID: <56FA361A.6080104@huawei.com>
-References: <1458830676-27075-2-git-send-email-shannon.zhao@linaro.org> <1458893149-17388-1-git-send-email-zhaoshenglong@huawei.com> <20160325171547.GB29822@localhost>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 1/3 v2] drm/i2c/adv7511: Add audio support
+Date: Tue, 29 Mar 2016 13:35:25 +0530
+Message-ID: <56FA3745.3000807@codeaurora.org>
+References: <cover.1459174494.git.joabreu@synopsys.com>
+ <15b1936d307912ba12df7fa09ec3a7a80ac5fcef.1459174494.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20160325171547.GB29822@localhost>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, catalin.marinas@arm.com, will.deacon@arm.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, ACPI <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <15b1936d307912ba12df7fa09ec3a7a80ac5fcef.1459174494.git.joabreu@synopsys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jose Abreu <Jose.Abreu@synopsys.com>, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: tixy@linaro.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Vineet.Gupta1@synopsys.com, Alexey.Brodkin@synopsys.com, lgirdwood@gmail.com, robh+dt@kernel.org, nariman@opensource.wolfsonmicro.com, yitian.bu@tangramtek.com, wsa+renesas@sang-engineering.com, broonie@kernel.org, Maruthi.Bayyavarapu@amd.com, galak@codeaurora.org, buyitian@gmail.com, alexander.deucher@amd.com, tiwai@suse.com, perex@perex.cz, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/3/26 1:15, Bjorn Helgaas wrote:
-> On Fri, Mar 25, 2016 at 04:05:49PM +0800, Shannon Zhao wrote:
->> > From: Shannon Zhao <shannon.zhao@linaro.org>
->> > 
->> > ACPI 6.0 introduces a new table STAO to list the devices which are used
->> > by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
->> > UART is used by Xen. So here it hides UART from Dom0.
->> > 
->> > CC: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
->> > CC: Len Brown <lenb@kernel.org> (supporter:ACPI)
->> > CC: linux-acpi@vger.kernel.org (open list:ACPI)
->> > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
->> > ---
->> >  drivers/acpi/scan.c | 68 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->> >  1 file changed, 68 insertions(+)
->> > 
->> > diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
->> > index 5f28cf7..5420cc5 100644
->> > --- a/drivers/acpi/scan.c
->> > +++ b/drivers/acpi/scan.c
->> > @@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
->> >  DEFINE_MUTEX(acpi_device_lock);
->> >  LIST_HEAD(acpi_wakeup_device_list);
->> >  static DEFINE_MUTEX(acpi_hp_context_lock);
->> > +static u64 spcr_uart_addr;
->> >  
->> >  struct acpi_dep_data {
->> >  	struct list_head node;
->> > @@ -1453,6 +1454,41 @@ static int acpi_add_single_object(struct acpi_device **child,
->> >  	return 0;
->> >  }
->> >  
->> > +static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
->> > +					    void *context)
->> > +{
->> > +	struct resource *res = context;
->> > +
->> > +	if (acpi_dev_resource_memory(ares, res))
->> > +		return AE_CTRL_TERMINATE;
->> > +
->> > +	return AE_OK;
->> > +}
->> > +
->> > +static bool acpi_device_should_be_hidden(acpi_handle handle)
->> > +{
->> > +	acpi_status status;
->> > +	struct resource res;
->> > +
->> > +	/* Check if it should ignore the UART device */
->> > +	if (spcr_uart_addr != 0) {
->> > +		if (!acpi_has_method(handle, METHOD_NAME__CRS))
->> > +			return false;
->> > +
->> > +		status = acpi_walk_resources(handle, METHOD_NAME__CRS,
->> > +					     acpi_get_resource_memory, &res);
->> > +		if (ACPI_FAILURE(status))
->> > +			return false;
->> > +
->> > +		if (res.start == spcr_uart_addr) {
->> > +			printk(KERN_INFO PREFIX "The UART device in SPCR table will be hidden\n");
-> Can we at least print out the ACPI device path and address here for
-> debugging purposes?  IMHO, kernel messages that contain only static
-> text are always dubious.  There's almost always a useful address, IRQ,
-> return value, etc., that could be included.
-> 
-Ok, I'll add the device address in the message and update this patch.
-
-Thanks,
--- 
-Shannon
-
+SGksCgpPbiAwMy8yOC8yMDE2IDA4OjA2IFBNLCBKb3NlIEFicmV1IHdyb3RlOgo+IFRoaXMgcGF0
+Y2ggYWRkcyBhdWRpbyBzdXBwb3J0IGZvciB0aGUgQURWNzUxMSBIRE1JIHRyYW5zbWl0dGVyCj4g
+dXNpbmcgQUxTQSBTb0MuCj4KPiBUaGUgY29kZSB3YXMgcG9ydGVkIGZyb20gQW5hbG9nIERldmlj
+ZXMgbGludXggdHJlZSBmcm9tCj4gY29tbWl0IDE3NzBjNGExZTMyYiAoIk1lcmdlIHJlbW90ZS10
+cmFja2luZyBicmFuY2gKPiAneGlsaW54L21hc3RlcicgaW50byB4Y29tbV96eW5xIiksIHdoaWNo
+IGlzIGF2YWlsYWJsZSBhdDoKPiAJLSBodHRwczovL2dpdGh1Yi5jb20vYW5hbG9nZGV2aWNlc2lu
+Yy9saW51eC8KPgo+IFRoZSBtYWluIGNvcmUgZmlsZSB3YXMgcmVuYW1lZCBmcm9tIGFkdjc1MTEu
+YyB0byBhZHY3NTExX2NvcmUuYwo+IHNvIHRoYXQgYXVkaW8gYW5kIHZpZGVvIGNvbXBpbGUgaW50
+byBhIHNpbmdsZSBhZHY3NTExLmtvIG1vZHVsZQo+IGFuZCB0byBrZWVwIHVwIHdpdGggQW5hbG9n
+IERldmljZXMga2VybmVsIHRyZWUuCj4KPiBUaGUgYXVkaW8gY2FuIGJlIGRpc2FibGVkIHVzaW5n
+IG1lbnUtY29uZmlnIHNvIGl0IGlzIHBvc3NpYmxlCj4gdG8gdXNlIG9ubHkgdmlkZW8gbW9kZS4K
+Pgo+IFRoZSBIRE1JIG1vZGUgaXMgYXV0b21hdGljYWxseSBzdGFydGVkIGF0IGJvb3QgYW5kIHRo
+ZSBhdWRpbwo+ICh3aGVuIGVuYWJsZWQpIHJlZ2lzdGVycyBhcyBhIGNvZGVjIGludG8gQUxTQS4K
+CklzIHRoZXJlIGEgcmVhc29uIHdoeSB3ZSBzZXQgdGhlIG1vZGUgdG8gSERNSSBhdCBwcm9iZSBp
+dHNlbGY/ClNob3VsZG4ndCBpdCBiZSBva2F5IHRvIHNldCB0aGUgbW9kZSBsYXRlciBvbmNlIHdl
+IHJlYWQgdGhlCkVESUQgb2ZmIHRoZSBwYW5lbD8KClNvbWUgbW9yZSBjb21tZW50cyBiZWxvdy4K
+Cj4KPiBTUERJRiBEQUkgZm9ybWF0IHdhcyBhbHNvIGFkZGVkIHRvIEFTb0MgYXMgaXQgaXMgcmVx
+dWlyZWQKPiBieSBhZHY3NTExIGF1ZGlvLgo+Cj4gU2lnbmVkLW9mZi1ieTogSm9zZSBBYnJldSA8
+am9hYnJldUBzeW5vcHN5cy5jb20+Cj4gLS0tCj4KPiBObyBjaGFuZ2VzIHYxIC0+IHYyLgo+Cj4g
+ICBkcml2ZXJzL2dwdS9kcm0vaTJjL0tjb25maWcgICAgICAgICB8ICAgMTEgKwo+ICAgZHJpdmVy
+cy9ncHUvZHJtL2kyYy9NYWtlZmlsZSAgICAgICAgfCAgICAyICsKPiAgIGRyaXZlcnMvZ3B1L2Ry
+bS9pMmMvYWR2NzUxMS5jICAgICAgIHwgMTAyNCAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLQo+ICAgZHJpdmVycy9ncHUvZHJtL2kyYy9hZHY3NTExLmggICAgICAgfCAgIDQxICsr
+Cj4gICBkcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTFfYXVkaW8uYyB8ICAzMTAgKysrKysrKysr
+KysKPiAgIGRyaXZlcnMvZ3B1L2RybS9pMmMvYWR2NzUxMV9jb3JlLmMgIHwgMTAwNSArKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gICBpbmNsdWRlL3NvdW5kL3NvYy1kYWkuaCAg
+ICAgICAgICAgICB8ICAgIDEgKwo+ICAgNyBmaWxlcyBjaGFuZ2VkLCAxMzcwIGluc2VydGlvbnMo
+KyksIDEwMjQgZGVsZXRpb25zKC0pCj4gICBkZWxldGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL2kyYy9hZHY3NTExLmMKPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+aTJjL2Fkdjc1MTFfYXVkaW8uYwo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS9pMmMvYWR2NzUxMV9jb3JlLmMKCjxzbmlwPgoKPiArCj4gK3N0YXRpYyBpbnQgYWR2NzUxMV9w
+cm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLCBjb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9pZCAq
+aWQpCj4gK3sKPiArCXN0cnVjdCBhZHY3NTExX2xpbmtfY29uZmlnIGxpbmtfY29uZmlnOwo+ICsJ
+c3RydWN0IGFkdjc1MTEgKmFkdjc1MTE7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmaTJjLT5k
+ZXY7Cj4gKwl1bnNpZ25lZCBpbnQgdmFsOwo+ICsJaW50IHJldDsKPiArCj4gKwlpZiAoIWRldi0+
+b2Zfbm9kZSkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4gKwlhZHY3NTExID0gZGV2bV9remFs
+bG9jKGRldiwgc2l6ZW9mKCphZHY3NTExKSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIWFkdjc1MTEp
+Cj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJYWR2NzUxMS0+cG93ZXJlZCA9IGZhbHNlOwo+
+ICsJYWR2NzUxMS0+c3RhdHVzID0gY29ubmVjdG9yX3N0YXR1c19kaXNjb25uZWN0ZWQ7Cj4gKwo+
+ICsJcmV0ID0gYWR2NzUxMV9wYXJzZV9kdChkZXYtPm9mX25vZGUsICZsaW5rX2NvbmZpZyk7Cj4g
+KwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJLyoKPiArCSAqIFRoZSBwb3dlciBk
+b3duIEdQSU8gaXMgb3B0aW9uYWwuIElmIHByZXNlbnQsIHRvZ2dsZSBpdCBmcm9tIGFjdGl2ZSB0
+bwo+ICsJICogaW5hY3RpdmUgdG8gd2FrZSB1cCB0aGUgZW5jb2Rlci4KPiArCSAqLwo+ICsJYWR2
+NzUxMS0+Z3Bpb19wZCA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgInBkIiwgR1BJT0Rf
+T1VUX0hJR0gpOwo+ICsJaWYgKElTX0VSUihhZHY3NTExLT5ncGlvX3BkKSkKPiArCQlyZXR1cm4g
+UFRSX0VSUihhZHY3NTExLT5ncGlvX3BkKTsKPiArCj4gKwlpZiAoYWR2NzUxMS0+Z3Bpb19wZCkg
+ewo+ICsJCW1kZWxheSg1KTsKPiArCQlncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoYWR2NzUxMS0+
+Z3Bpb19wZCwgMCk7Cj4gKwl9Cj4gKwo+ICsJYWR2NzUxMS0+cmVnbWFwID0gZGV2bV9yZWdtYXBf
+aW5pdF9pMmMoaTJjLCAmYWR2NzUxMV9yZWdtYXBfY29uZmlnKTsKPiArCWlmIChJU19FUlIoYWR2
+NzUxMS0+cmVnbWFwKSkKPiArCQlyZXR1cm4gUFRSX0VSUihhZHY3NTExLT5yZWdtYXApOwo+ICsK
+PiArCXJldCA9IHJlZ21hcF9yZWFkKGFkdjc1MTEtPnJlZ21hcCwgQURWNzUxMV9SRUdfQ0hJUF9S
+RVZJU0lPTiwgJnZhbCk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwlkZXZfZGJn
+KGRldiwgIlJldi4gJWRcbiIsIHZhbCk7Cj4gKwo+ICsJcmV0ID0gcmVnbWFwX3JlZ2lzdGVyX3Bh
+dGNoKGFkdjc1MTEtPnJlZ21hcCwgYWR2NzUxMV9maXhlZF9yZWdpc3RlcnMsCj4gKwkJCQkgICAg
+QVJSQVlfU0laRShhZHY3NTExX2ZpeGVkX3JlZ2lzdGVycykpOwo+ICsJaWYgKHJldCkKPiArCQly
+ZXR1cm4gcmV0Owo+ICsKPiArCXJlZ21hcF93cml0ZShhZHY3NTExLT5yZWdtYXAsIEFEVjc1MTFf
+UkVHX0VESURfSTJDX0FERFIsIGVkaWRfaTJjX2FkZHIpOwo+ICsJcmVnbWFwX3dyaXRlKGFkdjc1
+MTEtPnJlZ21hcCwgQURWNzUxMV9SRUdfUEFDS0VUX0kyQ19BRERSLAo+ICsJCSAgICAgcGFja2V0
+X2kyY19hZGRyKTsKPiArCXJlZ21hcF93cml0ZShhZHY3NTExLT5yZWdtYXAsIEFEVjc1MTFfUkVH
+X0NFQ19JMkNfQUREUiwgY2VjX2kyY19hZGRyKTsKPiArCWFkdjc1MTFfcGFja2V0X2Rpc2FibGUo
+YWR2NzUxMSwgMHhmZmZmKTsKPiArCj4gKwlhZHY3NTExLT5pMmNfbWFpbiA9IGkyYzsKPiArCWFk
+djc1MTEtPmkyY19lZGlkID0gaTJjX25ld19kdW1teShpMmMtPmFkYXB0ZXIsIGVkaWRfaTJjX2Fk
+ZHIgPj4gMSk7Cj4gKwlpZiAoIWFkdjc1MTEtPmkyY19lZGlkKQo+ICsJCXJldHVybiAtRU5PTUVN
+Owo+ICsKPiArCWlmIChpMmMtPmlycSkgewo+ICsJCWluaXRfd2FpdHF1ZXVlX2hlYWQoJmFkdjc1
+MTEtPndxKTsKPiArCj4gKwkJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2lycShkZXYsIGky
+Yy0+aXJxLCBOVUxMLAo+ICsJCQkJCQlhZHY3NTExX2lycV9oYW5kbGVyLAo+ICsJCQkJCQlJUlFG
+X09ORVNIT1QsIGRldl9uYW1lKGRldiksCj4gKwkJCQkJCWFkdjc1MTEpOwo+ICsJCWlmIChyZXQp
+Cj4gKwkJCWdvdG8gZXJyX2kyY191bnJlZ2lzdGVyX2RldmljZTsKPiArCX0KPiArCj4gKwkvKiBD
+RUMgaXMgdW51c2VkIGZvciBub3cgKi8KPiArCXJlZ21hcF93cml0ZShhZHY3NTExLT5yZWdtYXAs
+IEFEVjc1MTFfUkVHX0NFQ19DVFJMLAo+ICsJCSAgICAgQURWNzUxMV9DRUNfQ1RSTF9QT1dFUl9E
+T1dOKTsKPiArCj4gKwlhZHY3NTExX3Bvd2VyX29mZihhZHY3NTExKTsKPiArCj4gKwlpMmNfc2V0
+X2NsaWVudGRhdGEoaTJjLCBhZHY3NTExKTsKPiArCj4gKyNpZmRlZiBDT05GSUdfRFJNX0kyQ19B
+RFY3NTExX0FVRElPCj4gKwlhZHY3NTExX2F1ZGlvX2luaXQoJmkyYy0+ZGV2KTsKPiArI2VuZGlm
+CgpJZiB3ZSBpbnRlbmQgdG8gaGF2ZSBtb3JlIGF1ZGlvIGZ1bmNzIGJlaW5nIHVzZWQgYnkgdGhl
+IGNvcmUgaW4gdGhlCmZ1dHVyZSwgaXQgd291bGQgYmUgbmljZSB0byBoYXZlIE5PUCBhdWRpbyBm
+dW5jcyByYXRoZXIgdGhhbiBoYXZpbmcKbXVsdGlwbGUgI2lmZGVmIGNoZWNrcyBpbiB0aGUgZHJp
+dmVyIHdoZW4gQ09ORklHX0RSTV9JMkNfQURWNzUxMV9BVURJTwppc24ndCBzZXQuCgo+ICsKPiAr
+CWFkdjc1MTFfc2V0X2xpbmtfY29uZmlnKGFkdjc1MTEsICZsaW5rX2NvbmZpZyk7Cj4gKwo+ICsJ
+LyogRW5hYmxlIEhETUkgbW9kZSAqLwo+ICsJcmVnbWFwX3VwZGF0ZV9iaXRzKGFkdjc1MTEtPnJl
+Z21hcCwgQURWNzUxMV9SRUdfSERDUF9IRE1JX0NGRywKPiArCQkJQURWNzUxMV9IRE1JX0NGR19N
+T0RFX01BU0ssCj4gKwkJCUFEVjc1MTFfSERNSV9DRkdfTU9ERV9IRE1JKTsKPiArCj4gKwlyZXR1
+cm4gMDsKPiArCj4gK2Vycl9pMmNfdW5yZWdpc3Rlcl9kZXZpY2U6Cj4gKwlpMmNfdW5yZWdpc3Rl
+cl9kZXZpY2UoYWR2NzUxMS0+aTJjX2VkaWQpOwo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KPiAr
+Cj4gK3N0YXRpYyBpbnQgYWR2NzUxMV9yZW1vdmUoc3RydWN0IGkyY19jbGllbnQgKmkyYykKPiAr
+ewo+ICsJc3RydWN0IGFkdjc1MTEgKmFkdjc1MTEgPSBpMmNfZ2V0X2NsaWVudGRhdGEoaTJjKTsK
+PiArCgpBcmUgd2UgbWlzc2luZyBhIGNhbGwgdG8gYWR2NzUxMV9hdWRpb19leGl0KCkgaGVyZT8K
+ClRoYW5rcywKQXJjaGl0CgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMu
+IGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSAKRm9ydW0sIGhvc3RlZCBieSBUaGUgTGlu
+dXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwK
