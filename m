@@ -1,117 +1,72 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [PATCH v2 2/3] phy: rockchip-emmc: should be a child device of
- the GRF
-Date: Tue, 29 Mar 2016 09:53:14 +0800
-Message-ID: <56F9E00A.8040303@rock-chips.com>
-References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
- <1458854943-17388-2-git-send-email-heiko@sntech.de>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 0/8] add TCON and Vybrid support
+Date: Mon, 28 Mar 2016 18:59:54 -0700
+Message-ID: <1459216802-32094-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1458854943-17388-2-git-send-email-heiko@sntech.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, kishon@ti.com
-Cc: shawn.lin@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, ykk@rock-chips.com, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
+Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-=D4=DA 2016/3/25 5:29, Heiko Stuebner =D0=B4=B5=C0:
-> The emmc-phy is fully enclosed in the general register files (GRF).
-> Therefore as seen from the device-tree it shouldn't be a separate pla=
-tform-
-> device but instead a sub-device of the GRF - using the simply-mfd mec=
-hanism.
->
-> The driver entered the kernel in the current merge-window, so we can =
-still
-> adapt the binding without needing a fallback, as the binding hasn't b=
-een
-> released with a full kernel yet.
->
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
-> Hi Shawn, Kishon,
->
-> I didn't see this new phy driver until now, so I'd really like to get
-> this sorted before the old binding solidifies :-).
->
-> I'll convert the usbphy as well, but that has to have the fallback fo=
-r
-> the old binding, so is not as urgent as these two.
->
-> As mentioned in the patch description above, this is meant as a fixup=
- for
-> kernel 4.6.
->
->
-
-Reviewed-by: Shawn Lin <shawn.lin@rock-chips.com>
-
-> changes in v2: drop forgotten rockchip,grf from example
->
->
->   .../devicetree/bindings/phy/rockchip-emmc-phy.txt     | 19 ++++++++=
-++++-------
->   drivers/phy/phy-rockchip-emmc.c                       |  5 ++++-
->   2 files changed, 16 insertions(+), 8 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.=
-txt b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> index 61916f1..d711259 100644
-> --- a/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/rockchip-emmc-phy.txt
-> @@ -3,17 +3,21 @@ Rockchip EMMC PHY
->
->   Required properties:
->    - compatible: rockchip,rk3399-emmc-phy
-> - - rockchip,grf : phandle to the syscon managing the "general
-> -   register files"
->    - #phy-cells: must be 0
->    - reg: PHY configure reg address offset in "general
->      register files"
->
->   Example:
->
-> -emmcphy: phy {
-> -	compatible =3D "rockchip,rk3399-emmc-phy";
-> -	rockchip,grf =3D <&grf>;
-> -	reg =3D <0xf780>;
-> -	#phy-cells =3D <0>;
-> +
-> +grf: syscon@ff770000 {
-> +	compatible =3D "rockchip,rk3399-grf", "syscon", "simple-mfd";
-> +
-> +...
-> +
-> +	emmcphy: phy@f780 {
-> +		compatible =3D "rockchip,rk3399-emmc-phy";
-> +		reg =3D <0xf780>;
-> +		#phy-cells =3D <0>;
-> +	};
->   };
-> diff --git a/drivers/phy/phy-rockchip-emmc.c b/drivers/phy/phy-rockch=
-ip-emmc.c
-> index 887b4c2..6ebcf3e 100644
-> --- a/drivers/phy/phy-rockchip-emmc.c
-> +++ b/drivers/phy/phy-rockchip-emmc.c
-> @@ -176,7 +176,10 @@ static int rockchip_emmc_phy_probe(struct platfo=
-rm_device *pdev)
->   	struct regmap *grf;
->   	unsigned int reg_offset;
->
-> -	grf =3D syscon_regmap_lookup_by_phandle(dev->of_node, "rockchip,grf=
-");
-> +	if (!dev->parent || !dev->parent->of_node)
-> +		return -ENODEV;
-> +
-> +	grf =3D syscon_node_to_regmap(dev->parent->of_node);
->   	if (IS_ERR(grf)) {
->   		dev_err(dev, "Missing rockchip,grf property\n");
->   		return PTR_ERR(grf);
->
-
-
---=20
-Best Regards
-Shawn Lin
+VGhpcyBwYXRjaHNldCBhZGRzIHRoZSBtaXNzaW5nIHBpZWNlcyB0byBtYWtlIHRoZSBGcmVlc2Nh
+bGUKRENVIERSTSBkcml2ZXIgd29yayBvbiBGcmVlc2NhbGUgVnlicmlkLgoKRm9yZW1vc3QsIGl0
+IGFkZHMgc3VwcG9ydCBmb3IgdGhlIHRpbWluZyBjb250cm9sbGVyIChUQ09OKQptb2R1bGUuIFRo
+ZSBtb2R1bGUgaXMgYmV0d2VlbiB0aGUgRGlzcGxheSBDb250cm9sbGVyIGFuZCB0aGUKYWN0dWFs
+IG91dHB1dCBwaW5zLiBJdCBhbGxvd3MgdG8gYWx0ZXIgdGhlIHRpbWluZ3MgZm9yIFJBVwpURlQg
+ZGlzcGxheXMsIGJ1dCBjYW4gYWxzbyBvcGVyYXRlIGluIGEgYnlwYXNzIG1vZGUuIFRoaXMKY2hh
+bmdlIGhhcyBvbmx5IHN1cHBvcnQgZm9yIHRoZSBieXBhc3MgbW9kZS4KCkVhcmxpZXIgdmFyaWFu
+dHMgb2YgdGhlIERDVSBEUk0gZHJpdmVyIGNvbmZpZ3VyZWQgdGhlIFRDT04KbW9kdWxlIGluIGJ5
+cGFzcyBtb2RlLCBob3dldmVyIHRoaXMgaGFzIGJlZW4gcmVtb3ZlZCBhbmQKcG9zdHBvbmVkLiBU
+aGUgbGFzdCB2YXJpYW50IHdpdGggdGhlIFRDT04gY29kZSB3YXMgdjk6Cmh0dHBzOi8vbGttbC5v
+cmcvbGttbC8yMDE1LzcvMTMvMjQyCgpUaGUgcGF0Y2hzZXQgYWxzbyBmaXhlcyB0aGUgRENVIHJl
+bGF0ZWQgY2xvY2tzIGluIHRoZSBWeWJyaWQKY2xvY2sgdHJlZSBhbmQgbWFrZXMgdXNlIG9mIHRo
+ZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrIGZvcgp0aGUgcGl4ZWxjbG9jayBkaXZpZGVyLgoKVGVz
+dGluZyBvbiBMUzEwMjFhIHdlbGNvbWVpbmchCgpDaGFuZ2VzIHNpbmNlIHYxOgotIFByb3Blcmx5
+IGRpc2FibGUgY2xvY2tzIG9uIGVycm9ycwotIENyZWF0ZSBjbGVhciBzZXBlcmF0aW9uIG9mIHBp
+eGVsIGNsb2NrIGFuZCBidXMgY2xvY2sKLSBTaW1wbGlmaWVkIFRDT04gZHJpdmVyIGJ5IHJlbW92
+aW5nIHN1c3BlbmQvcmVzdW1lCiAgY2FwYWJpbGl0aWVzIChlbmNvZGVyIGRpc2FibGUvZW5hYmxl
+IG1ha2VzIHN1cmUgdGhhdAogIFRDT04gYnlwYXNzIGdldHMgZGlzYWJsZWQvcmVlbmFibGVkIG9u
+IHN1c3BlbmQpCi0gVXNlIGNvbW1vbiBjbG9jayBmcmFtZXdvcmsgdG8gY3JlYXRlIGEgZGl2aWRl
+ciBjbG9jawogIHdoaWNoIHJlcHJlc2VudHMgdGhlIERDVSBpbnRlcm5hbCBwaXhlbCBjbG9jayBk
+aXZpZGVyCgpTdGVmYW4gQWduZXIgKDgpOgogIEFSTTogaW14OiBjbGstdmY2MTA6IGZpeCBEQ1Ug
+Y2xvY2sgdHJlZQogIEFSTTogaW14OiBjbGstdmY2MTA6IGFkZCBUQ09OIGlwZyBjbG9jawogIGRy
+bS9mc2wtZGN1OiBkaXNhYmxlIGNsb2NrIG9uIGluaXRpYWxpemF0aW9uIGZhaWx1cmUgYW5kIHJl
+bW92ZQogIGRybS9mc2wtZGN1OiBhZGQgZXh0cmEgY2xvY2sgZm9yIHBpeGVsIGNsb2NrCiAgZHJt
+L2ZzbC1kY3U6IHVzZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrIGZvciBwaXhlbCBjbG9jayBkaXZp
+ZGVyCiAgZHJtL2ZzbC1kY3U6IGFkZCBUQ09OIGRyaXZlcgogIEFSTTogZHRzOiB2ZjYxMDogYWRk
+IGRpc3BsYXkgbm9kZXMKICBBUk06IGR0czogdmY2MTAtY29saWJyaTogZW5hYmxlIGRpc3BsYXkg
+Y29udHJvbGxlcgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQg
+ICAgICAgIHwgICA2ICsrCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCx0Y29u
+LnR4dCAgICAgICB8ICAxOCArKysrCiBhcmNoL2FybS9ib290L2R0cy92Zi1jb2xpYnJpLWV2YWwt
+djMuZHRzaSAgICAgICAgICB8ICAxNiArKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3ZmLWNvbGlicmku
+ZHRzaSAgICAgICAgICAgICAgICAgIHwgIDMzICsrKysrKysKIGFyY2gvYXJtL2Jvb3QvZHRzL3Zm
+eHh4LmR0c2kgICAgICAgICAgICAgICAgICAgICAgIHwgIDE5ICsrKysKIGRyaXZlcnMvY2xrL2lt
+eC9jbGstdmY2MTAuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dw
+dS9kcm0vZnNsLWRjdS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgMyArLQogZHJpdmVy
+cy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fY3J0Yy5jICAgICAgICAgfCAgIDcgKy0KIGRy
+aXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jICAgICAgICAgIHwgIDczICsr
+KysrKysrKystLS0tCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuaCAg
+ICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9yZ2Iu
+YyAgICAgICAgICB8ICAxMSArKysKIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF90Y29uLmMg
+ICAgICAgICAgICAgICAgIHwgMTA4ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUv
+ZHJtL2ZzbC1kY3UvZnNsX3Rjb24uaCAgICAgICAgICAgICAgICAgfCAgMzMgKysrKysrKwogaW5j
+bHVkZS9kdC1iaW5kaW5ncy9jbG9jay92ZjYxMC1jbG9jay5oICAgICAgICAgICAgfCAgIDQgKy0K
+IDE0IGZpbGVzIGNoYW5nZWQsIDMxMSBpbnNlcnRpb25zKCspLCAyOSBkZWxldGlvbnMoLSkKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9mc2wsdGNvbi50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vZnNsLWRj
+dS9mc2xfdGNvbi5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3Uv
+ZnNsX3Rjb24uaAoKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
