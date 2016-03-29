@@ -1,119 +1,60 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 10/12] ARM: dts: dragonboard-600c: Add on board leds
- support
-Date: Tue, 29 Mar 2016 15:20:55 +0100
-Message-ID: <56FA8F47.7070200@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 04/12] ARM: dts: dragonboard-600c: add board support with
+ serial
+Date: Tue, 29 Mar 2016 07:21:10 -0700
+Message-ID: <20160329142110.GE8929@tuxbot>
 References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160327055012.GD8929@tuxbot>
+ <1458762442-9492-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <56F2F78E.8050002@codeaurora.org>
+ <56F2FCD0.1000708@linaro.org>
+ <CAOCOHw7TyzDf4jvAMChOFFEgsL4Z1+CcESLOuckT=Q7W9hQvCw@mail.gmail.com>
+ <56F3477E.8090205@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160327055012.GD8929@tuxbot>
+Content-Disposition: inline
+In-Reply-To: <56F3477E.8090205@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Bjorn,
+On Wed 23 Mar 18:48 PDT 2016, Stephen Boyd wrote:
 
-On 27/03/16 06:50, Bjorn Andersson wrote:
-> On Wed 23 Mar 12:48 PDT 2016, Srinivas Kandagatla wrote:
->
->> This patch adds support to 4 user leds, wlan and bt led on board.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> I'm not fond of the overly complicated names; and I think it should at
-> least be shortened to "db600c:...".
+> On 03/23/2016 06:04 PM, Bjorn Andersson wrote:
+> > On Wed, Mar 23, 2016 at 1:30 PM, Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org> wrote:
+> >>
+> >> On 23/03/16 20:07, Stephen Boyd wrote:
+[..]
+> >
+> > Also, if I make a product based of this board, with some minor
+> > changes, is that still the sbc?
+> >
+> > I think the compatible should be "qcom,apq8064-db600c",
+> > "qcom,apq8064-sbc", "qcom,apq8064"
+> >
+> >
+> 
+> I really hope that people don't keep using the qcom bootloader dtb
+> picking design if they make a new product based off qcom boards with a
+> slight variation. They should replace the vendor part of the compatible
+> anyway with their own vendor prefix, and then the bootloader would need
+> to be updated to look for that string or something else. I really don't
+> want to get in the business of updating dtbTool for all the non-qcom
+> designs that pop up because they keep using the qcom dtb identification
+> scheme. It almost doesn't scale right now and that's just qcom designs.
 
-I agree, I will fix this in next version.
+At that other company the various dtb's that was to be picked for a
+given product was always to support the various SoC versions; so those
+devices always shipped with the mtp board-id and msm-id.
 
->
-> Tested this on my DB600c, seems to work, except the WiFi/BT triggers,
-> see comments below.
->
->> +		leds {
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&user_leds>, <&mpp_leds>;
->> +
->> +			compatible = "gpio-leds";
->> +
->> +			led@1 {
->> +				label = "dragonboard-600c:green:user1";
->> +				gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
->> +				linux,default-trigger = "heartbeat";
->> +				default-state = "off";
->> +			};
->> +
->> +			led@2 {
->> +				label = "dragonboard-600c:green:user2";
->> +				gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
->> +				linux,default-trigger = "mmc0";
->> +				default-state = "off";
->> +			};
->> +
->> +			led@3 {
->> +				label = "dragonboard-600c:green:user3";
->> +				gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
->> +				linux,default-trigger = "mmc1";
->> +				default-state = "off";
->> +			};
->> +
->> +			led@4 {
->> +				label = "apq8016-sbc:green:user4";
->> +				gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
->> +				linux,default-trigger = "none";
->> +				default-state = "off";
->> +			};
->> +
->> +			led@5 {
->> +				label = "dragonboard-600c:yellow:wlan";
->> +				gpios = <&pm8921_mpps 7 GPIO_ACTIVE_HIGH>;
->> +				linux,default-trigger = "wlan";
->
-> This should either be "phy0rx", "phy0tx", "phy0assoc" or "phy0radio". TX
-> does not seem to work, so this should be debugged; "assoc" is probably
-> the one that makes most sense.
+As far as I've seen this is how Qualcomm's Android customers does it.
 
 
-Am ok, to change, did you get activity leds works with any of these 
-strings with WLAN or BT?
+But as things progress further I do see a need for being able to also
+pick the right product and at that point you're right that the vendor
+must change their boot loader.
 
-phy0rx/tx seems to be bit more generic and atleast the name looks bit 
-non-specific to wlan.
-
-These names should be documented somewhere, Its very difficult to find 
-which names to use unless you read the code.
-
-It would be nice to just provide a phandle to the device which 
-led-trigger should use, which makes it clear and explicit.
-
-
-
->
->> +				default-state = "off";
->> +			};
->> +
->> +			led@6 {
->> +				label = "dragonboard-600c:blue:bt";
->> +				gpios = <&pm8921_mpps 8 GPIO_ACTIVE_HIGH>;
->> +				linux,default-trigger = "bt";
->
-> This should be "hci0-power".
-
-Does this trigger work for you?
-Name is bit misleading though.
-
-Thanks,
-srini
->
->> +				default-state = "off";
->> +			};
->> +		};
->> +
->
-> Regards,
-> Bjorn
->
+Regards,
+Bjorn
