@@ -1,31 +1,46 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCHv3 9/9] ARM: dts: Add Altera Arria10 L2 Cache EDAC
- devicetree entry
-Date: Tue, 29 Mar 2016 10:48:30 -0500
-Message-ID: <CADhT+wceGH_o-cZOS7O6J+cJzd_2r_QyKiceOvjX8FoqHFbMRA@mail.gmail.com>
-References: <1458576106-24505-1-git-send-email-tthayer@opensource.altera.com>
-	<1458576106-24505-10-git-send-email-tthayer@opensource.altera.com>
-	<20160329084549.GC3705@pd.tnic>
-	<CADhT+wfb6DOpBV11zZY-HYMkwnQECu8J3=aM9z39Db+=3u9Wng@mail.gmail.com>
-	<20160329140018.GD3705@pd.tnic>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v7 11/17] ARM: XEN: Move xen_early_init() before
+ efi_init()
+Date: Tue, 29 Mar 2016 17:07:57 +0100
+Message-ID: <20160329160756.GG6745@arm.com>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
+ <1458830676-27075-12-git-send-email-shannon.zhao@linaro.org>
+ <alpine.DEB.2.02.1603261252510.18380@kaball.uk.xensource.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20160329140018.GD3705@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thor Thayer <tthayer@opensource.altera.com>, dougthompson@xmission.com, m.chehab@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-edac@vger.kernel.org, Linux List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thor Thayer <tthayer.linux@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.02.1603261252510.18380@kaball.uk.xensource.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, zhaoshenglong@huawei.com, shannon.zhao@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 9:00 AM, Borislav Petkov <bp@alien8.de> wrote:
-> Fine with me as long as people don't start complaining if they start
-> testing my for-next branch and realize that the Arria10 support is not
-> complete.
->
-> Unless they test linux-next where your tree is too, I assume.
->
+On Sat, Mar 26, 2016 at 12:54:09PM +0000, Stefano Stabellini wrote:
+> are you OK with this patch?
 
-Yes, I take the patch through arm-soc and will ultimately land in
-linux-next.
+Nothing against it, but the only arm64 bit is:
 
-Dinh
+> > diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> > index 450987d..6cf5051 100644
+> > --- a/arch/arm64/kernel/setup.c
+> > +++ b/arch/arm64/kernel/setup.c
+> > @@ -313,6 +313,7 @@ void __init setup_arch(char **cmdline_p)
+> >  	 */
+> >  	local_async_enable();
+> >  
+> > +	xen_early_init();
+> >  	efi_init();
+> >  	arm64_memblock_init();
+> >  
+> > @@ -334,7 +335,6 @@ void __init setup_arch(char **cmdline_p)
+> >  	} else {
+> >  		psci_acpi_init();
+> >  	}
+> > -	xen_early_init();
+
+so it's difficult to care too much ;) I do hope that there won't be a
+need to split up efi_init() in future because some of it has to happen
+before xen_early_init, but that doesn't sound likely at the moment.
+
+Will
