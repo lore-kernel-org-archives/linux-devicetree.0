@@ -1,7 +1,7 @@
 From: <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [RFC 6/8] ARM: socfpga: dts: Add LED framework to A10-SR GPIO
-Date: Tue, 29 Mar 2016 14:13:09 -0500
-Message-ID: <1459278791-3646-7-git-send-email-tthayer@opensource.altera.com>
+Subject: [RFC 8/8] ARM: socfpga: dts: Add Devkit Arria10-SR HWMON
+Date: Tue, 29 Mar 2016 14:13:11 -0500
+Message-ID: <1459278791-3646-9-git-send-email-tthayer@opensource.altera.com>
 References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,48 +14,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Add the LED framework to the Arria10 System Resource chip GPIO hooks.
+Add the hwmon node to the Altera Arria10 System Resource node.
 
 Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 ---
- arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/socfpga_arria10_socdk.dtsi |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-index 095fd72..fc0b7a0 100644
+index fc0b7a0..fe70d03 100644
 --- a/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
 +++ b/arch/arm/boot/dts/socfpga_arria10_socdk.dtsi
-@@ -31,6 +31,30 @@
- 		reg = <0x0 0x40000000>; /* 1GB */
+@@ -108,6 +108,10 @@
+ 			#gpio-cells = <2>;
+ 			ngpios = <16>;
+ 		};
++
++		a10sr_hwmon: a10sr_hwmon {
++			compatible = "altr,a10sr-hwmon";
++		};
  	};
+ };
  
-+	a10_leds {
-+		compatible = "gpio-leds";
-+
-+		a10sr_led0 {
-+			label = "a10sr_led0";
-+			gpios = <&a10sr_gpio 4 1>;
-+		};
-+
-+		a10sr_led1 {
-+			label = "a10sr_led1";
-+			gpios = <&a10sr_gpio 5 1>;
-+		};
-+
-+		a10sr_led2 {
-+			label = "a10sr_led2";
-+			gpios = <&a10sr_gpio 6 1>;
-+		};
-+
-+		a10sr_led3 {
-+			label = "a10sr_led3";
-+			gpios = <&a10sr_gpio 7 1>;
-+		};
-+	};
-+
- 	soc {
- 		clkmgr@ffd04000 {
- 			clocks {
 -- 
 1.7.9.5
 
