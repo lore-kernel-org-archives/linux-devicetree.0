@@ -1,103 +1,64 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/3 v2] ASoC: dwc: Add I2S HDMI audio support
-Date: Tue, 29 Mar 2016 10:31:58 -0700
-Message-ID: <20160329173158.GB2350@sirena.org.uk>
-References: <cover.1459174494.git.joabreu@synopsys.com>
- <538be366488bf0d7633d702f2d0bab16707b7a47.1459174494.git.joabreu@synopsys.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH 4/7] ARM: dts: Enable N950 keyboard sleep leds by default
+Date: Tue, 29 Mar 2016 19:54:42 +0200
+Message-ID: <20160329175442.GA28516@amd>
+References: <1457827580-16919-1-git-send-email-sre@kernel.org>
+ <1457827580-16919-5-git-send-email-sre@kernel.org>
+ <20160329105128.GA30184@amd>
+ <20160329145209.GB31858@earth>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0133732050=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <538be366488bf0d7633d702f2d0bab16707b7a47.1459174494.git.joabreu@synopsys.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: tixy@linaro.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, Alexey.Brodkin@synopsys.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, yitian.bu@tangramtek.com, wsa+renesas@sang-engineering.com, laurent.pinchart+renesas@ideasonboard.com, nariman@opensource.wolfsonmicro.com, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, Maruthi.Bayyavarapu@amd.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Vineet.Gupta1@synopsys.com, buyitian@gmail.com, robh+dt@kernel.org, perex@perex.cz, tiwai@suse.com, CARLOS.PALMINHA@synopsys.com, galak@codeaurora.org, alexander.deucher@amd.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160329145209.GB31858@earth>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue 2016-03-29 16:52:09, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Tue, Mar 29, 2016 at 12:51:28PM +0200, Pavel Machek wrote:
+> > For 1-3 in the series, Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > 
+> > > Like the Nokia N900, the N950 has leds to show
+> > > the state of sys_clkreq and sys_off_mode pins.
+> > > 
+> > > A detailed description for the LEDs and
+> > > OMAP's sleep states can be found in Tony's
+> > > commit for the Nokia N900:
+> > > 
+> > > c1be2032f66df9e1238bd5bc4ca666de88a62abc
+> > 
+> > I must say I've seen it on N900, and yes, it is useful, but no, I
+> > don't think this is right.
+> >
+> > This is not a LED. This is a interface that changes meaning of two
+> > other LEDs. I guess it should go to debugfs somewhere.
+> 
+> I don't think we should diverge N900 and N950 userspace
+> APIs in this regard.
 
---===============0133732050==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="q1SX3yAxAkj1z+aD"
-Content-Disposition: inline
+That's a good argument.
 
+But maybe we should move both to debugfs somewhere before we get too
+much userspace that relies on it...
 
---q1SX3yAxAkj1z+aD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Actually the correct way would be a custom trigger
+> for the leds IMHO. I don't know if the led framework
+> supports per led custom triggers, though.
 
-On Mon, Mar 28, 2016 at 03:36:10PM +0100, Jose Abreu wrote:
-> HDMI audio support was added to the AXS board using an
-> I2S cpu driver and a custom platform driver.
->=20
-> The platform driver supports two channels @ 16 bits with
-> rates 32k, 44.1k and 48k. ALSA Simple audio card is used to
-> glue the cpu, platform and codec driver (adv7511).
+Well, not even custom trigger would make this easy: AFAIK you need to
+enable this on two LEDs or not at all, so you'd have one trigger _that
+would need to be shared over two LEDs_.
 
->  sound/soc/dwc/Kconfig          |   1 +
->  sound/soc/dwc/designware_i2s.c | 385 +++++++++++++++++++++++++++++++++++=
-++++--
-
-Your changelog appears to describe the writing of a machine driver but
-this is a large patch adding code to an I2S controller driver.  This
-means I can't review your patch since I can't tell what it is supposed
-to do.  If you've added functionality to this driver you need to send
-one or more patches each of which adds a single feature to the driver
-together with a changelog which describes what that feature is.
-
-Glancing at the patch I'm not 100% sure that the features you're adding
-are part of the Synopsis device but I'm not entirely sure.
-
->  2 files changed, 373 insertions(+), 13 deletions(-)
->=20
-> diff --git a/sound/soc/dwc/Kconfig b/sound/soc/dwc/Kconfig
-> index d50e085..bc3fae7 100644
-> --- a/sound/soc/dwc/Kconfig
-> +++ b/sound/soc/dwc/Kconfig
-> @@ -2,6 +2,7 @@ config SND_DESIGNWARE_I2S
->  	tristate "Synopsys I2S Device Driver"
->  	depends on CLKDEV_LOOKUP
->  	select SND_SOC_GENERIC_DMAENGINE_PCM
-> +	select SND_SIMPLE_CARD
-
-No, this doesn't make sense - the fact that someone has used a Synopsis
-I2S controller doesn't mean that they have a system which uses
-simple-card.  If the user wants to use simple-card they need to enable
-it separately, this is the same pattern we follow for all CPU controller
-drivers.
-
---q1SX3yAxAkj1z+aD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW+rwMAAoJECTWi3JdVIfQ/NwH/iLn+lucQZx+h6XQbK3+LBRY
-sqy6LGFdkcfp9k4TGDX6yM3+RTqNNzFr5NLWgOTANVFT8cEigO+Vx/g7pmcW1Zcv
-zykqni+Gr8q2ij/i+E1AaCWtxIYt8IOWqoGAT6kmEOoGq97ghQjjdtcaCExWLPeX
-4lLTRrYodZ/LQZDoX33jVI5N5FcTI8RHjzYCjfQry35VlL1QzXbHaDy+vB6CyEYq
-MFqCNhcgl+wMuCgdvPWxPGqgcBD4UxmrNtlKqLY8K0tletQMxREirtDODcqs5rm5
-QyLPItmwc/LSRoINUXh44/bOclcUr5Z67a/CxlaZ46xRs1ZaASmKSaFlcTzAB0c=
-=y76O
------END PGP SIGNATURE-----
-
---q1SX3yAxAkj1z+aD--
-
---===============0133732050==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0133732050==--
+Best regards,
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
