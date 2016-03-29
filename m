@@ -1,68 +1,51 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC 7/8] hwmon: Altera Arria10 System Resource Chip - HW Monitor
-Date: Tue, 29 Mar 2016 15:30:27 -0700
-Message-ID: <20160329223027.GA5495@roeck-us.net>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-8-git-send-email-tthayer@opensource.altera.com>
- <20160329201648.GA30248@roeck-us.net>
- <56FAF70D.4010109@opensource.altera.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: vulcan: Update PCI ranges
+Date: Wed, 30 Mar 2016 00:30:03 +0200
+Message-ID: <163715315.6u7avlh5g3@wuerfel>
+References: <56D200F5.7010505@broadcom.com> <1456645037-12978-1-git-send-email-jchandra@broadcom.com> <56E3278F.5090200@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FAF70D.4010109@opensource.altera.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E3278F.5090200-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 04:43:41PM -0500, Thor Thayer wrote:
+On Friday 11 March 2016 12:16:15 Florian Fainelli wrote:
+> On 27/02/16 23:37, Jayachandran C wrote:
+> > The PCI memory windows available in vulcan.dtsi are limited to 128MB
+> > for 32-bit BARs, and 4GB for 64-bit BARs. Given the memory mapped IO
+> > space available in arm64, these windows can be increased substantially
+> > to support more use cases.
+> > 
+> > The change increases the 32-bit window to 256MB and the 64-bit window
+> > to 128 GB. The firmware on vulcan boards will use these ranges as well.
+> > 
+> > PCI IO windows are not supported on Vulcan, so remove them instead of
+> > keeping an unused value.
+> > 
+> > Signed-off-by: Jayachandran C <jchandra-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> > ---
+> > 
+> > This is an update to the patch with subject
+> > "arm64: Broadcom Vulcan support"
+> > I had sent earlier, please fold it into that patch if possible
+> 
+> Arnd, I do not have any other Broadcom ARM64 DT changes for 4.6 to be
+> sent at the moment, do you mind taking this patch directly?
+> 
+> Feel free to add my:
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
 > 
-> On 03/29/2016 03:16 PM, Guenter Roeck wrote:
-> >On Tue, Mar 29, 2016 at 02:13:10PM -0500, tthayer@opensource.altera.com wrote:
-> >>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>
-> >>This patch adds the hwmon functionality to the Arria10 System
-> >>Resource Chip. The hwmon encapsulates the PCIe Enable, USB Enable,
-> >>and all the Power Good signals on the System Controller.
-> >>
-> >
-> >I may be completely wrong, but a glance through the driver suggests
-> >that, if anything, this should be a regulator driver, not a hwmon driver.
-> >A hardware monitoring driver would be expected to report the voltages,
-> >not (just) the voltage status. Am I missing something ?
-> >
-> >Please have a look into Documentation/hwmon/sysfs-interface for
-> >acceptable hwmon attribute names and their meaning.
-> >
-> >Thanks,
-> >Guenter
-> >
-> 
-> Hi Guenter,
-> 
-> <adding voltage and current regulator framework moderators>
-> 
-> Yes, I see your point. In looking at the regulator drivers, I interpret
-> those as being controlled by the driver whereas this chip is passively
-> reporting status.
-> 
-> The success/fail indication seemed at first glance to fit the hwmon model. I
-> thought the fan indication would be a good analog but even it reports speed
-> and not success/fail.
-> 
-Yes, alarm and/or fault attributes are supposed to be secondary.
 
-> After reading the referenced document, I agree that hwmon probably isn't
-> appropriate. However, the regulator doesn't seem appropriate either (the
-> only status appears to be tied to battery properties).
-> 
-Not really sure myself where this would fit if it is just status bits.
+Applied to the 4.6 fixes branch now, thanks!
 
-Does the chip report anything else besides the status ? One of the attributes
-includes "pmbus", so one could conclude that there must be a PMBus compatible
-chip somewhere.
-
-Thanks,
-Guenter
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
