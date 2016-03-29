@@ -1,63 +1,70 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm2835: add CPU node for ARM core
-Date: Tue, 29 Mar 2016 10:41:59 +0100
-Message-ID: <20160329094158.GB26574@leverpostej>
-References: <1459182081-30819-1-git-send-email-stefan.wahren@i2se.com>
+From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] iio:magnetometer:ak8975: mounting matrix support
+Date: Tue, 29 Mar 2016 11:44:22 +0200
+Message-ID: <56FA4E76.1000406@parrot.com>
+References: <cover.1458231723.git.gregor.boirie@parrot.com> <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie@parrot.com> <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw@mail.gmail.com> <20160321222150.GA1787@geburah.sephiroth> <CAL_Jsq+unk=UONZD-0e_VrpkC3R3hXHNoRN-gdj6TCSSHXWZXQ@mail.gmail.com> <56F947B4.3090503@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459182081-30819-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56F947B4.3090503-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 28, 2016 at 04:21:20PM +0000, Stefan Wahren wrote:
-> This patch adds the CPU node of the BCM2835 into the DT.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm2835.dtsi |   11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-> index b83b326..e87aba1 100644
-> --- a/arch/arm/boot/dts/bcm2835.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835.dtsi
-> @@ -3,6 +3,17 @@
->  / {
->  	compatible = "brcm,bcm2835";
->  
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,arm1176jzf-s", "arm,arm1176";
-> +			reg = <0x0>;
-> +		};
-> +	};
 
-Minor nit: the "arm,arm1176" fallback isn't documented, nor used
-elsewhere, so it can/should be dropped.
 
-Otherwise, this looks fine per [1]. With the above change, feel free to
-add my ack.
+On 03/28/2016 05:03 PM, Jonathan Cameron wrote:
 
-Mark.
+[snip...]
 
-[1] Documentation/devicetree/bindings/arm/cpus.txt
-
-> +
->  	soc {
->  		ranges = <0x7e000000 0x20000000 0x02000000>;
->  		dma-ranges = <0x40000000 0x00000000 0x20000000>;
-> -- 
-> 1.7.9.5
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Why is the sysfs interface specific to ak8975?
+>>> AFAIK, this is just the first IIO driver implementation relying on floating
+>>> point numbers. Should a single driver be enough to justify a "generic" API,
+>>> I suppose code could be factored out in a similar way to over sampling rate
+>>> support. People could call this on a per-driver basis.
+>> Given it is an ABI, yes I think so. We don't want to end up with a
+>> bunch of similar yet different interfaces.
+>>
+> Absolutely.  Most interfaces get made up based on one implementation ;)
+> A second is always nice, but here the interface is obvious enough we don't
+> need to wait.
+Right. I'll post a separate patch then.
+>>>> Furthermore, why is it specific to magnetometer? Couldn't
+>>>> accelerometers need the same thing? There's a thread discussing a
+>>>> similar matrix on android-x86[1].
+>>> Same may apply to gyro / accelero / imu and magnetometers at least.
+>>> inv_mpu_core.c already implements such a rotation matrix exposed as 3x3 integers
+>>> array. Should we be smart enough to keep this compatible with existing userspace
+>>> apps ?
+>> You have to maintain the ABI. If both interfaces can co-exist, then
+>> you can have both and mark the old one as deprecated. In time we can
+>> remove the old one.
+> If you want to (or someone else does) it would be good to add the new abi to
+> inv_mpu_core as well and indeed mark the old one as deprecated.
+> The cost of keeping it is negligible, so we may never actually bother to
+> remove it.
+What's the better way to mark this as deprecated ? dev_warn() ? 
+__deprecated ?
+Anything else ?
+>>>>> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>>>>> index 34a3206..f936f86 100644
+>>>>> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>>>>> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
+>>>>> @@ -9,6 +9,7 @@ Optional properties:
+>>>>>
+>>>>>     - gpios : should be device tree identifier of the magnetometer DRDY pin
+>>>>>     - vdd-supply: an optional regulator that needs to be on to provide VDD
+>>>>> +  - matrix: an optional 3x3 mounting rotation matrix
+>>>> Perhaps "rotation-matrx" would be a better name in case there's ever
+>>>> any other matrix needed.
+>>> What about "mounting-matrix" ?
+>> Sure.
+> Works for me as well.
+>> Rob
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
