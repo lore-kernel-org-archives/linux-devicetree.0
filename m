@@ -1,88 +1,114 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 4/8] drm/fsl-dcu: add extra clock for pixel clock
-Date: Mon, 28 Mar 2016 18:59:58 -0700
-Message-ID: <1459216802-32094-5-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 3/8] drm/fsl-dcu: disable clock on initialization failure and remove
+Date: Mon, 28 Mar 2016 18:59:57 -0700
+Message-ID: <1459216802-32094-4-git-send-email-stefan@agner.ch>
 References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
-Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459216802-32094-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, meng.yi-3arQi8VN3Tc@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFZ5YnJpZCBEQ1UgdmFyaWFudCBoYXMgdHdvIGluZGVwZW5kZW50IGNsb2NrIGlucHV0cywg
-b25lCmZvciB0aGUgcmVnaXN0ZXJzIChJUEcgYnVzIGNsb2NrKSBhbmQgb25lIGZvciB0aGUgcGl4
-ZWwgY2xvY2suClN1cHBvcnQgdGhpcyBkaXN0aW5jdGlvbiBpbiB0aGUgRENVIERSTSBkcml2ZXIg
-d2hpbGUgc3RheWluZwpiYWNrd2FyZCBjb21wYXRpYmxlIHdpdGggZGV2aWNlcyBwcm92aWRpbmcg
-b25seSBhIHNpbmdsZSBjbG9jawooZS5nLiBMUzEwMjFhIFNvQydzKS4KClNpZ25lZC1vZmYtYnk6
-IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0IHwgIDQgKysrKwogZHJpdmVycy9ncHUv
-ZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fY3J0Yy5jICAgICAgICAgICAgfCAgMiArLQogZHJpdmVy
-cy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmMgICAgICAgICAgICAgfCAxNiArKysr
-KysrKysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuaCAg
-ICAgICAgICAgICB8ICAxICsKIDQgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMiBk
-ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9mc2wsZGN1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2ZzbCxkY3UudHh0CmluZGV4IGViZjFiZTkuLmYyOTllMWUgMTAwNjQ0Ci0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cisr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0
-CkBAIC0xMSw2ICsxMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSBiaWctZW5kaWFuCQlC
-b29sZWFuIHByb3BlcnR5LCBMUzEwMjFBIERDVSByZWdpc3RlcnMgYXJlIGJpZy1lbmRpYW4uCiAt
-IGZzbCxwYW5lbDoJCVRoZSBwaGFuZGxlIHRvIHBhbmVsIG5vZGUuCiAKK09wdGlvbmFsIHByb3Bl
-cnRpZXM6CistIGNsb2NrczoJCVNlY29uZCBoYW5kbGUgZm9yIHBpeGVsIGNsb2NrLgorLSBjbG9j
-ay1uYW1lczoJCVNlY29uZCBuYW1lICJwaXgiIGZvciBwaXhlbCBjbG9jay4KKwogRXhhbXBsZXM6
-CiBkY3U6IGRjdUAyY2UwMDAwIHsKIAljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLWRjdSI7CmRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmMKaW5kZXggMzU4NzZlMy4u
-NjhmNzJmYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1f
-Y3J0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuYwpA
-QCAtNzksNyArNzksNyBAQCBzdGF0aWMgdm9pZCBmc2xfZGN1X2RybV9jcnRjX21vZGVfc2V0X25v
-ZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQogCXVuc2lnbmVkIGxvbmcgZGN1Y2xrOwogCiAJaW5k
-ZXggPSBkcm1fY3J0Y19pbmRleChjcnRjKTsKLQlkY3VjbGsgPSBjbGtfZ2V0X3JhdGUoZnNsX2Rl
-di0+Y2xrKTsKKwlkY3VjbGsgPSBjbGtfZ2V0X3JhdGUoZnNsX2Rldi0+cGl4X2Nsayk7CiAJZGl2
-ID0gZGN1Y2xrIC8gbW9kZS0+Y2xvY2sgLyAxMDAwOwogCiAJLyogQ29uZmlndXJlIHRpbWluZ3M6
-ICovCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYu
-YyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jCmluZGV4IGYyYTlj
-MWIuLmY4MGMxMTYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3Vf
-ZHJtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5j
-CkBAIC0zMzEsMTAgKzMzMSwyMSBAQCBzdGF0aWMgaW50IGZzbF9kY3VfZHJtX3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJCXJldHVybiByZXQ7CiAJfQogCisJZnNsX2Rldi0+
-cGl4X2NsayA9IGRldm1fY2xrX2dldChkZXYsICJwaXgiKTsKKwlpZiAoSVNfRVJSKGZzbF9kZXYt
-PnBpeF9jbGspKSB7CisJCS8qIGxlZ2FuY3kgYmluZGluZywgdXNlIGRjdSBjbG9jayBhcyBwaXhl
-bCBjbG9jayAqLworCQlmc2xfZGV2LT5waXhfY2xrID0gZnNsX2Rldi0+Y2xrOworCX0KKwlyZXQg
-PSBjbGtfcHJlcGFyZV9lbmFibGUoZnNsX2Rldi0+cGl4X2Nsayk7CisJaWYgKHJldCA8IDApIHsK
-KwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZW5hYmxlIHBpeCBjbGtcbiIpOworCQlnb3RvIGRp
-c2FibGVfY2xrOworCX0KKwogCWRybSA9IGRybV9kZXZfYWxsb2MoZHJpdmVyLCBkZXYpOwogCWlm
-ICghZHJtKSB7CiAJCXJldCA9IC1FTk9NRU07Ci0JCWdvdG8gZGlzYWJsZV9jbGs7CisJCWdvdG8g
-ZGlzYWJsZV9waXhfY2xrOwogCX0KIAogCWZzbF9kZXYtPmRldiA9IGRldjsKQEAgLTM1NSw2ICsz
-NjYsOCBAQCBzdGF0aWMgaW50IGZzbF9kY3VfZHJtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpCiAKIHVucmVmOgogCWRybV9kZXZfdW5yZWYoZHJtKTsKK2Rpc2FibGVfcGl4X2Ns
-azoKKwljbGtfZGlzYWJsZV91bnByZXBhcmUoZnNsX2Rldi0+cGl4X2Nsayk7CiBkaXNhYmxlX2Ns
-azoKIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZnNsX2Rldi0+Y2xrKTsKIAlyZXR1cm4gcmV0OwpA
-QCAtMzY1LDYgKzM3OCw3IEBAIHN0YXRpYyBpbnQgZnNsX2RjdV9kcm1fcmVtb3ZlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJc3RydWN0IGZzbF9kY3VfZHJtX2RldmljZSAqZnNsX2Rl
-diA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOwogCiAJY2xrX2Rpc2FibGVfdW5wcmVwYXJl
-KGZzbF9kZXYtPmNsayk7CisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZzbF9kZXYtPnBpeF9jbGsp
-OwogCWRybV9wdXRfZGV2KGZzbF9kZXYtPmRybSk7CiAKIAlyZXR1cm4gMDsKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUv
-ZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKaW5kZXggYWYzYTcwNy4uZjYwZWMwYSAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKQEAgLTE4Myw2ICsxODMs
-NyBAQCBzdHJ1Y3QgZnNsX2RjdV9kcm1fZGV2aWNlIHsKIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7
-CiAJaW50IGlycTsKIAlzdHJ1Y3QgY2xrICpjbGs7CisJc3RydWN0IGNsayAqcGl4X2NsazsKIAkv
-KnByb3RlY3RzIGhhcmR3YXJlIHJlZ2lzdGVyKi8KIAlzcGlubG9ja190IGlycV9sb2NrOwogCXN0
-cnVjdCBkcm1fZGV2aWNlICpkcm07Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Fix error handling during probe by reordering initialization and
+adding a error path which disables clock again. Also disable the
+clock on remove.
+
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+---
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c | 44 +++++++++++++++----------------
+ 1 file changed, 21 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+index e8d9337..f2a9c1b 100644
+--- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
++++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
+@@ -290,6 +290,11 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 	if (!fsl_dev)
+ 		return -ENOMEM;
+ 
++	id = of_match_node(fsl_dcu_of_match, pdev->dev.of_node);
++	if (!id)
++		return -ENODEV;
++	fsl_dev->soc = id->data;
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+ 		dev_err(dev, "could not get memory IO resource\n");
+@@ -308,39 +313,29 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
++	fsl_dev->regmap = devm_regmap_init_mmio(dev, base,
++			&fsl_dcu_regmap_config);
++	if (IS_ERR(fsl_dev->regmap)) {
++		dev_err(dev, "regmap init failed\n");
++		return PTR_ERR(fsl_dev->regmap);
++	}
++
+ 	fsl_dev->clk = devm_clk_get(dev, "dcu");
+ 	if (IS_ERR(fsl_dev->clk)) {
+-		ret = PTR_ERR(fsl_dev->clk);
+ 		dev_err(dev, "failed to get dcu clock\n");
+-		return ret;
+-	}
+-	ret = clk_prepare(fsl_dev->clk);
+-	if (ret < 0) {
+-		dev_err(dev, "failed to prepare dcu clk\n");
+-		return ret;
++		return PTR_ERR(fsl_dev->clk);
+ 	}
+-	ret = clk_enable(fsl_dev->clk);
++	ret = clk_prepare_enable(fsl_dev->clk);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to enable dcu clk\n");
+-		clk_unprepare(fsl_dev->clk);
+ 		return ret;
+ 	}
+ 
+-	fsl_dev->regmap = devm_regmap_init_mmio(dev, base,
+-			&fsl_dcu_regmap_config);
+-	if (IS_ERR(fsl_dev->regmap)) {
+-		dev_err(dev, "regmap init failed\n");
+-		return PTR_ERR(fsl_dev->regmap);
+-	}
+-
+-	id = of_match_node(fsl_dcu_of_match, pdev->dev.of_node);
+-	if (!id)
+-		return -ENODEV;
+-	fsl_dev->soc = id->data;
+-
+ 	drm = drm_dev_alloc(driver, dev);
+-	if (!drm)
+-		return -ENOMEM;
++	if (!drm) {
++		ret = -ENOMEM;
++		goto disable_clk;
++	}
+ 
+ 	fsl_dev->dev = dev;
+ 	fsl_dev->drm = drm;
+@@ -360,6 +355,8 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
+ 
+ unref:
+ 	drm_dev_unref(drm);
++disable_clk:
++	clk_disable_unprepare(fsl_dev->clk);
+ 	return ret;
+ }
+ 
+@@ -367,6 +364,7 @@ static int fsl_dcu_drm_remove(struct platform_device *pdev)
+ {
+ 	struct fsl_dcu_drm_device *fsl_dev = platform_get_drvdata(pdev);
+ 
++	clk_disable_unprepare(fsl_dev->clk);
+ 	drm_put_dev(fsl_dev->drm);
+ 
+ 	return 0;
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
