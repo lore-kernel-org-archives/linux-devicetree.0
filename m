@@ -1,135 +1,54 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 01/12] ARM: dts: apq8064: fix the pinctrls for i2c and spi
-Date: Tue, 29 Mar 2016 09:10:45 -0700
-Message-ID: <20160329161045.GR8929@tuxbot>
-References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762421-9339-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160329142807.GF8929@tuxbot>
- <56FA98F0.2000300@linaro.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v7 12/17] ARM64: ACPI: Check if it runs on Xen to enable
+ or disable ACPI
+Date: Tue, 29 Mar 2016 17:18:38 +0100
+Message-ID: <20160329161837.GH6745@arm.com>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
+ <1458830676-27075-13-git-send-email-shannon.zhao@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56FA98F0.2000300@linaro.org>
+In-Reply-To: <1458830676-27075-13-git-send-email-shannon.zhao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+To: Shannon Zhao <shannon.zhao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, zhaoshenglong@huawei.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue 29 Mar 08:02 PDT 2016, Srinivas Kandagatla wrote:
+On Thu, Mar 24, 2016 at 10:44:31PM +0800, Shannon Zhao wrote:
+> When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
+> a /hypervisor node in DT. So check if it needs to enable ACPI.
+> 
+> Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+> Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+> Acked-by: Hanjun Guo <hanjun.guo@linaro.org>
+> ---
+>  arch/arm64/kernel/acpi.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> index d1ce8e2..4e92be0 100644
+> --- a/arch/arm64/kernel/acpi.c
+> +++ b/arch/arm64/kernel/acpi.c
+> @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
+>  {
+>  	/*
+>  	 * Return 1 as soon as we encounter a node at depth 1 that is
+> -	 * not the /chosen node.
+> +	 * not the /chosen node, or /hypervisor node when running on Xen.
+>  	 */
+> -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
+> -		return 1;
+> +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
+> +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
+> +			return 1;
+> +	}
 
-> 
-> 
-> On 29/03/16 15:28, Bjorn Andersson wrote:
-> >On Wed 23 Mar 12:47 PDT 2016, Srinivas Kandagatla wrote:
-> >
-> >>This patch fixes pinctrls for spi and i2c nodes whose default and sleep
-> >>states are together, which is incorrect.
-> >>
-> >>Without this patch i2c/spi would not be functional.
-> >>
-> >>Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> >
-> >The change in itself is sound, but I don't understand why i2c/spi fails
-> >to function if we don't bring them to a sleep state. Can you please
-> >update the commit message with an explanation?
-> 
-> Yes, with the existing code the device would endup configuring the default
-> pinstate to sleep pinconf. So the i2c bus would not be functional.
-> 
+Hmm, but xen_initial_domain() is false when xen isn't being used at all,
+so it feels to me like this is a bit too far-reaching and is basically
+claiming the "/hypervisor" namespace for Xen. Couldn't it be renamed to
+"xen,hypervisor" or something?
 
-Ohh sorry, not sure why I didn't see that. Your fix is obviously
-correct.
+Mark, got any thoughts on this?
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> If you try mainline on any 8064 based boards you would easily reproduce the
-> bug. For example read the eeprom on IFC6410.
-> >
-> >
-> >PS. Whenever there's multiple states for a thing I do prefer prefixing
-> >them _a and _s to highlight that difference (not only suffixing the
-> >sleep state). And use abbreviations :)
-> 
-> If I search for _sleep in dts folder these are widely used, am not sure
-> which is the prefered way to do this, as long as its readable by user am ok
-> to do it either way.
-> 
-> >
-> >Regards,
-> >Bjorn
-> >
-> >>---
-> >>  arch/arm/boot/dts/qcom-apq8064.dtsi | 18 ++++++++++++------
-> >>  1 file changed, 12 insertions(+), 6 deletions(-)
-> >>
-> >>diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> >>index 65d0e8d..c6ff8fc 100644
-> >>--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
-> >>+++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-> >>@@ -227,7 +227,8 @@
-> >>
-> >>  			gsbi1_i2c: i2c@12460000 {
-> >>  				compatible = "qcom,i2c-qup-v1.1.1";
-> >>-				pinctrl-0 = <&i2c1_pins &i2c1_pins_sleep>;
-> >>+				pinctrl-0 = <&i2c1_pins>;
-> >>+				pinctrl-1 = <&i2c1_pins_sleep>;
-> >>  				pinctrl-names = "default", "sleep";
-> >>  				reg = <0x12460000 0x1000>;
-> >>  				interrupts = <0 194 IRQ_TYPE_NONE>;
-> >>@@ -255,7 +256,8 @@
-> >>  			gsbi2_i2c: i2c@124a0000 {
-> >>  				compatible = "qcom,i2c-qup-v1.1.1";
-> >>  				reg = <0x124a0000 0x1000>;
-> >>-				pinctrl-0 = <&i2c2_pins &i2c2_pins_sleep>;
-> >>+				pinctrl-0 = <&i2c2_pins>;
-> >>+				pinctrl-1 = <&i2c2_pins_sleep>;
-> >>  				pinctrl-names = "default", "sleep";
-> >>  				interrupts = <0 196 IRQ_TYPE_NONE>;
-> >>  				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
-> >>@@ -277,7 +279,8 @@
-> >>  			ranges;
-> >>  			gsbi3_i2c: i2c@16280000 {
-> >>  				compatible = "qcom,i2c-qup-v1.1.1";
-> >>-				pinctrl-0 = <&i2c3_pins &i2c3_pins_sleep>;
-> >>+				pinctrl-0 = <&i2c3_pins>;
-> >>+				pinctrl-1 = <&i2c3_pins_sleep>;
-> >>  				pinctrl-names = "default", "sleep";
-> >>  				reg = <0x16280000 0x1000>;
-> >>  				interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
-> >>@@ -302,7 +305,8 @@
-> >>
-> >>  			gsbi4_i2c: i2c@16380000 {
-> >>  				compatible = "qcom,i2c-qup-v1.1.1";
-> >>-				pinctrl-0 = <&i2c4_pins &i2c4_pins_sleep>;
-> >>+				pinctrl-0 = <&i2c4_pins>;
-> >>+				pinctrl-1 = <&i2c4_pins_sleep>;
-> >>  				pinctrl-names = "default", "sleep";
-> >>  				reg = <0x16380000 0x1000>;
-> >>  				interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
-> >>@@ -337,7 +341,8 @@
-> >>  				compatible = "qcom,spi-qup-v1.1.1";
-> >>  				reg = <0x1a280000 0x1000>;
-> >>  				interrupts = <0 155 0>;
-> >>-				pinctrl-0 = <&spi5_default &spi5_sleep>;
-> >>+				pinctrl-0 = <&spi5_default>;
-> >>+				pinctrl-1 = <&spi5_sleep>;
-> >>  				pinctrl-names = "default", "sleep";
-> >>  				clocks = <&gcc GSBI5_QUP_CLK>, <&gcc GSBI5_H_CLK>;
-> >>  				clock-names = "core", "iface";
-> >>@@ -370,7 +375,8 @@
-> >>
-> >>  			gsbi6_i2c: i2c@16580000 {
-> >>  				compatible = "qcom,i2c-qup-v1.1.1";
-> >>-				pinctrl-0 = <&i2c6_pins &i2c6_pins_sleep>;
-> >>+				pinctrl-0 = <&i2c6_pins>;
-> >>+				pinctrl-1 = <&i2c6_pins_sleep>;
-> >>  				pinctrl-names = "default", "sleep";
-> >>  				reg = <0x16580000 0x1000>;
-> >>  				interrupts = <GIC_SPI 157 IRQ_TYPE_NONE>;
-> >>--
-> >>2.5.0
-> >>
+Will
