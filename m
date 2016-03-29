@@ -1,114 +1,59 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v2 3/8] drm/fsl-dcu: disable clock on initialization failure and remove
-Date: Mon, 28 Mar 2016 18:59:57 -0700
-Message-ID: <1459216802-32094-4-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 7/8] ARM: dts: vf610: add display nodes
+Date: Mon, 28 Mar 2016 19:00:01 -0700
+Message-ID: <1459216802-32094-8-git-send-email-stefan@agner.ch>
 References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459216802-32094-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, meng.yi-3arQi8VN3Tc@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459216802-32094-1-git-send-email-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
+Cc: kernel@pengutronix.de, airlied@linux.ie, daniel.vetter@ffwll.ch, jianwei.wang.chn@gmail.com, alison.wang@freescale.com, meng.yi@nxp.com, alexander.stein@systec-electronic.com, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Fix error handling during probe by reordering initialization and
-adding a error path which disables clock again. Also disable the
-clock on remove.
+Add the dcu and tcon nodes to enable the Display Controller Unit
+and Timing Controller in Vybrid's SoC level device-tree file.
 
-Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c | 44 +++++++++++++++----------------
- 1 file changed, 21 insertions(+), 23 deletions(-)
+ arch/arm/boot/dts/vfxxx.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-index e8d9337..f2a9c1b 100644
---- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-@@ -290,6 +290,11 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
- 	if (!fsl_dev)
- 		return -ENOMEM;
+diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+index a9ceb5b..78e24c6 100644
+--- a/arch/arm/boot/dts/vfxxx.dtsi
++++ b/arch/arm/boot/dts/vfxxx.dtsi
+@@ -234,6 +234,14 @@
+ 							<20000000>;
+ 			};
  
-+	id = of_match_node(fsl_dcu_of_match, pdev->dev.of_node);
-+	if (!id)
-+		return -ENODEV;
-+	fsl_dev->soc = id->data;
++			tcon0: timing-controller@4003d000 {
++				compatible = "fsl,vf610-tcon";
++				reg = <0x4003d000 0x1000>;
++				clocks = <&clks VF610_CLK_TCON0>;
++				clock-names = "ipg";
++				status = "disabled";
++			};
 +
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
- 		dev_err(dev, "could not get memory IO resource\n");
-@@ -308,39 +313,29 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
- 		return -ENXIO;
- 	}
+ 			wdoga5: wdog@4003e000 {
+ 				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
+ 				reg = <0x4003e000 0x1000>;
+@@ -339,6 +347,17 @@
+ 				status = "disabled";
+ 			};
  
-+	fsl_dev->regmap = devm_regmap_init_mmio(dev, base,
-+			&fsl_dcu_regmap_config);
-+	if (IS_ERR(fsl_dev->regmap)) {
-+		dev_err(dev, "regmap init failed\n");
-+		return PTR_ERR(fsl_dev->regmap);
-+	}
++			dcu0: dcu@40058000 {
++				compatible = "fsl,vf610-dcu";
++				reg = <0x40058000 0x1200>;
++				interrupts = <30 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&clks VF610_CLK_DCU0>,
++					<&clks VF610_CLK_DCU0_DIV>;
++				clock-names = "dcu", "pix";
++				fsl,tcon = <&tcon0>;
++				status = "disabled";
++			};
 +
- 	fsl_dev->clk = devm_clk_get(dev, "dcu");
- 	if (IS_ERR(fsl_dev->clk)) {
--		ret = PTR_ERR(fsl_dev->clk);
- 		dev_err(dev, "failed to get dcu clock\n");
--		return ret;
--	}
--	ret = clk_prepare(fsl_dev->clk);
--	if (ret < 0) {
--		dev_err(dev, "failed to prepare dcu clk\n");
--		return ret;
-+		return PTR_ERR(fsl_dev->clk);
- 	}
--	ret = clk_enable(fsl_dev->clk);
-+	ret = clk_prepare_enable(fsl_dev->clk);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to enable dcu clk\n");
--		clk_unprepare(fsl_dev->clk);
- 		return ret;
- 	}
- 
--	fsl_dev->regmap = devm_regmap_init_mmio(dev, base,
--			&fsl_dcu_regmap_config);
--	if (IS_ERR(fsl_dev->regmap)) {
--		dev_err(dev, "regmap init failed\n");
--		return PTR_ERR(fsl_dev->regmap);
--	}
--
--	id = of_match_node(fsl_dcu_of_match, pdev->dev.of_node);
--	if (!id)
--		return -ENODEV;
--	fsl_dev->soc = id->data;
--
- 	drm = drm_dev_alloc(driver, dev);
--	if (!drm)
--		return -ENOMEM;
-+	if (!drm) {
-+		ret = -ENOMEM;
-+		goto disable_clk;
-+	}
- 
- 	fsl_dev->dev = dev;
- 	fsl_dev->drm = drm;
-@@ -360,6 +355,8 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
- 
- unref:
- 	drm_dev_unref(drm);
-+disable_clk:
-+	clk_disable_unprepare(fsl_dev->clk);
- 	return ret;
- }
- 
-@@ -367,6 +364,7 @@ static int fsl_dcu_drm_remove(struct platform_device *pdev)
- {
- 	struct fsl_dcu_drm_device *fsl_dev = platform_get_drvdata(pdev);
- 
-+	clk_disable_unprepare(fsl_dev->clk);
- 	drm_put_dev(fsl_dev->drm);
- 
- 	return 0;
+ 			i2c0: i2c@40066000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
