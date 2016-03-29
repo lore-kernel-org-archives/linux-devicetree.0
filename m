@@ -1,13 +1,24 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 6/9] ARM: dts: qcom: apq8064: Add syscon for sic-non-secure
-Date: Mon, 28 Mar 2016 20:37:02 -0700
-Message-ID: <1459222625-11440-7-git-send-email-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 8/9] ARM: dts: qcom: apq8064: Add smd node and all edges
+Date: Mon, 28 Mar 2016 20:37:04 -0700
+Message-ID: <1459222625-11440-9-git-send-email-bjorn.andersson@linaro.org>
 References: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Andy Gross <andy.gross@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -18,24 +29,59 @@ Andy, this is only here for context, please apply separately.
 Changes since v1:
 - Added dts patches
 
- arch/arm/boot/dts/qcom-apq8064.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/qcom-apq8064.dtsi | 40 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 65d0e8d98259..9d45c4ef4a97 100644
+index 5a9d68287840..ad7bc3c2aad1 100644
 --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -212,6 +212,11 @@
- 			regulator;
- 		};
+@@ -124,6 +124,46 @@
+ 		hwlocks = <&sfpb_mutex 3>;
+ 	};
  
-+		sic_non_secure: sic-non-secure@12100000 {
-+			compatible	= "syscon";
-+			reg		= <0x12100000 0x10000>;
++	smd {
++		compatible = "qcom,smd";
++
++		modem@0 {
++			interrupts = <0 37 IRQ_TYPE_EDGE_RISING>;
++
++			qcom,ipc = <&l2cc 8 3>;
++			qcom,smd-edge = <0>;
++
++			status = "disabled";
 +		};
 +
- 		gsbi1: gsbi@12440000 {
- 			status = "disabled";
- 			compatible = "qcom,gsbi-v1.0.0";
++		q6@1 {
++			interrupts = <0 90 IRQ_TYPE_EDGE_RISING>;
++
++			qcom,ipc = <&l2cc 8 15>;
++			qcom,smd-edge = <1>;
++
++			status = "disabled";
++		};
++
++		dsps@3 {
++			interrupts = <0 138 IRQ_TYPE_EDGE_RISING>;
++
++			qcom,ipc = <&sic_non_secure 0x4080 0>;
++			qcom,smd-edge = <3>;
++
++			status = "disabled";
++		};
++
++		riva@6 {
++			interrupts = <0 198 IRQ_TYPE_EDGE_RISING>;
++
++			qcom,ipc = <&l2cc 8 25>;
++			qcom,smd-edge = <6>;
++
++			status = "disabled";
++		};
++	};
++
+ 	smsm {
+ 		compatible = "qcom,smsm";
+ 
 -- 
 2.5.0
