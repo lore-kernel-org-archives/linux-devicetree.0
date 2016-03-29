@@ -1,40 +1,65 @@
-From: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 09/17] watchdog: qcom: add kpss-standalone to device tree binding
-Date: Mon, 28 Mar 2016 17:22:33 -0500
-Message-ID: <5E6274D4-B437-4ABD-B5A7-CCB38F282309@codeaurora.org>
-References: <1458770712-10880-1-git-send-email-mmcclint@codeaurora.org> <1458770712-10880-10-git-send-email-mmcclint@codeaurora.org> <20160325141521.GA12357@rob-hp-laptop> <0F389D09-1165-4686-98DF-0265351A086A@codeaurora.org> <20160328181544.GB29820@roeck-us.net>
-Mime-Version: 1.0 (Mac OS X Mail 9.2 \(3112\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [RFC PATCH 0/4] Implement USB device/host switch for Vybrid
+Date: Tue, 29 Mar 2016 00:24:46 +0000
+Message-ID: <HE1PR04MB1450691A838973845B7AD16F8B870@HE1PR04MB1450.eurprd04.prod.outlook.com>
+References: <cover.1458030082.git.maitysanchayan@gmail.com>
+ <20160325074051.GB22398@peterchendt>
+ <3c2e72efc8cae93ff31be1b44f9a02b3@agner.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160328181544.GB29820-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <3c2e72efc8cae93ff31be1b44f9a02b3-XLVq0VzYD2Y@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qca-upstream.external-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org" <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mar 28, 2016, at 1:15 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->=20
->>> What SoC(s) is this in. Use SoC specific compatible strings please.
->>=20
->> So ipq4019 wins the race because we are the first to try to enable w=
-atchdog for this block?
->>=20
->> qcom,kpss-ipq4019 ?
->>=20
-> It is a dedicated watchdog block, isn't it ? "qcom,kpss-ipq4019" woul=
-d not
-> refer to a specific block. Devicetree maintainers may have a better i=
-dea,
-> but it seems to me that there should be 'wdt' or 'watchdog' in the pr=
-operty
-> name.
+ 
+> 
+> On 2016-03-25 00:40, Peter Chen wrote:
+> > On Tue, Mar 15, 2016 at 02:08:26PM +0530, Sanchayan Maity wrote:
+> >> Hello Peter,
+> >>
+> >> The existing usage of extcon in Chipidea driver relies on OTG
+> >> registers. In case of SoC with dual role device but not a true OTG
+> >> controller, this does not work. Such SoC's should specify the
+> >> existing CI_HDRC_DUAL_ROLE_NOT_OTG flag and do the role switch
+> >> without checking any of the OTG registers in my opinion.
+> >> This is the case for Vybrid which uses a Chipidea IP but does not
+> >> have a true 5 pin OTG implemented.
+> >
+> > Sorry to reply you late due to my new born baby.
+> >
+> > Are you sure Vybrid is NOT OTG core? Afaik, it is uses the same IP
+> > base with other Freescale SoCs, just the IP core is 2.40a.
+> > When working at device mode, can you read vbus status through OTGSC?
+> > And if there is an ID pin (input pin) for Vybrid? I mean SoC, not the
+> > board.
+> 
+> I think the IP is actually OTG capable, the registers are there, but the signals
+> seem not to be available on the SoC package. That is also what the RM says...
+> 
+> Quotes from the RM:
+> 
+> "OTG controller should be treated as
+> Dual role controller that allows the
+> controller to act as either a Host or a
+> device with no support for HNP/SRP."
+> 
+> And later, in Chapter 11.1:
+> 
+> "The USB is not a true OTG. It can be configured by software to function either
+> as peripheral or as host. The ID pin, which is unique for OTG operation, is not
+> present in this implementation. There are no five pin interface. The user will
+> get four pin host/ device interface."
+> 
 
-Sounds fine to me, if no one has any other comments I=E2=80=99ll use th=
-is one in the next spin of the patch.
+Get it, thanks. I am doing a patch for covering this case and vbus always-on case.
 
--M--
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+Peter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
