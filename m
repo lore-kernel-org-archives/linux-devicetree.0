@@ -1,37 +1,55 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [RFC PATCH 1/3] libahci: save port map for forced port map
-Date: Tue, 29 Mar 2016 14:11:13 +0100
-Message-ID: <1459257075-21393-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1459257075-21393-1-git-send-email-srinivas.kandagatla@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459257075-21393-1-git-send-email-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jmaggard10@gmail.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
+Date: Tue, 29 Mar 2016 14:13:26 +0100
+Message-ID: <CACvgo50REvRxN2_qdw=2NeTTSgjpA+9c8OZgPE0q19meH6ArKA@mail.gmail.com>
+References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
+	<1571169.Hy8an0n7lM@diego>
+	<CACvgo516ewfwGCpV=noX+re1x8t3Sp1t39Sha+A2-tQ5YsoihA@mail.gmail.com>
+	<17189219.y56YqHz6yR@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <17189219.y56YqHz6yR@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-rockchip <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In usecases where force_port_map is used saved_port_map is never set,
-resulting in not programming the PORTS_IMPL register as part of intial
-config. This patch fixes this by setting it to port_map even in case
-where force_port_map is used, making it more inline with other parts of
-the code.
+On 28 March 2016 at 23:13, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/ata/libahci.c | 1 +
- 1 file changed, 1 insertion(+)
+> I have the feeling we're going quite a bit off-topic right now :-) .
+> The binary-driver-crazyness, hasn't really anything to do with Yakir'=
+s support
+> for the RGA (which is about raster-graphics-acceleration, so 2d stuff=
+).
+>
+> And me mentioning the armsoc-ddx was merely a means to allow some sor=
+t of
+> different userspace user, as requested in your original mail ;-) .
+>
+Seems like I forgot to state the obvious - for all the reasons
+mentioned, the armsoc ddx seems like a bad example.
 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 3982054..a5d7c1c 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -507,6 +507,7 @@ void ahci_save_initial_config(struct device *dev, struct ahci_host_priv *hpriv)
- 		dev_info(dev, "forcing port_map 0x%x -> 0x%x\n",
- 			 port_map, hpriv->force_port_map);
- 		port_map = hpriv->force_port_map;
-+		hpriv->saved_port_map = port_map;
- 	}
- 
- 	if (hpriv->mask_port_map) {
--- 
-2.5.0
+> Maybe you know a better use-case on where to demonstrate the viabilit=
+y of the
+> userspace API for it as originally requested.
+I'm afraid that my RockChip-foo is extremely limited. Perhaps the
+actual user of these should be mentioned ? xf86-video-rockhip (is
+there one ?) or any other effort/project that lacks some (all?) of the
+criticism listed.
+
+(Sort of) the bottom line - either reuse the existing interfaces or
+provide an approved, full blown userspace (libdrm demos/programs do
+not count) that uses the new interfaces.
+
+I haven't made these rules, just a fool^Wguy that repeats them so that
+people don't abuse them much. If in doubt check with Dave and Daniel V
+- they had enough repeating these.
+
+-Emil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
