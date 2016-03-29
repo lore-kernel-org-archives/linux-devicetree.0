@@ -1,68 +1,38 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH v2 6/8] drm/fsl-dcu: add TCON driver
-Date: Tue, 29 Mar 2016 09:26:53 +0200
-Message-ID: <3752084.bcROvR6fvG@ws-stein>
-References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
- <2234894.ri36D5MRrN@ws-stein> <57c86de8eca0aa16a5cdfc488977ca4e@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <57c86de8eca0aa16a5cdfc488977ca4e@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] Few more updates for NS2 DT
+Date: Tue, 29 Mar 2016 12:57:30 +0530
+Message-ID: <1459236454-26285-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlc2RheSAyOSBNYXJjaCAyMDE2IDAwOjExOjEzLCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4g
-Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRj
-dS50eHQKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9mc2wsZGN1LnR4dAo+ID4+IAo+ID4+IEBAIC0xNCw2ICsxNCw3IEBAIFJlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gPj4gIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4gIC0gY2xvY2tzOgkJU2Vjb25k
-IGhhbmRsZSBmb3IgcGl4ZWwgY2xvY2suCj4gPj4gIC0gY2xvY2stbmFtZXM6CQlTZWNvbmQgbmFt
-ZSAicGl4IiBmb3IgcGl4ZWwgY2xvY2suCj4gPj4gCj4gPj4gKy0gZnNsLHRjb246CQlUaGUgcGhh
-bmRsZSB0byB0aGUgdGltaW5nIGNvbnRyb2xsZXIgbm9kZS4KPiA+IAo+ID4gTWF5YmUgYSBjb21t
-ZW50IHRoaXMgaXMgKGN1cnJlbnRseSkgb25seSBmb3IgVnlicmlkLCBidXQgbm90IExTMTAyMUEu
-Cj4gCj4gSU1ITywgc3VjaCByZWZlcmVuY2VzIHRvIFNvQ3MgaW4gYSBwZXJpcGhlcmFsIGJpbmRp
-bmcgaXMgc29tZXdoYXQKPiBtaXNwbGFjZWQuIElmIHdlIHdvdWxkIHN0YXJ0IGRvaW5nIHRoaXMs
-IHdlIHdvdWxkIGVuZCB1cCBpbiBsb3RzIG9mIFNvQwo+IHJlZmVyZW5jZXMsIGFuZCBub2JvZHkg
-a25vd3Mgd2hldGhlciB0aGV5IGFyZSBhY3R1YWxseSBhY2N1cmF0ZSBhbmQgdXAKPiB0byBkYXRl
-Li4uIEFuZCBJIHRoaW5rIHdlIHNob3VsZCBhZGQgdGNvbiB0byBMUzEwMjFhLCBtb3JlIG9uIHRo
-YXQKPiBiZWxvdy4uLgoKV2VsbCwgSSBkb24ndCBtaW5kIGFmdGVyIGFsbC4KCj4gPj4gLS0tIC9k
-ZXYvbnVsbAo+ID4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF90Y29uLmMKPiA+
-PiBbLi4uXQo+ID4+ICtzdHJ1Y3QgZnNsX3Rjb24gKmZzbF90Y29uX2luaXQoc3RydWN0IGRldmlj
-ZSAqZGV2KQo+ID4+ICt7Cj4gPj4gKwlzdHJ1Y3QgZnNsX3Rjb24gKnRjb247Cj4gPj4gKwlzdHJ1
-Y3QgZGV2aWNlX25vZGUgKm5wOwo+ID4+ICsJaW50IHJldDsKPiA+PiArCj4gPj4gKwl0Y29uID0g
-ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCp0Y29uKSwgR0ZQX0tFUk5FTCk7Cj4gPj4gKwlpZiAo
-IXRjb24pCj4gPj4gKwkJcmV0dXJuIE5VTEw7Cj4gPj4gKwo+ID4+ICsJbnAgPSBvZl9wYXJzZV9w
-aGFuZGxlKGRldi0+b2Zfbm9kZSwgImZzbCx0Y29uIiwgMCk7Cj4gPj4gKwlpZiAoIW5wKSB7Cj4g
-Pj4gKwkJZGV2X3dhcm4oZGV2LCAiQ291bGRuJ3QgZmluZCB0aGUgdGNvbiBub2RlXG4iKTsKPiA+
-PiArCQlyZXR1cm4gTlVMTDsKPiA+PiArCX0KPiA+IAo+ID4gTWF5YmUgY2hlY2sgZm9yIGRldmlj
-ZSB0cmVlIG5vZGUgYmVmb3JlIGFsbG9jYXRpbmcgc3RydWN0IGZzbF90Y29uPyBBbHNvCj4gPiB0
-aGlzIHNob3VsZCBub3QgYmUgYSB3YXJuaW5nLCBhcyBvbiBMUzEwMjFBIHRoaXMgaXMgdG8gYmUg
-ZXhwZWN0ZWQuCj4gCj4gQWdyZWVkLCBkZWZpbml0ZWx5IHRoZSBzbWFydGVyIHNlcXVlbmNlLgo+
-IAo+IEFmYWN0IExTMTAyMWEgaGFzIGFsc28gYSBUQ09OLiBBdCBsZWFzdCBpbiBKaWFud2VpIFdh
-bmdzIGluaXRpYWwgcGF0Y2hlcwo+IGl0IHdhcyBwYXJ0IG9mIHRoZSBkcml2ZXIsIHNlZToKPiBo
-dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS83LzEzLzI0Mgo+IAo+IE5vdCBzdXJlIGhvdyB0aGF0
-IGRyaXZlciBjYW4gd29yayB3aXRob3V0IFRDT04gc3VwcG9ydCBvbiBMUzEwMjFhLCBtYXliZQo+
-IHRoZSBib290bG9hZGVyIHNldHMgdGhlIFRDT04gdG8gYnlwYXNzPwo+IAo+IFNpbmNlIEkgZG8g
-bm90IGhhdmUgYSBMUzEwMjFhLCBJIGhlc2l0YXRlZCB0byBqdXN0IGFkZCBpdCB0byB0aGUgTFMx
-MDIxcwo+IGR0J3MsIGJ1dCBpdCBzaG91bGQgYmUgZmFpcmx5IHN0cmFpZ2h0IGZvcndhcmQuCgpJ
-bnRlcmVzdGluZywgYnV0IGluIFBhdGNoIDMgKGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L2FyY2hpdmVzL2RyaS1kZXZlbC8yMDE1LUp1bHkvMDg2MzgxLmh0bWwpIG5vIFRDT04gbm9kZSBp
-cyBhZGRlZCBhbmQgdXNpbmcgaXMgc3RpbGwgCm9wdGlvbmFsLiBZZXQsIEkgZG9uJ3QgZmluZCBh
-bnkgVENPTiBoYXJkd2FyZSBpbiB0aGUgTFMxMDIxQSByZWZlcmVuY2UgbWFudWFsLCAKZS5nLiBp
-biB0aGUgbWVtb3J5IG1hcC4gSSBoYXJkIGd1ZXNzIGlzIHRoYXQgaXQgZG9lc24ndCByZXF1aXJl
-L3VzZSBvbmUuIApXaXRob3V0IG1lbW9yeSBhZGRyZXNzIGl0IHdvdWxkIGJlIHByZXR0eSBoYXJk
-IHRvIGFkZCBvbmUuCgpBbGV4YW5kZXIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+This patchset primarily adds more PL330 and PL022 DT nodes for
+NS2 SVK. It also moves clock DT nodes to separate file to be
+consistent with other Broadcom SoCs DT files.
+
+The patchset is based on v4.6-rc1 tag and is available in ns2_dt3_v1
+branch of https://github.com/Broadcom/arm64-linux.git
+
+All patches have been tested on Broadcom NS2 SVK.
+
+Anup Patel (4):
+  arm64: dts: Add ARM PL330 DMA DT node for NS2
+  arm64: dts: Add maintenance interrupt for GIC in NS2 DT
+  arm64: dts: Move NS2 clock DT nodes to separate DT file
+  arm64: dts: Add ARM PL022 SPI DT nodes for NS2
+
+ arch/arm64/boot/dts/broadcom/ns2-clock.dtsi | 105 +++++++++++++++++++++++
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts    |  45 ++++++++++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi       | 124 +++++++++++-----------------
+ 3 files changed, 196 insertions(+), 78 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/broadcom/ns2-clock.dtsi
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
