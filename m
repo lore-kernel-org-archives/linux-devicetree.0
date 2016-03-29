@@ -1,81 +1,36 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 00/12] ARM: dts: Add dragonboard-600c support.
-Date: Tue, 29 Mar 2016 16:02:43 +0100
-Message-ID: <56FA9913.7040308@linaro.org>
-References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160329145448.GP8929@tuxbot>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160329145448.GP8929@tuxbot>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH RESEND 0/2] pinmux support for Broadcom NS2 SoC
+Date: Tue, 29 Mar 2016 11:22:10 -0400
+Message-ID: <1459264932-27884-1-git-send-email-yendapally.reddy@broadcom.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Pramod Kumar <pramodku@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
+This patchset contains the pinmux support for the Broadcom's
+Northstar 2 (NS2) SoC.
 
+The first patch provides the driver details and the second patch contains
+the enable method. The documentation details patch is already merged.
 
-On 29/03/16 15:54, Bjorn Andersson wrote:
-> On Wed 23 Mar 12:46 PDT 2016, Srinivas Kandagatla wrote:
->
->> Hi Andy,
->>
->> This patchset adds support to Dragonboard 600c which is based on APQ8064.
->>
->> With this patchset, except spi I was able to test all the below features
->> on this board on top of linus master branch.
->> 1> i2c
->> 2> spi
->> 3> sd/mmc with card detect
->> 4> eMMC
->> 5> USB
->> 6> SATA
->> 7> on board Ethernet based on PCIE.
->> 8> user and activity leds.
->>
->> AHCI SATA is broken on APQ8064 on mainline, due to changes in libahci, fix is
->> being discussed which should not effect this dt patches anyway.
->> This patchset also has a fix to i2c/spi pinctrls which was not set correctly
->> in my previous apq8064 patches, I have verified this patchset with eeprom and
->> sensors on the board, you might want to take that patch in next rc.
->>
->> Thanks,
->> srini
->>
->> Srinivas Kandagatla (12):
->>    ARM: dts: apq8064: fix the pinctrls for i2c and spi
->>    ARM: dts: apq8064: add support to gsbi1 uart
->>    ARM: dts: apq8064: add gsbi7 i2c support
->>    ARM: dts: dragonboard-600c: add board support with serial
->>    ARM: dts: dragonboard-600c: add pmic regulator supplies
->>    ARM: dts: dragonboard-600c: Add eMMC and SD card support
->>    ARM: dts: dragonboard-600c: add usb support
->>    ARM: dts: dragonboard-600c: add pcie support
->>    ARM: dts: dragonboard-600c: add on board sata support.
->>    ARM: dts: dragonboard-600c: Add on board leds support
->>    ARM: dts: dragonboard-600c: add i2c support
->>    ARM: dts: dragonboard-600c: add spi support
->
-> Please abbreviate db600c (and drop those upper case As).
+This patch set has been tested on NS2 bcm958712K board.
+This patch set is based on v4.6.0-rc1 and is available from github
+repo: https://github.com/Broadcom/arm64-linux.git
+branch: ns2-pinmux-v1
 
-Yep. Will do.
->
->>
->>   arch/arm/boot/dts/Makefile                         |   1 +
->>   .../arm/boot/dts/qcom-apq8064-dragonboard-600c.dts | 377 +++++++++++++++++++++
->
-> Please make this qcom-apq8064-arrow-db600c.dts
-Ok, makes sense.
+Yendapally Reddy Dhananjaya Reddy (2):
+  pinctrl: ns2: add pinmux driver support for Broadcom NS2 SoC
+  ARM: dts: enable pinctrl for Broadcom NS2 SoC
 
-thanks
-srini
->
->>   arch/arm/boot/dts/qcom-apq8064-pins.dtsi           |  39 +++
->>   arch/arm/boot/dts/qcom-apq8064.dtsi                |  41 ++-
->>   4 files changed, 452 insertions(+), 6 deletions(-)
->>   create mode 100644 arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->
-> Regards,
-> Bjorn
->
+ arch/arm64/boot/dts/broadcom/ns2-svk.dts |    9 +
+ arch/arm64/boot/dts/broadcom/ns2.dtsi    |    7 +
+ drivers/pinctrl/bcm/Kconfig              |   13 +
+ drivers/pinctrl/bcm/Makefile             |    1 +
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c    | 1122 ++++++++++++++++++++++++++++++
+ 5 files changed, 1152 insertions(+)
+ create mode 100644 drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+
+-- 
+2.1.0
+
