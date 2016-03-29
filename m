@@ -1,114 +1,52 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 6/6] iommu/arm-smmu: Make use of phandle iterators in
- device-tree parsing
-Date: Tue, 29 Mar 2016 18:22:16 +0100
-Message-ID: <20160329172216.GM6745@arm.com>
-References: <1458669509-7178-1-git-send-email-joro@8bytes.org>
- <1458669509-7178-7-git-send-email-joro@8bytes.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v8 1/6] ALSA: pcm: add IEC958 channel status helper for
+ hw_params
+Date: Tue, 29 Mar 2016 18:23:12 +0100
+Message-ID: <20160329172312.GR5783@n2100.arm.linux.org.uk>
+References: <cover.1458214526.git.jsarha@ti.com>
+ <164484552294777b0b9b88d7982bd6bfb0da9a9f.1458214526.git.jsarha@ti.com>
+ <s5hzithhdfz.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1458669509-7178-7-git-send-email-joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jroedel-l3A5Bk7waGM@public.gmane.org
+In-Reply-To: <s5hzithhdfz.wl-tiwai@suse.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Takashi Iwai <tiwai@suse.de>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, peter.ujfalusi@ti.com, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, liam.r.girdwood@linux.intel.com, tony@atomide.com, broonie@kernel.org, Jyri Sarha <jsarha@ti.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
-
-On Tue, Mar 22, 2016 at 06:58:29PM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> 
-> Remove the usage of of_parse_phandle_with_args() and replace
-> it by the phandle-iterator implementation so that we can
-> parse out all of the potentially present 128 stream-ids.
-> 
-> Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
-> ---
->  drivers/iommu/arm-smmu.c | 28 ++++++++++++++++++++++------
->  1 file changed, 22 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 59ee4b8..413bd64 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -48,7 +48,7 @@
->  #include "io-pgtable.h"
->  
->  /* Maximum number of stream IDs assigned to a single device */
-> -#define MAX_MASTER_STREAMIDS		MAX_PHANDLE_ARGS
-> +#define MAX_MASTER_STREAMIDS		128
->  
->  /* Maximum number of context banks per SMMU */
->  #define ARM_SMMU_MAX_CBS		128
-> @@ -349,6 +349,12 @@ struct arm_smmu_domain {
->  	struct iommu_domain		domain;
->  };
->  
-> +struct arm_smmu_phandle_args {
-> +	struct device_node *np;
-> +	int args_count;
-> +	uint32_t args[MAX_MASTER_STREAMIDS];
-> +};
-> +
->  static struct iommu_ops arm_smmu_ops;
->  
->  static DEFINE_SPINLOCK(arm_smmu_devices_lock);
-> @@ -458,7 +464,7 @@ static int insert_smmu_master(struct arm_smmu_device *smmu,
->  
->  static int register_smmu_master(struct arm_smmu_device *smmu,
->  				struct device *dev,
-> -				struct of_phandle_args *masterspec)
-> +				struct arm_smmu_phandle_args *masterspec)
->  {
->  	int i;
->  	struct arm_smmu_master *master;
-> @@ -1716,7 +1722,8 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->  	struct arm_smmu_device *smmu;
->  	struct device *dev = &pdev->dev;
->  	struct rb_node *node;
-> -	struct of_phandle_args masterspec;
-> +	struct of_phandle_iterator it;
-> +	struct arm_smmu_phandle_args masterspec;
->  	int num_irqs, i, err;
->  
->  	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
-> @@ -1777,9 +1784,14 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->  
->  	i = 0;
->  	smmu->masters = RB_ROOT;
-> -	while (!of_parse_phandle_with_args(dev->of_node, "mmu-masters",
-> -					   "#stream-id-cells", i,
-> -					   &masterspec)) {
-> +
-> +	of_for_each_phandle(&it, err, dev->of_node,
-> +			    "mmu-masters", "#stream-id-cells", 0) {
-> +		int count = of_phandle_iterator_args(&it, masterspec.args,
-> +						     MAX_MASTER_STREAMIDS);
-> +		masterspec.np		= of_node_get(it.node);
-> +		masterspec.args_count	= count;
-> +
->  		err = register_smmu_master(smmu, dev, &masterspec);
->  		if (err) {
->  			dev_err(dev, "failed to add master %s\n",
-> @@ -1789,6 +1801,10 @@ static int arm_smmu_device_dt_probe(struct platform_device *pdev)
->  
->  		i++;
->  	}
-> +
-> +	if (i == 0)
-> +		goto out_put_masters;
-
-I'm confused by this hunk. If i == 0, then we shouldn't have registered
-any masters and therefore out_put_masters won't have anything to do.
-
-In fact, I'm not completely clear on how the of_node refcounting interacts
-with your iterators. Does the iterator put the node after you call the
-"next" function, or does it increment each thing exactly once?
-
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBNYXIgMjksIDIwMTYgYXQgMTA6NTQ6MDhBTSArMDIwMCwgVGFrYXNoaSBJd2FpIHdy
+b3RlOgo+IE9uIFRodSwgMTcgTWFyIDIwMTYgMTM6MjI6MjkgKzAxMDAsCj4gSnlyaSBTYXJoYSB3
+cm90ZToKPiA+IAo+ID4gQWRkIElFQzk1OCBjaGFubmVsIHN0YXR1cyBoZWxwZXIgdGhhdCBnZXRz
+IHRoZSBhdWRpbyBwcm9wZXJ0aWVzIGZyb20KPiA+IHNuZF9wY21faHdfcGFyYW1zIGluc3RlYWQg
+b2Ygc25kX3BjbV9ydW50aW1lLiBUaGlzIGlzIG5lZWRlZCB0bwo+ID4gcHJvZHVjZSB0aGUgY2hh
+bm5lbCBzdGF0dXMgYml0cyBhbHJlYWR5IGluIGF1ZGlvIHN0cmVhbSBjb25maWd1cmF0aW9uCj4g
+PiBwaGFzZS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
+bT4KPiAKPiBUaGlzIHBhdGNoIGxvb2tzIGFsbW9zdCBnb29kIHRvIG1lLCBidXQuLi4KPiAKPiA+
+IEBAIC03MSw2ICs1OSw3IEBAIGludCBzbmRfcGNtX2NyZWF0ZV9pZWM5NThfY29uc3VtZXIoc3Ry
+dWN0IHNuZF9wY21fcnVudGltZSAqcnVudGltZSwgdTggKmNzLAo+ID4gIAkJCSAgICAgSUVDOTU4
+X0FFUzRfQ09OX01BWF9XT1JETEVOXzI0Owo+ID4gIAkJCWJyZWFrOwo+ID4gIAkJY2FzZSAyNDoK
+PiA+ICsJCWNhc2UgMzI6IC8qIEFzc3VtZSAyNC1iaXQgd2lkdGggZm9yIDMyLWJpdCBzYW1wbGVz
+LiAqLwo+ID4gIAkJCXdzID0gSUVDOTU4X0FFUzRfQ09OX1dPUkRMRU5fMjRfMjAgfAo+ID4gIAkJ
+CSAgICAgSUVDOTU4X0FFUzRfQ09OX01BWF9XT1JETEVOXzI0Owo+ID4gIAkJCWJyZWFrOwo+IAo+
+IC4uLiB0aGlzIGNoYW5nZSBpcyBzaWxlbnRseSBzbGlwcGVkIGluLiAgSXQgc2hvdWxkIGJlIG1l
+bnRpb25lZCBpbiB0aGUKPiBjaGFuZ2Vsb2csIG9yIHNwbGl0IHRvIGFub3RoZXIgcGF0Y2gsIGFz
+IHRoaXMgaXMgYmFzaWNhbGx5IGFuCj4gb3J0aG9nb25hbCBjaGFuZ2UuCgpEb2VzIGl0IGV2ZW4g
+bWFrZSBzZW5zZSAtIEFFUyBkb2Vzbid0IGhhdmUgc3VwcG9ydCBmb3IgMzItYml0IHNhbXBsZXMs
+Cml0IGNhbiBvbmx5IGV2ZXIgdHJ1bmNhdGUgdGhlbSBkb3duIHRvIDI0LWJpdC4KCi0tIApSTUsn
+cyBQYXRjaCBzeXN0ZW06IGh0dHA6Ly93d3cuYXJtLmxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0
+Y2hlcy8KRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZTogY3VycmVudGx5IGF0IDkuNk1i
+cHMgZG93biA0MDBrYnBzIHVwCmFjY29yZGluZyB0byBzcGVlZHRlc3QubmV0LgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
