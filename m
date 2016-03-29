@@ -1,93 +1,60 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v2] mtd: nand: denali: allow to override max_banks from DT property
-Date: Tue, 29 Mar 2016 11:33:07 +0900
-Message-ID: <1459218787-15197-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 0/9] Qualcomm WCNSS remoteproc
+Date: Mon, 28 Mar 2016 20:36:56 -0700
+Message-ID: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Rob Herring <robh+dt@kernel.org>, Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 271707b1d817 ("mtd: nand: denali: max_banks calculation
-changed in revision 5.1") supported the new encoding of the "n_banks"
-bits of the "features" register, but there is an unfortunate case
-not covered by that commit.
+This series introduces the remoteproc driver for controlling the Qualcomm
+Wireless Connectivity Subsystem (WCNSS). The WCNSS is a builtin ARM9 inside the
+Qualcomm SoC with an externally connected RF module (iris).
 
-Panasonic (its System LSI Business Division is now Socionext) bought
-a couple of versions of this IP.  The IP released for Panasonic
-around Feb. 2012 is revision 5 and uses the old encoding for n_banks
-(2 << n_banks).  While the one released around Nov. 2012 is also
-revision 5, but it uses the new encoding (1 << n_banks).
+Supports booting and shutting down wcnss on 8064, 8974 and 8016. The driver
+will call the crash handler in remoteproc, but further work is needed in the
+framework for this not to bring down the kernel.
 
-The revision register cannot distinguish these two incompatible
-hardware.  I guess this IP series is not well-organized.  I could not
-find any solution but giving max_banks from DT property.
+Changes since v1:
+- Split iris definition into separate driver/dt-node
+- Move constants from DT to code
+- Make stop-state and some of interrupts optional to properly work on 8064
+- Cleaned up and made mdt loader support relocation, which is needed on 8016.
+- Add dts patches
 
-This commit works around the problem by allowing DT to set the
-max_banks forcibly.  Of course, this DT property can be optional if
-the auto detection based on the hardware registers works well.
+Bjorn Andersson (9):
+  dt-binding: remoteproc: Introduce Qualcomm WCNSS loader binding
+  remoteproc: core: Make the loaded resource table optional
+  remoteproc: Add additional crash reasons
+  remoteproc: Introduce Qualcomm WCNSS firmware loader
+  ARM: dts: qcom: msm8974: Introduce the wcnss remoteproc node
+  ARM: dts: qcom: apq8064: Add syscon for sic-non-secure
+  ARM: dts: qcom: apq8064: Add complete smsm node
+  ARM: dts: qcom: apq8064: Add smd node and all edges
+  ARM: dts: qcom: apq8064: Introduce wcnss remoteproc
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+ .../bindings/remoteproc/qcom,wcnss-pil.txt         | 117 +++++
+ .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts |   4 +
+ arch/arm/boot/dts/qcom-apq8064.dtsi                | 151 ++++++
+ .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   |  32 ++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                |  36 +-
+ drivers/remoteproc/Kconfig                         |  12 +
+ drivers/remoteproc/Makefile                        |   2 +
+ drivers/remoteproc/qcom_mdt_loader.c               | 172 ++++++
+ drivers/remoteproc/qcom_mdt_loader.h               |   7 +
+ drivers/remoteproc/qcom_wcnss.c                    | 579 +++++++++++++++++++++
+ drivers/remoteproc/qcom_wcnss.h                    |  22 +
+ drivers/remoteproc/qcom_wcnss_iris.c               | 185 +++++++
+ drivers/remoteproc/remoteproc_core.c               |  10 +-
+ include/linux/remoteproc.h                         |   4 +
+ 14 files changed, 1326 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+ create mode 100644 drivers/remoteproc/qcom_mdt_loader.c
+ create mode 100644 drivers/remoteproc/qcom_mdt_loader.h
+ create mode 100644 drivers/remoteproc/qcom_wcnss.c
+ create mode 100644 drivers/remoteproc/qcom_wcnss.h
+ create mode 100644 drivers/remoteproc/qcom_wcnss_iris.c
 
-Changes in v2:
-  - rebase on v4.6-rc1
-  - add Rob's Acked-by
-  - Rephrase git-log slightly
-
- Documentation/devicetree/bindings/mtd/denali-nand.txt | 4 ++++
- drivers/mtd/nand/denali.c                             | 3 ++-
- drivers/mtd/nand/denali_dt.c                          | 3 +++
- 3 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-index b04d03a..6154c77 100644
---- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
-@@ -7,6 +7,10 @@ Required properties:
-   - interrupts : The interrupt number.
-   - dm-mask : DMA bit mask
- 
-+Optional properties:
-+  - max-banks : Maximum number of banks supported by hardware.  If not
-+    specified, it is determined based on the "features" register of hardware.
-+
- The device tree may optionally contain sub-nodes describing partitions of the
- address space. See partition.txt for more detail.
- 
-diff --git a/drivers/mtd/nand/denali.c b/drivers/mtd/nand/denali.c
-index 30bf5f6..e18b569 100644
---- a/drivers/mtd/nand/denali.c
-+++ b/drivers/mtd/nand/denali.c
-@@ -1353,7 +1353,8 @@ static void denali_hw_init(struct denali_nand_info *denali)
- 	 */
- 	denali->bbtskipbytes = ioread32(denali->flash_reg +
- 						SPARE_AREA_SKIP_BYTES);
--	detect_max_banks(denali);
-+	if (!denali->max_banks)
-+		detect_max_banks(denali);
- 	denali_nand_reset(denali);
- 	iowrite32(0x0F, denali->flash_reg + RB_PIN_ENABLED);
- 	iowrite32(CHIP_EN_DONT_CARE__FLAG,
-diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
-index 0cb1e8d..be55db8 100644
---- a/drivers/mtd/nand/denali_dt.c
-+++ b/drivers/mtd/nand/denali_dt.c
-@@ -85,6 +85,9 @@ static int denali_dt_probe(struct platform_device *ofdev)
- 		denali->dev->dma_mask = NULL;
- 	}
- 
-+	of_property_read_u32(ofdev->dev.of_node, "max-banks",
-+			     &denali->max_banks);
-+
- 	dt->clk = devm_clk_get(&ofdev->dev, NULL);
- 	if (IS_ERR(dt->clk)) {
- 		dev_err(&ofdev->dev, "no clk available\n");
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.5.0
