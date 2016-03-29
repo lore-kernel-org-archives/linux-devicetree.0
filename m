@@ -1,87 +1,120 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 8/9] ARM: dts: qcom: apq8064: Add smd node and all edges
-Date: Mon, 28 Mar 2016 20:37:04 -0700
-Message-ID: <1459222625-11440-9-git-send-email-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 9/9] ARM: dts: qcom: apq8064: Introduce wcnss remoteproc
+Date: Mon, 28 Mar 2016 20:37:05 -0700
+Message-ID: <1459222625-11440-10-git-send-email-bjorn.andersson@linaro.org>
 References: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
-Andy, this is only here for context, please apply separately.
-
 Changes since v1:
 - Added dts patches
 
- arch/arm/boot/dts/qcom-apq8064.dtsi | 40 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ .../arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts |  4 ++
+ arch/arm/boot/dts/qcom-apq8064.dtsi                | 57 ++++++++++++++++++++++
+ 2 files changed, 61 insertions(+)
 
+diff --git a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
+index 06b3c76c3e41..276f529383e8 100644
+--- a/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
++++ b/arch/arm/boot/dts/qcom-apq8064-sony-xperia-yuga.dts
+@@ -432,5 +432,9 @@
+ 				pinctrl-0 = <&sdcc3_pin_a>, <&sdcc3_cd_pin_a>;
+ 			};
+ 		};
++
++		wcnss@3204000 {
++			status = "okay";
++		};
+ 	};
+ };
 diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
-index 5a9d68287840..ad7bc3c2aad1 100644
+index ad7bc3c2aad1..2c213ce80acc 100644
 --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
 +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
-@@ -124,6 +124,46 @@
- 		hwlocks = <&sfpb_mutex 3>;
+@@ -20,6 +20,11 @@
+ 			reg = <0x80000000 0x200000>;
+ 			no-map;
+ 		};
++
++		wcnss_mem: wcnss@8f000000 {
++			reg = <0x8f000000 0x700000>;
++			no-map;
++		};
  	};
  
-+	smd {
-+		compatible = "qcom,smd";
-+
-+		modem@0 {
-+			interrupts = <0 37 IRQ_TYPE_EDGE_RISING>;
-+
-+			qcom,ipc = <&l2cc 8 3>;
-+			qcom,smd-edge = <0>;
-+
-+			status = "disabled";
-+		};
-+
-+		q6@1 {
-+			interrupts = <0 90 IRQ_TYPE_EDGE_RISING>;
-+
-+			qcom,ipc = <&l2cc 8 15>;
-+			qcom,smd-edge = <1>;
-+
-+			status = "disabled";
-+		};
-+
-+		dsps@3 {
-+			interrupts = <0 138 IRQ_TYPE_EDGE_RISING>;
-+
-+			qcom,ipc = <&sic_non_secure 0x4080 0>;
-+			qcom,smd-edge = <3>;
-+
-+			status = "disabled";
-+		};
-+
-+		riva@6 {
-+			interrupts = <0 198 IRQ_TYPE_EDGE_RISING>;
-+
-+			qcom,ipc = <&l2cc 8 25>;
-+			qcom,smd-edge = <6>;
-+
-+			status = "disabled";
-+		};
-+	};
-+
- 	smsm {
- 		compatible = "qcom,smsm";
+ 	cpus {
+@@ -231,6 +236,26 @@
  
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&ps_hold>;
++
++			wcnss_pin_a: wcnss-pins-active {
++				fm {
++					pins = "gpio14", "gpio15";
++					function = "riva_fm";
++				};
++
++				bt {
++					pins = "gpio16", "gpio17";
++					function = "riva_bt";
++				};
++
++				wlan {
++					pins = "gpio64", "gpio65", "gpio66", "gpio67", "gpio68";
++					function = "riva_wlan";
++
++					drive-strength = <6>;
++					bias-pull-down;
++				};
++			};
+ 		};
+ 
+ 		sfpb_wrapper_mutex: syscon@1200000 {
+@@ -916,6 +941,38 @@
+ 			reset-names = "axi", "ahb", "por", "pci", "phy";
+ 			status = "disabled";
+ 		};
++
++		wcnss@3204000 {
++			compatible = "qcom,riva-pil";
++			reg = <0x03204000 0x100>;
++
++			interrupts-extended = <&intc 0 199 IRQ_TYPE_EDGE_RISING>,
++					      <&wcnss_smsm 6 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal";
++
++			memory-region = <&wcnss_mem>;
++
++			vddcx-supply = <&pm8921_s3>;
++			vddmx-supply = <&pm8921_lvs7>;
++			vddpx-supply = <&pm8921_s4>;
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&wcnss_pin_a>;
++
++			status = "disabled";
++
++			iris {
++				compatible = "qcom,wcn3660";
++
++				clocks = <&rpmcc 2>;
++				clock-names = "xo";
++
++				vddxo-supply = <&pm8921_l4>;
++				vddrfa-supply = <&pm8921_s2>;
++				vddpa-supply = <&pm8921_l10>;
++				vdddig-supply = <&pm8921_lvs2>;
++			};
++		};
+ 	};
+ };
+ #include "qcom-apq8064-pins.dtsi"
 -- 
 2.5.0
