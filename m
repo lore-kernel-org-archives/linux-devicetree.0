@@ -1,63 +1,71 @@
-From: Rameshwar Prasad Sahu <rsahu@apm.com>
-Subject: [PATCH] arm64: dts: apm: Fix compatible string for X-Gene 2 SATA
- controller DTS node
-Date: Tue, 29 Mar 2016 15:24:54 +0530
-Message-ID: <1459245294-22678-1-git-send-email-rsahu@apm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] regulator: core: Allow use of "status =
+ disabled" in regulator dts nodes
+Date: Tue, 29 Mar 2016 11:57:11 +0200
+Message-ID: <20160329095711.GI30977@lukather>
+References: <1457730069-31760-1-git-send-email-hdegoede@redhat.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-scsi@vger.kernel.org, jcm@redhat.com, Rameshwar Prasad Sahu <rsahu@apm.com>, patches@apm.com, linux-ide@vger.kernel.org, ddutile@redhat.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FJhvIAWe7X2mSp4a"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB6FC5G3QKGQERL5RU4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1457730069-31760-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fix X-Gene SATA controller compatible string for Merlin board.
+--FJhvIAWe7X2mSp4a
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
-Acked-by: Suman Tripathi <stripathi@apm.com>
----
- arch/arm64/boot/dts/apm/apm-shadowcat.dtsi |    6 +++---
- 1 files changed, 3 insertions(+), 3 deletions(-)
+Hi Mark,
 
-diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-index 5d87a3d..74d971e 100644
---- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-+++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
-@@ -524,7 +524,7 @@
- 		};
+On Fri, Mar 11, 2016 at 10:01:07PM +0100, Hans de Goede wrote:
+> The axp20x and axp22x pmics have ldo regulators which are muxed to the
+> outside via gpio pins. Unfortunately regulator enable / disable is
+> implemented in the hardware via selecting a specific pin-mux option.
+> 
+> So if we want to use these pins as gpio pins we must not register
+> a regulator for these pins at all, otherwise any gpio use (switching
+> to input, or writing a value) gets undone when the regulator subsys
+> disables unused regulators at the end of kernel-init.
+> 
+> This commits allows the use of  "status = disabled" in regulator dts
+> nodes and makes regulator_register return ENODEV when this is set.
+> 
+> Note that this commit changes the loop to find the of-node in
+> regulator_of_get_init_data from using for_each_available_child_of_node
+> to using for_each_child_of_node. regulator_register is the only user
+> of regulator_of_get_init_data and the use of for_each_available_child...
+> makes little sense there since this will only cause the constraints
+> from regulator dts nodes marked as disabled to not be used, the
+> actual registration of the regulator would still continue.
+> 
+> So in a way this patch could be seen as a bugfix as it actually makes
+> regulators with an of_node which is marked as not available not register,
+> but this behavior change may cause some issues in some places.
+> 
+> Note that individual regulator drivers / callers of regulator_register
+> which may encounter disabled regulator (child) nodes need to be patched to
+> handle ENODEV (to not make it fail their probe method).
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
- 		sata1: sata@1a000000 {
--			compatible = "apm,xgene-ahci";
-+			compatible = "apm,xgene-ahci-v2";
- 			reg = <0x0 0x1a000000 0x0 0x1000>,
- 			      <0x0 0x1f200000 0x0 0x1000>,
- 			      <0x0 0x1f20d000 0x0 0x1000>,
-@@ -534,7 +534,7 @@
- 		};
+Any comments on this one?
 
- 		sata2: sata@1a200000 {
--			compatible = "apm,xgene-ahci";
-+			compatible = "apm,xgene-ahci-v2";
- 			reg = <0x0 0x1a200000 0x0 0x1000>,
- 			      <0x0 0x1f210000 0x0 0x1000>,
- 			      <0x0 0x1f21d000 0x0 0x1000>,
-@@ -544,7 +544,7 @@
- 		};
+Thanks,
+Maxime
 
- 		sata3: sata@1a400000 {
--			compatible = "apm,xgene-ahci";
-+			compatible = "apm,xgene-ahci-v2";
- 			reg = <0x0 0x1a400000 0x0 0x1000>,
- 			      <0x0 0x1f220000 0x0 0x1000>,
- 			      <0x0 0x1f22d000 0x0 0x1000>,
---
-1.7.1
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--FJhvIAWe7X2mSp4a--
