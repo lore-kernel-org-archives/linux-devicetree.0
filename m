@@ -1,70 +1,55 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 10/12] ARM: dts: dragonboard-600c: Add on board leds
- support
-Date: Tue, 29 Mar 2016 14:30:03 +0100
-Message-ID: <56FA835B.3080909@linaro.org>
-References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
- <CAP71WjzdDRqtS4oJu_m_Y9kuZ4QprYnqMHop=5a6Vc6yypakhA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: at91: use chipid device for soc detection
+Date: Tue, 29 Mar 2016 15:53:35 +0200
+Message-ID: <56FA88DF.20208@atmel.com>
+References: <1458285681-25684-1-git-send-email-ludovic.desroches@atmel.com>
+ <20160318103418.GA2531@piout.net> <56F27C89.9070004@atmel.com>
+ <20160323134750.GC2570@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAP71WjzdDRqtS4oJu_m_Y9kuZ4QprYnqMHop=5a6Vc6yypakhA@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160323134750.GC2570-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Nico,
+Le 23/03/2016 14:47, Alexandre Belloni a =E9crit :
+> On 23/03/2016 at 12:22:49 +0100, Nicolas Ferre wrote :
+>> Le 18/03/2016 11:34, Alexandre Belloni a =E9crit :
+>>> On 18/03/2016 at 08:21:19 +0100, Ludovic Desroches wrote :
+>>>> So far, the CIDR and EXID registers were in the DBGU interface. Th=
+is device
+>>>> has disappeared with the SAMA5D2 family. These registers are expos=
+ed
+>>>> through a new device called chipid.
+>>>>
+>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>>>> [nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: remove useless warnings]
+>>> Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>
+>>>> ---
+>>>>  .../devicetree/bindings/arm/atmel-at91.txt         |  4 ++
+>>>>  arch/arm/mach-at91/soc.c                           | 81 +++++++++=
+++++++++-----
+>>
+>> We may need to split this patch in 2 for going through separate arm-=
+soc
+>> branches: what do you think Alexandre?
+>>
+>=20
+> I think the patch can go in as it is now, the documentation being in
+> line with the code.
 
-On 24/03/16 16:51, Nicolas Dechesne wrote:
-> On Wed, Mar 23, 2016 at 8:48 PM, Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
->> +                       led@1 {
->> +                               label = "dragonboard-600c:green:user1";
->> +                               gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
->> +                               linux,default-trigger = "heartbeat";
->> +                               default-state = "off";
->> +                       };
->> +
->> +                       led@2 {
->> +                               label = "dragonboard-600c:green:user2";
->> +                               gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
->> +                               linux,default-trigger = "mmc0";
->> +                               default-state = "off";
->> +                       };
->> +
->> +                       led@3 {
->> +                               label = "dragonboard-600c:green:user3";
->> +                               gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
->> +                               linux,default-trigger = "mmc1";
->> +                               default-state = "off";
->> +                       };
->> +
->> +                       led@4 {
->> +                               label = "apq8016-sbc:green:user4";
->
-> typo ^^
->
-Yep, Will fix this.
->> +                               gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
->> +                               linux,default-trigger = "none";
->> +                               default-state = "off";
->> +                       };
->
-> also, if i read the 96boards specs correctly, the LED are labeled
-> 3-2-1-0 , if you look at the board with the LEDs on the bottom. With
-> this DT config, you end up with 0-1-2-3 instead.
->
-> also, they should be labeled 0 to 3, not 1 to 4.
+Okay: patches 1 & 2 in the "soc" branch.
+patch 3 in the "dt" branch.
 
-I agree Will fix it. The structure was copied from the 8016.
-
-Its strange that DB410c LEDS labels on the board are from 1 to 4 rather 
-than 0 to 3, on the other hand DB600c does not have any labels as such.
-
-For Now I can change DB600c to start with 0 rather than 1.
-
-
->
+Bye,
+--=20
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
