@@ -1,151 +1,70 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Tue, 29 Mar 2016 14:27:29 +0100
-Message-ID: <CACvgo51UVYtNoSpqnh0Hu+A-EkabVagzaSim=wf8ubsNACP0MA@mail.gmail.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
-	<1511371.I0NIYzh3kP@diego>
-	<56EFE66A.8020404@rock-chips.com>
-	<1867694.1mDULrSexE@phil>
-	<CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
-	<56FA69C5.5090602@rock-chips.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 10/12] ARM: dts: dragonboard-600c: Add on board leds
+ support
+Date: Tue, 29 Mar 2016 14:30:03 +0100
+Message-ID: <56FA835B.3080909@linaro.org>
+References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1458762484-9768-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <CAP71WjzdDRqtS4oJu_m_Y9kuZ4QprYnqMHop=5a6Vc6yypakhA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56FA69C5.5090602-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-rockchip <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAP71WjzdDRqtS4oJu_m_Y9kuZ4QprYnqMHop=5a6Vc6yypakhA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yakir,
+Thanks Nico,
 
-On 29 March 2016 at 12:40, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> Hi Emil,
+On 24/03/16 16:51, Nicolas Dechesne wrote:
+> On Wed, Mar 23, 2016 at 8:48 PM, Srinivas Kandagatla
+> <srinivas.kandagatla@linaro.org> wrote:
+>> +                       led@1 {
+>> +                               label = "dragonboard-600c:green:user1";
+>> +                               gpios = <&tlmm_pinmux 3 GPIO_ACTIVE_HIGH>;
+>> +                               linux,default-trigger = "heartbeat";
+>> +                               default-state = "off";
+>> +                       };
+>> +
+>> +                       led@2 {
+>> +                               label = "dragonboard-600c:green:user2";
+>> +                               gpios = <&tlmm_pinmux 7 GPIO_ACTIVE_HIGH>;
+>> +                               linux,default-trigger = "mmc0";
+>> +                               default-state = "off";
+>> +                       };
+>> +
+>> +                       led@3 {
+>> +                               label = "dragonboard-600c:green:user3";
+>> +                               gpios = <&tlmm_pinmux 10 GPIO_ACTIVE_HIGH>;
+>> +                               linux,default-trigger = "mmc1";
+>> +                               default-state = "off";
+>> +                       };
+>> +
+>> +                       led@4 {
+>> +                               label = "apq8016-sbc:green:user4";
 >
-> On 03/28/2016 08:21 PM, Emil Velikov wrote:
->>
->> On 22 March 2016 at 00:42, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
->>>
->>> Hi Yakir,
->>>
->>> Am Montag, 21. M=C3=A4rz 2016, 20:17:46 schrieb Yakir Yang:
->>>>
->>>> On 03/21/2016 07:29 PM, Heiko St=C3=BCbner wrote:
->>>>>
->>>>> Am Montag, 21. M=C3=A4rz 2016, 17:28:38 schrieb Yakir Yang:
->>>>>>
->>>>>> This patch set would add the RGA direct rendering based 2d graph=
-ics
->>>>>> acceleration module.
->>>>>
->>>>> very cool to see that.
->>>>
->>>> ;)
->>>>
->>>>>> This patch set is based on git repository below:
->>>>>> git://people.freedesktop.org/~airlied/linux drm-next
->>>>>> commit id: 568d7c764ae01f3706085ac8f0d8a8ac7e826bd7
->>>>>>
->>>>>> And the RGA driver is based on Exynos G2D driver, it only manage=
-s the
->>>>>> command lists received from user, so user should make the comman=
-d list
->>>>>> to data and registers needed by operation to use.
->>>>>>
->>>>>> I have prepared an userspace demo application for testing:
->>>>>>     https://github.com/yakir-Yang/libdrm-rockchip
->>>>>>
->>>>>> That is a rockchip libdrm library, and I have write a simple tes=
-t case
->>>>>> "rockchip_rga_test" that would test the below RGA features:
->>>>>> - solid
->>>>>> - copy
->>>>>> - rotation
->>>>>> - flip
->>>>>> - window clip
->>>>>> - dithering
->>>>>
->>>>> Did you submit your libdrm changes as well?
->>>>>
->>>>> Userspace-interfaces need to be stable so the other side must als=
-o get
->>>>> accepted - even before the kernel change if I remember correctly.
->>>>
->>>> Got it, and I just saw exynos_fimg2d already landed at mainline li=
-bdrm.
->>>> But I don't find the way to submit patches to libdrm, would you li=
-ke
->>>> share some helps here ;)
->>>
->>> Looking at the libdrm sources on cgit.freedesktop.org, I did not fi=
-nd any
->>> specific manual on submitting patches.
->>>
->>> But looking at the dri-list archive, dri-devel-PD4FTy7X32lNgt0PjOBp9/EVdHwE84te@public.gmane.org=
-g is
->>> the
->>> right list and looking at the libdrm history it looks like Emil Vel=
-ikov
->>> <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> seems to be doing maintenance-stuff in l=
-ibdrm.
->>> And as a 3rd recipient, please also include the linux-rockchip list=
-=2E
->>>
->>> @Emil, please shout if I read that wrong :-)
->>>
->> You got it spot on Heiko. There are a few notes though...
->>
->> As one reuses the existing hardware/IP block, it would be better to
->> avoid copy/pasting code around.
->> Namely:
->>   - (if possible) factor out the exynos g2d kernel functionality to =
-a
->> separate kernel module and wire up the rockhip (via dt ?) to use it
->>   - factor out the g2d specifics out of exynos_drm.h (into
->> exynos_g2d_drm.h perhaps ?) and make sure exynos_drm.h includes the
->> new header
->>   - if neither of these are possible, then please ensure that the ne=
-w
->> header uses correct types (see the docs [1]), use MIT/X11 license (i=
-f
->> possible) and link where upstream userspace is happy with the
->> interface (ideally more than a simple test app like libdrm)
+> typo ^^
 >
+Yep, Will fix this.
+>> +                               gpios = <&tlmm_pinmux 11 GPIO_ACTIVE_HIGH>;
+>> +                               linux,default-trigger = "none";
+>> +                               default-state = "off";
+>> +                       };
 >
-> Whops... you have provided the third choice, nice  :-D
+> also, if i read the 96boards specs correctly, the LED are labeled
+> 3-2-1-0 , if you look at the board with the LEDs on the bottom. With
+> this DT config, you end up with 0-1-2-3 instead.
 >
-> And I got little idea about license, where should I use the MIT/X11
-> license, should I declare the MIT/X11 license in kernel uapi head
-> file, but Andreas just remind that kernel do not allow to no GUN
-> license. Or may be I can:
-Now that's a lovely typo - (GNU vs GUN) :-)
+> also, they should be labeled 0 to 3, not 1 to 4.
 
-But seriously - what makes you think that the kernel does not allow
-MIT/X11 licensed code ? Most of the DRM subsystem uses it.
+I agree Will fix it. The structure was copied from the 8016.
 
-> 1. Use GUN license in kernel rockchip_drm.h uapi head file
-> 2. Use MIT/X11 license in libdrm rockchip_drm.h head file.
+Its strange that DB410c LEDS labels on the board are from 1 to 4 rather 
+than 0 to 3, on the other hand DB600c does not have any labels as such.
+
+For Now I can change DB600c to start with 0 rather than 1.
+
+
 >
-I would suggest keeping the license the same in both places (the
-libdrm ones should be a direct copy of the kernel one produced with
-`make headers_install`), regardless of which one you opt for.
-
-> And I don't understand the "link where upstream userspace is happy
-> with the interface", could you reference small example here.
->
-Already mentioned elsewhere but for posterity:
-
-If designing a new interface one should provide a reference to a
-maintained upstream project, where the design was approved. Reason
-being is that unlike ChromeOS's kernel upstream one gets to keep its
-interfaces forever. And yes, I realise that CrOS folks are trying
-really hard to upstream things and use vanilla kernel.
-
-Regards,
-Emil
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
