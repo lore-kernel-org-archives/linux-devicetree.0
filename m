@@ -1,104 +1,67 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mmc
-Date: Tue, 29 Mar 2016 17:30:16 +0900
-Message-ID: <56FA3D18.9070600@samsung.com>
-References: <1457254062-22677-1-git-send-email-guodong.xu@linaro.org>
- <1457254062-22677-2-git-send-email-guodong.xu@linaro.org>
- <56DC3BAD.8020107@rock-chips.com>
- <CAFGCpxz3GfFeduaz1Dkg0WvRJWs+GHdVu8uY0-wV=RGyRfBE=A@mail.gmail.com>
- <56F9E6E5.9000100@kernel-upstream.org> <56FA3B70.2090902@linaro.org>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv3 9/9] ARM: dts: Add Altera Arria10 L2 Cache EDAC
+ devicetree entry
+Date: Tue, 29 Mar 2016 10:45:49 +0200
+Message-ID: <20160329084549.GC3705@pd.tnic>
+References: <1458576106-24505-1-git-send-email-tthayer@opensource.altera.com>
+ <1458576106-24505-10-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <56FA3B70.2090902@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: zhangfei <zhangfei.gao@linaro.org>, Shawn Lin <shawn.lin@kernel-upstream.org>, Guodong Xu <guodong.xu@linaro.org>, Shawn Lin <shawn.lin@rock-chips.com>
-Cc: robh+dt@kernel.org, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1458576106-24505-10-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2016 05:23 PM, zhangfei wrote:
+On Mon, Mar 21, 2016 at 11:01:46AM -0500, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
 > 
+> Add the device tree entries needed to support the Altera L2
+> cache EDAC on the Arria10 chip.
 > 
-> On 03/29/2016 10:22 AM, Shawn Lin wrote:
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2 Match register value (l2-ecc@ffd06010)
+> v3 Set ecc_manager to beginning of system_manager. Add sysman
+>    phandle. Move IRQs into ecc_manager from children.
+> ---
+>  arch/arm/boot/dts/socfpga_arria10.dtsi |   15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
 > 
->>>
->>>
->>>
->>>         +               else if (IS_ERR(host->pdata)) {
->>>                                  dev_err(host->dev, "platform data not
->>>         available\n");
->>>                                  return -EINVAL;
->>>                          }
->>>         @@ -3012,6 +3022,9 @@ int dw_mci_probe(struct dw_mci *host)
->>>                          }
->>>                  }
->>>
->>>         +       if (host->pdata->rstc != NULL)
->>>         +               reset_control_deassert(host->pdata->rstc);
->>>         +
->>>
->>>
->>>     sorry, I can't follow your intention here. Shouldn't it be something
->>>     like "assert mmc -> may need delay -> deassert mmc". As your current
->>>     code, nothing happend right?
-> Should be abstracted in reset driver.
-> 
->>>
->>>
->>> The chip exits from bootloader with this bit asserted. And when entering
->>> kernel, we only need to deassert.
->>>
->>> In my current code, the driver deassert mmc in _probe(), and assert mmc
->>> in _remove().
->>
->> I catch your point. From the previous discussion, we add it to make sure
->> dw_mmc in good state after leaving bootloader to kernel. But My real
->> question is that you can assert it in  bootloader, so you can also
->> dessert it in bootloaer to make sure dw_mmc work fine when probing
->> in kernel. In that way, we don't need this patch?
-> 
-> uefi does not have exit point, and kernel may not assume mmc controller state is always correct when boot.
-> If Uefi need copy Image from mmc, mmc controller is in working state.
-> When jump to kernel, uefi mmc driver can not recover itself.
-> If kernel assume mmc controller state is clean, mmc will be in abnormal state.
-> Some controller will clear itself when set clock, however, hip660 does not, it need special register to access.
-> 
-> 
->>
->> More to think, Is it ok to match the behaviour of bootloader stage?
->> My bootloader doesn't assert the reset pin of dw_mmc, so it seams if
->> I want to fix you issue on kernel stage, I need a new round of
->> assert->delay->deassert.
-> 
-> The process like delay (if required) should be abstracted in reset driver.
-> reset framework just export reset_control_assert/reset_control_deassert API.
-> Unfortunately not find clear description in Documentation/.
-> Suppose deassert is like start, while assert is like stop.
-
-First, this patch need to resend after fixing.
-Could you or Guodong resend these patches as V2 or V3?
-
-Best Regards,
-Jaehoon Chung
-
-> 
-> drivers/reset/core.c
-> reset_control_deassert - deasserts the reset line
-> reset_control_assert - asserts the reset line
-> 
-> More example:
-> drivers/mmc/host/sdhci-st.c
-> drivers/mmc/host/sunxi-mmc.c
-> drivers/usb/host/ohci-platform.c
-> drivers/i2c/busses/i2c-mv64xxx.c
-> 
-> Thanks
-> 
+> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> index cce9e50..345ea97 100644
+> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> @@ -599,6 +599,21 @@
+>  			reg = <0xffe00000 0x40000>;
+>  		};
+>  
+> +		eccmgr: eccmgr@ffd06000 {
+> +			compatible = "altr,socfpga-a10-ecc-manager";
+> +			altr,sysmgr-syscon = <&sysmgr>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <0 0 IRQ_TYPE_LEVEL_HIGH>;
+> +			ranges;
+> +
+> +			l2-ecc@ffd06010 {
+> +				compatible = "altr,socfpga-a10-l2-ecc";
+> +				reg = <0xffd06010 0x4>;
+> +			};
+> +		};
+> +
+>  		rst: rstmgr@ffd05000 {
+>  			#reset-cells = <1>;
+>  			compatible = "altr,rst-mgr";
 > -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
 
+I've picked up all except this one: need an ACK for it too. Dinh, DT-people?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
