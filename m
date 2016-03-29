@@ -1,200 +1,175 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Tue, 29 Mar 2016 13:47:38 +0200
-Message-ID: <9142448.GZtlcyxafd@diego>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com> <CACvgo52vL5_HQfgfnxRMzSJXYw-sWT3QozZaWswQXHr9-bwBSA@mail.gmail.com> <56FA6438.7060508@rock-chips.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [RESEND] [PATCH v11 2/6] added UFS 2.0 capabilities
+Date: Tue, 29 Mar 2016 12:53:47 +0100
+Message-ID: <56FA6CCB.2060807@synopsys.com>
+References: <cover.1457111366.git.jpinto@synopsys.com>
+ <fcc0aa6a294a02dcab590d56f7f43bcb2f9f18db.1457111366.git.jpinto@synopsys.com>
+ <5B8DA87D05A7694D9FA63FD143655C1B541CD26F@hasmsx108.ger.corp.intel.com>
+ <56FA621F.7050104@synopsys.com>
+ <5B8DA87D05A7694D9FA63FD143655C1B541CD330@hasmsx108.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56FA6438.7060508@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>
-Cc: Emil Velikov <emil.l.velikov@gmail.com>, David Airlie <airlied@linux.ie>, Mark Yao <mark.yao@rock-chips.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B541CD330@hasmsx108.ger.corp.intel.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: "Winkler, Tomas" <tomas.winkler@intel.com>, Joao Pinto <Joao.Pinto@synopsys.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+Cc: "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "robh@kernel.org" <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 29. M=E4rz 2016, 19:17:12 schrieb Yakir Yang:
-> Hi Emil & Heiko,
->=20
-> On 03/29/2016 05:35 AM, Emil Velikov wrote:
-> > On 28 March 2016 at 19:44, Heiko St=FCbner <heiko@sntech.de> wrote:
-> >> Am Montag, 28. M=E4rz 2016, 13:21:02 schrieb Emil Velikov:
-> >>> On 22 March 2016 at 00:42, Heiko Stuebner <heiko@sntech.de> wrote=
-:
-> >>>> Hi Yakir,
-> >>>>=20
-> >>>> Am Montag, 21. M=E4rz 2016, 20:17:46 schrieb Yakir Yang:
-> >>>>> On 03/21/2016 07:29 PM, Heiko St=FCbner wrote:
-> >>>>>> Am Montag, 21. M=E4rz 2016, 17:28:38 schrieb Yakir Yang:
-> >>>>>>> This patch set would add the RGA direct rendering based 2d gr=
-aphics
-> >>>>>>> acceleration module.
-> >>>>>>=20
-> >>>>>> very cool to see that.
-> >>>>>=20
-> >>>>> ;)
-> >>>>>=20
-> >>>>>>> This patch set is based on git repository below:
-> >>>>>>> git://people.freedesktop.org/~airlied/linux drm-next
-> >>>>>>> commit id: 568d7c764ae01f3706085ac8f0d8a8ac7e826bd7
-> >>>>>>>=20
-> >>>>>>> And the RGA driver is based on Exynos G2D driver, it only man=
-ages
-> >>>>>>> the
-> >>>>>>> command lists received from user, so user should make the com=
-mand
-> >>>>>>> list
-> >>>>>>> to data and registers needed by operation to use.
-> >>>>>>>=20
-> >>>>>>> I have prepared an userspace demo application for testing:
-> >>>>>>>     https://github.com/yakir-Yang/libdrm-rockchip
-> >>>>>>>=20
-> >>>>>>> That is a rockchip libdrm library, and I have write a simple =
-test
-> >>>>>>> case
-> >>>>>>> "rockchip_rga_test" that would test the below RGA features:
-> >>>>>>> - solid
-> >>>>>>> - copy
-> >>>>>>> - rotation
-> >>>>>>> - flip
-> >>>>>>> - window clip
-> >>>>>>> - dithering
-> >>>>>>=20
-> >>>>>> Did you submit your libdrm changes as well?
-> >>>>>>=20
-> >>>>>> Userspace-interfaces need to be stable so the other side must =
-also
-> >>>>>> get
-> >>>>>> accepted - even before the kernel change if I remember correct=
-ly.
-> >>>>>=20
-> >>>>> Got it, and I just saw exynos_fimg2d already landed at mainline
-> >>>>> libdrm.
-> >>>>> But I don't find the way to submit patches to libdrm, would you=
- like
-> >>>>> share some helps here ;)
-> >>>>=20
-> >>>> Looking at the libdrm sources on cgit.freedesktop.org, I did not=
- find
-> >>>> any
-> >>>> specific manual on submitting patches.
-> >>>>=20
-> >>>> But looking at the dri-list archive, dri-devel@lists.freedesktop=
-=2Eorg is
-> >>>> the
-> >>>> right list and looking at the libdrm history it looks like Emil =
-Velikov
-> >>>> <emil.l.velikov@gmail.com> seems to be doing maintenance-stuff i=
-n
-> >>>> libdrm.
-> >>>> And as a 3rd recipient, please also include the linux-rockchip l=
-ist.
-> >>>>=20
-> >>>> @Emil, please shout if I read that wrong :-)
-> >>>=20
-> >>> You got it spot on Heiko. There are a few notes though...
-> >>>=20
-> >>> As one reuses the existing hardware/IP block, it would be better =
-to
-> >>> avoid copy/pasting code around.
-> >>>=20
-> >>> Namely:
-> >>>   - (if possible) factor out the exynos g2d kernel functionality =
-to a
-> >>>=20
-> >>> separate kernel module and wire up the rockhip (via dt ?) to use =
-it
-> >>>=20
-> >>>   - factor out the g2d specifics out of exynos_drm.h (into
-> >>>=20
-> >>> exynos_g2d_drm.h perhaps ?) and make sure exynos_drm.h includes t=
-he
-> >>> new header
-> >>=20
-> >> I think the IP blocks themself are quite different between Rockchi=
-p's RGA
-> >> and Samsung's g2d and I guess the similarities are more along the =
-lines
-> >> on how that gets integrated into the respective drm driver and
-> >> userspace.
-> Yes, the hardware IP blocks is quite different. I just reference two =
-things
-> from Exynos g2d code:
-> 1. UAPI side: let userspace pass the detail mode tranform register se=
-tting
->      to kernel directly, so we don't need to pass the rendering
-> parameters to
->      kernel, just simplify the ioctl parameters.
->=20
-> 2. Kernel side: reference the cmdlist manager method. Two simply task=
-: one
->      for collecting the userspace register setting, another start
-> rendering process.
->=20
-> > In this case, the exynos_g2d_drm.h seems like a good idea. As I'm
-> > obviously biased, it's better to check how others feel on the topic=
-=2E
->=20
-> Do you mean that just create an exynos_g2d_drm.h, so both exynos_drm.=
-h
-> and rockchip_drm.h could include them ? It's good to reuse code, but =
-in this
-> case I thought it's better to keep both exist.
->=20
-> I have try to do that, split the common 'exynos_g2d_drm.h'. But I
-> thought it may
-> caused some name confusion. For example, the drm rockchip code need c=
-all the
-> EXYNOS_G2D_SET_CMDLIST ioctl to send command list. This may like drm
-> rockchip
-> is calling the Exynos G2D hardware, but actually it just the name con=
-flict.
->=20
-> Actually the head file is much simple, just contained 60 lines.
->=20
-> So, is it okay not to split the head file, just keep the data structu=
-re
-> define both
-> rockchip_drm.h and exynos_drm.h
->=20
-> >>>   - if neither of these are possible, then please ensure that the=
- new
-> >>>=20
-> >>> header uses correct types (see the docs [1]), use MIT/X11 license=
- (if
-> >>> possible) and link where upstream userspace is happy with the
-> >>> interface (ideally more than a simple test app like libdrm)
-> >>> These might sound like an overkill, although getting UAPI right a=
-nd
-> >>> maintaining it forever forces us to do so.
-> >>=20
-> >> As for a real-world usecase, maybe the armsoc xserver might be som=
-ewhat
-> >> easy to use. While the core changes I did are in the core project
-> >> already, I'm still keeping the actual Rockchip support separate [0=
-] due
-> >> to the not-yet- resolved create_gem ioctl.
-> >>=20
-> >> Anyway, the armsoc xserver has some exa implementation hooks were =
-I guess
-> >> it might be relatively easy to hook up soc-specific things.
-> >=20
-> > Ouch the armsoc ddx... Last time I've checked it felt like a place
-> > where everyone is doing his own thing, with no actual reviews and/o=
-r
-> > maintainer. Iirc most/all of it's functionality was achievable with
-> > modesetting ddx (with or without glamor) ? I take it that things ha=
-ve
-> > changed and/or I misunderstood something ?
->=20
-> Yeah, previously I plan to add RGA support to Rockchip armsoc DDX, bu=
-t
-> seems Mark start to work on modetestting, so I may need to switch to
-> follow him.
+On 3/29/2016 12:33 PM, Winkler, Tomas wrote:
+> Hi Thomas,
+> 
+> On 3/29/2016 11:41 AM, Winkler, Tomas wrote:
+>>
+>> Adding UFS 2.0 support to the UFS core driver.
+>>
+>> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>> Changes v8->v11:
+>> - Nothing changed (just to keep up with patch set version).
+>> Changes v7->v8:
+>> - Added "jedec, ufs-2.0" to the ufschd-platform compatibility strings Changes v0->v7:
+>> - Nothing changed (just to keep up with patch set version).
+>>
+>>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  4 +--
+>>  drivers/scsi/ufs/ufshcd.c                          | 29 +++++++++++++++++++---
+>>  drivers/scsi/ufs/ufshci.h                          |  1 +
+>>  3 files changed, 28 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt 
+>> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index 03c0e98..8d9a9d2 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -4,8 +4,8 @@ UFSHC nodes are defined to describe on-chip UFS host controllers.
+>>  Each UFS controller instance should have its own node.
+>>  
+>>  Required properties:
+>> -- compatible		: must contain "jedec,ufs-1.1", may also list one or more
+>> -					  of the following:
+>> +- compatible		: must contain "jedec,ufs-1.1" or "jedec,ufs-2.0", may
+>> +			  also list one or more of the following:
+>>  					  "qcom,msm8994-ufshc"
+>>  					  "qcom,msm8996-ufshc"
+>>  					  "qcom,ufshc"
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c 
+>> index 85cd256..2b5f2bf 100644
+>>
+>> I think this should go in separate patch
+> 
+> In my opinion it only makes sense to add 2.0 to the device-tree binding if the driver actually supports it, that was why I added to the same patch, but of course it can be separated if more people agree with the approach.
+> 
+> Yes, we have ufshcd-pci device that needs that so I think this should go separately 
 
-It is great to hear that people who actually know what they're doing in=
-=20
-graphics-land are working on x11 support :-D .
+I will separate this, no problem.
 
+>>
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -1223,6 +1223,7 @@ static int ufshcd_compose_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
+>>  			ret = -EINVAL;
+>>  		}
+>>  		break;
+>> +	case UTP_CMD_TYPE_UFS_STORAGE:
+>>  	case UTP_CMD_TYPE_DEV_MANAGE:
+>>  		ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags, DMA_NONE);
+>>  		if (hba->dev_cmd.type == DEV_CMD_TYPE_QUERY) @@ -1287,6 +1288,7 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+>>  	struct ufshcd_lrb *lrbp;
+>>  	struct ufs_hba *hba;
+>>  	unsigned long flags;
+>> +	u32 upiu_flags;
+>>  	int tag;
+>>  	int err = 0;
+>>  
+>> @@ -1343,10 +1345,23 @@ static int ufshcd_queuecommand(struct Scsi_Host *host, struct scsi_cmnd *cmd)
+>>  	lrbp->task_tag = tag;
+>>  	lrbp->lun = ufshcd_scsi_to_upiu_lun(cmd->device->lun);
+>>  	lrbp->intr_cmd = !ufshcd_is_intr_aggr_allowed(hba) ? true : false;
+>> -	lrbp->command_type = UTP_CMD_TYPE_SCSI;
+>> +
+>> +	if (hba->ufs_version == UFSHCI_VERSION_20)
+>> +		lrbp->command_type = UTP_CMD_TYPE_UFS_STORAGE;
+>> +	else
+>> +		lrbp->command_type = UTP_CMD_TYPE_SCSI;
+>> This translation can be pushed to prepare_req_desc_hdr and you end up 
+>> with  ~oneliner fix
+> 
+> I think your suggestion is good! We have to check the 2.0 version in 2 places and with your approach we would only check it in prepare_req_desc_hdr() once.
+> I will do that update!
+> 
+> Okay I think you can alter ufshcd_lrb structure and push the information there,
+> Add ufs version there as hba is not available in req_desc_hdr, I think both command_type and ufs_version can be u8 so the structure won't grow. 
 
-Heiko
+Going to check it out.
+
+> 
+> 
+>>
+>>  
+>>  	/* form UPIU before issuing the command */
+>> -	ufshcd_compose_upiu(hba, lrbp);
+>> +	if (hba->ufs_version == UFSHCI_VERSION_20) {
+>> +		if (likely(lrbp->cmd)) {
+>> How this can be possible NULL, the code above will crash or I'm missing something ? 
+>> +			ufshcd_prepare_req_desc_hdr(lrbp, &upiu_flags,
+>> +					lrbp->cmd->sc_data_direction);
+>> +			ufshcd_prepare_utp_scsi_cmd_upiu(lrbp, upiu_flags);
+>> What is different her from the code in ufshcd_compose_upiu ?
+>> +		} else
+>> +			err = -EINVAL;
+>> +	} else
+>> +		ufshcd_compose_upiu(hba, lrbp);
+> 
+> If you check ufshcd_compose_upiu() you will see that it contains 2 scopes:
+> cmd_upiu and query_req_upiu. Before 2.0 this single function approach that had both scopes worked well, but now with 2.0 we must use the same command_type
+> (UTP_CMD_TYPE_UFS_STORAGE) which causes incompatibility. This was why I put the same code from cmd_upiu in the outside.
+> 
+> Of course we can break ufshcd_compose_upiu() in 2: ufshcd_compose_cmd_upiu() and ufshcd_compose_query_upiu(). What do you think?
+> If you use ufs_version only in req_desc_hdr then you don't need this
+> 
+> If (ufs_version == 2.0)
+>    cmd_type = UFS_STORAGE 
+> else 
+>     cmd_type = lrb->command_type 
+> 
+> ... 
+> I think with this change 
+
+Ok, I will test that.
+
+> 
+>> +
+>>  	err = ufshcd_map_sg(lrbp);
+>>  	if (err) {
+>>  		lrbp->cmd = NULL;
+>> @@ -1371,7 +1386,12 @@ static int ufshcd_compose_dev_cmd(struct ufs_hba *hba,
+>>  	lrbp->sense_buffer = NULL;
+
+[snip]
+
+>>  				complete(hba->dev_cmd.complete);
+>>  		}
+>> diff --git a/drivers/scsi/ufs/ufshci.h b/drivers/scsi/ufs/ufshci.h 
+>> index 0ae0967..8dba0e7 100644
+>> --- a/drivers/scsi/ufs/ufshci.h
+>> +++ b/drivers/scsi/ufs/ufshci.h
+>> @@ -273,6 +273,7 @@ enum {
+>>  	UTP_CMD_TYPE_SCSI		= 0x0,
+>>  	UTP_CMD_TYPE_UFS		= 0x1,
+>>  	UTP_CMD_TYPE_DEV_MANAGE		= 0x2,
+>> +	UTP_CMD_TYPE_UFS_STORAGE	= 0x11,
+> Why 0x11? 
+
+I'll have to check with our R&D team.
+
+> 
+> Thanks
+> Tomas 
+> 
+
+Thanks
+Joao
+
