@@ -1,55 +1,62 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: [PATCH v4 2/2] doc: dt: mtd: add a DT property to enable the use of 4byte-address op codes
-Date: Tue, 29 Mar 2016 14:24:13 +0200
-Message-ID: <320899457d15b85eb0b71edd566cae035d7e1f55.1459251929.git.cyrille.pitchen@atmel.com>
-References: <cover.1459251929.git.cyrille.pitchen@atmel.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/3] vfio, platform: add support for ACPI while detecting the reset driver
+Date: Tue, 29 Mar 2016 14:44:20 +0200
+Message-ID: <4981390.J9tsJr16lM@wuerfel>
+References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org> <147496989.L43SVC7xRY@wuerfel> <8f766d081b33d91f196e7bd5e13b6f33@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1459251929.git.cyrille.pitchen@atmel.com>
+In-Reply-To: <8f766d081b33d91f196e7bd5e13b6f33@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: computersforpeace@gmail.com, linux-mtd@lists.infradead.org
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, marex@denx.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>
+To: okaya@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, vikrams@codeaurora.org, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, vinod.koul@intel.com, Alex Williamson <alex.williamson@redhat.com>, agross@codeaurora.org, Dan Carpenter <dan.carpenter@oracle.com>, shankerd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new optional DT property which enables an alternative
-way of supporting memory size above 16MiB (128Mib). This new mechanism
-translates the regular 3byte-address op codes into their 4byte-address
-version whereas the old/default mecanism makes the SPI memory enter its
-4byte-address mode, which has annoying side effects for early bootloaders.
+On Tuesday 29 March 2016 08:15:42 okaya@codeaurora.org wrote:
+> >> >
+> >> > * If there is indeed a requirement for ACPI to handle something =
+like
+> >> > this,
+> >> >   it should be part of the ACPI spec, with a well-defined method=
+ of
+> >> > handling
+> >> >   reset, rather than having to add a device specific hack for ea=
+ch
+> >> >   device separately.
+> >> >
+> >>=20
+> >> I see. Normally, this is done by calling _rst method. AFAIK, Linux
+> >> doesn=E2=80=99t support _rst. I can check its presence and call it=
+ if it is
+> >> there.
+> >=20
+> > Yes, that sounds reasonable: In patch 2 where you check for the
+> > presence of the reset method, just keep the existing logic for
+> > DT based systems, and use _rst on ACPI based systems instead,
+> > then you can drop both patches 1 and 3.
+> >=20
+>=20
+> I can certainly drop patch #3 and push the reset responsibility to ac=
+pi.
+>=20
+> I never liked having a fragmented sw design across multiple drivers.
+>=20
+> I need something for patch #1. Compatible is a DT property not ACPI.b=
+ut=20
+> then, I won't have a reset driver anymore.
+>=20
+> If we think about how vfio pci works, we pass the pci vendor and devi=
+ce=20
+> id to new_id file to find out which pci device needs to be pass thru.
+>=20
+> I can go to a similar route. This time we pass the object id through=20
+> new_id and I call reset method on this object.
+>=20
+> Let me know what you think?
 
-We cannot discover at run time whether the SPI NOR memory supports the
-4byte-address op codes. For instance both Macronix MX25L25635E and
-MX25L25673G share the same JEDEC ID (C22019 without any extension byte).
-However the first one doesn't support 4byte-address op codes whereas the
-second one does.
+It would certainly be nice to make it work more like PCI VFIO does
+here, where you can assign any device as long as it has an IOMMU
+(and a _rst method in this case).
 
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
----
- Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-index 2c91c03e7eb0..3cf1b3cdafe8 100644
---- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-+++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-@@ -66,6 +66,17 @@ Optional properties:
-                    Refer to your chips' datasheet to check if this is supported
-                    by your chip.
- 
-+- spi-nor-4byte-opcodes: For memory size above 16MiB (128Mib), use the dedicated
-+                         4byte-address opcodes instead of entering the 4byte
-+                         address mode. This mode changes the internal state of
-+                         the chip so may conflict with some early boot loaders,
-+                         which expect to use the regular (Fast) Read opcodes
-+                         with 3byte address.
-+                         However 4byte-address opcodes are not supported by all
-+                         chips and support for them cannot be detected at
-+                         runtime. Refer to you chip's datasheet to check if this
-+                         is supported by your chip.
-+
- Example:
- 
- 	flash: m25p80@0 {
--- 
-1.8.2.2
+	Arnd
