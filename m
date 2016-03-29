@@ -1,70 +1,93 @@
-From: Gregor Boirie <gregor.boirie-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] iio:magnetometer:ak8975: mounting matrix support
-Date: Tue, 29 Mar 2016 11:44:22 +0200
-Message-ID: <56FA4E76.1000406@parrot.com>
-References: <cover.1458231723.git.gregor.boirie@parrot.com> <a1efa2b83719dc3898c39a5886b7678892e7de3b.1458231723.git.gregor.boirie@parrot.com> <CAL_JsqJwE5fmHUzV-xi-hgMPSbzY_7QbXaHCSAMCpp9SggWtPw@mail.gmail.com> <20160321222150.GA1787@geburah.sephiroth> <CAL_Jsq+unk=UONZD-0e_VrpkC3R3hXHNoRN-gdj6TCSSHXWZXQ@mail.gmail.com> <56F947B4.3090503@kernel.org>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH resend v2 4/9] regulator: axp20x: support
+ AXP809 variant
+Date: Tue, 29 Mar 2016 12:51:30 +0300
+Message-ID: <1459245090.14208.1.camel@plaes.org>
+References: <1459243352-23344-1-git-send-email-wens@csie.org>
+	 <1459243352-23344-5-git-send-email-wens@csie.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F947B4.3090503-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Irina Tirdea <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Cristina Moraru <cristina.moraru09-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Baluta <daniel.baluta-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBJFA5G3QKGQESWWVHHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1459243352-23344-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: wens-jdAy2FN1RRM@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2016-03-29 at 17:22 +0800, Chen-Yu Tsai wrote:
+> The X-Powers AXP809 PMIC has a similar set of regulators as the
+> AXP221,
+> though a few LDOs were removed, and a new switch output added. Like
+> the
+> AXP221, AXP809 also has DC1SW and DC5LDO, which are internally
+> chained
+> to DCDC1 and DCDC5, respectively.
+> 
+> Add support for this new variant. Also remove the "axp22x_" prefix
+> from
+> DC1SW/DC5LDO supply handling code, as the AXP809 uses it as well.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  drivers/regulator/axp20x-regulator.c | 119
+> ++++++++++++++++++++++++++---------
+>  1 file changed, 90 insertions(+), 29 deletions(-)
+> 
 
+[...]
 
-On 03/28/2016 05:03 PM, Jonathan Cameron wrote:
+> @@ -420,17 +481,17 @@ static int axp20x_regulator_probe(struct
+> platform_device *pdev)
+>  		/*
+>  		 * Save AXP22X DCDC1 / DCDC5 regulator names for
+> later.
+>  		 */
 
-[snip...]
+You should probably update this comment too, due to changes below.
 
->
-> Why is the sysfs interface specific to ak8975?
->>> AFAIK, this is just the first IIO driver implementation relying on floating
->>> point numbers. Should a single driver be enough to justify a "generic" API,
->>> I suppose code could be factored out in a similar way to over sampling rate
->>> support. People could call this on a per-driver basis.
->> Given it is an ABI, yes I think so. We don't want to end up with a
->> bunch of similar yet different interfaces.
->>
-> Absolutely.  Most interfaces get made up based on one implementation ;)
-> A second is always nice, but here the interface is obvious enough we don't
-> need to wait.
-Right. I'll post a separate patch then.
->>>> Furthermore, why is it specific to magnetometer? Couldn't
->>>> accelerometers need the same thing? There's a thread discussing a
->>>> similar matrix on android-x86[1].
->>> Same may apply to gyro / accelero / imu and magnetometers at least.
->>> inv_mpu_core.c already implements such a rotation matrix exposed as 3x3 integers
->>> array. Should we be smart enough to keep this compatible with existing userspace
->>> apps ?
->> You have to maintain the ABI. If both interfaces can co-exist, then
->> you can have both and mark the old one as deprecated. In time we can
->> remove the old one.
-> If you want to (or someone else does) it would be good to add the new abi to
-> inv_mpu_core as well and indeed mark the old one as deprecated.
-> The cost of keeping it is negligible, so we may never actually bother to
-> remove it.
-What's the better way to mark this as deprecated ? dev_warn() ? 
-__deprecated ?
-Anything else ?
->>>>> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->>>>> index 34a3206..f936f86 100644
->>>>> --- a/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->>>>> +++ b/Documentation/devicetree/bindings/iio/magnetometer/ak8975.txt
->>>>> @@ -9,6 +9,7 @@ Optional properties:
->>>>>
->>>>>     - gpios : should be device tree identifier of the magnetometer DRDY pin
->>>>>     - vdd-supply: an optional regulator that needs to be on to provide VDD
->>>>> +  - matrix: an optional 3x3 mounting rotation matrix
->>>> Perhaps "rotation-matrx" would be a better name in case there's ever
->>>> any other matrix needed.
->>> What about "mounting-matrix" ?
->> Sure.
-> Works for me as well.
->> Rob
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
+> -		if (regulators == axp22x_regulators) {
+> -			/* Can we use rdev->constraints->name
+> instead? */
+> -			if (i == AXP22X_DCDC1)
+> -				of_property_read_string(rdev
+> ->dev.of_node,
+> -							"regulator
+> -name",
+> -							&axp22x_dc1_
+> name);
+> -			else if (i == AXP22X_DCDC5)
+> -				of_property_read_string(rdev
+> ->dev.of_node,
+> -							"regulator
+> -name",
+> -							&axp22x_dc5_
+> name);
+> -		}
+> +		if ((regulators == axp22x_regulators && i ==
+> AXP22X_DCDC1) ||
+> +		    (regulators == axp809_regulators && i ==
+> AXP809_DCDC1))
+> +			of_property_read_string(rdev->dev.of_node,
+> +						"regulator-name",
+> +						&dcdc1_name);
+> +
+> +		if ((regulators == axp22x_regulators && i ==
+> AXP22X_DCDC5) ||
+> +		    (regulators == axp809_regulators && i ==
+> AXP809_DCDC5))
+> +			of_property_read_string(rdev->dev.of_node,
+> +						"regulator-name",
+> +						&dcdc5_name);
+>  	}
+>  
+>  	return 0;
+> -- 
+> 2.7.0
+> 
