@@ -1,52 +1,88 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 2/8] ARM: imx: clk-vf610: add TCON ipg clock
-Date: Mon, 28 Mar 2016 18:59:56 -0700
-Message-ID: <1459216802-32094-3-git-send-email-stefan@agner.ch>
+Subject: [PATCH v2 4/8] drm/fsl-dcu: add extra clock for pixel clock
+Date: Mon, 28 Mar 2016 18:59:58 -0700
+Message-ID: <1459216802-32094-5-git-send-email-stefan@agner.ch>
 References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
-Cc: kernel@pengutronix.de, airlied@linux.ie, daniel.vetter@ffwll.ch, jianwei.wang.chn@gmail.com, alison.wang@freescale.com, meng.yi@nxp.com, alexander.stein@systec-electronic.com, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-Add the ipg (bus) clock for the TCON modules (Timing Controller). This
-module is required by the new DCU DRM driver, since the display signals
-pass through TCON.
-
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- drivers/clk/imx/clk-vf610.c             | 3 +++
- include/dt-bindings/clock/vf610-clock.h | 4 +++-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-vf610.c b/drivers/clk/imx/clk-vf610.c
-index 426fde2..43be1cf 100644
---- a/drivers/clk/imx/clk-vf610.c
-+++ b/drivers/clk/imx/clk-vf610.c
-@@ -327,6 +327,9 @@ static void __init vf610_clocks_init(struct device_node *ccm_node)
- 	clk[VF610_CLK_DCU1_DIV] = imx_clk_divider("dcu1_div", "dcu1_en", CCM_CSCDR3, 20, 3);
- 	clk[VF610_CLK_DCU1] = imx_clk_gate2("dcu1", "ipg_bus", CCM_CCGR9, CCM_CCGRx_CGn(8));
- 
-+	clk[VF610_CLK_TCON0] = imx_clk_gate2("tcon0", "platform_bus", CCM_CCGR1, CCM_CCGRx_CGn(13));
-+	clk[VF610_CLK_TCON1] = imx_clk_gate2("tcon1", "platform_bus", CCM_CCGR7, CCM_CCGRx_CGn(13));
-+
- 	clk[VF610_CLK_ESAI_SEL] = imx_clk_mux("esai_sel", CCM_CSCMR1, 20, 2, esai_sels, 4);
- 	clk[VF610_CLK_ESAI_EN] = imx_clk_gate("esai_en", "esai_sel", CCM_CSCDR2, 30);
- 	clk[VF610_CLK_ESAI_DIV] = imx_clk_divider("esai_div", "esai_en", CCM_CSCDR2, 24, 4);
-diff --git a/include/dt-bindings/clock/vf610-clock.h b/include/dt-bindings/clock/vf610-clock.h
-index 56c16aa..fbe17cc 100644
---- a/include/dt-bindings/clock/vf610-clock.h
-+++ b/include/dt-bindings/clock/vf610-clock.h
-@@ -195,6 +195,8 @@
- #define VF610_CLK_SNVS			182
- #define VF610_CLK_DAP			183
- #define VF610_CLK_OCOTP         184
--#define VF610_CLK_END			185
-+#define VF610_CLK_TCON0			185
-+#define VF610_CLK_TCON1			186
-+#define VF610_CLK_END			187
- 
- #endif /* __DT_BINDINGS_CLOCK_VF610_H */
--- 
-2.7.4
+VGhlIFZ5YnJpZCBEQ1UgdmFyaWFudCBoYXMgdHdvIGluZGVwZW5kZW50IGNsb2NrIGlucHV0cywg
+b25lCmZvciB0aGUgcmVnaXN0ZXJzIChJUEcgYnVzIGNsb2NrKSBhbmQgb25lIGZvciB0aGUgcGl4
+ZWwgY2xvY2suClN1cHBvcnQgdGhpcyBkaXN0aW5jdGlvbiBpbiB0aGUgRENVIERSTSBkcml2ZXIg
+d2hpbGUgc3RheWluZwpiYWNrd2FyZCBjb21wYXRpYmxlIHdpdGggZGV2aWNlcyBwcm92aWRpbmcg
+b25seSBhIHNpbmdsZSBjbG9jawooZS5nLiBMUzEwMjFhIFNvQydzKS4KClNpZ25lZC1vZmYtYnk6
+IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0IHwgIDQgKysrKwogZHJpdmVycy9ncHUv
+ZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fY3J0Yy5jICAgICAgICAgICAgfCAgMiArLQogZHJpdmVy
+cy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmMgICAgICAgICAgICAgfCAxNiArKysr
+KysrKysrKysrKystCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYuaCAg
+ICAgICAgICAgICB8ICAxICsKIDQgZmlsZXMgY2hhbmdlZCwgMjEgaW5zZXJ0aW9ucygrKSwgMiBk
+ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9mc2wsZGN1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2ZzbCxkY3UudHh0CmluZGV4IGViZjFiZTkuLmYyOTllMWUgMTAwNjQ0Ci0tLSBh
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cisr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0
+CkBAIC0xMSw2ICsxMSwxMCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSBiaWctZW5kaWFuCQlC
+b29sZWFuIHByb3BlcnR5LCBMUzEwMjFBIERDVSByZWdpc3RlcnMgYXJlIGJpZy1lbmRpYW4uCiAt
+IGZzbCxwYW5lbDoJCVRoZSBwaGFuZGxlIHRvIHBhbmVsIG5vZGUuCiAKK09wdGlvbmFsIHByb3Bl
+cnRpZXM6CistIGNsb2NrczoJCVNlY29uZCBoYW5kbGUgZm9yIHBpeGVsIGNsb2NrLgorLSBjbG9j
+ay1uYW1lczoJCVNlY29uZCBuYW1lICJwaXgiIGZvciBwaXhlbCBjbG9jay4KKwogRXhhbXBsZXM6
+CiBkY3U6IGRjdUAyY2UwMDAwIHsKIAljb21wYXRpYmxlID0gImZzbCxsczEwMjFhLWRjdSI7CmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9jcnRjLmMKaW5kZXggMzU4NzZlMy4u
+NjhmNzJmYiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1f
+Y3J0Yy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuYwpA
+QCAtNzksNyArNzksNyBAQCBzdGF0aWMgdm9pZCBmc2xfZGN1X2RybV9jcnRjX21vZGVfc2V0X25v
+ZmIoc3RydWN0IGRybV9jcnRjICpjcnRjKQogCXVuc2lnbmVkIGxvbmcgZGN1Y2xrOwogCiAJaW5k
+ZXggPSBkcm1fY3J0Y19pbmRleChjcnRjKTsKLQlkY3VjbGsgPSBjbGtfZ2V0X3JhdGUoZnNsX2Rl
+di0+Y2xrKTsKKwlkY3VjbGsgPSBjbGtfZ2V0X3JhdGUoZnNsX2Rldi0+cGl4X2Nsayk7CiAJZGl2
+ID0gZGN1Y2xrIC8gbW9kZS0+Y2xvY2sgLyAxMDAwOwogCiAJLyogQ29uZmlndXJlIHRpbWluZ3M6
+ICovCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9kcnYu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5jCmluZGV4IGYyYTlj
+MWIuLmY4MGMxMTYgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3Vf
+ZHJtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5j
+CkBAIC0zMzEsMTAgKzMzMSwyMSBAQCBzdGF0aWMgaW50IGZzbF9kY3VfZHJtX3Byb2JlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJCXJldHVybiByZXQ7CiAJfQogCisJZnNsX2Rldi0+
+cGl4X2NsayA9IGRldm1fY2xrX2dldChkZXYsICJwaXgiKTsKKwlpZiAoSVNfRVJSKGZzbF9kZXYt
+PnBpeF9jbGspKSB7CisJCS8qIGxlZ2FuY3kgYmluZGluZywgdXNlIGRjdSBjbG9jayBhcyBwaXhl
+bCBjbG9jayAqLworCQlmc2xfZGV2LT5waXhfY2xrID0gZnNsX2Rldi0+Y2xrOworCX0KKwlyZXQg
+PSBjbGtfcHJlcGFyZV9lbmFibGUoZnNsX2Rldi0+cGl4X2Nsayk7CisJaWYgKHJldCA8IDApIHsK
+KwkJZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZW5hYmxlIHBpeCBjbGtcbiIpOworCQlnb3RvIGRp
+c2FibGVfY2xrOworCX0KKwogCWRybSA9IGRybV9kZXZfYWxsb2MoZHJpdmVyLCBkZXYpOwogCWlm
+ICghZHJtKSB7CiAJCXJldCA9IC1FTk9NRU07Ci0JCWdvdG8gZGlzYWJsZV9jbGs7CisJCWdvdG8g
+ZGlzYWJsZV9waXhfY2xrOwogCX0KIAogCWZzbF9kZXYtPmRldiA9IGRldjsKQEAgLTM1NSw2ICsz
+NjYsOCBAQCBzdGF0aWMgaW50IGZzbF9kY3VfZHJtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UgKnBkZXYpCiAKIHVucmVmOgogCWRybV9kZXZfdW5yZWYoZHJtKTsKK2Rpc2FibGVfcGl4X2Ns
+azoKKwljbGtfZGlzYWJsZV91bnByZXBhcmUoZnNsX2Rldi0+cGl4X2Nsayk7CiBkaXNhYmxlX2Ns
+azoKIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZnNsX2Rldi0+Y2xrKTsKIAlyZXR1cm4gcmV0OwpA
+QCAtMzY1LDYgKzM3OCw3IEBAIHN0YXRpYyBpbnQgZnNsX2RjdV9kcm1fcmVtb3ZlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAJc3RydWN0IGZzbF9kY3VfZHJtX2RldmljZSAqZnNsX2Rl
+diA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOwogCiAJY2xrX2Rpc2FibGVfdW5wcmVwYXJl
+KGZzbF9kZXYtPmNsayk7CisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGZzbF9kZXYtPnBpeF9jbGsp
+OwogCWRybV9wdXRfZGV2KGZzbF9kZXYtPmRybSk7CiAKIAlyZXR1cm4gMDsKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2Rydi5oIGIvZHJpdmVycy9ncHUv
+ZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKaW5kZXggYWYzYTcwNy4uZjYwZWMwYSAxMDA2
+NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmgKQEAgLTE4Myw2ICsxODMs
+NyBAQCBzdHJ1Y3QgZnNsX2RjdV9kcm1fZGV2aWNlIHsKIAlzdHJ1Y3QgcmVnbWFwICpyZWdtYXA7
+CiAJaW50IGlycTsKIAlzdHJ1Y3QgY2xrICpjbGs7CisJc3RydWN0IGNsayAqcGl4X2NsazsKIAkv
+KnByb3RlY3RzIGhhcmR3YXJlIHJlZ2lzdGVyKi8KIAlzcGlubG9ja190IGlycV9sb2NrOwogCXN0
+cnVjdCBkcm1fZGV2aWNlICpkcm07Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
