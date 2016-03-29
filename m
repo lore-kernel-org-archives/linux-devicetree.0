@@ -1,48 +1,37 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] Sound: SOC: TAS571x: added missing register
- literals
-Date: Tue, 29 Mar 2016 09:52:23 -0700
-Message-ID: <20160329165223.GS2350@sirena.org.uk>
-References: <1459237178-12920-1-git-send-email-petr@barix.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3ig5MTpp3LwprTX9"
+From: Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
+Subject: [PATCH v2] ARM: mvebu: Correct unit address for linksys
+Date: Tue, 29 Mar 2016 16:57:40 +0000
+Message-ID: <1459270660-30411-1-git-send-email-patrick@puiterwijk.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459237178-12920-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The USB2 port for Armada 38x is defined to be at 58000, not at
+50000.
 
---3ig5MTpp3LwprTX9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-385-linksys.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Tue, Mar 29, 2016 at 09:39:34AM +0200, Petr Kulhavy wrote:
-> The list of TAS571x registers was incomplete.
-> Added the missing register definitions up to register 0x25
+diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+index 3710755..85d2c37 100644
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -117,7 +117,7 @@
+ 			};
+ 
+ 			/* USB part of the eSATA/USB 2.0 port */
+-			usb@50000 {
++			usb@58000 {
+ 				status = "okay";
+ 			};
+ 
+-- 
+2.7.4
 
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---3ig5MTpp3LwprTX9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW+rLGAAoJECTWi3JdVIfQIs4H/1cfzmiaQ5ddQ92td2WBFvU+
-kdsGlbGh+v+8CyKwotM9ceeOMSwO2X9aQutDqp2Yppm8D5fxuz7irUx7d4/BLmWB
-yGyADYgKTwLv0SgD1KYImUHGGCyQtW7YzphHBaCtiy7oCb6wlqbs24Ct5ltw9Vx0
-lvPBslLW9FVhQHlO5Ew842jM/ykx+mhKhClilyGZDuW4erqcs/UrXCkZ19DwtZK0
-zPj2rKrglyurXYIGVtmGkY+GPB4kZkTQxYPykk/BMJ5ZpBR8Oc0oMHLcxssQG9Ya
-vlKmP8A3O20UKlZqxqGGI4b5VjZXdvrJI0XaAUmrl8/yrMuifDVMu+F4TXiPa0s=
-=Ae7P
------END PGP SIGNATURE-----
-
---3ig5MTpp3LwprTX9--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
