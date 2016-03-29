@@ -1,56 +1,34 @@
-From: Alexander Stein <alexander.stein@systec-electronic.com>
-Subject: Re: [PATCH v2 6/8] drm/fsl-dcu: add TCON driver
-Date: Tue, 29 Mar 2016 08:45:33 +0200
-Message-ID: <2234894.ri36D5MRrN@ws-stein>
-References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
- <1459216802-32094-7-git-send-email-stefan@agner.ch>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] thermal: rcar: Remove binding docs for r8a7794
+Date: Tue, 29 Mar 2016 08:48:34 +0200
+Message-ID: <CAMuHMdVF5Ui4sJn=nxvCYGAzPha=wb6RFxwbEYz_b1QdvqTW4A@mail.gmail.com>
+References: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1459216802-32094-7-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpzb21lIGNvbW1lbnRzIGJlbG93LgoKT24gTW9uZGF5IDI4IE1hcmNoIDIwMTYgMTk6MDA6
-MDAsIFN0ZWZhbiBBZ25lciB3cm90ZToKPiBBZGQgZHJpdmVyIGZvciB0aGUgVENPTiAodGltaW5n
-IGNvbnRyb2xsZXIpIG1vZHVsZS4gVGhlIFRDT04gbW9kdWxlCj4gaXMgYSBzZXBhcmF0ZSBtb2R1
-bGUgYXR0YWNoZWQgYWZ0ZXIgdGhlIERDVSAoZGlzcGxheSBjb250cm9sbGVyCj4gdW5pdCkuIEVh
-Y2ggRENVIGluc3RhbmNlIGhhcyBpdHMgb3duLCBkaXJlY3RseSBjb25uZWN0ZWQgVENPTgo+IGlu
-c3RhbmNlLiBUaGUgRENVJ3MgUkdCIGFuZCB0aW1pbmcgc2lnbmFscyBhcmUgcGFzc2luZyB0aHJv
-dWdoCj4gdGhlIFRDT04gbW9kdWxlLiBUQ09OIGNhbiBwcm92aWRlIHRpbWluZyBzaWduYWxzIGZv
-ciByYXcgVEZUIHBhbmVscwo+IG9yIG9wZXJhdGUgaW4gYSBieXBhc3MgbW9kZSB3aGljaCBsZWF2
-ZXMgYWxsIHNpZ25hbHMgdW5hbHRlcmVkLgo+IAo+IFRoZSBkcml2ZXIgY3VycmVudGx5IG9ubHkg
-c3VwcG9ydHMgdGhlIGJ5cGFzcyBtb2RlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25l
-ciA8c3RlZmFuQGFnbmVyLmNoPgoKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9mc2wsZGN1LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4gQEAgLTE0LDYgKzE0LDcgQEAgUmVxdWly
-ZWQgcHJvcGVydGllczoKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgLSBjbG9ja3M6CQlTZWNv
-bmQgaGFuZGxlIGZvciBwaXhlbCBjbG9jay4KPiAgLSBjbG9jay1uYW1lczoJCVNlY29uZCBuYW1l
-ICJwaXgiIGZvciBwaXhlbCBjbG9jay4KPiArLSBmc2wsdGNvbjoJCVRoZSBwaGFuZGxlIHRvIHRo
-ZSB0aW1pbmcgY29udHJvbGxlciBub2RlLgoKTWF5YmUgYSBjb21tZW50IHRoaXMgaXMgKGN1cnJl
-bnRseSkgb25seSBmb3IgVnlicmlkLCBidXQgbm90IExTMTAyMUEuCgo+IC0tLSAvZGV2L251bGwK
-PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfdGNvbi5jCj4gWy4uLl0KPiArc3Ry
-dWN0IGZzbF90Y29uICpmc2xfdGNvbl9pbml0KHN0cnVjdCBkZXZpY2UgKmRldikKPiArewo+ICsJ
-c3RydWN0IGZzbF90Y29uICp0Y29uOwo+ICsJc3RydWN0IGRldmljZV9ub2RlICpucDsKPiArCWlu
-dCByZXQ7Cj4gKwo+ICsJdGNvbiA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqdGNvbiksIEdG
-UF9LRVJORUwpOwo+ICsJaWYgKCF0Y29uKQo+ICsJCXJldHVybiBOVUxMOwo+ICsKPiArCW5wID0g
-b2ZfcGFyc2VfcGhhbmRsZShkZXYtPm9mX25vZGUsICJmc2wsdGNvbiIsIDApOwo+ICsJaWYgKCFu
-cCkgewo+ICsJCWRldl93YXJuKGRldiwgIkNvdWxkbid0IGZpbmQgdGhlIHRjb24gbm9kZVxuIik7
-Cj4gKwkJcmV0dXJuIE5VTEw7Cj4gKwl9CgpNYXliZSBjaGVjayBmb3IgZGV2aWNlIHRyZWUgbm9k
-ZSBiZWZvcmUgYWxsb2NhdGluZyBzdHJ1Y3QgZnNsX3Rjb24/IEFsc28gdGhpcyAKc2hvdWxkIG5v
-dCBiZSBhIHdhcm5pbmcsIGFzIG9uIExTMTAyMUEgdGhpcyBpcyB0byBiZSBleHBlY3RlZC4KCkJl
-c3QgcmVnYXJkcywKQWxleGFuZGVyCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+On Tue, Mar 29, 2016 at 7:07 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> The latest information that I have is that there is no thermal IP
+> block present on the r8a7794 SoC so remove the corresponding binding.
+>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
