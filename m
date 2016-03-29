@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/4] ARM: dts: msm8974: Split efs in rfsa and rmtfs
-Date: Mon, 28 Mar 2016 18:32:37 -0700
-Message-ID: <1459215159-2576-2-git-send-email-bjorn.andersson@linaro.org>
+Subject: [PATCH 4/4] ARM: dts: msm8974: Add modem smp2p and smd nodes
+Date: Mon, 28 Mar 2016 18:32:39 -0700
+Message-ID: <1459215159-2576-4-git-send-email-bjorn.andersson@linaro.org>
 References: <1459215159-2576-1-git-send-email-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1459215159-2576-1-git-send-email-bjorn.andersson@linaro.org>
@@ -10,34 +10,60 @@ To: Andy Gross <andy.gross@linaro.org>
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-One part of the efs memory region is used specifically for sharing file system
-buffers between the apps and modem cpus (aka rmtfs), so better reflect this
-split.
-
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 927075137b76..1afee408a923 100644
+index d872ddc2d190..79c9cfcabf77 100644
 --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
 +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -49,8 +49,13 @@
- 			no-map;
- 		};
+@@ -168,6 +168,31 @@
+ 		hwlocks = <&tcsr_mutex 3>;
+ 	};
  
--		efs@0fd600000 {
--			reg = <0x0fd60000 0x1a0000>;
-+		rfsa@0fd60000 {
-+			reg = <0x0fd60000 0x20000>;
-+			no-map;
++	smp2p-modem {
++		compatible = "qcom,smp2p";
++		qcom,smem = <435>, <428>;
++
++		interrupt-parent = <&intc>;
++		interrupts = <0 27 IRQ_TYPE_EDGE_RISING>;
++
++		qcom,ipc = <&apcs 8 14>;
++
++		qcom,local-pid = <0>;
++		qcom,remote-pid = <1>;
++
++		modem_smp2p_out: master-kernel {
++			qcom,entry-name = "master-kernel";
++			#qcom,state-cells = <1>;
 +		};
 +
-+		rmtfs@0fd80000 {
-+			reg = <0x0fd80000 0x180000>;
- 			no-map;
- 		};
++		modem_smp2p_in: slave-kernel {
++			qcom,entry-name = "slave-kernel";
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++
+ 	smp2p-wcnss {
+ 		compatible = "qcom,smp2p";
+ 		qcom,smem = <451>, <431>;
+@@ -548,6 +573,13 @@
+ 	smd {
+ 		compatible = "qcom,smd";
  
++		modem {
++			interrupts = <0 25 IRQ_TYPE_EDGE_RISING>;
++
++			qcom,ipc = <&apcs 8 12>;
++			qcom,smd-edge = <0>;
++		};
++
+ 		rpm {
+ 			interrupts = <0 168 1>;
+ 			qcom,ipc = <&apcs 8 0>;
 -- 
 2.5.0
