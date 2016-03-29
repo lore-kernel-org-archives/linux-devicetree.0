@@ -1,47 +1,57 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH resend v5 3/3] ASoC: cygnus: Add Cygnus audio DMA driver
-Date: Tue, 29 Mar 2016 15:23:30 -0700
-Message-ID: <20160329222330.GR2350@sirena.org.uk>
-References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
- <1459277192-10942-4-git-send-email-simran.rai@broadcom.com>
+Subject: Re: [RFC 7/8] hwmon: Altera Arria10 System Resource Chip - HW Monitor
+Date: Tue, 29 Mar 2016 15:29:27 -0700
+Message-ID: <20160329222927.GS2350@sirena.org.uk>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-8-git-send-email-tthayer@opensource.altera.com>
+ <20160329201648.GA30248@roeck-us.net>
+ <56FAF70D.4010109@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="GUWDakHTpZ9AxSMt"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="wKbYzd8t8rt1PVqr"
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459277192-10942-4-git-send-email-simran.rai@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simran Rai <simran.rai@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Simran Rai <ssimran@broadcom.com>, Lori Hikichi <lhikichi@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, Arun Parameswaran <arunp@broadcom.com>, alsa-devel@alsa-project.org
+In-Reply-To: <56FAF70D.4010109@opensource.altera.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, lee.jones@linaro.org, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
---GUWDakHTpZ9AxSMt
+--wKbYzd8t8rt1PVqr
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 29, 2016 at 11:46:32AM -0700, Simran Rai wrote:
-> From: Simran Rai <ssimran@broadcom.com>
->=20
-> This patch adds Cygnus audio DMA driver. It supports playback
-> and capture modes and uses ringbuffers for data transfer.
+On Tue, Mar 29, 2016 at 04:43:41PM -0500, Thor Thayer wrote:
 
-This looks good.
+> Yes, I see your point. In looking at the regulator drivers, I interpret
+> those as being controlled by the driver whereas this chip is passively
+> reporting status.
 
---GUWDakHTpZ9AxSMt
+If the device isn't doing regulation it's not a regulator.
+
+> After reading the referenced document, I agree that hwmon probably isn't
+> appropriate. However, the regulator doesn't seem appropriate either (the
+> only status appears to be tied to battery properties).
+
+We report status for regulators but that's tied to monitoring that's
+built into a device that does regulation.
+
+How about IIO or power supply?
+
+--wKbYzd8t8rt1PVqr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJW+wBhAAoJECTWi3JdVIfQg0QH/2YjNzNuZMdO9jlG2AFZIFDC
-WRd9espJamxis1WJw7FYreQpKYYW1Gw111WJB7n11tNRBCr10pr2U1evmE8AAy6V
-OT0SJL3eEgPOnTCoDmqJwfD1UjDTBLIcO2trIrj5Y3Kzr33Vxkb/cLNYxdh89hMY
-qoyDTpCXcHzZBpUM+0La02wW200zNS8oCklO9SekbhPH2eg11UZXGVkZGQAPHRzI
-G5Pya7gY37F9e5pcG8w4nDuo7i4VameB1JWXzpWig3eiKz3d52kjeTnM7QSgDJe1
-Gp7qk+BupDNbmL5tUSn+ZX64MQWOjTE8If449ltae+bU+J/cXgaP5aWqquwPCHk=
-=NAnV
+iQEcBAEBCAAGBQJW+wHGAAoJECTWi3JdVIfQU6EH/0lenHgC0Sa1yadZvkoLzETz
+n7bhGzHq9X9kXQ+s0F9GnKbzGJuK2bolxVm6+QaO37J6wzNAMtX9PDKpWHOZpzxn
+GEAPys0I++0cPCTsP08Rf6F+LGv3j7bjX+/GRGktjjf+aN7b8UKCD0OiiI8rpPFN
+90OfC2PQjQ86o9Mh2WcXfIkecqCF5qBLree3wrmAVJOjL+mFjyO5CER57SunYSuJ
+gtdguP6jwddoizhiOq0XhM6eKIhNqOgTwOWCnzAU65B1cSgbGE+jDecWHNAa2NaI
+shzw9eMgmahJ/LyV0wleV/i5d51LFMMFpJsQNGWLJqhSCG7iqKrNnaMf3WxJH+E=
+=4hgU
 -----END PGP SIGNATURE-----
 
---GUWDakHTpZ9AxSMt--
+--wKbYzd8t8rt1PVqr--
