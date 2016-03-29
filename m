@@ -1,52 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend v5 0/3] ASoC: cygnus: Add audio support for
- Broadcom Cygnus SoC
-Date: Tue, 29 Mar 2016 12:09:10 -0700
-Message-ID: <20160329190910.GF2350@sirena.org.uk>
-References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
+From: Duc Dang <dhdang@apm.com>
+Subject: Re: [PATCH] arm64: dts: apm: Fix compatible string for X-Gene 2 SATA
+ controller DTS node
+Date: Tue, 29 Mar 2016 12:11:21 -0700
+Message-ID: <CADaLNDnU7UJOOFs9euPP035iJX5b1-p7jLoKB5f0Sn==Ec3sYA@mail.gmail.com>
+References: <1459245294-22678-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="K/+MhuhYzqQJJ3Xj"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459277192-10942-1-git-send-email-simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1459245294-22678-1-git-send-email-rsahu@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Rameshwar Prasad Sahu <rsahu@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, tj@kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, ddutile@redhat.com, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Mar 29, 2016 at 2:54 AM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
+> Fix X-Gene SATA controller compatible string for Merlin board.
+>
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> Acked-by: Suman Tripathi <stripathi@apm.com>
 
---K/+MhuhYzqQJJ3Xj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I will queue this patch into xgene-next tree.
 
-On Tue, Mar 29, 2016 at 11:46:29AM -0700, Simran Rai wrote:
+> ---
+>  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi |    6 +++---
+>  1 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> index 5d87a3d..74d971e 100644
+> --- a/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> +++ b/arch/arm64/boot/dts/apm/apm-shadowcat.dtsi
+> @@ -524,7 +524,7 @@
+>                 };
+>
+>                 sata1: sata@1a000000 {
+> -                       compatible = "apm,xgene-ahci";
+> +                       compatible = "apm,xgene-ahci-v2";
+>                         reg = <0x0 0x1a000000 0x0 0x1000>,
+>                               <0x0 0x1f200000 0x0 0x1000>,
+>                               <0x0 0x1f20d000 0x0 0x1000>,
+> @@ -534,7 +534,7 @@
+>                 };
+>
+>                 sata2: sata@1a200000 {
+> -                       compatible = "apm,xgene-ahci";
+> +                       compatible = "apm,xgene-ahci-v2";
+>                         reg = <0x0 0x1a200000 0x0 0x1000>,
+>                               <0x0 0x1f210000 0x0 0x1000>,
+>                               <0x0 0x1f21d000 0x0 0x1000>,
+> @@ -544,7 +544,7 @@
+>                 };
+>
+>                 sata3: sata@1a400000 {
+> -                       compatible = "apm,xgene-ahci";
+> +                       compatible = "apm,xgene-ahci-v2";
+>                         reg = <0x0 0x1a400000 0x0 0x1000>,
+>                               <0x0 0x1f220000 0x0 0x1000>,
+>                               <0x0 0x1f22d000 0x0 0x1000>,
+> --
+> 1.7.1
+>
 
-> Changes from v4:
-> - Fix power suspend function and add power resume function
-> - Remove clock initialization code from audio driver to clock framework
-
-I can't find any sign of anything since your v4 having been submitted
-previously so this isn't a resend (and including noise like that in the
-subject line just means less space for content anyway).
-
---K/+MhuhYzqQJJ3Xj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW+tLVAAoJECTWi3JdVIfQu0gH/i+saHSctt0cVBqo4SSyqhUg
-YDiMuHABevhParpAY46jTEB/RaLdcIa8rB1RwFlcI8u5+q8UiYIcfkxd5L+U5U3A
-yZReJjNPh/lYJuvsmrM6tmTuZrBDUz9esjzYp1xjeqvzogAOwQpH8BSWNqNaKxrh
-8PVXqPbOaDa2FHKdTioDDgXthXF8GvHHiBimCE74R7lkcJUHfLX/0br1PAY8iiS2
-hj/lmXHPptyqbcJaUy5bnwJSlgfxAZI8Y1A8oGYZ9sQq21iqyPlln2VAwcFJB/r6
-V/rInSPUlQu4egKHehalz+e8o5J376DlqPFo1aVmI3H3vWvCK9f7zb4m0xqEdTM=
-=g+GR
------END PGP SIGNATURE-----
-
---K/+MhuhYzqQJJ3Xj--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Duc Dang.
