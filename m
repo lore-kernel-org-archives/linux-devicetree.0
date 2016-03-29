@@ -1,49 +1,37 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: mvebu: correct the usb node name from usb@ to
- ehci@
-Date: Tue, 29 Mar 2016 19:11:34 +0200
-Message-ID: <20160329191134.0aeee57b@free-electrons.com>
-References: <1459259813-5278-1-git-send-email-patrick@puiterwijk.org>
-	<1459259813-5278-2-git-send-email-patrick@puiterwijk.org>
-	<4079235.sABSXKnJCE@wuerfel>
-	<87zithutnn.fsf@free-electrons.com>
-	<CAJweMdbywGZF1qJF2Nv3RTJb_dULOS_JAQpsPJjYgG+5Y7HU3w@mail.gmail.com>
-	<20160329190648.1f37cbc3@free-electrons.com>
-	<CAJweMdZXSjichcbMkg9o8=+Ecjmqg1pNU8UTOL1uY6TJXzZvxw@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 6/6] iommu/arm-smmu: Make use of phandle iterators in
+ device-tree parsing
+Date: Tue, 29 Mar 2016 18:20:17 +0100
+Message-ID: <20160329172017.GL6745@arm.com>
+References: <1458669509-7178-1-git-send-email-joro@8bytes.org>
+ <1458669509-7178-7-git-send-email-joro@8bytes.org>
+ <56F194BC.3020709@arm.com>
+ <20160323115128.GB17838@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJweMdZXSjichcbMkg9o8=+Ecjmqg1pNU8UTOL1uY6TJXzZvxw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160323115128.GB17838-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Patrick Uiterwijk <patrick-TjDN7UKZo3m+BTG0ijDn3Q@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jroedel-l3A5Bk7waGM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Tue, 29 Mar 2016 17:09:11 +0000, Patrick Uiterwijk wrote:
-
-> > On Tue, 29 Mar 2016 16:49:43 +0000, Patrick Uiterwijk wrote:
-> >
-> >> Thank you for this pointer, setting fdt_skip_update no did fix this
-> >> issue indeed.
-> >
-> > Hum, what should fix the problem is to set fdt_skip_update to "yes". If
-> > you set it to "no", then the Marvell U-Boot will do its funky DTB
-> > tweaks which are not necessarily compatible with the mainline kernel
-> > DT bindings.
+On Wed, Mar 23, 2016 at 12:51:28PM +0100, Joerg Roedel wrote:
+> On Tue, Mar 22, 2016 at 06:53:48PM +0000, Robin Murphy wrote:
+> > In a stream-matching implementation, a device may quite legitimately
+> > own anything up to _all_ of the stream IDs (32768, or 65536 if we
+> > ever implement support for the SMMUv2 EXID extension), so this is
+> > only a genuine limit for stream indexing (and if anyone ever
+> > actually made one of those, I don't think they're running mainline
+> > on it).
 > 
-> Correct, I meant setting it to "yes" fixed the problem, sorry for the confusion.
+> Do you mean we might see a lot more than the currently 128 supported
+> stream-ids for an smmu?
 
-Ok, then it makes sense. It's amazing how much weird issues this
-Marvell U-Boot behavior has caused :-/
+We might, but this patch is still an improvement for now.
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Will
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
