@@ -1,63 +1,26 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH 4/7] ARM: dts: Enable N950 keyboard sleep leds by default
-Date: Tue, 29 Mar 2016 19:54:42 +0200
-Message-ID: <20160329175442.GA28516@amd>
-References: <1457827580-16919-1-git-send-email-sre@kernel.org>
- <1457827580-16919-5-git-send-email-sre@kernel.org>
- <20160329105128.GA30184@amd>
- <20160329145209.GB31858@earth>
+From: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] Sound: SOC: TAS571x: added missing register literals
+Date: Tue, 29 Mar 2016 11:11:17 -0700
+Message-ID: <CAJzqFtao3sEjnbBbhO1T4e9xq0KahoJb63p4t7Mkc=EW-hMi1w@mail.gmail.com>
+References: <1459237178-12920-1-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160329145209.GB31858@earth>
+In-Reply-To: <1459237178-12920-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 2016-03-29 16:52:09, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Tue, Mar 29, 2016 at 12:51:28PM +0200, Pavel Machek wrote:
-> > For 1-3 in the series, Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > 
-> > > Like the Nokia N900, the N950 has leds to show
-> > > the state of sys_clkreq and sys_off_mode pins.
-> > > 
-> > > A detailed description for the LEDs and
-> > > OMAP's sleep states can be found in Tony's
-> > > commit for the Nokia N900:
-> > > 
-> > > c1be2032f66df9e1238bd5bc4ca666de88a62abc
-> > 
-> > I must say I've seen it on N900, and yes, it is useful, but no, I
-> > don't think this is right.
-> >
-> > This is not a LED. This is a interface that changes meaning of two
-> > other LEDs. I guess it should go to debugfs somewhere.
-> 
-> I don't think we should diverge N900 and N950 userspace
-> APIs in this regard.
+On Tue, Mar 29, 2016 at 12:39 AM, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org> wrote:
+> The list of TAS571x registers was incomplete.
+> Added the missing register definitions up to register 0x25
+>
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 
-That's a good argument.
+For the series:
 
-But maybe we should move both to debugfs somewhere before we get too
-much userspace that relies on it...
-
-> Actually the correct way would be a custom trigger
-> for the leds IMHO. I don't know if the led framework
-> supports per led custom triggers, though.
-
-Well, not even custom trigger would make this easy: AFAIK you need to
-enable this on two LEDs or not at all, so you'd have one trigger _that
-would need to be shared over two LEDs_.
-
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Reviewed-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
