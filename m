@@ -1,43 +1,31 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v3 0/4] thermal: hisilicon: enable power allocator for
- Hi6220
-Date: Tue, 29 Mar 2016 08:45:59 -0700
-Message-ID: <20160329154548.GE1855@localhost.localdomain>
-References: <1459250835-25561-1-git-send-email-leo.yan@linaro.org>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCHv3 9/9] ARM: dts: Add Altera Arria10 L2 Cache EDAC
+ devicetree entry
+Date: Tue, 29 Mar 2016 10:48:30 -0500
+Message-ID: <CADhT+wceGH_o-cZOS7O6J+cJzd_2r_QyKiceOvjX8FoqHFbMRA@mail.gmail.com>
+References: <1458576106-24505-1-git-send-email-tthayer@opensource.altera.com>
+	<1458576106-24505-10-git-send-email-tthayer@opensource.altera.com>
+	<20160329084549.GC3705@pd.tnic>
+	<CADhT+wfb6DOpBV11zZY-HYMkwnQECu8J3=aM9z39Db+=3u9Wng@mail.gmail.com>
+	<20160329140018.GD3705@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459250835-25561-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20160329140018.GD3705@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thor Thayer <tthayer@opensource.altera.com>, dougthompson@xmission.com, m.chehab@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-edac@vger.kernel.org, Linux List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thor Thayer <tthayer.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 07:27:11PM +0800, Leo Yan wrote:
-> Hi6220 has octa-core so it has quite high power consumption when run
-> benchmark and introduces high temperature for SoC. So need enable
-> thermal governor to control temperature and also cannot hurt much for
-> performance after impose cooling operations on CPU.
-> 
-> This patch series is to enable power allocator for Hi6220. Patch 1 is to
-> change "hysteresis" as optional property for trip points, so when enable
-> power allocator governor we can ignore this property.
-> 
-> During profiling also found two issues for thermal sensor's driver. The
-> power allocator just uses only one sensor, so patch 2 is to fix sensor
-> driver to let it can initialize driver successfully with only enabling
-> one sensor; patch 3 is to dismiss warning of IRQ imbalance enabling.
-> 
-> After profiling on Hikey, the power model has been simplized with only
-> dynamic coefficient, and now it's convienence to pass it from CPU node.
-> So patch 4 and 5 bind sensor and pass power model parameters.
-> 
-> This patch series have been tested on 96boards Hikey.
+On Tue, Mar 29, 2016 at 9:00 AM, Borislav Petkov <bp@alien8.de> wrote:
+> Fine with me as long as people don't start complaining if they start
+> testing my for-next branch and realize that the Arria10 support is not
+> complete.
+>
+> Unless they test linux-next where your tree is too, I assume.
+>
 
-Applied patches 1 and 2 in my fixes branch. Patches 3 and 4 need to go
-via the hisi platform tree. You may add my
+Yes, I take the patch through arm-soc and will ultimately land in
+linux-next.
 
-Acked-by: Eduardo Valentin <edubezval@gmail.com>
-
-on patches 3 and 4 if you want.
+Dinh
