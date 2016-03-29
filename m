@@ -1,133 +1,83 @@
-From: Yakir Yang <ykk@rock-chips.com>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Tue, 29 Mar 2016 19:17:12 +0800
-Message-ID: <56FA6438.7060508@rock-chips.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
- <1867694.1mDULrSexE@phil>
- <CACvgo513q-Vtm2wG4Cwh4G1u0OUNVAAFmHFv-kg4fHDEy7i_eg@mail.gmail.com>
- <13797722.SiyveTZ1bB@diego>
- <CACvgo52vL5_HQfgfnxRMzSJXYw-sWT3QozZaWswQXHr9-bwBSA@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/3] vfio, platform: add support for ACPI while detecting the reset driver
+Date: Tue, 29 Mar 2016 13:25:42 +0200
+Message-ID: <147496989.L43SVC7xRY@wuerfel>
+References: <1459172124-6730-1-git-send-email-okaya@codeaurora.org> <98854818.NJS35fvhsb@wuerfel> <e736f6bc775cdca8a4bb0dab20654823@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo52vL5_HQfgfnxRMzSJXYw-sWT3QozZaWswQXHr9-bwBSA@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <e736f6bc775cdca8a4bb0dab20654823@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: okaya@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, kvm@vger.kernel.org, timur@codeaurora.org, cov@codeaurora.org, jcm@redhat.com, eric.auger@linaro.org, mark.rutland@arm.com, devicetree@vger.kernel.org, Baptiste Reynal <b.reynal@virtualopensystems.com>, vikrams@codeaurora.org, marc.zyngier@arm.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, vinod.koul@intel.com, Alex Williamson <alex.williamson@redhat.com>, agross@codeaurora.org, Dan Carpenter <dan.carpenter@oracle.com>, shankerd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRW1pbCAmIEhlaWtvLAoKCk9uIDAzLzI5LzIwMTYgMDU6MzUgQU0sIEVtaWwgVmVsaWtvdiB3
-cm90ZToKPiBPbiAyOCBNYXJjaCAyMDE2IGF0IDE5OjQ0LCBIZWlrbyBTdMO8Ym5lciA8aGVpa29A
-c250ZWNoLmRlPiB3cm90ZToKPj4gQW0gTW9udGFnLCAyOC4gTcOkcnogMjAxNiwgMTM6MjE6MDIg
-c2NocmllYiBFbWlsIFZlbGlrb3Y6Cj4+PiBPbiAyMiBNYXJjaCAyMDE2IGF0IDAwOjQyLCBIZWlr
-byBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPiB3cm90ZToKPj4+PiBIaSBZYWtpciwKPj4+Pgo+
-Pj4+IEFtIE1vbnRhZywgMjEuIE3DpHJ6IDIwMTYsIDIwOjE3OjQ2IHNjaHJpZWIgWWFraXIgWWFu
-ZzoKPj4+Pj4gT24gMDMvMjEvMjAxNiAwNzoyOSBQTSwgSGVpa28gU3TDvGJuZXIgd3JvdGU6Cj4+
-Pj4+PiBBbSBNb250YWcsIDIxLiBNw6RyeiAyMDE2LCAxNzoyODozOCBzY2hyaWViIFlha2lyIFlh
-bmc6Cj4+Pj4+Pj4gVGhpcyBwYXRjaCBzZXQgd291bGQgYWRkIHRoZSBSR0EgZGlyZWN0IHJlbmRl
-cmluZyBiYXNlZCAyZCBncmFwaGljcwo+Pj4+Pj4+IGFjY2VsZXJhdGlvbiBtb2R1bGUuCj4+Pj4+
-PiB2ZXJ5IGNvb2wgdG8gc2VlIHRoYXQuCj4+Pj4+IDspCj4+Pj4+Cj4+Pj4+Pj4gVGhpcyBwYXRj
-aCBzZXQgaXMgYmFzZWQgb24gZ2l0IHJlcG9zaXRvcnkgYmVsb3c6Cj4+Pj4+Pj4gZ2l0Oi8vcGVv
-cGxlLmZyZWVkZXNrdG9wLm9yZy9+YWlybGllZC9saW51eCBkcm0tbmV4dAo+Pj4+Pj4+IGNvbW1p
-dCBpZDogNTY4ZDdjNzY0YWUwMWYzNzA2MDg1YWM4ZjBkOGE4YWM3ZTgyNmJkNwo+Pj4+Pj4+Cj4+
-Pj4+Pj4gQW5kIHRoZSBSR0EgZHJpdmVyIGlzIGJhc2VkIG9uIEV4eW5vcyBHMkQgZHJpdmVyLCBp
-dCBvbmx5IG1hbmFnZXMgdGhlCj4+Pj4+Pj4gY29tbWFuZCBsaXN0cyByZWNlaXZlZCBmcm9tIHVz
-ZXIsIHNvIHVzZXIgc2hvdWxkIG1ha2UgdGhlIGNvbW1hbmQgbGlzdAo+Pj4+Pj4+IHRvIGRhdGEg
-YW5kIHJlZ2lzdGVycyBuZWVkZWQgYnkgb3BlcmF0aW9uIHRvIHVzZS4KPj4+Pj4+Pgo+Pj4+Pj4+
-IEkgaGF2ZSBwcmVwYXJlZCBhbiB1c2Vyc3BhY2UgZGVtbyBhcHBsaWNhdGlvbiBmb3IgdGVzdGlu
-ZzoKPj4+Pj4+PiAgICAgaHR0cHM6Ly9naXRodWIuY29tL3lha2lyLVlhbmcvbGliZHJtLXJvY2tj
-aGlwCj4+Pj4+Pj4KPj4+Pj4+PiBUaGF0IGlzIGEgcm9ja2NoaXAgbGliZHJtIGxpYnJhcnksIGFu
-ZCBJIGhhdmUgd3JpdGUgYSBzaW1wbGUgdGVzdCBjYXNlCj4+Pj4+Pj4gInJvY2tjaGlwX3JnYV90
-ZXN0IiB0aGF0IHdvdWxkIHRlc3QgdGhlIGJlbG93IFJHQSBmZWF0dXJlczoKPj4+Pj4+PiAtIHNv
-bGlkCj4+Pj4+Pj4gLSBjb3B5Cj4+Pj4+Pj4gLSByb3RhdGlvbgo+Pj4+Pj4+IC0gZmxpcAo+Pj4+
-Pj4+IC0gd2luZG93IGNsaXAKPj4+Pj4+PiAtIGRpdGhlcmluZwo+Pj4+Pj4gRGlkIHlvdSBzdWJt
-aXQgeW91ciBsaWJkcm0gY2hhbmdlcyBhcyB3ZWxsPwo+Pj4+Pj4KPj4+Pj4+IFVzZXJzcGFjZS1p
-bnRlcmZhY2VzIG5lZWQgdG8gYmUgc3RhYmxlIHNvIHRoZSBvdGhlciBzaWRlIG11c3QgYWxzbyBn
-ZXQKPj4+Pj4+IGFjY2VwdGVkIC0gZXZlbiBiZWZvcmUgdGhlIGtlcm5lbCBjaGFuZ2UgaWYgSSBy
-ZW1lbWJlciBjb3JyZWN0bHkuCj4+Pj4+IEdvdCBpdCwgYW5kIEkganVzdCBzYXcgZXh5bm9zX2Zp
-bWcyZCBhbHJlYWR5IGxhbmRlZCBhdCBtYWlubGluZSBsaWJkcm0uCj4+Pj4+IEJ1dCBJIGRvbid0
-IGZpbmQgdGhlIHdheSB0byBzdWJtaXQgcGF0Y2hlcyB0byBsaWJkcm0sIHdvdWxkIHlvdSBsaWtl
-Cj4+Pj4+IHNoYXJlIHNvbWUgaGVscHMgaGVyZSA7KQo+Pj4+IExvb2tpbmcgYXQgdGhlIGxpYmRy
-bSBzb3VyY2VzIG9uIGNnaXQuZnJlZWRlc2t0b3Aub3JnLCBJIGRpZCBub3QgZmluZCBhbnkKPj4+
-PiBzcGVjaWZpYyBtYW51YWwgb24gc3VibWl0dGluZyBwYXRjaGVzLgo+Pj4+Cj4+Pj4gQnV0IGxv
-b2tpbmcgYXQgdGhlIGRyaS1saXN0IGFyY2hpdmUsIGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcgaXMKPj4+PiB0aGUKPj4+PiByaWdodCBsaXN0IGFuZCBsb29raW5nIGF0IHRoZSBsaWJk
-cm0gaGlzdG9yeSBpdCBsb29rcyBsaWtlIEVtaWwgVmVsaWtvdgo+Pj4+IDxlbWlsLmwudmVsaWtv
-dkBnbWFpbC5jb20+IHNlZW1zIHRvIGJlIGRvaW5nIG1haW50ZW5hbmNlLXN0dWZmIGluIGxpYmRy
-bS4KPj4+PiBBbmQgYXMgYSAzcmQgcmVjaXBpZW50LCBwbGVhc2UgYWxzbyBpbmNsdWRlIHRoZSBs
-aW51eC1yb2NrY2hpcCBsaXN0Lgo+Pj4+Cj4+Pj4gQEVtaWwsIHBsZWFzZSBzaG91dCBpZiBJIHJl
-YWQgdGhhdCB3cm9uZyA6LSkKPj4+IFlvdSBnb3QgaXQgc3BvdCBvbiBIZWlrby4gVGhlcmUgYXJl
-IGEgZmV3IG5vdGVzIHRob3VnaC4uLgo+Pj4KPj4+IEFzIG9uZSByZXVzZXMgdGhlIGV4aXN0aW5n
-IGhhcmR3YXJlL0lQIGJsb2NrLCBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8KPj4+IGF2b2lkIGNvcHkv
-cGFzdGluZyBjb2RlIGFyb3VuZC4KPj4+IE5hbWVseToKPj4+ICAgLSAoaWYgcG9zc2libGUpIGZh
-Y3RvciBvdXQgdGhlIGV4eW5vcyBnMmQga2VybmVsIGZ1bmN0aW9uYWxpdHkgdG8gYQo+Pj4gc2Vw
-YXJhdGUga2VybmVsIG1vZHVsZSBhbmQgd2lyZSB1cCB0aGUgcm9ja2hpcCAodmlhIGR0ID8pIHRv
-IHVzZSBpdAo+Pj4gICAtIGZhY3RvciBvdXQgdGhlIGcyZCBzcGVjaWZpY3Mgb3V0IG9mIGV4eW5v
-c19kcm0uaCAoaW50bwo+Pj4gZXh5bm9zX2cyZF9kcm0uaCBwZXJoYXBzID8pIGFuZCBtYWtlIHN1
-cmUgZXh5bm9zX2RybS5oIGluY2x1ZGVzIHRoZQo+Pj4gbmV3IGhlYWRlcgo+PiBJIHRoaW5rIHRo
-ZSBJUCBibG9ja3MgdGhlbXNlbGYgYXJlIHF1aXRlIGRpZmZlcmVudCBiZXR3ZWVuIFJvY2tjaGlw
-J3MgUkdBIGFuZAo+PiBTYW1zdW5nJ3MgZzJkIGFuZCBJIGd1ZXNzIHRoZSBzaW1pbGFyaXRpZXMg
-YXJlIG1vcmUgYWxvbmcgdGhlIGxpbmVzIG9uIGhvdwo+PiB0aGF0IGdldHMgaW50ZWdyYXRlZCBp
-bnRvIHRoZSByZXNwZWN0aXZlIGRybSBkcml2ZXIgYW5kIHVzZXJzcGFjZS4KPj4KClllcywgdGhl
-IGhhcmR3YXJlIElQIGJsb2NrcyBpcyBxdWl0ZSBkaWZmZXJlbnQuIEkganVzdCByZWZlcmVuY2Ug
-dHdvIHRoaW5ncwpmcm9tIEV4eW5vcyBnMmQgY29kZToKMS4gVUFQSSBzaWRlOiBsZXQgdXNlcnNw
-YWNlIHBhc3MgdGhlIGRldGFpbCBtb2RlIHRyYW5mb3JtIHJlZ2lzdGVyIHNldHRpbmcKICAgICB0
-byBrZXJuZWwgZGlyZWN0bHksIHNvIHdlIGRvbid0IG5lZWQgdG8gcGFzcyB0aGUgcmVuZGVyaW5n
-IApwYXJhbWV0ZXJzIHRvCiAgICAga2VybmVsLCBqdXN0IHNpbXBsaWZ5IHRoZSBpb2N0bCBwYXJh
-bWV0ZXJzLgoKMi4gS2VybmVsIHNpZGU6IHJlZmVyZW5jZSB0aGUgY21kbGlzdCBtYW5hZ2VyIG1l
-dGhvZC4gVHdvIHNpbXBseSB0YXNrOiBvbmUKICAgICBmb3IgY29sbGVjdGluZyB0aGUgdXNlcnNw
-YWNlIHJlZ2lzdGVyIHNldHRpbmcsIGFub3RoZXIgc3RhcnQgCnJlbmRlcmluZyBwcm9jZXNzLgoK
-PiBJbiB0aGlzIGNhc2UsIHRoZSBleHlub3NfZzJkX2RybS5oIHNlZW1zIGxpa2UgYSBnb29kIGlk
-ZWEuIEFzIEknbQo+IG9idmlvdXNseSBiaWFzZWQsIGl0J3MgYmV0dGVyIHRvIGNoZWNrIGhvdyBv
-dGhlcnMgZmVlbCBvbiB0aGUgdG9waWMuCgpEbyB5b3UgbWVhbiB0aGF0IGp1c3QgY3JlYXRlIGFu
-IGV4eW5vc19nMmRfZHJtLmgsIHNvIGJvdGggZXh5bm9zX2RybS5oCmFuZCByb2NrY2hpcF9kcm0u
-aCBjb3VsZCBpbmNsdWRlIHRoZW0gPyBJdCdzIGdvb2QgdG8gcmV1c2UgY29kZSwgYnV0IGluIHRo
-aXMKY2FzZSBJIHRob3VnaHQgaXQncyBiZXR0ZXIgdG8ga2VlcCBib3RoIGV4aXN0LgoKSSBoYXZl
-IHRyeSB0byBkbyB0aGF0LCBzcGxpdCB0aGUgY29tbW9uICdleHlub3NfZzJkX2RybS5oJy4gQnV0
-IEkgCnRob3VnaHQgaXQgbWF5CmNhdXNlZCBzb21lIG5hbWUgY29uZnVzaW9uLiBGb3IgZXhhbXBs
-ZSwgdGhlIGRybSByb2NrY2hpcCBjb2RlIG5lZWQgY2FsbCB0aGUKRVhZTk9TX0cyRF9TRVRfQ01E
-TElTVCBpb2N0bCB0byBzZW5kIGNvbW1hbmQgbGlzdC4gVGhpcyBtYXkgbGlrZSBkcm0gCnJvY2tj
-aGlwCmlzIGNhbGxpbmcgdGhlIEV4eW5vcyBHMkQgaGFyZHdhcmUsIGJ1dCBhY3R1YWxseSBpdCBq
-dXN0IHRoZSBuYW1lIGNvbmZsaWN0LgoKQWN0dWFsbHkgdGhlIGhlYWQgZmlsZSBpcyBtdWNoIHNp
-bXBsZSwganVzdCBjb250YWluZWQgNjAgbGluZXMuCgpTbywgaXMgaXQgb2theSBub3QgdG8gc3Bs
-aXQgdGhlIGhlYWQgZmlsZSwganVzdCBrZWVwIHRoZSBkYXRhIHN0cnVjdHVyZSAKZGVmaW5lIGJv
-dGgKcm9ja2NoaXBfZHJtLmggYW5kIGV4eW5vc19kcm0uaAoKPj4+ICAgLSBpZiBuZWl0aGVyIG9m
-IHRoZXNlIGFyZSBwb3NzaWJsZSwgdGhlbiBwbGVhc2UgZW5zdXJlIHRoYXQgdGhlIG5ldwo+Pj4g
-aGVhZGVyIHVzZXMgY29ycmVjdCB0eXBlcyAoc2VlIHRoZSBkb2NzIFsxXSksIHVzZSBNSVQvWDEx
-IGxpY2Vuc2UgKGlmCj4+PiBwb3NzaWJsZSkgYW5kIGxpbmsgd2hlcmUgdXBzdHJlYW0gdXNlcnNw
-YWNlIGlzIGhhcHB5IHdpdGggdGhlCj4+PiBpbnRlcmZhY2UgKGlkZWFsbHkgbW9yZSB0aGFuIGEg
-c2ltcGxlIHRlc3QgYXBwIGxpa2UgbGliZHJtKQo+Pj4gVGhlc2UgbWlnaHQgc291bmQgbGlrZSBh
-biBvdmVya2lsbCwgYWx0aG91Z2ggZ2V0dGluZyBVQVBJIHJpZ2h0IGFuZAo+Pj4gbWFpbnRhaW5p
-bmcgaXQgZm9yZXZlciBmb3JjZXMgdXMgdG8gZG8gc28uCj4+IEFzIGZvciBhIHJlYWwtd29ybGQg
-dXNlY2FzZSwgbWF5YmUgdGhlIGFybXNvYyB4c2VydmVyIG1pZ2h0IGJlIHNvbWV3aGF0IGVhc3kK
-Pj4gdG8gdXNlLiBXaGlsZSB0aGUgY29yZSBjaGFuZ2VzIEkgZGlkIGFyZSBpbiB0aGUgY29yZSBw
-cm9qZWN0IGFscmVhZHksIEknbQo+PiBzdGlsbCBrZWVwaW5nIHRoZSBhY3R1YWwgUm9ja2NoaXAg
-c3VwcG9ydCBzZXBhcmF0ZSBbMF0gZHVlIHRvIHRoZSBub3QteWV0LQo+PiByZXNvbHZlZCBjcmVh
-dGVfZ2VtIGlvY3RsLgo+Pgo+PiBBbnl3YXksIHRoZSBhcm1zb2MgeHNlcnZlciBoYXMgc29tZSBl
-eGEgaW1wbGVtZW50YXRpb24gaG9va3Mgd2VyZSBJIGd1ZXNzIGl0Cj4+IG1pZ2h0IGJlIHJlbGF0
-aXZlbHkgZWFzeSB0byBob29rIHVwIHNvYy1zcGVjaWZpYyB0aGluZ3MuCj4+Cj4gT3VjaCB0aGUg
-YXJtc29jIGRkeC4uLiBMYXN0IHRpbWUgSSd2ZSBjaGVja2VkIGl0IGZlbHQgbGlrZSBhIHBsYWNl
-Cj4gd2hlcmUgZXZlcnlvbmUgaXMgZG9pbmcgaGlzIG93biB0aGluZywgd2l0aCBubyBhY3R1YWwg
-cmV2aWV3cyBhbmQvb3IKPiBtYWludGFpbmVyLiBJaXJjIG1vc3QvYWxsIG9mIGl0J3MgZnVuY3Rp
-b25hbGl0eSB3YXMgYWNoaWV2YWJsZSB3aXRoCj4gbW9kZXNldHRpbmcgZGR4ICh3aXRoIG9yIHdp
-dGhvdXQgZ2xhbW9yKSA/IEkgdGFrZSBpdCB0aGF0IHRoaW5ncyBoYXZlCj4gY2hhbmdlZCBhbmQv
-b3IgSSBtaXN1bmRlcnN0b29kIHNvbWV0aGluZyA/CgpZZWFoLCBwcmV2aW91c2x5IEkgcGxhbiB0
-byBhZGQgUkdBIHN1cHBvcnQgdG8gUm9ja2NoaXAgYXJtc29jIEREWCwgYnV0CnNlZW1zIE1hcmsg
-c3RhcnQgdG8gd29yayBvbiBtb2RldGVzdHRpbmcsIHNvIEkgbWF5IG5lZWQgdG8gc3dpdGNoIHRv
-CmZvbGxvdyBoaW0uCgpBbnl3YXksIGZvciBub3cgSSBqdXN0IHVzZSBsaWJkcm0gdG8gcGFja2Fn
-ZSB0aGUgUkdBIGludGVyZmFjZXMuCgotIFlha2lyCgo+IE5vdGU6IFRoZSBhYm92ZSBpcyBub3Qg
-bWVhbnQgYXMgYmFzaGluZyBhbHRob3VnaCBpdCBoZWxsIHN1cmUgbG9va3MgbGlrZSBvbmUuCj4K
-PiBDaGVlcnMKPiBFbWlsCj4KPj4gWzBdIGh0dHBzOi8vZ2l0aHViLmNvbS9tbWluZC94Zjg2LXZp
-ZGVvLWFybXNvYy90cmVlL2RldmVsL3JvY2tjaGlwCj4+Cj4KPgoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Tuesday 29 March 2016 06:59:15 okaya@codeaurora.org wrote:
+> On 2016-03-29 05:25, Arnd Bergmann wrote:
+> > On Monday 28 March 2016 09:35:22 Sinan Kaya wrote:
+> >> The code is using the compatible DT string to associate a reset dr=
+iver=20
+> >> with
+> >> the actual device itself. The compatible string does not exist on =
+ACPI
+> >> based systems. HID is the unique identifier for a device driver=20
+> >> instead.
+> >> The change allows a driver to register with DT compatible string o=
+r=20
+> >> ACPI
+> >> HID and then match the object with one of these conditions.
+> >>=20
+> >> Rules for loading the reset driver are as follow:
+> >> - ACPI HID needs match for ACPI systems
+> >> - DT compat needs to match for OF systems
+> >>=20
+> >> Tested-by: Eric Auger <eric.auger@linaro.org> (device tree only)
+> >> Tested-by: Shanker Donthineni <shankerd@codeaurora.org> (ACPI only=
+)
+> >> Signed-off-by: Sinan Kaya <okaya@codeaurora.org>
+> >>=20
+> >=20
+> >=20
+> > This really feels wrong for two reasons:
+> >=20
+> > * device assignment of non-PCI devices is really special and doesn'=
+t
+> >   seem to make sense on general purpose servers that would be the=20
+> > target
+> >   for ACPI normally
+>=20
+>=20
+> Why is it special? Acpi is not equal to pci. Platform devices are fir=
+st=20
+> class devices too. Especially, _cls was introduced for this reason.
+
+It still feels like a hack. The normal design for a server is to have
+all internal devices show up on the PCI host bridge, next to the PCIe
+ports, to have a simple way to manage any device, both internal and
+off-chip. Putting a device on random MMIO registers outside of the
+discoverable buses and have the firmware work around the lack of
+discoverability will always be inferior.
+
+> >=20
+> > * If there is indeed a requirement for ACPI to handle something lik=
+e=20
+> > this,
+> >   it should be part of the ACPI spec, with a well-defined method of=
+=20
+> > handling
+> >   reset, rather than having to add a device specific hack for each
+> >   device separately.
+> >=20
+>=20
+> I see. Normally, this is done by calling _rst method. AFAIK, Linux=20
+> doesn=E2=80=99t support _rst. I can check its presence and call it if=
+ it is=20
+> there.
+
+Yes, that sounds reasonable: In patch 2 where you check for the
+presence of the reset method, just keep the existing logic for
+DT based systems, and use _rst on ACPI based systems instead,
+then you can drop both patches 1 and 3.
+
+	Arnd
