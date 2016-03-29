@@ -1,130 +1,117 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] ASoC: codecs: add support for TAS5720 digital
- amplifier
-Date: Mon, 28 Mar 2016 20:01:43 +0100
-Message-ID: <20160328190143.GC2350@sirena.org.uk>
-References: <1458580107-4632-1-git-send-email-dannenberg@ti.com>
- <1458580107-4632-3-git-send-email-dannenberg@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] mtd: nand: denali: allow to override max_banks from DT
+ property
+Date: Tue, 29 Mar 2016 09:53:05 +0200
+Message-ID: <20160329095305.46229ad5@bbrezillon>
+References: <1458822277-31428-1-git-send-email-yamada.masahiro@socionext.com>
+	<20160325154520.199b0863@bbrezillon>
+	<CAK7LNATqVEMRwa+Ss4V9sBXYZwqKX=CpB_3Oox8bM6Yow0mkXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="TYecfFk8j8mZq+dy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458580107-4632-3-git-send-email-dannenberg@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNATqVEMRwa+Ss4V9sBXYZwqKX=CpB_3Oox8bM6Yow0mkXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---TYecfFk8j8mZq+dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm answering to this one, but I already saw your v2.
 
-On Mon, Mar 21, 2016 at 12:08:27PM -0500, Andreas Dannenberg wrote:
+On Sat, 26 Mar 2016 13:27:50 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
 
-> +static int tas5720_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
-> +				  unsigned int freq, int dir)
-> +{
-> +	/*
-> +	 * Nothing to configure here for TAS5720. It's a simple codec slave.
-> +	 * However we need to keep this function in here otherwise the ASoC
-> +	 * platform driver will throw an ENOTSUPP at us when trying to play
-> +	 * audio.
-> +	 */
-> +
-> +	return 0;
-> +}
+> 2016-03-25 23:45 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> > On Thu, 24 Mar 2016 21:24:37 +0900
+> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >
+> >> Commit 271707b1d817 ("mtd: nand: denali: max_banks calculation
+> >> changed in revision 5.1") supported the new encoding of the "n_banks"
+> >> bits of the "features" register, but there is an unfortunate case
+> >> that is not covered by that commit.
+> >>
+> >> Panasonic (its System LSI division is now Socionext) bought several
+> >> versions of this IP.  The IP released for Panasonic around Feb. 2012
+> >> is revision 5 and uses the old encoding for n_banks (2 << n_banks).
+> >> While the one released around Nov. 2012 is also revision 5, but it
+> >> uses the new encoding (1 << n_banks).
+> >>
+> >> The revision register cannot distinguish these two incompatible
+> >> hardware.  I guess this IP series is not well-organized.  I could not
+> >> find any alternative but giving max_banks from DT property.
+> >
+> > Hm, shouldn't that be addressed with a new compatible instead of adding
+> > a extra property?
 
-Remove empty funnctions, -ENOTSUPP is expected behaviour for anything
-that isn't explicitly supported by a driver.
+You didn't answer to this suggestion. I see several advantages in this
+approach:
 
-> +	if (unlikely(!tx_mask)) {
+1/ You'll only break the DT once (to add your new compatible) even if
+you got your logic wrong. All you'll have to do in this case is patch
+your driver to change the compatible <-> capabilities association
 
-unlikely() is for optimising hot paths, just write the logic clearly
-unless there's a reason for it.
+2/ This may not be the only difference between the 2 revisions, and
+in this case, putting the compatible <-> capabilities association
+directly in your driver will allow you to easily tweak capabilities
+per-revision
 
-> +static irqreturn_t tas5720_irq_handler(int irq, void *_dev)
-> +{
-> +	/*
-> +	 * Immediately disable TAS5720 FAULTZ interrupts inside the low-level
-> +	 * handler to prevent the system getting saturated or even overrun
-> +	 * by interrupt requests. Normally the fact that we create a threaded
-> +	 * interrupt with IRQF_ONESHOT should take care of this as by design
-> +	 * it masks interrupts while the thread is processed however testing
-> +	 * has shown that at the high frequency the FAULTZ signal triggers
-> +	 * (every 300us!) occasionally the system would lock up even with a
-> +	 * threaded handler that's completely empty until the Kernel breaks the
-> +	 * cycle, disables that interrupt, and reports a "nobody cared" error.
-> +	 *
-> +	 * Disabling the interrupt here combined with a deferred re-enabling
-> +	 * after the thread has run not only prevents this lock condition but
-> +	 * also helps to rate-limit the processing of FAULTZ interrupts.
-> +	 */
-> +	disable_irq_nosync(irq);
+> >
+> >>
+> >> This commit works around the problem by allowing DT to set the
+> >> max_banks forcibly.  Of course, this DT property can be optional if
+> >> the auto detection based on the hardware registers works well.
+> >>
+> >> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> >> ---
+> >>
+> >>  Documentation/devicetree/bindings/mtd/denali-nand.txt | 4 ++++
+> >>  drivers/mtd/nand/denali.c                             | 3 ++-
+> >>  drivers/mtd/nand/denali_dt.c                          | 3 +++
+> >>  3 files changed, 9 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> >> index 785b825..78c250d 100644
+> >> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> >> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+> >> @@ -7,6 +7,10 @@ Required properties:
+> >>    - interrupts : The interrupt number.
+> >>    - dma-mask : DMA bit mask
+> >>
+> >> +Optional properties:
+> >> +  - max-banks : Maximum number of banks supported by hardware.  If not
+> >> +    specified, it is determined based on the "features" register of hardware.
+> >> +
+> >
+> > You might want to prefix that with "denali,".
+> >
+> >>  The device tree may optionally contain sub-nodes describing partitions of the
+> >>  address space. See partition.txt for more detail.
+> 
+> 
+> In which case, do we have to add a vendor prefix to DT properties?
+> 
+> I do not know a clear rule about this.
 
-No, this is completely broken.  Whatever is going on in your system with
-the interrupt core you need to address that at the appropriate level not
-by putting a nonsensical bodge in here.  The interrupt is disabled while
-the threaded handler is running, if that's not having the desired effect
-then whatever causes that needs to be fixed.
+Usually you add a vendor prefix when the property only applies to a
+specific controller/IP. In the NAND specific case, most NAND
+controllers have a fixed number of banks which can be deduced from the
+IP revision/version. I'd like to keep it like that and avoid seeing
+other drivers use this max-banks property to deduce the number of
+available banks, hence my suggestion to, at least, prefix your property
+with "denali,". But I'd still prefer to see the max-banks value be
+associated to a new compatible.
 
-> +static int tas5720_dapm_post_event(struct snd_soc_dapm_widget *w,
-> +				   struct snd_kcontrol *kcontrol, int event)
-> +{
-> +	struct snd_soc_codec *codec =3D snd_soc_dapm_to_codec(w->dapm);
-> +	int ret;
-> +
-> +	switch (event) {
-> +	case SND_SOC_DAPM_POST_PMU:
-> +		/*
-> +		 * Check if the codec is still powered up in which case exit
-> +		 * right away also skipping the shutdown-to-active wait time.
-> +		 */
-> +		ret =3D snd_soc_test_bits(codec, TAS5720_POWER_CTRL_REG,
-> +					TAS5720_SDZ, 0);
+Thanks,
 
-I don't understand this.  Why on earth would we be calling the PMU
-handler if the widget was not previously powered?=20
+Boris
 
-> +		/*
-> +		 * Take TAS5720 out of shutdown mode in preparation for widget
-> +		 * power up.
-> +		 */
-> +		ret =3D snd_soc_update_bits(codec, TAS5720_POWER_CTRL_REG,
-> +					  TAS5720_SDZ, TAS5720_SDZ);
-> +		if (ret < 0) {
-> +			dev_err(codec->dev, "error waking codec: %d\n", ret);
-> +			return ret;
-> +		}
-
-This is a _POST_PMU handler not a pre-PMU handler...
-
-> +	/* Events used to control the TAS5720 SHUTDOWN state */
-> +	SND_SOC_DAPM_PRE("Pre Event", tas5720_dapm_pre_event),
-> +	SND_SOC_DAPM_POST("Post Event", tas5720_dapm_post_event),
-
-Oh, we're using _PRE() and _POST() events...  this almost certainly
-indicates a problem, there are very few circumstances where these are a
-good idea and I'm not seeing anything in this driver which indicates
-that this is going on.  Please just use normal DAPM widgets (I'm
-guessing a PGA) to represent the device and work within DAPM, don't
-shoehorn some bodge around the side.
-
---TYecfFk8j8mZq+dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW+X+TAAoJECTWi3JdVIfQWewH/0jWhvFcvkxvr2R5G0BlWuzo
-HCWg3vTQQjqkKT3l9wcBS9HTIy5FVGHI/fWeGXTzsG4J8t23kvQa5cw4qLXwyGCb
-oXZhnsB5JmK8CKvZItGdf4AbAIvUMe+TVfHgwDr+f8/A9C3P2S5SofY7ANHQ4i1t
-8r7qrpp1IyOBjJPj1tYZAq4f5voJ63gKA2FLqdUjEA+Eh+eEcKPCETLk+Uf8Y91X
-U1DKtYH/RMDrZkQJ/vMDswbsYu775eBTqkjeUUVdR45o4caXyv3TwtJAhUgQvq6N
-KBVub/iYVjhU0XtVuYKfdZUnNBHJjk/S8qoM7vaXksClUHoP56bISR4f7DO4O6M=
-=kbD0
------END PGP SIGNATURE-----
-
---TYecfFk8j8mZq+dy--
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
