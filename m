@@ -1,83 +1,141 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 3/5] drm: Add an encoder and connector type enum for DPI.
-Date: Tue, 29 Mar 2016 10:07:07 +0200
-Message-ID: <20160329080707.GJ2510@phenom.ffwll.local>
-References: <1458865431-30048-1-git-send-email-eric@anholt.net>
- <1458865431-30048-4-git-send-email-eric@anholt.net>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v9 01/17] Xen: ACPI: Hide UART used by Xen
+Date: Tue, 29 Mar 2016 16:05:29 +0800
+Message-ID: <1459238729-11520-1-git-send-email-zhaoshenglong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1458865431-30048-4-git-send-email-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ACPI" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBNYXIgMjQsIDIwMTYgYXQgMDU6MjM6NDlQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
-dGU6Cj4gUmlnaHQgbm93IGV4eW5vcyBpcyBleHBvc2luZyBEUEkgYXMgYSBUTURTIGVuY29kZXIg
-YW5kIFZHQSBjb25uZWN0b3IsCj4gd2hpY2ggc2VlbXMgcmF0aGVyIG1pc2xlYWRpbmcuICBUaGlz
-IGlzbid0IGp1c3QgYW4gaW50ZXJuYWwgZGV0YWlsLAo+IHNpbmNlIHhyYW5kciBhY3R1YWxseSBl
-eHBvc2VzICJWR0EiIGFzIHRoZSBvdXRwdXQgbmFtZS4gIERlZmluZSBzb21lCj4gbmV3IGVudW1z
-IHNvIHRoYXQgdmM0J3MgRFBJIGNhbiBoYXZlIGEgbW9yZSBpbmZvcm1hdGl2ZSBuYW1lLgo+IAo+
-IEkgY29uc2lkZXJlZCBvdGhlciBuYW1lcyBmb3IgdGhlIGNvbm5lY3RvciBhcyB3ZWxsLiAgRm9y
-IFZDNCwgdGhlCj4gQWRhZnJ1aXQgRFBJIGtpcHBhaCB0YWtlcyB0aGUgMjggR1BJTyBwaW5zIGFu
-ZCByb3V0ZXMgdGhlbSB0byBhCj4gc3RhbmRhcmQtaXNoIDQwLXBpbiBGUEMgY29ubmVjdG9yLCBi
-dXQgIjQwLXBpbiBGUEMiIGRvZXNuJ3QgdW5pcXVlbHkKPiBpZGVudGlmeSBhbiBvcmRlcmluZyBv
-ZiBwaW5zIChhcHBhcmVudGx5IHNvbWUgb3RoZXIgb3JkZXJpbmdzIGV4aXN0KSwKPiBkb2Vzbid0
-IGV4cGxhaW4gdGhpbmdzIGFzIHdlbGwgZm9yIHRoZSB1c2VyICh3aG8sIGlmIGFueXRoaW5nLCBr
-bm93cwo+IHRoZWlyIHByb2R1Y3QgaXMgYSBEUEkga2lwcGFoL3BhbmVsIGNvbWJvKSwgYW5kIGFj
-dHVhbGx5IGRvZXNuJ3QgaGF2ZQo+IHRvIGV4aXN0IChvbmUgY291bGQgY29ubmVjdCB0aGUgMjgg
-R1BJT3MgZGlyZWN0bHkgdG8gc29tZXRoaW5nIGVsc2UpLgo+IFNpbXBseSAiRFBJIiBzZWVtcyBs
-aWtlIGEgZ29vZCBjb21wcm9taXNlIG5hbWUgdG8gZGlzdGluZ3Vpc2ggZnJvbSB0aGUKPiBIRE1J
-LCBEU0ksIGFuZCBUViBjb25uZWN0b3JzIC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBFcmljIEFuaG9s
-dCA8ZXJpY0BhbmhvbHQubmV0PgoKRm9sbG93LXVwIHBhdGNoIHRvIGZpeCB1cCBleGlzdGluZyBk
-cml2ZXJzPyBFaXRoZXIgd2F5CgpSZXZpZXdlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZl
-dHRlckBmZndsbC5jaD4gKyBhY2sgZm9yIG1lcmdpbmcKdGhyb3VnaCBhIHZjNCBwdWxsIHJlcXVl
-c3QgKERhdmUgaGFzIHJlY2VudGx5IG9rYXllZCB0aGF0IEkgY2FuIGRvIHN1Y2gKYWNrcyBmb3Ig
-bm9uLWk5MTUgdHJlZXMpLgoKQ2hlZXJzLCBEYW5pZWwKCj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9kcm1fY3J0Yy5jICB8IDIgKysKPiAgaW5jbHVkZS91YXBpL2RybS9kcm1fbW9kZS5oIHwgMiAr
-Kwo+ICAyIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vZHJtX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fY3J0Yy5jCj4g
-aW5kZXggZjYxOTEyMS4uNjRiZDk1NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJt
-X2NydGMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fY3J0Yy5jCj4gQEAgLTE2OCw2ICsx
-NjgsNyBAQCBzdGF0aWMgc3RydWN0IGRybV9jb25uX3Byb3BfZW51bV9saXN0IGRybV9jb25uZWN0
-b3JfZW51bV9saXN0W10gPSB7Cj4gIAl7IERSTV9NT0RFX0NPTk5FQ1RPUl9lRFAsICJlRFAiIH0s
-Cj4gIAl7IERSTV9NT0RFX0NPTk5FQ1RPUl9WSVJUVUFMLCAiVmlydHVhbCIgfSwKPiAgCXsgRFJN
-X01PREVfQ09OTkVDVE9SX0RTSSwgIkRTSSIgfSwKPiArCXsgRFJNX01PREVfQ09OTkVDVE9SX0RQ
-SSwgIkRQSSIgfSwKPiAgfTsKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3Byb3BfZW51
-bV9saXN0IGRybV9lbmNvZGVyX2VudW1fbGlzdFtdID0gewo+IEBAIC0xNzksNiArMTgwLDcgQEAg
-c3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fcHJvcF9lbnVtX2xpc3QgZHJtX2VuY29kZXJfZW51bV9s
-aXN0W10gPSB7Cj4gIAl7IERSTV9NT0RFX0VOQ09ERVJfVklSVFVBTCwgIlZpcnR1YWwiIH0sCj4g
-IAl7IERSTV9NT0RFX0VOQ09ERVJfRFNJLCAiRFNJIiB9LAo+ICAJeyBEUk1fTU9ERV9FTkNPREVS
-X0RQTVNULCAiRFAgTVNUIiB9LAo+ICsJeyBEUk1fTU9ERV9FTkNPREVSX0RQSSwgIkRQSSIgfSwK
-PiAgfTsKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3Byb3BfZW51bV9saXN0IGRybV9z
-dWJwaXhlbF9lbnVtX2xpc3RbXSA9IHsKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS91YXBpL2RybS9k
-cm1fbW9kZS5oIGIvaW5jbHVkZS91YXBpL2RybS9kcm1fbW9kZS5oCj4gaW5kZXggNTBhZGI0Ni4u
-MWViODVmNyAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL3VhcGkvZHJtL2RybV9tb2RlLmgKPiArKysg
-Yi9pbmNsdWRlL3VhcGkvZHJtL2RybV9tb2RlLmgKPiBAQCAtMjAyLDYgKzIwMiw3IEBAIHN0cnVj
-dCBkcm1fbW9kZV9nZXRfcGxhbmVfcmVzIHsKPiAgI2RlZmluZSBEUk1fTU9ERV9FTkNPREVSX1ZJ
-UlRVQUwgNQo+ICAjZGVmaW5lIERSTV9NT0RFX0VOQ09ERVJfRFNJCTYKPiAgI2RlZmluZSBEUk1f
-TU9ERV9FTkNPREVSX0RQTVNUCTcKPiArI2RlZmluZSBEUk1fTU9ERV9FTkNPREVSX0RQSQk4Cj4g
-IAo+ICBzdHJ1Y3QgZHJtX21vZGVfZ2V0X2VuY29kZXIgewo+ICAJX191MzIgZW5jb2Rlcl9pZDsK
-PiBAQCAtMjQxLDYgKzI0Miw3IEBAIHN0cnVjdCBkcm1fbW9kZV9nZXRfZW5jb2RlciB7Cj4gICNk
-ZWZpbmUgRFJNX01PREVfQ09OTkVDVE9SX2VEUAkJMTQKPiAgI2RlZmluZSBEUk1fTU9ERV9DT05O
-RUNUT1JfVklSVFVBTCAgICAgIDE1Cj4gICNkZWZpbmUgRFJNX01PREVfQ09OTkVDVE9SX0RTSQkJ
-MTYKPiArI2RlZmluZSBEUk1fTU9ERV9DT05ORUNUT1JfRFBJCQkxNwo+ICAKPiAgc3RydWN0IGRy
-bV9tb2RlX2dldF9jb25uZWN0b3Igewo+ICAKPiAtLSAKPiAyLjcuMAo+IAo+IF9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcg
-bGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKLS0gCkRhbmllbCBWZXR0
-ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0dHA6Ly9ibG9nLmZmd2xs
-LmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+ACPI 6.0 introduces a new table STAO to list the devices which are used
+by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
+UART is used by Xen. So here it hides UART from Dom0.
+
+CC: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org> (supporter:ACPI)
+CC: Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (supporter:ACPI)
+CC: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:ACPI)
+Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+v9: add the UART device address in printed message
+---
+ drivers/acpi/scan.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
+
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index 5f28cf7..29f26fc 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
+ DEFINE_MUTEX(acpi_device_lock);
+ LIST_HEAD(acpi_wakeup_device_list);
+ static DEFINE_MUTEX(acpi_hp_context_lock);
++static u64 spcr_uart_addr;
+ 
+ struct acpi_dep_data {
+ 	struct list_head node;
+@@ -1453,6 +1454,42 @@ static int acpi_add_single_object(struct acpi_device **child,
+ 	return 0;
+ }
+ 
++static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
++					    void *context)
++{
++	struct resource *res = context;
++
++	if (acpi_dev_resource_memory(ares, res))
++		return AE_CTRL_TERMINATE;
++
++	return AE_OK;
++}
++
++static bool acpi_device_should_be_hidden(acpi_handle handle)
++{
++	acpi_status status;
++	struct resource res;
++
++	/* Check if it should ignore the UART device */
++	if (spcr_uart_addr != 0) {
++		if (!acpi_has_method(handle, METHOD_NAME__CRS))
++			return false;
++
++		status = acpi_walk_resources(handle, METHOD_NAME__CRS,
++					     acpi_get_resource_memory, &res);
++		if (ACPI_FAILURE(status))
++			return false;
++
++		if (res.start == spcr_uart_addr) {
++			printk(KERN_INFO PREFIX "The UART device @%pa in SPCR table will be hidden\n",
++			       &res.start);
++			return true;
++		}
++	}
++
++	return false;
++}
++
+ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+ 				    unsigned long long *sta)
+ {
+@@ -1466,6 +1503,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+ 	switch (acpi_type) {
+ 	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
+ 	case ACPI_TYPE_DEVICE:
++		if (acpi_device_should_be_hidden(handle))
++			return -ENODEV;
++
+ 		*type = ACPI_BUS_TYPE_DEVICE;
+ 		status = acpi_bus_get_status_handle(handle, sta);
+ 		if (ACPI_FAILURE(status))
+@@ -1916,9 +1956,24 @@ static int acpi_bus_scan_fixed(void)
+ 	return result < 0 ? result : 0;
+ }
+ 
++static void __init acpi_get_spcr_uart_addr(void)
++{
++	acpi_status status;
++	struct acpi_table_spcr *spcr_ptr;
++
++	status = acpi_get_table(ACPI_SIG_SPCR, 0,
++				(struct acpi_table_header **)&spcr_ptr);
++	if (ACPI_SUCCESS(status))
++		spcr_uart_addr = spcr_ptr->serial_port.address;
++	else
++		printk(KERN_WARNING PREFIX "STAO table present, but SPCR is missing\n");
++}
++
+ int __init acpi_scan_init(void)
+ {
+ 	int result;
++	acpi_status status;
++	struct acpi_table_stao *stao_ptr;
+ 
+ 	acpi_pci_root_init();
+ 	acpi_pci_link_init();
+@@ -1934,6 +1989,20 @@ int __init acpi_scan_init(void)
+ 
+ 	acpi_scan_add_handler(&generic_device_handler);
+ 
++	/*
++	 * If there is STAO table, check whether it needs to ignore the UART
++	 * device in SPCR table.
++	 */
++	status = acpi_get_table(ACPI_SIG_STAO, 0,
++				(struct acpi_table_header **)&stao_ptr);
++	if (ACPI_SUCCESS(status)) {
++		if (stao_ptr->header.length > sizeof(struct acpi_table_stao))
++			printk(KERN_INFO PREFIX "STAO Name List not yet supported.");
++
++		if (stao_ptr->ignore_uart)
++			acpi_get_spcr_uart_addr();
++	}
++
+ 	mutex_lock(&acpi_scan_lock);
+ 	/*
+ 	 * Enumerate devices in the ACPI namespace.
+-- 
+2.0.4
