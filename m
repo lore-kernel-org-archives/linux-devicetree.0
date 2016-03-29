@@ -1,75 +1,61 @@
-From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Subject: [PATCH] ARM: dts: am335x-baltos-ir5221: use dedicated RTS/CTS signals
-Date: Tue, 29 Mar 2016 12:08:08 +0200
-Message-ID: <1459246088-17768-1-git-send-email-yegorslists@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] mfd: axp20x: Add AXP209 GPIO driver to
+ the mfd
+Date: Tue, 29 Mar 2016 11:10:09 +0100
+Message-ID: <20160329101009.GE8659@x1>
+References: <1457520614-32239-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1457520614-32239-3-git-send-email-maxime.ripard@free-electrons.com>
+ <20160321115410.GC4140@x1>
+ <20160329095838.GJ30977@lukather>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBBFJ5G3QKGQESPPHX3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160329095838.GJ30977@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Tue, 29 Mar 2016, Maxime Ripard wrote:
 
-Before "tty: Add software emulated RS485 support for 8250" patch Baltos devices
-relied on MCTRL_GPIO framework to handle both modem signals and RS485 mode.
+> Hi Lee,
+>=20
+> On Mon, Mar 21, 2016 at 11:54:10AM +0000, Lee Jones wrote:
+> > On Wed, 09 Mar 2016, Maxime Ripard wrote:
+> >=20
+> > > Now that we have a GPIO driver for the AXP209, we can add it to our M=
+FD.
+> > >=20
+> > > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > >  drivers/mfd/axp20x.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> >=20
+> > Applied, thanks.
+>=20
+> There's still some discussions about the whole design of the driver,
+> can you drop that patch for now?
 
-With emulated RS485 support for 8250 we can now use these pins as dedicated
-RTS/CTS signals taking advantage of hardware flow control etc. when operating
-in RS232 mode.
+Sure.  Done.
 
-Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/boot/dts/am335x-baltos-ir5221.dts | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-index 4e28d87..7fd2bb6 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-@@ -109,8 +109,8 @@
- 		pinctrl-single,pins = <
- 			AM33XX_IOPAD(0x980, PIN_INPUT | MUX_MODE0)      /* uart1_rxd */
- 			AM33XX_IOPAD(0x984, PIN_INPUT | MUX_MODE0)      /* uart1_txd */
--			AM33XX_IOPAD(0x978, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* uart1_ctsn, INPUT | MODE0 */
--			AM33XX_IOPAD(0x97c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* uart1_rtsn, OUTPUT | MODE0 */
-+			AM33XX_IOPAD(0x978, PIN_INPUT_PULLDOWN | MUX_MODE0)      /* uart1_ctsn */
-+			AM33XX_IOPAD(0x97c, PIN_OUTPUT_PULLDOWN | MUX_MODE0)      /* uart1_rtsn */
- 			AM33XX_IOPAD(0x8e0, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* lcd_vsync.gpio2[22] DTR */
- 			AM33XX_IOPAD(0x8e4, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_hsync.gpio2[23] DSR */
- 			AM33XX_IOPAD(0x8e8, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* lcd_pclk.gpio2[24] DCD */
-@@ -122,8 +122,8 @@
- 		pinctrl-single,pins = <
- 			AM33XX_IOPAD(0x950, PIN_INPUT | MUX_MODE1)      /* spi0_sclk.uart2_rxd_mux3 */
- 			AM33XX_IOPAD(0x954, PIN_OUTPUT | MUX_MODE1)      /* spi0_d0.uart2_txd_mux3 */
--			AM33XX_IOPAD(0x988, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* i2c0_sda.uart2_ctsn_mux0 */
--			AM33XX_IOPAD(0x98c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* i2c0_scl.uart2_rtsn_mux0 */
-+			AM33XX_IOPAD(0x988, PIN_INPUT_PULLDOWN | MUX_MODE2)      /* i2c0_sda.uart2_ctsn_mux0 */
-+			AM33XX_IOPAD(0x98c, PIN_OUTPUT_PULLDOWN | MUX_MODE2)      /* i2c0_scl.uart2_rtsn_mux0 */
- 			AM33XX_IOPAD(0x830, PIN_OUTPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad12.gpio1[12] DTR */
- 			AM33XX_IOPAD(0x834, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad13.gpio1[13] DSR */
- 			AM33XX_IOPAD(0x838, PIN_INPUT_PULLDOWN | MUX_MODE7)      /* gpmc_ad14.gpio1[14] DCD */
-@@ -287,8 +287,6 @@
- 	dsr-gpios = <&gpio2 23 GPIO_ACTIVE_LOW>;
- 	dcd-gpios = <&gpio2 24 GPIO_ACTIVE_LOW>;
- 	rng-gpios = <&gpio2 25 GPIO_ACTIVE_LOW>;
--	cts-gpios = <&gpio0 12 GPIO_ACTIVE_LOW>;
--	rts-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
- 
- 	status = "okay";
- };
-@@ -300,8 +298,6 @@
- 	dsr-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
- 	dcd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
- 	rng-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
--	cts-gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
--	rts-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
- 
- 	status = "okay";
- };
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
