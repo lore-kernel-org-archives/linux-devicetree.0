@@ -1,124 +1,123 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 11/12] ARM: dts: dragonboard-600c: add i2c support
-Date: Tue, 29 Mar 2016 16:02:32 +0100
-Message-ID: <56FA9908.80205@linaro.org>
+Subject: Re: [PATCH 01/12] ARM: dts: apq8064: fix the pinctrls for i2c and spi
+Date: Tue, 29 Mar 2016 16:02:08 +0100
+Message-ID: <56FA98F0.2000300@linaro.org>
 References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762490-9814-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160329144437.GN8929@tuxbot>
+ <1458762421-9339-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <20160329142807.GF8929@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160329144437.GN8929@tuxbot>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160329142807.GF8929@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 29/03/16 15:44, Bjorn Andersson wrote:
-> On Wed 23 Mar 12:48 PDT 2016, Srinivas Kandagatla wrote:
+On 29/03/16 15:28, Bjorn Andersson wrote:
+> On Wed 23 Mar 12:47 PDT 2016, Srinivas Kandagatla wrote:
 >
->> This patch adds nodes required to enable 4 i2c buses on the board which
->> are connected to various sensors and eeprom.
+>> This patch fixes pinctrls for spi and i2c nodes whose default and sleep
+>> states are together, which is incorrect.
 >>
+>> Without this patch i2c/spi would not be functional.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 >
-> I would like for the pinconf for these blocks to be in this patch (and
-> file) to make it clear how they are configured and where to change them.
->
-When I started adding this I had same opinion, I will do that in next 
-release.
+> The change in itself is sound, but I don't understand why i2c/spi fails
+> to function if we don't bring them to a sleep state. Can you please
+> update the commit message with an explanation?
 
-thanks,
-srini
+Yes, with the existing code the device would endup configuring the 
+default pinstate to sleep pinconf. So the i2c bus would not be functional.
+
+If you try mainline on any 8064 based boards you would easily reproduce 
+the bug. For example read the eeprom on IFC6410.
+>
+>
+> PS. Whenever there's multiple states for a thing I do prefer prefixing
+> them _a and _s to highlight that difference (not only suffixing the
+> sleep state). And use abbreviations :)
+
+If I search for _sleep in dts folder these are widely used, am not sure 
+which is the prefered way to do this, as long as its readable by user am 
+ok to do it either way.
+
+>
 > Regards,
 > Bjorn
 >
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 >> ---
->>   .../arm/boot/dts/qcom-apq8064-dragonboard-600c.dts | 46 ++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
+>>   arch/arm/boot/dts/qcom-apq8064.dtsi | 18 ++++++++++++------
+>>   1 file changed, 12 insertions(+), 6 deletions(-)
 >>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> index 4fecd94..942de04 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> @@ -8,6 +8,10 @@
->>   	aliases {
->>   		serial0 = &gsbi7_serial;
->>   		serial1 = &gsbi1_serial;
->> +		i2c0 = &gsbi2_i2c;
->> +		i2c1 = &gsbi3_i2c;
->> +		i2c2 = &gsbi4_i2c;
->> +		i2c3 = &gsbi7_i2c;
->>   	};
+>> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> index 65d0e8d..c6ff8fc 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+>> @@ -227,7 +227,8 @@
 >>
->>   	regulators {
->> @@ -180,6 +184,42 @@
->>   			};
->>   		};
+>>   			gsbi1_i2c: i2c@12460000 {
+>>   				compatible = "qcom,i2c-qup-v1.1.1";
+>> -				pinctrl-0 = <&i2c1_pins &i2c1_pins_sleep>;
+>> +				pinctrl-0 = <&i2c1_pins>;
+>> +				pinctrl-1 = <&i2c1_pins_sleep>;
+>>   				pinctrl-names = "default", "sleep";
+>>   				reg = <0x12460000 0x1000>;
+>>   				interrupts = <0 194 IRQ_TYPE_NONE>;
+>> @@ -255,7 +256,8 @@
+>>   			gsbi2_i2c: i2c@124a0000 {
+>>   				compatible = "qcom,i2c-qup-v1.1.1";
+>>   				reg = <0x124a0000 0x1000>;
+>> -				pinctrl-0 = <&i2c2_pins &i2c2_pins_sleep>;
+>> +				pinctrl-0 = <&i2c2_pins>;
+>> +				pinctrl-1 = <&i2c2_pins_sleep>;
+>>   				pinctrl-names = "default", "sleep";
+>>   				interrupts = <0 196 IRQ_TYPE_NONE>;
+>>   				clocks = <&gcc GSBI2_QUP_CLK>, <&gcc GSBI2_H_CLK>;
+>> @@ -277,7 +279,8 @@
+>>   			ranges;
+>>   			gsbi3_i2c: i2c@16280000 {
+>>   				compatible = "qcom,i2c-qup-v1.1.1";
+>> -				pinctrl-0 = <&i2c3_pins &i2c3_pins_sleep>;
+>> +				pinctrl-0 = <&i2c3_pins>;
+>> +				pinctrl-1 = <&i2c3_pins_sleep>;
+>>   				pinctrl-names = "default", "sleep";
+>>   				reg = <0x16280000 0x1000>;
+>>   				interrupts = <GIC_SPI 151 IRQ_TYPE_NONE>;
+>> @@ -302,7 +305,8 @@
 >>
->> +		gsbi@12480000 {
->> +			status = "okay";
->> +			qcom,mode = <GSBI_PROT_I2C>;
->> +			i2c@124a0000 {
->> +				/* On Low speed expansion and Sensors */
->> +				label = "LS-I2C0";
->> +				status = "okay";
->> +			};
->> +		};
->> +
->> +		gsbi@16200000 {
->> +			status = "okay";
->> +			qcom,mode = <GSBI_PROT_I2C>;
->> +			i2c@16280000 {
->> +			/* On Low speed expansion */
->> +				status = "okay";
->> +				label = "LS-I2C1";
->> +				clock-frequency = <200000>;
->> +				eeprom@52 {
->> +					compatible = "atmel,24c128";
->> +					reg = <0x52>;
->> +					pagesize = <64>;
->> +				};
->> +			};
->> +		};
->> +
->> +		gsbi@16300000 {
->> +			status = "okay";
->> +			qcom,mode = <GSBI_PROT_I2C>;
->> +			i2c@16380000 {
->> +				/* On High speed expansion */
->> +				label = "HS-CAM-I2C3";
->> +				status = "okay";
->> +			};
->> +		};
->> +
->>   		/* DEBUG UART  */
->>   		gsbi@16600000 {
->>   			status = "okay";
->> @@ -190,6 +230,12 @@
->>   				pinctrl-names = "default";
->>   				pinctrl-0 = <&gsbi7_uart_2pins>;
->>   			};
->> +
->> +			i2c@16680000 {
->> +				/* On High speed expansion */
->> +				status = "okay";
->> +				label = "HS-CAM-I2C2";
->> +			};
->>   		};
+>>   			gsbi4_i2c: i2c@16380000 {
+>>   				compatible = "qcom,i2c-qup-v1.1.1";
+>> -				pinctrl-0 = <&i2c4_pins &i2c4_pins_sleep>;
+>> +				pinctrl-0 = <&i2c4_pins>;
+>> +				pinctrl-1 = <&i2c4_pins_sleep>;
+>>   				pinctrl-names = "default", "sleep";
+>>   				reg = <0x16380000 0x1000>;
+>>   				interrupts = <GIC_SPI 153 IRQ_TYPE_NONE>;
+>> @@ -337,7 +341,8 @@
+>>   				compatible = "qcom,spi-qup-v1.1.1";
+>>   				reg = <0x1a280000 0x1000>;
+>>   				interrupts = <0 155 0>;
+>> -				pinctrl-0 = <&spi5_default &spi5_sleep>;
+>> +				pinctrl-0 = <&spi5_default>;
+>> +				pinctrl-1 = <&spi5_sleep>;
+>>   				pinctrl-names = "default", "sleep";
+>>   				clocks = <&gcc GSBI5_QUP_CLK>, <&gcc GSBI5_H_CLK>;
+>>   				clock-names = "core", "iface";
+>> @@ -370,7 +375,8 @@
 >>
->>   		leds {
+>>   			gsbi6_i2c: i2c@16580000 {
+>>   				compatible = "qcom,i2c-qup-v1.1.1";
+>> -				pinctrl-0 = <&i2c6_pins &i2c6_pins_sleep>;
+>> +				pinctrl-0 = <&i2c6_pins>;
+>> +				pinctrl-1 = <&i2c6_pins_sleep>;
+>>   				pinctrl-names = "default", "sleep";
+>>   				reg = <0x16580000 0x1000>;
+>>   				interrupts = <GIC_SPI 157 IRQ_TYPE_NONE>;
 >> --
 >> 2.5.0
 >>
