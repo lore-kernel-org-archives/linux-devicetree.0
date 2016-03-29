@@ -1,34 +1,71 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] thermal: rcar: Remove binding docs for r8a7794
-Date: Tue, 29 Mar 2016 08:48:34 +0200
-Message-ID: <CAMuHMdVF5Ui4sJn=nxvCYGAzPha=wb6RFxwbEYz_b1QdvqTW4A@mail.gmail.com>
-References: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v2 6/8] drm/fsl-dcu: add TCON driver
+Date: Tue, 29 Mar 2016 00:11:13 -0700
+Message-ID: <57c86de8eca0aa16a5cdfc488977ca4e@agner.ch>
+References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
+ <1459216802-32094-7-git-send-email-stefan@agner.ch>
+ <2234894.ri36D5MRrN@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Linux PM list <linux-pm@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2234894.ri36D5MRrN@ws-stein>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexander Stein <alexander.stein@systec-electronic.com>
+Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 7:07 AM, Simon Horman
-<horms+renesas@verge.net.au> wrote:
-> The latest information that I have is that there is no thermal IP
-> block present on the r8a7794 SoC so remove the corresponding binding.
->
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gMjAxNi0wMy0yOCAyMzo0NSwgQWxleGFuZGVyIFN0ZWluIHdyb3RlOgo+IEhpLAo+IAo+IHNv
+bWUgY29tbWVudHMgYmVsb3cuCj4gCj4gT24gTW9uZGF5IDI4IE1hcmNoIDIwMTYgMTk6MDA6MDAs
+IFN0ZWZhbiBBZ25lciB3cm90ZToKPj4gQWRkIGRyaXZlciBmb3IgdGhlIFRDT04gKHRpbWluZyBj
+b250cm9sbGVyKSBtb2R1bGUuIFRoZSBUQ09OIG1vZHVsZQo+PiBpcyBhIHNlcGFyYXRlIG1vZHVs
+ZSBhdHRhY2hlZCBhZnRlciB0aGUgRENVIChkaXNwbGF5IGNvbnRyb2xsZXIKPj4gdW5pdCkuIEVh
+Y2ggRENVIGluc3RhbmNlIGhhcyBpdHMgb3duLCBkaXJlY3RseSBjb25uZWN0ZWQgVENPTgo+PiBp
+bnN0YW5jZS4gVGhlIERDVSdzIFJHQiBhbmQgdGltaW5nIHNpZ25hbHMgYXJlIHBhc3NpbmcgdGhy
+b3VnaAo+PiB0aGUgVENPTiBtb2R1bGUuIFRDT04gY2FuIHByb3ZpZGUgdGltaW5nIHNpZ25hbHMg
+Zm9yIHJhdyBURlQgcGFuZWxzCj4+IG9yIG9wZXJhdGUgaW4gYSBieXBhc3MgbW9kZSB3aGljaCBs
+ZWF2ZXMgYWxsIHNpZ25hbHMgdW5hbHRlcmVkLgo+Pgo+PiBUaGUgZHJpdmVyIGN1cnJlbnRseSBv
+bmx5IHN1cHBvcnRzIHRoZSBieXBhc3MgbW9kZS4KPj4KPj4gU2lnbmVkLW9mZi1ieTogU3RlZmFu
+IEFnbmVyIDxzdGVmYW5AYWduZXIuY2g+Cj4gCj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4+IEBAIC0xNCw2ICsxNCw3
+IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiAgLSBj
+bG9ja3M6CQlTZWNvbmQgaGFuZGxlIGZvciBwaXhlbCBjbG9jay4KPj4gIC0gY2xvY2stbmFtZXM6
+CQlTZWNvbmQgbmFtZSAicGl4IiBmb3IgcGl4ZWwgY2xvY2suCj4+ICstIGZzbCx0Y29uOgkJVGhl
+IHBoYW5kbGUgdG8gdGhlIHRpbWluZyBjb250cm9sbGVyIG5vZGUuCj4gCj4gTWF5YmUgYSBjb21t
+ZW50IHRoaXMgaXMgKGN1cnJlbnRseSkgb25seSBmb3IgVnlicmlkLCBidXQgbm90IExTMTAyMUEu
+Cj4gCgpJTUhPLCBzdWNoIHJlZmVyZW5jZXMgdG8gU29DcyBpbiBhIHBlcmlwaGVyYWwgYmluZGlu
+ZyBpcyBzb21ld2hhdAptaXNwbGFjZWQuIElmIHdlIHdvdWxkIHN0YXJ0IGRvaW5nIHRoaXMsIHdl
+IHdvdWxkIGVuZCB1cCBpbiBsb3RzIG9mIFNvQwpyZWZlcmVuY2VzLCBhbmQgbm9ib2R5IGtub3dz
+IHdoZXRoZXIgdGhleSBhcmUgYWN0dWFsbHkgYWNjdXJhdGUgYW5kIHVwCnRvIGRhdGUuLi4gQW5k
+IEkgdGhpbmsgd2Ugc2hvdWxkIGFkZCB0Y29uIHRvIExTMTAyMWEsIG1vcmUgb24gdGhhdApiZWxv
+dy4uLgoKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9m
+c2xfdGNvbi5jCj4+IFsuLi5dCj4+ICtzdHJ1Y3QgZnNsX3Rjb24gKmZzbF90Y29uX2luaXQoc3Ry
+dWN0IGRldmljZSAqZGV2KQo+PiArewo+PiArCXN0cnVjdCBmc2xfdGNvbiAqdGNvbjsKPj4gKwlz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5wOwo+PiArCWludCByZXQ7Cj4+ICsKPj4gKwl0Y29uID0gZGV2
+bV9remFsbG9jKGRldiwgc2l6ZW9mKCp0Y29uKSwgR0ZQX0tFUk5FTCk7Cj4+ICsJaWYgKCF0Y29u
+KQo+PiArCQlyZXR1cm4gTlVMTDsKPj4gKwo+PiArCW5wID0gb2ZfcGFyc2VfcGhhbmRsZShkZXYt
+Pm9mX25vZGUsICJmc2wsdGNvbiIsIDApOwo+PiArCWlmICghbnApIHsKPj4gKwkJZGV2X3dhcm4o
+ZGV2LCAiQ291bGRuJ3QgZmluZCB0aGUgdGNvbiBub2RlXG4iKTsKPj4gKwkJcmV0dXJuIE5VTEw7
+Cj4+ICsJfQo+IAo+IE1heWJlIGNoZWNrIGZvciBkZXZpY2UgdHJlZSBub2RlIGJlZm9yZSBhbGxv
+Y2F0aW5nIHN0cnVjdCBmc2xfdGNvbj8gQWxzbyB0aGlzIAo+IHNob3VsZCBub3QgYmUgYSB3YXJu
+aW5nLCBhcyBvbiBMUzEwMjFBIHRoaXMgaXMgdG8gYmUgZXhwZWN0ZWQuCgpBZ3JlZWQsIGRlZmlu
+aXRlbHkgdGhlIHNtYXJ0ZXIgc2VxdWVuY2UuCgpBZmFjdCBMUzEwMjFhIGhhcyBhbHNvIGEgVENP
+Ti4gQXQgbGVhc3QgaW4gSmlhbndlaSBXYW5ncyBpbml0aWFsIHBhdGNoZXMKaXQgd2FzIHBhcnQg
+b2YgdGhlIGRyaXZlciwgc2VlOgpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNS83LzEzLzI0MgoK
+Tm90IHN1cmUgaG93IHRoYXQgZHJpdmVyIGNhbiB3b3JrIHdpdGhvdXQgVENPTiBzdXBwb3J0IG9u
+IExTMTAyMWEsIG1heWJlCnRoZSBib290bG9hZGVyIHNldHMgdGhlIFRDT04gdG8gYnlwYXNzPwoK
+U2luY2UgSSBkbyBub3QgaGF2ZSBhIExTMTAyMWEsIEkgaGVzaXRhdGVkIHRvIGp1c3QgYWRkIGl0
+IHRvIHRoZSBMUzEwMjFzCmR0J3MsIGJ1dCBpdCBzaG91bGQgYmUgZmFpcmx5IHN0cmFpZ2h0IGZv
+cndhcmQuCgotLQpTdGVmYW4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
