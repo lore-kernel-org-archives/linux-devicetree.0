@@ -1,156 +1,138 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 1/9] dt-binding: remoteproc: Introduce Qualcomm WCNSS loader binding
-Date: Mon, 28 Mar 2016 20:36:57 -0700
-Message-ID: <1459222625-11440-2-git-send-email-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 5/9] ARM: dts: qcom: msm8974: Introduce the wcnss remoteproc node
+Date: Mon, 28 Mar 2016 20:37:01 -0700
+Message-ID: <1459222625-11440-6-git-send-email-bjorn.andersson@linaro.org>
 References: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <1459222625-11440-1-git-send-email-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Suman Anna <s-anna@ti.com>, John Stultz <john.stultz@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, John Stultz <john.stultz@linaro.org>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-
-The document defines the binding for a component that loads firmware for
-and boots the Qualcomm WCNSS core.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Dropped non-variable properties (crash reason, firmware name)
-- Split wcnss and iris definitions into separate nodes
-- Dropped qcom, prefix of regulator supplies (standard binding)
-- Interrupts and stop-state is made optional to support 8064
+- Added dts patches
 
- .../bindings/remoteproc/qcom,wcnss-pil.txt         | 117 +++++++++++++++++++++
- 1 file changed, 117 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
+ .../boot/dts/qcom-msm8974-sony-xperia-honami.dts   | 32 +++++++++++++++++++
+ arch/arm/boot/dts/qcom-msm8974.dtsi                | 36 +++++++++++++++++++++-
+ 2 files changed, 67 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-new file mode 100644
-index 000000000000..e317731ec0c8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,wcnss-pil.txt
-@@ -0,0 +1,117 @@
-+Qualcomm WCNSS Peripheral Image Loader
+diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+index a0398b69f4f2..74faa291d213 100644
+--- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
++++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
+@@ -311,6 +311,13 @@
+ 		pinctrl-0 = <&blsp1_uart2_pin_a>;
+ 	};
+ 
++	wcnss-rproc@fb21b000 {
++		status = "ok";
 +
-+This document defines the binding for a component that loads and boots firmware
-+on the Qualcomm WCNSS core.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,riva-pil",
-+		    "qcom,pronto-v1-pil",
-+		    "qcom,pronto-v2-pil"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: base address and size of riva/pronto PMU registers
-+
-+- interrupts-extended:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must list the watchdog and fatal IRQs and may specify the
-+		    ready, handover and stop-ack IRQs
-+
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: should be "wdog", "fatal", optionally followed by "ready",
-+		    "handover", "stop-ack"
-+
-+- vddmx-supply:
-+- vddcx-supply:
-+- vddpx-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the regulators to be held on behalf of the
-+		    booting of the WCNSS core
-+
-+- qcom,state:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the SMEM state used to indicate to WCNSS that
-+		    it should shut down
-+
-+- qcom,state-names:
-+	Usage: optional
-+	Value type: <stringlist>
-+	Definition: should be "stop"
-+
-+= SUBNODES
-+A single subnode of the WCNSS PIL describes the attached rf module and its
-+resource dependencies.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,wcn3620",
-+		    "qcom,wcn3660",
-+		    "qcom,wcn3680"
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the xo clock and optionally the rf clock
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: should be "xo", optionally followed by "rf"
-+
-+- vddxo-supply:
-+- vddrfa-supply:
-+- vddpa-supply:
-+- vdddig-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the regulators to be held on behalf of the
-+		    booting of the WCNSS core
-+
-+= EXAMPLE
-+The following example describes the resources needed to boot control the WCNSS,
-+with attached WCN3680, as it is commonly found on MSM8974 boards.
-+
-+pronto@fb21b000 {
-+	compatible = "qcom,pronto-v2-pil";
-+	reg = <0xfb21b000 0x3000>;
-+
-+	interrupts-extended = <&intc 0 149 1>,
-+			      <&wcnss_smp2p_slave 0 0>,
-+			      <&wcnss_smp2p_slave 1 0>,
-+			      <&wcnss_smp2p_slave 2 0>,
-+			      <&wcnss_smp2p_slave 3 0>;
-+	interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
-+
-+	vddmx-supply = <&pm8841_s1>;
-+	vddcx-supply = <&pm8841_s2>;
-+	vddpx-supply = <&pm8941_s3>;
-+
-+	qcom,state = <&wcnss_smp2p_out 0>;
-+	qcom,state-names = "stop";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wcnss_pin_a>;
-+
-+	iris {
-+		compatible = "qcom,wcn3680";
-+
-+		clocks = <&rpmcc RPM_CXO_CLK_SRC>, <&rpmcc RPM_CXO_A2>;
-+		clock-names = "xo", "rf";
-+
-+		vddxo-supply = <&pm8941_l6>;
-+		vddrfa-supply = <&pm8941_l11>;
-+		vddpa-supply = <&pm8941_l19>;
-+		vdddig-supply = <&pm8941_s3>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&wcnss_pin_a>;
 +	};
-+};
++
+ 	pinctrl@fd510000 {
+ 		blsp1_uart2_pin_a: blsp1-uart2-pin-active {
+ 			rx {
+@@ -366,6 +373,31 @@
+ 			};
+ 		};
+ 
++		wcnss_pin_a: wcnss-pin-active {
++			wlan {
++				pins =  "gpio36", "gpio37", "gpio38", "gpio39", "gpio40";
++				function = "wlan";
++
++				drive-strength = <6>;
++				bias-pull-down;
++			};
++
++			bt {
++				pins = "gpio35", "gpio43", "gpio44";
++				function = "bt";
++
++				drive-strength = <2>;
++				bias-pull-down;
++			};
++
++			fm {
++				pins = "gpio41", "gpio42";
++				function = "fm";
++
++				drive-strength = <2>;
++				bias-pull-down;
++			};
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index ef5330578431..5c0d1a46baeb 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -2,6 +2,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-msm8974.h>
++#include <dt-bindings/clock/qcom,rpmcc.h>
+ #include "skeleton.dtsi"
+ 
+ / {
+@@ -24,7 +25,7 @@
+ 			no-map;
+ 		};
+ 
+-		reserved@0d200000 {
++		wcnss_region: wcnss@0d200000 {
+ 			reg = <0x0d200000 0xa00000>;
+ 			no-map;
+ 		};
+@@ -430,6 +431,39 @@
+ 			clock-names = "core";
+ 		};
+ 
++		wcnss-rproc@fb21b000 {
++			compatible = "qcom,pronto-v2-pil";
++			reg = <0xfb21b000 0x3000>;
++
++			memory-region = <&wcnss_region>;
++
++			interrupts-extended = <&intc 0 149 IRQ_TYPE_EDGE_RISING>,
++					      <&wcnss_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++					      <&wcnss_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++					      <&wcnss_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++					      <&wcnss_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready", "handover", "stop-ack";
++
++			vddpx-supply = <&pm8941_s3>;
++
++			qcom,state = <&wcnss_smp2p_out 0>;
++			qcom,state-names = "stop";
++
++			status = "disabled";
++
++			iris {
++				compatible = "qcom,wcn3680";
++
++				clocks = <&rpmcc RPM_CXO_A2>;
++				clock-names = "xo";
++
++				vddxo-supply = <&pm8941_l6>;
++				vddrfa-supply = <&pm8941_l11>;
++				vddpa-supply = <&pm8941_l19>;
++				vdddig-supply = <&pm8941_s3>;
++			};
++		};
++
+ 		msmgpio: pinctrl@fd510000 {
+ 			compatible = "qcom,msm8974-pinctrl";
+ 			reg = <0xfd510000 0x4000>;
 -- 
 2.5.0
