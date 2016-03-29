@@ -1,117 +1,114 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 5/8] drm/fsl-dcu: use common clock framework for pixel clock divider
-Date: Mon, 28 Mar 2016 18:59:59 -0700
-Message-ID: <1459216802-32094-6-git-send-email-stefan@agner.ch>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: [PATCH v2 8/8] ARM: dts: vf610-colibri: enable display controller
+Date: Mon, 28 Mar 2016 19:00:02 -0700
+Message-ID: <1459216802-32094-9-git-send-email-stefan@agner.ch>
 References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459216802-32094-1-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
-Cc: kernel@pengutronix.de, airlied@linux.ie, daniel.vetter@ffwll.ch, jianwei.wang.chn@gmail.com, alison.wang@freescale.com, meng.yi@nxp.com, alexander.stein@systec-electronic.com, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459216802-32094-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, meng.yi-3arQi8VN3Tc@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Use the common clock framework to calculate the pixel clock
-dividier. The previous implementation rounded down the calculated
-factor. Thanks to the CLK_DIVIDER_ROUND_CLOSEST flag using the
-common clock framework divider implementation improves the pixel
-clock accuracy in some cases. Ontop of that it also allows to see
-the actual pixel clock in the sysfs clock summary.
+Enable dcu node which is used by the DCU DRM driver. Assign the 5.7"
+EDT panel with VGA resolution which Toradex sells often with the
+evaluation board.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
+Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 ---
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c |  7 ++-----
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c  | 26 ++++++++++++++++++++++----
- 2 files changed, 24 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 16 +++++++++++++++
+ arch/arm/boot/dts/vf-colibri.dtsi         | 33 +++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
-index 68f72fb..f7b4d87 100644
---- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_crtc.c
-@@ -75,12 +75,10 @@ static void fsl_dcu_drm_crtc_mode_set_nofb(struct drm_crtc *crtc)
- 	struct fsl_dcu_drm_device *fsl_dev = dev->dev_private;
- 	struct drm_connector *con = &fsl_dev->connector.base;
- 	struct drm_display_mode *mode = &crtc->state->mode;
--	unsigned int hbp, hfp, hsw, vbp, vfp, vsw, div, index, pol = 0;
--	unsigned long dcuclk;
-+	unsigned int hbp, hfp, hsw, vbp, vfp, vsw, index, pol = 0;
+diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+index ed65e0f..f5d4c78 100644
+--- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
++++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+@@ -18,6 +18,11 @@
+ 		clock-frequency = <16000000>;
+ 	};
  
- 	index = drm_crtc_index(crtc);
--	dcuclk = clk_get_rate(fsl_dev->pix_clk);
--	div = dcuclk / mode->clock / 1000;
-+	clk_set_rate(fsl_dev->pix_clk, mode->clock * 1000);
- 
- 	/* Configure timings: */
- 	hbp = mode->htotal - mode->hsync_end;
-@@ -111,7 +109,6 @@ static void fsl_dcu_drm_crtc_mode_set_nofb(struct drm_crtc *crtc)
- 	regmap_write(fsl_dev->regmap, DCU_DISP_SIZE,
- 		     DCU_DISP_SIZE_DELTA_Y(mode->vdisplay) |
- 		     DCU_DISP_SIZE_DELTA_X(mode->hdisplay));
--	regmap_write(fsl_dev->regmap, DCU_DIV_RATIO, div);
- 	regmap_write(fsl_dev->regmap, DCU_SYN_POL, pol);
- 	regmap_write(fsl_dev->regmap, DCU_BGND, DCU_BGND_R(0) |
- 		     DCU_BGND_G(0) | DCU_BGND_B(0));
-diff --git a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-index f80c116..093a60b 100644
---- a/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-+++ b/drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c
-@@ -283,6 +283,9 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	void __iomem *base;
- 	struct drm_driver *driver = &fsl_dcu_drm_driver;
-+	struct clk *pix_clk_in;
-+	char pix_clk_name[32];
-+	const char *pix_clk_in_name;
- 	const struct of_device_id *id;
- 	int ret;
- 
-@@ -331,15 +334,27 @@ static int fsl_dcu_drm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	fsl_dev->pix_clk = devm_clk_get(dev, "pix");
-+	pix_clk_in = devm_clk_get(dev, "pix");
-+	if (IS_ERR(pix_clk_in)) {
-+		/* legancy binding, use dcu clock as pixel clock input */
-+		pix_clk_in = fsl_dev->clk;
-+	}
++	panel: panel {
++		compatible = "edt,et057090dhu";
++		backlight = <&bl>;
++	};
 +
-+	pix_clk_in_name = __clk_get_name(pix_clk_in);
-+	snprintf(pix_clk_name, sizeof(pix_clk_name), "%s_pix", pix_clk_in_name);
-+	fsl_dev->pix_clk = clk_register_divider(dev, pix_clk_name,
-+			pix_clk_in_name, 0, base + DCU_DIV_RATIO,
-+			0, 8, CLK_DIVIDER_ROUND_CLOSEST, NULL);
- 	if (IS_ERR(fsl_dev->pix_clk)) {
--		/* legancy binding, use dcu clock as pixel clock */
--		fsl_dev->pix_clk = fsl_dev->clk;
-+		dev_err(dev, "failed to register pix clk\n");
-+		ret = PTR_ERR(fsl_dev->pix_clk);
-+		goto disable_clk;
- 	}
+ 	regulators {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -53,6 +58,13 @@
+ 	status  = "okay";
+ };
+ 
++&dcu0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dcu0_1>;
++	fsl,panel = <&panel>;
++	status = "okay";
++};
 +
- 	ret = clk_prepare_enable(fsl_dev->pix_clk);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to enable pix clk\n");
--		goto disable_clk;
-+		goto unregister_pix_clk;
- 	}
+ &dspi1 {
+ 	status = "okay";
  
- 	drm = drm_dev_alloc(driver, dev);
-@@ -368,6 +383,8 @@ unref:
- 	drm_dev_unref(drm);
- disable_pix_clk:
- 	clk_disable_unprepare(fsl_dev->pix_clk);
-+unregister_pix_clk:
-+	clk_unregister(fsl_dev->pix_clk);
- disable_clk:
- 	clk_disable_unprepare(fsl_dev->clk);
- 	return ret;
-@@ -379,6 +396,7 @@ static int fsl_dcu_drm_remove(struct platform_device *pdev)
+@@ -100,6 +112,10 @@
+ 	status = "okay";
+ };
  
- 	clk_disable_unprepare(fsl_dev->clk);
- 	clk_disable_unprepare(fsl_dev->pix_clk);
-+	clk_unregister(fsl_dev->pix_clk);
- 	drm_put_dev(fsl_dev->drm);
++&tcon0 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+index 6e556be..5f1847b 100644
+--- a/arch/arm/boot/dts/vf-colibri.dtsi
++++ b/arch/arm/boot/dts/vf-colibri.dtsi
+@@ -159,6 +159,39 @@
+ 			>;
+ 		};
  
- 	return 0;
++		pinctrl_dcu0_1: dcu0grp_1 {
++			fsl,pins = <
++				VF610_PAD_PTE0__DCU0_HSYNC	0x1902
++				VF610_PAD_PTE1__DCU0_VSYNC	0x1902
++				VF610_PAD_PTE2__DCU0_PCLK	0x1902
++				VF610_PAD_PTE4__DCU0_DE		0x1902
++				VF610_PAD_PTE5__DCU0_R0		0x1902
++				VF610_PAD_PTE6__DCU0_R1		0x1902
++				VF610_PAD_PTE7__DCU0_R2		0x1902
++				VF610_PAD_PTE8__DCU0_R3		0x1902
++				VF610_PAD_PTE9__DCU0_R4		0x1902
++				VF610_PAD_PTE10__DCU0_R5	0x1902
++				VF610_PAD_PTE11__DCU0_R6	0x1902
++				VF610_PAD_PTE12__DCU0_R7	0x1902
++				VF610_PAD_PTE13__DCU0_G0	0x1902
++				VF610_PAD_PTE14__DCU0_G1	0x1902
++				VF610_PAD_PTE15__DCU0_G2	0x1902
++				VF610_PAD_PTE16__DCU0_G3	0x1902
++				VF610_PAD_PTE17__DCU0_G4	0x1902
++				VF610_PAD_PTE18__DCU0_G5	0x1902
++				VF610_PAD_PTE19__DCU0_G6	0x1902
++				VF610_PAD_PTE20__DCU0_G7	0x1902
++				VF610_PAD_PTE21__DCU0_B0	0x1902
++				VF610_PAD_PTE22__DCU0_B1	0x1902
++				VF610_PAD_PTE23__DCU0_B2	0x1902
++				VF610_PAD_PTE24__DCU0_B3	0x1902
++				VF610_PAD_PTE25__DCU0_B4	0x1902
++				VF610_PAD_PTE26__DCU0_B5	0x1902
++				VF610_PAD_PTE27__DCU0_B6	0x1902
++				VF610_PAD_PTE28__DCU0_B7	0x1902
++			>;
++		};
++
+ 		pinctrl_dspi1: dspi1grp {
+ 			fsl,pins = <
+ 				VF610_PAD_PTD5__DSPI1_CS0		0x33e2
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
