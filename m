@@ -1,16 +1,14 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 06/12] ARM: dts: dragonboard-600c: Add eMMC and SD card
- support
-Date: Tue, 29 Mar 2016 16:02:19 +0100
-Message-ID: <56FA98FB.4070203@linaro.org>
+Subject: Re: [PATCH 00/12] ARM: dts: Add dragonboard-600c support.
+Date: Tue, 29 Mar 2016 16:02:43 +0100
+Message-ID: <56FA9913.7040308@linaro.org>
 References: <1458762366-9233-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1458762458-9584-1-git-send-email-srinivas.kandagatla@linaro.org>
- <20160329143829.GJ8929@tuxbot>
+ <20160329145448.GP8929@tuxbot>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160329143829.GJ8929@tuxbot>
+In-Reply-To: <20160329145448.GP8929@tuxbot>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
@@ -18,99 +16,66 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 29/03/16 15:38, Bjorn Andersson wrote:
-> On Wed 23 Mar 12:47 PDT 2016, Srinivas Kandagatla wrote:
+On 29/03/16 15:54, Bjorn Andersson wrote:
+> On Wed 23 Mar 12:46 PDT 2016, Srinivas Kandagatla wrote:
 >
->> This patch adds eMMC and SD card support with card detect and adding
->> required regulators.
+>> Hi Andy,
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../arm/boot/dts/qcom-apq8064-dragonboard-600c.dts | 41 ++++++++++++++++++++++
->>   1 file changed, 41 insertions(+)
+>> This patchset adds support to Dragonboard 600c which is based on APQ8064.
 >>
->> diff --git a/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> index 0a0bcfe..a977314 100644
->> --- a/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> +++ b/arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
->> @@ -1,4 +1,5 @@
->>   #include "qcom-apq8064-v2.0.dtsi"
->> +#include <dt-bindings/gpio/gpio.h>
+>> With this patchset, except spi I was able to test all the below features
+>> on this board on top of linus master branch.
+>> 1> i2c
+>> 2> spi
+>> 3> sd/mmc with card detect
+>> 4> eMMC
+>> 5> USB
+>> 6> SATA
+>> 7> on board Ethernet based on PCIE.
+>> 8> user and activity leds.
 >>
->>   / {
->>   	model = "Qualcomm Technologies, Inc. APQ8064 DragonBoard600c";
->> @@ -22,6 +23,16 @@
->>   	};
+>> AHCI SATA is broken on APQ8064 on mainline, due to changes in libahci, fix is
+>> being discussed which should not effect this dt patches anyway.
+>> This patchset also has a fix to i2c/spi pinctrls which was not set correctly
+>> in my previous apq8064 patches, I have verified this patchset with eeprom and
+>> sensors on the board, you might want to take that patch in next rc.
 >>
->>   	soc {
->> +		pinctrl@800000 {
->> +			card_detect: card_detect {
->> +				mux {
->> +					pins = "gpio26";
->> +					function = "gpio";
->> +					bias-disable;
->> +				};
->> +			};
->> +		};
->> +
->>   		rpm@108000 {
->>   			regulators {
->>   				vdd_l1_l2_l12_l18-supply = <&pm8921_s4>;
->> @@ -62,6 +73,18 @@
->>   					regulator-max-microvolt = <1300000>;
->>   					qcom,switch-mode-frequency = <3200000>;
->>   				 };
->> +
->> +				l5 {
->> +					regulator-min-microvolt = <2750000>;
->> +					regulator-max-microvolt = <3000000>;
->> +					bias-pull-down;
->> +				};
->> +
->> +				l6 {
->> +					regulator-min-microvolt = <2950000>;
->> +					regulator-max-microvolt = <2950000>;
->> +					bias-pull-down;
->> +				};
+>> Thanks,
+>> srini
+>>
+>> Srinivas Kandagatla (12):
+>>    ARM: dts: apq8064: fix the pinctrls for i2c and spi
+>>    ARM: dts: apq8064: add support to gsbi1 uart
+>>    ARM: dts: apq8064: add gsbi7 i2c support
+>>    ARM: dts: dragonboard-600c: add board support with serial
+>>    ARM: dts: dragonboard-600c: add pmic regulator supplies
+>>    ARM: dts: dragonboard-600c: Add eMMC and SD card support
+>>    ARM: dts: dragonboard-600c: add usb support
+>>    ARM: dts: dragonboard-600c: add pcie support
+>>    ARM: dts: dragonboard-600c: add on board sata support.
+>>    ARM: dts: dragonboard-600c: Add on board leds support
+>>    ARM: dts: dragonboard-600c: add i2c support
+>>    ARM: dts: dragonboard-600c: add spi support
 >
-> I would prefer if you folded these into the regulator patch.
+> Please abbreviate db600c (and drop those upper case As).
 
-OK, I will give it a go and see how it looks.
-
+Yep. Will do.
 >
->>   			};
->>   		};
 >>
->> @@ -87,5 +110,23 @@
->>   				pinctrl-0 = <&gsbi7_uart_2pins>;
->>   			};
->>   		};
->> +
->> +		amba {
->> +			/* eMMC */
->> +			sdcc@12400000 {
->> +				status = "okay";
->> +				vmmc-supply = <&pm8921_l5>;
->> +				vqmmc-supply = <&pm8921_s4>;
->> +			};
->> +
->> +			/* External micro SD card */
->> +			sdcc@12180000 {
->> +				status = "okay";
->> +				vmmc-supply = <&pm8921_l6>;
->> +				pinctrl-names	= "default";
->> +				pinctrl-0	= <&card_detect>;
->> +				cd-gpios	= <&tlmm_pinmux 26 GPIO_ACTIVE_HIGH>;
->> +			};
->> +		};
+>>   arch/arm/boot/dts/Makefile                         |   1 +
+>>   .../arm/boot/dts/qcom-apq8064-dragonboard-600c.dts | 377 +++++++++++++++++++++
 >
-> Other than that,
->
+> Please make this qcom-apq8064-arrow-db600c.dts
+Ok, makes sense.
 
-> Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+thanks
+srini
 >
-
-Thanks  for the Ack.
+>>   arch/arm/boot/dts/qcom-apq8064-pins.dtsi           |  39 +++
+>>   arch/arm/boot/dts/qcom-apq8064.dtsi                |  41 ++-
+>>   4 files changed, 452 insertions(+), 6 deletions(-)
+>>   create mode 100644 arch/arm/boot/dts/qcom-apq8064-dragonboard-600c.dts
+>
 > Regards,
 > Bjorn
 >
