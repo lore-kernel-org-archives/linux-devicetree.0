@@ -1,145 +1,88 @@
-From: Shannon Zhao <zhaoshenglong@huawei.com>
-Subject: [RESEND PATCH v9 01/17] Xen: ACPI: Hide UART used by Xen
-Date: Tue, 29 Mar 2016 16:08:24 +0800
-Message-ID: <1459238904-16260-1-git-send-email-zhaoshenglong@huawei.com>
-References: <1458893149-17388-1-git-send-email-zhaoshenglong@huawei.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mmc
+Date: Tue, 29 Mar 2016 16:23:12 +0800
+Message-ID: <56FA3B70.2090902@linaro.org>
+References: <1457254062-22677-1-git-send-email-guodong.xu@linaro.org> <1457254062-22677-2-git-send-email-guodong.xu@linaro.org> <56DC3BAD.8020107@rock-chips.com> <CAFGCpxz3GfFeduaz1Dkg0WvRJWs+GHdVu8uY0-wV=RGyRfBE=A@mail.gmail.com> <56F9E6E5.9000100@kernel-upstream.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1458893149-17388-1-git-send-email-zhaoshenglong@huawei.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com
-Cc: catalin.marinas@arm.com, will.deacon@arm.com, xen-devel@lists.xen.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, shannon.zhao@linaro.org, peter.huangpeng@huawei.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "open list:ACPI" <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <56F9E6E5.9000100@kernel-upstream.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@kernel-upstream.org>, Guodong Xu <guodong.xu@linaro.org>, Shawn Lin <shawn.lin@rock-chips.com>
+Cc: robh+dt@kernel.org, =?UTF-8?B?UGF3ZcWCIE1vbGw=?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, jh80.chung@samsung.com, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Shannon Zhao <shannon.zhao@linaro.org>
 
-ACPI 6.0 introduces a new table STAO to list the devices which are used
-by Xen and can't be used by Dom0. On Xen virtual platforms, the physical
-UART is used by Xen. So here it hides UART from Dom0.
 
-CC: "Rafael J. Wysocki" <rjw@rjwysocki.net> (supporter:ACPI)
-CC: Len Brown <lenb@kernel.org> (supporter:ACPI)
-CC: linux-acpi@vger.kernel.org (open list:ACPI)
-Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
----
-v9: add the UART device address in printed message
----
- drivers/acpi/scan.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+On 03/29/2016 10:22 AM, Shawn Lin wrote:
 
-diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-index 5f28cf7..29f26fc 100644
---- a/drivers/acpi/scan.c
-+++ b/drivers/acpi/scan.c
-@@ -45,6 +45,7 @@ static LIST_HEAD(acpi_scan_handlers_list);
- DEFINE_MUTEX(acpi_device_lock);
- LIST_HEAD(acpi_wakeup_device_list);
- static DEFINE_MUTEX(acpi_hp_context_lock);
-+static u64 spcr_uart_addr;
- 
- struct acpi_dep_data {
- 	struct list_head node;
-@@ -1453,6 +1454,42 @@ static int acpi_add_single_object(struct acpi_device **child,
- 	return 0;
- }
- 
-+static acpi_status acpi_get_resource_memory(struct acpi_resource *ares,
-+					    void *context)
-+{
-+	struct resource *res = context;
-+
-+	if (acpi_dev_resource_memory(ares, res))
-+		return AE_CTRL_TERMINATE;
-+
-+	return AE_OK;
-+}
-+
-+static bool acpi_device_should_be_hidden(acpi_handle handle)
-+{
-+	acpi_status status;
-+	struct resource res;
-+
-+	/* Check if it should ignore the UART device */
-+	if (spcr_uart_addr != 0) {
-+		if (!acpi_has_method(handle, METHOD_NAME__CRS))
-+			return false;
-+
-+		status = acpi_walk_resources(handle, METHOD_NAME__CRS,
-+					     acpi_get_resource_memory, &res);
-+		if (ACPI_FAILURE(status))
-+			return false;
-+
-+		if (res.start == spcr_uart_addr) {
-+			printk(KERN_INFO PREFIX "The UART device @%pa in SPCR table will be hidden\n",
-+			       &res.start);
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
- static int acpi_bus_type_and_status(acpi_handle handle, int *type,
- 				    unsigned long long *sta)
- {
-@@ -1466,6 +1503,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
- 	switch (acpi_type) {
- 	case ACPI_TYPE_ANY:		/* for ACPI_ROOT_OBJECT */
- 	case ACPI_TYPE_DEVICE:
-+		if (acpi_device_should_be_hidden(handle))
-+			return -ENODEV;
-+
- 		*type = ACPI_BUS_TYPE_DEVICE;
- 		status = acpi_bus_get_status_handle(handle, sta);
- 		if (ACPI_FAILURE(status))
-@@ -1916,9 +1956,24 @@ static int acpi_bus_scan_fixed(void)
- 	return result < 0 ? result : 0;
- }
- 
-+static void __init acpi_get_spcr_uart_addr(void)
-+{
-+	acpi_status status;
-+	struct acpi_table_spcr *spcr_ptr;
-+
-+	status = acpi_get_table(ACPI_SIG_SPCR, 0,
-+				(struct acpi_table_header **)&spcr_ptr);
-+	if (ACPI_SUCCESS(status))
-+		spcr_uart_addr = spcr_ptr->serial_port.address;
-+	else
-+		printk(KERN_WARNING PREFIX "STAO table present, but SPCR is missing\n");
-+}
-+
- int __init acpi_scan_init(void)
- {
- 	int result;
-+	acpi_status status;
-+	struct acpi_table_stao *stao_ptr;
- 
- 	acpi_pci_root_init();
- 	acpi_pci_link_init();
-@@ -1934,6 +1989,20 @@ int __init acpi_scan_init(void)
- 
- 	acpi_scan_add_handler(&generic_device_handler);
- 
-+	/*
-+	 * If there is STAO table, check whether it needs to ignore the UART
-+	 * device in SPCR table.
-+	 */
-+	status = acpi_get_table(ACPI_SIG_STAO, 0,
-+				(struct acpi_table_header **)&stao_ptr);
-+	if (ACPI_SUCCESS(status)) {
-+		if (stao_ptr->header.length > sizeof(struct acpi_table_stao))
-+			printk(KERN_INFO PREFIX "STAO Name List not yet supported.");
-+
-+		if (stao_ptr->ignore_uart)
-+			acpi_get_spcr_uart_addr();
-+	}
-+
- 	mutex_lock(&acpi_scan_lock);
- 	/*
- 	 * Enumerate devices in the ACPI namespace.
--- 
-2.0.4
+>>
+>>
+>>
+>>         +               else if (IS_ERR(host->pdata)) {
+>>                                  dev_err(host->dev, "platform data not
+>>         available\n");
+>>                                  return -EINVAL;
+>>                          }
+>>         @@ -3012,6 +3022,9 @@ int dw_mci_probe(struct dw_mci *host)
+>>                          }
+>>                  }
+>>
+>>         +       if (host->pdata->rstc != NULL)
+>>         +               reset_control_deassert(host->pdata->rstc);
+>>         +
+>>
+>>
+>>     sorry, I can't follow your intention here. Shouldn't it be something
+>>     like "assert mmc -> may need delay -> deassert mmc". As your current
+>>     code, nothing happend right?
+Should be abstracted in reset driver.
 
+>>
+>>
+>> The chip exits from bootloader with this bit asserted. And when entering
+>> kernel, we only need to deassert.
+>>
+>> In my current code, the driver deassert mmc in _probe(), and assert mmc
+>> in _remove().
+>
+> I catch your point. From the previous discussion, we add it to make sure
+> dw_mmc in good state after leaving bootloader to kernel. But My real
+> question is that you can assert it in  bootloader, so you can also
+> dessert it in bootloaer to make sure dw_mmc work fine when probing
+> in kernel. In that way, we don't need this patch?
+
+uefi does not have exit point, and kernel may not assume mmc controller 
+state is always correct when boot.
+If Uefi need copy Image from mmc, mmc controller is in working state.
+When jump to kernel, uefi mmc driver can not recover itself.
+If kernel assume mmc controller state is clean, mmc will be in abnormal 
+state.
+Some controller will clear itself when set clock, however, hip660 does 
+not, it need special register to access.
+
+
+>
+> More to think, Is it ok to match the behaviour of bootloader stage?
+> My bootloader doesn't assert the reset pin of dw_mmc, so it seams if
+> I want to fix you issue on kernel stage, I need a new round of
+> assert->delay->deassert.
+
+The process like delay (if required) should be abstracted in reset driver.
+reset framework just export reset_control_assert/reset_control_deassert API.
+Unfortunately not find clear description in Documentation/.
+Suppose deassert is like start, while assert is like stop.
+
+drivers/reset/core.c
+reset_control_deassert - deasserts the reset line
+reset_control_assert - asserts the reset line
+
+More example:
+drivers/mmc/host/sdhci-st.c
+drivers/mmc/host/sunxi-mmc.c
+drivers/usb/host/ohci-platform.c
+drivers/i2c/busses/i2c-mv64xxx.c
+
+Thanks
 
