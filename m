@@ -1,37 +1,53 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] Addition of Altera Arria10 System Resource Chip
-Date: Wed, 30 Mar 2016 09:14:14 +0100
-Message-ID: <20160330081414.GE3323@x1>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 2/8] MAINTAINERS: Addition of Altera Arria10 System
+ Resource Chip
+Date: Wed, 30 Mar 2016 09:19:08 +0100
+Message-ID: <20160330081908.GH3323@x1>
 References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-3-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459278791-3646-1-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawell.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1459278791-3646-3-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Mar 2016, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
+On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
 
-You need to submit this properly, using `git send-email`, since it
-will look after you by listing each patch, together with their author,
-and provide a nice diff-stat, which is very helpful to reviewers.
-
-> The Altera Arria10 Development Kit includes a system resource chip
-> that fits under the Multi-Function Device framework. The chip has
-> hardware monitoring functions and a GPIO expander over the SPI bus.
+> From: Thor Thayer <tthayer@opensource.altera.com>
 >=20
-> [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource Chip
-> [RFC 2/8] MAINTAINERS: Addition of Altera Arria10 System Resource
-> [RFC 3/8] mfd: altr_a10sr: Add Altera Arria10 DevKit System Resource
-> [RFC 4/8] gpio: altera-a10sr: Add A10 System Resource Chip GPIO
-> [RFC 5/8] ARM: socfpga: dts: Add Devkit A10-SR fields for Arria10
-> [RFC 6/8] ARM: socfpga: dts: Add LED framework to A10-SR GPIO
-> [RFC 7/8] hwmon: Altera Arria10 System Resource Chip - HW Monitor
-> [RFC 8/8] ARM: socfpga: dts: Add Devkit Arria10-SR HWMON
+> Add maintainer for the Altera Arria10 files.
+>=20
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  MAINTAINERS |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 972f25d..567ce60 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -608,6 +608,14 @@ L:	linux-gpio@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/gpio/gpio-altera.c
+> =20
+> +ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
+> +M:	Thor Thayer <tthayer@opensource.altera.com>
+> +S:	Maintained
+> +F:	drivers/mfd/altera-a10sr.c
+> +F:	include/linux/mfd/altera-a10sr.h
+> +F:	drivers/gpio/gpio-altera-a10sr.c
+> +F:	drivers/hwmon/altera-a10sr-hwmon.c
+
+Alphabetical makes more sense.
+
+>  ALTERA TRIPLE SPEED ETHERNET DRIVER
+>  M:	Vince Bridgers <vbridger@opensource.altera.com>
+>  L:	netdev@vger.kernel.org
 
 --=20
 Lee Jones
@@ -39,7 +55,7 @@ Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
 =46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
