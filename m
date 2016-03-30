@@ -1,86 +1,39 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] arm64: rockchip: Initial GeekBox enablement
-Date: Wed, 30 Mar 2016 11:44:36 -0500
-Message-ID: <CADhT+wdXXp322vmgFmWTUiiRZTsCWeJSSdU=BMEEbSyb_bnrUw@mail.gmail.com>
-References: <1457294038-14243-1-git-send-email-afaerber@suse.de>
-	<56DDA3D5.3090209@st.com>
-	<56DDB749.1020808@suse.de>
-	<CADhT+wfO8x4En78g5ixnnwbpaeXJGDo+Q1sOABYsbXzNZy0CPw@mail.gmail.com>
-	<56DE7E1D.5070508@st.com>
-	<CADhT+weKf+F98uxCQhRa2RfMm8+4p=rrNZc-Vf=w_HPycXto=A@mail.gmail.com>
-	<CAAObsKD9HoEbtV_JMz_R=bcrQseDmhncRAWP9k8djksL-LMQqw@mail.gmail.com>
-	<56DFE55B.2090806@st.com>
-	<56DFE64B.8060606@st.com>
-	<CAAObsKBr9SXg1-wr9O-ypR8JozdGpeAwfDLMeUKi8ozxkKyTXg@mail.gmail.com>
-	<56DFF253.9050208@st.com>
-	<56DFFA9E.7060602@st.com>
-	<CAAObsKBUzBXcamEyup44N1bYUzGr_ZZTsYcD5x3PXb-2E00cGA@mail.gmail.com>
-	<56E033C8.40506@st.com>
-	<56E038CE.606@st.com>
-	<CADhT+wcMpzA_Coj8Z5OQZsc3bF3a7yOmsbazQMPtcdUWkJSuCA@mail.gmail.com>
-	<56E13AAB.2080900@st.com>
-	<CADhT+wd=vcph2y_OxkGNO5EwHvN=kBy-BrfZHmNjZHww4LxmTg@mail.gmail.com>
-	<56E28B5D.6000708@st.com>
-	<CAAObsKB-tSCu5KMYk2Zi-oX9zMKEOwwT93sMkiZKiYvtexmHaQ@mail.gmail.com>
-	<56E6E4B0.8060408@st.com>
-	<CAAObsKCdk+6HdzFYxRKZbPiaKcfMCLjbpngurat47YvyvSgH-w@mail.gmail.com>
-	<56E801EB.6030107@st.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] scatterlist: add sg_alloc_table_from_buf()
+ helper
+Date: Wed, 30 Mar 2016 09:51:43 -0700
+Message-ID: <20160330165143.GI2350@sirena.org.uk>
+References: <1459352394-22810-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1459352394-22810-5-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E801EB.6030107-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Giuseppe CAVALLARO <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu-XCtybt49RKsYaV1qd6yewg@public.gmane.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, =?UTF-8?Q?Frank_Sch=C3=A4fer?= <fschaefer.oss-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vFj1JTFBn4Zx1dEI"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBSMI6C3QKGQEKKOOJUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1459352394-22810-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgRichard Weinberger <ri>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 7:36 AM, Giuseppe CAVALLARO
-<peppe.cavallaro-qxv4g6HH51o@public.gmane.org> wrote:
-> Hello Tomeu
->
-> On 3/15/2016 8:23 AM, Tomeu Vizoso wrote:
->>
->> Thanks.
->>
->> Btw, I have rebased on top of 4.5 this morning and I have noticed that
->> 88f8b1bb41c6 ("stmmac: Fix 'eth0: No PHY found' regression") got in
->> there, so I guess we have now a bunch of boards with broken network on
->> that release:(
->
->
->
-> This is the status on my side: I am testing on an HW that has the
-> Enhanced descriptors and all works fine.
->
-> On this HW, if I force the driver to use the normal descriptor
-> layout, I meet problems but using both net.git and net-next.
-> So I suspect I cannot ply with this HW forcing the normal descriptors.
-> But! That is helping me to check if, on net-next, the stmmac is
-> actually  programming fine the normal desc case.
-> I have just found another fix so I kindly ask you to apply the temp
-> patch  attached and let me know.
-> In details, I have noticed that the OWN bit was not set in the right
-> TDES0.
->
-> I also ask you to give me a log of the kernel where the stmmac was
-> running fine. I would like to see which configuration it is selected
-> at runtime by the driver on your box.
-> From your previous logs (where the stmmac failed), it seems that
-> the  problem is on normal desc but, to be honest, this is the first
-> case I see a 3.50a with HW capability register and w/o Enhanced
-> descriptors.
->
+--vFj1JTFBn4Zx1dEI
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Are you still working on a fix for:
+On Wed, Mar 30, 2016 at 05:39:51PM +0200, Boris Brezillon wrote:
+> sg_alloc_table_from_buf() provides an easy solution to create an sg_table
+> from a virtual address pointer. This function takes care of dealing with
+> vmallocated buffers, buffer alignment, or DMA engine limitations (maximum
+> DMA transfer size).
 
-[    1.196110] libphy: PHY stmmac-0:ffffffff not found
-[    1.200972] eth0: Could not attach to PHY
-[    1.204991] stmmac_open: Cannot attach to PHY (error: -19)
-
-I see the error still there as of linux-next 20160330.
-
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This seems nice.  Should we also have a further helper on top of this
+which will get constraints from a dmaengine, it seems like it'd be a
+common need?
+--vFj1JTFBn4Zx1dEI--
