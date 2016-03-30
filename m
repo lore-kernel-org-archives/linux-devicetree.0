@@ -1,76 +1,55 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 0/4] mtd: nand: add enum nand_ecc_algo
-Date: Wed, 30 Mar 2016 15:27:10 +0200
-Message-ID: <20160330152710.0b33d28d@bbrezillon>
-References: <1458728343-1234-1-git-send-email-zajec5@gmail.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Wed, 30 Mar 2016 18:59:07 +0530
+Message-ID: <56FBD4A3.7080208@nvidia.com>
+References: <1456756829-2277-1-git-send-email-ldewangan@nvidia.com>	<20160229174751.GQ21240@tuxbot>	<20160301022326.GC18327@sirena.org.uk>	<56D5111E.6090606@nvidia.com>	<20160302033833.GV18327@sirena.org.uk>	<56D65F7E.3090907@nvidia.com>	<20160302043506.GC18327@sirena.org.uk>	<56E81103.8010903@nvidia.com> <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com> <56ED0F58.7060005@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458728343-1234-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56ED0F58.7060005@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Mark Brown <broonie@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafal,
 
-On Wed, 23 Mar 2016 11:18:59 +0100
-Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Saturday 19 March 2016 02:05 PM, Laxman Dewangan wrote:
+>
+> On Saturday 19 March 2016 10:01 AM, Bjorn Andersson wrote:
+>> On Tue, Mar 15, 2016 at 6:41 AM, Laxman Dewangan 
+>> <ldewangan@nvidia.com> wrote:
+>>>
+>>>
+>> Generally the device driver should describe the PMIC and the device
+>> tree should describe the board. So the Maxim's numbers should (if
+>> specified at all) go into the driver and the measures/calculated
+>> characteristics for your board should be specified in the dt.
+>>
+>> The ramp properties in the generic regulator binding is used to inform
+>> the OS about the board's ramp properties.
+>>
+>>
+>> If I understand you correctly the Maxim PMIC can be configured to
+>> drive the change at different speed, this should be configured through
+>> a Maxim specific property. It should not reuse the generic properties
+>> for ramp delays.
+>>
+>
+> Ramp delay configurations are seen on other vendor's PMIC devices also.
+> Therefore, I like o me generic property rather than specific to Maxim. 
+> Parsing can be done in the core framework and applied during setting 
+> machine constraints.
 
-> Some time ago I started working on a new "nand-ecc-algo" property to =
-allow
-> specifying ECC algorithm for hardware ECC mode as well.
-> Boris pointed out it's becoming a bit messy that way as we already ha=
-ve value
-> NAND_ECC_SOFT_BCH.
-> I suggested deprecating "soft_bch" value from nand-ecc-mode property =
-and got
-> Boris agreed and no objections from others. So there is how I want to=
- implement
-> this.
-> If you agree on this way & apply my patches, I'll start modifying NAN=
-D drivers
-> (similarly to the nandsim) and then will try to drop NAND_ECC_SOFT_BC=
-H except
-> for handling backward compatibility.
-> Then finally we should be able to add "nand-ecc-algo" property suppor=
-t properly.
+Any comment on this approach?
 
-Can you configure git-send-email to not encode your messages in base64?
+Like to add property as "regulator-device-ramp-delay" which will be used 
+for PMIC configuration and regulator-ramp-delay will be used for delay 
+calculation. This is case when advertised ramp delay does not match with 
+the platform measured ramp delay.
 
-Thanks,
-
-Boris
-
->=20
-> V2: Add of_get_nand_ecc_algo helper (in 2/4) instead of this slightly=
- hacky code
->     in nand_dt_init that would be replaced anyway.
->=20
-> Rafa=C5=82 Mi=C5=82ecki (4):
->   mtd: nand: add new enum for storing ECC algorithm
->   of: mtd: prepare helper reading NAND ECC algo from DT
->   mtd: nand: set ECC algorithm in nand_dt_init
->   mtd: nand: nandsim: set ECC algorithm explicitly
->=20
->  drivers/mtd/nand/nand_base.c |  6 +++++-
->  drivers/mtd/nand/nandsim.c   |  2 ++
->  drivers/of/of_mtd.c          | 36 ++++++++++++++++++++++++++++++++++=
-++
->  include/linux/mtd/nand.h     |  7 +++++++
->  include/linux/of_mtd.h       |  6 ++++++
->  5 files changed, 56 insertions(+), 1 deletion(-)
->=20
-
-
-
---=20
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If regulator-device-ramp-delay is not provided from platform then 
+regulator-ramp-delay will be used for PMIC configuration as well as for 
+the delay calculation. This is case when advertised ramp delay match 
+with the platform measured ramp delay.
