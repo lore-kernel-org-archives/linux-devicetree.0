@@ -1,49 +1,56 @@
-From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: Re: [RFC 5/8] ARM: socfpga: dts: Add Devkit A10-SR fields for
- Arria10
-Date: Wed, 30 Mar 2016 12:42:03 -0500
-Message-ID: <alpine.DEB.2.02.1603301240250.21508@linux-builds1>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com> <1459278791-3646-6-git-send-email-tthayer@opensource.altera.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
+ on platform behavior
+Date: Wed, 30 Mar 2016 11:16:23 -0700
+Message-ID: <20160330181623.GQ2350@sirena.org.uk>
+References: <20160229174751.GQ21240@tuxbot>
+ <20160301022326.GC18327@sirena.org.uk>
+ <56D5111E.6090606@nvidia.com>
+ <20160302033833.GV18327@sirena.org.uk>
+ <56D65F7E.3090907@nvidia.com>
+ <20160302043506.GC18327@sirena.org.uk>
+ <56E81103.8010903@nvidia.com>
+ <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com>
+ <56ED0F58.7060005@nvidia.com>
+ <56FBD4A3.7080208@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459278791-3646-6-git-send-email-tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawell.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7kZSb73GAX5WIGXJ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56FBD4A3.7080208@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Mar 2016, tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
 
-> From: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Add the Altera Arria10 System Resource node. This is a Multi-Function
-> device with GPIO and HWMON support.
-> 
-> Signed-off-by: Thor Thayer <tthayer-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> +		spi1: spi@ffda5000 {
-> +			compatible = "snps,dw-apb-ssi";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0xffda5000 0x100>;
-> +			interrupts = <0 102 4>;
-> +			num-chipselect = <4>;
-> +			bus-num = <0>;
-> +			/*32bit_access;*/
-> +			tx-dma-channel = <&pdma 16>;
-> +			rx-dma-channel = <&pdma 17>;
-> +			clocks = <&spi_m_clk>;
-> +			status = "disabled";
-> +		};
-> +
+--7kZSb73GAX5WIGXJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I think you need to split this into 2 patches, 1 for adding the SPI nodes, and
-the 2nd for adding the slave device.
+On Wed, Mar 30, 2016 at 06:59:07PM +0530, Laxman Dewangan wrote:
 
-BR,
-Dinh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Like to add property as "regulator-device-ramp-delay" which will be used for
+> PMIC configuration and regulator-ramp-delay will be used for delay
+> calculation. This is case when advertised ramp delay does not match with the
+> platform measured ramp delay.
+
+Why -device?
+
+--7kZSb73GAX5WIGXJ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW/Bf2AAoJECTWi3JdVIfQKgkH/icEt3K+PJqQVGkd3BT+OVse
+euDUzv/Mq1rA7FeEWl/SrYV/NWS6D6eucdo5E4Ya4JIBzzXhLfYDtBQjWrMsorMO
+sRc9e+Ko7g4OIwjhSDlpqH1g4OrjvOP40Br9U6puoD4fWPSH41H8jRjPp43BNbMU
+7GqUqrWpZ+vkd8RaA6/XiLwPuN96HMZkejZ23cuPStiKNNzAowfCaXrL2vc2Jmxf
+r+GH5psG4k8sdee3TVepyBMcUMD4ILHKF5ZPpFG3gkgFiHcZSo+rgc8mx0DEoOia
+d7CLFQNbBQUxAkckGj8jbfXmaHseuU8XdQ8yYHBqSg5/ApLZSNOAkOrI9mkbjGY=
+=eqZK
+-----END PGP SIGNATURE-----
+
+--7kZSb73GAX5WIGXJ--
