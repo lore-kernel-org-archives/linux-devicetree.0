@@ -1,56 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Wed, 30 Mar 2016 11:16:23 -0700
-Message-ID: <20160330181623.GQ2350@sirena.org.uk>
-References: <20160229174751.GQ21240@tuxbot>
- <20160301022326.GC18327@sirena.org.uk>
- <56D5111E.6090606@nvidia.com>
- <20160302033833.GV18327@sirena.org.uk>
- <56D65F7E.3090907@nvidia.com>
- <20160302043506.GC18327@sirena.org.uk>
- <56E81103.8010903@nvidia.com>
- <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com>
- <56ED0F58.7060005@nvidia.com>
- <56FBD4A3.7080208@nvidia.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] scatterlist: add sg_alloc_table_from_buf()
+ helper
+Date: Wed, 30 Mar 2016 20:18:31 +0200
+Message-ID: <20160330201831.38e1d6bd@bbrezillon>
+References: <1459352394-22810-1-git-send-email-boris.brezillon@free-electrons.com>
+	<1459352394-22810-5-git-send-email-boris.brezillon@free-electrons.com>
+	<20160330165143.GI2350@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7kZSb73GAX5WIGXJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FBD4A3.7080208@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160330165143.GI2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgRichard Weinberger <r>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 30 Mar 2016 09:51:43 -0700
+Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
---7kZSb73GAX5WIGXJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Wed, Mar 30, 2016 at 05:39:51PM +0200, Boris Brezillon wrote:
+> > sg_alloc_table_from_buf() provides an easy solution to create an sg_table
+> > from a virtual address pointer. This function takes care of dealing with
+> > vmallocated buffers, buffer alignment, or DMA engine limitations (maximum
+> > DMA transfer size).
+> 
+> This seems nice.  Should we also have a further helper on top of this
+> which will get constraints from a dmaengine, it seems like it'd be a
+> common need?
 
-On Wed, Mar 30, 2016 at 06:59:07PM +0530, Laxman Dewangan wrote:
+Yep, we could create a wrapper extracting dma_slave caps info,
+converting it to sg_constraints and calling sg_alloc_table_from_buf().
+But let's try to get this function accepted first, and I'll send another
+patch providing this wrapper.
 
-> Like to add property as "regulator-device-ramp-delay" which will be used for
-> PMIC configuration and regulator-ramp-delay will be used for delay
-> calculation. This is case when advertised ramp delay does not match with the
-> platform measured ramp delay.
+BTW, do you see other things that should be added in sg_constraints?
 
-Why -device?
-
---7kZSb73GAX5WIGXJ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW/Bf2AAoJECTWi3JdVIfQKgkH/icEt3K+PJqQVGkd3BT+OVse
-euDUzv/Mq1rA7FeEWl/SrYV/NWS6D6eucdo5E4Ya4JIBzzXhLfYDtBQjWrMsorMO
-sRc9e+Ko7g4OIwjhSDlpqH1g4OrjvOP40Br9U6puoD4fWPSH41H8jRjPp43BNbMU
-7GqUqrWpZ+vkd8RaA6/XiLwPuN96HMZkejZ23cuPStiKNNzAowfCaXrL2vc2Jmxf
-r+GH5psG4k8sdee3TVepyBMcUMD4ILHKF5ZPpFG3gkgFiHcZSo+rgc8mx0DEoOia
-d7CLFQNbBQUxAkckGj8jbfXmaHseuU8XdQ8yYHBqSg5/ApLZSNOAkOrI9mkbjGY=
-=eqZK
------END PGP SIGNATURE-----
-
---7kZSb73GAX5WIGXJ--
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
