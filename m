@@ -1,41 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: ARM: dts: imx6ul: add more functionality to i.MX6UL
-Date: Wed, 30 Mar 2016 19:43:14 +0800
-Message-ID: <20160330114313.GE28207@tiger>
-References: <1452619291-13625-1-git-send-email-LW@KARO-electronics.de>
- <1453284549-16363-1-git-send-email-LW@KARO-electronics.de>
- <1457095043-14115-1-git-send-email-LW@KARO-electronics.de>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] mmc: dw_mmc: controller reset support
+Date: Wed, 30 Mar 2016 19:45:05 +0800
+Message-ID: <56FBBC41.5080104@rock-chips.com>
+References: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457095043-14115-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Anson Huang <b20788@freescale.com>, Bai Ping <b51503@freescale.com>, Frank Li <Frank.Li@freescale.com>, Fugang Duan <B38611@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459322696-29919-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, --to=robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 04, 2016 at 01:37:21PM +0100, Lothar Wa=DFmann wrote:
-> [PATCHv3 1/2] ARM: dts: imx6ul: add support for Ka-Ro electronics TXU=
-L modules
-> [PATCHv3 2/2] ARM: dts: imx6ul: add support for Ka-Ro electronics TXU=
-L mainboard
++ Heiko
+On 2016/3/30 15:24, Guodong Xu wrote:
+> mmc controller registers may in abnormal state if mmc is used in
+> bootloader, eg. to load kernel from eMMC. Some controllers cann't
+> clear their registers when clk is set. They use dedicated reset
+> logics to do this.
+>
+> In this patch, a 'resets' property is added into dw_mmc dts
+> node. When driver does parse_dt and probe, it calls reset API to
+> deassert the 'reset' of dw_mmc host controller. When probe error or
+> remove, it calls reset API to assert it.
+>
+> Chip vendor's actual reset logics is implemented in reset driver, not
+> in dw_mmc code.
+>
+> Please also refer to Documentation/devicetree/bindings/reset/reset.txt
+>
+> Guodong Xu (2):
+>    Documentation: synopsys-dw-mshc: add binding for resets
+>    mmc: dw_mmc: add resets support to dw_mmc
+>
+>   .../devicetree/bindings/mmc/synopsys-dw-mshc.txt     |  4 ++++
+>   drivers/mmc/host/dw_mmc.c                            | 20 +++++++++++++++++++-
+>   include/linux/mmc/dw_mmc.h                           |  6 ++++--
+>   3 files changed, 27 insertions(+), 3 deletions(-)
+>
 
-Applied both, thanks.
 
->=20
-> This patchset adds more functionality to the i.MX6UL machines.
->=20
-> Changes vs. v1:
-> - added patch to implement KPP clock for i.MX6UL to prevent conflicts
->   when this patch would go via a different tree.
-> - added board support for Ka-Ro electronics TX6UL module for the same
->   reason
-> - added imx6ul specific compatibles as requested by Lucas Stach
->=20
-> Changes vs. v2:
-> - dropped patches which have already been applied in the meantime
-> - addressed comments by Shawn Guo
->=20
->=20
+-- 
+Best Regards
+Shawn Lin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
