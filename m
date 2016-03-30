@@ -1,61 +1,71 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 1/1] ARM: dts: kirkwood: add kirkwood-nsa320.dtb to Makefile
-Date: Wed, 30 Mar 2016 11:50:16 +0200
-Message-ID: <87io04uwfb.fsf@free-electrons.com>
-References: <1459154311-4770-1-git-send-email-xypron.glpk@gmx.de>
+From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RESEND] [PATCH v11 3/6] added support for DesignWare Controller
+Date: Wed, 30 Mar 2016 10:54:17 +0100
+Message-ID: <56FBA249.2070801@synopsys.com>
+References: <cover.1457111366.git.jpinto@synopsys.com>
+ <a2f0601b03aad273819e7a8da2a65664759e2889.1457111366.git.jpinto@synopsys.com>
+ <5B8DA87D05A7694D9FA63FD143655C1B541CD517@hasmsx108.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459154311-4770-1-git-send-email-xypron.glpk@gmx.de> (Heinrich
-	Schuchardt's message of "Mon, 28 Mar 2016 10:38:31 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Adam Baker <linux@baker-net.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5B8DA87D05A7694D9FA63FD143655C1B541CD517-Jy8z56yoSI8MvF1YICWikbfspsVTdybXVpNB7YpNyf8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Winkler, Tomas" <tomas.winkler-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <julian.calaby-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <hch-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <gbroner-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heinrich,
- 
- On lun., mars 28 2016, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
 
-> Commit be3d7d023b87 ("ARM: kirkwood: Add DTS file for NSA320")
-> created the new file kirkwood-nsa320.dts but did not
-> add it to the Makefile.
->
-> Fixes: be3d7d023b87 ("ARM: kirkwood: Add DTS file for NSA320")
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Hi Thomas,
 
-Applied on mvebu/dt
+On 3/29/2016 1:15 PM, Winkler, Tomas wrote:
+> 
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h index 2570d94..8b0cdf0 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -262,6 +262,7 @@ struct ufs_pwr_mode_info {
+>   * @suspend: called during host controller PM callback
+>   * @resume: called during host controller PM callback
+>   * @dbg_register_dump: used to dump controller debug information
+> + * @custom_phy_initialization: used to initialize phys in DWC Cores
+>   */
+>  struct ufs_hba_variant_ops {
+>  	const char *name;
+> @@ -283,6 +284,7 @@ struct ufs_hba_variant_ops {
+>  	int     (*suspend)(struct ufs_hba *, enum ufs_pm_op);
+>  	int     (*resume)(struct ufs_hba *, enum ufs_pm_op);
+>  	void	(*dbg_register_dump)(struct ufs_hba *hba);
+
+[snip]...
+
+>  /*
+>   * PHY Adpater attributes
+>   */
+> @@ -110,6 +144,11 @@
+>  #define PA_STALLNOCONFIGTIME	0x15A3
+>  #define PA_SAVECONFIGTIME	0x15A4
+>  
+> +/*Other attributes*/
+> +#define VS_MPHYCFGUPDT		0xD085
+> +#define VS_DEBUGOMC		0xD09E
+> +#define VS_POWERSTATE		0xD083
+> +
+>  /* PA power modes */
+>  enum {
+>  	FAST_MODE	= 1,
+> --
+> 1.8.1.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-scsi" in the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+I am planning to start working today in the v12 of the patch-set. Did you have
+opportunity to check the other patches (4, 5 and 6)?
 
 Thanks,
-
-Gregory
-> ---
->  arch/arm/boot/dts/Makefile | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index f8308db..e75a340 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -215,6 +215,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
->  	kirkwood-ns2mini.dtb \
->  	kirkwood-nsa310.dtb \
->  	kirkwood-nsa310a.dtb \
-> +	kirkwood-nsa320.dtb \
->  	kirkwood-nsa325.dtb \
->  	kirkwood-openblocks_a6.dtb \
->  	kirkwood-openblocks_a7.dtb \
-> -- 
-> 2.1.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Joao
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
