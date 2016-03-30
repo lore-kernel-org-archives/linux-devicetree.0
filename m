@@ -1,119 +1,146 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/7] ARM: dts: lpc4350-hitex-eval: fix unit name warnings from dtc
-Date: Wed, 30 Mar 2016 00:30:44 +0200
-Message-ID: <1459290646-3592-6-git-send-email-manabian@gmail.com>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459290646-3592-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH 2/2] mmc: dw_mmc: add resets support to dw_mmc
+Date: Wed, 30 Mar 2016 08:46:32 +0800
+Message-ID: <56FB21E8.30008@rock-chips.com>
+References: <1457254062-22677-1-git-send-email-guodong.xu@linaro.org>
+ <1457254062-22677-2-git-send-email-guodong.xu@linaro.org>
+ <56DC3BAD.8020107@rock-chips.com>
+ <CAFGCpxz3GfFeduaz1Dkg0WvRJWs+GHdVu8uY0-wV=RGyRfBE=A@mail.gmail.com>
+ <56F9E6E5.9000100@kernel-upstream.org> <56FA3B70.2090902@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <56FA3B70.2090902@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>, Guodong Xu <guodong.xu@linaro.org>
+Cc: shawn.lin@rock-chips.com, robh+dt@kernel.org, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, jh80.chung@samsung.com, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Fix the following warnings from dtc by either adding or removing
-the unit name from the node.
+=E5=9C=A8 2016/3/29 16:23, zhangfei =E5=86=99=E9=81=93:
+>
+>
+> On 03/29/2016 10:22 AM, Shawn Lin wrote:
+>
+>>>
+>>>
+>>>
+>>>         +               else if (IS_ERR(host->pdata)) {
+>>>                                  dev_err(host->dev, "platform data =
+not
+>>>         available\n");
+>>>                                  return -EINVAL;
+>>>                          }
+>>>         @@ -3012,6 +3022,9 @@ int dw_mci_probe(struct dw_mci *host)
+>>>                          }
+>>>                  }
+>>>
+>>>         +       if (host->pdata->rstc !=3D NULL)
+>>>         +               reset_control_deassert(host->pdata->rstc);
+>>>         +
+>>>
+>>>
+>>>     sorry, I can't follow your intention here. Shouldn't it be some=
+thing
+>>>     like "assert mmc -> may need delay -> deassert mmc". As your cu=
+rrent
+>>>     code, nothing happend right?
+> Should be abstracted in reset driver.
+>
+>>>
+>>>
+>>> The chip exits from bootloader with this bit asserted. And when ent=
+ering
+>>> kernel, we only need to deassert.
+>>>
+>>> In my current code, the driver deassert mmc in _probe(), and assert=
+ mmc
+>>> in _remove().
+>>
+>> I catch your point. From the previous discussion, we add it to make =
+sure
+>> dw_mmc in good state after leaving bootloader to kernel. But My real
+>> question is that you can assert it in  bootloader, so you can also
+>> dessert it in bootloaer to make sure dw_mmc work fine when probing
+>> in kernel. In that way, we don't need this patch?
+>
+> uefi does not have exit point, and kernel may not assume mmc controll=
+er
+> state is always correct when boot.
+> If Uefi need copy Image from mmc, mmc controller is in working state.
+> When jump to kernel, uefi mmc driver can not recover itself.
+> If kernel assume mmc controller state is clean, mmc will be in abnorm=
+al
+> state.
+> Some controller will clear itself when set clock, however, hip660 doe=
+s
+> not, it need special register to access.
+>
 
-Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
-Warning (unit_address_vs_reg): Node /soc/flash-controller@40003000/flash@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@0 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@1 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@2 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@3 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@4 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@5 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@6 has a unit name, but no reg property
-Warning (unit_address_vs_reg): Node /pca_buttons/button@7 has a unit name, but no reg property
+yep, I understand your requirement.
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/lpc4350-hitex-eval.dts | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+>
+>>
+>> More to think, Is it ok to match the behaviour of bootloader stage?
+>> My bootloader doesn't assert the reset pin of dw_mmc, so it seams if
+>> I want to fix you issue on kernel stage, I need a new round of
+>> assert->delay->deassert.
+>
+> The process like delay (if required) should be abstracted in reset dr=
+iver.
+> reset framework just export reset_control_assert/reset_control_deasse=
+rt
+> API.
+> Unfortunately not find clear description in Documentation/.
+> Suppose deassert is like start, while assert is like stop.
+>
 
-diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-index 6d0c698..cb65352 100644
---- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-+++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
-@@ -33,7 +33,7 @@
- 		stdout-path = &uart0;
- 	};
- 
--	memory {
-+	memory@28000000 {
- 		device_type = "memory";
- 		reg = <0x28000000 0x800000>; /* 8 MB */
- 	};
-@@ -45,50 +45,50 @@
- 		poll-interval = <100>;
- 		autorepeat;
- 
--		button@0 {
-+		button0 {
- 			label = "joy:right";
- 			linux,code = <KEY_RIGHT>;
- 			gpios = <&pca_gpio 8 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@1 {
-+		button1 {
- 			label = "joy:up";
- 			linux,code = <KEY_UP>;
- 			gpios = <&pca_gpio 9 GPIO_ACTIVE_LOW>;
- 		};
- 
- 
--		button@2 {
-+		button2 {
- 			label = "joy:enter";
- 			linux,code = <KEY_ENTER>;
- 			gpios = <&pca_gpio 10 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@3 {
-+		button3 {
- 			label = "joy:left";
- 			linux,code = <KEY_LEFT>;
- 			gpios = <&pca_gpio 11 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@4 {
-+		button4 {
- 			label = "joy:down";
- 			linux,code = <KEY_DOWN>;
- 			gpios = <&pca_gpio 12 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@5 {
-+		button5 {
- 			label = "user:sw3";
- 			linux,code = <KEY_F1>;
- 			gpios = <&pca_gpio 13 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@6 {
-+		button6 {
- 			label = "user:sw4";
- 			linux,code = <KEY_F2>;
- 			gpios = <&pca_gpio 14 GPIO_ACTIVE_LOW>;
- 		};
- 
--		button@7 {
-+		button7 {
- 			label = "user:sw5";
- 			linux,code = <KEY_F3>;
- 			gpios = <&pca_gpio 15 GPIO_ACTIVE_LOW>;
-@@ -453,7 +453,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&spifi_pins>;
- 
--	flash@0 {
-+	flash {
- 		compatible = "jedec,spi-nor";
- 		spi-rx-bus-width = <4>;
- 		#address-cells = <1>;
--- 
-2.7.4
+yes, no docs except dt-bindings..... So seems the usage of these two
+APIs depends on the implementation of reset controller driver
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> drivers/reset/core.c
+> reset_control_deassert - deasserts the reset line
+> reset_control_assert - asserts the reset line
+>
+> More example:
+> drivers/mmc/host/sdhci-st.c
+> drivers/mmc/host/sunxi-mmc.c
+> drivers/usb/host/ohci-platform.c
+> drivers/i2c/busses/i2c-mv64xxx.c
+
+But I'm afraid I have to nack here....
+
+Looking at these files:
+drivers/dma/stm32-dma.c
+drivers/net/ethernet/mediatek/mtk_eth_soc.c
+drivers/devfreq/tegra-devfreq.c
+drivers/crypto/rockchip/rk3288_crypto.c
+drivers/thermal/rockchip_thermal.c
+drivers/thermal/tegra_soctherm.c
+drivers/i2c/busses/i2c-tegra.c
+=2E...
+
+they just do the way like: assert->[delay](maybe abstracted)->deassert
+I think these drivers are vendor specific, so they can do
+the reset operations in consistent with the implementation of
+their platforms' reset controller drivers.
+
+But, dw_mmc is shared by many Socs. So It's not good to do it in
+dw_mci_probe, otherwise you force my reset controller driver to be
+implemented in the same way as yours..... Right?
+
+How about move it to your drv_data->init callback?
+
+
+>
+> Thanks
+>
+>
+>
+>
+
+
+--=20
+Best Regards
+Shawn Lin
