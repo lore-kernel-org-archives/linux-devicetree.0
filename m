@@ -1,51 +1,62 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] mmc: dw_mmc: controller reset support
-Date: Wed, 30 Mar 2016 19:45:05 +0800
-Message-ID: <56FBBC41.5080104@rock-chips.com>
-References: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] Add support for Engicam IMX6UL module
+Date: Wed, 30 Mar 2016 19:47:59 +0800
+Message-ID: <20160330114748.GF28207@tiger>
+References: <1455963652-24618-1-git-send-email-michael@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459322696-29919-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1455963652-24618-1-git-send-email-michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, --to=robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+ Heiko
-On 2016/3/30 15:24, Guodong Xu wrote:
-> mmc controller registers may in abnormal state if mmc is used in
-> bootloader, eg. to load kernel from eMMC. Some controllers cann't
-> clear their registers when clk is set. They use dedicated reset
-> logics to do this.
->
-> In this patch, a 'resets' property is added into dw_mmc dts
-> node. When driver does parse_dt and probe, it calls reset API to
-> deassert the 'reset' of dw_mmc host controller. When probe error or
-> remove, it calls reset API to assert it.
->
-> Chip vendor's actual reset logics is implemented in reset driver, not
-> in dw_mmc code.
->
-> Please also refer to Documentation/devicetree/bindings/reset/reset.txt
->
-> Guodong Xu (2):
->    Documentation: synopsys-dw-mshc: add binding for resets
->    mmc: dw_mmc: add resets support to dw_mmc
->
->   .../devicetree/bindings/mmc/synopsys-dw-mshc.txt     |  4 ++++
->   drivers/mmc/host/dw_mmc.c                            | 20 +++++++++++++++++++-
->   include/linux/mmc/dw_mmc.h                           |  6 ++++--
->   3 files changed, 27 insertions(+), 3 deletions(-)
->
+On Sat, Feb 20, 2016 at 11:20:48AM +0100, Michael Trimarchi wrote:
+> Thi patch series add the support for Engicam IMXUL product
+>=20
+> https://community.freescale.com/docs/DOC-328428
+>=20
+> Based on Freescale=E2=84=A2 i.MX 6UltraLite processor, a high perform=
+ance,
+> ultra-efficient processor family featuring an advanced implementation
+> of a single ARM=E2=84=A2 Cortex=E2=84=A2-A7 core, which operates at s=
+peeds up to 528 MHz.
+>=20
+> The new ENGICAM GEA M6UL module is suitable for cost effective HMI
+> applications requiring high performance CPU.
+>=20
+> Michael Trimarchi (4):
+>   ARM: dts: imx6ul: Add flexcan1 and flexcan2 support
+>   ARM: dts: imx6ul: Add LCDIF support
+>   ARM: dts: imx6ul: Add GPMI nand controller support
+>   ARM: dts: imx6ul-geam: Add Engicam IMX6UL GEA M6UL initial support
 
+There are quite some changes around imx6ul.dtsi getting into 4.6-rc1.
+Can you please rebase onto 4.6-rc1 and resend?
 
--- 
-Best Regards
-Shawn Lin
+Shawn
 
+>=20
+>  arch/arm/boot/dts/Makefile             |   3 +-
+>  arch/arm/boot/dts/imx6ul-geam-kit.dts  | 102 +++++++++
+>  arch/arm/boot/dts/imx6ul-geam.dtsi     | 371 +++++++++++++++++++++++=
+++++++++++
+>  arch/arm/boot/dts/imx6ul.dtsi          |  68 ++++++
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.c |  10 +
+>  drivers/mtd/nand/gpmi-nand/gpmi-nand.h |   6 +-
+>  6 files changed, 557 insertions(+), 3 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/imx6ul-geam-kit.dts
+>  create mode 100644 arch/arm/boot/dts/imx6ul-geam.dtsi
+>=20
+> --=20
+> 2.7.0
+>=20
+>=20
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
