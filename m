@@ -1,56 +1,63 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
-Date: Wed, 30 Mar 2016 14:41:55 +0100
-Message-ID: <20160330134155.GC25354@leverpostej>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
- <1459290646-3592-3-git-send-email-manabian@gmail.com>
- <20160330110611.GB25354@leverpostej>
- <56FBCF70.80006@mentor.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V2 0/4] mtd: nand: add enum nand_ecc_algo
+Date: Wed, 30 Mar 2016 15:58:10 +0200
+Message-ID: <20160330155810.328f2a1e@bbrezillon>
+References: <1458728343-1234-1-git-send-email-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56FBCF70.80006-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1458728343-1234-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2016 at 04:06:56PM +0300, Vladimir Zapolskiy wrote:
-> On 30.03.2016 14:06, Mark Rutland wrote:
-> > On Wed, Mar 30, 2016 at 12:30:41AM +0200, Joachim Eastwood wrote:
-> >> Add unit name to memory to remove the following warning:
-> >>  Warning (unit_address_vs_reg): Node /memory has a reg or ranges
-> >> 				property, but no unit name
-> > 
-> > If anything, it would be better to get rid of the memory node from the
-> > skeleton DTs.
-> > 
-> > For DTs which have a memory node there's no problem, and DTs which
-> > expect a bootlaoder to fill things in have a logical place to document
-> > that fact.
+Hi Rafal,
 
-> The only problem I see if DTB is updated on a board but a board bootloader
-> on fix-up is capable to fill a preexisting "/memory" device node in only,
-> otherwise it is not clear why the device node is present in skeleton.dtsi.
+On Wed, 23 Mar 2016 11:18:59 +0100
+Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Sure. To clarify the above, what I expect that for this case is that the
-empty memory node would exist in the dts for that particular board,
-along with a comment, e.g.
+> Some time ago I started working on a new "nand-ecc-algo" property to =
+allow
+> specifying ECC algorithm for hardware ECC mode as well.
+> Boris pointed out it's becoming a bit messy that way as we already ha=
+ve value
+> NAND_ECC_SOFT_BCH.
+> I suggested deprecating "soft_bch" value from nand-ecc-mode property =
+and got
+> Boris agreed and no objections from others. So there is how I want to=
+ implement
+> this.
+> If you agree on this way & apply my patches, I'll start modifying NAN=
+D drivers
+> (similarly to the nandsim) and then will try to drop NAND_ECC_SOFT_BC=
+H except
+> for handling backward compatibility.
+> Then finally we should be able to add "nand-ecc-algo" property suppor=
+t properly.
+>=20
+> V2: Add of_get_nand_ecc_algo helper (in 2/4) instead of this slightly=
+ hacky code
+>     in nand_dt_init that would be replaced anyway.
 
-	/* The firmware/bootloader for $BOARD fills this in */
-	memory {
-		device_type = "memory";
-		reg = <0 0 0 0>;
-	};
-
-That way you can tell at a glance that the lack of memory information in
-the DT for a board is intentional, and the bootloader still gets the
-node it expects.
+Whole series applied to nand/next [1]. I just added a comment for the
+ecc->algo field in patch 1.
+You can continue your rework (patch existing NAND_ECC_SOFT_BCH and
+NAND_ECC_SOFT users to use ecc->algo).
 
 Thanks,
-Mark.
+
+Boris
+
+[1]https://github.com/linux-nand/linux/tree/nand/next
+
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
