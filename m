@@ -1,67 +1,69 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
-Date: Wed, 30 Mar 2016 16:45:39 +0100
-Message-ID: <20160330154538.GA10224@arm.com>
-References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <20160128111453.GG17123@leverpostej>
- <56AA07AA.7050701@arm.com>
- <6645680.g0j8d12m6d@wuerfel>
- <20160128142751.GA775@arm.com>
- <56FBF2B7.8090601@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH resend v5 0/3] ASoC: cygnus: Add audio
+ support for Broadcom Cygnus SoC
+Date: Wed, 30 Mar 2016 08:51:40 -0700
+Message-ID: <20160330155140.GA2350@sirena.org.uk>
+References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
+ <20160329190910.GF2350@sirena.org.uk>
+ <56FAD579.3060703@broadcom.com>
+ <20160329194629.GH2350@sirena.org.uk>
+ <s5hpoucgerx.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56FBF2B7.8090601-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "eric.auger-qxv4g6HH51o@public.gmane.org" <eric.auger-qxv4g6HH51o@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============5921613701216445084=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <s5hpoucgerx.wl-tiwai@suse.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Lori Hikichi <lhikichi@broadcom.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ray Jui <rjui@broadcom.com>, Simran Rai <simran.rai@broadcom.com>, linux-kernel@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Kumar Gala <galak@codeaurora.org>, Arun Parameswaran <arunp@broadcom.com>, linux-arm-kernel@lists.infradead.org, Simran Rai <ssimran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
 
-On Wed, Mar 30, 2016 at 05:37:27PM +0200, Eric Auger wrote:
-> On 01/28/2016 03:27 PM, Will Deacon wrote:
-> > On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
-> >> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
-> >>>>
-> >>> Any IDs specified here would only apply to DMA by the "platform device" 
-> >>> side of the host controller itself (as would an equivalent "iommus" 
-> >>> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
-> >>> working on). In terms of PCI devices, the "mmu-masters" property is 
-> >>> overloaded such that only its existence matters, to identify that there 
-> >>> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
-> >>> host controller.
-> >>
-> >> I wasn't aware that this was actually still specified. I had hoped
-> >> we were getting rid of mmu-masters before anyone actually started
-> >> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
-> >>
-> >> Does anyone know what happened to the plan to use the iommu DT binding
-> >> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
-> > 
-> > We always did -- Seattle used the mmu-masters binding before the generic
-> > binding even existed. Robin has been working on patches to get of_xlate
-> > up and running, but it got held up by Laurent's series which didn't end
-> > up going anywhere.
-> > 
-> Up to now I have used the PCI smmu description as described in Suravee's
-> patch and this does not work anymore with 4.6-rc1 since the default
-> domain was introduced. So now I see 2 SMRs matching a single streamid
-> (in my case 256, one steming from the "platform device" side of the host
-> controller and one steming from the PCI device) and this causes SMCF
-> (stream match conflict fault). So PCIe PF does not work.
+--===============5921613701216445084==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="WnjMQ0y5QpAQNNgT"
+Content-Disposition: inline
 
-Sorry about that, it wasn't intentional. In fact, I wrote commit
-cbf8277ef456 ("iommu/arm-smmu: Treat IOMMU_DOMAIN_DMA as bypass for now")
-specifically to avoid this breakage, after seeing it myself with VFIO
-and an S2CR-based configuration. It looks like the check just needs moving
-higher up (i.e. before we initialise the SMRs).
 
-Does that fix it for you?
+--WnjMQ0y5QpAQNNgT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Mar 30, 2016 at 05:35:14PM +0200, Takashi Iwai wrote:
+>=20
+
+Empty mail?
+
+--WnjMQ0y5QpAQNNgT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW+/YHAAoJECTWi3JdVIfQjhQH/2ufWPlYELcv24Ut80pzhaaM
+P7U5Kol8/FynJ9tZSoumEAwHp+eibJSrUHztN+9xgw9YuVoto9R1eTH1b3OoKUpp
+nQdcyD/LGSrKYjZSOKKncMuUvW6RKQQsDn+JdM4568WywcNVtbdLbNDiYUnQX1U8
+5jRsH88Pbf7MFIrmOvvF7fFzZUrT83eVd1FGDFX9N8DP8CoriGGMfehrh7HEz9NH
+qPp8yh+t4epjYltg6LgvPZcMGIywJwrnenyw/Hsueh1LPMWyQxNTzWD4K3WZf1Az
+G6tlIccWnUSLRNF1Wze0lgsIf4QKwVsL7IJC15HdSbVputOGQOWNch0gG03/uFM=
+=dcJb
+-----END PGP SIGNATURE-----
+
+--WnjMQ0y5QpAQNNgT--
+
+--===============5921613701216445084==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5921613701216445084==--
