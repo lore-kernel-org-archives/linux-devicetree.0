@@ -1,249 +1,67 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 4/7] scatterlist: add sg_alloc_table_from_buf()
- helper
-Date: Wed, 30 Mar 2016 17:39:51 +0200
-Message-ID: <1459352394-22810-5-git-send-email-boris.brezillon@free-electrons.com>
-References: <1459352394-22810-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
+Date: Wed, 30 Mar 2016 16:45:39 +0100
+Message-ID: <20160330154538.GA10224@arm.com>
+References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <20160128111453.GG17123@leverpostej>
+ <56AA07AA.7050701@arm.com>
+ <6645680.g0j8d12m6d@wuerfel>
+ <20160128142751.GA775@arm.com>
+ <56FBF2B7.8090601@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBUHG563QKGQEITACF4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1459352394-22810-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <56FBF2B7.8090601-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Auger <eric.auger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, leo.duran-5C7GfCeVMHo@public.gmane.org, Suravee Suthikulpanit <Suravee.Suthikulpanit-5C7GfCeVMHo@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, thomas.lendacky-5C7GfCeVMHo@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, brijeshkumar.singh-5C7GfCeVMHo@public.gmane.org, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "eric.auger-qxv4g6HH51o@public.gmane.org" <eric.auger-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-sg_alloc_table_from_buf() provides an easy solution to create an sg_table
-from a virtual address pointer. This function takes care of dealing with
-vmallocated buffers, buffer alignment, or DMA engine limitations (maximum
-DMA transfer size).
+Hi Eric,
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- include/linux/scatterlist.h |  24 +++++++
- lib/scatterlist.c           | 161 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 185 insertions(+)
+On Wed, Mar 30, 2016 at 05:37:27PM +0200, Eric Auger wrote:
+> On 01/28/2016 03:27 PM, Will Deacon wrote:
+> > On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
+> >> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
+> >>>>
+> >>> Any IDs specified here would only apply to DMA by the "platform device" 
+> >>> side of the host controller itself (as would an equivalent "iommus" 
+> >>> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
+> >>> working on). In terms of PCI devices, the "mmu-masters" property is 
+> >>> overloaded such that only its existence matters, to identify that there 
+> >>> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
+> >>> host controller.
+> >>
+> >> I wasn't aware that this was actually still specified. I had hoped
+> >> we were getting rid of mmu-masters before anyone actually started
+> >> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
+> >>
+> >> Does anyone know what happened to the plan to use the iommu DT binding
+> >> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
+> > 
+> > We always did -- Seattle used the mmu-masters binding before the generic
+> > binding even existed. Robin has been working on patches to get of_xlate
+> > up and running, but it got held up by Laurent's series which didn't end
+> > up going anywhere.
+> > 
+> Up to now I have used the PCI smmu description as described in Suravee's
+> patch and this does not work anymore with 4.6-rc1 since the default
+> domain was introduced. So now I see 2 SMRs matching a single streamid
+> (in my case 256, one steming from the "platform device" side of the host
+> controller and one steming from the PCI device) and this causes SMCF
+> (stream match conflict fault). So PCIe PF does not work.
 
-diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-index 556ec1e..4a75362 100644
---- a/include/linux/scatterlist.h
-+++ b/include/linux/scatterlist.h
-@@ -41,6 +41,27 @@ struct sg_table {
- 	unsigned int orig_nents;	/* original size of list */
- };
- 
-+/**
-+ * struct sg_constraints - SG constraints structure
-+ *
-+ * @max_chunk_len: maximum chunk buffer length. Each SG entry has to be smaller
-+ *		   than this value. Zero means no constraint.
-+ * @required_alignment: minimum alignment. Is used for both size and pointer
-+ *			alignment. If this constraint is not met, the function
-+ *			should return -EINVAL.
-+ * @preferred_alignment: preferred alignment. Mainly used to optimize
-+ *			 throughput when the DMA engine performs better when
-+ *			 doing aligned accesses.
-+ *
-+ * This structure is here to help sg_alloc_table_from_buf() create the optimal
-+ * SG list based on DMA engine constraints.
-+ */
-+struct sg_constraints {
-+	size_t max_chunk_len;
-+	size_t required_alignment;
-+	size_t preferred_alignment;
-+};
-+
- /*
-  * Notes on SG table design.
-  *
-@@ -265,6 +286,9 @@ int sg_alloc_table_from_pages(struct sg_table *sgt,
- 	struct page **pages, unsigned int n_pages,
- 	unsigned long offset, unsigned long size,
- 	gfp_t gfp_mask);
-+int sg_alloc_table_from_buf(struct sg_table *sgt, const void *buf, size_t len,
-+			    const struct sg_constraints *constraints,
-+			    gfp_t gfp_mask);
- 
- size_t sg_copy_buffer(struct scatterlist *sgl, unsigned int nents, void *buf,
- 		      size_t buflen, off_t skip, bool to_buffer);
-diff --git a/lib/scatterlist.c b/lib/scatterlist.c
-index 004fc70..94776ff 100644
---- a/lib/scatterlist.c
-+++ b/lib/scatterlist.c
-@@ -433,6 +433,167 @@ int sg_alloc_table_from_pages(struct sg_table *sgt,
- }
- EXPORT_SYMBOL(sg_alloc_table_from_pages);
- 
-+static size_t sg_buf_chunk_len(const void *buf, size_t len,
-+			       const struct sg_constraints *cons)
-+{
-+	size_t chunk_len = len;
-+
-+	if (cons->max_chunk_len)
-+		chunk_len = min_t(size_t, chunk_len, cons->max_chunk_len);
-+
-+	if (is_vmalloc_addr(buf)) {
-+		unsigned long offset_in_page = offset_in_page(buf);
-+		size_t contig_len = PAGE_SIZE - offset_in_page;
-+		unsigned long phys = vmalloc_to_pfn(buf) - offset_in_page;
-+		const void *contig_ptr = buf + contig_len;
-+
-+		/*
-+		 * Vmalloced buffer might be composed of several physically
-+		 * contiguous pages. Avoid extra scattergather entries in
-+		 * this case.
-+		 */
-+		while (contig_len < chunk_len) {
-+			if (phys + PAGE_SIZE != vmalloc_to_pfn(contig_ptr))
-+				break;
-+
-+			contig_len += PAGE_SIZE;
-+			contig_ptr += PAGE_SIZE;
-+			phys += PAGE_SIZE;
-+		}
-+
-+		chunk_len = min_t(size_t, chunk_len, contig_len);
-+	}
-+
-+	if (!IS_ALIGNED((unsigned long)buf, cons->preferred_alignment)) {
-+		const void *aligned_buf = PTR_ALIGN(buf,
-+						    cons->preferred_alignment);
-+		size_t unaligned_len = (unsigned long)(aligned_buf - buf);
-+
-+		chunk_len = min_t(size_t, chunk_len, unaligned_len);
-+	} else if (chunk_len > cons->preferred_alignment) {
-+		chunk_len &= ~(cons->preferred_alignment - 1);
-+	}
-+
-+	return chunk_len;
-+}
-+
-+#define sg_for_each_chunk_in_buf(buf, len, chunk_len, constraints)	\
-+	for (chunk_len = sg_buf_chunk_len(buf, len, constraints);	\
-+	     len;							\
-+	     len -= chunk_len, buf += chunk_len,			\
-+	     chunk_len = sg_buf_chunk_len(buf, len, constraints))
-+
-+static int sg_check_constraints(struct sg_constraints *cons,
-+				const void *buf, size_t len)
-+{
-+	if (!cons->required_alignment)
-+		cons->required_alignment = 1;
-+
-+	if (!cons->preferred_alignment)
-+		cons->preferred_alignment = cons->required_alignment;
-+
-+	/* Test if buf and len are properly aligned. */
-+	if (!IS_ALIGNED((unsigned long)buf, cons->required_alignment) ||
-+	    !IS_ALIGNED(len, cons->required_alignment))
-+		return -EINVAL;
-+
-+	/*
-+	 * if the buffer has been vmallocated and required_alignment is
-+	 * more than PAGE_SIZE we cannot guarantee it.
-+	 */
-+	if (is_vmalloc_addr(buf) && cons->required_alignment > PAGE_SIZE)
-+		return -EINVAL;
-+
-+	/*
-+	 * max_chunk_len has to be aligned to required_alignment to
-+	 * guarantee that all buffer chunks are aligned correctly.
-+	 */
-+	if (!IS_ALIGNED(cons->max_chunk_len, cons->required_alignment))
-+		return -EINVAL;
-+
-+	/*
-+	 * preferred_alignment has to be aligned to required_alignment
-+	 * to avoid misalignment of buffer chunks.
-+	 */
-+	if (!IS_ALIGNED(cons->preferred_alignment, cons->required_alignment))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/**
-+ * sg_alloc_table_from_buf - create an SG table from a buffer
-+ *
-+ * @sgt: SG table
-+ * @buf: buffer you want to create this SG table from
-+ * @len: length of buf
-+ * @constraints: optional constraints to take into account when creating
-+ *		 the SG table. Can be NULL if no specific constraints are
-+ *		 required.
-+ * @gfp_mask: type of allocation to use when creating the table
-+ *
-+ * This function creates an SG table from a buffer, its length and some
-+ * SG constraints.
-+ *
-+ * Note: This function supports vmallocated and physically contiguous buffers.
-+ */
-+int sg_alloc_table_from_buf(struct sg_table *sgt, const void *buf, size_t len,
-+			    const struct sg_constraints *constraints,
-+			    gfp_t gfp_mask)
-+{
-+	struct sg_constraints cons = { };
-+	size_t remaining, chunk_len;
-+	const void *sg_buf;
-+	int i, ret;
-+
-+	if (constraints)
-+		cons = *constraints;
-+
-+	ret = sg_check_constraints(&cons, buf, len);
-+	if (ret)
-+		return ret;
-+
-+	sg_buf = buf;
-+	remaining = len;
-+	i = 0;
-+	sg_for_each_chunk_in_buf(sg_buf, remaining, chunk_len, &cons)
-+		i++;
-+
-+	ret = sg_alloc_table(sgt, i, gfp_mask);
-+	if (ret)
-+		return ret;
-+
-+	sg_buf = buf;
-+	remaining = len;
-+	i = 0;
-+	sg_for_each_chunk_in_buf(sg_buf, remaining, chunk_len, &cons) {
-+		if (is_vmalloc_addr(sg_buf)) {
-+			struct page *vm_page;
-+
-+			vm_page = vmalloc_to_page(sg_buf);
-+			if (!vm_page) {
-+				ret = -ENOMEM;
-+				goto err_free_table;
-+			}
-+
-+			sg_set_page(&sgt->sgl[i], vm_page, chunk_len,
-+				    offset_in_page(sg_buf));
-+		} else {
-+			sg_set_buf(&sgt->sgl[i], sg_buf, chunk_len);
-+		}
-+
-+		i++;
-+	}
-+
-+	return 0;
-+
-+err_free_table:
-+	sg_free_table(sgt);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL(sg_alloc_table_from_buf);
-+
- void __sg_page_iter_start(struct sg_page_iter *piter,
- 			  struct scatterlist *sglist, unsigned int nents,
- 			  unsigned long pgoffset)
--- 
-2.5.0
+Sorry about that, it wasn't intentional. In fact, I wrote commit
+cbf8277ef456 ("iommu/arm-smmu: Treat IOMMU_DOMAIN_DMA as bypass for now")
+specifically to avoid this breakage, after seeing it myself with VFIO
+and an S2CR-based configuration. It looks like the check just needs moving
+higher up (i.e. before we initialise the SMRs).
+
+Does that fix it for you?
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
