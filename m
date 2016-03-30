@@ -1,87 +1,119 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
-Date: Wed, 30 Mar 2016 16:06:56 +0300
-Message-ID: <56FBCF70.80006@mentor.com>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
- <1459290646-3592-3-git-send-email-manabian@gmail.com>
- <20160330110611.GB25354@leverpostej>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v6 1/2] dt: bindings: add MARVELL's sd8xxx wireless device
+Date: Wed, 30 Mar 2016 06:19:57 -0700
+Message-ID: <1459343998-5187-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160330110611.GB25354@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30.03.2016 14:06, Mark Rutland wrote:
-> On Wed, Mar 30, 2016 at 12:30:41AM +0200, Joachim Eastwood wrote:
->> Add unit name to memory to remove the following warning:
->>  Warning (unit_address_vs_reg): Node /memory has a reg or ranges
->> 				property, but no unit name
-> 
-> If anything, it would be better to get rid of the memory node from the
-> skeleton DTs.
-> 
-> For DTs which have a memory node there's no problem, and DTs which
-> expect a bootlaoder to fill things in have a logical place to document
-> that fact.
+From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Generally I support this.
+Add device tree binding documentation for MARVELL's sd8xxx
+(sd8897 and sd8997) wlan chip.
 
-U-boot still creates or fixes up "/memory" node only, assuming that
-a bootloader is updated rarely the kernel should continue to process
-in expected way "/memory" device node, also note that ePAPR says
+Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+---
+Listing changelist for both 1/2 and 2/2 patches
+v3: Don't update adapter->dt_node if mwifiex_plt_dev is NULL
 
-ePAPR> If a system has multiple ranges of memory, multiple memory nodes
-ePAPR> can be created, or the ranges can be specified in the reg property
-ePAPR> of a single memory node.
+v4: a)Corrected the 'name' and 'compatible' property names.(Arnd Bergmann and Rob
+    Herring)
+    b)Patch description wraped in 72 columns(Rob Herring)
+    c)Moved DT binding file to bindings/net/wireless/(Rob Herring)
+    d)Renamed "mwifiex,chip-gpio" to "marvell,wakeup-gpios"(Rob Herring/
+    Arnd Bergmann)
+    e)Replaced #ifdef with __maybe_unused(Arnd Bergmann)
 
-Having just a DT on hand it won't be possible to make assumptions about
-a bootloader, also "/memory" without a given unit address is used by
-other kernels and a bootloader can respect this.
+v5: a)Removed wildcards from compatible string(Arnd Bergmann)
+    b)Prepared single patch for all binding changes(Rob Herring)
+    c)Specified our node as a subnode of SDIO controller. With this approach, we
+    don't need to register new platform driver. (Rob herring)
 
-The only problem I see if DTB is updated on a board but a board bootloader
-on fix-up is capable to fill a preexisting "/memory" device node in only,
-otherwise it is not clear why the device node is present in skeleton.dtsi.
+v6: a)List out the specific property names for marvell,caldata* and size of the data(Rob Herring)
+    b)Use sdio function number for both the unit address and reg(Rob Herring)
+---
+ .../bindings/net/wireless/marvell-sd8xxx.txt       | 63 ++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
 
->> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/skeleton.dtsi   | 2 +-
->>  arch/arm/boot/dts/skeleton64.dtsi | 2 +-
->>  2 files changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
->> index b41d241..a20da0a 100644
->> --- a/arch/arm/boot/dts/skeleton.dtsi
->> +++ b/arch/arm/boot/dts/skeleton.dtsi
->> @@ -9,5 +9,5 @@
->>  	#size-cells = <1>;
->>  	chosen { };
->>  	aliases { };
->> -	memory { device_type = "memory"; reg = <0 0>; };
->> +	memory@0 { device_type = "memory"; reg = <0 0>; };
->>  };
->> diff --git a/arch/arm/boot/dts/skeleton64.dtsi b/arch/arm/boot/dts/skeleton64.dtsi
->> index b5d7f36..6dbe9f9 100644
->> --- a/arch/arm/boot/dts/skeleton64.dtsi
->> +++ b/arch/arm/boot/dts/skeleton64.dtsi
->> @@ -9,5 +9,5 @@
->>  	#size-cells = <2>;
->>  	chosen { };
->>  	aliases { };
->> -	memory { device_type = "memory"; reg = <0 0 0 0>; };
->> +	memory@0 { device_type = "memory"; reg = <0 0 0 0>; };
->>  };
->> -- 
->> 2.7.4
->>
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+new file mode 100644
+index 0000000..337fed4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-sd8xxx.txt
+@@ -0,0 +1,63 @@
++Marvell 8897/8997 (sd8897/sd8997) SDIO devices
++------
++
++This node provides properties for controlling the marvell sdio wireless device.
++The node is expected to be specified as a child node to the SDIO controller that
++connects the device to the system.
++
++Required properties:
++
++  - compatible : should be one of the following:
++	* "marvell,sd8897"
++	* "marvell,sd8997"
++
++Optional properties:
++
++  - marvell,caldata* : A series of properties with marvell,caldata prefix,
++		      represent calibration data downloaded to the device during
++		      initialization. This is an array of unsigned values.
++		      the properties should follow below property name and
++		      corresponding array length:
++	"marvell,caldata_00_txpwrlimit_2g_cfg_set" (length = 566).
++	"marvell,caldata_00_txpwrlimit_5g_cfg_set_sub0" (length = 502).
++	"marvell,caldata_00_txpwrlimit_5g_cfg_set_sub1" (length = 688).
++	"marvell,caldata_00_txpwrlimit_5g_cfg_set_sub2" (length = 750).
++	"marvell,caldata_00_txpwrlimit_5g_cfg_set_sub3" (length = 502).
++  - marvell,wakeup-pin : 'wakeuppin' is a wakeup pin number of wifi chip which will
++		      be configured to firmware. firmware will wakeup host side use
++		      the pin during suspend/resume stage.
++  - interrupt-parent: phandle of the parent interrupt controller
++  - interrupts : interrupt pin number to the cpu. driver will request an irq based on
++		 this interrupt number. during system suspend, the irq will be enabled
++		 as system wakeup source, so that the wifi chip can wakeup host
++		 platform under certain condition. during system resume, the irq will
++		 be disabled to make sure unnecessary interrupt is not received.
++
++Example:
++
++Tx power limit calibration data is configured in below example.
++The calibration data is an array of unsigned values, the length
++can vary between hw versions.
++IRQ pin 38 is used as system wakeup source interrupt. wakeup pin 3 is configured
++so that firmware can wakeup host using this device side pin.
++
++&mmc3 {
++	status = "okay";
++	vmmc-supply = <&wlan_en_reg>;
++	bus-width = <4>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++	mwifiex: mwifiex@1 {
++		compatible = "marvell,sd8897";
++		reg = <1>;
++		interrupt-parent = <&pio>;
++		interrupts = <38 IRQ_TYPE_LEVEL_LOW>;
++
++		marvell,caldata_00_txpwrlimit_2g_cfg_set = /bits/ 8 <
++	0x01 0x00 0x06 0x00 0x08 0x02 0x89 0x01>;
++		marvell,wakeup-pin = <3>;
++	};
++};
+-- 
+1.8.1.4
 
 --
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
