@@ -1,104 +1,32 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
-Date: Wed, 30 Mar 2016 22:45:06 +0200
-Message-ID: <CAGhQ9Vykn=G+cmVuBCAA_ATTz4XNEPeUWYbZRb5NsrVBOjaS-A@mail.gmail.com>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
-	<1459290646-3592-3-git-send-email-manabian@gmail.com>
-	<20160330110611.GB25354@leverpostej>
-	<56FBCF70.80006@mentor.com>
-	<20160330134155.GC25354@leverpostej>
-	<CAGhQ9VykiwMWaw3xcJdg2CahNFt+sp7tFC5O8VwA=-_=UoJ8kA@mail.gmail.com>
-	<20160330170645.GA13690@leverpostej>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: AM43x-epos: Fix clk parent for synctimer
+Date: Wed, 30 Mar 2016 13:53:24 -0700
+Message-ID: <20160330205324.GA9329@atomide.com>
+References: <1457420075-26158-1-git-send-email-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160330170645.GA13690@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <1457420075-26158-1-git-send-email-lokeshvutla-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30 March 2016 at 19:06, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Mar 30, 2016 at 06:15:35PM +0200, Joachim Eastwood wrote:
->> Hi Mark,
->>
->> On 30 March 2016 at 15:41, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Wed, Mar 30, 2016 at 04:06:56PM +0300, Vladimir Zapolskiy wrote:
->> >> On 30.03.2016 14:06, Mark Rutland wrote:
->> >> > On Wed, Mar 30, 2016 at 12:30:41AM +0200, Joachim Eastwood wrote:
->> >> >> Add unit name to memory to remove the following warning:
->> >> >>  Warning (unit_address_vs_reg): Node /memory has a reg or ranges
->> >> >>                            property, but no unit name
->> >> >
->> >> > If anything, it would be better to get rid of the memory node from the
->> >> > skeleton DTs.
->> >> >
->> >> > For DTs which have a memory node there's no problem, and DTs which
->> >> > expect a bootlaoder to fill things in have a logical place to document
->> >> > that fact.
->> >
->> >> The only problem I see if DTB is updated on a board but a board bootloader
->> >> on fix-up is capable to fill a preexisting "/memory" device node in only,
->> >> otherwise it is not clear why the device node is present in skeleton.dtsi.
->> >
->> > Sure. To clarify the above, what I expect that for this case is that the
->> > empty memory node would exist in the dts for that particular board,
->> > along with a comment, e.g.
->> >
->> >         /* The firmware/bootloader for $BOARD fills this in */
->> >         memory {
->> >                 device_type = "memory";
->> >                 reg = <0 0 0 0>;
->> >         };
->>
->> To avoid the warning with the new dtc this would need to be memory@0.
->
-> Hmm... That's a little sub-optimal in the case that a bootloader is
-> patching this. Presumably a bootloader that needs an existing node won't
-> patch the unit-address to match the reg (which might not start at 0).
->
-> I'd rather not have the unit-address than have an incorrect
-> unit-address, though I guess we don't have much of a choice here, unless
-> there's some override we can place in the dts.
->
->> > That way you can tell at a glance that the lack of memory information in
->> > the DT for a board is intentional, and the bootloader still gets the
->> > node it expects.
->>
->> But this doesn't seem to be a "problem" with any of the DTs in
->> arch/arm/boot as they all defined a memory node.
->>
->> I used the following script to check for the memory node in all built dtb's.
->>   make ARCH=arm CONFIG_OF_ALL_DTBS=y dtbs
->>   for i in $(ls arch/arm/boot/dts/*.dtb); do
->>          m=$(scripts/dtc/dtc -I dtb -O dts $i | grep -m1 'memory.*{')
->>          if [ -z "$m" ]; then
->>                  echo "Missing memory node in $i"
->>           fi
->>   done
->>
->> So it should be pretty safe to just remove the memory node entry in
->> the skeleton files. Unless I have missed something with the script
->> above.
->
-> The above might match reserved-memory nodes; it might be better to check
-> for 'device_type\s*=\s*"memory"'.
+* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [160307 22:58]:
+> commit 55ee7017ee31 ("arm: omap2: board-generic: use omap4_local_timer_init
+> for AM437x") makes synctimer32k as the clocksource on AM43xx. By default
+> the synctimer32k is clocked by 32K RTC OSC on AM43xx. But this 32K RTC OSC
+> is not available on epos boards which makes it fail to boot.
+> 
+> Synctimer32k can also be clocked by a peripheral PLL, so making this as
+> clock parent for synctimer3k on epos boards.
 
-I did check the output of the grep and it looks good. But there are
-indeed DTs that are missing the 'device_type = "memory"' parameter.
-Actually; _a lot_ or 438 of 741 to be exact. ugh...
+OK applying into omap-for-v4.6/fixes with Cc: stable v4.4+.
 
-I guess all those should be fixed up before we can remove the memory
-node from skeleton. :/
+Thanks,
 
-
-> I assume that was run after deleting the memory node from the skeletons?
-
-Yes :)
-
-
-regards,
-Joachim Eastwood
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
