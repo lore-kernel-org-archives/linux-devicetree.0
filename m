@@ -1,54 +1,151 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 5/5] arm64: dts: marvell: add XOR node for Armada 3700 SoC
-Date: Wed, 30 Mar 2016 19:35:20 +0200
-Message-ID: <1459359320-12638-6-git-send-email-gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 2/5] dmaengine: mv_xor: use SoC type instead of directly the operation mode
+Date: Wed, 30 Mar 2016 19:35:17 +0200
+Message-ID: <1459359320-12638-3-git-send-email-gregory.clement@free-electrons.com>
 References: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459359320-12638-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+Currently the main difference between legacy XOR engine and newer one, is
+the way the engine modes are setup (either in the descriptor or through
+the controller registers). In order to be able to take into account new
+generation of the XOR engine for the ARM64 SoC, we need to identify them
+by type, and then depending to the type the engine setup will be
+selected.
 
-Armada 3700 SoC comprise one dual-channel XOR engine and this
-patch adds its according representation.
-
-Signed-off-by: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/dma/mv_xor.c | 40 ++++++++++++++++++++++++++++------------
+ drivers/dma/mv_xor.h |  1 +
+ 2 files changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index ba9df7ff2a72..932783d82ea9 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -112,6 +112,19 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index a6ec82776cbc..6d012a56b97b 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -31,6 +31,11 @@
+ #include "dmaengine.h"
+ #include "mv_xor.h"
  
-+			xor@60900 {
-+				compatible = "marvell,armada-3700-xor";
-+				reg = <0x60900 0x100
-+				       0x60b00 0x100>;
++enum mv_xor_type {
++	XOR_ORION,
++	XOR_ARMADA_38X,
++};
 +
-+				xor10 {
-+					interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+				xor11 {
-+					interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
+ enum mv_xor_mode {
+ 	XOR_MODE_IN_REG,
+ 	XOR_MODE_IN_DESC,
+@@ -933,7 +938,7 @@ static int mv_xor_channel_remove(struct mv_xor_chan *mv_chan)
+ static struct mv_xor_chan *
+ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 		   struct platform_device *pdev,
+-		   int idx, dma_cap_mask_t cap_mask, int irq, int op_in_desc)
++		   int idx, dma_cap_mask_t cap_mask, int irq)
+ {
+ 	int ret = 0;
+ 	struct mv_xor_chan *mv_chan;
+@@ -945,7 +950,10 @@ mv_xor_channel_add(struct mv_xor_device *xordev,
+ 
+ 	mv_chan->idx = idx;
+ 	mv_chan->irq = irq;
+-	mv_chan->op_in_desc = op_in_desc;
++	if (xordev->xor_type == XOR_ORION)
++		mv_chan->op_in_desc = XOR_MODE_IN_REG;
++	else
++		mv_chan->op_in_desc = XOR_MODE_IN_DESC;
+ 
+ 	dma_dev = &mv_chan->dmadev;
+ 
+@@ -1137,8 +1145,8 @@ static int mv_xor_resume(struct platform_device *dev)
+ }
+ 
+ static const struct of_device_id mv_xor_dt_ids[] = {
+-	{ .compatible = "marvell,orion-xor", .data = (void *)XOR_MODE_IN_REG },
+-	{ .compatible = "marvell,armada-380-xor", .data = (void *)XOR_MODE_IN_DESC },
++	{ .compatible = "marvell,orion-xor", .data = (void *)XOR_ORION },
++	{ .compatible = "marvell,armada-380-xor", .data = (void *)XOR_ARMADA_38X },
+ 	{},
+ };
+ 
+@@ -1152,7 +1160,6 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	unsigned int max_engines, max_channels;
+ 	int i, ret;
+-	int op_in_desc;
+ 
+ 	dev_notice(&pdev->dev, "Marvell shared XOR driver\n");
+ 
+@@ -1180,6 +1187,20 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, xordev);
+ 
 +
- 			sata@e0000 {
- 				compatible = "marvell,armada-3700-ahci";
- 				reg = <0xe0000 0x2000>;
++	/*
++	 * We need to know which type of XOR device we use before
++	 * setting up. In non-dt case it can only be the legacy one.
++	 */
++	xordev->xor_type = XOR_ORION;
++	if (pdev->dev.of_node) {
++		const struct of_device_id *of_id =
++			of_match_device(mv_xor_dt_ids,
++					&pdev->dev);
++
++		xordev->xor_type = (uintptr_t)of_id->data;
++	}
++
+ 	/*
+ 	 * (Re-)program MBUS remapping windows if we are asked to.
+ 	 */
+@@ -1212,15 +1233,11 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 	if (pdev->dev.of_node) {
+ 		struct device_node *np;
+ 		int i = 0;
+-		const struct of_device_id *of_id =
+-			of_match_device(mv_xor_dt_ids,
+-					&pdev->dev);
+ 
+ 		for_each_child_of_node(pdev->dev.of_node, np) {
+ 			struct mv_xor_chan *chan;
+ 			dma_cap_mask_t cap_mask;
+ 			int irq;
+-			op_in_desc = (uintptr_t)of_id->data;
+ 
+ 			if (i >= max_channels)
+ 				continue;
+@@ -1237,7 +1254,7 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 			}
+ 
+ 			chan = mv_xor_channel_add(xordev, pdev, i,
+-						  cap_mask, irq, op_in_desc);
++						  cap_mask, irq);
+ 			if (IS_ERR(chan)) {
+ 				ret = PTR_ERR(chan);
+ 				irq_dispose_mapping(irq);
+@@ -1266,8 +1283,7 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 			}
+ 
+ 			chan = mv_xor_channel_add(xordev, pdev, i,
+-						  cd->cap_mask, irq,
+-						  XOR_MODE_IN_REG);
++						  cd->cap_mask, irq);
+ 			if (IS_ERR(chan)) {
+ 				ret = PTR_ERR(chan);
+ 				goto err_channel_add;
+diff --git a/drivers/dma/mv_xor.h b/drivers/dma/mv_xor.h
+index c19fe30e5ae9..bf56e082e7cd 100644
+--- a/drivers/dma/mv_xor.h
++++ b/drivers/dma/mv_xor.h
+@@ -85,6 +85,7 @@ struct mv_xor_device {
+ 	void __iomem	     *xor_high_base;
+ 	struct clk	     *clk;
+ 	struct mv_xor_chan   *channels[MV_XOR_MAX_CHANNELS];
++	int		     xor_type;
+ };
+ 
+ /**
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
