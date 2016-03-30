@@ -1,117 +1,81 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v3 2/2] mmc: dw_mmc: add resets support to dw_mmc
-Date: Wed, 30 Mar 2016 15:24:56 +0800
-Message-ID: <1459322696-29919-3-git-send-email-guodong.xu@linaro.org>
-References: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawn.lin@rock-chips.com, jh80.chung@samsung.com, --to=robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ulf.hansson@linaro.org, guodong.xu@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v7 10/17] arm/xen: Get event-channel irq through HVM_PARAM
+ when booting with ACPI
+Date: Wed, 30 Mar 2016 15:34:24 +0800
+Message-ID: <56FB8180.5040205@huawei.com>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org> <1458830676-27075-11-git-send-email-shannon.zhao@linaro.org> <56FAAEED.7060108@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56FAAEED.7060108-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-mmc registers may in abnormal state if mmc is used in bootloader,
-eg. to support booting from eMMC. So we need reset mmc registers
-when kernel boots up, instead of assuming mmc is in clean state.
 
-With this patch, user can add a 'resets' property into dw_mmc dts
-node. When driver parse_dt and probe, it calls reset API to
-deassert the 'reset' of dw_mmc host controller. When probe error or
-remove, it calls reset API to assert it.
 
-Please also refer to Documentation/devicetree/bindings/reset/reset.txt
+On 2016/3/30 0:35, Julien Grall wrote:
+> Hi Shannon,
+> 
+> On 24/03/16 14:44, Shannon Zhao wrote:
+>> When booting with ACPI, it could get the event-channel irq through
+> 
+> The kernel will always get the event-channel IRQ through
+> HVM_PARAM_CALLBACK_IRQ.
+> 
+> So I would say: ", the kernel will get the event-channel..."
+> 
+>> HVM_PARAM_CALLBACK_IRQ.
+>>
+>> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+>> ---
+>>   arch/arm/xen/enlighten.c | 36 +++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 35 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+>> index d94f726..680aae0 100644
+>> --- a/arch/arm/xen/enlighten.c
+>> +++ b/arch/arm/xen/enlighten.c
+>> @@ -30,6 +30,7 @@
+>>   #include <linux/time64.h>
+>>   #include <linux/timekeeping.h>
+>>   #include <linux/timekeeper_internal.h>
+>> +#include <linux/acpi.h>
+>>
+>>   #include <linux/mm.h>
+>>
+>> @@ -278,6 +279,35 @@ void __init xen_early_init(void)
+>>           add_preferred_console("hvc", 0, NULL);
+>>   }
+>>
+>> +static void __init xen_acpi_guest_init(void)
+>> +{
+>> +#ifdef CONFIG_ACPI
+>> +    struct xen_hvm_param a;
+>> +    int interrupt, trigger, polarity;
+>> +
+>> +    a.domid = DOMID_SELF;
+>> +    a.index = HVM_PARAM_CALLBACK_IRQ;
+>> +    xen_events_irq = 0;
+>> +
+>> +    if (!HYPERVISOR_hvm_op(HVMOP_get_param, &a)) {
+>> +        if ((a.value >> 56) == HVM_PARAM_CALLBACK_TYPE_PPI) {
+>> +            interrupt = a.value & 0xff;
+>> +            trigger = ((a.value >> 8) & 0x1) ? ACPI_EDGE_SENSITIVE
+>> +                             : ACPI_LEVEL_SENSITIVE;
+>> +            polarity = ((a.value >> 8) & 0x2) ? ACPI_ACTIVE_LOW
+>> +                              : ACPI_ACTIVE_HIGH;
+>> +            xen_events_irq = acpi_register_gsi(NULL, interrupt,
+>> +                               trigger, polarity);
+>> +        }
+>> +    }
+> 
+> Can you invert the condition to remove one layer of indentation?
+Sure, will update.
 
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
----
- drivers/mmc/host/dw_mmc.c  | 20 +++++++++++++++++++-
- include/linux/mmc/dw_mmc.h |  6 ++++--
- 2 files changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 242f9a0..d0a4535 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -2878,6 +2878,13 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
- 	if (!pdata)
- 		return ERR_PTR(-ENOMEM);
- 
-+	/* find reset controller when exist */
-+	pdata->rstc = devm_reset_control_get_optional(dev, NULL);
-+	if (IS_ERR(pdata->rstc)) {
-+		if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
-+			return ERR_PTR(-EPROBE_DEFER);
-+	}
-+
- 	/* find out number of slots supported */
- 	of_property_read_u32(np, "num-slots", &pdata->num_slots);
- 
-@@ -2949,7 +2956,9 @@ int dw_mci_probe(struct dw_mci *host)
- 
- 	if (!host->pdata) {
- 		host->pdata = dw_mci_parse_dt(host);
--		if (IS_ERR(host->pdata)) {
-+		if (PTR_ERR(host->pdata) == -EPROBE_DEFER) {
-+			return -EPROBE_DEFER;
-+		} else if (IS_ERR(host->pdata)) {
- 			dev_err(host->dev, "platform data not available\n");
- 			return -EINVAL;
- 		}
-@@ -3012,6 +3021,9 @@ int dw_mci_probe(struct dw_mci *host)
- 		}
- 	}
- 
-+	if (!IS_ERR(host->pdata->rstc))
-+		reset_control_deassert(host->pdata->rstc);
-+
- 	setup_timer(&host->cmd11_timer,
- 		    dw_mci_cmd11_timer, (unsigned long)host);
- 
-@@ -3164,6 +3176,9 @@ err_dmaunmap:
- 	if (host->use_dma && host->dma_ops->exit)
- 		host->dma_ops->exit(host);
- 
-+	if (!IS_ERR(host->pdata->rstc))
-+		reset_control_assert(host->pdata->rstc);
-+
- err_clk_ciu:
- 	if (!IS_ERR(host->ciu_clk))
- 		clk_disable_unprepare(host->ciu_clk);
-@@ -3196,6 +3211,9 @@ void dw_mci_remove(struct dw_mci *host)
- 	if (host->use_dma && host->dma_ops->exit)
- 		host->dma_ops->exit(host);
- 
-+	if (!IS_ERR(host->pdata->rstc))
-+		reset_control_assert(host->pdata->rstc);
-+
- 	if (!IS_ERR(host->ciu_clk))
- 		clk_disable_unprepare(host->ciu_clk);
- 
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 7b41c6d..b95cd84 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -14,9 +14,10 @@
- #ifndef LINUX_MMC_DW_MMC_H
- #define LINUX_MMC_DW_MMC_H
- 
--#include <linux/scatterlist.h>
--#include <linux/mmc/core.h>
- #include <linux/dmaengine.h>
-+#include <linux/mmc/core.h>
-+#include <linux/reset.h>
-+#include <linux/scatterlist.h>
- 
- #define MAX_MCI_SLOTS	2
- 
-@@ -260,6 +261,7 @@ struct dw_mci_board {
- 	/* delay in mS before detecting cards after interrupt */
- 	u32 detect_delay_ms;
- 
-+	struct reset_control *rstc;
- 	struct dw_mci_dma_ops *dma_ops;
- 	struct dma_pdata *data;
- };
+Thanks,
 -- 
-1.9.1
+Shannon
