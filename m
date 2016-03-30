@@ -1,48 +1,38 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
-Date: Wed, 30 Mar 2016 14:36:14 +0200
-Message-ID: <CAGhQ9VxoWQG3g-9o63yUCaTRuivN=gikA61MeAWmvGa5vka3Vw@mail.gmail.com>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
-	<1459290646-3592-3-git-send-email-manabian@gmail.com>
-	<20160330110611.GB25354@leverpostej>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] mwifiex: add platform specific wakeup interrupt support
+Date: Wed, 30 Mar 2016 15:38:44 +0300
+Message-ID: <87a8lg5eej.fsf@purkki.adurom.net>
+References: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
+	<1458299032-31929-2-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160330110611.GB25354@leverpostej>
+In-Reply-To: <1458299032-31929-2-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+	(Amitkumar Karwar's message of "Fri, 18 Mar 2016 04:03:52 -0700")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org
+To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> writes:
 
-On 30 March 2016 at 13:06, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Mar 30, 2016 at 12:30:41AM +0200, Joachim Eastwood wrote:
->> Add unit name to memory to remove the following warning:
->>  Warning (unit_address_vs_reg): Node /memory has a reg or ranges
->>                               property, but no unit name
+> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 >
-> If anything, it would be better to get rid of the memory node from the
-> skeleton DTs.
+> On some arm-based platforms, we need to configure platform specific
+> parameters by device tree node and also define our node as a child
+> node of parent SDIO host controller.
+> This patch parses these parameters from device tree. It includes
+> calibration data dowoload to firmware, wakeup pin configured to firmware,
+> and soc specific wake up gpio, which will be set as wakeup interrupt pin.
+>
+> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 
-Yes, I agree and as Vladimir notes just by adding a unit name we
-create duplicate memory nodes.
+I only see patch 2, where are the rest three? Also it's not clear what's
+the plan with this patchset.
 
-I'll send an updated patch set once Rob has a change to look at it also.
-
-
-> For DTs which have a memory node there's no problem, and DTs which
-> expect a bootlaoder to fill things in have a logical place to document
-> that fact.
-
-I'll take a look at which DTs that currently doesn't have a memory and add it.
-
-
-Thanks for looking.
-
-
-regards,
-Joachim Eastwood
+-- 
+Kalle Valo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
