@@ -1,111 +1,69 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 3/8] mfd: altr_a10sr: Add Altera Arria10 DevKit System
- Resource Chip
-Date: Wed, 30 Mar 2016 15:52:39 +0100
-Message-ID: <20160330145239.GM3323@x1>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-4-git-send-email-tthayer@opensource.altera.com>
- <20160330115106.GJ3323@x1>
- <56FBE829.2000607@opensource.altera.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v3 0/4] thermal: hisilicon: enable power allocator for
+ Hi6220
+Date: Wed, 30 Mar 2016 16:18:25 +0100
+Message-ID: <56FBEE41.5070009@hisilicon.com>
+References: <1459250835-25561-1-git-send-email-leo.yan@linaro.org>
+ <20160329154548.GE1855@localhost.localdomain>
+ <20160330025353.GA28401@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FBE829.2000607@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>, broonie@kernel.org
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160330025353.GA28401@leoy-linaro>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, "haojian.zhuang@linaro.org" <haojian.zhuang@linaro.org>, "zhangfei.gao@linaro.org" <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Mr Brown,
+Hi Leo,
 
-On Wed, 30 Mar 2016, Thor Thayer wrote:
-> On 03/30/2016 06:51 AM, Lee Jones wrote:
-> >On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
-> >
-> >>From: Thor Thayer <tthayer@opensource.altera.com>
-> >>
-> >>Add support for the Altera Arria10 Development Kit System Resource
-> >>chip which is implemented using a MAX5 as a external gpio extender,
-> >>and hardware monitor with the regmap framework over a SPI bus.
-> >>
-> >>Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> >>---
->=20
-> [...]
->=20
-> >>index 0000000..13665d4
-> >>--- /dev/null
-> >>+++ b/drivers/mfd/altera-a10sr.c
-> >>@@ -0,0 +1,177 @@
-> >>+/*
-> >>+ * Copyright Altera Corporation (C) 2014-2016. All Rights Reserved
-> >>+ *
-> >>+ * This program is free software; you can redistribute it and/or m=
-odify it
-> >>+ * under the terms and conditions of the GNU General Public Licens=
-e,
-> >>+ * version 2, as published by the Free Software Foundation.
-> >>+ *
-> >>+ * This program is distributed in the hope it will be useful, but =
-WITHOUT
-> >>+ * ANY WARRANTY; without even the implied warranty of MERCHANTABIL=
-ITY or
-> >>+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public L=
-icense for
-> >>+ * more details.
-> >>+ *
-> >>+ * You should have received a copy of the GNU General Public Licen=
-se along with
-> >>+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-> >
-> >Any chance you can use the shorter copyright header?
-> >
->=20
-> This is the header that Altera has specified and that we're
-> operating under. We haven't received guidance on Intel's header yet
-> but it may change as a result of our acquisition by Intel.
+On 30/03/2016 03:53, Leo Yan wrote:
+> On Tue, Mar 29, 2016 at 08:45:59AM -0700, Eduardo Valentin wrote:
+>> On Tue, Mar 29, 2016 at 07:27:11PM +0800, Leo Yan wrote:
+>>> Hi6220 has octa-core so it has quite high power consumption when run
+>>> benchmark and introduces high temperature for SoC. So need enable
+>>> thermal governor to control temperature and also cannot hurt much for
+>>> performance after impose cooling operations on CPU.
+>>>
+>>> This patch series is to enable power allocator for Hi6220. Patch 1 is to
+>>> change "hysteresis" as optional property for trip points, so when enable
+>>> power allocator governor we can ignore this property.
+>>>
+>>> During profiling also found two issues for thermal sensor's driver. The
+>>> power allocator just uses only one sensor, so patch 2 is to fix sensor
+>>> driver to let it can initialize driver successfully with only enabling
+>>> one sensor; patch 3 is to dismiss warning of IRQ imbalance enabling.
+>>>
+>>> After profiling on Hikey, the power model has been simplized with only
+>>> dynamic coefficient, and now it's convienence to pass it from CPU node.
+>>> So patch 4 and 5 bind sensor and pass power model parameters.
+>>>
+>>> This patch series have been tested on 96boards Hikey.
+>>
+>> Applied patches 1 and 2 in my fixes branch. Patches 3 and 4 need to go
+>> via the hisi platform tree. You may add my
+>>
+>> Acked-by: Eduardo Valentin <edubezval@gmail.com>
+>>
+>> on patches 3 and 4 if you want.
+> 
+> Thanks, Eduardo.
+> 
+> Hi Wei,
+> 
+> Could you help pick up patches 3/4 for enabling thermal in dts?
 
-=46air enough.
+Applied 3 & 4.
+Thanks!
 
-> >>+
-> >>+	/*
-> >>+	 * We can't use the standard regmap_update_bits function because
-> >>+	 * the read register has a different address than the write regis=
-ter.
-> >>+	 * Therefore, just do a read, modify, write operation here.
-> >>+	 */
-> >>+	ret =3D regmap_read(a10sr->regmap, (reg | READ_REG_MASK), &rval);
-> >>+	if (ret < 0)
-> >>+		return ret;
-> >>+
-> >>+	rval =3D ((rval & ~bit_mask) | (reg_val & bit_mask));
-> >>+
-> >>+	ret =3D regmap_write(a10sr->regmap, (reg & WRITE_REG_MASK), rval)=
-;
-> >>+
-> >>+	return ret;
-> >>+}
-> >
-> >Why can't you use the Regmap update function(s)?
->=20
-> The read register has a different address than the write register
-> which is handled in this function with the masks (read address is
-> odd, write address is even).
+Best Regards,
+Wei
 
-Mark, do we have an API which handled such a configuration?
+> 
+> Thanks,
+> Leo Yan
+> 
+> .
+> 
 
-> Thank you for the review of my patch set. I will implement the
-> changes that you pointed out. Thank you for reviewing!
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
