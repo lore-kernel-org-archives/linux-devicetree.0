@@ -1,91 +1,43 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCH 6/7] ARM: socfpga: Enable Arria10 OCRAM ECC on startup
-Date: Wed, 30 Mar 2016 10:27:47 -0500
-Message-ID: <1459351668-14622-7-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCH 7/7] ARM: dts: Add Altera Arria10 OCRAM EDAC devicetree entry
+Date: Wed, 30 Mar 2016 10:27:48 -0500
+Message-ID: <1459351668-14622-8-git-send-email-tthayer@opensource.altera.com>
 References: <1459351668-14622-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1459351668-14622-1-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-doc-owner@vger.kernel.org
 To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-Enable ECC for Arria10 On-Chip RAM on machine startup. The ECC has to be
-enabled before data is stored in memory otherwise the ECC will fail
-on reads.
+Add the device tree entries needed to support the Altera On-Chip
+RAM EDAC on the Arria10 chip.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
- arch/arm/mach-socfpga/core.h    |    1 +
- arch/arm/mach-socfpga/ocram.c   |   22 ++++++++++++++++++++++
- arch/arm/mach-socfpga/socfpga.c |    2 ++
- 3 files changed, 25 insertions(+)
+ arch/arm/boot/dts/socfpga_arria10.dtsi |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/mach-socfpga/core.h b/arch/arm/mach-socfpga/core.h
-index bfbc78d..65e1817 100644
---- a/arch/arm/mach-socfpga/core.h
-+++ b/arch/arm/mach-socfpga/core.h
-@@ -39,6 +39,7 @@ extern void socfpga_sysmgr_init(void);
- void socfpga_init_l2_ecc(void);
- void socfpga_init_ocram_ecc(void);
- void socfpga_init_arria10_l2_ecc(void);
-+void socfpga_init_arria10_ocram_ecc(void);
- 
- extern void __iomem *sys_manager_base_addr;
- extern void __iomem *rst_manager_base_addr;
-diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
-index 60ec643..e9d0982 100644
---- a/arch/arm/mach-socfpga/ocram.c
-+++ b/arch/arm/mach-socfpga/ocram.c
-@@ -19,6 +19,8 @@
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
- 
-+#include "../drivers/edac/altera_edac.h"
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 519e9e4..27cc497 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -612,6 +612,11 @@
+ 				compatible = "altr,socfpga-a10-l2-ecc";
+ 				reg = <0xffd06010 0x4>;
+ 			};
 +
- #define ALTR_OCRAM_CLEAR_ECC          0x00000018
- #define ALTR_OCRAM_ECC_EN             0x00000019
++			ocram-ecc@ff8c3000 {
++				compatible = "altr,socfpga-a10-ocram-ecc";
++				reg = <0xff8c3000 0x400>;
++			};
+ 		};
  
-@@ -47,3 +49,23 @@ void socfpga_init_ocram_ecc(void)
- 
- 	iounmap(mapped_ocr_edac_addr);
- }
-+
-+void socfpga_init_arria10_ocram_ecc(void)
-+{
-+	struct device_node *np;
-+	int ret;
-+
-+	/* Find the OCRAM EDAC device tree node */
-+	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-a10-ocram-ecc");
-+	if (!np) {
-+		pr_err("Unable to find socfpga-a10-ocram-ecc\n");
-+		return;
-+	}
-+
-+	ret = altr_init_a10_ecc_block(np, A10_SYSMGR_ECC_INTSTAT_OCRAM,
-+				      ALTR_A10_OCRAM_ECC_EN_CTL, 0);
-+	if (ret)
-+		pr_err("Unable to initialize OCRAM\n");
-+
-+	of_node_put(np);
-+}
-diff --git a/arch/arm/mach-socfpga/socfpga.c b/arch/arm/mach-socfpga/socfpga.c
-index e9b5b60..dde14f7 100644
---- a/arch/arm/mach-socfpga/socfpga.c
-+++ b/arch/arm/mach-socfpga/socfpga.c
-@@ -72,6 +72,8 @@ static void __init socfpga_arria10_init_irq(void)
- 	socfpga_sysmgr_init();
- 	if (IS_ENABLED(CONFIG_EDAC_ALTERA_L2C))
- 		socfpga_init_arria10_l2_ecc();
-+	if (IS_ENABLED(CONFIG_EDAC_ALTERA_OCRAM))
-+		socfpga_init_arria10_ocram_ecc();
- }
- 
- static void socfpga_cyclone5_restart(enum reboot_mode mode, const char *cmd)
+ 		rst: rstmgr@ffd05000 {
 -- 
 1.7.9.5
+
