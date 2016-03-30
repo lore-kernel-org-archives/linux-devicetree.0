@@ -1,71 +1,74 @@
-From: maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: Re: [RFC PATCH 0/4] Implement USB device/host switch for Vybrid
-Date: Wed, 30 Mar 2016 12:02:46 +0530
-Message-ID: <20160330063246.GA16028@Sanchayan-Arch.toradex.int>
-References: <cover.1458030082.git.maitysanchayan@gmail.com>
- <20160325074051.GB22398@peterchendt>
- <3c2e72efc8cae93ff31be1b44f9a02b3@agner.ch>
- <HE1PR04MB1450691A838973845B7AD16F8B870@HE1PR04MB1450.eurprd04.prod.outlook.com>
+From: Shannon Zhao <zhaoshenglong@huawei.com>
+Subject: Re: [PATCH v7 12/17] ARM64: ACPI: Check if it runs on Xen to enable
+ or disable ACPI
+Date: Wed, 30 Mar 2016 15:19:28 +0800
+Message-ID: <56FB7E00.7030400@huawei.com>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org> <1458830676-27075-13-git-send-email-shannon.zhao@linaro.org> <20160329161837.GH6745@arm.com> <20160329163147.GB27223@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <HE1PR04MB1450691A838973845B7AD16F8B870-6LN7OEpIatVC+P/YwrXEHc9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Cc: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org" <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160329163147.GB27223@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Shannon Zhao <shannon.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
+Hi Will, Mark,
 
-On 16-03-29 00:24:46, Peter Chen wrote:
->  
-> > 
-> > On 2016-03-25 00:40, Peter Chen wrote:
-> > > On Tue, Mar 15, 2016 at 02:08:26PM +0530, Sanchayan Maity wrote:
-> > >> Hello Peter,
-> > >>
-> > >> The existing usage of extcon in Chipidea driver relies on OTG
-> > >> registers. In case of SoC with dual role device but not a true OTG
-> > >> controller, this does not work. Such SoC's should specify the
-> > >> existing CI_HDRC_DUAL_ROLE_NOT_OTG flag and do the role switch
-> > >> without checking any of the OTG registers in my opinion.
-> > >> This is the case for Vybrid which uses a Chipidea IP but does not
-> > >> have a true 5 pin OTG implemented.
-> > >
-> > > Sorry to reply you late due to my new born baby.
-> > >
-> > > Are you sure Vybrid is NOT OTG core? Afaik, it is uses the same IP
-> > > base with other Freescale SoCs, just the IP core is 2.40a.
-> > > When working at device mode, can you read vbus status through OTGSC?
-> > > And if there is an ID pin (input pin) for Vybrid? I mean SoC, not the
-> > > board.
-> > 
-> > I think the IP is actually OTG capable, the registers are there, but the signals
-> > seem not to be available on the SoC package. That is also what the RM says...
-> > 
-> > Quotes from the RM:
-> > 
-> > "OTG controller should be treated as
-> > Dual role controller that allows the
-> > controller to act as either a Host or a
-> > device with no support for HNP/SRP."
-> > 
-> > And later, in Chapter 11.1:
-> > 
-> > "The USB is not a true OTG. It can be configured by software to function either
-> > as peripheral or as host. The ID pin, which is unique for OTG operation, is not
-> > present in this implementation. There are no five pin interface. The user will
-> > get four pin host/ device interface."
-> > 
+On 2016/3/30 0:31, Mark Rutland wrote:
+> On Tue, Mar 29, 2016 at 05:18:38PM +0100, Will Deacon wrote:
+>> > On Thu, Mar 24, 2016 at 10:44:31PM +0800, Shannon Zhao wrote:
+>>> > > When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
+>>> > > a /hypervisor node in DT. So check if it needs to enable ACPI.
+>>> > > 
+>>> > > Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
+>>> > > Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
+>>> > > Acked-by: Hanjun Guo <hanjun.guo@linaro.org>
+>>> > > ---
+>>> > >  arch/arm64/kernel/acpi.c | 12 ++++++++----
+>>> > >  1 file changed, 8 insertions(+), 4 deletions(-)
+>>> > > 
+>>> > > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+>>> > > index d1ce8e2..4e92be0 100644
+>>> > > --- a/arch/arm64/kernel/acpi.c
+>>> > > +++ b/arch/arm64/kernel/acpi.c
+>>> > > @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
+>>> > >  {
+>>> > >  	/*
+>>> > >  	 * Return 1 as soon as we encounter a node at depth 1 that is
+>>> > > -	 * not the /chosen node.
+>>> > > +	 * not the /chosen node, or /hypervisor node when running on Xen.
+>>> > >  	 */
+>>> > > -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
+>>> > > -		return 1;
+>>> > > +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
+>>> > > +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
+>>> > > +			return 1;
+>>> > > +	}
+>> > 
+>> > Hmm, but xen_initial_domain() is false when xen isn't being used at all,
+>> > so it feels to me like this is a bit too far-reaching and is basically
+>> > claiming the "/hypervisor" namespace for Xen. Couldn't it be renamed to
+>> > "xen,hypervisor" or something?
+>> > 
+>> > Mark, got any thoughts on this?
+> The node has a compatible string, "xen,xen" per [1], which would tell us
+> absolutely that xen is present. I'd be happy checking for that
+> explicitly.
 > 
-> Get it, thanks. I am doing a patch for covering this case and vbus always-on case.
+I think actually the xen_initial_domain is the result of the
+fdt_find_hyper_node. If the compatible string "xen,xen" doesn't exist,
+the xen_initial_domain() will return false and whatever the current node
+is the above check will return 1 since the device tree is not empty.
 
-If I may ask at this point, how would your implementation be covering this case
-for Vybrid?
+> In patch 11 fdt_find_hyper_node checks the compatible string. We could
+> factor that out into a helper like is_xen_node(node) and use it here
+> too.
+> 
+I don't think so because we already check the compatible string before
+and we could get the result simply via xen_initial_domain().
 
-- Sanchayan.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+-- 
+Shannon
