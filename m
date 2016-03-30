@@ -1,51 +1,49 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/5] Add XOR engine support to Armada 3700 SoC (ARM64)
-Date: Wed, 30 Mar 2016 19:35:15 +0200
-Message-ID: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 4/5] dmaengine: mv_xor: Allow selecting mv_xor for mvebu only
+ compatible SoC
+Date: Wed, 30 Mar 2016 19:35:19 +0200
+Message-ID: <1459359320-12638-5-git-send-email-gregory.clement@free-electrons.com>
+References: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Armada 3700 SoC uses the mv_xor driver but don't select anymore the
+PLAT_ORION symbol. This commit extends the dependency of the mv_xor
+driver to the more modern SoCs only compatible with ARCH_MVEBU, which
+allows using it with the Armada 3700 SoC.
 
-This series adds the support of the Marvell XOR engine to the Armada
-3700 SoC. As this SoC is an ARM64 one, then the code has been fixed to
-support the 64 bits platform.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ drivers/dma/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The initialization for the Armada 3700 is different from the other
-SoCs, so in order to support it, a new way of handling the different
-family have been added.
-
-Once the dmaengine part will be approved, I will apply the dts part
-in the mvebu/dt64 tree.
-
-Thanks,
-
-Gregory
-
-Gregory CLEMENT (3):
-  dmaengine: mv_xor: make the code 64 bits compliant
-  dmaengine: mv_xor: use SoC type instead of directly the operation mode
-  dmaengine: mv_xor: Allow selecting mv_xor for mvebu only compatible
-    SoC
-
-Marcin Wojtas (2):
-  dmaengine: mv_xor: add support for Armada 3700 SoC
-  arm64: dts: marvell: add XOR node for Armada 3700 SoC
-
- Documentation/devicetree/bindings/dma/mv-xor.txt |  3 +-
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi     | 13 ++++
- drivers/dma/Kconfig                              |  2 +-
- drivers/dma/mv_xor.c                             | 98 +++++++++++++++++++-----
- drivers/dma/mv_xor.h                             |  1 +
- 5 files changed, 95 insertions(+), 22 deletions(-)
-
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index d96d87c56f2e..cdc50c2c172f 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -332,7 +332,7 @@ config MPC512X_DMA
+ 
+ config MV_XOR
+ 	bool "Marvell XOR engine support"
+-	depends on PLAT_ORION
++	depends on PLAT_ORION || ARCH_MVEBU
+ 	select DMA_ENGINE
+ 	select DMA_ENGINE_RAID
+ 	select ASYNC_TX_ENABLE_CHANNEL_SWITCH
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
