@@ -1,76 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] Sound: SOC: TAS571x: added missing register
- literals
-Date: Wed, 30 Mar 2016 10:21:27 -0700
-Message-ID: <20160330172127.GL2350@sirena.org.uk>
-References: <1459237178-12920-1-git-send-email-petr@barix.com>
- <20160329213305.GO2350@sirena.org.uk>
- <56FB8B00.4000408@barix.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
+Date: Wed, 30 Mar 2016 18:24:12 +0100
+Message-ID: <20160330172412.GB10224@arm.com>
+References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <20160128111453.GG17123@leverpostej>
+ <56AA07AA.7050701@arm.com>
+ <6645680.g0j8d12m6d@wuerfel>
+ <20160128142751.GA775@arm.com>
+ <56FBF2B7.8090601@linaro.org>
+ <20160330154538.GA10224@arm.com>
+ <56FBF754.7020804@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ura8jf0QYTXVPAoa"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <56FB8B00.4000408-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <56FBF754.7020804@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eric Auger <eric.auger@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, galak@codeaurora.org, thomas.lendacky@amd.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, brijeshkumar.singh@amd.com, Christoffer Dall <christoffer.dall@linaro.org>, "eric.auger@st.com" <eric.auger@st.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 30, 2016 at 05:57:08PM +0200, Eric Auger wrote:
+> On 03/30/2016 05:45 PM, Will Deacon wrote:
+> > On Wed, Mar 30, 2016 at 05:37:27PM +0200, Eric Auger wrote:
+> >> On 01/28/2016 03:27 PM, Will Deacon wrote:
+> >>> On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
+> >>>> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
+> >>>>>>
+> >>>>> Any IDs specified here would only apply to DMA by the "platform device" 
+> >>>>> side of the host controller itself (as would an equivalent "iommus" 
+> >>>>> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
+> >>>>> working on). In terms of PCI devices, the "mmu-masters" property is 
+> >>>>> overloaded such that only its existence matters, to identify that there 
+> >>>>> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
+> >>>>> host controller.
+> >>>>
+> >>>> I wasn't aware that this was actually still specified. I had hoped
+> >>>> we were getting rid of mmu-masters before anyone actually started
+> >>>> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
+> >>>>
+> >>>> Does anyone know what happened to the plan to use the iommu DT binding
+> >>>> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
+> >>>
+> >>> We always did -- Seattle used the mmu-masters binding before the generic
+> >>> binding even existed. Robin has been working on patches to get of_xlate
+> >>> up and running, but it got held up by Laurent's series which didn't end
+> >>> up going anywhere.
+> >>>
+> >> Up to now I have used the PCI smmu description as described in Suravee's
+> >> patch and this does not work anymore with 4.6-rc1 since the default
+> >> domain was introduced. So now I see 2 SMRs matching a single streamid
+> >> (in my case 256, one steming from the "platform device" side of the host
+> >> controller and one steming from the PCI device) and this causes SMCF
+> >> (stream match conflict fault). So PCIe PF does not work.
+> > 
+> > Sorry about that, it wasn't intentional. In fact, I wrote commit
+> > cbf8277ef456 ("iommu/arm-smmu: Treat IOMMU_DOMAIN_DMA as bypass for now")
+> > specifically to avoid this breakage, after seeing it myself with VFIO
+> > and an S2CR-based configuration. It looks like the check just needs moving
+> > higher up (i.e. before we initialise the SMRs).
+> > 
+> > Does that fix it for you?
+> Yes this fixes the issue for me, thanks! I guess you will send that patch?
 
---ura8jf0QYTXVPAoa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I need to check that it doesn't break rebinding to the host after VFIO
+has been used for passthrough, first.
 
-On Wed, Mar 30, 2016 at 10:14:56AM +0200, Petr Kulhavy wrote:
-> On 29.03.2016 23:33, Mark Brown wrote:
+Does your devicetree explicitly assign a StreamID to the platform device
+for the host controller? We should probably be handling this, since it
+will crop us as an issue again once we decide to enable the default
+domain properly.
 
-> >On Tue, Mar 29, 2016 at 09:39:34AM +0200, Petr Kulhavy wrote:
+> So eventually what is the right way to describe the smmu-masters (~
+> future of that patch)?
 
-> >>The list of TAS571x registers was incomplete.
-> >>Added the missing register definitions up to register 0x25
+Using the generic iommu binding
+(Documentation/devicetree/bindings/iommu/iommu.txt), which will be required
+for of_xlate-based probing. The old binding should still continue to
+function as it always has, though.
 
-> >According to the driver the device has registers up to 0xff?
-
-> That is indeed true. But from address 0x29 on (0x26 to 0x28 are reserved)
-> the register width varies between 20, 12 and 8 bytes, which I'm afraid the
-> register map is unable to represent.
-
-Say what's going on in your changelog then.
-
-> >>+#define TAS571X_DEV_ID_REG		0x01
-> >>+#define TAS571X_ERR_STATUS_REG		0x02
-
-> >These look like volatile registers but the device has a register cache
-> >and we're not adding a list of volatile registers (or readable registers
-> >for that matter).
-
-> That's a good point, thanks! 0x03 is a regular RW register but 0x00 to 0x02
-> are indeed volatile.
-> Is it better to make them read-only, or volatile?
-
-It's not an either/or.  If they are read only they should be flagged as
-that.  If they are volatile (if they could change value at runtime) then
-they need to be flagged as that, I'd expect this applies to
-ERR_STATUS_REG.
-
---ura8jf0QYTXVPAoa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW/AsIAAoJECTWi3JdVIfQ5fsH/3Ifubqa+pegij8BLimPJiUe
-Iyruh6Egm305kGUKEzfAlnZ080vHj4QxSnOR+atoiJG8gjl2qG6WPNhLex3pm0PN
-0L4Hym5TmfX06z3xVOeVKIIhxST5AW0w1glTVZ2aU4Uzv7EKX0tyAfJxS+HJGuhj
-90tyO4G0I8A1zGROhERBRqc3GqLuXAvg4HJoPCdxE7uKFupyWKOaxJk9tWg8N7oG
-M289RxfCCLcHmb6n8i6vfpjxGbnN4cPy+nlT7qCpBre5xLD+EQQIGwIf8FSl+jsr
-WOtj3e27P5lUmF7ttSdlUNw+EmWuqZoB90vn0birDVjYgZTpY+qWBlzuTnz8UOo=
-=3PH6
------END PGP SIGNATURE-----
-
---ura8jf0QYTXVPAoa--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will
