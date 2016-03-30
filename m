@@ -1,77 +1,73 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 4/7] ARM: dts: Enable N950 keyboard sleep leds by default
-Date: Wed, 30 Mar 2016 12:35:21 -0700
-Message-ID: <20160330193520.GY9329@atomide.com>
-References: <1457827580-16919-1-git-send-email-sre@kernel.org>
- <1457827580-16919-5-git-send-email-sre@kernel.org>
- <20160329105128.GA30184@amd>
- <20160329145209.GB31858@earth>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
+Date: Wed, 30 Mar 2016 21:03:57 +0100
+Message-ID: <CACvgo53rYAW4H0SJnz8-7QtfRHmWWUh+7L7DiUbjBJ-hPBMHug@mail.gmail.com>
+References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>
+	<1571169.Hy8an0n7lM@diego>
+	<CACvgo516ewfwGCpV=noX+re1x8t3Sp1t39Sha+A2-tQ5YsoihA@mail.gmail.com>
+	<17189219.y56YqHz6yR@diego>
+	<CACvgo50REvRxN2_qdw=2NeTTSgjpA+9c8OZgPE0q19meH6ArKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160329145209.GB31858@earth>
+In-Reply-To: <CACvgo50REvRxN2_qdw=2NeTTSgjpA+9c8OZgPE0q19meH6ArKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-rockchip <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160329 07:53]:
-> Hi,
-> 
-> On Tue, Mar 29, 2016 at 12:51:28PM +0200, Pavel Machek wrote:
-> > For 1-3 in the series, Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > 
-> > > Like the Nokia N900, the N950 has leds to show
-> > > the state of sys_clkreq and sys_off_mode pins.
-> > > 
-> > > A detailed description for the LEDs and
-> > > OMAP's sleep states can be found in Tony's
-> > > commit for the Nokia N900:
-> > > 
-> > > c1be2032f66df9e1238bd5bc4ca666de88a62abc
-> > 
-> > I must say I've seen it on N900, and yes, it is useful, but no, I
-> > don't think this is right.
-> >
-> > This is not a LED. This is a interface that changes meaning of two
-> > other LEDs. I guess it should go to debugfs somewhere.
+On 29 March 2016 at 14:13, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrot=
+e:
+> On 28 March 2016 at 23:13, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote=
+:
+>
+>> I have the feeling we're going quite a bit off-topic right now :-) .
+>> The binary-driver-crazyness, hasn't really anything to do with Yakir=
+'s support
+>> for the RGA (which is about raster-graphics-acceleration, so 2d stuf=
+f).
+>>
+>> And me mentioning the armsoc-ddx was merely a means to allow some so=
+rt of
+>> different userspace user, as requested in your original mail ;-) .
+>>
+> Seems like I forgot to state the obvious - for all the reasons
+> mentioned, the armsoc ddx seems like a bad example.
+>
+>> Maybe you know a better use-case on where to demonstrate the viabili=
+ty of the
+>> userspace API for it as originally requested.
+> I'm afraid that my RockChip-foo is extremely limited. Perhaps the
+> actual user of these should be mentioned ? xf86-video-rockhip (is
+> there one ?) or any other effort/project that lacks some (all?) of th=
+e
+> criticism listed.
+>
+> (Sort of) the bottom line - either reuse the existing interfaces or
+> provide an approved, full blown userspace (libdrm demos/programs do
+> not count) that uses the new interfaces.
+>
+> I haven't made these rules, just a fool^Wguy that repeats them so tha=
+t
+> people don't abuse them much. If in doubt check with Dave and Daniel =
+V
+> - they had enough repeating these.
+>
+I can see how my earlier response may have been come
+across/interpreted as aggressive and/or demanding. Apologies anyone
+got upset/annoyed.
 
-Eh that sounds like a GPIO LED to me :) And it already has a
-/sys/class/leds/debug interface.
-
-The two LEDs this GPIO controls are hardwired to sys_clkreq and
-sys_off_mode pins that are the control signals between the SoC
-and PMIC.
-
-In theory you could steal the sys_clkreq and sys_off_mode pins
-from the PMIC at the cost of breaking PM. But I doubt anybody
-wants to do that considering it's a battery operated device.
-
-> I don't think we should diverge N900 and N950 userspace
-> APIs in this regard.
-> 
-> Actually the correct way would be a custom trigger
-> for the leds IMHO. I don't know if the led framework
-> supports per led custom triggers, though.
-
-Sure, there are something like 10 triggers already. And
-you can already change them using:
-
-echo none > /sys/class/leds/debug::sleep/trigger
-
-That still does not change the fact that the LEDs trigger
-based on the state of sys_clkreq and sys_off_mode.
-
-Maybe I'm not following what you guys are trying to achieve
-here though :) If so, please let me know.
+Let me try in another light - if you guys are willing to have
+xf86-video-rockchip or keep track of/co-maintain armsoc, pretty much
+everyone will be over the moon. Personally I'd opt for the former,
+taking the modesetting (the one in the xserver tree) as a base - it
+has all the cool new bits ;-)
 
 Regards,
-
-Tony
-
-
+Emil
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
