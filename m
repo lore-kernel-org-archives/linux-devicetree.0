@@ -1,83 +1,82 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 03/17] Xen: xlate: Use page_to_xen_pfn instead of page_to_pfn
-Date: Wed, 30 Mar 2016 15:38:00 +0800
-Message-ID: <56FB8258.7030303@huawei.com>
-References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org> <1458830676-27075-4-git-send-email-shannon.zhao@linaro.org> <56FAAD48.2010401@arm.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [RFC PATCH 0/4] Implement USB device/host switch for Vybrid
+Date: Wed, 30 Mar 2016 08:07:13 +0000
+Message-ID: <HE1PR04MB1450A32BDE5CA5C06124561A8B980@HE1PR04MB1450.eurprd04.prod.outlook.com>
+References: <cover.1458030082.git.maitysanchayan@gmail.com>
+ <20160325074051.GB22398@peterchendt>
+ <3c2e72efc8cae93ff31be1b44f9a02b3@agner.ch>
+ <HE1PR04MB1450691A838973845B7AD16F8B870@HE1PR04MB1450.eurprd04.prod.outlook.com>
+ <20160330063246.GA16028@Sanchayan-Arch.toradex.int>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56FAAD48.2010401-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160330063246.GA16028@Sanchayan-Arch.toradex.int>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "maitysanchayan@gmail.com" <maitysanchayan@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Agner <stefan@agner.ch>, "ivan.ivanov@linaro.org" <ivan.ivanov@linaro.org>, Peter Chen <hzpeterchen@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "marcel@ziswiler.com" <marcel@ziswiler.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2016/3/30 0:28, Julien Grall wrote:
-> Hi Shannon,
+ 
 > 
-> On 24/03/16 14:44, Shannon Zhao wrote:
->> Make xen_xlate_map_ballooned_pages work with 64K pages. In that case
->> Kernel pages are 64K in size but Xen pages remain 4K in size. Xen pfns
->> refer to 4K pages.
->>
->> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
->> ---
->>   drivers/xen/xlate_mmu.c | 26 ++++++++++++++++----------
->>   1 file changed, 16 insertions(+), 10 deletions(-)
->>
->> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
->> index 9692656..28f728b 100644
->> --- a/drivers/xen/xlate_mmu.c
->> +++ b/drivers/xen/xlate_mmu.c
->> @@ -207,9 +207,12 @@ int __init
->> xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
->>       void *vaddr;
->>       int rc;
->>       unsigned int i;
->> +    unsigned long nr_pages;
->> +    xen_pfn_t xen_pfn = 0;
->>
->>       BUG_ON(nr_grant_frames == 0);
->> -    pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
->> +    nr_pages = DIV_ROUND_UP(nr_grant_frames, XEN_PFN_PER_PAGE);
->> +    pages = kcalloc(nr_pages, sizeof(pages[0]), GFP_KERNEL);
->>       if (!pages)
->>           return -ENOMEM;
->>
->> @@ -218,22 +221,25 @@ int __init
->> xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
->>           kfree(pages);
->>           return -ENOMEM;
->>       }
->> -    rc = alloc_xenballooned_pages(nr_grant_frames, pages);
->> +    rc = alloc_xenballooned_pages(nr_pages, pages);
->>       if (rc) {
->> -        pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
->> -            nr_grant_frames, rc);
->> +        pr_warn("%s Couldn't balloon alloc %ld pages rc:%d\n", __func__,
->> +            nr_pages, rc);
->>           kfree(pages);
->>           kfree(pfns);
->>           return rc;
->>       }
->> -    for (i = 0; i < nr_grant_frames; i++)
->> -        pfns[i] = page_to_pfn(pages[i]);
->> +    for (i = 0; i < nr_grant_frames; i++) {
->> +        if ((i % XEN_PFN_PER_PAGE) == 0)
->> +            xen_pfn = page_to_xen_pfn(pages[i / XEN_PFN_PER_PAGE]);
->> +        pfns[i] = pfn_to_gfn(xen_pfn++);
->> +    }
+> On 16-03-29 00:24:46, Peter Chen wrote:
+> >
+> > >
+> > > On 2016-03-25 00:40, Peter Chen wrote:
+> > > > On Tue, Mar 15, 2016 at 02:08:26PM +0530, Sanchayan Maity wrote:
+> > > >> Hello Peter,
+> > > >>
+> > > >> The existing usage of extcon in Chipidea driver relies on OTG
+> > > >> registers. In case of SoC with dual role device but not a true
+> > > >> OTG controller, this does not work. Such SoC's should specify the
+> > > >> existing CI_HDRC_DUAL_ROLE_NOT_OTG flag and do the role switch
+> > > >> without checking any of the OTG registers in my opinion.
+> > > >> This is the case for Vybrid which uses a Chipidea IP but does not
+> > > >> have a true 5 pin OTG implemented.
+> > > >
+> > > > Sorry to reply you late due to my new born baby.
+> > > >
+> > > > Are you sure Vybrid is NOT OTG core? Afaik, it is uses the same IP
+> > > > base with other Freescale SoCs, just the IP core is 2.40a.
+> > > > When working at device mode, can you read vbus status through OTGSC?
+> > > > And if there is an ID pin (input pin) for Vybrid? I mean SoC, not
+> > > > the board.
+> > >
+> > > I think the IP is actually OTG capable, the registers are there, but
+> > > the signals seem not to be available on the SoC package. That is also what
+> the RM says...
+> > >
+> > > Quotes from the RM:
+> > >
+> > > "OTG controller should be treated as Dual role controller that
+> > > allows the controller to act as either a Host or a device with no
+> > > support for HNP/SRP."
+> > >
+> > > And later, in Chapter 11.1:
+> > >
+> > > "The USB is not a true OTG. It can be configured by software to
+> > > function either as peripheral or as host. The ID pin, which is
+> > > unique for OTG operation, is not present in this implementation.
+> > > There are no five pin interface. The user will get four pin host/ device
+> interface."
+> > >
+> >
+> > Get it, thanks. I am doing a patch for covering this case and vbus always-on
+> case.
 > 
-> Would it be possible to re-use xen_for_each_gfn? This will avoid
-> open-coding the loop to break down the Linux page.
-I don't think so. Using xen_acpi_guest_init will require factoring
-"pfns[i] = pfn_to_gfn(xen_pfn++)" to a function with parameter pfns[i].
-How can we pass pfns[i]?
+> If I may ask at this point, how would your implementation be covering this case
+> for Vybrid?
+> 
 
-Thanks,
--- 
-Shannon
+Yes, if the vbus and id status are from the extcon, it will not read register OTGSC.
+
+Peter
