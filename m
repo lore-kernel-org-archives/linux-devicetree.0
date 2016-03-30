@@ -1,43 +1,146 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v4 0/2] Add UCS1002 USB Port Power Controller
-Date: Wed, 30 Mar 2016 18:51:39 +0200
-Message-ID: <CAFqH_53AwUYKZAoUPN0VDiF_zGb=hkzB4k0KV+a9EX06HrdkiA@mail.gmail.com>
-References: <1457947485-14140-1-git-send-email-enric.balletbo@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] Input: synaptics-rmi4: Support regulator supplies
+Date: Wed, 30 Mar 2016 09:57:03 -0700
+Message-ID: <1459357023-5560-1-git-send-email-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457947485-14140-1-git-send-email-enric.balletbo@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andrew Duggan <aduggan@synaptics.com>, Christopher Heiny <cheiny@synaptics.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
-2016-03-14 10:24 GMT+01:00 Enric Balletbo i Serra
-<enric.balletbo@collabora.com>:
-> Dear all,
->
-> This is the fourth version of the UCS1002 driver, a Programmable USB Port
-> Power Controller with Charger Emulation.
->
-> Any comments are welcome. Thanks in advance.
->
-> Enric Balletbo i Serra (2):
->   devicetree: Add UCS1002 USB Port Power Controller binding
->   power: ucs1002: Add support for Programmable USB Port Power Controller
->
->  .../devicetree/bindings/power/ucs1002.txt          |   41 +
->  drivers/power/Kconfig                              |    9 +
->  drivers/power/Makefile                             |    1 +
->  drivers/power/ucs1002_power.c                      | 1004 ++++++++++++++++++++
->  4 files changed, 1055 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
->  create mode 100644 drivers/power/ucs1002_power.c
->
-> --
-> 2.1.0
->
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 
-Just a gentle reminder for if anyone can do some review, I would
-really like to see these patches ready for next merge window :)
+Support the two supplies - vdd and vio - to make it possible to control
+power to the Synaptics chip.
 
-- Enric
+Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+---
+ .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  7 ++++
+ drivers/input/rmi4/rmi_i2c.c                       | 45 ++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+index 95fa715c6046..a8c31f40f816 100644
+--- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
++++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+@@ -22,6 +22,13 @@ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
+ 			device.
+ 
++- vdd-supply: VDD power supply.
++See Documentation/devicetree/bindings/regulator/regulator.txt
++
++- vio-supply: VIO power supply
++See Documentation/devicetree/bindings/regulator/regulator.txt
++
++
+ Function Parameters:
+ Parameters specific to RMI functions are contained in child nodes of the rmi device
+  node. Documentation for the parameters of each function can be found in:
+diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+index a96a326b53bd..a8c794daba04 100644
+--- a/drivers/input/rmi4/rmi_i2c.c
++++ b/drivers/input/rmi4/rmi_i2c.c
+@@ -11,6 +11,8 @@
+ #include <linux/rmi.h>
+ #include <linux/irq.h>
+ #include <linux/of.h>
++#include <linux/delay.h>
++#include <linux/regulator/consumer.h>
+ #include "rmi_driver.h"
+ 
+ #define BUFFER_SIZE_INCREMENT 32
+@@ -37,6 +39,8 @@ struct rmi_i2c_xport {
+ 
+ 	u8 *tx_buf;
+ 	size_t tx_buf_size;
++
++	struct regulator_bulk_data supplies[2];
+ };
+ 
+ #define RMI_PAGE_SELECT_REGISTER 0xff
+@@ -246,6 +250,22 @@ static int rmi_i2c_probe(struct i2c_client *client,
+ 		return -ENODEV;
+ 	}
+ 
++	rmi_i2c->supplies[0].supply = "vdd";
++	rmi_i2c->supplies[1].supply = "vio";
++	retval = devm_regulator_bulk_get(&client->dev,
++					 ARRAY_SIZE(rmi_i2c->supplies),
++					 rmi_i2c->supplies);
++	if (retval < 0)
++		return retval;
++
++	retval = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
++				       rmi_i2c->supplies);
++	if (retval < 0)
++		return retval;
++
++	/* Allow the firmware to get ready */
++	msleep(10);
++
+ 	rmi_i2c->client = client;
+ 	mutex_init(&rmi_i2c->page_mutex);
+ 
+@@ -286,6 +306,8 @@ static int rmi_i2c_remove(struct i2c_client *client)
+ 	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+ 
+ 	rmi_unregister_transport_device(&rmi_i2c->xport);
++	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies),
++			       rmi_i2c->supplies);
+ 
+ 	return 0;
+ }
+@@ -308,6 +330,10 @@ static int rmi_i2c_suspend(struct device *dev)
+ 			dev_warn(dev, "Failed to enable irq for wake: %d\n",
+ 				ret);
+ 	}
++
++	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies),
++			       rmi_i2c->supplies);
++
+ 	return ret;
+ }
+ 
+@@ -317,6 +343,14 @@ static int rmi_i2c_resume(struct device *dev)
+ 	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
++				    rmi_i2c->supplies);
++	if (ret)
++		return ret;
++
++	/* Allow the firmware to get ready */
++	msleep(10);
++
+ 	enable_irq(rmi_i2c->irq);
+ 	if (device_may_wakeup(&client->dev)) {
+ 		ret = disable_irq_wake(rmi_i2c->irq);
+@@ -346,6 +380,9 @@ static int rmi_i2c_runtime_suspend(struct device *dev)
+ 
+ 	disable_irq(rmi_i2c->irq);
+ 
++	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies),
++			       rmi_i2c->supplies);
++
+ 	return 0;
+ }
+ 
+@@ -355,6 +392,14 @@ static int rmi_i2c_runtime_resume(struct device *dev)
+ 	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+ 	int ret;
+ 
++	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
++				    rmi_i2c->supplies);
++	if (ret)
++		return ret;
++
++	/* Allow the firmware to get ready */
++	msleep(10);
++
+ 	enable_irq(rmi_i2c->irq);
+ 
+ 	ret = rmi_driver_resume(rmi_i2c->xport.rmi_dev);
+-- 
+2.5.0
