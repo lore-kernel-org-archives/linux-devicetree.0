@@ -1,145 +1,72 @@
-From: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX settings
-Date: Wed, 30 Mar 2016 13:29:34 +0300
-Message-ID: <874mboqmwh.fsf@intel.com>
-References: <20160318211936.GA4158@rob-hp-laptop> <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com> <20160323043638.GA18462@peterchendt> <56F2D43D.1040404@timesys.com> <56F2DDB7.7070700@timesys.com> <20160324022117.GA5301@peterchendt>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
+Date: Wed, 30 Mar 2016 12:06:12 +0100
+Message-ID: <20160330110611.GB25354@leverpostej>
+References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
+ <1459290646-3592-3-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha1; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160324022117.GA5301@peterchendt>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459290646-3592-3-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 30, 2016 at 12:30:41AM +0200, Joachim Eastwood wrote:
+> Add unit name to memory to remove the following warning:
+>  Warning (unit_address_vs_reg): Node /memory has a reg or ranges
+> 				property, but no unit name
 
+If anything, it would be better to get rid of the memory node from the
+skeleton DTs.
 
-Hi,
+For DTs which have a memory node there's no problem, and DTs which
+expect a bootlaoder to fill things in have a logical place to document
+that fact.
 
-Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
-> [ text/plain ]
-> On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
->> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
->> >On 03/23/2016 12:36 AM, Peter Chen wrote:
->> >>On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
->> >>>The TX settings can be calibrated for particular hardware.  The
->> >>>phy is reset by Linux, so this cannot be handled by the bootloader.
->> >>>
->> >>>The TRM mentions that the maximum resistance should be used for the
->> >>>DN/DP calibration in order to pass USB certification.
->> >>>
->> >>>The values for the TX registers are poorly described in the TRM.
->> >>>The meanings of the register values were taken from another
->> >>>Freescale-provided document:
->> >>>https://community.freescale.com/message/566147#comment-566912
->> >>>
->> >>>Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
->> >>>---
->> >>>v3. Added unit suffix (-ohms) to tx-cal-45-d*
->> >>>
->> >>>v2. Copying devicetree list
->> >>>     Removed prettifying extra whitespace
->> >>>     Removed unnecessary register rewrite on resume
->> >>>     Use min and max constants for clarity
->> >>>
->> >>>  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
->> >>>  drivers/usb/phy/phy-mxs-usb.c                      |   58
->> >>>++++++++++++++++++++
->> >>>  2 files changed, 68 insertions(+)
->> >>>
->> >>>diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->> >>>b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->> >>>index 379b84a..1d25b04 100644
->> >>>--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->> >>>+++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
->> >>>@@ -12,6 +12,16 @@ Required properties:
->> >>>  - interrupts: Should contain phy interrupt
->> >>>  - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
->> >>>series
->> >>>
->> >>>+
->> >>>+    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
->> >>>+        val >=3D MXS_PHY_TX_D_CAL_MIN && val <=3D MXS_PHY_TX_D_CAL_M=
-AX) {
->> >>>+        /* scale to 4-bit value */
->> >>>+        val =3D (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
->> >>>+            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
->> >>>+        mxs_phy->tx_reg_mask |=3D GM_USBPHY_TX_D_CAL(~0);
->> >>>+        mxs_phy->tx_reg_set  |=3D GM_USBPHY_TX_D_CAL(val);
->> >>>+    }
->> >>>+
->> >>
->> >>I have tested "tx-d-cal", but it seems incorrect according to the xls =
-you
->> >>have provided, would you please check it again or am I wrong?
->> >
->> >Gah! You're right. Some of the D_CAL values need to be rounded up to
->> >match the xls.  And even then, the value for 86 still doesn't play nice.
->> >  I was really hoping to avoid using a table for these values.
->> >
->> >The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
->> >possible register values and so are unaffected by a similar issue.  I
->> >rechecked their numbers just to be sure.
->>=20
->> The solution looks to be to scale D_CAL starting from 80 instead of
->> 79.  If you look at the xls listing, the jump from 79 to 83 is the
->> only time two adjacent register values result in a change greater
->> than 2% or 3%.
->>=20
->> This will result in some code ugliness as the minimum allowed
->> percentage (79), per the Freescale document, and the point at which
->> we are scaling the percentage values to register values (80) are
->> different.
->>=20
->> And, as mentioned before, the values will also have to be rounded up.
->>=20
->> This quick shell code confirms that these sorts of calculations
->> match up with the values in the spreadsheet:
->>=20
->> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
->> echo "$d=3D"$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
->> d=3D$((d+1)); done
->>=20
->>=20
->> I can't find any formula which would hit all of those same
->> percentages without rounding up.
->>=20
->
-> Then, we had to use table for it. Besides, IC team confirms the default=20
-> value and the step for TXCAL45DP/DN are changed at next generation SoCs,
-> so I am wondering how we describe it at binding doc.
+Thanks,
+Mark.
 
-so I take it we're not yet ready to move forward with this ?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJW+6qOAAoJEIaOsuA1yqREiEYP+gOJjFfbLOvazvHiEuyqRVJ9
-qIHyYYLIpZayDFqbnJIRU1MQkOVCmhMGQkvjjgSeGqlNDfIAG2kqmkDo7lRCg5f5
-iyhDocCuUjnyCfHvaal9Roe78kqn9RbSyaZtKJxCZSLHeye0yg3/eRNwSLaRuJCG
-OMJ4TwhIXFoogj+AXp9OPJ0Xm22XQr2KQPB+kJXnbu7JEwOSNDTmUmTMlitx9Kxs
-391EDrgyOUE984JRryE7JxslEHBW90SXhuOb8P7SjxnDe0dHgBtGQxEGFhhgf+7g
-JottXQDd8NlS8a4oCUVSj0ibyW/pukzGh9vaM4lIPFQEPLoxm4PRy7ggnYXpJxV3
-FjTFHtgIjCrFCGnjCDQmvAGhx/0oyG+ySPjIxb/M1BpWoFzm3r0WTkMPGFP7/g7H
-uB9+gJgOzsKx2Py7uSJWvLTZMSq5gTtIGoAEnkbqfx4H5TnKfxzETpayO6fiFM33
-mQ4uiTJRzxCSbd8jDRV6zp8wURiyhmF3F8vpM7Ksgao0A5LT+eWA5FFrrD9wfFjJ
-oj0cFldjYLd1g4ndChUJ1ipfW+Fdf801N18FkCimbs0Le2rOdwRWa1hlPCM/sIwF
-MQ2eB9AaT+m/rl71xdz3kRmKoQ03o/OgClMZts6MmeHD6ltKTxQsz++fGsKuln/X
-QV7p4ON1yI/S3QmOHD8b
-=s9iM
------END PGP SIGNATURE-----
---=-=-=--
+> 
+> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/skeleton.dtsi   | 2 +-
+>  arch/arm/boot/dts/skeleton64.dtsi | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
+> index b41d241..a20da0a 100644
+> --- a/arch/arm/boot/dts/skeleton.dtsi
+> +++ b/arch/arm/boot/dts/skeleton.dtsi
+> @@ -9,5 +9,5 @@
+>  	#size-cells = <1>;
+>  	chosen { };
+>  	aliases { };
+> -	memory { device_type = "memory"; reg = <0 0>; };
+> +	memory@0 { device_type = "memory"; reg = <0 0>; };
+>  };
+> diff --git a/arch/arm/boot/dts/skeleton64.dtsi b/arch/arm/boot/dts/skeleton64.dtsi
+> index b5d7f36..6dbe9f9 100644
+> --- a/arch/arm/boot/dts/skeleton64.dtsi
+> +++ b/arch/arm/boot/dts/skeleton64.dtsi
+> @@ -9,5 +9,5 @@
+>  	#size-cells = <2>;
+>  	chosen { };
+>  	aliases { };
+> -	memory { device_type = "memory"; reg = <0 0 0 0>; };
+> +	memory@0 { device_type = "memory"; reg = <0 0 0 0>; };
+>  };
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
