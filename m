@@ -1,82 +1,43 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
-Date: Wed, 30 Mar 2016 18:24:12 +0100
-Message-ID: <20160330172412.GB10224@arm.com>
-References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <20160128111453.GG17123@leverpostej>
- <56AA07AA.7050701@arm.com>
- <6645680.g0j8d12m6d@wuerfel>
- <20160128142751.GA775@arm.com>
- <56FBF2B7.8090601@linaro.org>
- <20160330154538.GA10224@arm.com>
- <56FBF754.7020804@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 1/5] dmaengine: mv_xor: make the code 64 bits compliant
+Date: Wed, 30 Mar 2016 19:35:16 +0200
+Message-ID: <1459359320-12638-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FBF754.7020804@linaro.org>
+In-Reply-To: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eric Auger <eric.auger@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, galak@codeaurora.org, thomas.lendacky@amd.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, brijeshkumar.singh@amd.com, Christoffer Dall <christoffer.dall@linaro.org>, "eric.auger@st.com" <eric.auger@st.com>
+To: Vinod Koul <vinod.koul@intel.com>, dmaengine@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Omri Itach <omrii@marvell.com>, Marcin Wojtas <mw@semihalf.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2016 at 05:57:08PM +0200, Eric Auger wrote:
-> On 03/30/2016 05:45 PM, Will Deacon wrote:
-> > On Wed, Mar 30, 2016 at 05:37:27PM +0200, Eric Auger wrote:
-> >> On 01/28/2016 03:27 PM, Will Deacon wrote:
-> >>> On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
-> >>>> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
-> >>>>>>
-> >>>>> Any IDs specified here would only apply to DMA by the "platform device" 
-> >>>>> side of the host controller itself (as would an equivalent "iommus" 
-> >>>>> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
-> >>>>> working on). In terms of PCI devices, the "mmu-masters" property is 
-> >>>>> overloaded such that only its existence matters, to identify that there 
-> >>>>> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
-> >>>>> host controller.
-> >>>>
-> >>>> I wasn't aware that this was actually still specified. I had hoped
-> >>>> we were getting rid of mmu-masters before anyone actually started
-> >>>> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
-> >>>>
-> >>>> Does anyone know what happened to the plan to use the iommu DT binding
-> >>>> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
-> >>>
-> >>> We always did -- Seattle used the mmu-masters binding before the generic
-> >>> binding even existed. Robin has been working on patches to get of_xlate
-> >>> up and running, but it got held up by Laurent's series which didn't end
-> >>> up going anywhere.
-> >>>
-> >> Up to now I have used the PCI smmu description as described in Suravee's
-> >> patch and this does not work anymore with 4.6-rc1 since the default
-> >> domain was introduced. So now I see 2 SMRs matching a single streamid
-> >> (in my case 256, one steming from the "platform device" side of the host
-> >> controller and one steming from the PCI device) and this causes SMCF
-> >> (stream match conflict fault). So PCIe PF does not work.
-> > 
-> > Sorry about that, it wasn't intentional. In fact, I wrote commit
-> > cbf8277ef456 ("iommu/arm-smmu: Treat IOMMU_DOMAIN_DMA as bypass for now")
-> > specifically to avoid this breakage, after seeing it myself with VFIO
-> > and an S2CR-based configuration. It looks like the check just needs moving
-> > higher up (i.e. before we initialise the SMRs).
-> > 
-> > Does that fix it for you?
-> Yes this fixes the issue for me, thanks! I guess you will send that patch?
+Fix two warnings which appear when building for 64 bits target.
 
-I need to check that it doesn't break rebinding to the host after VFIO
-has been used for passthrough, first.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ drivers/dma/mv_xor.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Does your devicetree explicitly assign a StreamID to the platform device
-for the host controller? We should probably be handling this, since it
-will crop us as an issue again once we decide to enable the default
-domain properly.
-
-> So eventually what is the right way to describe the smmu-masters (~
-> future of that patch)?
-
-Using the generic iommu binding
-(Documentation/devicetree/bindings/iommu/iommu.txt), which will be required
-for of_xlate-based probing. The old binding should still continue to
-function as it always has, though.
-
-Will
+diff --git a/drivers/dma/mv_xor.c b/drivers/dma/mv_xor.c
+index 3922a5d56806..a6ec82776cbc 100644
+--- a/drivers/dma/mv_xor.c
++++ b/drivers/dma/mv_xor.c
+@@ -477,7 +477,7 @@ mv_xor_prep_dma_xor(struct dma_chan *chan, dma_addr_t dest, dma_addr_t *src,
+ 	BUG_ON(len > MV_XOR_MAX_BYTE_COUNT);
+ 
+ 	dev_dbg(mv_chan_to_devp(mv_chan),
+-		"%s src_cnt: %d len: %u dest %pad flags: %ld\n",
++		"%s src_cnt: %d len: %zu dest %pad flags: %ld\n",
+ 		__func__, src_cnt, len, &dest, flags);
+ 
+ 	sw_desc = mv_chan_alloc_slot(mv_chan);
+@@ -1220,7 +1220,7 @@ static int mv_xor_probe(struct platform_device *pdev)
+ 			struct mv_xor_chan *chan;
+ 			dma_cap_mask_t cap_mask;
+ 			int irq;
+-			op_in_desc = (int)of_id->data;
++			op_in_desc = (uintptr_t)of_id->data;
+ 
+ 			if (i >= max_channels)
+ 				continue;
+-- 
+2.5.0
