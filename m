@@ -1,248 +1,108 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] arm64: dts: add LS1043a-QDS board support
-Date: Wed, 30 Mar 2016 22:06:17 +0800
-Message-ID: <20160330140608.GL28207@tiger>
-References: <1457403939-12080-1-git-send-email-Zhiqiang.Hou@nxp.com>
- <1457403939-12080-2-git-send-email-Zhiqiang.Hou@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/2] dt: bindings: add MARVELL's bt-sd8xxx wireless device
+Date: Wed, 30 Mar 2016 09:06:48 -0500
+Message-ID: <CAL_JsqKk+S7SfxBT3c-Z2hAFjZLW03jNeLJQsMDFJ0ZfJuDmRQ@mail.gmail.com>
+References: <1459344056-5234-1-git-send-email-akarwar@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457403939-12080-2-git-send-email-Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiqiang Hou <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, Mingkai.Hu-3arQi8VN3Tc@public.gmane.org, Shaohui.Xie-3arQi8VN3Tc@public.gmane.org, Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459344056-5234-1-git-send-email-akarwar@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amitkumar Karwar <akarwar@marvell.com>
+Cc: linux-bluetooth@vger.kernel.org, Nishant Sarmukadam <nishants@marvell.com>, wnhuang@chromium.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xinming Hu <huxm@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 08, 2016 at 10:25:39AM +0800, Zhiqiang Hou wrote:
-> From: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> The LS1043a-QDS board is a high-performance computing, evaluation,
-> development, and test platform supporting the LS1043a SoC.
-> 
-> Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Mingkai Hu <Mingkai.Hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-
-The series looks good to me.  There are a couple of small comments in
-this patch as below, but I decided to fix them myself and applied both
-patches.
-
+On Wed, Mar 30, 2016 at 8:20 AM, Amitkumar Karwar <akarwar@marvell.com> wrote:
+> From: Xinming Hu <huxm@marvell.com>
+>
+> Add device tree binding documentation for MARVELL's bluetooth sdio
+> (sd8897 and sd8997) chip.
+>
+> Signed-off-by: Xinming Hu <huxm@marvell.com>
+> Signed-off-by: Amitkumar Karwar <akarwar@marvell.com>
 > ---
-> v4:
->  - No change.
-> 
-> v3:
->  - Resort the nodes alphabetically.
->  - Correct the compatible of nodes adt7461a at24,24c512 and pca9547.
->  - Change the name of adt7461a to temp-sensor.
-> 
-> v2:
->  - Add root node compatible property.
-> 
->  arch/arm64/boot/dts/freescale/Makefile            |   1 +
->  arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts | 167 ++++++++++++++++++++++
->  2 files changed, 168 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index f3c2516..1423fa4 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
 
-The list should maintained alphabetically.
+[...]
 
->   
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
+> diff --git a/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
 > new file mode 100644
-> index 0000000..97e9906
+> index 0000000..172ba83
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> @@ -0,0 +1,167 @@
-> +/*
-> + * Device Tree Include file for Freescale Layerscape-1043A family SoC.
-> + *
-> + * Copyright 2014-2015, Freescale Semiconductor
-> + *
-> + * Mingkai Hu <Mingkai.hu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPLv2 or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
+> +++ b/Documentation/devicetree/bindings/net/marvell-bt-sd8xxx.txt
+> @@ -0,0 +1,57 @@
+> +Marvell 8897/8997 (sd8897/sd8997) bluetooth SDIO devices
+> +------
 > +
-> +/dts-v1/;
-> +/include/ "fsl-ls1043a.dtsi"
+> +Required properties:
 > +
-> +/ {
-> +	model = "LS1043A QDS Board";
-> +	compatible = "fsl,ls1043a-qds", "fsl,ls1043a";
+> +  - compatible : should be one of the following:
+> +       * "marvell,sd8897-bt"
+> +       * "marvell,sd8997-bt"
 > +
-> +	aliases {
-> +		gpio0 = &gpio1;
-> +		gpio1 = &gpio2;
-> +		gpio2 = &gpio3;
-> +		gpio3 = &gpio4;
-> +		serial0 = &lpuart0;
-> +		serial1 = &lpuart1;
-> +		serial2 = &lpuart2;
-> +		serial3 = &lpuart3;
-> +		serial4 = &lpuart4;
-> +		serial5 = &lpuart5;
-> +	};
-> +};
+> +Optional properties:
 > +
-> +&duart0 {
-> +	status = "okay";
-> +};
-> +
-> +&duart1 {
-> +	status = "okay";
-> +};
-> +
-> +&ifc {
-> +	#address-cells = <2>;
-> +	#size-cells = <1>;
-> +	/* NOR, NAND Flashes and FPGA on board */
-> +	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
-> +		  0x1 0x0 0x0 0x7e800000 0x00010000
-> +		  0x2 0x0 0x0 0x7fb00000 0x00000100>;
-> +	status = "okay";
-> +
-> +	nor@0,0 {
-> +		compatible = "cfi-flash";
-> +		reg = <0x0 0x0 0x8000000>;
-> +		bank-width = <2>;
-> +		device-width = <1>;
-> +	};
-> +
-> +	nand@1,0 {
-> +		compatible = "fsl,ifc-nand";
-> +		reg = <0x1 0x0 0x10000>;
-> +	};
-> +
-> +	fpga: board-control@2,0 {
-> +		compatible = "fsl,ls1043aqds-fpga", "fsl,fpga-qixis";
-> +		reg = <0x2 0x0 0x0000100>;
-> +	};
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
+> +  - btmrvl,cal-data : Calibration data downloaded to the device during
+> +                     initialization. This is an array of 28 values(u8).
 
-We generally have a new line between properties and sub-node.
+btmrvl is not a vendor. These should all be "marvell".
 
-Shawn
+> +
+> +  - btmrvl,wakeup-pin : 'wakeup-pin' represent wakeup pin number of the bluetooth
+> +                     chip. firmware will use the pin to wakeup host system.
+> +  - btmrvl,wakeup-gap : wakeup gap (in msecs) represent wakeup latency of the host
 
-> +	pca9547@77 {
-> +		compatible = "nxp,pca9547";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+Add units suffix (-msec).
+
+> +                     platform. The value will be configure to fiwmware.
+
+s/fiwmware/firmware/
+
+> +                     This is needed to work chip's sleep feature as expected.
+> +  - interrupt-parent: phandle of the parent interrupt controller
+> +  - interrupts : interrupt pin number to the cpu. driver will request an irq based on
+> +                this interrupt number. during system suspend, the irq will be enabled
+> +                as system wakeup source, so that the bluetooth chip can wakeup host
+> +                platform under certain condition. during system resume, the irq will
+> +                be disabled to make sure unnecessary interrupt is not received.
 > +
-> +		i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x0>;
+> +Example:
 > +
-> +			rtc@68 {
-> +				compatible = "dallas,ds3232";
-> +				reg = <0x68>;
-> +				/* IRQ10_B */
-> +				interrupts = <0 150 0x4>;
-> +			};
-> +		};
+> +IRQ pin 119 is used as system wakeup source interrupt.
+> +wakeup pin 13 and gap 100ms are configured so that firmware can wakeup host
+> +using this device side pin and wakeup latency.
+> +calibration data is also available in below example.
 > +
-> +		i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x2>;
+> +&mmc3 {
+> +       status = "okay";
+> +       vmmc-supply = <&wlan_en_reg>;
+> +       bus-width = <4>;
+> +       cap-power-off-card;
+> +       keep-power-in-suspend;
 > +
-> +			ina220@40 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
+> +       #address-cells = <1>;
+> +       #size-cells = <0>;
+> +       btmrvl: btmrvl@2 {
+
+Use a generic node name: bluetooth@2
+
+> +               compatible = "marvell,sd8897-bt";
+> +               reg = <2>;
+> +               interrupt-parent = <&pio>;
+> +               interrupts = <119 IRQ_TYPE_LEVEL_LOW>;
 > +
-> +			ina220@41 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x41>;
-> +				shunt-resistor = <1000>;
-> +			};
-> +		};
-> +
-> +		i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x3>;
-> +
-> +			eeprom@56 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x56>;
-> +			};
-> +
-> +			eeprom@57 {
-> +				compatible = "atmel,24c512";
-> +				reg = <0x57>;
-> +			};
-> +
-> +			temp-sensor@4c {
-> +				compatible = "adi,adt7461a";
-> +				reg = <0x4c>;
-> +			};
-> +		};
-> +	};
+> +               btmrvl,cal-data = /bits/ 8 <
+> +                       0x37 0x01 0x1c 0x00 0xff 0xff 0xff 0xff 0x01 0x7f 0x04 0x02
+> +                       0x00 0x00 0xba 0xce 0xc0 0xc6 0x2d 0x00 0x00 0x00 0x00 0x00
+> +                       0x00 0x00 0xf0 0x00>;
+> +               btmrvl,wakeup-pin = <0x0d>;
+> +               btmrvl,wakeup-gap = <0x64>;
+> +       };
 > +};
 > +
-> +&lpuart0 {
-> +	status = "okay";
-> +};
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> 1.8.1.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
