@@ -1,109 +1,113 @@
-From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 03/17] Xen: xlate: Use page_to_xen_pfn instead of
- page_to_pfn
-Date: Wed, 30 Mar 2016 12:22:49 +0100
-Message-ID: <56FBB709.5050802@arm.com>
-References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
- <1458830676-27075-4-git-send-email-shannon.zhao@linaro.org>
- <56FAAD48.2010401@arm.com> <56FB8258.7030303@huawei.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Wed, 30 Mar 2016 12:35:32 +0100
+Message-ID: <20160330113532.GI3323@x1>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56FB8258.7030303-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shannon,
+On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
 
-On 30/03/16 08:38, Shannon Zhao wrote:
->
->
-> On 2016/3/30 0:28, Julien Grall wrote:
->> On 24/03/16 14:44, Shannon Zhao wrote:
->>> Make xen_xlate_map_ballooned_pages work with 64K pages. In that case
->>> Kernel pages are 64K in size but Xen pages remain 4K in size. Xen pfns
->>> refer to 4K pages.
->>>
->>> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
->>> ---
->>>    drivers/xen/xlate_mmu.c | 26 ++++++++++++++++----------
->>>    1 file changed, 16 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/drivers/xen/xlate_mmu.c b/drivers/xen/xlate_mmu.c
->>> index 9692656..28f728b 100644
->>> --- a/drivers/xen/xlate_mmu.c
->>> +++ b/drivers/xen/xlate_mmu.c
->>> @@ -207,9 +207,12 @@ int __init
->>> xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
->>>        void *vaddr;
->>>        int rc;
->>>        unsigned int i;
->>> +    unsigned long nr_pages;
->>> +    xen_pfn_t xen_pfn = 0;
->>>
->>>        BUG_ON(nr_grant_frames == 0);
->>> -    pages = kcalloc(nr_grant_frames, sizeof(pages[0]), GFP_KERNEL);
->>> +    nr_pages = DIV_ROUND_UP(nr_grant_frames, XEN_PFN_PER_PAGE);
->>> +    pages = kcalloc(nr_pages, sizeof(pages[0]), GFP_KERNEL);
->>>        if (!pages)
->>>            return -ENOMEM;
->>>
->>> @@ -218,22 +221,25 @@ int __init
->>> xen_xlate_map_ballooned_pages(xen_pfn_t **gfns, void **virt,
->>>            kfree(pages);
->>>            return -ENOMEM;
->>>        }
->>> -    rc = alloc_xenballooned_pages(nr_grant_frames, pages);
->>> +    rc = alloc_xenballooned_pages(nr_pages, pages);
->>>        if (rc) {
->>> -        pr_warn("%s Couldn't balloon alloc %ld pfns rc:%d\n", __func__,
->>> -            nr_grant_frames, rc);
->>> +        pr_warn("%s Couldn't balloon alloc %ld pages rc:%d\n", __func__,
->>> +            nr_pages, rc);
->>>            kfree(pages);
->>>            kfree(pfns);
->>>            return rc;
->>>        }
->>> -    for (i = 0; i < nr_grant_frames; i++)
->>> -        pfns[i] = page_to_pfn(pages[i]);
->>> +    for (i = 0; i < nr_grant_frames; i++) {
->>> +        if ((i % XEN_PFN_PER_PAGE) == 0)
->>> +            xen_pfn = page_to_xen_pfn(pages[i / XEN_PFN_PER_PAGE]);
->>> +        pfns[i] = pfn_to_gfn(xen_pfn++);
->>> +    }
->>
->> Would it be possible to re-use xen_for_each_gfn? This will avoid
->> open-coding the loop to break down the Linux page.
-> I don't think so. Using xen_acpi_guest_init will require factoring
-> "pfns[i] = pfn_to_gfn(xen_pfn++)" to a function with parameter pfns[i].
-> How can we pass pfns[i]?
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>=20
+> The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> Device, it has two subdevices:
+>      - GPIO
+>      - HWMON
+>=20
+> This patch adds documentation for the Altera A10-SR DT bindings.
+>=20
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+>  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++=
+++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10s=
+r.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b=
+/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> new file mode 100644
+> index 0000000..564c761
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> @@ -0,0 +1,35 @@
+> +* Altera Arria10 Development Kit System Resource Chip
+> +
+> +Required parent device properties:
+> +- compatible : "altr,altr_a10sr"
+> +- spi-max-frequency : Maximum SPI frequency.
+> +- reg : the SPI Chip Select address for the Arria10 System Resource =
+chip
 
-By using the variable data. Something along those lines:
+DT bindings are much easier to read in the following format:
 
-struct map_balloon_pages
-{
-       xen_pfn_t *pfns;
-       unsigned int idx;
-};
+- compatible		: "altr,altr_a10sr"
+- spi-max-frequency	: Maximum SPI frequency.
+- reg			: the SPI Chip Select address for the Arria10 System Resource c=
+hip
 
-static void setup_balloon_gfn(unsigned long gfn, void *data)
-{
-       struct map_balloon_pages *info = data;
+=2E.. also, sentences start with an uppercase char.
 
+> +The A10SR consists of this varied group of sub-devices:
+> +
+> +Device                   Description
+> +------                   ----------
+> +altr_a10sr_gpio          GPIO Controller
+> +altr_a10sr_hwmon         Hardware Monitor
+> +
+> +The LEDs are implemented entirely in the device tree using
+> +the gpio-led framework.
 
-       data->pfns[data->idx] = gfn;
-       data->idx++;
-}
+This is a Linuxisum and should not live in DT bindings.
 
-And then in xen_xlate_map_ballooned_pages
+> +Example:
+> +
+> +        a10-sr: a10-sr@0 {
 
-xen_for_each_gfn(pages, nr_grant_frames, setup_balloon_gfn, &data);
+Nodes should be named after their device 'type'.
 
-Regards,
+Does this device really start a address 0?
 
--- 
-Julien Grall
+> +		compatible =3D "altr,altr-a10sr";
+> +		reg =3D <0>;
+> +		spi-max-frequency =3D <100000>;
+> +
+> +		a10sr_gpio: a10sr_gpio {
+
+Device type only please.
+
+> +			compatible =3D "altr,a10sr-gpio";
+> +			gpio-controller;
+> +			#gpio-cells =3D <2>;
+> +			ngpios =3D <16>;
+> +		};
+> +
+> +		a10sr_hwmon: a10sr_hwmon {
+
+Device type only please.
+
+> +			compatible =3D "altr,a10sr-hwmon";
+> +		};
+> +	};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-hwmon" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
