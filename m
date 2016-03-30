@@ -1,113 +1,140 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Wed, 30 Mar 2016 12:35:32 +0100
-Message-ID: <20160330113532.GI3323@x1>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v3 2/2] mmc: dw_mmc: add resets support to dw_mmc
+Date: Wed, 30 Mar 2016 20:40:31 +0900
+Message-ID: <56FBBB2F.5030308@samsung.com>
+References: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
+ <1459322696-29919-3-git-send-email-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1459322696-29919-3-git-send-email-guodong.xu@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>, shawn.lin@rock-chips.com, "robh+dt@kernel.org" <robh+dt@kernel.org>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+modified Rob's mail address.
 
-> From: Thor Thayer <tthayer@opensource.altera.com>
->=20
-> The Altera Arria10 Devkit System Resource chip is a Multi-Function
-> Device, it has two subdevices:
->      - GPIO
->      - HWMON
->=20
-> This patch adds documentation for the Altera A10-SR DT bindings.
->=20
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+On 03/30/2016 04:24 PM, Guodong Xu wrote:
+> mmc registers may in abnormal state if mmc is used in bootloader,
+> eg. to support booting from eMMC. So we need reset mmc registers
+> when kernel boots up, instead of assuming mmc is in clean state.
+
+Do you mean mmc(card side) register or dwmmc host controller's register on host side?
+
+According to dwmmc controller TMR, there are two reset signals. One is reset_n, other is rst_n.
+It seems this patch is relevant to reset_n(For host). (rst_n is hardware reset for card.)
+
+So could you clarify better? Then it's helpful to me for understanding..
+
+It seems that it means "mmc" is card, mmc registers is host controller register, right?
+
+> 
+> With this patch, user can add a 'resets' property into dw_mmc dts
+> node. When driver parse_dt and probe, it calls reset API to
+> deassert the 'reset' of dw_mmc host controller. When probe error or
+> remove, it calls reset API to assert it.
+> 
+> Please also refer to Documentation/devicetree/bindings/reset/reset.txt
+> 
+> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 > ---
->  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++=
-++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10s=
-r.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b=
-/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> new file mode 100644
-> index 0000000..564c761
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> @@ -0,0 +1,35 @@
-> +* Altera Arria10 Development Kit System Resource Chip
+>  drivers/mmc/host/dw_mmc.c  | 20 +++++++++++++++++++-
+>  include/linux/mmc/dw_mmc.h |  6 ++++--
+>  2 files changed, 23 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 242f9a0..d0a4535 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -2878,6 +2878,13 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+>  	if (!pdata)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> +	/* find reset controller when exist */
+> +	pdata->rstc = devm_reset_control_get_optional(dev, NULL);
+> +	if (IS_ERR(pdata->rstc)) {
+> +		if (PTR_ERR(pdata->rstc) == -EPROBE_DEFER)
+> +			return ERR_PTR(-EPROBE_DEFER);
+> +	}
 > +
-> +Required parent device properties:
-> +- compatible : "altr,altr_a10sr"
-> +- spi-max-frequency : Maximum SPI frequency.
-> +- reg : the SPI Chip Select address for the Arria10 System Resource =
-chip
-
-DT bindings are much easier to read in the following format:
-
-- compatible		: "altr,altr_a10sr"
-- spi-max-frequency	: Maximum SPI frequency.
-- reg			: the SPI Chip Select address for the Arria10 System Resource c=
-hip
-
-=2E.. also, sentences start with an uppercase char.
-
-> +The A10SR consists of this varied group of sub-devices:
+>  	/* find out number of slots supported */
+>  	of_property_read_u32(np, "num-slots", &pdata->num_slots);
+>  
+> @@ -2949,7 +2956,9 @@ int dw_mci_probe(struct dw_mci *host)
+>  
+>  	if (!host->pdata) {
+>  		host->pdata = dw_mci_parse_dt(host);
+> -		if (IS_ERR(host->pdata)) {
+> +		if (PTR_ERR(host->pdata) == -EPROBE_DEFER) {
+> +			return -EPROBE_DEFER;
+> +		} else if (IS_ERR(host->pdata)) {
+>  			dev_err(host->dev, "platform data not available\n");
+>  			return -EINVAL;
+>  		}
+> @@ -3012,6 +3021,9 @@ int dw_mci_probe(struct dw_mci *host)
+>  		}
+>  	}
+>  
+> +	if (!IS_ERR(host->pdata->rstc))
+> +		reset_control_deassert(host->pdata->rstc);
 > +
-> +Device                   Description
-> +------                   ----------
-> +altr_a10sr_gpio          GPIO Controller
-> +altr_a10sr_hwmon         Hardware Monitor
+>  	setup_timer(&host->cmd11_timer,
+>  		    dw_mci_cmd11_timer, (unsigned long)host);
+>  
+> @@ -3164,6 +3176,9 @@ err_dmaunmap:
+>  	if (host->use_dma && host->dma_ops->exit)
+>  		host->dma_ops->exit(host);
+>  
+> +	if (!IS_ERR(host->pdata->rstc))
+> +		reset_control_assert(host->pdata->rstc);
+
+location is correct?
+
 > +
-> +The LEDs are implemented entirely in the device tree using
-> +the gpio-led framework.
-
-This is a Linuxisum and should not live in DT bindings.
-
-> +Example:
+>  err_clk_ciu:
+>  	if (!IS_ERR(host->ciu_clk))
+>  		clk_disable_unprepare(host->ciu_clk);
+> @@ -3196,6 +3211,9 @@ void dw_mci_remove(struct dw_mci *host)
+>  	if (host->use_dma && host->dma_ops->exit)
+>  		host->dma_ops->exit(host);
+>  
+> +	if (!IS_ERR(host->pdata->rstc))
+> +		reset_control_assert(host->pdata->rstc);
 > +
-> +        a10-sr: a10-sr@0 {
+>  	if (!IS_ERR(host->ciu_clk))
+>  		clk_disable_unprepare(host->ciu_clk);
+>  
+> diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+> index 7b41c6d..b95cd84 100644
+> --- a/include/linux/mmc/dw_mmc.h
+> +++ b/include/linux/mmc/dw_mmc.h
+> @@ -14,9 +14,10 @@
+>  #ifndef LINUX_MMC_DW_MMC_H
+>  #define LINUX_MMC_DW_MMC_H
+>  
+> -#include <linux/scatterlist.h>
+> -#include <linux/mmc/core.h>
+>  #include <linux/dmaengine.h>
+> +#include <linux/mmc/core.h>
+> +#include <linux/reset.h>
+> +#include <linux/scatterlist.h>
 
-Nodes should be named after their device 'type'.
+Why did you touch other things?
 
-Does this device really start a address 0?
+>  
+>  #define MAX_MCI_SLOTS	2
+>  
+> @@ -260,6 +261,7 @@ struct dw_mci_board {
+>  	/* delay in mS before detecting cards after interrupt */
+>  	u32 detect_delay_ms;
+>  
+> +	struct reset_control *rstc;
+>  	struct dw_mci_dma_ops *dma_ops;
+>  	struct dma_pdata *data;
+>  };
+> 
 
-> +		compatible =3D "altr,altr-a10sr";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <100000>;
-> +
-> +		a10sr_gpio: a10sr_gpio {
-
-Device type only please.
-
-> +			compatible =3D "altr,a10sr-gpio";
-> +			gpio-controller;
-> +			#gpio-cells =3D <2>;
-> +			ngpios =3D <16>;
-> +		};
-> +
-> +		a10sr_hwmon: a10sr_hwmon {
-
-Device type only please.
-
-> +			compatible =3D "altr,a10sr-hwmon";
-> +		};
-> +	};
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-hwmon" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
