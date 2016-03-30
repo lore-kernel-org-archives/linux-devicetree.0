@@ -1,39 +1,87 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] mwifiex: add platform specific wakeup interrupt support
-Date: Wed, 30 Mar 2016 15:38:44 +0300
-Message-ID: <87a8lg5eej.fsf@purkki.adurom.net>
-References: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
-	<1458299032-31929-2-git-send-email-akarwar@marvell.com>
+From: Shannon Zhao <shannon.zhao@linaro.org>
+Subject: Re: [PATCH v7 03/17] Xen: xlate: Use page_to_xen_pfn instead of
+ page_to_pfn
+Date: Wed, 30 Mar 2016 20:42:20 +0800
+Message-ID: <56FBC9AC.1070203@linaro.org>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
+ <1458830676-27075-4-git-send-email-shannon.zhao@linaro.org>
+ <56FAAD48.2010401@arm.com> <56FB8258.7030303@huawei.com>
+ <56FBB709.5050802@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458299032-31929-2-git-send-email-akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-	(Amitkumar Karwar's message of "Fri, 18 Mar 2016 04:03:52 -0700")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <56FBB709.5050802@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Julien Grall <julien.grall@arm.com>, Shannon Zhao <zhaoshenglong@huawei.com>, linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com, david.vrabel@citrix.com
+Cc: devicetree@vger.kernel.org, linux-efi@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, peter.huangpeng@huawei.com, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> writes:
-
-> From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->
-> On some arm-based platforms, we need to configure platform specific
-> parameters by device tree node and also define our node as a child
-> node of parent SDIO host controller.
-> This patch parses these parameters from device tree. It includes
-> calibration data dowoload to firmware, wakeup pin configured to firmware,
-> and soc specific wake up gpio, which will be set as wakeup interrupt pin.
->
-> Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-
-I only see patch 2, where are the rest three? Also it's not clear what's
-the plan with this patchset.
-
--- 
-Kalle Valo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxNuW5tDAz5pyIMzDml6UgMTk6MjIsIEp1bGllbiBHcmFsbCB3cm90ZToKPiBIaSBTaGFu
+bm9uLAo+IAo+IE9uIDMwLzAzLzE2IDA4OjM4LCBTaGFubm9uIFpoYW8gd3JvdGU6Cj4+Cj4+Cj4+
+IE9uIDIwMTYvMy8zMCAwOjI4LCBKdWxpZW4gR3JhbGwgd3JvdGU6Cj4+PiBPbiAyNC8wMy8xNiAx
+NDo0NCwgU2hhbm5vbiBaaGFvIHdyb3RlOgo+Pj4+IE1ha2UgeGVuX3hsYXRlX21hcF9iYWxsb29u
+ZWRfcGFnZXMgd29yayB3aXRoIDY0SyBwYWdlcy4gSW4gdGhhdCBjYXNlCj4+Pj4gS2VybmVsIHBh
+Z2VzIGFyZSA2NEsgaW4gc2l6ZSBidXQgWGVuIHBhZ2VzIHJlbWFpbiA0SyBpbiBzaXplLiBYZW4g
+cGZucwo+Pj4+IHJlZmVyIHRvIDRLIHBhZ2VzLgo+Pj4+Cj4+Pj4gU2lnbmVkLW9mZi1ieTogU2hh
+bm5vbiBaaGFvIDxzaGFubm9uLnpoYW9AbGluYXJvLm9yZz4KPj4+PiBSZXZpZXdlZC1ieTogU3Rl
+ZmFubyBTdGFiZWxsaW5pIDxzdGVmYW5vLnN0YWJlbGxpbmlAZXUuY2l0cml4LmNvbT4KPj4+PiAt
+LS0KPj4+PiAgICBkcml2ZXJzL3hlbi94bGF0ZV9tbXUuYyB8IDI2ICsrKysrKysrKysrKysrKyst
+LS0tLS0tLS0tCj4+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKyksIDEwIGRl
+bGV0aW9ucygtKQo+Pj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMveGVuL3hsYXRlX21tdS5j
+IGIvZHJpdmVycy94ZW4veGxhdGVfbW11LmMKPj4+PiBpbmRleCA5NjkyNjU2Li4yOGY3MjhiIDEw
+MDY0NAo+Pj4+IC0tLSBhL2RyaXZlcnMveGVuL3hsYXRlX21tdS5jCj4+Pj4gKysrIGIvZHJpdmVy
+cy94ZW4veGxhdGVfbW11LmMKPj4+PiBAQCAtMjA3LDkgKzIwNywxMiBAQCBpbnQgX19pbml0Cj4+
+Pj4geGVuX3hsYXRlX21hcF9iYWxsb29uZWRfcGFnZXMoeGVuX3Bmbl90ICoqZ2Zucywgdm9pZCAq
+KnZpcnQsCj4+Pj4gICAgICAgIHZvaWQgKnZhZGRyOwo+Pj4+ICAgICAgICBpbnQgcmM7Cj4+Pj4g
+ICAgICAgIHVuc2lnbmVkIGludCBpOwo+Pj4+ICsgICAgdW5zaWduZWQgbG9uZyBucl9wYWdlczsK
+Pj4+PiArICAgIHhlbl9wZm5fdCB4ZW5fcGZuID0gMDsKPj4+Pgo+Pj4+ICAgICAgICBCVUdfT04o
+bnJfZ3JhbnRfZnJhbWVzID09IDApOwo+Pj4+IC0gICAgcGFnZXMgPSBrY2FsbG9jKG5yX2dyYW50
+X2ZyYW1lcywgc2l6ZW9mKHBhZ2VzWzBdKSwgR0ZQX0tFUk5FTCk7Cj4+Pj4gKyAgICBucl9wYWdl
+cyA9IERJVl9ST1VORF9VUChucl9ncmFudF9mcmFtZXMsIFhFTl9QRk5fUEVSX1BBR0UpOwo+Pj4+
+ICsgICAgcGFnZXMgPSBrY2FsbG9jKG5yX3BhZ2VzLCBzaXplb2YocGFnZXNbMF0pLCBHRlBfS0VS
+TkVMKTsKPj4+PiAgICAgICAgaWYgKCFwYWdlcykKPj4+PiAgICAgICAgICAgIHJldHVybiAtRU5P
+TUVNOwo+Pj4+Cj4+Pj4gQEAgLTIxOCwyMiArMjIxLDI1IEBAIGludCBfX2luaXQKPj4+PiB4ZW5f
+eGxhdGVfbWFwX2JhbGxvb25lZF9wYWdlcyh4ZW5fcGZuX3QgKipnZm5zLCB2b2lkICoqdmlydCwK
+Pj4+PiAgICAgICAgICAgIGtmcmVlKHBhZ2VzKTsKPj4+PiAgICAgICAgICAgIHJldHVybiAtRU5P
+TUVNOwo+Pj4+ICAgICAgICB9Cj4+Pj4gLSAgICByYyA9IGFsbG9jX3hlbmJhbGxvb25lZF9wYWdl
+cyhucl9ncmFudF9mcmFtZXMsIHBhZ2VzKTsKPj4+PiArICAgIHJjID0gYWxsb2NfeGVuYmFsbG9v
+bmVkX3BhZ2VzKG5yX3BhZ2VzLCBwYWdlcyk7Cj4+Pj4gICAgICAgIGlmIChyYykgewo+Pj4+IC0g
+ICAgICAgIHByX3dhcm4oIiVzIENvdWxkbid0IGJhbGxvb24gYWxsb2MgJWxkIHBmbnMgcmM6JWRc
+biIsCj4+Pj4gX19mdW5jX18sCj4+Pj4gLSAgICAgICAgICAgIG5yX2dyYW50X2ZyYW1lcywgcmMp
+Owo+Pj4+ICsgICAgICAgIHByX3dhcm4oIiVzIENvdWxkbid0IGJhbGxvb24gYWxsb2MgJWxkIHBh
+Z2VzIHJjOiVkXG4iLAo+Pj4+IF9fZnVuY19fLAo+Pj4+ICsgICAgICAgICAgICBucl9wYWdlcywg
+cmMpOwo+Pj4+ICAgICAgICAgICAga2ZyZWUocGFnZXMpOwo+Pj4+ICAgICAgICAgICAga2ZyZWUo
+cGZucyk7Cj4+Pj4gICAgICAgICAgICByZXR1cm4gcmM7Cj4+Pj4gICAgICAgIH0KPj4+PiAtICAg
+IGZvciAoaSA9IDA7IGkgPCBucl9ncmFudF9mcmFtZXM7IGkrKykKPj4+PiAtICAgICAgICBwZm5z
+W2ldID0gcGFnZV90b19wZm4ocGFnZXNbaV0pOwo+Pj4+ICsgICAgZm9yIChpID0gMDsgaSA8IG5y
+X2dyYW50X2ZyYW1lczsgaSsrKSB7Cj4+Pj4gKyAgICAgICAgaWYgKChpICUgWEVOX1BGTl9QRVJf
+UEFHRSkgPT0gMCkKPj4+PiArICAgICAgICAgICAgeGVuX3BmbiA9IHBhZ2VfdG9feGVuX3Bmbihw
+YWdlc1tpIC8gWEVOX1BGTl9QRVJfUEFHRV0pOwo+Pj4+ICsgICAgICAgIHBmbnNbaV0gPSBwZm5f
+dG9fZ2ZuKHhlbl9wZm4rKyk7Cj4+Pj4gKyAgICB9Cj4+Pgo+Pj4gV291bGQgaXQgYmUgcG9zc2li
+bGUgdG8gcmUtdXNlIHhlbl9mb3JfZWFjaF9nZm4/IFRoaXMgd2lsbCBhdm9pZAo+Pj4gb3Blbi1j
+b2RpbmcgdGhlIGxvb3AgdG8gYnJlYWsgZG93biB0aGUgTGludXggcGFnZS4KPj4gSSBkb24ndCB0
+aGluayBzby4gVXNpbmcgeGVuX2FjcGlfZ3Vlc3RfaW5pdCB3aWxsIHJlcXVpcmUgZmFjdG9yaW5n
+Cj4+ICJwZm5zW2ldID0gcGZuX3RvX2dmbih4ZW5fcGZuKyspIiB0byBhIGZ1bmN0aW9uIHdpdGgg
+cGFyYW1ldGVyIHBmbnNbaV0uCj4+IEhvdyBjYW4gd2UgcGFzcyBwZm5zW2ldPwo+IAo+IEJ5IHVz
+aW5nIHRoZSB2YXJpYWJsZSBkYXRhLiBTb21ldGhpbmcgYWxvbmcgdGhvc2UgbGluZXM6Cj4gCj4g
+c3RydWN0IG1hcF9iYWxsb29uX3BhZ2VzCj4gewo+ICAgICAgIHhlbl9wZm5fdCAqcGZuczsKPiAg
+ICAgICB1bnNpZ25lZCBpbnQgaWR4Owo+IH07Cj4gCj4gc3RhdGljIHZvaWQgc2V0dXBfYmFsbG9v
+bl9nZm4odW5zaWduZWQgbG9uZyBnZm4sIHZvaWQgKmRhdGEpCj4gewo+ICAgICAgIHN0cnVjdCBt
+YXBfYmFsbG9vbl9wYWdlcyAqaW5mbyA9IGRhdGE7Cj4gCj4gCj4gICAgICAgZGF0YS0+cGZuc1tk
+YXRhLT5pZHhdID0gZ2ZuOwo+ICAgICAgIGRhdGEtPmlkeCsrOwo+IH0KPiAKPiBBbmQgdGhlbiBp
+biB4ZW5feGxhdGVfbWFwX2JhbGxvb25lZF9wYWdlcwo+IAo+IHhlbl9mb3JfZWFjaF9nZm4ocGFn
+ZXMsIG5yX2dyYW50X2ZyYW1lcywgc2V0dXBfYmFsbG9vbl9nZm4sICZkYXRhKTsKSSB0aGluayB0
+aGlzIGxvb2tzIGxpa2UgbGVzcyBkaXJlY3QuIEFueXdheSBJIHdpbGwgdXBkYXRlIHRoaXMgcGF0
+Y2ggYXMKeW91IHNhaWQuCgpUaGFua3MsCi0tIApTaGFubm9uCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
+ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
