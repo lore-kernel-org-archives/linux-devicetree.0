@@ -1,39 +1,43 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] scatterlist: add sg_alloc_table_from_buf()
- helper
-Date: Wed, 30 Mar 2016 09:51:43 -0700
-Message-ID: <20160330165143.GI2350@sirena.org.uk>
-References: <1459352394-22810-1-git-send-email-boris.brezillon@free-electrons.com>
- <1459352394-22810-5-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v4 0/2] Add UCS1002 USB Port Power Controller
+Date: Wed, 30 Mar 2016 18:51:39 +0200
+Message-ID: <CAFqH_53AwUYKZAoUPN0VDiF_zGb=hkzB4k0KV+a9EX06HrdkiA@mail.gmail.com>
+References: <1457947485-14140-1-git-send-email-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vFj1JTFBn4Zx1dEI"
-Return-path: <linux-sunxi+bncBDQ2L75W5QGBBSMI6C3QKGQEKKOOJUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1459352394-22810-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgRichard Weinberger <ri>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1457947485-14140-1-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
---vFj1JTFBn4Zx1dEI
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+2016-03-14 10:24 GMT+01:00 Enric Balletbo i Serra
+<enric.balletbo@collabora.com>:
+> Dear all,
+>
+> This is the fourth version of the UCS1002 driver, a Programmable USB Port
+> Power Controller with Charger Emulation.
+>
+> Any comments are welcome. Thanks in advance.
+>
+> Enric Balletbo i Serra (2):
+>   devicetree: Add UCS1002 USB Port Power Controller binding
+>   power: ucs1002: Add support for Programmable USB Port Power Controller
+>
+>  .../devicetree/bindings/power/ucs1002.txt          |   41 +
+>  drivers/power/Kconfig                              |    9 +
+>  drivers/power/Makefile                             |    1 +
+>  drivers/power/ucs1002_power.c                      | 1004 ++++++++++++++++++++
+>  4 files changed, 1055 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/ucs1002.txt
+>  create mode 100644 drivers/power/ucs1002_power.c
+>
+> --
+> 2.1.0
+>
 
-On Wed, Mar 30, 2016 at 05:39:51PM +0200, Boris Brezillon wrote:
-> sg_alloc_table_from_buf() provides an easy solution to create an sg_table
-> from a virtual address pointer. This function takes care of dealing with
-> vmallocated buffers, buffer alignment, or DMA engine limitations (maximum
-> DMA transfer size).
+Just a gentle reminder for if anyone can do some review, I would
+really like to see these patches ready for next merge window :)
 
-This seems nice.  Should we also have a further helper on top of this
-which will get constraints from a dmaengine, it seems like it'd be a
-common need?
---vFj1JTFBn4Zx1dEI--
+- Enric
