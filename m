@@ -1,62 +1,58 @@
-From: Michael Trimarchi <michael@amarulasolutions.com>
-Subject: Re: [PATCH 0/4] Add support for Engicam IMX6UL module
-Date: Wed, 30 Mar 2016 14:46:31 +0200
-Message-ID: <CAOf5uwkFoi3_RojUpCsyR3v6EYVahHfjA4MWwEVimtfBhWY9nQ@mail.gmail.com>
-References: <1455963652-24618-1-git-send-email-michael@amarulasolutions.com>
- <20160330114748.GF28207@tiger>
+From: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v5 2/4] mwifiex: add platform specific wakeup interrupt
+ support
+Date: Wed, 30 Mar 2016 12:50:03 +0000
+Message-ID: <9b96089aa29a4202b2ccc8110315c174@SC-EXCH04.marvell.com>
+References: <1458299032-31929-1-git-send-email-akarwar@marvell.com>
+	<1458299032-31929-2-git-send-email-akarwar@marvell.com>
+ <87a8lg5eej.fsf@purkki.adurom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20160330114748.GF28207@tiger>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87a8lg5eej.fsf-5ukZ45wKbUHoml4zekdYB16hYfS7NtTn@public.gmane.org>
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wei-Ning Huang <wnhuang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkKCgpPbiBXZWQsIE1hciAzMCwgMjAxNiBhdCAxOjQ3IFBNLCBTaGF3biBHdW8gPHNoYXduZ3Vv
-QGtlcm5lbC5vcmc+IHdyb3RlOgo+IE9uIFNhdCwgRmViIDIwLCAyMDE2IGF0IDExOjIwOjQ4QU0g
-KzAxMDAsIE1pY2hhZWwgVHJpbWFyY2hpIHdyb3RlOgo+PiBUaGkgcGF0Y2ggc2VyaWVzIGFkZCB0
-aGUgc3VwcG9ydCBmb3IgRW5naWNhbSBJTVhVTCBwcm9kdWN0Cj4+Cj4+IGh0dHBzOi8vY29tbXVu
-aXR5LmZyZWVzY2FsZS5jb20vZG9jcy9ET0MtMzI4NDI4Cj4+Cj4+IEJhc2VkIG9uIEZyZWVzY2Fs
-ZeKEoiBpLk1YIDZVbHRyYUxpdGUgcHJvY2Vzc29yLCBhIGhpZ2ggcGVyZm9ybWFuY2UsCj4+IHVs
-dHJhLWVmZmljaWVudCBwcm9jZXNzb3IgZmFtaWx5IGZlYXR1cmluZyBhbiBhZHZhbmNlZCBpbXBs
-ZW1lbnRhdGlvbgo+PiBvZiBhIHNpbmdsZSBBUk3ihKIgQ29ydGV44oSiLUE3IGNvcmUsIHdoaWNo
-IG9wZXJhdGVzIGF0IHNwZWVkcyB1cCB0byA1MjggTUh6Lgo+Pgo+PiBUaGUgbmV3IEVOR0lDQU0g
-R0VBIE02VUwgbW9kdWxlIGlzIHN1aXRhYmxlIGZvciBjb3N0IGVmZmVjdGl2ZSBITUkKPj4gYXBw
-bGljYXRpb25zIHJlcXVpcmluZyBoaWdoIHBlcmZvcm1hbmNlIENQVS4KPj4KPj4gTWljaGFlbCBU
-cmltYXJjaGkgKDQpOgo+PiAgIEFSTTogZHRzOiBpbXg2dWw6IEFkZCBmbGV4Y2FuMSBhbmQgZmxl
-eGNhbjIgc3VwcG9ydAo+PiAgIEFSTTogZHRzOiBpbXg2dWw6IEFkZCBMQ0RJRiBzdXBwb3J0Cj4+
-ICAgQVJNOiBkdHM6IGlteDZ1bDogQWRkIEdQTUkgbmFuZCBjb250cm9sbGVyIHN1cHBvcnQKPj4g
-ICBBUk06IGR0czogaW14NnVsLWdlYW06IEFkZCBFbmdpY2FtIElNWDZVTCBHRUEgTTZVTCBpbml0
-aWFsIHN1cHBvcnQKPgo+IFRoZXJlIGFyZSBxdWl0ZSBzb21lIGNoYW5nZXMgYXJvdW5kIGlteDZ1
-bC5kdHNpIGdldHRpbmcgaW50byA0LjYtcmMxLgo+IENhbiB5b3UgcGxlYXNlIHJlYmFzZSBvbnRv
-IDQuNi1yYzEgYW5kIHJlc2VuZD8KPgoKSSB3aWxsIHByZXBhcmUgdG9uaWdodCBhZ2FpbiwgbGV0
-IHRlc3QgdGhlbSB0b21vcnJvdyBhbmQgc2VuZCBiYWNrCnRvbW9ycm93IGV2ZW5pbmcKCk1pY2hh
-ZWwKCgo+IFNoYXduCj4KPj4KPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAgICAgICAg
-ICAgIHwgICAzICstCj4+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2dWwtZ2VhbS1raXQuZHRzICB8
-IDEwMiArKysrKysrKysKPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bC1nZWFtLmR0c2kgICAg
-IHwgMzcxICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnVsLmR0c2kgICAgICAgICAgfCAgNjggKysrKysrCj4+ICBkcml2ZXJzL210ZC9u
-YW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYyB8ICAxMCArCj4+ICBkcml2ZXJzL210ZC9uYW5kL2dw
-bWktbmFuZC9ncG1pLW5hbmQuaCB8ICAgNiArLQo+PiAgNiBmaWxlcyBjaGFuZ2VkLCA1NTcgaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2Fy
-bS9ib290L2R0cy9pbXg2dWwtZ2VhbS1raXQuZHRzCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJj
-aC9hcm0vYm9vdC9kdHMvaW14NnVsLWdlYW0uZHRzaQo+Pgo+PiAtLQo+PiAyLjcuMAo+Pgo+PgoK
-CgotLSAKfCBNaWNoYWVsIE5henphcmVubyBUcmltYXJjaGkgICAgICAgICAgICAgICAgICAgICBB
-bWFydWxhIFNvbHV0aW9ucyBCViB8CnwgQ09PICAtICBGb3VuZGVyICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICBDcnVxdWl1c2thZGUgNDcgfAp8ICszMSgwKTg1MTExOTE3MiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEFtc3RlcmRhbSAxMDE4IEFNIE5MIHwKfCAg
-ICAgICAgICAgICAgICAgIFtgYXNdIGh0dHA6Ly93d3cuYW1hcnVsYXNvbHV0aW9ucy5jb20gICAg
-ICAgICAgICAgICB8CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+Hi Kalle,
+
+> From: Kalle Valo [mailto:kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org]
+> Sent: Wednesday, March 30, 2016 6:09 PM
+> To: Amitkumar Karwar
+> Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Cathy Luo; Nishant Sarmukadam;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Wei-Ning Huang; Xinming Hu
+> Subject: Re: [PATCH v5 2/4] mwifiex: add platform specific wakeup
+> interrupt support
+> 
+> Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org> writes:
+> 
+> > From: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> >
+> > On some arm-based platforms, we need to configure platform specific
+> > parameters by device tree node and also define our node as a child
+> > node of parent SDIO host controller.
+> > This patch parses these parameters from device tree. It includes
+> > calibration data dowoload to firmware, wakeup pin configured to
+> > firmware, and soc specific wake up gpio, which will be set as wakeup
+> interrupt pin.
+> >
+> > Signed-off-by: Xinming Hu <huxm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> 
+> I only see patch 2, where are the rest three? Also it's not clear what's
+> the plan with this patchset.
+> 
+
+Yes. It should have been [PATCH v5 2/2]
+I am going to submit v6 shortly which address below comments from Rob Herring.
+https://patchwork.kernel.org/patch/8618261/
+
+Regards,
+Amitkumar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
