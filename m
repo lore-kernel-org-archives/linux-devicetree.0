@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH V10 3/6] pinctrl: add DT binding doc for pincontrol of PMIC max77620/max20024
-Date: Wed, 30 Mar 2016 19:59:45 +0530
-Message-ID: <1459348188-11726-4-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH V10 6/6] gpio: max77620: add gpio driver for MAX77620/MAX20024
+Date: Wed, 30 Mar 2016 19:59:48 +0530
+Message-ID: <1459348188-11726-7-git-send-email-ldewangan@nvidia.com>
 References: <1459348188-11726-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,168 +12,327 @@ To: lee.jones@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org
 Cc: mark.rutland@arm.com, gnurou@gmail.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, ijc+devicetree@hellion.org.uk, swarren@nvidia.com, treding@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Maxim Semiconductor's PMIC MAX77620/MAX20024 has 8 GPIO pins
-which act as GPIO as well as special function mode.
+MAXIM Semiconductor's PMIC, MAX77620/MAX20024 has 8 GPIO
+pins. It also supports interrupts from these pins.
 
-Add DT binding document to configure pins in function mode as
-well as pin configuration parameters.
+Add GPIO driver for these pins to control via GPIO APIs.
 
 Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 ---
+Changes from V1:
+- Use the gpiochip_add_data and get the chip data from core APIs.
+- Cleanups based on comment received on mfd/rtc.
+- Avoid duplication on error message.
+
+Changes form V2:
+- Run coccicheck and checkpatch in strict mode for the alignment.
+- update based on api changes from core.
+
+Changes from V3:
+- Change all sys initcall to module driver.
+- change the max77620_read argument to unisgned int from u8.
+
 Changes from V4:
-- Separate out from pincontrol driver
+- Added DT binding document as devicetree/bindings/gpio/gpio-max77620.txt
 
 Changes from V5:
-- Starting patch title with pinctrl instead of DT:pinctrl
+- Separate out DT binding doc for gpio.
+- Added reviewed by for Linus W
 
 Changes from V6/V7:
 - None
 
-Changes on V8:
-- Collected Ack from Linus.
+Changes from V8:
+- Run checkpatch --strict and fix error. Mostly to use unsigned int instead
+  of unsigned.
+- Use linux/gpio/driver.h
 
 Changes from V9:
-None
+- Use devm_regmap_add_irq_chip() and devm_gpiochip_add_data()
 
- .../bindings/pinctrl/pinctrl-max77620.txt          | 127 +++++++++++++++++++++
- 1 file changed, 127 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+ drivers/gpio/Kconfig         |   9 ++
+ drivers/gpio/Makefile        |   1 +
+ drivers/gpio/gpio-max77620.c | 238 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 248 insertions(+)
+ create mode 100644 drivers/gpio/gpio-max77620.c
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index 5f3429f..e8328d5 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -851,6 +851,15 @@ config GPIO_LP3943
+ 	  LP3943 can be used as a GPIO expander which provides up to 16 GPIOs.
+ 	  Open drain outputs are required for this usage.
+ 
++config GPIO_MAX77620
++	bool "GPIO support for PMIC MAX77620 and MAX20024"
++	depends on MFD_MAX77620
++	help
++	  GPIO driver for MAX77620 and MAX20024 PMIC from Maxim Semiconductor.
++	  MAX77620 PMIC has 8 pins that can be configured as GPIOs. The
++	  driver also provides interrupt support for each of the gpios.
++	  Say yes here to enable the max77620 to be used as gpio controller.
++
+ config GPIO_MSIC
+ 	bool "Intel MSIC mixed signal gpio support"
+ 	depends on MFD_INTEL_MSIC
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 1e0b74f..3ff3603 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -58,6 +58,7 @@ obj-$(CONFIG_GPIO_MAX730X)	+= gpio-max730x.o
+ obj-$(CONFIG_GPIO_MAX7300)	+= gpio-max7300.o
+ obj-$(CONFIG_GPIO_MAX7301)	+= gpio-max7301.o
+ obj-$(CONFIG_GPIO_MAX732X)	+= gpio-max732x.o
++obj-$(CONFIG_GPIO_MAX77620)	+= gpio-max77620.o
+ obj-$(CONFIG_GPIO_MB86S7X)	+= gpio-mb86s7x.o
+ obj-$(CONFIG_GPIO_MENZ127)	+= gpio-menz127.o
+ obj-$(CONFIG_GPIO_MC33880)	+= gpio-mc33880.o
+diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
 new file mode 100644
-index 0000000..ad4fce3
+index 0000000..d927562
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-max77620.txt
-@@ -0,0 +1,127 @@
-+Pincontrol driver for MAX77620 Power management IC from Maxim Semiconductor.
++++ b/drivers/gpio/gpio-max77620.c
+@@ -0,0 +1,238 @@
++/*
++ * MAXIM MAX77620 GPIO driver
++ *
++ * Copyright (c) 2016, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ */
 +
-+Device has 8 GPIO pins which can be configured as GPIO as well as the
-+special IO functions.
++#include <linux/gpio/driver.h>
++#include <linux/interrupt.h>
++#include <linux/mfd/max77620.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
 +
-+Please refer file <devicetree/bindings/pinctrl/pinctrl-bindings.txt>
-+for details of the common pinctrl bindings used by client devices,
-+including the meaning of the phrase "pin configuration node".
++#define GPIO_REG_ADDR(offset) (MAX77620_REG_GPIO0 + offset)
 +
-+Optional Pinmux properties:
-+--------------------------
-+Following properties are required if default setting of pins are required
-+at boot.
-+- pinctrl-names: A pinctrl state named per <pinctrl-binding.txt>.
-+- pinctrl[0...n]: Properties to contain the phandle for pinctrl states per
-+		<pinctrl-binding.txt>.
-+
-+The pin configurations are defined as child of the pinctrl states node. Each
-+sub-node have following properties:
-+
-+Required properties:
-+------------------
-+- pins: List of pins. Valid values of pins properties are:
-+		      gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7.
-+
-+Optional properties:
-+-------------------
-+Following are optional properties defined as pinmux DT binding document
-+<pinctrl-bindings.txt>. Absence of properties will leave the configuration
-+on default.
-+	function,
-+	drive-push-pull,
-+	drive-open-drain,
-+	bias-pull-up,
-+	bias-pull-down.
-+
-+Valid values for function properties are:
-+	gpio, lpm-control-in, fps-out, 32k-out, sd0-dvs-in, sd1-dvs-in,
-+	reference-out
-+
-+Theres is also customised properties for the GPIO1, GPIO2 and GPIO3. These
-+customised properties are required to configure FPS configuration parameters
-+of these GPIOs. Please refer <devicetree/bindings/mfd/max77620.txt> for more
-+detail of Flexible Power Sequence (FPS).
-+
-+- maxim,active-fps-source:		FPS source for the GPIOs to get
-+					enabled/disabled when system is in
-+					active state.  Valid values are:
-+					- MAX77620_FPS_SRC_0,
-+						FPS source is FPS0.
-+					- MAX77620_FPS_SRC_1,
-+						FPS source is FPS1
-+					- MAX77620_FPS_SRC_2 and
-+						FPS source is FPS2
-+					- MAX77620_FPS_SRC_NONE.
-+						GPIO is not controlled
-+						by FPS events and it gets
-+						enabled/disabled by register
-+						access.
-+					Absence of this property will leave
-+					the FPS configuration register for that
-+					GPIO to default configuration.
-+
-+- maxim,active-fps-power-up-slot:	Sequencing event slot number on which
-+					the GPIO get enabled when
-+					master FPS input event set to HIGH.
-+					Valid values are 0 to 7.
-+					This is applicable if FPS source is
-+					selected as FPS0, FPS1 or FPS2.
-+
-+- maxim,active-fps-power-down-slot:	Sequencing event slot number on which
-+					the GPIO get disabled when master
-+					FPS input event set to LOW.
-+					Valid values are 0 to 7.
-+					This is applicable if FPS source is
-+					selected as FPS0, FPS1 or FPS2.
-+
-+- maxim,suspend-fps-source:		This is same as property
-+					"maxim,active-fps-source" but value
-+					get configured when system enters in
-+					to suspend state.
-+
-+- maxim,suspend-fps-power-up-slot:	This is same as property
-+					"maxim,active-fps-power-up-slot" but
-+					this value get configured into FPS
-+					configuration register when system
-+					enters into suspend.
-+					This is applicable if suspend state
-+					FPS source is selected as FPS0, FPS1 or
-+
-+- maxim,suspend-fps-power-down-slot:	This is same as property
-+					"maxim,active-fps-power-down-slot" but
-+					this value get configured into FPS
-+					configuration register when system
-+					enters into suspend.
-+					This is applicable if suspend state
-+					FPS source is selected as FPS0, FPS1 or
-+					FPS2.
-+
-+Example:
-+--------
-+#include <dt-bindings/mfd/max77620.h>
-+...
-+max77620@3c {
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spmic_default>;
-+
-+	spmic_default: pinmux@0 {
-+		pin_gpio0 {
-+			pins = "gpio0";
-+			function = "gpio";
-+		};
-+
-+		pin_gpio1 {
-+			pins = "gpio1";
-+			function = "fps-out";
-+			maxim,active-fps-source = <MAX77620_FPS_SRC_0>;
-+		};
-+
-+		pin_gpio2 {
-+			pins = "gpio2";
-+			function = "fps-out";
-+			maxim,active-fps-source = <MAX77620_FPS_SRC_1>;
-+		};
-+	};
++struct max77620_gpio {
++	struct gpio_chip	gpio_chip;
++	struct regmap		*rmap;
++	struct device		*dev;
++	int			gpio_irq;
++	int			irq_base;
++	int			gpio_base;
 +};
++
++static const struct regmap_irq max77620_gpio_irqs[] = {
++	REGMAP_IRQ_REG(0, 0, MAX77620_IRQ_LVL2_GPIO_EDGE0),
++	REGMAP_IRQ_REG(1, 0, MAX77620_IRQ_LVL2_GPIO_EDGE1),
++	REGMAP_IRQ_REG(2, 0, MAX77620_IRQ_LVL2_GPIO_EDGE2),
++	REGMAP_IRQ_REG(3, 0, MAX77620_IRQ_LVL2_GPIO_EDGE3),
++	REGMAP_IRQ_REG(4, 0, MAX77620_IRQ_LVL2_GPIO_EDGE4),
++	REGMAP_IRQ_REG(5, 0, MAX77620_IRQ_LVL2_GPIO_EDGE5),
++	REGMAP_IRQ_REG(6, 0, MAX77620_IRQ_LVL2_GPIO_EDGE6),
++	REGMAP_IRQ_REG(7, 0, MAX77620_IRQ_LVL2_GPIO_EDGE7),
++};
++
++static struct regmap_irq_chip max77620_gpio_irq_chip = {
++	.name = "max77620-gpio",
++	.irqs = max77620_gpio_irqs,
++	.num_irqs = ARRAY_SIZE(max77620_gpio_irqs),
++	.num_regs = 1,
++	.irq_reg_stride = 1,
++	.status_base = MAX77620_REG_IRQ_LVL2_GPIO,
++};
++
++static int max77620_gpio_dir_input(struct gpio_chip *gc, unsigned int offset)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	int ret;
++
++	ret = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(offset),
++				 MAX77620_CNFG_GPIO_DIR_MASK,
++				 MAX77620_CNFG_GPIO_DIR_INPUT);
++	if (ret < 0)
++		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
++
++	return ret;
++}
++
++static int max77620_gpio_get(struct gpio_chip *gc, unsigned int offset)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(mgpio->rmap, GPIO_REG_ADDR(offset), &val);
++	if (ret < 0) {
++		dev_err(mgpio->dev, "CNFG_GPIOx read failed: %d\n", ret);
++		return ret;
++	}
++
++	return !!(val & MAX77620_CNFG_GPIO_INPUT_VAL_MASK);
++}
++
++static int max77620_gpio_dir_output(struct gpio_chip *gc, unsigned int offset,
++				    int value)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	u8 val;
++	int ret;
++
++	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
++				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
++
++	ret = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(offset),
++				 MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
++	if (ret < 0) {
++		dev_err(mgpio->dev, "CNFG_GPIOx val update failed: %d\n", ret);
++		return ret;
++	}
++
++	ret = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(offset),
++				 MAX77620_CNFG_GPIO_DIR_MASK,
++				 MAX77620_CNFG_GPIO_DIR_OUTPUT);
++	if (ret < 0)
++		dev_err(mgpio->dev, "CNFG_GPIOx dir update failed: %d\n", ret);
++
++	return ret;
++}
++
++static int max77620_gpio_set_debounce(struct gpio_chip *gc,
++				      unsigned int offset,
++				      unsigned int debounce)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	u8 val;
++	int ret;
++
++	switch (debounce) {
++	case 0:
++		val = MAX77620_CNFG_GPIO_DBNC_None;
++		break;
++	case 1 ... 8:
++		val = MAX77620_CNFG_GPIO_DBNC_8ms;
++		break;
++	case 9 ... 16:
++		val = MAX77620_CNFG_GPIO_DBNC_16ms;
++		break;
++	case 17 ... 32:
++		val = MAX77620_CNFG_GPIO_DBNC_32ms;
++		break;
++	default:
++		dev_err(mgpio->dev, "Illegal value %u\n", debounce);
++		return -EINVAL;
++	}
++
++	ret = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(offset),
++				 MAX77620_CNFG_GPIO_DBNC_MASK, val);
++	if (ret < 0)
++		dev_err(mgpio->dev, "CNFG_GPIOx_DBNC update failed: %d\n", ret);
++
++	return ret;
++}
++
++static void max77620_gpio_set(struct gpio_chip *gc, unsigned int offset,
++			      int value)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	u8 val;
++	int ret;
++
++	val = (value) ? MAX77620_CNFG_GPIO_OUTPUT_VAL_HIGH :
++				MAX77620_CNFG_GPIO_OUTPUT_VAL_LOW;
++
++	ret = regmap_update_bits(mgpio->rmap, GPIO_REG_ADDR(offset),
++				 MAX77620_CNFG_GPIO_OUTPUT_VAL_MASK, val);
++	if (ret < 0)
++		dev_err(mgpio->dev, "CNFG_GPIO_OUT update failed: %d\n", ret);
++}
++
++static int max77620_gpio_to_irq(struct gpio_chip *gc, unsigned int offset)
++{
++	struct max77620_gpio *mgpio = gpiochip_get_data(gc);
++	struct max77620_chip *chip = dev_get_drvdata(mgpio->dev->parent);
++
++	return regmap_irq_get_virq(chip->gpio_irq_data, offset);
++}
++
++static int max77620_gpio_probe(struct platform_device *pdev)
++{
++	struct max77620_chip *chip =  dev_get_drvdata(pdev->dev.parent);
++	struct max77620_gpio *mgpio;
++	int gpio_irq;
++	int ret;
++
++	gpio_irq = platform_get_irq(pdev, 0);
++	if (gpio_irq <= 0) {
++		dev_err(&pdev->dev, "GPIO irq not available %d\n", gpio_irq);
++		return -ENODEV;
++	}
++
++	mgpio = devm_kzalloc(&pdev->dev, sizeof(*mgpio), GFP_KERNEL);
++	if (!mgpio)
++		return -ENOMEM;
++
++	mgpio->rmap = chip->rmap;
++	mgpio->dev = &pdev->dev;
++	mgpio->gpio_irq = gpio_irq;
++
++	mgpio->gpio_chip.label = pdev->name;
++	mgpio->gpio_chip.parent = &pdev->dev;
++	mgpio->gpio_chip.direction_input = max77620_gpio_dir_input;
++	mgpio->gpio_chip.get = max77620_gpio_get;
++	mgpio->gpio_chip.direction_output = max77620_gpio_dir_output;
++	mgpio->gpio_chip.set_debounce = max77620_gpio_set_debounce;
++	mgpio->gpio_chip.set = max77620_gpio_set;
++	mgpio->gpio_chip.to_irq = max77620_gpio_to_irq;
++	mgpio->gpio_chip.ngpio = MAX77620_GPIO_NR;
++	mgpio->gpio_chip.can_sleep = 1;
++	mgpio->gpio_chip.base = -1;
++	mgpio->irq_base = -1;
++#ifdef CONFIG_OF_GPIO
++	mgpio->gpio_chip.of_node = pdev->dev.parent->of_node;
++#endif
++
++	platform_set_drvdata(pdev, mgpio);
++
++	ret = devm_gpiochip_add_data(&pdev->dev, &mgpio->gpio_chip, mgpio);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "gpio_init: Failed to add max77620_gpio\n");
++		return ret;
++	}
++
++	mgpio->gpio_base = mgpio->gpio_chip.base;
++	ret = devm_regmap_add_irq_chip(&pdev->dev, chip->rmap, mgpio->gpio_irq,
++				       IRQF_ONESHOT, mgpio->irq_base,
++				       &max77620_gpio_irq_chip,
++				       &chip->gpio_irq_data);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "Failed to add gpio irq_chip %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct platform_device_id max77620_gpio_devtype[] = {
++	{ .name = "max77620-gpio", },
++	{},
++};
++MODULE_DEVICE_TABLE(platform, max77620_gpio_devtype);
++
++static struct platform_driver max77620_gpio_driver = {
++	.driver.name	= "max77620-gpio",
++	.probe		= max77620_gpio_probe,
++	.id_table	= max77620_gpio_devtype,
++};
++
++module_platform_driver(max77620_gpio_driver);
++
++MODULE_DESCRIPTION("GPIO interface for MAX77620 and MAX20024 PMIC");
++MODULE_AUTHOR("Laxman Dewangan <ldewangan@nvidia.com>");
++MODULE_AUTHOR("Chaitanya Bandi <bandik@nvidia.com>");
++MODULE_ALIAS("platform:max77620-gpio");
++MODULE_LICENSE("GPL v2");
 -- 
 2.1.4
