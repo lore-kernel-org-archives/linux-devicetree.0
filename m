@@ -1,65 +1,91 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Thu, 31 Mar 2016 09:51:45 -0700
-Message-ID: <20160331165145.GF2350@sirena.org.uk>
-References: <56D5111E.6090606@nvidia.com>
- <20160302033833.GV18327@sirena.org.uk>
- <56D65F7E.3090907@nvidia.com>
- <20160302043506.GC18327@sirena.org.uk>
- <56E81103.8010903@nvidia.com>
- <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com>
- <56ED0F58.7060005@nvidia.com>
- <56FBD4A3.7080208@nvidia.com>
- <20160330181623.GQ2350@sirena.org.uk>
- <56FCCC60.3080303@nvidia.com>
+Subject: Re: [PATCH 2/3 v2] ASoC: dwc: Add I2S HDMI audio support
+Date: Thu, 31 Mar 2016 09:56:42 -0700
+Message-ID: <20160331165642.GG2350@sirena.org.uk>
+References: <cover.1459174494.git.joabreu@synopsys.com>
+ <538be366488bf0d7633d702f2d0bab16707b7a47.1459174494.git.joabreu@synopsys.com>
+ <20160329173158.GB2350@sirena.org.uk>
+ <56FAC355.1040705@synopsys.com>
+ <20160329182222.GC2350@sirena.org.uk>
+ <56FCEFD0.8090509@synopsys.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6u7lpXof/8C/+w+8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FCCC60.3080303@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+Content-Type: multipart/mixed; boundary="===============1138398617=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <56FCEFD0.8090509@synopsys.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: tixy@linaro.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com, Alexey.Brodkin@synopsys.com, dri-devel@lists.freedesktop.org, tiwai@suse.com, yitian.bu@tangramtek.com, wsa+renesas@sang-engineering.com, laurent.pinchart+renesas@ideasonboard.com, nariman@opensource.wolfsonmicro.com, linux-snps-arc@lists.infradead.org, devicetree@vger.kernel.org, Maruthi.Bayyavarapu@amd.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Vineet.Gupta1@synopsys.com, buyitian@gmail.com, robh+dt@kernel.org, perex@perex.cz, linux-kernel@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, galak@codeaurora.org, alexander.deucher@amd.com
 List-Id: devicetree@vger.kernel.org
 
 
---6u7lpXof/8C/+w+8
+--===============1138398617==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="piopQj3F5GMtthHx"
+Content-Disposition: inline
+
+
+--piopQj3F5GMtthHx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Mar 31, 2016 at 12:36:08PM +0530, Laxman Dewangan wrote:
-> On Wednesday 30 March 2016 11:46 PM, Mark Brown wrote:
+On Thu, Mar 31, 2016 at 10:37:20AM +0100, Jose Abreu wrote:
+> On 29-03-2016 19:22, Mark Brown wrote:
 
-> >>Like to add property as "regulator-device-ramp-delay" which will be used for
-> >>PMIC configuration and regulator-ramp-delay will be used for delay
-> >>calculation. This is case when advertised ramp delay does not match with the
-> >>platform measured ramp delay.
+> > If you want to add a new platform driver you need to add a new platform
+> > driver, not shove the code into an existing driver for a seperate IP.
 
-> >Why -device?
+> I can separate the platform driver into a new file but they will have to be
+> compiled into the same module as the new additions to the i2s driver depend on
+> functions of the platform driver (see i2s_irq_handler()). Or should I divide
 
-> This is device specific and just to differentiate with regulator-ramp-delay
-> which is the platform specific.
-> May be there is some other good name. I can think of other name as
-> regulator-typical-ramp-delay, regulator-advertised-ramp-delay etc.
+No, that's not at all acceptable.  The Designware IP is not specific to
+your system, you can't make it depend on your platform driver.  The
+kernel needs to work on other people's systems too.  You need to work
+through and/or extend the abstractions the framework provides to
+separate the drivers for different IPs.
 
-So there's already a property you want to set, why are you not trying to
-set that property?
+> this into two modules and add a Kconfig option to the platform driver? Besides
+> this I first wanted the driver to be compiled into the same module so that it is
+> compatible with kernel 3.18 where simple audio card requires that platform
+> driver == cpu driver.
 
---6u7lpXof/8C/+w+8
+That's not OK upstream, we're working on the current kernel not on
+random old kernels.  We don't carry compatibility code to enable current
+kernel code to be run on years old kernels.
+
+--piopQj3F5GMtthHx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJW/VWgAAoJECTWi3JdVIfQrYEH/3N4o/8S6vh/YkE8DWAX6tKp
-NxK8RrxkwoltbFrVAIviSxZeXsZkDSHy1zpAzk9+9LXrAxYPBCxvS67N8i86etOV
-uz0KLrk5auozBjaXc1vMK3aLdmc4qEiv6g8GXOO+58S4EvR2+dW6tapRJ4RuemEQ
-IPvyWsWenPnaDWIZqAa6mncN5XiVbL9SVXUNwHw8T0Io+JN0xhoniC0YCZh7Sbrz
-AqsgO7d6Btfqr3WC4bbIjl6oStNDXtxryZzpIf4AMBj7uT4agkA07viXybXIj+2S
-EM/Dm2MBmO/gnQp31h8gGyBXKOB4SQCyWv8pZ+AVuOUndGF1Ie2L8KS3MoyXXX8=
-=Cx4U
+iQEcBAEBCAAGBQJW/VbJAAoJECTWi3JdVIfQneAH/j6fiMmUYVuswFhQ5h3V1ezC
+VW61HfhEQVmAoYEw3lxArepUlIODE6UFzt8sz+J/kTAGTAromOvN58NkIn0+sQxB
+jp6CmzC4ohEC4/5fziwPBHjbzFkQ7mbjiiHDJBonMG4IylBrKRpRrHTWYFM4SUOV
+GnCAbAGj/zU39vxsZpAw9Nmar4rkpohHbJUC6C6fRoEDY5iZ+D8EcCSIZLHRlEC5
+fZBDh9VVicBk5xykQH2uFBowoBV6jfU8HHRUeeu4/Q7kirk2YAePQFoY/qw1lXfK
+7XcGl9ZhhduIJd2bCKZuG5ribrE68mel2QNaT1QtEJPFzpcVGun2BYPYRJBLLEo=
+=Wf6v
 -----END PGP SIGNATURE-----
 
---6u7lpXof/8C/+w+8--
+--piopQj3F5GMtthHx--
+
+--===============1138398617==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1138398617==--
