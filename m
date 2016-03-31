@@ -1,106 +1,58 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: Re: [PATCH] mtd: nand: document the NAND controller/NAND chip DT
- representation
-Date: Thu, 31 Mar 2016 16:22:01 +0100
-Message-ID: <56FD4099.5040804@imgtec.com>
-References: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
- <56FD3F0E.9080306@imgtec.com> <20160331171942.622d03aa@bbrezillon>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] ASoC: tas571x: chip type detection via I2C name
+Date: Thu, 31 Mar 2016 08:36:26 -0700
+Message-ID: <20160331153626.GB2350@sirena.org.uk>
+References: <1459425241-21941-1-git-send-email-petr@barix.com>
+ <1459425241-21941-2-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160331171942.622d03aa@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="CdJmqRynzCmrDwyG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459425241-21941-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 31/03/16 16:19, Boris Brezillon wrote:
-> On Thu, 31 Mar 2016 16:15:26 +0100
-> Harvey Hunt <harvey.hunt@imgtec.com> wrote:
->
->> Hi Boris,
->>
->> On 31/03/16 14:57, Boris Brezillon wrote:
->>> Standardize the NAND controller/NAND chip DT representation. Now, all new
->>> NAND controller drivers should comply with this representation, even if
->>> they are only supporting a single NAND chip.
->>>
->>> Existing drivers can keep support for the old representation (where only
->>> the NAND chip was described), but are encouraged to also support the new
->>> one.
->>>
->>> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
->>> ---
->>>    Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
->>>    1 file changed, 36 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
->>> index b53f92e..fbf5677 100644
->>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
->>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
->>> @@ -1,4 +1,23 @@
->>> -* MTD generic binding
->>> +* NAND chip and NAND controller generic binding
->>> +
->>> +NAND controller/NAND chip representation:
->>> +
->>> +The NAND controller should be represented with it's own DT node, and all
->>
->> s/it's/its/
->
-> Yep, I'll fix that.
->
->>
->>> +NAND chips attached to this controller should be defined as children nodes
->>> +of the NAND controller. This representation should be enforced even for
->>> +simple controllers supporting only one chip.
->>> +
->>> +Mandatory NAND controller properties:
->>> +- #address-cells: depends on your controller. Should at least be 1 to
->>> +		  encode the CS line id.
->>> +- #size-cells: depends on your controller. Put zero unless you need a
->>> +	       mapping between CS lines and dedicated memory regions
->>> +
->>> +Optional NAND controller properties
->>> +- ranges: only needed if you need to define a mapping between CS lines and
->>> +	  memory regions
->>> +
->>> +Optional NAND chip properties:
->>>
->>>    - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->>>      Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
->>> @@ -19,3 +38,19 @@ errors per {size} bytes".
->>>    The interpretation of these parameters is implementation-defined, so not all
->>>    implementations must support all possible combinations. However, implementations
->>>    are encouraged to further specify the value(s) they support.
->>> +
->>> +Example:
->>> +
->>> +	nand-controller {
->>> +		#address-cells = <1>;
->>> +		#size-cells = <0>;
->>> +
->>> +		/* controller specific properties */
->>> +
->>> +		nand@0 {
->>> +			reg = <0>;
->>> +			nand-ecc-mode = "soft_bch";
->>> +
->>> +			/* controller specific properties */
->>
->> Did you mean "chip specific properties"?
->
-> No, it's really "controller specific properties". Those are properties
-> prefixed by the controller vendor name (like 'allwinner,rb' which is
-> encoding the native ready/busy pin to be attached to this chip).
->
+--CdJmqRynzCmrDwyG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Okay, I see - I was somewhat confused by it being in the nand chip node, 
-but I understand what you mean now.
+On Thu, Mar 31, 2016 at 01:53:58PM +0200, Petr Kulhavy wrote:
+> The chip selection was relying only on DT. It was not possible to use the
+> driver without DT.
+> This adds the chip type detection from the I2C name, which
+> allows to use the driver from the platform driver without DT.
+>=20
+> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Thanks,
+Don't resubmit already applied patches, as covered in SubmittingPatches
+you should submit against the latest development tree.  Please resend
+with just the new stuff, if any changes are needed in already applied
+patches send incremental fixes.
 
-Harvey
+--CdJmqRynzCmrDwyG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW/UP5AAoJECTWi3JdVIfQUeoH/jcmMIPU4bEH+PDp4Zdh2/iX
+W33LmNMtnNzblP6nQMfI+UfIvrfKiLMjEVM+fWK85SQRy5r0vB+pZJx+1BYwoHC1
+WSMoGxEqlYr1DelRPNY3M3+Ja1ZYjtJ/NAL03f14RiZ+4LbMqvGjiYpjXypKgB26
+o7sDY85lL16ICN+ALamEASbcd/l/8ePCSv+EEZ9DGL3KebCjWDszYrgCQD0kVCFm
+ijV39gEtzwVrt0ovI2CzmDUJopSLhS4xHUcT49t9aZyAeuOzRKN+7eYs+EUSxOI1
+ZEqAwgfNS0xlCrZpGw6tYxMNXg7fvuCyNlrPhrPOkYDlxe72dFSjJh61CL4tM4M=
+=lla/
+-----END PGP SIGNATURE-----
+
+--CdJmqRynzCmrDwyG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
