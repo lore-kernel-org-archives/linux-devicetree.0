@@ -1,102 +1,68 @@
-From: Thierry Reding <treding@nvidia.com>
-Subject: Re: [PATCH v14 0/17] Add Analogix Core Display Port Driver
-Date: Thu, 31 Mar 2016 12:22:48 +0200
-Message-ID: <20160331102247.GE26032@ulmo.nvidia.com>
-References: <1455534485-1154-1-git-send-email-ykk@rock-chips.com>
- <20160331101535.GZ2510@phenom.ffwll.local>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
+Date: Thu, 31 Mar 2016 11:38:00 +0100
+Message-ID: <20160331103800.GC26532@leverpostej>
+References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
+ <1459290646-3592-3-git-send-email-manabian@gmail.com>
+ <20160330110611.GB25354@leverpostej>
+ <56FBCF70.80006@mentor.com>
+ <20160330134155.GC25354@leverpostej>
+ <CAGhQ9VykiwMWaw3xcJdg2CahNFt+sp7tFC5O8VwA=-_=UoJ8kA@mail.gmail.com>
+ <20160330170645.GA13690@leverpostej>
+ <CAGhQ9Vykn=G+cmVuBCAA_ATTz4XNEPeUWYbZRb5NsrVBOjaS-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UnaWdueM1EBWVRzC"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20160331101535.GZ2510@phenom.ffwll.local>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yakir Yang <ykk@rock-chips.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Jingoo Han <jingoohan1@gmail.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Mark Yao <mark.yao@rock-chips.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, javier@osg.samsung.com, Kukjin Kim <kgene@kernel.org>, dri-devel@lists.freedesktop.org, Kumar Gala <galak@codeaurora.org>aj
+In-Reply-To: <CAGhQ9Vykn=G+cmVuBCAA_ATTz4XNEPeUWYbZRb5NsrVBOjaS-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---UnaWdueM1EBWVRzC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 30, 2016 at 10:45:06PM +0200, Joachim Eastwood wrote:
+> On 30 March 2016 at 19:06, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Wed, Mar 30, 2016 at 06:15:35PM +0200, Joachim Eastwood wrote:
+> >> I used the following script to check for the memory node in all built dtb's.
+> >>   make ARCH=arm CONFIG_OF_ALL_DTBS=y dtbs
+> >>   for i in $(ls arch/arm/boot/dts/*.dtb); do
+> >>          m=$(scripts/dtc/dtc -I dtb -O dts $i | grep -m1 'memory.*{')
+> >>          if [ -z "$m" ]; then
+> >>                  echo "Missing memory node in $i"
+> >>           fi
+> >>   done
+> >>
+> >> So it should be pretty safe to just remove the memory node entry in
+> >> the skeleton files. Unless I have missed something with the script
+> >> above.
+> >
+> > The above might match reserved-memory nodes; it might be better to check
+> > for 'device_type\s*=\s*"memory"'.
+> 
+> I did check the output of the grep and it looks good. But there are
+> indeed DTs that are missing the 'device_type = "memory"' parameter.
+> Actually; _a lot_ or 438 of 741 to be exact. ugh...
+> 
+> I guess all those should be fixed up before we can remove the memory
+> node from skeleton. :/
 
-On Thu, Mar 31, 2016 at 12:15:35PM +0200, Daniel Vetter wrote:
-> On Mon, Feb 15, 2016 at 07:08:05PM +0800, Yakir Yang wrote:
-> >=20
-> > Hi all,
-> >=20
-> >   The Samsung Exynos eDP controller and Rockchip RK3288 eDP controller
-> > share the same IP, so a lot of parts can be re-used. I split the common
-> > code into bridge directory, then rk3288 and exynos only need to keep
-> > some platform code. Cause I can't find the exact IP name of exynos dp
-> > controller, so I decide to name dp core driver with "analogix" which I
-> > find in rk3288 eDP TRM
-> >=20
-> > But there are still three light registers setting different between
-> > exynos and rk3288.
-> > 1. RK3288 have five special pll registers which not indicate in exynos
-> >    dp controller.
-> > 2. The address of DP_PHY_PD(dp phy power manager register) are different
-> >    between rk3288 and exynos.
-> > 3. Rk3288 and exynos have different setting with AUX_HW_RETRY_CTL(dp de=
-bug
-> >    register).
-> >=20
-> > Due to Mark Yao have introduced the ATOMIC support to Rockchip drm, so =
-it's
-> > okay to use the ATOMIC helpers functions in connector_funcs. No need to=
- splict
-> > the connector init to platform driver anymore, and this is the biggest =
-change
-> > since version 11.
-> >=20
-> > This v14 didn't have lots of new changes which seems not the correct ti=
-me to
-> > upgrade the version number, but I have changed ordering of patches (add=
-ing 2
-> > more, and removing 2 out). Especially to prevent confusing people, so I=
- updated
-> > the whole series.
->=20
-> So I'm jumping into this part way late, but just noticed (well Thierry
-> pointed this out to me) that the exynos dp driver reinvents all the dp and
-> dp-aux helpers we already. That's somewhat okish for a private driver (and
-> exynos has a reputation for that kind of stuff), but imo not ok for a
-> shared driver.
->=20
-> Not saying this should block merging this patch, but it really needs to be
-> addressed. All the dp aux and edid read code in the current
-> exynos_dp_core/reg.c files needs to be replaced with dp helpers and the
-> core i2c edid reading code.
+Ouch, yes. :(
 
-Agreed. I think a first step would be to implement and register a
-drm_dp_aux object for Analogix DP hardware. That will give you access to
-a slew of helpers that allow to read DPCD, parse link status and use the
-standard EDID reading routines that the DRM core already has. This
-should remove a lot of duplication from this driver.
+That said, the cahnges don't need to be an atomic operation. We could
+start adding device_type = "memory" to dts immediately (in as whatever
+size batches maintainers are happy with), as a duplicate device_type
+shouldn't be problematic.
 
-For extra incentive, doing this might even fix a bug or two.
+When we hit critical mass, we could then remove the skeleton memory
+nodes, fixing up any remaining fallout.
 
-Thierry
+As for the mechanical changes, it sounds like we need coccinelle for DT.
 
---UnaWdueM1EBWVRzC
-Content-Type: application/pgp-signature; name="signature.asc"
+That, or a laptop, a long flight, and a gin and tonic.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAABCAAGBQJW/Pp0AAoJEN0jrNd/PrOhQ8oP/1O6JJe+NVY/UGnYa7rAHyGh
-IZABvSV3u0gLYBqaIQuCAhFlWKOwZewQGjhbQ5IciBQJ+kyjlz1rMALj70/ugju2
-VUzgSL7oTy74JGIijKBhk06Le+4neePooniNmEFfReezCfqY9Ln+97s5/svkVM6r
-dIJ2krPQiMqRgJ2/F+NtcDUvsnbv+Jc52YXmDrxnWinforNAjrOeE9Ha0Ik9FD1L
-TO5q4PVpwxDgI8lvqkk+idrf3d03KkWsgm8q/za95E/GXcEwI27cArF1wPDLeczd
-0hk1xuE3Lx4IJRsBqAla4DIfLs9gQPuciNlARYvDpFD66hhe7u6ndSCA2gmmwRqC
-VnmfhNGPavXM573yZS1NmBBKpJQ+QsUPlosOQxFkEwx9g8dUTfrY1KXPZ2YZ/kAH
-0MRXWNSWUspsxjAmUD50BJgbdAOxcTprKxVyWeOcoZHYvd/3/UooK/OggWMx8qhr
-233+D1o+FGAIabxFmqamxQGYS4UU/rN9CUhICmBGfPcFXKcHx9Z+Iz4cX+4uENt1
-QHLv1ZG9POxI+pZqqLgEJ/xO+d69z3lAABS/hR6ekKqN8dySwQKfhaqzgtpZFTwP
-87DbLWGSeqHjRAsax/YgPwBaanrHcDdao4W+9HkNT0TaCSjGuTfjMXOdkrUv0d/h
-kT2qsgzEGmoDjCrHb6Ob
-=HdMD
------END PGP SIGNATURE-----
-
---UnaWdueM1EBWVRzC--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
