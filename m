@@ -1,44 +1,47 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Thu, 31 Mar 2016 22:43:03 +0530
-Message-ID: <56FD5A9F.5050001@nvidia.com>
-References: <56D5111E.6090606@nvidia.com> <20160302033833.GV18327@sirena.org.uk> <56D65F7E.3090907@nvidia.com> <20160302043506.GC18327@sirena.org.uk> <56E81103.8010903@nvidia.com> <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com> <56ED0F58.7060005@nvidia.com> <56FBD4A3.7080208@nvidia.com> <20160330181623.GQ2350@sirena.org.uk> <56FCCC60.3080303@nvidia.com> <20160331165145.GF2350@sirena.org.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] dt/bindings: sound: new chip added into TAS571x
+ binding
+Date: Thu, 31 Mar 2016 10:25:15 -0700
+Message-ID: <20160331172515.GK2350@sirena.org.uk>
+References: <1459442487-32284-1-git-send-email-petr@barix.com>
+ <1459442487-32284-3-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="s6Wo+7iKhEdF4/RK"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331165145.GF2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459442487-32284-3-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Thursday 31 March 2016 10:21 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Thu, Mar 31, 2016 at 12:36:08PM +0530, Laxman Dewangan wrote:
->> On Wednesday 30 March 2016 11:46 PM, Mark Brown wrote:
->>>> Like to add property as "regulator-device-ramp-delay" which will be used for
->>>> PMIC configuration and regulator-ramp-delay will be used for delay
->>>> calculation. This is case when advertised ramp delay does not match with the
->>>> platform measured ramp delay.
->>> Why -device?
->> This is device specific and just to differentiate with regulator-ramp-delay
->> which is the platform specific.
->> May be there is some other good name. I can think of other name as
->> regulator-typical-ramp-delay, regulator-advertised-ramp-delay etc.
-> So there's already a property you want to set, why are you not trying to
-> set that property?
+--s6Wo+7iKhEdF4/RK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-We need two properties, one what we measured in platform and second one 
-for what we want to program PMIC. This is for the case where vendor 
-advertised ramp delay is not same as measured due to platform design.
-Based on discussion, regulator-ramp-delay is for measured ramp delay in 
-platform. So we will need another property for configuring PMIC.
+On Thu, Mar 31, 2016 at 06:41:27PM +0200, Petr Kulhavy wrote:
+> This adds the TAS5721 into the TAS571x binding.
 
+Please use subject lines reflecting the style for the subsystem.
 
+--s6Wo+7iKhEdF4/RK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW/V16AAoJECTWi3JdVIfQ9w8H/RLS5Fk3DV3Uz/9dpttxFNcA
+Zz1X2PBbrjGqpuX+ZvtPp4/uBMUrEQNzPDM+9wwpuzYVKSu59vXC8HVOmN6838jR
+M1xQDxD1PZ1DmhqbfJZb8QWdNG+CtvpJSR8iucZMSmDhSxzkcKWRYeGN58cbSDFj
+GjfrwtWpKdzdqSV5Y05JYo3fkdKoytBui9czzoNbnN8MArFEygFHlNJxmoGx6/+c
+YVH33HpbQIA+taTCkE1QvSND8vYLFtGvQlBdXfnbWWZea3Ztb7Zs3eF1Sz39m2Bv
+v8eFaK68r4S8Mh5NKLp6fuqJamRfCbNTJroYCBbvpKgEFNb/NGjZ2RgR2IEEOb8=
+=RJOE
+-----END PGP SIGNATURE-----
+
+--s6Wo+7iKhEdF4/RK--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
