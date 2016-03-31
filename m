@@ -1,41 +1,60 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Fri, 1 Apr 2016 01:18:23 +0530
-Message-ID: <56FD7F07.7010404@nvidia.com>
-References: <20160331165145.GF2350@sirena.org.uk> <56FD5A9F.5050001@nvidia.com> <20160331174741.GO2350@sirena.org.uk> <56FD62BA.3040406@nvidia.com> <20160331183130.GR2350@sirena.org.uk> <56FD6CF7.5080909@nvidia.com> <20160331184553.GS2350@sirena.org.uk> <56FD6ED6.3020507@nvidia.com> <20160331185945.GT2350@sirena.org.uk> <56FD7379.2000307@nvidia.com> <20160331192227.GU2350@sirena.org.uk>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] Documentation: devicetree: Clean up gpio-keys example
+Date: Thu, 31 Mar 2016 13:09:39 -0700
+Message-ID: <20160331200939.GM39098@dtor-ws>
+References: <1458129209-15449-1-git-send-email-afaerber@suse.de>
+ <CABxcv=kSax5=5mOWT7ktavFQHvdp=sxZNcJaqc=nRQN-DejnVA@mail.gmail.com>
+ <F1BB73D3-C592-4476-91A9-0529B51C2156@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160331192227.GU2350@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <F1BB73D3-C592-4476-91A9-0529B51C2156@gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Julien Chauveau <chauveau.julien@gmail.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-input@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Mar 16, 2016 at 10:55:53PM +0100, Julien Chauveau wrote:
+>=20
+> > Le 16 mars 2016 =E0 15:47, Javier Martinez Canillas <javier@dowhile=
+0.org> a =E9crit :
+> >=20
+> > Hello Andreas,
+> >=20
+> > On Wed, Mar 16, 2016 at 8:53 AM, Andreas F=E4rber <afaerber@suse.de=
+> wrote:
+> >> Drop #address-cells and #size-cells, which are not required by the
+> >> gpio-keys binding documentation, as button sub-nodes are not devic=
+es.
+> >>=20
+> >> Rename sub-nodes to avoid new dtc unit address warnings when copie=
+d.
+> >>=20
+> >> While at it, adopt the dashes convention for the node name.
+> >>=20
+> >> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
+> >> Cc: Julien Chauveau <chauveau.julien@gmail.com>
+> >> Cc: Javier Martinez Canillas <javier@dowhile0.org>
+> >> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> >> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
+> >> ---
+> >=20
+> > Patch looks good to me.
+> >=20
+> > Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>=20
+> I agree.
+>=20
+> Reviewed-by: Julien Chauveau <chauveau.julien@gmail.com>
 
-On Friday 01 April 2016 12:52 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Fri, Apr 01, 2016 at 12:29:05AM +0530, Laxman Dewangan wrote:
->> On Friday 01 April 2016 12:29 AM, Mark Brown wrote:
->> But here is the stuff without typo ;-)
->> Device supports 5mV/us and 100mV/us which is not in observed value.
-> So why doesn't the device end up configuring 100mV/us when asked for
-> 50mv/us?  That's reasonably expected - the configured ramp rate is a
-> maximum rate given that this is used to limit inrush current.
->
->
+Applied, thank you.
 
-We did this to adjust device configuration to nearest higher side but 
-this is not working well on some of cases.
-
-On same device, DCDC (SD) rails support 4 ramp configurations, 
-13.75mV/us, 27.5mV/us, 55mV/us and 100mV/us.
-
-HW team measured the  ramp time at 7.5mV/us when device configured at 
-27.5mV/uS.
-
-So as per above, it will be adjusted to 13.75mV/us (nearest higher side) 
-for device configuration but this device need to configure for 27.5mV/us.
+--=20
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
