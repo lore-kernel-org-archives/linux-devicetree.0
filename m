@@ -1,100 +1,102 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/8] clk: samsung: exynos3250: Add MMC2 clock
-Date: Thu, 31 Mar 2016 13:04:59 +0200
-Message-ID: <56FD045B.5020805@samsung.com>
-References: <1458027490-13787-1-git-send-email-cw00.choi@samsung.com>
- <1458027490-13787-4-git-send-email-cw00.choi@samsung.com>
- <56F47ABC.7060006@samsung.com> <56F509E6.7080807@samsung.com>
- <56F87E83.7060100@samsung.com> <56F9DEE6.8020203@samsung.com>
+From: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+Subject: Re: [PATCH v7 12/17] ARM64: ACPI: Check if it runs on Xen to enable
+ or disable ACPI
+Date: Thu, 31 Mar 2016 12:04:42 +0100
+Message-ID: <alpine.DEB.2.02.1603311155450.11739@kaball.uk.xensource.com>
+References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
+ <1458830676-27075-13-git-send-email-shannon.zhao@linaro.org>
+ <20160329161837.GH6745@arm.com> <20160329163147.GB27223@leverpostej>
+ <56FB7E00.7030400@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="US-ASCII"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <56F9DEE6.8020203-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <56FB7E00.7030400-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, julien.grall-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/29/2016 03:48 AM, Krzysztof Kozlowski wrote:
-> On 28.03.2016 09:44, Chanwoo Choi wrote:
->> You mean that separate patch1 include only the new clock id 
->> about both UART2 and MMC2
->> and the patch2/patch3 just use the new clock id as following:
->>
->> patch1 dt-bindings: Add the clock id of UART2 and MMC2 for Exynos3250
->> patch2 clk: samsung: exynos3250: Add UART2 clock
->> patch3 clk: samsung: exynos3250: Add MMC2 clock
->>
->> As far as I understand it is that right?
->> If it is ok, I'll modify it on v4 patchset as you comment.
+On Wed, 30 Mar 2016, Shannon Zhao wrote:
+> Hi Will, Mark,
 > 
-> Hi Sylwester and Tomasz,
-> 
-> Can you provide me a tag with these exynos3250 clock patches (after
-> posting v4)? Of course you can also ack/review them and then I'll 
-> handle it.
+> On 2016/3/30 0:31, Mark Rutland wrote:
+> > On Tue, Mar 29, 2016 at 05:18:38PM +0100, Will Deacon wrote:
+> >> > On Thu, Mar 24, 2016 at 10:44:31PM +0800, Shannon Zhao wrote:
+> >>> > > When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
+> >>> > > a /hypervisor node in DT. So check if it needs to enable ACPI.
+> >>> > > 
+> >>> > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>> > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
+> >>> > > Acked-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>> > > ---
+> >>> > >  arch/arm64/kernel/acpi.c | 12 ++++++++----
+> >>> > >  1 file changed, 8 insertions(+), 4 deletions(-)
+> >>> > > 
+> >>> > > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
+> >>> > > index d1ce8e2..4e92be0 100644
+> >>> > > --- a/arch/arm64/kernel/acpi.c
+> >>> > > +++ b/arch/arm64/kernel/acpi.c
+> >>> > > @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
+> >>> > >  {
+> >>> > >  	/*
+> >>> > >  	 * Return 1 as soon as we encounter a node at depth 1 that is
+> >>> > > -	 * not the /chosen node.
+> >>> > > +	 * not the /chosen node, or /hypervisor node when running on Xen.
+> >>> > >  	 */
+> >>> > > -	if (depth == 1 && (strcmp(uname, "chosen") != 0))
+> >>> > > -		return 1;
+> >>> > > +	if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
+> >>> > > +		if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
+> >>> > > +			return 1;
+> >>> > > +	}
+> >> > 
+> >> > Hmm, but xen_initial_domain() is false when xen isn't being used at all,
+> >> > so it feels to me like this is a bit too far-reaching and is basically
+> >> > claiming the "/hypervisor" namespace for Xen. Couldn't it be renamed to
+> >> > "xen,hypervisor" or something?
+> >> > 
+> >> > Mark, got any thoughts on this?
+> > The node has a compatible string, "xen,xen" per [1], which would tell us
+> > absolutely that xen is present. I'd be happy checking for that
+> > explicitly.
+> > 
+> I think actually the xen_initial_domain is the result of the
+> fdt_find_hyper_node. If the compatible string "xen,xen" doesn't exist,
+> the xen_initial_domain() will return false and whatever the current node
+> is the above check will return 1 since the device tree is not empty.
 
-Here are tags with only the first (clock id definitions) and the all 
-three clk patches respectively:
+Right.
 
----------------------------------------8<--------------------------------
-The following changes since commit f55532a0c0b8bb6148f4e07853b876ef73bc69ca:
+xen_initial_domain implies both "xen,xen" and XENFEAT_dom0 (which is a
+feature retrieved by making a XENVER_get_features hypercall, see
+drivers/xen/features.c:xen_setup_features).
 
-  Linux 4.6-rc1 (2016-03-26 16:03:24 -0700)
+So the following check:
 
-are available in the git repository at:
+ +     if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
+ +         return 1;
 
-  git://linuxtv.org/snawrocki/samsung.git tags/clk-v4.7-exynos3250-dt
+means that even if it's xen_initial_domain(), return error unless the
+node found is "hypervisor". In other words, even if
+xen_initial_domain(), no other nodes are allowed except /chosen and
+/hypervisor.
 
-for you to fetch changes up to fd00bbcddb59c4866e7c985e30f663b62cfc2588:
+This doesn't look far reaching to me, but yes, we could check explicitly
+for the node to be compatible "xen,xen", in addition to be named
+"hypervisor", even though the check is already done elsewhere
+(arch/arm/xen/enlighten.c).
 
-  dt-bindings: Add the clock id of UART2 and MMC2 for Exynos3250 (2016-03-31 12:25:44 +0200)
+But I would keep it as it is.
 
-----------------------------------------------------------------
-Addition of the UART2 and MMC3 clock indices definition
-to the exynos3250 clock subsystem dt binding header file.
+> > In patch 11 fdt_find_hyper_node checks the compatible string. We could
+> > factor that out into a helper like is_xen_node(node) and use it here
+> > too.
+> > 
+> I don't think so because we already check the compatible string before
+> and we could get the result simply via xen_initial_domain().
 
-----------------------------------------------------------------
-Chanwoo Choi (1):
-      dt-bindings: Add the clock id of UART2 and MMC2 for Exynos3250
-
- include/dt-bindings/clock/exynos3250.h | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
---------------------------------------->8--------------------------------
-
-
----------------------------------------8<--------------------------------
-The following changes since commit f55532a0c0b8bb6148f4e07853b876ef73bc69ca:
-
-  Linux 4.6-rc1 (2016-03-26 16:03:24 -0700)
-
-are available in the git repository at:
-
-  git://linuxtv.org/snawrocki/samsung.git tags/clk-v4.7-exynos3250
-
-for you to fetch changes up to f6764714afdde1f0f511bb0e2d531593c3bec827:
-
-  clk: samsung: exynos3250: Add MMC2 clock (2016-03-31 12:25:54 +0200)
-
-----------------------------------------------------------------
-Addition of the Exynos3250 SoC's UART2 and MMC2 clocks.
-
-----------------------------------------------------------------
-Chanwoo Choi (2):
-      dt-bindings: Add the clock id of UART2 and MMC2 for Exynos3250
-      clk: samsung: exynos3250: Add MMC2 clock
-
-Pankaj Dubey (1):
-      clk: samsung: exynos3250: Add UART2 clock
-
- drivers/clk/samsung/clk-exynos3250.c   | 15 +++++++++++++++
- include/dt-bindings/clock/exynos3250.h | 11 ++++++++++-
- 2 files changed, 25 insertions(+), 1 deletion(-)
---------------------------------------->8--------------------------------
-
-Cheers,
-Sylwester
+We could add a comment saying xen_initial_domain() implies "xen,xen" or
+something.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
