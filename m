@@ -1,84 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Thu, 31 Mar 2016 09:06:51 -0500
-Message-ID: <20160331140651.GA2193@rob-hp-laptop>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH resend v5 1/3] ASoC: cygnus: Add DT bindings for Broadcom
+ Cygnus audio
+Date: Thu, 31 Mar 2016 09:13:08 -0500
+Message-ID: <20160331141308.GA9670@rob-hp-laptop>
+References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
+ <1459277192-10942-2-git-send-email-simran.rai@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20160330113532.GI3323@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, tthayer@opensource.altera.com
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1459277192-10942-2-git-send-email-simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2016 at 12:35:32PM +0100, Lee Jones wrote:
-> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+On Tue, Mar 29, 2016 at 11:46:30AM -0700, Simran Rai wrote:
+> From: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 > 
-> > From: Thor Thayer <tthayer@opensource.altera.com>
-> > 
-> > The Altera Arria10 Devkit System Resource chip is a Multi-Function
-> > Device, it has two subdevices:
-> >      - GPIO
-> >      - HWMON
-> > 
-> > This patch adds documentation for the Altera A10-SR DT bindings.
-> > 
-> > Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> > ---
-> >  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
-> >  1 file changed, 35 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> > new file mode 100644
-> > index 0000000..564c761
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
-> > @@ -0,0 +1,35 @@
-> > +* Altera Arria10 Development Kit System Resource Chip
-> > +
-> > +Required parent device properties:
-> > +- compatible : "altr,altr_a10sr"
+> Add bindings for audio driver in Broadcom Cygnus.
+> 
+> Signed-off-by: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../bindings/sound/brcm,cygnus-audio.txt           |   67 ++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
 
-Why "altr" twice?
+I acked v3 of this already. Did something change? If not, please add 
+acks when sending new versions. If things did change, explain that here.
 
-Don't use underscores.
-
-> > +- spi-max-frequency : Maximum SPI frequency.
-> > +- reg : the SPI Chip Select address for the Arria10 System Resource chip
-> 
-> DT bindings are much easier to read in the following format:
-> 
-> - compatible		: "altr,altr_a10sr"
-> - spi-max-frequency	: Maximum SPI frequency.
-> - reg			: the SPI Chip Select address for the Arria10 System Resource chip
-> 
-> ... also, sentences start with an uppercase char.
-> 
-> > +The A10SR consists of this varied group of sub-devices:
-> > +
-> > +Device                   Description
-> > +------                   ----------
-> > +altr_a10sr_gpio          GPIO Controller
-> > +altr_a10sr_hwmon         Hardware Monitor
-> > +
-> > +The LEDs are implemented entirely in the device tree using
-> > +the gpio-led framework.
-> 
-> This is a Linuxisum and should not live in DT bindings.
-> 
-> > +Example:
-> > +
-> > +        a10-sr: a10-sr@0 {
-> 
-> Nodes should be named after their device 'type'.
-> 
-> Does this device really start a address 0?
-
-Being a SPI device, I imagine so.
-
+And this v5 is not a resend if you didn't already send out v5 before.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
