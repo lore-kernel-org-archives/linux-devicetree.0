@@ -1,92 +1,73 @@
-From: Harvey Hunt <harvey.hunt@imgtec.com>
-Subject: Re: [PATCH] mtd: nand: document the NAND controller/NAND chip DT
- representation
-Date: Thu, 31 Mar 2016 16:15:26 +0100
-Message-ID: <56FD3F0E.9080306@imgtec.com>
-References: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 1/3] checks: Add infrastructure for setting bus type of nodes
+Date: Thu, 31 Mar 2016 10:17:46 -0500
+Message-ID: <CAL_JsqKTarcy2UHKD5m2F7TNP3stNnpCdxTrptGeiTXJJHiGaA@mail.gmail.com>
+References: <1458780021-5052-1-git-send-email-robh@kernel.org> <20160331052247.GD416@voom.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160331052247.GD416-1s0os16eZneny3qCrzbmXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-On 31/03/16 14:57, Boris Brezillon wrote:
-> Standardize the NAND controller/NAND chip DT representation. Now, all new
-> NAND controller drivers should comply with this representation, even if
-> they are only supporting a single NAND chip.
+On Thu, Mar 31, 2016 at 12:22 AM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Wed, Mar 23, 2016 at 07:40:19PM -0500, Rob Herring wrote:
+>> In preparation to support bus specific checks, add the necessary
+>> infrastructure to determine the bus type for nodes. Initially, PCI and
+>> simple bus are supported.
+>>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> David,
 >
-> Existing drivers can keep support for the old representation (where only
-> the NAND chip was described), but are encouraged to also support the new
-> one.
+> Sorry it's taken me a while to look at this.  I've been a mixture of
+> busy and sick :/
+
+No problem.
+
+[...]
+
+>> +static bool is_pci_bridge(struct node *node)
+>> +{
+>> +     struct property *prop;
+>> +
+>> +     if (!node)
+>> +             return false;
+>> +
+>> +     prop = get_property(node, "device_type");
+>> +     if (!prop)
+>> +             return false;
+>> +
+>> +     if (strcmp(prop->val.val, "pci") == 0)
+>> +             return true;
+>> +
+>> +     return false;
+>> +}
 >
-> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> ---
->   Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
->   1 file changed, 36 insertions(+), 1 deletion(-)
+> So, I don't love using device_type here, since that's generally
+> discouraged in modern flat trees, but I don't know of a better way to
+> detect a pci bridge, so I guess it's ok.
+
+True, but pci, cpu, and memory remain as accepted uses. We'd have to
+define a "pci-bridge" or "pci-bus" compatible to replace it.
+
+>> +struct bus_type pci_bus_type = {
+>> +        .expected_addr_cells = 3,
+>> +        .expected_size_cells = 2,
 >
-> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-> index b53f92e..fbf5677 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> @@ -1,4 +1,23 @@
-> -* MTD generic binding
-> +* NAND chip and NAND controller generic binding
-> +
-> +NAND controller/NAND chip representation:
-> +
-> +The NAND controller should be represented with it's own DT node, and all
+> I'm a bit torn here.  Part of me wants to suggest a 'check_bridge'
+> function which handles this and can also make more subtle checks, but
+> then just the expected cells values will handle nearly all real cases
+> more succinctly.
 
-s/it's/its/
+I left them as you had them, but I'm not so sure these are all that
+useful. It works for PCI as the sizes are fixed, but then we could
+just check against fixed values. For simple-bus, we need more
+flexibility because the size could be 1 or 2. For other cases like I2C
+or SPI buses, we know the sizes, but we can't really detect those
+buses.
 
-> +NAND chips attached to this controller should be defined as children nodes
-> +of the NAND controller. This representation should be enforced even for
-> +simple controllers supporting only one chip.
-> +
-> +Mandatory NAND controller properties:
-> +- #address-cells: depends on your controller. Should at least be 1 to
-> +		  encode the CS line id.
-> +- #size-cells: depends on your controller. Put zero unless you need a
-> +	       mapping between CS lines and dedicated memory regions
-> +
-> +Optional NAND controller properties
-> +- ranges: only needed if you need to define a mapping between CS lines and
-> +	  memory regions
-> +
-> +Optional NAND chip properties:
->
->   - nand-ecc-mode : String, operation mode of the NAND ecc mode.
->     Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-> @@ -19,3 +38,19 @@ errors per {size} bytes".
->   The interpretation of these parameters is implementation-defined, so not all
->   implementations must support all possible combinations. However, implementations
->   are encouraged to further specify the value(s) they support.
-> +
-> +Example:
-> +
-> +	nand-controller {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		/* controller specific properties */
-> +
-> +		nand@0 {
-> +			reg = <0>;
-> +			nand-ecc-mode = "soft_bch";
-> +
-> +			/* controller specific properties */
-
-Did you mean "chip specific properties"?
-
-> +		};
-> +	};
->
-
-Thanks,
-
-Harvey
+Rob
