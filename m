@@ -1,103 +1,60 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [RESEND PATCH v10 0/6] ARM: hisi: Add initial support including clock driver for Hi3519 soc.
-Date: Thu, 31 Mar 2016 16:10:05 +0800
-Message-ID: <1459411811-12390-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 02/18] ARM: dts: vf610: add GPC as new interrupt parent
+Date: Thu, 31 Mar 2016 16:21:37 +0800
+Message-ID: <20160331082137.GW28207@tiger>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-3-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1457576219-7971-3-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
+To: Stefan Agner <stefan@agner.ch>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jiancheng Xue <xuejiancheng@huawei.com>
+On Wed, Mar 09, 2016 at 06:16:43PM -0800, Stefan Agner wrote:
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-Hello,
+So this patch cannot be applied before the fsl,vf610-gpc driver gets
+landed on mainline.
 
-Hi3519 soc is mainly used for ip camera and sport DV solutions. This patchset adds initial support
-for Hi3519 soc. It includes clock driver, arch configuration, debug uart configuration and device tree.
-It has been tested on hi3519 reference board.
+Shawn
 
-PATCH 3~6 in this serials have been acked. PATCH 1~2 are still waiting for being acked.
-
-Any comments will be appreciated!
-
-Thanks!
-
-Change Log
-----------
-v10:
---Fixed issues pointed by Stephen Boyd.
-  Use EXPORT_SYMBOL_GPL instead of EXPORT_SYMBOL.
---Fixed some compile warning on some platforms
-
-v9:
---Fixed issues pointed by Michael Turquette.
-  Remove some unused header included by source files.
-  Add a specific config option for compiling reset module. 
-
-v8:
---Made hi3519 clock driver can be compiled as a module
---Fixed an issue in arch/arm/Kconfig.debug
-
-v7:
---Rebased to v4.5-rc1
-
-v6:
--Changed clock driver to a real platform driver
-
-v5:
--Adjusted clock and reset controller driver code
-
-v4:
--Rebased to v4.4-rc7
--Divided patches according to Rob's comments
--Added spi nodes in hi3519-demb.dts
-
-v3:
--Rebased to v4.4-rc4
--Adjusted according to Arnd's comments
--Removed ARCH_HI3519, using ARCH_HISI directly
-
-v2:
--Rebased to v4.4-rc3
--Put dt-binding doc and header file in a separate patch.
--Deleted unused clocks definitions.
--Adjusted the ARCH_xxx order in Kconfig file
--Renamed ARCH_HI3xxx to ARCH_36xx
-
-Jiancheng Xue (6):
-  clk: hisilicon: export some hisilicon APIs to modules
-  clk: hisilicon: add CRG driver for hi3519 soc
-  ARM: hisi: add compatible string for Hi3519 soc
-  ARM: debug: add hi3519 debug uart
-  ARM: dt-bindings: add device tree bindings for Hi3519 sysctrl
-  ARM: dts: add dts files for Hi3519
-
- .../bindings/arm/hisilicon/hi3519-sysctrl.txt      |  14 ++
- .../devicetree/bindings/clock/hi3519-crg.txt       |  46 +++++
- arch/arm/Kconfig.debug                             |  10 ++
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/hi3519-demb.dts                  |  42 +++++
- arch/arm/boot/dts/hi3519.dtsi                      | 187 +++++++++++++++++++++
- arch/arm/mach-hisi/hisilicon.c                     |  23 +--
- drivers/clk/hisilicon/Kconfig                      |  15 ++
- drivers/clk/hisilicon/Makefile                     |   2 +
- drivers/clk/hisilicon/clk-hi3519.c                 | 129 ++++++++++++++
- drivers/clk/hisilicon/clk.c                        |  23 ++-
- drivers/clk/hisilicon/clk.h                        |  14 +-
- drivers/clk/hisilicon/reset.c                      | 124 ++++++++++++++
- drivers/clk/hisilicon/reset.h                      |  32 ++++
- include/dt-bindings/clock/hi3519-clock.h           |  40 +++++
- 15 files changed, 669 insertions(+), 34 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/hisilicon/hi3519-sysctrl.txt
- create mode 100644 Documentation/devicetree/bindings/clock/hi3519-crg.txt
- create mode 100644 arch/arm/boot/dts/hi3519-demb.dts
- create mode 100644 arch/arm/boot/dts/hi3519.dtsi
- create mode 100644 drivers/clk/hisilicon/clk-hi3519.c
- create mode 100644 drivers/clk/hisilicon/reset.c
- create mode 100644 drivers/clk/hisilicon/reset.h
- create mode 100644 include/dt-bindings/clock/hi3519-clock.h
-
--- 
-1.9.1
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 5e49fbd..909988d 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -88,7 +88,7 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  		compatible = "simple-bus";
+> -		interrupt-parent = <&mscm_ir>;
+> +		interrupt-parent = <&gpc>;
+>  		ranges;
+>  
+>  		aips0: aips-bus@40000000 {
+> @@ -475,6 +475,14 @@
+>  				reg = <0x4006e000 0x1000>;
+>  				interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
+>  			};
+> +
+> +			gpc: gpc@4006c000 {
+> +				compatible = "fsl,vf610-gpc";
+> +				reg = <0x4006c000 0x1000>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				interrupt-parent = <&mscm_ir>;
+> +			};
+>  		};
+>  
+>  		aips1: aips-bus@40080000 {
+> -- 
+> 2.7.2
+> 
+> 
