@@ -1,44 +1,103 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support
- via 'ext-reset-output' dt prop
-Date: Thu, 31 Mar 2016 09:57:14 +0800
-Message-ID: <20160331015714.GM28207@tiger>
-References: <20151106220249.GA19791@roeck-us.net>
- <565F4244.7090502@timesys.com>
- <CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com>
- <CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
- <20151228162923.GA31680@spo001.leaseweb.nl>
- <56AA79DA.2010305@timesys.com>
- <CAOMZO5DrTY3ho0Z_jXxeYMqbd6GmUKRwD1LB61vM1ZTGQAYOrg@mail.gmail.com>
- <56F991C3.8030201@timesys.com>
- <20160330012226.GD28207@tiger>
- <20160330210916.GB21993@roeck-us.net>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v5 3/5] ARM: at91: pm: configure PMC fast startup signals
+Date: Thu, 31 Mar 2016 02:43:42 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A243641D6441667@penmbx01>
+References: <1458111489-23774-1-git-send-email-wenyou.yang@atmel.com>
+ <1458111489-23774-4-git-send-email-wenyou.yang@atmel.com>
+ <20160317171433.GD2831@piout.net>
+ <B256D81BAE5131468A838E5D7A243641D643C03F@penmbx01>
+ <20160324112452.GJ2570@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160330210916.GB21993@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Tim Harvey <tharvey@gateworks.com>
-Cc: Akshay Bhat <akshay.bhat@timesys.com>, Fabio Estevam <festevam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, linux-watchdog@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Justin Waters <justin.waters@timesys.com>, Lucas Stach <l.stach@pengutronix.de>, Stefan Roese <sr@denx.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160324112452.GJ2570@piout.net>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Russell King <linux@arm.linux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Brown <broonie@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2016 at 02:09:16PM -0700, Guenter Roeck wrote:
-> The question was if the property name should be ext-reset-output or
-> fsl,ext-reset-output. In my opinion, it should be fsl,ext-reset-output
-> because it is not a generic property. Tim disagrees.
-> 
-> So we have two options: Change the property name to fsl,ext-reset-output,
-> which I would accept, or wait for a devicetree maintainer to make a decision.
-
-Guenter,
-
-I agree with you on this point.  Before everyone agrees that this is a
-generic binding, we should have vendor prefix for the property.
-
-Tim,
-
-This is a small change which, IMO, shouldn't hold an useful patch from being
-merged.  Care to resend with the suggested change?
-
-Shawn
+SGkgQWxleGFuZHJlLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFs
+ZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxleGFuZHJlLmJlbGxvbmlAZnJlZS1lbGVjdHJvbnMu
+Y29tXQ0KPiBTZW50OiAyMDE25bm0M+aciDI05pelIDE5OjI1DQo+IFRvOiBZYW5nLCBXZW55b3Ug
+PFdlbnlvdS5ZYW5nQGF0bWVsLmNvbT4NCj4gQ2M6IEZlcnJlLCBOaWNvbGFzIDxOaWNvbGFzLkZF
+UlJFQGF0bWVsLmNvbT47IEplYW4tQ2hyaXN0b3BoZSBQbGFnbmlvbC0NCj4gVmlsbGFyZCA8cGxh
+Z25pb2pAamNyb3NvZnQuY29tPjsgUnVzc2VsbCBLaW5nIDxsaW51eEBhcm0ubGludXgub3JnLnVr
+PjsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJu
+ZWwub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1j
+bGtAdmdlci5rZXJuZWwub3JnOyBSb2IgSGVycmluZw0KPiA8cm9iaCtkdEBrZXJuZWwub3JnPjsg
+UGF3ZWwgTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBCcm93bg0KPiA8YnJvb25pZUBr
+ZXJuZWwub3JnPjsgSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az47
+IEt1bWFyDQo+IEdhbGEgPGdhbGFrQGNvZGVhdXJvcmEub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BB
+VENIIHY1IDMvNV0gQVJNOiBhdDkxOiBwbTogY29uZmlndXJlIFBNQyBmYXN0IHN0YXJ0dXAgc2ln
+bmFscw0KPiANCj4gT24gMjEvMDMvMjAxNiBhdCAwMjoyNDozMiArMDAwMCwgWWFuZywgV2VueW91
+IHdyb3RlIDoNCj4gPiBIaSBBbGV4YW5kcmUsDQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBBbGV4YW5kcmUgQmVsbG9uaQ0KPiA+ID4gW21haWx0bzph
+bGV4YW5kcmUuYmVsbG9uaUBmcmVlLWVsZWN0cm9ucy5jb21dDQo+ID4gPiBTZW50OiAyMDE25bm0
+M+aciDE45pelIDE6MTUNCj4gPiA+IFRvOiBZYW5nLCBXZW55b3UgPFdlbnlvdS5ZYW5nQGF0bWVs
+LmNvbT4NCj4gPiA+IENjOiBGZXJyZSwgTmljb2xhcyA8Tmljb2xhcy5GRVJSRUBhdG1lbC5jb20+
+OyBKZWFuLUNocmlzdG9waGUNCj4gPiA+IFBsYWduaW9sLSBWaWxsYXJkIDxwbGFnbmlvakBqY3Jv
+c29mdC5jb20+OyBSdXNzZWxsIEtpbmcNCj4gPiA+IDxsaW51eEBhcm0ubGludXgub3JnLnVrPjsg
+bGludXgtIGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPiBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtYXJtLSBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+IGxp
+bnV4LWNsa0B2Z2VyLmtlcm5lbC5vcmc7IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+
+OyBQYXdlbA0KPiA+ID4gTW9sbCA8cGF3ZWwubW9sbEBhcm0uY29tPjsgTWFyayBCcm93biA8YnJv
+b25pZUBrZXJuZWwub3JnPjsgSWFuDQo+ID4gPiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVs
+bGlvbi5vcmcudWs+OyBLdW1hciBHYWxhDQo+ID4gPiA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+DQo+
+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDMvNV0gQVJNOiBhdDkxOiBwbTogY29uZmlndXJl
+IFBNQyBmYXN0DQo+ID4gPiBzdGFydHVwIHNpZ25hbHMNCj4gPiA+DQo+ID4gPiBPbiAxNi8wMy8y
+MDE2IGF0IDE0OjU4OjA3ICswODAwLCBXZW55b3UgWWFuZyB3cm90ZSA6DQo+ID4gPiA+IFRoZSBm
+YXN0IHN0YXJ0dXAgc2lnbmFsIGlzIHVzZWQgYXMgd2FrZSB1cCBzb3VyY2VzIGZvciBVTFAxIG1v
+ZGUuDQo+ID4gPiA+IEFzIHNvb24gYXMgYSBmYXN0IHN0YXJ0dXAgc2lnbmFsIGlzIGFzc2VydGVk
+LCB0aGUgZW1iZWRkZWQgMTIgTUh6DQo+ID4gPiA+IFJDIG9zY2lsbGF0b3IgcmVzdGFydHMgYXV0
+b21hdGljYWxseS4NCj4gPiA+ID4NCj4gPiA+ID4gVGhpcyBwYXRjaCBpcyB0byBjb25maWd1cmUg
+dGhlIGZhc3Qgc3RhcnR1cCBzaWduYWxzLCB3aGljaCBzaWduYWwNCj4gPiA+ID4gaXMgZW5hYmxl
+ZCB0byB0cmlnZ2VyIHRoZSBQTUMgdG8gd2FrZSB1cCB0aGUgc3lzdGVtIGZyb20gVUxQMSBtb2Rl
+DQo+ID4gPiA+IHNob3VsZCBiZSBjb25maWd1cmVkIHZpYSB0aGUgRFQuDQo+ID4gPiA+DQo+ID4g
+PiA+IFNpZ25lZC1vZmYtYnk6IFdlbnlvdSBZYW5nIDx3ZW55b3UueWFuZ0BhdG1lbC5jb20+DQo+
+ID4gPg0KPiA+ID4gSSB3b3VsZCBhY3R1YWxseSBhdm9pZCBkb2luZyB0aGF0IGZyb20gdGhlIFBN
+QyBkcml2ZXIgYW5kIGRvIHRoYXQNCj4gPiA+IGNvbmZpZ3VyYXRpb24gZnJvbSB0aGUgYWljNSBk
+cml2ZXIuIEl0IGhhcyBhbGwgdGhlIGluZm9ybWF0aW9uIHlvdQ0KPiA+ID4gbmVlZCwgaXQga25v
+d3Mgd2hhdCBraW5kIG9mIGxldmVsIG9yIGVkZ2UgaXMgbmVlZGVkIHRvIHdha2UgdXAgYW5kDQo+
+ID4gPiB3aGF0IGFyZSB0aGUgd2FrZXVwIGludGVycnVwdHMgdG8gZW5hYmxlLiBUaGlzIHdpbGwg
+YWxsb3cgeW91IHRvDQo+ID4gPiBzdG9wIGludHJvZHVjaW5nIGEgbmV3IGJpbmRpbmcuIEFsc28s
+IHRoaXMgd2lsbCBhdm9pZCBkaXNjcmVwYW5jaWVzDQo+ID4gPiBiZXR3ZWVuIHdoYXQgaXMgY29u
+ZmlndXJlZCBpbiB0aGUgRFQgYW5kIHdoYXQgdGhlIHVzZXIgcmVhbGx5IHdhbnRzDQo+ID4gPiAo
+Zm9yIGV4ZW1wbGUgZGlmZmVyZW5jZXMgYmV0d2VlbiB0aGUgZWRnZSBkaXJlY3Rpb24gY29uZmln
+dXJlZCBmb3IgdGhlIFBJT0J1DQo+IGluIHVzZXJzcGFjZSB2ZXJzdXMgd2hhdCBpcyBpbiB0aGUg
+ZGV2aWNlIHRyZWUgb3Igd2FrZW9ubGFuDQo+IGFjdGl2YXRpb24vZGVhY3RpdmF0aW9uKS4NCj4g
+Pg0KPiA+IFRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjay4NCj4gPg0KPiA+IEJ1dCBzb21lIHdh
+a2UtdXBzIHN1Y2ggYXMgV0tVUCBwaW4sIEFDQ19DRSwgUlhMUF9NQ0UsIGRvbid0IGhhdmUgdGhl
+DQo+ID4gY29ycmVzcG9uZGluZw0KPiANCj4gVGhlIFdLVVAgcGluIGNhbiBiZSBjb25maWd1cmVk
+IGZyb20gdGhlIHNoZHdjIGRyaXZlciwgQUNDX0NFIGZyb20gdGhlIEFDQw0KPiBkcml2ZXIsIFJY
+TFBfTUNFLCBmcm9tIHRoZSBSWExQIGRyaXZlciBiZWNhdXNlIHlvdSB3aWxsIG5lZWQgZHJpdmVy
+cyBmb3IgdGhvc2UNCj4gYXQgc29tZSBwb2ludCBhbnl3YXkuDQo+IA0KPiA+IGludGVycnVwdCBu
+dW1iZXIuIE1vcmVvdmVyLCBJIHRoaW5rLCB0aGUgVUxQMSBpcyB2ZXJ5IGRpZmZlcmVudCBmb3Jt
+DQo+ID4gdGhlIFVMUDAsIGl0IGlzIG5vdCB3b2tlbiB1cCBieSB0aGUgaW50ZXJydXB0LiBJdCBp
+cyBmYWxsZW4gc2xlZXAgYW5kIHdva2VuIHVwIGJ5DQo+IHRoZSBzb21lIG1lY2hhbmlzbSBpbiB0
+aGUgUE1DLg0KPiA+DQo+IA0KPiBXZWxsLCB3ZSBkb24ndCByZWFsbHkgY2FyZSBhYm91dCB0aGUg
+bWVjaGFuaXNtLiBXZSBvbmx5IGNhcmUgYWJvdXQgaG93IHRoZSB1c2VyDQo+IGlzIGFibGUgdG8g
+Y29uZmlndXJlIHRoZSB3YWtldXAgc291cmNlcy4NCg0KVW5kZXJzdGFuZCB5b3VyIGNvbmNlcm5z
+Lg0KDQo+IA0KPiBXaXRoIHlvdXIgcGF0Y2ggc2V0LCB3aGF0IGhhcHBlbnMgd2hlbiBubyBVTFAx
+IHNvdXJjZXMgYXJlIGRlZmluZWQgYnV0IHRoZXJlDQo+IGFyZSBVTFAwIHNvdXJjZXM/IFdoYXQg
+aGFwcGVucyB3aGVuIHRoZXJlIGFyZSBib3RoIFVMUDEgYW5kIFVMUDAgc291cmNlcz8NCg0KSSB0
+aGluayB0aGVyZSBpcyBvbmx5IG9uZSBtb2RlLCBlaXRoZXIgVUxQMSBvciBVTFAwLCBpbiBhIHJ1
+bnRpbWUgc3lzdGVtLg0KVGhlIFVMUDEgc291cmNlcyBhcmUgdXNlZCB0byB3YWtlIHVwIHRoZSBV
+TFAxLCBhbmQgdGhlIFVMUDAgc291cmNlcyB3YWtlIHVwIHRoZSBVTFAwLA0KdGhleSBkb24ndCBt
+dXR1YWxseSBlZmZlY3QgZWFjaCBvdGhlci4NCg0KSWYgc3lzdGVtIGlzIGluIHRoZSBVTFAxIG1v
+ZGUsIGFuZCB0aGVyZSBhcmUgbm8gVUxQMSBzb3VyY2VzIGRlZmluZWQsIHRoZSBzeXN0ZW0gd2ls
+bCBmYWlsIHRvDQpiZSB3YWtlbiB1cCwgZXZlbiB0aG91Z2ggdGhlcmUgYXJlIFVMUDAgc291cmNl
+cyBkZWZpbmVkLiBUaGUgVUxQMCBzb3VyY2UgY2FuJ3Qgd2FrZSB1cCB0aGUgVUxQMS4NCg0KPiAN
+Cj4gV2hhdCB3b3VsZCBiZSBnb29kIGlzIHRvIHVzZSBVTFAxIHdoZW4gb25seSBVTFAxIHNvdXJj
+ZXMgYXJlIHNldCB1cCBhbmQNCj4gVUxQMCBpbiB0aGUgb3RoZXIgY2FzZXMuIFRoaXMgd2lsbCBn
+cmVhdGx5IGhlbHAgdGhlIHVzZXIuIEFsc28sIHdoYXQgSSdtIHN1Z2dlc3RpbmcNCj4gYWN0dWFs
+bHkgYWxsb3dzIHRvIGNoYW5nZSB0aGUgVUxQMSBzb3VyY2VzIGF0IHJ1bnRpbWUgZnJvbSBkZXZp
+Y2VzIHRoYXQgYXJlDQo+IGFjdHVhbGx5IHVzZWQgd2hpY2ggaXMgcXVpdGUgYmV0dGVyIHRoYW4g
+c2V0dGluZyB0aGVtIHVwIHN0YXRpY2FsbHkgZnJvbSBEVC4NCj4gDQoNCkluIHRoZSBVTFAxIG1v
+ZGUsIGFsbCBjbG9ja3MgYXJlIGRpc2FibGVkLiBJdCBjYW4gZ2V0IGxvd2VyIGNvbnN1bXB0aW9u
+IGFuZA0KcXVpY2tlciB3YWtlIHVwICh0aGUgcHJvY2Vzc29yIHJlc3RhcnRzIGluIGxlc3MgdGhh
+biAxMHVzKSB0aGFuIFVMUDAgbW9kZS4NCg0KVGhlIG51bWJlciBvZiB3YWtlIHVwIHNvdXJjZXMg
+aXMgbGltaXRlZCBhcyB3ZWxsLiBJdCBpcyB2ZXJ5IGRpZmZlcmVudCBmcm9tIFVMUDAncw0KDQoN
+CkhpIE5pY29sYXMsIHdoYXQgaXMgeW91ciBvcGluaW9ucz8NCg0KDQpCZXN0IFJlZ2FyZHMsDQpX
+ZW55b3UgWWFuZw0K
