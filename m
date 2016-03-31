@@ -1,153 +1,92 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH 1/3] leds: trigger: Introduce a kernel panic LED trigger
-Date: Thu, 31 Mar 2016 09:28:57 +0200
-Message-ID: <56FCD1B9.2050801@samsung.com>
-References: <1459283749-22451-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <1459283749-22451-2-git-send-email-ezequiel@vanguardiasur.com.ar>
- <56FB9C6A.2090402@samsung.com> <20160330191109.GA27372@laptop.cereza>
- <56FCCBE4.7010004@samsung.com>
+From: Eric Auger <eric.auger@linaro.org>
+Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
+Date: Thu, 31 Mar 2016 09:39:38 +0200
+Message-ID: <56FCD43A.4090409@linaro.org>
+References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
+ <20160128111453.GG17123@leverpostej> <56AA07AA.7050701@arm.com>
+ <6645680.g0j8d12m6d@wuerfel> <20160128142751.GA775@arm.com>
+ <56FBF2B7.8090601@linaro.org> <20160330154538.GA10224@arm.com>
+ <56FBF754.7020804@linaro.org> <20160330172412.GB10224@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-reply-to: <56FCCBE4.7010004@samsung.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Richard Purdie <rpurdie@rpsys.net>, kgene@kernel.org, k.kozlowski@samsung.com, linux-kernel@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-acpi@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160330172412.GB10224@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, galak@codeaurora.org, thomas.lendacky@amd.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, brijeshkumar.singh@amd.com, Christoffer Dall <christoffer.dall@linaro.org>, "eric.auger@st.com" <eric.auger@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2016 09:04 AM, Jacek Anaszewski wrote:
-> Hi Ezequiel,
->
-> On 03/30/2016 09:11 PM, Ezequiel Garcia wrote:
->> +lkml
->>
->> On 30 Mar 11:29 AM, Jacek Anaszewski wrote:
->>> Hi Ezequiel,
+Hi Will,
+On 03/30/2016 07:24 PM, Will Deacon wrote:
+> On Wed, Mar 30, 2016 at 05:57:08PM +0200, Eric Auger wrote:
+>> On 03/30/2016 05:45 PM, Will Deacon wrote:
+>>> On Wed, Mar 30, 2016 at 05:37:27PM +0200, Eric Auger wrote:
+>>>> On 01/28/2016 03:27 PM, Will Deacon wrote:
+>>>>> On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
+>>>>>> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
+>>>>>>>>
+>>>>>>> Any IDs specified here would only apply to DMA by the "platform device" 
+>>>>>>> side of the host controller itself (as would an equivalent "iommus" 
+>>>>>>> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
+>>>>>>> working on). In terms of PCI devices, the "mmu-masters" property is 
+>>>>>>> overloaded such that only its existence matters, to identify that there 
+>>>>>>> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
+>>>>>>> host controller.
+>>>>>>
+>>>>>> I wasn't aware that this was actually still specified. I had hoped
+>>>>>> we were getting rid of mmu-masters before anyone actually started
+>>>>>> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
+>>>>>>
+>>>>>> Does anyone know what happened to the plan to use the iommu DT binding
+>>>>>> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
+>>>>>
+>>>>> We always did -- Seattle used the mmu-masters binding before the generic
+>>>>> binding even existed. Robin has been working on patches to get of_xlate
+>>>>> up and running, but it got held up by Laurent's series which didn't end
+>>>>> up going anywhere.
+>>>>>
+>>>> Up to now I have used the PCI smmu description as described in Suravee's
+>>>> patch and this does not work anymore with 4.6-rc1 since the default
+>>>> domain was introduced. So now I see 2 SMRs matching a single streamid
+>>>> (in my case 256, one steming from the "platform device" side of the host
+>>>> controller and one steming from the PCI device) and this causes SMCF
+>>>> (stream match conflict fault). So PCIe PF does not work.
 >>>
->>> Thanks for the patch. I've tested it on exynos4412-trats2 board
->>> with leds-aat1290 driver, by executing:
+>>> Sorry about that, it wasn't intentional. In fact, I wrote commit
+>>> cbf8277ef456 ("iommu/arm-smmu: Treat IOMMU_DOMAIN_DMA as bypass for now")
+>>> specifically to avoid this breakage, after seeing it myself with VFIO
+>>> and an S2CR-based configuration. It looks like the check just needs moving
+>>> higher up (i.e. before we initialise the SMRs).
 >>>
->>> echo "c" > /proc/sysrq-trigger
->>>
->>> I was able to notice the blinking then.
->>>
->>> Applied to the for-next branch of linux-leds.git.
->>>
->>
->> Notice that we currently need LEDs to be dedicated
->> to the panic trigger, which is pretty lame as LEDs
->> are scarce and are most likely assigned to something else.
->>
->> So, here's a toy patch to switch all the installed LEDs
->> to the panic trigger on kernel panic. Patch is half-baked,
->> but it shows the idea.
->>
->> (Interestingly, it also blinks the LEDs on a USB keyboard!)
->>
->> Is there any value in polishing this and find a way upstream?
->
-> I like the idea, but I'd rather explicitly mark LEDs as panic
-> indicators.
->
-> How about adding a "kernel-panic-indicator" Device Tree property to
-> common LED bindings? LED class device could be registered for the
-> panic trigger on kernel panic notification only when the property is
-> present.
+>>> Does that fix it for you?
+>> Yes this fixes the issue for me, thanks! I guess you will send that patch?
+> 
+> I need to check that it doesn't break rebinding to the host after VFIO
+> has been used for passthrough, first.
 
-Of course we would need similar solution for ACPI based platforms,
-however I am not sure if this approach is feasible in that case, since
-device configuration data is enclosed in firmware then.
-Adding linux-acpi list.
+OK. I can help testing too since I am currently working on PCIe
+passthrough respin.
+> 
+> Does your devicetree explicitly assign a StreamID to the platform device
+> for the host controller? We should probably be handling this, since it
+> will crop us as an issue again once we decide to enable the default
+> domain properly.
 
-> Adding Rob, Mark and devicetree list.
->
->> diff --git a/drivers/leds/led-class.c b/drivers/leds/led-class.c
->> index aa84e5b37593..caaf6161a7ae 100644
->> --- a/drivers/leds/led-class.c
->> +++ b/drivers/leds/led-class.c
->> @@ -321,6 +321,20 @@ void devm_led_classdev_unregister(struct device
->> *dev,
->>   }
->>   EXPORT_SYMBOL_GPL(devm_led_classdev_unregister);
->>
->> +static int led_panic_notifier(struct notifier_block *nb,
->> +                  unsigned long code, void *unused)
->> +{
->> +    struct led_classdev *led_cdev;
->> +
->> +    list_for_each_entry(led_cdev, &leds_list, node)
->> +        led_trigger_set_at_panic(led_cdev, "panic");
->> +    return NOTIFY_DONE;
->> +}
->> +
->> +static struct notifier_block led_panic_nb = {
->> +    .notifier_call = led_panic_notifier,
->> +};
->> +
->>   static int __init leds_init(void)
->>   {
->>       leds_class = class_create(THIS_MODULE, "leds");
->> @@ -328,6 +342,8 @@ static int __init leds_init(void)
->>           return PTR_ERR(leds_class);
->>       leds_class->pm = &leds_class_dev_pm_ops;
->>       leds_class->dev_groups = led_groups;
->> +    atomic_notifier_chain_register(&panic_notifier_list,
->> +                       &led_panic_nb);
->>       return 0;
->>   }
->>
->> diff --git a/drivers/leds/led-triggers.c b/drivers/leds/led-triggers.c
->> index 2181581795d3..8c1d33acdfa8 100644
->> --- a/drivers/leds/led-triggers.c
->> +++ b/drivers/leds/led-triggers.c
->> @@ -148,6 +148,21 @@ void led_trigger_remove(struct led_classdev
->> *led_cdev)
->>   }
->>   EXPORT_SYMBOL_GPL(led_trigger_remove);
->>
->> +void led_trigger_set_at_panic(struct led_classdev *led_cdev, const
->> char *name)
->> +{
->
-> "name" parameter is not required, since setting other trigger than panic
-> on kernel panic doesn't make sense.
->
->> +    struct led_trigger *trig;
->> +
->> +    list_for_each_entry(trig, &trigger_list, next_trig) {
->> +        if (strcmp(name, trig->name))
->> +            continue;
->> +        list_add_tail(&led_cdev->trig_list, &trig->led_cdevs);
->> +        led_cdev->trigger = trig;
->> +        if (trig->activate)
->> +            trig->activate(led_cdev);
->> +        break;
->> +    }
->> +}
->> +
->>   void led_trigger_set_default(struct led_classdev *led_cdev)
->>   {
->>       struct led_trigger *trig;
->> diff --git a/drivers/leds/leds.h b/drivers/leds/leds.h
->> index db3f20da7221..8cfa10f626a6 100644
->> --- a/drivers/leds/leds.h
->> +++ b/drivers/leds/leds.h
->> @@ -21,6 +21,7 @@ static inline int led_get_brightness(struct
->> led_classdev *led_cdev)
->>       return led_cdev->brightness;
->>   }
->>
->> +void led_trigger_set_at_panic(struct led_classdev *led_cdev, const
->> char *name);
->>   void led_init_core(struct led_classdev *led_cdev);
->>   void led_stop_software_blink(struct led_classdev *led_cdev);
->>   void led_set_brightness_nopm(struct led_classdev *led_cdev,
->>
->
->
+Yes it does. My dt description currently matches the one found in this
+patch from Suravee (old binding style). Hence my question. Shall I
+remove this and let PCIe register their RID=SID automatically?
+> 
+>> So eventually what is the right way to describe the smmu-masters (~
+>> future of that patch)?
+> 
+> Using the generic iommu binding
+> (Documentation/devicetree/bindings/iommu/iommu.txt), which will be required
+> for of_xlate-based probing. The old binding should still continue to
+> function as it always has, though.
+OK thanks
 
-
--- 
-Best regards,
-Jacek Anaszewski
+Eric
+> 
+> Will
+> 
