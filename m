@@ -1,59 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/8] drm/fsl-dcu: add extra clock for pixel clock
-Date: Thu, 31 Mar 2016 09:42:09 -0500
-Message-ID: <20160331144209.GA28867@rob-hp-laptop>
-References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
- <1459216802-32094-5-git-send-email-stefan@agner.ch>
+Subject: Re: [PATCH] gpio: dt-bindings: document the concept of GPIO banks
+Date: Thu, 31 Mar 2016 09:48:48 -0500
+Message-ID: <CAL_JsqKzzoSOFY9b9jwOVa4EZdzzRDusOEtDuOwnB7Q3x6W=eQ@mail.gmail.com>
+References: <1459415459-8107-1-git-send-email-linus.walleij@linaro.org>
+ <CAL_JsqK+n-EwHx52=d9-dTJaVsSOzRS+PAmyCYwe6HK=kDoyGQ@mail.gmail.com> <56FD2689.1080707@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1459216802-32094-5-git-send-email-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56FD2689.1080707@atmel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBNYXIgMjgsIDIwMTYgYXQgMDY6NTk6NThQTSAtMDcwMCwgU3RlZmFuIEFnbmVyIHdy
-b3RlOgo+IFRoZSBWeWJyaWQgRENVIHZhcmlhbnQgaGFzIHR3byBpbmRlcGVuZGVudCBjbG9jayBp
-bnB1dHMsIG9uZQo+IGZvciB0aGUgcmVnaXN0ZXJzIChJUEcgYnVzIGNsb2NrKSBhbmQgb25lIGZv
-ciB0aGUgcGl4ZWwgY2xvY2suCj4gU3VwcG9ydCB0aGlzIGRpc3RpbmN0aW9uIGluIHRoZSBEQ1Ug
-RFJNIGRyaXZlciB3aGlsZSBzdGF5aW5nCj4gYmFja3dhcmQgY29tcGF0aWJsZSB3aXRoIGRldmlj
-ZXMgcHJvdmlkaW5nIG9ubHkgYSBzaW5nbGUgY2xvY2sKPiAoZS5nLiBMUzEwMjFhIFNvQydzKS4K
-CkknZCBzdXNwZWN0IHRoYXQgYm90aCBoYXZlIDIgY2xvY2tzLCBqdXN0IHRoZSBMUzEwMjFhIGVp
-dGhlciBkaWRuJ3QgCm1vZGVsIHRoZSBJUEcgY2xvY2sgb3IgY29ubmVjdHMgYm90aCB0byB0aGUg
-c2FtZSBzb3VyY2UuIFRoZSBkcml2ZXIgCnNob3VsZCBzdXBwb3J0IGJvdGgsIGJ1dCBhbGwgdGhl
-IGR0cydzIHNob3VsZCBiZSB1cGRhdGVkIHRvIGhhdmUgMiAKY2xvY2tzLgoKPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBTdGVmYW4gQWduZXIgPHN0ZWZhbkBhZ25lci5jaD4KPiAtLS0KPiAgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQgfCAgNCArKysrCj4g
-IGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuYyAgICAgICAgICAgIHwg
-IDIgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmMgICAgICAg
-ICAgICAgfCAxNiArKysrKysrKysrKysrKystCj4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2Zz
-bF9kY3VfZHJtX2Rydi5oICAgICAgICAgICAgIHwgIDEgKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDIx
-IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQKPiBpbmRleCBlYmYx
-YmU5Li5mMjk5ZTFlIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQKPiBAQCAtMTEsNiArMTEsMTAgQEAgUmVxdWly
-ZWQgcHJvcGVydGllczoKPiAgLSBiaWctZW5kaWFuCQlCb29sZWFuIHByb3BlcnR5LCBMUzEwMjFB
-IERDVSByZWdpc3RlcnMgYXJlIGJpZy1lbmRpYW4uCj4gIC0gZnNsLHBhbmVsOgkJVGhlIHBoYW5k
-bGUgdG8gcGFuZWwgbm9kZS4KPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gY2xvY2tz
-OgkJU2Vjb25kIGhhbmRsZSBmb3IgcGl4ZWwgY2xvY2suCj4gKy0gY2xvY2stbmFtZXM6CQlTZWNv
-bmQgbmFtZSAicGl4IiBmb3IgcGl4ZWwgY2xvY2suCgpEb2N1bWVudCB0aGVzZSBpbiBvbmUgcGxh
-Y2UgYW5kIGp1c3QgYWRkIGEgbm90ZSB0aGF0IExTMTAyMWEgb25seSBoYXMgMSAKY2xvY2suCgo+
-ICsKPiAgRXhhbXBsZXM6Cj4gIGRjdTogZGN1QDJjZTAwMDAgewo+ICAJY29tcGF0aWJsZSA9ICJm
-c2wsbHMxMDIxYS1kY3UiOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9m
-c2xfZGN1X2RybV9jcnRjLmMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Thu, Mar 31, 2016 at 8:30 AM, Nicolas Ferre <nicolas.ferre@atmel.com=
+> wrote:
+> Le 31/03/2016 15:22, Rob Herring a =C3=A9crit :
+>> On Thu, Mar 31, 2016 at 4:10 AM, Linus Walleij <linus.walleij@linaro=
+=2Eorg> wrote:
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: Neil Armstrong <narmstrong@baylibre.com>
+>>> Cc: Rob Herring <robh@kernel.org>
+>>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> We generally avoid indexing blocks in DT.
+>>
+>>> ---
+>>>  Documentation/devicetree/bindings/gpio/gpio.txt | 14 +++++++++++++=
++
+>>>  1 file changed, 14 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Docu=
+mentation/devicetree/bindings/gpio/gpio.txt
+>>> index 069cdf6f9dac..f509ecf03ece 100644
+>>> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+>>> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+>>> @@ -131,6 +131,19 @@ Every GPIO controller node must contain both a=
+n empty "gpio-controller"
+>>>  property, and a #gpio-cells integer property, which indicates the =
+number of
+>>>  cells in a gpio-specifier.
+>>>
+>>> +Some system-on-chips (SoCs) use the concept of GPIO banks. A GPIO =
+bank is an
+>>> +instance of a hardware IP core on a silicon die, usually exposed t=
+o the
+>>> +programmer as a coherent range of I/O addresses. Usually each such=
+ bank is
+>>> +exposed in the device tree as an individual gpio-controller node, =
+reflecting
+>>> +the fact that the hardware was synthesized by reusing the same IP =
+block a
+>>> +few times over.
+>>> +
+>>> +A GPIO controller may specify a bank ID. This is a hardware index =
+that
+>>> +indicate the logical order of the GPIO controller in the hardware =
+architecture,
+>>> +usually in the sequence 0, 1, 2 .. n. The hardware index may be di=
+fferent
+>>> +from the order of register ranges and related to the backplane of =
+how this
+>>> +one bank is connected to the outside through a pin controller for =
+example.
+>>
+>> I still don't understand why do you need to know this? If you need
+>> some mapping of gpio nodes into pin controller, the pin controller
+>> should have a mapping using phandles.
+>
+> We use aliases for this:
+>
+> aliases {
+>     gpio0 =3D &pioA;
+>     gpio1 =3D &pioB;
+>     [..]
+> };
+
+Which is a global number space that might not work in all cases. I
+don't think gpio should be using aliases either. If you need to
+describe the connections between nodes, then keep that between nodes.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
