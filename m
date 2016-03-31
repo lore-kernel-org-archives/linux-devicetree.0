@@ -1,82 +1,106 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
-Date: Thu, 31 Mar 2016 17:21:51 +0200
-Message-ID: <CAGhQ9Vy8TKPxPdYF-wXbCo_LZkBsSsficEG8wCn1bCbS9JN+vg@mail.gmail.com>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
-	<1459290646-3592-3-git-send-email-manabian@gmail.com>
-	<20160330110611.GB25354@leverpostej>
-	<56FBCF70.80006@mentor.com>
-	<20160330134155.GC25354@leverpostej>
-	<CAGhQ9VykiwMWaw3xcJdg2CahNFt+sp7tFC5O8VwA=-_=UoJ8kA@mail.gmail.com>
-	<20160330170645.GA13690@leverpostej>
-	<CAGhQ9Vykn=G+cmVuBCAA_ATTz4XNEPeUWYbZRb5NsrVBOjaS-A@mail.gmail.com>
-	<20160331103800.GC26532@leverpostej>
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: Re: [PATCH] mtd: nand: document the NAND controller/NAND chip DT
+ representation
+Date: Thu, 31 Mar 2016 16:22:01 +0100
+Message-ID: <56FD4099.5040804@imgtec.com>
+References: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
+ <56FD3F0E.9080306@imgtec.com> <20160331171942.622d03aa@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331103800.GC26532@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160331171942.622d03aa@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31 March 2016 at 12:38, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Mar 30, 2016 at 10:45:06PM +0200, Joachim Eastwood wrote:
->> On 30 March 2016 at 19:06, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Wed, Mar 30, 2016 at 06:15:35PM +0200, Joachim Eastwood wrote:
->> >> I used the following script to check for the memory node in all built dtb's.
->> >>   make ARCH=arm CONFIG_OF_ALL_DTBS=y dtbs
->> >>   for i in $(ls arch/arm/boot/dts/*.dtb); do
->> >>          m=$(scripts/dtc/dtc -I dtb -O dts $i | grep -m1 'memory.*{')
->> >>          if [ -z "$m" ]; then
->> >>                  echo "Missing memory node in $i"
->> >>           fi
->> >>   done
->> >>
->> >> So it should be pretty safe to just remove the memory node entry in
->> >> the skeleton files. Unless I have missed something with the script
->> >> above.
->> >
->> > The above might match reserved-memory nodes; it might be better to check
->> > for 'device_type\s*=\s*"memory"'.
+Hi,
+
+On 31/03/16 16:19, Boris Brezillon wrote:
+> On Thu, 31 Mar 2016 16:15:26 +0100
+> Harvey Hunt <harvey.hunt@imgtec.com> wrote:
+>
+>> Hi Boris,
 >>
->> I did check the output of the grep and it looks good. But there are
->> indeed DTs that are missing the 'device_type = "memory"' parameter.
->> Actually; _a lot_ or 438 of 741 to be exact. ugh...
+>> On 31/03/16 14:57, Boris Brezillon wrote:
+>>> Standardize the NAND controller/NAND chip DT representation. Now, all new
+>>> NAND controller drivers should comply with this representation, even if
+>>> they are only supporting a single NAND chip.
+>>>
+>>> Existing drivers can keep support for the old representation (where only
+>>> the NAND chip was described), but are encouraged to also support the new
+>>> one.
+>>>
+>>> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+>>> ---
+>>>    Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
+>>>    1 file changed, 36 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+>>> index b53f92e..fbf5677 100644
+>>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+>>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+>>> @@ -1,4 +1,23 @@
+>>> -* MTD generic binding
+>>> +* NAND chip and NAND controller generic binding
+>>> +
+>>> +NAND controller/NAND chip representation:
+>>> +
+>>> +The NAND controller should be represented with it's own DT node, and all
 >>
->> I guess all those should be fixed up before we can remove the memory
->> node from skeleton. :/
+>> s/it's/its/
 >
-> Ouch, yes. :(
+> Yep, I'll fix that.
 >
-> That said, the cahnges don't need to be an atomic operation. We could
-> start adding device_type = "memory" to dts immediately (in as whatever
-> size batches maintainers are happy with), as a duplicate device_type
-> shouldn't be problematic.
-
-Yes, that is true.
-
-
-> When we hit critical mass, we could then remove the skeleton memory
-> nodes, fixing up any remaining fallout.
+>>
+>>> +NAND chips attached to this controller should be defined as children nodes
+>>> +of the NAND controller. This representation should be enforced even for
+>>> +simple controllers supporting only one chip.
+>>> +
+>>> +Mandatory NAND controller properties:
+>>> +- #address-cells: depends on your controller. Should at least be 1 to
+>>> +		  encode the CS line id.
+>>> +- #size-cells: depends on your controller. Put zero unless you need a
+>>> +	       mapping between CS lines and dedicated memory regions
+>>> +
+>>> +Optional NAND controller properties
+>>> +- ranges: only needed if you need to define a mapping between CS lines and
+>>> +	  memory regions
+>>> +
+>>> +Optional NAND chip properties:
+>>>
+>>>    - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+>>>      Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+>>> @@ -19,3 +38,19 @@ errors per {size} bytes".
+>>>    The interpretation of these parameters is implementation-defined, so not all
+>>>    implementations must support all possible combinations. However, implementations
+>>>    are encouraged to further specify the value(s) they support.
+>>> +
+>>> +Example:
+>>> +
+>>> +	nand-controller {
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		/* controller specific properties */
+>>> +
+>>> +		nand@0 {
+>>> +			reg = <0>;
+>>> +			nand-ecc-mode = "soft_bch";
+>>> +
+>>> +			/* controller specific properties */
+>>
+>> Did you mean "chip specific properties"?
 >
-> As for the mechanical changes, it sounds like we need coccinelle for DT.
+> No, it's really "controller specific properties". Those are properties
+> prefixed by the controller vendor name (like 'allwinner,rb' which is
+> encoding the native ready/busy pin to be attached to this chip).
 >
-> That, or a laptop, a long flight, and a gin and tonic.
 
-:-)
+Okay, I see - I was somewhat confused by it being in the nand chip node, 
+but I understand what you mean now.
 
-I'll see if I can cook up something with awk.
+Thanks,
 
-
-Anyway, I am dropping the memory node changes from this patch set so I
-can get a pull request sent to arm-soc for lpc18xx sooner rather than
-later.
-
-
-regards,
-Joachim Eastwood
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Harvey
