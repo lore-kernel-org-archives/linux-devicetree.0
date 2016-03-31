@@ -1,60 +1,60 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 02/18] ARM: dts: vf610: add GPC as new interrupt parent
-Date: Thu, 31 Mar 2016 16:21:37 +0800
-Message-ID: <20160331082137.GW28207@tiger>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
- <1457576219-7971-3-git-send-email-stefan@agner.ch>
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: [RESEND PATCH v10 4/6] ARM: debug: add hi3519 debug uart
+Date: Thu, 31 Mar 2016 16:10:09 +0800
+Message-ID: <1459411811-12390-5-git-send-email-xuejiancheng@hisilicon.com>
+References: <1459411811-12390-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457576219-7971-3-git-send-email-stefan@agner.ch>
+In-Reply-To: <1459411811-12390-1-git-send-email-xuejiancheng@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, p.zabel@pengutronix.de, robh+dt@kernel.org, linux@arm.linux.org.uk, khilman@linaro.org, arnd@arndb.de, olof@lixom.net, xuwei5@hisilicon.com
+Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, yanhaifeng@hisilicon.com, yanghongwei@hisilicon.com, suwenping@hisilicon.com, raojun@hisilicon.com, ml.yang@hisilicon.com, gaofei@hisilicon.com, zhangzhenxing@hisilicon.com, xuejiancheng@hisilicon.com, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 06:16:43PM -0800, Stefan Agner wrote:
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+From: Jiancheng Xue <xuejiancheng@huawei.com>
 
-So this patch cannot be applied before the fsl,vf610-gpc driver gets
-landed on mainline.
+add hi3519 debug uart
 
-Shawn
+Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+---
+ arch/arm/Kconfig.debug | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> ---
->  arch/arm/boot/dts/vfxxx.dtsi | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index 5e49fbd..909988d 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -88,7 +88,7 @@
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		compatible = "simple-bus";
-> -		interrupt-parent = <&mscm_ir>;
-> +		interrupt-parent = <&gpc>;
->  		ranges;
->  
->  		aips0: aips-bus@40000000 {
-> @@ -475,6 +475,14 @@
->  				reg = <0x4006e000 0x1000>;
->  				interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
->  			};
-> +
-> +			gpc: gpc@4006c000 {
-> +				compatible = "fsl,vf610-gpc";
-> +				reg = <0x4006c000 0x1000>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupt-parent = <&mscm_ir>;
-> +			};
->  		};
->  
->  		aips1: aips-bus@40080000 {
-> -- 
-> 2.7.2
-> 
-> 
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index c6b6175..edd3fbe 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -260,6 +260,14 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on Cortina Gemini based platforms.
+ 
++	config DEBUG_HI3519_UART
++		bool "Hisilicon HI3519 Debug UART"
++		depends on ARCH_HISI
++		select DEBUG_UART_PL01X
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on HI3519 UART.
++
+ 	config DEBUG_HI3620_UART
+ 		bool "Hisilicon HI3620 Debug UART"
+ 		depends on ARCH_HI3xxx
+@@ -1451,6 +1459,7 @@ config DEBUG_UART_PHYS
+ 	default 0x11002000 if DEBUG_MT8127_UART0
+ 	default 0x11006000 if DEBUG_MT6589_UART0
+ 	default 0x11009000 if DEBUG_MT8135_UART3
++	default 0x12100000 if DEBUG_HI3519_UART
+ 	default 0x16000000 if DEBUG_INTEGRATOR
+ 	default 0x18000300 if DEBUG_BCM_5301X
+ 	default 0x18010000 if DEBUG_SIRFATLAS7_UART0
+@@ -1619,6 +1628,7 @@ config DEBUG_UART_VIRT
+ 	default 0xfee20000 if DEBUG_NSPIRE_CLASSIC_UART || DEBUG_NSPIRE_CX_UART
+ 	default 0xfee82340 if ARCH_IOP13XX
+ 	default 0xfef00000 if ARCH_IXP4XX && !CPU_BIG_ENDIAN
++	default 0xfef00000 if DEBUG_HI3519_UART
+ 	default 0xfef00003 if ARCH_IXP4XX && CPU_BIG_ENDIAN
+ 	default 0xfef36000 if DEBUG_HIGHBANK_UART
+ 	default 0xfefb0000 if DEBUG_OMAP1UART1 || DEBUG_OMAP7XXUART1
+-- 
+1.9.1
