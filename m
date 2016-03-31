@@ -1,87 +1,49 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH v7 18/20] ARM: dts: Add support of bus frequency using VDD_INT
- for exynos3250-rinato
-Date: Thu, 31 Mar 2016 18:06:03 +0900
-Message-ID: <1459415165-32613-19-git-send-email-cw00.choi@samsung.com>
-References: <1459415165-32613-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1459415165-32613-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org
-Cc: rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 3/8] mfd: altr_a10sr: Add Altera Arria10 DevKit System
+ Resource Chip
+Date: Thu, 31 Mar 2016 10:10:01 +0100
+Message-ID: <20160331091001.GN3323@x1>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-4-git-send-email-tthayer@opensource.altera.com>
+ <20160330115106.GJ3323@x1>
+ <56FBE829.2000607@opensource.altera.com>
+ <20160330145239.GM3323@x1>
+ <20160330161048.GB2350@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160330161048.GB2350@sirena.org.uk>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Thor Thayer <tthayer@opensource.altera.com>, linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bus device-tree nodes of INT (internal) block
-to enable the bus frequency scaling. The following sub-blocks share
-the VDD_INT power source:
-- LEFTBUS (parent device)
-- RIGHTBUS
-- PERIL
-- LCD0
-- FSYS
-- MCUISP / ISP
-- MFC
+On Wed, 30 Mar 2016, Mark Brown wrote:
+> On Wed, Mar 30, 2016 at 03:52:39PM +0100, Lee Jones wrote:
+> > On Wed, 30 Mar 2016, Thor Thayer wrote:
+>=20
+> > > The read register has a different address than the write register
+> > > which is handled in this function with the masks (read address is
+> > > odd, write address is even).
+>=20
+> > Mark, do we have an API which handled such a configuration?
+>=20
+> No, but it sounds like this is a regmap with seven bit register value=
+s
+> and a read/write bit which should be using read_flag_mask rather than
+> trying to treat these as separate registers.
 
-The LEFTBUS is parent device with devfreq ondemand governor
-and the rest of devices depend on the LEFTBUS device.
+Nice one.  Thanks Mark.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
----
- arch/arm/boot/dts/exynos3250-rinato.dts | 41 +++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos3250-rinato.dts b/arch/arm/boot/dts/exynos3250-rinato.dts
-index 9710e79e10a0..09444897b416 100644
---- a/arch/arm/boot/dts/exynos3250-rinato.dts
-+++ b/arch/arm/boot/dts/exynos3250-rinato.dts
-@@ -154,6 +154,47 @@
- 	status = "okay";
- };
- 
-+&bus_leftbus {
-+	devfreq-events = <&ppmu_leftbus_3>, <&ppmu_rightbus_3>;
-+	vdd-supply = <&buck3_reg>;
-+	status = "okay";
-+};
-+
-+&bus_rightbus {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
-+&bus_lcd0 {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
-+&bus_fsys {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
-+&bus_mcuisp {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
-+&bus_isp {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
-+&bus_peril {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
-+&bus_mfc {
-+	devfreq = <&bus_leftbus>;
-+	status = "okay";
-+};
-+
- &cpu0 {
- 	cpu0-supply = <&buck2_reg>;
- };
--- 
-1.9.1
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-hwmon" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
