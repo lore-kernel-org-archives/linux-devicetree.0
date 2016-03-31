@@ -1,121 +1,67 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/7] ARM: dts: skeleton: add unit name to memory node
-Date: Thu, 31 Mar 2016 18:34:04 +0200
-Message-ID: <CAGhQ9VyQYeKrpPD-YhWjysvHmYaKssCO7xsU9MyRvFivEym=Hw@mail.gmail.com>
-References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
-	<1459290646-3592-3-git-send-email-manabian@gmail.com>
-	<20160330110611.GB25354@leverpostej>
-	<56FBCF70.80006@mentor.com>
-	<20160330134155.GC25354@leverpostej>
-	<CAGhQ9VykiwMWaw3xcJdg2CahNFt+sp7tFC5O8VwA=-_=UoJ8kA@mail.gmail.com>
-	<20160330170645.GA13690@leverpostej>
-	<CAGhQ9Vykn=G+cmVuBCAA_ATTz4XNEPeUWYbZRb5NsrVBOjaS-A@mail.gmail.com>
-	<20160331103800.GC26532@leverpostej>
-	<CAGhQ9Vy8TKPxPdYF-wXbCo_LZkBsSsficEG8wCn1bCbS9JN+vg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 3/3] dt/bindings: sound: new chip added into TAS571x binding
+Date: Thu, 31 Mar 2016 18:41:27 +0200
+Message-ID: <1459442487-32284-3-git-send-email-petr@barix.com>
+References: <1459442487-32284-1-git-send-email-petr@barix.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGhQ9Vy8TKPxPdYF-wXbCo_LZkBsSsficEG8wCn1bCbS9JN+vg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1459442487-32284-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31 March 2016 at 17:21, Joachim  Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 31 March 2016 at 12:38, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> On Wed, Mar 30, 2016 at 10:45:06PM +0200, Joachim Eastwood wrote:
->>> On 30 March 2016 at 19:06, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->>> > On Wed, Mar 30, 2016 at 06:15:35PM +0200, Joachim Eastwood wrote:
->>> >> I used the following script to check for the memory node in all built dtb's.
->>> >>   make ARCH=arm CONFIG_OF_ALL_DTBS=y dtbs
->>> >>   for i in $(ls arch/arm/boot/dts/*.dtb); do
->>> >>          m=$(scripts/dtc/dtc -I dtb -O dts $i | grep -m1 'memory.*{')
->>> >>          if [ -z "$m" ]; then
->>> >>                  echo "Missing memory node in $i"
->>> >>           fi
->>> >>   done
->>> >>
->>> >> So it should be pretty safe to just remove the memory node entry in
->>> >> the skeleton files. Unless I have missed something with the script
->>> >> above.
->>> >
->>> > The above might match reserved-memory nodes; it might be better to check
->>> > for 'device_type\s*=\s*"memory"'.
->>>
->>> I did check the output of the grep and it looks good. But there are
->>> indeed DTs that are missing the 'device_type = "memory"' parameter.
->>> Actually; _a lot_ or 438 of 741 to be exact. ugh...
->>>
->>> I guess all those should be fixed up before we can remove the memory
->>> node from skeleton. :/
->>
->> Ouch, yes. :(
->>
->> That said, the cahnges don't need to be an atomic operation. We could
->> start adding device_type = "memory" to dts immediately (in as whatever
->> size batches maintainers are happy with), as a duplicate device_type
->> shouldn't be problematic.
->
-> Yes, that is true.
->
->
->> When we hit critical mass, we could then remove the skeleton memory
->> nodes, fixing up any remaining fallout.
->>
->> As for the mechanical changes, it sounds like we need coccinelle for DT.
->>
->> That, or a laptop, a long flight, and a gin and tonic.
->
-> :-)
->
-> I'll see if I can cook up something with awk.
+This adds the TAS5721 into the TAS571x binding.
 
-Something like this should do it:
-#!/usr/bin/gawk -f
-# find arch/arm/boot/dts/ -type f -name *.dts* | xargs
-./mem_node_add_dev_type.awk -i inplace
-BEGIN { go = 0 }
-/[^-]memory ?{/ { go = 1; idx = 0; device_type = 0 }
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Kevin Cernekee <cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+v1: <initial>
 
-go == 1 {
-        buf[idx++] = $0
-        if ($0 ~ /device_type/)
-                device_type = 1
+v2: formatting of the "compatible" strings amended
 
-        if ($0 ~ /};/) {
-                print buf[0]
+v3: <no change>
 
-                if (!device_type) {
-                        buf[0] = buf[1]
-                        gsub(/[^\t]*/, "", buf[0])
-                        buf[0] = buf[0] "device_type = \"memory\";"
-                } else {
-                        delete buf[0]
-                }
+v4: no change, the set v3 resubmitted without the already accepted patches
 
-                for (i in buf)
-                        print buf[i]
-                delete buf
+ Documentation/devicetree/bindings/sound/tas571x.txt | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-                go = 0
-                device_type = 0
-        }
-        next
-}
+diff --git a/Documentation/devicetree/bindings/sound/tas571x.txt b/Documentation/devicetree/bindings/sound/tas571x.txt
+index 0ac31d8d5ac4..b4959f10b74b 100644
+--- a/Documentation/devicetree/bindings/sound/tas571x.txt
++++ b/Documentation/devicetree/bindings/sound/tas571x.txt
+@@ -1,4 +1,4 @@
+-Texas Instruments TAS5711/TAS5717/TAS5719 stereo power amplifiers
++Texas Instruments TAS5711/TAS5717/TAS5719/TAS5721 stereo power amplifiers
+ 
+ The codec is controlled through an I2C interface.  It also has two other
+ signals that can be wired up to GPIOs: reset (strongly recommended), and
+@@ -6,7 +6,11 @@ powerdown (optional).
+ 
+ Required properties:
+ 
+-- compatible: "ti,tas5711", "ti,tas5717", or "ti,tas5719"
++- compatible: should be one of the following:
++  - "ti,tas5711",
++  - "ti,tas5717",
++  - "ti,tas5719",
++  - "ti,tas5721"
+ - reg: The I2C address of the device
+ - #sound-dai-cells: must be equal to 0
+ 
+@@ -25,6 +29,8 @@ Optional properties:
+ - PVDD_B-supply: regulator phandle for the PVDD_B supply (5711)
+ - PVDD_C-supply: regulator phandle for the PVDD_C supply (5711)
+ - PVDD_D-supply: regulator phandle for the PVDD_D supply (5711)
++- DRVDD-supply: regulator phandle for the DRVDD supply (5721)
++- PVDD-supply: regulator phandle for the PVDD supply (5721)
+ 
+ Example:
+ 
+-- 
+1.9.1
 
-{ print }
-
-Gives me: 249 files changed, 249 insertions(+), 1 deletion(-) on v4.6-rc1.
-
-Running the my check script after this reveals that 83 DTs lack the
-device_type parameter, but these seem to also lack the memory node as
-well. Wonder why my script didn't pick up the missing memory node in
-those... I also doubt that the memory node is set by the boot loader
-in some of these boards.
-
-
-regards,
-Joachim Eastwood
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
