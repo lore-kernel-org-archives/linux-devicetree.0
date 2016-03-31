@@ -1,88 +1,92 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH v2 8/9] ARM: dts: Declare push button as GPIO key on stm32f429 Disco board
-Date: Thu, 31 Mar 2016 17:09:38 +0200
-Message-ID: <1459436979-17275-9-git-send-email-mcoquelin.stm32@gmail.com>
-References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, arnd@arndb.de
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: Re: [PATCH] mtd: nand: document the NAND controller/NAND chip DT
+ representation
+Date: Thu, 31 Mar 2016 16:15:26 +0100
+Message-ID: <56FD3F0E.9080306@imgtec.com>
+References: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
----
- arch/arm/boot/dts/stm32429i-eval.dts  | 18 ++++++++++++++++++
- arch/arm/boot/dts/stm32f429-disco.dts | 13 +++++++++++++
- 2 files changed, 31 insertions(+)
+Hi Boris,
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 6bfc5959dac3..0fd78e4e8a45 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -47,6 +47,7 @@
- 
- /dts-v1/;
- #include "stm32f429.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32429i-EVAL board";
-@@ -82,6 +83,23 @@
- 		};
- 	};
- 
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		button@0 {
-+			label = "Wake up";
-+			linux,code = <KEY_WAKEUP>;
-+			gpios = <&gpioa 0 0>;
-+		};
-+		button@1 {
-+			label = "Tamper";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&gpioc 13 0>;
-+		};
-+	};
-+
- 	usbotg_hs_phy: usbphy {
- 		#phy-cells = <0>;
- 		compatible = "usb-nop-xceiv";
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 01408073dd53..7d0415e80668 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -47,6 +47,7 @@
- 
- /dts-v1/;
- #include "stm32f429.dtsi"
-+#include <dt-bindings/input/input.h>
- 
- / {
- 	model = "STMicroelectronics STM32F429i-DISCO board";
-@@ -75,6 +76,18 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+		button@0 {
-+			label = "User";
-+			linux,code = <KEY_HOME>;
-+			gpios = <&gpioa 0 0>;
-+		};
-+	};
- };
- 
- &clk_hse {
--- 
-1.9.1
+On 31/03/16 14:57, Boris Brezillon wrote:
+> Standardize the NAND controller/NAND chip DT representation. Now, all new
+> NAND controller drivers should comply with this representation, even if
+> they are only supporting a single NAND chip.
+>
+> Existing drivers can keep support for the old representation (where only
+> the NAND chip was described), but are encouraged to also support the new
+> one.
+>
+> Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>   Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
+>   1 file changed, 36 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+> index b53f92e..fbf5677 100644
+> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+> @@ -1,4 +1,23 @@
+> -* MTD generic binding
+> +* NAND chip and NAND controller generic binding
+> +
+> +NAND controller/NAND chip representation:
+> +
+> +The NAND controller should be represented with it's own DT node, and all
 
+s/it's/its/
+
+> +NAND chips attached to this controller should be defined as children nodes
+> +of the NAND controller. This representation should be enforced even for
+> +simple controllers supporting only one chip.
+> +
+> +Mandatory NAND controller properties:
+> +- #address-cells: depends on your controller. Should at least be 1 to
+> +		  encode the CS line id.
+> +- #size-cells: depends on your controller. Put zero unless you need a
+> +	       mapping between CS lines and dedicated memory regions
+> +
+> +Optional NAND controller properties
+> +- ranges: only needed if you need to define a mapping between CS lines and
+> +	  memory regions
+> +
+> +Optional NAND chip properties:
+>
+>   - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+>     Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+> @@ -19,3 +38,19 @@ errors per {size} bytes".
+>   The interpretation of these parameters is implementation-defined, so not all
+>   implementations must support all possible combinations. However, implementations
+>   are encouraged to further specify the value(s) they support.
+> +
+> +Example:
+> +
+> +	nand-controller {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		/* controller specific properties */
+> +
+> +		nand@0 {
+> +			reg = <0>;
+> +			nand-ecc-mode = "soft_bch";
+> +
+> +			/* controller specific properties */
+
+Did you mean "chip specific properties"?
+
+> +		};
+> +	};
+>
+
+Thanks,
+
+Harvey
