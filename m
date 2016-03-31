@@ -1,80 +1,93 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Thu, 31 Mar 2016 13:39:42 -0700
-Message-ID: <20160331203942.GV2350@sirena.org.uk>
-References: <20160331174741.GO2350@sirena.org.uk>
- <56FD62BA.3040406@nvidia.com>
- <20160331183130.GR2350@sirena.org.uk>
- <56FD6CF7.5080909@nvidia.com>
- <20160331184553.GS2350@sirena.org.uk>
- <56FD6ED6.3020507@nvidia.com>
- <20160331185945.GT2350@sirena.org.uk>
- <56FD7379.2000307@nvidia.com>
- <20160331192227.GU2350@sirena.org.uk>
- <56FD7F07.7010404@nvidia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] dt-binding: Add Qualcomm WCNSS control binding
+Date: Thu, 31 Mar 2016 15:42:02 -0500
+Message-ID: <CAL_JsqKoHOSVGMJfWrGwFi7BMTFp0P3t8W6e4VxtOS8j5aCHWw@mail.gmail.com>
+References: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
+ <1459226126-16725-3-git-send-email-bjorn.andersson@linaro.org>
+ <20160331142817.GA22092@rob-hp-laptop> <20160331171625.GZ8929@tuxbot>
+ <CAL_JsqKbjUxOMbn00OOmwM1vvjRzC8RzX=4WA7WP+K2XYjOSMA@mail.gmail.com> <20160331182449.GA8929@tuxbot>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qCb2VTfFGdRLn6RH"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56FD7F07.7010404-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160331182449.GA8929@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 31, 2016 at 1:24 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Thu 31 Mar 10:38 PDT 2016, Rob Herring wrote:
+>
+>> On Thu, Mar 31, 2016 at 12:16 PM, Bjorn Andersson
+>> <bjorn.andersson@linaro.org> wrote:
+>> > On Thu 31 Mar 07:28 PDT 2016, Rob Herring wrote:
+>> >
+>> >> On Mon, Mar 28, 2016 at 09:35:24PM -0700, Bjorn Andersson wrote:
+>> > [..]
+>>
+>> [...]
+>>
+>> >> > +
+>> >> > +== WiFi
+>> >> > +The following properties are defined to the WiFi node:
+>> >> > +
+>> >> > +- compatible:
+>> >> > +   Usage: required
+>> >> > +   Value type: <string>
+>> >> > +   Definition: must be one of:
+>> >> > +               "qcom,wcn3620-wlan",
+>> >> > +               "qcom,wcn3660-wlan",
+>> >> > +               "qcom,wcn3680-wlan"
+>> >
+>> > Digging through documentation and trying to answer the questions above
+>> > made me realize that these numbers are for the external rf component,
+>> > not the variants of the logic inside the SoC; and as such wrong.
+>>
+>> Do you need to know both? Or only the firmware image needs to know?
+>>
+>
+> So far I've only found cases where we need to know the register map for
+> the DMA engine shuffling packets, so this is related to the SoC-internal
+> part only.
+>
+> The differences in RF capabilities - at least for WiFi - seems to be
+> acquired in runtime from the firmware.
+>
+> The other piece that depend on the RF part seems to be the availability
+> of e.g. ANT support, so if anything that needs to go into the wcnss
+> node, in some way (either compatible or the set of subnodes).
+>
+>> >> > +
+>> >> > +- qcom,wcnss-mmio:
+>> >> > +   Usage: required
+>> >> > +   Value type: <prop-encoded-array>
+>> >> > +   Definition: should specify base address and size of the WiFi related
+>> >> > +               registers of WCNSS
+>> >>
+>> >> This is an address visible to the cpu?
+>> >>
+>> >
+>> > Yes it is; the device is controlled both through SMD and mmio accessible
+>> > registers, where the SMD interface is the primary interface.
+>> >
+>> > SMD being the primary "bus" I believe I can't use reg to denote this
+>> > register range. Should I describe this in some other form?
+>>
+>> That's a tricky one. I would create a node for the memory-mapped
+>> portion with proper compatible and reg properties, and then make this
+>> a phandle to that node. Something similar to how we do phandles to
+>> syscon's.
+>>
+>
+> Okay, sounds reasonable. I don't see a need for a specific
+> implementation, so I'll just back it with the generic syscon
+> implementation (and a specific compatible).
 
---qCb2VTfFGdRLn6RH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I don't think I'd do syscon here as it is mainly designed to have
+multiple users. You just need to look-up the phandle, perhaps check
+the compatible, and call of_address_to_resource to get the address.
+Actually, you could skip the phandle entirely and just find the node
+by compatible (assuming there is only one).
 
-On Fri, Apr 01, 2016 at 01:18:23AM +0530, Laxman Dewangan wrote:
-> On Friday 01 April 2016 12:52 AM, Mark Brown wrote:
-
-> >So why doesn't the device end up configuring 100mV/us when asked for
-> >50mv/us?  That's reasonably expected - the configured ramp rate is a
-> >maximum rate given that this is used to limit inrush current.
-
-> We did this to adjust device configuration to nearest higher side but this
-> is not working well on some of cases.
-
-> On same device, DCDC (SD) rails support 4 ramp configurations, 13.75mV/us,
-> 27.5mV/us, 55mV/us and 100mV/us.
-
-> HW team measured the  ramp time at 7.5mV/us when device configured at
-> 27.5mV/uS.
-
-> So as per above, it will be adjusted to 13.75mV/us (nearest higher side) for
-> device configuration but this device need to configure for 27.5mV/us.
-
-You're saying that the device is so bad at regulating the ramp rate that
-it's not only failing to keep up with the desired ramp rate and capping
-at whatever rate but it's also doing even worse if configured for a
-slower rate?  That's not great, it sounds like it's doing the ramp
-control via some sort of dead reckoning thing rather than by actually
-ramping the voltage it's trying to regulate like it was asked to.
-
-Is the error in the observed values a function of the capacitance that
-we can calcuate here?
-
---qCb2VTfFGdRLn6RH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW/YsJAAoJECTWi3JdVIfQb2kH/2Tc7Lhv8rnj7OiEUuvO6Lys
-vn3A2MwOFl3H6MJmp1kMwzO6KR67kF/pFSohVKG85vNKBoqVJQg74NqvtoP52Cie
-FLbf1YBWs+r5NXegK/dx4RXJdLL6ZEU7PxddnOKY/Od3AsQPDPgpVYbh2o9uDpdf
-inCyRboZCt1bVFfPBi/gWUsLqo/3sPhYp0552++HRotz1lSt00VI6tBgngiJmNEH
-GfFJcNzoS3NoYi8iHTz1cdyZmAedWK2GL0rhb9D0uQSDscrlerijlYa1V3WePx1J
-2z+p/gCaaiWn6vwvEceZ+ecYfr2MNBhUoTLPKfwqw0C4MGiPdrl0pbZaU2w5veY=
-=v42+
------END PGP SIGNATURE-----
-
---qCb2VTfFGdRLn6RH--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
