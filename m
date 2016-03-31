@@ -1,58 +1,67 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 01/18] irqchip: vf610-gpc: add Vybrid GPC IRQ controller
-Date: Thu, 31 Mar 2016 16:07:25 +0800
-Message-ID: <20160331080725.GU28207@tiger>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
- <1457576219-7971-2-git-send-email-stefan@agner.ch>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] iio: st_sensors: support open drain mode
+Date: Thu, 31 Mar 2016 10:15:08 +0200
+Message-ID: <CACRpkdZ37dpKsHr01M0+waXgP4xZJjxxFrNQW13Zxi1a9H+-Rg@mail.gmail.com>
+References: <1458825486-17188-1-git-send-email-linus.walleij@linaro.org>
+	<1458825486-17188-4-git-send-email-linus.walleij@linaro.org>
+	<56F8F592.9010807@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1457576219-7971-2-git-send-email-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56F8F592.9010807-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 06:16:42PM -0800, Stefan Agner wrote:
-> +static int __init vf610_gpc_of_init(struct device_node *node,
-> +			       struct device_node *parent)
-> +{
-> +	struct irq_domain *domain, *domain_parent;
-> +	int i;
-> +
-> +	domain_parent = irq_find_host(parent);
-> +	if (!domain_parent) {
-> +		pr_err("vf610_gpc: interrupt-parent not found\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	gpc_base = of_io_request_and_map(node, 0, "gpc");
-> +	if (WARN_ON(!gpc_base))
+On Mon, Mar 28, 2016 at 11:12 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 24/03/16 13:18, Linus Walleij wrote:
 
-of_io_request_and_map() doesn't return NULL for error but an error code
-encoded by ERR_PTR().  That said, you should use IS_ERR(gpc_base) rather
-than !gpc_base for error check.
+>> +- st,int-pin-open-drain: the interrupt/data ready line will be configured
+>> +  as open drain, which is useful if several sensors share the same
+>> +  interrupt line.
+>
+> Really feels like this one ought to be more generic.. Mind you so does
+> drdy-int-pin!
 
-Shawn
+Sorry about drdy-int-pin, it wasn't me ;)
 
-> +		return PTR_ERR(gpc_base);
-> +
-> +	domain = irq_domain_add_hierarchy(domain_parent, 0, VF610_GPC_MAX_IRQS,
-> +					  node, &gpc_irq_domain_ops, NULL);
-> +	if (!domain) {
-> +		iounmap(gpc_base);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	/* Initially mask all interrupts for wakeup */
-> +	for (i = 0; i < IMR_NUM; i++)
-> +		writel_relaxed(~0, gpc_base + VF610_GPC_IMR1 + i * 4);
-> +
-> +	return 0;
-> +}
-> +IRQCHIP_DECLARE(vf610_gpc, "fsl,vf610-gpc", vf610_gpc_of_init);
-> -- 
-> 2.7.2
-> 
-> 
+That one is a mux kind of thing: interrupt goes out on IRQ line
+INT1 or INT2, select one...
+
+> Hmm. Looks like most open drain controls are chip specific - other than
+> your pinctrl ones and that doesn't really map to here I guess.
+
+Both the muxing and the OD setting can be done with pin control,
+it's just that it is like swatting a fly with a skyscraper - vast overkill
+for two interrupt lines.
+
+I came to the conclusion that with small chips or IP blocks just
+randomly doing some muxing or biasing of a few pins isn't necessarily
+worth all the trouble of implementing pin control, the latter was
+conceived for real big arrays of pins really. There are already a
+few of these all over the kernel, e.g. the ST Multi-Purpose expander
+drivers/mfd/stmpe.c - could be pin control muxed but it'd be overkill.
+
+So as pin control maintainer when this kind of hardware comes up
+I usually just "think it over" and then "OK then".
+
+>> +     if (sdata->int_pin_open_drain) {
+>> +             dev_info(&indio_dev->dev,
+>> +                      "set interrupt line to open drain mode\n");
+>
+> Hmm. Curriously I have a board with an lis3l02dq on it where the interrupt
+> is shared, but doesn't explicitly support open drain. In that case it
+> is done with some external circuitry.
+
+That should run fine with just the status read patch from earlier
+in the series I guess?
+
+> Anyhow - I guess when I actually add support for that I'll just add a sanity
+> check in here that addr_od and mask_od are specified :)
+
+Hm, yeah. Otherwise just patch out my enforcement of the
+OD flag for a shared line and add a comment in.
+
+Yours,
+Linus Walleij
