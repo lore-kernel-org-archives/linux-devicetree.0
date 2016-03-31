@@ -1,95 +1,59 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 6/8] drm/fsl-dcu: add TCON driver
-Date: Thu, 31 Mar 2016 09:35:16 -0500
-Message-ID: <20160331143515.GA26784@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 4/8] drm/fsl-dcu: add extra clock for pixel clock
+Date: Thu, 31 Mar 2016 09:42:09 -0500
+Message-ID: <20160331144209.GA28867@rob-hp-laptop>
 References: <1459216802-32094-1-git-send-email-stefan@agner.ch>
- <1459216802-32094-7-git-send-email-stefan@agner.ch>
+ <1459216802-32094-5-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1459216802-32094-7-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, jianwei.wang.chn-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org, meng.yi-3arQi8VN3Tc@public.gmane.org, alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1459216802-32094-5-git-send-email-stefan@agner.ch>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 28, 2016 at 07:00:00PM -0700, Stefan Agner wrote:
-> Add driver for the TCON (timing controller) module. The TCON module
-> is a separate module attached after the DCU (display controller
-> unit). Each DCU instance has its own, directly connected TCON
-> instance. The DCU's RGB and timing signals are passing through
-> the TCON module. TCON can provide timing signals for raw TFT panels
-> or operate in a bypass mode which leaves all signals unaltered.
-> 
-> The driver currently only supports the bypass mode.
-> 
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> ---
->  .../devicetree/bindings/display/fsl,dcu.txt        |   2 +
->  .../devicetree/bindings/display/fsl,tcon.txt       |  18 ++++
->  drivers/gpu/drm/fsl-dcu/Makefile                   |   3 +-
->  drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.c          |   3 +
->  drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_drv.h          |   1 +
->  drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c          |  11 +++
->  drivers/gpu/drm/fsl-dcu/fsl_tcon.c                 | 108 +++++++++++++++++++++
->  drivers/gpu/drm/fsl-dcu/fsl_tcon.h                 |  33 +++++++
->  8 files changed, 178 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/display/fsl,tcon.txt
->  create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_tcon.c
->  create mode 100644 drivers/gpu/drm/fsl-dcu/fsl_tcon.h
-> 
-> diff --git a/Documentation/devicetree/bindings/display/fsl,dcu.txt b/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> index f299e1e..b19bf12 100644
-> --- a/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> +++ b/Documentation/devicetree/bindings/display/fsl,dcu.txt
-> @@ -14,6 +14,7 @@ Required properties:
->  Optional properties:
->  - clocks:		Second handle for pixel clock.
->  - clock-names:		Second name "pix" for pixel clock.
-> +- fsl,tcon:		The phandle to the timing controller node.
->  
->  Examples:
->  dcu: dcu@2ce0000 {
-> @@ -23,4 +24,5 @@ dcu: dcu@2ce0000 {
->  	clock-names = "dcu";
->  	big-endian;
->  	fsl,panel = <&panel>;
-> +	fsl,tcon = <&tcon>;
->  };
-> diff --git a/Documentation/devicetree/bindings/display/fsl,tcon.txt b/Documentation/devicetree/bindings/display/fsl,tcon.txt
-> new file mode 100644
-> index 0000000..2e1015e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/fsl,tcon.txt
-> @@ -0,0 +1,18 @@
-> +Device Tree bindings for Freescale TCON Driver
-> +
-> +Required properties:
-> +- compatible:		Should be one of
-> +	* "fsl,vf610-tcon".
-> +
-> +- reg:			Address and length of the register set for dcu.
-
-s/dcu/tcon/
-
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-> +- clocks:		From common clock binding: handle to tcon ipg clock.
-> +- clock-names:		From common clock binding: Shall be "ipg".
-> +
-> +Examples:
-> +timing-controller@4003d000 {
-> +	compatible = "fsl,vf610-tcon";
-> +	reg = <0x4003d000 0x1000>;
-> +	clocks = <&clks VF610_CLK_TCON0>;
-> +	clock-names = "ipg";
-> +	status = "okay";
-> +};
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBNYXIgMjgsIDIwMTYgYXQgMDY6NTk6NThQTSAtMDcwMCwgU3RlZmFuIEFnbmVyIHdy
+b3RlOgo+IFRoZSBWeWJyaWQgRENVIHZhcmlhbnQgaGFzIHR3byBpbmRlcGVuZGVudCBjbG9jayBp
+bnB1dHMsIG9uZQo+IGZvciB0aGUgcmVnaXN0ZXJzIChJUEcgYnVzIGNsb2NrKSBhbmQgb25lIGZv
+ciB0aGUgcGl4ZWwgY2xvY2suCj4gU3VwcG9ydCB0aGlzIGRpc3RpbmN0aW9uIGluIHRoZSBEQ1Ug
+RFJNIGRyaXZlciB3aGlsZSBzdGF5aW5nCj4gYmFja3dhcmQgY29tcGF0aWJsZSB3aXRoIGRldmlj
+ZXMgcHJvdmlkaW5nIG9ubHkgYSBzaW5nbGUgY2xvY2sKPiAoZS5nLiBMUzEwMjFhIFNvQydzKS4K
+CkknZCBzdXNwZWN0IHRoYXQgYm90aCBoYXZlIDIgY2xvY2tzLCBqdXN0IHRoZSBMUzEwMjFhIGVp
+dGhlciBkaWRuJ3QgCm1vZGVsIHRoZSBJUEcgY2xvY2sgb3IgY29ubmVjdHMgYm90aCB0byB0aGUg
+c2FtZSBzb3VyY2UuIFRoZSBkcml2ZXIgCnNob3VsZCBzdXBwb3J0IGJvdGgsIGJ1dCBhbGwgdGhl
+IGR0cydzIHNob3VsZCBiZSB1cGRhdGVkIHRvIGhhdmUgMiAKY2xvY2tzLgoKPiAKPiBTaWduZWQt
+b2ZmLWJ5OiBTdGVmYW4gQWduZXIgPHN0ZWZhbkBhZ25lci5jaD4KPiAtLS0KPiAgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQgfCAgNCArKysrCj4g
+IGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMuYyAgICAgICAgICAgIHwg
+IDIgKy0KPiAgZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX2RjdV9kcm1fZHJ2LmMgICAgICAg
+ICAgICAgfCAxNiArKysrKysrKysrKysrKystCj4gIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2Zz
+bF9kY3VfZHJtX2Rydi5oICAgICAgICAgICAgIHwgIDEgKwo+ICA0IGZpbGVzIGNoYW5nZWQsIDIx
+IGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQKPiBpbmRleCBlYmYx
+YmU5Li5mMjk5ZTFlIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2ZzbCxkY3UudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvZnNsLGRjdS50eHQKPiBAQCAtMTEsNiArMTEsMTAgQEAgUmVxdWly
+ZWQgcHJvcGVydGllczoKPiAgLSBiaWctZW5kaWFuCQlCb29sZWFuIHByb3BlcnR5LCBMUzEwMjFB
+IERDVSByZWdpc3RlcnMgYXJlIGJpZy1lbmRpYW4uCj4gIC0gZnNsLHBhbmVsOgkJVGhlIHBoYW5k
+bGUgdG8gcGFuZWwgbm9kZS4KPiAgCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gY2xvY2tz
+OgkJU2Vjb25kIGhhbmRsZSBmb3IgcGl4ZWwgY2xvY2suCj4gKy0gY2xvY2stbmFtZXM6CQlTZWNv
+bmQgbmFtZSAicGl4IiBmb3IgcGl4ZWwgY2xvY2suCgpEb2N1bWVudCB0aGVzZSBpbiBvbmUgcGxh
+Y2UgYW5kIGp1c3QgYWRkIGEgbm90ZSB0aGF0IExTMTAyMWEgb25seSBoYXMgMSAKY2xvY2suCgo+
+ICsKPiAgRXhhbXBsZXM6Cj4gIGRjdTogZGN1QDJjZTAwMDAgewo+ICAJY29tcGF0aWJsZSA9ICJm
+c2wsbHMxMDIxYS1kY3UiOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9m
+c2xfZGN1X2RybV9jcnRjLmMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
