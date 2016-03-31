@@ -1,65 +1,211 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v7 01/20] PM / devfreq: exynos: Add generic exynos bus
- frequency driver
-Date: Thu, 31 Mar 2016 21:28:32 +0900
-Message-ID: <CAGTfZH0mgxyQPKBTX=ZXgtSn=bQ2zAMSNMHfO+OXh3U5qrUr4g@mail.gmail.com>
-References: <1459415165-32613-1-git-send-email-cw00.choi@samsung.com>
-	<1459415165-32613-2-git-send-email-cw00.choi@samsung.com>
-	<56FD13D2.1050300@samsung.com>
-Reply-To: cw00.choi@samsung.com
+From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
+Subject: [PATCHv3 1/5] ARM: dts: imx6-tx6: remove regulator bus
+Date: Thu, 31 Mar 2016 14:33:41 +0200
+Message-ID: <1459427625-15568-2-git-send-email-LW@KARO-electronics.de>
+References: <1459427625-15568-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <56FD13D2.1050300@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: "myungjoo.ham@samsung.com" <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, =?UTF-8?Q?Krzysztof_Koz=C5=82owski?= <k.kozlowski@samsung.com>, Kukjin Kim <kgene@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Anand Moon <linux.amoon@gmail.com>, Markus Reichl <m.reichl@fivetechno.de>, Tobias Jakobi <tjakobi@math.uni-bielefeld.de>, "inki.dae@samsung.com" <inki.dae@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vg>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459427625-15568-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Williams <dan.j.williams@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 9:10 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> On 03/31/2016 11:05 AM, Chanwoo Choi wrote:
->
->> +static int exynos_bus_target(struct device *dev, unsigned long *freq, u32 flags)
->> +{
->
->> +     new_opp = devfreq_recommended_opp(dev, freq, flags);
->> +     if (IS_ERR_OR_NULL(new_opp)) {
->> +             dev_err(dev, "failed to get recommed opp instance\n");
->
-> s/recommed/recommended/
+DT maintainers don't like the 'simple-bus' container around the
+regulator nodes. So remove it.
 
-OK. I'll fix it.
+Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
+---
+ arch/arm/boot/dts/imx6qdl-tx6.dtsi | 166 +++++++++++++++++------------=
+--------
+ 1 file changed, 75 insertions(+), 91 deletions(-)
 
->
->> +             rcu_read_unlock();
->> +             return PTR_ERR(new_opp);
->> +     }
->
->> +}
->
->> +static int exynos_bus_probe(struct platform_device *pdev)
->> +{
->
->> +     bus->devfreq = devm_devfreq_add_device(dev, profile, "simple_ondemand",
->> +                                             ondemand_data);
->> +     if (IS_ERR_OR_NULL(bus->devfreq)) {
->> +             dev_err(dev, "failed to add devfreq device\n");
->> +             return  PTR_ERR(bus->devfreq);
->> +     }
->
->> +}
->
-> You should use IS_ERR() instead of IS_ERR_OR_NULL(), since functions
-> of which the return value is being tested return only ERR_PTR() values.
-> IS_ERR_OR_NULL() suggest NULL values are possible and then constructs
-> like
->         if (IS_ERR_OR_NULL(result))
->                 return PTR_ERR(result);
->
-> are not correct anyway.
-
-OK. I'll use IS_ERR() instead of IS_ERR_OR_NULL()
-
-Thanks,
-Chanwoo Choi
+diff --git a/arch/arm/boot/dts/imx6qdl-tx6.dtsi b/arch/arm/boot/dts/imx=
+6qdl-tx6.dtsi
+index afc6022..a3e37a7 100644
+--- a/arch/arm/boot/dts/imx6qdl-tx6.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-tx6.dtsi
+@@ -93,104 +93,88 @@
+ 		};
+ 	};
+=20
+-	regulators {
+-		compatible =3D "simple-bus";
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-		reg_3v3_etn: regulator@0 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <0>;
+-			regulator-name =3D "3V3_ETN";
+-			regulator-min-microvolt =3D <3300000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			pinctrl-names =3D "default";
+-			pinctrl-0 =3D <&pinctrl_etnphy_power>;
+-			gpio =3D <&gpio3 20 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	reg_3v3_etn: regulator-3v3-etn {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "3V3_ETN";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_etnphy_power>;
++		gpio =3D <&gpio3 20 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+=20
+-		reg_2v5: regulator@1 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <1>;
+-			regulator-name =3D "2V5";
+-			regulator-min-microvolt =3D <2500000>;
+-			regulator-max-microvolt =3D <2500000>;
+-			regulator-always-on;
+-		};
++	reg_2v5: regulator-2v5 {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "2V5";
++		regulator-min-microvolt =3D <2500000>;
++		regulator-max-microvolt =3D <2500000>;
++		regulator-always-on;
++	};
+=20
+-		reg_3v3: regulator@2 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <2>;
+-			regulator-name =3D "3V3";
+-			regulator-min-microvolt =3D <3300000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			regulator-always-on;
+-		};
++	reg_3v3: regulator-3v3 {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "3V3";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		regulator-always-on;
++	};
+=20
+-		reg_can_xcvr: regulator@3 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <3>;
+-			regulator-name =3D "CAN XCVR";
+-			regulator-min-microvolt =3D <3300000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			pinctrl-names =3D "default";
+-			pinctrl-0 =3D <&pinctrl_flexcan_xcvr>;
+-			gpio =3D <&gpio4 21 GPIO_ACTIVE_HIGH>;
+-			enable-active-low;
+-		};
++	reg_can_xcvr: regulator-can-xcvr {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "CAN XCVR";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_flexcan_xcvr>;
++		gpio =3D <&gpio4 21 GPIO_ACTIVE_HIGH>;
++		enable-active-low;
++	};
+=20
+-		reg_lcd0_pwr: regulator@4 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <4>;
+-			regulator-name =3D "LCD0 POWER";
+-			regulator-min-microvolt =3D <3300000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			pinctrl-names =3D "default";
+-			pinctrl-0 =3D <&pinctrl_lcd0_pwr>;
+-			gpio =3D <&gpio3 29 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-			regulator-boot-on;
+-			regulator-always-on;
+-		};
++	reg_lcd0_pwr: regulator-lcd0-pwr {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "LCD0 POWER";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_lcd0_pwr>;
++		gpio =3D <&gpio3 29 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-boot-on;
++	};
+=20
+-		reg_lcd1_pwr: regulator@5 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <5>;
+-			regulator-name =3D "LCD1 POWER";
+-			regulator-min-microvolt =3D <3300000>;
+-			regulator-max-microvolt =3D <3300000>;
+-			pinctrl-names =3D "default";
+-			pinctrl-0 =3D <&pinctrl_lcd1_pwr>;
+-			gpio =3D <&gpio2 31 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-			regulator-boot-on;
+-			regulator-always-on;
+-		};
++	reg_lcd1_pwr: regulator-lcd1-pwr {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "LCD1 POWER";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_lcd1_pwr>;
++		gpio =3D <&gpio2 31 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++		regulator-boot-on;
++	};
+=20
+-		reg_usbh1_vbus: regulator@6 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <6>;
+-			regulator-name =3D "usbh1_vbus";
+-			regulator-min-microvolt =3D <5000000>;
+-			regulator-max-microvolt =3D <5000000>;
+-			pinctrl-names =3D "default";
+-			pinctrl-0 =3D <&pinctrl_usbh1_vbus>;
+-			gpio =3D <&gpio3 31 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	reg_usbh1_vbus: regulator-usbh1-vbus {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "usbh1_vbus";
++		regulator-min-microvolt =3D <5000000>;
++		regulator-max-microvolt =3D <5000000>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_usbh1_vbus>;
++		gpio =3D <&gpio3 31 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+=20
+-		reg_usbotg_vbus: regulator@7 {
+-			compatible =3D "regulator-fixed";
+-			reg =3D <7>;
+-			regulator-name =3D "usbotg_vbus";
+-			regulator-min-microvolt =3D <5000000>;
+-			regulator-max-microvolt =3D <5000000>;
+-			pinctrl-names =3D "default";
+-			pinctrl-0 =3D <&pinctrl_usbotg_vbus>;
+-			gpio =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
+-			enable-active-high;
+-		};
++	reg_usbotg_vbus: regulator-usbotg-vbus {
++		compatible =3D "regulator-fixed";
++		regulator-name =3D "usbotg_vbus";
++		regulator-min-microvolt =3D <5000000>;
++		regulator-max-microvolt =3D <5000000>;
++		pinctrl-names =3D "default";
++		pinctrl-0 =3D <&pinctrl_usbotg_vbus>;
++		gpio =3D <&gpio1 7 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
+ 	};
+=20
+ 	sound {
+--=20
+2.1.4
