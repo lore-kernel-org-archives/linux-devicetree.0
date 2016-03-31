@@ -1,29 +1,84 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: 74x164: add dt support for nxp's 74x594
-Date: Thu, 31 Mar 2016 10:26:53 +0200
-Message-ID: <CACRpkdb5Yqw4dMqV1wBh2hL701XgxEWGDguVvuK2gvsmakj4eg@mail.gmail.com>
-References: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 04/18] ARM: dts: vf610: add on-chip SRAM
+Date: Thu, 31 Mar 2016 16:33:25 +0800
+Message-ID: <20160331083325.GX28207@tiger>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-5-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1457998330-8070-1-git-send-email-nicolassaenzj@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1457576219-7971-5-git-send-email-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Saenz Julienne <nicolassaenzj@gmail.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 12:32 AM, Nicolas Saenz Julienne
-<nicolassaenzj@gmail.com> wrote:
+On Wed, Mar 09, 2016 at 06:16:45PM -0800, Stefan Agner wrote:
+> Add Vybrids massive on-chip SRAM areas. Make use of the memory
+> region functionality to denominate the retained SRAM area in
+> LPSTOP2 and LPSTOP3.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
-> The chip is also an 8 bit shift register which works out of the box as a GPO
-> expander with this patch
->
-> Signed-off-by: Nicolas Saenz Julienne <nicolassaenzj@gmail.com>
+This one looks fine to me.  I was going to pick it up separately, but it
+doesn't apply.
 
-Patch applied.
+Shawn
 
-I'm not a compatible-string minimalist. Add as many as you
-like.
-
-Yours,
-Linus Walleij
+> ---
+>  arch/arm/boot/dts/vfxxx.dtsi | 37 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> index 909988d..b038ea4 100644
+> --- a/arch/arm/boot/dts/vfxxx.dtsi
+> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> @@ -91,6 +91,43 @@
+>  		interrupt-parent = <&gpc>;
+>  		ranges;
+>  
+> +		ocram0: sram@3f000000 {
+> +			compatible = "mmio-sram";
+> +			reg = <0x3f000000 0x40000>;
+> +
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0 0x3f000000 0x40000>;
+> +
+> +			stbyram1@0 {
+> +				reg = <0x0 0x4000>;
+> +				label = "stbyram1";
+> +				pool;
+> +			};
+> +
+> +			stbyram2@4000 {
+> +				reg = <0x4000 0xc000>;
+> +				label = "stbyram2";
+> +				pool;
+> +			};
+> +		};
+> +
+> +		ocram1: sram@3f040000 {
+> +			compatible = "mmio-sram";
+> +			reg = <0x3f040000 0x40000>;
+> +		};
+> +
+> +		gfxram0: sram@3f400000 {
+> +			compatible = "mmio-sram";
+> +			reg = <0x3f400000 0x80000>;
+> +		};
+> +
+> +		/* used by L2 cache */
+> +		gfxram1: sram@3f480000 {
+> +			compatible = "mmio-sram";
+> +			reg = <0x3f480000 0x80000>;
+> +		};
+> +
+>  		aips0: aips-bus@40000000 {
+>  			compatible = "fsl,aips-bus", "simple-bus";
+>  			#address-cells = <1>;
+> -- 
+> 2.7.2
+> 
+> 
