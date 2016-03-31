@@ -1,52 +1,52 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v5 0/2] clk: Add Artpec-6 SoC support
-Date: Thu, 31 Mar 2016 20:02:49 +0200
-Message-ID: <cover.1459447089.git.larper@axis.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
+From: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH resend v5 1/3] ASoC: cygnus: Add DT bindings for Broadcom
+ Cygnus audio
+Date: Thu, 31 Mar 2016 11:14:53 -0700
+Message-ID: <CAES42Na+wM6P5yB3tg+bxk88txQA+52kgL8uwFqEW1XO8LfUeQ@mail.gmail.com>
+References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
+ <1459277192-10942-2-git-send-email-simran.rai@broadcom.com> <20160331141308.GA9670@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160331141308.GA9670@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add clock support for the Artpec-6 SoC port. The ARM parts are merged in
-4.6-rc1.
+Hi Rob,
 
-Changes since v4:
-- Update the maintainer entry with the correct clock directory.
-- Implement split clock registration with early clocks through CLK_OF_DECLARE
-  and deferrable clocks through a platform driver.
+On Thu, Mar 31, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Mar 29, 2016 at 11:46:30AM -0700, Simran Rai wrote:
+>> From: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>> Add bindings for audio driver in Broadcom Cygnus.
+>>
+>> Signed-off-by: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../bindings/sound/brcm,cygnus-audio.txt           |   67 ++++++++++++++++++++
+>>  1 file changed, 67 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+>
+> I acked v3 of this already. Did something change? If not, please add
+> acks when sending new versions. If things did change, explain that here.
+There was a change made in v4 that introduced assigned-clocks,
+assigned-clock-parents, and assigned-clock-rates, to allow initial
+configuration of
+default parent clock and its frequency.
+>
+> And this v5 is not a resend if you didn't already send out v5 before.
+I had sent out v5 on March 01 but looks like it did not make it to
+through. Yesterday I sent out another patch (v6) to address Mark's
+comments. Can you please ack PATCH v6.
 
-Changes since v3:
-- The binding was corrected to handle two fractional divider clocks as input to
-  the clock controller.
-- Updated clk-artpec6.c to handle a distinct fractional divider input for each
-  i2s clock mux.
-
-Changes since v2:
-- Moved axis,artpec6-clkctrl.h to the first patch with the DT bindings.
-
-Changes since v1:
-- The driver now provides all clocks from the main clock controller block
-  through one DT node.
-- Added a header file for the clock indexes.
-- Refer to clock-bindings.txt in the bindings document.
-
-Lars Persson (2):
-  clk: add device tree binding for Artpec-6 clock controller
-  clk: add artpec-6 clock controller
-
- .../devicetree/bindings/clock/artpec6.txt          |  41 ++++
- MAINTAINERS                                        |   2 +-
- drivers/clk/Makefile                               |   1 +
- drivers/clk/axis/Makefile                          |   1 +
- drivers/clk/axis/clk-artpec6.c                     | 230 +++++++++++++++++++++
- include/dt-bindings/clock/axis,artpec6-clkctrl.h   |  38 ++++
- 6 files changed, 312 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/clock/artpec6.txt
- create mode 100644 drivers/clk/axis/Makefile
- create mode 100644 drivers/clk/axis/clk-artpec6.c
- create mode 100644 include/dt-bindings/clock/axis,artpec6-clkctrl.h
-
--- 
-2.1.4
-
+Thanks,
+Simran
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
