@@ -1,60 +1,79 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 2/2] PM / Domains: Retrieve PM QoS device latencies from DT
-Date: Thu, 31 Mar 2016 15:50:26 +0200
-Message-ID: <1459432226-22562-2-git-send-email-ulf.hansson@linaro.org>
-References: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org
-Cc: Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lina Iyer <lina.iyer@linaro.org>, Axel Haslam <ahaslam@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] mtd: nand: document the NAND controller/NAND chip DT representation
+Date: Thu, 31 Mar 2016 15:57:13 +0200
+Message-ID: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For the DT based device attach process, let's parse the device node for
-PM QoS latency properties and provide the result as the timing data when
-adding a device to its PM domain.
+Standardize the NAND controller/NAND chip DT representation. Now, all new
+NAND controller drivers should comply with this representation, even if
+they are only supporting a single NAND chip.
 
-In DT based platforms, this change allows a device to have initial correct
-latency values. In the ideal scenario it should mean that the calibration
-of these values shouldn't be needed by the genpd governor, but let's leave
-that as a future change to consider.
+Existing drivers can keep support for the old representation (where only
+the NAND chip was described), but are encouraged to also support the new
+one.
 
-Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/base/power/domain.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
+ 1 file changed, 36 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index 56705b5..f3302a9 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1790,6 +1790,7 @@ int genpd_dev_pm_attach(struct device *dev)
- {
- 	struct of_phandle_args pd_args;
- 	struct generic_pm_domain *pd;
-+	struct gpd_timing_data td;
- 	unsigned int i;
- 	int ret;
- 
-@@ -1824,10 +1825,16 @@ int genpd_dev_pm_attach(struct device *dev)
- 		return -EPROBE_DEFER;
- 	}
- 
-+	memset(&td, 0, sizeof(td));
-+	of_property_read_u64(dev->of_node, "suspend-latency",
-+			&td.suspend_latency_ns);
-+	of_property_read_u64(dev->of_node, "resume-latency",
-+			&td.resume_latency_ns);
+diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+index b53f92e..fbf5677 100644
+--- a/Documentation/devicetree/bindings/mtd/nand.txt
++++ b/Documentation/devicetree/bindings/mtd/nand.txt
+@@ -1,4 +1,23 @@
+-* MTD generic binding
++* NAND chip and NAND controller generic binding
 +
- 	dev_dbg(dev, "adding to PM domain %s\n", pd->name);
++NAND controller/NAND chip representation:
++
++The NAND controller should be represented with it's own DT node, and all
++NAND chips attached to this controller should be defined as children nodes
++of the NAND controller. This representation should be enforced even for
++simple controllers supporting only one chip.
++
++Mandatory NAND controller properties:
++- #address-cells: depends on your controller. Should at least be 1 to
++		  encode the CS line id.
++- #size-cells: depends on your controller. Put zero unless you need a
++	       mapping between CS lines and dedicated memory regions
++
++Optional NAND controller properties
++- ranges: only needed if you need to define a mapping between CS lines and
++	  memory regions
++
++Optional NAND chip properties:
  
- 	for (i = 1; i < GENPD_RETRY_MAX_MS; i <<= 1) {
--		ret = pm_genpd_add_device(pd, dev);
-+		ret = __pm_genpd_add_device(pd, dev, &td);
- 		if (ret != -EAGAIN)
- 			break;
- 
+ - nand-ecc-mode : String, operation mode of the NAND ecc mode.
+   Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
+@@ -19,3 +38,19 @@ errors per {size} bytes".
+ The interpretation of these parameters is implementation-defined, so not all
+ implementations must support all possible combinations. However, implementations
+ are encouraged to further specify the value(s) they support.
++
++Example:
++
++	nand-controller {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		/* controller specific properties */
++
++		nand@0 {
++			reg = <0>;
++			nand-ecc-mode = "soft_bch";
++
++			/* controller specific properties */
++		};
++	};
 -- 
-1.9.1
+2.5.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
