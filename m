@@ -1,52 +1,110 @@
-From: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH resend v5 1/3] ASoC: cygnus: Add DT bindings for Broadcom
- Cygnus audio
-Date: Thu, 31 Mar 2016 11:14:53 -0700
-Message-ID: <CAES42Na+wM6P5yB3tg+bxk88txQA+52kgL8uwFqEW1XO8LfUeQ@mail.gmail.com>
-References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
- <1459277192-10942-2-git-send-email-simran.rai@broadcom.com> <20160331141308.GA9670@rob-hp-laptop>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Thu, 31 Mar 2016 13:21:02 -0500
+Message-ID: <56FD6A8E.7030208@opensource.altera.com>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331141308.GA9670@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160330113532.GI3323@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Lee,
 
-On Thu, Mar 31, 2016 at 7:13 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Mar 29, 2016 at 11:46:30AM -0700, Simran Rai wrote:
->> From: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> Add bindings for audio driver in Broadcom Cygnus.
->>
->> Signed-off-by: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> Signed-off-by: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../bindings/sound/brcm,cygnus-audio.txt           |   67 ++++++++++++++++++++
->>  1 file changed, 67 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+On 03/30/2016 06:35 AM, Lee Jones wrote:
+> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
 >
-> I acked v3 of this already. Did something change? If not, please add
-> acks when sending new versions. If things did change, explain that here.
-There was a change made in v4 that introduced assigned-clocks,
-assigned-clock-parents, and assigned-clock-rates, to allow initial
-configuration of
-default parent clock and its frequency.
->
-> And this v5 is not a resend if you didn't already send out v5 before.
-I had sent out v5 on March 01 but looks like it did not make it to
-through. Yesterday I sent out another patch (v6) to address Mark's
-comments. Can you please ack PATCH v6.
+>> From: Thor Thayer <tthayer@opensource.altera.com>
+>>
 
-Thanks,
-Simran
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[..snip..]
+
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+>> @@ -0,0 +1,35 @@
+>> +* Altera Arria10 Development Kit System Resource Chip
+>> +
+>> +Required parent device properties:
+>> +- compatible : "altr,altr_a10sr"
+>> +- spi-max-frequency : Maximum SPI frequency.
+>> +- reg : the SPI Chip Select address for the Arria10 System Resource chip
+>
+> DT bindings are much easier to read in the following format:
+>
+> - compatible		: "altr,altr_a10sr"
+> - spi-max-frequency	: Maximum SPI frequency.
+> - reg			: the SPI Chip Select address for the Arria10 System Resource chip
+>
+> ... also, sentences start with an uppercase char.
+>
+
+OK.
+
+>> +The A10SR consists of this varied group of sub-devices:
+>> +
+>> +Device                   Description
+>> +------                   ----------
+>> +altr_a10sr_gpio          GPIO Controller
+>> +altr_a10sr_hwmon         Hardware Monitor
+>> +
+>> +The LEDs are implemented entirely in the device tree using
+>> +the gpio-led framework.
+>
+> This is a Linuxisum and should not live in DT bindings.
+>
+
+I was following the format of other mfd binding documents such as 
+Documentation/devicetree/bindings/mfd/da9055.txt so I'll need your help 
+understanding this.
+
+I'm not familiar with the phrase Linuxisum. A Google search turns up 
+several threads referencing Linuxisum but I can't seem to find the 
+definition. One thread seems to imply that an existing driver such as 
+GPIO is a Linuxisum and should not be re-defined. Am I understanding 
+correctly?
+
+>> +Example:
+>> +
+>> +        a10-sr: a10-sr@0 {
+>
+> Nodes should be named after their device 'type'.
+>
+> Does this device really start a address 0?
+
+OK. If I understand, this should be named after mfd then?
+>
+>> +		compatible = "altr,altr-a10sr";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <100000>;
+>> +
+>> +		a10sr_gpio: a10sr_gpio {
+>
+> Device type only please.
+
+And this would be a gpio?
+
+Thanks for your comments and for reviewing!
+
+>
+>> +			compatible = "altr,a10sr-gpio";
+>> +			gpio-controller;
+>> +			#gpio-cells = <2>;
+>> +			ngpios = <16>;
+>> +		};
+>> +
+>> +		a10sr_hwmon: a10sr_hwmon {
+>
+> Device type only please.
+>
+>> +			compatible = "altr,a10sr-hwmon";
+>> +		};
+>> +	};
+>
