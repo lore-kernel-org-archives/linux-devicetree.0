@@ -1,135 +1,65 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v7 1/5] of/serial: move earlycon early_param handling to
- serial
-Date: Thu, 31 Mar 2016 10:37:32 -0700
-Message-ID: <20160331173732.GA10567@kroah.com>
-References: <1459431629-27934-1-git-send-email-aleksey.makarov@linaro.org>
- <1459431629-27934-2-git-send-email-aleksey.makarov@linaro.org>
- <20160331163203.GC10256@kroah.com>
- <56FD5894.3060105@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] dt-binding: Add Qualcomm WCNSS control binding
+Date: Thu, 31 Mar 2016 12:38:13 -0500
+Message-ID: <CAL_JsqKbjUxOMbn00OOmwM1vvjRzC8RzX=4WA7WP+K2XYjOSMA@mail.gmail.com>
+References: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
+ <1459226126-16725-3-git-send-email-bjorn.andersson@linaro.org>
+ <20160331142817.GA22092@rob-hp-laptop> <20160331171625.GZ8929@tuxbot>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FD5894.3060105@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Aleksey Makarov <aleksey.makarov@linaro.org>
-Cc: Russell King <linux@arm.linux.org.uk>, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Peter Hurley <peter@hurleysoftware.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Zheng, Lv" <lv.zheng@intel.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160331171625.GZ8929@tuxbot>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 08:04:20PM +0300, Aleksey Makarov wrote:
-> 
-> 
-> On 03/31/2016 07:32 PM, Greg Kroah-Hartman wrote:
-> > On Thu, Mar 31, 2016 at 04:40:23PM +0300, Aleksey Makarov wrote:
-> >> From: Leif Lindholm <leif.lindholm@linaro.org>
-> >>
-> >> We have multiple "earlycon" early_param handlers - merge the DT one into
-> >> the main earlycon one.  It's a cleanup that also will be useful
-> >> to defer setting up DT console until ACPI/DT decision is made.
-> >>
-> >> Rename the exported function to avoid clashing with the function from
-> >> arch/microblaze/kernel/prom.c
-> >>
-> >> Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> >> Signed-off-by: Aleksey Makarov <aleksey.makarov@linaro.org>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> >> ---
-> >>  drivers/of/fdt.c              | 11 +----------
-> >>  drivers/tty/serial/earlycon.c |  2 +-
-> >>  include/linux/of_fdt.h        |  2 ++
-> >>  3 files changed, 4 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> >> index 3349d2a..b50f775 100644
-> >> --- a/drivers/of/fdt.c
-> >> +++ b/drivers/of/fdt.c
-> >> @@ -805,7 +805,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
-> >>  
-> >>  #ifdef CONFIG_SERIAL_EARLYCON
-> >>  
-> >> -static int __init early_init_dt_scan_chosen_serial(void)
-> >> +int __init early_init_dt_scan_chosen_stdout(void)
-> >>  {
-> >>  	int offset;
-> >>  	const char *p, *q, *options = NULL;
-> >> @@ -849,15 +849,6 @@ static int __init early_init_dt_scan_chosen_serial(void)
-> >>  	}
-> >>  	return -ENODEV;
-> >>  }
-> >> -
-> >> -static int __init setup_of_earlycon(char *buf)
-> >> -{
-> >> -	if (buf)
-> >> -		return 0;
-> >> -
-> >> -	return early_init_dt_scan_chosen_serial();
-> >> -}
-> >> -early_param("earlycon", setup_of_earlycon);
-> >>  #endif
-> >>  
-> >>  /**
-> >> diff --git a/drivers/tty/serial/earlycon.c b/drivers/tty/serial/earlycon.c
-> >> index 067783f..7aae655 100644
-> >> --- a/drivers/tty/serial/earlycon.c
-> >> +++ b/drivers/tty/serial/earlycon.c
-> >> @@ -209,7 +209,7 @@ static int __init param_setup_earlycon(char *buf)
-> >>  	 * don't generate a warning from parse_early_params() in that case
-> >>  	 */
-> >>  	if (!buf || !buf[0])
-> >> -		return 0;
-> >> +		return early_init_dt_scan_chosen_stdout();
-> >>  
-> >>  	err = setup_earlycon(buf);
-> >>  	if (err == -ENOENT || err == -EALREADY)
-> >> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> >> index 2fbe868..5cfe322 100644
-> >> --- a/include/linux/of_fdt.h
-> >> +++ b/include/linux/of_fdt.h
-> >> @@ -63,6 +63,7 @@ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
-> >>  				     int depth, void *data);
-> >>  extern int early_init_dt_scan_memory(unsigned long node, const char *uname,
-> >>  				     int depth, void *data);
-> >> +extern int early_init_dt_scan_chosen_stdout(void);
-> >>  extern void early_init_fdt_scan_reserved_mem(void);
-> >>  extern void early_init_fdt_reserve_self(void);
-> >>  extern void early_init_dt_add_memory_arch(u64 base, u64 size);
-> >> @@ -91,6 +92,7 @@ extern void early_get_first_memblock_info(void *, phys_addr_t *);
-> >>  extern u64 of_flat_dt_translate_address(unsigned long node);
-> >>  extern void of_fdt_limit_memory(int limit);
-> >>  #else /* CONFIG_OF_FLATTREE */
-> >> +static inline int early_init_dt_scan_chosen_stdout(void) { return -ENODEV; }
-> > 
-> > Doesn't this change the default logic?  Today you are returning 0 if you
-> > don't have this config option set,
-> 
-> I am not sure I understand this.  Which return value do you mean?
-> 
-> 1. early_init_dt_scan_chosen_stdout()
-> 
-> Today if CONFIG_OF_FLATTREE is not set then early_init_dt_scan_chosen_stdout() does not exist.
+On Thu, Mar 31, 2016 at 12:16 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Thu 31 Mar 07:28 PDT 2016, Rob Herring wrote:
+>
+>> On Mon, Mar 28, 2016 at 09:35:24PM -0700, Bjorn Andersson wrote:
+> [..]
 
-It "exists" in that you return -ENODEV, right?  Look at the place where
-you called this function, previously you returned 0, now you return this
-function call's return value.
+[...]
 
-> 2. param_setup_earlycon()
-> 
-> Today we have 2 handlers for "earlycon" option.  One (in fdt.c) is for the option without args,
-> and another (earlycon.c) always expects agrs.  But both return 0 for the opposite cases becasue they
-> can not check what another hander returns.
-> 
-> Now we have just one handler and it can return correct value.
+>> > +
+>> > +== WiFi
+>> > +The following properties are defined to the WiFi node:
+>> > +
+>> > +- compatible:
+>> > +   Usage: required
+>> > +   Value type: <string>
+>> > +   Definition: must be one of:
+>> > +               "qcom,wcn3620-wlan",
+>> > +               "qcom,wcn3660-wlan",
+>> > +               "qcom,wcn3680-wlan"
+>
+> Digging through documentation and trying to answer the questions above
+> made me realize that these numbers are for the external rf component,
+> not the variants of the logic inside the SoC; and as such wrong.
 
-I don't understand.
+Do you need to know both? Or only the firmware image needs to know?
 
-> >  and now you return -ENODEV, did you
-> > test this out?
-> 
-> Yes, I tested it.
+>> > +
+>> > +- qcom,wcnss-mmio:
+>> > +   Usage: required
+>> > +   Value type: <prop-encoded-array>
+>> > +   Definition: should specify base address and size of the WiFi related
+>> > +               registers of WCNSS
+>>
+>> This is an address visible to the cpu?
+>>
+>
+> Yes it is; the device is controlled both through SMD and mmio accessible
+> registers, where the SMD interface is the primary interface.
+>
+> SMD being the primary "bus" I believe I can't use reg to denote this
+> register range. Should I describe this in some other form?
 
-On what platforms?  With what configurations?
+That's a tricky one. I would create a node for the memory-mapped
+portion with proper compatible and reg properties, and then make this
+a phandle to that node. Something similar to how we do phandles to
+syscon's.
 
-thanks,
-
-greg k-h
+Rob
