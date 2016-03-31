@@ -1,42 +1,35 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Fri, 1 Apr 2016 00:01:19 +0530
-Message-ID: <56FD6CF7.5080909@nvidia.com>
-References: <56E81103.8010903@nvidia.com> <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com> <56ED0F58.7060005@nvidia.com> <56FBD4A3.7080208@nvidia.com> <20160330181623.GQ2350@sirena.org.uk> <56FCCC60.3080303@nvidia.com> <20160331165145.GF2350@sirena.org.uk> <56FD5A9F.5050001@nvidia.com> <20160331174741.GO2350@sirena.org.uk> <56FD62BA.3040406@nvidia.com> <20160331183130.GR2350@sirena.org.uk>
+From: <tthayer@opensource.altera.com>
+Subject: [PATCHv2 0/7] Add Altera Arria10 OCRAM EDAC support
+Date: Thu, 31 Mar 2016 13:48:00 -0500
+Message-ID: <1459450087-24792-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331183130.GR2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer@opensource.altera.com
 List-Id: devicetree@vger.kernel.org
 
+From: Thor Thayer <tthayer@opensource.altera.com>
 
-On Friday 01 April 2016 12:01 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Thu, Mar 31, 2016 at 11:17:38PM +0530, Laxman Dewangan wrote:
->
->> HW and chip team did simulation with tegra and PMIC and found that the board
->> needs more capacitance then what Vendor recommended for proper signal
->> conditioning on interface. So they put the difference capactitance value and
->> this causes deviation in ramp delay from advertised value. In out design, we
->> measured the ramp time as 50mv/us when PMIC is configured for 100mV/us.
->> So for all settling time, we need to use the ramp as 50mV/us.
->>  From DT, I will provide regulator-ramp-delay as 50mv/us.
->> But I do not have property for saying 100mv/us for PMIC configurations and
->> this is what makes need of 2nd property.
-> So the PMIC actually has a setting for the rate you're seeing but for
-> some resaon you can't use it?
+This series of patches adds the Arria10 OCRAM EDAC support
 
-PMIC has the different rate setting what I am seeing on platform (measured).
-HW team measured the ramp dealy with specific configuration of rate 
-setting on PMIC which is not default (OTP-One time programmed from Vendor).
+Thor Thayer (7):
+  EDAC, altera: New file operations for Arria10 ECC modules
+  EDAC, altera: Add register offset for ECC Enable
+  EDAC, altera: Make OCRAM ECC dependency check generic
+  Documentation: dt: socfpga: Add Altera Arria10 OCRAM binding
+  EDAC, altera: Addition of Arria10 OCRAM ECC
+  ARM: socfpga: Enable Arria10 OCRAM ECC on startup
+  ARM: dts: Add Altera Arria10 OCRAM EDAC devicetree entry
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../bindings/arm/altera/socfpga-eccmgr.txt         |   10 ++
+ arch/arm/boot/dts/socfpga_arria10.dtsi             |    5 +
+ arch/arm/mach-socfpga/ocram.c                      |  128 ++++++++++++++++++++
+ drivers/edac/altera_edac.c                         |  127 +++++++++++++++----
+ drivers/edac/altera_edac.h                         |   37 ++++++
+ 5 files changed, 284 insertions(+), 23 deletions(-)
+
+-- 
+1.7.9.5
+
