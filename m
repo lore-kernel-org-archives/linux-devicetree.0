@@ -1,7 +1,7 @@
 From: <tthayer@opensource.altera.com>
-Subject: [PATCHv2 1/7] EDAC, altera: New file operations for Arria10 ECC modules
-Date: Thu, 31 Mar 2016 13:48:01 -0500
-Message-ID: <1459450087-24792-2-git-send-email-tthayer@opensource.altera.com>
+Subject: [PATCHv2 3/7] EDAC, altera: Make OCRAM ECC dependency check generic
+Date: Thu, 31 Mar 2016 13:48:03 -0500
+Message-ID: <1459450087-24792-4-git-send-email-tthayer@opensource.altera.com>
 References: <1459450087-24792-1-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,70 +14,79 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@opensource.altera.com>
 
-In preparation for the Arria10 peripheral ECCs, new file
-operations are used because the Arria10 IRQ trigger mechanism
-is different than Cyclone5/Arria5 and Arria10 L2 cache.
-
-Add new pointer for file operations function to ecc data
-structure and point to current file operations function.
+In preparation for the Arria10 peripheral ECCs, the OCRAM
+ECC dependency check was moved into the general ECC area
+since this same function can be used by other memories.
 
 Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 ---
 v2: No change
 ---
- drivers/edac/altera_edac.c |    5 ++++-
- drivers/edac/altera_edac.h |    1 +
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ drivers/edac/altera_edac.c |   43 +++++++++++++++++++++----------------------
+ 1 file changed, 21 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 0afdc58..fb6fe56 100644
+index f0a6de7..f7ffc77 100644
 --- a/drivers/edac/altera_edac.c
 +++ b/drivers/edac/altera_edac.c
-@@ -668,7 +668,7 @@ static void altr_create_edacdev_dbgfs(struct edac_device_ctl_info *edac_dci,
- 
- 	if (!edac_debugfs_create_file(priv->dbgfs_name, S_IWUSR,
- 				      drvdata->debugfs_dir, edac_dci,
--				      &altr_edac_device_inject_fops))
-+				      priv->inject_fops))
- 		debugfs_remove_recursive(drvdata->debugfs_dir);
+@@ -648,6 +648,26 @@ static ssize_t altr_edac_device_trig(struct file *file,
+ 	return count;
  }
  
-@@ -886,6 +886,7 @@ const struct edac_device_prv_data ocramecc_data = {
- 	.ue_set_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_INJD),
- 	.set_err_ofst = ALTR_OCR_ECC_REG_OFFSET,
- 	.trig_alloc_sz = ALTR_TRIG_OCRAM_BYTE_SIZE,
-+	.inject_fops = &altr_edac_device_inject_fops,
- };
++/*
++ *  Test for memory's ECC dependencies upon entry because platform specific
++ *  startup should have initialized the memory and enabled the ECC.
++ *  Can't turn on ECC here because accessing un-initialized memory will
++ *  cause CE/UE errors possibly causing an ABORT.
++ */
++static int altr_check_ecc_deps(struct altr_edac_device_dev *device)
++{
++	void __iomem  *base = device->base;
++	const struct edac_device_prv_data *prv = device->data;
++
++	if (readl(base + prv->ecc_en_ofst) & prv->ecc_enable_mask)
++		return 0;
++
++	edac_printk(KERN_ERR, EDAC_DEVICE,
++		    "%s: No ECC present or ECC disabled.\n",
++		    device->edac_dev_name);
++	return -ENODEV;
++}
++
+ static const struct file_operations altr_edac_device_inject_fops = {
+ 	.open = simple_open,
+ 	.write = altr_edac_device_trig,
+@@ -853,29 +873,8 @@ static void ocram_free_mem(void *p, size_t size, void *other)
+ 	gen_pool_free((struct gen_pool *)other, (u32)p, size);
+ }
  
- #endif	/* CONFIG_EDAC_ALTERA_OCRAM */
-@@ -975,6 +976,7 @@ const struct edac_device_prv_data l2ecc_data = {
- 	.ue_set_mask = (ALTR_L2_ECC_EN | ALTR_L2_ECC_INJD),
- 	.set_err_ofst = ALTR_L2_ECC_REG_OFFSET,
- 	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
-+	.inject_fops = &altr_edac_device_inject_fops,
- };
- 
- const struct edac_device_prv_data a10_l2ecc_data = {
-@@ -991,6 +993,7 @@ const struct edac_device_prv_data a10_l2ecc_data = {
- 	.set_err_ofst = ALTR_A10_L2_ECC_INJ_OFST,
- 	.ecc_irq_handler = altr_edac_a10_l2_irq,
- 	.trig_alloc_sz = ALTR_TRIG_L2C_BYTE_SIZE,
-+	.inject_fops = &altr_edac_device_inject_fops,
- };
- 
- #endif	/* CONFIG_EDAC_ALTERA_L2C */
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index b0a17d0..c995388 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -262,6 +262,7 @@ struct edac_device_prv_data {
- 	irqreturn_t (*ecc_irq_handler)(struct altr_edac_device_dev *dci,
- 				       bool sb);
- 	int trig_alloc_sz;
-+	const struct file_operations *inject_fops;
- };
- 
- struct altr_edac_device_dev {
+-/*
+- * altr_ocram_check_deps()
+- *	Test for OCRAM cache ECC dependencies upon entry because
+- *	platform specific startup should have initialized the
+- *	On-Chip RAM memory and enabled the ECC.
+- *	Can't turn on ECC here because accessing un-initialized
+- *	memory will cause CE/UE errors possibly causing an ABORT.
+- */
+-static int altr_ocram_check_deps(struct altr_edac_device_dev *device)
+-{
+-	void __iomem  *base = device->base;
+-	const struct edac_device_prv_data *prv = device->data;
+-
+-	if (readl(base + prv->ecc_en_ofst) & prv->ecc_enable_mask)
+-		return 0;
+-
+-	edac_printk(KERN_ERR, EDAC_DEVICE,
+-		    "OCRAM: No ECC present or ECC disabled.\n");
+-	return -ENODEV;
+-}
+-
+ const struct edac_device_prv_data ocramecc_data = {
+-	.setup = altr_ocram_check_deps,
++	.setup = altr_check_ecc_deps,
+ 	.ce_clear_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_SERR),
+ 	.ue_clear_mask = (ALTR_OCR_ECC_EN | ALTR_OCR_ECC_DERR),
+ 	.dbgfs_name = "altr_ocram_trigger",
 -- 
 1.7.9.5
 
