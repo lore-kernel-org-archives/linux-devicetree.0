@@ -1,59 +1,40 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v3 15/16] usb: musb: da8xx: Use devm in probe
-Date: Thu, 31 Mar 2016 17:28:48 -0500
-Message-ID: <56FDA4A0.6080106@lechnology.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-16-git-send-email-david@lechnology.com>
- <20160331222112.GA28044@uda0271908>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH 0/4] perf: Add APM X-Gene SoC Performance Monitoring Unit driver
+Date: Thu, 31 Mar 2016 16:37:48 -0700
+Message-ID: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331222112.GA28044@uda0271908>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2016 05:21 PM, Bin Liu wrote:
+perf: Add APM X-Gene SoC Performance Monitoring Unit driver
 
->> -	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
->> +	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
->>   	if (!glue) {
->>   		dev_err(&pdev->dev, "failed to allocate glue context\n");
->> -		goto err0;
->> +		return -ENOMEM;
->>   	}
->>
->> -	clk = clk_get(&pdev->dev, "usb20");
->> +	clk = devm_clk_get(&pdev->dev, "usb20");
->>   	if (IS_ERR(clk)) {
->>   		dev_err(&pdev->dev, "failed to get clock\n");
->> -		ret = PTR_ERR(clk);
->> -		goto err3;
->> +		return PTR_ERR(clk);
->
-> memory leak due to not kfree(glue).
+In addition to the X-Gene ARM CPU performance monitoring unit (PMU), there
+are PMU for the SoC system devices such as L3 cache(s), I/O bridge(s),
+memory controller bridges and memory. These PMU devices are loosely
+architected to follow the same model as the PMU for ARM cores.
 
-It is my understanding that since glue is allocated with devm_kzalloc(), 
-that if the probe function returns and error, glue and everything else 
-allocated with devm_* will be automatically freed.
+Signed-off-by: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
 
-If this is not the case, wouldn't devm_kfree() be the appropriate 
-function instead?
+Tai Nguyen (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC PMU driver
+  Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+  perf: xgene: Add APM X-Gene SoC Performance Monitoring Unit driver
+  arm64: dts: apm: Add APM X-Gene SoC PMU DTS entries
 
+ .../devicetree/bindings/perf/apm-xgene-pmu.txt     |  116 ++
+ MAINTAINERS                                        |    7 +
+ arch/arm64/boot/dts/apm/apm-storm.dtsi             |   60 +
+ drivers/perf/Kconfig                               |    7 +
+ drivers/perf/Makefile                              |    1 +
+ drivers/perf/xgene_pmu.c                           | 1447 ++++++++++++++++++++
+ 6 files changed, 1638 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ create mode 100644 drivers/perf/xgene_pmu.c
 
->> @@ -576,8 +569,6 @@ static int da8xx_remove(struct platform_device *pdev)
->>   	platform_device_unregister(glue->musb);
->>   	usb_phy_generic_unregister(glue->phy);
->>   	clk_disable(glue->clk);
->> -	clk_put(glue->clk);
->> -	kfree(glue);
->
-> Doesn't match with $subject, I'd put them into a seperate patch.
-
-
-I disagree. Since these are now automatically freed because of changes 
-in the probe function, these changes belong in the same patch.
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
