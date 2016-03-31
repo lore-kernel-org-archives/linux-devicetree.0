@@ -1,102 +1,129 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCHv2 7/8] ARM: dts: imx6: add support for more Ka-Ro
- electronics modules
-Date: Thu, 31 Mar 2016 08:29:44 +0200
-Message-ID: <20160331082944.3f604423@ipc1.ka-ro>
-References: <1457424244-14549-1-git-send-email-LW@KARO-electronics.de>
-	<1457424244-14549-8-git-send-email-LW@KARO-electronics.de>
-	<20160331061023.GO28207@tiger>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] usb: phy: mxs: Add DT bindings to configure TX
+ settings
+Date: Thu, 31 Mar 2016 14:49:31 +0800
+Message-ID: <20160331064931.GA3799@peterchendt>
+References: <20160318211936.GA4158@rob-hp-laptop>
+ <1458577947-12614-1-git-send-email-jaret.cantu@timesys.com>
+ <20160323043638.GA18462@peterchendt>
+ <56F2D43D.1040404@timesys.com>
+ <56F2DDB7.7070700@timesys.com>
+ <20160324022117.GA5301@peterchendt>
+ <874mboqmwh.fsf@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160331061023.GO28207@tiger>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Dan Williams <dan.j.williams@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <874mboqmwh.fsf-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Mar 30, 2016 at 01:29:34PM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+> > [ text/plain ]
+> > On Wed, Mar 23, 2016 at 02:17:27PM -0400, Jaret Cantu wrote:
+> >> On 03/23/2016 01:37 PM, Jaret Cantu wrote:
+> >> >On 03/23/2016 12:36 AM, Peter Chen wrote:
+> >> >>On Mon, Mar 21, 2016 at 12:32:27PM -0400, Jaret Cantu wrote:
+> >> >>>The TX settings can be calibrated for particular hardware.  The
+> >> >>>phy is reset by Linux, so this cannot be handled by the bootloader.
+> >> >>>
+> >> >>>The TRM mentions that the maximum resistance should be used for the
+> >> >>>DN/DP calibration in order to pass USB certification.
+> >> >>>
+> >> >>>The values for the TX registers are poorly described in the TRM.
+> >> >>>The meanings of the register values were taken from another
+> >> >>>Freescale-provided document:
+> >> >>>https://community.freescale.com/message/566147#comment-566912
+> >> >>>
+> >> >>>Signed-off-by: Jaret Cantu <jaret.cantu-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>
+> >> >>>---
+> >> >>>v3. Added unit suffix (-ohms) to tx-cal-45-d*
+> >> >>>
+> >> >>>v2. Copying devicetree list
+> >> >>>     Removed prettifying extra whitespace
+> >> >>>     Removed unnecessary register rewrite on resume
+> >> >>>     Use min and max constants for clarity
+> >> >>>
+> >> >>>  .../devicetree/bindings/phy/mxs-usb-phy.txt        |   10 ++++
+> >> >>>  drivers/usb/phy/phy-mxs-usb.c                      |   58
+> >> >>>++++++++++++++++++++
+> >> >>>  2 files changed, 68 insertions(+)
+> >> >>>
+> >> >>>diff --git a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >> >>>b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >> >>>index 379b84a..1d25b04 100644
+> >> >>>--- a/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >> >>>+++ b/Documentation/devicetree/bindings/phy/mxs-usb-phy.txt
+> >> >>>@@ -12,6 +12,16 @@ Required properties:
+> >> >>>  - interrupts: Should contain phy interrupt
+> >> >>>  - fsl,anatop: phandle for anatop register, it is only for imx6 SoC
+> >> >>>series
+> >> >>>
+> >> >>>+
+> >> >>>+    if (!of_property_read_u32(np, "fsl,tx-d-cal", &val) &&
+> >> >>>+        val >= MXS_PHY_TX_D_CAL_MIN && val <= MXS_PHY_TX_D_CAL_MAX) {
+> >> >>>+        /* scale to 4-bit value */
+> >> >>>+        val = (MXS_PHY_TX_D_CAL_MAX - val) * 0xF
+> >> >>>+            / (MXS_PHY_TX_D_CAL_MAX - MXS_PHY_TX_D_CAL_MIN);
+> >> >>>+        mxs_phy->tx_reg_mask |= GM_USBPHY_TX_D_CAL(~0);
+> >> >>>+        mxs_phy->tx_reg_set  |= GM_USBPHY_TX_D_CAL(val);
+> >> >>>+    }
+> >> >>>+
+> >> >>
+> >> >>I have tested "tx-d-cal", but it seems incorrect according to the xls you
+> >> >>have provided, would you please check it again or am I wrong?
+> >> >
+> >> >Gah! You're right. Some of the D_CAL values need to be rounded up to
+> >> >match the xls.  And even then, the value for 86 still doesn't play nice.
+> >> >  I was really hoping to avoid using a table for these values.
+> >> >
+> >> >The TXCALDP/DN values use a much simpler 1-to-1 scale across the 16
+> >> >possible register values and so are unaffected by a similar issue.  I
+> >> >rechecked their numbers just to be sure.
+> >> 
+> >> The solution looks to be to scale D_CAL starting from 80 instead of
+> >> 79.  If you look at the xls listing, the jump from 79 to 83 is the
+> >> only time two adjacent register values result in a change greater
+> >> than 2% or 3%.
+> >> 
+> >> This will result in some code ugliness as the minimum allowed
+> >> percentage (79), per the Freescale document, and the point at which
+> >> we are scaling the percentage values to register values (80) are
+> >> different.
+> >> 
+> >> And, as mentioned before, the values will also have to be rounded up.
+> >> 
+> >> This quick shell code confirms that these sorts of calculations
+> >> match up with the values in the spreadsheet:
+> >> 
+> >> for d in 119 116 114 112 109 106 103 100 97 95 93 90 88 86 83 79; do
+> >> echo "$d="$(( ( (119-$d) * 0xf + (119-80)/2 ) / (119-80) ));
+> >> d=$((d+1)); done
+> >> 
+> >> 
+> >> I can't find any formula which would hit all of those same
+> >> percentages without rounding up.
+> >> 
+> >
+> > Then, we had to use table for it. Besides, IC team confirms the default 
+> > value and the step for TXCAL45DP/DN are changed at next generation SoCs,
+> > so I am wondering how we describe it at binding doc.
+> 
+> so I take it we're not yet ready to move forward with this ?
+> 
 
-On Thu, 31 Mar 2016 14:10:23 +0800 Shawn Guo wrote:
-> On Tue, Mar 08, 2016 at 09:04:03AM +0100, Lothar Wa=C3=9Fmann wrote:
-> > Add support for the following i.MX6 based modules from Ka-Ro
-> > electronics GmbH:
-> > TX6S-8034:
-> > Processor    Freescale i.MX 6 Solo, 800MHz
-> > RAM          256MiB DDR3 SDRAM
-> > ROM          128MiB NAND Flash
-> > Power supply Single 3.1V to 5.5V
-> > Size         31mm SO-DIMM
-> > Temp. Range  industrial grade (-40=C2=B0C/-25=C2=B0C to 105=C2=B0C =
-Tj)
-> >=20
-> > TX6S-8035:
-> > Processor    Freescale i.MX 6 Solo, 800MHz
-> > RAM          512MiB DDR3 SDRAM
-> > ROM          4GiB eMMC
-> > Power supply Single 3.1V to 5.5V
-> > Size         31mm SO-DIMM
-> > Temp. Range  industrial grade (-40=C2=B0C/-25=C2=B0C to 105=C2=B0C =
-Tj)
-> >=20
-> > TX6U-8033:
-> > Processor    Freescale i.MX 6 Dual Lite, 800MHz
-> > RAM          1GiB DDR3 SDRAM
-> > ROM          4GiB eMMC
-> > Power supply Single 3.1V to 5.5V
-> > Size         31mm SO-DIMM
-> > Temp. Range  industrial grade (-40=C2=B0C/-25=C2=B0C to 105=C2=B0C =
-Tj)
-> >=20
-> > TX6Q-1036:
-> > Processor    Freescale i.MX 6Quad, 1GHz
-> > RAM          1GB DDR3 SDRAM 64-bit
-> > ROM          8GiB eMMC
-> > Power supply Single 3.1V to 5.5V
-> > Size         31mm SO-DIMM
-> > Temp. Range  Extended Consumer Grade (-20=C2=B0C to 105=C2=B0C Tj)
-> >=20
-> > Signed-off-by: Lothar Wa=C3=9Fmann <LW@KARO-electronics.de>
-> > ---
-> >  arch/arm/boot/dts/Makefile             |   4 +
-> >  arch/arm/boot/dts/imx6dl-tx6s-8034.dts | 249 +++++++++++++++++++++=
-+++++++
-> >  arch/arm/boot/dts/imx6dl-tx6s-8035.dts | 246 +++++++++++++++++++++=
-++++++
-> >  arch/arm/boot/dts/imx6dl-tx6u-8033.dts | 248 +++++++++++++++++++++=
-++++++
-> >  arch/arm/boot/dts/imx6q-tx6q-1036.dts  | 295 +++++++++++++++++++++=
-++++++++++++
-> >  5 files changed, 1042 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx6dl-tx6s-8034.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6dl-tx6s-8035.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6dl-tx6u-8033.dts
-> >  create mode 100644 arch/arm/boot/dts/imx6q-tx6q-1036.dts
-> >=20
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefil=
-e
-> > index 072294f..71b5cd3 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -320,6 +320,9 @@ dtb-$(CONFIG_SOC_IMX6Q) +=3D \
-> >  	imx6dl-sabrelite.dtb \
-> >  	imx6dl-sabresd.dtb \
-> >  	imx6dl-tx6dl-comtft.dtb \
-> > +	imx6dl-tx6s-8034.dtb \
-> > +	imx6dl-tx6s-8035.dtb \
-> > +	imx6dl-tx6u-8033.dtb \
->=20
-> imx6dl-tx6u-8033.dtb should go after imx6dl-tx6u-801x.dtb?
->=20
-Of course. I obviously missed this when dropping the patch to rename
-the dtb files which you rejected.
+No, we still haven't a formal solution.
 
-
-NB: There is no need to quote the full original mail when you have no
-further comments on the remaining part. This would save people
-from having to scroll through the mail needlessly looking for further
-comments.
-
-
-Lothar Wa=C3=9Fmann
+-- 
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
