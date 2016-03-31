@@ -1,41 +1,38 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Fri, 1 Apr 2016 00:09:18 +0530
-Message-ID: <56FD6ED6.3020507@nvidia.com>
-References: <56ED0F58.7060005@nvidia.com> <56FBD4A3.7080208@nvidia.com> <20160330181623.GQ2350@sirena.org.uk> <56FCCC60.3080303@nvidia.com> <20160331165145.GF2350@sirena.org.uk> <56FD5A9F.5050001@nvidia.com> <20160331174741.GO2350@sirena.org.uk> <56FD62BA.3040406@nvidia.com> <20160331183130.GR2350@sirena.org.uk> <56FD6CF7.5080909@nvidia.com> <20160331184553.GS2350@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331184553.GS2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: [PATCH v12 1/9] fixed typo in ufshcd-pltfrm
+Date: Thu, 31 Mar 2016 19:57:14 +0100
+Message-ID: <b5d74b13bec27b43fcfe0b386e595578735f020e.1459448160.git.jpinto@synopsys.com>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1459448160.git.jpinto@synopsys.com>
+In-Reply-To: <cover.1459448160.git.jpinto@synopsys.com>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tomas.winkler@intel.com
+Cc: vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com, Joao Pinto <Joao.Pinto@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
+Fixed typo in ufshcd-pltfrm.
 
-On Friday 01 April 2016 12:15 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Fri, Apr 01, 2016 at 12:01:19AM +0530, Laxman Dewangan wrote:
->> On Friday 01 April 2016 12:01 AM, Mark Brown wrote:
->>> So the PMIC actually has a setting for the rate you're seeing but for
->>> some resaon you can't use it?
->> PMIC has the different rate setting what I am seeing on platform (measured).
->> HW team measured the ramp dealy with specific configuration of rate setting
->> on PMIC which is not default (OTP-One time programmed from Vendor).
-> That doesn't tell me what happens if you just configure the device to
-> deliver the rate you're observing...
+Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+---
+Changes v0->v12:
+- Nothing changed (just to keep up with patch set version).
 
-The setting for observed value is not there for device configuration.
+ drivers/scsi/ufs/ufshcd-pltfrm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Device support 5mV/us and 100mV/us.
-
-We observed 50mV/us when setting device to 100mV/us.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/scsi/ufs/ufshcd-pltfrm.c b/drivers/scsi/ufs/ufshcd-pltfrm.c
+index d2a7b12..0522891 100644
+--- a/drivers/scsi/ufs/ufshcd-pltfrm.c
++++ b/drivers/scsi/ufs/ufshcd-pltfrm.c
+@@ -353,6 +353,6 @@ EXPORT_SYMBOL_GPL(ufshcd_pltfrm_init);
+ 
+ MODULE_AUTHOR("Santosh Yaragnavi <santosh.sy@samsung.com>");
+ MODULE_AUTHOR("Vinayak Holikatti <h.vinayak@samsung.com>");
+-MODULE_DESCRIPTION("UFS host controller Pltform bus based glue driver");
++MODULE_DESCRIPTION("UFS host controller Platform bus based glue driver");
+ MODULE_LICENSE("GPL");
+ MODULE_VERSION(UFSHCD_DRIVER_VERSION);
+-- 
+1.8.1.5
