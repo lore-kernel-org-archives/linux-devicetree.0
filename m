@@ -1,70 +1,65 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Thu, 31 Mar 2016 10:47:41 -0700
-Message-ID: <20160331174741.GO2350@sirena.org.uk>
-References: <56D65F7E.3090907@nvidia.com>
- <20160302043506.GC18327@sirena.org.uk>
- <56E81103.8010903@nvidia.com>
- <CAJAp7OgUjN+Ymh+vM8g9Wex0JDRSOFkvpTKHm8fXYkDgTQ+0Tw@mail.gmail.com>
- <56ED0F58.7060005@nvidia.com>
- <56FBD4A3.7080208@nvidia.com>
- <20160330181623.GQ2350@sirena.org.uk>
- <56FCCC60.3080303@nvidia.com>
- <20160331165145.GF2350@sirena.org.uk>
- <56FD5A9F.5050001@nvidia.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 02/18] ARM: dts: vf610: add GPC as new interrupt parent
+Date: Thu, 31 Mar 2016 10:53:44 -0700
+Message-ID: <5c2e731d0fc986bc680a582584efee19@agner.ch>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-3-git-send-email-stefan@agner.ch>
+ <20160331082137.GW28207@tiger>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="MCBkylF/aX/f/TlX"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56FD5A9F.5050001-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160331082137.GW28207@tiger>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2016-03-31 01:21, Shawn Guo wrote:
+> On Wed, Mar 09, 2016 at 06:16:43PM -0800, Stefan Agner wrote:
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> 
+> So this patch cannot be applied before the fsl,vf610-gpc driver gets
+> landed on mainline.
 
---MCBkylF/aX/f/TlX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes!
 
-On Thu, Mar 31, 2016 at 10:43:03PM +0530, Laxman Dewangan wrote:
-
-> We need two properties, one what we measured in platform and second one f=
-or
-> what we want to program PMIC. This is for the case where vendor advertised
-> ramp delay is not same as measured due to platform design.
-
-What makes you say that we need two properties? =20
-
-> Based on discussion, regulator-ramp-delay is for measured ramp delay in
-> platform. So we will need another property for configuring PMIC.
-
-So as well as delaying in the kernel to cover the ramp time you want to
-configure something in the PMIC?  What are you trying to configure in
-the PMIC?  How will the PMIC driver meaningfully interpret a generic
-property given that the whole point here is that the PMIC is unable to
-deliver in spec behaviour?
-
---MCBkylF/aX/f/TlX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW/WK7AAoJECTWi3JdVIfQVsQH/3oftUkvejVMiQz13a1mjFYB
-5ehDacey9SE2SIEWNFVs9UNy2yUhz3vuS8z3KpRZcrXcCPbWl+3WWyMge3a8XJKN
-my72cZyn4qvXbzCcO1VKV79TV5HPX6g7bKVgWn9x0QAY8NEZUJ6/DIrhL5nd37lE
-WOu/fmqar76RA9hnspsIyZ2UpUBGKO8mReZlzUQ598s4AlB6TuLTwE+yICNFJP8x
-8w0aVUdDes5zpVjjKNYYrHbZRQdlzBRLB5DSJT8xO9v2I1bFDRIwd3/YcXYbt7Ha
-oARAws0VMjfpHbF5ibk2BMMw0r4oIX1OYO0PAYjsluvUu4IP7uTTAAUIhrR7Fsk=
-=5uvR
------END PGP SIGNATURE-----
-
---MCBkylF/aX/f/TlX--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+>> ---
+>>  arch/arm/boot/dts/vfxxx.dtsi | 10 +++++++++-
+>>  1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+>> index 5e49fbd..909988d 100644
+>> --- a/arch/arm/boot/dts/vfxxx.dtsi
+>> +++ b/arch/arm/boot/dts/vfxxx.dtsi
+>> @@ -88,7 +88,7 @@
+>>  		#address-cells = <1>;
+>>  		#size-cells = <1>;
+>>  		compatible = "simple-bus";
+>> -		interrupt-parent = <&mscm_ir>;
+>> +		interrupt-parent = <&gpc>;
+>>  		ranges;
+>>
+>>  		aips0: aips-bus@40000000 {
+>> @@ -475,6 +475,14 @@
+>>  				reg = <0x4006e000 0x1000>;
+>>  				interrupts = <96 IRQ_TYPE_LEVEL_HIGH>;
+>>  			};
+>> +
+>> +			gpc: gpc@4006c000 {
+>> +				compatible = "fsl,vf610-gpc";
+>> +				reg = <0x4006c000 0x1000>;
+>> +				interrupt-controller;
+>> +				#interrupt-cells = <2>;
+>> +				interrupt-parent = <&mscm_ir>;
+>> +			};
+>>  		};
+>>
+>>  		aips1: aips-bus@40080000 {
+>> --
+>> 2.7.2
+>>
+>>
