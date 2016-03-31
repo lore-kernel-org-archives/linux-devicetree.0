@@ -1,141 +1,81 @@
-From: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 12/17] ARM64: ACPI: Check if it runs on Xen to enable
- or disable ACPI
-Date: Thu, 31 Mar 2016 13:44:08 +0200
-Message-ID: <CAKv+Gu-wPq_FzO3sm7bhSFuu7EVxHWB_v6HOn1GqNbdaE-iBoQ@mail.gmail.com>
-References: <1458830676-27075-1-git-send-email-shannon.zhao@linaro.org>
-	<1458830676-27075-13-git-send-email-shannon.zhao@linaro.org>
-	<20160329161837.GH6745@arm.com>
-	<20160329163147.GB27223@leverpostej>
-	<56FB7E00.7030400@huawei.com>
-	<alpine.DEB.2.02.1603311155450.11739@kaball.uk.xensource.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1603311155450.11739-7Z66fg9igcxYtxbxJUhB2Dgeux46jI+i@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
-Cc: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Huangpeng (Peter)" <peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, julien.grall-5wv7dgnIgG8@public.gmane.org, Stefano Stabellini <stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org" <xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, David Vrabel <david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
+From: Irina Tirdea <irina.tirdea@intel.com>
+Subject: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Thu, 31 Mar 2016 14:44:41 +0300
+Message-ID: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 31 March 2016 at 13:04, Stefano Stabellini
-<stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org> wrote:
-> On Wed, 30 Mar 2016, Shannon Zhao wrote:
->> Hi Will, Mark,
->>
->> On 2016/3/30 0:31, Mark Rutland wrote:
->> > On Tue, Mar 29, 2016 at 05:18:38PM +0100, Will Deacon wrote:
->> >> > On Thu, Mar 24, 2016 at 10:44:31PM +0800, Shannon Zhao wrote:
->> >>> > > When it's a Xen domain0 booting with ACPI, it will supply a /chosen and
->> >>> > > a /hypervisor node in DT. So check if it needs to enable ACPI.
->> >>> > >
->> >>> > > Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >>> > > Reviewed-by: Stefano Stabellini <stefano.stabellini-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>
->> >>> > > Acked-by: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> >>> > > ---
->> >>> > >  arch/arm64/kernel/acpi.c | 12 ++++++++----
->> >>> > >  1 file changed, 8 insertions(+), 4 deletions(-)
->> >>> > >
->> >>> > > diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
->> >>> > > index d1ce8e2..4e92be0 100644
->> >>> > > --- a/arch/arm64/kernel/acpi.c
->> >>> > > +++ b/arch/arm64/kernel/acpi.c
->> >>> > > @@ -67,10 +67,13 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
->> >>> > >  {
->> >>> > >       /*
->> >>> > >        * Return 1 as soon as we encounter a node at depth 1 that is
->> >>> > > -      * not the /chosen node.
->> >>> > > +      * not the /chosen node, or /hypervisor node when running on Xen.
->> >>> > >        */
->> >>> > > -     if (depth == 1 && (strcmp(uname, "chosen") != 0))
->> >>> > > -             return 1;
->> >>> > > +     if (depth == 1 && (strcmp(uname, "chosen") != 0)) {
->> >>> > > +             if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
->> >>> > > +                     return 1;
->> >>> > > +     }
->> >> >
->> >> > Hmm, but xen_initial_domain() is false when xen isn't being used at all,
->> >> > so it feels to me like this is a bit too far-reaching and is basically
->> >> > claiming the "/hypervisor" namespace for Xen. Couldn't it be renamed to
->> >> > "xen,hypervisor" or something?
->> >> >
->> >> > Mark, got any thoughts on this?
->> > The node has a compatible string, "xen,xen" per [1], which would tell us
->> > absolutely that xen is present. I'd be happy checking for that
->> > explicitly.
->> >
->> I think actually the xen_initial_domain is the result of the
->> fdt_find_hyper_node. If the compatible string "xen,xen" doesn't exist,
->> the xen_initial_domain() will return false and whatever the current node
->> is the above check will return 1 since the device tree is not empty.
->
-> Right.
->
-> xen_initial_domain implies both "xen,xen" and XENFEAT_dom0 (which is a
-> feature retrieved by making a XENVER_get_features hypercall, see
-> drivers/xen/features.c:xen_setup_features).
->
-> So the following check:
->
->  +     if (!xen_initial_domain() || (strcmp(uname, "hypervisor") != 0))
->  +         return 1;
->
-> means that even if it's xen_initial_domain(), return error unless the
-> node found is "hypervisor". In other words, even if
-> xen_initial_domain(), no other nodes are allowed except /chosen and
-> /hypervisor.
->
-> This doesn't look far reaching to me, but yes, we could check explicitly
-> for the node to be compatible "xen,xen", in addition to be named
-> "hypervisor", even though the check is already done elsewhere
-> (arch/arm/xen/enlighten.c).
->
-> But I would keep it as it is.
->
+This is a proposal for adding ACPI support for pin controller
+configuration.
 
-The heuristic is there to decide whether some DTB image contains a
-complete description of the platform, or only some data handed over by
-the bootloader. Arguably, a DT containing both /chosen and /hypervisor
-but nothing else can still not describe an actual platform, and
-whether we execute under Xen or not is completely irrelevant.
+It has been developed to enable the MinnowBoard and IoT community
+by providing an easy way to specify pin multiplexing and
+pin configuration.
 
-So this should be sufficient imo
+This proposal is based on using _DSD properties to specify device
+states and configuration nodes and it follows closely the device
+tree model. Device states are defined using the Device Properties
+format and the configuration nodes are defined using the
+Hierarchical Properties Extension format. The generic properties
+for the configuration nodes are the same as the ones for device
+tree, while pincontroller drivers can also define custom ones.
 
-diff --git a/arch/arm64/kernel/acpi.c b/arch/arm64/kernel/acpi.c
-index d1ce8e2f98b9..d6d61e2e4d49 100644
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -67,9 +67,10 @@ static int __init dt_scan_depth1_nodes(unsigned long node,
- {
-        /*
-         * Return 1 as soon as we encounter a node at depth 1 that is
--        * not the /chosen node.
-+        * not the /chosen node or the /hypervisor node.
-         */
--       if (depth == 1 && (strcmp(uname, "chosen") != 0))
-+       if (depth == 1 && strcmp(uname, "chosen") != 0 &&
-+           strcmp(uname, "hypervisor") != 0)
-                return 1;
-        return 0;
- }
+Irina Tirdea (4):
+  pinctrl: Rename pinctrl_utils_dt_free_map to pinctrl_utils_free_map
+  pinctrl: pinconf-generic: Add ACPI support
+  pinctrl: Add ACPI support
+  pinctrl: Parse GpioInt/GpioIo resources
 
+ Documentation/acpi/pinctrl-properties.txt        | 282 ++++++++++++
+ drivers/acpi/property.c                          |   8 +-
+ drivers/base/property.c                          |  36 +-
+ drivers/pinctrl/Makefile                         |   1 +
+ drivers/pinctrl/acpi.c                           | 551 +++++++++++++++++++++++
+ drivers/pinctrl/acpi.h                           |  32 ++
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c           |   2 +-
+ drivers/pinctrl/bcm/pinctrl-cygnus-mux.c         |   2 +-
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c         |   2 +-
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c           |   2 +-
+ drivers/pinctrl/berlin/berlin.c                  |   2 +-
+ drivers/pinctrl/core.c                           |  26 ++
+ drivers/pinctrl/core.h                           |   2 +
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c    |   4 +-
+ drivers/pinctrl/meson/pinctrl-meson.c            |   2 +-
+ drivers/pinctrl/nomadik/pinctrl-abx500.c         |   4 +-
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c        |   4 +-
+ drivers/pinctrl/pinconf-generic.c                | 123 +++--
+ drivers/pinctrl/pinctrl-amd.c                    |   2 +-
+ drivers/pinctrl/pinctrl-as3722.c                 |   2 +-
+ drivers/pinctrl/pinctrl-at91-pio4.c              |   4 +-
+ drivers/pinctrl/pinctrl-digicolor.c              |   2 +-
+ drivers/pinctrl/pinctrl-lpc18xx.c                |   2 +-
+ drivers/pinctrl/pinctrl-palmas.c                 |   2 +-
+ drivers/pinctrl/pinctrl-pic32.c                  |   2 +-
+ drivers/pinctrl/pinctrl-pistachio.c              |   2 +-
+ drivers/pinctrl/pinctrl-tb10x.c                  |   2 +-
+ drivers/pinctrl/pinctrl-utils.c                  |   4 +-
+ drivers/pinctrl/pinctrl-utils.h                  |   2 +-
+ drivers/pinctrl/pinctrl-zynq.c                   |   2 +-
+ drivers/pinctrl/pxa/pinctrl-pxa2xx.c             |   2 +-
+ drivers/pinctrl/qcom/pinctrl-msm.c               |   2 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c         |   2 +-
+ drivers/pinctrl/qcom/pinctrl-spmi-mpp.c          |   2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-gpio.c         |   2 +-
+ drivers/pinctrl/qcom/pinctrl-ssbi-mpp.c          |   2 +-
+ drivers/pinctrl/stm32/pinctrl-stm32.c            |   4 +-
+ drivers/pinctrl/tegra/pinctrl-tegra-xusb.c       |   2 +-
+ drivers/pinctrl/tegra/pinctrl-tegra.c            |   4 +-
+ drivers/pinctrl/uniphier/pinctrl-uniphier-core.c |   2 +-
+ include/linux/acpi.h                             |   4 +-
+ include/linux/pinctrl/pinconf-generic.h          |  27 +-
+ include/linux/property.h                         |   9 +
+ 43 files changed, 1063 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/acpi/pinctrl-properties.txt
+ create mode 100644 drivers/pinctrl/acpi.c
+ create mode 100644 drivers/pinctrl/acpi.h
 
-
->> > In patch 11 fdt_find_hyper_node checks the compatible string. We could
->> > factor that out into a helper like is_xen_node(node) and use it here
->> > too.
->> >
->> I don't think so because we already check the compatible string before
->> and we could get the result simply via xen_initial_domain().
->
-> We could add a comment saying xen_initial_domain() implies "xen,xen" or
-> something.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
