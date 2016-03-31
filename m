@@ -1,92 +1,30 @@
-From: Eric Auger <eric.auger@linaro.org>
-Subject: Re: [PATCH 11/13] dtb: amd: Add PCIe SMMU device tree node
-Date: Thu, 31 Mar 2016 09:39:38 +0200
-Message-ID: <56FCD43A.4090409@linaro.org>
-References: <1453929121-12171-1-git-send-email-Suravee.Suthikulpanit@amd.com>
- <20160128111453.GG17123@leverpostej> <56AA07AA.7050701@arm.com>
- <6645680.g0j8d12m6d@wuerfel> <20160128142751.GA775@arm.com>
- <56FBF2B7.8090601@linaro.org> <20160330154538.GA10224@arm.com>
- <56FBF754.7020804@linaro.org> <20160330172412.GB10224@arm.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCHv2 7/8] ARM: dts: imx6: add support for more Ka-Ro
+ electronics modules
+Date: Thu, 31 Mar 2016 15:47:04 +0800
+Message-ID: <20160331074704.GT28207@tiger>
+References: <1457424244-14549-1-git-send-email-LW@KARO-electronics.de>
+ <1457424244-14549-8-git-send-email-LW@KARO-electronics.de>
+ <20160331061023.GO28207@tiger>
+ <20160331082944.3f604423@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160330172412.GB10224@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20160331082944.3f604423@ipc1.ka-ro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, arm@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leo.duran@amd.com, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>, galak@codeaurora.org, thomas.lendacky@amd.com, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org, brijeshkumar.singh@amd.com, Christoffer Dall <christoffer.dall@linaro.org>, "eric.auger@st.com" <eric.auger@st.com>
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Dan Williams <dan.j.williams@intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
-On 03/30/2016 07:24 PM, Will Deacon wrote:
-> On Wed, Mar 30, 2016 at 05:57:08PM +0200, Eric Auger wrote:
->> On 03/30/2016 05:45 PM, Will Deacon wrote:
->>> On Wed, Mar 30, 2016 at 05:37:27PM +0200, Eric Auger wrote:
->>>> On 01/28/2016 03:27 PM, Will Deacon wrote:
->>>>> On Thu, Jan 28, 2016 at 03:17:33PM +0100, Arnd Bergmann wrote:
->>>>>> On Thursday 28 January 2016 12:20:58 Robin Murphy wrote:
->>>>>>>>
->>>>>>> Any IDs specified here would only apply to DMA by the "platform device" 
->>>>>>> side of the host controller itself (as would an equivalent "iommus" 
->>>>>>> property on pcie0 once I finish the SMMUv2 generic binding support I'm 
->>>>>>> working on). In terms of PCI devices, the "mmu-masters" property is 
->>>>>>> overloaded such that only its existence matters, to identify that there 
->>>>>>> _is_ a relationship between the SMMU and the PCI bus(es) behind that 
->>>>>>> host controller.
->>>>>>
->>>>>> I wasn't aware that this was actually still specified. I had hoped
->>>>>> we were getting rid of mmu-masters before anyone actually started
->>>>>> using it, but now I see it in ns2.dtsi and fsl-ls2080a.dtsi.
->>>>>>
->>>>>> Does anyone know what happened to the plan to use the iommu DT binding
->>>>>> for the ARM SMMU instead? Do we now have to support both ways indefinitely?
->>>>>
->>>>> We always did -- Seattle used the mmu-masters binding before the generic
->>>>> binding even existed. Robin has been working on patches to get of_xlate
->>>>> up and running, but it got held up by Laurent's series which didn't end
->>>>> up going anywhere.
->>>>>
->>>> Up to now I have used the PCI smmu description as described in Suravee's
->>>> patch and this does not work anymore with 4.6-rc1 since the default
->>>> domain was introduced. So now I see 2 SMRs matching a single streamid
->>>> (in my case 256, one steming from the "platform device" side of the host
->>>> controller and one steming from the PCI device) and this causes SMCF
->>>> (stream match conflict fault). So PCIe PF does not work.
->>>
->>> Sorry about that, it wasn't intentional. In fact, I wrote commit
->>> cbf8277ef456 ("iommu/arm-smmu: Treat IOMMU_DOMAIN_DMA as bypass for now")
->>> specifically to avoid this breakage, after seeing it myself with VFIO
->>> and an S2CR-based configuration. It looks like the check just needs moving
->>> higher up (i.e. before we initialise the SMRs).
->>>
->>> Does that fix it for you?
->> Yes this fixes the issue for me, thanks! I guess you will send that patch?
-> 
-> I need to check that it doesn't break rebinding to the host after VFIO
-> has been used for passthrough, first.
+On Thu, Mar 31, 2016 at 08:29:44AM +0200, Lothar Wa=DFmann wrote:
+> NB: There is no need to quote the full original mail when you have no
+> further comments on the remaining part. This would save people
+> from having to scroll through the mail needlessly looking for further
+> comments.
 
-OK. I can help testing too since I am currently working on PCIe
-passthrough respin.
-> 
-> Does your devicetree explicitly assign a StreamID to the platform device
-> for the host controller? We should probably be handling this, since it
-> will crop us as an issue again once we decide to enable the default
-> domain properly.
+I generally put my name/signature at the end of my commenting.  So
+that's where you can stop looking for further comments.
 
-Yes it does. My dt description currently matches the one found in this
-patch from Suravee (old binding style). Hence my question. Shall I
-remove this and let PCIe register their RID=SID automatically?
-> 
->> So eventually what is the right way to describe the smmu-masters (~
->> future of that patch)?
-> 
-> Using the generic iommu binding
-> (Documentation/devicetree/bindings/iommu/iommu.txt), which will be required
-> for of_xlate-based probing. The old binding should still continue to
-> function as it always has, though.
-OK thanks
-
-Eric
-> 
-> Will
-> 
+Shawn
