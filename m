@@ -1,79 +1,84 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] mtd: nand: document the NAND controller/NAND chip DT representation
-Date: Thu, 31 Mar 2016 15:57:13 +0200
-Message-ID: <1459432633-23162-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Thu, 31 Mar 2016 09:06:51 -0500
+Message-ID: <20160331140651.GA2193@rob-hp-laptop>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160330113532.GI3323@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, tthayer@opensource.altera.com
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Standardize the NAND controller/NAND chip DT representation. Now, all new
-NAND controller drivers should comply with this representation, even if
-they are only supporting a single NAND chip.
+On Wed, Mar 30, 2016 at 12:35:32PM +0100, Lee Jones wrote:
+> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+> 
+> > From: Thor Thayer <tthayer@opensource.altera.com>
+> > 
+> > The Altera Arria10 Devkit System Resource chip is a Multi-Function
+> > Device, it has two subdevices:
+> >      - GPIO
+> >      - HWMON
+> > 
+> > This patch adds documentation for the Altera A10-SR DT bindings.
+> > 
+> > Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> > ---
+> >  .../devicetree/bindings/mfd/altera-a10sr.txt       |   35 ++++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/altera-a10sr.txt b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> > new file mode 100644
+> > index 0000000..564c761
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/altera-a10sr.txt
+> > @@ -0,0 +1,35 @@
+> > +* Altera Arria10 Development Kit System Resource Chip
+> > +
+> > +Required parent device properties:
+> > +- compatible : "altr,altr_a10sr"
 
-Existing drivers can keep support for the old representation (where only
-the NAND chip was described), but are encouraged to also support the new
-one.
+Why "altr" twice?
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+Don't use underscores.
 
-diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-index b53f92e..fbf5677 100644
---- a/Documentation/devicetree/bindings/mtd/nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/nand.txt
-@@ -1,4 +1,23 @@
--* MTD generic binding
-+* NAND chip and NAND controller generic binding
-+
-+NAND controller/NAND chip representation:
-+
-+The NAND controller should be represented with it's own DT node, and all
-+NAND chips attached to this controller should be defined as children nodes
-+of the NAND controller. This representation should be enforced even for
-+simple controllers supporting only one chip.
-+
-+Mandatory NAND controller properties:
-+- #address-cells: depends on your controller. Should at least be 1 to
-+		  encode the CS line id.
-+- #size-cells: depends on your controller. Put zero unless you need a
-+	       mapping between CS lines and dedicated memory regions
-+
-+Optional NAND controller properties
-+- ranges: only needed if you need to define a mapping between CS lines and
-+	  memory regions
-+
-+Optional NAND chip properties:
- 
- - nand-ecc-mode : String, operation mode of the NAND ecc mode.
-   Supported values are: "none", "soft", "hw", "hw_syndrome", "hw_oob_first",
-@@ -19,3 +38,19 @@ errors per {size} bytes".
- The interpretation of these parameters is implementation-defined, so not all
- implementations must support all possible combinations. However, implementations
- are encouraged to further specify the value(s) they support.
-+
-+Example:
-+
-+	nand-controller {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* controller specific properties */
-+
-+		nand@0 {
-+			reg = <0>;
-+			nand-ecc-mode = "soft_bch";
-+
-+			/* controller specific properties */
-+		};
-+	};
--- 
-2.5.0
+> > +- spi-max-frequency : Maximum SPI frequency.
+> > +- reg : the SPI Chip Select address for the Arria10 System Resource chip
+> 
+> DT bindings are much easier to read in the following format:
+> 
+> - compatible		: "altr,altr_a10sr"
+> - spi-max-frequency	: Maximum SPI frequency.
+> - reg			: the SPI Chip Select address for the Arria10 System Resource chip
+> 
+> ... also, sentences start with an uppercase char.
+> 
+> > +The A10SR consists of this varied group of sub-devices:
+> > +
+> > +Device                   Description
+> > +------                   ----------
+> > +altr_a10sr_gpio          GPIO Controller
+> > +altr_a10sr_hwmon         Hardware Monitor
+> > +
+> > +The LEDs are implemented entirely in the device tree using
+> > +the gpio-led framework.
+> 
+> This is a Linuxisum and should not live in DT bindings.
+> 
+> > +Example:
+> > +
+> > +        a10-sr: a10-sr@0 {
+> 
+> Nodes should be named after their device 'type'.
+> 
+> Does this device really start a address 0?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Being a SPI device, I imagine so.
+
