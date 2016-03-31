@@ -1,39 +1,37 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH resend v5 1/3] ASoC: cygnus: Add DT bindings for Broadcom
- Cygnus audio
-Date: Thu, 31 Mar 2016 09:13:08 -0500
-Message-ID: <20160331141308.GA9670@rob-hp-laptop>
-References: <1459277192-10942-1-git-send-email-simran.rai@broadcom.com>
- <1459277192-10942-2-git-send-email-simran.rai@broadcom.com>
+Subject: Re: [PATCH] Documentation: devicetree: bindings: regulator:
+ palmas-pmic.txt
+Date: Thu, 31 Mar 2016 09:15:42 -0500
+Message-ID: <20160331141542.GA17373@rob-hp-laptop>
+References: <1459255363-21101-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1459277192-10942-2-git-send-email-simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1459255363-21101-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arun Parameswaran <arunp-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, spatton-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 11:46:30AM -0700, Simran Rai wrote:
-> From: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Tue, Mar 29, 2016 at 06:12:43PM +0530, Keerthy wrote:
+> From: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
 > 
-> Add bindings for audio driver in Broadcom Cygnus.
+> Adding support for the tps659038 pmic so it doesn't generate a warning
+> when running the patch check script to
+> Documentation/devicetree/bindings/regulator/palmas-pmic.txt
 > 
-> Signed-off-by: Lori Hikichi <lhikichi-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Simran Rai <ssimran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Simran Rai <simran.rai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Adding a note that the tps659037 device is a OTP spin of the
+> tps659038 pmic and device compatible.
+> 
+> Signed-off-by: Schuyler Patton <spatton-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 > ---
->  .../bindings/sound/brcm,cygnus-audio.txt           |   67 ++++++++++++++++++++
->  1 file changed, 67 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/brcm,cygnus-audio.txt
+>  Documentation/devicetree/bindings/regulator/palmas-pmic.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-I acked v3 of this already. Did something change? If not, please add 
-acks when sending new versions. If things did change, explain that here.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-And this v5 is not a resend if you didn't already send out v5 before.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
