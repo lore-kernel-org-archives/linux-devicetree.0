@@ -1,60 +1,44 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] Documentation: devicetree: Clean up gpio-keys example
-Date: Thu, 31 Mar 2016 13:09:39 -0700
-Message-ID: <20160331200939.GM39098@dtor-ws>
-References: <1458129209-15449-1-git-send-email-afaerber@suse.de>
- <CABxcv=kSax5=5mOWT7ktavFQHvdp=sxZNcJaqc=nRQN-DejnVA@mail.gmail.com>
- <F1BB73D3-C592-4476-91A9-0529B51C2156@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 3/3] ARM: dts: apq8064: add ahci ports-implemented mask
+Date: Thu, 31 Mar 2016 23:25:38 +0300
+Message-ID: <56FD87C2.3020503@cogentembedded.com>
+References: <1459445500-9071-1-git-send-email-srinivas.kandagatla@linaro.org>
+ <1459445500-9071-4-git-send-email-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <F1BB73D3-C592-4476-91A9-0529B51C2156@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Julien Chauveau <chauveau.julien@gmail.com>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-input@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1459445500-9071-4-git-send-email-srinivas.kandagatla@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jmaggard10@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 10:55:53PM +0100, Julien Chauveau wrote:
->=20
-> > Le 16 mars 2016 =E0 15:47, Javier Martinez Canillas <javier@dowhile=
-0.org> a =E9crit :
-> >=20
-> > Hello Andreas,
-> >=20
-> > On Wed, Mar 16, 2016 at 8:53 AM, Andreas F=E4rber <afaerber@suse.de=
-> wrote:
-> >> Drop #address-cells and #size-cells, which are not required by the
-> >> gpio-keys binding documentation, as button sub-nodes are not devic=
-es.
-> >>=20
-> >> Rename sub-nodes to avoid new dtc unit address warnings when copie=
-d.
-> >>=20
-> >> While at it, adopt the dashes convention for the node name.
-> >>=20
-> >> Reported-by: Julien Chauveau <chauveau.julien@gmail.com>
-> >> Cc: Julien Chauveau <chauveau.julien@gmail.com>
-> >> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> >> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> >> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
-> >> ---
-> >=20
-> > Patch looks good to me.
-> >=20
-> > Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
->=20
-> I agree.
->=20
-> Reviewed-by: Julien Chauveau <chauveau.julien@gmail.com>
+On 03/31/2016 08:31 PM, Srinivas Kandagatla wrote:
 
-Applied, thank you.
+> This patch adds new ports-implemented mask, which is required to get
+> achi working on the mainline. Without this patch value read from
+> PORTS_IMPL register which is zero would not enable any ports for
+> software to use.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>   arch/arm/boot/dts/qcom-apq8064.dtsi | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> index 252b310..71d6fcb 100644
+> --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> @@ -696,7 +696,7 @@
+>   		};
+>
+>   		sata0: sata@29000000 {
+> -			compatible		= "generic-ahci";
+> +			compatible		= "generic-ahci", "qcom,apq8064-ahci";
 
---=20
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    The order of values should be reverse, no?
+
+[...]
+
+MBR, Sergei
