@@ -1,67 +1,87 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: st_sensors: support open drain mode
-Date: Thu, 31 Mar 2016 10:15:08 +0200
-Message-ID: <CACRpkdZ37dpKsHr01M0+waXgP4xZJjxxFrNQW13Zxi1a9H+-Rg@mail.gmail.com>
-References: <1458825486-17188-1-git-send-email-linus.walleij@linaro.org>
-	<1458825486-17188-4-git-send-email-linus.walleij@linaro.org>
-	<56F8F592.9010807@kernel.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 03/18] ARM: dts: vf610-colibri: GPIO wakeup key
+Date: Thu, 31 Mar 2016 16:19:08 +0800
+Message-ID: <20160331081908.GV28207@tiger>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-4-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56F8F592.9010807-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1457576219-7971-4-git-send-email-stefan@agner.ch>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 28, 2016 at 11:12 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On 24/03/16 13:18, Linus Walleij wrote:
+On Wed, Mar 09, 2016 at 06:16:44PM -0800, Stefan Agner wrote:
+> Enable GPIO wakeup key on Vybrid PAD 41 which is routed to the
+> Colibri default wakeup pin SO-DIMM 45.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 
->> +- st,int-pin-open-drain: the interrupt/data ready line will be configured
->> +  as open drain, which is useful if several sensors share the same
->> +  interrupt line.
->
-> Really feels like this one ought to be more generic.. Mind you so does
-> drdy-int-pin!
+I think this one can be merged independently, right?  One small comment
+below though.
 
-Sorry about drdy-int-pin, it wasn't me ;)
+> ---
+>  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> index 4d8b7f6..936ece6 100644
+> --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> @@ -39,6 +39,8 @@
+>   *     OTHER DEALINGS IN THE SOFTWARE.
+>   */
+>  
+> +#include <dt-bindings/input/input.h>
+> +
+>  / {
+>  	chosen {
+>  		stdout-path = "serial0:115200n8";
+> @@ -74,6 +76,20 @@
+>  		gpio = <&gpio2 19 GPIO_ACTIVE_LOW>; /* USBH_PEN resp. USBH_P_EN */
+>  		vin-supply = <&reg_5v0>;
+>  	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_gpiokeys>;
+> +
+> +		power {
+> +			label = "Wake-Up";
+> +			gpios = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+> +			linux,code = <KEY_WAKEUP>;
+> +			debounce-interval = <10>;
+> +			gpio-key,wakeup;
 
-That one is a mux kind of thing: interrupt goes out on IRQ line
-INT1 or INT2, select one...
+Please use generic 'wakeup-source' instead.  See the following document
+for details.
 
-> Hmm. Looks like most open drain controls are chip specific - other than
-> your pinctrl ones and that doesn't really map to here I guess.
+Documentation/devicetree/bindings/power/wakeup-source.txt
 
-Both the muxing and the OD setting can be done with pin control,
-it's just that it is like swatting a fly with a skyscraper - vast overkill
-for two interrupt lines.
+Shawn
 
-I came to the conclusion that with small chips or IP blocks just
-randomly doing some muxing or biasing of a few pins isn't necessarily
-worth all the trouble of implementing pin control, the latter was
-conceived for real big arrays of pins really. There are already a
-few of these all over the kernel, e.g. the ST Multi-Purpose expander
-drivers/mfd/stmpe.c - could be pin control muxed but it'd be overkill.
-
-So as pin control maintainer when this kind of hardware comes up
-I usually just "think it over" and then "OK then".
-
->> +     if (sdata->int_pin_open_drain) {
->> +             dev_info(&indio_dev->dev,
->> +                      "set interrupt line to open drain mode\n");
->
-> Hmm. Curriously I have a board with an lis3l02dq on it where the interrupt
-> is shared, but doesn't explicitly support open drain. In that case it
-> is done with some external circuitry.
-
-That should run fine with just the status read patch from earlier
-in the series I guess?
-
-> Anyhow - I guess when I actually add support for that I'll just add a sanity
-> check in here that addr_od and mask_od are specified :)
-
-Hm, yeah. Otherwise just patch out my enforcement of the
-OD flag for a shared line and add a comment in.
-
-Yours,
-Linus Walleij
+> +		};
+> +	};
+>  };
+>  
+>  &bl {
+> @@ -157,5 +173,11 @@
+>  				VF610_PAD_PTB21__GPIO_43	0x22ed
+>  			>;
+>  		};
+> +
+> +		pinctrl_gpiokeys: gpiokeys {
+> +			fsl,pins = <
+> +				VF610_PAD_PTB19__GPIO_41	0x218d
+> +			>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.2
+> 
+> 
