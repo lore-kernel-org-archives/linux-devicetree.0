@@ -1,70 +1,53 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] watchdog: imx2_wdt: add external reset support via
- 'ext-reset-output' dt prop
-Date: Thu, 31 Mar 2016 11:01:58 -0700
-Message-ID: <CAJ+vNU2zBCAF8hJfmSa31CyD9XcOCxYWqH9LKRm1S_sunqkgOg@mail.gmail.com>
-References: <20151106220249.GA19791@roeck-us.net>
-	<565F4244.7090502@timesys.com>
-	<CAJ+vNU00Bf97HUqkkW9KqOUzHXh482R9O1gasz6ju3Pn-_5chA@mail.gmail.com>
-	<CAJ+vNU2qHQPSJ1KWp_3f3vAdeuOcF0ooZHmHsdafabZLXJv=Bw@mail.gmail.com>
-	<20151228162923.GA31680@spo001.leaseweb.nl>
-	<56AA79DA.2010305@timesys.com>
-	<CAOMZO5DrTY3ho0Z_jXxeYMqbd6GmUKRwD1LB61vM1ZTGQAYOrg@mail.gmail.com>
-	<56F991C3.8030201@timesys.com>
-	<20160330012226.GD28207@tiger>
-	<20160330210916.GB21993@roeck-us.net>
-	<20160331015714.GM28207@tiger>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 06/18] ARM: imx: clk-gate2: allow custom gate
+ configuration
+Date: Thu, 31 Mar 2016 10:59:54 -0700
+Message-ID: <f21855561b6cbf2d2a57508ed9470ed0@agner.ch>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-7-git-send-email-stefan@agner.ch>
+ <20160331113728.GA18833@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331015714.GM28207@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Akshay Bhat <akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Justin Waters <justin.waters-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160331113728.GA18833@tiger>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 30, 2016 at 6:57 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 30, 2016 at 02:09:16PM -0700, Guenter Roeck wrote:
->> The question was if the property name should be ext-reset-output or
->> fsl,ext-reset-output. In my opinion, it should be fsl,ext-reset-output
->> because it is not a generic property. Tim disagrees.
+On 2016-03-31 04:37, Shawn Guo wrote:
+> On Wed, Mar 09, 2016 at 06:16:47PM -0800, Stefan Agner wrote:
+>> The 2-bit gates found i.MX and Vybrid SoC support different clock
+>> configuration:
 >>
+>> 0b00: clk disabled
+>> 0b01: clk enabled in RUN mode but disabled in WAIT and STOP mode
+>> 0b10: clk enabled in RUN, WAIT and STOP mode (only Vybrid)
+>> 0b11: clk enabled in RUN and WAIT mode
+>>
+>> For some clocks, we might want to configure different behaviour,
+>> e.g. a memory clock should be on even in STOP mode. Add a new
+>> function imx_clk_gate2_cgr which allow to configure specific
+>> gate values through the cgr_val parameter.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> 
+> It's not appropriate to use 'ARM:' as subject prefix any more, since
+> clock drivers had been moved to drivers/clk.
 
-Guenter,
+Agreed. Evidence on how long I dragged those patches in my own tree :-/
 
-My issue regarding the vendor prefix was not a hard dissagreement but
-was more about me understanding the rational behind using vendor
-prefixes. In this case the imx2_wdt driver 'is' a vendor specific
-driver as its compatible strings are prefixed with 'fsl,' so isn't
-'any' property added to devicetree/bindings/watchdog/fsl-imx-wdt.txt
-inherently a vendor specific properly already? I assume that is why
-the 'big-endian' property isn't 'fsl,big-endian'.
+> 
+> I applied patch 6 ~ 9 with updating the subject prefix as below.
+> 
+> clk: imx: vf610: add suspend/resume support
+> clk: imx: vf610: add WKPU unit
+> clk: imx: vf610: leave DDR clock on
+> clk: imx: clk-gate2: allow custom gate configuration
 
-Maybe it's more about if it 'is' marked as a vendor specific property
-its much easier to get approval and accepted by a vendor-specific
-maintainer?
+Thanks!
 
->> So we have two options: Change the property name to fsl,ext-reset-output,
->> which I would accept, or wait for a devicetree maintainer to make a decision.
->
-> Guenter,
->
-> I agree with you on this point.  Before everyone agrees that this is a
-> generic binding, we should have vendor prefix for the property.
->
-> Tim,
->
-> This is a small change which, IMO, shouldn't hold an useful patch from being
-> merged.  Care to resend with the suggested change?
->
-> Shawn
-
-Shawn,
-
-Sure - I'll rebase and re-submit.
-
-Tim
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
