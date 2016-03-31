@@ -1,48 +1,186 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Fri, 1 Apr 2016 00:29:05 +0530
-Message-ID: <56FD7379.2000307@nvidia.com>
-References: <20160330181623.GQ2350@sirena.org.uk> <56FCCC60.3080303@nvidia.com> <20160331165145.GF2350@sirena.org.uk> <56FD5A9F.5050001@nvidia.com> <20160331174741.GO2350@sirena.org.uk> <56FD62BA.3040406@nvidia.com> <20160331183130.GR2350@sirena.org.uk> <56FD6CF7.5080909@nvidia.com> <20160331184553.GS2350@sirena.org.uk> <56FD6ED6.3020507@nvidia.com> <20160331185945.GT2350@sirena.org.uk>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] Input: synaptics-rmi4: Support regulator supplies
+Date: Thu, 31 Mar 2016 12:14:21 -0700
+Message-ID: <20160331191421.GC8929@tuxbot>
+References: <1459357049-5608-1-git-send-email-bjorn.andersson@linaro.org>
+ <20160331181905.GJ39098@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331185945.GT2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160331181905.GJ39098@dtor-ws>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Andrew Duggan <aduggan@synaptics.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Christopher Heiny <cheiny@synaptics.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu 31 Mar 11:19 PDT 2016, Dmitry Torokhov wrote:
 
-On Friday 01 April 2016 12:29 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Fri, Apr 01, 2016 at 12:09:18AM +0530, Laxman Dewangan wrote:
->
->> The setting for observed value is not there for device configuration.
->> Device support 5mV/us and 100mV/us.
->> We observed 50mV/us when setting device to 100mV/us.
-> But you said the device had a configuration for 50mV/us?
-I looked for last 4 communication and tried to find out if any typo on 
-mail so that I can correct but did not found.
+> Hi Bjorn,
+> 
+> On Wed, Mar 30, 2016 at 09:57:29AM -0700, Bjorn Andersson wrote:
+> > From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > 
+> > Support the two supplies - vdd and vio - to make it possible to control
+> > power to the Synaptics chip.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  .../devicetree/bindings/input/rmi4/rmi_i2c.txt     |  7 ++++
+> >  drivers/input/rmi4/rmi_i2c.c                       | 45 ++++++++++++++++++++++
+> 
+> Would not we need pretty much the same changes for SPI devices? Can this
+> be done in core?
+> 
 
-/**
-Here is the case,
-PMIC supports 2 ramp time configurations 5mv/us and 100mV/us. This is 
-supported with some specific capacitance in rail output per 
-recommendation from PMIC
-**/
+Yes, I believe it needs the exact same steps.
 
-So may be more older may have..
+I did a initial quick hack on v1 of the patchset and back then it was
+possible, when I rebased it a few weeks back I kept ending up in getting
+interrupts with the power off.
 
-But here is the stuff without typo ;-)
-Device supports 5mV/us and 100mV/us which is not in observed value.
+Looking at the code this is likely because in the resume paths the IRQ
+is enabled before we jump to rmi_driver_resume(), so putting this in the
+core I ended up calling rmi_process_interrupt_requests() before powering
+up the chip.
 
-And this is the only reason for requesting of second property.
+I assume it's done this way to allow incoming interrupts while functions
+are being resumed. Andrew, can you comment on this?
 
+Regards,
+Bjorn
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks.
+> 
+> >  2 files changed, 52 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> > index 95fa715c6046..a8c31f40f816 100644
+> > --- a/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> > +++ b/Documentation/devicetree/bindings/input/rmi4/rmi_i2c.txt
+> > @@ -22,6 +22,13 @@ See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> >  - syna,reset-delay-ms: The number of milliseconds to wait after resetting the
+> >  			device.
+> >  
+> > +- vdd-supply: VDD power supply.
+> > +See Documentation/devicetree/bindings/regulator/regulator.txt
+> > +
+> > +- vio-supply: VIO power supply
+> > +See Documentation/devicetree/bindings/regulator/regulator.txt
+> > +
+> > +
+> >  Function Parameters:
+> >  Parameters specific to RMI functions are contained in child nodes of the rmi device
+> >   node. Documentation for the parameters of each function can be found in:
+> > diff --git a/drivers/input/rmi4/rmi_i2c.c b/drivers/input/rmi4/rmi_i2c.c
+> > index a96a326b53bd..a8c794daba04 100644
+> > --- a/drivers/input/rmi4/rmi_i2c.c
+> > +++ b/drivers/input/rmi4/rmi_i2c.c
+> > @@ -11,6 +11,8 @@
+> >  #include <linux/rmi.h>
+> >  #include <linux/irq.h>
+> >  #include <linux/of.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/regulator/consumer.h>
+> >  #include "rmi_driver.h"
+> >  
+> >  #define BUFFER_SIZE_INCREMENT 32
+> > @@ -37,6 +39,8 @@ struct rmi_i2c_xport {
+> >  
+> >  	u8 *tx_buf;
+> >  	size_t tx_buf_size;
+> > +
+> > +	struct regulator_bulk_data supplies[2];
+> >  };
+> >  
+> >  #define RMI_PAGE_SELECT_REGISTER 0xff
+> > @@ -246,6 +250,22 @@ static int rmi_i2c_probe(struct i2c_client *client,
+> >  		return -ENODEV;
+> >  	}
+> >  
+> > +	rmi_i2c->supplies[0].supply = "vdd";
+> > +	rmi_i2c->supplies[1].supply = "vio";
+> > +	retval = devm_regulator_bulk_get(&client->dev,
+> > +					 ARRAY_SIZE(rmi_i2c->supplies),
+> > +					 rmi_i2c->supplies);
+> > +	if (retval < 0)
+> > +		return retval;
+> > +
+> > +	retval = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
+> > +				       rmi_i2c->supplies);
+> > +	if (retval < 0)
+> > +		return retval;
+> > +
+> > +	/* Allow the firmware to get ready */
+> > +	msleep(10);
+> > +
+> >  	rmi_i2c->client = client;
+> >  	mutex_init(&rmi_i2c->page_mutex);
+> >  
+> > @@ -286,6 +306,8 @@ static int rmi_i2c_remove(struct i2c_client *client)
+> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+> >  
+> >  	rmi_unregister_transport_device(&rmi_i2c->xport);
+> > +	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies),
+> > +			       rmi_i2c->supplies);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -308,6 +330,10 @@ static int rmi_i2c_suspend(struct device *dev)
+> >  			dev_warn(dev, "Failed to enable irq for wake: %d\n",
+> >  				ret);
+> >  	}
+> > +
+> > +	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies),
+> > +			       rmi_i2c->supplies);
+> > +
+> >  	return ret;
+> >  }
+> >  
+> > @@ -317,6 +343,14 @@ static int rmi_i2c_resume(struct device *dev)
+> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+> >  	int ret;
+> >  
+> > +	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
+> > +				    rmi_i2c->supplies);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Allow the firmware to get ready */
+> > +	msleep(10);
+> > +
+> >  	enable_irq(rmi_i2c->irq);
+> >  	if (device_may_wakeup(&client->dev)) {
+> >  		ret = disable_irq_wake(rmi_i2c->irq);
+> > @@ -346,6 +380,9 @@ static int rmi_i2c_runtime_suspend(struct device *dev)
+> >  
+> >  	disable_irq(rmi_i2c->irq);
+> >  
+> > +	regulator_bulk_disable(ARRAY_SIZE(rmi_i2c->supplies),
+> > +			       rmi_i2c->supplies);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -355,6 +392,14 @@ static int rmi_i2c_runtime_resume(struct device *dev)
+> >  	struct rmi_i2c_xport *rmi_i2c = i2c_get_clientdata(client);
+> >  	int ret;
+> >  
+> > +	ret = regulator_bulk_enable(ARRAY_SIZE(rmi_i2c->supplies),
+> > +				    rmi_i2c->supplies);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Allow the firmware to get ready */
+> > +	msleep(10);
+> > +
+> >  	enable_irq(rmi_i2c->irq);
+> >  
+> >  	ret = rmi_driver_resume(rmi_i2c->xport.rmi_dev);
+> > -- 
+> > 2.5.0
+> > 
+> 
+> -- 
+> Dmitry
