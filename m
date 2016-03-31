@@ -1,64 +1,103 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/8] arm64: dts: rockchip: Clean up /memory nodes
-Date: Thu, 31 Mar 2016 22:45:52 +0200
-Message-ID: <11405116.V0u286Y0bM@phil>
-References: <1458136727-32075-1-git-send-email-afaerber@suse.de>
- <2027561.JLzKLXOoFO@phil> <1776429.KtRq374vTa@phil>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 3/5] dt-binding: Add Qualcomm WCNSS control binding
+Date: Thu, 31 Mar 2016 14:28:57 -0700
+Message-ID: <20160331212857.GE8929@tuxbot>
+References: <1459226126-16725-1-git-send-email-bjorn.andersson@linaro.org>
+ <1459226126-16725-3-git-send-email-bjorn.andersson@linaro.org>
+ <20160331142817.GA22092@rob-hp-laptop>
+ <20160331171625.GZ8929@tuxbot>
+ <CAL_JsqKbjUxOMbn00OOmwM1vvjRzC8RzX=4WA7WP+K2XYjOSMA@mail.gmail.com>
+ <20160331182449.GA8929@tuxbot>
+ <CAL_JsqKoHOSVGMJfWrGwFi7BMTFp0P3t8W6e4VxtOS8j5aCHWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1776429.KtRq374vTa@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKoHOSVGMJfWrGwFi7BMTFp0P3t8W6e4VxtOS8j5aCHWw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, linux-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 31. M=E4rz 2016, 19:15:43 schrieb Heiko Stuebner:
-> Am Samstag, 19. M=E4rz 2016, 09:04:08 schrieb Heiko Stuebner:
-> > Am Mittwoch, 16. M=E4rz 2016, 14:58:39 schrieb Andreas F=E4rber:
-> > > A dtc update results in warnings for nodes with reg property but
-> > > without
-> > > unit address in the node name, so rename /memory to /memory@0.
-> > > =
+On Thu 31 Mar 13:42 PDT 2016, Rob Herring wrote:
 
-> > > Signed-off-by: Andreas F=E4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> > =
+> On Thu, Mar 31, 2016 at 1:24 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Thu 31 Mar 10:38 PDT 2016, Rob Herring wrote:
+> >
+> >> On Thu, Mar 31, 2016 at 12:16 PM, Bjorn Andersson
+> >> <bjorn.andersson@linaro.org> wrote:
+> >> > On Thu 31 Mar 07:28 PDT 2016, Rob Herring wrote:
+> >> >
+> >> >> On Mon, Mar 28, 2016 at 09:35:24PM -0700, Bjorn Andersson wrote:
+> >> > [..]
+> >>
+> >> [...]
+> >>
+> >> >> > +
+> >> >> > +== WiFi
+> >> >> > +The following properties are defined to the WiFi node:
+> >> >> > +
+> >> >> > +- compatible:
+> >> >> > +   Usage: required
+> >> >> > +   Value type: <string>
+> >> >> > +   Definition: must be one of:
+> >> >> > +               "qcom,wcn3620-wlan",
+> >> >> > +               "qcom,wcn3660-wlan",
+> >> >> > +               "qcom,wcn3680-wlan"
+> >> >
+> >> > Digging through documentation and trying to answer the questions above
+> >> > made me realize that these numbers are for the external rf component,
+> >> > not the variants of the logic inside the SoC; and as such wrong.
+> >>
+> >> Do you need to know both? Or only the firmware image needs to know?
+> >>
+> >
+> > So far I've only found cases where we need to know the register map for
+> > the DMA engine shuffling packets, so this is related to the SoC-internal
+> > part only.
+> >
+> > The differences in RF capabilities - at least for WiFi - seems to be
+> > acquired in runtime from the firmware.
+> >
+> > The other piece that depend on the RF part seems to be the availability
+> > of e.g. ANT support, so if anything that needs to go into the wcnss
+> > node, in some way (either compatible or the set of subnodes).
+> >
+> >> >> > +
+> >> >> > +- qcom,wcnss-mmio:
+> >> >> > +   Usage: required
+> >> >> > +   Value type: <prop-encoded-array>
+> >> >> > +   Definition: should specify base address and size of the WiFi related
+> >> >> > +               registers of WCNSS
+> >> >>
+> >> >> This is an address visible to the cpu?
+> >> >>
+> >> >
+> >> > Yes it is; the device is controlled both through SMD and mmio accessible
+> >> > registers, where the SMD interface is the primary interface.
+> >> >
+> >> > SMD being the primary "bus" I believe I can't use reg to denote this
+> >> > register range. Should I describe this in some other form?
+> >>
+> >> That's a tricky one. I would create a node for the memory-mapped
+> >> portion with proper compatible and reg properties, and then make this
+> >> a phandle to that node. Something similar to how we do phandles to
+> >> syscon's.
+> >>
+> >
+> > Okay, sounds reasonable. I don't see a need for a specific
+> > implementation, so I'll just back it with the generic syscon
+> > implementation (and a specific compatible).
+> 
+> I don't think I'd do syscon here as it is mainly designed to have
+> multiple users. You just need to look-up the phandle, perhaps check
+> the compatible, and call of_address_to_resource to get the address.
+> Actually, you could skip the phandle entirely and just find the node
+> by compatible (assuming there is only one).
+> 
 
-> > applied to a dts64-fixes branch for 4.6, after changing the commit
-> > message to ----
-> > A dtc update results in warnings for nodes with reg property but without
-> > unit address in the node name, so rename /memory to /memory@startaddress
-> > (memory starts at 0 in the case of the rk3368).
-> > ----
-> > =
+Ahh, right. Thanks for the suggestion.
 
-> > To clarify that the @0 is not arbitary chosen.
-> =
-
-> This dtc update in question hasn't landed in v4.6-rc1 and from what I
-> gathered will need some changes. The patch is obviously still correct, but
-> I have now moved it from v4.6-fixes to the regular v4.7 64bit dts
-> changes.
-
-also it seems "memory" is special and memory without unitname will stay =
-
-allowed [0], especially as uboot or other bootloaders may expect such a nod=
-e =
-
-to insert the actual amount of memory into it.
-
-Looking at uboot, fdt_fixup_memory_banks seems to look explicitly for a =
-
-"memory" node, so I'm actually not sure, if this is safe to keep at all.
-
-
-[0] http://www.spinics.net/lists/arm-kernel/msg494038.html
+Regards,
+Bjorn
