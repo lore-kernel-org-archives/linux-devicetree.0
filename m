@@ -1,53 +1,54 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: dt-bindings: document the concept of GPIO banks
-Date: Thu, 31 Mar 2016 11:10:59 +0200
-Message-ID: <1459415459-8107-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh@kernel.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH v7 19/20] ARM: dts: Expand the voltage range of buck1/3
+ regulator for exynos4412-odroidu3
+Date: Thu, 31 Mar 2016 18:06:04 +0900
+Message-ID: <1459415165-32613-20-git-send-email-cw00.choi@samsung.com>
+References: <1459415165-32613-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1459415165-32613-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, k.kozlowski@samsung.com, kgene@kernel.org
+Cc: rjw@rjwysocki.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux.amoon@gmail.com, m.reichl@fivetechno.de, tjakobi@math.uni-bielefeld.de, inki.dae@samsung.com, cw00.choi@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+This patch expands the voltage range of buck1/3 regulator due to as following:
+- MIF (Memory Interface) bus frequency needs the range of '900 - 1100 mV'.
+- INT (Internal) bus frequency needs the range of '900 - 1050 mV'.
+
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+[m.reichl and linux.amoon: Tested it on exynos4412-odroidu3 board]
+Tested-by: Markus Reichl <m.reichl@fivetechno.de>
+Tested-by: Anand Moon <linux.amoon@gmail.com>
 ---
- Documentation/devicetree/bindings/gpio/gpio.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 069cdf6f9dac..f509ecf03ece 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -131,6 +131,19 @@ Every GPIO controller node must contain both an empty "gpio-controller"
- property, and a #gpio-cells integer property, which indicates the number of
- cells in a gpio-specifier.
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index cba37c974703..b4983cbc4f8c 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -356,8 +356,8 @@
  
-+Some system-on-chips (SoCs) use the concept of GPIO banks. A GPIO bank is an
-+instance of a hardware IP core on a silicon die, usually exposed to the
-+programmer as a coherent range of I/O addresses. Usually each such bank is
-+exposed in the device tree as an individual gpio-controller node, reflecting
-+the fact that the hardware was synthesized by reusing the same IP block a
-+few times over.
-+
-+A GPIO controller may specify a bank ID. This is a hardware index that
-+indicate the logical order of the GPIO controller in the hardware architecture,
-+usually in the sequence 0, 1, 2 .. n. The hardware index may be different
-+from the order of register ranges and related to the backplane of how this
-+one bank is connected to the outside through a pin controller for example.
-+
- Optionally, a GPIO controller may have a "ngpios" property. This property
- indicates the number of in-use slots of available slots for GPIOs. The
- typical example is something like this: the hardware register is 32 bits
-@@ -152,6 +165,7 @@ gpio-controller@00000000 {
- 	reg = <0x00000000 0x1000>;
- 	gpio-controller;
- 	#gpio-cells = <2>;
-+	gpio-bank = <0>;
- 	ngpios = <18>;
- }
+ 			buck1_reg: BUCK1 {
+ 				regulator-name = "vdd_mif";
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <1000000>;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1100000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 			};
+@@ -372,8 +372,8 @@
  
+ 			buck3_reg: BUCK3 {
+ 				regulator-name = "vdd_int";
+-				regulator-min-microvolt = <1000000>;
+-				regulator-max-microvolt = <1000000>;
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1050000>;
+ 				regulator-always-on;
+ 				regulator-boot-on;
+ 			};
 -- 
-2.4.3
-
+1.9.1
