@@ -1,47 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl
- and gpio bindings
-Date: Thu, 31 Mar 2016 08:36:23 -0500
-Message-ID: <CAL_JsqLsKEb+dWLg9VD3p=kjgEV84_r8z89p0QgMJWKqjrGNpw@mail.gmail.com>
-References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
- <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
- <20160325144834.GA27177@rob-hp-laptop> <CACRpkdbem5a_aLTHErp0ZvanwvVPbGnDiWxM5e7iX_FdHtXprQ@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH v9 4/7] ASoC: hdmi-codec: Add audio abort() callback for video
+ side to use
+Date: Thu, 31 Mar 2016 16:36:01 +0300
+Message-ID: <36a4881da9400908b2e033cb2d931daf0d59bac9.1459431292.git.jsarha@ti.com>
+References: <cover.1459431292.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbem5a_aLTHErp0ZvanwvVPbGnDiWxM5e7iX_FdHtXprQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.1459431292.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, airlied@linux.ie, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, alsa-devel@alsa-project.org
+Cc: peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, arnaud.pouliquen@st.com, Jyri Sarha <jsarha@ti.com>, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, rmk+kernel@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 3:58 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Fri, Mar 25, 2016 at 3:48 PM, Rob Herring <robh@kernel.org> wrote:
->> On Thu, Mar 24, 2016 at 05:50:09PM +0100, Neil Armstrong wrote:
->>> Add pinctrl and gpio DT bindings for PLX Technology OXNAS SoC Family.
->>> This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->
->>> + - plxtech,gpio-bank: Specifies which bank a controller owns.
->>
->> How is this used?
->
-> That is used to give a unique ID number to the bank.
->
-> Hardware often need this to cross-reference pin controllers
-> to GPIO banks.
->
-> I should add it as "gpio-bank" to the generic bindings
-> instead, several platforms already use this and there is
-> no point in having a vendor prefix in front of it.
-
-Okay, now it is clearer. I don't want this documented as a common
-property because I don't want to encourage it's use. I only see 2
-users currently: ST and PIC32.
-
-Looking at one example, it appears to be redundant already.
-nomadik-gpio-chips property already gives you the index. The index of
-the phandles is the bank numbering. PIC32 could do the same.
-
-Rob
+QWRkIGF1ZGlvIGFib3J0KCkgY2FsbGJhY2ssIHRoYXQgaXMgcHJvdmlkZWQgYXQgYXVkaW8gc3Ry
+ZWFtIHN0YXJ0LApmb3IgdmlkZW8gc2lkZS4gVGhpcyBpcyBmb3IgdmlkZW8gc2lkZSB0byB1c2Ug
+aW4gY2FzZSB0aGVyZSBpcyBhCnByZXNzaW5nIG5lZWQgdG8gdGVhciBkb3duIHRoZSBhdWRpbyBw
+bGF5YmFjayBmb3Igc29tZSByZWFzb24uCgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2Fy
+aGFAdGkuY29tPgotLS0KIGluY2x1ZGUvc291bmQvaGRtaS1jb2RlYy5oICAgIHwgIDggKysrKysr
+LS0KIHNvdW5kL3NvYy9jb2RlY3MvaGRtaS1jb2RlYy5jIHwgMjAgKysrKysrKysrKysrKysrKysr
+Ky0KIDIgZmlsZXMgY2hhbmdlZCwgMjUgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRp
+ZmYgLS1naXQgYS9pbmNsdWRlL3NvdW5kL2hkbWktY29kZWMuaCBiL2luY2x1ZGUvc291bmQvaGRt
+aS1jb2RlYy5oCmluZGV4IGZjM2E0ODEuLjE1ZmU3MGYgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvc291
+bmQvaGRtaS1jb2RlYy5oCisrKyBiL2luY2x1ZGUvc291bmQvaGRtaS1jb2RlYy5oCkBAIC01NSwx
+MCArNTUsMTQgQEAgc3RydWN0IGhkbWlfY29kZWNfcGFyYW1zIHsKIAogc3RydWN0IGhkbWlfY29k
+ZWNfb3BzIHsKIAkvKgotCSAqIENhbGxlZCB3aGVuIEFTb0Mgc3RhcnRzIGFuIGF1ZGlvIHN0cmVh
+bSBzZXR1cC4KKwkgKiBDYWxsZWQgd2hlbiBBU29DIHN0YXJ0cyBhbiBhdWRpbyBzdHJlYW0gc2V0
+dXAuIFRoZSBjYWxsCisJICogcHJvdmlkZXMgYW4gYXVkaW8gYWJvcnQgY2FsbGJhY2sgZm9yIHN0
+b3BpbmcgYW4gb25nb2luZworCSAqIHN0cmVhbSBmcm9tIHZpZGVvIHNpZGUgZHJpdmVyIGlmIHRo
+ZSBIRE1JIGF1ZGlvIGJlY29tZXMKKwkgKiB1bmF2YWlsYWJsZS4KIAkgKiBPcHRpb25hbAogCSAq
+LwotCWludCAoKmF1ZGlvX3N0YXJ0dXApKHN0cnVjdCBkZXZpY2UgKmRldik7CisJaW50ICgqYXVk
+aW9fc3RhcnR1cCkoc3RydWN0IGRldmljZSAqZGV2LAorCQkJICAgICB2b2lkICgqYWJvcnRfY2Ip
+KHN0cnVjdCBkZXZpY2UgKmRldikpOwogCiAJLyoKIAkgKiBDb25maWd1cmVzIEhETUktZW5jb2Rl
+ciBmb3IgYXVkaW8gc3RyZWFtLgpkaWZmIC0tZ2l0IGEvc291bmQvc29jL2NvZGVjcy9oZG1pLWNv
+ZGVjLmMgYi9zb3VuZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYwppbmRleCBiNDZiOGVkLi4zNTE1
+MWE0IDEwMDY0NAotLS0gYS9zb3VuZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYworKysgYi9zb3Vu
+ZC9zb2MvY29kZWNzL2hkbWktY29kZWMuYwpAQCAtNDcsNiArNDcsMjMgQEAgZW51bSB7CiAJREFJ
+X0lEX1NQRElGLAogfTsKIAorc3RhdGljIHZvaWQgaGRtaV9jb2RlY19hYm9ydChzdHJ1Y3QgZGV2
+aWNlICpkZXYpCit7CisJc3RydWN0IGhkbWlfY29kZWNfcHJpdiAqaGNwID0gZGV2X2dldF9kcnZk
+YXRhKGRldik7CisKKwlkZXZfZGJnKGRldiwgIiVzKClcbiIsIF9fZnVuY19fKTsKKworCW11dGV4
+X2xvY2soJmhjcC0+Y3VycmVudF9zdHJlYW1fbG9jayk7CisJaWYgKGhjcC0+Y3VycmVudF9zdHJl
+YW0gJiYgaGNwLT5jdXJyZW50X3N0cmVhbS0+cnVudGltZSAmJgorCSAgICBzbmRfcGNtX3J1bm5p
+bmcoaGNwLT5jdXJyZW50X3N0cmVhbSkpIHsKKwkJZGV2X2luZm8oZGV2LCAiSERNSSBhdWRpbyBw
+bGF5YmFjayBhYm9ydGVkXG4iKTsKKwkJc25kX3BjbV9zdHJlYW1fbG9ja19pcnEoaGNwLT5jdXJy
+ZW50X3N0cmVhbSk7CisJCXNuZF9wY21fc3RvcChoY3AtPmN1cnJlbnRfc3RyZWFtLCBTTkRSVl9Q
+Q01fU1RBVEVfRElTQ09OTkVDVEVEKTsKKwkJc25kX3BjbV9zdHJlYW1fdW5sb2NrX2lycShoY3At
+PmN1cnJlbnRfc3RyZWFtKTsKKwl9CisJbXV0ZXhfdW5sb2NrKCZoY3AtPmN1cnJlbnRfc3RyZWFt
+X2xvY2spOworfQorCiBzdGF0aWMgaW50IGhkbWlfY29kZWNfbmV3X3N0cmVhbShzdHJ1Y3Qgc25k
+X3BjbV9zdWJzdHJlYW0gKnN1YnN0cmVhbSwKIAkJCQkgc3RydWN0IHNuZF9zb2NfZGFpICpkYWkp
+CiB7CkBAIC03OCw3ICs5NSw4IEBAIHN0YXRpYyBpbnQgaGRtaV9jb2RlY19zdGFydHVwKHN0cnVj
+dCBzbmRfcGNtX3N1YnN0cmVhbSAqc3Vic3RyZWFtLAogCQlyZXR1cm4gcmV0OwogCiAJaWYgKGhj
+cC0+aGNkLm9wcy0+YXVkaW9fc3RhcnR1cCkgewotCQlyZXQgPSBoY3AtPmhjZC5vcHMtPmF1ZGlv
+X3N0YXJ0dXAoZGFpLT5kZXYtPnBhcmVudCk7CisJCXJldCA9IGhjcC0+aGNkLm9wcy0+YXVkaW9f
+c3RhcnR1cChkYWktPmRldi0+cGFyZW50LAorCQkJCQkJICBoZG1pX2NvZGVjX2Fib3J0KTsKIAkJ
+aWYgKHJldCkgewogCQkJbXV0ZXhfbG9jaygmaGNwLT5jdXJyZW50X3N0cmVhbV9sb2NrKTsKIAkJ
+CWhjcC0+Y3VycmVudF9zdHJlYW0gPSBOVUxMOwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
