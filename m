@@ -1,47 +1,51 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] dt/bindings: sound: new chip added into TAS571x
- binding
-Date: Thu, 31 Mar 2016 10:25:15 -0700
-Message-ID: <20160331172515.GK2350@sirena.org.uk>
-References: <1459442487-32284-1-git-send-email-petr@barix.com>
- <1459442487-32284-3-git-send-email-petr@barix.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="s6Wo+7iKhEdF4/RK"
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH V2] ARM: bcm2835: add CPU node for ARM core
+Date: Thu, 31 Mar 2016 17:25:17 +0000
+Message-ID: <1459445118-1733-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459442487-32284-3-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Cc: cernekee-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch adds the CPU node of the BCM2835 into the DT.
 
---s6Wo+7iKhEdF4/RK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 
-On Thu, Mar 31, 2016 at 06:41:27PM +0200, Petr Kulhavy wrote:
-> This adds the TAS5721 into the TAS571x binding.
+---
+ arch/arm/boot/dts/bcm2835.dtsi |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Please use subject lines reflecting the style for the subsystem.
+Changes in V2:
+- removed undocumented fallback compatible
 
---s6Wo+7iKhEdF4/RK
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index b83b326..e87aba1 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -3,6 +3,17 @@
+ / {
+ 	compatible = "brcm,bcm2835";
+ 
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,arm1176jzf-s";
++			reg = <0x0>;
++		};
++	};
++
+ 	soc {
+ 		ranges = <0x7e000000 0x20000000 0x02000000>;
+ 		dma-ranges = <0x40000000 0x00000000 0x20000000>;
+-- 
+1.7.9.5
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW/V16AAoJECTWi3JdVIfQ9w8H/RLS5Fk3DV3Uz/9dpttxFNcA
-Zz1X2PBbrjGqpuX+ZvtPp4/uBMUrEQNzPDM+9wwpuzYVKSu59vXC8HVOmN6838jR
-M1xQDxD1PZ1DmhqbfJZb8QWdNG+CtvpJSR8iucZMSmDhSxzkcKWRYeGN58cbSDFj
-GjfrwtWpKdzdqSV5Y05JYo3fkdKoytBui9czzoNbnN8MArFEygFHlNJxmoGx6/+c
-YVH33HpbQIA+taTCkE1QvSND8vYLFtGvQlBdXfnbWWZea3Ztb7Zs3eF1Sz39m2Bv
-v8eFaK68r4S8Mh5NKLp6fuqJamRfCbNTJroYCBbvpKgEFNb/NGjZ2RgR2IEEOb8=
-=RJOE
------END PGP SIGNATURE-----
-
---s6Wo+7iKhEdF4/RK--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
