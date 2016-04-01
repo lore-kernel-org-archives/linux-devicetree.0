@@ -1,77 +1,64 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 15/16] usb: musb: da8xx: Use devm in probe
-Date: Fri, 1 Apr 2016 09:56:44 -0500
-Message-ID: <20160401145644.GB6264@uda0271908>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
- <1458863503-31121-16-git-send-email-david@lechnology.com>
- <20160331222112.GA28044@uda0271908>
- <56FDA4A0.6080106@lechnology.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl
+ and gpio bindings
+Date: Fri, 1 Apr 2016 10:19:14 -0500
+Message-ID: <CAL_JsqJS31gNS-dYXQvkLHb=qsVz4Vccztufnd08yfD+p52v_w@mail.gmail.com>
+References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
+ <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
+ <20160325144834.GA27177@rob-hp-laptop> <CACRpkdbem5a_aLTHErp0ZvanwvVPbGnDiWxM5e7iX_FdHtXprQ@mail.gmail.com>
+ <CAL_JsqLsKEb+dWLg9VD3p=kjgEV84_r8z89p0QgMJWKqjrGNpw@mail.gmail.com> <56FE8602.8020405@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56FDA4A0.6080106-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <56FE8602.8020405@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Apr 1, 2016 at 9:30 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On 03/31/2016 03:36 PM, Rob Herring wrote:
+>> On Thu, Mar 31, 2016 at 3:58 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>> On Fri, Mar 25, 2016 at 3:48 PM, Rob Herring <robh@kernel.org> wrote:
+>>>> On Thu, Mar 24, 2016 at 05:50:09PM +0100, Neil Armstrong wrote:
+>>>>> Add pinctrl and gpio DT bindings for PLX Technology OXNAS SoC Family.
+>>>>> This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
+>>>>>
+>>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>>
+>>>>> + - plxtech,gpio-bank: Specifies which bank a controller owns.
+>>>>
+>>>> How is this used?
+>>>
+>>> That is used to give a unique ID number to the bank.
+>>>
+>>> Hardware often need this to cross-reference pin controllers
+>>> to GPIO banks.
+>>>
+>>> I should add it as "gpio-bank" to the generic bindings
+>>> instead, several platforms already use this and there is
+>>> no point in having a vendor prefix in front of it.
+>>
+>> Okay, now it is clearer. I don't want this documented as a common
+>> property because I don't want to encourage it's use. I only see 2
+>> users currently: ST and PIC32.
+>>
+>> Looking at one example, it appears to be redundant already.
+>> nomadik-gpio-chips property already gives you the index. The index of
+>> the phandles is the bank numbering. PIC32 could do the same.
+>>
+>> Rob
+>>
+>
+> Hi,
+>
+> What should I use ?
 
-On Thu, Mar 31, 2016 at 05:28:48PM -0500, David Lechner wrote:
-> On 03/31/2016 05:21 PM, Bin Liu wrote:
-> 
-> >>-	glue = kzalloc(sizeof(*glue), GFP_KERNEL);
-> >>+	glue = devm_kzalloc(&pdev->dev, sizeof(*glue), GFP_KERNEL);
-> >>  	if (!glue) {
-> >>  		dev_err(&pdev->dev, "failed to allocate glue context\n");
-> >>-		goto err0;
-> >>+		return -ENOMEM;
-> >>  	}
-> >>
-> >>-	clk = clk_get(&pdev->dev, "usb20");
-> >>+	clk = devm_clk_get(&pdev->dev, "usb20");
-> >>  	if (IS_ERR(clk)) {
-> >>  		dev_err(&pdev->dev, "failed to get clock\n");
-> >>-		ret = PTR_ERR(clk);
-> >>-		goto err3;
-> >>+		return PTR_ERR(clk);
-> >
-> >memory leak due to not kfree(glue).
-> 
-> It is my understanding that since glue is allocated with
-> devm_kzalloc(), that if the probe function returns and error, glue
-> and everything else allocated with devm_* will be automatically
-> freed.
+Maybe gpio-ranges as you asked. Not really sure as I haven't used it.
 
-Ah, right.
+> I need to repost in a separate patchset with vendor replaced by Oxford Semiconductor.
+> Should I get rid of the vendor prefix of gpio-bank ?
 
-> 
-> If this is not the case, wouldn't devm_kfree() be the appropriate
-> function instead?
-> 
-> 
-> >>@@ -576,8 +569,6 @@ static int da8xx_remove(struct platform_device *pdev)
-> >>  	platform_device_unregister(glue->musb);
-> >>  	usb_phy_generic_unregister(glue->phy);
-> >>  	clk_disable(glue->clk);
-> >>-	clk_put(glue->clk);
-> >>-	kfree(glue);
-> >
-> >Doesn't match with $subject, I'd put them into a seperate patch.
-> 
-> 
-> I disagree. Since these are now automatically freed because of
-> changes in the probe function, these changes belong in the same
-> patch.
-> 
-Ok.
+No, because I think you should get rid of the property.
 
-Signed-off-by: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-
-Regards,
--Bin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
