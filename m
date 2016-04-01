@@ -1,64 +1,63 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 3/4] ARM: dts: vfxxx: Add OCROM and phandle entries
- for Vybrid SoC bus driver
-Date: Fri, 1 Apr 2016 14:00:46 +0800
-Message-ID: <20160401060046.GG18833@tiger>
-References: <cover.1457684688.git.maitysanchayan@gmail.com>
- <39ab1c08dacb7fc4e36a3f3517da16d4da47710b.1457684688.git.maitysanchayan@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 15/18] ARM: vf610: PM: initial suspend/resume support
+Date: Thu, 31 Mar 2016 23:40:42 -0700
+Message-ID: <f8da1f10269809cd07dfdda9f43a5dbf@agner.ch>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-16-git-send-email-stefan@agner.ch>
+ <20160401022507.GF18833@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <39ab1c08dacb7fc4e36a3f3517da16d4da47710b.1457684688.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: arnd-r2nGTMty4D4@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160401022507.GF18833@tiger>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 02:29:30PM +0530, Sanchayan Maity wrote:
-> Add OCROM node and introduce phandles to OCROM, MSCM and NVMEM
-> OCOTP for use by the Vybrid SoC bus driver.
+On 2016-03-31 19:25, Shawn Guo wrote:
+> On Wed, Mar 09, 2016 at 06:16:56PM -0800, Stefan Agner wrote:
+>> Add system suspend and resume support for Vybrid SoC. The standby
+>> sleep state puts the SoC in STOP mode. The SoC can be woken through
+>> an interrupt from GPC (Global Power Controller). The GPC can use any
+>> interrupt as wake-up source. To save power the main PLL1 is bypassed
+>> and uses the 24MHz on-chip oscillator. However, memory clock need to
+>> be at full speed, hence the PLL2 needs to be on to keep the memory
+>> clocked. The mode is completely implemented in C since we can access
+>> the full memory at all times. The mode provides most power saving
+>> while being able to be woken by any IRQ as wake-up source.
+>>
+>> The mem sleep state (Suspend-to-RAM) uses Vybrid's LPSTOP2 mode. This
+>> mode powergates most parts of the SoC expect some peripherials such as
+>> Wake-Up controller (WKPU) or LP RTC. Parts of the internal SRAM is
+>> retained too. The suspend code written in assembly runs from this SRAM.
+>> The code puts the main memory (DDR3) into self-refresh mode and takes
+>> it out of self-refresh mode on resume. Verified with Colibri VF50/VF61
+>> V1.2A.
+>>
+>> Signed-off-by: Stefan Agner <stefan@agner.ch>
+>> ---
+>>  arch/arm/mach-imx/Makefile        |   3 +
+>>  arch/arm/mach-imx/common.h        |  10 +
+>>  arch/arm/mach-imx/mach-vf610.c    |   8 +
+>>  arch/arm/mach-imx/pm-vf610.c      | 634 ++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-imx/suspend-vf610.S | 437 ++++++++++++++++++++++++++
+>>  drivers/clk/imx/clk-vf610.c       |  17 +
+>>  6 files changed, 1109 insertions(+)
+>>  create mode 100644 arch/arm/mach-imx/pm-vf610.c
+>>  create mode 100644 arch/arm/mach-imx/suspend-vf610.S
 > 
-> Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vfxxx.dtsi | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> index db9157e..0dd7ad5 100644
-> --- a/arch/arm/boot/dts/vfxxx.dtsi
-> +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> @@ -87,9 +87,19 @@
->  	soc {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
-> -		compatible = "simple-bus";
-> +		compatible = "fsl,vf610-soc-bus", "simple-bus";
->  		interrupt-parent = <&mscm_ir>;
->  		ranges;
-> +		fsl,rom-revision = <&ocrom 0x80>;
-> +		fsl,cpu-count = <&mscm_cpucfg 0x2C>;
-> +		fsl,l2-size = <&mscm_cpucfg 0x14>;
+> I know this is how we implemented suspend for i.MX6.  But this is not
+> the direction moving forward.  When people was pushing a pile of code
+> adding suspend for i.MX7D, I refused to take it and asked them to push
+> those hardware details into firmware and use PSCI to implement suspend.
+> I would like to suggest the same for Vybrid.
 
-We need a bindings doc for these new properties and compatible.
+Yeah I saw your comment on the i.MX7D patchset, and kind of hoped it
+does not apply for Vybrid :-)
 
-Shawn
+I see, need to look into PSCI closer, and see how much work it would be
+to set that up and transfer the code into it...
 
-> +		nvmem-cells = <&ocotp_cfg0>, <&ocotp_cfg1>;
-> +		nvmem-cell-names = "cfg0", "cfg1";
-> +
-> +		ocrom: ocrom@00000000 {
-> +			compatible = "fsl,vf610-ocrom", "syscon";
-> +			reg = <0x00000000 0x18000>;
-> +		};
->  
->  		aips0: aips-bus@40000000 {
->  			compatible = "fsl,aips-bus", "simple-bus";
-> -- 
-> 2.7.2
-> 
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
