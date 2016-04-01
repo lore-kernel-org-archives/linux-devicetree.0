@@ -1,62 +1,54 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] dt-bindings: Add Oxford Semiconductor OXNAS Standard Clocks bindings
-Date: Fri,  1 Apr 2016 16:26:31 +0200
-Message-ID: <1459520791-13269-3-git-send-email-narmstrong@baylibre.com>
-References: <1459520791-13269-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459520791-13269-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, sboyd@codeaurora.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH 02/11] ARM: dts: exynos: Fix DTC unit name warnings in
+ Exynos3250
+Date: Fri, 1 Apr 2016 10:27:20 -0400
+Message-ID: <56FE8548.5060501@osg.samsung.com>
+References: <1459493874-2366-1-git-send-email-k.kozlowski@samsung.com>
+ <1459493874-2366-2-git-send-email-k.kozlowski@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459493874-2366-2-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/clock/oxnas,stdclk.txt     | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
+Hello Krzysztof,
 
-diff --git a/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt b/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
-new file mode 100644
-index 0000000..208cca6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/oxnas,stdclk.txt
-@@ -0,0 +1,35 @@
-+Oxford Semiconductor OXNAS SoC Family Standard Clocks
-+================================================
-+
-+Please also refer to clock-bindings.txt in this directory for common clock
-+bindings usage.
-+
-+Required properties:
-+- compatible: Should be "oxsemi,ox810se-stdclk"
-+- #clock-cells: 1, see below
-+
-+Parent node should have the following properties :
-+- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
-+
-+For OX810SE, the clock indices are :
-+ - 0: LEON
-+ - 1: DMA_SGDMA
-+ - 2: CIPHER
-+ - 3: SATA
-+ - 4: AUDIO
-+ - 5: USBMPH
-+ - 6: ETHA
-+ - 7: PCIA
-+ - 8: NAND
-+
-+example:
-+
-+sys: sys-ctrl@000000 {
-+	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
-+	reg = <0x000000 0x100000>;
-+
-+	stdclk: stdclk {
-+		compatible = "oxsemi,ox810se-stdclk";
-+		#clock-cells = <1>;
-+	};
-+};
+On 04/01/2016 02:57 AM, Krzysztof Kozlowski wrote:
+> Fix following DTC warnings in Exynos3250 boards:
+> 
+> Warning (unit_address_vs_reg): Node /soc/video-phy@10020710 has a unit name, but no reg property
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos3250.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+> index 137f9015d4e8..5225e953d2ed 100644
+> --- a/arch/arm/boot/dts/exynos3250.dtsi
+> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+> @@ -153,7 +153,7 @@
+>  			interrupt-parent = <&gic>;
+>  		};
+>  
+> -		mipi_phy: video-phy@10020710 {
+> +		mipi_phy: video-phy {
+>  			compatible = "samsung,s5pv210-mipi-video-phy";
+>  			#phy-cells = <1>;
+>  			syscon = <&pmu_system_controller>;
+> 
+
+Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+
+Best regards,
 -- 
-1.9.1
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
