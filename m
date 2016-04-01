@@ -1,56 +1,55 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
-Date: Fri, 1 Apr 2016 11:19:31 -0500
-Message-ID: <20160401161931.GC6264@uda0271908>
-References: <1458181615-27782-1-git-send-email-david@lechnology.com>
- <1458181615-27782-7-git-send-email-david@lechnology.com>
- <56FE74AC.6080303@ti.com>
- <20160401144510.GA6264@uda0271908>
- <56FE9B8F.7050605@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC][PATCH 0/2] Initial support for ARM Mali Display Processors
+Date: Fri,  1 Apr 2016 17:21:50 +0100
+Message-ID: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56FE9B8F.7050605-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Stone <daniel-rLtY4a/8tF1rovVCs/uTlw@public.gmane.org>, David Brown <David.Brown-5wv7dgnIgG8@public.gmane.org>, Brian Starkey <Brian.Starkey-5wv7dgnIgG8@public.gmane.org>
+Cc: DRI devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-On Fri, Apr 01, 2016 at 11:02:23AM -0500, David Lechner wrote:
-> On 04/01/2016 09:45 AM, Bin Liu wrote:
-> >>>+EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
-> >>
-> >>Don't prefer export symbols from PHY driver. That'll create unnecessary
-> >>dependencies between the controller and the PHY.
-> >
-> >Agreed.
-> >
-> >>
-> >>I think it'll be better to create a new attribute and use it?
-> >
-> >Another simpler option is to not support _set_mode() for DA8xx, and the
-> >phy driver set the otgmode bit in probe() based on dr_mode of the
-> >controller.
-> >
-> >Regards,
-> >-Bin.
-> >
-> 
-> This certainly works for my particular use case, however, Sergei
-> Shtylyov, who wrote the da8xx musb glue layer originally, seemed to
-> recall in his review of the patch series that this really is
-> necessary for OTG mode to work properly.
+Here is the public first version of the driver for the Mali Display Processors.
+Currently, the driver supports the Display Engine found in Mali DP500, DP550
+and DP650, with up to 3 planes that can be rotated by the hardware. There are
+features that the hardware supports that are not currently implemented in the
+driver, but in the current form it is capable of supporting X11 using fbdev
+emulation as well as Wayland with pixman rendering.
 
-I don't know much about the usb module on DA8xx, but it seems to me that
-_set_mode() has nothing to do with OTG mode. musb_core only calls
-_set_mode() in two places - 1) sysfs: musb_mode_store(), 2) init:
-musb_init_controller(). None of them should be related to OTG mode.
+The patchset is submitted as an RFC to gather feedback and to catch early
+mistakes in the driver. I would appreciate any comments that you might have as
+well as code reviews if possible.
 
-Regards,
--Bin.
+Many thanks,
+Liviu
+
+Liviu Dudau (2):
+  dt/bindings: display: Add DT bindings for Mali Display Processors.
+  drm/arm: Add support for Mali Display Processors
+
+ .../devicetree/bindings/display/arm,malidp.txt     |  65 ++
+ drivers/gpu/drm/arm/Kconfig                        |  15 +
+ drivers/gpu/drm/arm/Makefile                       |   2 +
+ drivers/gpu/drm/arm/malidp_crtc.c                  | 279 ++++++++
+ drivers/gpu/drm/arm/malidp_drv.c                   | 483 +++++++++++++
+ drivers/gpu/drm/arm/malidp_drv.h                   |  49 ++
+ drivers/gpu/drm/arm/malidp_hw.c                    | 774 +++++++++++++++++++++
+ drivers/gpu/drm/arm/malidp_hw.h                    | 192 +++++
+ drivers/gpu/drm/arm/malidp_planes.c                | 339 +++++++++
+ drivers/gpu/drm/arm/malidp_regs.h                  | 172 +++++
+ 10 files changed, 2370 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/arm,malidp.txt
+ create mode 100644 drivers/gpu/drm/arm/malidp_crtc.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_drv.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_drv.h
+ create mode 100644 drivers/gpu/drm/arm/malidp_hw.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_hw.h
+ create mode 100644 drivers/gpu/drm/arm/malidp_planes.c
+ create mode 100644 drivers/gpu/drm/arm/malidp_regs.h
+
+-- 
+2.7.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
