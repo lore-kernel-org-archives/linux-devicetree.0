@@ -1,129 +1,292 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC 4/8] gpio: altera-a10sr: Add A10 System Resource Chip GPIO support.
-Date: Fri, 1 Apr 2016 14:17:42 +0200
-Message-ID: <CACRpkda8VTDGVsRqbCs6ESeokA3t_p2X91FUNiqA7YM=F-JXBQ@mail.gmail.com>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
-	<1459278791-3646-5-git-send-email-tthayer@opensource.altera.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/4] perf: xgene: Add APM X-Gene SoC Performance
+ Monitoring Unit driver
+Date: Fri, 1 Apr 2016 13:18:20 +0100
+Message-ID: <20160401121820.GB29876@leverpostej>
+References: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
+ <1459467472-31561-4-git-send-email-ttnguyen@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1459278791-3646-5-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: tthayer@opensource.altera.com
-Cc: Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, jdelvare@suse.com, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, pawell.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459467472-31561-4-git-send-email-ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tai Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 9:13 PM,  <tthayer@opensource.altera.com> wrote:
+Hi,
 
-> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> Add the GPIO functionality for the Altera Arria10 MAX5 System Resource
-> Chip. The A10 MAX5 has 12 bits of GPIO assigned to switches, buttons,
-> and LEDs as a GPIO extender on the SPI bus.
->
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+I haven't reviewed this in great detail, but I spotted a few issues.
 
-OK...
-
-As Lee says: split off the MFD patch so it is a pure GPIO driver
-patch.
-
-> +#include <linux/gpio.h>
-
-You should instead #include <linux/gpio/driver.h>
-
-> +#include <linux/mfd/altera-a10sr.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/syscalls.h>
-> +#include <linux/uaccess.h>
-
-Syscalls and uaccess??? I don't think so.
-
-> +struct altr_a10sr_gpio {
-> +       struct altr_a10sr *a10sc;
-> +       struct gpio_chip gp;
-> +};
-
-Add some kerneldoc.
-
-> +static inline struct altr_a10sr_gpio *to_altr_a10sr_gpio(struct gpio_chip *chip)
+> +static int get_next_avail_cntr(struct xgene_pmu_dev *pmu_dev)
 > +{
-> +       return container_of(chip, struct altr_a10sr_gpio, gp);
-> +}
-
-Don't use this old design pattern.
-
-Use [devm_]gpiochip_add_data() and use gpiochip_get_data(gc) to get
-a data pointer from the gpiochip.
-
-> +static int altr_a10sr_gpio_get(struct gpio_chip *gc, unsigned int nr)
-> +{
-> +       struct altr_a10sr_gpio *gpio = to_altr_a10sr_gpio(gc);
-
-So this becomes
-struct altr_a10sr_gpio *gpio = gpiochip_get_data(gc);
-
-> +       int ret;
-> +       unsigned char reg = ALTR_A10SR_LED_RD_REG + ALTR_A10SR_REG_OFFSET(nr);
+> +	int shift, cntr, retval;
+> +	unsigned long flags;
 > +
-> +       ret = altr_a10sr_reg_read(gpio->a10sc, reg);
+> +	raw_spin_lock_irqsave(&pmu_dev->lock, flags);
 > +
-> +       if (ret < 0)
-> +               return ret;
+> +	for (cntr = 0; cntr < pmu_dev->max_counters; cntr++) {
+> +		shift = cntr;
+> +		if (!(pmu_dev->cntr_assign_mask & (1ULL << shift))) {
+> +			pmu_dev->cntr_assign_mask |= (1ULL << shift);
+> +			retval = cntr;
+> +			goto out;
+> +		}
+> +	}
+> +	retval = -ENOSPC;
+
+Please use a bitmask. Then you can do something like:
+
+        cntr = find_first_zero_bit(pmu_dev->cntr_assign_mask, 
+                                   pmu_dev->max_counters);
+        if (cntr == pmu_dev->max_counters)
+                return -ENOSPC;
+        set_bit(cntr, pmu_dev->cntr_assign_mask);
+        return cntr;
+
+Are the spinlocks necessary? 
+
+I thought add and del couldn't be called in parallel for the same
+context, and those are the only users of this mask.
+
 > +
-> +       if (ret & (1 << ALTR_A10SR_REG_BIT(nr)))
-> +               return 1;
-
-Do this instead:
-
-return !!(ret & (1 << ALTR_A10SR_REG_BIT(nr)))
-
-It raises the question whether ALTR_A10SR_REG_BIT
-is just a reimplementation of the BIT() macro from
-<linux/bitops.h>, please check this.
-
-> +static int altr_a10sr_gpio_direction_input(struct gpio_chip *gc,
-> +                                          unsigned int nr)
-> +{
-> +       if ((nr >= ALTR_A10SR_IN_VALID_RANGE_LO) &&
-> +           (nr <= ALTR_A10SR_IN_VALID_RANGE_HI))
-> +               return 0;
-> +       return -EINVAL;
+> +out:
+> +	raw_spin_unlock_irqrestore(&pmu_dev->lock, flags);
+> +
+> +	return retval;
 > +}
 > +
-> +static int altr_a10sr_gpio_direction_output(struct gpio_chip *gc,
-> +                                           unsigned int nr, int value)
+> +static int clear_avail_cntr(struct xgene_pmu_dev *pmu_dev, u8 cntr)
 > +{
-> +       if ((nr >= ALTR_A10SR_OUT_VALID_RANGE_LO) &&
-> +           (nr <= ALTR_A10SR_OUT_VALID_RANGE_HI))
-> +               return 0;
-> +       return -EINVAL;
+> +	unsigned long flags;
+> +	int shift;
+> +
+> +	if (cntr > pmu_dev->max_counters)
+> +		return -EINVAL;
+
+This implies we have an event we tried to del, which didn't have a
+counter. Surely we should never have added the event in that case, and
+this should never happen?
+
+> +
+> +	shift = cntr;
+> +
+> +	raw_spin_lock_irqsave(&pmu_dev->lock, flags);
+> +	pmu_dev->cntr_assign_mask &= ~(1ULL << shift);
+
+clear_bit(cntr, pmu_dev->cntr_assign_mask);
+
+> +	raw_spin_unlock_irqrestore(&pmu_dev->lock, flags);
+> +
+> +	return 0;
 > +}
 
-Does this mean that all lines are *always* input and output
-at the same time?
+[...]
 
-If there is no .set_direction() callback and all lines are both
-input and output it kind of implies that all lines are also
-implicitly open drain do you agree?
+> +static int xgene_perf_event_init(struct perf_event *event)
+> +{
+> +	struct xgene_pmu_dev *pmu_dev = to_pmu_dev(event->pmu);
+> +	struct hw_perf_event *hwc = &event->hw;
+> +	u64 config, config1;
+> +
+> +	/* test the event attr type check for PMU enumeration */
+> +	if (event->attr.type != event->pmu->type)
+> +		return -ENOENT;
+> +
+> +	/*
+> +	 * SOC PMU counters are shared across all cores.
+> +	 * Therefore, it does not support per-process mode.
+> +	 * Also, it does not support event sampling mode.
+> +	 */
+> +	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
+> +		return -EINVAL;
+> +
+> +	/* SOC counters do not have usr/os/guest/host bits */
+> +	if (event->attr.exclude_user || event->attr.exclude_kernel ||
+> +	    event->attr.exclude_host || event->attr.exclude_guest)
+> +		return -EINVAL;
+> +
+> +	if (event->cpu < 0)
+> +		return -EINVAL;
 
-Please check:
-- If there is really no direction setting anywhere
-- For example if some lines are hardwired as input and
-  some lines are hardwired as output
-- If that is not the case, verify that all lines are really
-  open drain, they should be if all are both input and
-  output at the same time.
+We should really have this made common for system PMUs (e.g. librify
+it). Every driver does something subtly different, and isn't kept in
+sync with new core feature addition.
 
-> +       ret = gpiochip_add(&gpio->gp);
-> +       if (ret < 0) {
-> +               dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
-> +               return ret;
-> +       }
+Even if you're happy to accept a request made with any event->cpu,
+you'll need to forcefully override that and ensure that all events are
+in the same percpu context.
 
-Use devm_gpiochip_add_data() instead.
+See what we do in drivers/bus/arm-ccn.c.
 
-Yours,
-Linus Walleij
+> +
+> +	if (event->pmu != &pmu_dev->pmu)
+> +		return -ENOENT;
+
+If this does need to be checked, we should so so when checking the type
+above.
+
+However, the PMU should have a unique type anyway, so the type being the
+same should imply this is true anyway.
+
+> +
+> +	if (pmu_dev) {
+> +		config = event->attr.config;
+> +		config1 = event->attr.config1;
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+
+How can the else case ever occur? All other PMUs have been filtered away
+by this point.
+
+> +	if (pmu_dev->max_counters == 0)
+> +		return -EINVAL;
+
+Why bother registering the PMU device at all in this case?
+
+> +
+> +	hwc->config = config;
+> +	if (config1)
+> +		hwc->extra_reg.config = config1;
+> +	else
+> +		/* Enable all Agents */
+> +		hwc->extra_reg.config = 0xFFFFFFFFFFFFFFFFULL;
+
+I'm not sure I follow what's going on here.
+
+It would be good to document precisely what this means.
+
+[...]
+
+> +static int xgene_init_events_attrs(struct xgene_pmu_dev *pmu_dev,
+> +				   struct xgene_pmu_dev_event_desc *event_desc)
+> +{
+> +	struct attribute_group *attr_group;
+> +	struct attribute **attrs;
+> +	int i = 0, j;
+> +
+> +	while (event_desc[i].attr.attr.name)
+> +		i++;
+> +
+> +	attr_group = devm_kzalloc(pmu_dev->parent->dev,
+> +			sizeof(struct attribute *) * (i + 1)
+> +			+ sizeof(*attr_group), GFP_KERNEL);
+> +	if (!attr_group)
+> +		return -ENOMEM;
+> +
+> +	attrs = (struct attribute **)(attr_group + 1);
+> +	for (j = 0; j < i; j++)
+> +		attrs[j] = &event_desc[j].attr.attr;
+> +
+> +	attr_group->name = "events";
+> +	attr_group->attrs = attrs;
+> +	pmu_dev->events_group = attr_group;
+> +
+> +	return 0;
+> +}
+
+I don't think this needs to be dynamic. See what we do in
+drivers/bus/arm-cci.c with CCI_EXT_ATTR_ENTRY for a simple way of
+initialising the attribute pointer array at compile time.
+
+With that, you don't need any dynamic allocation or initialisation here.
+
+> +static void xgene_perf_pmu_init(struct xgene_pmu_dev *pmu_dev)
+> +{
+> +	pmu_dev->pmu.event_init	= xgene_perf_event_init;
+> +	pmu_dev->pmu.add	= xgene_perf_add;
+> +	pmu_dev->pmu.del	= xgene_perf_del;
+> +	pmu_dev->pmu.start	= xgene_perf_start;
+> +	pmu_dev->pmu.stop	= xgene_perf_stop;
+> +	pmu_dev->pmu.read	= xgene_perf_read;
+> +}
+
+You'll also need to set the task_ctx_nr to perf_invalid_context, as this
+is a system PMU rather than something that can profile tasks or
+individual CPUs.
+
+> +static irqreturn_t _xgene_pmu_isr(int irq, struct xgene_pmu_dev *pmu_dev)
+> +{
+> +	struct perf_event *event = NULL;
+> +	struct perf_sample_data data;
+> +	struct xgene_pmu *xgene_pmu;
+> +	struct hw_perf_event *hwc;
+> +	struct pt_regs *regs;
+
+This is _not_ a CPU PMU. There are no relevant pt_rregs.
+
+> +	int idx;
+> +	u32 val;
+> +
+> +	/* Get interrupt counter source */
+> +	val = readl(pmu_dev->inf->csr + PMU_PMOVSR);
+> +	idx = ffs(val) - 1;
+> +	if (!(val & PMU_OVERFLOW_MASK))
+> +		goto out;
+> +	event = pmu_dev->pmu_counter_event[idx];
+> +
+> +	/*
+> +	 * Handle the counter(s) overflow(s)
+> +	 */
+> +	regs = get_irq_regs();
+
+As above, this is irrelevant.
+
+> +
+> +	/* Ignore if we don't have an event. */
+> +	if (!event)
+> +		goto out;
+> +
+> +	hwc = &event->hw;
+> +
+> +	xgene_perf_event_update(event, hwc, idx);
+> +	perf_sample_data_init(&data, 0, hwc->last_period);
+> +	if (!xgene_perf_event_set_period(event, hwc, idx))
+> +		goto out;
+> +
+> +	if (perf_event_overflow(event, &data, regs))
+> +		xgene_perf_disable_event(event);
+
+perf_event_overflow skips non-sampling events (i.e. all events this PMU
+is capable of), and always returns 0, so the regs aren't even used at
+all...
+
+This can/should go.
+
+[...]
+
+> +static int xgene_pmu_probe_active_mcb_mcu(struct xgene_pmu *xgene_pmu,
+> +					  struct platform_device *pdev)
+> +{
+> +	if (efi_enabled(EFI_BOOT))
+> +		return acpi_pmu_probe_active_mcb_mcu(xgene_pmu, pdev);
+> +	else
+> +		return fdt_pmu_probe_active_mcb_mcu(xgene_pmu, pdev);
+> +}
+
+EFI has _nothing_ to do with ACPI here.
+
+EFI != ACPI; ECI && !ACPI is possible.
+
+Check whether you have an of_node or an acpi companion device.
+
+> +static int xgene_pmu_probe_pmu_dev(struct xgene_pmu *xgene_pmu,
+> +				   struct platform_device *pdev)
+> +{
+> +	if (efi_enabled(EFI_BOOT))
+> +		return acpi_pmu_probe_pmu_dev(xgene_pmu, pdev);
+> +	else
+> +		return fdt_pmu_probe_pmu_dev(xgene_pmu, pdev);
+> +}
+
+Likewise.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
