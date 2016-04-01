@@ -1,74 +1,58 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Fri, 1 Apr 2016 09:11:21 -0700
-Message-ID: <20160401161121.GZ2350@sirena.org.uk>
-References: <20160331183130.GR2350@sirena.org.uk>
- <56FD6CF7.5080909@nvidia.com>
- <20160331184553.GS2350@sirena.org.uk>
- <56FD6ED6.3020507@nvidia.com>
- <20160331185945.GT2350@sirena.org.uk>
- <56FD7379.2000307@nvidia.com>
- <20160331192227.GU2350@sirena.org.uk>
- <56FD7F07.7010404@nvidia.com>
- <20160331203942.GV2350@sirena.org.uk>
- <56FE2009.4020302@nvidia.com>
+From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
+Date: Fri, 1 Apr 2016 11:19:31 -0500
+Message-ID: <20160401161931.GC6264@uda0271908>
+References: <1458181615-27782-1-git-send-email-david@lechnology.com>
+ <1458181615-27782-7-git-send-email-david@lechnology.com>
+ <56FE74AC.6080303@ti.com>
+ <20160401144510.GA6264@uda0271908>
+ <56FE9B8F.7050605@lechnology.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="J8ZfMsDg90ddfAv1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56FE2009.4020302@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Liam Girdwood <lgirdwood@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gandhar Dighe <gdighe@nvidia.com>, Stuart Yates <syates@nvidia.com>
+In-Reply-To: <56FE9B8F.7050605-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---J8ZfMsDg90ddfAv1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, Apr 01, 2016 at 11:02:23AM -0500, David Lechner wrote:
+> On 04/01/2016 09:45 AM, Bin Liu wrote:
+> >>>+EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
+> >>
+> >>Don't prefer export symbols from PHY driver. That'll create unnecessary
+> >>dependencies between the controller and the PHY.
+> >
+> >Agreed.
+> >
+> >>
+> >>I think it'll be better to create a new attribute and use it?
+> >
+> >Another simpler option is to not support _set_mode() for DA8xx, and the
+> >phy driver set the otgmode bit in probe() based on dr_mode of the
+> >controller.
+> >
+> >Regards,
+> >-Bin.
+> >
+> 
+> This certainly works for my particular use case, however, Sergei
+> Shtylyov, who wrote the da8xx musb glue layer originally, seemed to
+> recall in his review of the patch series that this really is
+> necessary for OTG mode to work properly.
 
-On Fri, Apr 01, 2016 at 12:45:21PM +0530, Laxman Dewangan wrote:
-> On Friday 01 April 2016 02:09 AM, Mark Brown wrote:
+I don't know much about the usb module on DA8xx, but it seems to me that
+_set_mode() has nothing to do with OTG mode. musb_core only calls
+_set_mode() in two places - 1) sysfs: musb_mode_store(), 2) init:
+musb_init_controller(). None of them should be related to OTG mode.
 
-> >Is the error in the observed values a function of the capacitance that
-> >we can calcuate here?
+Regards,
+-Bin.
 
-> As per datasheet, There is no direct equation for ramp time deviation when
-> regulator output current cross the regulator current limit.
-
-OK, so it's really a current limit that's kicking in rather than a ramp
-rate control (though if it's a current limit I'm still not clear why the
-target rate limits where we cap)?  Can we do something based on the
-maximum load configured and the current limit?  That sounds more generic
-anyway, a current limiting feature is quite common.  If we implement the
-current limit interface for the regulator and then specify what the
-maximum load is we should be able to do the calculations you quoted from
-the datasheet I'd have thought (unless I'm missing something).
-
-> So providing configured and observed value direct will help much here.
-
-Only if we never do anything like reconfigure the ramp rate at runtime
-which some other user might want to do, and it does rely on every system
-integrator to notice that the ramp rate is inaccurate and work out how
-to work around it for their system.  What would be better would be if we
-could figure out a way of describing this based on something more
-directly observable.
-
---J8ZfMsDg90ddfAv1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW/p2oAAoJECTWi3JdVIfQShIH/RxYArq0WSLJ8bJkR2x6fklh
-9kiI4srAZTtjRgBf06cqLU1QRmwRM99Aagykprn14ghbpYYvOd3OLouS/M7/qfG4
-PpPPvuzV4ju8fgVsfyeAwMstGY0sLiv2rQxWJAtpwLr84L3FxibBSv0Lzfd7PQAh
-g0NiKEdtK/IDbQy0G6klhe7oG0UpL7gmWqDK+6D/RUOGW8+K1YM9XHDW7bX+3+RJ
-G3i+dN8ii25qQTABJPpCOjxvMZ35XO5NUlOZTaLC4Yk3XVofK/fbFTNz2mn9MxtG
-Mh0LL7yloB29BFAXDSl12qLZrWNl8HITmO6Ny8Inb+gmWgerPeGFg2O2xH14FwU=
-=PE5S
------END PGP SIGNATURE-----
-
---J8ZfMsDg90ddfAv1--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
