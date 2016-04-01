@@ -1,30 +1,60 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 04/10] serial: mps2-uart: add MPS2 UART driver
-Date: Fri, 1 Apr 2016 15:27:20 +0100
-Message-ID: <56FE8548.6090602@arm.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
- <1459519381-34441-5-git-send-email-vladimir.murzin@arm.com>
- <CAHp75VchqMT9NK_JaLp-90ainSov77H93+F6h75bQHuZV0zA=A@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl
+ and gpio bindings
+Date: Fri, 1 Apr 2016 16:30:26 +0200
+Message-ID: <56FE8602.8020405@baylibre.com>
+References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
+ <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
+ <20160325144834.GA27177@rob-hp-laptop>
+ <CACRpkdbem5a_aLTHErp0ZvanwvVPbGnDiWxM5e7iX_FdHtXprQ@mail.gmail.com>
+ <CAL_JsqLsKEb+dWLg9VD3p=kjgEV84_r8z89p0QgMJWKqjrGNpw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHp75VchqMT9NK_JaLp-90ainSov77H93+F6h75bQHuZV0zA=A@mail.gmail.com>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>, Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLsKEb+dWLg9VD3p=kjgEV84_r8z89p0QgMJWKqjrGNpw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/16 15:19, Andy Shevchenko wrote:
-> On Fri, Apr 1, 2016 at 5:02 PM, Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org> wrote:
->> This driver adds support to the UART controller found on ARM MPS2
->> platform.
+On 03/31/2016 03:36 PM, Rob Herring wrote:
+> On Thu, Mar 31, 2016 at 3:58 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Fri, Mar 25, 2016 at 3:48 PM, Rob Herring <robh@kernel.org> wrote:
+>>> On Thu, Mar 24, 2016 at 05:50:09PM +0100, Neil Armstrong wrote:
+>>>> Add pinctrl and gpio DT bindings for PLX Technology OXNAS SoC Family.
+>>>> This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
+>>>>
+>>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 >>
->> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+>>>> + - plxtech,gpio-bank: Specifies which bank a controller owns.
+>>>
+>>> How is this used?
+>>
+>> That is used to give a unique ID number to the bank.
+>>
+>> Hardware often need this to cross-reference pin controllers
+>> to GPIO banks.
+>>
+>> I should add it as "gpio-bank" to the generic bindings
+>> instead, several platforms already use this and there is
+>> no point in having a vendor prefix in front of it.
 > 
-> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Okay, now it is clearer. I don't want this documented as a common
+> property because I don't want to encourage it's use. I only see 2
+> users currently: ST and PIC32.
+> 
+> Looking at one example, it appears to be redundant already.
+> nomadik-gpio-chips property already gives you the index. The index of
+> the phandles is the bank numbering. PIC32 could do the same.
+> 
+> Rob
 > 
 
-Thanks, Andy!
+Hi,
 
-Vladimir
+What should I use ?
+I need to repost in a separate patchset with vendor replaced by Oxford Semiconductor.
+Should I get rid of the vendor prefix of gpio-bank ?
+
+Neil
