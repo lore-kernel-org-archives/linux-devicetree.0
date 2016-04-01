@@ -1,81 +1,104 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Fri, 1 Apr 2016 12:45:21 +0530
-Message-ID: <56FE2009.4020302@nvidia.com>
-References: <20160331174741.GO2350@sirena.org.uk> <56FD62BA.3040406@nvidia.com> <20160331183130.GR2350@sirena.org.uk> <56FD6CF7.5080909@nvidia.com> <20160331184553.GS2350@sirena.org.uk> <56FD6ED6.3020507@nvidia.com> <20160331185945.GT2350@sirena.org.uk> <56FD7379.2000307@nvidia.com> <20160331192227.GU2350@sirena.org.uk> <56FD7F07.7010404@nvidia.com> <20160331203942.GV2350@sirena.org.uk>
+From: Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: dtc warnings
+Date: Fri, 1 Apr 2016 10:49:13 +0300
+Message-ID: <56FE27F9.2070100@gmail.com>
+References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="0peGLmgNqw77MlN9QwQPKBXT89RghVLlq"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160331203942.GV2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--0peGLmgNqw77MlN9QwQPKBXT89RghVLlq
+Content-Type: multipart/mixed; boundary="Tdp6D8wc82uv26GtKco7Cl14XmEdIkBnB"
+From: Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
+ "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
+ "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Message-ID: <56FE27F9.2070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: dtc warnings
+References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 
-On Friday 01 April 2016 02:09 AM, Mark Brown wrote:
-> * PGP Signed by an unknown key
->
-> On Fri, Apr 01, 2016 at 01:18:23AM +0530, Laxman Dewangan wrote:
->> On Friday 01 April 2016 12:52 AM, Mark Brown wrote:
->> So as per above, it will be adjusted to 13.75mV/us (nearest higher s=
-ide) for
->> device configuration but this device need to configure for 27.5mV/us=
-=2E
-> You're saying that the device is so bad at regulating the ramp rate t=
-hat
-> it's not only failing to keep up with the desired ramp rate and cappi=
-ng
-> at whatever rate but it's also doing even worse if configured for a
-> slower rate?  That's not great, it sounds like it's doing the ramp
-> control via some sort of dead reckoning thing rather than by actually
-> ramping the voltage it's trying to regulate like it was asked to.
->
-> Is the error in the observed values a function of the capacitance tha=
-t
-> we can calcuate here?
->
-As per datasheet, There is no direct equation for ramp time deviation=20
-when regulator output current cross the regulator current limit.
+--Tdp6D8wc82uv26GtKco7Cl14XmEdIkBnB
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
- From data sheet:
-/**
+Hi Rob,
 
-During a DVS transition, the regulators output current will increase by=
-=20
-COUT*dV/dt. In the event that the load current plus the additional=20
-current imposed by the DVS transition, reach the regulator=C2=92s curre=
-nt=20
-limit, the current limit will be enforced. When the current limit is=20
-enforced, the advertised DVS transition rate (dV/dt) will not occur.
+On 01/04/16 04:40, Rob Herring wrote:
+> You may have noticed that linux-next had gotten noisy with dtc
+> warnings lately. I dropped the change for a bit, but added it back
+> today except now it is disabled unless building with "W=3D1".
+>=20
+> There's ~25K (2500 unique) warnings generated from the ARM dts files.
+> Here's the ranking of warnings by dtb. OMAP is the clear winner (based
+> on the similar counts, probably lots of duplicates). Please help
+> remind contributors to test with W=3D1 and start to fix these.
+>=20
+> At least for memory nodes, I plan to whitelist allowing no
+> unit-address. There could be others, but none that I've seen so far.
 
+What's the correct way to fix nodes for display platform devices? For
+example, omap4-panda-common.dtsi has two connector nodes:
 
-And there is calculation of Iinrush based on Cout and configured dv/dt.
-Iinrush=3Dmin(Ilim & Cout*dV/dt).
-
-IINRUSH calculation for Cout =3D 100uF
-
-IINRUSH=3Dmin(ILIMP & COUT*dV/dt).
-SD0 is a two phase regulator with a typical PMOS current limit (ILIMPP0=
-)=20
-of 3.75A per phase. For ILIMP in the above equation we will use=20
-2x3.75A=3D7.5A.
-SD0 has a typical soft-start rate (dV/dt_SS_SD0) of 25mV/us. For dv/dt=20
-in the above equation we will use 25mV/us.
-IINRUSH=3Dmin(7.5A & 100uF*25mV/us).
-IINRUSH=3Dmin(7.5A & 2.5A).
-IINRUSH=3D2.5A
-
-**/
+dvi0: connector@0 {
+	compatible =3D "dvi-connector";
+	label =3D "dvi";
+	...
+};
 
 
-So providing configured and observed value direct will help much here.
+hdmi0: connector@1 {
+	compatible =3D "hdmi-connector";
+	label =3D "hdmi";
+	...
+};
 
+Should I add the reg property, or should I rename the nodes to, say,
+connector_dvi and connector_hdmi, or connector1 and connector2?
+
+The index (reg) is not used for anything, but perhaps there could be
+some use for it in the future (although I have no idea what the use
+would be).
+
+ Tomi
+
+
+--Tdp6D8wc82uv26GtKco7Cl14XmEdIkBnB--
+
+--0peGLmgNqw77MlN9QwQPKBXT89RghVLlq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJW/if5AAoJEPo9qoy8lh71FOsQAJk8rNsmssTEHAXiscsGCNwI
+77G8ZySxJ/bVo+g6BlLfbQOgFW30VhuNvzTL6lo1hP7sNEK7NLzW8Xyk3te6eDh4
+/XS76xtXlfsag1nUPwNpPyifZ5OVRgae7/8bA+Dial1brB1JYbwOpzVZeVLVqPqF
+diyvuoxLSwWV5gqapZJ8rt2YQWrbmc9dk6I0WYLFHAY8c7wHjgfiSq0OoTovhTee
+8bzQ0AzhPn8qQE48+rSoGRB5poEqpzR07wUp+ftc9ZdLldsqaj67pzDoNXNliEB+
+XhCvn1SggZWGm19moeWAh+6EWLnQG6fxto2MtYO4vYiWmD3BFHS9AOmXePRW7YsV
+zfBu+yvN34A+hzO1UpM4VQ/z2cCRzieLQhB7BCSmZ7Ri9oyoaIfs5pA48ASwiB2K
+TA41mSUdAgYHJ/VkXL5OC3Nc9411rZkne7Ivk/svikBYNmRTUJ+0hJQyqkjAOd5s
+hxJXXuBipSD4lNB9dHiuEYkwbGY8zM9pDcPOcQaSLc2+QjVPBuW+C6p+e3E17wxZ
+9ylIshROpvDBOYoF5ZguU3uAPhdJc22xMTRLP4J8T5s3W/m1WpeMFYkUjK7rFoE9
+M4NtuH28bc4sOt0Pp//yLefTAXYOycgQEY4obdbMIaKoxbQm24+3jp5ustIEXvtd
+RAaezVPGJ8cHTKfRDJd3
+=0tyK
+-----END PGP SIGNATURE-----
+
+--0peGLmgNqw77MlN9QwQPKBXT89RghVLlq--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
