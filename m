@@ -1,41 +1,138 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] doc: dt: mtd: add a DT property to enable the use
- of 4byte-address op codes
-Date: Fri, 1 Apr 2016 13:42:36 -0700
-Message-ID: <20160401204236.GE3645@localhost>
-References: <cover.1458657802.git.cyrille.pitchen@atmel.com>
- <b6dff3f629497025be74207227b94807b64e0e9c.1458657802.git.cyrille.pitchen@atmel.com>
- <CAL_JsqKUMhPwxrhz50D8+UAaVPT_+=xJLm6A6fVy6RgpyOnq8w@mail.gmail.com>
- <56F2B18A.3020107@atmel.com>
- <56F54ED2.3030609@atmel.com>
+From: Stuart Yoder <stuart.yoder@nxp.com>
+Subject: [PATCH 1/2] Documentation: fsl-mc: binding updates for MSIs, ranges,
+ PHYs
+Date: Fri, 1 Apr 2016 15:54:29 -0500
+Message-ID: <1459544069-12852-1-git-send-email-stuart.yoder@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <56F54ED2.3030609-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, boris brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek =?utf-8?B?VmHFoXV0?= <marex-ynQEQJNshbs@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, german.rivera@freescale.com, Stuart Yoder <stuart.yoder@freescale.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, leoyang.li@nxp.com, Stuart Yoder <stuart.yoder@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 25, 2016 at 03:44:34PM +0100, Cyrille Pitchen wrote:
-> Hi all,
-> 
-> Since the framework is named spi-nor, what about spi-nor-4byte-opcodes?
-> Is it okay for everyone?
-> 
-> It would follow the same pattern as spi-max-frequency which applies to all SPI
-> devices.
+From: Stuart Yoder <stuart.yoder@freescale.com>
 
-"spi-nor-" as a prefix seems better, thanks.
+-The Freescale Management Complex and all associated objects
+ use message interrupts, and thus an msi-parent is required.
 
-I'm still not confident we've settled the discussion on the need for
-this property. I really don't like having a mixture of ways to specify
-the same thing, so if we can avoid it in any way (e.g., by just being
-more specific about device names), then I'd probably prefer that.
+-Define a ranges property to specify the mapping between
+ the MC address space and the system address space.
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-The fsl-mc node may optionally have dpmac sub-nodes that describe
+ the relationship between the Ethernet MACs which belong to the MC
+ and the Ethernet PHYs on the system board.
+
+Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
+Acked-by: J. German Rivera <German.Rivera@nxp.com>
+---
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |   81 +++++++++++++++++++-
+ 1 file changed, 80 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+index c7a26ca..6611a7c 100644
+--- a/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
++++ b/Documentation/devicetree/bindings/misc/fsl,qoriq-mc.txt
+@@ -30,11 +30,90 @@ Required properties:
+                         region may not be present in some scenarios, such
+                         as in the device tree presented to a virtual machine.
+ 
++    - msi-parent
++        Value type: <phandle>
++        Definition: Must be present and point to the MSI controller node
++                    handling message interrupts for the MC.
++
++    - ranges
++        Value type: <prop-encoded-array>
++        Definition: A standard property.  Defines the mapping between the child
++                    MC address space and the parent system address space.
++
++                    The MC address space is defined by 3 components:
++                       <region type> <offset hi> <offset lo>
++
++                    Valid values for region type are
++                       0x0 - MC portals
++                       0x1 - QBMAN portals
++
++    - #address-cells
++        Value type: <u32>
++        Definition: Must be 3.  (see definition in 'ranges' property)
++
++    - #size-cells
++        Value type: <u32>
++        Definition: Must be 1.
++
++Sub-nodes:
++
++        The fsl-mc node may optionally have dpmac sub-nodes that describe
++        the relationship between the Ethernet MACs which belong to the MC
++        and the Ethernet PHYs on the system board.
++
++        The dpmac nodes must be under a node named "dpmacs" which contains
++        the following properties:
++
++            - #address-cells
++              Value type: <u32>
++              Definition: Must be present if dpmac sub-nodes are defined and must
++                          have a value of 1.
++
++            - #size-cells
++              Value type: <u32>
++              Definition: Must be present if dpmac sub-nodes are defined and must
++                          have a value of 0.
++
++        These nodes must have the following properties:
++
++            - compatible
++              Value type: <string>
++              Definition: Must be "fsl,qoriq-mc-dpmac".
++
++            - reg
++              Value type: <prop-encoded-array>
++              Definition: Specifies the id of the dpmac.
++
++            - phy-handle
++              Value type: <phandle>
++              Definition: Specifies the phandle to the PHY device node associated
++                          with the this dpmac.
++
+ Example:
+ 
+         fsl_mc: fsl-mc@80c000000 {
+                 compatible = "fsl,qoriq-mc";
+                 reg = <0x00000008 0x0c000000 0 0x40>,    /* MC portal base */
+                       <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+-        };
++                msi-parent = <&its>;
++                #address-cells = <3>;
++                #size-cells = <1>;
++
++                /*
++                 * Region type 0x0 - MC portals
++                 * Region type 0x1 - QBMAN portals
++                 */
++                ranges = <0x0 0x0 0x0 0x8 0x0c000000 0x4000000
++                          0x1 0x0 0x0 0x8 0x18000000 0x8000000>;
+ 
++                dpmacs {
++                    #address-cells = <1>;
++                    #size-cells = <0>;
++
++                    dpmac@1 {
++                        compatible = "fsl,qoriq-mc-dpmac";
++                        reg = <1>;
++                        phy-handle = <&mdio0_phy0>;
++                    }
++                }
++        };
+-- 
+1.7.9.5
