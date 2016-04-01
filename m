@@ -1,37 +1,67 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH V9 RESEND 14/14] arm: tegra: set critical trips for Tegra124
-Date: Fri, 1 Apr 2016 15:04:34 +0800
-Message-ID: <56FE1D82.7090908@nvidia.com>
-References: <1459247364-1139-1-git-send-email-wni@nvidia.com> <1459247364-1139-15-git-send-email-wni@nvidia.com> <20160329151705.GC1855@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160329151705.GC1855-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, mikko.perttunen-/1wQRMveznE@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: s3c: Fix DTC unit name warnings in S3C2416 and
+ S3C6410
+Date: Fri, 01 Apr 2016 16:11:50 +0900
+Message-ID: <1459494710-16269-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-To:
-Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Fix following DTC warnings in S3C2416 and S3C6410 boards:
 
-Cc:
-devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
 
-On 2016=E5=B9=B403=E6=9C=8829=E6=97=A5 23:17, Eduardo Valentin wrote:
-> On Tue, Mar 29, 2016 at 06:29:24PM +0800, Wei Ni wrote:
->> Set general "critical" trip temperatures for cpu, gpu, mem and pllx
->> thermal zones for all Tegra124 platform, these trips can trigger
->> shut down or reset.
->> Tegra124 Jetson TK1 was already set "critical" trips before, so it
->> can overwrite the general values.
->>
->> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->=20
-> Acked-by: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm/boot/dts/s3c2416-smdk2416.dts | 2 +-
+ arch/arm/boot/dts/s3c6410-mini6410.dts | 2 +-
+ arch/arm/boot/dts/s3c6410-smdk6410.dts | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm/boot/dts/s3c2416-smdk2416.dts b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+index f257926c13b7..15f3d1c1bb80 100644
+--- a/arch/arm/boot/dts/s3c2416-smdk2416.dts
++++ b/arch/arm/boot/dts/s3c2416-smdk2416.dts
+@@ -15,7 +15,7 @@
+ 	model = "SMDK2416";
+ 	compatible = "samsung,s3c2416";
+ 
+-	memory {
++	memory@30000000 {
+ 		reg =  <0x30000000 0x4000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/s3c6410-mini6410.dts b/arch/arm/boot/dts/s3c6410-mini6410.dts
+index a25debb50401..b7d84cf816c2 100644
+--- a/arch/arm/boot/dts/s3c6410-mini6410.dts
++++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
+@@ -22,7 +22,7 @@
+ 	model = "FriendlyARM Mini6410 board based on S3C6410";
+ 	compatible = "friendlyarm,mini6410", "samsung,s3c6410";
+ 
+-	memory {
++	memory@50000000 {
+ 		reg = <0x50000000 0x10000000>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/s3c6410-smdk6410.dts b/arch/arm/boot/dts/s3c6410-smdk6410.dts
+index ecf35ec466f7..dbebd58a4764 100644
+--- a/arch/arm/boot/dts/s3c6410-smdk6410.dts
++++ b/arch/arm/boot/dts/s3c6410-smdk6410.dts
+@@ -22,7 +22,7 @@
+ 	model = "SAMSUNG SMDK6410 board based on S3C6410";
+ 	compatible = "samsung,mini6410", "samsung,s3c6410";
+ 
+-	memory {
++	memory@50000000 {
+ 		reg = <0x50000000 0x8000000>;
+ 	};
+ 
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
