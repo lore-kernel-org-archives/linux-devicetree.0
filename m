@@ -1,36 +1,61 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] reset: Add support for Oxford Semiconductor Reset
-Date: Fri, 01 Apr 2016 16:34:11 +0200
-Message-ID: <1459521251.9500.29.camel@pengutronix.de>
-References: <1459520174-12897-1-git-send-email-narmstrong@baylibre.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 04/11] ARM: dts: exynos: Fix DTC unit name warnings in
+ Trats2 board
+Date: Fri, 1 Apr 2016 10:35:40 -0400
+Message-ID: <56FE873C.2090503@osg.samsung.com>
+References: <1459493874-2366-1-git-send-email-k.kozlowski@samsung.com>
+ <1459493874-2366-4-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459520174-12897-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1459493874-2366-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Hello Krzysztof,
 
-Am Freitag, den 01.04.2016, 16:16 +0200 schrieb Neil Armstrong:
-> This patchset includes support for the reset controller driver for
-> Oxford Semiconductor OXNAS SoC Family.
+On 04/01/2016 02:57 AM, Krzysztof Kozlowski wrote:
+> Fix following DTC warnings in Trats2 board:
 > 
-> It was originally posted part of a platform patchset available here :
-> http://lkml.kernel.org/r/1458838215-23314-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+> Warning (unit_address_vs_reg): Node /i2c-gpio-1/max77693@66/regulators/ESAFEOUT1@1 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /i2c-gpio-1/max77693@66/regulators/ESAFEOUT2@2 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /i2c-gpio-1/max77693@66/regulators/CHARGER@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /thermistor-ap@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /thermistor-battery@1 has a unit name, but no reg property
 > 
-> Changes this v3 patchset :
-> - Get rid of PLX Technology, replace by Oxford Semiconductor
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index 2bf363c3bf62..523627003738 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -29,7 +29,7 @@
+>  		i2c12 = &i2c_max77693_fuel;
+>  	};
+>  
+> -	memory {
+> +	mmemory@40000000 {
+>  		reg =  <0x40000000 0x40000000>;
+>  	};
+> 
 
-Thank you, applied both to reset/next.
+Besides this creating duplicated memory nodes as you said, plain memory
+should be allowed according to Rob and he plans to add an exception to dtc:
 
-regards
-Philipp
+http://www.spinics.net/lists/arm-kernel/msg494038.html
+ 
+Rest of the patch looks good so after removing the memory node change:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
