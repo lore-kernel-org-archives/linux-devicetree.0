@@ -1,112 +1,33 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [RFC PATCH 3/4] pinctrl: Add ACPI support
-Date: Fri, 01 Apr 2016 17:14:34 +0300
-Message-ID: <1459520074.5907.205.camel@linux.intel.com>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
-	 <1459424685-26965-4-git-send-email-irina.tirdea@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1459424685-26965-4-git-send-email-irina.tirdea@intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 0/2] reset: Add support for Oxford Semiconductor Reset
+Date: Fri,  1 Apr 2016 16:16:12 +0200
+Message-ID: <1459520174-12897-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2016-03-31 at 14:44 +0300, Irina Tirdea wrote:
-> Add ACPI support for pin controller properties. These are
-> based on ACPI _DSD properties and follow the device tree
-> model based on states and node configurations. The states
-> are defined as _DSD properties and configuration nodes
-> are defined using the _DSD Hierarchical Properties Extension.
->=20
-> A configuration node supports the generic device tree properties.
->=20
-> The implementation is based on device tree code from devicetree.c.
->=20
+This patchset includes support for the reset controller driver for
+Oxford Semiconductor OXNAS SoC Family.
 
-Patch is good to me, though few minor comments below.
+It was originally posted part of a platform patchset available here :
+http://lkml.kernel.org/r/1458838215-23314-1-git-send-email-narmstrong@baylibre.com
 
-> +/**
-> + * struct pinctrl_acpi_map - mapping table chunk parsed from ACPI
-> + * @node: list node for struct pinctrl's @fw_maps field
-> + * @pctldev: the pin controller that allocated this struct, and will
-> free it
+Changes this v3 patchset :
+- Get rid of PLX Technology, replace by Oxford Semiconductor
 
-> + * @maps: the mapping table entries
+Neil Armstrong (2):
+  reset: Add Oxford Semiconductor Reset Controller driver
+  dt-bindings: Add Oxford Semiconductor Reset Controller bindings
 
-We have @map and @num_maps.
+ .../devicetree/bindings/reset/oxnas,reset.txt      |  58 +++++++++
+ drivers/reset/Kconfig                              |   3 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-oxnas.c                        | 136 +++++++++++++++++++++
+ 4 files changed, 198 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/oxnas,reset.txt
+ create mode 100644 drivers/reset/reset-oxnas.c
 
-> + */
-> +struct pinctrl_acpi_map {
-> +	struct list_head node;
-> +	struct pinctrl_dev *pctldev;
-> +	struct pinctrl_map *map;
-> +	unsigned num_maps;
-> +};
-> +
->=20
-
-> +static int acpi_remember_or_free_map(struct pinctrl *p, const char
-> *statename,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pinctrl_dev *pctldev,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pinctrl_map *map,
-> unsigned num_maps)
-> +{
-> +	struct pinctrl_acpi_map *acpi_map;
-> +	struct list_head *acpi_maps;
-
-
-> +	unsigned int i;
-
-Just unsigned i to be in align with unsigned num_maps.
-
-> +
-> +	/* Initialize common mapping table entry fields */
-> +	for (i =3D 0; i < num_maps; i++) {
-> +		map[i].dev_name =3D dev_name(p->dev);
-> +		map[i].name =3D statename;
-> +		if (pctldev)
-> +			map[i].ctrl_dev_name =3D dev_name(pctldev-
-> >dev);
-> +	}
-
-
-> +int pinctrl_acpi_to_map(struct pinctrl *p)
-> +{
-> +	const union acpi_object *prop, *statenames, *configs;
-> +	unsigned int state, nstates, nconfigs, config;
-> +	char *statename, *propname, *configname;
-> +	struct fwnode_handle *fw_prop;
-> +	struct acpi_device *adev;
-> +	int ret;
-> +
-> +	/* We may store pointers to property names within the node
-> */
-> +	adev =3D acpi_bus_get_acpi_device(ACPI_HANDLE(p->dev));
-> +	if (!adev)
-> +		return -ENODEV;
-> +
-
-> +	/* Only allow named states (device must have prop 'pinctrl-
-> names') */
-
-Does it fit one line?
-
-> +err_free_map:
-
-Perhaps err_free_maps?
-
-> +	pinctrl_acpi_free_maps(p);
-> +	return ret;
-
---=C2=A0
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-acpi" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.1
