@@ -1,38 +1,51 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: dtc warnings
-Date: Fri, 1 Apr 2016 08:42:37 -0700
-Message-ID: <20160401154237.GK9329@atomide.com>
-References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 12/18] dt-bindings: Add PLX Technology OXNAS pinctrl
+ and gpio bindings
+Date: Fri, 1 Apr 2016 17:48:28 +0200
+Message-ID: <56FE984C.10807@baylibre.com>
+References: <1458838215-23314-1-git-send-email-narmstrong@baylibre.com>
+ <1458838215-23314-13-git-send-email-narmstrong@baylibre.com>
+ <20160325144834.GA27177@rob-hp-laptop>
+ <CACRpkdbem5a_aLTHErp0ZvanwvVPbGnDiWxM5e7iX_FdHtXprQ@mail.gmail.com>
+ <CAL_JsqLsKEb+dWLg9VD3p=kjgEV84_r8z89p0QgMJWKqjrGNpw@mail.gmail.com>
+ <56FE8602.8020405@baylibre.com>
+ <CAL_JsqJS31gNS-dYXQvkLHb=qsVz4Vccztufnd08yfD+p52v_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJS31gNS-dYXQvkLHb=qsVz4Vccztufnd08yfD+p52v_w@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [160331 18:42]:
-> You may have noticed that linux-next had gotten noisy with dtc
-> warnings lately. I dropped the change for a bit, but added it back
-> today except now it is disabled unless building with "W=1".
+On 04/01/2016 05:19 PM, Rob Herring wrote:
+> On Fri, Apr 1, 2016 at 9:30 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>>
+>>> Rob
+>>>
+>>
+>> Hi,
+>>
+>> What should I use ?
 > 
-> There's ~25K (2500 unique) warnings generated from the ARM dts files.
-> Here's the ranking of warnings by dtb. OMAP is the clear winner (based
-> on the similar counts, probably lots of duplicates). Please help
-> remind contributors to test with W=1 and start to fix these.
+> Maybe gpio-ranges as you asked. Not really sure as I haven't used it.
 
-I think Tero already has been looking at fixing the omap clock
-related warnings that seem to produce most of these, so adding
-him to Cc.
+If I use gpio-ranges I can get rid of gpio-bank and ngpios properties.
 
-Regards,
+> 
+>> I need to repost in a separate patchset with vendor replaced by Oxford Semiconductor.
+>> Should I get rid of the vendor prefix of gpio-bank ?
+> 
+> No, because I think you should get rid of the property.
+> 
+> Rob
+> 
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If gpio-ranges is OK, I can post it ASAP.
+
+Thanks,
+
+Neil
+
