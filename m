@@ -1,97 +1,53 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Fri, 1 Apr 2016 09:14:26 +0100
-Message-ID: <20160401081426.GS3323@x1>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1>
- <56FD6A8E.7030208@opensource.altera.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 04/11] ARM: dts: exynos: Fix DTC unit name warnings in
+ Trats2 board
+Date: Fri, 01 Apr 2016 17:17:16 +0900
+Message-ID: <56FE2E8C.3060107@samsung.com>
+References: <1459493874-2366-1-git-send-email-k.kozlowski@samsung.com>
+ <1459493874-2366-4-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <56FD6A8E.7030208@opensource.altera.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Thor Thayer <tthayer@opensource.altera.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1459493874-2366-4-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Mar 2016, Thor Thayer wrote:
-> On 03/30/2016 06:35 AM, Lee Jones wrote:
-> >On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
-> >
-> >>From: Thor Thayer <tthayer@opensource.altera.com>
+On 01.04.2016 15:57, Krzysztof Kozlowski wrote:
+> Fix following DTC warnings in Trats2 board:
+> 
+> Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
+> Warning (unit_address_vs_reg): Node /i2c-gpio-1/max77693@66/regulators/ESAFEOUT1@1 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /i2c-gpio-1/max77693@66/regulators/ESAFEOUT2@2 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /i2c-gpio-1/max77693@66/regulators/CHARGER@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /thermistor-ap@0 has a unit name, but no reg property
+> Warning (unit_address_vs_reg): Node /thermistor-battery@1 has a unit name, but no reg property
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4412-trats2.dts | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index 2bf363c3bf62..523627003738 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -29,7 +29,7 @@
+>  		i2c12 = &i2c_max77693_fuel;
+>  	};
+>  
+> -	memory {
+> +	mmemory@40000000 {
+>  		reg =  <0x40000000 0x40000000>;
+>  	};
 
-[...]
+Nope, beside obvious typo here, this is bad. This causes creation of
+duplicated memory nodes, one coming from skeleton and one from here.
 
-> >>+The A10SR consists of this varied group of sub-devices:
-> >>+
-> >>+Device                   Description
-> >>+------                   ----------
-> >>+altr_a10sr_gpio          GPIO Controller
-> >>+altr_a10sr_hwmon         Hardware Monitor
-> >>+
-> >>+The LEDs are implemented entirely in the device tree using
-> >>+the gpio-led framework.
-> >
-> >This is a Linuxisum and should not live in DT bindings.
->=20
-> I was following the format of other mfd binding documents such as
-> Documentation/devicetree/bindings/mfd/da9055.txt so I'll need your
-> help understanding this.
->=20
-> I'm not familiar with the phrase Linuxisum. A Google search turns up
-> several threads referencing Linuxisum but I can't seem to find the
-> definition. One thread seems to imply that an existing driver such
-> as GPIO is a Linuxisum and should not be re-defined. Am I
-> understanding correctly?
+Rob,
+How the 'memory' node warning should be fixed?
 
-Linuxisum is a made up word.  Actually, it looks like I placed a
-superfluous 'u' in there, but I assume most people would get the gist.
-Some examples ending in "ism" which might push the point across are
-"colloquialism" and "feminism", where the "ism" can probably be taken
-to mean "pertaining to".  So in the example above, we might reasonably
-conclude that I meant "pertaining to Linux", which I did.
 
-In other words "the gpio-led framework" is something we have in Linux,
-but might not exist in other OSes.  And considering DT is supposed to
-be OS agnostic and the documentation relevant to all OSes, you can not
-and should not document Linuxisms.
-
-> >>+Example:
-> >>+
-> >>+        a10-sr: a10-sr@0 {
-> >
-> >Nodes should be named after their device 'type'.
-> >
-> >Does this device really start a address 0?
->=20
-> OK. If I understand, this should be named after mfd then?
-
-MFDs are usually a little tougher, but in your case I think it should
-be "resource-manager" or similar.
-
-> >>+		compatible =3D "altr,altr-a10sr";
-> >>+		reg =3D <0>;
-> >>+		spi-max-frequency =3D <100000>;
-> >>+
-> >>+		a10sr_gpio: a10sr_gpio {
-> >
-> >Device type only please.
->=20
-> And this would be a gpio?
-
-Exactly.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
