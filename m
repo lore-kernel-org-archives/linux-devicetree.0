@@ -1,62 +1,97 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: dtc warnings
-Date: Fri, 1 Apr 2016 16:53:48 +0900
-Message-ID: <CAJKOXPdDyVbfSyshu4j21Ax2J-VwPpMZgAGEeO8VtgFYh4hTmw@mail.gmail.com>
-References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
-	<56FE27F9.2070100@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Fri, 1 Apr 2016 09:14:26 +0100
+Message-ID: <20160401081426.GS3323@x1>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1>
+ <56FD6A8E.7030208@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56FE27F9.2070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <56FD6A8E.7030208@opensource.altera.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Thor Thayer <tthayer@opensource.altera.com>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 1, 2016 at 4:49 PM, Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> Hi Rob,
->
-> On 01/04/16 04:40, Rob Herring wrote:
-> > You may have noticed that linux-next had gotten noisy with dtc
-> > warnings lately. I dropped the change for a bit, but added it back
-> > today except now it is disabled unless building with "W=1".
+On Thu, 31 Mar 2016, Thor Thayer wrote:
+> On 03/30/2016 06:35 AM, Lee Jones wrote:
+> >On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
 > >
-> > There's ~25K (2500 unique) warnings generated from the ARM dts files.
-> > Here's the ranking of warnings by dtb. OMAP is the clear winner (based
-> > on the similar counts, probably lots of duplicates). Please help
-> > remind contributors to test with W=1 and start to fix these.
+> >>From: Thor Thayer <tthayer@opensource.altera.com>
+
+[...]
+
+> >>+The A10SR consists of this varied group of sub-devices:
+> >>+
+> >>+Device                   Description
+> >>+------                   ----------
+> >>+altr_a10sr_gpio          GPIO Controller
+> >>+altr_a10sr_hwmon         Hardware Monitor
+> >>+
+> >>+The LEDs are implemented entirely in the device tree using
+> >>+the gpio-led framework.
 > >
-> > At least for memory nodes, I plan to whitelist allowing no
-> > unit-address. There could be others, but none that I've seen so far.
->
-> What's the correct way to fix nodes for display platform devices? For
-> example, omap4-panda-common.dtsi has two connector nodes:
->
-> dvi0: connector@0 {
->         compatible = "dvi-connector";
->         label = "dvi";
->         ...
-> };
->
->
-> hdmi0: connector@1 {
->         compatible = "hdmi-connector";
->         label = "hdmi";
->         ...
-> };
+> >This is a Linuxisum and should not live in DT bindings.
+>=20
+> I was following the format of other mfd binding documents such as
+> Documentation/devicetree/bindings/mfd/da9055.txt so I'll need your
+> help understanding this.
+>=20
+> I'm not familiar with the phrase Linuxisum. A Google search turns up
+> several threads referencing Linuxisum but I can't seem to find the
+> definition. One thread seems to imply that an existing driver such
+> as GPIO is a Linuxisum and should not be re-defined. Am I
+> understanding correctly?
 
-I have the same doubts. The ePAPR says in that case "the node-name
-alone differentiates the node from other nodes at the same level in
-the tree.". But which is preferred? Differentiating by number or by
-type?
+Linuxisum is a made up word.  Actually, it looks like I placed a
+superfluous 'u' in there, but I assume most people would get the gist.
+Some examples ending in "ism" which might push the point across are
+"colloquialism" and "feminism", where the "ism" can probably be taken
+to mean "pertaining to".  So in the example above, we might reasonably
+conclude that I meant "pertaining to Linux", which I did.
 
-Similarly, what to do with the opp modes (a lot of warnings) in
-Documentation/devicetree/bindings/opp/opp.txt?
+In other words "the gpio-led framework" is something we have in Linux,
+but might not exist in other OSes.  And considering DT is supposed to
+be OS agnostic and the documentation relevant to all OSes, you can not
+and should not document Linuxisms.
 
-Best regards,
-Krzysztof
+> >>+Example:
+> >>+
+> >>+        a10-sr: a10-sr@0 {
+> >
+> >Nodes should be named after their device 'type'.
+> >
+> >Does this device really start a address 0?
+>=20
+> OK. If I understand, this should be named after mfd then?
+
+MFDs are usually a little tougher, but in your case I think it should
+be "resource-manager" or similar.
+
+> >>+		compatible =3D "altr,altr-a10sr";
+> >>+		reg =3D <0>;
+> >>+		spi-max-frequency =3D <100000>;
+> >>+
+> >>+		a10sr_gpio: a10sr_gpio {
+> >
+> >Device type only please.
+>=20
+> And this would be a gpio?
+
+Exactly.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-gpio" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
