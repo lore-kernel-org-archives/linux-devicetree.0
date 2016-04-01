@@ -1,90 +1,93 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] mtd: nand: read (from DT) and store ECC algorithm
-Date: Fri, 1 Apr 2016 13:07:28 -0700
-Message-ID: <20160401200728.GA3645@localhost>
-References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
- <1455300685-27009-2-git-send-email-zajec5@gmail.com>
- <20160401160722.GC117117@google.com>
- <CACna6rz6mYSxAr1oSjcLc__sSKM1XdUf-cGOFanGvuij0nNC5Q@mail.gmail.com>
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
+ Chip bindings
+Date: Fri, 1 Apr 2016 15:21:04 -0500
+Message-ID: <56FED830.6060902@opensource.altera.com>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+ <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
+ <20160330113532.GI3323@x1> <56FD6A8E.7030208@opensource.altera.com>
+ <20160401081426.GS3323@x1>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACna6rz6mYSxAr1oSjcLc__sSKM1XdUf-cGOFanGvuij0nNC5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160401081426.GS3323@x1>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 01, 2016 at 09:32:40PM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
-:
-> On 1 April 2016 at 18:07, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
-> > On Fri, Feb 12, 2016 at 07:11:24PM +0100, Rafa=C5=82 Mi=C5=82ecki w=
-rote:
-> >> This will allow drivers handle ECC properly.
-> >>
-> >> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  drivers/mtd/nand/nand_base.c | 6 +++++-
-> >>  include/linux/mtd/nand.h     | 1 +
-> >>  2 files changed, 6 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_=
-base.c
-> >> index f2c8ff3..ef977f3 100644
-> >> --- a/drivers/mtd/nand/nand_base.c
-> >> +++ b/drivers/mtd/nand/nand_base.c
-> >> @@ -3979,7 +3979,7 @@ ident_done:
-> >>  static int nand_dt_init(struct nand_chip *chip)
-> >>  {
-> >>       struct device_node *dn =3D nand_get_flash_node(chip);
-> >> -     int ecc_mode, ecc_strength, ecc_step;
-> >> +     int ecc_mode, ecc_algo, ecc_strength, ecc_step;
-> >>
-> >>       if (!dn)
-> >>               return 0;
-> >> @@ -3991,6 +3991,7 @@ static int nand_dt_init(struct nand_chip *ch=
-ip)
-> >>               chip->bbt_options |=3D NAND_BBT_USE_FLASH;
-> >>
-> >>       ecc_mode =3D of_get_nand_ecc_mode(dn);
-> >> +     ecc_algo =3D of_get_nand_ecc_algo(dn);
-> >>       ecc_strength =3D of_get_nand_ecc_strength(dn);
-> >>       ecc_step =3D of_get_nand_ecc_step_size(dn);
-> >>
-> >> @@ -4003,6 +4004,9 @@ static int nand_dt_init(struct nand_chip *ch=
-ip)
-> >>       if (ecc_mode >=3D 0)
-> >>               chip->ecc.mode =3D ecc_mode;
-> >>
-> >> +     if (ecc_algo >=3D 0)
-> >> +             chip->ecc.algo =3D ecc_algo;
-> >> +
-> >
-> > While this might appear to handle the absence of the nand-ecc-algo
-> > property correctly, this isn't safe. This means that any existing D=
-T
-> > without the property will get treated as Hamming ECC. Perhaps we ne=
-ed
-> > the enum to have a 0 value of 'NAND_ECC_ALGO_UNKNOWN' or something =
-like
-> > that?
->=20
-> You're commenting on an old series. If you take a look at:
-> https://patchwork.ozlabs.org/patch/601180/
-> that also got applied to the:
-> https://github.com/linux-nand/linux/commits/nand/next
-> repo, you'll see we have NAND_ECC_UNKNOWN there.
 
-Ah, I guess I missed that because I was searching for the patch to
-brcmnand (i.e., fixing the original problem you saw). AFAICT, this v2
-series doesn't actually resolve your issue with brcmnand, no?
 
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 04/01/2016 03:14 AM, Lee Jones wrote:
+> On Thu, 31 Mar 2016, Thor Thayer wrote:
+>> On 03/30/2016 06:35 AM, Lee Jones wrote:
+>>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
+>>>
+>>>> From: Thor Thayer <tthayer@opensource.altera.com>
+>
+> [...]
+>
+>>>> +The A10SR consists of this varied group of sub-devices:
+>>>> +
+>>>> +Device                   Description
+>>>> +------                   ----------
+>>>> +altr_a10sr_gpio          GPIO Controller
+>>>> +altr_a10sr_hwmon         Hardware Monitor
+>>>> +
+>>>> +The LEDs are implemented entirely in the device tree using
+>>>> +the gpio-led framework.
+>>>
+>>> This is a Linuxisum and should not live in DT bindings.
+>>
+>> I was following the format of other mfd binding documents such as
+>> Documentation/devicetree/bindings/mfd/da9055.txt so I'll need your
+>> help understanding this.
+>>
+>> I'm not familiar with the phrase Linuxisum. A Google search turns up
+>> several threads referencing Linuxisum but I can't seem to find the
+>> definition. One thread seems to imply that an existing driver such
+>> as GPIO is a Linuxisum and should not be re-defined. Am I
+>> understanding correctly?
+>
+> Linuxisum is a made up word.  Actually, it looks like I placed a
+> superfluous 'u' in there, but I assume most people would get the gist.
+> Some examples ending in "ism" which might push the point across are
+> "colloquialism" and "feminism", where the "ism" can probably be taken
+> to mean "pertaining to".  So in the example above, we might reasonably
+> conclude that I meant "pertaining to Linux", which I did.
+>
+> In other words "the gpio-led framework" is something we have in Linux,
+> but might not exist in other OSes.  And considering DT is supposed to
+> be OS agnostic and the documentation relevant to all OSes, you can not
+> and should not document Linuxisms.
+>
+
+Got it. Thanks for the explanation! I'll make the changes.
+
+>>>> +Example:
+>>>> +
+>>>> +        a10-sr: a10-sr@0 {
+>>>
+>>> Nodes should be named after their device 'type'.
+>>>
+>>> Does this device really start a address 0?
+>>
+>> OK. If I understand, this should be named after mfd then?
+>
+> MFDs are usually a little tougher, but in your case I think it should
+> be "resource-manager" or similar.
+>
+>>>> +		compatible = "altr,altr-a10sr";
+>>>> +		reg = <0>;
+>>>> +		spi-max-frequency = <100000>;
+>>>> +
+>>>> +		a10sr_gpio: a10sr_gpio {
+>>>
+>>> Device type only please.
+>>
+>> And this would be a gpio?
+>
+> Exactly.
+>
