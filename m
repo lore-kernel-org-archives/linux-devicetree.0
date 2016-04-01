@@ -1,82 +1,53 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 0/9] ARM: dts: Add new Exynos3250-based ARTIK5 module
- dtsi file
-Date: Fri, 01 Apr 2016 09:29:57 +0900
-Message-ID: <56FDC105.7050709@samsung.com>
-References: <1459392485-11327-1-git-send-email-cw00.choi@samsung.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH V2] ARM: bcm2835: add CPU node for ARM core
+Date: Thu, 31 Mar 2016 17:55:33 -0700
+Message-ID: <87zitem9kq.fsf@eliezer.anholt.net>
+References: <1459445118-1733-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1459392485-11327-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, kgene@kernel.org, s.nawrocki@samsung.com, tomasz.figa@gmail.com
-Cc: jh80.chung@samsung.com, andi.shyti@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, pankaj.dubey@samsung.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; boundary="==-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459445118-1733-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31.03.2016 11:47, Chanwoo Choi wrote:
-> This patchset add the support for Device Tree source for Samsung ARTIK5 module[1]
-> based on Exynos3250 SoC and development board[2]. The ARTIK5 module includes
-> the follwoing devices:
-> - Application Processor (Samsung Exynos3250)
-> - WiFi/BT Combo chip
-> - PMIC (Samsung S2MPS14)
-> - eMMC (4GB)
-> - DRAM LPDDR3 (512MB)
-> - Connectors pin (60 Pins x 3 set)
-> 
-> Also, this patchset add the ARTIK5 development board[2] dts file which includes
-> the ARTIK5 module[1] and have the devices such as sound codec, sd card port,
-> ethernet port, uart port and so on.
-> 
-> [1] https://www.artik.io/hardware/artik-5
-> [2] http://www.digikey.com/product-detail/en/SIP-KITNXB001/1510-1316-ND/5825102
-> 
-> Changes from v3:
-> (https://lkml.org/lkml/2016/3/15/71)
-> - Add acked-by tag from Rob Herring <robh@kernel.org> (patch8)
-> - Fix typo on patch descritpion (patch8)
-> - Make the separate patch for including the new clock id
->   for both MMC2 and UART2 device (patch2)
-> 
-> Changes from v2:
-> (https://lkml.org/lkml/2016/3/14/910)
-> - Add reviewed tag by Krzysztof Kozlowski for all patches
-> - Include the separate patch1[3] in patchset because patch5 depend on patch1[3]
->   [3] https://lkml.org/lkml/2016/3/14/245
-> - Fix the order issue in exynos3250-artik5.dtsi
-> - Use lowercase for hex address in exynos3250-artik5.dtsi
-> 
-> Changes from v1:
-> (https://lkml.org/lkml/2016/3/13/215)
-> - Change the board name from 'artik5-devel' to 'artik5-eval'
-> - Merge the patch6/7/8 to patch5
-> - Add the new board information to samsung-boards.txt[1]
->   [1] Documentation/devicetree/bindings/arm/samsung/samsung-boards.txt
-> - Fix minor coding style issue and remove 'wakeup' property
-> - Remove 'broken-cd' and 'desc-num' property from mshc_0 node
-> - Handle the LDO11/LDO12 by using XMMC0CDn pin (GPK0-2 gpio) for MMC device
->   and fix the ldo number of 'vmmc-supply' property.
-> - Add the 'vqmmc-supply' property for MSHC2
-> - Drop the patch10 for PPMU node
-> - Add the new patch to initialize the MMC2 gpio pin on monk board
-> 
-> Chanwoo Choi (6):
->   ARM: dts: Add initial pin configuration for exynos3250-rinato
->   dt-bindings: Add the clock id of UART2 and MMC2 for Exynos3250
->   clk: samsung: exynos3250: Add MMC2 clock
->   ARM: dts: Add initial gpio setting of MMC2 device for exynos3250-monk
->   ARM: dts: Add MSHC2 dt node for Exynos3250 SoC
->   ARM: dts: Add exynos3250-artik5 dtsi file for ARTIK5 module
-> 
-> Jaehoon Chung (1):
->   ARM: dts: Add MSHC2 dt node for SD card for exynos3250-artik5-eval board
-> 
-> Pankaj Dubey (2):
->   clk: samsung: exynos3250: Add UART2 clock
->   ARM: dts: Add UART2 dt node for Exynos3250 SoC
+--==-=-=
+Content-Type: text/plain
 
-Thanks, applied all non-clock patches after pulling tag from Sylwester.
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-Best regards,
-Krzysztof
+> This patch adds the CPU node of the BCM2835 into the DT.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Acked-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+
+Pulled to bcm2835-dt-next.  Thanks!
+
+--==-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJW/ccGAAoJELXWKTbR/J7oJfAQALMsSzG9FD616t5levBWt8Vv
+rcSU0vFWPRwdSmuKjKBzAZdQgEwm4ck1VVELjbYTqRe/jX6fS2Bf8mEGEU2ZsDDA
+Ble0nRd6qcAqdZsUewpcdjiAVg4HceI4NAcuOC1MuePkK/B8lBS9gbyUSETGhrI5
+t2RZgkQdL1e2Q8MqaHzCR5LsKj466sG7GRR9YBxQzjyBL01YzChnwOvJFMGoz3pC
+tWA//73aSdv9pzRPPETv1aSK95yrYtQL00jSvH9gAuxpLPEgXi2kPJ9QJEdCBsFb
+q4vIi914s8vu8pV7WyzgJ+UMDMGBdwXXubRjRPIQJVg9nSq56hWl9CpJxrd1keUY
+DaDZR+nUcnlVQioun3Vj7lGgq5wPzpUKHi/kTw5y554dh23N2nafmWA7DgPDeEx+
+lS4KID2LwVrPCbj3UFLVgnzwgYqK7A8pc55sgBA7fAFTv2SwSP7cBE+4Q11s5OzO
+brwFapaVfftYZYfveP/r7JWrDXStRstcnoPngHNjSmO+1yQgRQL2zzmCE+7ImVad
+mZLPjvbghdX+Ui84GPvh1oq96yy3jwb6fnBLjxx2c9CfHjvPbA+0GlWbJTPto+/M
+z7vvCd9V3x1Tswpjggbmb4/N1eSZMOmEkO4Ga4r95wMawgfu8kW9uwRzVyQeSUGm
+X+9C3uMhPAg3gi1KzjMZ
+=qWwT
+-----END PGP SIGNATURE-----
+--==-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
