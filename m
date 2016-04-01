@@ -1,33 +1,85 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 0/2] reset: Add support for Oxford Semiconductor Reset
-Date: Fri,  1 Apr 2016 16:16:12 +0200
-Message-ID: <1459520174-12897-1-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 2/2] dt-bindings: Add Oxford Semiconductor Reset Controller bindings
+Date: Fri,  1 Apr 2016 16:16:14 +0200
+Message-ID: <1459520174-12897-3-git-send-email-narmstrong@baylibre.com>
+References: <1459520174-12897-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459520174-12897-1-git-send-email-narmstrong@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, p.zabel@pengutronix.de, devicetree@vger.kernel.org
 Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset includes support for the reset controller driver for
-Oxford Semiconductor OXNAS SoC Family.
-
-It was originally posted part of a platform patchset available here :
-http://lkml.kernel.org/r/1458838215-23314-1-git-send-email-narmstrong@baylibre.com
-
-Changes this v3 patchset :
-- Get rid of PLX Technology, replace by Oxford Semiconductor
-
-Neil Armstrong (2):
-  reset: Add Oxford Semiconductor Reset Controller driver
-  dt-bindings: Add Oxford Semiconductor Reset Controller bindings
-
- .../devicetree/bindings/reset/oxnas,reset.txt      |  58 +++++++++
- drivers/reset/Kconfig                              |   3 +
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-oxnas.c                        | 136 +++++++++++++++++++++
- 4 files changed, 198 insertions(+)
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/reset/oxnas,reset.txt      | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reset/oxnas,reset.txt
- create mode 100644 drivers/reset/reset-oxnas.c
 
+diff --git a/Documentation/devicetree/bindings/reset/oxnas,reset.txt b/Documentation/devicetree/bindings/reset/oxnas,reset.txt
+new file mode 100644
+index 0000000..6f06db9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/oxnas,reset.txt
+@@ -0,0 +1,58 @@
++Oxford Semiconductor OXNAS SoC Family RESET Controller
++================================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required properties:
++- compatible: Should be "oxsemi,ox810se-reset"
++- #reset-cells: 1, see below
++
++Parent node should have the following properties :
++- compatible: Should be "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd"
++
++For OX810SE, the indices are :
++ - 0 : ARM
++ - 1 : COPRO
++ - 2 : Reserved
++ - 3 : Reserved
++ - 4 : USBHS
++ - 5 : USBHSPHY
++ - 6 : MAC
++ - 7 : PCI
++ - 8 : DMA
++ - 9 : DPE
++ - 10 : DDR
++ - 11 : SATA
++ - 12 : SATA_LINK
++ - 13 : SATA_PHY
++ - 14 : Reserved
++ - 15 : NAND
++ - 16 : GPIO
++ - 17 : UART1
++ - 18 : UART2
++ - 19 : MISC
++ - 20 : I2S
++ - 21 : AHB_MON
++ - 22 : UART3
++ - 23 : UART4
++ - 24 : SGDMA
++ - 25 : Reserved
++ - 26 : Reserved
++ - 27 : Reserved
++ - 28 : Reserved
++ - 29 : Reserved
++ - 30 : Reserved
++ - 31 : BUS
++
++example:
++
++sys: sys-ctrl@000000 {
++	compatible = "oxsemi,ox810se-sys-ctrl", "syscon", "simple-mfd";
++	reg = <0x000000 0x100000>;
++
++	reset: reset-controller {
++		compatible = "oxsemi,ox810se-reset";
++		#reset-cells = <1>;
++	};
++};
 -- 
 1.9.1
