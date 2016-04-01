@@ -1,93 +1,53 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [RFC 1/8] dt-bindings: mfd: Add Altera Arria10 System Resource
- Chip bindings
-Date: Fri, 1 Apr 2016 15:21:04 -0500
-Message-ID: <56FED830.6060902@opensource.altera.com>
-References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
- <1459278791-3646-2-git-send-email-tthayer@opensource.altera.com>
- <20160330113532.GI3323@x1> <56FD6A8E.7030208@opensource.altera.com>
- <20160401081426.GS3323@x1>
-Reply-To: <tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160401081426.GS3323@x1>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, pawell.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, dinguyen@opensource.altera.com, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: [PATCH 0/5] ARM: dts: omap: Fix some DTC warnings
+Date: Fri,  1 Apr 2016 16:20:17 -0400
+Message-ID: <1459542022-17246-1-git-send-email-javier@osg.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Tony
+
+DTC reports a lot of warnings on omap DTS due a mismatch between unit
+names and reg properties in different device nodes. This series tries
+to fix at least some of them, but there are still a lot remaining.
+
+Best regards,
+Javier
 
 
-On 04/01/2016 03:14 AM, Lee Jones wrote:
-> On Thu, 31 Mar 2016, Thor Thayer wrote:
->> On 03/30/2016 06:35 AM, Lee Jones wrote:
->>> On Tue, 29 Mar 2016, tthayer@opensource.altera.com wrote:
->>>
->>>> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> [...]
->
->>>> +The A10SR consists of this varied group of sub-devices:
->>>> +
->>>> +Device                   Description
->>>> +------                   ----------
->>>> +altr_a10sr_gpio          GPIO Controller
->>>> +altr_a10sr_hwmon         Hardware Monitor
->>>> +
->>>> +The LEDs are implemented entirely in the device tree using
->>>> +the gpio-led framework.
->>>
->>> This is a Linuxisum and should not live in DT bindings.
->>
->> I was following the format of other mfd binding documents such as
->> Documentation/devicetree/bindings/mfd/da9055.txt so I'll need your
->> help understanding this.
->>
->> I'm not familiar with the phrase Linuxisum. A Google search turns up
->> several threads referencing Linuxisum but I can't seem to find the
->> definition. One thread seems to imply that an existing driver such
->> as GPIO is a Linuxisum and should not be re-defined. Am I
->> understanding correctly?
->
-> Linuxisum is a made up word.  Actually, it looks like I placed a
-> superfluous 'u' in there, but I assume most people would get the gist.
-> Some examples ending in "ism" which might push the point across are
-> "colloquialism" and "feminism", where the "ism" can probably be taken
-> to mean "pertaining to".  So in the example above, we might reasonably
-> conclude that I meant "pertaining to Linux", which I did.
->
-> In other words "the gpio-led framework" is something we have in Linux,
-> but might not exist in other OSes.  And considering DT is supposed to
-> be OS agnostic and the documentation relevant to all OSes, you can not
-> and should not document Linuxisms.
->
+Javier Martinez Canillas (5):
+  ARM: dts: omap: add missing unit name to pbias regulator nodes
+  ARM: dts: n8x0: remove unneeded unit name for i2c node
+  ARM: dts: omap3: add missing unit name to PMU node
+  ARM: dts: omap: remove unneeded unit name for sound nodes
+  ARM: dts: omap: add missing unit names to bandgap nodes
 
-Got it. Thanks for the explanation! I'll make the changes.
+ arch/arm/boot/dts/am437x-gp-evm.dts         | 2 +-
+ arch/arm/boot/dts/am43x-epos-evm.dts        | 2 +-
+ arch/arm/boot/dts/am57xx-beagle-x15.dts     | 2 +-
+ arch/arm/boot/dts/am57xx-cl-som-am57x.dts   | 2 +-
+ arch/arm/boot/dts/dra7-evm.dts              | 2 +-
+ arch/arm/boot/dts/dra7.dtsi                 | 2 +-
+ arch/arm/boot/dts/dra72-evm.dts             | 2 +-
+ arch/arm/boot/dts/omap2420-n8x0-common.dtsi | 2 +-
+ arch/arm/boot/dts/omap2430.dtsi             | 2 +-
+ arch/arm/boot/dts/omap3.dtsi                | 4 ++--
+ arch/arm/boot/dts/omap34xx.dtsi             | 2 +-
+ arch/arm/boot/dts/omap36xx.dtsi             | 2 +-
+ arch/arm/boot/dts/omap4-var-som-om44.dtsi   | 2 +-
+ arch/arm/boot/dts/omap4.dtsi                | 2 +-
+ arch/arm/boot/dts/omap443x.dtsi             | 2 +-
+ arch/arm/boot/dts/omap4460.dtsi             | 2 +-
+ arch/arm/boot/dts/omap5.dtsi                | 2 +-
+ 17 files changed, 18 insertions(+), 18 deletions(-)
 
->>>> +Example:
->>>> +
->>>> +        a10-sr: a10-sr@0 {
->>>
->>> Nodes should be named after their device 'type'.
->>>
->>> Does this device really start a address 0?
->>
->> OK. If I understand, this should be named after mfd then?
->
-> MFDs are usually a little tougher, but in your case I think it should
-> be "resource-manager" or similar.
->
->>>> +		compatible = "altr,altr-a10sr";
->>>> +		reg = <0>;
->>>> +		spi-max-frequency = <100000>;
->>>> +
->>>> +		a10sr_gpio: a10sr_gpio {
->>>
->>> Device type only please.
->>
->> And this would be a gpio?
->
-> Exactly.
->
+-- 
+2.5.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
