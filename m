@@ -1,176 +1,31 @@
-From: Shannon Zhao <shannon.zhao@linaro.org>
-Subject: [PATCH v10 17/17] Xen: EFI: Parse DT parameters for Xen specific UEFI
-Date: Fri,  1 Apr 2016 23:49:15 +0800
-Message-ID: <1459525755-36968-18-git-send-email-shannon.zhao@linaro.org>
-References: <1459525755-36968-1-git-send-email-shannon.zhao@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459525755-36968-1-git-send-email-shannon.zhao@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, stefano.stabellini@citrix.com
-Cc: david.vrabel@citrix.com, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, julien.grall@arm.com, peter.huangpeng@huawei.com, xen-devel@lists.xen.org, zhaoshenglong@huawei.com, shannon.zhao@linaro.org, Matt Fleming <matt@codeblueprint.co.uk>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] of: mtd: add helper reading "nand-ecc-algo" from DT
+Date: Fri, 1 Apr 2016 09:01:51 -0700
+Message-ID: <20160401160151.GA117117@google.com>
+References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1455300685-27009-1-git-send-email-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new function to parse DT parameters for Xen specific UEFI just
-like the way for normal UEFI. Then it could reuse the existing codes.
+On Fri, Feb 12, 2016 at 07:11:23PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> This allows specifying algorithm used for NAND ECC. There are two
+> available values: "bch" and "hamming". It's important as having just
+> ECC parameters (step, strength) isn't enough to determine algorithm,
+> e.g. you can't distinct BCH-1 and Hamming.
+>=20
+> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-If Xen supports EFI, initialize runtime services.
-
-CC: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Shannon Zhao <shannon.zhao@linaro.org>
-Reviewed-by: Matt Fleming <matt@codeblueprint.co.uk>
-Reviewed-by: Stefano Stabellini <stefano.stabellini@eu.citrix.com>
----
- arch/arm/xen/enlighten.c           |  6 +++++
- drivers/firmware/efi/arm-runtime.c | 17 +++++++++-----
- drivers/firmware/efi/efi.c         | 45 ++++++++++++++++++++++++++++++++------
- 3 files changed, 56 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-index 13e3e9f..e130562 100644
---- a/arch/arm/xen/enlighten.c
-+++ b/arch/arm/xen/enlighten.c
-@@ -261,6 +261,12 @@ static int __init fdt_find_hyper_node(unsigned long node, const char *uname,
- 	    !strncmp(hyper_node.prefix, s, strlen(hyper_node.prefix)))
- 		hyper_node.version = s + strlen(hyper_node.prefix);
- 
-+	if (IS_ENABLED(CONFIG_XEN_EFI)) {
-+		/* Check if Xen supports EFI */
-+		if (of_get_flat_dt_subnode_by_name(node, "uefi") > 0)
-+			set_bit(EFI_PARAVIRT, &efi.flags);
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/drivers/firmware/efi/arm-runtime.c b/drivers/firmware/efi/arm-runtime.c
-index 6ae21e4..ac609b9 100644
---- a/drivers/firmware/efi/arm-runtime.c
-+++ b/drivers/firmware/efi/arm-runtime.c
-@@ -27,6 +27,7 @@
- #include <asm/mmu.h>
- #include <asm/pgalloc.h>
- #include <asm/pgtable.h>
-+#include <asm/xen/xen-ops.h>
- 
- extern u64 efi_system_table;
- 
-@@ -107,13 +108,19 @@ static int __init arm_enable_runtime_services(void)
- 	}
- 	set_bit(EFI_SYSTEM_TABLES, &efi.flags);
- 
--	if (!efi_virtmap_init()) {
--		pr_err("No UEFI virtual mapping was installed -- runtime services will not be available\n");
--		return -ENOMEM;
-+	if (IS_ENABLED(CONFIG_XEN_EFI) && efi_enabled(EFI_PARAVIRT)) {
-+		/* Set up runtime services function pointers for Xen Dom0 */
-+		xen_efi_runtime_setup();
-+	} else {
-+		if (!efi_virtmap_init()) {
-+			pr_err("No UEFI virtual mapping was installed -- runtime services will not be available\n");
-+			return -ENOMEM;
-+		}
-+
-+		/* Set up runtime services function pointers */
-+		efi_native_runtime_setup();
- 	}
- 
--	/* Set up runtime services function pointers */
--	efi_native_runtime_setup();
- 	set_bit(EFI_RUNTIME_SERVICES, &efi.flags);
- 
- 	efi.runtime_version = efi.systab->hdr.revision;
-diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-index 3a69ed5..519c096 100644
---- a/drivers/firmware/efi/efi.c
-+++ b/drivers/firmware/efi/efi.c
-@@ -469,12 +469,14 @@ device_initcall(efi_load_efivars);
- 		FIELD_SIZEOF(struct efi_fdt_params, field) \
- 	}
- 
--static __initdata struct {
-+struct params {
- 	const char name[32];
- 	const char propname[32];
- 	int offset;
- 	int size;
--} dt_params[] = {
-+};
-+
-+static struct params fdt_params[] __initdata = {
- 	UEFI_PARAM("System Table", "linux,uefi-system-table", system_table),
- 	UEFI_PARAM("MemMap Address", "linux,uefi-mmap-start", mmap),
- 	UEFI_PARAM("MemMap Size", "linux,uefi-mmap-size", mmap_size),
-@@ -482,24 +484,45 @@ static __initdata struct {
- 	UEFI_PARAM("MemMap Desc. Version", "linux,uefi-mmap-desc-ver", desc_ver)
- };
- 
-+static struct params xen_fdt_params[] __initdata = {
-+	UEFI_PARAM("System Table", "xen,uefi-system-table", system_table),
-+	UEFI_PARAM("MemMap Address", "xen,uefi-mmap-start", mmap),
-+	UEFI_PARAM("MemMap Size", "xen,uefi-mmap-size", mmap_size),
-+	UEFI_PARAM("MemMap Desc. Size", "xen,uefi-mmap-desc-size", desc_size),
-+	UEFI_PARAM("MemMap Desc. Version", "xen,uefi-mmap-desc-ver", desc_ver)
-+};
-+
- struct param_info {
- 	int found;
- 	void *params;
-+	struct params *dt_params;
-+	int size;
- };
- 
- static int __init fdt_find_uefi_params(unsigned long node, const char *uname,
- 				       int depth, void *data)
- {
- 	struct param_info *info = data;
-+	struct params *dt_params = info->dt_params;
- 	const void *prop;
- 	void *dest;
- 	u64 val;
--	int i, len;
-+	int i, len, offset;
- 
--	if (depth != 1 || strcmp(uname, "chosen") != 0)
--		return 0;
-+	if (efi_enabled(EFI_PARAVIRT)) {
-+		if (depth != 1 || strcmp(uname, "hypervisor") != 0)
-+			return 0;
- 
--	for (i = 0; i < ARRAY_SIZE(dt_params); i++) {
-+		offset = of_get_flat_dt_subnode_by_name(node, "uefi");
-+		if (offset < 0)
-+			return 0;
-+		node = offset;
-+	} else {
-+		if (depth != 1 || strcmp(uname, "chosen") != 0)
-+			return 0;
-+	}
-+
-+	for (i = 0; i < info->size; i++) {
- 		prop = of_get_flat_dt_prop(node, dt_params[i].propname, &len);
- 		if (!prop)
- 			return 0;
-@@ -530,12 +553,20 @@ int __init efi_get_fdt_params(struct efi_fdt_params *params)
- 	info.found = 0;
- 	info.params = params;
- 
-+	if (efi_enabled(EFI_PARAVIRT)) {
-+		info.dt_params = xen_fdt_params;
-+		info.size = ARRAY_SIZE(xen_fdt_params);
-+	} else {
-+		info.dt_params = fdt_params;
-+		info.size = ARRAY_SIZE(fdt_params);
-+	}
-+
- 	ret = of_scan_flat_dt(fdt_find_uefi_params, &info);
- 	if (!info.found)
- 		pr_info("UEFI not found.\n");
- 	else if (!ret)
- 		pr_err("Can't find '%s' in device tree!\n",
--		       dt_params[info.found].name);
-+		       info.dt_params[info.found].name);
- 
- 	return ret;
- }
--- 
-2.1.4
+Acked-by: Brian Norris <computersforpeace-dVM3bRS+LDk@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
