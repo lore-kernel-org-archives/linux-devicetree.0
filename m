@@ -1,61 +1,90 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 06/11] phy: da8xx-usb: new driver for DA8XX SoC USB PHY
-Date: Fri, 1 Apr 2016 14:56:35 -0500
-Message-ID: <20160401195635.GA29841@uda0271908>
-References: <1458181615-27782-1-git-send-email-david@lechnology.com>
- <1458181615-27782-7-git-send-email-david@lechnology.com>
- <56FE74AC.6080303@ti.com>
- <20160401144510.GA6264@uda0271908>
- <56FE9B8F.7050605@lechnology.com>
- <56FECFEB.2030708@cogentembedded.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] mtd: nand: read (from DT) and store ECC algorithm
+Date: Fri, 1 Apr 2016 13:07:28 -0700
+Message-ID: <20160401200728.GA3645@localhost>
+References: <1455300685-27009-1-git-send-email-zajec5@gmail.com>
+ <1455300685-27009-2-git-send-email-zajec5@gmail.com>
+ <20160401160722.GC117117@google.com>
+ <CACna6rz6mYSxAr1oSjcLc__sSKM1XdUf-cGOFanGvuij0nNC5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <56FECFEB.2030708-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CACna6rz6mYSxAr1oSjcLc__sSKM1XdUf-cGOFanGvuij0nNC5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Apr 01, 2016 at 10:45:47PM +0300, Sergei Shtylyov wrote:
-> On 04/01/2016 07:02 PM, David Lechner wrote:
-> 
-> >>>>+EXPORT_SYMBOL_GPL(da8xx_usb20_phy_set_mode);
-> >>>
-> >>>Don't prefer export symbols from PHY driver. That'll create unnecessary
-> >>>dependencies between the controller and the PHY.
+On Fri, Apr 01, 2016 at 09:32:40PM +0200, Rafa=C5=82 Mi=C5=82ecki wrote=
+:
+> On 1 April 2016 at 18:07, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
+wrote:
+> > On Fri, Feb 12, 2016 at 07:11:24PM +0100, Rafa=C5=82 Mi=C5=82ecki w=
+rote:
+> >> This will allow drivers handle ECC properly.
 > >>
-> >>Agreed.
+> >> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>  drivers/mtd/nand/nand_base.c | 6 +++++-
+> >>  include/linux/mtd/nand.h     | 1 +
+> >>  2 files changed, 6 insertions(+), 1 deletion(-)
 > >>
-> >>>I think it'll be better to create a new attribute and use it?
+> >> diff --git a/drivers/mtd/nand/nand_base.c b/drivers/mtd/nand/nand_=
+base.c
+> >> index f2c8ff3..ef977f3 100644
+> >> --- a/drivers/mtd/nand/nand_base.c
+> >> +++ b/drivers/mtd/nand/nand_base.c
+> >> @@ -3979,7 +3979,7 @@ ident_done:
+> >>  static int nand_dt_init(struct nand_chip *chip)
+> >>  {
+> >>       struct device_node *dn =3D nand_get_flash_node(chip);
+> >> -     int ecc_mode, ecc_strength, ecc_step;
+> >> +     int ecc_mode, ecc_algo, ecc_strength, ecc_step;
 > >>
-> >>Another simpler option is to not support _set_mode() for DA8xx, and the
-> >>phy driver set the otgmode bit in probe() based on dr_mode of the
-> >>controller.
+> >>       if (!dn)
+> >>               return 0;
+> >> @@ -3991,6 +3991,7 @@ static int nand_dt_init(struct nand_chip *ch=
+ip)
+> >>               chip->bbt_options |=3D NAND_BBT_USE_FLASH;
 > >>
-> >>Regards,
-> >>-Bin.
+> >>       ecc_mode =3D of_get_nand_ecc_mode(dn);
+> >> +     ecc_algo =3D of_get_nand_ecc_algo(dn);
+> >>       ecc_strength =3D of_get_nand_ecc_strength(dn);
+> >>       ecc_step =3D of_get_nand_ecc_step_size(dn);
+> >>
+> >> @@ -4003,6 +4004,9 @@ static int nand_dt_init(struct nand_chip *ch=
+ip)
+> >>       if (ecc_mode >=3D 0)
+> >>               chip->ecc.mode =3D ecc_mode;
+> >>
+> >> +     if (ecc_algo >=3D 0)
+> >> +             chip->ecc.algo =3D ecc_algo;
+> >> +
 > >
-> >This certainly works for my particular use case, however, Sergei Shtylyov, who
-> >wrote the da8xx musb glue layer originally, seemed to recall in his review of
-> >the patch series that this really is necessary for OTG mode to work properly.
-> 
->    No, it's still not necessary, however this method is now called
-> from musb_init_controller() (it wasn't in my time). ISTR however
-> that you needed to enforce the mode override in CFGCHIP2 for the
-> host mode to function properly.
+> > While this might appear to handle the absence of the nand-ecc-algo
+> > property correctly, this isn't safe. This means that any existing D=
+T
+> > without the property will get treated as Hamming ECC. Perhaps we ne=
+ed
+> > the enum to have a 0 value of 'NAND_ECC_ALGO_UNKNOWN' or something =
+like
+> > that?
+>=20
+> You're commenting on an old series. If you take a look at:
+> https://patchwork.ozlabs.org/patch/601180/
+> that also got applied to the:
+> https://github.com/linux-nand/linux/commits/nand/next
+> repo, you'll see we have NAND_ECC_UNKNOWN there.
 
-Yes, but I think we don't have to rely on musb_init_controller(), what
-we can do is the phy probe() calls of_usb_get_dr_mode_by_phy() to get
-the dr_mode of the controller then sets CFGCHIP2 bits accordingly, so
-that we can drop _set_mode() in the phy driver.
+Ah, I guess I missed that because I was searching for the patch to
+brcmnand (i.e., fixing the original problem you saw). AFAICT, this v2
+series doesn't actually resolve your issue with brcmnand, no?
 
-Regards,
--Bin.
+Brian
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
