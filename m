@@ -1,23 +1,54 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH] thermal: rcar: Remove binding docs for r8a7794
-Date: Thu, 31 Mar 2016 18:53:58 -0700
-Message-ID: <20160401015357.GC19409@localhost.localdomain>
-References: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 15/18] ARM: vf610: PM: initial suspend/resume support
+Date: Fri, 1 Apr 2016 10:25:07 +0800
+Message-ID: <20160401022507.GF18833@tiger>
+References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
+ <1457576219-7971-16-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459228065-18674-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Zhang Rui <rui.zhang@intel.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-pm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+In-Reply-To: <1457576219-7971-16-git-send-email-stefan@agner.ch>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 29, 2016 at 02:07:45PM +0900, Simon Horman wrote:
-> The latest information that I have is that there is no thermal IP
-> block present on the r8a7794 SoC so remove the corresponding binding.
+On Wed, Mar 09, 2016 at 06:16:56PM -0800, Stefan Agner wrote:
+> Add system suspend and resume support for Vybrid SoC. The standby
+> sleep state puts the SoC in STOP mode. The SoC can be woken through
+> an interrupt from GPC (Global Power Controller). The GPC can use any
+> interrupt as wake-up source. To save power the main PLL1 is bypassed
+> and uses the 24MHz on-chip oscillator. However, memory clock need to
+> be at full speed, hence the PLL2 needs to be on to keep the memory
+> clocked. The mode is completely implemented in C since we can access
+> the full memory at all times. The mode provides most power saving
+> while being able to be woken by any IRQ as wake-up source.
 > 
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> The mem sleep state (Suspend-to-RAM) uses Vybrid's LPSTOP2 mode. This
+> mode powergates most parts of the SoC expect some peripherials such as
+> Wake-Up controller (WKPU) or LP RTC. Parts of the internal SRAM is
+> retained too. The suspend code written in assembly runs from this SRAM.
+> The code puts the main memory (DDR3) into self-refresh mode and takes
+> it out of self-refresh mode on resume. Verified with Colibri VF50/VF61
+> V1.2A.
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  arch/arm/mach-imx/Makefile        |   3 +
+>  arch/arm/mach-imx/common.h        |  10 +
+>  arch/arm/mach-imx/mach-vf610.c    |   8 +
+>  arch/arm/mach-imx/pm-vf610.c      | 634 ++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-imx/suspend-vf610.S | 437 ++++++++++++++++++++++++++
+>  drivers/clk/imx/clk-vf610.c       |  17 +
+>  6 files changed, 1109 insertions(+)
+>  create mode 100644 arch/arm/mach-imx/pm-vf610.c
+>  create mode 100644 arch/arm/mach-imx/suspend-vf610.S
 
-Add this to my -fixes branch.
+I know this is how we implemented suspend for i.MX6.  But this is not
+the direction moving forward.  When people was pushing a pile of code
+adding suspend for i.MX7D, I refused to take it and asked them to push
+those hardware details into firmware and use PSCI to implement suspend.
+I would like to suggest the same for Vybrid.
+
+Shawn
