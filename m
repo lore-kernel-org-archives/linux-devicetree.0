@@ -1,65 +1,115 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: dtc warnings
-Date: Fri, 1 Apr 2016 08:57:30 -0500
-Message-ID: <56FE7E4A.2000601@ti.com>
-References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
- <56FE27F9.2070100@gmail.com>
- <CAJKOXPdDyVbfSyshu4j21Ax2J-VwPpMZgAGEeO8VtgFYh4hTmw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdDyVbfSyshu4j21Ax2J-VwPpMZgAGEeO8VtgFYh4hTmw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Tomi Valkeinen <tomi.valkeinen@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, arm-platform-maintainers@lists.infradead.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v5 00/10] Support for Cortex-M Prototyping System
+Date: Fri,  1 Apr 2016 15:02:51 +0100
+Message-ID: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/01/2016 02:53 AM, Krzysztof Kozlowski wrote:
-> On Fri, Apr 1, 2016 at 4:49 PM, Tomi Valkeinen <tomi.valkeinen@gmail.com> wrote:
->>
->> Hi Rob,
->>
->> On 01/04/16 04:40, Rob Herring wrote:
->>> You may have noticed that linux-next had gotten noisy with dtc
->>> warnings lately. I dropped the change for a bit, but added it back
->>> today except now it is disabled unless building with "W=1".
->>>
->>> There's ~25K (2500 unique) warnings generated from the ARM dts files.
->>> Here's the ranking of warnings by dtb. OMAP is the clear winner (based
->>> on the similar counts, probably lots of duplicates). Please help
->>> remind contributors to test with W=1 and start to fix these.
->>>
->>> At least for memory nodes, I plan to whitelist allowing no
->>> unit-address. There could be others, but none that I've seen so far.
->>
->> What's the correct way to fix nodes for display platform devices? For
->> example, omap4-panda-common.dtsi has two connector nodes:
->>
->> dvi0: connector@0 {
->>         compatible = "dvi-connector";
->>         label = "dvi";
->>         ...
->> };
->>
->>
->> hdmi0: connector@1 {
->>         compatible = "hdmi-connector";
->>         label = "hdmi";
->>         ...
->> };
-> 
-> I have the same doubts. The ePAPR says in that case "the node-name
-> alone differentiates the node from other nodes at the same level in
-> the tree.". But which is preferred? Differentiating by number or by
-> type?
-> 
-> Similarly, what to do with the opp modes (a lot of warnings) in
-> Documentation/devicetree/bindings/opp/opp.txt?
-> 
-+ linux-pm and Viresh for opp.txt
+Hi,
 
+This patch series provides the basic support for running ucLinux on V2M-MPS2
+platform.
+
+With these patches applied ucLinux can be run on both HW and FVP models
+with Cortex-M3/M4/M7 configurations.
+
+Board description:
+
+http://infocenter.arm.com/help/topic/com.arm.doc.100112_0100_03_en/arm_versatile_express_cortex_m_prototyping_system_(v2m_mps2)_technical_reference_manual_100112_0100_03_en.pdf
+
+Application notes (cover Cortex-M3/M4/M7):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0385a/DAI0385A_cortex_m3_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0386a/DAI0386A_cortex_m4_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0399a/DAI0399A_cortex_m7_on_v2m_mps2.pdf
+http://infocenter.arm.com/help/topic/com.arm.doc.dai0400a/DAI0400A_cortex_m7_on_v2m_mps2.pdf
+
+Cortex-M System Design Kit (referenced as CMDK from documents above):
+
+http://infocenter.arm.com/help/topic/com.arm.doc.ddi0479c/DDI0479C_cortex_m_system_design_kit_r1p0_trm.pdf
+
+I'd be happy to hear any feedback/comments on this series!
+
+Changelog:
+
+  v4  -> v5:
+      - rebased on 4.6-rc1
+      - updated mps2-uart per Peter
+      - s/COFIG_ARCH_MPS2/CONFIG_ARCH_MPS under arm/mach-vexpress
+
+  v3  -> v4:
+      - rebased on 4.5-rc5
+      - updated mps2-uart per Andy, Alan and Peter
+      - dropped "zombie" EMBEDDED from defconfg per Arnd
+      - moved mps2 under vexpress umbrella per Arnd
+      - updated device-tree sources per Arnd
+      - dropped low-level debug support, seems earlycon works well for that
+
+  v2  -> v3:
+      - rebased on 4.5-rc4
+      - fixes for mps2-timer per Thomas
+      - swicthed back to ttyMPS naming per Greg
+
+  v1  -> v2:
+      - rebased on 4.5-rc2
+      - fixes for mps2-timer per Daniel and Rob (added Ack from Daniel)
+      - fixes for mps2-uart per Greg and Andy
+
+  RFC -> v1:
+      - dropped RFC tag
+      - rebased on 4.4-rc3
+      - added Acks from Rob
+      - updated mps2-timer per Daniel
+      - fixed build failures reported by 0-DAY kernel test infrastructure
+
+Thanks!
+
+Vladimir Murzin (10):
+  dt-bindings: document the MPS2 timer bindings
+  clockevents/drivers: add MPS2 Timer driver
+  dt-bindings: document the MPS2 UART bindings
+  serial: mps2-uart: add MPS2 UART driver
+  serial: mps2-uart: add support for early console
+  ARM: vexpress/mps2: introduce MPS2 platform
+  ARM: configs: add MPS2 defconfig
+  ARM: dts: introduce MPS2 AN385/AN386
+  ARM: dts: introduce MPS2 AN399/AN400
+  MAINTAINERS: Update ARM Versatile Express platform entry
+
+ .../devicetree/bindings/serial/arm,mps2-uart.txt   |   19 +
+ .../devicetree/bindings/timer/arm,mps2-timer.txt   |   28 +
+ MAINTAINERS                                        |    1 +
+ arch/arm/Kconfig                                   |    8 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/Makefile                         |    3 +
+ arch/arm/boot/dts/mps2-an385.dts                   |   92 +++
+ arch/arm/boot/dts/mps2-an399.dts                   |   92 +++
+ arch/arm/boot/dts/mps2.dtsi                        |  242 ++++++++
+ arch/arm/configs/mps2_defconfig                    |  109 ++++
+ arch/arm/mach-vexpress/Makefile                    |    4 +-
+ arch/arm/mach-vexpress/Makefile.boot               |    3 +
+ arch/arm/mach-vexpress/v2m-mps2.c                  |   21 +
+ drivers/clocksource/Kconfig                        |    6 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/mps2-timer.c                   |  275 +++++++++
+ drivers/tty/serial/Kconfig                         |   13 +
+ drivers/tty/serial/Makefile                        |    1 +
+ drivers/tty/serial/mps2-uart.c                     |  626 ++++++++++++++++++++
+ include/uapi/linux/serial_core.h                   |    3 +
+ 20 files changed, 1547 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/arm,mps2-timer.txt
+ create mode 100644 arch/arm/boot/dts/mps2-an385.dts
+ create mode 100644 arch/arm/boot/dts/mps2-an399.dts
+ create mode 100644 arch/arm/boot/dts/mps2.dtsi
+ create mode 100644 arch/arm/configs/mps2_defconfig
+ create mode 100644 arch/arm/mach-vexpress/Makefile.boot
+ create mode 100644 arch/arm/mach-vexpress/v2m-mps2.c
+ create mode 100644 drivers/clocksource/mps2-timer.c
+ create mode 100644 drivers/tty/serial/mps2-uart.c
 
 -- 
-Regards,
-Nishanth Menon
+1.7.9.5
