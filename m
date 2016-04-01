@@ -1,50 +1,36 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 03/11] ARM: dts: exynos: Fix DTC unit name warnings in
- Exynos4
-Date: Fri, 1 Apr 2016 10:30:44 -0400
-Message-ID: <56FE8614.1050900@osg.samsung.com>
-References: <1459493874-2366-1-git-send-email-k.kozlowski@samsung.com>
- <1459493874-2366-3-git-send-email-k.kozlowski@samsung.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] reset: Add support for Oxford Semiconductor Reset
+Date: Fri, 01 Apr 2016 16:34:11 +0200
+Message-ID: <1459521251.9500.29.camel@pengutronix.de>
+References: <1459520174-12897-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1459493874-2366-3-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459520174-12897-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Neil,
 
+Am Freitag, den 01.04.2016, 16:16 +0200 schrieb Neil Armstrong:
+> This patchset includes support for the reset controller driver for
+> Oxford Semiconductor OXNAS SoC Family.
+> 
+> It was originally posted part of a platform patchset available here :
+> http://lkml.kernel.org/r/1458838215-23314-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> 
+> Changes this v3 patchset :
+> - Get rid of PLX Technology, replace by Oxford Semiconductor
 
-On 04/01/2016 02:57 AM, Krzysztof Kozlowski wrote:
-> Fix following DTC warnings in all Exynos4 boards:
-> 
-> Warning (unit_address_vs_reg): Node /soc/video-phy@10020710 has a unit name, but no reg property
-> 
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index 000d506c027b..021f52d43ff7 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -82,7 +82,7 @@
->  		reg = <0x12570000 0x14>;
->  	};
->  
-> -	mipi_phy: video-phy@10020710 {
-> +	mipi_phy: video-phy {
->  		compatible = "samsung,s5pv210-mipi-video-phy";
->  		#phy-cells = <1>;
->  		syscon = <&pmu_system_controller>;
-> 
+Thank you, applied both to reset/next.
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+regards
+Philipp
 
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
