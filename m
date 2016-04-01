@@ -1,43 +1,61 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 1/3] libahci: save port map for forced port map
-Date: Fri,  1 Apr 2016 08:52:56 +0100
-Message-ID: <1459497178-31090-2-git-send-email-srinivas.kandagatla@linaro.org>
-References: <1459497178-31090-1-git-send-email-srinivas.kandagatla@linaro.org>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: dtc warnings
+Date: Fri, 1 Apr 2016 16:53:48 +0900
+Message-ID: <CAJKOXPdDyVbfSyshu4j21Ax2J-VwPpMZgAGEeO8VtgFYh4hTmw@mail.gmail.com>
+References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
+	<56FE27F9.2070100@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459497178-31090-1-git-send-email-srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <56FE27F9.2070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jmaggard10-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In usecases where force_port_map is used saved_port_map is never set,
-resulting in not programming the PORTS_IMPL register as part of initial
-config. This patch fixes this by setting it to port_map even in case
-where force_port_map is used, making it more inline with other parts of
-the code.
+On Fri, Apr 1, 2016 at 4:49 PM, Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+> Hi Rob,
+>
+> On 01/04/16 04:40, Rob Herring wrote:
+> > You may have noticed that linux-next had gotten noisy with dtc
+> > warnings lately. I dropped the change for a bit, but added it back
+> > today except now it is disabled unless building with "W=1".
+> >
+> > There's ~25K (2500 unique) warnings generated from the ARM dts files.
+> > Here's the ranking of warnings by dtb. OMAP is the clear winner (based
+> > on the similar counts, probably lots of duplicates). Please help
+> > remind contributors to test with W=1 and start to fix these.
+> >
+> > At least for memory nodes, I plan to whitelist allowing no
+> > unit-address. There could be others, but none that I've seen so far.
+>
+> What's the correct way to fix nodes for display platform devices? For
+> example, omap4-panda-common.dtsi has two connector nodes:
+>
+> dvi0: connector@0 {
+>         compatible = "dvi-connector";
+>         label = "dvi";
+>         ...
+> };
+>
+>
+> hdmi0: connector@1 {
+>         compatible = "hdmi-connector";
+>         label = "hdmi";
+>         ...
+> };
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/ata/libahci.c | 1 +
- 1 file changed, 1 insertion(+)
+I have the same doubts. The ePAPR says in that case "the node-name
+alone differentiates the node from other nodes at the same level in
+the tree.". But which is preferred? Differentiating by number or by
+type?
 
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 3982054..a5d7c1c 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -507,6 +507,7 @@ void ahci_save_initial_config(struct device *dev, struct ahci_host_priv *hpriv)
- 		dev_info(dev, "forcing port_map 0x%x -> 0x%x\n",
- 			 port_map, hpriv->force_port_map);
- 		port_map = hpriv->force_port_map;
-+		hpriv->saved_port_map = port_map;
- 	}
- 
- 	if (hpriv->mask_port_map) {
--- 
-2.5.0
+Similarly, what to do with the opp modes (a lot of warnings) in
+Documentation/devicetree/bindings/opp/opp.txt?
 
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
