@@ -1,59 +1,50 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ARM: i.MX25: add RNGC node to dtsi
-Date: Fri, 1 Apr 2016 16:52:59 +0800
-Message-ID: <20160401085259.GH18833@tiger>
-References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
- <1457705200-16951-2-git-send-email-s.trumtrar@pengutronix.de>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v12 3/9] added UFS 2.0 capabilities
+Date: Fri, 1 Apr 2016 10:19:15 +0100
+Message-ID: <56FE3D13.6070504@synopsys.com>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+ <40585ae835f02d3b5550a32553b2189754e365b6.1459448160.git.jpinto@synopsys.com>
+ <1459455981.23778.31.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457705200-16951-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Matt Mackall <mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459455981.23778.31.camel@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Winkler, Tomas" <tomas.winkler@intel.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>
+Cc: "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hch@infradead.org" <hch@infradead.org>, "akinobu.mita@gmail.com" <akinobu.mita@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gbroner@codeaurora.org" <gbroner@codeaurora.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "julian.calaby@gmail.com" <julian.calaby@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 11, 2016 at 03:06:39PM +0100, Steffen Trumtrar wrote:
-> Add a devicetree entry for the Random Number Generator Version C (RNGC).
+On 3/31/2016 9:27 PM, Winkler, Tomas wrote:
+> On Thu, 2016-03-31 at 19:57 +0100, Joao Pinto wrote:
+>> Adding UFS 2.0 support to the UFS core driver.
+>>
+>> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
 > 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> Changes in v2:
->   - remove interrupt-names from dtsi
-> 
->  arch/arm/boot/dts/imx25.dtsi | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-> index cde329e9b9e3..ebf11d9f123e 100644
-> --- a/arch/arm/boot/dts/imx25.dtsi
-> +++ b/arch/arm/boot/dts/imx25.dtsi
-> @@ -397,6 +397,14 @@
->  				interrupts = <41>;
->  			};
->  
-> +			rng: rng@53fb0000 {
-> +				compatible = "fsl,imx25-rng";
-> +				reg = <0x53fb0000 0x4000>;
-> +				clocks = <&clks 109>;
-> +				clock-names = "ipg";
+> Looks good to me, though not tested yet
+> Tomas
 
-I think clock-names can be dropped too.
+I have tested the build in a x86 and ARC. Also tested the functionality by using
+a HAPS-DX FPGA with the UFS 2.0 design + MPHY G210.
 
-Shawn
+> 
+>> ---
+>> Changes v11->v12 (Tomas Winkler):
+>> - devicetree binding tweak was moved to a separated patch
+>> - unipro tweaks were moved to a separated patch
+>> - ufshcd_compose_upiu was decomposed in 2 functions
 
-> +				interrupts = <22>;
-> +			};
-> +
->  			esdhc1: esdhc@53fb4000 {
->  				compatible = "fsl,imx25-esdhc";
->  				reg = <0x53fb4000 0x4000>;
-> -- 
-> 2.7.0
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+>> +enum {
+>> +	UTP_CMD_TYPE_UFS_STORAGE	= 0x1,
+>> +};
+>> +
+>>  enum {
+>>  	UTP_SCSI_COMMAND		= 0x00000000,
+>>  	UTP_NATIVE_UFS_COMMAND		= 0x10000000,
+
+If you need anything else, please let me know.
+
+Thanks.
+Joao
