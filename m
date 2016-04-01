@@ -1,54 +1,119 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 15/18] ARM: vf610: PM: initial suspend/resume support
-Date: Fri, 1 Apr 2016 10:25:07 +0800
-Message-ID: <20160401022507.GF18833@tiger>
-References: <1457576219-7971-1-git-send-email-stefan@agner.ch>
- <1457576219-7971-16-git-send-email-stefan@agner.ch>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC 1/3] checks: Add infrastructure for setting bus type of
+ nodes
+Date: Fri, 1 Apr 2016 13:23:35 +1100
+Message-ID: <20160401022335.GI416@voom.redhat.com>
+References: <1458780021-5052-1-git-send-email-robh@kernel.org>
+ <20160331052247.GD416@voom.redhat.com>
+ <CAL_JsqKTarcy2UHKD5m2F7TNP3stNnpCdxTrptGeiTXJJHiGaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hABqaeELJqnDDeDE"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1457576219-7971-16-git-send-email-stefan@agner.ch>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, kernel@pengutronix.de, sergeimir@emcraft.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <CAL_JsqKTarcy2UHKD5m2F7TNP3stNnpCdxTrptGeiTXJJHiGaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 09, 2016 at 06:16:56PM -0800, Stefan Agner wrote:
-> Add system suspend and resume support for Vybrid SoC. The standby
-> sleep state puts the SoC in STOP mode. The SoC can be woken through
-> an interrupt from GPC (Global Power Controller). The GPC can use any
-> interrupt as wake-up source. To save power the main PLL1 is bypassed
-> and uses the 24MHz on-chip oscillator. However, memory clock need to
-> be at full speed, hence the PLL2 needs to be on to keep the memory
-> clocked. The mode is completely implemented in C since we can access
-> the full memory at all times. The mode provides most power saving
-> while being able to be woken by any IRQ as wake-up source.
-> 
-> The mem sleep state (Suspend-to-RAM) uses Vybrid's LPSTOP2 mode. This
-> mode powergates most parts of the SoC expect some peripherials such as
-> Wake-Up controller (WKPU) or LP RTC. Parts of the internal SRAM is
-> retained too. The suspend code written in assembly runs from this SRAM.
-> The code puts the main memory (DDR3) into self-refresh mode and takes
-> it out of self-refresh mode on resume. Verified with Colibri VF50/VF61
-> V1.2A.
-> 
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  arch/arm/mach-imx/Makefile        |   3 +
->  arch/arm/mach-imx/common.h        |  10 +
->  arch/arm/mach-imx/mach-vf610.c    |   8 +
->  arch/arm/mach-imx/pm-vf610.c      | 634 ++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-imx/suspend-vf610.S | 437 ++++++++++++++++++++++++++
->  drivers/clk/imx/clk-vf610.c       |  17 +
->  6 files changed, 1109 insertions(+)
->  create mode 100644 arch/arm/mach-imx/pm-vf610.c
->  create mode 100644 arch/arm/mach-imx/suspend-vf610.S
 
-I know this is how we implemented suspend for i.MX6.  But this is not
-the direction moving forward.  When people was pushing a pile of code
-adding suspend for i.MX7D, I refused to take it and asked them to push
-those hardware details into firmware and use PSCI to implement suspend.
-I would like to suggest the same for Vybrid.
+--hABqaeELJqnDDeDE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Shawn
+On Thu, Mar 31, 2016 at 10:17:46AM -0500, Rob Herring wrote:
+> On Thu, Mar 31, 2016 at 12:22 AM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > On Wed, Mar 23, 2016 at 07:40:19PM -0500, Rob Herring wrote:
+> >> In preparation to support bus specific checks, add the necessary
+> >> infrastructure to determine the bus type for nodes. Initially, PCI and
+> >> simple bus are supported.
+> >>
+> >> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> ---
+> >> David,
+> >
+> > Sorry it's taken me a while to look at this.  I've been a mixture of
+> > busy and sick :/
+>=20
+> No problem.
+>=20
+> [...]
+>=20
+> >> +static bool is_pci_bridge(struct node *node)
+> >> +{
+> >> +     struct property *prop;
+> >> +
+> >> +     if (!node)
+> >> +             return false;
+> >> +
+> >> +     prop =3D get_property(node, "device_type");
+> >> +     if (!prop)
+> >> +             return false;
+> >> +
+> >> +     if (strcmp(prop->val.val, "pci") =3D=3D 0)
+> >> +             return true;
+> >> +
+> >> +     return false;
+> >> +}
+> >
+> > So, I don't love using device_type here, since that's generally
+> > discouraged in modern flat trees, but I don't know of a better way to
+> > detect a pci bridge, so I guess it's ok.
+>=20
+> True, but pci, cpu, and memory remain as accepted uses. We'd have to
+> define a "pci-bridge" or "pci-bus" compatible to replace it.
+
+Right, that was the conclusion I was coming around to.
+
+> >> +struct bus_type pci_bus_type =3D {
+> >> +        .expected_addr_cells =3D 3,
+> >> +        .expected_size_cells =3D 2,
+> >
+> > I'm a bit torn here.  Part of me wants to suggest a 'check_bridge'
+> > function which handles this and can also make more subtle checks, but
+> > then just the expected cells values will handle nearly all real cases
+> > more succinctly.
+>=20
+> I left them as you had them, but I'm not so sure these are all that
+> useful. It works for PCI as the sizes are fixed, but then we could
+> just check against fixed values. For simple-bus, we need more
+> flexibility because the size could be 1 or 2. For other cases like I2C
+> or SPI buses, we know the sizes, but we can't really detect those
+> buses.
+
+Hm, ok.  Well how about instead of the expected cells values, we have
+two callbacks:  check_bridge() and check_device().   The
+check_bridge() callback can check the cells parameters along with
+anything else that makes sense.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--hABqaeELJqnDDeDE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJW/dunAAoJEGw4ysog2bOShJwP/jU5B9M5SXgXbMesp5O2k8Ha
+NKBet0kPuTomTN+NIOVOSBrKIyFV/N4ToQ/oKPwTr72giGsfCDrWCtM1ruKfpOid
+Ay2xJlJNnhSXiF3MX/thlZ4k3sz5cR8RMPm0julSbbcaqLo8ykWGFVMkKWKZlG9l
+MogImc2LoVbQ6XfFbUZY+Ih+Kb6EuFF3nDS5uq4ClX+ATcLroJ7s/TLTxYmbp+Ki
+v4aLNMibAAZKXmVR2tv2tRwtM4OuECb5GItT6+NM3V1PQ50nhk+Ji5h+vzPFDxQf
+wKrKBOBRf+Ydi7Sc27op78paQzZnCZk7ZLSY/ZHLNe55H/ny+/vGFJNYpnCvcrCR
+tWuRGBJ6BIJxZD5zT2G8iHSSAh79CL90ztH6nOaxMl6r8mcWGp/Dl+bJNdlpdaJV
+A1LmEZOKRZmYJnVFP53IeU0N9MMgqxlY57izj+E4NptNGC8iSLVHHawGzoC8KHir
+9TDXWIjautk73BUD+6gvEBkDuU7jK/jvqssyIQF88/8EaghTRPBqcVRuRVC2rFa3
+TbFfkSkiAWE2XyPV01DnP56gnmxeFfTWYxBQ/WJnQ0Naw3y/es7tZ0qSuNI2ET7F
+N8Ot4NGbX+8T5/1vRwJ4sS3XHsDZW9gZx+rGOpEAVxfMKY6Enn00q7qXk7OKdo71
+JdPuTX9XUG3eipYtDfct
+=g4lo
+-----END PGP SIGNATURE-----
+
+--hABqaeELJqnDDeDE--
