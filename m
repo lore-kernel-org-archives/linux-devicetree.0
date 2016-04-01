@@ -1,74 +1,129 @@
-From: Purna Chandra Mandal <purna.mandal@microchip.com>
-Subject: [PATCH v5 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
-Date: Fri, 1 Apr 2016 16:48:49 +0530
-Message-ID: <1459509530-22716-1-git-send-email-purna.mandal@microchip.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 4/8] gpio: altera-a10sr: Add A10 System Resource Chip GPIO support.
+Date: Fri, 1 Apr 2016 14:17:42 +0200
+Message-ID: <CACRpkda8VTDGVsRqbCs6ESeokA3t_p2X91FUNiqA7YM=F-JXBQ@mail.gmail.com>
+References: <1459278791-3646-1-git-send-email-tthayer@opensource.altera.com>
+	<1459278791-3646-5-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Joshua Henderson <digitalpeer@digitalpeer.com>, Purna Chandra Mandal <purna.mandal@microchip.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1459278791-3646-5-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: tthayer@opensource.altera.com
+Cc: Lee Jones <lee.jones@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, jdelvare@suse.com, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, pawell.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Dinh Nguyen <dinguyen@opensource.altera.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-hwmon@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the devicetree bindings for the SPI peripheral found
-on Microchip PIC32 class devices.
+On Tue, Mar 29, 2016 at 9:13 PM,  <tthayer@opensource.altera.com> wrote:
 
-Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
-Acked-by: Rob Herring <robh@kernel.org>
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>
+> Add the GPIO functionality for the Altera Arria10 MAX5 System Resource
+> Chip. The A10 MAX5 has 12 bits of GPIO assigned to switches, buttons,
+> and LEDs as a GPIO extender on the SPI bus.
+>
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
 
----
+OK...
 
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2:
- - fix indentation
- - add space after comma
- - moved 'cs-gpios' section under 'required' properties.
+As Lee says: split off the MFD patch so it is a pure GPIO driver
+patch.
 
- .../bindings/spi/microchip,spi-pic32.txt           | 34 ++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
+> +#include <linux/gpio.h>
 
-diff --git a/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
-new file mode 100644
-index 0000000..79de379f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/microchip,spi-pic32.txt
-@@ -0,0 +1,34 @@
-+Microchip PIC32 SPI Master controller
-+
-+Required properties:
-+- compatible: Should be "microchip,pic32mzda-spi".
-+- reg: Address and length of register space for the device.
-+- interrupts: Should contain all three spi interrupts in sequence
-+              of <fault-irq>, <receive-irq>, <transmit-irq>.
-+- interrupt-names: Should be "fault", "rx", "tx" in order.
-+- clocks: Phandle of the clock generating SPI clock on the bus.
-+- clock-names: Should be "mck0".
-+- cs-gpios: Specifies the gpio pins to be used for chipselects.
-+            See: Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Optional properties:
-+- dmas: Two or more DMA channel specifiers following the convention outlined
-+        in Documentation/devicetree/bindings/dma/dma.txt
-+- dma-names: Names for the dma channels. There must be at least one channel
-+             named "spi-tx" for transmit and named "spi-rx" for receive.
-+
-+Example:
-+
-+spi1: spi@1f821000 {
-+        compatible = "microchip,pic32mzda-spi";
-+        reg = <0x1f821000 0x200>;
-+        interrupts = <109 IRQ_TYPE_LEVEL_HIGH>,
-+                     <110 IRQ_TYPE_LEVEL_HIGH>,
-+                     <111 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-names = "fault", "rx", "tx";
-+        clocks = <&PBCLK2>;
-+        clock-names = "mck0";
-+        cs-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
-+        dmas = <&dma 134>, <&dma 135>;
-+        dma-names = "spi-rx", "spi-tx";
-+};
--- 
-1.8.3.1
+You should instead #include <linux/gpio/driver.h>
+
+> +#include <linux/mfd/altera-a10sr.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/syscalls.h>
+> +#include <linux/uaccess.h>
+
+Syscalls and uaccess??? I don't think so.
+
+> +struct altr_a10sr_gpio {
+> +       struct altr_a10sr *a10sc;
+> +       struct gpio_chip gp;
+> +};
+
+Add some kerneldoc.
+
+> +static inline struct altr_a10sr_gpio *to_altr_a10sr_gpio(struct gpio_chip *chip)
+> +{
+> +       return container_of(chip, struct altr_a10sr_gpio, gp);
+> +}
+
+Don't use this old design pattern.
+
+Use [devm_]gpiochip_add_data() and use gpiochip_get_data(gc) to get
+a data pointer from the gpiochip.
+
+> +static int altr_a10sr_gpio_get(struct gpio_chip *gc, unsigned int nr)
+> +{
+> +       struct altr_a10sr_gpio *gpio = to_altr_a10sr_gpio(gc);
+
+So this becomes
+struct altr_a10sr_gpio *gpio = gpiochip_get_data(gc);
+
+> +       int ret;
+> +       unsigned char reg = ALTR_A10SR_LED_RD_REG + ALTR_A10SR_REG_OFFSET(nr);
+> +
+> +       ret = altr_a10sr_reg_read(gpio->a10sc, reg);
+> +
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (ret & (1 << ALTR_A10SR_REG_BIT(nr)))
+> +               return 1;
+
+Do this instead:
+
+return !!(ret & (1 << ALTR_A10SR_REG_BIT(nr)))
+
+It raises the question whether ALTR_A10SR_REG_BIT
+is just a reimplementation of the BIT() macro from
+<linux/bitops.h>, please check this.
+
+> +static int altr_a10sr_gpio_direction_input(struct gpio_chip *gc,
+> +                                          unsigned int nr)
+> +{
+> +       if ((nr >= ALTR_A10SR_IN_VALID_RANGE_LO) &&
+> +           (nr <= ALTR_A10SR_IN_VALID_RANGE_HI))
+> +               return 0;
+> +       return -EINVAL;
+> +}
+> +
+> +static int altr_a10sr_gpio_direction_output(struct gpio_chip *gc,
+> +                                           unsigned int nr, int value)
+> +{
+> +       if ((nr >= ALTR_A10SR_OUT_VALID_RANGE_LO) &&
+> +           (nr <= ALTR_A10SR_OUT_VALID_RANGE_HI))
+> +               return 0;
+> +       return -EINVAL;
+> +}
+
+Does this mean that all lines are *always* input and output
+at the same time?
+
+If there is no .set_direction() callback and all lines are both
+input and output it kind of implies that all lines are also
+implicitly open drain do you agree?
+
+Please check:
+- If there is really no direction setting anywhere
+- For example if some lines are hardwired as input and
+  some lines are hardwired as output
+- If that is not the case, verify that all lines are really
+  open drain, they should be if all are both input and
+  output at the same time.
+
+> +       ret = gpiochip_add(&gpio->gp);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
+> +               return ret;
+> +       }
+
+Use devm_gpiochip_add_data() instead.
+
+Yours,
+Linus Walleij
