@@ -1,104 +1,56 @@
-From: Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: dtc warnings
-Date: Fri, 1 Apr 2016 10:49:13 +0300
-Message-ID: <56FE27F9.2070100@gmail.com>
-References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="0peGLmgNqw77MlN9QwQPKBXT89RghVLlq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/3] ahci: add ports-implemented dt bindings
+Date: Fri,  1 Apr 2016 08:52:55 +0100
+Message-ID: <1459497178-31090-1-git-send-email-srinivas.kandagatla@linaro.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, Hans de Goede <hdegoede@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jmaggard10@gmail.com, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---0peGLmgNqw77MlN9QwQPKBXT89RghVLlq
-Content-Type: multipart/mixed; boundary="Tdp6D8wc82uv26GtKco7Cl14XmEdIkBnB"
-From: Tomi Valkeinen <tomi.valkeinen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: arm-platform-maintainers-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org,
- "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
- "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Message-ID: <56FE27F9.2070100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: dtc warnings
-References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-In-Reply-To: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Hi Tejun,
 
---Tdp6D8wc82uv26GtKco7Cl14XmEdIkBnB
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On some SOCs PORTS_IMPL register value is never programmed by the BIOS
+and left at zero value. Which means that no sata ports are available for
+software. AHCI driver used to cope up with this by fabricating the
+port_map if the PORTS_IMPL register is read zero, but recent patch [1]
+broke this workaround as zero value was valid for nvme disks.
 
-Hi Rob,
+This patch adds ports-implemented dt bindings as workaround for this issue
+in a way that DT can dictate the port_map incase where the SOCs does not
+program it already.
 
-On 01/04/16 04:40, Rob Herring wrote:
-> You may have noticed that linux-next had gotten noisy with dtc
-> warnings lately. I dropped the change for a bit, but added it back
-> today except now it is disabled unless building with "W=3D1".
->=20
-> There's ~25K (2500 unique) warnings generated from the ARM dts files.
-> Here's the ranking of warnings by dtb. OMAP is the clear winner (based
-> on the similar counts, probably lots of duplicates). Please help
-> remind contributors to test with W=3D1 and start to fix these.
->=20
-> At least for memory nodes, I plan to whitelist allowing no
-> unit-address. There could be others, but none that I've seen so far.
+Am sure that there are more than one SOC that hits this issue.
 
-What's the correct way to fix nodes for display platform devices? For
-example, omap4-panda-common.dtsi has two connector nodes:
+Without this patchset, ACHI on APQ8064 Qualcomm platform is broken in mainline.
+With the below patchset am able to get back the functionality.
 
-dvi0: connector@0 {
-	compatible =3D "dvi-connector";
-	label =3D "dvi";
-	...
-};
+Can you take all the patches via libata tree, I have collected the
+acks required for DT.
 
+Changes since v2:
+	- reordered compatible strings in DT spotted by Sergei.
 
-hdmi0: connector@1 {
-	compatible =3D "hdmi-connector";
-	label =3D "hdmi";
-	...
-};
+Changes since RFC:
+	- Remove DT example as suggested by Rob.
+	- Fixed comments on DT binding patch as suggested by Rob.
+	- removed unused variable spotted by kernel test robot.
 
-Should I add the reg property, or should I rename the nodes to, say,
-connector_dvi and connector_hdmi, or connector1 and connector2?
+Thanks,
+srini
+[1] 566d18 "libata: disable forced PORTS_IMPL for >= AHCI 1.3"
 
-The index (reg) is not used for anything, but perhaps there could be
-some use for it in the future (although I have no idea what the use
-would be).
+Srinivas Kandagatla (3):
+  libahci: save port map for forced port map
+  ata: ahci-platform: Add ports-implemented DT bindings.
+  ARM: dts: apq8064: add ahci ports-implemented mask
 
- Tomi
+ Documentation/devicetree/bindings/ata/ahci-platform.txt | 4 ++++
+ arch/arm/boot/dts/qcom-apq8064.dtsi                     | 3 ++-
+ drivers/ata/ahci_platform.c                             | 3 +++
+ drivers/ata/libahci.c                                   | 1 +
+ 4 files changed, 10 insertions(+), 1 deletion(-)
 
+-- 
+2.5.0
 
---Tdp6D8wc82uv26GtKco7Cl14XmEdIkBnB--
-
---0peGLmgNqw77MlN9QwQPKBXT89RghVLlq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJW/if5AAoJEPo9qoy8lh71FOsQAJk8rNsmssTEHAXiscsGCNwI
-77G8ZySxJ/bVo+g6BlLfbQOgFW30VhuNvzTL6lo1hP7sNEK7NLzW8Xyk3te6eDh4
-/XS76xtXlfsag1nUPwNpPyifZ5OVRgae7/8bA+Dial1brB1JYbwOpzVZeVLVqPqF
-diyvuoxLSwWV5gqapZJ8rt2YQWrbmc9dk6I0WYLFHAY8c7wHjgfiSq0OoTovhTee
-8bzQ0AzhPn8qQE48+rSoGRB5poEqpzR07wUp+ftc9ZdLldsqaj67pzDoNXNliEB+
-XhCvn1SggZWGm19moeWAh+6EWLnQG6fxto2MtYO4vYiWmD3BFHS9AOmXePRW7YsV
-zfBu+yvN34A+hzO1UpM4VQ/z2cCRzieLQhB7BCSmZ7Ri9oyoaIfs5pA48ASwiB2K
-TA41mSUdAgYHJ/VkXL5OC3Nc9411rZkne7Ivk/svikBYNmRTUJ+0hJQyqkjAOd5s
-hxJXXuBipSD4lNB9dHiuEYkwbGY8zM9pDcPOcQaSLc2+QjVPBuW+C6p+e3E17wxZ
-9ylIshROpvDBOYoF5ZguU3uAPhdJc22xMTRLP4J8T5s3W/m1WpeMFYkUjK7rFoE9
-M4NtuH28bc4sOt0Pp//yLefTAXYOycgQEY4obdbMIaKoxbQm24+3jp5ustIEXvtd
-RAaezVPGJ8cHTKfRDJd3
-=0tyK
------END PGP SIGNATURE-----
-
---0peGLmgNqw77MlN9QwQPKBXT89RghVLlq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
