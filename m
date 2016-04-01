@@ -1,113 +1,70 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/3 v2] drm/i2c/adv7511: Add audio support
-Date: Fri, 01 Apr 2016 20:10:14 +0300
-Message-ID: <5276355.2bQYPXCpz6@avalon>
-References: <cover.1459174494.git.joabreu@synopsys.com>
- <15b1936d307912ba12df7fa09ec3a7a80ac5fcef.1459174494.git.joabreu@synopsys.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] dmaengine: mv_xor: add support for Armada 3700 SoC
+Date: Fri, 1 Apr 2016 12:12:17 -0500
+Message-ID: <20160401171217.GA5786@rob-hp-laptop>
+References: <1459359320-12638-1-git-send-email-gregory.clement@free-electrons.com>
+ <1459359320-12638-4-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <15b1936d307912ba12df7fa09ec3a7a80ac5fcef.1459174494.git.joabreu@synopsys.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: tixy@linaro.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, Alexey.Brodkin@synopsys.com, lgirdwood@gmail.com, yitian.bu@tangramtek.com, wsa+renesas@sang-engineering.com, laurent.pinchart+renesas@ideasonboard.com, tiwai@suse.com, nariman@opensource.wolfsonmicro.com, linux-snps-arc@lists.infradead.org, Jose Abreu <Jose.Abreu@synopsys.com>, devicetree@vger.kernel.org, Maruthi.Bayyavarapu@amd.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Vineet.Gupta1@synopsys.com, buyitian@gmail.com, robh+dt@kernel.org, perex@perex.cz, linux-kernel@vger.kernel.org, broonie@kernel.org, galak@codeaurora.org, alexander.deucher@amd.com, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459359320-12638-4-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9zZSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gTW9uZGF5IDI4IE1hciAyMDE2
-IDE1OjM2OjA5IEpvc2UgQWJyZXUgd3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGRzIGF1ZGlvIHN1cHBv
-cnQgZm9yIHRoZSBBRFY3NTExIEhETUkgdHJhbnNtaXR0ZXIKPiB1c2luZyBBTFNBIFNvQy4KPiAK
-PiBUaGUgY29kZSB3YXMgcG9ydGVkIGZyb20gQW5hbG9nIERldmljZXMgbGludXggdHJlZSBmcm9t
-Cj4gY29tbWl0IDE3NzBjNGExZTMyYiAoIk1lcmdlIHJlbW90ZS10cmFja2luZyBicmFuY2gKPiAn
-eGlsaW54L21hc3RlcicgaW50byB4Y29tbV96eW5xIiksIHdoaWNoIGlzIGF2YWlsYWJsZSBhdDoK
-PiAJLSBodHRwczovL2dpdGh1Yi5jb20vYW5hbG9nZGV2aWNlc2luYy9saW51eC8KPiAKPiBUaGUg
-bWFpbiBjb3JlIGZpbGUgd2FzIHJlbmFtZWQgZnJvbSBhZHY3NTExLmMgdG8gYWR2NzUxMV9jb3Jl
-LmMKPiBzbyB0aGF0IGF1ZGlvIGFuZCB2aWRlbyBjb21waWxlIGludG8gYSBzaW5nbGUgYWR2NzUx
-MS5rbyBtb2R1bGUKPiBhbmQgdG8ga2VlcCB1cCB3aXRoIEFuYWxvZyBEZXZpY2VzIGtlcm5lbCB0
-cmVlLgo+IAo+IFRoZSBhdWRpbyBjYW4gYmUgZGlzYWJsZWQgdXNpbmcgbWVudS1jb25maWcgc28g
-aXQgaXMgcG9zc2libGUKPiB0byB1c2Ugb25seSB2aWRlbyBtb2RlLgo+IAo+IFRoZSBIRE1JIG1v
-ZGUgaXMgYXV0b21hdGljYWxseSBzdGFydGVkIGF0IGJvb3QgYW5kIHRoZSBhdWRpbwo+ICh3aGVu
-IGVuYWJsZWQpIHJlZ2lzdGVycyBhcyBhIGNvZGVjIGludG8gQUxTQS4KPiAKPiBTUERJRiBEQUkg
-Zm9ybWF0IHdhcyBhbHNvIGFkZGVkIHRvIEFTb0MgYXMgaXQgaXMgcmVxdWlyZWQKPiBieSBhZHY3
-NTExIGF1ZGlvLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEpvc2UgQWJyZXUgPGpvYWJyZXVAc3lub3Bz
-eXMuY29tPgo+IC0tLQo+IAo+IE5vIGNoYW5nZXMgdjEgLT4gdjIuCj4gCj4gIGRyaXZlcnMvZ3B1
-L2RybS9pMmMvS2NvbmZpZyAgICAgICAgIHwgICAxMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9pMmMv
-TWFrZWZpbGUgICAgICAgIHwgICAgMiArCj4gIGRyaXZlcnMvZ3B1L2RybS9pMmMvYWR2NzUxMS5j
-ICAgICAgIHwgMTAyNCAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gIGRyaXZlcnMv
-Z3B1L2RybS9pMmMvYWR2NzUxMS5oICAgICAgIHwgICA0MSArKwo+ICBkcml2ZXJzL2dwdS9kcm0v
-aTJjL2Fkdjc1MTFfYXVkaW8uYyB8ICAzMTAgKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJt
-L2kyYy9hZHY3NTExX2NvcmUuYyAgfCAxMDA1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KwoKUGxlYXNlIHVzZSBnaXQtZm9ybWF0LXBhdGNoIC1NIHRvIGRldGVjdCByZW5hbWVzIGlmIHlv
-dSBzZW5kIGEgbmV3IHZlcnNpb24gb2YgCnRoaXMgc2VyaWVzLCBpdCB3aWxsIGhlbHAgd2l0aCBy
-ZXZpZXcuCgo+ICBpbmNsdWRlL3NvdW5kL3NvYy1kYWkuaCAgICAgICAgICAgICB8ICAgIDEgKwo+
-ICA3IGZpbGVzIGNoYW5nZWQsIDEzNzAgaW5zZXJ0aW9ucygrKSwgMTAyNCBkZWxldGlvbnMoLSkK
-PiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pMmMvYWR2NzUxMS5jCj4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTFfYXVkaW8uYwo+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2kyYy9hZHY3NTExX2NvcmUuYwoKW3Nu
-aXBdCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTFfY29yZS5jCj4g
-Yi9kcml2ZXJzL2dwdS9kcm0vaTJjL2Fkdjc1MTFfY29yZS5jIG5ldyBmaWxlIG1vZGUgMTAwNjQ0
-Cj4gaW5kZXggMDAwMDAwMC4uZDU0MjU2YQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9kcml2ZXJz
-L2dwdS9kcm0vaTJjL2Fkdjc1MTFfY29yZS5jCgpbc25pcF0KCj4gK3N0YXRpYyBpbnQgYWR2NzUx
-MV9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqaTJjLCBjb25zdCBzdHJ1Y3QgaTJjX2RldmljZV9p
-ZAo+ICppZCkgK3sKPiArCXN0cnVjdCBhZHY3NTExX2xpbmtfY29uZmlnIGxpbmtfY29uZmlnOwo+
-ICsJc3RydWN0IGFkdjc1MTEgKmFkdjc1MTE7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmaTJj
-LT5kZXY7Cj4gKwl1bnNpZ25lZCBpbnQgdmFsOwo+ICsJaW50IHJldDsKPiArCj4gKwlpZiAoIWRl
-di0+b2Zfbm9kZSkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4gKwlhZHY3NTExID0gZGV2bV9r
-emFsbG9jKGRldiwgc2l6ZW9mKCphZHY3NTExKSwgR0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIWFkdjc1
-MTEpCj4gKwkJcmV0dXJuIC1FTk9NRU07Cj4gKwo+ICsJYWR2NzUxMS0+cG93ZXJlZCA9IGZhbHNl
-Owo+ICsJYWR2NzUxMS0+c3RhdHVzID0gY29ubmVjdG9yX3N0YXR1c19kaXNjb25uZWN0ZWQ7Cj4g
-Kwo+ICsJcmV0ID0gYWR2NzUxMV9wYXJzZV9kdChkZXYtPm9mX25vZGUsICZsaW5rX2NvbmZpZyk7
-Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwo+ICsJLyoKPiArCSAqIFRoZSBwb3dl
-ciBkb3duIEdQSU8gaXMgb3B0aW9uYWwuIElmIHByZXNlbnQsIHRvZ2dsZSBpdCBmcm9tIGFjdGl2
-ZSB0bwo+ICsJICogaW5hY3RpdmUgdG8gd2FrZSB1cCB0aGUgZW5jb2Rlci4KPiArCSAqLwo+ICsJ
-YWR2NzUxMS0+Z3Bpb19wZCA9IGRldm1fZ3Bpb2RfZ2V0X29wdGlvbmFsKGRldiwgInBkIiwgR1BJ
-T0RfT1VUX0hJR0gpOwo+ICsJaWYgKElTX0VSUihhZHY3NTExLT5ncGlvX3BkKSkKPiArCQlyZXR1
-cm4gUFRSX0VSUihhZHY3NTExLT5ncGlvX3BkKTsKPiArCj4gKwlpZiAoYWR2NzUxMS0+Z3Bpb19w
-ZCkgewo+ICsJCW1kZWxheSg1KTsKPiArCQlncGlvZF9zZXRfdmFsdWVfY2Fuc2xlZXAoYWR2NzUx
-MS0+Z3Bpb19wZCwgMCk7Cj4gKwl9Cj4gKwo+ICsJYWR2NzUxMS0+cmVnbWFwID0gZGV2bV9yZWdt
-YXBfaW5pdF9pMmMoaTJjLCAmYWR2NzUxMV9yZWdtYXBfY29uZmlnKTsKPiArCWlmIChJU19FUlIo
-YWR2NzUxMS0+cmVnbWFwKSkKPiArCQlyZXR1cm4gUFRSX0VSUihhZHY3NTExLT5yZWdtYXApOwo+
-ICsKPiArCXJldCA9IHJlZ21hcF9yZWFkKGFkdjc1MTEtPnJlZ21hcCwgQURWNzUxMV9SRUdfQ0hJ
-UF9SRVZJU0lPTiwgJnZhbCk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7Cj4gKwlkZXZf
-ZGJnKGRldiwgIlJldi4gJWRcbiIsIHZhbCk7Cj4gKwo+ICsJcmV0ID0gcmVnbWFwX3JlZ2lzdGVy
-X3BhdGNoKGFkdjc1MTEtPnJlZ21hcCwgYWR2NzUxMV9maXhlZF9yZWdpc3RlcnMsCj4gKwkJCQkg
-ICAgQVJSQVlfU0laRShhZHY3NTExX2ZpeGVkX3JlZ2lzdGVycykpOwo+ICsJaWYgKHJldCkKPiAr
-CQlyZXR1cm4gcmV0Owo+ICsKPiArCXJlZ21hcF93cml0ZShhZHY3NTExLT5yZWdtYXAsIEFEVjc1
-MTFfUkVHX0VESURfSTJDX0FERFIsIGVkaWRfaTJjX2FkZHIpOwo+ICsJcmVnbWFwX3dyaXRlKGFk
-djc1MTEtPnJlZ21hcCwgQURWNzUxMV9SRUdfUEFDS0VUX0kyQ19BRERSLAo+ICsJCSAgICAgcGFj
-a2V0X2kyY19hZGRyKTsKPiArCXJlZ21hcF93cml0ZShhZHY3NTExLT5yZWdtYXAsIEFEVjc1MTFf
-UkVHX0NFQ19JMkNfQUREUiwgY2VjX2kyY19hZGRyKTsKPiArCWFkdjc1MTFfcGFja2V0X2Rpc2Fi
-bGUoYWR2NzUxMSwgMHhmZmZmKTsKPiArCj4gKwlhZHY3NTExLT5pMmNfbWFpbiA9IGkyYzsKPiAr
-CWFkdjc1MTEtPmkyY19lZGlkID0gaTJjX25ld19kdW1teShpMmMtPmFkYXB0ZXIsIGVkaWRfaTJj
-X2FkZHIgPj4gMSk7Cj4gKwlpZiAoIWFkdjc1MTEtPmkyY19lZGlkKQo+ICsJCXJldHVybiAtRU5P
-TUVNOwo+ICsKPiArCWlmIChpMmMtPmlycSkgewo+ICsJCWluaXRfd2FpdHF1ZXVlX2hlYWQoJmFk
-djc1MTEtPndxKTsKPiArCj4gKwkJcmV0ID0gZGV2bV9yZXF1ZXN0X3RocmVhZGVkX2lycShkZXYs
-IGkyYy0+aXJxLCBOVUxMLAo+ICsJCQkJCQlhZHY3NTExX2lycV9oYW5kbGVyLAo+ICsJCQkJCQlJ
-UlFGX09ORVNIT1QsIGRldl9uYW1lKGRldiksCj4gKwkJCQkJCWFkdjc1MTEpOwo+ICsJCWlmIChy
-ZXQpCj4gKwkJCWdvdG8gZXJyX2kyY191bnJlZ2lzdGVyX2RldmljZTsKPiArCX0KPiArCj4gKwkv
-KiBDRUMgaXMgdW51c2VkIGZvciBub3cgKi8KPiArCXJlZ21hcF93cml0ZShhZHY3NTExLT5yZWdt
-YXAsIEFEVjc1MTFfUkVHX0NFQ19DVFJMLAo+ICsJCSAgICAgQURWNzUxMV9DRUNfQ1RSTF9QT1dF
-Ul9ET1dOKTsKPiArCj4gKwlhZHY3NTExX3Bvd2VyX29mZihhZHY3NTExKTsKPiArCj4gKwlpMmNf
-c2V0X2NsaWVudGRhdGEoaTJjLCBhZHY3NTExKTsKPiArCj4gKyNpZmRlZiBDT05GSUdfRFJNX0ky
-Q19BRFY3NTExX0FVRElPCj4gKwlhZHY3NTExX2F1ZGlvX2luaXQoJmkyYy0+ZGV2KTsKPiArI2Vu
-ZGlmCgpTaG91bGRuJ3Qgd2UgY29uZGl0aW9uIHRoaXMgdG8gdGhlIGF1ZGlvIGNoYW5uZWwgYmVp
-bmcgc29tZWhvdyBkZXNjcmliZWQgaW4gRFQgCj8gSWYgYSBib2FyZCBkb2Vzbid0IHJvdXRlIGF1
-ZGlvIHNpZ25hbHMgdG8gdGhlIEFEVjc1MTEgYXVkaW8gaW5wdXQsIHRoZXJlJ3MgCm5vIG5lZWQg
-dG8gcmVnaXN0ZXIgYW4gYXVkaW8gY29kZWMuCgo+ICsKPiArCWFkdjc1MTFfc2V0X2xpbmtfY29u
-ZmlnKGFkdjc1MTEsICZsaW5rX2NvbmZpZyk7Cj4gKwo+ICsJLyogRW5hYmxlIEhETUkgbW9kZSAq
-Lwo+ICsJcmVnbWFwX3VwZGF0ZV9iaXRzKGFkdjc1MTEtPnJlZ21hcCwgQURWNzUxMV9SRUdfSERD
-UF9IRE1JX0NGRywKPiArCQkJQURWNzUxMV9IRE1JX0NGR19NT0RFX01BU0ssCj4gKwkJCUFEVjc1
-MTFfSERNSV9DRkdfTU9ERV9IRE1JKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArCj4gK2Vycl9pMmNf
-dW5yZWdpc3Rlcl9kZXZpY2U6Cj4gKwlpMmNfdW5yZWdpc3Rlcl9kZXZpY2UoYWR2NzUxMS0+aTJj
-X2VkaWQpOwo+ICsKPiArCXJldHVybiByZXQ7Cj4gK30KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQ
-aW5jaGFydAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Mar 30, 2016 at 07:35:18PM +0200, Gregory CLEMENT wrote:
+> From: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+> 
+> Armada 3700 SoC comprise a single XOR engine compliant with the ones used
+> in older Marvell SoC's like Armada XP or 38x. The only thing that neededs
+
+s/neededs/needs/
+
+> modification is the Mbus configuration, which has to be done on two
+> levels: global and in device. The first one is inherited from the
+> bootlader.  The latter can be opened in a default way, leaving
+> arbitration to the bus controller. Hence filled mbus_dram_target_info
+> structure is not needed.
+> 
+> Patch "dmaengine: mv_xor: optimize performance by using a subset
+> of the XOR channels" introduced limitation for using XOR engines and
+> channels vs number of available CPU's. Those contstraints do not however
+> fit Armada 3700 architecture with two possible CPU's and single,
+> dual-channel engine. Hence in this commit an adjustment for setting
+> maximum available channels is added.
+> 
+> This patch enables XOR access to DRAM by opening default window to 4GB
+> space with specific attribute.
+> 
+> Signed-off-by: Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/dma/mv-xor.txt |  3 +-
+>  drivers/dma/mv_xor.c                             | 56 +++++++++++++++++++++---
+>  2 files changed, 51 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/mv-xor.txt b/Documentation/devicetree/bindings/dma/mv-xor.txt
+> index 276ef815ef32..900328d28231 100644
+> --- a/Documentation/devicetree/bindings/dma/mv-xor.txt
+> +++ b/Documentation/devicetree/bindings/dma/mv-xor.txt
+> @@ -1,7 +1,8 @@
+>  * Marvell XOR engines
+>  
+>  Required properties:
+> -- compatible: Should be "marvell,orion-xor" or "marvell,armada-380-xor"
+> +- compatible: Should be "marvell,orion-xor", "marvell,armada-380-xor"
+> +    or "marvell,armada-3700-xor".
+
+Reformatting to 1 per line would be better. Otherwise,
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>  - reg: Should contain registers location and length (two sets)
+>      the first set is the low registers, the second set the high
+>      registers for the XOR engine.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
