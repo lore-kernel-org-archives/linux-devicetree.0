@@ -1,60 +1,86 @@
-From: Vladimir Murzin <vladimir.murzin@arm.com>
-Subject: [PATCH v5 03/10] dt-bindings: document the MPS2 UART bindings
-Date: Fri,  1 Apr 2016 15:02:54 +0100
-Message-ID: <1459519381-34441-4-git-send-email-vladimir.murzin@arm.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [RFC PATCH 2/4] pinctrl: pinconf-generic: Add ACPI support
+Date: Fri, 01 Apr 2016 17:05:29 +0300
+Message-ID: <1459519529.5907.198.camel@linux.intel.com>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+	 <1459424685-26965-3-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arnd@arndb.de, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, daniel.lezcano@linaro.org, tglx@linutronix.de, liviu.dudau@arm.com, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com
-Cc: mark.rutland@arm.com, gnomes@lxorguk.ukuu.org.uk, peter@hurleysoftware.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, andy.shevchenko@gmail.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459424685-26965-3-git-send-email-irina.tirdea@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds documentation of device tree bindings for the
-UART found on ARM MPS2 platform
+On Thu, 2016-03-31 at 14:44 +0300, Irina Tirdea wrote:
+> Add ACPI support for the generic device tree properties.
+> Convert the pinconf generic code to handle both ACPI and
+> device tree by using the fwnode_property API. Also include
+> renaming device tree references in names of functions and
+> structures from 'dt' to 'fwnode'.
 
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/serial/arm,mps2-uart.txt   |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
+This is looks good to me, though few style / minor comments below.
 
-diff --git a/Documentation/devicetree/bindings/serial/arm,mps2-uart.txt b/Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
-new file mode 100644
-index 0000000..128cc6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/arm,mps2-uart.txt
-@@ -0,0 +1,19 @@
-+ARM MPS2 UART
-+
-+Required properties:
-+- compatible	: Should be "arm,mps2-uart"
-+- reg		: Address and length of the register set
-+- interrupts	: Reference to the UART RX, TX and overrun interrupts
-+
-+Required clocking property:
-+- clocks	  : The input clock of the UART
-+
-+
-+Examples:
-+
-+uart0: serial@40004000 {
-+	compatible = "arm,mps2-uart";
-+	reg = <0x40004000 0x1000>;
-+	interrupts = <0 1 12>;
-+	clocks = <&sysclk>;
-+};
--- 
-1.7.9.5
+> --- a/drivers/pinctrl/pinconf-generic.c
+> +++ b/drivers/pinctrl/pinconf-generic.c
+>=20
+
+> @@ -175,22 +176,22 @@ static const struct pinconf_generic_params
+> dt_params[] =3D {
+> =C2=A0};
+> =C2=A0
+> =C2=A0/**
+> - * parse_dt_cfg() - Parse DT pinconf parameters
+> - * @np:	DT node
+> + * parse_fwnode_cfg() - Parse FW pinconf parameters
+> + * @fw:	FW node
+
+Here and below it should be @fwnode.
+
+> -int pinconf_generic_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+> -		struct device_node *np, struct pinctrl_map **map,
+> +static int pinconf_generic_fwnode_subnode_to_map(struct pinctrl_dev
+> *pctldev,
+> +		struct fwnode_handle *fwnode, struct pinctrl_map
+> **map,
+> =C2=A0		unsigned *reserved_maps, unsigned *num_maps,
+> =C2=A0		enum pinctrl_map_type type)
+> =C2=A0{
+> -	int ret;
+> +	int ret, i;
+
+Since you change this line anyway, perhaps move it to be last in the
+definition block?
+
+> =C2=A0	const char *function;
+> =C2=A0	struct device *dev =3D pctldev->dev;
+> =C2=A0	unsigned long *configs =3D NULL;
+> =C2=A0	unsigned num_configs =3D 0;
+> =C2=A0	unsigned reserve, strings_count;
+> -	struct property *prop;
+> -	const char *group;
+> +	const char **groups;
+> =C2=A0	const char *subnode_target_type =3D "pins";
+
+=2E..to here.
+
+> +#ifdef CONFIG_OF
+> +inline int pinconf_generic_parse_dt_config(struct device_node *np,
+> +					=C2=A0=C2=A0=C2=A0struct pinctrl_dev
+> *pctldev,
+> +					=C2=A0=C2=A0=C2=A0unsigned long **configs,
+> +					=C2=A0=C2=A0=C2=A0unsigned int *nconfigs)
+> +{
+> +	return pinconf_generic_parse_fwnode_config(&np->fwnode,
+> pctldev,
+> +						=C2=A0=C2=A0=C2=A0configs,
+> nconfigs);
+> +}
+
+I didn't see any user of this.
+
+--=20
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
