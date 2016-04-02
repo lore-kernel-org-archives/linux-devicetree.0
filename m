@@ -1,71 +1,61 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 2/3] ARM: dts: vf-colibri: increase NAND clock speed
-Date: Fri,  1 Apr 2016 23:13:40 -0700
-Message-ID: <1459577621-3160-2-git-send-email-stefan@agner.ch>
-References: <1459577621-3160-1-git-send-email-stefan@agner.ch>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 4/7] ARM: dts: Enable N950 keyboard sleep leds by default
+Date: Sat, 2 Apr 2016 08:47:57 +0200
+Message-ID: <20160402064757.GA13872@amd>
+References: <1457827580-16919-1-git-send-email-sre@kernel.org>
+ <1457827580-16919-5-git-send-email-sre@kernel.org>
+ <20160329105128.GA30184@amd>
+ <20160329145209.GB31858@earth>
+ <20160330193520.GY9329@atomide.com>
+ <20160401124523.GB10776@amd>
+ <20160401183221.GN9329@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459577621-3160-1-git-send-email-stefan@agner.ch>
+Content-Disposition: inline
+In-Reply-To: <20160401183221.GN9329@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The NAND flash memory populated on Colibri VF61 allows faster NAND
-timings than the flash memory on VF50. Additionally, due to divider
-limitations, VF61 did clock the flash even slower than VF50. Assign
-the NFC clock in the module specific device trees vf500-colibri.dtsi
-and vf610-colibri.dtsi respectively.
+Hi!
 
-This increases raw read speed on Colibri VF61 by about 20%.
+> > > The two LEDs this GPIO controls are hardwired to sys_clkreq and
+> > > sys_off_mode pins that are the control signals between the SoC
+> > > and PMIC.
+> > 
+> > No, not on N900. On N900, these LEDs are normally used for keyboard
+> > backlight.
+> 
+> Oh I see. I've totally forgotten that as I always keep the debug
+> option enabled :) The extra battery consumption by those is quite
+> minimal and warns you if you have something hogging the CPU.
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/vf-colibri.dtsi    | 2 --
- arch/arm/boot/dts/vf500-colibri.dtsi | 5 +++++
- arch/arm/boot/dts/vf610-colibri.dtsi | 5 +++++
- 3 files changed, 10 insertions(+), 2 deletions(-)
+Yes, I like it.
 
-diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
-index 7529dd7..226a86f 100644
---- a/arch/arm/boot/dts/vf-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf-colibri.dtsi
-@@ -130,8 +130,6 @@
- };
- 
- &nfc {
--	assigned-clocks = <&clks VF610_CLK_NFC>;
--	assigned-clock-rates = <33000000>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_nfc>;
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/vf500-colibri.dtsi b/arch/arm/boot/dts/vf500-colibri.dtsi
-index 3fe1f48..1a8a0ef 100644
---- a/arch/arm/boot/dts/vf500-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf500-colibri.dtsi
-@@ -69,6 +69,11 @@
- 	};
- };
- 
-+&nfc {
-+	assigned-clocks = <&clks VF610_CLK_NFC>;
-+	assigned-clock-rates = <33000000>;
-+};
-+
- &iomuxc {
- 	vf610-colibri {
- 		pinctrl_touchctrl_idle: touchctrl_idle {
-diff --git a/arch/arm/boot/dts/vf610-colibri.dtsi b/arch/arm/boot/dts/vf610-colibri.dtsi
-index ab4a29f..9ec9e33 100644
---- a/arch/arm/boot/dts/vf610-colibri.dtsi
-+++ b/arch/arm/boot/dts/vf610-colibri.dtsi
-@@ -50,3 +50,8 @@
- 		reg = <0x80000000 0x10000000>;
- 	};
- };
-+
-+&nfc {
-+	assigned-clocks = <&clks VF610_CLK_NFC>;
-+	assigned-clock-rates = <50000000>;
-+};
+> > ...and this is what this GPIO does. So it is not exactly a LED. You
+> > can turn it on, but than, _two_ LEDs will start blinking. You can't
+> > control them with the brightess control. "Heartbeat" trigger is going
+> > to be very confusing on debug::sleep.
+> 
+> And it occured to me that adding any other policy than
+> "default-on" to the GPIO LED will only work when the device
+> is active.
+> 
+> Sounds like the thing to do is to just configure the I2C LED
+> controller in the dts file if we don't already have that. And
+> assuming it has a Linux driver.
+
+I don't see what you mean here. If you want to always keep the debug
+leds on... that may be a bit confusing for the users (and Pali wants
+to keep kernel usable for mere mortals it seems).
+
+Anyway, current solution is not too horrible (its wrong but it does
+not hurt that much), so...
+
+Best regards,
+									Pavel
 -- 
-2.7.4
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
