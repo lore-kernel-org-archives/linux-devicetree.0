@@ -1,91 +1,133 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 12/16] arm64: dts: hi6220: add pinctrl for uarts and enable them
-Date: Sat,  2 Apr 2016 17:29:39 +0800
-Message-ID: <1459589383-16914-13-git-send-email-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v2 14/16] arm64: dts: hikey: Add hi655x pmic dts node
+Date: Sat,  2 Apr 2016 17:29:41 +0800
+Message-ID: <1459589383-16914-15-git-send-email-guodong.xu@linaro.org>
 References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459589383-16914-1-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuwei5@hisilicon.com, mark.rutland@arm.com, robh@kernel.org, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Chen Feng <puck.chen@hisilicon.com>, Fei Wang <w.f@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl for uart2 uart3 and uart4. Enable uart1 uart2 and uart3.
+From: Chen Feng <puck.chen@hisilicon.com>
 
-Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Add the mfd hi655x dts node and regulator support on
+hi6220 platform.
+
+Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: Fei Wang <w.f@huawei.com>
+Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+Reviewed-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+Reviewed-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 12 ++++++++++++
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi      |  9 +++++++++
- 2 files changed, 21 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 87 ++++++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index e00e9ec..c4f560a 100644
+index 28bc646..a6dffa8 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
 +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -50,6 +50,18 @@
- 		i2c1: i2c@f7101000 {
- 			status = "ok";
+@@ -6,6 +6,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
+ 
+ #include "hi6220.dtsi"
+ #include "hikey-gpio.dtsi"
+@@ -104,6 +105,92 @@
+ 			default-state = "off";
  		};
-+
-+		uart1: uart@f7111000 {
-+			status = "ok";
-+		};
-+
-+		uart2: uart@f7112000 {
-+			status = "ok";
-+		};
-+
-+		uart3: uart@f7113000 {
-+			status = "ok";
-+		};
  	};
++
++	pmic: pmic@f8000000 {
++		compatible = "hisilicon,hi655x-pmic";
++		reg = <0x0 0xf8000000 0x0 0x1000>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		pmic-gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++		status = "okay";
++
++		regulators {
++			ldo2: LDO2@a21 {
++				regulator-name = "LDO2_2V8";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo7: LDO7@a26 {
++				regulator-name = "LDO7_SDIO";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo10: LDO10@a29 {
++				regulator-name = "LDO10_2V85";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-enable-ramp-delay = <360>;
++			};
++
++			ldo13: LDO13@a32 {
++				regulator-name = "LDO13_1V8";
++				regulator-min-microvolt = <1600000>;
++				regulator-max-microvolt = <1950000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo14: LDO14@a33 {
++				regulator-name = "LDO14_2V8";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo15: LDO15@a34 {
++				regulator-name = "LDO15_1V8";
++				regulator-min-microvolt = <1600000>;
++				regulator-max-microvolt = <1950000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo17: LDO17@a36 {
++				regulator-name = "LDO17_2V5";
++				regulator-min-microvolt = <2500000>;
++				regulator-max-microvolt = <3200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo19: LDO19@a38 {
++				regulator-name = "LDO19_3V0";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-enable-ramp-delay = <360>;
++			};
++
++			ldo21: LDO21@a40 {
++				regulator-name = "LDO21_1V8";
++				regulator-min-microvolt = <1650000>;
++				regulator-max-microvolt = <2000000>;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo22: LDO22@a41 {
++				regulator-name = "LDO22_1V2";
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1200000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
++		};
++	};
  };
  
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index a7ca40b..6afd327 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -266,6 +266,8 @@
- 			clocks = <&sys_ctrl HI6220_UART1_PCLK>,
- 				 <&sys_ctrl HI6220_UART1_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pmx_func &uart1_cfg_func1 &uart1_cfg_func2>;
- 			status = "disabled";
- 		};
- 
-@@ -276,6 +278,8 @@
- 			clocks = <&sys_ctrl HI6220_UART2_PCLK>,
- 				 <&sys_ctrl HI6220_UART2_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pmx_func &uart2_cfg_func>;
- 			status = "disabled";
- 		};
- 
-@@ -286,6 +290,9 @@
- 			clocks = <&sys_ctrl HI6220_UART3_PCLK>,
- 				 <&sys_ctrl HI6220_UART3_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart3_pmx_func &uart3_cfg_func>;
-+			status = "disabled";
- 		};
- 
- 		uart4: uart@f7114000 {
-@@ -295,6 +302,8 @@
- 			clocks = <&sys_ctrl HI6220_UART4_PCLK>,
- 				 <&sys_ctrl HI6220_UART4_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart4_pmx_func &uart4_cfg_func>;
- 			status = "disabled";
- 		};
- 
+ &uart2 {
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
