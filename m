@@ -1,54 +1,88 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH] ARM: dts: armv7-m: add address to unit name
-Date: Sat, 2 Apr 2016 15:41:24 +0200
-Message-ID: <CAGhQ9VyW4YNUGrgw1d5HBXutyBqjxP=+0ZGuYrtmnguC=MwMMA@mail.gmail.com>
-References: <1459577299-2818-1-git-send-email-stefan@agner.ch>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2] mtd: nand: document the NAND controller/NAND chip DT
+ representation
+Date: Sat, 2 Apr 2016 15:47:58 +0200
+Message-ID: <20160402154758.706f6f0f@bbrezillon>
+References: <1459513595-14308-1-git-send-email-boris.brezillon@free-electrons.com>
+	<20160401205722.GA10227@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459577299-2818-1-git-send-email-stefan@agner.ch>
+In-Reply-To: <20160401205722.GA10227@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Arnd Bergmann <arnd@arndb.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, kernel@pengutronix.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, linux-mtd@lists.infradead.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Harvey Hunt <harvey.hunt@imgtec.com>, Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 April 2016 at 08:08, Stefan Agner <stefan@agner.ch> wrote:
-> Add address to unit name to remove the following warning:
->  Warning (unit_address_vs_reg): Node /nv-interrupt-controller has a
->  reg or ranges property, but no unit name
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
-> Hi Arnd,
->
-> Not sure through which tree this should go but an earlier patch
-> seemd to be applied directly by you...
->
-> --
-> Stefan
->
->  arch/arm/boot/dts/armv7-m.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/armv7-m.dtsi b/arch/arm/boot/dts/armv7-m.dtsi
-> index b1ad7cf..8126bec 100644
-> --- a/arch/arm/boot/dts/armv7-m.dtsi
-> +++ b/arch/arm/boot/dts/armv7-m.dtsi
-> @@ -1,7 +1,7 @@
->  #include "skeleton.dtsi"
->
->  / {
-> -       nvic: nv-interrupt-controller  {
-> +       nvic: nv-interrupt-controller@0xe000e100 {
+Hi Brian,
 
-While changing the line it might be good idea to use the standard
-'interrupt-controller' name instead.
+On Fri, 1 Apr 2016 13:57:22 -0700
+Brian Norris <computersforpeace@gmail.com> wrote:
 
-I posted the same patch couple of days ago, btw.
-http://marc.info/?l=devicetree&m=145929088915714&w=2
+> On Fri, Apr 01, 2016 at 02:26:35PM +0200, Boris Brezillon wrote:
+> > Standardize the NAND controller/NAND chip DT representation. Now, all new
+> > NAND controller drivers should comply with this representation, even if
+> > they are only supporting a single NAND chip.
+> > 
+> > Existing drivers can keep support for the old representation (where only
+> > the NAND chip was described), but are encouraged to also support the new
+> > one.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> > Changes since v1:
+> > - fix typo
+> > ---
+> 
+> Thanks for doing this. This mostly looks pretty good.
+> 
+> >  Documentation/devicetree/bindings/mtd/nand.txt | 37 +++++++++++++++++++++++++-
+> >  1 file changed, 36 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+> > index b53f92e..a17662b 100644
+> > --- a/Documentation/devicetree/bindings/mtd/nand.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+> > @@ -1,4 +1,23 @@
+> > -* MTD generic binding
+> > +* NAND chip and NAND controller generic binding
+> > +
+> > +NAND controller/NAND chip representation:
+> 
+> You're starting with an assumption that there is a difference. I suppose
+> that's usually the case, but is there ever a case that there isn't
+> really? For instance, what about gpio.c? It's just a few GPIOs wired
+> directly to a NAND chip.
 
+Well, even if it's a bit-banging controller which is able to only
+interface with a single chip it's still a controller and not the NAND
+chip itself, so I think keeping the separation in this case is still
+valid. As an example, see the i2c or spi bit-banging drivers, even if
+there's no real controller, they are still represented with their own
+node...
 
-But I don't care which one that is applied.
+> Or perhaps, does it make sense still, even
+> there? For instance, if you wanted to wire multiple chips but share most
+> of the lines, you'd need to coordinate this in a "controller" node
+> somehow.
 
-regards,
-Joachim Eastwood
+Yep.
+
+> 
+> All-in-all, looks good though, and we can patch this up with any other
+> additions. (It's not exactly a formal specification, after all, but just
+> guidelines.) So:
+> 
+> Acked-by: Brian Norris <computersforpeace@gmail.com>
+
+Ok, I'll wait for an ack from a DT maintainer before taking this patch.
+
+Thanks,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
