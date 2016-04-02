@@ -1,71 +1,163 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 13/16] arm64: dts: add LED nodes for hi6220-hikey
-Date: Sat,  2 Apr 2016 17:29:40 +0800
-Message-ID: <1459589383-16914-14-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v2 11/16] arm64: dts: add Hi6220's stub clock node
+Date: Sat,  2 Apr 2016 17:29:38 +0800
+Message-ID: <1459589383-16914-12-git-send-email-guodong.xu@linaro.org>
 References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, mark.rutland@arm.com, robh@kernel.org, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Guodong Xu <guodong.xu@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 41 ++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+From: Leo Yan <leo.yan@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index c4f560a..28bc646 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -63,6 +63,47 @@
- 			status = "ok";
+Enable SRAM node and stub clock node for Hi6220, which uses mailbox
+channel 1 for CPU's frequency change.
+
+Furthermore, add the CPU clock phandle in CPU's node and using
+operating-points-v2 to register operating points. So can be used by
+cpufreq-dt driver.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 56 +++++++++++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 07b211b..a7ca40b 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -82,6 +82,11 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			clocks = <&stub_clock 0>;
++			operating-points-v2 = <&cpu_opp_table>;
++			cooling-min-level = <4>;
++			cooling-max-level = <0>;
++			#cooling-cells = <2>; /* min followed by max */
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -90,6 +95,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -98,6 +104,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -106,6 +113,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -114,6 +122,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -122,6 +131,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -130,6 +140,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+@@ -138,10 +149,42 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
++			operating-points-v2 = <&cpu_opp_table>;
+ 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
  		};
  	};
+ 
++	cpu_opp_table: cpu_opp_table {
++		compatible = "operating-points-v2";
++		opp-shared;
 +
-+	leds {
-+		compatible = "gpio-leds";
-+		user_led4 {
-+			label = "user_led4";
-+			gpios = <&gpio4 0 0>; /* <&gpio_user_led_1>; */
-+			linux,default-trigger = "heartbeat";
++		opp00 {
++			opp-hz = /bits/ 64 <208000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <500000>;
 +		};
-+
-+		user_led3 {
-+			label = "user_led3";
-+			gpios = <&gpio4 1 0>; /* <&gpio_user_led_2>; */
-+			linux,default-trigger = "mmc0";
++		opp01 {
++			opp-hz = /bits/ 64 <432000000>;
++			opp-microvolt = <1040000>;
++			clock-latency-ns = <500000>;
 +		};
-+
-+		user_led2 {
-+			label = "user_led2";
-+			gpios = <&gpio4 2 0>; /* <&gpio_user_led_3>; */
-+			linux,default-trigger = "mmc1";
++		opp02 {
++			opp-hz = /bits/ 64 <729000000>;
++			opp-microvolt = <1090000>;
++			clock-latency-ns = <500000>;
 +		};
-+
-+		user_led1 {
-+			label = "user_led1";
-+			gpios = <&gpio4 3 0>; /* <&gpio_user_led_4>; */
-+			linux,default-trigger = "cpu0";
++		opp03 {
++			opp-hz = /bits/ 64 <960000000>;
++			opp-microvolt = <1180000>;
++			clock-latency-ns = <500000>;
 +		};
-+
-+		wlan_active_led {
-+			label = "wifi_active";
-+			gpios = <&gpio3 5 0>; /* <&gpio_wlan_active_led>; */
-+			linux,default-trigger = "phy0tx";
-+			default-state = "off";
-+		};
-+
-+		bt_active_led {
-+			label = "bt_active";
-+			gpios = <&gpio4 7 0>; /* <&gpio_bt_active_led>; */
-+			linux,default-trigger = "hci0rx";
-+			default-state = "off";
++		opp04 {
++			opp-hz = /bits/ 64 <1200000000>;
++			opp-microvolt = <1330000>;
++			clock-latency-ns = <500000>;
 +		};
 +	};
- };
++
+ 	gic: interrupt-controller@f6801000 {
+ 		compatible = "arm,gic-400";
+ 		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
+@@ -169,6 +212,11 @@
+ 		#size-cells = <2>;
+ 		ranges;
  
- &uart2 {
++		sram: sram@fff80000 {
++			compatible = "hisilicon,hi6220-sramctrl", "syscon";
++			reg = <0x0 0xfff80000 0x0 0x12000>;
++		};
++
+ 		ao_ctrl: ao_ctrl@f7800000 {
+ 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
+ 			reg = <0x0 0xf7800000 0x0 0x2000>;
+@@ -194,6 +242,14 @@
+ 			#clock-cells = <1>;
+ 		};
+ 
++		stub_clock: stub_clock {
++			compatible = "hisilicon,hi6220-stub-clk";
++			hisilicon,hi6220-clk-sram = <&sram>;
++			#clock-cells = <1>;
++			mbox-names = "mbox-tx";
++			mboxes = <&mailbox 1 0 11>;
++		};
++
+ 		uart0: uart@f8015000 {	/* console */
+ 			compatible = "arm,pl011", "arm,primecell";
+ 			reg = <0x0 0xf8015000 0x0 0x1000>;
 -- 
 1.9.1
