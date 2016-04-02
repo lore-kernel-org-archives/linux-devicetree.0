@@ -1,64 +1,55 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] ARM: dts: imx7d: add flexcan support
-Date: Sat, 2 Apr 2016 18:10:12 +0200
-Message-ID: <CAAMH-yt1_Rtt3cEAGY5_NaEvv3wYje3y_Ryue+pANMr-7Yocfw@mail.gmail.com>
-References: <1458037826-19375-1-git-send-email-gary.bisson@boundarydevices.com>
-	<1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
-	<1458050668-26748-3-git-send-email-gary.bisson@boundarydevices.com>
-	<20160402013118.GJ18833@tiger>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: armv7-m: add address to unit name
+Date: Sat, 2 Apr 2016 19:12:30 +0300
+Message-ID: <56FFEF6E.2000002@cogentembedded.com>
+References: <1459577299-2818-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160402013118.GJ18833@tiger>
+In-Reply-To: <1459577299-2818-1-git-send-email-stefan-XLVq0VzYD2Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Shawn, All,
+Hello.
 
-On Sat, Apr 2, 2016 at 3:31 AM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Mar 15, 2016 at 03:04:21PM +0100, Gary Bisson wrote:
->> Add the device nodes for the i.MX7 FlexCAN buses.
->>
->> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
->> ---
->>
->> Changelog v1 -> v2:
->> - none
->>
->> ---
->>  arch/arm/boot/dts/imx7d.dtsi | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
->> index a768716..c5e47a4 100644
->> --- a/arch/arm/boot/dts/imx7d.dtsi
->> +++ b/arch/arm/boot/dts/imx7d.dtsi
->> @@ -930,6 +930,28 @@
->>                               fsl,num-rx-queues=<3>;
->>                               status = "disabled";
->>                       };
->> +
->> +                     flexcan1: can@30a00000 {
->> +                             compatible = "fsl,imx7d-flexcan", "fsl,imx6q-flexcan";
->> +                             reg = <0x30a00000 0x10000>;
->> +                             interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
->> +                             clocks = <&clks IMX7D_CLK_DUMMY>,
->> +                                     <&clks IMX7D_CAN1_ROOT_CLK>;
->> +                             clock-names = "ipg", "per";
->> +                             stop-mode = <&gpr 0x10 1 0x10 17>;
+On 4/2/2016 9:08 AM, Stefan Agner wrote:
+
+> Add address to unit name to remove the following warning:
+>   Warning (unit_address_vs_reg): Node /nv-interrupt-controller has a
+>   reg or ranges property, but no unit name
 >
-> Is this property documented anywhere, or even supported by mainline
-> kernel?
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+> Hi Arnd,
+>
+> Not sure through which tree this should go but an earlier patch
+> seemd to be applied directly by you...
+>
+> --
+> Stefan
+>
+>   arch/arm/boot/dts/armv7-m.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/armv7-m.dtsi b/arch/arm/boot/dts/armv7-m.dtsi
+> index b1ad7cf..8126bec 100644
+> --- a/arch/arm/boot/dts/armv7-m.dtsi
+> +++ b/arch/arm/boot/dts/armv7-m.dtsi
+> @@ -1,7 +1,7 @@
+>   #include "skeleton.dtsi"
+>
+>   / {
+> -	nvic: nv-interrupt-controller  {
+> +	nvic: nv-interrupt-controller@0xe000e100 {
 
-No you're right this property is only available on NXP kernel:
-http://git.freescale.com/git/cgit.cgi/imx/linux-2.6-imx.git/tree/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt?id=rel_imx_4.1.15_1.0.0_ga#n20
+    Drop "0x" from <unit address> please. And the name should be just 
+"interrupt-controller@..."
 
-I'll remove it for now, I'll re-order the nodes as well.
+WBR, Sergei
 
-Regards,
-Gary
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
