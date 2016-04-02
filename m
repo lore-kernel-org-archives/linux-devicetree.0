@@ -1,39 +1,42 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 08/16] arm64: dts: hikey: enable i2c0 and i2c1 for working with mezzanine boards
-Date: Sat,  2 Apr 2016 17:29:35 +0800
-Message-ID: <1459589383-16914-9-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v2 10/16] arm64: dts: add mailbox node for Hi6220
+Date: Sat,  2 Apr 2016 17:29:37 +0800
+Message-ID: <1459589383-16914-11-git-send-email-guodong.xu@linaro.org>
 References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: xuwei5@hisilicon.com, mark.rutland@arm.com, robh@kernel.org, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Guodong Xu <guodong.xu@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+From: Leo Yan <leo.yan@linaro.org>
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 5c9ee31..e00e9ec 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -42,6 +42,15 @@
- 		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
- 		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
- 	};
+This patch add device mailbox node for Hi6220 in DT.
+
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 2608b68..07b211b 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -665,5 +665,13 @@
+ 			g-tx-fifo-size = <128 128 128 128 128 128>;
+ 			interrupts = <0 77 0x4>;
+ 		};
 +
-+	soc {
-+		i2c0: i2c@f7100000 {
-+			status = "ok";
++		mailbox: mailbox@f7510000 {
++			compatible = "hisilicon,hi6220-mbox";
++			reg = <0x0 0xf7510000 0x0 0x1000>, /* IPC_S */
++			      <0x0 0x06dff800 0x0 0x0800>; /* Mailbox buffer */
++			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
++			#mbox-cells = <3>;
 +		};
-+		i2c1: i2c@f7101000 {
-+			status = "ok";
-+		};
-+	};
+ 	};
  };
- 
- &uart2 {
 -- 
 1.9.1
