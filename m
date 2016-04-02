@@ -1,61 +1,61 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 4/7] ARM: dts: Enable N950 keyboard sleep leds by default
-Date: Sat, 2 Apr 2016 08:47:57 +0200
-Message-ID: <20160402064757.GA13872@amd>
-References: <1457827580-16919-1-git-send-email-sre@kernel.org>
- <1457827580-16919-5-git-send-email-sre@kernel.org>
- <20160329105128.GA30184@amd>
- <20160329145209.GB31858@earth>
- <20160330193520.GY9329@atomide.com>
- <20160401124523.GB10776@amd>
- <20160401183221.GN9329@atomide.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH V2 0/4] mtd: nand: add enum nand_ecc_algo
+Date: Sat, 2 Apr 2016 09:11:56 +0200
+Message-ID: <20160402091156.00c01288@bbrezillon>
+References: <1458728343-1234-1-git-send-email-zajec5@gmail.com>
+	<20160330152710.0b33d28d@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160401183221.GN9329@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sre@kernel.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160330152710.0b33d28d@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Wed, 30 Mar 2016 15:27:10 +0200
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-> > > The two LEDs this GPIO controls are hardwired to sys_clkreq and
-> > > sys_off_mode pins that are the control signals between the SoC
-> > > and PMIC.
-> > 
-> > No, not on N900. On N900, these LEDs are normally used for keyboard
-> > backlight.
-> 
-> Oh I see. I've totally forgotten that as I always keep the debug
-> option enabled :) The extra battery consumption by those is quite
-> minimal and warns you if you have something hogging the CPU.
+> Hi Rafal,
+>=20
+> On Wed, 23 Mar 2016 11:18:59 +0100
+> Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>=20
+> > Some time ago I started working on a new "nand-ecc-algo" property t=
+o allow
+> > specifying ECC algorithm for hardware ECC mode as well.
+> > Boris pointed out it's becoming a bit messy that way as we already =
+have value
+> > NAND_ECC_SOFT_BCH.
+> > I suggested deprecating "soft_bch" value from nand-ecc-mode propert=
+y and got
+> > Boris agreed and no objections from others. So there is how I want =
+to implement
+> > this.
+> > If you agree on this way & apply my patches, I'll start modifying N=
+AND drivers
+> > (similarly to the nandsim) and then will try to drop NAND_ECC_SOFT_=
+BCH except
+> > for handling backward compatibility.
+> > Then finally we should be able to add "nand-ecc-algo" property supp=
+ort properly.
+>=20
+> Can you configure git-send-email to not encode your messages in base6=
+4?
 
-Yes, I like it.
 
-> > ...and this is what this GPIO does. So it is not exactly a LED. You
-> > can turn it on, but than, _two_ LEDs will start blinking. You can't
-> > control them with the brightess control. "Heartbeat" trigger is going
-> > to be very confusing on debug::sleep.
-> 
-> And it occured to me that adding any other policy than
-> "default-on" to the GPIO LED will only work when the device
-> is active.
-> 
-> Sounds like the thing to do is to just configure the I2C LED
-> controller in the dts file if we don't already have that. And
-> assuming it has a Linux driver.
+Nevermind, my mailer was showing me base64 encoded content, but after a
+reboot everything is back to normal. Don't know what happened exactly.
 
-I don't see what you mean here. If you want to always keep the debug
-leds on... that may be a bit confusing for the users (and Pali wants
-to keep kernel usable for mere mortals it seems).
 
-Anyway, current solution is not too horrible (its wrong but it does
-not hurt that much), so...
 
-Best regards,
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--=20
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
