@@ -1,41 +1,43 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: kirkwood: Add DTS for Linksys EA4200v2/EA4500
-Date: Sat, 2 Apr 2016 18:26:56 +0200
-Message-ID: <20160402162656.GG32554@lunn.ch>
-References: <1459601753-31193-1-git-send-email-bert@biot.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
+Date: Sat, 2 Apr 2016 09:35:06 -0700
+Message-ID: <20160402163506.GD2350@sirena.org.uk>
+References: <1459509530-22716-1-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dds9jO4idXToq0wP"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459601753-31193-1-git-send-email-bert-Nh2F35Ii2RQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bert Vermeulen <bert-Nh2F35Ii2RQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459509530-22716-1-git-send-email-purna.mandal@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Purna Chandra Mandal <purna.mandal@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Joshua Henderson <digitalpeer@digitalpeer.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-> +		button@15 {
-> +			label = "WPS Button";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		button@16 {
-> +			label = "Reset Button";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
 
-I'm looking at the warnings the new DT compiler produces....
+--dds9jO4idXToq0wP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Buttons should not have a @15, etc, since they don't have a register
-property.
+On Fri, Apr 01, 2016 at 04:48:49PM +0530, Purna Chandra Mandal wrote:
+> Document the devicetree bindings for the SPI peripheral found
+> on Microchip PIC32 class devices.
 
-If you can, it would be good it you can compile your .dts file using
-the dtc compile in linux-next and pass W=1.
+Please use subject lines reflecting the style for the subsystem.
 
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--dds9jO4idXToq0wP
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJW//S4AAoJECTWi3JdVIfQjfEH+weHKWmxXd0vqovgGShGg0Cd
+lvdbe/YcGan7+wIQY4RfnbuEBgv7SCVDZETrTbKNTFDu/GSxYfzNZQBPCU8PPbzb
+3OQhH3thPKGTsAWdmNGQMTn8B7vCh2HvcNUdDwDFQF8ooMklBNTd4NyjKifuNqto
+PG3VtRHfzjDabfrLnvsuAjRJj9cT3xsYW+Q+/ztZFT2ree6kKwsUL7qL6pDgwhO6
+0FjKVOVZCtUwhLAcMwCNQDovVVyDKcKfkdb9FZP8pIQyEvx4q6icygfeVbBinYk/
+rb22jYg72YKvF+r14gCz6iimQh3GvSiowYoGSk5wOo6ADU8kuhXBNlxdXBBrrf8=
+=+uPx
+-----END PGP SIGNATURE-----
+
+--dds9jO4idXToq0wP--
