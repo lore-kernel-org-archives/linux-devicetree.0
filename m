@@ -1,103 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/2] ASoC: codecs: add support for
- TAS5720 digital amplifier
-Date: Sat, 2 Apr 2016 09:21:33 -0700
-Message-ID: <20160402162133.GA2350@sirena.org.uk>
-References: <1458580107-4632-1-git-send-email-dannenberg@ti.com>
- <1458580107-4632-3-git-send-email-dannenberg@ti.com>
- <20160328190143.GC2350@sirena.org.uk>
- <20160330025318.GB2073@borg.dal.design.ti.com>
- <20160330153853.GW2350@sirena.org.uk>
- <20160401211402.GA26370@borg.dal.design.ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1320147451882385987=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20160401211402.GA26370@borg.dal.design.ti.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andreas Dannenberg <dannenberg@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v3 0/9] imx: add latest Boundary Devices boards support
+Date: Sat,  2 Apr 2016 18:25:42 +0200
+Message-ID: <1459614351-16731-1-git-send-email-gary.bisson@boundarydevices.com>
+References: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1458050668-26748-1-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---===============1320147451882385987==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="X71G3O74nGQzyUqw"
-Content-Disposition: inline
+This series adds support for the following Boundary Devices boards:
+- Nitrogen7 (i.MX7)
+- Nitrogen6SX (i.MX6SoloX)
+- Nitrogen6QP_MAX (i.MX6QP)
 
+The first patches add display and CAN support to i.MX7 device tree. Those
+two features have been successfully tested on the Nitrogen7. Also the support
+of CKIL clock has been added in order to use it as slow clock for the WiFi
+module.
 
---X71G3O74nGQzyUqw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Then the last 3 patches add some missing configurations in order to fully
+support Boundary platforms using imx_v6_v7_defconfig.
 
-On Fri, Apr 01, 2016 at 04:14:02PM -0500, Andreas Dannenberg wrote:
-> On Wed, Mar 30, 2016 at 08:38:53AM -0700, Mark Brown wrote:
+All the patches have been applied/tested on top of Shawn's 'for-next' branch.
 
-> > It sounds like this feature is unusably broken...  possibly you could do
-> > something in the mute handler but it seems that anything you try to do
-> > to use this feature is going to be both fragile and disruptive to the
-> > system.
+Here are some remarks/questions that came during testing:
+- Is the pxp v4l2 driver being worked on for mainline inclusion?
+- Are the ldb modifications for SoloX being worked on for mainline inclusion?
+- Is the WM8960 ASoC machine driver being worked on for mainline inclusion?
+- When booting the Nitrogen7, there's backtrace due to clk_pllv3_prepare, does
+  it happen on the sdb too? Note that it doesn't prevent the board to work.
 
-> Agreed, this is not the first time this has come up :( Btw in my quest
-> for a solution one of my earlier implementations actually hooked into
-> the MUTE handler, but while this worked keeping the TA5720 in shutdown
-> most of the time it did not completely solve the interrupt-overrun issue
-> (the TAS5720 would still generate SAIF errors for brief periods,
-> dead-locking my SoC even with an empty threaded handler). I was also
-> concerned that hooking such parasitic code into a MUTE handler would be
-> a bit of an abuse and not make me may friends here.
+Changes v1 -> v2:
+- Remove lines commented out from nitrogen6sx dts as suggested by Vladimir
+- Disable pcie for nitrogen6qp_max dts
+Changes v2 -> v3:
+- Re-order lcdif node by unit-address order
+- Re-order flexcan nodes by unit-address order
+- Remove flexcan unnecessary stop-mode property
+- Fix Nitrogen7 BT UART clock parent
+- Fix Nitrogen7 lvdo2 node to be always-on
 
-I think this feature is so broken that any attempt to use it is going to
-cause problems.  Even if you somehow manage to make something that holds
-together in your test system I'm not convinced it's going to be safe for
-other users.
+Regards,
+Gary
 
-> > What is the value in implementing it?
+Gary Bisson (9):
+  ARM: dts: imx7d: add lcdif support
+  ARM: dts: imx7d: add flexcan support
+  clk: imx: add ckil clock for i.MX7
+  ARM: dts: imx: add Boundary Devices Nitrogen7 board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_MAX QP board
+  ARM: dts: imx: add Boundary Devices Nitrogen6_SoloX board
+  ARM: imx_v6_v7_defconfig: add FT5x06 and TSC2004 touch support
+  ARM: imx_v6_v7_defconfig: add CONFIG_I2C_MUX_GPIO
+  ARM: imx_v6_v7_defconfig: add CONFIG_RTC_DRV_M41T80
 
-> There is a strong request from one rather large customer to have
-> interrupt-driven fault handling. I did have an early implementation of
-> the driver that polled for errors (except SAIF) at the beginning and the
-> end of the audio playback but this was not good enough.
+ arch/arm/boot/dts/Makefile                 |   3 +
+ arch/arm/boot/dts/imx6qp-nitrogen6_max.dts |  59 +++
+ arch/arm/boot/dts/imx6sx-nitrogen6sx.dts   | 732 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d-nitrogen7.dts      | 819 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx7d.dtsi               |  31 ++
+ arch/arm/configs/imx_v6_v7_defconfig       |   4 +
+ drivers/clk/imx/clk-imx7d.c                |   3 +-
+ include/dt-bindings/clock/imx7d-clock.h    |   3 +-
+ 8 files changed, 1652 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6qp-nitrogen6_max.dts
+ create mode 100644 arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+ create mode 100644 arch/arm/boot/dts/imx7d-nitrogen7.dts
 
-I really think this is something that the user needs to carry out of
-tree, it seems clear that that enbling interrupts is very disruptive.
+-- 
+2.7.0
 
-> But thinking about this some more, what if I do not actually use the
-> interrupt signal, but rather during playback use a timer that fires
-> every let's say 1s to check the TAS5720 fault register? This way one
-
-That's fine, some other drivers do this for things that don't have
-interrupts or don't have usable interrupts.
-
---X71G3O74nGQzyUqw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJW//GJAAoJECTWi3JdVIfQpkkH/2K0Zy/s1peVzSNulX7iHEf5
-JL/iyIxrQE33y0ygORvn3q9Tz597yqUO19kuCqkxZ6o9rkecg/aFHtDuHojwgvS/
-ei7agmSki4V4XpmDGTj4cORjSIP7sSLPhkoBuBfSZB0D7NyEcztSqGoq6MwQEVt+
-3l3+jQMgR8Qkl+iqlXI6CEBAh987dLhX9o+DkV0nnFyL1IFPqukdhS0BxtpYcqF9
-bF9+Kfw4fykYnzod3qkK4atF7SUt3X3GMl5P+2qhIcb+yDjRcwUdVCU47vIv8HsP
-p2Jte51Xyx8SKWA0NnsquZZ56Geu9kH20g3w+jwxuHC9OnvcZ90jVMJnqh3dW1w=
-=WAmO
------END PGP SIGNATURE-----
-
---X71G3O74nGQzyUqw--
-
---===============1320147451882385987==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1320147451882385987==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
