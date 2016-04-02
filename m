@@ -1,275 +1,276 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH v2 1/2] irqchip: add lpc18xx gpio pin interrupt driver
-Date: Sat,  2 Apr 2016 18:35:23 +0200
-Message-ID: <1459614924-32670-2-git-send-email-manabian@gmail.com>
-References: <1459614924-32670-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459614924-32670-1-git-send-email-manabian@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, jason@lakedaemon.net, tglx@linutronix.de
-Cc: Joachim Eastwood <manabian@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Subject: Re: [PATCH 1/8] mfd: twl-core: Rename struct twl4030_platform_data
+ to twl_platform_data
+Date: Sat, 02 Apr 2016 21:58:33 +0200
+Message-ID: <1459627113.12073.24.camel@paulk.fr>
+References: <1459279341-17389-1-git-send-email-contact@paulk.fr>
+	 <56FBEEC9.1020508@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-sDOAotwi9TTDR+Dw08/+"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56FBEEC9.1020508-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
----
- drivers/irqchip/Kconfig                 |   5 +
- drivers/irqchip/Makefile                |   1 +
- drivers/irqchip/irq-lpc18xx-gpio-pint.c | 219 ++++++++++++++++++++++++++++++++
- 3 files changed, 225 insertions(+)
- create mode 100644 drivers/irqchip/irq-lpc18xx-gpio-pint.c
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 3e12479..0278837e 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -211,6 +211,11 @@ config KEYSTONE_IRQ
- 		Support for Texas Instruments Keystone 2 IRQ controller IP which
- 		is part of the Keystone 2 IPC mechanism
- 
-+config LPC18XX_GPIO_PINT
-+	bool
-+	select IRQ_DOMAIN
-+	select GENERIC_IRQ_CHIP
-+
- config MIPS_GIC
- 	bool
- 	select GENERIC_IRQ_IPI
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b03cfcb..bf60e0c 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_BCM7038_L1_IRQ)		+= irq-bcm7038-l1.o
- obj-$(CONFIG_BCM7120_L2_IRQ)		+= irq-bcm7120-l2.o
- obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
- obj-$(CONFIG_KEYSTONE_IRQ)		+= irq-keystone.o
-+obj-$(CONFIG_LPC18XX_GPIO_PINT)		+= irq-lpc18xx-gpio-pint.o
- obj-$(CONFIG_MIPS_GIC)			+= irq-mips-gic.o
- obj-$(CONFIG_ARCH_MEDIATEK)		+= irq-mtk-sysirq.o
- obj-$(CONFIG_ARCH_DIGICOLOR)		+= irq-digicolor.o
-diff --git a/drivers/irqchip/irq-lpc18xx-gpio-pint.c b/drivers/irqchip/irq-lpc18xx-gpio-pint.c
-new file mode 100644
-index 0000000..d53e99b
---- /dev/null
-+++ b/drivers/irqchip/irq-lpc18xx-gpio-pint.c
-@@ -0,0 +1,219 @@
-+/*
-+ * Irqchip driver for GPIO Pin Interrupt (PINT) on NXP LPC18xx/43xx.
-+ *
-+ * Copyright (C) 2016 Joachim Eastwood <manabian@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/init.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+
-+/* LPC18xx GPIO pin interrupt register offsets */
-+#define LPC18XX_GPIO_PINT_ISEL		0x000
-+#define LPC18XX_GPIO_PINT_SIENR		0x008
-+#define LPC18XX_GPIO_PINT_CIENR		0x00c
-+#define LPC18XX_GPIO_PINT_SIENF		0x014
-+#define LPC18XX_GPIO_PINT_CIENF		0x018
-+#define LPC18XX_GPIO_PINT_IST		0x024
-+
-+#define PINT_MAX_IRQS			32
-+
-+struct lpc18xx_gpio_pint_chip {
-+	struct irq_domain *domain;
-+	void __iomem	  *base;
-+	struct clk	  *clk;
-+	unsigned int	  revmap[];
-+};
-+
-+static void lpc18xx_gpio_pint_handler(struct irq_desc *desc)
-+{
-+	struct lpc18xx_gpio_pint_chip *pint = irq_desc_get_handler_data(desc);
-+	unsigned int irq = irq_desc_get_irq(desc);
-+	unsigned int hwirq = pint->revmap[irq];
-+	unsigned int virq;
-+
-+	virq = irq_find_mapping(pint->domain, hwirq);
-+	generic_handle_irq(virq);
-+}
-+
-+static void lpc18xx_gpio_pint_edge_mask(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	u32 mask = d->mask;
-+
-+	irq_gc_lock(gc);
-+	irq_reg_writel(gc, mask, LPC18XX_GPIO_PINT_CIENR);
-+	irq_reg_writel(gc, mask, LPC18XX_GPIO_PINT_CIENF);
-+	irq_gc_unlock(gc);
-+}
-+
-+static void lpc18xx_gpio_pint_edge_unmask(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	u32 type, mask = d->mask;
-+
-+	irq_gc_lock(gc);
-+	type = irqd_get_trigger_type(d);
-+	if (type & IRQ_TYPE_EDGE_RISING)
-+		irq_reg_writel(gc, mask, LPC18XX_GPIO_PINT_SIENR);
-+	if (type & IRQ_TYPE_EDGE_FALLING)
-+		irq_reg_writel(gc, mask, LPC18XX_GPIO_PINT_SIENF);
-+	irq_gc_unlock(gc);
-+}
-+
-+static int lpc18xx_gpio_pint_type(struct irq_data *data, unsigned int type)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
-+	u32 mask = data->mask;
-+
-+	irq_gc_lock(gc);
-+	if (type & IRQ_TYPE_LEVEL_MASK)
-+		gc->type_cache |= mask;
-+	else
-+		gc->type_cache &= ~mask;
-+	irq_reg_writel(gc, gc->type_cache, LPC18XX_GPIO_PINT_ISEL);
-+
-+	switch (type) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		irq_reg_writel(gc, mask, LPC18XX_GPIO_PINT_SIENF);
-+		break;
-+
-+	case IRQ_TYPE_LEVEL_LOW:
-+		irq_reg_writel(gc, mask, LPC18XX_GPIO_PINT_CIENF);
-+		break;
-+
-+	/* IRQ_TYPE_EDGE_* is set in lpc18xx_gpio_pint_edge_unmask */
-+	}
-+
-+	irqd_set_trigger_type(data, type);
-+	irq_setup_alt_chip(data, type);
-+	irq_gc_unlock(gc);
-+
-+	return 0;
-+}
-+
-+static int lpc18xx_gpio_pint_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct lpc18xx_gpio_pint_chip *pint;
-+	struct irq_chip_generic *gc;
-+	int irqs[PINT_MAX_IRQS];
-+	unsigned int max_virqno;
-+	struct resource *regs;
-+	int nrirqs;
-+	int i, ret;
-+
-+	nrirqs = of_irq_count(np);
-+	if (nrirqs > PINT_MAX_IRQS)
-+		return -EINVAL;
-+
-+	max_virqno = 0;
-+	for (i = 0; i < nrirqs; i++) {
-+		irqs[i] = platform_get_irq(pdev, i);
-+		if (max_virqno < irqs[i])
-+			max_virqno = irqs[i];
-+	}
-+
-+	pint = devm_kzalloc(&pdev->dev,
-+			    sizeof(*pint) + (sizeof(unsigned int) * max_virqno),
-+			    GFP_KERNEL);
-+	if (!pint)
-+		return -ENOMEM;
-+
-+	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pint->base = devm_ioremap_resource(&pdev->dev, regs);
-+	if (IS_ERR(pint->base))
-+		return PTR_ERR(pint->base);
-+
-+
-+	pint->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(pint->clk)) {
-+		dev_err(&pdev->dev, "input clock not found\n");
-+		return PTR_ERR(pint->clk);
-+	}
-+
-+	ret = clk_prepare_enable(pint->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable to enable clock\n");
-+		return ret;
-+	}
-+
-+	pint->domain = irq_domain_add_linear(np, nrirqs, &irq_generic_chip_ops,
-+					     pint);
-+	if (!pint->domain) {
-+		dev_err(&pdev->dev, "unable setup irq domain\n");
-+		ret = -EINVAL;
-+		goto err_domain_add;
-+	}
-+
-+	ret = irq_alloc_domain_generic_chips(pint->domain, nrirqs, 2,
-+					     "gpio_pint", handle_edge_irq,
-+					     0, 0, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev, "unable alloc irq domain chips\n");
-+		goto err_alloc_domain_gc;
-+	}
-+
-+	gc = irq_get_domain_generic_chip(pint->domain, 0);
-+	gc->reg_base = pint->base;
-+
-+	gc->chip_types[0].type		    = IRQ_TYPE_EDGE_BOTH;
-+	gc->chip_types[0].handler	    = handle_edge_irq;
-+	gc->chip_types[0].chip.irq_ack	    = irq_gc_ack_set_bit;
-+	gc->chip_types[0].chip.irq_mask	    = lpc18xx_gpio_pint_edge_mask;
-+	gc->chip_types[0].chip.irq_unmask   = lpc18xx_gpio_pint_edge_unmask;
-+	gc->chip_types[0].chip.irq_set_type = lpc18xx_gpio_pint_type;
-+	gc->chip_types[0].regs.ack	    = LPC18XX_GPIO_PINT_IST;
-+
-+	gc->chip_types[1].type		    = IRQ_TYPE_LEVEL_MASK;
-+	gc->chip_types[1].handler	    = handle_level_irq;
-+	gc->chip_types[1].chip.irq_mask	    = irq_gc_mask_disable_reg;
-+	gc->chip_types[1].chip.irq_unmask   = irq_gc_unmask_enable_reg;
-+	gc->chip_types[1].chip.irq_set_type = lpc18xx_gpio_pint_type;
-+	gc->chip_types[1].regs.enable	    = LPC18XX_GPIO_PINT_SIENR;
-+	gc->chip_types[1].regs.disable	    = LPC18XX_GPIO_PINT_CIENR;
-+
-+	/* Disable and clear all interrupts */
-+	writel(~0, pint->base + LPC18XX_GPIO_PINT_CIENR);
-+	writel(~0, pint->base + LPC18XX_GPIO_PINT_CIENF);
-+	writel(0,  pint->base + LPC18XX_GPIO_PINT_ISEL);
-+	writel(~0, pint->base + LPC18XX_GPIO_PINT_IST);
-+
-+	for (i = 0; i < nrirqs; i++) {
-+		pint->revmap[irqs[i]] = i;
-+		irq_set_chained_handler_and_data(irqs[i],
-+						 lpc18xx_gpio_pint_handler,
-+						 pint);
-+	}
-+
-+	return 0;
-+
-+err_alloc_domain_gc:
-+	irq_domain_remove(pint->domain);
-+err_domain_add:
-+	clk_disable_unprepare(pint->clk);
-+	return ret;
-+}
-+
-+static const struct of_device_id lpc18xx_gpio_pint_match[] = {
-+	{ .compatible = "nxp,lpc1850-gpio-pint" },
-+	{ }
-+};
-+
-+static struct platform_driver lpc18xx_gpio_pint_driver = {
-+	.probe	= lpc18xx_gpio_pint_probe,
-+	.driver	= {
-+		.name = "lpc18xx-gpio-pint",
-+		.of_match_table = lpc18xx_gpio_pint_match,
-+	},
-+};
-+builtin_platform_driver(lpc18xx_gpio_pint_driver);
--- 
-2.8.0
+--=-sDOAotwi9TTDR+Dw08/+
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Le mercredi 30 mars 2016 =C3=A0 18:20 +0300, Grygorii Strashko a =C3=A9crit=
+=C2=A0:
+> On 03/29/2016 10:22 PM, Paul Kocialkowski wrote:
+> > Since twl4030_platform_data also holds platform data (e.g. regulators) =
+for
+> > other
+> > TWL chips, it makes sense to rename it to a non-model-specific name.
+> >=20
+> > This will also allow hooking more platform data structure to it in the
+> > future.
+>
+> Do we really need this patch?
+> In general ldb and r51 board files are going to be dropped soon and
+> it not expected to support this PMIC devices for non-DT use cases.
+> As result twl4030_platform_data will be dropped at all or made private.
+
+I understand. Depending on how soon these legacy boards are dropped, a clea=
+nup
+might still be a good thing to have. Either way, it doesn't hurt and the pa=
+tch
+is ready already.
+
+However, I'll refrain from introducing more twl cleanups (which I had plann=
+ed on
+doing) until we get rid of all the platform data stuff.
+
+> > Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> > ---
+> > =C2=A0 arch/arm/mach-omap2/board-ldp.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A02 +-
+> > =C2=A0 arch/arm/mach-omap2/board-rx51-peripherals.c |=C2=A0=C2=A02 +-
+> > =C2=A0 arch/arm/mach-omap2/twl-common.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A08 ++++----
+> > =C2=A0 arch/arm/mach-omap2/twl-common.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 14 +++++++-------
+> > =C2=A0 drivers/mfd/twl-core.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A04 ++--
+> > =C2=A0 include/linux/i2c/twl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A03 ++-
+> > =C2=A0 6 files changed, 17 insertions(+), 16 deletions(-)
+> >=20
+> > diff --git a/arch/arm/mach-omap2/board-ldp.c b/arch/arm/mach-omap2/boar=
+d-
+> > ldp.c
+> > index d9c3ffc..b8c2e21 100644
+> > --- a/arch/arm/mach-omap2/board-ldp.c
+> > +++ b/arch/arm/mach-omap2/board-ldp.c
+> > @@ -321,7 +321,7 @@ static struct regulator_init_data ldp_vpll2 =3D {
+> > =C2=A0=C2=A0	.consumer_supplies	=3D ldp_vpll2_supplies,
+> > =C2=A0 };
+> >=20
+> > -static struct twl4030_platform_data ldp_twldata =3D {
+> > +static struct twl_platform_data ldp_twldata =3D {
+> > =C2=A0=C2=A0	/* platform_data for children goes here */
+> > =C2=A0=C2=A0	.vmmc1		=3D &ldp_vmmc1,
+> > =C2=A0=C2=A0	.vaux1		=3D &ldp_vaux1,
+> > diff --git a/arch/arm/mach-omap2/board-rx51-peripherals.c b/arch/arm/ma=
+ch-
+> > omap2/board-rx51-peripherals.c
+> > index da174c0..3739bff 100644
+> > --- a/arch/arm/mach-omap2/board-rx51-peripherals.c
+> > +++ b/arch/arm/mach-omap2/board-rx51-peripherals.c
+> > @@ -957,7 +957,7 @@ static struct twl4030_audio_data rx51_audio_data
+> > __initdata =3D {
+> > =C2=A0=C2=A0	.vibra		=3D &rx51_vibra_data,
+> > =C2=A0 };
+> >=20
+> > -static struct twl4030_platform_data rx51_twldata __initdata =3D {
+> > +static struct twl_platform_data rx51_twldata __initdata =3D {
+> > =C2=A0=C2=A0	/* platform_data for children goes here */
+> > =C2=A0=C2=A0	.gpio			=3D &rx51_gpio_data,
+> > =C2=A0=C2=A0	.keypad			=3D &rx51_kp_data,
+> > diff --git a/arch/arm/mach-omap2/twl-common.c b/arch/arm/mach-omap2/twl=
+-
+> > common.c
+> > index 292eca0..4e6532f 100644
+> > --- a/arch/arm/mach-omap2/twl-common.c
+> > +++ b/arch/arm/mach-omap2/twl-common.c
+> > @@ -55,7 +55,7 @@ static int twl_get_voltage(void *data)
+> >=20
+> > =C2=A0 void __init omap_pmic_init(int bus, u32 clkrate,
+> > =C2=A0=C2=A0			=C2=A0=C2=A0=C2=A0const char *pmic_type, int pmic_irq,
+> > -			=C2=A0=C2=A0=C2=A0struct twl4030_platform_data *pmic_data)
+> > +			=C2=A0=C2=A0=C2=A0struct twl_platform_data *pmic_data)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	omap_mux_init_signal("sys_nirq", OMAP_PIN_INPUT_PULLUP |
+> > OMAP_PIN_OFF_WAKEUPENABLE);
+> > =C2=A0=C2=A0	strlcpy(pmic_i2c_board_info.type, pmic_type,
+> > @@ -68,7 +68,7 @@ void __init omap_pmic_init(int bus, u32 clkrate,
+> >=20
+> > =C2=A0 #ifdef CONFIG_ARCH_OMAP4
+> > =C2=A0 void __init omap4_pmic_init(const char *pmic_type,
+> > -		=C2=A0=C2=A0=C2=A0=C2=A0struct twl4030_platform_data *pmic_data,
+> > +		=C2=A0=C2=A0=C2=A0=C2=A0struct twl_platform_data *pmic_data,
+> > =C2=A0=C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0struct i2c_board_info *devices, i=
+nt nr_devices)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	/* PMIC part*/
+> > @@ -205,7 +205,7 @@ static struct twl_regulator_driver_data
+> > omap3_vdd2_drvdata =3D {
+> > =C2=A0=C2=A0	.set_voltage =3D twl_set_voltage,
+> > =C2=A0 };
+> >=20
+> > -void __init omap3_pmic_get_config(struct twl4030_platform_data *pmic_d=
+ata,
+> > +void __init omap3_pmic_get_config(struct twl_platform_data *pmic_data,
+> > =C2=A0=C2=A0				=C2=A0=C2=A0u32 pdata_flags, u32 regulators_flags)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	if (!pmic_data->vdd1) {
+> > @@ -470,7 +470,7 @@ static struct regulator_init_data omap4_v2v1_idata =
+=3D {
+> > =C2=A0=C2=A0	.consumer_supplies	=3D omap4_v2v1_supply,
+> > =C2=A0 };
+> >=20
+> > -void __init omap4_pmic_get_config(struct twl4030_platform_data *pmic_d=
+ata,
+> > +void __init omap4_pmic_get_config(struct twl_platform_data *pmic_data,
+> > =C2=A0=C2=A0				=C2=A0=C2=A0u32 pdata_flags, u32 regulators_flags)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	if (!pmic_data->vdd1) {
+> > diff --git a/arch/arm/mach-omap2/twl-common.h b/arch/arm/mach-omap2/twl=
+-
+> > common.h
+> > index 24b65d0..e7caa23 100644
+> > --- a/arch/arm/mach-omap2/twl-common.h
+> > +++ b/arch/arm/mach-omap2/twl-common.h
+> > @@ -30,35 +30,35 @@
+> > =C2=A0 #define TWL_COMMON_REGULATOR_VPLL2	(1 << 5)
+> >=20
+> >=20
+> > -struct twl4030_platform_data;
+> > +struct twl_platform_data;
+> > =C2=A0 struct twl6040_platform_data;
+> > =C2=A0 struct omap_tw4030_pdata;
+> > =C2=A0 struct i2c_board_info;
+> >=20
+> > =C2=A0 void omap_pmic_init(int bus, u32 clkrate, const char *pmic_type,=
+ int
+> > pmic_irq,
+> > -		=C2=A0=C2=A0=C2=A0=C2=A0struct twl4030_platform_data *pmic_data);
+> > +		=C2=A0=C2=A0=C2=A0=C2=A0struct twl_platform_data *pmic_data);
+> > =C2=A0 void omap_pmic_late_init(void);
+> >=20
+> > =C2=A0 static inline void omap2_pmic_init(const char *pmic_type,
+> > -				=C2=A0=C2=A0=C2=A0struct twl4030_platform_data *pmic_data)
+> > +				=C2=A0=C2=A0=C2=A0struct twl_platform_data *pmic_data)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	omap_pmic_init(2, 2600, pmic_type, 7 + OMAP_INTC_START,
+> > pmic_data);
+> > =C2=A0 }
+> >=20
+> > =C2=A0 static inline void omap3_pmic_init(const char *pmic_type,
+> > -				=C2=A0=C2=A0=C2=A0struct twl4030_platform_data *pmic_data)
+> > +				=C2=A0=C2=A0=C2=A0struct twl_platform_data *pmic_data)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	omap_pmic_init(1, 2600, pmic_type, 7 + OMAP_INTC_START,
+> > pmic_data);
+> > =C2=A0 }
+> >=20
+> > =C2=A0 void omap4_pmic_init(const char *pmic_type,
+> > -		=C2=A0=C2=A0=C2=A0=C2=A0struct twl4030_platform_data *pmic_data,
+> > +		=C2=A0=C2=A0=C2=A0=C2=A0struct twl_platform_data *pmic_data,
+> > =C2=A0=C2=A0		=C2=A0=C2=A0=C2=A0=C2=A0struct i2c_board_info *devices, i=
+nt nr_devices);
+> >=20
+> > -void omap3_pmic_get_config(struct twl4030_platform_data *pmic_data,
+> > +void omap3_pmic_get_config(struct twl_platform_data *pmic_data,
+> > =C2=A0=C2=A0			=C2=A0=C2=A0=C2=A0u32 pdata_flags, u32 regulators_flags)=
+;
+> >=20
+> > -void omap4_pmic_get_config(struct twl4030_platform_data *pmic_data,
+> > +void omap4_pmic_get_config(struct twl_platform_data *pmic_data,
+> > =C2=A0=C2=A0			=C2=A0=C2=A0=C2=A0u32 pdata_flags, u32 regulators_flags)=
+;
+> >=20
+> > =C2=A0 void omap_twl4030_audio_init(char *card_name, struct omap_tw4030=
+_pdata
+> > *pdata);
+> > diff --git a/drivers/mfd/twl-core.c b/drivers/mfd/twl-core.c
+> > index 831696e..dae52f7 100644
+> > --- a/drivers/mfd/twl-core.c
+> > +++ b/drivers/mfd/twl-core.c
+> > @@ -721,7 +721,7 @@ add_regulator(int num, struct regulator_init_data
+> > *pdata,
+> > =C2=A0=C2=A0=C2=A0*/
+> >=20
+> > =C2=A0 static int
+> > -add_children(struct twl4030_platform_data *pdata, unsigned irq_base,
+> > +add_children(struct twl_platform_data *pdata, unsigned irq_base,
+> > =C2=A0=C2=A0		unsigned long features)
+> > =C2=A0 {
+> > =C2=A0=C2=A0	struct device	*child;
+> > @@ -1083,7 +1083,7 @@ static struct of_dev_auxdata twl_auxdata_lookup[]=
+ =3D {
+> > =C2=A0 static int
+> > =C2=A0 twl_probe(struct i2c_client *client, const struct i2c_device_id =
+*id)
+> > =C2=A0 {
+> > -	struct twl4030_platform_data	*pdata =3D
+> > dev_get_platdata(&client->dev);
+> > +	struct twl_platform_data	*pdata =3D dev_get_platdata(&client-
+> > >dev);
+> > =C2=A0=C2=A0	struct device_node		*node =3D client->dev.of_node;
+> > =C2=A0=C2=A0	struct platform_device		*pdev;
+> > =C2=A0=C2=A0	const struct regmap_config	*twl_regmap_config;
+> > diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
+> > index 9ad7828..27bea30 100644
+> > --- a/include/linux/i2c/twl.h
+> > +++ b/include/linux/i2c/twl.h
+> > @@ -704,7 +704,8 @@ struct twl4030_audio_data {
+> > =C2=A0=C2=A0	unsigned int irq_base;
+> > =C2=A0 };
+> >=20
+> > -struct twl4030_platform_data {
+> > +struct twl_platform_data {
+> > +	/* TWL4030 platform data */
+> > =C2=A0=C2=A0	struct twl4030_clock_init_data		*clock;
+> > =C2=A0=C2=A0	struct twl4030_bci_platform_data	*bci;
+> > =C2=A0=C2=A0	struct twl4030_gpio_platform_data	*gpio;
+> >=20
+>=20
+--=-sDOAotwi9TTDR+Dw08/+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAABCAAGBQJXACRpAAoJEIT9weqP7pUMjIcP/2OIheCHu8e+WGtDMWvviuax
+JnxRUiTgqCPKVCVQAxMbxnHBHrkh507gCcMK02Pb7m/+yBnHvQDs4ETDFvL4fodR
+DkZaw/We4smOpKBABsXmsjnIfSeYkMxtLCV8yLBD3oextXvo+OEy8r7J0FTh75RR
+dCUQsd3zt2bFN4SNtfikRxFXuLDCxthOoJXyx8Iry8KBMIfpf1/3sEfdaMl+yfeL
+K3XklsFCpbV+1jHrSQiQF8yEhK1MRzAOtIlardj76T8LMtmSdWjjxDJM3lAinUz2
+UC1z5yOsKpflwXjmLm18E4CRffrx8NPR95j95GuWdxj1JTp+7E5M75LcP1UTPlVS
+kkqtzXCn9WAGCLt7nL0dCWakLHmTVfQ4emzXkY8KpG1UUtRTsv9KsApOlwLsCFLU
+DvHpSG2A0Q1LELu2LBpUKtx8CPFh3DWQeuI/BEvX3vq8iDjivjTq6sm/Vvb1aTjR
+KsUpw5O5JQE8b4hDF7f/48VMlDGE0zhELtyqvOLq0yyGQJ7XnbQByVYKLY+CkN6o
+uk/Hc2lP4DazDIw7rHmXkL9qkQB8d9cEDT9wpEuIyHydDkmcRZIi760MJysbjoX+
+i84U2w4QbJe/PxJtIl0DuqUSFh5B3PTKe2DTLmNkySrG7VkrNfk8MbT26oDRnOAO
+3qL+js9r402MKXysSBZh
+=RKAS
+-----END PGP SIGNATURE-----
+
+--=-sDOAotwi9TTDR+Dw08/+--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
