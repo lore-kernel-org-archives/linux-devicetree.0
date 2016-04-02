@@ -1,163 +1,268 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 11/16] arm64: dts: add Hi6220's stub clock node
-Date: Sat,  2 Apr 2016 17:29:38 +0800
-Message-ID: <1459589383-16914-12-git-send-email-guodong.xu@linaro.org>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, mark.rutland@arm.com, robh@kernel.org, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Leo Yan <leo.yan@linaro.org>
+From: Bert Vermeulen <bert@biot.com>
+Subject: [PATCH] ARM: dts: kirkwood: Add DTS for Linksys EA4200v2/EA4500
+Date: Sat,  2 Apr 2016 14:55:52 +0200
+Message-ID: <1459601753-31193-1-git-send-email-bert@biot.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Bert Vermeulen <bert@biot.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,
+ ..." <linux-arm-kernel@lists.infradead.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+This platform is based on a Marvell 88E6282 SoC and 88E6171 switch.
 
-Enable SRAM node and stub clock node for Hi6220, which uses mailbox
-channel 1 for CPU's frequency change.
+The DSA port labels follow the switchdev convention.
 
-Furthermore, add the CPU clock phandle in CPU's node and using
-operating-points-v2 to register operating points. So can be used by
-cpufreq-dt driver.
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+Signed-off-by: Bert Vermeulen <bert@biot.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 56 +++++++++++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
+ arch/arm/boot/dts/kirkwood-candyhouse.dts | 228 ++++++++++++++++++++++++++++++
+ 1 file changed, 228 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-candyhouse.dts
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 07b211b..a7ca40b 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -82,6 +82,11 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			clocks = <&stub_clock 0>;
-+			operating-points-v2 = <&cpu_opp_table>;
-+			cooling-min-level = <4>;
-+			cooling-max-level = <0>;
-+			#cooling-cells = <2>; /* min followed by max */
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -90,6 +95,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x1>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -98,6 +104,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x2>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -106,6 +113,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x3>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -114,6 +122,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -122,6 +131,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -130,6 +140,7 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x102>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 
-@@ -138,10 +149,42 @@
- 			device_type = "cpu";
- 			reg = <0x0 0x103>;
- 			enable-method = "psci";
-+			operating-points-v2 = <&cpu_opp_table>;
- 			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
- 		};
- 	};
- 
-+	cpu_opp_table: cpu_opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
+diff --git a/arch/arm/boot/dts/kirkwood-candyhouse.dts b/arch/arm/boot/dts/kirkwood-candyhouse.dts
+new file mode 100644
+index 0000000..1d16cef
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-candyhouse.dts
+@@ -0,0 +1,228 @@
++/*
++ * kirkwood-candyhouse.dts - Device Tree file for Linksys Candyhouse (E4200v2 / EA4500)
++ *
++ * (c) 2013 Jonas Gorski <jogo@openwrt.org>
++ * (c) 2013 Deutsche Telekom Innovation Laboratories
++ * (c) 2014 Luka Perkov <luka@openwrt.org>
++ * (c) 2014 Randy C. Will <randall.will@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
 +
-+		opp00 {
-+			opp-hz = /bits/ 64 <208000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp01 {
-+			opp-hz = /bits/ 64 <432000000>;
-+			opp-microvolt = <1040000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp02 {
-+			opp-hz = /bits/ 64 <729000000>;
-+			opp-microvolt = <1090000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp03 {
-+			opp-hz = /bits/ 64 <960000000>;
-+			opp-microvolt = <1180000>;
-+			clock-latency-ns = <500000>;
-+		};
-+		opp04 {
-+			opp-hz = /bits/ 64 <1200000000>;
-+			opp-microvolt = <1330000>;
-+			clock-latency-ns = <500000>;
++/dts-v1/;
++
++#include "kirkwood.dtsi"
++#include "kirkwood-6282.dtsi"
++
++/ {
++	model = "Linksys Candyhouse (E4200v2 / EA4500)";
++	compatible = "linksys,ea4500", "linksys,e4200v2", "marvell,kirkwood-88f6282", "marvell,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x8000000>;
++	};
++
++	chosen {
++		bootargs = "console=ttyS0,115200n8 earlyprintk";
++	};
++
++	mbus {
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++
++			pcie@2,0 {
++				status = "okay";
++			};
 +		};
 +	};
 +
- 	gic: interrupt-controller@f6801000 {
- 		compatible = "arm,gic-400";
- 		reg = <0x0 0xf6801000 0 0x1000>, /* GICD */
-@@ -169,6 +212,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		sram: sram@fff80000 {
-+			compatible = "hisilicon,hi6220-sramctrl", "syscon";
-+			reg = <0x0 0xfff80000 0x0 0x12000>;
++	ocp@f1000000 {
++		pinctrl: pin-controller@10000 {
++			pmx_led_white_health: pmx-led-white-health {
++				marvell,pins = "mpp7";
++				marvell,function = "gpo";
++			};
++			pmx_led_white_pulse: pmx-led-white-pulse {
++				marvell,pins = "mpp14";
++				marvell,function = "gpio";
++			};
++			pmx_btn_wps: pmx-btn-wps {
++				marvell,pins = "mpp47";
++				marvell,function = "gpio";
++			};
++			pmx_btn_reset: pmx-btn-reset {
++				marvell,pins = "mpp48";
++				marvell,function = "gpio";
++			};
 +		};
 +
- 		ao_ctrl: ao_ctrl@f7800000 {
- 			compatible = "hisilicon,hi6220-aoctrl", "syscon";
- 			reg = <0x0 0xf7800000 0x0 0x2000>;
-@@ -194,6 +242,14 @@
- 			#clock-cells = <1>;
- 		};
- 
-+		stub_clock: stub_clock {
-+			compatible = "hisilicon,hi6220-stub-clk";
-+			hisilicon,hi6220-clk-sram = <&sram>;
-+			#clock-cells = <1>;
-+			mbox-names = "mbox-tx";
-+			mboxes = <&mailbox 1 0 11>;
++		/* There is no battery on the boards, so the RTC does not keep
++		   time when there is no power, making it useless. */
++		rtc@10300 {
++			status = "disabled";
 +		};
 +
- 		uart0: uart@f8015000 {	/* console */
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xf8015000 0x0 0x1000>;
++		serial@12000 {
++			status = "okay";
++		};
++
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
++		pinctrl-names = "default";
++
++		button@15 {
++			label = "WPS Button";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
++		};
++
++		button@16 {
++			label = "Reset Button";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = < &pmx_led_white_health &pmx_led_white_pulse >;
++		pinctrl-names = "default";
++
++		white-health {
++			label = "candyhouse:white:health";
++			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
++		};
++
++		white-pulse {
++			label = "candyhouse:white:pulse";
++			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	dsa@0 {
++		compatible = "marvell,dsa";
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		dsa,ethernet = <&eth0port>;
++		dsa,mii-bus = <&mdio>;
++
++		switch@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x10 0>;	/* MDIO address 16, switch 0 in tree */
++
++			port@0 {
++				reg = <0>;
++				label = "sw0p0";
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "sw0p1";
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "sw0p2";
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "sw0p3";
++			};
++
++			port@4 {
++				reg = <4>;
++				label = "sw0p4";
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "cpu";
++			};
++		};
++	};
++};
++
++&nand {
++	status = "okay";
++	pinctrl-0 = <&pmx_nand>;
++	pinctrl-names = "default";
++
++	partition@0 {
++		label = "u-boot";
++		reg = <0x0 0x80000>;
++	};
++
++	partition@80000 {
++		label = "u_env";
++		reg = <0x80000 0x20000>;
++	};
++
++	partition@A0000 {
++		label = "s_env";
++		reg = <0xA0000 0x20000>;
++	};
++
++	partition@200000 {
++		label = "kernel";
++		reg = <0x200000 0x2A0000>;
++	};
++
++	partition@4A0000 {
++		label = "rootfs";
++		reg = <0x4A0000 0x1760000>;
++	};
++
++	partition@1C00000 {
++		label = "alt_kernel";
++		reg = <0x1C00000 0x2A0000>;
++	};
++
++	partition@1EA0000 {
++		label = "alt_rootfs";
++		reg = <0x1EA0000 0x1760000>;
++	};
++
++	partition@3600000 {
++		label = "syscfg";
++		reg = <0x3600000 0x4A00000>;
++	};
++};
++
++&mdio {
++	status = "okay";
++};
++
++/* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
++ * fixed speed and duplex. */
++&eth0 {
++	status = "okay";
++	ethernet0-port@0 {
++		speed = <1000>;
++		duplex = <1>;
++	};
++};
++
++/* eth1 is connected to the switch as well. However DSA only supports a
++ * single CPU port. So leave this port disabled to avoid confusion. */
++&eth1 {
++	status = "disabled";
++	ethernet1-port@0 {
++		speed = <1000>;
++		duplex = <1>;
++	};
++};
 -- 
 1.9.1
