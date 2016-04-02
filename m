@@ -1,20 +1,40 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH] ARM: dts: armv7-m: add address to unit name
-Date: Fri,  1 Apr 2016 23:08:19 -0700
-Message-ID: <1459577299-2818-1-git-send-email-stefan@agner.ch>
+Subject: [PATCH 1/3] ARM: dts: vf-colibri: alias the primary FEC as ethernet0
+Date: Fri,  1 Apr 2016 23:13:39 -0700
+Message-ID: <1459577621-3160-1-git-send-email-stefan@agner.ch>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: mcoquelin.stm32@gmail.com, u.kleine-koenig@pengutronix.de, shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Add address to unit name to remove the following warning:
- Warning (unit_address_vs_reg): Node /nv-interrupt-controller has a
- reg or ranges property, but no unit name
+The Vybrid based Colibri modules provide a on-module PHY which is
+connected to the second FEC instance FEC1. Since the on-module
+Ethernet port is considered as primary ethernet interface, alias
+fec1 as ethernet0. This also makes sure that the first MAC address
+provided by the boot loader gets assigned to the FEC instance used
+for the on-module PHY.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
-Hi Arnd,
+ arch/arm/boot/dts/vf-colibri.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Not sure through which tree this should go but an earlier patch
-seemd to be applied directly by you...
+diff --git a/arch/arm/boot/dts/vf-colibri.dtsi b/arch/arm/boot/dts/vf-colibri.dtsi
+index fda7f28..7529dd7 100644
+--- a/arch/arm/boot/dts/vf-colibri.dtsi
++++ b/arch/arm/boot/dts/vf-colibri.dtsi
+@@ -40,6 +40,11 @@
+  */
+ 
+ / {
++	aliases {
++		ethernet0 = &fec1;
++		ethernet1 = &fec0;
++	};
++
+ 	bl: backlight {
+ 		compatible = "pwm-backlight";
+ 		pinctrl-names = "default";
+-- 
+2.7.4
