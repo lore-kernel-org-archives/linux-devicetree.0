@@ -1,137 +1,52 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] dt-bindings: Add Oxford Semiconductor OXNAS pinctrl and gpio bindings
-Date: Sun,  3 Apr 2016 15:26:09 +0200
-Message-ID: <1459689969-5326-3-git-send-email-narmstrong@baylibre.com>
-References: <1459689969-5326-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459689969-5326-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Neil Armstrong <narmstrong@baylibre.com>
+From: Simon Arlott <simon@fire.lp0.eu>
+Subject: Re: [PATCH] bmips: rename BCM63168 to BCM63268
+Date: Sun, 3 Apr 2016 15:41:22 +0100
+Message-ID: <57012B92.6040102@simon.arlott.org.uk>
+References: <1459684846-11308-1-git-send-email-noltari@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1459684846-11308-1-git-send-email-noltari@gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl and gpio DT bindings for Oxford Semiconductor OXNAS SoC Family.
-This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
+On 03/04/16 13:00, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
+> BCM63168 and BCM63268 are very similar and Broadcom refers to them as=
+ BCM63268
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/gpio/gpio_oxnas.txt        | 43 ++++++++++++++++
- .../devicetree/bindings/pinctrl/oxnas,pinctrl.txt  | 57 ++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+They are practically the same but they both exist.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-new file mode 100644
-index 0000000..ddd3de9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
-@@ -0,0 +1,43 @@
-+* Oxford Semiconductor OXNAS SoC GPIO Controller
-+
-+Required properties:
-+ - compatible: "oxsemi,ox810se-gpio"
-+ - reg: Base address and length for the device.
-+ - interrupts: The port interrupt shared by all pins.
-+ - gpio-controller: Marks the port as GPIO controller.
-+ - #gpio-cells: Two. The first cell is the pin number and
-+   the second cell is used to specify the gpio polarity as defined in
-+   defined in <dt-bindings/gpio/gpio.h>:
-+      0 = GPIO_ACTIVE_HIGH
-+      1 = GPIO_ACTIVE_LOW
-+ - interrupt-controller: Marks the device node as an interrupt controller.
-+ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
-+   is used to specify the trigger type as defined in
-+   <dt-bindings/interrupt-controller/irq.h>:
-+      IRQ_TYPE_EDGE_RISING
-+      IRQ_TYPE_EDGE_FALLING
-+      IRQ_TYPE_EDGE_BOTH
-+ - gpio-ranges: Interaction with the PINCTRL subsystem.
-+
-+Example:
-+
-+gpio0: gpio@0 {
-+	compatible = "oxsemi,ox810se-gpio";
-+	reg = <0x000000 0x100000>;
-+	interrupts = <21>;
-+	#gpio-cells = <2>;
-+	gpio-controller;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+	gpio-ranges = <&pinctrl 0 0 32>;
-+};
-+
-+keys {
-+	...
-+
-+	button@sw1 {
-+		label = "ESC";
-+		linux,code = <1>;
-+		gpios = <&gpio0 12 0>;
-+	};
-+};
-diff --git a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
-new file mode 100644
-index 0000000..d607432
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
-@@ -0,0 +1,57 @@
-+* Oxford Semiconductor OXNAS SoC Family Pin Controller
-+
-+Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
-+../interrupt-controller/interrupts.txt for generic information regarding
-+pin controller, GPIO, and interrupt bindings.
-+
-+OXNAS 'pin configuration node' is a node of a group of pins which can be
-+used for a specific device or function. This node represents configurations of
-+pins, optional function, and optional mux related configuration.
-+
-+Required properties for pin controller node:
-+ - compatible: "oxsemi,ox810se-pinctrl"
-+ - oxsemi,sys-ctrl: a phandle to the system controller syscon node
-+
-+Required properties for pin configuration sub-nodes:
-+ - pins: List of pins to which the configuration applies.
-+
-+Optional properties for pin configuration sub-nodes:
-+----------------------------------------------------
-+ - function: Mux function for the specified pins.
-+ - bias-pull-up: Enable weak pull-up.
-+
-+Example:
-+
-+pinctrl: pinctrl {
-+	compatible = "oxsemi,ox810se-pinctrl";
-+
-+	/* Regmap for sys registers */
-+	oxsemi,sys-ctrl = <&sys>;
-+
-+	pinctrl_uart2: pinctrl_uart2 {
-+		uart2a {
-+			pins = "gpio31";
-+			function = "fct3";
-+		};
-+		uart2b {
-+			pins = "gpio32";
-+			function = "fct3";
-+		};
-+	};
-+};
-+
-+uart2: serial@900000 {
-+	compatible = "ns16550a";
-+	reg = <0x900000 0x100000>;
-+	clocks = <&sysclk>;
-+	interrupts = <29>;
-+	reg-shift = <0>;
-+	fifo-size = <16>;
-+	reg-io-width = <1>;
-+	current-speed = <115200>;
-+	no-loopback-test;
-+	status = "disabled";
-+	resets = <&reset 22>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+};
--- 
-1.9.1
+> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
+> index 38b5bd5..bfee6ea 100644
+> --- a/arch/mips/bmips/setup.c
+> +++ b/arch/mips/bmips/setup.c
+> @@ -112,10 +112,10 @@ static void bcm6368_quirks(void)
+>  static const struct bmips_quirk bmips_quirk_list[] =3D {
+>  	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
+>  	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
+> +	{ "brcm,bcm63268",		&bcm6368_quirks			},
+>  	{ "brcm,bcm6328",		&bcm6328_quirks			},
+>  	{ "brcm,bcm6358",		&bcm6358_quirks			},
+>  	{ "brcm,bcm6368",		&bcm6368_quirks			},
+> -	{ "brcm,bcm63168",		&bcm6368_quirks			},
+
+You can add "brcm,bcm63268" but you can't remove support for
+"brcm,bcm63168".
+
+>  	{ },
+>  };
+> =20
+>=20
+
+--=20
+Simon Arlott
