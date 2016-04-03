@@ -1,52 +1,56 @@
-From: Simon Arlott <simon@fire.lp0.eu>
-Subject: Re: [PATCH] bmips: rename BCM63168 to BCM63268
-Date: Sun, 3 Apr 2016 15:41:22 +0100
-Message-ID: <57012B92.6040102@simon.arlott.org.uk>
-References: <1459684846-11308-1-git-send-email-noltari@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1459684846-11308-1-git-send-email-noltari@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: =?UTF-8?Q?=c3=81lvaro_Fern=c3=a1ndez_Rojas?= <noltari@gmail.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] ARM64: dts: amlogic: Add hiu and periphs buses
+Date: Sun,  3 Apr 2016 19:14:41 +0200
+Message-ID: <1459703681-8689-1-git-send-email-carlo@caione.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-meson-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/16 13:00, =C3=81lvaro Fern=C3=A1ndez Rojas wrote:
-> BCM63168 and BCM63268 are very similar and Broadcom refers to them as=
- BCM63268
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
-They are practically the same but they both exist.
+Add two new buses in the DTS: hiu and periphs buses.
+In the Amlogic S905/GXBB SoC several devices (clock / eth / pin
+controllers, etc...) are mapped under these two buses. Add them in the
+DT before starting to add new devices.
 
-> diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-> index 38b5bd5..bfee6ea 100644
-> --- a/arch/mips/bmips/setup.c
-> +++ b/arch/mips/bmips/setup.c
-> @@ -112,10 +112,10 @@ static void bcm6368_quirks(void)
->  static const struct bmips_quirk bmips_quirk_list[] =3D {
->  	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
->  	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
-> +	{ "brcm,bcm63268",		&bcm6368_quirks			},
->  	{ "brcm,bcm6328",		&bcm6328_quirks			},
->  	{ "brcm,bcm6358",		&bcm6358_quirks			},
->  	{ "brcm,bcm6368",		&bcm6368_quirks			},
-> -	{ "brcm,bcm63168",		&bcm6368_quirks			},
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-You can add "brcm,bcm63268" but you can't remove support for
-"brcm,bcm63168".
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+index 832815d..3126f0c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+@@ -167,6 +167,22 @@
+ 			};
+ 		};
+ 
++		periphs: periphs@c8834000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xc8834000 0x0 0x2000>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xc8834000 0x0 0x2000>;
++		};
++
++		hiubus: hiubus@c883c000 {
++			compatible = "simple-bus";
++			reg = <0x0 0xc883c000 0x0 0x2000>;
++			#address-cells = <2>;
++			#size-cells = <2>;
++			ranges = <0x0 0x0 0x0 0xc883c000 0x0 0x2000>;
++		};
++
+ 		apb: apb@d0000000 {
+ 			compatible = "simple-bus";
+ 			reg = <0x0 0xd0000000 0x0 0x200000>;
+-- 
+1.9.1
 
->  	{ },
->  };
-> =20
->=20
-
---=20
-Simon Arlott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
