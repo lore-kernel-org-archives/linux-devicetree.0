@@ -1,41 +1,137 @@
-From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Subject: [PATCH 2/4] ARM: dts: axp209: Add ac_power_supply child node to the ax209 node
-Date: Sun,  3 Apr 2016 15:15:05 +0200
-Message-ID: <1459689307-8501-2-git-send-email-haas@computerlinguist.org>
-References: <1459689307-8501-1-git-send-email-haas@computerlinguist.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459689307-8501-1-git-send-email-haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/2] dt-bindings: Add Oxford Semiconductor OXNAS pinctrl and gpio bindings
+Date: Sun,  3 Apr 2016 15:26:09 +0200
+Message-ID: <1459689969-5326-3-git-send-email-narmstrong@baylibre.com>
+References: <1459689969-5326-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459689969-5326-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a node representing the ac power supply part of the axp209 pmic.
+Add pinctrl and gpio DT bindings for Oxford Semiconductor OXNAS SoC Family.
+This version supports the ARM926EJ-S based OX810SE SoC with 34 IO pins.
 
-Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/axp209.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/gpio/gpio_oxnas.txt        | 43 ++++++++++++++++
+ .../devicetree/bindings/pinctrl/oxnas,pinctrl.txt  | 57 ++++++++++++++++++++++
+ 2 files changed, 100 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
 
-diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
-index 051ab3b..9046f0a 100644
---- a/arch/arm/boot/dts/axp209.dtsi
-+++ b/arch/arm/boot/dts/axp209.dtsi
-@@ -94,4 +94,10 @@
- 		compatible = "x-powers,axp202-usb-power-supply";
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+new file mode 100644
+index 0000000..ddd3de9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio_oxnas.txt
+@@ -0,0 +1,43 @@
++* Oxford Semiconductor OXNAS SoC GPIO Controller
 +
-+	ac_power_supply: ac_power_supply {
-+		compatible = "x-powers,axp202-ac-power-supply";
-+		status = "disabled";
++Required properties:
++ - compatible: "oxsemi,ox810se-gpio"
++ - reg: Base address and length for the device.
++ - interrupts: The port interrupt shared by all pins.
++ - gpio-controller: Marks the port as GPIO controller.
++ - #gpio-cells: Two. The first cell is the pin number and
++   the second cell is used to specify the gpio polarity as defined in
++   defined in <dt-bindings/gpio/gpio.h>:
++      0 = GPIO_ACTIVE_HIGH
++      1 = GPIO_ACTIVE_LOW
++ - interrupt-controller: Marks the device node as an interrupt controller.
++ - #interrupt-cells: Two. The first cell is the GPIO number and second cell
++   is used to specify the trigger type as defined in
++   <dt-bindings/interrupt-controller/irq.h>:
++      IRQ_TYPE_EDGE_RISING
++      IRQ_TYPE_EDGE_FALLING
++      IRQ_TYPE_EDGE_BOTH
++ - gpio-ranges: Interaction with the PINCTRL subsystem.
++
++Example:
++
++gpio0: gpio@0 {
++	compatible = "oxsemi,ox810se-gpio";
++	reg = <0x000000 0x100000>;
++	interrupts = <21>;
++	#gpio-cells = <2>;
++	gpio-controller;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	gpio-ranges = <&pinctrl 0 0 32>;
++};
++
++keys {
++	...
++
++	button@sw1 {
++		label = "ESC";
++		linux,code = <1>;
++		gpios = <&gpio0 12 0>;
 +	};
++};
+diff --git a/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+new file mode 100644
+index 0000000..d607432
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/oxnas,pinctrl.txt
+@@ -0,0 +1,57 @@
++* Oxford Semiconductor OXNAS SoC Family Pin Controller
 +
- };
++Please refer to pinctrl-bindings.txt, ../gpio/gpio.txt, and
++../interrupt-controller/interrupts.txt for generic information regarding
++pin controller, GPIO, and interrupt bindings.
++
++OXNAS 'pin configuration node' is a node of a group of pins which can be
++used for a specific device or function. This node represents configurations of
++pins, optional function, and optional mux related configuration.
++
++Required properties for pin controller node:
++ - compatible: "oxsemi,ox810se-pinctrl"
++ - oxsemi,sys-ctrl: a phandle to the system controller syscon node
++
++Required properties for pin configuration sub-nodes:
++ - pins: List of pins to which the configuration applies.
++
++Optional properties for pin configuration sub-nodes:
++----------------------------------------------------
++ - function: Mux function for the specified pins.
++ - bias-pull-up: Enable weak pull-up.
++
++Example:
++
++pinctrl: pinctrl {
++	compatible = "oxsemi,ox810se-pinctrl";
++
++	/* Regmap for sys registers */
++	oxsemi,sys-ctrl = <&sys>;
++
++	pinctrl_uart2: pinctrl_uart2 {
++		uart2a {
++			pins = "gpio31";
++			function = "fct3";
++		};
++		uart2b {
++			pins = "gpio32";
++			function = "fct3";
++		};
++	};
++};
++
++uart2: serial@900000 {
++	compatible = "ns16550a";
++	reg = <0x900000 0x100000>;
++	clocks = <&sysclk>;
++	interrupts = <29>;
++	reg-shift = <0>;
++	fifo-size = <16>;
++	reg-io-width = <1>;
++	current-speed = <115200>;
++	no-loopback-test;
++	status = "disabled";
++	resets = <&reset 22>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++};
 -- 
-2.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
