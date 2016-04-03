@@ -1,87 +1,50 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] iio: st_sensors: support open drain mode
-Date: Sun, 3 Apr 2016 10:33:30 +0100
-Message-ID: <5700E36A.6080608@kernel.org>
-References: <1458825486-17188-1-git-send-email-linus.walleij@linaro.org>
- <1458825486-17188-4-git-send-email-linus.walleij@linaro.org>
- <56F8F592.9010807@kernel.org>
- <CACRpkdZ37dpKsHr01M0+waXgP4xZJjxxFrNQW13Zxi1a9H+-Rg@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v5] iio: dac: Add support for the AD5592R/AD5593R
+ ADCs/DACs
+Date: Sun, 3 Apr 2016 10:39:52 +0100
+Message-ID: <5700E4E8.40304@kernel.org>
+References: <1458721195-28915-1-git-send-email-michael.hennerich@analog.com>
+ <CACRpkdYAqPn9o-wMbb-iZn7bjad8u9JmdwRqwrjFMArPrOXEOQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZ37dpKsHr01M0+waXgP4xZJjxxFrNQW13Zxi1a9H+-Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYAqPn9o-wMbb-iZn7bjad8u9JmdwRqwrjFMArPrOXEOQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Michael Hennerich <michael.hennerich@analog.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Lars-Peter Clausen <lars@metafoo.de>, Hartmut Knaack <knaack.h@gmx.de>, Paul Cercueil <paul.cercueil@analog.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Pawe=c5=82_Moll?= <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31/03/16 09:15, Linus Walleij wrote:
-> On Mon, Mar 28, 2016 at 11:12 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On 24/03/16 13:18, Linus Walleij wrote:
+On 31/03/16 09:01, Linus Walleij wrote:
+> On Wed, Mar 23, 2016 at 9:19 AM,  <michael.hennerich@analog.com> wrote:
 > 
->>> +- st,int-pin-open-drain: the interrupt/data ready line will be configured
->>> +  as open drain, which is useful if several sensors share the same
->>> +  interrupt line.
+>> From: Paul Cercueil <paul.cercueil@analog.com>
 >>
->> Really feels like this one ought to be more generic.. Mind you so does
->> drdy-int-pin!
-> 
-> Sorry about drdy-int-pin, it wasn't me ;)
-> 
-> That one is a mux kind of thing: interrupt goes out on IRQ line
-> INT1 or INT2, select one...
-> 
->> Hmm. Looks like most open drain controls are chip specific - other than
->> your pinctrl ones and that doesn't really map to here I guess.
-> 
-> Both the muxing and the OD setting can be done with pin control,
-> it's just that it is like swatting a fly with a skyscraper - vast overkill
-> for two interrupt lines.
-> 
-> I came to the conclusion that with small chips or IP blocks just
-> randomly doing some muxing or biasing of a few pins isn't necessarily
-> worth all the trouble of implementing pin control, the latter was
-> conceived for real big arrays of pins really. There are already a
-> few of these all over the kernel, e.g. the ST Multi-Purpose expander
-> drivers/mfd/stmpe.c - could be pin control muxed but it'd be overkill.
-> 
-> So as pin control maintainer when this kind of hardware comes up
-> I usually just "think it over" and then "OK then".
-I can indeed see the advantages of that flexibility, but from an IIO point
-of view, we are going to have a number of very similar bindings.  I can't
-see a reason not to generalize the form of the binding away from a single
-driver.
-
-So lets drop the vendor prefix from this one and have
-int-pin-open-drain (and drdy-int-pin ideally).
-> 
->>> +     if (sdata->int_pin_open_drain) {
->>> +             dev_info(&indio_dev->dev,
->>> +                      "set interrupt line to open drain mode\n");
+>> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
+>> ADC/DAC/GPIO devices.
 >>
->> Hmm. Curriously I have a board with an lis3l02dq on it where the interrupt
->> is shared, but doesn't explicitly support open drain. In that case it
->> is done with some external circuitry.
+>> Signed-off-by: Paul Cercueil <paul.cercueil@analog.com>
+>> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
 > 
-> That should run fine with just the status read patch from earlier
-> in the series I guess?
-I'll go with a 'probably'.  Getting that part to run at all is 'interesting'
-as it's minimum rate is 440Hz and my board can't keep up.
+> For this v5 version:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > 
->> Anyhow - I guess when I actually add support for that I'll just add a sanity
->> check in here that addr_od and mask_od are specified :)
+> I'm fine with this new gpiochip driver being merged into the
+> IIO tree.
 > 
-> Hm, yeah. Otherwise just patch out my enforcement of the
-> OD flag for a shared line and add a comment in.
-Will figure it out when / if I ever actually do those patches...
+Cool,  Paul / Michael,
 
-J
-> 
+I still had a few trivial outstanding comments. Please remember to add
+this reviewed-by to V6.
+
+thanks,
+
+Jonathan
 > Yours,
 > Linus Walleij
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
+
