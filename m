@@ -1,85 +1,87 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: [PATCH v6 24/24] [media] rtl2832: regmap is aware of lockdep, drop local locking hack
-Date: Sun,  3 Apr 2016 10:52:54 +0200
-Message-ID: <1459673574-11440-25-git-send-email-peda@lysator.liu.se>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Mat
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] iio: st_sensors: support open drain mode
+Date: Sun, 3 Apr 2016 10:33:30 +0100
+Message-ID: <5700E36A.6080608@kernel.org>
+References: <1458825486-17188-1-git-send-email-linus.walleij@linaro.org>
+ <1458825486-17188-4-git-send-email-linus.walleij@linaro.org>
+ <56F8F592.9010807@kernel.org>
+ <CACRpkdZ37dpKsHr01M0+waXgP4xZJjxxFrNQW13Zxi1a9H+-Rg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZ37dpKsHr01M0+waXgP4xZJjxxFrNQW13Zxi1a9H+-Rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Giuseppe Barba <giuseppe.barba-qxv4g6HH51o@public.gmane.org>, Denis Ciocca <denis.ciocca-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+On 31/03/16 09:15, Linus Walleij wrote:
+> On Mon, Mar 28, 2016 at 11:12 AM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On 24/03/16 13:18, Linus Walleij wrote:
+> 
+>>> +- st,int-pin-open-drain: the interrupt/data ready line will be configured
+>>> +  as open drain, which is useful if several sensors share the same
+>>> +  interrupt line.
+>>
+>> Really feels like this one ought to be more generic.. Mind you so does
+>> drdy-int-pin!
+> 
+> Sorry about drdy-int-pin, it wasn't me ;)
+> 
+> That one is a mux kind of thing: interrupt goes out on IRQ line
+> INT1 or INT2, select one...
+> 
+>> Hmm. Looks like most open drain controls are chip specific - other than
+>> your pinctrl ones and that doesn't really map to here I guess.
+> 
+> Both the muxing and the OD setting can be done with pin control,
+> it's just that it is like swatting a fly with a skyscraper - vast overkill
+> for two interrupt lines.
+> 
+> I came to the conclusion that with small chips or IP blocks just
+> randomly doing some muxing or biasing of a few pins isn't necessarily
+> worth all the trouble of implementing pin control, the latter was
+> conceived for real big arrays of pins really. There are already a
+> few of these all over the kernel, e.g. the ST Multi-Purpose expander
+> drivers/mfd/stmpe.c - could be pin control muxed but it'd be overkill.
+> 
+> So as pin control maintainer when this kind of hardware comes up
+> I usually just "think it over" and then "OK then".
+I can indeed see the advantages of that flexibility, but from an IIO point
+of view, we are going to have a number of very similar bindings.  I can't
+see a reason not to generalize the form of the binding away from a single
+driver.
 
-Reviewed-by: Antti Palosaari <crope@iki.fi>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/media/dvb-frontends/rtl2832.c      | 30 ------------------------------
- drivers/media/dvb-frontends/rtl2832_priv.h |  1 -
- 2 files changed, 31 deletions(-)
+So lets drop the vendor prefix from this one and have
+int-pin-open-drain (and drdy-int-pin ideally).
+> 
+>>> +     if (sdata->int_pin_open_drain) {
+>>> +             dev_info(&indio_dev->dev,
+>>> +                      "set interrupt line to open drain mode\n");
+>>
+>> Hmm. Curriously I have a board with an lis3l02dq on it where the interrupt
+>> is shared, but doesn't explicitly support open drain. In that case it
+>> is done with some external circuitry.
+> 
+> That should run fine with just the status read patch from earlier
+> in the series I guess?
+I'll go with a 'probably'.  Getting that part to run at all is 'interesting'
+as it's minimum rate is 440Hz and my board can't keep up.
+> 
+>> Anyhow - I guess when I actually add support for that I'll just add a sanity
+>> check in here that addr_od and mask_od are specified :)
+> 
+> Hm, yeah. Otherwise just patch out my enforcement of the
+> OD flag for a shared line and add a comment in.
+Will figure it out when / if I ever actually do those patches...
 
-diff --git a/drivers/media/dvb-frontends/rtl2832.c b/drivers/media/dvb-frontends/rtl2832.c
-index ac5ac5f7a335..23459fed2516 100644
---- a/drivers/media/dvb-frontends/rtl2832.c
-+++ b/drivers/media/dvb-frontends/rtl2832.c
-@@ -890,32 +890,6 @@ static bool rtl2832_volatile_reg(struct device *dev, unsigned int reg)
- 	return false;
- }
- 
--/*
-- * FIXME: Hack. Implement own regmap locking in order to silence lockdep
-- * recursive lock warning. That happens when regmap I2C client calls I2C mux
-- * adapter, which leads demod I2C repeater enable via demod regmap. Operation
-- * takes two regmap locks recursively - but those are different regmap instances
-- * in a two different I2C drivers, so it is not deadlock. Proper fix is to make
-- * regmap aware of lockdep.
-- */
--static void rtl2832_regmap_lock(void *__dev)
--{
--	struct rtl2832_dev *dev = __dev;
--	struct i2c_client *client = dev->client;
--
--	dev_dbg(&client->dev, "\n");
--	mutex_lock(&dev->regmap_mutex);
--}
--
--static void rtl2832_regmap_unlock(void *__dev)
--{
--	struct rtl2832_dev *dev = __dev;
--	struct i2c_client *client = dev->client;
--
--	dev_dbg(&client->dev, "\n");
--	mutex_unlock(&dev->regmap_mutex);
--}
--
- static struct dvb_frontend *rtl2832_get_dvb_frontend(struct i2c_client *client)
- {
- 	struct rtl2832_dev *dev = i2c_get_clientdata(client);
-@@ -1082,12 +1056,8 @@ static int rtl2832_probe(struct i2c_client *client,
- 	dev->sleeping = true;
- 	INIT_DELAYED_WORK(&dev->i2c_gate_work, rtl2832_i2c_gate_work);
- 	/* create regmap */
--	mutex_init(&dev->regmap_mutex);
- 	dev->regmap_config.reg_bits =  8,
- 	dev->regmap_config.val_bits =  8,
--	dev->regmap_config.lock = rtl2832_regmap_lock,
--	dev->regmap_config.unlock = rtl2832_regmap_unlock,
--	dev->regmap_config.lock_arg = dev,
- 	dev->regmap_config.volatile_reg = rtl2832_volatile_reg,
- 	dev->regmap_config.max_register = 5 * 0x100,
- 	dev->regmap_config.ranges = regmap_range_cfg,
-diff --git a/drivers/media/dvb-frontends/rtl2832_priv.h b/drivers/media/dvb-frontends/rtl2832_priv.h
-index d8f97d14f6fd..c1a8a69e9015 100644
---- a/drivers/media/dvb-frontends/rtl2832_priv.h
-+++ b/drivers/media/dvb-frontends/rtl2832_priv.h
-@@ -33,7 +33,6 @@
- struct rtl2832_dev {
- 	struct rtl2832_platform_data *pdata;
- 	struct i2c_client *client;
--	struct mutex regmap_mutex;
- 	struct regmap_config regmap_config;
- 	struct regmap *regmap;
- 	struct i2c_mux_core *muxc;
--- 
-2.1.4
+J
+> 
+> Yours,
+> Linus Walleij
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
