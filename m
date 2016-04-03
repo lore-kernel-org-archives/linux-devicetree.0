@@ -1,66 +1,85 @@
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-	<noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] bmips: rename BCM63168 to BCM63268
-Date: Sun,  3 Apr 2016 14:00:46 +0200
-Message-ID: <1459684846-11308-1-git-send-email-noltari@gmail.com>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
+ device access
+Date: Sun, 3 Apr 2016 15:12:31 +0300
+Message-ID: <20160403151028-mutt-send-email-mst@redhat.com>
+References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160308183050.GJ2049-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-BCM63168 and BCM63268 are very similar and Broadcom refers to them as B=
-CM63268
-in GPL sources (e.g. 63268_map_part.h).
-Use alphabetical order for supported bmips quirks.
-Add BCM63268 to devicetree documentation.
+On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
+> Allowing for the future possibility of implementing AML-based
+> (i.e., firmware-triggered) access to the QEMU fw_cfg device,
+> acquire the global ACPI lock when accessing the device on behalf
+> of the guest-side sysfs driver, to prevent any potential race
+> conditions.
+> 
+> Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/mips/brcm/soc.txt | 2 +-
- arch/mips/bmips/setup.c                             | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Greg, could you merge this please?
+I'm rather worried that this goes out without.
 
-diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Docu=
-mentation/devicetree/bindings/mips/brcm/soc.txt
-index e58a4f6..aae0b92 100644
---- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
-+++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
-@@ -4,7 +4,7 @@ Required properties:
-=20
- - compatible: "brcm,bcm3384", "brcm,bcm33843"
-               "brcm,bcm3384-viper", "brcm,bcm33843-viper"
--              "brcm,bcm6328", "brcm,bcm6358", "brcm,bcm6368",
-+              "brcm,bcm63268", "brcm,bcm6328", "brcm,bcm6358", "brcm,b=
-cm6368",
-               "brcm,bcm7125", "brcm,bcm7346", "brcm,bcm7358", "brcm,bc=
-m7360",
-               "brcm,bcm7362", "brcm,bcm7420", "brcm,bcm7425"
-=20
-diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index 38b5bd5..bfee6ea 100644
---- a/arch/mips/bmips/setup.c
-+++ b/arch/mips/bmips/setup.c
-@@ -112,10 +112,10 @@ static void bcm6368_quirks(void)
- static const struct bmips_quirk bmips_quirk_list[] =3D {
- 	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
- 	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
-+	{ "brcm,bcm63268",		&bcm6368_quirks			},
- 	{ "brcm,bcm6328",		&bcm6328_quirks			},
- 	{ "brcm,bcm6358",		&bcm6358_quirks			},
- 	{ "brcm,bcm6368",		&bcm6368_quirks			},
--	{ "brcm,bcm63168",		&bcm6368_quirks			},
- 	{ },
- };
-=20
---=20
-2.1.4
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> 
+> Changes since v1:
+> 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
+> 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
+> 	  and only throw a warning/error message otherwise.
+> 
+> 	- didn't get any *negative* feedback from the QEMU crowd, so
+> 	  this is now a bona-fide "please apply this", rather than just
+> 	  an RFC :)
+> 
+> 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
+> 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
+> 
+> Thanks much,
+>   --Gabriel
+> 
+>  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
+> index 7bba76c..a44dc32 100644
+> --- a/drivers/firmware/qemu_fw_cfg.c
+> +++ b/drivers/firmware/qemu_fw_cfg.c
+> @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
+>  static inline void fw_cfg_read_blob(u16 key,
+>  				    void *buf, loff_t pos, size_t count)
+>  {
+> +	u32 glk;
+> +	acpi_status status;
+> +
+> +	/* If we have ACPI, ensure mutual exclusion against any potential
+> +	 * device access by the firmware, e.g. via AML methods:
+> +	 */
+> +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
+> +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
+> +		/* Should never get here */
+> +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
+> +		memset(buf, 0, count);
+> +		return;
+> +	}
+> +
+>  	mutex_lock(&fw_cfg_dev_lock);
+>  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
+>  	while (pos-- > 0)
+>  		ioread8(fw_cfg_reg_data);
+>  	ioread8_rep(fw_cfg_reg_data, buf, count);
+>  	mutex_unlock(&fw_cfg_dev_lock);
+> +
+> +	acpi_release_global_lock(glk);
+>  }
+>  
+>  /* clean up fw_cfg device i/o */
+> -- 
+> 2.4.3
