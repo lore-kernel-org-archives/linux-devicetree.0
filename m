@@ -1,342 +1,299 @@
 From: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
-Subject: [PATCH v6 2/2] clocksource: add J-Core timer/clocksource driver
-Date: Thu, 17 Mar 2016 23:12:57 +0000
-Message-ID: <f127e6d3f3ef64ea286b7b8f485e5d0c7f3faa6f.1470183518.git.dalias@libc.org>
-References: <cover.1470183518.git.dalias@libc.org>
+Subject: [PATCH v5 2/2] spi: add driver for J-Core SPI controller
+Date: Sun, 3 Apr 2016 05:12:45 +0000
+Message-ID: <a452a1588abbfb1f69390a6b882ea27a449b2391.1470187592.git.dalias@libc.org>
+References: <cover.1470187592.git.dalias@libc.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1470183518.git.dalias-8zAoT0mYgF4@public.gmane.org>
+In-Reply-To: <cover.1470187592.git.dalias-8zAoT0mYgF4@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-At the hardware level, the J-Core PIT is integrated with the interrupt
-controller, but it is represented as its own device and has an
-independent programming interface. It provides a 12-bit countdown
-timer, which is not presently used, and a periodic timer. The interval
-length for the latter is programmable via a 32-bit throttle register
-whose units are determined by a bus-period register. The periodic
-timer is used to implement both periodic and oneshot clock event
-modes; in oneshot mode the interrupt handler simply disables the timer
-as soon as it fires.
+The J-Core "spi2" device is a PIO-based SPI master controller. It
+differs from "bitbang" devices in that that it's clocked in hardware
+rather than via soft clock modulation over gpio, and performs
+byte-at-a-time transfers between the cpu and SPI controller.
 
-Despite its device tree node representing an interrupt for the PIT,
-the actual irq generated is programmable, not hard-wired. The driver
-is responsible for programming the PIT to generate the hardware irq
-number that the DT assigns to it.
-
-On SMP configurations, J-Core provides cpu-local instances of the PIT;
-no broadcast timer is needed. This driver supports the creation of the
-necessary per-cpu clock_event_device instances. The code has been
-tested and works on SMP, but will not be usable without additional
-J-Core SMP-support patches and appropriate hardware capable of running
-SMP.
-
-A nanosecond-resolution clocksource is provided using the J-Core "RTC"
-registers, which give a 64-bit seconds count and 32-bit nanoseconds.
-The driver converts these to a 64-bit nanoseconds count.
+This driver will be extended to support future versions of the J-Core
+SPI controller with DMA transfers when they become available.
 
 Signed-off-by: Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>
 ---
- drivers/clocksource/Kconfig     |   9 ++
- drivers/clocksource/Makefile    |   1 +
- drivers/clocksource/jcore-pit.c | 242 ++++++++++++++++++++++++++++++++++++++++
- include/linux/cpuhotplug.h      |   1 +
- 4 files changed, 253 insertions(+)
- create mode 100644 drivers/clocksource/jcore-pit.c
+ drivers/spi/Kconfig     |   7 ++
+ drivers/spi/Makefile    |   1 +
+ drivers/spi/spi-jcore.c | 232 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 240 insertions(+)
+ create mode 100644 drivers/spi/spi-jcore.c
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 5677886..3210ca5 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -407,6 +407,15 @@ config SYS_SUPPORTS_SH_TMU
- config SYS_SUPPORTS_EM_STI
-         bool
+diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+index d6fb8d4..1abb3d7 100644
+--- a/drivers/spi/Kconfig
++++ b/drivers/spi/Kconfig
+@@ -285,6 +285,13 @@ config SPI_IMX
+ 	  This enables using the Freescale i.MX SPI controllers in master
+ 	  mode.
  
-+config CLKSRC_JCORE_PIT
-+	bool "J-Core PIT timer driver"
++config SPI_JCORE
++	tristate "J-Core SPI Master"
 +	depends on OF && (SUPERH || COMPILE_TEST)
-+	depends on GENERIC_CLOCKEVENTS
-+	depends on HAS_IOMEM
 +	help
-+	  This enables build of clocksource and clockevent driver for
-+	  the integrated PIT in the J-Core synthesizable, open source SoC.
++	  This enables support for the SPI master controller in the J-Core
++	  synthesizable, open source SoC.
 +
- config SH_TIMER_CMT
- 	bool "Renesas CMT timer driver" if COMPILE_TEST
- 	depends on GENERIC_CLOCKEVENTS
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index fd9d6df..cf87f40 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -5,6 +5,7 @@ obj-$(CONFIG_ATMEL_TCB_CLKSRC)	+= tcb_clksrc.o
- obj-$(CONFIG_X86_PM_TIMER)	+= acpi_pm.o
- obj-$(CONFIG_SCx200HR_TIMER)	+= scx200_hrt.o
- obj-$(CONFIG_CS5535_CLOCK_EVENT_SRC)	+= cs5535-clockevt.o
-+obj-$(CONFIG_CLKSRC_JCORE_PIT)		+= jcore-pit.o
- obj-$(CONFIG_SH_TIMER_CMT)	+= sh_cmt.o
- obj-$(CONFIG_SH_TIMER_MTU2)	+= sh_mtu2.o
- obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
-diff --git a/drivers/clocksource/jcore-pit.c b/drivers/clocksource/jcore-pit.c
+ config SPI_LM70_LLP
+ 	tristate "Parallel port adapter for LM70 eval board (DEVELOPMENT)"
+ 	depends on PARPORT
+diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+index 185367e..8715fec 100644
+--- a/drivers/spi/Makefile
++++ b/drivers/spi/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_SPI_FSL_SPI)		+= spi-fsl-spi.o
+ obj-$(CONFIG_SPI_GPIO)			+= spi-gpio.o
+ obj-$(CONFIG_SPI_IMG_SPFI)		+= spi-img-spfi.o
+ obj-$(CONFIG_SPI_IMX)			+= spi-imx.o
++obj-$(CONFIG_SPI_JCORE)			+= spi-jcore.o
+ obj-$(CONFIG_SPI_LM70_LLP)		+= spi-lm70llp.o
+ obj-$(CONFIG_SPI_LP8841_RTC)		+= spi-lp8841-rtc.o
+ obj-$(CONFIG_SPI_MESON_SPIFC)		+= spi-meson-spifc.o
+diff --git a/drivers/spi/spi-jcore.c b/drivers/spi/spi-jcore.c
 new file mode 100644
-index 0000000..23dee50
+index 0000000..7d2044a
 --- /dev/null
-+++ b/drivers/clocksource/jcore-pit.c
-@@ -0,0 +1,242 @@
++++ b/drivers/spi/spi-jcore.c
+@@ -0,0 +1,232 @@
 +/*
-+ * J-Core SoC PIT/clocksource driver
++ * J-Core SPI controller driver
 + *
-+ * Copyright (C) 2015-2016 Smart Energy Instruments, Inc.
++ * Copyright (C) 2012-2016 Smart Energy Instruments, Inc.
 + *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
++ * Current version by Rich Felker
++ * Based loosely on initial version by Oleksandr G Zhadan
++ *
 + */
-+
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
++#include <linux/init.h>
 +#include <linux/interrupt.h>
-+#include <linux/clockchips.h>
-+#include <linux/clocksource.h>
-+#include <linux/sched_clock.h>
-+#include <linux/cpu.h>
-+#include <linux/cpuhotplug.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
++#include <linux/errno.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/spi/spi.h>
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/delay.h>
 +
-+#define PIT_IRQ_SHIFT		12
-+#define PIT_PRIO_SHIFT		20
-+#define PIT_ENABLE_SHIFT	26
-+#define PIT_IRQ_MASK		0x3f
-+#define PIT_PRIO_MASK		0xf
++#define DRV_NAME	"jcore_spi"
 +
-+#define REG_PITEN		0x00
-+#define REG_THROT		0x10
-+#define REG_COUNT		0x14
-+#define REG_BUSPD		0x18
-+#define REG_SECHI		0x20
-+#define REG_SECLO		0x24
-+#define REG_NSEC		0x28
++#define CTRL_REG	0x0
++#define DATA_REG	0x4
 +
-+struct jcore_pit {
-+	struct clock_event_device	ced;
-+	__iomem void			*base;
-+	unsigned long			periodic_delta;
-+	unsigned			cpu;
-+	u32				enable_val;
++#define JCORE_SPI_CTRL_XMIT		0x02
++#define JCORE_SPI_STAT_BUSY		0x02
++#define JCORE_SPI_CTRL_LOOP		0x08
++#define JCORE_SPI_CTRL_CS_BITS		0x15
++
++#define JCORE_SPI_WAIT_RDY_MAX_LOOP	2000000
++
++struct jcore_spi {
++	struct spi_master *master;
++	void __iomem *base;
++	unsigned int cs_reg;
++	unsigned int speed_reg;
++	unsigned int speed_hz;
++	unsigned int clock_freq;
 +};
 +
-+static __iomem void		*jcore_pit_base;
-+static struct clocksource	jcore_cs;
-+struct jcore_pit __percpu	*jcore_pit_percpu;
-+
-+static notrace u64 jcore_sched_clock_read(void)
++static int jcore_spi_wait(void __iomem *ctrl_reg)
 +{
-+	u32 seclo, nsec, seclo0;
-+	__iomem void *base = jcore_pit_base;
++	unsigned timeout = JCORE_SPI_WAIT_RDY_MAX_LOOP;
 +
-+	seclo = __raw_readl(base + REG_SECLO);
 +	do {
-+		seclo0 = seclo;
-+		nsec  = __raw_readl(base + REG_NSEC);
-+		seclo = __raw_readl(base + REG_SECLO);
-+	} while (seclo0 != seclo);
++		if (!(readl(ctrl_reg) & JCORE_SPI_STAT_BUSY))
++			return 0;
++		cpu_relax();
++	} while (--timeout);
 +
-+	return seclo * NSEC_PER_SEC + nsec;
++	return -EBUSY;
 +}
 +
-+static cycle_t jcore_clocksource_read(struct clocksource *cs)
++static void jcore_spi_program(struct jcore_spi *hw)
 +{
-+	return jcore_sched_clock_read();
++	void __iomem *ctrl_reg = hw->base + CTRL_REG;
++
++	if (jcore_spi_wait(ctrl_reg))
++		dev_err(hw->master->dev.parent,
++			"timeout waiting to program ctrl reg.\n");
++
++	writel(hw->cs_reg | hw->speed_reg, ctrl_reg);
 +}
 +
-+static int jcore_pit_disable(struct jcore_pit *pit)
++static void jcore_spi_chipsel(struct spi_device *spi, bool value)
 +{
-+	__raw_writel(0, pit->base + REG_PITEN);
-+	return 0;
++	struct jcore_spi *hw = spi_master_get_devdata(spi->master);
++	u32 csbit = 1U << (2 * spi->chip_select);
++
++	dev_dbg(hw->master->dev.parent, "chipselect %d\n", spi->chip_select);
++
++	if (value)
++		hw->cs_reg |= csbit;
++	else
++		hw->cs_reg &= ~csbit;
++
++	jcore_spi_program(hw);
 +}
 +
-+static int jcore_pit_set(unsigned long delta, struct jcore_pit *pit)
++static void jcore_spi_baudrate(struct jcore_spi *hw, int speed)
 +{
-+	jcore_pit_disable(pit);
-+	__raw_writel(delta, pit->base + REG_THROT);
-+	__raw_writel(pit->enable_val, pit->base + REG_PITEN);
-+	return 0;
++	if (speed == hw->speed_hz) return;
++	hw->speed_hz = speed;
++	if (speed >= hw->clock_freq / 2)
++		hw->speed_reg = 0;
++	else
++		hw->speed_reg = ((hw->clock_freq / 2 / speed) - 1) << 27;
++	jcore_spi_program(hw);
++	dev_dbg(hw->master->dev.parent, "speed=%d reg=0x%x\n",
++		speed, hw->speed_reg);
 +}
 +
-+static int jcore_pit_set_state_shutdown(struct clock_event_device *ced)
++static int jcore_spi_txrx(struct spi_master *master, struct spi_device *spi,
++			  struct spi_transfer *t)
 +{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++	struct jcore_spi *hw = spi_master_get_devdata(master);
 +
-+	return jcore_pit_disable(pit);
-+}
++	void __iomem *ctrl_reg = hw->base + CTRL_REG;
++	void __iomem *data_reg = hw->base + DATA_REG;
++	u32 xmit;
 +
-+static int jcore_pit_set_state_oneshot(struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++	/* data buffers */
++	const unsigned char *tx;
++	unsigned char *rx;
++	unsigned int len;
++	unsigned int count;
 +
-+	return jcore_pit_disable(pit);
-+}
++	jcore_spi_baudrate(hw, t->speed_hz);
 +
-+static int jcore_pit_set_state_periodic(struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++	xmit = hw->cs_reg | hw->speed_reg | JCORE_SPI_CTRL_XMIT;
++	tx = t->tx_buf;
++	rx = t->rx_buf;
++	len = t->len;
 +
-+	return jcore_pit_set(pit->periodic_delta, pit);
-+}
++	for (count = 0; count < len; count++) {
++		if (jcore_spi_wait(ctrl_reg))
++			break;
 +
-+static int jcore_pit_set_next_event(unsigned long delta,
-+				    struct clock_event_device *ced)
-+{
-+	struct jcore_pit *pit = container_of(ced, struct jcore_pit, ced);
++		writel(tx ? *tx++ : 0, data_reg);
++		writel(xmit, ctrl_reg);
 +
-+	return jcore_pit_set(delta, pit);
-+}
++		if (jcore_spi_wait(ctrl_reg))
++			break;
 +
-+static int jcore_pit_local_init(unsigned cpu)
-+{
-+	struct jcore_pit *pit = this_cpu_ptr(jcore_pit_percpu);
-+	unsigned buspd, freq;
-+
-+	pr_info("Local J-Core PIT init on cpu %u\n", pit->cpu);
-+
-+	buspd = __raw_readl(pit->base + REG_BUSPD);
-+	freq = DIV_ROUND_CLOSEST(NSEC_PER_SEC, buspd);
-+	pit->periodic_delta = DIV_ROUND_CLOSEST(NSEC_PER_SEC, HZ*buspd);
-+
-+	clockevents_config_and_register(&pit->ced, freq, 1, ULONG_MAX);
-+
-+	return 0;
-+}
-+
-+static int jcore_pit_local_shutdown(unsigned cpu)
-+{
-+	return 0;
-+}
-+
-+static irqreturn_t jcore_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct jcore_pit *pit = this_cpu_ptr(dev_id);
-+
-+	if (clockevent_state_oneshot(&pit->ced))
-+		jcore_pit_disable(pit);
-+
-+	pit->ced.event_handler(&pit->ced);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init jcore_pit_init(struct device_node *node)
-+{
-+	int err;
-+	unsigned pit_irq, cpu;
-+	unsigned long hwirq;
-+	u32 irqprio, enable_val;
-+
-+	jcore_pit_base = of_iomap(node, 0);
-+	if (!jcore_pit_base) {
-+		pr_err("Error: Cannot map base address for J-Core PIT\n");
-+		return -ENXIO;
++		if (rx)
++			*rx++ = readl(data_reg);
 +	}
 +
-+	pit_irq = irq_of_parse_and_map(node, 0);
-+	if (!pit_irq) {
-+		pr_err("Error: J-Core PIT has no IRQ\n");
-+		return -ENXIO;
-+	}
++	spi_finalize_current_transfer(master);
 +
-+	pr_info("Initializing J-Core PIT at %p IRQ %d\n",
-+		jcore_pit_base, pit_irq);
++	if (count < len)
++		return -EREMOTEIO;
 +
-+	jcore_cs.name = "jcore_pit_cs";
-+	jcore_cs.rating = 400;
-+	jcore_cs.read = jcore_clocksource_read;
-+	jcore_cs.mult = 1;
-+	jcore_cs.shift = 0;
-+	jcore_cs.mask = CLOCKSOURCE_MASK(32);
-+	jcore_cs.flags = CLOCK_SOURCE_IS_CONTINUOUS;
++	return 0;
++}
 +
-+	err = clocksource_register_hz(&jcore_cs, NSEC_PER_SEC);
-+	if (err) {
-+		pr_err("Error registering clocksource device: %d\n", err);
++static int jcore_spi_probe(struct platform_device *pdev)
++{
++	struct device_node *node = pdev->dev.of_node;
++	struct jcore_spi *hw;
++	struct spi_master *master;
++	struct resource *res;
++	u32 clock_freq;
++	struct clk *clk;
++	int err = -ENODEV;
++
++	master = spi_alloc_master(&pdev->dev, sizeof(struct jcore_spi));
++	if (!master)
 +		return err;
-+	}
 +
-+	sched_clock_register(jcore_sched_clock_read, 32, NSEC_PER_SEC);
++	/* Setup the master state. */
++	master->num_chipselect = 3;
++	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
++	master->transfer_one = jcore_spi_txrx;
++	master->set_cs = jcore_spi_chipsel;
++	master->dev.of_node = node;
++	master->bus_num = pdev->id;
 +
-+	jcore_pit_percpu = alloc_percpu(struct jcore_pit);
-+	if (!jcore_pit_percpu) {
-+		pr_err("Failed to allocate memory for clock event device\n");
-+		return -ENOMEM;
-+	}
++	hw = spi_master_get_devdata(master);
++	hw->master = master;
++	platform_set_drvdata(pdev, hw);
 +
-+	err = request_irq(pit_irq, jcore_timer_interrupt,
-+			  IRQF_TIMER | IRQF_PERCPU,
-+			  "jcore_pit", jcore_pit_percpu);
-+	if (err) {
-+		pr_err("pit irq request failed: %d\n", err);
-+		return err;
-+	}
++	/* Find and map our resources */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res)
++		goto exit_busy;
++	if (!devm_request_mem_region(&pdev->dev, res->start,
++				     resource_size(res), pdev->name))
++		goto exit_busy;
++	hw->base = devm_ioremap_nocache(&pdev->dev, res->start,
++					resource_size(res));
++	if (!hw->base)
++		goto exit_busy;
 +
 +	/*
-+	 * The J-Core PIT is not hard-wired to a particular IRQ, but
-+	 * integrated with the interrupt controller such that the IRQ it
-+	 * generates is programmable. The programming interface has a
-+	 * legacy field which was an interrupt priority for AIC1, but
-+	 * which is OR'd onto bits 2-5 of the generated IRQ number when
-+	 * used with J-Core AIC2, so set it to match these bits.
++	 * The SPI clock rate controlled via a configurable clock divider
++	 * which is applied to the reference clock. A 50 MHz reference is
++	 * most suitable for obtaining standard SPI clock rates, but some
++	 * designs may have a different reference clock, and the DT must
++	 * make the driver aware so that it can properly program the
++	 * requested rate. If the clock is omitted, 50 MHz is assumed.
 +	 */
-+	hwirq = irq_get_irq_data(pit_irq)->hwirq;
-+	irqprio = (hwirq >> 2) & PIT_PRIO_MASK;
-+	enable_val = (1U << PIT_ENABLE_SHIFT)
-+		   | (hwirq << PIT_IRQ_SHIFT)
-+		   | (irqprio << PIT_PRIO_SHIFT);
-+
-+	for_each_present_cpu(cpu) {
-+		struct jcore_pit *pit = per_cpu_ptr(jcore_pit_percpu, cpu);
-+
-+		pit->base = of_iomap(node, cpu);
-+		if (!pit->base) {
-+			pr_err("Unable to map PIT for cpu %u\n", cpu);
-+			continue;
-+		}
-+
-+		pit->ced.name = "jcore_pit";
-+		pit->ced.features = CLOCK_EVT_FEAT_PERIODIC
-+				  | CLOCK_EVT_FEAT_ONESHOT
-+				  | CLOCK_EVT_FEAT_PERCPU;
-+		pit->ced.cpumask = cpumask_of(cpu);
-+		pit->ced.rating = 400;
-+		pit->ced.irq = pit_irq;
-+		pit->ced.set_state_shutdown = jcore_pit_set_state_shutdown;
-+		pit->ced.set_state_periodic = jcore_pit_set_state_periodic;
-+		pit->ced.set_state_oneshot = jcore_pit_set_state_oneshot;
-+		pit->ced.set_next_event = jcore_pit_set_next_event;
-+
-+		pit->cpu = cpu;
-+		pit->enable_val = enable_val;
++	clock_freq = 50000000;
++	clk = devm_clk_get(&pdev->dev, "ref_clk");
++	if (!IS_ERR_OR_NULL(clk)) {
++		if (clk_enable(clk) == 0)
++			clock_freq = clk_get_rate(clk);
++		else
++			dev_warn(&pdev->dev, "could not enable ref_clk\n");
 +	}
++	hw->clock_freq = clock_freq;
 +
-+	cpuhp_setup_state(CPUHP_AP_JCORE_TIMER_STARTING,
-+			  "AP_JCORE_TIMER_STARTING",
-+			  jcore_pit_local_init, jcore_pit_local_shutdown);
++	/* Initialize all CS bits to high. */
++	hw->cs_reg = JCORE_SPI_CTRL_CS_BITS;
++	jcore_spi_baudrate(hw, 400000);
++
++	/* Register our spi controller */
++	err = devm_spi_register_master(&pdev->dev, master);
++	if (err)
++		goto exit;
 +
 +	return 0;
++
++exit_busy:
++	err = -EBUSY;
++exit:
++	platform_set_drvdata(pdev, NULL);
++	spi_master_put(master);
++	return err;
 +}
 +
-+CLOCKSOURCE_OF_DECLARE(jcore_pit, "jcore,pit", jcore_pit_init);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 242bf53..e95ed7d 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -50,6 +50,7 @@ enum cpuhp_state {
- 	CPUHP_AP_ARM_ARCH_TIMER_STARTING,
- 	CPUHP_AP_ARM_GLOBAL_TIMER_STARTING,
- 	CPUHP_AP_DUMMY_TIMER_STARTING,
-+	CPUHP_AP_JCORE_TIMER_STARTING,
- 	CPUHP_AP_EXYNOS4_MCT_TIMER_STARTING,
- 	CPUHP_AP_ARM_TWD_STARTING,
- 	CPUHP_AP_METAG_TIMER_STARTING,
++static const struct of_device_id jcore_spi_of_match[] = {
++	{ .compatible = "jcore,spi2" },
++	{},
++};
++
++static struct platform_driver jcore_spi_driver = {
++	.probe = jcore_spi_probe,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = jcore_spi_of_match,
++	},
++};
++
++module_platform_driver(jcore_spi_driver);
++
++MODULE_DESCRIPTION("J-Core SPI driver");
++MODULE_AUTHOR("Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:" DRV_NAME);
 -- 
 2.8.1
 
