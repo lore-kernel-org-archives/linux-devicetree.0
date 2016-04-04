@@ -1,79 +1,46 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH v12 8/9] add TC G210 platform driver
-Date: Mon, 4 Apr 2016 11:48:23 +0100
-Message-ID: <57024677.2060009@synopsys.com>
-References: <cover.1459448160.git.jpinto@synopsys.com>
- <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
- <20160404051546.GE17806@rob-hp-laptop>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 02/16] arm64: dts: add sp804 timer node for Hi6220
+Date: Mon, 4 Apr 2016 13:21:00 +0200
+Message-ID: <CACRpkdZ=_86Rhc+ei+3uE0dda9+onC8pQwosheMfEj4tOqmcDA@mail.gmail.com>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+	<1459589383-16914-3-git-send-email-guodong.xu@linaro.org>
+	<CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
+	<20160404014359.GA15178@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <20160404051546.GE17806@rob-hp-laptop>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: tomas.winkler@intel.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160404014359.GA15178@leoy-linaro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Guodong Xu <guodong.xu@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, XinWei Kong <kong.kongxinwei@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 4, 2016 at 3:43 AM, Leo Yan <leo.yan@linaro.org> wrote:
+> On Sun, Apr 03, 2016 at 09:23:42PM +0200, Linus Walleij wrote:
+>> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
 
-Hi Rob,
+>> By chance the code in the driver will allow just one clock and
+>> will then assume that both the bus to the timer and the timer
+>> itself is clocked from the same clock. But I highly doubt that this
+>> is the case.
+>
+> This patch has been sent out for review previously [1]; So I refered
+> other platforms and changed to only enable apb bus clock due I have
+> not found timer enabling bits in Hi6220's spec.
 
-On 4/4/2016 6:15 AM, Rob Herring wrote:
-> On Thu, Mar 31, 2016 at 07:57:21PM +0100, Joao Pinto wrote:
->> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
->>
->> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
->> ---
+This is not about enabling/disabling the clock(s) to the timer.
+It doesn't matter if these clocks are always on.
 
-[snip]
+It is about determining the *frequency* of the timers.
 
->> +
->> +Required properties:
->> +- compatible	: compatible list must contain the PHY type & version:
->> +			"snps, g210-tc-6.00-20bit"
->> +			"snps, g210-tc-6.00-40bit"
-> Remove the space              ^
-> 
->> +		  complemented with the Controller IP version:
->> +			"snps, dwc-ufshcd-1.40a"
-> 
-> ditto
+It is vital that the timer driver get the right frequency of the clock
+to the block from the clock implementation, and I do not think
+it is the same as the "apb_pclk".
 
-Ok, will do that!
+The thing is that of course "any frequency" will
+work but what you will notice is that the timer runs very
+weirdly compared to wall-clock time unless the right clock
+yielding the right frequency has been specified here.
 
-> 
-> Combining the phy and controller compatible strings is a bit strange. 
-> Generally, they would be separate nodes using the common phy binding.
-> 
-
-Correct, but in this case is just the compatibility string is just to tell the
-dw ufs host that it has a 40-bit or a 20-bit test chip connected. The Test chip
-is initialized by a unipro command sequence and there is no more ops related to it.
-
->> +		  complemented with the JEDEC version:
->> +			"jedec,ufs-1.1"
->> +			"jedec,ufs-2.0"
->> +
->> +- reg		: <registers mapping>
->> +- interrupts	: <interrupt mapping for UFS host controller IRQ>
->> +
->> +Example for a setup using a 1.40a DWC Controller with a 6.00 G210 40-bit TC:
->> +	dwc_ufs@d0000000 {
-> 
-> No underscores please.
-
-Ok, will update it.
-
-> 
->> +		compatible = "snps, g210-tc-6.00-40bit",
->> +			     "snps, dwc-ufshcd-1.40a",
->> +			     "jedec,ufs-2.0";
->> +		reg = < 0xd0000000 0x10000 >;
->> +		interrupts = < 24 >;
->> +	};
-> 
-
-Will send a v13 with these tweaks.
-
-Thanks.
-
+Yours,
+Linus Walleij
