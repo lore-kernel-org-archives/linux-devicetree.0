@@ -1,48 +1,77 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] ata: ahci-platform: Add ports-implemented DT
- bindings.
-Date: Mon, 4 Apr 2016 00:15:56 -0500
-Message-ID: <20160404051556.GH17806@rob-hp-laptop>
-References: <1459497178-31090-1-git-send-email-srinivas.kandagatla@linaro.org>
- <1459497178-31090-3-git-send-email-srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 02/16] arm64: dts: add sp804 timer node for Hi6220
+Date: Mon, 4 Apr 2016 00:16:35 -0500
+Message-ID: <20160404051635.GQ17806@rob-hp-laptop>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+ <1459589383-16914-3-git-send-email-guodong.xu@linaro.org>
+ <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459497178-31090-3-git-send-email-srinivas.kandagatla@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: devicetree@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, jmaggard10@gmail.com, linux-ide@vger.kernel.org, Tejun Heo <tj@kernel.org>, Andy Gross <andy.gross@linaro.org>, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Guodong Xu <guodong.xu@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, XinWei Kong <kong.kongxinwei@hisilicon.com>, Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 01, 2016 at 08:52:57AM +0100, Srinivas Kandagatla wrote:
-> On some SOCs PORTS_IMPL register value is never programmed by the
-> firmware and left at zero value. Which means that no sata ports are
-> available for software. AHCI driver used to cope up with this by
-> fabricating the port_map if the PORTS_IMPL register is read zero,
-> but recent patch broke this workaround as zero value was valid for
-> NVMe disks.
+On Sun, Apr 03, 2016 at 09:23:42PM +0200, Linus Walleij wrote:
+> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
 > 
-> This patch adds ports-implemented DT bindings as workaround for this issue
-> in a way that DT can can override the PORTS_IMPL register in cases where
-> the firmware did not program it already.
-> 
-> Fixes: 566d1827df2e ("libata: disable forced PORTS_IMPL for >= AHCI 1.3)
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Acked-by: Tejun Heo <tj@kernel.org>
-> Reviewed-by: Andy Gross <andy.gross@linaro.org>
-> ---
->  Documentation/devicetree/bindings/ata/ahci-platform.txt | 4 ++++
->  drivers/ata/ahci_platform.c                             | 3 +++
->  2 files changed, 7 insertions(+)
+> > From: Leo Yan <leo.yan@linaro.org>
+> >
+> > Add sp804 timer for hi6220, so it can be used as broadcast timer.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+> > ---
+> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > index ad1f1eb..82c4756 100644
+> > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > @@ -209,5 +209,14 @@
+> >                         clock-names = "uartclk", "apb_pclk";
+> >                         status = "disabled";
+> >                 };
+> > +
+> > +               dual_timer0: dual_timer@f8008000 {
 
-Acked-by: Rob Herring <robh@kernel.org>
+timer@...
+
+> > +                       compatible = "arm,sp804", "arm,primecell";
+> > +                       reg = <0x0 0xf8008000 0x0 0x1000>;
+> > +                       interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&ao_ctrl 27>;
+> > +                       clock-names = "apb_pclk";
+> 
+> How can this work? You only give the apb_pclk for clocking the
+> bus to the timer.
+> 
+> Most platforms using this driver has something like this:
+> 
+>                 timer01: timer@10104000 {
+>                         compatible = "arm,sp804", "arm,primecell";
+>                         reg = <0x10104000 0x1000>;
+>                         interrupt-parent = <&intc_dc1176>;
+>                         interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>, <0 9
+> IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&timclk>, <&timclk>, <&pclk>;
+>                         clock-names = "timer1", "timer2", "apb_pclk";
+>                 };
+> 
+> It then reads the two clocks in the beginning of clocks() to
+> determine the frequency of each timer.
+> 
+> By chance the code in the driver will allow just one clock and
+> will then assume that both the bus to the timer and the timer
+> itself is clocked from the same clock. But I highly doubt that this
+> is the case.
+
+I believe 1 clock was allowed for early bindings, but yes it should be 
+3.
+
+Rob
