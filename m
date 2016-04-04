@@ -1,35 +1,57 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] rtc: omap: Support ext_wakeup configuration
-Date: Mon, 4 Apr 2016 15:40:47 -0700
-Message-ID: <20160404224046.GA17042@atomide.com>
-References: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Mon, 4 Apr 2016 23:52:01 +0100
+Message-ID: <20160404225200.GA1615@svinekod>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459785403-1725-1-git-send-email-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-* Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [160404 08:57]:
-> Support configuration of ext_wakeup sources. This patch makes it
-> possible to enable ext_wakeup and set it's polarity, depending on board
-> configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
-> notify about power-button presses. Handling power-button presses enables
-> to recover from RTC-only power states correctly.
+On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
+> This is a proposal for adding ACPI support for pin controller
+> configuration.
+> 
+> It has been developed to enable the MinnowBoard and IoT community
+> by providing an easy way to specify pin multiplexing and
+> pin configuration.
+> 
+> This proposal is based on using _DSD properties to specify device
+> states and configuration nodes and it follows closely the device
+> tree model. Device states are defined using the Device Properties
+> format and the configuration nodes are defined using the
+> Hierarchical Properties Extension format. The generic properties
+> for the configuration nodes are the same as the ones for device
+> tree, while pincontroller drivers can also define custom ones.
 
-I suggest you just set this pin up as a minimal gpiochip. That way
-we can use the standard binding :) And if we get lucky, this pin can
-also trigger during runtime.
+>From a look of the Documentation addition, and of the current uses of
+pinctrl-names in device tree bindings, one reason for requiring multiple
+pinctrl states is power management. Given that, I'm somewhat concerned by this,
+as it goes against the usual ACPI model of abstracting this sort of thing
+behind power control methods.
 
-Regards,
+To the best of my knowledge, that goes against the ASWG's expectations on how
+_DSD will be used (per [1]). Charles, please correct me if that document is no
+longer representative.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Additionally, pinctrl has some cross-cutting concerns (e.g. mutually exclusive
+device usage due to a shared pin), and I can imagine that may interact poorly
+with any AML or firmware assumptions about the state of the world, as there's
+no mechanism present to notify those of changes to pins.
+
+I think that this is a class of problem which needs to be raised with the ASWG,
+and solved in an ACPI-native fashion, rather than simply copying properties
+from DT using _DSD. If nothing else, the restrictions on FW and AML would need
+to be specified.
+
+Thanks,
+Mark.
+
+[1] https://lists.acpica.org/pipermail/dsd/2015-September/000019.html
