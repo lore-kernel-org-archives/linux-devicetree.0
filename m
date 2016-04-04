@@ -1,50 +1,79 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v7, 3/5] dt: move guts devicetree doc out of powerpc directory
-Date: Mon, 4 Apr 2016 00:15:52 -0500
-Message-ID: <20160404051552.GG17806@rob-hp-laptop>
-References: <1459480051-3701-1-git-send-email-yangbo.lu@nxp.com>
-	<1459480051-3701-4-git-send-email-yangbo.lu@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v12 8/9] add TC G210 platform driver
+Date: Mon, 4 Apr 2016 00:15:46 -0500
+Message-ID: <20160404051546.GE17806@rob-hp-laptop>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+ <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459480051-3701-4-git-send-email-yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scott.wood-3arQi8VN3Tc@public.gmane.org, xiaobo.xie-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, leoyang.li-3arQi8VN3Tc@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: tomas.winkler@intel.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 01, 2016 at 11:07:29AM +0800, Yangbo Lu wrote:
-> Move guts devicetree doc to Documentation/devicetree/bindings/soc/fsl/
-> since it's used by not only PowerPC but also ARM. And add a specification
-> for 'little-endian' property.
+On Thu, Mar 31, 2016 at 07:57:21PM +0100, Joao Pinto wrote:
+> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
 > 
-> Signed-off-by: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
 > ---
-> Changes for v2:
-> 	- None
-> Changes for v3:
-> 	- None
-> Changes for v4:
-> 	- Added this patch
-> Changes for v5:
-> 	- Modified the description for little-endian property
-> Changes for v6:
-> 	- None
-> Changes for v7:
-> 	- None
-> ---
->  Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt | 3 +++
->  1 file changed, 3 insertions(+)
->  rename Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt (91%)
+> Changes v11->v12 (Tomas Winkler):
+> - custom_phy_initialization replaced by phy_initialization
+> Changes v10->v11 (Arnd Bergmann):
+> - vops structs are now passed in .data
+> Changes v0->v10:
+> - This patch only appeared in v10
+> 
+>  .../devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt |  26 +++++
+>  drivers/scsi/ufs/Kconfig                           |   9 ++
+>  drivers/scsi/ufs/Makefile                          |   1 +
+>  drivers/scsi/ufs/tc-dwc-g210-pltfrm.c              | 113 +++++++++++++++++++++
+>  4 files changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+>  create mode 100644 drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+> new file mode 100644
+> index 0000000..6ec9647
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+> @@ -0,0 +1,26 @@
+> +* Universal Flash Storage (UFS) DesignWare Host Controller
+> +
+> +DWC_UFS nodes are defined to describe on-chip UFS host controllers and MPHY.
+> +Each UFS controller instance should have its own node.
+> +
+> +Required properties:
+> +- compatible	: compatible list must contain the PHY type & version:
+> +			"snps, g210-tc-6.00-20bit"
+> +			"snps, g210-tc-6.00-40bit"
+Remove the space              ^
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> +		  complemented with the Controller IP version:
+> +			"snps, dwc-ufshcd-1.40a"
+
+ditto
+
+Combining the phy and controller compatible strings is a bit strange. 
+Generally, they would be separate nodes using the common phy binding.
+
+> +		  complemented with the JEDEC version:
+> +			"jedec,ufs-1.1"
+> +			"jedec,ufs-2.0"
+> +
+> +- reg		: <registers mapping>
+> +- interrupts	: <interrupt mapping for UFS host controller IRQ>
+> +
+> +Example for a setup using a 1.40a DWC Controller with a 6.00 G210 40-bit TC:
+> +	dwc_ufs@d0000000 {
+
+No underscores please.
+
+> +		compatible = "snps, g210-tc-6.00-40bit",
+> +			     "snps, dwc-ufshcd-1.40a",
+> +			     "jedec,ufs-2.0";
+> +		reg = < 0xd0000000 0x10000 >;
+> +		interrupts = < 24 >;
+> +	};
