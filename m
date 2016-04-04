@@ -1,36 +1,72 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] Documentation: fsl-mc: binding updates for MSIs,
- ranges, PHYs
-Date: Mon, 4 Apr 2016 00:16:05 -0500
-Message-ID: <20160404051605.GK17806@rob-hp-laptop>
-References: <1459544069-12852-1-git-send-email-stuart.yoder@nxp.com>
+Subject: Re: [PATCH v2 06/16] arm64: dts: add Hi6220 spi configuration nodes
+Date: Mon, 4 Apr 2016 00:16:38 -0500
+Message-ID: <20160404051638.GR17806@rob-hp-laptop>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+ <1459589383-16914-7-git-send-email-guodong.xu@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459544069-12852-1-git-send-email-stuart.yoder@nxp.com>
+In-Reply-To: <1459589383-16914-7-git-send-email-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stuart Yoder <stuart.yoder@nxp.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, german.rivera@freescale.com, Stuart Yoder <stuart.yoder@freescale.com>, linux-kernel@vger.kernel.org, leoyang.li@nxp.com
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: xuwei5@hisilicon.com, mark.rutland@arm.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Zhong Kaihua <zhongkaihua@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 01, 2016 at 03:54:29PM -0500, Stuart Yoder wrote:
-> From: Stuart Yoder <stuart.yoder@freescale.com>
+On Sat, Apr 02, 2016 at 05:29:33PM +0800, Guodong Xu wrote:
+> From: Zhong Kaihua <zhongkaihua@huawei.com>
 > 
-> -The Freescale Management Complex and all associated objects
->  use message interrupts, and thus an msi-parent is required.
+> Add Hi6220 spi configuration nodes
 > 
-> -Define a ranges property to specify the mapping between
->  the MC address space and the system address space.
-> 
-> -The fsl-mc node may optionally have dpmac sub-nodes that describe
->  the relationship between the Ethernet MACs which belong to the MC
->  and the Ethernet PHYs on the system board.
-> 
-> Signed-off-by: Stuart Yoder <stuart.yoder@nxp.com>
-> Acked-by: J. German Rivera <German.Rivera@nxp.com>
+> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
+> Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
 > ---
->  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |   81 +++++++++++++++++++-
->  1 file changed, 80 insertions(+), 1 deletion(-)
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   |  1 +
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 15 +++++++++++++++
+>  arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 21 +++++++++++++++++++++
+>  3 files changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index 985a2ad..5c9ee31 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -20,6 +20,7 @@
+>  		serial1 = &uart1; /* BT UART */
+>  		serial2 = &uart2; /* LS Expansion UART0 */
+>  		serial3 = &uart3; /* LS Expansion UART1 */
+> +		spi0 = &spi_0;
 
-Acked-by: Rob Herring <robh@kernel.org>
+You shouldn't really need an alias for SPI.
+
+>  	};
+>  
+>  	chosen {
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index e96cc3c..dcca83b 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -585,5 +585,20 @@
+>  			clock-names = "apb_pclk";
+>  			status = "ok";
+>  		};
+> +
+> +		spi_0: spi@f7106000 {
+> +			compatible = "arm,pl022", "arm,primecell";
+> +			reg = <0x0 0xf7106000 0x0 0x1000>;
+> +			interrupts = <0 50 4>;
+> +			bus-id = <0>;
+> +			enable-dma = <0>;
+> +			clocks = <&sys_ctrl HI6220_SPI_CLK>;
+> +			clock-names = "apb_pclk";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
+> +			num-cs = <1>;
+> +			cs-gpios = <&gpio6 2 0>;
+> +			status = "ok";
+
+You only need an ok to override a disabled status, so I think you can 
+drop this. Or disable by default and let boards override it if that 
+makes sense.
+
+Rob
