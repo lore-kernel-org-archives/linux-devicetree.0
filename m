@@ -1,77 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 02/16] arm64: dts: add sp804 timer node for Hi6220
-Date: Mon, 4 Apr 2016 00:16:35 -0500
-Message-ID: <20160404051635.GQ17806@rob-hp-laptop>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
- <1459589383-16914-3-git-send-email-guodong.xu@linaro.org>
- <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
+Subject: Re: [PATCH v6 14/24] of/unittest: convert to use an explicit i2c mux
+ core
+Date: Mon, 4 Apr 2016 00:16:28 -0500
+Message-ID: <20160404051628.GO17806@rob-hp-laptop>
+References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
+ <1459673574-11440-15-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
+In-Reply-To: <1459673574-11440-15-git-send-email-peda@lysator.liu.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Guodong Xu <guodong.xu@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, XinWei Kong <kong.kongxinwei@hisilicon.com>, Leo Yan <leo.yan@linaro.org>
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Matt
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 03, 2016 at 09:23:42PM +0200, Linus Walleij wrote:
-> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
+On Sun, Apr 03, 2016 at 10:52:44AM +0200, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
 > 
-> > From: Leo Yan <leo.yan@linaro.org>
-> >
-> > Add sp804 timer for hi6220, so it can be used as broadcast timer.
-> >
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> > Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-> > ---
-> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > index ad1f1eb..82c4756 100644
-> > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> > @@ -209,5 +209,14 @@
-> >                         clock-names = "uartclk", "apb_pclk";
-> >                         status = "disabled";
-> >                 };
-> > +
-> > +               dual_timer0: dual_timer@f8008000 {
+> Allocate an explicit i2c mux core to handle parent and child adapters
+> etc. Update the select op to be in terms of the i2c mux core instead
+> of the child adapter.
+> 
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  drivers/of/unittest.c | 40 +++++++++++++++-------------------------
+>  1 file changed, 15 insertions(+), 25 deletions(-)
 
-timer@...
+I assume you ran the unittest...
 
-> > +                       compatible = "arm,sp804", "arm,primecell";
-> > +                       reg = <0x0 0xf8008000 0x0 0x1000>;
-> > +                       interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> > +                                    <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-> > +                       clocks = <&ao_ctrl 27>;
-> > +                       clock-names = "apb_pclk";
-> 
-> How can this work? You only give the apb_pclk for clocking the
-> bus to the timer.
-> 
-> Most platforms using this driver has something like this:
-> 
->                 timer01: timer@10104000 {
->                         compatible = "arm,sp804", "arm,primecell";
->                         reg = <0x10104000 0x1000>;
->                         interrupt-parent = <&intc_dc1176>;
->                         interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>, <0 9
-> IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&timclk>, <&timclk>, <&pclk>;
->                         clock-names = "timer1", "timer2", "apb_pclk";
->                 };
-> 
-> It then reads the two clocks in the beginning of clocks() to
-> determine the frequency of each timer.
-> 
-> By chance the code in the driver will allow just one clock and
-> will then assume that both the bus to the timer and the timer
-> itself is clocked from the same clock. But I highly doubt that this
-> is the case.
-
-I believe 1 clock was allowed for early bindings, but yes it should be 
-3.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
