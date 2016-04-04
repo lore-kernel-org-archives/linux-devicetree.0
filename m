@@ -1,69 +1,68 @@
-From: Sreedhar Sambangi <ssambang@codeaurora.org>
-Subject: [PATCH 1/2] qcom: ipq4019: Add regulator support to DK04 device tree
-Date: Mon,  4 Apr 2016 14:08:10 -0700
-Message-ID: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] clk: sunxi: Add CSI (camera's Sensors
+ Interface) module clock driver for sun[457]i
+Date: Mon, 4 Apr 2016 14:24:50 -0700
+Message-ID: <20160404212450.GP4227@lukather>
+References: <1458204222-31149-1-git-send-email-yassinjaffer@gmail.com>
+ <1458204222-31149-2-git-send-email-yassinjaffer@gmail.com>
+ <20160319235905.GA16539@rob-hp-laptop>
+ <20160402011436.GA18567@codeaurora.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l3ej7W/Jb2pB3qL2"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBMFXRO4AKGQESIT6UKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20160402011436.GA18567-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Reinder de Haan <patchesrdh-I1/eAgTnXDYAvxtiuMwx3w@public.gmane.org>, Jens Kuske <jenskuske-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM/Allwinner sunXi SoC support" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-    This adds the regulator nodes to DK04 device tree to support
+--l3ej7W/Jb2pB3qL2
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Change-Id: I9c1df0e720a330bf6db1889fd2247f6a70ea6faa
-Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
----
- .../bindings/regulator/ipq4019-regulator.txt          | 19 +++++++++++++++++++
- arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi         | 11 +++++++++++
- 2 files changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+Hi Stephen
 
-diff --git a/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-new file mode 100644
-index 0000000..9d934a4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-@@ -0,0 +1,19 @@
-+* Qualcomm Technologies, Inc. IPQ4019 regulators
-+
-+Required properties:
-+- compatible		: Must be "regulator-ipq4019".
-+- states		: Selection of available voltages and corresponding values
-+- reg			: Register address for controlling LDO
-+- mask			: Mask value for switching voltages
-+Example:
-+
-+	vccq_sd0: regulator@0 {
-+		compatible = "qcom,regulator-ipq4019";
-+		regulator-name = "SD0 VccQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3000000>;
-+		states = <3000000 0x3
-+			1800000 0x1>;
-+		reg = <0x01948000 0x4>;
-+		mask = <0x3>;
-+	};
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
-index 9f3c864..566e239 100644
---- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
-@@ -155,5 +155,16 @@
- 		watchdog@b017000 {
- 			status = "ok";
- 		};
-+
-+		vccq_sd0: regulator@0 {
-+			compatible = "qcom,regulator-ipq4019";
-+			regulator-name = "SD0 VccQ";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <3000000>;
-+			states = <3000000 0x3
-+				1800000 0x1>;
-+			reg = <0x01948000 0x4>;
-+			mask = <0x3>;
-+		};
- 	};
- };
---
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On Fri, Apr 01, 2016 at 06:14:36PM -0700, Stephen Boyd wrote:
+> On 03/19, Rob Herring wrote:
+> > On Thu, Mar 17, 2016 at 07:43:42PM +1100, yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> > > From: Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > 
+> > > This patch adds a composite clock type consisting of
+> > > a clock gate, mux, configurable dividers, and a reset control.
+> > > 
+> > > Signed-off-by: Yassin Jaffer <yassinjaffer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/clock/sunxi.txt |   1 +
+> > 
+> > I wish someone would just add all the sunxi clocks in one pass instead 
+> > of one by one.
+> > 
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> Me too!
+
+I understand, but it's probably not going to happen. The clock tree is
+massive, and obviously you have to multiply that by the number of SoCs
+we have.
+
+And to be honest, I don't really see the point of merging clock
+drivers that have never been tested, and might be massively broken,
+especially now that we have this ABI requirement for the DT, and we
+can't adjust the binding when we actually start using that clock.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--l3ej7W/Jb2pB3qL2--
