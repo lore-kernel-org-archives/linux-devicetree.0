@@ -1,57 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Mon, 4 Apr 2016 23:52:01 +0100
-Message-ID: <20160404225200.GA1615@svinekod>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/16] arm64: dts: add Hi6220 pinctrl configuration
+ nodes
+Date: Mon, 4 Apr 2016 15:54:53 -0700
+Message-ID: <20160404225453.GD16484@atomide.com>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+ <1459589383-16914-6-git-send-email-guodong.xu@linaro.org>
+ <CACRpkdaQdVL2A=0-8qQLMa0BBpxp4dugyT91DJW2kUm3BcB9aw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, charles.garcia-tobin@arm.com
+In-Reply-To: <CACRpkdaQdVL2A=0-8qQLMa0BBpxp4dugyT91DJW2kUm3BcB9aw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
-> This is a proposal for adding ACPI support for pin controller
-> configuration.
+* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [160403 12:32]:
+> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 > 
-> It has been developed to enable the MinnowBoard and IoT community
-> by providing an easy way to specify pin multiplexing and
-> pin configuration.
+> > From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >
+> > Add Hi6220 pinctrl configuration nodes
+> >
+> > Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
-> This proposal is based on using _DSD properties to specify device
-> states and configuration nodes and it follows closely the device
-> tree model. Device states are defined using the Device Properties
-> format and the configuration nodes are defined using the
-> Hierarchical Properties Extension format. The generic properties
-> for the configuration nodes are the same as the ones for device
-> tree, while pincontroller drivers can also define custom ones.
+> Nah. Acked-by is fine, but I didn't write handle or write this
+> code. :)
+> 
+> No ACK from Haojian? Tony? Looks allright?
 
->From a look of the Documentation addition, and of the current uses of
-pinctrl-names in device tree bindings, one reason for requiring multiple
-pinctrl states is power management. Given that, I'm somewhat concerned by this,
-as it goes against the usual ACPI model of abstracting this sort of thing
-behind power control methods.
+Looks OK to me, I guess no driver changes needed (again :)?
 
-To the best of my knowledge, that goes against the ASWG's expectations on how
-_DSD will be used (per [1]). Charles, please correct me if that document is no
-longer representative.
-
-Additionally, pinctrl has some cross-cutting concerns (e.g. mutually exclusive
-device usage due to a shared pin), and I can imagine that may interact poorly
-with any AML or firmware assumptions about the state of the world, as there's
-no mechanism present to notify those of changes to pins.
-
-I think that this is a class of problem which needs to be raised with the ASWG,
-and solved in an ACPI-native fashion, rather than simply copying properties
-from DT using _DSD. If nothing else, the restrictions on FW and AML would need
-to be specified.
-
-Thanks,
-Mark.
-
-[1] https://lists.acpica.org/pipermail/dsd/2015-September/000019.html
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
