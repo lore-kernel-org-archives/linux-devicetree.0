@@ -1,77 +1,52 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: Re: [PATCH v5 2/2] clk: add artpec-6 clock controller
-Date: Mon, 4 Apr 2016 10:24:42 +0200
-Message-ID: <570224CA.7040500@axis.com>
-References: <cover.1459447089.git.larper@axis.com> <24806729fd9726fe79d315a3c88ecf1c9ea237ef.1459447089.git.larper@axis.com> <20160402013928.GF18567@codeaurora.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
+ driver
+Date: Mon, 4 Apr 2016 10:45:06 +0200
+Message-ID: <57022992.4060008@barix.com>
+References: <1457684989-13318-1-git-send-email-petr@barix.com>
+ <87fuvtbl26.fsf@intel.com> <56E76E5A.5060801@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20160402013928.GF18567@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E76E5A.5060801-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 04/02/2016 03:39 AM, Stephen Boyd wrote:
-> On 03/31, Lars Persson wrote:
->> diff --git a/drivers/clk/axis/Makefile b/drivers/clk/axis/Makefile
->> new file mode 100644
->> index 0000000..628c9d3
->> --- /dev/null
->> +++ b/drivers/clk/axis/Makefile
->> @@ -0,0 +1 @@
->> +obj-$(CONFIG_MACH_ARTPEC6)	+= clk-artpec6.o
->> diff --git a/drivers/clk/axis/clk-artpec6.c b/drivers/clk/axis/clk-artpec6.c
->> new file mode 100644
->> index 0000000..cf716f1
->> --- /dev/null
-
-[snip]
+On 15.03.2016 03:07, David Lechner wrote:
+> On 03/14/2016 02:00 AM, Felipe Balbi wrote:
+>>
+>> Hi,
+>>
+>> why isn't this an actual clock phandle ? Driver could, then, use
+>> clk_get_rate() to figure this one out. You could just use a fixed clock
+>> here to satisfy the clock API.
+>>
 >
->> +
->> +	/* Read PLL1 factors configured by boot strap pins. */
->> +	pll_mode = (readl(clkdata->syscon_base) >> 6) & 3;
->> +	switch (pll_mode) {
->> +	case 0:		/* DDR3-2133 mode */
->> +		pll_m = 4;
->> +		pll_n = 85;
->> +		break;
->> +	case 1:		/* DDR3-1866 mode */
->> +		pll_m = 6;
->> +		pll_n = 112;
->> +		break;
->> +	case 2:		/* DDR3-1600 mode */
->> +		pll_m = 4;
->> +		pll_n = 64;
->> +		break;
->> +	case 3:		/* DDR3-1333 mode */
->> +		pll_m = 8;
->> +		pll_n = 106;
->> +		break;
->> +	}
->> +
->> +	clkdata->clk_table[ARTPEC6_CLK_CPU] =
->> +	    clk_register_fixed_factor(NULL, "cpu", sys_refclk_name, 0, pll_n,
->> +				      pll_m);
->> +	clkdata->clk_table[ARTPEC6_CLK_CPU_PERIPH] =
->> +	    clk_register_fixed_factor(NULL, "cpu_periph", "cpu", 0, 1, 2);
->> +
->> +	/* EPROBE_DEFER on the apb_clock is not handled in amba devices. */
->
-> Shouldn't we fix that then?
+> I've actually been working on getting the da8xx ohci driver working 
+> with device tree. It has similar clock issues (in fact, the ohci clock 
+> is a child of the musb clock). Petr, give me a day or two and will 
+> have post some patches. It will have a clock that can be used here for 
+> clk_get_rate().
 
-Marek Szyprowski recently tried to fix this, but Russel NAKed the change 
-due to userspace breakage:
-https://lkml.org/lkml/2016/2/15/555
+Hi David,
 
+I'm trying to move on with my USB2.0 patch set because my projects is 
+blocked waiting for it.
+I've seen your PHY patch but it contains only on/off functions and does 
+not handle the clocks, which IMHO should be moved to the PHY driver as 
+well if we decided to do it properly.
 
->
->> +	clkdata->clk_table[ARTPEC6_CLK_UART_PCLK] =
->> +	    clk_register_fixed_factor(NULL, "uart_pclk", "cpu", 0, 1, 8);
->> +	clkdata->clk_table[ARTPEC6_CLK_UART_REFCLK] =
->> +	    clk_register_fixed_rate(NULL, "uart_ref", sys_refclk_name, 0,
->> +				    50000000);
->
+How shall we proceed if both of us are working on the same piece of code?
+
+Thanks
+Petr
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
