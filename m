@@ -1,32 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 14/24] of/unittest: convert to use an explicit i2c mux
- core
-Date: Mon, 4 Apr 2016 00:16:28 -0500
-Message-ID: <20160404051628.GO17806@rob-hp-laptop>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se>
- <1459673574-11440-15-git-send-email-peda@lysator.liu.se>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Serial ports with non connected RTS/CTS
+Date: Mon, 4 Apr 2016 00:16:33 -0500
+Message-ID: <20160404051633.GP17806@rob-hp-laptop>
+References: <56A89C48.1040604@parkeon.com>
+ <57009DD6.2050006@hurleysoftware.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1459673574-11440-15-git-send-email-peda@lysator.liu.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>
-Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Matt
+In-Reply-To: <57009DD6.2050006-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Hurley <peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org>
+Cc: Martin Fuzzey <mfuzzey-mB3Nsq4MPf1BDgjK7y7TUQ@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 03, 2016 at 10:52:44AM +0200, Peter Rosin wrote:
-> From: Peter Rosin <peda@axentia.se>
-> 
-> Allocate an explicit i2c mux core to handle parent and child adapters
-> etc. Update the select op to be in terms of the i2c mux core instead
-> of the child adapter.
-> 
-> Signed-off-by: Peter Rosin <peda@axentia.se>
-> ---
->  drivers/of/unittest.c | 40 +++++++++++++++-------------------------
->  1 file changed, 15 insertions(+), 25 deletions(-)
+On Sat, Apr 02, 2016 at 09:36:38PM -0700, Peter Hurley wrote:
+> On 01/27/2016 02:30 AM, Martin Fuzzey wrote:
+> > Hi all,
+> > 
+> > currently, at least for 8250 based serial ports using of_serial, there is no way of indicating that the RTS / CTS lines, although supported by the UART, are not actually connected on the board.
+> > 
+> > This means that userspace needs to know about this and not use the CRTSCTS termios flag (otherwise no data is sent).
+> > 
+> > This is currently the case for Debian stattach for example (nettools 1.60) which unconditionally uses CRTSCTS (but the busybox version of slattach has a "-F" option that can be used to disable CRTSCTS).
+> > 
+> > Would it not be better to allow this situation to be described in the device tree?
+> > 
+> > Such an option already exists for the imx UART (""fsl,uart-has-rtscts")
+> > 
+> > of_serial already has the "auto-flow-control" DT property but, as stated in the documentation:
+> >     "The  driver is allowed to detect support for the capability even without this  property."
+> > 
+> > In the past there was a (since reverted) property "has-hw-flow-control"
+> > See
+> >     06aa82e "serial: uart: add hw flow control support configuration"
+> >     a6eec92 " Revert "serial: uart: add hw flow control support configuration"
+> > 
+> > However that just provided another (redundant) way of *activating* hardware flow control and did not allow it to be disactivated.
+> > 
+> > Would a new DT property "no-rtscts" to do this be acceptable?
 
-I assume you ran the unittest...
+Yes.
 
-Acked-by: Rob Herring <robh@kernel.org>
+It's really a "the h/w designers left CTS tied/floating inactive by 
+mistake" flag. What is done with RTS doesn't really matter. So just 
+"no-cts" perhaps.
+
+> > I think it would have to be a negative property to avoid breaking old device trees.
+
+Agreed. 
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
