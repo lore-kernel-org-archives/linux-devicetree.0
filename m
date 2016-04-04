@@ -1,56 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/1] of: Empty of_read_number when !OF
-Date: Mon, 4 Apr 2016 00:16:24 -0500
-Message-ID: <20160404051624.GN17806@rob-hp-laptop>
-References: <1459686365-19837-1-git-send-email-alexanders83@web.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for hisilicon random
+ number generator
+Date: Mon, 4 Apr 2016 00:15:49 -0500
+Message-ID: <20160404051549.GF17806@rob-hp-laptop>
+References: <1459474664-11264-1-git-send-email-wangkefeng.wang@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1459686365-19837-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1459474664-11264-1-git-send-email-wangkefeng.wang@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, xuwei5@hisilicon.com, linux-crypto@vger.kernel.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Apr 03, 2016 at 02:26:05PM +0200, Alexander Stein wrote:
-> Introduce empty of_read_number when CONFIG_OF is not defined. This allows
-> us to compile test gpio drivers.
-
-The only user I see is sodaville. That case should use 
-of_property_read_u32 instead.
-
-Rob
-
+On Fri, Apr 01, 2016 at 09:37:43AM +0800, Kefeng Wang wrote:
+> Document the devicetree bindings for the random number generator
+> found on Hisilicon Hip04 and Hip05 soc.
 > 
-> Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 > ---
-> Changes in v2:
-> * rebased to current gpio's for-next branch
+>  Documentation/devicetree/bindings/rng/hisi-rng.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/hisi-rng.txt
 > 
->  include/linux/of.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 7fcb681baadf..f0564a2f0a98 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -672,6 +672,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
->  {
->  }
->  
-> +static inline u64 of_read_number(const __be32 *cell, int size)
-> +{
-> +	return 0;
-> +}
+> diff --git a/Documentation/devicetree/bindings/rng/hisi-rng.txt b/Documentation/devicetree/bindings/rng/hisi-rng.txt
+> new file mode 100644
+> index 0000000..80f29b6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/hisi-rng.txt
+> @@ -0,0 +1,12 @@
+> +Hisilicon Random Number Generator
 > +
->  #define of_match_ptr(_ptr)	NULL
->  #define of_match_node(_matches, _node)	NULL
->  #endif /* CONFIG_OF */
+> +Required properties:
+> +- compatible : Should be "hisilicon,hisi-rng"
+
+hisi is a bit redundant with hisilicon and please define SoC specific 
+compatible strings.
+
+> +- reg : Offset and length of the register set of this block
+> +
+> +Example:
+> +
+> +rng@d1010000 {
+> +	compatible = "hisilicon,hisi-rng";
+> +	reg = <0xd1010000 0x100>;
+> +};
 > -- 
-> 2.8.0
+> 1.7.12.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
