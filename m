@@ -1,72 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 06/16] arm64: dts: add Hi6220 spi configuration nodes
-Date: Mon, 4 Apr 2016 00:16:38 -0500
-Message-ID: <20160404051638.GR17806@rob-hp-laptop>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
- <1459589383-16914-7-git-send-email-guodong.xu@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] of: Empty of_read_number when !OF
+Date: Mon, 4 Apr 2016 00:16:24 -0500
+Message-ID: <20160404051624.GN17806@rob-hp-laptop>
+References: <1459686365-19837-1-git-send-email-alexanders83@web.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1459589383-16914-7-git-send-email-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: xuwei5@hisilicon.com, mark.rutland@arm.com, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kong.kongxinwei@hisilicon.com, Zhong Kaihua <zhongkaihua@huawei.com>
+In-Reply-To: <1459686365-19837-1-git-send-email-alexanders83-S0/GAf8tV78@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 02, 2016 at 05:29:33PM +0800, Guodong Xu wrote:
-> From: Zhong Kaihua <zhongkaihua@huawei.com>
-> 
-> Add Hi6220 spi configuration nodes
-> 
-> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-> Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts   |  1 +
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi        | 15 +++++++++++++++
->  arch/arm64/boot/dts/hisilicon/hikey-pinctrl.dtsi | 21 +++++++++++++++++++++
->  3 files changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> index 985a2ad..5c9ee31 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-> @@ -20,6 +20,7 @@
->  		serial1 = &uart1; /* BT UART */
->  		serial2 = &uart2; /* LS Expansion UART0 */
->  		serial3 = &uart3; /* LS Expansion UART1 */
-> +		spi0 = &spi_0;
+On Sun, Apr 03, 2016 at 02:26:05PM +0200, Alexander Stein wrote:
+> Introduce empty of_read_number when CONFIG_OF is not defined. This allows
+> us to compile test gpio drivers.
 
-You shouldn't really need an alias for SPI.
-
->  	};
->  
->  	chosen {
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index e96cc3c..dcca83b 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -585,5 +585,20 @@
->  			clock-names = "apb_pclk";
->  			status = "ok";
->  		};
-> +
-> +		spi_0: spi@f7106000 {
-> +			compatible = "arm,pl022", "arm,primecell";
-> +			reg = <0x0 0xf7106000 0x0 0x1000>;
-> +			interrupts = <0 50 4>;
-> +			bus-id = <0>;
-> +			enable-dma = <0>;
-> +			clocks = <&sys_ctrl HI6220_SPI_CLK>;
-> +			clock-names = "apb_pclk";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&spi0_pmx_func &spi0_cfg_func>;
-> +			num-cs = <1>;
-> +			cs-gpios = <&gpio6 2 0>;
-> +			status = "ok";
-
-You only need an ok to override a disabled status, so I think you can 
-drop this. Or disable by default and let boards override it if that 
-makes sense.
+The only user I see is sodaville. That case should use 
+of_property_read_u32 instead.
 
 Rob
+
+> 
+> Signed-off-by: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>
+> ---
+> Changes in v2:
+> * rebased to current gpio's for-next branch
+> 
+>  include/linux/of.h | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 7fcb681baadf..f0564a2f0a98 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -672,6 +672,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
+>  {
+>  }
+>  
+> +static inline u64 of_read_number(const __be32 *cell, int size)
+> +{
+> +	return 0;
+> +}
+> +
+>  #define of_match_ptr(_ptr)	NULL
+>  #define of_match_node(_matches, _node)	NULL
+>  #endif /* CONFIG_OF */
+> -- 
+> 2.8.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
