@@ -1,145 +1,137 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH] rtc: omap: Support ext_wakeup configuration
-Date: Mon,  4 Apr 2016 17:56:43 +0200
-Message-ID: <1459785403-1725-1-git-send-email-m.niestroj@grinn-global.com>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH] ARM: arm64: dts: Add expansion bus to VExpress and Juno
+Date: Mon,  4 Apr 2016 17:20:50 +0100
+Message-ID: <1459786850-29409-1-git-send-email-brian.starkey@arm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Support configuration of ext_wakeup sources. This patch makes it
-possible to enable ext_wakeup and set it's polarity, depending on board
-configuration. AM335x's dedicated PMIC (tps65217) uses ext_wakeup to
-notify about power-button presses. Handling power-button presses enables
-to recover from RTC-only power states correctly.
+The VExpress and Juno development platforms have an external expansion
+bus which can be used for additional hardware (e.g. LogicTile Express
+daughterboards).
+Add this bus to all VExpress CoreTile and Juno device-trees.
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+On VExpress, the bus is described for a CoreTile located on site 1.
+
+Signed-off-by: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/rtc/rtc-omap.txt | 24 ++++++++++-
- drivers/rtc/rtc-omap.c                             | 46 +++++++++++++++++++++-
- 2 files changed, 68 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts  |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts     |   13 +++++++++++++
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts      |   13 +++++++++++++
+ arch/arm64/boot/dts/arm/juno-base.dtsi      |   10 ++++++++++
+ 5 files changed, 62 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/rtc-omap.txt b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-index bf7d11a..1c05311b 100644
---- a/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc-omap.txt
-@@ -18,8 +18,20 @@ Optional properties:
-   through pmic_power_en
- - clocks: Any internal or external clocks feeding in to rtc
- - clock-names: Corresponding names of the clocks
-+- ti,ext-wakeup-en: Enables ext_wakeup[n] sources. Value determines which
-+		    ext_wakeup is enabled by bitwise OR of corresponding bits.
-+		    Examples:
-+		     <1> - enabled ext_wakeup[0],
-+		     <2> - enabled ext_wakeup[1],
-+		     <3> - enabled ext_wakeup[0] and enabled ext_wakeup[1],
-+		     ...
-+- ti,ext-wakeup-pol: Sets polarity of ext_wakeup[n] sources, similarly as
-+		     above. Set bit means active-low, unset bit means
-+		     active-high. Examples:
-+		      <1> - only ext_wakeup0 is active-low
-+		      <3> - only ext_wakeup0 and ext_wakeup1 are active-low
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+index 9420053..ec7539b 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts
+@@ -280,4 +280,17 @@
  
--Example:
-+Examples:
- 
- rtc@1c23000 {
- 	compatible = "ti,da830-rtc";
-@@ -31,3 +43,13 @@ rtc@1c23000 {
- 	clocks = <&clk_32k_rtc>, <&clk_32768_ck>;
- 	clock-names = "ext-clk", "int-clk";
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
++
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x40000000 0x3fef0000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
  };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+index 17f63f7..a339b0c 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+@@ -638,4 +638,17 @@
+ 
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
 +
-+rtc@44e3e000 {
-+	compatible = "ti,am3352-rtc", "ti,da830-rtc";
-+	reg = <0x44e3e000 0x1000>;
-+	interrupts = <75
-+		      76>;
-+	system-power-controller;
-+	ti,ext-wakeup-en = <1>;
-+	ti,ext-wakeup-pol = <1>;
-+};
-diff --git a/drivers/rtc/rtc-omap.c b/drivers/rtc/rtc-omap.c
-index ec2e9c5..1a46f5d 100644
---- a/drivers/rtc/rtc-omap.c
-+++ b/drivers/rtc/rtc-omap.c
-@@ -114,7 +114,11 @@
- #define OMAP_RTC_IRQWAKEEN_ALARM_WAKEEN	BIT(1)
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x40000000 0x3fef0000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+index d2709b7..76a9ccb 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca5s.dts
+@@ -250,4 +250,17 @@
  
- /* OMAP_RTC_PMIC bit fields: */
--#define OMAP_RTC_PMIC_POWER_EN_EN	BIT(16)
-+#define OMAP_RTC_PMIC_POWER_EN_EN		BIT(16)
-+#define OMAP_RTC_PMIC_EXT_WAKEUP_EN(x)		(x)
-+#define OMAP_RTC_PMIC_EXT_WAKEUP_POL(x)		((x) << 4)
-+#define OMAP_RTC_PMIC_EXT_WAKEUP_EN_MASK	0x0F
-+#define OMAP_RTC_PMIC_EXT_WAKEUP_POL_MASK	0xF0
- 
- /* OMAP_RTC_KICKER values */
- #define	KICK0_VALUE			0x83e70b13
-@@ -533,6 +537,11 @@ static int omap_rtc_probe(struct platform_device *pdev)
- 	const struct platform_device_id *id_entry;
- 	const struct of_device_id *of_id;
- 	int ret;
-+	u32 ext_wakeup_en;
-+	u32 ext_wakeup_pol;
-+	bool has_ext_wakeup_en;
-+	bool has_ext_wakeup_pol;
-+	u32 val;
- 
- 	rtc = devm_kzalloc(&pdev->dev, sizeof(*rtc), GFP_KERNEL);
- 	if (!rtc)
-@@ -544,6 +553,30 @@ static int omap_rtc_probe(struct platform_device *pdev)
- 		rtc->is_pmic_controller = rtc->type->has_pmic_mode &&
- 				of_property_read_bool(pdev->dev.of_node,
- 						"system-power-controller");
-+		if (of_property_read_u32(pdev->dev.of_node,
-+						"ti,ext-wakeup-en",
-+						&ext_wakeup_en) >= 0) {
-+			if (ext_wakeup_en < BIT(4))
-+				has_ext_wakeup_en = true;
-+			else
-+				dev_err(&pdev->dev,
-+					"wrong ext-wakeup-en value\n");
-+		} else {
-+			dev_err(&pdev->dev,
-+				"no ext-wakeup-en\n");
-+		}
-+		if (of_property_read_u32(pdev->dev.of_node,
-+						"ti,ext-wakeup-pol",
-+						&ext_wakeup_pol) >= 0) {
-+			if (ext_wakeup_pol < BIT(4))
-+				has_ext_wakeup_pol = true;
-+			else
-+				dev_err(&pdev->dev,
-+					"wrong ext-wakeup-pol value\n");
-+		} else {
-+			dev_err(&pdev->dev,
-+				"no ext-wakeup-pol\n");
-+		}
- 	} else {
- 		id_entry = platform_get_device_id(pdev);
- 		rtc->type = (void *)id_entry->driver_data;
-@@ -650,6 +683,17 @@ static int omap_rtc_probe(struct platform_device *pdev)
- 			  reg | OMAP_RTC_OSC_SEL_32KCLK_SRC);
- 	}
- 
-+	if (has_ext_wakeup_en || has_ext_wakeup_pol) {
-+		val = rtc_readl(rtc, OMAP_RTC_PMIC_REG);
-+		if (has_ext_wakeup_en)
-+			val = (val & ~OMAP_RTC_PMIC_EXT_WAKEUP_EN_MASK)
-+				| OMAP_RTC_PMIC_EXT_WAKEUP_EN(ext_wakeup_en);
-+		if (has_ext_wakeup_pol)
-+			val = (val & ~OMAP_RTC_PMIC_EXT_WAKEUP_POL_MASK)
-+				| OMAP_RTC_PMIC_EXT_WAKEUP_POL(ext_wakeup_pol);
-+		rtc_writel(rtc, OMAP_RTC_PMIC_REG, val);
-+	}
+ 		/include/ "vexpress-v2m-rs1.dtsi"
+ 	};
 +
- 	rtc->type->lock(rtc);
++	site2: hsb@40000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x40000000 0x40000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index d949fac..edac212 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -359,4 +359,17 @@
  
- 	device_init_wakeup(&pdev->dev, true);
+ 		/include/ "vexpress-v2m.dtsi"
+ 	};
++
++	site2: hsb@e0000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xe0000000 0x20000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 3>;
++		interrupt-map = <0 0 &gic 0 36 4>,
++				<0 1 &gic 0 37 4>,
++				<0 2 &gic 0 38 4>,
++				<0 3 &gic 0 39 4>;
++	};
+ };
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index 68ccc39..dee2386 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -272,3 +272,13 @@
+ 
+ 		/include/ "juno-motherboard.dtsi"
+ 	};
++
++	site2: tlx@60000000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0x60000000 0x10000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0>;
++		interrupt-map = <0 0 &gic 0 0 0 168 IRQ_TYPE_LEVEL_HIGH>;
++	};
 -- 
-2.8.0
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
