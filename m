@@ -1,52 +1,127 @@
-From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
- driver
-Date: Mon, 4 Apr 2016 10:45:06 +0200
-Message-ID: <57022992.4060008@barix.com>
-References: <1457684989-13318-1-git-send-email-petr@barix.com>
- <87fuvtbl26.fsf@intel.com> <56E76E5A.5060801@lechnology.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [RFC][PATCH 1/2] dt/bindings: display: Add DT bindings for Mali
+ Display Processors.
+Date: Mon, 4 Apr 2016 10:01:46 +0100
+Message-ID: <20160404090146.GE27137@e106497-lin.cambridge.arm.com>
+References: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
+ <1459527712-9488-2-git-send-email-Liviu.Dudau@arm.com>
+ <20160404051602.GJ17806@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <56E76E5A.5060801-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20160404051602.GJ17806@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 15.03.2016 03:07, David Lechner wrote:
-> On 03/14/2016 02:00 AM, Felipe Balbi wrote:
->>
->> Hi,
->>
->> why isn't this an actual clock phandle ? Driver could, then, use
->> clk_get_rate() to figure this one out. You could just use a fixed clock
->> here to satisfy the clock API.
->>
->
-> I've actually been working on getting the da8xx ohci driver working 
-> with device tree. It has similar clock issues (in fact, the ohci clock 
-> is a child of the musb clock). Petr, give me a day or two and will 
-> have post some patches. It will have a clock that can be used here for 
-> clk_get_rate().
-
-Hi David,
-
-I'm trying to move on with my USB2.0 patch set because my projects is 
-blocked waiting for it.
-I've seen your PHY patch but it contains only on/off functions and does 
-not handle the clocks, which IMHO should be moved to the PHY driver as 
-well if we decided to do it properly.
-
-How shall we proceed if both of us are working on the same piece of code?
-
-Thanks
-Petr
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBBcHIgMDQsIDIwMTYgYXQgMTI6MTY6MDJBTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gT24gRnJpLCBBcHIgMDEsIDIwMTYgYXQgMDU6MjE6NTFQTSArMDEwMCwgTGl2aXUgRHVk
+YXUgd3JvdGU6Cj4gPiBBZGQgRFQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIE1hbGkg
+RGlzcGxheSBQcm9jZXNzb3IuIFRoZSBiaW5kaW5ncwo+ID4gZGVzY3JpYmUgdGhlIE1hbGkgRFA1
+MDAsIERQNTUwIGFuZCBEUDY1MCBwcm9jZXNzb3JzIGZyb20gQVJNIEx0ZC4KPiA+IAo+ID4gQ2M6
+IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Cj4gPiBDYzogUGF3ZWwgTW9sbCA8cGF3
+ZWwubW9sbEBhcm0uY29tPgo+ID4gQ2M6IE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5j
+b20+Cj4gPiBDYzogSWFuIENhbXBiZWxsIDxpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51az4K
+PiA+IENjOiBLdW1hciBHYWxhIDxnYWxha0Bjb2RlYXVyb3JhLm9yZz4KPiA+IAo+ID4gU2lnbmVk
+LW9mZi1ieTogTGl2aXUgRHVkYXUgPExpdml1LkR1ZGF1QGFybS5jb20+Cj4gPiAtLS0KPiA+ICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0ICAgICB8IDY1ICsr
+KysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjUgaW5zZXJ0aW9ucygr
+KQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dAo+ID4gbmV3
+IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAuLmVkNzBkZTMKPiA+IC0tLSAvZGV2
+L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2FybSxtYWxpZHAudHh0Cj4gPiBAQCAtMCwwICsxLDY1IEBACj4gPiArQVJNIE1hbGktRFAKPiA+
+ICsKPiA+ICtUaGUgZm9sbG93aW5nIGJpbmRpbmdzIGFwcGx5IHRvIGEgZmFtaWx5IG9mIERpc3Bs
+YXkgUHJvY2Vzc29ycyBzb2xkIGFzCj4gPiArbGljZW5zYWJsZSBJUCBieSBBUk0gTHRkLiBUaGUg
+YmluZGluZ3MgZGVzY3JpYmUgdGhlIE1hbGkgRFA1MDAsIERQNTUwIGFuZAo+ID4gK0RQNjUwIHBy
+b2Nlc3NvcnMgdGhhdCBvZmZlciBtdWx0aXBsZSBjb21wb3NpdGlvbiBsYXllcnMsIHN1cHBvcnQg
+Zm9yCj4gPiArcm90YXRpb24gYW5kIHNjYWxpbmcgb3V0cHV0Lgo+ID4gKwo+ID4gK1JlcXVpcmVk
+IHByb3BlcnRpZXM6Cj4gPiArICAtIGNvbXBhdGlibGU6IHNob3VsZCBiZSBvbmUgb2YKPiA+ICsJ
+ImFybSxtYWxpLWRwNTAwIgo+ID4gKwkiYXJtLG1hbGktZHA1NTAiCj4gPiArCSJhcm0sbWFsaS1k
+cDY1MCIKPiA+ICsgICAgZGVwZW5kaW5nIG9uIHRoZSBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9u
+IHByZXNlbnQgaW4gdGhlIGhhcmR3YXJlCj4gCj4gSSBhc3N1bWUgdGhlc2UgaGF2ZSByZXZpc2lv
+bnMgYW5kIGNvbmZpZ3VyYXRpb24gb3B0aW9ucy4gVGhlc2Ugd2lsbCBuZWVkIAo+IFNvQyBzcGVj
+aWZpYyBwcm9wZXJ0aWVzIGFzIHdlbGwuIE5vIG5lZWQgdG8gYWRkIG9uZSBub3cgaWYgeW91IGRv
+bid0IAo+IGhhdmUgYW4gU29DIHRvIGxpc3QsIGJ1dCBqdXN0IG5vdGUgc29tZXRoaW5nIHRvIHRo
+aXMgZWZmZWN0LgoKVGhlcmUgYXJlIHJldmlzaW9ucywgaW5kZWVkLCBidXQgY29udHJhaW5lZCBh
+dCB0aGUgbW9tZW50IHRvIEFSTSdzIGludGVybmFsCmJ1aWxkcy4gQXMgZm9yIHRoZSBjb25maWd1
+cmF0aW9uIG9wdGlvbnMsIHRob3NlIGFyZSBiZWluZyBkZXRlY3RlZCBpbiB0aGUKZHJpdmVyIGJ5
+IHF1ZXJ5aW5nIGEgY29uZmlnX2lkIHJlZ2lzdGVyLiBOb3QgYWxsIHRoZSBmZWF0dXJlcyB0aGVy
+ZSBjb3JyZXNwb25kCnRvIGEgcmV2aXNpb24gbnVtYmVyIHRob3VnaCwgc28gSSdsbCB0YWtlIGEg
+IndhaXQgYW5kIHNlZSIgYXBwcm9hY2ggdG8gYWRkaW5nCmFkZGl0aW9uYWwgaW5mb3JtYXRpb24g
+aW4gdGhlIERUIGJpbmRpbmdzLgoKPiAKPiA+ICsgIC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJl
+c3MgYW5kIHNpemUgb2YgdGhlIGJsb2NrIG9mIHJlZ2lzdGVycyB1c2VkIGJ5Cj4gPiArICAgIHRo
+ZSBwcm9jZXNzb3IuCj4gPiArICAtIGludGVycnVwdHM6IEludGVycnVwdCBsaXN0LCBhcyBkZWZp
+bmVkIGluIC4uL2ludGVycnVwdC1jb250cm9sbGVyL2ludGVycnVwdHMudHh0LAo+ID4gKyAgICBp
+bnRlcnJ1cHQgY2xpZW50IG5vZGVzLgo+ID4gKyAgLSBpbnRlcnJ1cHQtbmFtZXM6IG5hbWUgb2Yg
+dGhlIGVuZ2luZSBpbnNpZGUgdGhlIHByb2Nlc3NvciB0aGF0IHdpbGwKPiA+ICsgICAgdXNlIHRo
+ZSBjb3JyZXNwb25kaW5nIGludGVycnVwdC4gU2hvdWxkIGJlIG9uZSBvZiAiREUiIG9yICJTRSIu
+Cj4gCj4gVGhpcyBpcyB3b3JkZWQgbGlrZSBpdCBpcyBlaXRoZXIgb25lLCBidXQgdGhlIGV4YW1w
+bGUgc2hvd3MgYm90aC4KCllvdSAoYW5kIE1hcmtSKSBhcmUgcmlnaHQsIHRoZSBpbnRlbnQgd2Fz
+IHRvIHNheSB0aGF0IGZvciBlYWNoIGludGVycnVwdCBpbiB0aGUKaW50ZXJydXB0cyBsaXN0IHlv
+dSB1c2UgYSBuYW1lIGluIHRoZSBpbnRlcnJ1cHQtbmFtZSBhbmQgdGhhdCBuYW1lIGNhbiBiZSBl
+aXRoZXIKIkRFIiBvciAiU0UiLiBJIHdpbGwgcmVwaHJhc2UgaXQgdG8gbWFrZSBpdCBtb3JlIGNs
+ZWFyLgoKPiAKPiA+ICsgIC0gY2xvY2tzOiBBIGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrLXNwZWNp
+ZmllciBwYWlycywgb25lIGZvciBlYWNoIGVudHJ5Cj4gPiArICAgIGluICdjbG9jay1uYW1lcycK
+PiA+ICsgIC0gY2xvY2stbmFtZXM6IEEgbGlzdCBvZiBjbG9jayBuYW1lcy4gSXQgc2hvdWxkIGNv
+bnRhaW46Cj4gPiArICAgICAgLSAicGNsayI6IGZvciB0aGUgQVBCIGludGVyZmFjZSBjbG9jawo+
+ID4gKyAgICAgIC0gImFjbGsiOiBmb3IgdGhlIEFYSSBpbnRlcmZhY2UgY2xvY2sKPiA+ICsgICAg
+ICAtICJtY2xrIjogZm9yIHRoZSBtYWluIHByb2Nlc3NvciBjbG9jawo+ID4gKyAgICAgIC0gInB4
+bGNsayI6IGZvciB0aGUgcGl4ZWwgY2xvY2sgZmVlZGluZyB0aGUgb3V0cHV0IFBMTCBvZiB0aGUg
+cHJvY2Vzc29yLgo+ID4gKyAgLSBhcm0sbWFsaWRwLW91dHB1dC1wb3J0LWxpbmVzOiBBcnJheSBv
+ZiB1OCB2YWx1ZXMgZGVzY3JpYmluZyB0aGUgbnVtYmVyCj4gPiArICAgIG9mIG91dHB1dCBsaW5l
+cyBwZXIgY2hhbm5lbCAoUiwgRyBhbmQgQikuCj4gCj4gVGhpcyBzaG91bGQgYmUgYSBmdW5jdGlv
+biBvZiB0aGUgdHlwZSBvZiBwYW5lbCB5b3UgY29ubmVjdCBhbmQgCj4gc2hvdWxkbid0IGJlIG5l
+ZWRlZC4KCkhtbSwgbm90IHN1cmUgSSB1bmRlcnN0YW5kIHlvdSBoZXJlLiBNYWxpIERQIGNhbiBl
+eHBvcnQgYSBudW1iZXIgb2YgcGFyYWxsZWwgbGluZXMKcGVyIGNvbG9yIGNvbXBvbmVudCwgYnV0
+IHRoYXQgZG9lc24ndCBhdXRvbWF0aWNhbGx5IHRyYW5zbGF0ZSBpbnRvIGhvdyBtYW55IG9mIHRo
+b3NlCmFyZSBiZWluZyB1c2VkIGFzIGlucHV0IHRvIHRoZSBlbmNvZGVyLCBhbmQgdGhlcmUgYXJl
+IG5vIHN0YW5kYXJkIGJpbmRpbmdzIGluIHRoZQplbmNvZGVycyBlaXRoZXIgdG8gcXVlcnkgdGhl
+IGNvbmZpZ3VyYXRpb24uIFNvIEkgbmVlZCBhIHdheSBzb21ld2hlcmUgdG8gZGVzY3JpYmUKaG93
+IGhhcmR3YXJlIGhhcyBiZWVuIHdpcmVkLiBJIHRob3VnaHQgRFRzIGFyZSBvbmUgc3VjaCBwbGFj
+ZS4gRG8geW91IGhhdmUgYSBiZXR0ZXIKaWRlYSBvciBleGFtcGxlPwoKPiAKPiA+ICsKPiA+ICtS
+ZXF1aXJlZCBzdWItbm9kZXM6Cj4gPiArICAtIHBvcnQ6IFRoZSBNYWxpIERQIGNvbm5lY3Rpb24g
+dG8gYW4gZW5jb2RlciBpbnB1dCBwb3J0LiBUaGUgY29ubmVjdGlvbgo+ID4gKyAgICBpcyBtb2Rl
+bGxlZCB1c2luZyB0aGUgT0YgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCj4gPiArICAgIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQKPiA+ICsKPiA+ICtPcHRp
+b25hbCBwcm9wZXJ0aWVzOgo+ID4gKyAgLSBtZW1vcnktcmVnaW9uOiBwaGFuZGxlIHRvIGEgbm9k
+ZSBkZXNjcmliaW5nIG1lbW9yeSAoc2VlCj4gPiArICAgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9yZXNlcnZlZC1tZW1vcnkvcmVzZXJ2ZWQtbWVtb3J5LnR4dCkKPiA+ICsgICAg
+dG8gYmUgdXNlZCBmb3IgdGhlIGZyYW1lYnVmZmVyOyBpZiBub3QgcHJlc2VudCwgdGhlIGZyYW1l
+YnVmZmVyIG1heQo+ID4gKyAgICBiZSBsb2NhdGVkIGFueXdoZXJlIGluIG1lbW9yeS4KPiA+ICsK
+PiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4gKwo+ID4gKy8gewo+ID4gKwkuLi4KPiA+ICsKPiA+ICsJ
+ZHAwOiBtYWxpZHBANmYyMDAwMDAgewo+IAo+IGRpc3BsYXktY29udHJvbGxlckAKCldpbGwgY2hh
+bmdlIQoKVGhhbmtzIGZvciB0aGUgcmV2aWV3IQpMaXZpdQoKPiAKPiA+ICsJCWNvbXBhdGlibGUg
+PSAiYXJtLG1hbGktZHA2NTAiOwo+ID4gKwkJcmVnID0gPDAgMHg2ZjIwMDAwMCAwIDB4MjAwMDA+
+Owo+ID4gKwkJbWVtb3J5LXJlZ2lvbiA9IDwmZGlzcGxheV9yZXNlcnZlZD47Cj4gPiArCQlpbnRl
+cnJ1cHRzID0gPDAgMTY4IElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ID4gKwkJCSAgICAgPDAgMTY4
+IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJaW50ZXJydXB0LW5hbWVzID0gIkRFIiwgIlNF
+IjsKPiA+ICsJCWNsb2NrcyA9IDwmb3NjY2xrMj4sIDwmZnBnYW9zYzA+LCA8JmZwZ2Fvc2MxPiwg
+PCZmcGdhb3NjMT47Cj4gPiArCQljbG9jay1uYW1lcyA9ICJweGxjbGsiLCAibWNsayIsICJhY2xr
+IiwgInBjbGsiOwo+ID4gKwkJYXJtLG1hbGlkcC1vdXRwdXQtcG9ydC1saW5lcyA9IC9iaXRzLyA4
+IDw4IDggOD47Cj4gPiArCQlwb3J0IHsKPiA+ICsJCQlkcDBfb3V0cHV0OiBlbmRwb2ludCB7Cj4g
+PiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdGRhOTk4eF8yX2lucHV0PjsKPiA+ICsJCQl9Owo+
+ID4gKwkJfTsKPiA+ICsJfTsKPiA+ICsKPiA+ICsJLi4uCj4gPiArfTsKPiA+IC0tIAo+ID4gMi43
+LjEKPiA+IAo+ID4gLS0KPiA+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRo
+ZSBsaW5lICJ1bnN1YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+ID4gdGhlIGJvZHkgb2YgYSBtZXNz
+YWdlIHRvIG1ham9yZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPiA+IE1vcmUgbWFqb3Jkb21vIGluZm8g
+YXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IAoKLS0gCj09
+PT09PT09PT09PT09PT09PT09CnwgSSB3b3VsZCBsaWtlIHRvIHwKfCBmaXggdGhlIHdvcmxkLCAg
+fAp8IGJ1dCB0aGV5J3JlIG5vdCB8CnwgZ2l2aW5nIG1lIHRoZSAgIHwKIFwgc291cmNlIGNvZGUh
+ICAvCiAgLS0tLS0tLS0tLS0tLS0tCiAgICDCr1xfKOODhClfL8KvCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
