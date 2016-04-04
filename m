@@ -1,308 +1,107 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: dts: kirkwood: Add DTS for Linksys
- EA4200v2/EA4500\
-Date: Mon, 4 Apr 2016 16:55:28 +0200
-Message-ID: <20160404145528.GE25131@lunn.ch>
-References: <1459781168-16708-1-git-send-email-bert@biot.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
+Date: Mon, 4 Apr 2016 08:12:01 -0700
+Message-ID: <20160404151200.GA4652@atomide.com>
+References: <1458311007-19168-1-git-send-email-peter.ujfalusi@ti.com>
+ <alpine.DEB.2.02.1603191937430.6629@utopia.booyaka.com>
+ <56EFB794.5010505@ti.com>
+ <alpine.DEB.2.02.1603211743200.31059@utopia.booyaka.com>
+ <56FE407E.9030803@ti.com>
+ <20160402001753.GR9329@atomide.com>
+ <57026205.6020105@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459781168-16708-1-git-send-email-bert-Nh2F35Ii2RQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bert Vermeulen <bert-Nh2F35Ii2RQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57026205.6020105@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2016 at 04:46:07PM +0200, Bert Vermeulen wrote:
-> This platform is based on a Marvell 88E6282 SoC and 88E6171 switch.
+* Peter Ujfalusi <peter.ujfalusi@ti.com> [160404 05:47]:
+> On 04/02/16 03:17, Tony Lindgren wrote:
+> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [160401 02:34]:
+> >> So what shall we do with the OMAP3 McBSP2/3 sidetone? It has been broken in DT
+> >> boot since the first time we booted OMAP3 with DT... Only in legacy mode we
+> >> can have properly working ST.
+> > 
+> > Grr.
 > 
-> Signed-off-by: Bert Vermeulen <bert-Nh2F35Ii2RQ@public.gmane.org>
+> Yes :(
+> The reason for this is that in DT boot we can not provide the
+> enable_st_clock() callback to the mcbsp driver stack. This is done for legacy
+> boot in mach-omap2/mcbsp.c
 
-Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Seems like the short term fix there is to pass enable_st_clock pointer
+in pdata using pdata-quirks.c. Then for the long term solution using
+PM runtime to block gating of the clock while sidetone is active is
+the way to go it seems.
 
-Thanks
-	Andrew	     
+> The ST does not have clocks coming from PRCM level, it only uses the McBSP
+> iclk when it is enabled (the McBSP block of the McBSP). As far as pm_runtime
+> goes I think the ST module should not use it. We can not tell hwmod to
+> enable/disable the McBSP2/3 iclk when we pm_runtime for the ST. It does not
+> help at all. We can have nop action for the ST when pm_runtime is used, but
+> then why would we have it?
 
+Using PM runtime in the sidetone driver should just work as long as the
+sidetone device driver depends on the McBSP driver before it gets probed.
+The clock framework handles things for the mcbsp ick with the usecount.
+And doing pm_runtime_get() in the sidetone driver will do what the legacy
+enable_st_clock() does currently.
 
-> ---
-> Changes from v3:
-> - added comment noting eth1 is connected to switch as well
+> > So having two separate drivers might make things a lot simpler.
 > 
-> Changes from v2:
-> - added linksys to filename
-> - added make rule
+> Not really. It will make things way more complicated imho. How to handle
+> legacy boot as we still have that supported?
+
+Hey both the legacy driver and DT driver are really just platform devices
+and drivers. And passing both dts and platform data can be done just
+fine, no?
+
+> When the McBSP driver is loaded we must know if it has sidetone or not so
+> we can create the needed audio controls, sysfs entries. The sysfs and
+> kcontrol registration could be moved out to the new ST driver, true.
+
+Yeah during the probe, the sidetone driver must register with the McBSP
+driver to tell it's there. I guess no need to pass anything in the
+dts or platform_data for that.
+
+> I actually started with two separate drivers approach first, but decided that
+> it does not worth the effort (legacy boot support, pm_runtime/hwmod hassle,
+> platform data, callback API design, etc).
+> I know, it is not rocket science but it is king of shoot out of cannon into
+> sparrows.
+> I'll think about it for a little while ;)
+
+Well what we've seen so far is that any kind of non-standard solution
+will always be a pain to maintain in the long run :)
+
+> > If you don't treat the McBSP and sidetone as separate modules, things can
+> > easily fail. For example, doing a read-back to flush of posted write to
+> > sidetone registers flushes nothing for McBSP and the other way around.
 > 
-> Changes from v1:
-> - changed console to stdout-path
-> - removed unnecesarry @0 from dsa node, and fixed dsa/switch node
-> - fixed partitions according to the official docs
-> - prefer node labels rather than full hierarchy where possible
+> I don't see problem with the need of flushing if we would need it. I don't
+> think we are doing anything proactively to flush writes in the driver today
+> and we do have at least one product using the ST (n900).
+
+Usually the problem is with an interrupt ack write not reaching the device
+in time before something else happens. So I could see mysterious issues
+happening with the McBSP and sidetone having separate interrupts. Maybe
+not a real problem, but the chance for it is still there for sure.
+
+> >> Other option would be to deprecate the ST support as such, but that would
+> >> leave the n900 guys in trouble as they need ST to be functional...
+> > 
+> > That does not sound like a nice option at all :(
 > 
->  arch/arm/boot/dts/Makefile                   |   1 +
->  arch/arm/boot/dts/kirkwood-linksys-viper.dts | 237 +++++++++++++++++++++++++++
->  2 files changed, 238 insertions(+)
->  create mode 100644 arch/arm/boot/dts/kirkwood-linksys-viper.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 95c1923..feeb3f9 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -199,6 +199,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
->  	kirkwood-linkstation-lswsxl.dtb \
->  	kirkwood-linkstation-lswvl.dtb \
->  	kirkwood-linkstation-lswxl.dtb \
-> +	kirkwood-linksys-viper.dtb \
->  	kirkwood-lschlv2.dtb \
->  	kirkwood-lsxhl.dtb \
->  	kirkwood-mplcec4.dtb \
-> diff --git a/arch/arm/boot/dts/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-> new file mode 100644
-> index 0000000..0f4631f
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-> @@ -0,0 +1,237 @@
-> +/*
-> + * kirkwood-viper.dts - Device Tree file for Linksys viper (E4200v2 / EA4500)
-> + *
-> + * (c) 2013 Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + * (c) 2013 Deutsche Telekom Innovation Laboratories
-> + * (c) 2014 Luka Perkov <luka-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> + * (c) 2014 Randy C. Will <randall.will-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "kirkwood.dtsi"
-> +#include "kirkwood-6282.dtsi"
-> +
-> +/ {
-> +	model = "Linksys Viper (E4200v2 / EA4500)";
-> +	compatible = "linksys,viper", "marvell,kirkwood-88f6282", "marvell,kirkwood";
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x00000000 0x8000000>;
-> +	};
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
-> +		pinctrl-names = "default";
-> +
-> +		wps {
-> +			label = "WPS Button";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> +		};
-> +
-> +		reset {
-> +			label = "Reset Button";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	gpio-leds {
-> +		compatible = "gpio-leds";
-> +		pinctrl-0 = < &pmx_led_white_health &pmx_led_white_pulse >;
-> +		pinctrl-names = "default";
-> +
-> +		white-health {
-> +			label = "viper:white:health";
-> +			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		white-pulse {
-> +			label = "viper:white:pulse";
-> +			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
-> +
-> +	dsa {
-> +		compatible = "marvell,dsa";
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		dsa,ethernet = <&eth0port>;
-> +		dsa,mii-bus = <&mdio>;
-> +
-> +		switch@16,0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <16 0>;	/* MDIO address 16, switch 0 in tree */
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				label = "ethernet1";
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				label = "ethernet2";
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				label = "ethernet3";
-> +			};
-> +
-> +			port@3 {
-> +				reg = <3>;
-> +				label = "ethernet4";
-> +			};
-> +
-> +			port@4 {
-> +				reg = <4>;
-> +				label = "internet";
-> +			};
-> +
-> +			port@5 {
-> +				reg = <5>;
-> +				label = "cpu";
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&pinctrl {
-> +	pmx_led_white_health: pmx-led-white-health {
-> +		marvell,pins = "mpp7";
-> +		marvell,function = "gpo";
-> +	};
-> +	pmx_led_white_pulse: pmx-led-white-pulse {
-> +		marvell,pins = "mpp14";
-> +		marvell,function = "gpio";
-> +	};
-> +	pmx_btn_wps: pmx-btn-wps {
-> +		marvell,pins = "mpp47";
-> +		marvell,function = "gpio";
-> +	};
-> +	pmx_btn_reset: pmx-btn-reset {
-> +		marvell,pins = "mpp48";
-> +		marvell,function = "gpio";
-> +	};
-> +};
-> +
-> +&nand {
-> +	status = "okay";
-> +	pinctrl-0 = <&pmx_nand>;
-> +	pinctrl-names = "default";
-> +
-> +	partitions {
-> +		compatible = "fixed-partitions";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		partition@0 {
-> +			label = "u-boot";
-> +			reg = <0x0 0x80000>;
-> +			read-only;
-> +		};
-> +
-> +		partition@80000 {
-> +			label = "u_env";
-> +			reg = <0x80000 0x20000>;
-> +		};
-> +
-> +		partition@A0000 {
-> +			label = "s_env";
-> +			reg = <0xA0000 0x20000>;
-> +		};
-> +
-> +		partition@200000 {
-> +			label = "kernel";
-> +			reg = <0x200000 0x2A0000>;
-> +		};
-> +
-> +		partition@4A0000 {
-> +			label = "rootfs";
-> +			reg = <0x4A0000 0x1760000>;
-> +		};
-> +
-> +		partition@1C00000 {
-> +			label = "alt_kernel";
-> +			reg = <0x1C00000 0x2A0000>;
-> +		};
-> +
-> +		partition@1EA0000 {
-> +			label = "alt_rootfs";
-> +			reg = <0x1EA0000 0x1760000>;
-> +		};
-> +
-> +		partition@3600000 {
-> +			label = "syscfg";
-> +			reg = <0x3600000 0x4A00000>;
-> +		};
-> +
-> +		partition@C0000 {
-> +			label = "unused";
-> +			reg = <0xC0000 0x140000>;
-> +		};
-> +
-> +	};
-> +};
-> +
-> +&pciec {
-> +	status = "okay";
-> +};
-> +
-> +&pcie0 {
-> +	status = "okay";
-> +};
-> +
-> +&pcie1 {
-> +	status = "okay";
-> +};
-> +
-> +&mdio {
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +/* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
-> + * fixed speed and duplex. */
-> +&eth0 {
-> +	status = "okay";
-> +	ethernet0-port@0 {
-> +		speed = <1000>;
-> +		duplex = <1>;
-> +	};
-> +};
-> +
-> +/* eth1 is connected to the switch at port 6. However DSA only supports a
-> + * single CPU port. So leave this port disabled to avoid confusion. */
-> +&eth1 {
-> +	status = "disabled";
-> +};
-> +
-> +/* There is no battery on the board, so the RTC does not keep
-> +   time when there is no power, making it useless. */
-> +&rtc {
-> +	status = "disabled";
-> +};
-> +
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I know. This has been bugging me for a long time. I want to fix this one
+> before my beagleboard-xm gives up and won't boot up anymore since after that I
+> will have no omap3 board to work with :(
+
+There are plenty of cheap omap3 devices available out there though :)
+
+Regards,
+
+Tony
