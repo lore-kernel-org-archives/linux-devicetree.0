@@ -1,14 +1,14 @@
 From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
         <noltari@gmail.com>
-Subject: [PATCH v4 1/2] bmips: add BCM6358 support
-Date: Mon,  4 Apr 2016 10:09:12 +0200
-Message-ID: <1459757353-14683-1-git-send-email-noltari@gmail.com>
-References: <1459677376-10449-1-git-send-email-noltari@gmail.com>
+Subject: [PATCH v2] bmips: add support for BCM63268
+Date: Mon,  4 Apr 2016 10:11:57 +0200
+Message-ID: <1459757517-14897-1-git-send-email-noltari@gmail.com>
+References: <1459684846-11308-1-git-send-email-noltari@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1459677376-10449-1-git-send-email-noltari@gmail.com>
+In-Reply-To: <1459684846-11308-1-git-send-email-noltari@gmail.com>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -18,104 +18,56 @@ List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
 List-owner: <mailto:ralf@linux-mips.org>
 List-post: <mailto:linux-mips@linux-mips.org>
 List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org, ralf@linux-mips.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, robh@kernel.org
+To: linux-mips@linux-mips.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, simon@fire.lp0.eu
 Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-BCM6358 has a shared TLB which conflicts with current SMP support, so i=
-t must
-be disabled for now.
-BCM6358 uses >=3D 0xfffe0000 addresses for internal registers, which ne=
-ed to be
-remapped (by using a simplified version of BRCM63xx ioremap.h).
-However, 0xfff80000 is a better address, since it also covers BCM3368, =
-leaving
-the possibility to add it in the future.
+This SoC is very similar to BCM63168 and Broadcom usually refers to the=
+m as
+BCM63268.
+Use alphabetical order for bmips quirks.
+Add BCM63268 and missing BCM63168 to device tree documentation.
 
 Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
 ---
- v4: no changes, resend
- v3: Use a hardcoded constant for is_bmips_internal_registers (BCM3368 =
-base
-  address)
- v2: Use a different approach for remapping internal registers
+ v2: keep support for BCM63168
 
- arch/mips/bmips/setup.c                    | 10 +++++++++
- arch/mips/include/asm/mach-bmips/ioremap.h | 33 ++++++++++++++++++++++=
-++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 arch/mips/include/asm/mach-bmips/ioremap.h
+ Documentation/devicetree/bindings/mips/brcm/soc.txt | 3 ++-
+ arch/mips/bmips/setup.c                             | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Docu=
+mentation/devicetree/bindings/mips/brcm/soc.txt
+index e58a4f6..7a08c3e 100644
+--- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
++++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
+@@ -4,7 +4,8 @@ Required properties:
+=20
+ - compatible: "brcm,bcm3384", "brcm,bcm33843"
+               "brcm,bcm3384-viper", "brcm,bcm33843-viper"
+-              "brcm,bcm6328", "brcm,bcm6358", "brcm,bcm6368",
++              "brcm,bcm63168", "brcm,bcm63268", "brcm,bcm6328",
++              "brcm,bcm6358", "brcm,bcm6368",
+               "brcm,bcm7125", "brcm,bcm7346", "brcm,bcm7358", "brcm,bc=
+m7360",
+               "brcm,bcm7362", "brcm,bcm7420", "brcm,bcm7425"
+=20
 diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index 3553528..38b5bd5 100644
+index 38b5bd5..7cca770 100644
 --- a/arch/mips/bmips/setup.c
 +++ b/arch/mips/bmips/setup.c
-@@ -95,6 +95,15 @@ static void bcm6328_quirks(void)
- 		bcm63xx_fixup_cpu1();
- }
-=20
-+static void bcm6358_quirks(void)
-+{
-+	/*
-+	 * BCM6358 needs special handling for its shared TLB, so
-+	 * disable SMP for now
-+	 */
-+	bmips_smp_enabled =3D 0;
-+}
-+
- static void bcm6368_quirks(void)
- {
- 	bcm63xx_fixup_cpu1();
-@@ -104,6 +113,7 @@ static const struct bmips_quirk bmips_quirk_list[] =
-=3D {
+@@ -112,10 +112,11 @@ static void bcm6368_quirks(void)
+ static const struct bmips_quirk bmips_quirk_list[] =3D {
  	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
  	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
++	{ "brcm,bcm63168",              &bcm6368_quirks                 },
++	{ "brcm,bcm63268",              &bcm6368_quirks                 },
  	{ "brcm,bcm6328",		&bcm6328_quirks			},
-+	{ "brcm,bcm6358",		&bcm6358_quirks			},
+ 	{ "brcm,bcm6358",		&bcm6358_quirks			},
  	{ "brcm,bcm6368",		&bcm6368_quirks			},
- 	{ "brcm,bcm63168",		&bcm6368_quirks			},
+-	{ "brcm,bcm63168",		&bcm6368_quirks			},
  	{ },
-diff --git a/arch/mips/include/asm/mach-bmips/ioremap.h b/arch/mips/inc=
-lude/asm/mach-bmips/ioremap.h
-new file mode 100644
-index 0000000..29c7a7b
---- /dev/null
-+++ b/arch/mips/include/asm/mach-bmips/ioremap.h
-@@ -0,0 +1,33 @@
-+#ifndef __ASM_MACH_BMIPS_IOREMAP_H
-+#define __ASM_MACH_BMIPS_IOREMAP_H
-+
-+#include <linux/types.h>
-+
-+static inline phys_addr_t fixup_bigphys_addr(phys_addr_t phys_addr, ph=
-ys_addr_t size)
-+{
-+	return phys_addr;
-+}
-+
-+static inline int is_bmips_internal_registers(phys_addr_t offset)
-+{
-+	if (offset >=3D 0xfff80000)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static inline void __iomem *plat_ioremap(phys_addr_t offset, unsigned =
-long size,
-+					 unsigned long flags)
-+{
-+	if (is_bmips_internal_registers(offset))
-+		return (void __iomem *)offset;
-+
-+	return NULL;
-+}
-+
-+static inline int plat_iounmap(const volatile void __iomem *addr)
-+{
-+	return is_bmips_internal_registers((unsigned long)addr);
-+}
-+
-+#endif /* __ASM_MACH_BMIPS_IOREMAP_H */
+ };
+=20
 --=20
 2.1.4
