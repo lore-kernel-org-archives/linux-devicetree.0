@@ -1,56 +1,42 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH RFC 5/5] ARM: dts: sun8i: Enable Ethernet controller on the Orange PI PC
-Date: Tue,  5 Apr 2016 00:22:34 +0800
-Message-ID: <1459786954-12649-6-git-send-email-wens@csie.org>
-References: <1459786954-12649-1-git-send-email-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1459786954-12649-1-git-send-email-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH 1/5 v10] dt/bindings: Add binding for the DA8xx MUSB
+ driver
+Date: Mon, 4 Apr 2016 11:25:15 -0500
+Message-ID: <5702956B.8030501@lechnology.com>
+References: <1457684989-13318-1-git-send-email-petr@barix.com>
+ <87fuvtbl26.fsf@intel.com> <56E76E5A.5060801@lechnology.com>
+ <57022992.4060008@barix.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57022992.4060008-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Orange PI PC uses the H3's internal Ethernet PHY with the EMAC
-Ethernet controller.
+On 04/04/2016 03:45 AM, Petr Kulhavy wrote:
+> I'm trying to move on with my USB2.0 patch set because my projects is
+> blocked waiting for it.
+> I've seen your PHY patch but it contains only on/off functions and does
+> not handle the clocks, which IMHO should be moved to the PHY driver as
+> well if we decided to do it properly.
 
-Set a proper address for the PHY and enable the EMAC.
+Have a closer look at my (v3) patchset. It does handle clocks in the phy 
+driver. The clocks themselves are implemented in mach-davinici similar 
+to the rest of the SoC clocks and the phy driver uses clk_get(), 
+clk_prepare_enable(), etc.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
 
-This patch depends on "ARM: dts: sun8i-h3: Add Ethernet controller device",
-which uses an binding still in development.
+> How shall we proceed if both of us are working on the same piece of code?
 
-Do not merge.
+I have never submitted patches for the Linux kernel before last month, 
+so I have not yet experienced the whole process of getting a patch 
+accepted. So, I don't know an answer to this question.
 
----
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index daf50b9a6657..f01e10df812a 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -102,6 +102,20 @@
- 	status = "okay";
- };
- 
-+&ephy {
-+	allwinner,ephy-addr = <0x1>;
-+};
-+
-+&emac {
-+	phy = <&phy1>;
-+	phy-mode = "mii";
-+	status = "okay";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
- &ir {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&ir_pins_a>;
--- 
-2.7.0
+Perhaps someone with more experience can offer advice?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
