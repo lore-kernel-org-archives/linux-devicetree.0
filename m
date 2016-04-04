@@ -1,76 +1,58 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: brcmnand: Add support for v6.2 controllers
-Date: Sun, 3 Apr 2016 23:53:53 -0700
-Message-ID: <20160404065353.GE13995@localhost>
-References: <1457652859-767-1-git-send-email-f.fainelli@gmail.com>
+From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Subject: Re: [PATCH 1/7] ARM: dts: armv7-m: add unit name to
+ interrupt-controller
+Date: Sun, 03 Apr 2016 23:51:45 -0700
+Message-ID: <ff9b34a6b4aa15fa7b98916c41245084@agner.ch>
+References: <1459290646-3592-1-git-send-email-manabian@gmail.com>
+ <1459290646-3592-2-git-send-email-manabian@gmail.com>
+ <20160404060558.GY6191@pengutronix.de>
+ <CAGhQ9Vxyf1m6mCpFZdfFymA-_PO9KsGuvPaBBrPxxbSEHT9eUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1457652859-767-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAGhQ9Vxyf1m6mCpFZdfFymA-_PO9KsGuvPaBBrPxxbSEHT9eUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Simon Arlott <simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BROADCOM STB NAND FLASH DRIVER" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+To: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Boris, Richard
+On 2016-04-03 23:42, Joachim  Eastwood wrote:
+> On 4 April 2016 at 08:05, Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> Hello Joachim,
+>>
+>> On Wed, Mar 30, 2016 at 12:30:40AM +0200, Joachim Eastwood wrote:
+>>> Add unit name to nvic to remove the following warning:
+>>>  Warning (unit_address_vs_reg): Node /nv-interrupt-controller has a=
+ reg
+>>>                               or ranges property, but no unit name
+>>>
+>>> Also correct the node name to 'interrupt-controller' while changing=
+ the
+>>> line.
+>>>
+>>> Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Looks right,
+>>
+>> Acked-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>=20
+> Thanks, Uwe.
+>=20
+>=20
+> Unless any of the other Cortex-M platform maintainers (added more CCs=
+)
+> has any objections I'll take this through the lpc18xx tree. I will
+> send a pull request to arm-soc with this soon.
 
-On Thu, Mar 10, 2016 at 03:34:16PM -0800, Florian Fainelli wrote:
-> Document and match the brcm,brcmnand-v6.2 compatible string, the controller has
-> a register layout identical to the v6.0 version and supports prefetch. Update the
-> command shift logic to account for v6.2 controller which are the first ones to
-> use a shift of 0 (6.1 used a shift of 24).
+Your patch looks right, I agree we should merge yours.
 
-Ah yes, another blip in the ever-shifting register layout of this
-controller. Fun!
+Acked-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 
-> Signed-off-by: Kamal Dasu <kdasu.kdev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Acked-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt | 1 +
->  drivers/mtd/nand/brcmnand/brcmnand.c                    | 3 ++-
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> index c2546ced9c02..deb24cbdda82 100644
-> --- a/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/brcm,brcmnand.txt
-> @@ -24,6 +24,7 @@ Required properties:
->                           brcm,brcmnand-v5.0
->                           brcm,brcmnand-v6.0
->                           brcm,brcmnand-v6.1
-> +                         brcm,brcmnand-v6.2
->                           brcm,brcmnand-v7.0
->                           brcm,brcmnand-v7.1
->                           brcm,brcmnand
-> diff --git a/drivers/mtd/nand/brcmnand/brcmnand.c b/drivers/mtd/nand/brcmnand/brcmnand.c
-> index e0528397306a..0b7a698cc233 100644
-> --- a/drivers/mtd/nand/brcmnand/brcmnand.c
-> +++ b/drivers/mtd/nand/brcmnand/brcmnand.c
-> @@ -601,7 +601,7 @@ static void brcmnand_wr_corr_thresh(struct brcmnand_host *host, u8 val)
->  
->  static inline int brcmnand_cmd_shift(struct brcmnand_controller *ctrl)
->  {
-> -	if (ctrl->nand_version < 0x0700)
-> +	if (ctrl->nand_version < 0x0602)
->  		return 24;
->  	return 0;
->  }
-> @@ -2115,6 +2115,7 @@ static const struct of_device_id brcmnand_of_match[] = {
->  	{ .compatible = "brcm,brcmnand-v5.0" },
->  	{ .compatible = "brcm,brcmnand-v6.0" },
->  	{ .compatible = "brcm,brcmnand-v6.1" },
-> +	{ .compatible = "brcm,brcmnand-v6.2" },
->  	{ .compatible = "brcm,brcmnand-v7.0" },
->  	{ .compatible = "brcm,brcmnand-v7.1" },
->  	{},
-> -- 
-> 2.1.0
-> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
