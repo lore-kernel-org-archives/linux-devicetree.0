@@ -1,73 +1,40 @@
-From: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?=
-        <noltari@gmail.com>
-Subject: [PATCH v2] bmips: add support for BCM63268
-Date: Mon,  4 Apr 2016 10:11:57 +0200
-Message-ID: <1459757517-14897-1-git-send-email-noltari@gmail.com>
-References: <1459684846-11308-1-git-send-email-noltari@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez_Rojas?= <noltari@gmail.com>
+Subject: Re: [PATCH 2/3] MIPS: BMIPS: improve BCM6358 device tree
+Date: Mon, 4 Apr 2016 10:13:07 +0200
+Message-ID: <1BA9312E-2743-472E-B07E-BE69C54573DE@gmail.com>
+References: <1459685585-11747-1-git-send-email-noltari@gmail.com> <1459685585-11747-2-git-send-email-noltari@gmail.com> <20160403231010.GA6518@linux-mips.org>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1459684846-11308-1-git-send-email-noltari@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-mips@linux-mips.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, simon@fire.lp0.eu
-Cc: =?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160403231010.GA6518@linux-mips.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, simon@fire.lp0.eu
 List-Id: devicetree@vger.kernel.org
 
-This SoC is very similar to BCM63168 and Broadcom usually refers to the=
-m as
-BCM63268.
-Use alphabetical order for bmips quirks.
-Add BCM63268 and missing BCM63168 to device tree documentation.
+Done,
 
-Signed-off-by: =C3=81lvaro Fern=C3=A1ndez Rojas <noltari@gmail.com>
+=C1lvaro.
+
+> El 4 abr 2016, a las 1:10, Ralf Baechle <ralf@linux-mips.org> escribi=
+=F3:
+>=20
+> On Sun, Apr 03, 2016 at 02:13:04PM +0200, =C1lvaro Fern=E1ndez Rojas =
+wrote:
+>=20
+>> - Switch to bcm6345-l1-intc interrupt controller.
+>> - Add ehci0 and ohci0 nodes.
+>> - Use proper native-endian syscon property.
+>>=20
+>> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari@gmail.com>
+>> ---
+>> arch/mips/boot/dts/brcm/bcm6358.dtsi | 29 ++++++++++++++++++++++++--=
 ---
- v2: keep support for BCM63168
-
- Documentation/devicetree/bindings/mips/brcm/soc.txt | 3 ++-
- arch/mips/bmips/setup.c                             | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Docu=
-mentation/devicetree/bindings/mips/brcm/soc.txt
-index e58a4f6..7a08c3e 100644
---- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
-+++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
-@@ -4,7 +4,8 @@ Required properties:
-=20
- - compatible: "brcm,bcm3384", "brcm,bcm33843"
-               "brcm,bcm3384-viper", "brcm,bcm33843-viper"
--              "brcm,bcm6328", "brcm,bcm6358", "brcm,bcm6368",
-+              "brcm,bcm63168", "brcm,bcm63268", "brcm,bcm6328",
-+              "brcm,bcm6358", "brcm,bcm6368",
-               "brcm,bcm7125", "brcm,bcm7346", "brcm,bcm7358", "brcm,bc=
-m7360",
-               "brcm,bcm7362", "brcm,bcm7420", "brcm,bcm7425"
-=20
-diff --git a/arch/mips/bmips/setup.c b/arch/mips/bmips/setup.c
-index 38b5bd5..7cca770 100644
---- a/arch/mips/bmips/setup.c
-+++ b/arch/mips/bmips/setup.c
-@@ -112,10 +112,11 @@ static void bcm6368_quirks(void)
- static const struct bmips_quirk bmips_quirk_list[] =3D {
- 	{ "brcm,bcm3384-viper",		&bcm3384_viper_quirks		},
- 	{ "brcm,bcm33843-viper",	&bcm3384_viper_quirks		},
-+	{ "brcm,bcm63168",              &bcm6368_quirks                 },
-+	{ "brcm,bcm63268",              &bcm6368_quirks                 },
- 	{ "brcm,bcm6328",		&bcm6328_quirks			},
- 	{ "brcm,bcm6358",		&bcm6358_quirks			},
- 	{ "brcm,bcm6368",		&bcm6368_quirks			},
--	{ "brcm,bcm63168",		&bcm6368_quirks			},
- 	{ },
- };
-=20
---=20
-2.1.4
+>=20
+> Any reason Why didn't you fold this patch into the "[v3,2/2] bmips: a=
+dd
+> device tree example for BCM6358" patch of the other series?
+>=20
+>  Ralf
+>=20
