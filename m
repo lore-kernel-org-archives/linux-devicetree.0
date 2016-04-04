@@ -1,83 +1,93 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v3] ARM: dts: dra7: Correct clock tree for sys_32k_ck
-Date: Mon, 4 Apr 2016 11:07:15 +0530
-Message-ID: <1459748235-27232-1-git-send-email-j-keerthy@ti.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: dtc warnings
+Date: Mon, 4 Apr 2016 11:20:00 +0530
+Message-ID: <20160404055000.GA3622@vireshk-i7>
+References: <CAL_Jsq+=OjY8y_8x7OSm-MWYKbrHN5cbv4TLwULxhNq+gfiMtw@mail.gmail.com>
+ <56FE27F9.2070100@gmail.com>
+ <CAJKOXPdDyVbfSyshu4j21Ax2J-VwPpMZgAGEeO8VtgFYh4hTmw@mail.gmail.com>
+ <56FE7E4A.2000601@ti.com>
+ <20160403065909.GF2987@vireshk-i7>
+ <20160403080854.GA12133@kozik-lap>
+ <CAKohpomijKf3m07Lc3+fWawxAPwe83F8k9akz1LOTokpZNL2ig@mail.gmail.com>
+ <20160404051656.GV17806@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lokeshvutla@ti.com, t-kristo@ti.com, linux-omap@vger.kernel.org, j-keerthy@ti.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20160404051656.GV17806@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Rob Herring <rob.herring@linaro.org>, Nishanth Menon <nm@ti.com>, Tomi Valkeinen <tomi.valkeinen@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, arm-platform-maintainers@lists.infradead.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is w.r.t J6/J6eco: 32clk is pseudo (erratum i856) - clock source.
-Errata i856 for the AM572x (DRA7xx) points out that the 32.768KHz external
-crystal is not enabled at power up. Instead the CPU falls back to using
-an emulation for the 32KHz clock which is SYSCLK1/610.  SYSCLK1 is usually
-20MHz on boards so far (which gives an emulated frequency of 32.786KHz)
+On 04-04-16, 00:16, Rob Herring wrote:
+> On Sun, Apr 03, 2016 at 05:57:00PM +0530, Viresh Kumar wrote:
+> > On 3 April 2016 at 13:38, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
+> > > Warnings coming from recent linux-next:
+> > >
+> > >   DTC     arch/arm/boot/dts/exynos5800-peach-pi.dtb
+> > > Warning (unit_address_vs_reg): Node /opp_table0/opp@1800000000 has a unit name, but no reg property
+> > > Warning (unit_address_vs_reg): Node /opp_table0/opp@1700000000 has a unit name, but no reg property
 
-Modelling the same in device tree.
+Something isn't right in my setup, as I am not hitting these:
 
-Acked-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
----
-Errata Document: http://www.ti.com/lit/er/sprz429h/sprz429h.pdf
-Errata number: i856
+$ make CROSS_COMPILE="arm-linux-gnueabihf-" ARCH=arm O=../bexynos dtbs
+make[1]: Entering directory '/mnt/ssd/all/work/repos/devel/bexynos'
+  CHK     include/config/kernel.release
+  Using /mnt/ssd/all/work/repos/devel/linux as source for kernel
+  GEN     ./Makefile
+  CHK     include/generated/uapi/linux/version.h
+  CHK     include/generated/utsrelease.h
+make[2]: 'include/generated/mach-types.h' is up to date.
+  CHK     include/generated/bounds.h
+  CHK     include/generated/timeconst.h
+  CHK     include/generated/asm-offsets.h
+  CALL    /mnt/ssd/all/work/repos/devel/linux/scripts/checksyscalls.sh
+<stdin>:1310:2: warning: #warning syscall preadv2 not implemented [-Wcpp]
+<stdin>:1313:2: warning: #warning syscall pwritev2 not implemented [-Wcpp]
+  DTC     arch/arm/boot/dts/exynos3250-artik5-eval.dtb
+  DTC     arch/arm/boot/dts/exynos3250-monk.dtb
+  DTC     arch/arm/boot/dts/exynos3250-rinato.dtb
+  DTC     arch/arm/boot/dts/exynos4210-origen.dtb
+  DTC     arch/arm/boot/dts/exynos4210-smdkv310.dtb
+  DTC     arch/arm/boot/dts/exynos4210-trats.dtb
+  DTC     arch/arm/boot/dts/exynos4210-universal_c210.dtb
+  DTC     arch/arm/boot/dts/exynos4412-odroidu3.dtb
+  DTC     arch/arm/boot/dts/exynos4412-odroidx.dtb
+  DTC     arch/arm/boot/dts/exynos4412-odroidx2.dtb
+  DTC     arch/arm/boot/dts/exynos4412-origen.dtb
+  DTC     arch/arm/boot/dts/exynos4412-smdk4412.dtb
+  DTC     arch/arm/boot/dts/exynos4412-tiny4412.dtb
+  DTC     arch/arm/boot/dts/exynos4412-trats2.dtb
+  DTC     arch/arm/boot/dts/exynos5250-arndale.dtb
+  DTC     arch/arm/boot/dts/exynos5250-smdk5250.dtb
+  DTC     arch/arm/boot/dts/exynos5250-snow.dtb
+  DTC     arch/arm/boot/dts/exynos5250-snow-rev5.dtb
+  DTC     arch/arm/boot/dts/exynos5250-spring.dtb
+  DTC     arch/arm/boot/dts/exynos5260-xyref5260.dtb
+  DTC     arch/arm/boot/dts/exynos5410-smdk5410.dtb
+  DTC     arch/arm/boot/dts/exynos5420-arndale-octa.dtb
+  DTC     arch/arm/boot/dts/exynos5420-peach-pit.dtb
+  DTC     arch/arm/boot/dts/exynos5420-smdk5420.dtb
+  DTC     arch/arm/boot/dts/exynos5422-odroidxu3.dtb
+  DTC     arch/arm/boot/dts/exynos5422-odroidxu3-lite.dtb
+  DTC     arch/arm/boot/dts/exynos5422-odroidxu4.dtb
+  DTC     arch/arm/boot/dts/exynos5440-sd5v1.dtb
+  DTC     arch/arm/boot/dts/exynos5440-ssdk5440.dtb
+  DTC     arch/arm/boot/dts/exynos5800-peach-pi.dtb
+make[1]: Leaving directory '/mnt/ssd/all/work/repos/devel/bexynos'
 
-Tested the debugfs clock tree nodes on DRA7-EVM.
+> > 
+> > @Rob: What should we be doing about these warnings?
+> > OPP-entries don't have a reg property obviously and we
+> > discussed earlier if naming them based on freq is fine or
+> > not.
+> 
+> We can whitelist opp nodes in dtc, use oppN instead, or ignore the 
+> warnings for now. 
 
-Changes in v3:
+I will be required to update check_unit_address_vs_reg() for that, right ? Or
+is there a easier way for doing this ? :)
 
-  Rebased to 4.6-rc2
-  Tested on top of omap-for-v4.6/fixes-rc1 branch and the patch applied
-  cleanly.
- 
-Changes in v2:
-
-  Added missing Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-
- arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index d0bae06..ef2164a 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -98,12 +98,20 @@
- 		clock-frequency = <32768>;
- 	};
- 
--	sys_32k_ck: sys_32k_ck {
-+	sys_clk32_crystal_ck: sys_clk32_crystal_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <32768>;
- 	};
- 
-+	sys_clk32_pseudo_ck: sys_clk32_pseudo_ck {
-+		#clock-cells = <0>;
-+		compatible = "fixed-factor-clock";
-+		clocks = <&sys_clkin1>;
-+		clock-mult = <1>;
-+		clock-div = <610>;
-+	};
-+
- 	virt_12000000_ck: virt_12000000_ck {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
-@@ -2170,4 +2178,12 @@
- 		ti,bit-shift = <22>;
- 		reg = <0x0558>;
- 	};
-+
-+	sys_32k_ck: sys_32k_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&sys_clk32_crystal_ck>, <&sys_clk32_pseudo_ck>, <&sys_clk32_pseudo_ck>, <&sys_clk32_pseudo_ck>;
-+		ti,bit-shift = <8>;
-+		reg = <0x6c4>;
-+	};
- };
 -- 
-1.9.1
+viresh
