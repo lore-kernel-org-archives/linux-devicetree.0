@@ -1,75 +1,62 @@
-From: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/16] arm64: dts: add sp804 timer node for Hi6220
-Date: Mon, 4 Apr 2016 21:42:37 +0800
-Message-ID: <20160404134237.GC402@leoy-linaro>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
- <1459589383-16914-3-git-send-email-guodong.xu@linaro.org>
- <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
- <20160404014359.GA15178@leoy-linaro>
- <CACRpkdZ=_86Rhc+ei+3uE0dda9+onC8pQwosheMfEj4tOqmcDA@mail.gmail.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [RFC PATCH 4/4] pinctrl: Parse GpioInt/GpioIo resources
+Date: Mon, 4 Apr 2016 16:47:40 +0300
+Message-ID: <20160404134740.GB1727@lahna.fi.intel.com>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+ <1459424685-26965-5-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZ=_86Rhc+ei+3uE0dda9+onC8pQwosheMfEj4tOqmcDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <1459424685-26965-5-git-send-email-irina.tirdea@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2016 at 01:21:00PM +0200, Linus Walleij wrote:
-> On Mon, Apr 4, 2016 at 3:43 AM, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Sun, Apr 03, 2016 at 09:23:42PM +0200, Linus Walleij wrote:
-> >> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
-> >> By chance the code in the driver will allow just one clock and
-> >> will then assume that both the bus to the timer and the timer
-> >> itself is clocked from the same clock. But I highly doubt that this
-> >> is the case.
-> >
-> > This patch has been sent out for review previously [1]; So I refered
-> > other platforms and changed to only enable apb bus clock due I have
-> > not found timer enabling bits in Hi6220's spec.
-> 
-> This is not about enabling/disabling the clock(s) to the timer.
-> It doesn't matter if these clocks are always on.
-> 
-> It is about determining the *frequency* of the timers.
-> 
-> It is vital that the timer driver get the right frequency of the clock
-> to the block from the clock implementation, and I do not think
-> it is the same as the "apb_pclk".
+On Thu, Mar 31, 2016 at 02:44:45PM +0300, Irina Tirdea wrote:
+> +static int acpi_parse_gpio_res(struct pinctrl *p,
+> +			       struct pinctrl_map **map,
+> +			       unsigned *num_maps,
+> +			       struct pinctrl_dev ***pctldevs)
+> +{
+> +	struct acpi_gpio_lookup lookup;
+> +	struct list_head res_list;
+> +	struct acpi_device *adev;
+> +	unsigned int index;
+> +	int ret;
+> +
+> +	adev = ACPI_COMPANION(p->dev);
+> +
+> +	*map = NULL;
+> +	*num_maps = 0;
+> +	memset(&lookup, 0, sizeof(lookup));
+> +
+> +	/* Parse all GpioInt/GpioIo resources in _CRS and extract pin conf */
+> +	for (index = 0; ; index++) {
+> +		lookup.index = index;
+> +		lookup.n = 0;
+> +		lookup.found = false;
+> +
+> +		INIT_LIST_HEAD(&res_list);
+> +		ret = acpi_dev_get_resources(adev, &res_list, acpi_gpio_to_map,
+> +					     &lookup);
+> +		if (ret < 0)
+> +			goto exit_free;
+> +		acpi_dev_free_resource_list(&res_list);
+> +		if (!lookup.found)
+> +			break;
+> +	}
+> +
+> +	*map = lookup.map;
+> +	*num_maps = lookup.num_maps;
+> +	*pctldevs = lookup.pctldevs;
 
-Thanks for reminding. Fortunately, apb_pclk and timer's clock are
-same, all of them's rate are 19.2MHz.
+This function has quite many stars in arguments and in the function
+body. In particular pctldevs has three stars!
 
-> The thing is that of course "any frequency" will
-> work but what you will notice is that the timer runs very
-> weirdly compared to wall-clock time unless the right clock
-> yielding the right frequency has been specified here.
+I wonder if this could be written in such way that avoids that. Like
+create a structure holding the map information and pass that to the
+function instead.
 
-Compared sp804 timer counter with wall-clock (which is using ARM's
-arch timer), and confirmed that sp804 timer's counter register is
-decreasing with rate 19.2MHz.
-
-Also have checked Hi6220's spec, there have no timer's dediated clock
-enabling bits. This is the reason before I only registered one clock.
-So according to you and Rob's comments, how about change as below?
-
-		dual_timer0: timer@f8008000 {
-			compatible = "arm,sp804", "arm,primecell";
-			reg = <0x0 0xf8008000 0x0 0x1000>;
-			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&ao_ctrl HI6220_TIMER0_PCLK>,
-				 <&ao_ctrl HI6220_TIMER0_PCLK>,
-				 <&ao_ctrl HI6220_TIMER0_PCLK>;
-			clock-names = "apb_pclk", "apb_pclk", "apb_pclk";
-		};
-
-Thanks,
-Leo Yan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Other parts of the patch look good to me.
