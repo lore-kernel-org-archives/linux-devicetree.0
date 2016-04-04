@@ -1,28 +1,69 @@
-From: Peter Hurley <peter@hurleysoftware.com>
-Subject: Re: [PATCH v7 1/5] of/serial: move earlycon early_param handling to
- serial
-Date: Mon, 4 Apr 2016 14:07:37 -0700
-Message-ID: <5702D799.5050101@hurleysoftware.com>
-References: <1459431629-27934-1-git-send-email-aleksey.makarov@linaro.org>
- <1459431629-27934-2-git-send-email-aleksey.makarov@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1459431629-27934-2-git-send-email-aleksey.makarov@linaro.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Aleksey Makarov <aleksey.makarov@linaro.org>
-Cc: Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Leif Lindholm <leif.lindholm@linaro.org>, Graeme Gregory <graeme.gregory@linaro.org>, Al Stone <ahs3@redhat.com>, Christopher Covington <cov@codeaurora.org>, Yury Norov <ynorov@caviumnetworks.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "Zheng, Lv" <lv.zheng@intel.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org
+From: Sreedhar Sambangi <ssambang@codeaurora.org>
+Subject: [PATCH 1/2] qcom: ipq4019: Add regulator support to DK04 device tree
+Date: Mon,  4 Apr 2016 14:08:10 -0700
+Message-ID: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/31/2016 06:40 AM, Aleksey Makarov wrote:
-> From: Leif Lindholm <leif.lindholm@linaro.org>
-> 
-> We have multiple "earlycon" early_param handlers - merge the DT one into
-> the main earlycon one.  It's a cleanup that also will be useful
-> to defer setting up DT console until ACPI/DT decision is made.
-> 
-> Rename the exported function to avoid clashing with the function from
-> arch/microblaze/kernel/prom.c
+    This adds the regulator nodes to DK04 device tree to support
 
-Reviewed-by: Peter Hurley <peter@hurleysoftware.com>
+Change-Id: I9c1df0e720a330bf6db1889fd2247f6a70ea6faa
+Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
+---
+ .../bindings/regulator/ipq4019-regulator.txt          | 19 +++++++++++++++++++
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi         | 11 +++++++++++
+ 2 files changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+new file mode 100644
+index 0000000..9d934a4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+@@ -0,0 +1,19 @@
++* Qualcomm Technologies, Inc. IPQ4019 regulators
++
++Required properties:
++- compatible		: Must be "regulator-ipq4019".
++- states		: Selection of available voltages and corresponding values
++- reg			: Register address for controlling LDO
++- mask			: Mask value for switching voltages
++Example:
++
++	vccq_sd0: regulator@0 {
++		compatible = "qcom,regulator-ipq4019";
++		regulator-name = "SD0 VccQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3000000>;
++		states = <3000000 0x3
++			1800000 0x1>;
++		reg = <0x01948000 0x4>;
++		mask = <0x3>;
++	};
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+index 9f3c864..566e239 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+@@ -155,5 +155,16 @@
+ 		watchdog@b017000 {
+ 			status = "ok";
+ 		};
++
++		vccq_sd0: regulator@0 {
++			compatible = "qcom,regulator-ipq4019";
++			regulator-name = "SD0 VccQ";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3000000>;
++			states = <3000000 0x3
++				1800000 0x1>;
++			reg = <0x01948000 0x4>;
++			mask = <0x3>;
++		};
+ 	};
+ };
+--
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
