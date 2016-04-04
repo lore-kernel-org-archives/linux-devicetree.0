@@ -1,69 +1,77 @@
-From: maitysanchayan@gmail.com
-Subject: Re: [PATCH v1 3/4] ARM: dts: vfxxx: Add OCROM and phandle entries
- for Vybrid SoC bus driver
-Date: Mon, 4 Apr 2016 13:44:59 +0530
-Message-ID: <20160404081459.GB11913@Sanchayan-Arch.toradex.int>
-References: <cover.1457684688.git.maitysanchayan@gmail.com>
- <39ab1c08dacb7fc4e36a3f3517da16d4da47710b.1457684688.git.maitysanchayan@gmail.com>
- <20160401060046.GG18833@tiger>
+From: Lars Persson <lars.persson@axis.com>
+Subject: Re: [PATCH v5 2/2] clk: add artpec-6 clock controller
+Date: Mon, 4 Apr 2016 10:24:42 +0200
+Message-ID: <570224CA.7040500@axis.com>
+References: <cover.1459447089.git.larper@axis.com> <24806729fd9726fe79d315a3c88ecf1c9ea237ef.1459447089.git.larper@axis.com> <20160402013928.GF18567@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20160401060046.GG18833@tiger>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: arnd@arndb.de, stefan@agner.ch, robh+dt@kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20160402013928.GF18567@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On 16-04-01 14:00:46, Shawn Guo wrote:
-> On Fri, Mar 11, 2016 at 02:29:30PM +0530, Sanchayan Maity wrote:
-> > Add OCROM node and introduce phandles to OCROM, MSCM and NVMEM
-> > OCOTP for use by the Vybrid SoC bus driver.
-> > 
-> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/vfxxx.dtsi | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
-> > index db9157e..0dd7ad5 100644
-> > --- a/arch/arm/boot/dts/vfxxx.dtsi
-> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
-> > @@ -87,9 +87,19 @@
-> >  	soc {
-> >  		#address-cells = <1>;
-> >  		#size-cells = <1>;
-> > -		compatible = "simple-bus";
-> > +		compatible = "fsl,vf610-soc-bus", "simple-bus";
-> >  		interrupt-parent = <&mscm_ir>;
-> >  		ranges;
-> > +		fsl,rom-revision = <&ocrom 0x80>;
-> > +		fsl,cpu-count = <&mscm_cpucfg 0x2C>;
-> > +		fsl,l2-size = <&mscm_cpucfg 0x14>;
-> 
-> We need a bindings doc for these new properties and compatible.
 
-Ok. Will add the documentation part in v2.
+On 04/02/2016 03:39 AM, Stephen Boyd wrote:
+> On 03/31, Lars Persson wrote:
+>> diff --git a/drivers/clk/axis/Makefile b/drivers/clk/axis/Makefile
+>> new file mode 100644
+>> index 0000000..628c9d3
+>> --- /dev/null
+>> +++ b/drivers/clk/axis/Makefile
+>> @@ -0,0 +1 @@
+>> +obj-$(CONFIG_MACH_ARTPEC6)	+= clk-artpec6.o
+>> diff --git a/drivers/clk/axis/clk-artpec6.c b/drivers/clk/axis/clk-artpec6.c
+>> new file mode 100644
+>> index 0000000..cf716f1
+>> --- /dev/null
 
-- Sanchayan.
+[snip]
+>
+>> +
+>> +	/* Read PLL1 factors configured by boot strap pins. */
+>> +	pll_mode = (readl(clkdata->syscon_base) >> 6) & 3;
+>> +	switch (pll_mode) {
+>> +	case 0:		/* DDR3-2133 mode */
+>> +		pll_m = 4;
+>> +		pll_n = 85;
+>> +		break;
+>> +	case 1:		/* DDR3-1866 mode */
+>> +		pll_m = 6;
+>> +		pll_n = 112;
+>> +		break;
+>> +	case 2:		/* DDR3-1600 mode */
+>> +		pll_m = 4;
+>> +		pll_n = 64;
+>> +		break;
+>> +	case 3:		/* DDR3-1333 mode */
+>> +		pll_m = 8;
+>> +		pll_n = 106;
+>> +		break;
+>> +	}
+>> +
+>> +	clkdata->clk_table[ARTPEC6_CLK_CPU] =
+>> +	    clk_register_fixed_factor(NULL, "cpu", sys_refclk_name, 0, pll_n,
+>> +				      pll_m);
+>> +	clkdata->clk_table[ARTPEC6_CLK_CPU_PERIPH] =
+>> +	    clk_register_fixed_factor(NULL, "cpu_periph", "cpu", 0, 1, 2);
+>> +
+>> +	/* EPROBE_DEFER on the apb_clock is not handled in amba devices. */
+>
+> Shouldn't we fix that then?
 
-> 
-> Shawn
-> 
-> > +		nvmem-cells = <&ocotp_cfg0>, <&ocotp_cfg1>;
-> > +		nvmem-cell-names = "cfg0", "cfg1";
-> > +
-> > +		ocrom: ocrom@00000000 {
-> > +			compatible = "fsl,vf610-ocrom", "syscon";
-> > +			reg = <0x00000000 0x18000>;
-> > +		};
-> >  
-> >  		aips0: aips-bus@40000000 {
-> >  			compatible = "fsl,aips-bus", "simple-bus";
-> > -- 
-> > 2.7.2
-> > 
-> > 
+Marek Szyprowski recently tried to fix this, but Russel NAKed the change 
+due to userspace breakage:
+https://lkml.org/lkml/2016/2/15/555
+
+
+>
+>> +	clkdata->clk_table[ARTPEC6_CLK_UART_PCLK] =
+>> +	    clk_register_fixed_factor(NULL, "uart_pclk", "cpu", 0, 1, 8);
+>> +	clkdata->clk_table[ARTPEC6_CLK_UART_REFCLK] =
+>> +	    clk_register_fixed_rate(NULL, "uart_ref", sys_refclk_name, 0,
+>> +				    50000000);
+>
