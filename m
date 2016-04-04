@@ -1,40 +1,35 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 05/16] arm64: dts: add Hi6220 pinctrl configuration
- nodes
-Date: Mon, 4 Apr 2016 15:54:53 -0700
-Message-ID: <20160404225453.GD16484@atomide.com>
-References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
- <1459589383-16914-6-git-send-email-guodong.xu@linaro.org>
- <CACRpkdaQdVL2A=0-8qQLMa0BBpxp4dugyT91DJW2kUm3BcB9aw@mail.gmail.com>
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH v13 0/9] add support for DWC UFS Controller
+Date: Mon, 04 Apr 2016 19:34:09 -0400
+Message-ID: <yq1inzxeyoe.fsf@sermon.lab.mkp.net>
+References: <cover.1459448160.git.jpinto@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaQdVL2A=0-8qQLMa0BBpxp4dugyT91DJW2kUm3BcB9aw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1459448160.git.jpinto@synopsys.com> (Joao Pinto's message
+	of "Mon, 4 Apr 2016 12:13:24 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: robh@kernel.org, tomas.winkler@intel.com, martin.petersen@oracle.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-* Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [160403 12:32]:
-> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> 
-> > From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >
-> > Add Hi6220 pinctrl configuration nodes
-> >
-> > Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> Nah. Acked-by is fine, but I didn't write handle or write this
-> code. :)
-> 
-> No ACK from Haojian? Tony? Looks allright?
+>>>>> "Joao" == Joao Pinto <Joao.Pinto@synopsys.com> writes:
 
-Looks OK to me, I guess no driver changes needed (again :)?
+Joao,
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Joao> The work consisted of: - Fixed typo in ufshcd-pltfrm.c - Tweak
+Joao> ufshcd.c for UFS 2.0 support - Implement ufshcd-dwc which contains
+Joao> all DWC HW specific code - Unipro attributes were added and new
+Joao> registers were added to the driver - Implement a tc-dwc-g210
+Joao> containing G210 MPHY specific code - Implement a tc-dwc-g210 glue
+Joao> platform driver - Implement a tc-dwc-g210 glue pci driver -
+Joao> Documentation update
+
+You really need to keep track of which Acked-by: and Reviewed-by: tags
+you have gotten from people and apply them to patches that you haven't
+changed. Otherwise we start from scratch every time you resubmit.
+
+Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
