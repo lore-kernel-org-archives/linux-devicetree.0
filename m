@@ -1,227 +1,88 @@
-From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] mtd: spi-nor: add an alternative method to support
- memory >16MiB
-Date: Mon, 4 Apr 2016 16:27:09 +0200
-Message-ID: <570279BD.6050604@atmel.com>
-References: <1458556429-11741-1-git-send-email-cyrille.pitchen@atmel.com>
- <20160321170107.GG2545@google.com> <56F02C70.6050106@atmel.com>
- <20160321175537.GH2545@google.com> <56F12C24.6040206@atmel.com>
- <20160401203852.GD3645@localhost>
+From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Subject: Re: [PATCH v2 1/9] Documentation: dt-bindings: Document STM32 EXTI
+ controller bindings
+Date: Mon, 4 Apr 2016 16:32:33 +0200
+Message-ID: <CALszF6CEs_5BATN5Vz-=z=ukL5cSKnCLVz+3mU0G9ohfq1RwpQ@mail.gmail.com>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+	<1459436979-17275-2-git-send-email-mcoquelin.stm32@gmail.com>
+	<20160404051529.GA17806@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160401203852.GD3645@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20160404051529.GA17806@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+Hi Rob,
 
-Le 01/04/2016 22:38, Brian Norris a =E9crit :
-> On Tue, Mar 22, 2016 at 12:27:32PM +0100, Cyrille Pitchen wrote:
->> Le 21/03/2016 18:55, Brian Norris a =E9crit :
->>> On Mon, Mar 21, 2016 at 06:16:32PM +0100, Cyrille Pitchen wrote:
->>>> Le 21/03/2016 18:01, Brian Norris a =E9crit :
->>>>> On Mon, Mar 21, 2016 at 11:33:49AM +0100, Cyrille Pitchen wrote:
->>>>>> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/K=
-config
->>>>>> index d42c98e1f581..7fae36fc8526 100644
->>>>>> --- a/drivers/mtd/spi-nor/Kconfig
->>>>>> +++ b/drivers/mtd/spi-nor/Kconfig
->>>>>> @@ -29,6 +29,18 @@ config MTD_SPI_NOR_USE_4K_SECTORS
->>>>>>  	  Please note that some tools/drivers/filesystems may not work=
- with
->>>>>>  	  4096 B erase size (e.g. UBIFS requires 15 KiB as a minimum).
->>>>>> =20
->>>>>> +config MTD_SPI_NOR_USE_4B_OPCODES
->>>>>> +	bool "Use 4-byte address op codes"
->>>>>> +	default n
->>>>>> +	help
->>>>>> +	  This is an alternative to the "Enter/Exit 4-byte mode" comma=
-nds and
->>>>>> +	  Base Address Register (BAR) updates to support flash size ab=
-ove 16MiB.
->>>>>> +	  Using dedicated 4-byte address op codes for (Fast) Read, Pag=
-e Program
->>>>>> +	  and Sector Erase operations avoids changing the internal sta=
-te of the
->>>>>> +	  SPI NOR memory. Hence if a CPU reset occurs, early bootloade=
-rs can
->>>>>> +	  still use regular 3-byte address op codes and read from the =
-very first
->>>>>> +	  16MiB of the flash memory.
->>>>>> +
->>>>>
->>>>> Why does this need to be a Kconfig option? Can't it just as well =
-be
->>>>> supported by keeping entries in the ID table, to show which flash
->>>>> support these opcodes and which don't? Kconfig is really a bad me=
-chanism
->>>>> for trying to configure your flash.
->>>>
->>>> Well, the only reason why I've chosen a Kconfig option is to be as=
- safe as
->>>> possible, if for some reason someone still wants to use the former
->>>> implementation. Honestly I don't know why one would do so but I'm =
-cautious
->>>> so I also set "default n". This way no regression is introduced.
->>>
->>> I think the main reason is that some manufacturers did not initiall=
-y
->>> support both methods. So we couldn't just say "all Micron" or "all
->>> Macronix" should use these opcodes. Spansion was the only one to su=
-pport
->>> them consistently. See [1] for reference.
->>>
->>> And actually, your Kconfig option is not "cautious", because you ha=
-ve no
->>> guarantee that people will make intelligent choices here. So you're
->>> making a Kconfig that if someone accidentally turns it on, their fl=
-ash
->>> might not work any more. That's much less safe than properly labell=
-ing
->>> which flash supports which feature.
->>>
->>>> If you think it's better to use a dedicated flag like SECT_4K or
->>>> SPI_NOR_QUAD_READ in the spi_nor_ids[] table, I'm perfectly fine w=
-ith it as
->>>> well.
->>>
->>> I think that would be better. (Really, an opt-out would be the leas=
-t
->>> work in the long-run I think, since IIRC there were only a few
->>> early-generation flash that were both large enough to need 4 byte
->>> addressing and didn't support the dedicated opcodes. But it'll be h=
-ard
->>> to track those down now I think, so opt-in probably is most practic=
-al.)
->>>
->>>> Just let me know your choice then I'll update my patch accordingly=
- if needed.
->>>
->>> Brian
->>>
->>> [1]
->>> commit 87c9511fba2bd069a35e1312587a29e112fc0cd6
->>> Author: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Date:   Thu Apr 11 01:34:57 2013 -0700
->>>
->>>     mtd: m25p80: utilize dedicated 4-byte addressing commands
->>>
+2016-04-04 7:15 GMT+02:00 Rob Herring <robh@kernel.org>:
+> On Thu, Mar 31, 2016 at 05:09:31PM +0200, Maxime Coquelin wrote:
+>> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+>> ---
+>>  .../bindings/interrupt-controller/st,stm32-exti.txt  | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
 >>
->> Indeed, your commit message is very interesting since it points out =
-some issue
->> I already face: for my test I'm currently using a Macronix MX25L2567=
-3G
->> (JEDEC ID C22019). This memory *does* support the dedicated 4byte ad=
-dress op
->> codes.
->>
->> Then if I look at the datasheet for the Macronix MX25L25635E, this o=
-lder memory
->> shares the exact same JEDEC ID, C22019 but *doesn't* support the 4by=
-te address
->> op codes.
->>
->> None of these two memory types use ext id: the JEDEC ID is only 3byt=
-e long.
->> Anyway, in QPI mode, the QPIID command (0xAF), which replaces the re=
-gular
->> Read ID command (0x9f) only sends 3 bytes too.
->>
->> The memory table inside the spi-nor framework is indexed by JEDEC ID=
- (+ ext id)
->> but we've just pointed out a case where it is not possible to create=
- two
->> different entries in this table, one for the 35E without the "4byte"=
- flag, the
->> other for 73G with the "4byte" flag.
->>
->> So there is no mean for the software to discover at runtime what are=
- the actual
->> capabilities of the memory. Hence I think we should introduce a DT p=
-roperty
->> which would clearly tell the spi-nor framework that we want to use t=
-he
->> dedicated 4byte address op codes instead of entering the 4byte addre=
-ss mode
->> (still the default behaviour since older memories only support this =
-mode).
->=20
-> We don't absolutely need a new property. You could just support
-> "mxic,mx25l25673g" in the compatible property, and make sure that nam=
-e
-> matching will override the ID matching. (Although, maybe this won't w=
-ork
-> so well, since plenty of DT's erroneously have used "m25p80" even tho=
-ugh
-> they are not "m25p80" flash...)
->=20
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>> new file mode 100644
+>> index 000000000000..6e7703d4ff5b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+>> @@ -0,0 +1,20 @@
+>> +STM32 External Interrupt Controller
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: Should be "st,stm32-exti"
+>> +- reg: Specifies base physical address and size of the registers
+>> +- interrupt-controller: Indentifies the node as an interrupt controller
+>> +- #interrupt-cells: Specifies the number of cells to encode an interrupt
+>> +  specifier, shall be 2
+>> +- interrupts: interrupts references to primary interrupt controller
+>
+> Need to define how many and what is the order?
+The exti driver uses of_irq_count() to count the number of interrupts.
+The order doesn't matter in my implementation, I will come back on
+this point below.
 
-I've implemented the solution you suggest in v5 of the series. I think =
-the
-implementation is backward compatible and should also work with DT usin=
-g
-"m25p80": we should still fall into the branch where the
-"found %s, expected %s\n" warning message is printed.
+>
+> Are these 1:1 mapping? You could use interrupt-map here to define the
+> mapping.
 
-I've just replaced the "jinfo !=3D info" test by
-"jinfo->id_len !=3D info->id_len || memcmp(jinfo->id, info->id, info->i=
-d_len)".
+No, this is not 1:1 mapping.
+This is the mapping for STM32F429 (With 'n' managed by a mux in Syscfg
+(from GPIOA to GPIOI)):
+EXTI0 (GPIOn0) : NVIC 6
+EXTI1 (GPIOn1) : NVIC 7
+EXTI2 (GPIOn2) : NVIC 8
+EXTI3 (GPIOn3) : NVIC 9
+EXTI4 (GPIOn4) : NVIC 10
+EXTI5 (GPIOn5) : NVIC 23
+EXTI6 (GPIOn6) : NVIC 23
+EXTI7 (GPIOn7) : NVIC 23
+EXTI8 (GPIOn8) : NVIC 23
+EXTI9 (GPIOn9) : NVIC 23
+EXTI10 (GPIOn10) : NVIC 40
+EXTI11 (GPIOn11) : NVIC 40
+EXTI12 (GPIOn12) : NVIC 40
+EXTI13 (GPIOn13) : NVIC 40
+EXTI14 (GPIOn14) : NVIC 40
+EXTI15 (GPIOn15) : NVIC 40
+EXTI16 (PVD) : NVIC 1
+EXTI17 (RTC Alarm) : NVIC 41
+EXTI18 (USB OTG FS Wakeup) : NVIC 42
+EXTI19 (Ethernet Wakeup) : NVIC 62
+EXTI20 (USB OTG HS Wakeup) : NVIC 76
+EXTI21 (RTC Tamper) : NVIC 2
+EXTI22 (RTC Wakeup) : NVIC 3
 
-So it allows a add multiple entries in the spi_nor_ids[] table sharing =
-the very
-same JEDEC ID.
+Ideally, we should define a kind of mapping in the DT node.
+However, from what I understand 'interrupt-map' is not intended to be used
+in an interrupt controller (it would not even be parsed in of_irq_parse_raw()).
 
-The right entry (info) is first selected by spi_nor_match_id() accordin=
-g to the
-'name' parameter, which is almost always set from the DT compatible str=
-ing.
-Non DT users can also select the entry they want as long as they provid=
-e the
-revelant string in the 'name' parameter of spi_nor_scan().
+Any ideas?
 
->> So what about a new DT named "m25p,4byte-opcodes" so the naming is c=
-onsistent
->> with the existing "m25p,fast-read"?
->=20
-> (I never liked the fast-read property, FWIW. It wasn't necessary.)
->=20
-> If we're choosing new properties, let's not make them "m25p", since
-> that's neither a vendor prefix, nor does it reflect its driver use ca=
-se.
-> (We would support it for non-m25p80-based drivers.)
->=20
-> "spi-nor," might be a better prefix.
-
-"spi-nor-4byte-opcodes" was v4.
-
->=20
->> For DT guys, I just sum the initial issue up: entering the 4byte add=
-ress mode
->> as currently done changes the internal state of the SPI memory. If a=
- SoC reset
->> occurs, some early bootloaders not supporting this 4byte address mod=
-e expect
->> to use only 3byte addresses for (Fast) Read operations =3D> the boot=
- is broken.
->> Then using the dedicated 4byte address op codes fixes the issue as t=
-hey don't
->> change the internal memory state so early bootloader can still use 3=
-byte
->> address op codes.
->=20
-> Brian
->=20
-
-Best regards,
-
-Cyrille
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for the review,
+Maxime
