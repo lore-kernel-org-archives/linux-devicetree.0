@@ -1,40 +1,69 @@
-From: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez_Rojas?= <noltari@gmail.com>
-Subject: Re: [PATCH 2/3] MIPS: BMIPS: improve BCM6358 device tree
-Date: Mon, 4 Apr 2016 10:13:07 +0200
-Message-ID: <1BA9312E-2743-472E-B07E-BE69C54573DE@gmail.com>
-References: <1459685585-11747-1-git-send-email-noltari@gmail.com> <1459685585-11747-2-git-send-email-noltari@gmail.com> <20160403231010.GA6518@linux-mips.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: maitysanchayan@gmail.com
+Subject: Re: [PATCH v1 3/4] ARM: dts: vfxxx: Add OCROM and phandle entries
+ for Vybrid SoC bus driver
+Date: Mon, 4 Apr 2016 13:44:59 +0530
+Message-ID: <20160404081459.GB11913@Sanchayan-Arch.toradex.int>
+References: <cover.1457684688.git.maitysanchayan@gmail.com>
+ <39ab1c08dacb7fc4e36a3f3517da16d4da47710b.1457684688.git.maitysanchayan@gmail.com>
+ <20160401060046.GG18833@tiger>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160403231010.GA6518@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <20160401060046.GG18833@tiger>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, f.fainelli@gmail.com, jogo@openwrt.org, cernekee@gmail.com, simon@fire.lp0.eu
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: arnd@arndb.de, stefan@agner.ch, robh+dt@kernel.org, lee.jones@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Done,
+Hello,
 
-=C1lvaro.
+On 16-04-01 14:00:46, Shawn Guo wrote:
+> On Fri, Mar 11, 2016 at 02:29:30PM +0530, Sanchayan Maity wrote:
+> > Add OCROM node and introduce phandles to OCROM, MSCM and NVMEM
+> > OCOTP for use by the Vybrid SoC bus driver.
+> > 
+> > Signed-off-by: Sanchayan Maity <maitysanchayan@gmail.com>
+> > ---
+> >  arch/arm/boot/dts/vfxxx.dtsi | 12 +++++++++++-
+> >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/vfxxx.dtsi b/arch/arm/boot/dts/vfxxx.dtsi
+> > index db9157e..0dd7ad5 100644
+> > --- a/arch/arm/boot/dts/vfxxx.dtsi
+> > +++ b/arch/arm/boot/dts/vfxxx.dtsi
+> > @@ -87,9 +87,19 @@
+> >  	soc {
+> >  		#address-cells = <1>;
+> >  		#size-cells = <1>;
+> > -		compatible = "simple-bus";
+> > +		compatible = "fsl,vf610-soc-bus", "simple-bus";
+> >  		interrupt-parent = <&mscm_ir>;
+> >  		ranges;
+> > +		fsl,rom-revision = <&ocrom 0x80>;
+> > +		fsl,cpu-count = <&mscm_cpucfg 0x2C>;
+> > +		fsl,l2-size = <&mscm_cpucfg 0x14>;
+> 
+> We need a bindings doc for these new properties and compatible.
 
-> El 4 abr 2016, a las 1:10, Ralf Baechle <ralf@linux-mips.org> escribi=
-=F3:
->=20
-> On Sun, Apr 03, 2016 at 02:13:04PM +0200, =C1lvaro Fern=E1ndez Rojas =
-wrote:
->=20
->> - Switch to bcm6345-l1-intc interrupt controller.
->> - Add ehci0 and ohci0 nodes.
->> - Use proper native-endian syscon property.
->>=20
->> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari@gmail.com>
->> ---
->> arch/mips/boot/dts/brcm/bcm6358.dtsi | 29 ++++++++++++++++++++++++--=
----
->=20
-> Any reason Why didn't you fold this patch into the "[v3,2/2] bmips: a=
-dd
-> device tree example for BCM6358" patch of the other series?
->=20
->  Ralf
->=20
+Ok. Will add the documentation part in v2.
+
+- Sanchayan.
+
+> 
+> Shawn
+> 
+> > +		nvmem-cells = <&ocotp_cfg0>, <&ocotp_cfg1>;
+> > +		nvmem-cell-names = "cfg0", "cfg1";
+> > +
+> > +		ocrom: ocrom@00000000 {
+> > +			compatible = "fsl,vf610-ocrom", "syscon";
+> > +			reg = <0x00000000 0x18000>;
+> > +		};
+> >  
+> >  		aips0: aips-bus@40000000 {
+> >  			compatible = "fsl,aips-bus", "simple-bus";
+> > -- 
+> > 2.7.2
+> > 
+> > 
