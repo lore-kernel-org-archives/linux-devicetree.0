@@ -1,75 +1,59 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCH v3 2/2] mmc: dw_mmc: add resets support to dw_mmc
-Date: Mon, 04 Apr 2016 12:54:03 +0900
-Message-ID: <5701E55B.1080503@samsung.com>
-References: <1459322696-29919-1-git-send-email-guodong.xu@linaro.org>
- <1459322696-29919-3-git-send-email-guodong.xu@linaro.org>
- <56FBBB2F.5030308@samsung.com> <1754831.FONmYVUinF@phil>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/9] Documentation: dt-bindings: Document STM32 EXTI
+ controller bindings
+Date: Mon, 4 Apr 2016 00:15:29 -0500
+Message-ID: <20160404051529.GA17806@rob-hp-laptop>
+References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
+ <1459436979-17275-2-git-send-email-mcoquelin.stm32@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1754831.FONmYVUinF@phil>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Guodong Xu <guodong.xu@linaro.org>, shawn.lin@rock-chips.com, "robh+dt@kernel.org" <robh+dt@kernel.org>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459436979-17275-2-git-send-email-mcoquelin.stm32@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, bruherrera@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2016 03:42 AM, Heiko Stuebner wrote:
-> Am Mittwoch, 30. M=E4rz 2016, 20:40:31 schrieb Jaehoon Chung:
->> modified Rob's mail address.
->>
->> On 03/30/2016 04:24 PM, Guodong Xu wrote:
->>> mmc registers may in abnormal state if mmc is used in bootloader,
->>> eg. to support booting from eMMC. So we need reset mmc registers
->>> when kernel boots up, instead of assuming mmc is in clean state.
->>
->> Do you mean mmc(card side) register or dwmmc host controller's regis=
-ter on
->> host side?
->>
->> According to dwmmc controller TMR, there are two reset signals. One =
-is
->> reset_n, other is rst_n. It seems this patch is relevant to reset_n(=
-=46or
->> host). (rst_n is hardware reset for card.)
->>
->> So could you clarify better? Then it's helpful to me for understandi=
-ng..
->=20
-> I think that actually means a reset of controller IP block logic, out=
-side=20
-> the control of the dw_mmc block itself.
->=20
-> On Rockchip SoCs this gets triggered from the CRU (clock and reset un=
-it), so=20
-> I guess if I'm reading the manual correctly, should be the reset_n si=
-gnal of=20
-> the ip block.
->=20
-> rst_n on the other hand gets triggered through a dw_mmc register sett=
-ing and=20
-> is already handled by the dw_mmc driver.
+On Thu, Mar 31, 2016 at 05:09:31PM +0200, Maxime Coquelin wrote:
+> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> ---
+>  .../bindings/interrupt-controller/st,stm32-exti.txt  | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+> new file mode 100644
+> index 000000000000..6e7703d4ff5b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
+> @@ -0,0 +1,20 @@
+> +STM32 External Interrupt Controller
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "st,stm32-exti"
+> +- reg: Specifies base physical address and size of the registers
+> +- interrupt-controller: Indentifies the node as an interrupt controller
+> +- #interrupt-cells: Specifies the number of cells to encode an interrupt
+> +  specifier, shall be 2
+> +- interrupts: interrupts references to primary interrupt controller
 
-Right, this patch is for reset_n signal. I didn't have seen the SoC tha=
-t reset_n is designed.
-(Or i didn't realize...)
-If Rockchip is used from CRU (clock and reset unit), then i think that =
-it makes sense.
+Need to define how many and what is the order?
 
-Thanks for explanation.=20
+Are these 1:1 mapping? You could use interrupt-map here to define the 
+mapping.
 
-Best Regards,
-Jaehoon Chung
-
->=20
->=20
-> Heiko
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
->=20
-
+> +
+> +Example:
+> +
+> +exti: interrupt-controller@40013c00 {
+> +	compatible = "st,stm32-exti";
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	reg = <0x40013C00 0x400>;
+> +	interrupts = <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <42>, <62>, <76>;
+> +};
+> -- 
+> 1.9.1
+> 
