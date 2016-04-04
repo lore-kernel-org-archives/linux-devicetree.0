@@ -1,63 +1,30 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Define DT bindings for PM QoS device latencies
-Date: Mon, 4 Apr 2016 11:42:04 +0200
-Message-ID: <CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
-References: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
-	<20160401184429.GA18950@rob-hp-laptop>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
+Date: Mon, 4 Apr 2016 15:37:59 +0530
+Message-ID: <57023CFF.5040308@microchip.com>
+References: <1459509530-22716-1-git-send-email-purna.mandal@microchip.com>
+ <20160402163506.GD2350@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20160401184429.GA18950@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lina Iyer <lina.iyer@linaro.org>, Axel Haslam <ahaslam@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jon Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160402163506.GD2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 April 2016 at 20:44, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Mar 31, 2016 at 03:50:25PM +0200, Ulf Hansson wrote:
->> PM QoS device latencies are properties of the hardware. Let's define some
->> DT bindings for them.
->>
->> Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
->> index 025b5e7..b101a20 100644
->> --- a/Documentation/devicetree/bindings/power/power_domain.txt
->> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
->> @@ -65,12 +65,18 @@ Required properties:
->>   - power-domains : A phandle and PM domain specifier as defined by bindings of
->>                     the power controller specified by phandle.
->>
->> +Optional properties:
->> + - suspend-latency: Suspend latency of the device in ns.
->> + - resume-latency: Resume latency of the device in ns.
->
-> The names are a bit Linux specific, but I don't have a better
-> suggestion. Could be power-up/down, but then you may have other
-> latencies such as link up times.
->
-> Whatever we end up with, add a unit suffix (-ns).
+On 04/02/2016 10:05 PM, Mark Brown wrote:
 
-Okay.
+> On Fri, Apr 01, 2016 at 04:48:49PM +0530, Purna Chandra Mandal wrote:
+>> Document the devicetree bindings for the SPI peripheral found
+>> on Microchip PIC32 class devices.
+> Please use subject lines reflecting the style for the subsystem.
 
->
-> Shouldn't this be split into latency of the domain (and in the domain's
-> node) and latency of the device?
+ack. Will do.
 
-Yes! $Subject patch only takes device latencies into account.
 
-Perhaps what you mean is that we should document device PM QoS
-latencies in another place than
-Documentation/devicetree/bindings/power/power_domain.txt as well?
-
-Regarding bindings for the domain latencies, I will post that as a
-separate patch soonish.
-
-[...]
-
-Kind regards
-Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
