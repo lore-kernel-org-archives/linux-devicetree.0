@@ -1,103 +1,188 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [RFC][PATCH 1/2] dt/bindings: display: Add DT bindings for Mali
- Display Processors.
-Date: Mon, 4 Apr 2016 10:02:45 +0100
-Message-ID: <20160404090245.GF27137@e106497-lin.cambridge.arm.com>
-References: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
- <1459527712-9488-2-git-send-email-Liviu.Dudau@arm.com>
- <20160401164757.GB7395@leverpostej>
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3 v2] drm/i2c/adv7511: Add audio support
+Date: Mon, 4 Apr 2016 10:05:39 +0100
+Message-ID: <57022E63.2010900@synopsys.com>
+References: <cover.1459174494.git.joabreu@synopsys.com>
+ <15b1936d307912ba12df7fa09ec3a7a80ac5fcef.1459174494.git.joabreu@synopsys.com>
+ <5276355.2bQYPXCpz6@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20160401164757.GB7395@leverpostej>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, LKML <linux-kernel@vger.kernel.org>, DRI devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5276355.2bQYPXCpz6@avalon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tixy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, yitian.bu-sf4bEIuTEZ8/jFmSBShxMA@public.gmane.org, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, nariman-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Maruthi.Bayyavarapu-5C7GfCeVMHo@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, buyitian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alexander.deucher-5C7GfCeVMHo@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBBcHIgMDEsIDIwMTYgYXQgMDU6NDc6NTdQTSArMDEwMCwgTWFyayBSdXRsYW5kIHdy
-b3RlOgo+IE9uIEZyaSwgQXByIDAxLCAyMDE2IGF0IDA1OjIxOjUxUE0gKzAxMDAsIExpdml1IER1
-ZGF1IHdyb3RlOgo+ID4gQWRkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBNYWxp
-IERpc3BsYXkgUHJvY2Vzc29yLiBUaGUgYmluZGluZ3MKPiA+IGRlc2NyaWJlIHRoZSBNYWxpIERQ
-NTAwLCBEUDU1MCBhbmQgRFA2NTAgcHJvY2Vzc29ycyBmcm9tIEFSTSBMdGQuCj4gPiAKPiA+IENj
-OiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPgo+ID4gQ2M6IFBhd2VsIE1vbGwgPHBh
-d2VsLm1vbGxAYXJtLmNvbT4KPiA+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0u
-Y29tPgo+ID4gQ2M6IElhbiBDYW1wYmVsbCA8aWpjK2RldmljZXRyZWVAaGVsbGlvbi5vcmcudWs+
-Cj4gPiBDYzogS3VtYXIgR2FsYSA8Z2FsYWtAY29kZWF1cm9yYS5vcmc+Cj4gPiAKPiA+IFNpZ25l
-ZC1vZmYtYnk6IExpdml1IER1ZGF1IDxMaXZpdS5EdWRhdUBhcm0uY29tPgo+ID4gLS0tCj4gPiAg
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0sbWFsaWRwLnR4dCAgICAgfCA2NSAr
-KysrKysrKysrKysrKysrKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY1IGluc2VydGlvbnMo
-KykKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybSxtYWxpZHAudHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtLG1hbGlkcC50eHQKPiA+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi5lZDcwZGUzCj4gPiAtLS0gL2Rl
-di9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9hcm0sbWFsaWRwLnR4dAo+ID4gQEAgLTAsMCArMSw2NSBAQAo+ID4gK0FSTSBNYWxpLURQCj4g
-PiArCj4gPiArVGhlIGZvbGxvd2luZyBiaW5kaW5ncyBhcHBseSB0byBhIGZhbWlseSBvZiBEaXNw
-bGF5IFByb2Nlc3NvcnMgc29sZCBhcwo+ID4gK2xpY2Vuc2FibGUgSVAgYnkgQVJNIEx0ZC4gVGhl
-IGJpbmRpbmdzIGRlc2NyaWJlIHRoZSBNYWxpIERQNTAwLCBEUDU1MCBhbmQKPiA+ICtEUDY1MCBw
-cm9jZXNzb3JzIHRoYXQgb2ZmZXIgbXVsdGlwbGUgY29tcG9zaXRpb24gbGF5ZXJzLCBzdXBwb3J0
-IGZvcgo+ID4gK3JvdGF0aW9uIGFuZCBzY2FsaW5nIG91dHB1dC4KPiA+ICsKPiA+ICtSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgo+ID4gKyAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mCj4gPiAr
-CSJhcm0sbWFsaS1kcDUwMCIKPiA+ICsJImFybSxtYWxpLWRwNTUwIgo+ID4gKwkiYXJtLG1hbGkt
-ZHA2NTAiCj4gPiArICAgIGRlcGVuZGluZyBvbiB0aGUgcGFydGljdWxhciBpbXBsZW1lbnRhdGlv
-biBwcmVzZW50IGluIHRoZSBoYXJkd2FyZQo+ID4gKyAgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRk
-cmVzcyBhbmQgc2l6ZSBvZiB0aGUgYmxvY2sgb2YgcmVnaXN0ZXJzIHVzZWQgYnkKPiA+ICsgICAg
-dGhlIHByb2Nlc3Nvci4KPiA+ICsgIC0gaW50ZXJydXB0czogSW50ZXJydXB0IGxpc3QsIGFzIGRl
-ZmluZWQgaW4gLi4vaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQsCj4gPiArICAg
-IGludGVycnVwdCBjbGllbnQgbm9kZXMuCj4gPiArICAtIGludGVycnVwdC1uYW1lczogbmFtZSBv
-ZiB0aGUgZW5naW5lIGluc2lkZSB0aGUgcHJvY2Vzc29yIHRoYXQgd2lsbAo+ID4gKyAgICB1c2Ug
-dGhlIGNvcnJlc3BvbmRpbmcgaW50ZXJydXB0LiBTaG91bGQgYmUgb25lIG9mICJERSIgb3IgIlNF
-Ii4KPiAKPiBzL2JlIG9uZSBvZi9jb250YWluLywgcy9vci9hbmQvLCBqdWRnaW5nIGJ5IHRoZSBl
-eGFtcGxlLgoKWWVzLCBJIG5lZWQgdG8gcmVwaHJhc2UgdGhhdCBhcyBteSBpbnRlbnQgd2FzIHRv
-IGV4cGxhaW4gdGhhdCBlYWNoIG9mIHRoZSBuYW1lcyBjYW4KYmUgZWl0aGVyICJERSIgb3IgIlNF
-IiwgYnV0IGFsbCB0aGUgcmV2aWV3cyBzbyBmYXIgdHJpcHBlZCBvdmVyIHRoaXMgb25lLgoKPiAK
-PiBPdGhlcndpc2UgdGhpcyBnZW5lcmFsbHkgbG9va3MgZmluZSB0byBtZS4KClRoYW5rcyBmb3Ig
-cmV2aWV3aW5nIHRoaXMhCkxpdml1Cgo+IAo+IE1hcmsuCj4gCj4gPiArICAtIGNsb2NrczogQSBs
-aXN0IG9mIHBoYW5kbGUgKyBjbG9jay1zcGVjaWZpZXIgcGFpcnMsIG9uZSBmb3IgZWFjaCBlbnRy
-eQo+ID4gKyAgICBpbiAnY2xvY2stbmFtZXMnCj4gPiArICAtIGNsb2NrLW5hbWVzOiBBIGxpc3Qg
-b2YgY2xvY2sgbmFtZXMuIEl0IHNob3VsZCBjb250YWluOgo+ID4gKyAgICAgIC0gInBjbGsiOiBm
-b3IgdGhlIEFQQiBpbnRlcmZhY2UgY2xvY2sKPiA+ICsgICAgICAtICJhY2xrIjogZm9yIHRoZSBB
-WEkgaW50ZXJmYWNlIGNsb2NrCj4gPiArICAgICAgLSAibWNsayI6IGZvciB0aGUgbWFpbiBwcm9j
-ZXNzb3IgY2xvY2sKPiA+ICsgICAgICAtICJweGxjbGsiOiBmb3IgdGhlIHBpeGVsIGNsb2NrIGZl
-ZWRpbmcgdGhlIG91dHB1dCBQTEwgb2YgdGhlIHByb2Nlc3Nvci4KPiA+ICsgIC0gYXJtLG1hbGlk
-cC1vdXRwdXQtcG9ydC1saW5lczogQXJyYXkgb2YgdTggdmFsdWVzIGRlc2NyaWJpbmcgdGhlIG51
-bWJlcgo+ID4gKyAgICBvZiBvdXRwdXQgbGluZXMgcGVyIGNoYW5uZWwgKFIsIEcgYW5kIEIpLgo+
-ID4gKwo+ID4gK1JlcXVpcmVkIHN1Yi1ub2RlczoKPiA+ICsgIC0gcG9ydDogVGhlIE1hbGkgRFAg
-Y29ubmVjdGlvbiB0byBhbiBlbmNvZGVyIGlucHV0IHBvcnQuIFRoZSBjb25uZWN0aW9uCj4gPiAr
-ICAgIGlzIG1vZGVsbGVkIHVzaW5nIHRoZSBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4K
-PiA+ICsgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4dAo+ID4g
-Kwo+ID4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPiArICAtIG1lbW9yeS1yZWdpb246IHBoYW5k
-bGUgdG8gYSBub2RlIGRlc2NyaWJpbmcgbWVtb3J5IChzZWUKPiA+ICsgICAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS9yZXNlcnZlZC1tZW1vcnkudHh0
-KQo+ID4gKyAgICB0byBiZSB1c2VkIGZvciB0aGUgZnJhbWVidWZmZXI7IGlmIG5vdCBwcmVzZW50
-LCB0aGUgZnJhbWVidWZmZXIgbWF5Cj4gPiArICAgIGJlIGxvY2F0ZWQgYW55d2hlcmUgaW4gbWVt
-b3J5Lgo+ID4gKwo+ID4gKwo+ID4gK0V4YW1wbGU6Cj4gPiArCj4gPiArLyB7Cj4gPiArCS4uLgo+
-ID4gKwo+ID4gKwlkcDA6IG1hbGlkcEA2ZjIwMDAwMCB7Cj4gPiArCQljb21wYXRpYmxlID0gImFy
-bSxtYWxpLWRwNjUwIjsKPiA+ICsJCXJlZyA9IDwwIDB4NmYyMDAwMDAgMCAweDIwMDAwPjsKPiA+
-ICsJCW1lbW9yeS1yZWdpb24gPSA8JmRpc3BsYXlfcmVzZXJ2ZWQ+Owo+ID4gKwkJaW50ZXJydXB0
-cyA9IDwwIDE2OCBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKPiA+ICsJCQkgICAgIDwwIDE2OCBJUlFf
-VFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsJCWludGVycnVwdC1uYW1lcyA9ICJERSIsICJTRSI7Cj4g
-PiArCQljbG9ja3MgPSA8Jm9zY2NsazI+LCA8JmZwZ2Fvc2MwPiwgPCZmcGdhb3NjMT4sIDwmZnBn
-YW9zYzE+Owo+ID4gKwkJY2xvY2stbmFtZXMgPSAicHhsY2xrIiwgIm1jbGsiLCAiYWNsayIsICJw
-Y2xrIjsKPiA+ICsJCWFybSxtYWxpZHAtb3V0cHV0LXBvcnQtbGluZXMgPSAvYml0cy8gOCA8OCA4
-IDg+Owo+ID4gKwkJcG9ydCB7Cj4gPiArCQkJZHAwX291dHB1dDogZW5kcG9pbnQgewo+ID4gKwkJ
-CQlyZW1vdGUtZW5kcG9pbnQgPSA8JnRkYTk5OHhfMl9pbnB1dD47Cj4gPiArCQkJfTsKPiA+ICsJ
-CX07Cj4gPiArCX07Cj4gPiArCj4gPiArCS4uLgo+ID4gK307Cj4gPiAtLSAKPiA+IDIuNy4xCj4g
-PiAKPiAKCi0tIAo9PT09PT09PT09PT09PT09PT09PQp8IEkgd291bGQgbGlrZSB0byB8CnwgZml4
-IHRoZSB3b3JsZCwgIHwKfCBidXQgdGhleSdyZSBub3QgfAp8IGdpdmluZyBtZSB0aGUgICB8CiBc
-IHNvdXJjZSBjb2RlISAgLwogIC0tLS0tLS0tLS0tLS0tLQogICAgwq9cXyjjg4QpXy/CrwpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Laurent,
+
+
+On 01-04-2016 18:10, Laurent Pinchart wrote:
+> Hi Jose,
+>
+> Thank you for the patch.
+>
+> On Monday 28 Mar 2016 15:36:09 Jose Abreu wrote:
+>> This patch adds audio support for the ADV7511 HDMI transmitter
+>> using ALSA SoC.
+>>
+>> The code was ported from Analog Devices linux tree from
+>> commit 1770c4a1e32b ("Merge remote-tracking branch
+>> 'xilinx/master' into xcomm_zynq"), which is available at:
+>> 	- https://github.com/analogdevicesinc/linux/
+>>
+>> The main core file was renamed from adv7511.c to adv7511_core.c
+>> so that audio and video compile into a single adv7511.ko module
+>> and to keep up with Analog Devices kernel tree.
+>>
+>> The audio can be disabled using menu-config so it is possible
+>> to use only video mode.
+>>
+>> The HDMI mode is automatically started at boot and the audio
+>> (when enabled) registers as a codec into ALSA.
+>>
+>> SPDIF DAI format was also added to ASoC as it is required
+>> by adv7511 audio.
+>>
+>> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> ---
+>>
+>> No changes v1 -> v2.
+>>
+>>  drivers/gpu/drm/i2c/Kconfig         |   11 +
+>>  drivers/gpu/drm/i2c/Makefile        |    2 +
+>>  drivers/gpu/drm/i2c/adv7511.c       | 1024 -------------------------------
+>>  drivers/gpu/drm/i2c/adv7511.h       |   41 ++
+>>  drivers/gpu/drm/i2c/adv7511_audio.c |  310 +++++++++++
+>>  drivers/gpu/drm/i2c/adv7511_core.c  | 1005 ++++++++++++++++++++++++++++++
+> Please use git-format-patch -M to detect renames if you send a new version of 
+> this series, it will help with review.
+
+Ok, will do that in next version.
+
+>>  include/sound/soc-dai.h             |    1 +
+>>  7 files changed, 1370 insertions(+), 1024 deletions(-)
+>>  delete mode 100644 drivers/gpu/drm/i2c/adv7511.c
+>>  create mode 100644 drivers/gpu/drm/i2c/adv7511_audio.c
+>>  create mode 100644 drivers/gpu/drm/i2c/adv7511_core.c
+> [snip]
+>
+>> diff --git a/drivers/gpu/drm/i2c/adv7511_core.c
+>> b/drivers/gpu/drm/i2c/adv7511_core.c new file mode 100644
+>> index 0000000..d54256a
+>> --- /dev/null
+>> +++ b/drivers/gpu/drm/i2c/adv7511_core.c
+> [snip]
+>
+>> +static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id
+>> *id) +{
+>> +	struct adv7511_link_config link_config;
+>> +	struct adv7511 *adv7511;
+>> +	struct device *dev = &i2c->dev;
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	if (!dev->of_node)
+>> +		return -EINVAL;
+>> +
+>> +	adv7511 = devm_kzalloc(dev, sizeof(*adv7511), GFP_KERNEL);
+>> +	if (!adv7511)
+>> +		return -ENOMEM;
+>> +
+>> +	adv7511->powered = false;
+>> +	adv7511->status = connector_status_disconnected;
+>> +
+>> +	ret = adv7511_parse_dt(dev->of_node, &link_config);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * The power down GPIO is optional. If present, toggle it from active to
+>> +	 * inactive to wake up the encoder.
+>> +	 */
+>> +	adv7511->gpio_pd = devm_gpiod_get_optional(dev, "pd", GPIOD_OUT_HIGH);
+>> +	if (IS_ERR(adv7511->gpio_pd))
+>> +		return PTR_ERR(adv7511->gpio_pd);
+>> +
+>> +	if (adv7511->gpio_pd) {
+>> +		mdelay(5);
+>> +		gpiod_set_value_cansleep(adv7511->gpio_pd, 0);
+>> +	}
+>> +
+>> +	adv7511->regmap = devm_regmap_init_i2c(i2c, &adv7511_regmap_config);
+>> +	if (IS_ERR(adv7511->regmap))
+>> +		return PTR_ERR(adv7511->regmap);
+>> +
+>> +	ret = regmap_read(adv7511->regmap, ADV7511_REG_CHIP_REVISION, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +	dev_dbg(dev, "Rev. %d\n", val);
+>> +
+>> +	ret = regmap_register_patch(adv7511->regmap, adv7511_fixed_registers,
+>> +				    ARRAY_SIZE(adv7511_fixed_registers));
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR, edid_i2c_addr);
+>> +	regmap_write(adv7511->regmap, ADV7511_REG_PACKET_I2C_ADDR,
+>> +		     packet_i2c_addr);
+>> +	regmap_write(adv7511->regmap, ADV7511_REG_CEC_I2C_ADDR, cec_i2c_addr);
+>> +	adv7511_packet_disable(adv7511, 0xffff);
+>> +
+>> +	adv7511->i2c_main = i2c;
+>> +	adv7511->i2c_edid = i2c_new_dummy(i2c->adapter, edid_i2c_addr >> 1);
+>> +	if (!adv7511->i2c_edid)
+>> +		return -ENOMEM;
+>> +
+>> +	if (i2c->irq) {
+>> +		init_waitqueue_head(&adv7511->wq);
+>> +
+>> +		ret = devm_request_threaded_irq(dev, i2c->irq, NULL,
+>> +						adv7511_irq_handler,
+>> +						IRQF_ONESHOT, dev_name(dev),
+>> +						adv7511);
+>> +		if (ret)
+>> +			goto err_i2c_unregister_device;
+>> +	}
+>> +
+>> +	/* CEC is unused for now */
+>> +	regmap_write(adv7511->regmap, ADV7511_REG_CEC_CTRL,
+>> +		     ADV7511_CEC_CTRL_POWER_DOWN);
+>> +
+>> +	adv7511_power_off(adv7511);
+>> +
+>> +	i2c_set_clientdata(i2c, adv7511);
+>> +
+>> +#ifdef CONFIG_DRM_I2C_ADV7511_AUDIO
+>> +	adv7511_audio_init(&i2c->dev);
+>> +#endif
+> Shouldn't we condition this to the audio channel being somehow described in DT 
+> ? If a board doesn't route audio signals to the ADV7511 audio input, there's 
+> no need to register an audio codec.
+
+I can do this but the audio is already conditionally compiled using menuconfig.
+Is it really necessary to add this extra layer of condition?
+
+>> +
+>> +	adv7511_set_link_config(adv7511, &link_config);
+>> +
+>> +	/* Enable HDMI mode */
+>> +	regmap_update_bits(adv7511->regmap, ADV7511_REG_HDCP_HDMI_CFG,
+>> +			ADV7511_HDMI_CFG_MODE_MASK,
+>> +			ADV7511_HDMI_CFG_MODE_HDMI);
+>> +
+>> +	return 0;
+>> +
+>> +err_i2c_unregister_device:
+>> +	i2c_unregister_device(adv7511->i2c_edid);
+>> +
+>> +	return ret;
+>> +}
+
+Best regards,
+Jose Miguel Abreu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
