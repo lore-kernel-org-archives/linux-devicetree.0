@@ -1,39 +1,44 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: arm64: dts: Add expansion bus to VExpress and Juno
-Date: Mon, 4 Apr 2016 18:05:11 +0100
-Message-ID: <57029EC7.8030802@arm.com>
-References: <1459786850-29409-1-git-send-email-brian.starkey@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Subject: [PATCH 0/5] mfd: tps65217: Add power-button and IRQ support
+Date: Mon,  4 Apr 2016 19:10:59 +0200
+Message-ID: <1459789865-3704-1-git-send-email-m.niestroj@grinn-global.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459786850-29409-1-git-send-email-brian.starkey-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
-Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+the following patches add tps65217 power button support and make it usable
+with am335x boards. They also fix a NULL dereference in tps65217 charger
+subsystem and add possibility to use IRQs instead of polling task to
+update AC power state.
 
-On 04/04/16 17:20, Brian Starkey wrote:
-> The VExpress and Juno development platforms have an external expansion
-> bus which can be used for additional hardware (e.g. LogicTile Express
-> daughterboards).
+Developed and tested on top of v4.6-rc2.
 
-How do you plan to add those additional hardware on the expansion bus ?
+Marcin Niestroj (5):
+  mfd: tps65217: Add support for IRQs
+  power_supply: tps65217-charger: Fix NULL deref during property export
+  power_supply: tps65217-charger: Add support for IRQs
+  mfd: tps65217: Add power button as subdevice
+  Input: Add tps65217 power button driver
 
-IIUC having them in DT and running on a system without the tile
-connected will cause aborts, hence you are just adding bus definition.
-
-Is there any use in having just the bus definition in DT. If you are
-planning to add devices using overlays, can't the bus definition also
-be added then ?
-
-I am fine with the patch as such, just wanted to know the information.
+ .../bindings/input/tps65217-pwrbutton.txt          |  14 ++
+ drivers/input/misc/Kconfig                         |  10 ++
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/tps65217-pwrbutton.c            | 131 ++++++++++++++
+ drivers/mfd/Kconfig                                |   1 +
+ drivers/mfd/tps65217.c                             | 192 ++++++++++++++++++++-
+ drivers/power/tps65217_charger.c                   |  46 ++++-
+ include/linux/mfd/tps65217.h                       |  11 ++
+ 8 files changed, 396 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/tps65217-pwrbutton.txt
+ create mode 100644 drivers/input/misc/tps65217-pwrbutton.c
 
 -- 
-Regards,
-Sudeep
+2.8.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
