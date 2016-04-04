@@ -1,107 +1,66 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/3] ARM: OMAP3: Fix McBSP2/3 hwmod setup for sidetone
-Date: Mon, 4 Apr 2016 08:12:01 -0700
-Message-ID: <20160404151200.GA4652@atomide.com>
-References: <1458311007-19168-1-git-send-email-peter.ujfalusi@ti.com>
- <alpine.DEB.2.02.1603191937430.6629@utopia.booyaka.com>
- <56EFB794.5010505@ti.com>
- <alpine.DEB.2.02.1603211743200.31059@utopia.booyaka.com>
- <56FE407E.9030803@ti.com>
- <20160402001753.GR9329@atomide.com>
- <57026205.6020105@ti.com>
+From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/8] ARM: dts: fixes for DT warnings on OMAP2+ platforms
+Date: Mon, 4 Apr 2016 18:16:05 +0300
+Message-ID: <1459782973-21201-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57026205.6020105@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, jarkko.nikula@bitmer.com, t-kristo@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Peter Ujfalusi <peter.ujfalusi@ti.com> [160404 05:47]:
-> On 04/02/16 03:17, Tony Lindgren wrote:
-> > * Peter Ujfalusi <peter.ujfalusi@ti.com> [160401 02:34]:
-> >> So what shall we do with the OMAP3 McBSP2/3 sidetone? It has been broken in DT
-> >> boot since the first time we booted OMAP3 with DT... Only in legacy mode we
-> >> can have properly working ST.
-> > 
-> > Grr.
-> 
-> Yes :(
-> The reason for this is that in DT boot we can not provide the
-> enable_st_clock() callback to the mcbsp driver stack. This is done for legacy
-> boot in mach-omap2/mcbsp.c
+Hi,
 
-Seems like the short term fix there is to pass enable_st_clock pointer
-in pdata using pdata-quirks.c. Then for the long term solution using
-PM runtime to block gating of the clock while sidetone is active is
-the way to go it seems.
+This set fixes the clock node related warnings for OMAP2+ platforms
+that are going to be introduced with the new version of DTC that
+does stricter checks on DT structure. Basically, the address component
+is currently missing on the node names that have a reg properly, which
+is illegal.
 
-> The ST does not have clocks coming from PRCM level, it only uses the McBSP
-> iclk when it is enabled (the McBSP block of the McBSP). As far as pm_runtime
-> goes I think the ST module should not use it. We can not tell hwmod to
-> enable/disable the McBSP2/3 iclk when we pm_runtime for the ST. It does not
-> help at all. We can have nop action for the ST when pm_runtime is used, but
-> then why would we have it?
+Set applied on top of 4.6-rc2. Pushed branch here also:
 
-Using PM runtime in the sidetone driver should just work as long as the
-sidetone device driver depends on the McBSP driver before it gets probed.
-The clock framework handles things for the mcbsp ick with the usecount.
-And doing pm_runtime_get() in the sidetone driver will do what the legacy
-enable_st_clock() does currently.
+tree: https://github.com/t-kristo/linux-pm.git
+branch: 4.6-rc2-clk-dt-warn-fixes
 
-> > So having two separate drivers might make things a lot simpler.
-> 
-> Not really. It will make things way more complicated imho. How to handle
-> legacy boot as we still have that supported?
+Boot tested on following boards:
 
-Hey both the legacy driver and DT driver are really just platform devices
-and drivers. And passing both dts and platform data can be done just
-fine, no?
+  : Board           : Boot WRN version                 
+ 1: am335x-evm      : PASS   0 4.6.0-rc2-00008-gadb720d
+ 2: am335x-evmsk    : PASS   0 4.6.0-rc2-00008-gadb720d
+ 3: am3517-evm      : PASS   1 4.6.0-rc2-00008-gadb720d
+ 4: am37x-evm       : PASS   0 4.6.0-rc2-00008-gadb720d
+ 5: am437x-sk       : PASS   0 4.6.0-rc2-00008-gadb720d
+ 6: am43x-epos-evm  : FAIL   0 4.6.0-rc2-00008-gadb720d
+ 7: am437x-gp-evm   : PASS   0 4.6.0-rc2-00008-gadb720d
+ 8: am57xx-evm      : PASS   0 4.6.0-rc2-00008-gadb720d
+ 9: omap3-beagle-xm : PASS   0 4.6.0-rc2-00008-gadb720d
+10: omap3-beagle    : PASS   0 4.6.0-rc2-00008-gadb720d
+11: am335x-boneblack: PASS   0 4.6.0-rc2-00008-gadb720d
+12: am335x-bone     : PASS   0 4.6.0-rc2-00008-gadb720d
+13: craneboard      : PASS   1 4.6.0-rc2-00008-gadb720d
+14: dra72x-evm      : PASS   0 4.6.0-rc2-00008-gadb720d
+15: dra7xx-evm      : PASS   0 4.6.0-rc2-00008-gadb720d
+16: ldp3430         : PASS   0 4.6.0-rc2-00008-gadb720d
+17: omap3-n900      : FAIL   0                         
+18: omap5-uevm      : FAIL   0                         
+19: omap4-panda-es  : PASS   0 4.6.0-rc2-00008-gadb720d
+20: omap4-panda     : PASS   0 4.6.0-rc2-00008-gadb720d
+21: omap2430-sdp    : PASS   0 4.6.0-rc2-00008-gadb720d
+22: omap3430-sdp    : PASS   0 4.6.0-rc2-00008-gadb720d
+23: omap4-sdp-es23plus: PASS   0 4.6.0-rc2-00008-gadb720d
+TOTAL = 23 boards, Booted Boards = 20, No Boot boards = 3
 
-> When the McBSP driver is loaded we must know if it has sidetone or not so
-> we can create the needed audio controls, sysfs entries. The sysfs and
-> kcontrol registration could be moved out to the new ST driver, true.
+The boot failures detected are caused by board defects on the test
+farm I am using, except for the am43xx-epos, which is a known issue
+(syntimer fix still missing from -rc2.)
 
-Yeah during the probe, the sidetone driver must register with the McBSP
-driver to tell it's there. I guess no need to pass anything in the
-dts or platform_data for that.
+Also ran a quick suspend/resume test on omap3/omap4 and that seems
+to be working fine also.
 
-> I actually started with two separate drivers approach first, but decided that
-> it does not worth the effort (legacy boot support, pm_runtime/hwmod hassle,
-> platform data, callback API design, etc).
-> I know, it is not rocket science but it is king of shoot out of cannon into
-> sparrows.
-> I'll think about it for a little while ;)
+-Tero
 
-Well what we've seen so far is that any kind of non-standard solution
-will always be a pain to maintain in the long run :)
-
-> > If you don't treat the McBSP and sidetone as separate modules, things can
-> > easily fail. For example, doing a read-back to flush of posted write to
-> > sidetone registers flushes nothing for McBSP and the other way around.
-> 
-> I don't see problem with the need of flushing if we would need it. I don't
-> think we are doing anything proactively to flush writes in the driver today
-> and we do have at least one product using the ST (n900).
-
-Usually the problem is with an interrupt ack write not reaching the device
-in time before something else happens. So I could see mysterious issues
-happening with the McBSP and sidetone having separate interrupts. Maybe
-not a real problem, but the chance for it is still there for sure.
-
-> >> Other option would be to deprecate the ST support as such, but that would
-> >> leave the n900 guys in trouble as they need ST to be functional...
-> > 
-> > That does not sound like a nice option at all :(
-> 
-> I know. This has been bugging me for a long time. I want to fix this one
-> before my beagleboard-xm gives up and won't boot up anymore since after that I
-> will have no omap3 board to work with :(
-
-There are plenty of cheap omap3 devices available out there though :)
-
-Regards,
-
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
