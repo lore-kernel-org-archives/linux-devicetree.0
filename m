@@ -1,87 +1,89 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC 3/3] checks: Add unit-address checks for PCI buses
-Date: Mon, 4 Apr 2016 11:08:32 +1000
-Message-ID: <20160404010832.GE16485@voom.fritz.box>
-References: <1458780021-5052-1-git-send-email-robh@kernel.org>
- <1458780021-5052-3-git-send-email-robh@kernel.org>
- <20160331053220.GF416@voom.redhat.com>
- <CAL_JsqK5Ze4P8ofykfebV30TrMzur0cvhZi_RQMkW-kUbsvTpw@mail.gmail.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v2 02/16] arm64: dts: add sp804 timer node for Hi6220
+Date: Mon, 4 Apr 2016 09:43:59 +0800
+Message-ID: <20160404014359.GA15178@leoy-linaro>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+ <1459589383-16914-3-git-send-email-guodong.xu@linaro.org>
+ <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X3gaHHMYHkYqP6yf"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqK5Ze4P8ofykfebV30TrMzur0cvhZi_RQMkW-kUbsvTpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Guodong Xu <guodong.xu@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd.bergmann@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, XinWei Kong <kong.kongxinwei@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Linus,
 
---X3gaHHMYHkYqP6yf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for review.
 
-On Fri, Apr 01, 2016 at 02:52:44PM -0500, Rob Herring wrote:
-> On Thu, Mar 31, 2016 at 12:32 AM, David Gibson
-> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> > On Wed, Mar 23, 2016 at 07:40:21PM -0500, Rob Herring wrote:
-> >> PCI device unit addresses are in the form DD or DD,F where DD is the
-> >> device 0-0x1f and F is the function 0-7. Add checks that the unit
-> >> address matches this form.
+On Sun, Apr 03, 2016 at 09:23:42PM +0200, Linus Walleij wrote:
+> On Sat, Apr 2, 2016 at 11:29 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
+> 
+> > From: Leo Yan <leo.yan@linaro.org>
 > >
-> > Hmm.. we ought to be able to do a bit better than this, again by
-> > constructing the expected unit address from reg.
->=20
-> If I do that, I can't check the dev and function values are within range.
+> > Add sp804 timer for hi6220, so it can be used as broadcast timer.
+> >
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
+> > ---
+> >  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > index ad1f1eb..82c4756 100644
+> > --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> > @@ -209,5 +209,14 @@
+> >                         clock-names = "uartclk", "apb_pclk";
+> >                         status = "disabled";
+> >                 };
+> > +
+> > +               dual_timer0: dual_timer@f8008000 {
+> > +                       compatible = "arm,sp804", "arm,primecell";
+> > +                       reg = <0x0 0xf8008000 0x0 0x1000>;
+> > +                       interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+> > +                       clocks = <&ao_ctrl 27>;
+> > +                       clock-names = "apb_pclk";
+> 
+> How can this work? You only give the apb_pclk for clocking the
+> bus to the timer.
+> 
+> Most platforms using this driver has something like this:
+> 
+>                 timer01: timer@10104000 {
+>                         compatible = "arm,sp804", "arm,primecell";
+>                         reg = <0x10104000 0x1000>;
+>                         interrupt-parent = <&intc_dc1176>;
+>                         interrupts = <0 8 IRQ_TYPE_LEVEL_HIGH>, <0 9
+> IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&timclk>, <&timclk>, <&pclk>;
+>                         clock-names = "timer1", "timer2", "apb_pclk";
+>                 };
+> 
+> It then reads the two clocks in the beginning of clocks() to
+> determine the frequency of each timer.
+> 
+> By chance the code in the driver will allow just one clock and
+> will then assume that both the bus to the timer and the timer
+> itself is clocked from the same clock. But I highly doubt that this
+> is the case.
 
-Not from here, but that seems an odd place to do it anyway.  Instead
-I'd suggest checking the dev and function values in a verifier for
-'reg' values on the bus, then check the unit address afterwards.
+This patch has been sent out for review previously [1]; So I refered
+other platforms and changed to only enable apb bus clock due I have
+not found timer enabling bits in Hi6220's spec.
 
-> > While we're at it,
-> > it probably makes sense to have that dependent on a check which makes
-> > sure the first entry in a pci device's 'reg' is the config address.
->=20
-> You mean just check the first cell masked with 0x1f000000 is 0, right?
+> Please verify what clocks actually goes into this timer, it should
+> nominally be three of them.
 
-I guess, I'd have to look at the PCI reg encoding again.
+Yes, it can work well even I don't enable any timer clock. I will
+check furthermore in spec to see if can bind with formal way as your
+suggestion.
 
-> Really, I'm not so worried about checking PCI devices. DT's with PCI
-> devices described are rare. All I really want to check first are
-> leading 0s, leading 0x and uppercase hex. That's 90% of what I find in
-> reviews and am tired of commenting on. I do think bus specific checks
-> are useful, but don't think we need to fill them all in right now.
+[1] http://archive.arm.linux.org.uk/lurker/message/20151009.131015.687ed525.en.html
 
-Ok.  How about we leave the PCI checked function as just /* TODO */
-for now then.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---X3gaHHMYHkYqP6yf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJXAb6QAAoJEGw4ysog2bOStcEP/2S/bmsTWFnZxgANo5y0UkQy
-aiK0bSD7xwb3ceSJODYB7CiT5DPStIp+TkcWIoa/PoS3WvDDghvDRzoZAm13cIEM
-5zMMMnogjhZAMWAryb3IICweSc9ay5McAyDFAqxpAcgCVDau75J6wpAfLhJYteo1
-OwjTKy+4eOQk0jNuYMiyfrmf/NtM90XcV5XL+kQu2UUlsiMJFPe6dyd9o/xg9X7j
-vIa2hmA2qopSM0ahZU5JjWynrseD+/AkVATZG5dmnY2uEmD79WpUMOMy9fPZxPJG
-a9/Er+WWml1eCZ9eI6AZpWGBzBDOGINYty8/36nrxcBJ/QiWhICWa4VZgH+WEYTn
-A40iCoRJFGYYOC4LOOXDVBboq4uhh72DdRKfgw4Ad14jy4R+g+TSUj0ND6ZmAT4d
-TTPdgNIVcDDUgEBH9xrvR0/wE+/064lHDRk5WO59dqGAJDtzNIJVFgLEXGI1oT4F
-e55e4PLtaofSVBMrijnGyBCKriP8wQg4Z5TCKEjtRzVzhvCd4jWPMHcPM6rHKTRj
-/9DCBzIlqAPM7J8D52/chL0hgdUrQVUUGSKybghOiCUvSzMhmd/0owkSIVNB4xW8
-SfH31gu3JjMg7+UKasW1N3WDhNlIPeZfgSvgcvF91R04hQde8RaMBP6zRmFZR5ns
-uGko7MPwHCZpsaNgt+Dr
-=ZDca
------END PGP SIGNATURE-----
-
---X3gaHHMYHkYqP6yf--
+Thanks,
+Leo Yan
