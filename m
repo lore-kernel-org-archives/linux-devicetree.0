@@ -1,82 +1,284 @@
-From: "Tirdea, Irina" <irina.tirdea-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [RFC PATCH 4/4] pinctrl: Parse GpioInt/GpioIo resources
-Date: Mon, 4 Apr 2016 14:05:33 +0000
-Message-ID: <1F3AC3675D538145B1661F571FE1805F2F22D82F@irsmsx105.ger.corp.intel.com>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
- <1459424685-26965-5-git-send-email-irina.tirdea@intel.com>
- <20160404134740.GB1727@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160404134740.GB1727-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Purdila, Octavian" <octavian.purdila-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Ciocan, Cristina" <cristina.ciocan-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Bert Vermeulen <bert@biot.com>
+Subject: [PATCH v3] ARM: dts: kirkwood: Add DTS for Linksys EA4200v2/EA4500
+Date: Mon,  4 Apr 2016 16:16:05 +0200
+Message-ID: <1459779366-15648-1-git-send-email-bert@biot.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Bert Vermeulen <bert@biot.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+	DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+This platform is based on a Marvell 88E6282 SoC and 88E6171 switch.
+---
+Changes from v2:
+- added linksys to filename
+- added make rule
 
+Changes from v1:
+- changed console to stdout-path
+- removed unnecesarry @0 from dsa node, and fixed dsa/switch node
+- fixed partitions according to the official docs
+- prefer node labels rather than full hierarchy where possible
 
-> -----Original Message-----
-> From: Mika Westerberg [mailto:mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org]
-> Sent: 04 April, 2016 16:48
-> To: Tirdea, Irina
-> Cc: Rafael J. Wysocki; Len Brown; Linus Walleij; linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rob Herring; Heikki Krogerus;
-> Andy Shevchenko; Purdila, Octavian; Ciocan, Cristina; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Subject: Re: [RFC PATCH 4/4] pinctrl: Parse GpioInt/GpioIo resources
-> 
-> On Thu, Mar 31, 2016 at 02:44:45PM +0300, Irina Tirdea wrote:
-> > +static int acpi_parse_gpio_res(struct pinctrl *p,
-> > +			       struct pinctrl_map **map,
-> > +			       unsigned *num_maps,
-> > +			       struct pinctrl_dev ***pctldevs)
-> > +{
-> > +	struct acpi_gpio_lookup lookup;
-> > +	struct list_head res_list;
-> > +	struct acpi_device *adev;
-> > +	unsigned int index;
-> > +	int ret;
-> > +
-> > +	adev = ACPI_COMPANION(p->dev);
-> > +
-> > +	*map = NULL;
-> > +	*num_maps = 0;
-> > +	memset(&lookup, 0, sizeof(lookup));
-> > +
-> > +	/* Parse all GpioInt/GpioIo resources in _CRS and extract pin conf */
-> > +	for (index = 0; ; index++) {
-> > +		lookup.index = index;
-> > +		lookup.n = 0;
-> > +		lookup.found = false;
-> > +
-> > +		INIT_LIST_HEAD(&res_list);
-> > +		ret = acpi_dev_get_resources(adev, &res_list, acpi_gpio_to_map,
-> > +					     &lookup);
-> > +		if (ret < 0)
-> > +			goto exit_free;
-> > +		acpi_dev_free_resource_list(&res_list);
-> > +		if (!lookup.found)
-> > +			break;
-> > +	}
-> > +
-> > +	*map = lookup.map;
-> > +	*num_maps = lookup.num_maps;
-> > +	*pctldevs = lookup.pctldevs;
-> 
-> This function has quite many stars in arguments and in the function
-> body. In particular pctldevs has three stars!
-> 
-> I wonder if this could be written in such way that avoids that. Like
-> create a structure holding the map information and pass that to the
-> function instead.
-> 
+ arch/arm/boot/dts/Makefile                   |   1 +
+ arch/arm/boot/dts/kirkwood-linksys-viper.dts | 236 +++++++++++++++++++++++++++
+ 2 files changed, 237 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-linksys-viper.dts
 
-
-Yes, that would make the code more clear. I will rewrite it using a structure.
-
-> Other parts of the patch look good to me.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 95c1923..feeb3f9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -199,6 +199,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+ 	kirkwood-linkstation-lswsxl.dtb \
+ 	kirkwood-linkstation-lswvl.dtb \
+ 	kirkwood-linkstation-lswxl.dtb \
++	kirkwood-linksys-viper.dtb \
+ 	kirkwood-lschlv2.dtb \
+ 	kirkwood-lsxhl.dtb \
+ 	kirkwood-mplcec4.dtb \
+diff --git a/arch/arm/boot/dts/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
+new file mode 100644
+index 0000000..3ada18d
+--- /dev/null
++++ b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
+@@ -0,0 +1,236 @@
++/*
++ * kirkwood-viper.dts - Device Tree file for Linksys viper (E4200v2 / EA4500)
++ *
++ * (c) 2013 Jonas Gorski <jogo@openwrt.org>
++ * (c) 2013 Deutsche Telekom Innovation Laboratories
++ * (c) 2014 Luka Perkov <luka@openwrt.org>
++ * (c) 2014 Randy C. Will <randall.will@gmail.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++
++#include "kirkwood.dtsi"
++#include "kirkwood-6282.dtsi"
++
++/ {
++	model = "Linksys Viper (E4200v2 / EA4500)";
++	compatible = "linksys,viper", "marvell,kirkwood-88f6282", "marvell,kirkwood";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x8000000>;
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
++		pinctrl-names = "default";
++
++		wps {
++			label = "WPS Button";
++			linux,code = <KEY_WPS_BUTTON>;
++			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
++		};
++
++		reset {
++			label = "Reset Button";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
++		};
++	};
++
++	gpio-leds {
++		compatible = "gpio-leds";
++		pinctrl-0 = < &pmx_led_white_health &pmx_led_white_pulse >;
++		pinctrl-names = "default";
++
++		white-health {
++			label = "viper:white:health";
++			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
++		};
++
++		white-pulse {
++			label = "viper:white:pulse";
++			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
++		};
++	};
++
++	dsa {
++		compatible = "marvell,dsa";
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		dsa,ethernet = <&eth0port>;
++		dsa,mii-bus = <&mdio>;
++
++		switch@16,0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <16 0>;	/* MDIO address 16, switch 0 in tree */
++
++			port@0 {
++				reg = <0>;
++				label = "ethernet1";
++			};
++
++			port@1 {
++				reg = <1>;
++				label = "ethernet2";
++			};
++
++			port@2 {
++				reg = <2>;
++				label = "ethernet3";
++			};
++
++			port@3 {
++				reg = <3>;
++				label = "ethernet4";
++			};
++
++			port@4 {
++				reg = <4>;
++				label = "internet";
++			};
++
++			port@5 {
++				reg = <5>;
++				label = "cpu";
++			};
++		};
++	};
++};
++
++&pinctrl {
++	pmx_led_white_health: pmx-led-white-health {
++		marvell,pins = "mpp7";
++		marvell,function = "gpo";
++	};
++	pmx_led_white_pulse: pmx-led-white-pulse {
++		marvell,pins = "mpp14";
++		marvell,function = "gpio";
++	};
++	pmx_btn_wps: pmx-btn-wps {
++		marvell,pins = "mpp47";
++		marvell,function = "gpio";
++	};
++	pmx_btn_reset: pmx-btn-reset {
++		marvell,pins = "mpp48";
++		marvell,function = "gpio";
++	};
++};
++
++&nand {
++	status = "okay";
++	pinctrl-0 = <&pmx_nand>;
++	pinctrl-names = "default";
++
++	partitions {
++		compatible = "fixed-partitions";
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		partition@0 {
++			label = "u-boot";
++			reg = <0x0 0x80000>;
++			read-only;
++		};
++
++		partition@80000 {
++			label = "u_env";
++			reg = <0x80000 0x20000>;
++		};
++
++		partition@A0000 {
++			label = "s_env";
++			reg = <0xA0000 0x20000>;
++		};
++
++		partition@200000 {
++			label = "kernel";
++			reg = <0x200000 0x2A0000>;
++		};
++
++		partition@4A0000 {
++			label = "rootfs";
++			reg = <0x4A0000 0x1760000>;
++		};
++
++		partition@1C00000 {
++			label = "alt_kernel";
++			reg = <0x1C00000 0x2A0000>;
++		};
++
++		partition@1EA0000 {
++			label = "alt_rootfs";
++			reg = <0x1EA0000 0x1760000>;
++		};
++
++		partition@3600000 {
++			label = "syscfg";
++			reg = <0x3600000 0x4A00000>;
++		};
++
++		partition@C0000 {
++			label = "unused";
++			reg = <0xC0000 0x140000>;
++		};
++
++	};
++};
++
++&pciec {
++	status = "okay";
++};
++
++&pcie0 {
++	status = "okay";
++};
++
++&pcie1 {
++	status = "okay";
++};
++
++&mdio {
++	status = "okay";
++};
++
++&uart0 {
++	status = "okay";
++};
++
++/* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
++ * fixed speed and duplex. */
++&eth0 {
++	status = "okay";
++	ethernet0-port@0 {
++		speed = <1000>;
++		duplex = <1>;
++	};
++};
++
++/* eth1 doesn't appear to be connected at all. */
++&eth1 {
++	status = "disabled";
++};
++
++/* There is no battery on the board, so the RTC does not keep
++   time when there is no power, making it useless. */
++&rtc {
++	status = "disabled";
++};
++
+-- 
+1.9.1
