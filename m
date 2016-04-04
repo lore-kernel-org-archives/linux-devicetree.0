@@ -1,88 +1,305 @@
-From: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: Re: [PATCH v2 1/9] Documentation: dt-bindings: Document STM32 EXTI
- controller bindings
-Date: Mon, 4 Apr 2016 16:32:33 +0200
-Message-ID: <CALszF6CEs_5BATN5Vz-=z=ukL5cSKnCLVz+3mU0G9ohfq1RwpQ@mail.gmail.com>
-References: <1459436979-17275-1-git-send-email-mcoquelin.stm32@gmail.com>
-	<1459436979-17275-2-git-send-email-mcoquelin.stm32@gmail.com>
-	<20160404051529.GA17806@rob-hp-laptop>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: kirkwood: Add DTS for Linksys
+ EA4200v2/EA4500
+Date: Mon, 4 Apr 2016 16:37:31 +0200
+Message-ID: <20160404143731.GB25131@lunn.ch>
+References: <1459779366-15648-1-git-send-email-bert@biot.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160404051529.GA17806@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bruno Herrera <bruherrera@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459779366-15648-1-git-send-email-bert-Nh2F35Ii2RQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bert Vermeulen <bert-Nh2F35Ii2RQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Apr 04, 2016 at 04:16:05PM +0200, Bert Vermeulen wrote:
+> This platform is based on a Marvell 88E6282 SoC and 88E6171 switch.
 
-2016-04-04 7:15 GMT+02:00 Rob Herring <robh@kernel.org>:
-> On Thu, Mar 31, 2016 at 05:09:31PM +0200, Maxime Coquelin wrote:
->> Signed-off-by: Maxime Coquelin <mcoquelin.stm32@gmail.com>
->> ---
->>  .../bindings/interrupt-controller/st,stm32-exti.txt  | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->> new file mode 100644
->> index 000000000000..6e7703d4ff5b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stm32-exti.txt
->> @@ -0,0 +1,20 @@
->> +STM32 External Interrupt Controller
->> +
->> +Required properties:
->> +
->> +- compatible: Should be "st,stm32-exti"
->> +- reg: Specifies base physical address and size of the registers
->> +- interrupt-controller: Indentifies the node as an interrupt controller
->> +- #interrupt-cells: Specifies the number of cells to encode an interrupt
->> +  specifier, shall be 2
->> +- interrupts: interrupts references to primary interrupt controller
->
-> Need to define how many and what is the order?
-The exti driver uses of_irq_count() to count the number of interrupts.
-The order doesn't matter in my implementation, I will come back on
-this point below.
+It is missing your signed-off-by.
 
->
-> Are these 1:1 mapping? You could use interrupt-map here to define the
-> mapping.
+See Section "11) Sign your work" of Documentation/SubmittingPatches.
 
-No, this is not 1:1 mapping.
-This is the mapping for STM32F429 (With 'n' managed by a mux in Syscfg
-(from GPIOA to GPIOI)):
-EXTI0 (GPIOn0) : NVIC 6
-EXTI1 (GPIOn1) : NVIC 7
-EXTI2 (GPIOn2) : NVIC 8
-EXTI3 (GPIOn3) : NVIC 9
-EXTI4 (GPIOn4) : NVIC 10
-EXTI5 (GPIOn5) : NVIC 23
-EXTI6 (GPIOn6) : NVIC 23
-EXTI7 (GPIOn7) : NVIC 23
-EXTI8 (GPIOn8) : NVIC 23
-EXTI9 (GPIOn9) : NVIC 23
-EXTI10 (GPIOn10) : NVIC 40
-EXTI11 (GPIOn11) : NVIC 40
-EXTI12 (GPIOn12) : NVIC 40
-EXTI13 (GPIOn13) : NVIC 40
-EXTI14 (GPIOn14) : NVIC 40
-EXTI15 (GPIOn15) : NVIC 40
-EXTI16 (PVD) : NVIC 1
-EXTI17 (RTC Alarm) : NVIC 41
-EXTI18 (USB OTG FS Wakeup) : NVIC 42
-EXTI19 (Ethernet Wakeup) : NVIC 62
-EXTI20 (USB OTG HS Wakeup) : NVIC 76
-EXTI21 (RTC Tamper) : NVIC 2
-EXTI22 (RTC Wakeup) : NVIC 3
+Apart from that, it looks good.
 
-Ideally, we should define a kind of mapping in the DT node.
-However, from what I understand 'interrupt-map' is not intended to be used
-in an interrupt controller (it would not even be parsed in of_irq_parse_raw()).
+      Andrew
 
-Any ideas?
 
-Thanks for the review,
-Maxime
+> ---
+> Changes from v2:
+> - added linksys to filename
+> - added make rule
+> 
+> Changes from v1:
+> - changed console to stdout-path
+> - removed unnecesarry @0 from dsa node, and fixed dsa/switch node
+> - fixed partitions according to the official docs
+> - prefer node labels rather than full hierarchy where possible
+> 
+>  arch/arm/boot/dts/Makefile                   |   1 +
+>  arch/arm/boot/dts/kirkwood-linksys-viper.dts | 236 +++++++++++++++++++++++++++
+>  2 files changed, 237 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/kirkwood-linksys-viper.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 95c1923..feeb3f9 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -199,6 +199,7 @@ dtb-$(CONFIG_MACH_KIRKWOOD) += \
+>  	kirkwood-linkstation-lswsxl.dtb \
+>  	kirkwood-linkstation-lswvl.dtb \
+>  	kirkwood-linkstation-lswxl.dtb \
+> +	kirkwood-linksys-viper.dtb \
+>  	kirkwood-lschlv2.dtb \
+>  	kirkwood-lsxhl.dtb \
+>  	kirkwood-mplcec4.dtb \
+> diff --git a/arch/arm/boot/dts/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
+> new file mode 100644
+> index 0000000..3ada18d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
+> @@ -0,0 +1,236 @@
+> +/*
+> + * kirkwood-viper.dts - Device Tree file for Linksys viper (E4200v2 / EA4500)
+> + *
+> + * (c) 2013 Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> + * (c) 2013 Deutsche Telekom Innovation Laboratories
+> + * (c) 2014 Luka Perkov <luka-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> + * (c) 2014 Randy C. Will <randall.will-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "kirkwood.dtsi"
+> +#include "kirkwood-6282.dtsi"
+> +
+> +/ {
+> +	model = "Linksys Viper (E4200v2 / EA4500)";
+> +	compatible = "linksys,viper", "marvell,kirkwood-88f6282", "marvell,kirkwood";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x8000000>;
+> +	};
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-0 = < &pmx_btn_wps &pmx_btn_reset >;
+> +		pinctrl-names = "default";
+> +
+> +		wps {
+> +			label = "WPS Button";
+> +			linux,code = <KEY_WPS_BUTTON>;
+> +			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+> +		};
+> +
+> +		reset {
+> +			label = "Reset Button";
+> +			linux,code = <KEY_RESTART>;
+> +			gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +
+> +	gpio-leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-0 = < &pmx_led_white_health &pmx_led_white_pulse >;
+> +		pinctrl-names = "default";
+> +
+> +		white-health {
+> +			label = "viper:white:health";
+> +			gpios = <&gpio0 7 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		white-pulse {
+> +			label = "viper:white:pulse";
+> +			gpios = <&gpio0 14 GPIO_ACTIVE_HIGH>;
+> +		};
+> +	};
+> +
+> +	dsa {
+> +		compatible = "marvell,dsa";
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		dsa,ethernet = <&eth0port>;
+> +		dsa,mii-bus = <&mdio>;
+> +
+> +		switch@16,0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <16 0>;	/* MDIO address 16, switch 0 in tree */
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				label = "ethernet1";
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				label = "ethernet2";
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +				label = "ethernet3";
+> +			};
+> +
+> +			port@3 {
+> +				reg = <3>;
+> +				label = "ethernet4";
+> +			};
+> +
+> +			port@4 {
+> +				reg = <4>;
+> +				label = "internet";
+> +			};
+> +
+> +			port@5 {
+> +				reg = <5>;
+> +				label = "cpu";
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&pinctrl {
+> +	pmx_led_white_health: pmx-led-white-health {
+> +		marvell,pins = "mpp7";
+> +		marvell,function = "gpo";
+> +	};
+> +	pmx_led_white_pulse: pmx-led-white-pulse {
+> +		marvell,pins = "mpp14";
+> +		marvell,function = "gpio";
+> +	};
+> +	pmx_btn_wps: pmx-btn-wps {
+> +		marvell,pins = "mpp47";
+> +		marvell,function = "gpio";
+> +	};
+> +	pmx_btn_reset: pmx-btn-reset {
+> +		marvell,pins = "mpp48";
+> +		marvell,function = "gpio";
+> +	};
+> +};
+> +
+> +&nand {
+> +	status = "okay";
+> +	pinctrl-0 = <&pmx_nand>;
+> +	pinctrl-names = "default";
+> +
+> +	partitions {
+> +		compatible = "fixed-partitions";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		partition@0 {
+> +			label = "u-boot";
+> +			reg = <0x0 0x80000>;
+> +			read-only;
+> +		};
+> +
+> +		partition@80000 {
+> +			label = "u_env";
+> +			reg = <0x80000 0x20000>;
+> +		};
+> +
+> +		partition@A0000 {
+> +			label = "s_env";
+> +			reg = <0xA0000 0x20000>;
+> +		};
+> +
+> +		partition@200000 {
+> +			label = "kernel";
+> +			reg = <0x200000 0x2A0000>;
+> +		};
+> +
+> +		partition@4A0000 {
+> +			label = "rootfs";
+> +			reg = <0x4A0000 0x1760000>;
+> +		};
+> +
+> +		partition@1C00000 {
+> +			label = "alt_kernel";
+> +			reg = <0x1C00000 0x2A0000>;
+> +		};
+> +
+> +		partition@1EA0000 {
+> +			label = "alt_rootfs";
+> +			reg = <0x1EA0000 0x1760000>;
+> +		};
+> +
+> +		partition@3600000 {
+> +			label = "syscfg";
+> +			reg = <0x3600000 0x4A00000>;
+> +		};
+> +
+> +		partition@C0000 {
+> +			label = "unused";
+> +			reg = <0xC0000 0x140000>;
+> +		};
+> +
+> +	};
+> +};
+> +
+> +&pciec {
+> +	status = "okay";
+> +};
+> +
+> +&pcie0 {
+> +	status = "okay";
+> +};
+> +
+> +&pcie1 {
+> +	status = "okay";
+> +};
+> +
+> +&mdio {
+> +	status = "okay";
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +/* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
+> + * fixed speed and duplex. */
+> +&eth0 {
+> +	status = "okay";
+> +	ethernet0-port@0 {
+> +		speed = <1000>;
+> +		duplex = <1>;
+> +	};
+> +};
+> +
+> +/* eth1 doesn't appear to be connected at all. */
+> +&eth1 {
+> +	status = "disabled";
+> +};
+> +
+> +/* There is no battery on the board, so the RTC does not keep
+> +   time when there is no power, making it useless. */
+> +&rtc {
+> +	status = "disabled";
+> +};
+> +
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
