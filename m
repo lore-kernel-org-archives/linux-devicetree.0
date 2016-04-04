@@ -1,55 +1,70 @@
-From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [v14, 01/17] drm: bridge: analogix/dp: split exynos dp driver to
- bridge directory
-Date: Tue, 5 Apr 2016 10:15:24 +0800
-Message-ID: <57031FBC.5000904@rock-chips.com>
-References: <1455534576-1486-1-git-send-email-ykk@rock-chips.com>
- <20160330203204.GA24156@roeck-us.net>
- <20160331095600.GD26032@ulmo.nvidia.com>
- <CAD=FV=VqWqtraAbMTN-Qn7gEOgLmrsXRAeRtxtB0qRj84JREeA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Mon, 4 Apr 2016 14:40:34 -0700
+Message-ID: <20160404214034.GL2350@sirena.org.uk>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <CAD=FV=VqWqtraAbMTN-Qn7gEOgLmrsXRAeRtxtB0qRj84JREeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Gustavo Padovan <gustavo.padovan-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sean Paul <seanpaul@chromium.>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jZUYryPdXB7p5neD"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Irina Tirdea <irina.tirdea@intel.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 04/01/2016 12:02 AM, Doug Anderson wrote:
-> Hi,
->
-> On Thu, Mar 31, 2016 at 2:56 AM, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> Ugh... most of these functions shouldn't be there in the first place. We
->> have helpers in the core that already do this. Most of the functionality
->> is duplicated in this driver.
->>
->> I realize that this is a problem that existed in the Exynos DP driver,
->> but somebody really ought to rewrite those parts to make use of the DRM
->> DP helpers.
-> As I understand it from discussions in
-> <http://article.gmane.org/gmane.linux.drivers.devicetree/162059> and
-> <http://article.gmane.org/gmane.linux.kernel.samsung-soc/53048>, we
-> shouldn't block merging the series but someone should pick up this
-> work after the merge.
->
-> So probably Yakir should fixup the problem pointed out by Guenter and
-> send a new pull.
-Yep, should I just update the pull request. Or I should send v15 first
-and then update the pull request ?
+--jZUYryPdXB7p5neD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-- Yakir
-> -Doug
->
->
->
+On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
+
+> This is a proposal for adding ACPI support for pin controller
+> configuration.
+
+> It has been developed to enable the MinnowBoard and IoT community
+> by providing an easy way to specify pin multiplexing and
+> pin configuration.
+
+So this is mainly targeted at modules being added to base boards?
+Without getting into the binding at all here it seems like this is not
+solving the problem at the right abstraction level.  It's exposing the
+pins on the SoC directly without any tie in with the functionality that
+goes over those pins.  This means that any binding of a board to an ACPI
+using system that just uses this is going to be entirely specific to the
+particular combination of base and expansion board even if the
+electrical connections are standard.
+
+This is something that people are currently looking at for DT, there the
+discussion has been about defining the connectors as entities and hiding
+the details of the muxing on the SoC behind that along with higher level
+concepts like instantiation of buses like I2C and SPI.  It seems like if
+we do want to try to share between DT and ACPI we should be doing it at
+that level rather than dealing with pinmuxing at the extremely low level
+that pinctrl does.
+
+Obviously for the more general ACPI use case the idiomatic way of
+handling this is that the OS should never see anything about the
+pin muxing.  With DT we need to really know what's going on with the
+pinbox because the model is that even for things built into a single
+board the OS is responsible for managing the pins but that's really not
+how ACPI is expected to work.
+
+--jZUYryPdXB7p5neD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXAt9KAAoJECTWi3JdVIfQd/UH/jKV4Z1HXGfpjEPvWmgn8xe3
+PSAjr9/SDWG+dmpYWAdDfflPCH1CyfsczQADMRw1413mq8J8EVQSrlz6tRbwN7w3
+yZPgrnbVV/d0kxiFtehr9L7sBVQjHsQkG9TotGc58hPqop5klncAMgy936dp8wx/
+q+sIyzTTuSEltWUJn9fSiIV8jbt8905MbQc/dpoxVwOv7Im0LrsC+DYNpVIipeoP
+QrGGHSSFNJyjP4PTAXQVH24K9V5hWEfaNBPZ8oCVZNDBZIKHToZzcBIg3TgxfYWx
+6aerGv8W2cyI8Ku/aRepdJ/cf68zPOpOxOJeMEPQ7EtGDw2enA8r1b5rBPFRwU8=
+=qsye
+-----END PGP SIGNATURE-----
+
+--jZUYryPdXB7p5neD--
