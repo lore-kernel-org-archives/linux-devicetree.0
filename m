@@ -1,62 +1,75 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [RFC PATCH 4/4] pinctrl: Parse GpioInt/GpioIo resources
-Date: Mon, 4 Apr 2016 16:47:40 +0300
-Message-ID: <20160404134740.GB1727@lahna.fi.intel.com>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
- <1459424685-26965-5-git-send-email-irina.tirdea@intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 02/16] arm64: dts: add sp804 timer node for Hi6220
+Date: Mon, 4 Apr 2016 15:53:47 +0200
+Message-ID: <CACRpkdb_aMpj3X-m-FdM-PCCSuXgHnect5+nWPFnGVzGx4zrbA@mail.gmail.com>
+References: <1459589383-16914-1-git-send-email-guodong.xu@linaro.org>
+ <1459589383-16914-3-git-send-email-guodong.xu@linaro.org>
+ <CACRpkdbWuKx6=aF5xW=3EKfuUf-MYM_EEnovyhBnOGVOeHyCmQ@mail.gmail.com>
+ <20160404014359.GA15178@leoy-linaro>
+ <CACRpkdZ=_86Rhc+ei+3uE0dda9+onC8pQwosheMfEj4tOqmcDA@mail.gmail.com>
+ <20160404134237.GC402@leoy-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459424685-26965-5-git-send-email-irina.tirdea@intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Irina Tirdea <irina.tirdea@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20160404134237.GC402@leoy-linaro>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Guodong Xu <guodong.xu@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xu Wei <xuwei5@hisilicon.com>, Grant Likely <grant.likely@secretlab.ca>, XinWei Kong <kong.kongxinwei@hisilicon.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 02:44:45PM +0300, Irina Tirdea wrote:
-> +static int acpi_parse_gpio_res(struct pinctrl *p,
-> +			       struct pinctrl_map **map,
-> +			       unsigned *num_maps,
-> +			       struct pinctrl_dev ***pctldevs)
-> +{
-> +	struct acpi_gpio_lookup lookup;
-> +	struct list_head res_list;
-> +	struct acpi_device *adev;
-> +	unsigned int index;
-> +	int ret;
-> +
-> +	adev = ACPI_COMPANION(p->dev);
-> +
-> +	*map = NULL;
-> +	*num_maps = 0;
-> +	memset(&lookup, 0, sizeof(lookup));
-> +
-> +	/* Parse all GpioInt/GpioIo resources in _CRS and extract pin conf */
-> +	for (index = 0; ; index++) {
-> +		lookup.index = index;
-> +		lookup.n = 0;
-> +		lookup.found = false;
-> +
-> +		INIT_LIST_HEAD(&res_list);
-> +		ret = acpi_dev_get_resources(adev, &res_list, acpi_gpio_to_map,
-> +					     &lookup);
-> +		if (ret < 0)
-> +			goto exit_free;
-> +		acpi_dev_free_resource_list(&res_list);
-> +		if (!lookup.found)
-> +			break;
-> +	}
-> +
-> +	*map = lookup.map;
-> +	*num_maps = lookup.num_maps;
-> +	*pctldevs = lookup.pctldevs;
+On Mon, Apr 4, 2016 at 3:42 PM, Leo Yan <leo.yan@linaro.org> wrote:
+> On Mon, Apr 04, 2016 at 01:21:00PM +0200, Linus Walleij wrote:
 
-This function has quite many stars in arguments and in the function
-body. In particular pctldevs has three stars!
+>> This is not about enabling/disabling the clock(s) to the timer.
+>> It doesn't matter if these clocks are always on.
+>>
+>> It is about determining the *frequency* of the timers.
+>>
+>> It is vital that the timer driver get the right frequency of the clock
+>> to the block from the clock implementation, and I do not think
+>> it is the same as the "apb_pclk".
+>
+> Thanks for reminding. Fortunately, apb_pclk and timer's clock are
+> same, all of them's rate are 19.2MHz.
 
-I wonder if this could be written in such way that avoids that. Like
-create a structure holding the map information and pass that to the
-function instead.
+OK I was wrong, worrying about nothing.
 
-Other parts of the patch look good to me.
+>> The thing is that of course "any frequency" will
+>> work but what you will notice is that the timer runs very
+>> weirdly compared to wall-clock time unless the right clock
+>> yielding the right frequency has been specified here.
+>
+> Compared sp804 timer counter with wall-clock (which is using ARM's
+> arch timer), and confirmed that sp804 timer's counter register is
+> decreasing with rate 19.2MHz.
+
+Thanks, awesome.
+
+> Also have checked Hi6220's spec, there have no timer's dediated clock
+> enabling bits. This is the reason before I only registered one clock.
+> So according to you and Rob's comments, how about change as below?
+>
+>                 dual_timer0: timer@f8008000 {
+>                         compatible = "arm,sp804", "arm,primecell";
+>                         reg = <0x0 0xf8008000 0x0 0x1000>;
+>                         interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&ao_ctrl HI6220_TIMER0_PCLK>,
+>                                  <&ao_ctrl HI6220_TIMER0_PCLK>,
+>                                  <&ao_ctrl HI6220_TIMER0_PCLK>;
+>                         clock-names = "apb_pclk", "apb_pclk", "apb_pclk";
+
+This works for me, though I think only the last name
+matters so I would name the first two "timer1" and "timer2".
+
+Yours,
+Linus Walleij
