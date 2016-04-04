@@ -1,79 +1,126 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v12 8/9] add TC G210 platform driver
-Date: Mon, 4 Apr 2016 00:15:46 -0500
-Message-ID: <20160404051546.GE17806@rob-hp-laptop>
-References: <cover.1459448160.git.jpinto@synopsys.com>
- <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
+Subject: Re: [RFC][PATCH 1/2] dt/bindings: display: Add DT bindings for Mali
+ Display Processors.
+Date: Mon, 4 Apr 2016 00:16:02 -0500
+Message-ID: <20160404051602.GJ17806@rob-hp-laptop>
+References: <1459527712-9488-1-git-send-email-Liviu.Dudau@arm.com>
+ <1459527712-9488-2-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
+In-Reply-To: <1459527712-9488-2-git-send-email-Liviu.Dudau@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: tomas.winkler@intel.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: Dave Airlie <airlied@gmail.com>, Daniel Stone <daniel@fooishbar.org>, David Brown <David.Brown@arm.com>, Brian Starkey <Brian.Starkey@arm.com>, DRI devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 31, 2016 at 07:57:21PM +0100, Joao Pinto wrote:
-> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
+On Fri, Apr 01, 2016 at 05:21:51PM +0100, Liviu Dudau wrote:
+> Add DT bindings documentation for the Mali Display Processor. The bindings
+> describe the Mali DP500, DP550 and DP650 processors from ARM Ltd.
 > 
-> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> 
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
 > ---
-> Changes v11->v12 (Tomas Winkler):
-> - custom_phy_initialization replaced by phy_initialization
-> Changes v10->v11 (Arnd Bergmann):
-> - vops structs are now passed in .data
-> Changes v0->v10:
-> - This patch only appeared in v10
+>  .../devicetree/bindings/display/arm,malidp.txt     | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/arm,malidp.txt
 > 
->  .../devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt |  26 +++++
->  drivers/scsi/ufs/Kconfig                           |   9 ++
->  drivers/scsi/ufs/Makefile                          |   1 +
->  drivers/scsi/ufs/tc-dwc-g210-pltfrm.c              | 113 +++++++++++++++++++++
->  4 files changed, 149 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
->  create mode 100644 drivers/scsi/ufs/tc-dwc-g210-pltfrm.c
-> 
-> diff --git a/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
+> diff --git a/Documentation/devicetree/bindings/display/arm,malidp.txt b/Documentation/devicetree/bindings/display/arm,malidp.txt
 > new file mode 100644
-> index 0000000..6ec9647
+> index 0000000..ed70de3
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/tc-dwc-g210-pltfrm.txt
-> @@ -0,0 +1,26 @@
-> +* Universal Flash Storage (UFS) DesignWare Host Controller
+> +++ b/Documentation/devicetree/bindings/display/arm,malidp.txt
+> @@ -0,0 +1,65 @@
+> +ARM Mali-DP
 > +
-> +DWC_UFS nodes are defined to describe on-chip UFS host controllers and MPHY.
-> +Each UFS controller instance should have its own node.
+> +The following bindings apply to a family of Display Processors sold as
+> +licensable IP by ARM Ltd. The bindings describe the Mali DP500, DP550 and
+> +DP650 processors that offer multiple composition layers, support for
+> +rotation and scaling output.
 > +
 > +Required properties:
-> +- compatible	: compatible list must contain the PHY type & version:
-> +			"snps, g210-tc-6.00-20bit"
-> +			"snps, g210-tc-6.00-40bit"
-Remove the space              ^
+> +  - compatible: should be one of
+> +	"arm,mali-dp500"
+> +	"arm,mali-dp550"
+> +	"arm,mali-dp650"
+> +    depending on the particular implementation present in the hardware
 
-> +		  complemented with the Controller IP version:
-> +			"snps, dwc-ufshcd-1.40a"
+I assume these have revisions and configuration options. These will need 
+SoC specific properties as well. No need to add one now if you don't 
+have an SoC to list, but just note something to this effect.
 
-ditto
+> +  - reg: Physical base address and size of the block of registers used by
+> +    the processor.
+> +  - interrupts: Interrupt list, as defined in ../interrupt-controller/interrupts.txt,
+> +    interrupt client nodes.
+> +  - interrupt-names: name of the engine inside the processor that will
+> +    use the corresponding interrupt. Should be one of "DE" or "SE".
 
-Combining the phy and controller compatible strings is a bit strange. 
-Generally, they would be separate nodes using the common phy binding.
+This is worded like it is either one, but the example shows both.
 
-> +		  complemented with the JEDEC version:
-> +			"jedec,ufs-1.1"
-> +			"jedec,ufs-2.0"
+> +  - clocks: A list of phandle + clock-specifier pairs, one for each entry
+> +    in 'clock-names'
+> +  - clock-names: A list of clock names. It should contain:
+> +      - "pclk": for the APB interface clock
+> +      - "aclk": for the AXI interface clock
+> +      - "mclk": for the main processor clock
+> +      - "pxlclk": for the pixel clock feeding the output PLL of the processor.
+> +  - arm,malidp-output-port-lines: Array of u8 values describing the number
+> +    of output lines per channel (R, G and B).
+
+This should be a function of the type of panel you connect and 
+shouldn't be needed.
+
 > +
-> +- reg		: <registers mapping>
-> +- interrupts	: <interrupt mapping for UFS host controller IRQ>
+> +Required sub-nodes:
+> +  - port: The Mali DP connection to an encoder input port. The connection
+> +    is modelled using the OF graph bindings specified in
+> +    Documentation/devicetree/bindings/graph.txt
 > +
-> +Example for a setup using a 1.40a DWC Controller with a 6.00 G210 40-bit TC:
-> +	dwc_ufs@d0000000 {
+> +Optional properties:
+> +  - memory-region: phandle to a node describing memory (see
+> +    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
+> +    to be used for the framebuffer; if not present, the framebuffer may
+> +    be located anywhere in memory.
+> +
+> +
+> +Example:
+> +
+> +/ {
+> +	...
+> +
+> +	dp0: malidp@6f200000 {
 
-No underscores please.
+display-controller@
 
-> +		compatible = "snps, g210-tc-6.00-40bit",
-> +			     "snps, dwc-ufshcd-1.40a",
-> +			     "jedec,ufs-2.0";
-> +		reg = < 0xd0000000 0x10000 >;
-> +		interrupts = < 24 >;
+> +		compatible = "arm,mali-dp650";
+> +		reg = <0 0x6f200000 0 0x20000>;
+> +		memory-region = <&display_reserved>;
+> +		interrupts = <0 168 IRQ_TYPE_LEVEL_HIGH>,
+> +			     <0 168 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "DE", "SE";
+> +		clocks = <&oscclk2>, <&fpgaosc0>, <&fpgaosc1>, <&fpgaosc1>;
+> +		clock-names = "pxlclk", "mclk", "aclk", "pclk";
+> +		arm,malidp-output-port-lines = /bits/ 8 <8 8 8>;
+> +		port {
+> +			dp0_output: endpoint {
+> +				remote-endpoint = <&tda998x_2_input>;
+> +			};
+> +		};
 > +	};
+> +
+> +	...
+> +};
+> -- 
+> 2.7.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
