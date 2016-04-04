@@ -1,30 +1,79 @@
-From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt/bindings: Add bindings for PIC32 SPI peripheral
-Date: Mon, 4 Apr 2016 15:37:59 +0530
-Message-ID: <57023CFF.5040308@microchip.com>
-References: <1459509530-22716-1-git-send-email-purna.mandal@microchip.com>
- <20160402163506.GD2350@sirena.org.uk>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v12 8/9] add TC G210 platform driver
+Date: Mon, 4 Apr 2016 11:48:23 +0100
+Message-ID: <57024677.2060009@synopsys.com>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+ <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
+ <20160404051546.GE17806@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160402163506.GD2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <20160404051546.GE17806@rob-hp-laptop>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: tomas.winkler@intel.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/02/2016 10:05 PM, Mark Brown wrote:
 
-> On Fri, Apr 01, 2016 at 04:48:49PM +0530, Purna Chandra Mandal wrote:
->> Document the devicetree bindings for the SPI peripheral found
->> on Microchip PIC32 class devices.
-> Please use subject lines reflecting the style for the subsystem.
+Hi Rob,
 
-ack. Will do.
+On 4/4/2016 6:15 AM, Rob Herring wrote:
+> On Thu, Mar 31, 2016 at 07:57:21PM +0100, Joao Pinto wrote:
+>> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
+>>
+>> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+>> ---
 
+[snip]
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +
+>> +Required properties:
+>> +- compatible	: compatible list must contain the PHY type & version:
+>> +			"snps, g210-tc-6.00-20bit"
+>> +			"snps, g210-tc-6.00-40bit"
+> Remove the space              ^
+> 
+>> +		  complemented with the Controller IP version:
+>> +			"snps, dwc-ufshcd-1.40a"
+> 
+> ditto
+
+Ok, will do that!
+
+> 
+> Combining the phy and controller compatible strings is a bit strange. 
+> Generally, they would be separate nodes using the common phy binding.
+> 
+
+Correct, but in this case is just the compatibility string is just to tell the
+dw ufs host that it has a 40-bit or a 20-bit test chip connected. The Test chip
+is initialized by a unipro command sequence and there is no more ops related to it.
+
+>> +		  complemented with the JEDEC version:
+>> +			"jedec,ufs-1.1"
+>> +			"jedec,ufs-2.0"
+>> +
+>> +- reg		: <registers mapping>
+>> +- interrupts	: <interrupt mapping for UFS host controller IRQ>
+>> +
+>> +Example for a setup using a 1.40a DWC Controller with a 6.00 G210 40-bit TC:
+>> +	dwc_ufs@d0000000 {
+> 
+> No underscores please.
+
+Ok, will update it.
+
+> 
+>> +		compatible = "snps, g210-tc-6.00-40bit",
+>> +			     "snps, dwc-ufshcd-1.40a",
+>> +			     "jedec,ufs-2.0";
+>> +		reg = < 0xd0000000 0x10000 >;
+>> +		interrupts = < 24 >;
+>> +	};
+> 
+
+Will send a v13 with these tweaks.
+
+Thanks.
+
