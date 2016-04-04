@@ -1,35 +1,107 @@
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH v13 0/9] add support for DWC UFS Controller
-Date: Mon, 04 Apr 2016 19:34:09 -0400
-Message-ID: <yq1inzxeyoe.fsf@sermon.lab.mkp.net>
-References: <cover.1459448160.git.jpinto@synopsys.com>
+From: Tai Tri Nguyen <ttnguyen@apm.com>
+Subject: Re: [PATCH 2/4] Documentation: Add documentation for APM X-Gene SoC
+ PMU DTS binding
+Date: Mon, 4 Apr 2016 16:40:33 -0700
+Message-ID: <CACgAJHyS+o_Nyrc7pDxVCTHK7tue9L9F2weGQt_2WqeGfZBeag@mail.gmail.com>
+References: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
+	<1459467472-31561-3-git-send-email-ttnguyen@apm.com>
+	<20160401123000.GC29876@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1459448160.git.jpinto@synopsys.com> (Joao Pinto's message
-	of "Mon, 4 Apr 2016 12:13:24 +0100")
+In-Reply-To: <20160401123000.GC29876@leverpostej>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: robh@kernel.org, tomas.winkler@intel.com, martin.petersen@oracle.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: will.deacon@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Joao" == Joao Pinto <Joao.Pinto@synopsys.com> writes:
+Hi Mark,
 
-Joao,
+On Fri, Apr 1, 2016 at 5:30 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> Hi,
+>
+> As per Documentation/devicetree/bindings/submitting-patches.txt, please
+> put binding patches earlier in a series than the code using them.
+>
+> On Thu, Mar 31, 2016 at 04:37:50PM -0700, Tai Nguyen wrote:
+>> Documentation: Add documentation for APM X-Gene SoC PMU DTS binding
+>>
+>> Signed-off-by: Tai Nguyen <ttnguyen@apm.com>
+>> ---
+>>  .../devicetree/bindings/perf/apm-xgene-pmu.txt     | 116 +++++++++++++++++++++
+>>  1 file changed, 116 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+>> new file mode 100644
+>> index 0000000..40dfd4e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+>> @@ -0,0 +1,116 @@
+>> +* APM X-Gene SoC PMU bindings
+>> +
+>> +This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
+>> +The following PMU devices are supported:
+>> +
+>> +  L3C                        - L3 cache controller
+>> +  IOB                        - IO bridge
+>> +  MCB                        - Memory controller bridge
+>> +  MC                 - Memory controller
+>
+> These sound like separate units. How do these relate?
+>
+> Is there an SOC-wide PMU that aggregates counters, or are these actually
+> independent?
+>
 
-Joao> The work consisted of: - Fixed typo in ufshcd-pltfrm.c - Tweak
-Joao> ufshcd.c for UFS 2.0 support - Implement ufshcd-dwc which contains
-Joao> all DWC HW specific code - Unipro attributes were added and new
-Joao> registers were added to the driver - Implement a tc-dwc-g210
-Joao> containing G210 MPHY specific code - Implement a tc-dwc-g210 glue
-Joao> platform driver - Implement a tc-dwc-g210 glue pci driver -
-Joao> Documentation update
+Yes, they are independent, but sharing the same top level status interrupt.
+There's no SOC-wide PMU which aggregates these counters.
 
-You really need to keep track of which Acked-by: and Reviewed-by: tags
-you have gotten from people and apply them to patches that you haven't
-changed. Otherwise we start from scratch every time you resubmit.
+>> +
+>> +The following section describes the SoC PMU DT node binding.
+>> +
+>> +Required properties:
+>> +- compatible         : Shall be "apm,xgene-pmu" for revision 1 or
+>> +                          "apm,xgene-pmu-v2" for revision 2.
+>
+> That name is very general. Is there not a more specific name for the SOC
+> PMU?
+>
 
-Thanks!
+Beside the ARMv8 core PMU which has the compatible name "arm,armv8-pmuv3",
+these are all the PMUs in X-Gene SoCs. Also, we are using the same PMU
+driver across our platforms. I think a general name is what it should be.
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+>> +Required properties for L3C subnode:
+>> +- compatible         : Shall be "apm,xgene-pmu-l3c".
+>> +- reg                        : First resource shall be the L3C PMU resource.
+>> +- index                      : Instance number of the L3C PMU.
+>> +
+>> +Required properties for IOB subnode:
+>> +- compatible         : Shall be "apm,xgene-pmu-iob".
+>> +- reg                        : First resource shall be the IOB PMU resource.
+>> +- index                      : Instance number of the IOB PMU.
+>> +
+>> +Required properties for MCB subnode:
+>> +- compatible         : Shall be "apm,xgene-pmu-mcb".
+>> +- reg                        : First resource shall be the MCB PMU resource.
+>> +- index                      : Instance number of the MCB PMU.
+>> +
+>> +Required properties for MC subnode:
+>> +- compatible         : Shall be "apm,xgene-pmu-mc".
+>> +- reg                        : First resource shall be the MC PMU resource.
+>> +- index                      : Instance number of the MC PMU.
+>
+> What's the index property useful for?
+>
+
+The index property is used for indicating the physical hardware PMU id.
+For example, on X-Gene1 there are 4 memory controllers (MC), each of them has
+its own PMU. The index property tells us which MC a PMU belongs to.
+The same for MCB/L3C and IOB.
+
+> Thanks,
+> Mark.
+
+Thanks,
+Tai
