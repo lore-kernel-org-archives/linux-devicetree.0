@@ -1,143 +1,79 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] firmware: qemu_fw_cfg.c: hold ACPI global lock during
- device access
-Date: Tue, 5 Apr 2016 11:54:19 +0300
-Message-ID: <20160405114156-mutt-send-email-mst@redhat.com>
-References: <20160308183050.GJ2049@HEDWIG.INI.CMU.EDU>
- <20160316185440-mutt-send-email-mst@redhat.com>
- <20160317133340.GJ12454@HEDWIG.INI.CMU.EDU>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Tue, 5 Apr 2016 11:00:50 +0200
+Message-ID: <CACRpkdZW83kOADo1WcYT=mc++ro3Xb7PS15zh+RkLnSxmbTZAQ@mail.gmail.com>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+	<20160404214034.GL2350@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20160317133340.GJ12454-h65ZQ0r4j6KKUezXOiBB2eW1CriLhL8O@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Gabriel L. Somlo" <somlo-D+Gtc/HYRWM@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, lersek-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org, imammedo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pbonzini-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ehabkost-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, luto-kltTT9wpgjJwATOyAt5JVQ@public.gmane.org, stefanha-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, revol-GANU6spQydw@public.gmane.org, matt-mF/unelCI9GS6iBeEJttW/XRex20P6io@public.gmane.org, rth-hL46jP5Bxq7R7s880joybQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20160404214034.GL2350@sirena.org.uk>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 17, 2016 at 09:33:40AM -0400, Gabriel L. Somlo wrote:
-> On Wed, Mar 16, 2016 at 06:57:01PM +0200, Michael S. Tsirkin wrote:
-> > On Tue, Mar 08, 2016 at 01:30:50PM -0500, Gabriel Somlo wrote:
-> > > Allowing for the future possibility of implementing AML-based
-> > > (i.e., firmware-triggered) access to the QEMU fw_cfg device,
-> > > acquire the global ACPI lock when accessing the device on behalf
-> > > of the guest-side sysfs driver, to prevent any potential race
-> > > conditions.
-> > > 
-> > > Suggested-by: Michael S. Tsirkin <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> > > Signed-off-by: Gabriel Somlo <somlo-D+Gtc/HYRWM@public.gmane.org>
-> > 
-> > So this patch makes sense of course.
-> > 
-> > 
-> > Given the recent discussion on QEMU mailing list,
-> > I think there is an additional patch that we need:
-> > filter the files exposed to userspace by "opt/" prefix.
-> > 
-> > This will ensure that we can change all other fw cfg files
-> > at will without breaking guest scripts.
-> > 
-> > Gabriel, could you code this up? Or do you see a
-> > pressing need to expose internal QEMU registers to
-> > userspace?
-> 
-> I'd be happy to update the docs to (better) emphasisze that:
+On Mon, Apr 4, 2016 at 11:40 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
+>
+>> This is a proposal for adding ACPI support for pin controller
+>> configuration.
+>
+>> It has been developed to enable the MinnowBoard and IoT community
+>> by providing an easy way to specify pin multiplexing and
+>> pin configuration.
+>
+> So this is mainly targeted at modules being added to base boards?
+> Without getting into the binding at all here it seems like this is not
+> solving the problem at the right abstraction level.  It's exposing the
+> pins on the SoC directly without any tie in with the functionality that
+> goes over those pins.  This means that any binding of a board to an ACPI
+> using system that just uses this is going to be entirely specific to the
+> particular combination of base and expansion board even if the
+> electrical connections are standard.
 
-Well my experience shows people do not read the docs.
-And really, good interfaces should be self-documenting.
+I have seen the same need beyond strictly embedded (MinnowBoard)
+from the Intel camp.
 
->         1 the only way to guarantee any particular item shows up in
->           guest-side fw_cfg sysfs is manually putting it there via the
->           host-side command line
-> 
->                 - and BTW, unless you prefixed it with "opt/..." you
->                   are off the reservation, and it might collide with
->                   qemu->firmware communications.
-> 
->         2 anything one didn't place there themselves via the qemu
->           command line is informational only, might change or go away
->           at any time, and developing expectations about it based on
->           past observation is done at the observer's own risk.
-> 
-> While I don't *personally* care about items outside of "opt/", I'm a bit
-> uncomfortable actively *hiding* them from userspace -- I could easily
-> imagine the ability to see (read-only) fw_cfg content from userspace
-> being a handy debugging/troubleshooting tool. It's back to separating
-> between mechanism and policy: hiding things from userspace would IMHO
-> fall into the policy enforcement side of things, and I'm still unclear
-> about the failure scenario we'd be trying to prevent, and its likelihood.
-> 
-> Thanks,
-> --Gabriel
+These chips with funny Atom-specific codenames (baytrail, cherryview,
+broxton, sunrisepoint etc) are not just used for these IoT use cases
+but also for e.g. laptops of the ChromeBook form factor, and the same
+pin control needs arise there, just at a different cadence related to
+product cycle.
 
-Mostly, we can change internal qemu/firmware interfaces
-as long as we verify that firmware that ships with QEMU
-does not rely on them.
+I bet they also have funny product-specific kernel trees :(
 
-I'm fine with exposing stuff for debugging purposes
-but I would like a cleaner separation between the two,
-and self-documenting interfaces.
-How about:
-	- place everything that is under "opt/" in e.g. "supported"
-	  directory, or at root
-	- place everything that is not under "opt/" in e.g. "unsupported"
-	  directory
+> This is something that people are currently looking at for DT, there the
+> discussion has been about defining the connectors as entities and hiding
+> the details of the muxing on the SoC behind that along with higher level
+> concepts like instantiation of buses like I2C and SPI.  It seems like if
+> we do want to try to share between DT and ACPI we should be doing it at
+> that level rather than dealing with pinmuxing at the extremely low level
+> that pinctrl does.
 
-Abstracting hardware is what OS is all about, this is not policy.
+Agree: work is needed here. It is a big confusion, the whole model is
+based around the configuration being pretty static as I recently
+realized when just wanting to add a runtime-detected LCD panel
+to a certain driver. No runtime patching of the DT or overlays or any
+of the sort deliver what is really needed.
 
-> > > ---
-> > > 
-> > > Changes since v1:
-> > > 	- no more "#ifdef CONFIG_ACPI"; instead we proceed if
-> > > 	  acpi_acquire_global_lock() returns either OK or NOT_CONFIGURED,
-> > > 	  and only throw a warning/error message otherwise.
-> > > 
-> > > 	- didn't get any *negative* feedback from the QEMU crowd, so
-> > > 	  this is now a bona-fide "please apply this", rather than just
-> > > 	  an RFC :)
-> > > 
-> > > 	- tested on ACPI-enabled x86_64, and acpi_less ARM (32 and 64 bit)
-> > > 	  QEMU VMs (I don't have handy access to an ACPI-enabled ARM VM)
-> > > 
-> > > Thanks much,
-> > >   --Gabriel
-> > > 
-> > >  drivers/firmware/qemu_fw_cfg.c | 16 ++++++++++++++++
-> > >  1 file changed, 16 insertions(+)
-> > > 
-> > > diff --git a/drivers/firmware/qemu_fw_cfg.c b/drivers/firmware/qemu_fw_cfg.c
-> > > index 7bba76c..a44dc32 100644
-> > > --- a/drivers/firmware/qemu_fw_cfg.c
-> > > +++ b/drivers/firmware/qemu_fw_cfg.c
-> > > @@ -77,12 +77,28 @@ static inline u16 fw_cfg_sel_endianness(u16 key)
-> > >  static inline void fw_cfg_read_blob(u16 key,
-> > >  				    void *buf, loff_t pos, size_t count)
-> > >  {
-> > > +	u32 glk;
-> > > +	acpi_status status;
-> > > +
-> > > +	/* If we have ACPI, ensure mutual exclusion against any potential
-> > > +	 * device access by the firmware, e.g. via AML methods:
-> > > +	 */
-> > > +	status = acpi_acquire_global_lock(ACPI_WAIT_FOREVER, &glk);
-> > > +	if (ACPI_FAILURE(status) && status != AE_NOT_CONFIGURED) {
-> > > +		/* Should never get here */
-> > > +		WARN(1, "fw_cfg_read_blob: Failed to lock ACPI!\n");
-> > > +		memset(buf, 0, count);
-> > > +		return;
-> > > +	}
-> > > +
-> > >  	mutex_lock(&fw_cfg_dev_lock);
-> > >  	iowrite16(fw_cfg_sel_endianness(key), fw_cfg_reg_ctrl);
-> > >  	while (pos-- > 0)
-> > >  		ioread8(fw_cfg_reg_data);
-> > >  	ioread8_rep(fw_cfg_reg_data, buf, count);
-> > >  	mutex_unlock(&fw_cfg_dev_lock);
-> > > +
-> > > +	acpi_release_global_lock(glk);
-> > >  }
-> > >  
-> > >  /* clean up fw_cfg device i/o */
-> > > -- 
-> > > 2.4.3
+The only thing I heard which was actually doing something sensible
+was when Matthew Garret once told that apple mice provide a
+device tree fragment to the OS on how to handle it during bus
+discovery.
+
+I think that for random complex hotpluggable devices like what
+greybus is trying to achieve this is needed too, despite the standard
+USB-like device classes in all their glory.
+
+> Obviously for the more general ACPI use case the idiomatic way of
+> handling this is that the OS should never see anything about the
+> pin muxing.  With DT we need to really know what's going on with the
+> pinbox because the model is that even for things built into a single
+> board the OS is responsible for managing the pins but that's really not
+> how ACPI is expected to work.
+
+See my previous mail for some kind of answer to this.
+
+Yours,
+Linus Walleij
