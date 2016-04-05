@@ -1,79 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Tue, 5 Apr 2016 11:00:50 +0200
-Message-ID: <CACRpkdZW83kOADo1WcYT=mc++ro3Xb7PS15zh+RkLnSxmbTZAQ@mail.gmail.com>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
-	<20160404214034.GL2350@sirena.org.uk>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH v13 0/9] add support for DWC UFS Controller
+Date: Tue, 5 Apr 2016 10:09:13 +0100
+Message-ID: <570380B9.30800@synopsys.com>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+ <yq1inzxeyoe.fsf@sermon.lab.mkp.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20160404214034.GL2350@sirena.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <yq1inzxeyoe.fsf@sermon.lab.mkp.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Martin K. Petersen" <martin.petersen@oracle.com>, Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: robh@kernel.org, tomas.winkler@intel.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 4, 2016 at 11:40 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
->
->> This is a proposal for adding ACPI support for pin controller
->> configuration.
->
->> It has been developed to enable the MinnowBoard and IoT community
->> by providing an easy way to specify pin multiplexing and
->> pin configuration.
->
-> So this is mainly targeted at modules being added to base boards?
-> Without getting into the binding at all here it seems like this is not
-> solving the problem at the right abstraction level.  It's exposing the
-> pins on the SoC directly without any tie in with the functionality that
-> goes over those pins.  This means that any binding of a board to an ACPI
-> using system that just uses this is going to be entirely specific to the
-> particular combination of base and expansion board even if the
-> electrical connections are standard.
+Hi,
 
-I have seen the same need beyond strictly embedded (MinnowBoard)
-from the Intel camp.
+On 4/5/2016 12:34 AM, Martin K. Petersen wrote:
+>>>>>> "Joao" == Joao Pinto <Joao.Pinto@synopsys.com> writes:
+> 
+> Joao,
+> 
+> Joao> The work consisted of: - Fixed typo in ufshcd-pltfrm.c - Tweak
+> Joao> ufshcd.c for UFS 2.0 support - Implement ufshcd-dwc which contains
+> Joao> all DWC HW specific code - Unipro attributes were added and new
+> Joao> registers were added to the driver - Implement a tc-dwc-g210
+> Joao> containing G210 MPHY specific code - Implement a tc-dwc-g210 glue
+> Joao> platform driver - Implement a tc-dwc-g210 glue pci driver -
+> Joao> Documentation update
+> 
+> You really need to keep track of which Acked-by: and Reviewed-by: tags
+> you have gotten from people and apply them to patches that you haven't
+> changed. Otherwise we start from scratch every time you resubmit.
+> 
+> Thanks!
+> 
 
-These chips with funny Atom-specific codenames (baytrail, cherryview,
-broxton, sunrisepoint etc) are not just used for these IoT use cases
-but also for e.g. laptops of the ChromeBook form factor, and the same
-pin control needs arise there, just at a different cadence related to
-product cycle.
+It's ok to submit the same v13 with the ACK tags?
 
-I bet they also have funny product-specific kernel trees :(
-
-> This is something that people are currently looking at for DT, there the
-> discussion has been about defining the connectors as entities and hiding
-> the details of the muxing on the SoC behind that along with higher level
-> concepts like instantiation of buses like I2C and SPI.  It seems like if
-> we do want to try to share between DT and ACPI we should be doing it at
-> that level rather than dealing with pinmuxing at the extremely low level
-> that pinctrl does.
-
-Agree: work is needed here. It is a big confusion, the whole model is
-based around the configuration being pretty static as I recently
-realized when just wanting to add a runtime-detected LCD panel
-to a certain driver. No runtime patching of the DT or overlays or any
-of the sort deliver what is really needed.
-
-The only thing I heard which was actually doing something sensible
-was when Matthew Garret once told that apple mice provide a
-device tree fragment to the OS on how to handle it during bus
-discovery.
-
-I think that for random complex hotpluggable devices like what
-greybus is trying to achieve this is needed too, despite the standard
-USB-like device classes in all their glory.
-
-> Obviously for the more general ACPI use case the idiomatic way of
-> handling this is that the OS should never see anything about the
-> pin muxing.  With DT we need to really know what's going on with the
-> pinbox because the model is that even for things built into a single
-> board the OS is responsible for managing the pins but that's really not
-> how ACPI is expected to work.
-
-See my previous mail for some kind of answer to this.
-
-Yours,
-Linus Walleij
+Joao
