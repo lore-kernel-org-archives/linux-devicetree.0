@@ -1,78 +1,123 @@
-From: Tai Tri Nguyen <ttnguyen@apm.com>
-Subject: Re: [PATCH 3/4] perf: xgene: Add APM X-Gene SoC Performance
- Monitoring Unit driver
-Date: Tue, 5 Apr 2016 14:50:32 -0700
-Message-ID: <CACgAJHykV72QEWPbH33P9NgQrw4yXB-1HVdXZp0aLDP6T1+J7g@mail.gmail.com>
+From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 2/4] Documentation: Add documentation for APM X-Gene SoC
+ PMU DTS binding
+Date: Tue, 5 Apr 2016 14:51:06 -0700
+Message-ID: <CACgAJHwHXWpt-QGb0cUdc4ykvHbRNcEijEyxxF7AtMQW65ms4g@mail.gmail.com>
 References: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
-	<1459467472-31561-4-git-send-email-ttnguyen@apm.com>
-	<20160401121820.GB29876@leverpostej>
-	<CACgAJHwZ0MwjBDa65P7tYAkF4-m+TCj-65OGpYYQD2tO6hkFqQ@mail.gmail.com>
-	<20160404233338.GA1917@svinekod>
-	<CACgAJHx6Y8yt57m3YB51dOQjuxNHFvEnJe255mDhnVZOjmJu_A@mail.gmail.com>
-	<20160405192100.GA5946@svinekod>
+	<1459467472-31561-3-git-send-email-ttnguyen@apm.com>
+	<20160401123000.GC29876@leverpostej>
+	<CACgAJHyS+o_Nyrc7pDxVCTHK7tue9L9F2weGQt_2WqeGfZBeag@mail.gmail.com>
+	<20160404233831.GB1917@svinekod>
+	<CACgAJHwZ=CwyvxLmuXdOAw2oFhfoC2jkdOY1HPenCsEaYLjrPw@mail.gmail.com>
+	<20160405193114.GB5946@svinekod>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160405192100.GA5946@svinekod>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: will.deacon@arm.com, catalin.marinas@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160405193114.GB5946@svinekod>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi Mark,
 
-On Tue, Apr 5, 2016 at 12:21 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Apr 05, 2016 at 11:50:10AM -0700, Tai Tri Nguyen wrote:
->> On Mon, Apr 4, 2016 at 4:33 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > On Mon, Apr 04, 2016 at 04:42:11PM -0700, Tai Tri Nguyen wrote:
->> >> On Fri, Apr 1, 2016 at 5:18 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->> >> >> +     hwc->config = config;
->> >> >> +     if (config1)
->> >> >> +             hwc->extra_reg.config = config1;
->> >> >> +     else
->> >> >> +             /* Enable all Agents */
->> >> >> +             hwc->extra_reg.config = 0xFFFFFFFFFFFFFFFFULL;
+On Tue, Apr 5, 2016 at 12:31 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Apr 05, 2016 at 11:51:02AM -0700, Tai Tri Nguyen wrote:
+>> Hi Mark,
+>>
+>> On Mon, Apr 4, 2016 at 4:38 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> > On Mon, Apr 04, 2016 at 04:40:33PM -0700, Tai Tri Nguyen wrote:
+>> >> On Fri, Apr 1, 2016 at 5:30 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> >> > On Thu, Mar 31, 2016 at 04:37:50PM -0700, Tai Nguyen wrote:
+>> >> >> +This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
+>> >> >> +The following PMU devices are supported:
+>> >> >> +
+>> >> >> +  L3C                        - L3 cache controller
+>> >> >> +  IOB                        - IO bridge
+>> >> >> +  MCB                        - Memory controller bridge
+>> >> >> +  MC                 - Memory controller
 >> >> >
->> >> > I'm not sure I follow what's going on here.
+>> >> > These sound like separate units. How do these relate?
 >> >> >
->> >> > It would be good to document precisely what this means.
+>> >> > Is there an SOC-wide PMU that aggregates counters, or are these actually
+>> >> > independent?
+>> >> >
 >> >>
->> >> These are X-Gene PMU specific for monitoring performance of a specific
->> >> data path.
->> >> X-Gene PMUs have 2 registers capable of masking the Agents from which
->> >> the request come from. If the bit with the bit number corresponding to
->> >> the AgentID
->> >> is set, the event will be counted only if it is caused by a request
->> >> from that agent.
->> >> Each PMU has different set of Agents. By default, the event will be counted for
->> >> all agent requests.
+>> >> Yes, they are independent, but sharing the same top level status interrupt.
+>> >> There's no SOC-wide PMU which aggregates these counters.
+>> >
+>> > If they're just sharing the interrupt, why are they not separate nodes (and
+>> > drivers) which simply happen to share an interrupt?
+>> >
+>> > Is there anything else shared?
+>>
+>> Yes, a long with the interrupt they also share top level PMU status CSR region.
+>
+> Ah, ok. I had missed that.
+>
+> What exactly exists in that region? Are the shared registers just for handling
+> the shared interrupt, or are they used to handle other parts of the PMUs too?
+
+They are shared registers for handling the shared interrupt only,
+indicating/masking source of the
+shared interrupt.
+
+>
+>> >> >> +Required properties for L3C subnode:
+>> >> >> +- compatible         : Shall be "apm,xgene-pmu-l3c".
+>> >> >> +- reg                        : First resource shall be the L3C PMU resource.
+>> >> >> +- index                      : Instance number of the L3C PMU.
+>> >> >> +
+>> >> >> +Required properties for IOB subnode:
+>> >> >> +- compatible         : Shall be "apm,xgene-pmu-iob".
+>> >> >> +- reg                        : First resource shall be the IOB PMU resource.
+>> >> >> +- index                      : Instance number of the IOB PMU.
+>> >> >> +
+>> >> >> +Required properties for MCB subnode:
+>> >> >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
+>> >> >> +- reg                        : First resource shall be the MCB PMU resource.
+>> >> >> +- index                      : Instance number of the MCB PMU.
+>> >> >> +
+>> >> >> +Required properties for MC subnode:
+>> >> >> +- compatible         : Shall be "apm,xgene-pmu-mc".
+>> >> >> +- reg                        : First resource shall be the MC PMU resource.
+>> >> >> +- index                      : Instance number of the MC PMU.
+>> >> >
+>> >> > What's the index property useful for?
+>> >> >
 >> >>
->> >> I'll have it commented better for next revision of the patch.
+>> >> The index property is used for indicating the physical hardware PMU id.
+>> >> For example, on X-Gene1 there are 4 memory controllers (MC), each of them has
+>> >> its own PMU. The index property tells us which MC a PMU belongs to.
+>> >> The same for MCB/L3C and IOB.
 >> >
->> > It might be worth having something under Documentation/ for this, similarly to
->> > what we do for CCN in Documentation/arm/CCN.txt.
->> >
->> > How is the user expected to determine agent IDs? Is there a listing somewhere?
->> > Does this change between reivisions? This may be worth documenting.
+>> > Sure, but is this simply informative for the user, or does this have an impact
+>> > on the programming model?
 >> >
 >>
->> Each of the SoC PMU has an agent ID list in our product User Manual
->> documentation.
->> An user is expected to refer to the list to determine the agent ID.
->> The agent ID list
->> per each PMU is different. Also we may change or add more agents to the list for
->> next generations of APM X-Gene. I think it would be too much to document it in
->> the Documentation/ folder.
+>> Yes, it does impact. For example, there are 4 PMUs associated with 4 MCs.
+>> They all certainly have the same sort of events. The index will help
+>> to determine
+>> the right event users want to monitor. Below is an example of perf list output:
+>> ...
+>> mc0/mcu-rd-request/
+>> ...
+>> mc1/mcu-rd-request/
 >
-> Given that the IDs are so variable, you can simply defer to user manuals in the
-> documentation. However, there should definitely be documentation describing the
-> format of the config and config1 fields.
+> By "programming model" I mean the way the kernel interacts with the device,
+> rather than the interface exposed to userspace. For example, does the index
+> affect which bits are used in the shared CSR region?
 >
-> Thanks,
-> Mark.
+> If it's only used for the name exposed to userspace, that's fine.
+>
+> Otherwise, there may be subtle gotchas.
 
-Yes, I agree and will add it.
+No, it doesn't impact in that mean.
 
-Thanks,
+Regards,
 -- 
 Tai
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
