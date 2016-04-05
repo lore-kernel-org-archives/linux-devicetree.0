@@ -1,87 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Tue, 5 Apr 2016 09:59:35 -0700
-Message-ID: <20160405165935.GA5456@sirena.org.uk>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
- <20160404225200.GA1615@svinekod>
- <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] dmaengine: bcm2835: support dma channel 11 to 14
+Date: Tue, 5 Apr 2016 10:03:37 -0700
+Message-ID: <20160405170336.GB5392@vkoul-mobl.iind.intel.com>
+References: <1458228273-15591-1-git-send-email-kernel@martin.sperl.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>
+In-Reply-To: <1458228273-15591-1-git-send-email-kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 17, 2016 at 03:24:30PM +0000, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org wrote:
+> From: Martin Sperl <kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org>
+> 
+> Right now the dma engine officially supports dma channel 11 and 12.
+> But the use of dma channel 12 immediately stalls the system.
+> 
+> The reason is that the interrupt assigned right now to dma channel 11
+> is actually a shared interrupt for dma channels 11 to 12.
+> So whenever the dma channel 12, 13 or 14 is used, it triggers the interrupt
+> for dma 11 which only clears the interrupt flag for dma channel 11.
+> This results in the interrupt 11 is triggered all the time.
+> 
+> On top the requesting dma channel12 (and the corresponding irq) triggers
+> an immeditate stall of the system, because for the 12th interrupt
+> any dma channel will trigger also this interrupt - even if the dma channel
+> is controlled by the firmware.
+> 
+> As the description in the default device-tree is (for the above reasons)
+> wrong a new means had to get devised that allows correct representation
+> of the mapping between interrupts and dma channels.
+> 
+> For this the existing (but unused) device-tree property "interrupt-names"
+> is used to define the mapping.
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This looks fine by me, need an ACK on ARM patch before this can be applied.
 
-On Tue, Apr 05, 2016 at 10:43:11AM +0200, Linus Walleij wrote:
-
-> And these products are only update-able
-> with hairy BIOS patches that need to be applied
-> using $SPECIAL_TOOL  that "normal users" do not want to
-> concern themselves with, as this is not an "apt-get upgrade"
-> kind of thing.
-
-This bit has been addressed in UEFI - there's now a mechanism for the OS
-to supply firmware updates to the BIOS via runtime sevices calls without
-needing to go to the hairy tools.  There's also been facilities for some
-time which allow ACPI fragments to be loaded at runtime without patching
-the firmware (though they're not used so often at present).
-
-> And I think that is what is happening, it's just that so much
-> prestige is involved that no-one wants to officially admit it.
-
-> I was once poking fun at this development model accusing
-> firmware engineers of having a God complex when they claim
-> to be able to engineer in these complex use cases during
-
-That's not really a fair characterization of the situation.  The goal
-that ACPI has been trying to meet is allowing new hardware to work
-without needing software updates so people's installation experience
-isn't miserable.  The Windows monoculture that firmware developers have
-been targetting has hurt the achievement of that but it's the idea.
-It's a good model for some classes of device but not for all.
-
-> product firmware development. Now I just feel sad about this
-> situation and want things to "just work" for them. I think these
-> patches are good.
-
-See Mark Rutland's reply - there's a whole model behind how ACPI
-abstracts the system that needs to be taken into account, just stuffing
-the existing DT in through a mechanism intended for simple vendor
-specific key/value properties isn't guaranteed to give something that's
-coherent and sensible.  DT design decisions will obviously not have
-considered ACPI and exposing the full combination of the two system
-models to system integrators seems likely to lead to unfortunate
-corners, especially with things that happen to work right now but cause
-problems later on.
-
-Given the rush to shoehorn existing DT into ACPI at some point it's
-looking like it would be much more sensible for x86 to just do what
-arm64 has done and support both DT and ACPI in parallel and let people
-(either system integrators or end users) choose the most appropriate
-interface for their application.
-
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXA+72AAoJECTWi3JdVIfQJuwH/Ajuc8sImrTIMB0Ev0PWFFXo
-HAuwfErHs6AW2+6aiK4ozQJkTZi9wSiVcCEvrauGSiEtSI1Jz5RqF2gUyjeIm/if
-Nqn5HOl+MYqRCvbAf3zHIOUMTNCSKmG7R3xqxunOMtBl13PsDjyxKW4fttiMpMjM
-/pOYICp0XNCLjzB7JmTJyWpX1IH+7sOlGAqt0Xs4u78WrChmeE6X2rqSBoO7OPyI
-PSwgc/eY1p8gc7CeUEmqOM9gSn+DS2ftEIcfobzL5l8iYoHK5FKbXqvWe5At5a6u
-e1E3V81pm/RNNJYQFUW2lmaDm3NAeJXCKNAHNO9G4287rW9VtbTjyK5y+UNVuxk=
-=Q+zD
------END PGP SIGNATURE-----
-
---zhXaljGHf11kAtnf--
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
