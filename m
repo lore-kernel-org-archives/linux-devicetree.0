@@ -1,193 +1,80 @@
-From: Thor Thayer <tthayer@opensource.altera.com>
-Subject: Re: [PATCHv2 6/7] ARM: socfpga: Enable Arria10 OCRAM ECC on startup
-Date: Tue, 5 Apr 2016 00:25:33 -0500
-Message-ID: <57034C4D.9010204@opensource.altera.com>
-References: <1459450087-24792-1-git-send-email-tthayer@opensource.altera.com>
- <1459450087-24792-7-git-send-email-tthayer@opensource.altera.com>
-Reply-To: <tthayer@opensource.altera.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v3 0/9] add TCON and Vybrid support
+Date: Mon,  4 Apr 2016 22:28:32 -0700
+Message-ID: <1459834121-25997-1-git-send-email-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1459450087-24792-7-git-send-email-tthayer@opensource.altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, shawnguo@kernel.org, stefan@agner.ch
+Cc: meng.yi@nxp.com, pawel.moll@arm.com, alison.wang@freescale.com, daniel.vetter@ffwll.ch, mturquette@baylibre.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, galak@codeaurora.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, alexander.stein@systec-electronic.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 03/31/2016 01:48 PM, tthayer@opensource.altera.com wrote:
-> From: Thor Thayer <tthayer@opensource.altera.com>
->
-> Enable ECC for Arria10 On-Chip RAM on machine startup. The ECC has to
-> be enabled and memory initialized before data is stored in memory
-> otherwise the ECC will fail on reads.
->
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2: Add Arria10 ECC block initialization locally.
-> ---
->   arch/arm/mach-socfpga/ocram.c |  128 +++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 128 insertions(+)
->
-> diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
-> index 60ec643..d4a524c 100644
-> --- a/arch/arm/mach-socfpga/ocram.c
-> +++ b/arch/arm/mach-socfpga/ocram.c
-> @@ -13,12 +13,15 @@
->    * You should have received a copy of the GNU General Public License along with
->    * this program.  If not, see <http://www.gnu.org/licenses/>.
->    */
-> +#include <linux/delay.h>
->   #include <linux/io.h>
->   #include <linux/genalloc.h>
->   #include <linux/module.h>
->   #include <linux/of_address.h>
->   #include <linux/of_platform.h>
->
-> +#include "core.h"
-> +
->   #define ALTR_OCRAM_CLEAR_ECC          0x00000018
->   #define ALTR_OCRAM_ECC_EN             0x00000019
->
-> @@ -47,3 +50,128 @@ void socfpga_init_ocram_ecc(void)
->
->   	iounmap(mapped_ocr_edac_addr);
->   }
-> +
-> +/* Arria10 OCRAM Section */
-> +#define ALTR_A10_ECC_CTRL_OFST          0x08
-> +#define ALTR_A10_OCRAM_ECC_EN_CTL       (BIT(1) | BIT(0))
-> +#define ALTR_A10_ECC_INITA              BIT(16)
-> +
-> +#define ALTR_A10_ECC_INITSTAT_OFST      0x0C
-> +#define ALTR_A10_ECC_INITCOMPLETEA      BIT(0)
-> +#define ALTR_A10_ECC_INITCOMPLETEB      BIT(8)
-> +
-> +#define ALTR_A10_ECC_ERRINTEN_OFST      0x10
-> +#define ALTR_A10_ECC_SERRINTEN          BIT(0)
-> +
-> +#define ALTR_A10_ECC_INTSTAT_OFST       0x20
-> +#define ALTR_A10_ECC_SERRPENA           BIT(0)
-> +#define ALTR_A10_ECC_DERRPENA           BIT(8)
-> +#define ALTR_A10_ECC_ERRPENA_MASK       (ALTR_A10_ECC_SERRPENA | \
-> +					 ALTR_A10_ECC_DERRPENA)
-> +/* ECC Manager Defines */
-> +#define A10_SYSMGR_ECC_INTMASK_SET_OFST   0x94
-> +#define A10_SYSMGR_ECC_INTMASK_CLR_OFST   0x98
-> +#define A10_SYSMGR_ECC_INTMASK_OCRAM      BIT(1)
-> +
-> +#define ALTR_A10_ECC_INIT_WATCHDOG_10US   10000
-> +
-> +static void ecc_set_bits(u32 bit_mask, void __iomem *ioaddr)
-> +{
-> +	u32 value = readl(ioaddr);
-> +
-> +	value |= bit_mask;
-> +	writel(value, ioaddr);
-> +}
-> +
-> +static void ecc_clear_bits(u32 bit_mask, void __iomem *ioaddr)
-> +{
-> +	u32 value = readl(ioaddr);
-> +
-> +	value &= ~bit_mask;
-> +	writel(value, ioaddr);
-> +}
-> +
-> +static int ecc_test_bits(u32 bit_mask, void __iomem *ioaddr)
-> +{
-> +	u32 value = readl(ioaddr);
-> +
-> +	return (value & bit_mask) ? 1 : 0;
-> +}
-> +
-> +/*
-> + * This function uses the memory initialization block in the Arria10 ECC
-> + * controller to initialize/clear the entire memory data and ECC data.
-> + */
-> +static int altr_init_memory_port(void __iomem *ioaddr)
-> +{
-> +	int limit = ALTR_A10_ECC_INIT_WATCHDOG_10US;
-> +
-> +	ecc_set_bits(ALTR_A10_ECC_INITA, (ioaddr + ALTR_A10_ECC_CTRL_OFST));
-> +	while (limit--) {
-> +		if (ecc_test_bits(ALTR_A10_ECC_INITCOMPLETEA,
-> +				  (ioaddr + ALTR_A10_ECC_INITSTAT_OFST)))
-> +			break;
-> +		udelay(1);
-> +	}
-> +	if (limit < 0)
-> +		return -EBUSY;
-> +
-> +	/* Clear any pending ECC interrupts */
-> +	writel(ALTR_A10_ECC_ERRPENA_MASK,
-> +	       (ioaddr + ALTR_A10_ECC_INTSTAT_OFST));
-> +
-> +	return 0;
-> +}
-> +
-> +void socfpga_init_arria10_ocram_ecc(void)
-> +{
-> +	struct device_node *np;
-> +	int ret = 0;
-> +	void __iomem *ecc_block_base;
-> +
-> +	if (!sys_manager_base_addr) {
-> +		pr_err("SOCFPGA: sys-mgr is not initialized\n");
-> +		return;
-> +	}
-> +
-> +	/* Find the OCRAM EDAC device tree node */
-> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-a10-ocram-ecc");
-> +	if (!np) {
-> +		pr_err("Unable to find socfpga-a10-ocram-ecc\n");
-> +		return;
-> +	}
-> +
-> +	/* Map the ECC Block */
-> +	ecc_block_base = of_iomap(np, 0);
-> +	of_node_put(np);
-> +	if (!ecc_block_base) {
-> +		pr_err("Unable to map OCRAM ECC block\n");
-> +		return;
-> +	}
-> +
-> +	/* Disable ECC */
-> +	writel(ALTR_A10_OCRAM_ECC_EN_CTL,
-> +	       sys_manager_base_addr + A10_SYSMGR_ECC_INTMASK_SET_OFST);
-> +	ecc_clear_bits(ALTR_A10_ECC_SERRINTEN,
-> +		       (ecc_block_base + ALTR_A10_ECC_ERRINTEN_OFST));
-> +	ecc_clear_bits(ALTR_A10_OCRAM_ECC_EN_CTL,
-> +		       (ecc_block_base + ALTR_A10_ECC_CTRL_OFST));
-> +
-> +	/* Use HW initialization block to initialize memory for ECC */
-> +	ret = altr_init_memory_port(ecc_block_base);
-> +	if (ret) {
-> +		pr_err("ECC: cannot init OCRAM PORTA memory\n");
-> +		return;
-
-I realize that I'm not calling iounmap(ecc_block_base) and I'll fix that 
-in the next revision with a goto.
-
-> +	}
-> +
-> +	/* Enable ECC */
-> +	ecc_set_bits(ALTR_A10_OCRAM_ECC_EN_CTL,
-> +		     (ecc_block_base + ALTR_A10_ECC_CTRL_OFST));
-> +	ecc_set_bits(ALTR_A10_ECC_SERRINTEN,
-> +		     (ecc_block_base + ALTR_A10_ECC_ERRINTEN_OFST));
-> +	writel(ALTR_A10_OCRAM_ECC_EN_CTL,
-> +	       sys_manager_base_addr + A10_SYSMGR_ECC_INTMASK_CLR_OFST);
-> +
-
-The iounmap() will go here. I'd still like to hear review comments for 
-the rest.
-
-Thanks for reviewing.
-
-> +	/* Ensure all writes complete */
-> +	wmb();
-> +}
->
+VGhpcyBwYXRjaHNldCBhZGRzIHRoZSBtaXNzaW5nIHBpZWNlcyB0byBtYWtlIHRoZSBGcmVlc2Nh
+bGUKRENVIERSTSBkcml2ZXIgd29yayBvbiBGcmVlc2NhbGUgVnlicmlkLgoKRm9yZW1vc3QsIGl0
+IGFkZHMgc3VwcG9ydCBmb3IgdGhlIHRpbWluZyBjb250cm9sbGVyIChUQ09OKQptb2R1bGUuIFRo
+ZSBtb2R1bGUgaXMgYmV0d2VlbiB0aGUgRGlzcGxheSBDb250cm9sbGVyIGFuZCB0aGUKYWN0dWFs
+IG91dHB1dCBwaW5zLiBJdCBhbGxvd3MgdG8gYWx0ZXIgdGhlIHRpbWluZ3MgZm9yIFJBVwpURlQg
+ZGlzcGxheXMsIGJ1dCBjYW4gYWxzbyBvcGVyYXRlIGluIGEgYnlwYXNzIG1vZGUuIFRoaXMKY2hh
+bmdlIGhhcyBvbmx5IHN1cHBvcnQgZm9yIHRoZSBieXBhc3MgbW9kZS4KCkVhcmxpZXIgdmFyaWFu
+dHMgb2YgdGhlIERDVSBEUk0gZHJpdmVyIGNvbmZpZ3VyZWQgdGhlIFRDT04KbW9kdWxlIGluIGJ5
+cGFzcyBtb2RlLCBob3dldmVyIHRoaXMgaGFzIGJlZW4gcmVtb3ZlZCBhbmQKcG9zdHBvbmVkLiBU
+aGUgbGFzdCB2YXJpYW50IHdpdGggdGhlIFRDT04gY29kZSB3YXMgdjk6Cmh0dHBzOi8vbGttbC5v
+cmcvbGttbC8yMDE1LzcvMTMvMjQyCgpUaGUgcGF0Y2hzZXQgYWxzbyBmaXhlcyB0aGUgRENVIHJl
+bGF0ZWQgY2xvY2tzIGluIHRoZSBWeWJyaWQKY2xvY2sgdHJlZSBhbmQgbWFrZXMgdXNlIG9mIHRo
+ZSBjb21tb24gY2xvY2sgZnJhbWV3b3JrIGZvcgp0aGUgcGl4ZWxjbG9jayBkaXZpZGVyLgoKVGVz
+dGluZyBvbiBMUzEwMjFhIHdlbGNvbWUhCgpDaGFuZ2VzIHNpbmNlIHYyOgotIEFkZCBzZWNvbmQg
+Y2xvY2sgKCJwaXgiKSB0byBsczEwMjFhLmR0c2kgdG9vCi0gVXBkYXRlZCBkb2N1bWVudGF0aW9u
+IHJlZ2FyZGluZyBjbG9ja3MKLSBEbyBub3Qgd2FybiBpZiBUQ09OIGlzIG1pc3NpbmcgYXMgc29t
+ZSBkZXZpY2UgZG8gbm90CiAgcHJvdmlkZSBpdAotIEFsbG9jYXRlIG1lbW9yeSBhZnRlciBjaGVj
+a2luZyBmb3IgVENPTiBub2RlIGFuZCByZXR1cm4KICAtRU5PTUVNIGlmIG1lbW9yeSBhbGxvY2F0
+aW9uIGZhaWxzCi0gQWRkIGZzbCx0Y29uLnR4dCB0byBNQUlOVEFJTkVSUyBmaWxlCgpDaGFuZ2Vz
+IHNpbmNlIHYxOgotIFByb3Blcmx5IGRpc2FibGUgY2xvY2tzIG9uIGVycm9ycwotIENyZWF0ZSBj
+bGVhciBzZXBlcmF0aW9uIG9mIHBpeGVsIGNsb2NrIGFuZCBidXMgY2xvY2sKLSBTaW1wbGlmaWVk
+IFRDT04gZHJpdmVyIGJ5IHJlbW92aW5nIHN1c3BlbmQvcmVzdW1lCiAgY2FwYWJpbGl0aWVzIChl
+bmNvZGVyIGRpc2FibGUvZW5hYmxlIG1ha2VzIHN1cmUgdGhhdAogIFRDT04gYnlwYXNzIGdldHMg
+ZGlzYWJsZWQvcmVlbmFibGVkIG9uIHN1c3BlbmQpCi0gVXNlIGNvbW1vbiBjbG9jayBmcmFtZXdv
+cmsgdG8gY3JlYXRlIGEgZGl2aWRlciBjbG9jawogIHdoaWNoIHJlcHJlc2VudHMgdGhlIERDVSBp
+bnRlcm5hbCBwaXhlbCBjbG9jayBkaXZpZGVyCgpTdGVmYW4gQWduZXIgKDkpOgogIEFSTTogaW14
+OiBjbGstdmY2MTA6IGZpeCBEQ1UgY2xvY2sgdHJlZQogIEFSTTogaW14OiBjbGstdmY2MTA6IGFk
+ZCBUQ09OIGlwZyBjbG9jawogIGRybS9mc2wtZGN1OiBkaXNhYmxlIGNsb2NrIG9uIGluaXRpYWxp
+emF0aW9uIGZhaWx1cmUgYW5kIHJlbW92ZQogIGRybS9mc2wtZGN1OiBhZGQgZXh0cmEgY2xvY2sg
+Zm9yIHBpeGVsIGNsb2NrCiAgZHJtL2ZzbC1kY3U6IHVzZSBjb21tb24gY2xvY2sgZnJhbWV3b3Jr
+IGZvciBwaXhlbCBjbG9jayBkaXZpZGVyCiAgZHJtL2ZzbC1kY3U6IGFkZCBUQ09OIGRyaXZlcgog
+IEFSTTogZHRzOiB2ZjYxMDogYWRkIGRpc3BsYXkgbm9kZXMKICBBUk06IGR0czogdmY2MTAtY29s
+aWJyaTogZW5hYmxlIGRpc3BsYXkgY29udHJvbGxlcgogIEFSTTogZHRzOiBsczEwMjFhOiBhZGQg
+cGl4IGNsb2NrIHRvIERDVSBkdHMgbm9kZQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvZnNsLGRjdS50eHQgICAgICAgIHwgIDE1ICsrLQogLi4uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9mc2wsdGNvbi50eHQgICAgICAgfCAgMTggKysrKwogTUFJTlRBSU5FUlMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwogYXJjaC9hcm0vYm9vdC9k
+dHMvbHMxMDIxYS5kdHNpICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKy0KIGFyY2gvYXJtL2Jv
+b3QvZHRzL3ZmLWNvbGlicmktZXZhbC12My5kdHNpICAgICAgICAgIHwgIDE2ICsrKwogYXJjaC9h
+cm0vYm9vdC9kdHMvdmYtY29saWJyaS5kdHNpICAgICAgICAgICAgICAgICAgfCAgMzMgKysrKysr
+CiBhcmNoL2FybS9ib290L2R0cy92Znh4eC5kdHNpICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+OSArKysrCiBkcml2ZXJzL2Nsay9pbXgvY2xrLXZmNjEwLmMgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgNyArLQogZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvTWFrZWZpbGUgICAgICAgICAgICAg
+ICAgICAgfCAgIDMgKy0KIGRyaXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF9kY3VfZHJtX2NydGMu
+YyAgICAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfZGN1X2RybV9k
+cnYuYyAgICAgICAgICB8ICA3MyArKysrKysrKysrLS0tLQogZHJpdmVycy9ncHUvZHJtL2ZzbC1k
+Y3UvZnNsX2RjdV9kcm1fZHJ2LmggICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL2Zz
+bC1kY3UvZnNsX2RjdV9kcm1fcmdiLmMgICAgICAgICAgfCAgMTEgKysKIGRyaXZlcnMvZ3B1L2Ry
+bS9mc2wtZGN1L2ZzbF90Y29uLmMgICAgICAgICAgICAgICAgIHwgMTExICsrKysrKysrKysrKysr
+KysrKysrKwogZHJpdmVycy9ncHUvZHJtL2ZzbC1kY3UvZnNsX3Rjb24uaCAgICAgICAgICAgICAg
+ICAgfCAgMzMgKysrKysrCiBpbmNsdWRlL2R0LWJpbmRpbmdzL2Nsb2NrL3ZmNjEwLWNsb2NrLmgg
+ICAgICAgICAgICB8ICAgNCArLQogMTYgZmlsZXMgY2hhbmdlZCwgMzIzIGluc2VydGlvbnMoKyks
+IDM1IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L2ZzbCx0Y29uLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvZ3B1L2RybS9mc2wtZGN1L2ZzbF90Y29uLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
+ZXJzL2dwdS9kcm0vZnNsLWRjdS9mc2xfdGNvbi5oCgotLSAKMi43LjQKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
