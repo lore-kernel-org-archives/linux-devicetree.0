@@ -1,131 +1,93 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Tue, 5 Apr 2016 19:16:26 +0100
-Message-ID: <20160405181625.GA3064@svinekod>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
- <20160404225200.GA1615@svinekod>
- <1F3AC3675D538145B1661F571FE1805F2F2342A6@irsmsx105.ger.corp.intel.com>
+From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Subject: [PATCH RESEND 1/2] usb: dwc2: Add reset control to dwc2
+Date: Tue, 5 Apr 2016 13:19:32 -0500
+Message-ID: <1459880373-32666-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1F3AC3675D538145B1661F571FE1805F2F2342A6@irsmsx105.ger.corp.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Tirdea, Irina" <irina.tirdea@intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Purdila, Octavian" <octavian.purdila@intel.com>, "Ciocan, Cristina" <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "charles.garcia-tobin@arm.com" <charles.garcia-tobin@arm.com>
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 05, 2016 at 03:33:43PM +0000, Tirdea, Irina wrote:
-> > -----Original Message-----
-> > From: Mark Rutland [mailto:mark.rutland@arm.com]
-> > On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
-> > > This is a proposal for adding ACPI support for pin controller
-> > > configuration.
-> > >
-> > > It has been developed to enable the MinnowBoard and IoT community
-> > > by providing an easy way to specify pin multiplexing and
-> > > pin configuration.
-> > >
-> > > This proposal is based on using _DSD properties to specify device
-> > > states and configuration nodes and it follows closely the device
-> > > tree model. Device states are defined using the Device Properties
-> > > format and the configuration nodes are defined using the
-> > > Hierarchical Properties Extension format. The generic properties
-> > > for the configuration nodes are the same as the ones for device
-> > > tree, while pincontroller drivers can also define custom ones.
-> > 
-> > From a look of the Documentation addition, and of the current uses of
-> > pinctrl-names in device tree bindings, one reason for requiring multiple
-> > pinctrl states is power management. Given that, I'm somewhat concerned by this,
-> > as it goes against the usual ACPI model of abstracting this sort of thing
-> > behind power control methods.
-> > 
-> 
-> Right, there is an overlap of the pinctrl "sleep" state with the ACPI power
-> management model. 
-> 
-> However, the main reason for implementing this is setting initial pin multiplexing
-> and configuration. This is normally done by BIOS, but there is currently no way of
-> changing the default configuration (except for a BIOS update). This is a problem
-> when using boards like MinnowBoard, where it is expected to get the board and
-> to be able to add various devices to its exported GPIO pins.
+From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-In the absence of a BIOS update, how is it expected that the relevant pinctrl
-settings for a given device will be known? Does the device provide ACPI
-fragments like an SSDT? Does it simply identify itself in some manner, and
-leave the rest to the kernel? Is this entirely user-driven?
+Allow for platforms that have a reset controller driver in place to bring
+the USB IP out of reset.
 
-> We need a way to change default pin multiplexing to enable the functionality
-> required by a specific device. In some cases we also need to set the bias to
-> get things like interrupts working.
-> 
-> Another use case for pinctrl states is using custom reset pin configurations that need
-> to be controlled from the driver.
+Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+Resend with Cc to Felipe.
+---
+ drivers/usb/dwc2/core.h     |    1 +
+ drivers/usb/dwc2/platform.c |   15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
 
-To be clear, I'm not stating that having pinctrl under the OS is necessarily
-wrong, and I can see why the firmware may not have all the relevant knowledge
-in advance. I can certainly see why having the OS in control can be preferable.
+diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+index 3c58d63..f748132 100644
+--- a/drivers/usb/dwc2/core.h
++++ b/drivers/usb/dwc2/core.h
+@@ -837,6 +837,7 @@ struct dwc2_hsotg {
+ 	void *priv;
+ 	int     irq;
+ 	struct clk *clk;
++	struct reset_control *reset;
+ 
+ 	unsigned int queuing_high_bandwidth:1;
+ 	unsigned int srp_success:1;
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 88629be..b1fa9dd 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -45,6 +45,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/phy/phy.h>
+ #include <linux/platform_data/s3c-hsotg.h>
++#include <linux/reset.h>
+ 
+ #include <linux/usb/of.h>
+ 
+@@ -337,6 +338,9 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
+ {
+ 	int i, ret;
+ 
++	if(hsotg->reset)
++		reset_control_deassert(hsotg->reset);
++
+ 	/* Set default UTMI width */
+ 	hsotg->phyif = GUSBCFG_PHYIF16;
+ 
+@@ -434,6 +438,9 @@ static int dwc2_driver_remove(struct platform_device *dev)
+ 	if (hsotg->ll_hw_enabled)
+ 		dwc2_lowlevel_hw_disable(hsotg);
+ 
++	if (hsotg->reset)
++		reset_control_assert(hsotg->reset);
++
+ 	return 0;
+ }
+ 
+@@ -529,6 +536,14 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
+ 		(unsigned long)res->start, hsotg->regs);
+ 
++	hsotg->reset = devm_reset_control_get(&dev->dev, "dwc2");
++	if (IS_ERR(hsotg->reset)) {
++		dev_info(&dev->dev, "Could not get reset control!\n");
++		if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		hsotg->reset = NULL;
++	}
++
+ 	retval = dwc2_lowlevel_hw_init(hsotg);
+ 	if (retval)
+ 		return retval;
+-- 
+1.7.9.5
 
-My concern is that there is a conflict with the ACPI model, and potential
-fragility, given that:
-
-* The firmware does not have the relevant information in advance for a given
-  device that may be connected (i.e. how devices may change the pinctrl setup
-  is unknown).
-
-* The firmware is to some extent expected to manage pinctrl today (for power
-  management of devices it does know about), and hence a pinctrl device is
-  potentially under shared management of ACPI and the OS.
-
-* The ACPI specification says nothing about this style of pinctrl management,
-  so it is unclear what the expectations are:
-
-  - Is a given pinctrl device under shared ownership by the firmware and
-    kernel, or is a given device entirely under the control of just one?
-
-  - How shared access to the pinctrl device is mediated, e.g. is any locking or
-    signalling mechanism required to ensure that firmware and kernel do not
-    access the device simultaneously in a manner that causes problems.
-
-  - Is the firmware permitted to perform power management of devices for which
-    the kernel handles pinctrl? What states can either expect, and when is such
-    management permitted? e.g. must the OS ensure that a device is in its
-    default state? Can it only call power management calls from particular
-    states? What is the restored state?
-
-  - What the expectations are w.r.t. ownership of pins, e.g. must the firmware
-    never change the state of certain pins? Must it save/restore their state in
-    system-wide power-management scenarios like suspend or hibernate?
-
-I think this needs to be raised with the ASWG, and some level of model needs to
-be defined for this, to cater for the issues raised above.
-
-That might be very simple, e.g. pins are never shared, the pinctrl management
-device must permit concurrent accesses by FW and kernel, the kernel is
-responsible for all management of those pins after system reset.
-
-In the absence of that, this is liable to become fragmented and fragile, and is
-practically impossible to rectify post-hoc.
-
-> Since we have the pinctrl infrastructure and the all Intel ACPI pinctrl drivers already
-> support it, this seems the most straightforward way to implement it.
-
-I do not disagree that this is expedient. I am concerned that it permits a very
-large set of avoidable problems, and I believe that we need to be somewhat
-stricter from the outset.
-
-> > Additionally, pinctrl has some cross-cutting concerns (e.g. mutually exclusive
-> > device usage due to a shared pin), and I can imagine that may interact poorly
-> > with any AML or firmware assumptions about the state of the world, as there's
-> > no mechanism present to notify those of changes to pins.
-> 
-> This is a problem with any modification we would make to the ACPI tables. 
-> It is true that pinctrl configuration could create conflicts when changing
-> pin multiplexing, but that could be avoided by using only the pinctrl states that
-> make sense for the entire ACPI configuration.
-
-I think that "makes sense for the entire ACPI configuration" needs to be
-defined, and then mandated, which implies an ACPI spec addition.
-
-Thanks,
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
