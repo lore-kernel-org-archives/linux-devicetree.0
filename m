@@ -1,93 +1,77 @@
 From: <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Subject: [PATCH RESEND 1/2] usb: dwc2: Add reset control to dwc2
-Date: Tue, 5 Apr 2016 13:19:32 -0500
-Message-ID: <1459880373-32666-1-git-send-email-dinguyen@opensource.altera.com>
+Subject: [PATCH RESEND 2/2] ARM: socfpga: dts: add reset control for USB
+Date: Tue, 5 Apr 2016 13:19:33 -0500
+Message-ID: <1459880373-32666-2-git-send-email-dinguyen@opensource.altera.com>
+References: <1459880373-32666-1-git-send-email-dinguyen@opensource.altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459880373-32666-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 
-Allow for platforms that have a reset controller driver in place to bring
-the USB IP out of reset.
+Add the resets property for the 2 USB controllers.
 
 Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-Resend with Cc to Felipe.
----
- drivers/usb/dwc2/core.h     |    1 +
- drivers/usb/dwc2/platform.c |   15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm/boot/dts/socfpga.dtsi         |    4 ++++
+ arch/arm/boot/dts/socfpga_arria10.dtsi |    4 ++++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index 3c58d63..f748132 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -837,6 +837,7 @@ struct dwc2_hsotg {
- 	void *priv;
- 	int     irq;
- 	struct clk *clk;
-+	struct reset_control *reset;
- 
- 	unsigned int queuing_high_bandwidth:1;
- 	unsigned int srp_success:1;
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index 88629be..b1fa9dd 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -45,6 +45,7 @@
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_data/s3c-hsotg.h>
-+#include <linux/reset.h>
- 
- #include <linux/usb/of.h>
- 
-@@ -337,6 +338,9 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
- {
- 	int i, ret;
- 
-+	if(hsotg->reset)
-+		reset_control_deassert(hsotg->reset);
-+
- 	/* Set default UTMI width */
- 	hsotg->phyif = GUSBCFG_PHYIF16;
- 
-@@ -434,6 +438,9 @@ static int dwc2_driver_remove(struct platform_device *dev)
- 	if (hsotg->ll_hw_enabled)
- 		dwc2_lowlevel_hw_disable(hsotg);
- 
-+	if (hsotg->reset)
-+		reset_control_assert(hsotg->reset);
-+
- 	return 0;
- }
- 
-@@ -529,6 +536,14 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
- 		(unsigned long)res->start, hsotg->regs);
- 
-+	hsotg->reset = devm_reset_control_get(&dev->dev, "dwc2");
-+	if (IS_ERR(hsotg->reset)) {
-+		dev_info(&dev->dev, "Could not get reset control!\n");
-+		if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		hsotg->reset = NULL;
-+	}
-+
- 	retval = dwc2_lowlevel_hw_init(hsotg);
- 	if (retval)
- 		return retval;
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index b89cbde3b..9f48141 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -831,6 +831,8 @@
+ 			interrupts = <0 125 4>;
+ 			clocks = <&usb_mp_clk>;
+ 			clock-names = "otg";
++			resets = <&rst USB0_RESET>;
++			reset-names = "dwc2";
+ 			phys = <&usbphy0>;
+ 			phy-names = "usb2-phy";
+ 			status = "disabled";
+@@ -842,6 +844,8 @@
+ 			interrupts = <0 128 4>;
+ 			clocks = <&usb_mp_clk>;
+ 			clock-names = "otg";
++			resets = <&rst USB1_RESET>;
++			reset-names = "dwc2";
+ 			phys = <&usbphy0>;
+ 			phy-names = "usb2-phy";
+ 			status = "disabled";
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index 1c5e139..b065651 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -689,6 +689,8 @@
+ 			interrupts = <0 95 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&usb_clk>;
+ 			clock-names = "otg";
++			resets = <&rst USB0_RESET>;
++			reset-names = "dwc2";
+ 			phys = <&usbphy0>;
+ 			phy-names = "usb2-phy";
+ 			status = "disabled";
+@@ -700,6 +702,8 @@
+ 			interrupts = <0 96 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&usb_clk>;
+ 			clock-names = "otg";
++			resets = <&rst USB1_RESET>;
++			reset-names = "dwc2";
+ 			phys = <&usbphy0>;
+ 			phy-names = "usb2-phy";
+ 			status = "disabled";
 -- 
 1.7.9.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
