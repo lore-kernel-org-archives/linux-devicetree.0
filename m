@@ -1,59 +1,111 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH 1/2] qcom: ipq4019: Add regulator support to DK04 device
- tree
-Date: Tue, 5 Apr 2016 00:59:06 -0500
-Message-ID: <20160405055906.GB2639@hector>
-References: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sreedhar Sambangi <ssambang@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
+From: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Subject: [PATCH v1] regulator: twl: Provide of_map_mode for twl4030
+Date: Tue,  5 Apr 2016 08:59:34 +0300
+Message-ID: <1459835974-31664-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
+References: <20160404222638.GM2350@sirena.org.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160404222638.GM2350@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tony@atomide.com, lgirdwood@gmail.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2016 at 02:08:10PM -0700, Sreedhar Sambangi wrote:
->     This adds the regulator nodes to DK04 device tree to support
-> 
-> Change-Id: I9c1df0e720a330bf6db1889fd2247f6a70ea6faa
-> Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
-> ---
->  .../bindings/regulator/ipq4019-regulator.txt          | 19 +++++++++++++++++++
->  arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi         | 11 +++++++++++
->  2 files changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-> new file mode 100644
-> index 0000000..9d934a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-> @@ -0,0 +1,19 @@
-> +* Qualcomm Technologies, Inc. IPQ4019 regulators
-> +
-> +Required properties:
-> +- compatible		: Must be "regulator-ipq4019".
-> +- states		: Selection of available voltages and corresponding values
-> +- reg			: Register address for controlling LDO
-> +- mask			: Mask value for switching voltages
-> +Example:
+of_map_mode is needed so to be possible to set initial regulators mode from
+the board DTS. Otherwise, for DT boot, regulators are left in their default
+state after reset/reboot. Document device specific modes as well.
 
-How many LDOs are there on the IPQ4019?  Can you document all of the supplies?
-You can figure this out by looking for the vdd pins in the chip documentation
+Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+---
+ .../bindings/regulator/twl-regulator.txt           |  6 ++++++
+ drivers/regulator/twl-regulator.c                  | 22 +++++++++++++++++++---
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
-> +
-> +	vccq_sd0: regulator@0 {
-> +		compatible = "qcom,regulator-ipq4019";
-> +		regulator-name = "SD0 VccQ";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3000000>;
-> +		states = <3000000 0x3
-> +			1800000 0x1>;
-
-So there are only 2 states?  No linear range from 1.8 to 3.3?
-
-> +		reg = <0x01948000 0x4>;
-> +		mask = <0x3>;
-> +	};
+diff --git a/Documentation/devicetree/bindings/regulator/twl-regulator.txt b/Documentation/devicetree/bindings/regulator/twl-regulator.txt
+index 75b0c16..74a91c4 100644
+--- a/Documentation/devicetree/bindings/regulator/twl-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/twl-regulator.txt
+@@ -57,6 +57,12 @@ For twl4030 regulators/LDOs
+ 
+ Optional properties:
+ - Any optional property defined in bindings/regulator/regulator.txt
++For twl4030 regulators/LDOs:
++ - regulator-initial-mode:
++  - 0x08 - Sleep mode, the nominal output voltage is maintained with low power
++           consumption with low load current capability.
++  - 0x0e - Active mode, the regulator can deliver its nominal output voltage
++           with full-load current capability.
+ 
+ Example:
+ 
+diff --git a/drivers/regulator/twl-regulator.c b/drivers/regulator/twl-regulator.c
+index aad748b0..53fcbb0 100644
+--- a/drivers/regulator/twl-regulator.c
++++ b/drivers/regulator/twl-regulator.c
+@@ -395,6 +395,18 @@ static int twl4030reg_set_mode(struct regulator_dev *rdev, unsigned mode)
+ 	return twl4030_send_pb_msg(message);
+ }
+ 
++static inline unsigned int twl4030reg_map_mode(unsigned int mode)
++{
++	switch (mode) {
++	case RES_STATE_ACTIVE:
++		return REGULATOR_MODE_NORMAL;
++	case RES_STATE_SLEEP:
++		return REGULATOR_MODE_STANDBY;
++	default:
++		return -EINVAL;
++	}
++}
++
+ static int twl6030reg_set_mode(struct regulator_dev *rdev, unsigned mode)
+ {
+ 	struct twlreg_info	*info = rdev_get_drvdata(rdev);
+@@ -897,10 +909,11 @@ static struct regulator_ops twlsmps_ops = {
+ #define TWL4030_FIXED_LDO(label, offset, mVolts, num, turnon_delay, \
+ 			remap_conf) \
+ 		TWL_FIXED_LDO(label, offset, mVolts, num, turnon_delay, \
+-			remap_conf, TWL4030, twl4030fixed_ops)
++			remap_conf, TWL4030, twl4030fixed_ops, \
++			twl4030reg_map_mode)
+ #define TWL6030_FIXED_LDO(label, offset, mVolts, turnon_delay) \
+ 		TWL_FIXED_LDO(label, offset, mVolts, 0x0, turnon_delay, \
+-			0x0, TWL6030, twl6030fixed_ops)
++			0x0, TWL6030, twl6030fixed_ops, 0x0)
+ 
+ #define TWL4030_ADJUSTABLE_LDO(label, offset, num, turnon_delay, remap_conf) \
+ static const struct twlreg_info TWL4030_INFO_##label = { \
+@@ -917,6 +930,7 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
+ 		.type = REGULATOR_VOLTAGE, \
+ 		.owner = THIS_MODULE, \
+ 		.enable_time = turnon_delay, \
++		.of_map_mode = twl4030reg_map_mode, \
+ 		}, \
+ 	}
+ 
+@@ -932,6 +946,7 @@ static const struct twlreg_info TWL4030_INFO_##label = { \
+ 		.type = REGULATOR_VOLTAGE, \
+ 		.owner = THIS_MODULE, \
+ 		.enable_time = turnon_delay, \
++		.of_map_mode = twl4030reg_map_mode, \
+ 		}, \
+ 	}
+ 
+@@ -977,7 +992,7 @@ static const struct twlreg_info TWL6032_INFO_##label = { \
+ 	}
+ 
+ #define TWL_FIXED_LDO(label, offset, mVolts, num, turnon_delay, remap_conf, \
+-		family, operations) \
++		family, operations, map_mode) \
+ static const struct twlreg_info TWLFIXED_INFO_##label = { \
+ 	.base = offset, \
+ 	.id = num, \
+@@ -992,6 +1007,7 @@ static const struct twlreg_info TWLFIXED_INFO_##label = { \
+ 		.owner = THIS_MODULE, \
+ 		.min_uV = mVolts * 1000, \
+ 		.enable_time = turnon_delay, \
++		.of_map_mode = map_mode, \
+ 		}, \
+ 	}
+ 
+-- 
+1.9.1
