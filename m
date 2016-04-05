@@ -1,30 +1,49 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] dmaengine: qcom: bam_dma: use correct pipe FIFO
- size
-Date: Tue, 5 Apr 2016 16:45:52 -0700
-Message-ID: <20160405234551.GE11586@vkoul-mobl.iind.intel.com>
-References: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
- <1459896982-30171-5-git-send-email-stanimir.varbanov@linaro.org>
+From: Al Stone <astone@redhat.com>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Tue, 5 Apr 2016 17:48:42 -0600
+Message-ID: <57044EDA.90004@redhat.com>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+ <20160404225200.GA1615@svinekod>
+ <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
+ <20160405165935.GA5456@sirena.org.uk>
+ <CAE1zot+-=JQkMqRPpNtCk1MksRf9kOQ1G216kSXszDjn2z4d=g@mail.gmail.com>
+Reply-To: ahs3@redhat.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459896982-30171-5-git-send-email-stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Pramod Gurav <gpramod-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAE1zot+-=JQkMqRPpNtCk1MksRf9kOQ1G216kSXszDjn2z4d=g@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Octavian Purdila <octavian.purdila@intel.com>, Mark Brown <broonie@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 06, 2016 at 01:56:21AM +0300, Stanimir Varbanov wrote:
-> The pipe fifo size register must instruct the bam hw
-> how many hw descriptors can be pushed to fifo. Currently
-> we isntruct the hw with 32KBytes but wrap the tail in
-    ^^^^^^^^^
-typo 
+On 04/05/2016 01:37 PM, Octavian Purdila wrote:
+> On Tue, Apr 5, 2016 at 7:59 PM, Mark Brown <broonie@kernel.org> wrote:
+>> On Tue, Apr 05, 2016 at 10:43:11AM +0200, Linus Walleij wrote:
+>>[snip...]
+> 
+> I know that there are some discussions for pinmux configuration in the
+> ASWG, but it does not match the Linux pinctrl model. So we will end up
+> with a pinctrl driver that offers groups, functions and pin names and
+> a totally different ACPI description that we can't map to the pinctrl
+> driver.
+
+Um, as a member of the ASWG, this is the first I've heard of this discussion.
+And I do attend the meetings very regularly.  Please send me an issue number
+off-line because I'm not finding it in the current issue list.
+
+Secondly, if this is being discussed within the ASWG, please refer to the UEFI
+member agreements about disclosing information prior to it being approved by
+the forum; there are limits to such disclosures, and a public mailing list may
+be well past those limits.
 
 -- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Red Hat, Inc.
+ahs3@redhat.com
+-----------------------------------
