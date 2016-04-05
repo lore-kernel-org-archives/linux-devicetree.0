@@ -1,41 +1,40 @@
 From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v2 4/5] dmaengine: qcom: bam_dma: use correct pipe FIFO size
-Date: Wed,  6 Apr 2016 01:56:21 +0300
-Message-ID: <1459896982-30171-5-git-send-email-stanimir.varbanov@linaro.org>
-References: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vinod.koul@intel.com>, Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Pramod Gurav <gpramod@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH 0/4] bam dma fixes and one dt extension
+Date: Wed, 6 Apr 2016 02:06:47 +0300
+Message-ID: <57044507.7020207@linaro.org>
+References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
+ <20160405213317.GB3873@hector.attlocal.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160405213317.GB3873@hector.attlocal.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Andy Gross <agross@codeaurora.org>, Archit Taneja <architt@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The pipe fifo size register must instruct the bam hw
-how many hw descriptors can be pushed to fifo. Currently
-we isntruct the hw with 32KBytes but wrap the tail in
-bam_start_dma in BAM_P_EVNT_REG on 4095 i.e. 32760. This
-leads to stalled transactions when the tail wraps.
+Hi,
 
-Fix this by use the correct fifo size in BAM_P_FIFO_SIZES
-register i.e. 32K - 8.
+On 04/06/2016 12:33 AM, Andy Gross wrote:
+> On Tue, Dec 01, 2015 at 11:14:55AM +0200, Stanimir Varbanov wrote:
+>> Here are three bam dma fixes, which I made during testing qcrypto
+>> driver. The first one is a real fix, the second one is related to
+>> peripherals on which the BAM IP is initialized by remote execution
+>> environment, and the third one is a sleeping bug IMO.
+>>
+>> The last patch is a extension again for peripherals which BAM is
+>> remotely controlled by other execution environment.
+>>
+>> All patches has been tested on db410c board with apq8016.
+>>
+> 
+> Stan,
+> 
+> Can you resend these patches w/ updates?  Or at least the remote control patch
+> if you can get that out faster.  And also include the dmaengine list.
 
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
- drivers/dma/qcom/bam_dma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Done. Thanks for pining.
 
-diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-index d0f878a78fae..7e5ad1c25e21 100644
---- a/drivers/dma/qcom/bam_dma.c
-+++ b/drivers/dma/qcom/bam_dma.c
-@@ -459,7 +459,7 @@ static void bam_chan_init_hw(struct bam_chan *bchan,
- 	 */
- 	writel_relaxed(ALIGN(bchan->fifo_phys, sizeof(struct bam_desc_hw)),
- 			bam_addr(bdev, bchan->id, BAM_P_DESC_FIFO_ADDR));
--	writel_relaxed(BAM_DESC_FIFO_SIZE,
-+	writel_relaxed(BAM_MAX_DATA_SIZE,
- 			bam_addr(bdev, bchan->id, BAM_P_FIFO_SIZES));
- 
- 	/* enable the per pipe interrupts, enable EOT, ERR, and INT irqs */
--- 
-1.9.1
+regards,
+Stan
