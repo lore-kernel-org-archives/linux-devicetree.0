@@ -1,89 +1,67 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
- ADMA
-Date: Tue, 5 Apr 2016 14:36:50 -0700
-Message-ID: <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
-References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
- <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/4] ARM: dts: DRA7: Enable Timers 13 through 16
+Date: Tue, 5 Apr 2016 16:44:09 -0500
+Message-ID: <1459892652-47845-2-git-send-email-s-anna@ti.com>
+References: <1459892652-47845-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1458057390-20756-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459892652-47845-1-git-send-email-s-anna-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Mar 15, 2016 at 03:56:29PM +0000, Jon Hunter wrote:
+The Timers 13 through 16 have been added previously in
+disabled state. These timers are common timers that are
+present on all DRA7 family of SoCs, so enable these
+devices by default like the rest of the DMTimers.
 
-> +static void tegra_adma_request_free(struct tegra_adma_chan *tdc)
-> +{
-> +	struct tegra_adma *tdma = tdc->tdma;
-> +
-> +	if (!tdc->sreq_reserved)
-> +		return;
-> +
-> +	switch (tdc->sreq_dir) {
-> +	case DMA_MEM_TO_DEV:
-> +		clear_bit(tdc->sreq_index, &tdma->tx_requests_reserved);
-> +		break;
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra7.dtsi | 4 ----
+ 1 file changed, 4 deletions(-)
 
-empty line here woould be nicer
-
-> +	ret = dma_cookie_status(dc, cookie, txstate);
-> +	if (ret == DMA_COMPLETE || !txstate)
-> +		return ret;
-> +
-> +	spin_lock_irqsave(&tdc->vc.lock, flags);
-> +
-> +	vd = vchan_find_desc(&tdc->vc, cookie);
-> +	if (vd) {
-> +		desc = to_tegra_adma_desc(&vd->tx);
-> +		residual = desc->ch_regs.tc;
-
-Here we are filling up residue for desc found in issued list
-
-> +	} else if (tdc->desc && tdc->desc->vd.tx.cookie == cookie) {
-> +		residual = tegra_adma_get_residue(tdc);
-
-Well if it is not issued then why we we need to caluclate, its full size of
-descriptor
-
-> +	} else {
-> +		residual = 0;
-
-why this?
-
-> +static struct dma_async_tx_descriptor *tegra_adma_prep_slave_sg(
-> +	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
-> +	enum dma_transfer_direction direction, unsigned long flags,
-> +	void *context)
-> +{
-> +	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
-> +
-> +	dev_warn(tdc2dev(tdc), "scatter-gather transfers are not supported\n");
-> +
-> +	return NULL;
-> +}
-
-Why do we need this placeholder, If you dont support slave_sg dont add this
-as capability
-
-> +static const struct tegra_adma_chip_data tegra210_chip_data = {
-> +	.nr_channels = 22,
-> +};
-
-why should this be hard coded in kernel and not queried from something like
-DT? This case seems to be hardware property
-
-> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
-> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
-> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
-
-I think you should not set DMA_SLAVE, do you need caps to be exported. I
-think that should be exported for cyclic too, let me know if that was the
-issue?
-
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 13ac88279427..66c7924e5491 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -778,7 +778,6 @@
+ 			reg = <0x48828000 0x80>;
+ 			interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "timer13";
+-			status = "disabled";
+ 		};
+ 
+ 		timer14: timer@4882a000 {
+@@ -786,7 +785,6 @@
+ 			reg = <0x4882a000 0x80>;
+ 			interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "timer14";
+-			status = "disabled";
+ 		};
+ 
+ 		timer15: timer@4882c000 {
+@@ -794,7 +792,6 @@
+ 			reg = <0x4882c000 0x80>;
+ 			interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "timer15";
+-			status = "disabled";
+ 		};
+ 
+ 		timer16: timer@4882e000 {
+@@ -802,7 +799,6 @@
+ 			reg = <0x4882e000 0x80>;
+ 			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
+ 			ti,hwmods = "timer16";
+-			status = "disabled";
+ 		};
+ 
+ 		wdt2: wdt@4ae14000 {
 -- 
-~Vinod
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
