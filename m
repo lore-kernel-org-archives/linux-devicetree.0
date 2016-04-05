@@ -1,122 +1,43 @@
-From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: Add documentation for APM X-Gene SoC
- PMU DTS binding
-Date: Tue, 5 Apr 2016 11:51:02 -0700
-Message-ID: <CACgAJHwZ=CwyvxLmuXdOAw2oFhfoC2jkdOY1HPenCsEaYLjrPw@mail.gmail.com>
-References: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
-	<1459467472-31561-3-git-send-email-ttnguyen@apm.com>
-	<20160401123000.GC29876@leverpostej>
-	<CACgAJHyS+o_Nyrc7pDxVCTHK7tue9L9F2weGQt_2WqeGfZBeag@mail.gmail.com>
-	<20160404233831.GB1917@svinekod>
+From: Dinh Nguyen <dinguyen@opensource.altera.com>
+Subject: Re: [PATCHv2 7/7] ARM: dts: Add Altera Arria10 OCRAM EDAC devicetree
+ entry
+Date: Tue, 5 Apr 2016 13:44:10 -0500
+Message-ID: <alpine.DEB.2.02.1604051343040.32718@linux-builds1>
+References: <1459450087-24792-1-git-send-email-tthayer@opensource.altera.com>
+ <1459450087-24792-8-git-send-email-tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160404233831.GB1917@svinekod>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1459450087-24792-8-git-send-email-tthayer@opensource.altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tthayer@opensource.altera.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bp@alien8.de, dougthompson@xmission.com, grant.likely@linaro.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, 31 Mar 2016, tthayer@opensource.altera.com wrote:
 
-On Mon, Apr 4, 2016 at 4:38 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Mon, Apr 04, 2016 at 04:40:33PM -0700, Tai Tri Nguyen wrote:
->> On Fri, Apr 1, 2016 at 5:30 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Thu, Mar 31, 2016 at 04:37:50PM -0700, Tai Nguyen wrote:
->> >> +This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
->> >> +The following PMU devices are supported:
->> >> +
->> >> +  L3C                        - L3 cache controller
->> >> +  IOB                        - IO bridge
->> >> +  MCB                        - Memory controller bridge
->> >> +  MC                 - Memory controller
->> >
->> > These sound like separate units. How do these relate?
->> >
->> > Is there an SOC-wide PMU that aggregates counters, or are these actually
->> > independent?
->> >
->>
->> Yes, they are independent, but sharing the same top level status interrupt.
->> There's no SOC-wide PMU which aggregates these counters.
->
-> If they're just sharing the interrupt, why are they not separate nodes (and
-> drivers) which simply happen to share an interrupt?
->
-> Is there anything else shared?
+> From: Thor Thayer <tthayer@opensource.altera.com>
+> 
+> Add the device tree entries needed to support the Altera On-Chip
+> RAM EDAC on the Arria10 chip.
+> 
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2: No change
+> ---
+>  arch/arm/boot/dts/socfpga_arria10.dtsi |    5 +++++
+>  1 file changed, 5 insertions(+)
 
-Yes, a long with the interrupt they also share top level PMU status CSR region.
+I've applied this patch and will take through the arm-soc tree.
 
->
->> >> +The following section describes the SoC PMU DT node binding.
->> >> +
->> >> +Required properties:
->> >> +- compatible         : Shall be "apm,xgene-pmu" for revision 1 or
->> >> +                          "apm,xgene-pmu-v2" for revision 2.
->> >
->> > That name is very general. Is there not a more specific name for the SOC
->> > PMU?
->> >
->>
->> Beside the ARMv8 core PMU which has the compatible name "arm,armv8-pmuv3",
->> these are all the PMUs in X-Gene SoCs. Also, we are using the same PMU
->> driver across our platforms. I think a general name is what it should be.
->
-> Depending on my prior question, I'm not sure that's necessarily true. If
-> there's no actual shared SoC PMU logic as such, the names below for each
-> individual PMU seem fine.
->
-
-Given that they are sharing the same top level PMU status CSRs, a
-combined driver
-seems to be the best approach in my opinion.
-
->> >> +Required properties for L3C subnode:
->> >> +- compatible         : Shall be "apm,xgene-pmu-l3c".
->> >> +- reg                        : First resource shall be the L3C PMU resource.
->> >> +- index                      : Instance number of the L3C PMU.
->> >> +
->> >> +Required properties for IOB subnode:
->> >> +- compatible         : Shall be "apm,xgene-pmu-iob".
->> >> +- reg                        : First resource shall be the IOB PMU resource.
->> >> +- index                      : Instance number of the IOB PMU.
->> >> +
->> >> +Required properties for MCB subnode:
->> >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
->> >> +- reg                        : First resource shall be the MCB PMU resource.
->> >> +- index                      : Instance number of the MCB PMU.
->> >> +
->> >> +Required properties for MC subnode:
->> >> +- compatible         : Shall be "apm,xgene-pmu-mc".
->> >> +- reg                        : First resource shall be the MC PMU resource.
->> >> +- index                      : Instance number of the MC PMU.
->> >
->> > What's the index property useful for?
->> >
->>
->> The index property is used for indicating the physical hardware PMU id.
->> For example, on X-Gene1 there are 4 memory controllers (MC), each of them has
->> its own PMU. The index property tells us which MC a PMU belongs to.
->> The same for MCB/L3C and IOB.
->
-> Sure, but is this simply informative for the user, or does this have an impact
-> on the programming model?
->
-
-Yes, it does impact. For example, there are 4 PMUs associated with 4 MCs.
-They all certainly have the same sort of events. The index will help
-to determine
-the right event users want to monitor. Below is an example of perf list output:
-...
-mc0/mcu-rd-request/
-...
-mc1/mcu-rd-request/
-...
-
-Regards,
--- 
-Tai
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Dinh
