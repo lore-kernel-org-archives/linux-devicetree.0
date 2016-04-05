@@ -1,31 +1,59 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: ls1021a: DSPI has 6 chip-selects
-Date: Tue, 05 Apr 2016 07:55:57 +0200
-Message-ID: <4127550.3CisoYDpa9@ws-stein>
-References: <1458726546-29453-1-git-send-email-alexander.stein@systec-electronic.com>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH 1/2] qcom: ipq4019: Add regulator support to DK04 device
+ tree
+Date: Tue, 5 Apr 2016 00:59:06 -0500
+Message-ID: <20160405055906.GB2639@hector>
+References: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458726546-29453-1-git-send-email-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sreedhar Sambangi <ssambang@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 March 2016 10:49:06, Alexander Stein wrote:
-> Both DSPI have signals SPIn_PCS[0:5] so in summary 6 chip-selects, not 5.
-> Fix that.
+On Mon, Apr 04, 2016 at 02:08:10PM -0700, Sreedhar Sambangi wrote:
+>     This adds the regulator nodes to DK04 device tree to support
 > 
-> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
+> Change-Id: I9c1df0e720a330bf6db1889fd2247f6a70ea6faa
+> Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
 > ---
+>  .../bindings/regulator/ipq4019-regulator.txt          | 19 +++++++++++++++++++
+>  arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi         | 11 +++++++++++
+>  2 files changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+> new file mode 100644
+> index 0000000..9d934a4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+> @@ -0,0 +1,19 @@
+> +* Qualcomm Technologies, Inc. IPQ4019 regulators
+> +
+> +Required properties:
+> +- compatible		: Must be "regulator-ipq4019".
+> +- states		: Selection of available voltages and corresponding values
+> +- reg			: Register address for controlling LDO
+> +- mask			: Mask value for switching voltages
+> +Example:
 
-Any feedback?
+How many LDOs are there on the IPQ4019?  Can you document all of the supplies?
+You can figure this out by looking for the vdd pins in the chip documentation
 
-Best regards,
-Alexander
+> +
+> +	vccq_sd0: regulator@0 {
+> +		compatible = "qcom,regulator-ipq4019";
+> +		regulator-name = "SD0 VccQ";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3000000>;
+> +		states = <3000000 0x3
+> +			1800000 0x1>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So there are only 2 states?  No linear range from 1.8 to 3.3?
+
+> +		reg = <0x01948000 0x4>;
+> +		mask = <0x3>;
+> +	};
