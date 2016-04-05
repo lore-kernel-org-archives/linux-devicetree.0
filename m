@@ -1,73 +1,78 @@
-From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] ARM: arm64: dts: Add expansion bus to VExpress and Juno
-Date: Tue, 5 Apr 2016 09:14:59 +0100
-Message-ID: <20160405081458.GA18740@e106950-lin.cambridge.arm.com>
-References: <1459786850-29409-1-git-send-email-brian.starkey@arm.com>
- <57029EC7.8030802@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Tue, 5 Apr 2016 10:43:11 +0200
+Message-ID: <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+	<20160404225200.GA1615@svinekod>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <57029EC7.8030802-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20160404225200.GA1615@svinekod>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
+On Tue, Apr 5, 2016 at 12:52 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Thu, Mar 31, 2016 at 02:44:41PM +0300, Irina Tirdea wrote:
 
-On Mon, Apr 04, 2016 at 06:05:11PM +0100, Sudeep Holla wrote:
->How do you plan to add those additional hardware on the expansion bus ?
+>> This proposal is based on using _DSD properties to specify device
+>> states and configuration nodes and it follows closely the device
+>> tree model. Device states are defined using the Device Properties
+>> format and the configuration nodes are defined using the
+>> Hierarchical Properties Extension format. The generic properties
+>> for the configuration nodes are the same as the ones for device
+>> tree, while pincontroller drivers can also define custom ones.
 >
->IIUC having them in DT and running on a system without the tile
->connected will cause aborts, hence you are just adding bus definition.
->
->Is there any use in having just the bus definition in DT. If you are
->planning to add devices using overlays, can't the bus definition also
->be added then ?
+> From a look of the Documentation addition, and of the current uses of
+> pinctrl-names in device tree bindings, one reason for requiring multiple
+> pinctrl states is power management. Given that, I'm somewhat concerned by this,
+> as it goes against the usual ACPI model of abstracting this sort of thing
+> behind power control methods.
 
-Did you mean "then" as "when I submit the overlay patches" or "add the
-bus in the overlay"?
+There are other use cases but in essence there are two common use
+cases:
 
-I wasn't sure the overlays would get accepted into mainline as they
-describe proprietary FPGA bitfiles which aren't going to be publicly
-available. We should be able to upstream them if that's not an issue.
+- Initial set-up of muxing and electrical properties
 
-I'm still interested in getting the bus definition upstream so that we
-have a basis for defining our bitfile overlays in our kernel tree(s).
-Previously there's been no example or convention leading us to hack the
-DTs together in various ways:
-https://git.linaro.org/landing-teams/working/arm/kernel.git/commit/14ebf51be6ead99b3861d779bdcf3cee18ab81d6
-https://git.linaro.org/landing-teams/working/arm/kernel.git/commit/8e3f902e202f48e2b424c0f049f3894ac83c4c65
+- Runtime reconfiguration for power saving (especially
+  biasing and pull options)
 
-As for adding it via overlays; as we use the same bitfile on multiple
-platforms, we'd need to maintain and apply a bunch of overlays: one
-per-platform for the bus, and one per bitfile for the devices.
-It seemed better to get the bus definition (which is fixed) into the
-base platform definitions, then we only need overlays to describe the
-devices which are unique to a bitfile.
+I did see that the ACPI people's ambition has been for all things
+power save to be embedded into AML and the like.
 
-Having the bus definition also serves to document the interrupt lines
-and address ranges on the different platforms.
+However AFAICT
+the development model for deployment of ACPI seems to imply that
+products are shipped with ACPI tables resident in ROM-like storage,
+and at product release several devices are disabled from muxing
+while others at the same time are totally lacking power save
+enablement.
 
->
->I am fine with the patch as such, just wanted to know the information.
->
+And these products are only update-able
+with hairy BIOS patches that need to be applied
+using $SPECIAL_TOOL  that "normal users" do not want to
+concern themselves with, as this is not an "apt-get upgrade"
+kind of thing.
 
-Thanks for having a look,
+And as this is server silicon the systems have a bunch of these
+"normal users" that are not embedded development experts
+and they are very hesitant about doing such things.
 
-Brian
+Under that scenario it is of course tempting to simply set up the
+pins in a known good state and then remove
+the responsibility of pin controlling from ACPI firmware altogether
+and into the kernel, where "apt-get upgrade" will take care of
+post-product launch upgrading of the functionality.
 
->-- 
->Regards,
->Sudeep
->
->_______________________________________________
->linux-arm-kernel mailing list
->linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And I think that is what is happening, it's just that so much
+prestige is involved that no-one wants to officially admit it.
+
+I was once poking fun at this development model accusing
+firmware engineers of having a God complex when they claim
+to be able to engineer in these complex use cases during
+product firmware development. Now I just feel sad about this
+situation and want things to "just work" for them. I think these
+patches are good.
+
+Yours,
+Linus Walleij
