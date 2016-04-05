@@ -1,7 +1,7 @@
 From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v3 01/16] arm64: dts: Reserve memory regions for hi6220
-Date: Tue,  5 Apr 2016 21:27:25 +0800
-Message-ID: <1459862860-9775-2-git-send-email-guodong.xu@linaro.org>
+Subject: [PATCH v3 03/16] arm64: dts: enable idle states for Hi6220
+Date: Tue,  5 Apr 2016 21:27:27 +0800
+Message-ID: <1459862860-9775-4-git-send-email-guodong.xu@linaro.org>
 References: <1459862860-9775-1-git-send-email-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1459862860-9775-1-git-send-email-guodong.xu@linaro.org>
@@ -12,55 +12,109 @@ List-Id: devicetree@vger.kernel.org
 
 From: Leo Yan <leo.yan@linaro.org>
 
-On Hi6220, below memory regions in DDR have specific purpose:
+Add cpu and cluster level's low power state for Hi6220.
 
-  0x05e0,0000 - 0x05ef,ffff: For MCU firmware using at runtime;
-  0x06df,f000 - 0x06df,ffff: For mailbox message data;
-  0x0740,f000 - 0x0740,ffff: For MCU firmware's section;
-  0x3e00,0000 - 0x3fff,ffff: For OP-TEE.
-
-This patch reserves these memory regions in DT.
-
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 8185251..17bd793 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -7,9 +7,6 @@
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index b975286..dc7f21a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -53,11 +53,35 @@
+ 			};
+ 		};
  
- /dts-v1/;
++		idle-states {
++			entry-method = "psci";
++
++			CPU_SLEEP: cpu-sleep {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <700>;
++				exit-latency-us = <250>;
++				min-residency-us = <1000>;
++			};
++
++			CLUSTER_SLEEP: cluster-sleep {
++				compatible = "arm,idle-state";
++				local-timer-stop;
++				arm,psci-suspend-param = <0x1010000>;
++				entry-latency-us = <1000>;
++				exit-latency-us = <700>;
++				min-residency-us = <2700>;
++				wakeup-latency-us = <1500>;
++			};
++		};
++
+ 		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
+ 			device_type = "cpu";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
  
--/*Reserved 1MB memory for MCU*/
--/memreserve/ 0x05e00000 0x00100000;
--
- #include "hi6220.dtsi"
+ 		cpu1: cpu@1 {
+@@ -65,6 +89,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x1>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
  
- / {
-@@ -27,9 +24,20 @@
- 		stdout-path = "serial3:115200n8";
+ 		cpu2: cpu@2 {
+@@ -72,6 +97,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x2>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -79,6 +105,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x3>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu4: cpu@100 {
+@@ -86,6 +113,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+@@ -93,6 +121,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+@@ -100,6 +129,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x102>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+@@ -107,6 +137,7 @@
+ 			device_type = "cpu";
+ 			reg = <0x0 0x103>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&CPU_SLEEP &CLUSTER_SLEEP>;
+ 		};
  	};
- 
-+	/*
-+	 * Reserve below regions from memory node:
-+	 *
-+	 *  0x05e0,0000 - 0x05ef,ffff: MCU firmware runtime using
-+	 *  0x06df,f000 - 0x06df,ffff: Mailbox message data
-+	 *  0x0740,f000 - 0x0740,ffff: MCU firmware section
-+	 *  0x3e00,0000 - 0x3fff,ffff: OP-TEE
-+	 */
- 	memory@0 {
- 		device_type = "memory";
--		reg = <0x0 0x0 0x0 0x40000000>;
-+		reg = <0x00000000 0x00000000 0x00000000 0x05e00000>,
-+		      <0x00000000 0x05f00000 0x00000000 0x00eff000>,
-+		      <0x00000000 0x06e00000 0x00000000 0x0060f000>,
-+		      <0x00000000 0x07410000 0x00000000 0x36bf0000>;
- 	};
- };
  
 -- 
 1.9.1
