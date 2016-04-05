@@ -1,39 +1,112 @@
-From: "Koul, Vinod" <vinod.koul@intel.com>
-Subject: Re: [PATCH 0/2] Bypass BAM init if Remotely controlled
-Date: Tue, 5 Apr 2016 21:27:55 +0000
-Message-ID: <1459891672.3136.55.camel@intel.com>
-References: <1458640151-15150-1-git-send-email-gpramod@codeaurora.org>
-	 <56F116AC.2000704@mm-sol.com>
-	 <20160405181950.GD8930@vkoul-mobl.iind.intel.com>
-	 <20160405212120.GA3873@hector.attlocal.net>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/4] Documentation: Add documentation for APM X-Gene SoC
+ PMU DTS binding
+Date: Tue, 5 Apr 2016 20:31:15 +0100
+Message-ID: <20160405193114.GB5946@svinekod>
+References: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
+ <1459467472-31561-3-git-send-email-ttnguyen@apm.com>
+ <20160401123000.GC29876@leverpostej>
+ <CACgAJHyS+o_Nyrc7pDxVCTHK7tue9L9F2weGQt_2WqeGfZBeag@mail.gmail.com>
+ <20160404233831.GB1917@svinekod>
+ <CACgAJHwZ=CwyvxLmuXdOAw2oFhfoC2jkdOY1HPenCsEaYLjrPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160405212120.GA3873@hector.attlocal.net>
-Content-Language: en-US
-Content-ID: <2A99454BB1A57E498182F3AB4AB59444@intel.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "andy.gross@linaro.org" <andy.gross@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "svarbanov@mm-sol.com" <svarbanov@mm-sol.com>, "architt@codeaurora.org" <architt@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "Williams, Dan J" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "gpramod@codeaurora.org" <gpramod@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACgAJHwZ=CwyvxLmuXdOAw2oFhfoC2jkdOY1HPenCsEaYLjrPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyMDE2LTA0LTA1IGF0IDE2OjIxIC0wNTAwLCBBbmR5IEdyb3NzIHdyb3RlOg0KPiBP
-biBUdWUsIEFwciAwNSwgMjAxNiBhdCAxMToxOTo1MEFNIC0wNzAwLCBWaW5vZCBLb3VsIHdyb3Rl
-Og0KPiA+IE9uIFR1ZSwgTWFyIDIyLCAyMDE2IGF0IDExOjU1OjU2QU0gKzAyMDAsIFN0YW5pbWly
-IFZhcmJhbm92IHdyb3RlOg0KPiA+ID4gT24gMDMvMjIvMjAxNiAxMTo0OSBBTSwgUHJhbW9kIEd1
-cmF2IHdyb3RlOg0KPiA+ID4gPiBPbiBzb21lIFFPQ00gcGxhdGZvcm1zKGVnIDg5OTYpIEJBTSBj
-b250cm9sIHJlZ2lzdGVycyBhcmUNCj4gPiA+ID4gbWFuYWdlZCByZW1vdGVseQ0KPiA+ID4gPiBo
-ZW5jZSBjYW4gbm90IGJlIGFjY2Vzc2VkIGJ5IGFwcGxpY2F0aW9uIHByb2Nlc3NvciBmb3Igd3Jp
-dGVzLg0KPiA+ID4gPiBTbyBza2lwIHRoZSBiYW1faW5pdA0KPiA+ID4gPiBmb3IgYW55IHN1Y2gg
-cGxhdGZvcm0gaWYgRFQgcHJvcGVydHkgaXMgc2V0Lg0KPiA+ID4gPiANCj4gPiA+ID4gVGVzdGVk
-IG9uIDg5OTYgKEJBTSBHbG9iYWwgY29udHJvbCBpcyB0aHJvdWdoIHJlbW90ZSkgYW5kIERCNDEw
-Qw0KPiA+ID4gPiBib2FyZHMuDQo+ID4gPiA+IFRlc3RlZCB3aXRoIGkyYyBETUEgb24gdGhlc2Ug
-dGFyZ2V0cyB3aGljaCB1c2VzIEJBTSBhcyBETUENCj4gPiA+ID4gY29udHJvbGxlci4NCj4gPiA+
-IA0KPiA+ID4gSSBoYXZlIHNpbWlsYXIgcGF0Y2hlcyBhdCBbMV0gYWxyZWFkeSwgY291bGQgeW91
-IGNoZWNrIHRoZW0gZmlyc3QuDQo+ID4gDQo+ID4gd2FzIHRoZXJlIGFuIHVwZGF0ZSBwb3N0ZWQg
-b24gdGhlc2U/IEkgZG9udCBoYXZlIHRoaXMgc2VyaWVzIG9yIGFuDQo+ID4gdXBkYXRlIGluDQo+
-ID4gbXkgcXVldWUNCj4gDQo+IE5vIHVwZGF0ZXMgdGhhdCBJIGNhbiBzZWUuICBUaGUgb3JpZ2lu
-YWwgaXMgaGVyZToNCj4gDQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzEyLzEvMTEzDQo+
-IA0KDQpBbmQgdGhhdCBzZWVtZWQgdG8gaGF2ZSBzb21lIGRpc2N1c3Npb24gc28gSSBkb250IHJl
-Y2FsbCBsb29raW5nIGF0IGl0LiANCg0KLS0gDQp+Vmlub2QNCg==
+On Tue, Apr 05, 2016 at 11:51:02AM -0700, Tai Tri Nguyen wrote:
+> Hi Mark,
+> 
+> On Mon, Apr 4, 2016 at 4:38 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > On Mon, Apr 04, 2016 at 04:40:33PM -0700, Tai Tri Nguyen wrote:
+> >> On Fri, Apr 1, 2016 at 5:30 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> >> > On Thu, Mar 31, 2016 at 04:37:50PM -0700, Tai Nguyen wrote:
+> >> >> +This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
+> >> >> +The following PMU devices are supported:
+> >> >> +
+> >> >> +  L3C                        - L3 cache controller
+> >> >> +  IOB                        - IO bridge
+> >> >> +  MCB                        - Memory controller bridge
+> >> >> +  MC                 - Memory controller
+> >> >
+> >> > These sound like separate units. How do these relate?
+> >> >
+> >> > Is there an SOC-wide PMU that aggregates counters, or are these actually
+> >> > independent?
+> >> >
+> >>
+> >> Yes, they are independent, but sharing the same top level status interrupt.
+> >> There's no SOC-wide PMU which aggregates these counters.
+> >
+> > If they're just sharing the interrupt, why are they not separate nodes (and
+> > drivers) which simply happen to share an interrupt?
+> >
+> > Is there anything else shared?
+> 
+> Yes, a long with the interrupt they also share top level PMU status CSR region.
+
+Ah, ok. I had missed that.
+
+What exactly exists in that region? Are the shared registers just for handling
+the shared interrupt, or are they used to handle other parts of the PMUs too?
+
+> >> >> +Required properties for L3C subnode:
+> >> >> +- compatible         : Shall be "apm,xgene-pmu-l3c".
+> >> >> +- reg                        : First resource shall be the L3C PMU resource.
+> >> >> +- index                      : Instance number of the L3C PMU.
+> >> >> +
+> >> >> +Required properties for IOB subnode:
+> >> >> +- compatible         : Shall be "apm,xgene-pmu-iob".
+> >> >> +- reg                        : First resource shall be the IOB PMU resource.
+> >> >> +- index                      : Instance number of the IOB PMU.
+> >> >> +
+> >> >> +Required properties for MCB subnode:
+> >> >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
+> >> >> +- reg                        : First resource shall be the MCB PMU resource.
+> >> >> +- index                      : Instance number of the MCB PMU.
+> >> >> +
+> >> >> +Required properties for MC subnode:
+> >> >> +- compatible         : Shall be "apm,xgene-pmu-mc".
+> >> >> +- reg                        : First resource shall be the MC PMU resource.
+> >> >> +- index                      : Instance number of the MC PMU.
+> >> >
+> >> > What's the index property useful for?
+> >> >
+> >>
+> >> The index property is used for indicating the physical hardware PMU id.
+> >> For example, on X-Gene1 there are 4 memory controllers (MC), each of them has
+> >> its own PMU. The index property tells us which MC a PMU belongs to.
+> >> The same for MCB/L3C and IOB.
+> >
+> > Sure, but is this simply informative for the user, or does this have an impact
+> > on the programming model?
+> >
+> 
+> Yes, it does impact. For example, there are 4 PMUs associated with 4 MCs.
+> They all certainly have the same sort of events. The index will help
+> to determine
+> the right event users want to monitor. Below is an example of perf list output:
+> ...
+> mc0/mcu-rd-request/
+> ...
+> mc1/mcu-rd-request/
+
+By "programming model" I mean the way the kernel interacts with the device,
+rather than the interface exposed to userspace. For example, does the index
+affect which bits are used in the shared CSR region?
+
+If it's only used for the name exposed to userspace, that's fine.
+
+Otherwise, there may be subtle gotchas.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
