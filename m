@@ -1,259 +1,193 @@
-From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH 1/4] power: Add an axp20x-ac-power driver
-Date: Tue, 5 Apr 2016 07:11:02 +0200
-Message-ID: <570348E6.5060107@computerlinguist.org>
-References: <1459689307-8501-1-git-send-email-haas@computerlinguist.org>
- <20160404213851.GQ4227@lukather>
-Reply-To: haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org
+From: Thor Thayer <tthayer@opensource.altera.com>
+Subject: Re: [PATCHv2 6/7] ARM: socfpga: Enable Arria10 OCRAM ECC on startup
+Date: Tue, 5 Apr 2016 00:25:33 -0500
+Message-ID: <57034C4D.9010204@opensource.altera.com>
+References: <1459450087-24792-1-git-send-email-tthayer@opensource.altera.com>
+ <1459450087-24792-7-git-send-email-tthayer@opensource.altera.com>
+Reply-To: <tthayer@opensource.altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="B7K558WWe7e2eP66ci2df62gvgh0TGAkm"
-Return-path: <linux-sunxi+bncBCD4V7EG6QFRB44RRW4AKGQEMRWFXYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20160404213851.GQ4227@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1459450087-24792-7-git-send-email-tthayer@opensource.altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: bp@alien8.de, dougthompson@xmission.com, m.chehab@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, dinguyen@opensource.altera.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---B7K558WWe7e2eP66ci2df62gvgh0TGAkm
-Content-Type: multipart/mixed; boundary="BkrpIVgbtj2qcX675pamwE7coReK5e8Jh"
-From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org,
- ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org,
- lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org,
- dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
-Message-ID: <570348E6.5060107-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
-Subject: Re: [PATCH 1/4] power: Add an axp20x-ac-power driver
-References: <1459689307-8501-1-git-send-email-haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
- <20160404213851.GQ4227@lukather>
-In-Reply-To: <20160404213851.GQ4227@lukather>
+Hi,
 
---BkrpIVgbtj2qcX675pamwE7coReK5e8Jh
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 03/31/2016 01:48 PM, tthayer@opensource.altera.com wrote:
+> From: Thor Thayer <tthayer@opensource.altera.com>
+>
+> Enable ECC for Arria10 On-Chip RAM on machine startup. The ECC has to
+> be enabled and memory initialized before data is stored in memory
+> otherwise the ECC will fail on reads.
+>
+> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
+> ---
+> v2: Add Arria10 ECC block initialization locally.
+> ---
+>   arch/arm/mach-socfpga/ocram.c |  128 +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 128 insertions(+)
+>
+> diff --git a/arch/arm/mach-socfpga/ocram.c b/arch/arm/mach-socfpga/ocram.c
+> index 60ec643..d4a524c 100644
+> --- a/arch/arm/mach-socfpga/ocram.c
+> +++ b/arch/arm/mach-socfpga/ocram.c
+> @@ -13,12 +13,15 @@
+>    * You should have received a copy of the GNU General Public License along with
+>    * this program.  If not, see <http://www.gnu.org/licenses/>.
+>    */
+> +#include <linux/delay.h>
+>   #include <linux/io.h>
+>   #include <linux/genalloc.h>
+>   #include <linux/module.h>
+>   #include <linux/of_address.h>
+>   #include <linux/of_platform.h>
+>
+> +#include "core.h"
+> +
+>   #define ALTR_OCRAM_CLEAR_ECC          0x00000018
+>   #define ALTR_OCRAM_ECC_EN             0x00000019
+>
+> @@ -47,3 +50,128 @@ void socfpga_init_ocram_ecc(void)
+>
+>   	iounmap(mapped_ocr_edac_addr);
+>   }
+> +
+> +/* Arria10 OCRAM Section */
+> +#define ALTR_A10_ECC_CTRL_OFST          0x08
+> +#define ALTR_A10_OCRAM_ECC_EN_CTL       (BIT(1) | BIT(0))
+> +#define ALTR_A10_ECC_INITA              BIT(16)
+> +
+> +#define ALTR_A10_ECC_INITSTAT_OFST      0x0C
+> +#define ALTR_A10_ECC_INITCOMPLETEA      BIT(0)
+> +#define ALTR_A10_ECC_INITCOMPLETEB      BIT(8)
+> +
+> +#define ALTR_A10_ECC_ERRINTEN_OFST      0x10
+> +#define ALTR_A10_ECC_SERRINTEN          BIT(0)
+> +
+> +#define ALTR_A10_ECC_INTSTAT_OFST       0x20
+> +#define ALTR_A10_ECC_SERRPENA           BIT(0)
+> +#define ALTR_A10_ECC_DERRPENA           BIT(8)
+> +#define ALTR_A10_ECC_ERRPENA_MASK       (ALTR_A10_ECC_SERRPENA | \
+> +					 ALTR_A10_ECC_DERRPENA)
+> +/* ECC Manager Defines */
+> +#define A10_SYSMGR_ECC_INTMASK_SET_OFST   0x94
+> +#define A10_SYSMGR_ECC_INTMASK_CLR_OFST   0x98
+> +#define A10_SYSMGR_ECC_INTMASK_OCRAM      BIT(1)
+> +
+> +#define ALTR_A10_ECC_INIT_WATCHDOG_10US   10000
+> +
+> +static void ecc_set_bits(u32 bit_mask, void __iomem *ioaddr)
+> +{
+> +	u32 value = readl(ioaddr);
+> +
+> +	value |= bit_mask;
+> +	writel(value, ioaddr);
+> +}
+> +
+> +static void ecc_clear_bits(u32 bit_mask, void __iomem *ioaddr)
+> +{
+> +	u32 value = readl(ioaddr);
+> +
+> +	value &= ~bit_mask;
+> +	writel(value, ioaddr);
+> +}
+> +
+> +static int ecc_test_bits(u32 bit_mask, void __iomem *ioaddr)
+> +{
+> +	u32 value = readl(ioaddr);
+> +
+> +	return (value & bit_mask) ? 1 : 0;
+> +}
+> +
+> +/*
+> + * This function uses the memory initialization block in the Arria10 ECC
+> + * controller to initialize/clear the entire memory data and ECC data.
+> + */
+> +static int altr_init_memory_port(void __iomem *ioaddr)
+> +{
+> +	int limit = ALTR_A10_ECC_INIT_WATCHDOG_10US;
+> +
+> +	ecc_set_bits(ALTR_A10_ECC_INITA, (ioaddr + ALTR_A10_ECC_CTRL_OFST));
+> +	while (limit--) {
+> +		if (ecc_test_bits(ALTR_A10_ECC_INITCOMPLETEA,
+> +				  (ioaddr + ALTR_A10_ECC_INITSTAT_OFST)))
+> +			break;
+> +		udelay(1);
+> +	}
+> +	if (limit < 0)
+> +		return -EBUSY;
+> +
+> +	/* Clear any pending ECC interrupts */
+> +	writel(ALTR_A10_ECC_ERRPENA_MASK,
+> +	       (ioaddr + ALTR_A10_ECC_INTSTAT_OFST));
+> +
+> +	return 0;
+> +}
+> +
+> +void socfpga_init_arria10_ocram_ecc(void)
+> +{
+> +	struct device_node *np;
+> +	int ret = 0;
+> +	void __iomem *ecc_block_base;
+> +
+> +	if (!sys_manager_base_addr) {
+> +		pr_err("SOCFPGA: sys-mgr is not initialized\n");
+> +		return;
+> +	}
+> +
+> +	/* Find the OCRAM EDAC device tree node */
+> +	np = of_find_compatible_node(NULL, NULL, "altr,socfpga-a10-ocram-ecc");
+> +	if (!np) {
+> +		pr_err("Unable to find socfpga-a10-ocram-ecc\n");
+> +		return;
+> +	}
+> +
+> +	/* Map the ECC Block */
+> +	ecc_block_base = of_iomap(np, 0);
+> +	of_node_put(np);
+> +	if (!ecc_block_base) {
+> +		pr_err("Unable to map OCRAM ECC block\n");
+> +		return;
+> +	}
+> +
+> +	/* Disable ECC */
+> +	writel(ALTR_A10_OCRAM_ECC_EN_CTL,
+> +	       sys_manager_base_addr + A10_SYSMGR_ECC_INTMASK_SET_OFST);
+> +	ecc_clear_bits(ALTR_A10_ECC_SERRINTEN,
+> +		       (ecc_block_base + ALTR_A10_ECC_ERRINTEN_OFST));
+> +	ecc_clear_bits(ALTR_A10_OCRAM_ECC_EN_CTL,
+> +		       (ecc_block_base + ALTR_A10_ECC_CTRL_OFST));
+> +
+> +	/* Use HW initialization block to initialize memory for ECC */
+> +	ret = altr_init_memory_port(ecc_block_base);
+> +	if (ret) {
+> +		pr_err("ECC: cannot init OCRAM PORTA memory\n");
+> +		return;
 
-Hi Maxime,
+I realize that I'm not calling iounmap(ecc_block_base) and I'll fix that 
+in the next revision with a goto.
 
-thanks for taking the time to review this.
+> +	}
+> +
+> +	/* Enable ECC */
+> +	ecc_set_bits(ALTR_A10_OCRAM_ECC_EN_CTL,
+> +		     (ecc_block_base + ALTR_A10_ECC_CTRL_OFST));
+> +	ecc_set_bits(ALTR_A10_ECC_SERRINTEN,
+> +		     (ecc_block_base + ALTR_A10_ECC_ERRINTEN_OFST));
+> +	writel(ALTR_A10_OCRAM_ECC_EN_CTL,
+> +	       sys_manager_base_addr + A10_SYSMGR_ECC_INTMASK_CLR_OFST);
+> +
 
-On 04/04/2016 11:38 PM, Maxime Ripard wrote:
-> Hi,
->>
->> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
->> index a57d6e9..9351c0e 100644
->> --- a/drivers/mfd/axp20x.c
->> +++ b/drivers/mfd/axp20x.c
->> @@ -178,6 +178,12 @@ static struct resource axp288_power_button_resource=
-s[] =3D {
->>  	},
->>  };
->> =20
->> +static struct resource axp20x_ac_power_supply_resources[] =3D {
->> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_PLUGIN, "ACIN_PLUGIN"),
->> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_REMOVAL, "ACIN_REMOVAL"),
->> +	DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_OVER_V, "ACIN_OVER_V"),
->> +};
->> +
->>  static struct resource axp288_fuel_gauge_resources[] =3D {
->>  	{
->>  		.start =3D AXP288_IRQ_QWBTU,
->> @@ -440,6 +446,11 @@ static struct mfd_cell axp20x_cells[] =3D {
->>  		.of_compatible	=3D "x-powers,axp202-usb-power-supply",
->>  		.num_resources	=3D ARRAY_SIZE(axp20x_usb_power_supply_resources),
->>  		.resources	=3D axp20x_usb_power_supply_resources,
->> +	}, {
->> +		.name		=3D "axp20x-ac-power-supply",
->> +		.of_compatible	=3D "x-powers,axp202-ac-power-supply",
->> +		.num_resources	=3D ARRAY_SIZE(axp20x_ac_power_supply_resources),
->> +		.resources	=3D axp20x_ac_power_supply_resources,
->>  	},
->>  };
->>
->=20
-> These changes should be in a separate patch.
+The iounmap() will go here. I'd still like to hear review comments for 
+the rest.
 
-Will do!
->=20
+Thanks for reviewing.
 
->> +
->> +static irqreturn_t axp20x_irq_ac_removal(int irq, void *devid)
->> +{
->> +	struct axp20x_ac_power *power =3D devid;
->> +
->> +	dev_info(&power->supply->dev, "IRQ#%d AC disconnected\n", irq);
->> +	power_supply_changed(power->supply);
->> +
->> +	return IRQ_HANDLED;
->> +}
->=20
-> Logging in the interrupt handler is usually a bad idea, for several
-> reasons:
->    - If you have a console, it's going to be output on the console,
->      which might take quite some time. And you don't want to take
->      quite some time in the interrupt handler.
->    - printk might not even work in the interrupt context in some
->      scenarios.
->=20
-> Removing that handler, you can register the same interrupt handler on
-> all the interrupts.
->=20
-
-Oops. Yes, I will fix that!
-
->> +static int axp20x_ac_power_probe(struct platform_device *pdev)
->> +{
->> +	struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev->dev.parent);
->> +	struct power_supply_config psy_cfg =3D {};
->> +	struct axp20x_ac_power *power;
->> +	static const char * const irq_names[] =3D { "ACIN_PLUGIN",
->> +		"ACIN_REMOVAL", "ACIN_OVER_V" };
->> +	irqreturn_t (*irq_funcs[])(int, void *) =3D { axp20x_irq_ac_plugin,
->> +		axp20x_irq_ac_removal, axp20x_irq_ac_over_v };
->> +	int i, irq, r, input;
->> +
->> +	if (!of_device_is_available(pdev->dev.of_node))
->> +		return -ENODEV;
->=20
-> That's useless. If the device is not available, you're not going to be
-> probed in the first place.
-
-Ok.
-
->=20
->> +	power =3D devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
->> +	if (!power)
->> +		return -ENOMEM;
->> +
->> +	power->regmap =3D axp20x->regmap;
->> +
->> +	r =3D regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &input);
->> +	if (r < 0)
->> +		return r;
->> +
->> +	if (!!(input & AXP20X_PWR_STATUS_AC_VBUS_SHORT)) {
->> +		dev_err(&pdev->dev, "AC is connected to VBUS. Use axp20x_usb_power-su=
-pply driver instead!");
->> +		return -ENODEV;
->> +	}
->=20
-> Can't that change over time? Can't we support both drivers at the same ti=
-me?
-
-Both drivers are supported at the same time. I did even try with both
-AC and USB connected and both return meaningful values, at least for
-voltage. The AXP20x can drawn power from both sources at the same time.
-
-The check above fires in a specific scenario where ACIN and VBUS are
-physically connected on the PCB. The Datasheet states for that
-particular register:
-
-"Indicates whether ACIN/VBUS short circuits on PCB or not"
-
-So, assuming the chip detects the condition correctly, this does not
-change over that. But you can switch from ACIN to VBUS and vice-versa
-just fine if they are not short-circuited. If they are connected
-together, I'd prefer the DTS to only enable the usb driver. The check
-above is a last resort there.
-
-Then again, with the quality of those data sheets, one never knows.
-
->=20
->> +	/* Enable ac voltage and current measurement */
->> +	r =3D regmap_update_bits(power->regmap, AXP20X_ADC_EN1,
->> +			AXP20X_ADC_EN1_ACIN_CURR | AXP20X_ADC_EN1_ACIN_VOLT,
->> +			AXP20X_ADC_EN1_ACIN_CURR | AXP20X_ADC_EN1_ACIN_VOLT);
->> +	if (r)
->> +		return r;
->> +
->> +	psy_cfg.of_node =3D pdev->dev.of_node;
->> +	psy_cfg.drv_data =3D power;
->> +
->> +	power->supply =3D devm_power_supply_register(&pdev->dev,
->> +					&axp20x_ac_power_desc, &psy_cfg);
->> +	if (IS_ERR(power->supply))
->> +		return PTR_ERR(power->supply);
->> +
->> +	/* Request irqs after registering, as irqs may trigger immediately */
->> +	for (i =3D 0; i < ARRAY_SIZE(irq_names); i++) {
->> +		irq =3D platform_get_irq_byname(pdev, irq_names[i]);
->> +		if (irq < 0) {
->> +			dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
->> +				 irq_names[i], irq);
->> +			continue;
->> +		}
->> +		irq =3D regmap_irq_get_virq(axp20x->regmap_irqc, irq);
->> +		r =3D devm_request_any_context_irq(&pdev->dev, irq,
->> +				irq_funcs[i], 0, DRVNAME, power);
->> +		if (r < 0)
->> +			dev_warn(&pdev->dev, "Error requesting %s IRQ: %d\n",
->> +				 irq_names[i], r);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id axp20x_ac_power_match[] =3D {
->> +	{ .compatible =3D "x-powers,axp202-ac-power-supply" },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(of, axp20x_ac_power_match);
->> +
->> +static struct platform_driver axp20x_ac_power_driver =3D {
->> +	.probe =3D axp20x_ac_power_probe,
->> +	.driver =3D {
->> +		.name =3D DRVNAME,
->> +		.of_match_table =3D axp20x_ac_power_match,
->> +	},
->> +};
->> +
->> +module_platform_driver(axp20x_ac_power_driver);
->> +
->> +MODULE_AUTHOR("Bruno Pr=C3=A9mont <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>");
->> +MODULE_DESCRIPTION("AXP20x PMIC AC power supply status driver");
->> +MODULE_LICENSE("GPL");
->> --=20
->> 2.8.0
->=20
-> Thanks!
-> Maxime
->=20
-
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---BkrpIVgbtj2qcX675pamwE7coReK5e8Jh--
-
---B7K558WWe7e2eP66ci2df62gvgh0TGAkm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQEcBAEBCAAGBQJXA0jsAAoJEARK++Ppe5yKzFAH/0vfvkd/6sEvirjsAdSY7q50
-EFPZ6/Nb/w7mNKj2UFT58r9ntGBkYUNyOByWHKQrph2G1tTKdMHxrDdHfE6vvQES
-qGMjpTMIyReaqGP9AiIhw6ebdc6PSgff0eSgpskzAzlp2LT6rHp6O5FM5gx0Ro8J
-U1ENF3WJznvKePOzd4NOSsWhpZOBRmmSvti3m6Demxc85KhLoKEWt0tjibukzRez
-GD8/JgWQaL6tpNH8F5/s+lxLBnDsixo2W9rps1KYNF95ed7j1C9/Z5VOqlX8/Rzi
-5LvHBJrUGoOE2Dmm7WsbFfgBLhaAX2YvQKejavnCKTJyt49sAuoztpnmCThU2VQ=
-=B8PD
------END PGP SIGNATURE-----
-
---B7K558WWe7e2eP66ci2df62gvgh0TGAkm--
+> +	/* Ensure all writes complete */
+> +	wmb();
+> +}
+>
