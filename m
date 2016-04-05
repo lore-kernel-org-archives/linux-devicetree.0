@@ -1,137 +1,49 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH 6/6] ARM: dts: pxa3xx: add pincontrol helpers
-Date: Tue,  5 Apr 2016 08:35:55 +0200
-Message-ID: <1459838155-28803-6-git-send-email-robert.jarzmik@free.fr>
-References: <1459838155-28803-1-git-send-email-robert.jarzmik@free.fr>
+From: Dave Gordon <david.s.gordon-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] scatterlist: add sg_alloc_table_from_buf() helper
+Date: Tue, 5 Apr 2016 08:11:48 +0100
+Message-ID: <57036534.7010800@intel.com>
+References: <1459352394-22810-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1459352394-22810-5-git-send-email-boris.brezillon@free-electrons.com>
+ <20160330165143.GI2350@sirena.org.uk> <20160330201831.38e1d6bd@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459838155-28803-1-git-send-email-robert.jarzmik@free.fr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160330201831.38e1d6bd@bbrezillon>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The various pxa3xx variants have a really weird pin scheme assignement,
-when you want the pin number relative to a known gpio pin.
+On 30/03/16 19:18, Boris Brezillon wrote:
+> On Wed, 30 Mar 2016 09:51:43 -0700
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+>> On Wed, Mar 30, 2016 at 05:39:51PM +0200, Boris Brezillon wrote:
+>>> sg_alloc_table_from_buf() provides an easy solution to create an sg_table
+>>> from a virtual address pointer. This function takes care of dealing with
+>>> vmallocated buffers, buffer alignment, or DMA engine limitations (maximum
+>>> DMA transfer size).
+>>
+>> This seems nice.  Should we also have a further helper on top of this
+>> which will get constraints from a dmaengine, it seems like it'd be a
+>> common need?
+>
+> Yep, we could create a wrapper extracting dma_slave caps info,
+> converting it to sg_constraints and calling sg_alloc_table_from_buf().
+> But let's try to get this function accepted first, and I'll send another
+> patch providing this wrapper.
+>
+> BTW, do you see other things that should be added in sg_constraints?
+>
 
-This change adds the various tools to ease up writing the pinmux and
-pinconf devicetree parts.
+You could compare with the things Solaris uses to describe the 
+restrictions on a DMA binding ...
 
-Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
----
- arch/arm/boot/dts/pxa3xx.dtsi | 90 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
+http://docs.oracle.com/cd/E23824_01/html/821-1478/ddi-dma-attr-9s.html#REFMAN9Sddi-dma-attr-9s
 
-diff --git a/arch/arm/boot/dts/pxa3xx.dtsi b/arch/arm/boot/dts/pxa3xx.dtsi
-index 6995b11ce042..9d6f3aacedb7 100644
---- a/arch/arm/boot/dts/pxa3xx.dtsi
-+++ b/arch/arm/boot/dts/pxa3xx.dtsi
-@@ -1,6 +1,96 @@
- /* The pxa3xx skeleton simply augments the 2xx version */
- #include "pxa2xx.dtsi"
- 
-+#define MFP_PIN_PXA300(gpio)				\
-+	((gpio <= 2) ? (0x00b4 + 4 * gpio) :		\
-+	 (gpio <= 26) ? (0x027c + 4 * (gpio - 3)) :	\
-+	 (gpio <= 98) ? (0x0400 + 4 * (gpio - 27)) :	\
-+	 (gpio <= 127) ? (0x0600 + 4 * (gpio - 99)) :	\
-+	 0)
-+
-+#define MFP_PIN_PXA310(gpio)				\
-+	((gpio <= 2) ? (0x00b4 + 4 * gpio) :		\
-+	 (gpio <= 26) ? (0x027c + 4 * (gpio - 3)) :	\
-+	 (gpio <= 29) ? (0x0400 + 4 * (gpio - 27)) :	\
-+	 (gpio <= 98) ? (0x0418 + 4 * (gpio - 30)) :	\
-+	 (gpio <= 127) ? (0x0600 + 4 * (gpio - 99)) :	\
-+	 (gpio <= 262) ? 0 :				\
-+	 (gpio <= 268) ? (0x052c + 4 * (gpio - 263)) :	\
-+	 0)
-+
-+#define MFP_PIN_PXA320(gpio)				\
-+	((gpio <= 4) ? (0x0124 + 4 * gpio) :		\
-+	 (gpio <= 9) ? (0x028c + 4 * (gpio - 5)) :	\
-+	 (gpio <= 10) ? (0x0458 + 4 * (gpio - 10)) :	\
-+	 (gpio <= 26) ? (0x02a0 + 4 * (gpio - 11)) :	\
-+	 (gpio <= 48) ? (0x0400 + 4 * (gpio - 27)) :	\
-+	 (gpio <= 62) ? (0x045c + 4 * (gpio - 49)) :	\
-+	 (gpio <= 73) ? (0x04b4 + 4 * (gpio - 63)) :	\
-+	 (gpio <= 98) ? (0x04f0 + 4 * (gpio - 74)) :	\
-+	 (gpio <= 127) ? (0x0600 + 4 * (gpio - 99)) :	\
-+	 0)
-+
-+/*
-+ * MFP Alternate functions for pins having a gpio.
-+ * Example of use: pinctrl-single,pins = < MFP_PIN_PXA310(21) MFP_AF1 >
-+ */
-+#define MFP_AF0		(0 << 0)
-+#define MFP_AF1		(1 << 0)
-+#define MFP_AF2		(2 << 0)
-+#define MFP_AF3		(3 << 0)
-+#define MFP_AF4		(4 << 0)
-+#define MFP_AF5		(5 << 0)
-+#define MFP_AF6		(6 << 0)
-+
-+/*
-+ * MFP drive strength functions for pins.
-+ * Example of use: pinctrl-single,drive-strength = MFP_DS03X;
-+ */
-+#define MFP_DSMSK	(0x7 << 10)
-+#define MFP_DS01X	< (0x0 << 10) MFP_DSMSK >
-+#define MFP_DS02X	< (0x1 << 10) MFP_DSMSK >
-+#define MFP_DS03X	< (0x2 << 10) MFP_DSMSK >
-+#define MFP_DS04X	< (0x3 << 10) MFP_DSMSK >
-+#define MFP_DS06X	< (0x4 << 10) MFP_DSMSK >
-+#define MFP_DS08X	< (0x5 << 10) MFP_DSMSK >
-+#define MFP_DS10X	< (0x6 << 10) MFP_DSMSK >
-+#define MFP_DS13X	< (0x7 << 10) MFP_DSMSK >
-+
-+/*
-+ * MFP low power mode for pins.
-+ * Example of use:
-+ *   pinctrl-single,low-power-mode = MFP_LPM(MFP_LPM_PULL_LOW|MFP_LPM_EDGE_FALL);
-+ *
-+ * Table that determines the low power modes outputs, with actual settings
-+ * used in parentheses for don't-care values. Except for the float output,
-+ * the configured driven and pulled levels match, so if there is a need for
-+ * non-LPM pulled output, the same configuration could probably be used.
-+ *
-+ * Output value  sleep_oe_n  sleep_data  pullup_en  pulldown_en  pull_sel
-+ *                 (bit 7)    (bit 8)    (bit 14)     (bit 13)   (bit 15)
-+ *
-+ * Input            0          X(0)        X(0)        X(0)       0
-+ * Drive 0          0          0           0           X(1)       0
-+ * Drive 1          0          1           X(1)        0	  0
-+ * Pull hi (1)      1          X(1)        1           0	  0
-+ * Pull lo (0)      1          X(0)        0           1	  0
-+ * Z (float)        1          X(0)        0           0	  0
-+ */
-+#define MFP_LPM(x)		< (x) MFP_LPM_MSK >
-+
-+#define MFP_LPM_MSK		0xe1f0
-+#define MFP_LPM_INPUT		0x0000
-+#define MFP_LPM_DRIVE_LOW	0x2000
-+#define MFP_LPM_DRIVE_HIGH	0x4100
-+#define MFP_LPM_PULL_LOW	0x2080
-+#define MFP_LPM_PULL_HIGH	0x4180
-+#define MFP_LPM_FLOAT		0x0080
-+
-+#define MFP_LPM_EDGE_NONE	0x0000
-+#define MFP_LPM_EDGE_RISE	0x0010
-+#define MFP_LPM_EDGE_FALL	0x0020
-+#define MFP_LPM_EDGE_BOTH	0x0030
-+
- / {
- 	model = "Marvell PXA3xx familiy SoC";
- 	compatible = "marvell,pxa3xx";
--- 
-2.1.4
+.Dave.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
