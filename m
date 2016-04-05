@@ -1,36 +1,65 @@
-From: Peter Rosin <peda@lysator.liu.se>
-Subject: Re: [PATCH v6 19/24] i2c-mux: document i2c muxes and elaborate on
- parent-/mux-locked muxes
-Date: Tue, 05 Apr 2016 09:50:32 +0200
-Message-ID: <57036E48.9080404@lysator.liu.se>
-References: <1459673574-11440-1-git-send-email-peda@lysator.liu.se> <1459673574-11440-20-git-send-email-peda@lysator.liu.se> <5700F9DA.1040501@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5700F9DA.1040501@kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Jonathan Corbet <corbet@lwn.net>, Peter Korsgaard <peter.korsgaard@barco.com>, Guenter Roeck <linux@roeck-us.net>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Antti Palosaari <crope@iki.fi>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Kalle Valo <kvalo@codeaurora.org>, Joe Perches <joe@perches.com>, Jiri Slaby <jslaby@suse.com>, Daniel Baluta <daniel.baluta@intel.com>, Adriana Reus <adriana.reus@intel.com>, Lucas De Marchi <lucas.demarchi@intel.com>, Matt Ranostay <matt.ranostay@intel.com>
+From: Sreedhar Sambangi <ssambang@codeaurora.org>
+Subject: [PATCH] qcom: ipq4019: Add SDHC device nodes for SOC and DK04 board.
+Date: Tue,  5 Apr 2016 00:54:02 -0700
+Message-ID: <1459842842-8409-1-git-send-email-ssambang@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On 2016-04-03 13:09, Jonathan Cameron wrote:
-> On 03/04/16 09:52, Peter Rosin wrote:
->> From: Peter Rosin <peda@axentia.se>
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
-> Very nice, one typo that I could see.
+Add Support for SDHC Controller on the IPQ4019 SOC.
 
-Thanks!
+Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi |  7 +++++++
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           | 10 ++++++++++
+ 2 files changed, 17 insertions(+)
 
-*snip*
-
->> +     and the actual transfer (e.g. if the child mux is auto-closing
->> +     and the parent mux issus i2c-transfers as part of its select).
->> +     This is especailly the case if the parent mux is mux-locked, but
-> especially
-
-Fixed now in my local repo.
-
-Cheers,
-Peter
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+index 566e239..c8d4dbc 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi
+@@ -88,6 +88,7 @@
+ 					bias-disable = <0>;
+ 				};*/
+ 			};
++
+ 		};
+ 
+ 		blsp_dma: dma@7884000 {
+@@ -166,5 +167,11 @@
+ 			reg = <0x01948000 0x4>;
+ 			mask = <0x3>;
+ 		};
++
++		sdhci@7824000 {
++			status = "ok";
++			vqmmc-supply = <&vccq_sd0>;
++			non-removable;
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 9a3cd26..d70e503 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -363,5 +363,15 @@
+ 			compatible = "qcom,pshold";
+ 			reg = <0x4ab000 0x4>;
+ 		};
++
++		sdhci@7824000 {
++			compatible = "qcom,sdhci-msm-v4";
++			reg = <0x7824900 0x11c>, <0x7824000 0x800>;
++			interrupts = <0 123 0>, <0 138 0>;
++			bus-width = <8>;
++			clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
++			clock-names = "core", "iface";
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
