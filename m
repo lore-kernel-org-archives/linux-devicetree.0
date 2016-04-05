@@ -1,80 +1,33 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v3 07/16] arm64: dts: add all hi6220 i2c nodes
-Date: Tue,  5 Apr 2016 21:27:31 +0800
-Message-ID: <1459862860-9775-8-git-send-email-guodong.xu@linaro.org>
-References: <1459862860-9775-1-git-send-email-guodong.xu@linaro.org>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v10 8/9] usb: xhci: Add NVIDIA Tegra XUSB controller
+ driver
+Date: Tue, 5 Apr 2016 09:35:52 -0400
+Message-ID: <20160405133552.GB28802@kroah.com>
+References: <1457108379-20794-1-git-send-email-thierry.reding@gmail.com>
+ <1457108379-20794-8-git-send-email-thierry.reding@gmail.com>
+ <20160405131751.GB24972@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459862860-9775-1-git-send-email-guodong.xu@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: xuwei5@hisilicon.com, mark.rutland@arm.com, robh@kernel.org, grant.likely@secretlab.ca, linus.walleij@linaro.org, arnd.bergmann@linaro.org
-Cc: devicetree@vger.kernel.org, kong.kongxinwei@hisilicon.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Feng <puck.chen@hisilicon.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20160405131751.GB24972-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+On Tue, Apr 05, 2016 at 03:17:51PM +0200, Thierry Reding wrote:
+> Hi Mathias, Greg,
+> 
+> Due to the various dependencies within the series, I'd prefer this to go
+> via the Tegra tree. Would you be okay with providing your Acked-by?
 
-This patch adds all I2C nodes for the Hi6220 SoC. This hi6220 Soc
-use this I2C IP of Synopsys Designware for HiKey board.
+That's all up to Mathias, I'll defer to him here :)
 
-Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
-Signed-off-by: Wei Xu <xuwei5@hisilicon.com>
----
- arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 33 +++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+thanks,
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-index 8b74eeb..53b5b25 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-@@ -602,5 +602,38 @@
- 			cs-gpios = <&gpio6 2 0>;
- 			status = "ok";
- 		};
-+
-+		i2c0: i2c@f7100000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xf7100000 0x0 0x1000>;
-+			interrupts = <0 44 4>;
-+			clocks = <&sys_ctrl HI6220_I2C0_CLK>;
-+			i2c-sda-hold-time-ns = <300>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c0_pmx_func &i2c0_cfg_func>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@f7101000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xf7101000 0x0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_I2C1_CLK>;
-+			interrupts = <0 45 4>;
-+			i2c-sda-hold-time-ns = <300>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c1_pmx_func &i2c1_cfg_func>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@f7102000 {
-+			compatible = "snps,designware-i2c";
-+			reg = <0x0 0xf7102000 0x0 0x1000>;
-+			clocks = <&sys_ctrl HI6220_I2C2_CLK>;
-+			interrupts = <0 46 4>;
-+			i2c-sda-hold-time-ns = <300>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2c2_pmx_func &i2c2_cfg_func>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-1.9.1
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
