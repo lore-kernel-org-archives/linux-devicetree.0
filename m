@@ -1,79 +1,73 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: DT: Add support to scale ramp delay based
- on platform behavior
-Date: Tue, 5 Apr 2016 13:31:41 +0530
-Message-ID: <570370E5.3070901@nvidia.com>
-References: <20160331183130.GR2350@sirena.org.uk> <56FD6CF7.5080909@nvidia.com> <20160331184553.GS2350@sirena.org.uk> <56FD6ED6.3020507@nvidia.com> <20160331185945.GT2350@sirena.org.uk> <56FD7379.2000307@nvidia.com> <20160331192227.GU2350@sirena.org.uk> <56FD7F07.7010404@nvidia.com> <20160331203942.GV2350@sirena.org.uk> <56FE2009.4020302@nvidia.com> <20160401161121.GZ2350@sirena.org.uk>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] ARM: arm64: dts: Add expansion bus to VExpress and Juno
+Date: Tue, 5 Apr 2016 09:14:59 +0100
+Message-ID: <20160405081458.GA18740@e106950-lin.cambridge.arm.com>
+References: <1459786850-29409-1-git-send-email-brian.starkey@arm.com>
+ <57029EC7.8030802@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160401161121.GZ2350-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57029EC7.8030802-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gandhar Dighe <gdighe-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stuart Yates <syates-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sudeep,
 
-On Friday 01 April 2016 09:41 PM, Mark Brown wrote:
-> * PGP Signed by an unknown key
+On Mon, Apr 04, 2016 at 06:05:11PM +0100, Sudeep Holla wrote:
+>How do you plan to add those additional hardware on the expansion bus ?
 >
-> On Fri, Apr 01, 2016 at 12:45:21PM +0530, Laxman Dewangan wrote:
->> On Friday 01 April 2016 02:09 AM, Mark Brown wrote:
->>> Is the error in the observed values a function of the capacitance t=
-hat
->>> we can calcuate here?
->> As per datasheet, There is no direct equation for ramp time deviatio=
-n when
->> regulator output current cross the regulator current limit.
-> OK, so it's really a current limit that's kicking in rather than a ra=
-mp
-> rate control (though if it's a current limit I'm still not clear why =
-the
-> target rate limits where we cap)?  Can we do something based on the
-> maximum load configured and the current limit?  That sounds more gene=
-ric
-> anyway, a current limiting feature is quite common.  If we implement =
-the
-> current limit interface for the regulator and then specify what the
-> maximum load is we should be able to do the calculations you quoted f=
-rom
-> the datasheet I'd have thought (unless I'm missing something).
+>IIUC having them in DT and running on a system without the tile
+>connected will cause aborts, hence you are just adding bus definition.
+>
+>Is there any use in having just the bus definition in DT. If you are
+>planning to add devices using overlays, can't the bus definition also
+>be added then ?
 
-We are not having any control/configuration for this in this particular=
-=20
-observations. All are set at maximum and still seeing this deviation.
+Did you mean "then" as "when I submit the overlay patches" or "add the
+bus in the overlay"?
 
-During a DVS transition, the regulators output current will increase by=
-=20
-COUT*dV/dt. In the event that the load current plus the additional=20
-current imposed by the DVS transition, reach the regulator=C2=92s curre=
-nt=20
-limit, the current limit will be enforced. When the current limit is=20
-enforced, the advertised DVS transition rate (dV/dt) will not occur.
+I wasn't sure the overlays would get accepted into mainline as they
+describe proprietary FPGA bitfiles which aren't going to be publicly
+available. We should be able to upstream them if that's not an issue.
 
-Now there is not really equation that how it control dV/dt with require=
-d=20
-current vs regulator=C2=92s current limit current limit.
+I'm still interested in getting the bus definition upstream so that we
+have a basis for defining our bitfile overlays in our kernel tree(s).
+Previously there's been no example or convention leading us to hack the
+DTs together in various ways:
+https://git.linaro.org/landing-teams/working/arm/kernel.git/commit/14ebf51be6ead99b3861d779bdcf3cee18ab81d6
+https://git.linaro.org/landing-teams/working/arm/kernel.git/commit/8e3f902e202f48e2b424c0f049f3894ac83c4c65
 
-Working with HW team on LDO3 rail, we observed that Vendor recommend th=
-e=20
-Cout to 2.2uF. With having this capacitor in rail, we meet the=20
-advertised dv/dt i.e. 100mV/us.
-In Our platform, we have used 2x4.7uF for signal conditioning and we=20
-observed dv/dt went by half.
-When we changed the output capacitor to 2.2uF, we get exactly what=20
-vendor advertised.
+As for adding it via overlays; as we use the same bitfile on multiple
+platforms, we'd need to maintain and apply a bunch of overlays: one
+per-platform for the bus, and one per bitfile for the devices.
+It seemed better to get the bus definition (which is fixed) into the
+base platform definitions, then we only need overlays to describe the
+devices which are unique to a bitfile.
 
-So can we derive the configured value from the ramp time (platform) and=
-=20
-some multiplication factor? If this is not common way then probably=20
-maxim specific as suggested by Bjorn.
+Having the bus definition also serves to document the interrupt lines
+and address ranges on the different platforms.
 
+>
+>I am fine with the patch as such, just wanted to know the information.
+>
 
+Thanks for having a look,
+
+Brian
+
+>-- 
+>Regards,
+>Sudeep
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
