@@ -1,95 +1,87 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Tue, 5 Apr 2016 09:12:46 -0700
-Message-ID: <20160405161246.GA1924@sirena.org.uk>
+Date: Tue, 5 Apr 2016 09:59:35 -0700
+Message-ID: <20160405165935.GA5456@sirena.org.uk>
 References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
- <20160404214034.GL2350@sirena.org.uk>
- <CACRpkdZW83kOADo1WcYT=mc++ro3Xb7PS15zh+RkLnSxmbTZAQ@mail.gmail.com>
+ <20160404225200.GA1615@svinekod>
+ <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
-Return-path: <linux-acpi-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdZW83kOADo1WcYT=mc++ro3Xb7PS15zh+RkLnSxmbTZAQ@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
+In-Reply-To: <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 
---VS++wcV0S1rZb1Fb
+--zhXaljGHf11kAtnf
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 05, 2016 at 11:00:50AM +0200, Linus Walleij wrote:
-> On Mon, Apr 4, 2016 at 11:40 PM, Mark Brown <broonie@kernel.org> wrote:
+On Tue, Apr 05, 2016 at 10:43:11AM +0200, Linus Walleij wrote:
 
-> > So this is mainly targeted at modules being added to base boards?
-> > Without getting into the binding at all here it seems like this is not
-> > solving the problem at the right abstraction level.  It's exposing the
+> And these products are only update-able
+> with hairy BIOS patches that need to be applied
+> using $SPECIAL_TOOL  that "normal users" do not want to
+> concern themselves with, as this is not an "apt-get upgrade"
+> kind of thing.
 
-> I have seen the same need beyond strictly embedded (MinnowBoard)
-> from the Intel camp.
+This bit has been addressed in UEFI - there's now a mechanism for the OS
+to supply firmware updates to the BIOS via runtime sevices calls without
+needing to go to the hairy tools.  There's also been facilities for some
+time which allow ACPI fragments to be loaded at runtime without patching
+the firmware (though they're not used so often at present).
 
-> These chips with funny Atom-specific codenames (baytrail, cherryview,
-> broxton, sunrisepoint etc) are not just used for these IoT use cases
-> but also for e.g. laptops of the ChromeBook form factor, and the same
-> pin control needs arise there, just at a different cadence related to
-> product cycle.
+> And I think that is what is happening, it's just that so much
+> prestige is involved that no-one wants to officially admit it.
 
-Right, the chips are used in a broader space but in cases where they're
-being used in fixed systems where we don't have to deal with repaceable
-modules then the idiomatic thing for ACPI is to hide all the pinmuxing
-=66rom the operating system.
+> I was once poking fun at this development model accusing
+> firmware engineers of having a God complex when they claim
+> to be able to engineer in these complex use cases during
 
-> I bet they also have funny product-specific kernel trees :(
+That's not really a fair characterization of the situation.  The goal
+that ACPI has been trying to meet is allowing new hardware to work
+without needing software updates so people's installation experience
+isn't miserable.  The Windows monoculture that firmware developers have
+been targetting has hurt the achievement of that but it's the idea.
+It's a good model for some classes of device but not for all.
 
-Yup, they do.
+> product firmware development. Now I just feel sad about this
+> situation and want things to "just work" for them. I think these
+> patches are good.
 
-> Agree: work is needed here. It is a big confusion, the whole model is
-> based around the configuration being pretty static as I recently
-> realized when just wanting to add a runtime-detected LCD panel
-> to a certain driver. No runtime patching of the DT or overlays or any
-> of the sort deliver what is really needed.
+See Mark Rutland's reply - there's a whole model behind how ACPI
+abstracts the system that needs to be taken into account, just stuffing
+the existing DT in through a mechanism intended for simple vendor
+specific key/value properties isn't guaranteed to give something that's
+coherent and sensible.  DT design decisions will obviously not have
+considered ACPI and exposing the full combination of the two system
+models to system integrators seems likely to lead to unfortunate
+corners, especially with things that happen to work right now but cause
+problems later on.
 
-Yes, funnily enough the CHIP people were just talking about that
-specific case at ELC yesterday (they patched u-boot to parse overlays
-so the kernel never sees the hotplug).
+Given the rush to shoehorn existing DT into ACPI at some point it's
+looking like it would be much more sensible for x86 to just do what
+arm64 has done and support both DT and ACPI in parallel and let people
+(either system integrators or end users) choose the most appropriate
+interface for their application.
 
-> The only thing I heard which was actually doing something sensible
-> was when Matthew Garret once told that apple mice provide a
-> device tree fragment to the OS on how to handle it during bus
-> discovery.
-
-That's what people are doing with the BeagleBone/RPi/CHIP/96boards case
-- it's one of the primary usecases for DT overlays but currently
-everyone's final integration layer is out of tree.
-
-> > Obviously for the more general ACPI use case the idiomatic way of
-> > handling this is that the OS should never see anything about the
-> > pin muxing.  With DT we need to really know what's going on with the
-> > pinbox because the model is that even for things built into a single
-> > board the OS is responsible for managing the pins but that's really not
-> > how ACPI is expected to work.
-
-> See my previous mail for some kind of answer to this.
-
-Yup, will reply there.
-
---VS++wcV0S1rZb1Fb
+--zhXaljGHf11kAtnf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQEcBAEBCAAGBQJXA+P7AAoJECTWi3JdVIfQvLMH/0rYNHwSm1H69UpjjIWie//B
-oICYLbI/XlJSIXDvBXLx6No5VKm9QpsxEgAWmXJ/rGyiIKNbhh8+fB01QN8STgKA
-70iz2Su6c3c8quyuzV10h2Go+Uc2qWoc5Dy/dvaKOoN28dVocLuxvqnsjNFr0MXM
-wwRQAUmk8Voxy9fU+F2eNR73CdgW5NjgqJ0lar15ljJa9AHoeyzNyUPAIV7T+JQZ
-BV9FTWLp4j1BOROvcctryCYn/0hic6DuErhVeFt1Tc/Zpfh3qIxQHjud6hi2DvBX
-/kpI2M72hIZh0e54gh1hCq+f/e2ewO0e40w+GMl/y5RplhdJZ58SrBA8rbnT/Xo=
-=Iu9o
+iQEcBAEBCAAGBQJXA+72AAoJECTWi3JdVIfQJuwH/Ajuc8sImrTIMB0Ev0PWFFXo
+HAuwfErHs6AW2+6aiK4ozQJkTZi9wSiVcCEvrauGSiEtSI1Jz5RqF2gUyjeIm/if
+Nqn5HOl+MYqRCvbAf3zHIOUMTNCSKmG7R3xqxunOMtBl13PsDjyxKW4fttiMpMjM
+/pOYICp0XNCLjzB7JmTJyWpX1IH+7sOlGAqt0Xs4u78WrChmeE6X2rqSBoO7OPyI
+PSwgc/eY1p8gc7CeUEmqOM9gSn+DS2ftEIcfobzL5l8iYoHK5FKbXqvWe5At5a6u
+e1E3V81pm/RNNJYQFUW2lmaDm3NAeJXCKNAHNO9G4287rW9VtbTjyK5y+UNVuxk=
+=Q+zD
 -----END PGP SIGNATURE-----
 
---VS++wcV0S1rZb1Fb--
+--zhXaljGHf11kAtnf--
