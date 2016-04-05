@@ -1,50 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2 v2] pwm: add DT bindings for the STMPE PWM
-Date: Tue,  5 Apr 2016 23:22:29 +0200
-Message-ID: <1459891349-28305-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: "Koul, Vinod" <vinod.koul@intel.com>
+Subject: Re: [PATCH 0/2] Bypass BAM init if Remotely controlled
+Date: Tue, 5 Apr 2016 21:27:55 +0000
+Message-ID: <1459891672.3136.55.camel@intel.com>
+References: <1458640151-15150-1-git-send-email-gpramod@codeaurora.org>
+	 <56F116AC.2000704@mm-sol.com>
+	 <20160405181950.GD8930@vkoul-mobl.iind.intel.com>
+	 <20160405212120.GA3873@hector.attlocal.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160405212120.GA3873@hector.attlocal.net>
+Content-Language: en-US
+Content-ID: <2A99454BB1A57E498182F3AB4AB59444@intel.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "andy.gross@linaro.org" <andy.gross@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "svarbanov@mm-sol.com" <svarbanov@mm-sol.com>, "architt@codeaurora.org" <architt@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "Williams, Dan J" <dan.j.williams@intel.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "gpramod@codeaurora.org" <gpramod@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds fairly standard device tree bindings for the STMPE
-PWM found in STMPE24xx multi-purpose expanders.
-
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- Give a simpler, non-contextual node name for the PWM.
----
- Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-
-diff --git a/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt b/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-new file mode 100644
-index 000000000000..cb209646bf13
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
-@@ -0,0 +1,18 @@
-+== ST STMPE PWM controller ==
-+
-+This is a PWM block embedded in the ST Microelectronics STMPE
-+(ST Multi-Purpose Expander) chips. The PWM is registered as a
-+subdevices of the STMPE MFD device.
-+
-+Required properties:
-+- compatible: should be:
-+  - "st,stmpe-pwm"
-+- #pwm-cells: should be 2. See pwm.txt in this directory for a description of
-+  the cells format.
-+
-+Example:
-+
-+pwm0: pwm {
-+	compatible = "st,stmpe-pwm";
-+	#pwm-cells = <2>;
-+};
--- 
-2.4.11
+T24gVHVlLCAyMDE2LTA0LTA1IGF0IDE2OjIxIC0wNTAwLCBBbmR5IEdyb3NzIHdyb3RlOg0KPiBP
+biBUdWUsIEFwciAwNSwgMjAxNiBhdCAxMToxOTo1MEFNIC0wNzAwLCBWaW5vZCBLb3VsIHdyb3Rl
+Og0KPiA+IE9uIFR1ZSwgTWFyIDIyLCAyMDE2IGF0IDExOjU1OjU2QU0gKzAyMDAsIFN0YW5pbWly
+IFZhcmJhbm92IHdyb3RlOg0KPiA+ID4gT24gMDMvMjIvMjAxNiAxMTo0OSBBTSwgUHJhbW9kIEd1
+cmF2IHdyb3RlOg0KPiA+ID4gPiBPbiBzb21lIFFPQ00gcGxhdGZvcm1zKGVnIDg5OTYpIEJBTSBj
+b250cm9sIHJlZ2lzdGVycyBhcmUNCj4gPiA+ID4gbWFuYWdlZCByZW1vdGVseQ0KPiA+ID4gPiBo
+ZW5jZSBjYW4gbm90IGJlIGFjY2Vzc2VkIGJ5IGFwcGxpY2F0aW9uIHByb2Nlc3NvciBmb3Igd3Jp
+dGVzLg0KPiA+ID4gPiBTbyBza2lwIHRoZSBiYW1faW5pdA0KPiA+ID4gPiBmb3IgYW55IHN1Y2gg
+cGxhdGZvcm0gaWYgRFQgcHJvcGVydHkgaXMgc2V0Lg0KPiA+ID4gPiANCj4gPiA+ID4gVGVzdGVk
+IG9uIDg5OTYgKEJBTSBHbG9iYWwgY29udHJvbCBpcyB0aHJvdWdoIHJlbW90ZSkgYW5kIERCNDEw
+Qw0KPiA+ID4gPiBib2FyZHMuDQo+ID4gPiA+IFRlc3RlZCB3aXRoIGkyYyBETUEgb24gdGhlc2Ug
+dGFyZ2V0cyB3aGljaCB1c2VzIEJBTSBhcyBETUENCj4gPiA+ID4gY29udHJvbGxlci4NCj4gPiA+
+IA0KPiA+ID4gSSBoYXZlIHNpbWlsYXIgcGF0Y2hlcyBhdCBbMV0gYWxyZWFkeSwgY291bGQgeW91
+IGNoZWNrIHRoZW0gZmlyc3QuDQo+ID4gDQo+ID4gd2FzIHRoZXJlIGFuIHVwZGF0ZSBwb3N0ZWQg
+b24gdGhlc2U/IEkgZG9udCBoYXZlIHRoaXMgc2VyaWVzIG9yIGFuDQo+ID4gdXBkYXRlIGluDQo+
+ID4gbXkgcXVldWUNCj4gDQo+IE5vIHVwZGF0ZXMgdGhhdCBJIGNhbiBzZWUuICBUaGUgb3JpZ2lu
+YWwgaXMgaGVyZToNCj4gDQo+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE1LzEyLzEvMTEzDQo+
+IA0KDQpBbmQgdGhhdCBzZWVtZWQgdG8gaGF2ZSBzb21lIGRpc2N1c3Npb24gc28gSSBkb250IHJl
+Y2FsbCBsb29raW5nIGF0IGl0LiANCg0KLS0gDQp+Vmlub2QNCg==
