@@ -1,60 +1,48 @@
-From: Irina Tirdea <irina.tirdea@intel.com>
-Subject: [RFC PATCH v2 0/3] Add ACPI support for pinctrl configuration
-Date: Tue,  5 Apr 2016 18:33:23 +0300
-Message-ID: <1459870406-15219-1-git-send-email-irina.tirdea@intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Irina Tirdea <irina.tirdea@intel.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] PCI: imx6: Add reset-gpio-active-high boolean
+ property to DT
+Date: Tue, 5 Apr 2016 12:46:53 -0300
+Message-ID: <CAOMZO5AnN4_RrA4bksWNmioAP1PCBT1Ax4of_OnoCvG+VXgDUQ@mail.gmail.com>
+References: <1459514508-8557-1-git-send-email-ynezz@true.cz>
+	<1459514508-8557-3-git-send-email-ynezz@true.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459514508-8557-3-git-send-email-ynezz-knWk7/PSn+s@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Zhu <Richard.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, =?UTF-8?Q?Krzysztof_Ha=C5=82asa?= <khalasa-NlWvg49iv0c@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a proposal for adding ACPI support for pin controller
-configuration.
+On Fri, Apr 1, 2016 at 9:41 AM, Petr =C5=A0tetiar <ynezz-knWk7/PSn+s@public.gmane.org> wrote=
+:
 
-It has been developed to enable the MinnowBoard and IoT community
-by providing an easy way to specify pin multiplexing and
-pin configuration.
+>         /* Some boards don't have PCIe reset GPIO. */
+>         if (gpio_is_valid(imx6_pcie->reset_gpio)) {
+> -               gpio_set_value_cansleep(imx6_pcie->reset_gpio, 0);
+> +               gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+> +                                       !!imx6_pcie->gpio_active_high=
+);
 
-This proposal is based on using _DSD properties to specify device
-states and configuration nodes and it follows closely the device
-tree model. Device states are defined using the Device Properties
-format and the configuration nodes are defined using the
-Hierarchical Properties Extension format. The generic properties
-for the configuration nodes are the same as the ones for device
-tree, while pincontroller drivers can also define custom ones.
+gpio_set_value_cansleep(imx6_pcie->reset_gpio,
+                                      imx6_pcie->gpio_active_high); is =
+enough.
 
-Changes from v1:
- - address code review comments regarding coding style, documentation
-and fixes
- - rewrote patch 3 ("pinctrl: Parse GpioInt/GpioIo resources") to
-avoid using triple pointers
- - define pinconf_generic_dt_node_to_map since it is used by pinctrl
-sirf driver
- - add dependency on PINCONF_GENERIC to the entire ACPI parsing code
- - dropped first patch from the series since it got merged
-("pinctrl: Rename pinctrl_utils_dt_free_map to pinctrl_utils_free_map")
+> @@ -546,9 +549,14 @@ static int __init imx6_pcie_probe(struct platfor=
+m_device *pdev)
+>
+>         /* Fetch GPIOs */
+>         imx6_pcie->reset_gpio =3D of_get_named_gpio(np, "reset-gpio",=
+ 0);
+> +       imx6_pcie->gpio_active_high =3D of_property_read_bool(np,
+> +                                               "reset-gpio-active-hi=
+gh");
 
-Irina Tirdea (3):
-  pinctrl: pinconf-generic: Add ACPI support
-  pinctrl: Add ACPI support
-  pinctrl: Parse GpioInt/GpioIo resources
-
- Documentation/acpi/pinctrl-properties.txt | 292 +++++++++++++++++
- drivers/acpi/property.c                   |   8 +-
- drivers/base/property.c                   |  36 ++-
- drivers/pinctrl/Makefile                  |   1 +
- drivers/pinctrl/acpi.c                    | 519 ++++++++++++++++++++++++++++++
- drivers/pinctrl/acpi.h                    |  32 ++
- drivers/pinctrl/core.c                    |  26 ++
- drivers/pinctrl/core.h                    |   2 +
- drivers/pinctrl/pinconf-generic.c         | 121 ++++---
- include/linux/acpi.h                      |   4 +-
- include/linux/pinctrl/pinconf-generic.h   |  35 +-
- include/linux/property.h                  |   9 +
- 12 files changed, 1010 insertions(+), 75 deletions(-)
- create mode 100644 Documentation/acpi/pinctrl-properties.txt
- create mode 100644 drivers/pinctrl/acpi.c
- create mode 100644 drivers/pinctrl/acpi.h
-
--- 
-1.9.1
+You need to document reset-gpio-active-high property in
+Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
