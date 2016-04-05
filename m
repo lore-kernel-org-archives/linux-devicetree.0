@@ -1,32 +1,46 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 1/5] mfd: tps65217: Add support for IRQs
-Date: Tue, 5 Apr 2016 13:07:02 +0300
-Message-ID: <57038E46.9070204@ti.com>
-References: <1459789865-3704-1-git-send-email-m.niestroj@grinn-global.com>
- <1459789865-3704-3-git-send-email-m.niestroj@grinn-global.com>
+From: "Winkler, Tomas" <tomas.winkler@intel.com>
+Subject: RE: [PATCH v13 0/9] add support for DWC UFS Controller
+Date: Tue, 5 Apr 2016 10:15:33 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B541E3FE8@hasmsx108.ger.corp.intel.com>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+ <yq1inzxeyoe.fsf@sermon.lab.mkp.net> <570380B9.30800@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1459789865-3704-3-git-send-email-m.niestroj@grinn-global.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Marcin Niestroj <m.niestroj@grinn-global.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, Sebastian Reichel <sre@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <570380B9.30800@synopsys.com>
+Content-Language: en-US
+Sender: linux-scsi-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc: "robh@kernel.org" <robh@kernel.org>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "julian.calaby@gmail.com" <julian.calaby@gmail.com>, "akinobu.mita@gmail.com" <akinobu.mita@gmail.com>, "hch@infradead.org" <hch@infradead.org>, "gbroner@codeaurora.org" <gbroner@codeaurora.org>, "subhashj@codeaurora.org" <subhashj@codeaurora.org>, "CARLOS.PALMINHA@synopsys.com" <CARLOS.PALMINHA@synopsys.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/04/2016 08:11 PM, Marcin Niestroj wrote:
-> Add support for handling IRQs: power button, AC and USB power state
-> changes. Mask and interrupt bits are shared within one register, which
-> prevents us to use regmap_irq implementation. New irq_domain is created in
-> order to add interrupt handling for each tps65217's subsystem. IRQ
-> resources have been added for charger subsystem to be able to notify about
-> AC and USB state changes.
->
-> Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
-> ---
 
-Just curious Why not use a regmap_irq?
+Hi,
 
--- 
-regards,
--grygorii
+On 4/5/2016 12:34 AM, Martin K. Petersen wrote:
+>>>>>> "Joao" == Joao Pinto <Joao.Pinto@synopsys.com> writes:
+> 
+> Joao,
+> 
+> Joao> The work consisted of: - Fixed typo in ufshcd-pltfrm.c - Tweak 
+> Joao> ufshcd.c for UFS 2.0 support - Implement ufshcd-dwc which 
+> Joao> contains all DWC HW specific code - Unipro attributes were added 
+> Joao> and new registers were added to the driver - Implement a 
+> Joao> tc-dwc-g210 containing G210 MPHY specific code - Implement a 
+> Joao> tc-dwc-g210 glue platform driver - Implement a tc-dwc-g210 glue 
+> Joao> pci driver - Documentation update
+> 
+> You really need to keep track of which Acked-by: and Reviewed-by: tags 
+> you have gotten from people and apply them to patches that you haven't 
+> changed. Otherwise we start from scratch every time you resubmit.
+> 
+> Thanks!
+> 
+
+It's ok to submit the same v13 with the ACK tags?
+
+You can add my Ack on the core patches, not DWC specific, I didn't really look at those properly.
+Thanks
+Tomas 
+
