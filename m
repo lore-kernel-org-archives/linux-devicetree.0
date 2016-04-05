@@ -1,123 +1,120 @@
-From: Tai Tri Nguyen <ttnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: Add documentation for APM X-Gene SoC
- PMU DTS binding
-Date: Tue, 5 Apr 2016 14:51:06 -0700
-Message-ID: <CACgAJHwHXWpt-QGb0cUdc4ykvHbRNcEijEyxxF7AtMQW65ms4g@mail.gmail.com>
-References: <1459467472-31561-1-git-send-email-ttnguyen@apm.com>
-	<1459467472-31561-3-git-send-email-ttnguyen@apm.com>
-	<20160401123000.GC29876@leverpostej>
-	<CACgAJHyS+o_Nyrc7pDxVCTHK7tue9L9F2weGQt_2WqeGfZBeag@mail.gmail.com>
-	<20160404233831.GB1917@svinekod>
-	<CACgAJHwZ=CwyvxLmuXdOAw2oFhfoC2jkdOY1HPenCsEaYLjrPw@mail.gmail.com>
-	<20160405193114.GB5946@svinekod>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Tue, 5 Apr 2016 15:44:52 -0700
+Message-ID: <20160405224452.GM1924@sirena.org.uk>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+ <20160404225200.GA1615@svinekod>
+ <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
+ <20160405165935.GA5456@sirena.org.uk>
+ <CAE1zot+-=JQkMqRPpNtCk1MksRf9kOQ1G216kSXszDjn2z4d=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160405193114.GB5946@svinekod>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="HVCoas+krw6dou6l"
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAE1zot+-=JQkMqRPpNtCk1MksRf9kOQ1G216kSXszDjn2z4d=g@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Octavian Purdila <octavian.purdila@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
 
-On Tue, Apr 5, 2016 at 12:31 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Tue, Apr 05, 2016 at 11:51:02AM -0700, Tai Tri Nguyen wrote:
->> Hi Mark,
->>
->> On Mon, Apr 4, 2016 at 4:38 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Mon, Apr 04, 2016 at 04:40:33PM -0700, Tai Tri Nguyen wrote:
->> >> On Fri, Apr 1, 2016 at 5:30 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
->> >> > On Thu, Mar 31, 2016 at 04:37:50PM -0700, Tai Nguyen wrote:
->> >> >> +This is APM X-Gene SoC PMU (Performance Monitoring Unit) module.
->> >> >> +The following PMU devices are supported:
->> >> >> +
->> >> >> +  L3C                        - L3 cache controller
->> >> >> +  IOB                        - IO bridge
->> >> >> +  MCB                        - Memory controller bridge
->> >> >> +  MC                 - Memory controller
->> >> >
->> >> > These sound like separate units. How do these relate?
->> >> >
->> >> > Is there an SOC-wide PMU that aggregates counters, or are these actually
->> >> > independent?
->> >> >
->> >>
->> >> Yes, they are independent, but sharing the same top level status interrupt.
->> >> There's no SOC-wide PMU which aggregates these counters.
->> >
->> > If they're just sharing the interrupt, why are they not separate nodes (and
->> > drivers) which simply happen to share an interrupt?
->> >
->> > Is there anything else shared?
->>
->> Yes, a long with the interrupt they also share top level PMU status CSR region.
->
-> Ah, ok. I had missed that.
->
-> What exactly exists in that region? Are the shared registers just for handling
-> the shared interrupt, or are they used to handle other parts of the PMUs too?
+--HVCoas+krw6dou6l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-They are shared registers for handling the shared interrupt only,
-indicating/masking source of the
-shared interrupt.
+On Tue, Apr 05, 2016 at 10:37:14PM +0300, Octavian Purdila wrote:
+> On Tue, Apr 5, 2016 at 7:59 PM, Mark Brown <broonie@kernel.org> wrote:
+> > On Tue, Apr 05, 2016 at 10:43:11AM +0200, Linus Walleij wrote:
 
->
->> >> >> +Required properties for L3C subnode:
->> >> >> +- compatible         : Shall be "apm,xgene-pmu-l3c".
->> >> >> +- reg                        : First resource shall be the L3C PMU resource.
->> >> >> +- index                      : Instance number of the L3C PMU.
->> >> >> +
->> >> >> +Required properties for IOB subnode:
->> >> >> +- compatible         : Shall be "apm,xgene-pmu-iob".
->> >> >> +- reg                        : First resource shall be the IOB PMU resource.
->> >> >> +- index                      : Instance number of the IOB PMU.
->> >> >> +
->> >> >> +Required properties for MCB subnode:
->> >> >> +- compatible         : Shall be "apm,xgene-pmu-mcb".
->> >> >> +- reg                        : First resource shall be the MCB PMU resource.
->> >> >> +- index                      : Instance number of the MCB PMU.
->> >> >> +
->> >> >> +Required properties for MC subnode:
->> >> >> +- compatible         : Shall be "apm,xgene-pmu-mc".
->> >> >> +- reg                        : First resource shall be the MC PMU resource.
->> >> >> +- index                      : Instance number of the MC PMU.
->> >> >
->> >> > What's the index property useful for?
->> >> >
->> >>
->> >> The index property is used for indicating the physical hardware PMU id.
->> >> For example, on X-Gene1 there are 4 memory controllers (MC), each of them has
->> >> its own PMU. The index property tells us which MC a PMU belongs to.
->> >> The same for MCB/L3C and IOB.
->> >
->> > Sure, but is this simply informative for the user, or does this have an impact
->> > on the programming model?
->> >
->>
->> Yes, it does impact. For example, there are 4 PMUs associated with 4 MCs.
->> They all certainly have the same sort of events. The index will help
->> to determine
->> the right event users want to monitor. Below is an example of perf list output:
->> ...
->> mc0/mcu-rd-request/
->> ...
->> mc1/mcu-rd-request/
->
-> By "programming model" I mean the way the kernel interacts with the device,
-> rather than the interface exposed to userspace. For example, does the index
-> affect which bits are used in the shared CSR region?
->
-> If it's only used for the name exposed to userspace, that's fine.
->
-> Otherwise, there may be subtle gotchas.
+> >> And these products are only update-able
+> >> with hairy BIOS patches that need to be applied
+> >> using $SPECIAL_TOOL  that "normal users" do not want to
+> >> concern themselves with, as this is not an "apt-get upgrade"
+> >> kind of thing.
 
-No, it doesn't impact in that mean.
+> > This bit has been addressed in UEFI - there's now a mechanism for the OS
+> > to supply firmware updates to the BIOS via runtime sevices calls without
+> > needing to go to the hairy tools.
 
-Regards,
--- 
-Tai
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> AFAIK there is still no standard way of updating just the ACPI tables.
+> You need various tools to "stitch" a full firmware image that can be
+> consumed by the update mechanism.
+
+Right, but in terms of end users that doesn't matter - the users that
+Linus is concerned with here aren't going to know what ACPI is.
+
+> > There's also been facilities for some
+> > time which allow ACPI fragments to be loaded at runtime without patching
+> > the firmware (though they're not used so often at present).
+
+> And I just sent a separate patch series for "ACPI overlays", similar
+> with the dynamic DT, with the primary goal of supporting open-ended
+> hardware configurations.
+
+> But to be able to effectively use this we need a way to change pinmux settings.
+
+I'll need to find that series I guess...
+
+Note that we currently don't have any actual mechanism to load a DT
+overlay in mainline.  One of the issues there is making sure that the
+external interfaces we're offering are actually stable, another is
+making sure (for safety) that the overlays are only updating bits of the
+device tree that corrspond to the bit of the hardware that the overlay
+is for.
+
+> > Given the rush to shoehorn existing DT into ACPI at some point it's
+> > looking like it would be much more sensible for x86 to just do what
+> > arm64 has done and support both DT and ACPI in parallel and let people
+> > (either system integrators or end users) choose the most appropriate
+> > interface for their application.
+
+> Lets look at this from a different perspective. The proposal is not
+> about importing the DT model into ACPI but importing the Linux pinctrl
+
+It's not like this is the only change that has been sent to reuse some
+DT element rather directly in ACPI recently...
+
+> model into ACPI. That will allow us to use the Linux pinctrl drivers
+> to their full potential.
+
+> That doesn't stop the development of other, more OS independent, ACPI
+> models for pinmuxing. Which we can also support.
+
+That's not really a great answer.  Regardless of how good a solution
+this is for handling pinmuxing ACPI it needs to be joined up with the
+rest of ACPI, we need some clear instructions for both firmware and OS
+authors about how this works in a wider ACPI context and interacts with
+other features, preferably in the ACPI specs where people can find them.
+
+It could be something really simple like just saying that if we've got
+these pinctrl definitions then the firmware is not allowed to do any pin
+management, or it could be something more involved like saying that the
+OS has to notify the OS before using them.
+
+> I know that there are some discussions for pinmux configuration in the
+> ASWG, but it does not match the Linux pinctrl model. So we will end up
+> with a pinctrl driver that offers groups, functions and pin names and
+> a totally different ACPI description that we can't map to the pinctrl
+> driver.
+
+If there's an ASWG spec in progress that explicitly overlaps it seems
+even more important that this is joined up - I'm not aware of what's
+going on there.
+
+--HVCoas+krw6dou6l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQEcBAEBCAAGBQJXBD/hAAoJECTWi3JdVIfQEWIH/2CGEKbuqUhslfAtMtzaiNag
+VyOrKCf/rh/vb78pBx9TbL//StHLlDvdXuwzw2NguN6OXPq9lkRcaz7pPC9i+g0J
+SCjlAGdF6ZaTWxXqRKSOezO2miACvPvkmWIfNKuedi6LzNnuTxON0RqEKNTuPQ7/
+B3QnXklsi8cVUvxJ55mHedXViv7HBiz6J68aO5hFziyp6QVoAyc2K9w6ocPpXlcP
+X2fR+JdUx9VHoYUvdzlKv3nxKDTI8uCDijAh9VP6T7G76memsfjbZwyp3vJlLJIe
+oewRemPCdOjZW4N0/QpmPgQGGOVjTYFgjDtPUAVFKvBpV78z9hehQPlGnzc2I84=
+=0EB1
+-----END PGP SIGNATURE-----
+
+--HVCoas+krw6dou6l--
