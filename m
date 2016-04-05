@@ -1,39 +1,89 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] bam dma fixes and one dt extension
-Date: Tue, 5 Apr 2016 16:33:17 -0500
-Message-ID: <20160405213317.GB3873@hector.attlocal.net>
-References: <1448961299-15161-1-git-send-email-stanimir.varbanov@linaro.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 2/3] dmaengine: tegra-adma: Add support for Tegra210
+ ADMA
+Date: Tue, 5 Apr 2016 14:36:50 -0700
+Message-ID: <20160405213649.GA11586@vkoul-mobl.iind.intel.com>
+References: <1458057390-20756-1-git-send-email-jonathanh@nvidia.com>
+ <1458057390-20756-3-git-send-email-jonathanh@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1448961299-15161-1-git-send-email-stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1458057390-20756-3-git-send-email-jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 01, 2015 at 11:14:55AM +0200, Stanimir Varbanov wrote:
-> Here are three bam dma fixes, which I made during testing qcrypto
-> driver. The first one is a real fix, the second one is related to
-> peripherals on which the BAM IP is initialized by remote execution
-> environment, and the third one is a sleeping bug IMO.
-> 
-> The last patch is a extension again for peripherals which BAM is
-> remotely controlled by other execution environment.
-> 
-> All patches has been tested on db410c board with apq8016.
-> 
+On Tue, Mar 15, 2016 at 03:56:29PM +0000, Jon Hunter wrote:
 
-Stan,
+> +static void tegra_adma_request_free(struct tegra_adma_chan *tdc)
+> +{
+> +	struct tegra_adma *tdma = tdc->tdma;
+> +
+> +	if (!tdc->sreq_reserved)
+> +		return;
+> +
+> +	switch (tdc->sreq_dir) {
+> +	case DMA_MEM_TO_DEV:
+> +		clear_bit(tdc->sreq_index, &tdma->tx_requests_reserved);
+> +		break;
 
-Can you resend these patches w/ updates?  Or at least the remote control patch
-if you can get that out faster.  And also include the dmaengine list.
+empty line here woould be nicer
 
-Regards,
+> +	ret = dma_cookie_status(dc, cookie, txstate);
+> +	if (ret == DMA_COMPLETE || !txstate)
+> +		return ret;
+> +
+> +	spin_lock_irqsave(&tdc->vc.lock, flags);
+> +
+> +	vd = vchan_find_desc(&tdc->vc, cookie);
+> +	if (vd) {
+> +		desc = to_tegra_adma_desc(&vd->tx);
+> +		residual = desc->ch_regs.tc;
 
-Andy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Here we are filling up residue for desc found in issued list
+
+> +	} else if (tdc->desc && tdc->desc->vd.tx.cookie == cookie) {
+> +		residual = tegra_adma_get_residue(tdc);
+
+Well if it is not issued then why we we need to caluclate, its full size of
+descriptor
+
+> +	} else {
+> +		residual = 0;
+
+why this?
+
+> +static struct dma_async_tx_descriptor *tegra_adma_prep_slave_sg(
+> +	struct dma_chan *dc, struct scatterlist *sgl, unsigned int sg_len,
+> +	enum dma_transfer_direction direction, unsigned long flags,
+> +	void *context)
+> +{
+> +	struct tegra_adma_chan *tdc = to_tegra_adma_chan(dc);
+> +
+> +	dev_warn(tdc2dev(tdc), "scatter-gather transfers are not supported\n");
+> +
+> +	return NULL;
+> +}
+
+Why do we need this placeholder, If you dont support slave_sg dont add this
+as capability
+
+> +static const struct tegra_adma_chip_data tegra210_chip_data = {
+> +	.nr_channels = 22,
+> +};
+
+why should this be hard coded in kernel and not queried from something like
+DT? This case seems to be hardware property
+
+> +	dma_cap_set(DMA_SLAVE, tdma->dma_dev.cap_mask);
+> +	dma_cap_set(DMA_PRIVATE, tdma->dma_dev.cap_mask);
+> +	dma_cap_set(DMA_CYCLIC, tdma->dma_dev.cap_mask);
+
+I think you should not set DMA_SLAVE, do you need caps to be exported. I
+think that should be exported for cyclic too, let me know if that was the
+issue?
+
+-- 
+~Vinod
