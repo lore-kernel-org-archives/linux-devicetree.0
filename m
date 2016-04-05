@@ -1,43 +1,104 @@
-From: Dinh Nguyen <dinguyen@opensource.altera.com>
-Subject: Re: [PATCHv2 7/7] ARM: dts: Add Altera Arria10 OCRAM EDAC devicetree
- entry
-Date: Tue, 5 Apr 2016 13:44:10 -0500
-Message-ID: <alpine.DEB.2.02.1604051343040.32718@linux-builds1>
-References: <1459450087-24792-1-git-send-email-tthayer@opensource.altera.com>
- <1459450087-24792-8-git-send-email-tthayer@opensource.altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1459450087-24792-8-git-send-email-tthayer@opensource.altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tthayer@opensource.altera.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bp@alien8.de, dougthompson@xmission.com, grant.likely@linaro.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m.chehab@samsung.com
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ARM: tegra: fix naming in GPIO DT binding header
+Date: Tue,  5 Apr 2016 13:25:07 -0600
+Message-ID: <1459884307-24043-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 31 Mar 2016, tthayer@opensource.altera.com wrote:
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> From: Thor Thayer <tthayer@opensource.altera.com>
-> 
-> Add the device tree entries needed to support the Altera On-Chip
-> RAM EDAC on the Arria10 chip.
-> 
-> Signed-off-by: Thor Thayer <tthayer@opensource.altera.com>
-> ---
-> v2: No change
-> ---
->  arch/arm/boot/dts/socfpga_arria10.dtsi |    5 +++++
->  1 file changed, 5 insertions(+)
+According to the Tegra TRM, GPIOs are aggregated into /ports/ of 8 GPIOs,
+not into /banks/. Fix <dt-bindings/gpio/tegra-gpio.h> to correctly reflect
+this naming convention. While this seems like silly churn, it will become
+slightly more important once we introduce the GPIO binding for upcoming
+Tegra chips.
 
-I've applied this patch and will take through the arm-soc tree.
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ include/dt-bindings/gpio/tegra-gpio.h | 68 +++++++++++++++++------------------
+ 1 file changed, 34 insertions(+), 34 deletions(-)
 
-Thanks,
-Dinh
+diff --git a/include/dt-bindings/gpio/tegra-gpio.h b/include/dt-bindings/gpio/tegra-gpio.h
+index 197dc28b676e..a1c09e88e80b 100644
+--- a/include/dt-bindings/gpio/tegra-gpio.h
++++ b/include/dt-bindings/gpio/tegra-gpio.h
+@@ -12,40 +12,40 @@
+ 
+ #include <dt-bindings/gpio/gpio.h>
+ 
+-#define TEGRA_GPIO_BANK_ID_A 0
+-#define TEGRA_GPIO_BANK_ID_B 1
+-#define TEGRA_GPIO_BANK_ID_C 2
+-#define TEGRA_GPIO_BANK_ID_D 3
+-#define TEGRA_GPIO_BANK_ID_E 4
+-#define TEGRA_GPIO_BANK_ID_F 5
+-#define TEGRA_GPIO_BANK_ID_G 6
+-#define TEGRA_GPIO_BANK_ID_H 7
+-#define TEGRA_GPIO_BANK_ID_I 8
+-#define TEGRA_GPIO_BANK_ID_J 9
+-#define TEGRA_GPIO_BANK_ID_K 10
+-#define TEGRA_GPIO_BANK_ID_L 11
+-#define TEGRA_GPIO_BANK_ID_M 12
+-#define TEGRA_GPIO_BANK_ID_N 13
+-#define TEGRA_GPIO_BANK_ID_O 14
+-#define TEGRA_GPIO_BANK_ID_P 15
+-#define TEGRA_GPIO_BANK_ID_Q 16
+-#define TEGRA_GPIO_BANK_ID_R 17
+-#define TEGRA_GPIO_BANK_ID_S 18
+-#define TEGRA_GPIO_BANK_ID_T 19
+-#define TEGRA_GPIO_BANK_ID_U 20
+-#define TEGRA_GPIO_BANK_ID_V 21
+-#define TEGRA_GPIO_BANK_ID_W 22
+-#define TEGRA_GPIO_BANK_ID_X 23
+-#define TEGRA_GPIO_BANK_ID_Y 24
+-#define TEGRA_GPIO_BANK_ID_Z 25
+-#define TEGRA_GPIO_BANK_ID_AA 26
+-#define TEGRA_GPIO_BANK_ID_BB 27
+-#define TEGRA_GPIO_BANK_ID_CC 28
+-#define TEGRA_GPIO_BANK_ID_DD 29
+-#define TEGRA_GPIO_BANK_ID_EE 30
+-#define TEGRA_GPIO_BANK_ID_FF 31
++#define TEGRA_GPIO_PORT_A 0
++#define TEGRA_GPIO_PORT_B 1
++#define TEGRA_GPIO_PORT_C 2
++#define TEGRA_GPIO_PORT_D 3
++#define TEGRA_GPIO_PORT_E 4
++#define TEGRA_GPIO_PORT_F 5
++#define TEGRA_GPIO_PORT_G 6
++#define TEGRA_GPIO_PORT_H 7
++#define TEGRA_GPIO_PORT_I 8
++#define TEGRA_GPIO_PORT_J 9
++#define TEGRA_GPIO_PORT_K 10
++#define TEGRA_GPIO_PORT_L 11
++#define TEGRA_GPIO_PORT_M 12
++#define TEGRA_GPIO_PORT_N 13
++#define TEGRA_GPIO_PORT_O 14
++#define TEGRA_GPIO_PORT_P 15
++#define TEGRA_GPIO_PORT_Q 16
++#define TEGRA_GPIO_PORT_R 17
++#define TEGRA_GPIO_PORT_S 18
++#define TEGRA_GPIO_PORT_T 19
++#define TEGRA_GPIO_PORT_U 20
++#define TEGRA_GPIO_PORT_V 21
++#define TEGRA_GPIO_PORT_W 22
++#define TEGRA_GPIO_PORT_X 23
++#define TEGRA_GPIO_PORT_Y 24
++#define TEGRA_GPIO_PORT_Z 25
++#define TEGRA_GPIO_PORT_AA 26
++#define TEGRA_GPIO_PORT_BB 27
++#define TEGRA_GPIO_PORT_CC 28
++#define TEGRA_GPIO_PORT_DD 29
++#define TEGRA_GPIO_PORT_EE 30
++#define TEGRA_GPIO_PORT_FF 31
+ 
+-#define TEGRA_GPIO(bank, offset) \
+-	((TEGRA_GPIO_BANK_ID_##bank * 8) + offset)
++#define TEGRA_GPIO(port, offset) \
++	((TEGRA_GPIO_PORT_##port * 8) + offset)
+ 
+ #endif
+-- 
+2.8.1
