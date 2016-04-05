@@ -1,67 +1,60 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [RFC PATCH v1 0/4] Add Rockchip RGA support
-Date: Tue, 05 Apr 2016 09:13:28 +0800
-Message-ID: <57031138.7020408@rock-chips.com>
-References: <1458552518-25527-1-git-send-email-ykk@rock-chips.com>	<1571169.Hy8an0n7lM@diego>	<CACvgo516ewfwGCpV=noX+re1x8t3Sp1t39Sha+A2-tQ5YsoihA@mail.gmail.com>	<17189219.y56YqHz6yR@diego>	<CACvgo50REvRxN2_qdw=2NeTTSgjpA+9c8OZgPE0q19meH6ArKA@mail.gmail.com>
- <CACvgo53rYAW4H0SJnz8-7QtfRHmWWUh+7L7DiUbjBJ-hPBMHug@mail.gmail.com>
+From: Kefeng Wang <wangkefeng.wang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt/bindings: Add bindings for hisilicon random number
+ generator
+Date: Tue, 5 Apr 2016 09:16:58 +0800
+Message-ID: <5703120A.6040803@huawei.com>
+References: <1459474664-11264-1-git-send-email-wangkefeng.wang@huawei.com>
+ <20160404051549.GF17806@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACvgo53rYAW4H0SJnz8-7QtfRHmWWUh+7L7DiUbjBJ-hPBMHug@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20160404051549.GF17806@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNuW5tDAz5pyIMzHml6UgMDQ6MDMsIEVtaWwgVmVsaWtvdiB3cm90ZToKPiBPbiAyOSBN
-YXJjaCAyMDE2IGF0IDE0OjEzLCBFbWlsIFZlbGlrb3YgPGVtaWwubC52ZWxpa292QGdtYWlsLmNv
-bT4gd3JvdGU6Cj4+IE9uIDI4IE1hcmNoIDIwMTYgYXQgMjM6MTMsIEhlaWtvIFN0w7xibmVyIDxo
-ZWlrb0BzbnRlY2guZGU+IHdyb3RlOgo+Pgo+Pj4gSSBoYXZlIHRoZSBmZWVsaW5nIHdlJ3JlIGdv
-aW5nIHF1aXRlIGEgYml0IG9mZi10b3BpYyByaWdodCBub3cgOi0pIC4KPj4+IFRoZSBiaW5hcnkt
-ZHJpdmVyLWNyYXp5bmVzcywgaGFzbid0IHJlYWxseSBhbnl0aGluZyB0byBkbyB3aXRoIFlha2ly
-J3Mgc3VwcG9ydAo+Pj4gZm9yIHRoZSBSR0EgKHdoaWNoIGlzIGFib3V0IHJhc3Rlci1ncmFwaGlj
-cy1hY2NlbGVyYXRpb24sIHNvIDJkIHN0dWZmKS4KPj4+Cj4+PiBBbmQgbWUgbWVudGlvbmluZyB0
-aGUgYXJtc29jLWRkeCB3YXMgbWVyZWx5IGEgbWVhbnMgdG8gYWxsb3cgc29tZSBzb3J0IG9mCj4+
-PiBkaWZmZXJlbnQgdXNlcnNwYWNlIHVzZXIsIGFzIHJlcXVlc3RlZCBpbiB5b3VyIG9yaWdpbmFs
-IG1haWwgOy0pIC4KPj4+Cj4+IFNlZW1zIGxpa2UgSSBmb3Jnb3QgdG8gc3RhdGUgdGhlIG9idmlv
-dXMgLSBmb3IgYWxsIHRoZSByZWFzb25zCj4+IG1lbnRpb25lZCwgdGhlIGFybXNvYyBkZHggc2Vl
-bXMgbGlrZSBhIGJhZCBleGFtcGxlLgo+Pgo+Pj4gTWF5YmUgeW91IGtub3cgYSBiZXR0ZXIgdXNl
-LWNhc2Ugb24gd2hlcmUgdG8gZGVtb25zdHJhdGUgdGhlIHZpYWJpbGl0eSBvZiB0aGUKPj4+IHVz
-ZXJzcGFjZSBBUEkgZm9yIGl0IGFzIG9yaWdpbmFsbHkgcmVxdWVzdGVkLgo+PiBJJ20gYWZyYWlk
-IHRoYXQgbXkgUm9ja0NoaXAtZm9vIGlzIGV4dHJlbWVseSBsaW1pdGVkLiBQZXJoYXBzIHRoZQo+
-PiBhY3R1YWwgdXNlciBvZiB0aGVzZSBzaG91bGQgYmUgbWVudGlvbmVkID8geGY4Ni12aWRlby1y
-b2NraGlwIChpcwo+PiB0aGVyZSBvbmUgPykgb3IgYW55IG90aGVyIGVmZm9ydC9wcm9qZWN0IHRo
-YXQgbGFja3Mgc29tZSAoYWxsPykgb2YgdGhlCj4+IGNyaXRpY2lzbSBsaXN0ZWQuCj4+Cj4+IChT
-b3J0IG9mKSB0aGUgYm90dG9tIGxpbmUgLSBlaXRoZXIgcmV1c2UgdGhlIGV4aXN0aW5nIGludGVy
-ZmFjZXMgb3IKPj4gcHJvdmlkZSBhbiBhcHByb3ZlZCwgZnVsbCBibG93biB1c2Vyc3BhY2UgKGxp
-YmRybSBkZW1vcy9wcm9ncmFtcyBkbwo+PiBub3QgY291bnQpIHRoYXQgdXNlcyB0aGUgbmV3IGlu
-dGVyZmFjZXMuCj4+Cj4+IEkgaGF2ZW4ndCBtYWRlIHRoZXNlIHJ1bGVzLCBqdXN0IGEgZm9vbF5X
-Z3V5IHRoYXQgcmVwZWF0cyB0aGVtIHNvIHRoYXQKPj4gcGVvcGxlIGRvbid0IGFidXNlIHRoZW0g
-bXVjaC4gSWYgaW4gZG91YnQgY2hlY2sgd2l0aCBEYXZlIGFuZCBEYW5pZWwgVgo+PiAtIHRoZXkg
-aGFkIGVub3VnaCByZXBlYXRpbmcgdGhlc2UuCj4+Cj4gSSBjYW4gc2VlIGhvdyBteSBlYXJsaWVy
-IHJlc3BvbnNlIG1heSBoYXZlIGJlZW4gY29tZQo+IGFjcm9zcy9pbnRlcnByZXRlZCBhcyBhZ2dy
-ZXNzaXZlIGFuZC9vciBkZW1hbmRpbmcuIEFwb2xvZ2llcyBhbnlvbmUKPiBnb3QgdXBzZXQvYW5u
-b3llZC4KPgo+IExldCBtZSB0cnkgaW4gYW5vdGhlciBsaWdodCAtIGlmIHlvdSBndXlzIGFyZSB3
-aWxsaW5nIHRvIGhhdmUKPiB4Zjg2LXZpZGVvLXJvY2tjaGlwIG9yIGtlZXAgdHJhY2sgb2YvY28t
-bWFpbnRhaW4gYXJtc29jLCBwcmV0dHkgbXVjaAo+IGV2ZXJ5b25lIHdpbGwgYmUgb3ZlciB0aGUg
-bW9vbi4gUGVyc29uYWxseSBJJ2Qgb3B0IGZvciB0aGUgZm9ybWVyLAo+IHRha2luZyB0aGUgbW9k
-ZXNldHRpbmcgKHRoZSBvbmUgaW4gdGhlIHhzZXJ2ZXIgdHJlZSkgYXMgYSBiYXNlIC0gaXQKPiBo
-YXMgYWxsIHRoZSBjb29sIG5ldyBiaXRzIDstKQo+Cj4gUmVnYXJkcywKPiBFbWlsCj4KPgo+CgpJ
-J2QgbGlrZSB0byB1c2UgbW9kZXNldHRpbmcgbW9yZSB0aGFuIGFybXNvYy4gdGhlIG1vZGVzZXR0
-aW5nIHNlZW1zIG1vcmUgCnN0YWJsZSBhbmQgaXQgc3VwcG9ydCBnbGFtb3IoMmQgYWNjZWxlcmF0
-aW9uIHdpdGggZ3B1KS4KCldlIGhhdmUgc29tZSB3b3JrIG9uIG1vZGVzZXR0aW5nIGRkeCwgd2l0
-aCBzb21lIGhhY2ssIGJvdGggM2QgZHJpMiBhbmQgCmdsYW1vciAyZCBhY2NlbGVyYXRpb24gY2Fu
-IHdvcmtzIHdpdGggbWFsaSBncHUuCgpTbyBpZiBZYWtpciB3YW50IHRvIHN1cHBvcnQgRVhBIG9u
-IGRkeCwgSSBob3BlIGhlIGNhbiB1c2UgbW9kZXNldHRpbmcuCgoKVGhhbmtzLgoKLS0gCu+8rWFy
-ayBZYW8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+On 2016/4/4 13:15, Rob Herring wrote:
+> On Fri, Apr 01, 2016 at 09:37:43AM +0800, Kefeng Wang wrote:
+>> Document the devicetree bindings for the random number generator
+>> found on Hisilicon Hip04 and Hip05 soc.
+[...]
+>> +
+>> +Required properties:
+>> +- compatible : Should be "hisilicon,hisi-rng"
+> 
+> hisi is a bit redundant with hisilicon and please define SoC specific 
+> compatible strings.
+
+Due to it exists in both Hip04/Hip05 soc(and maybe some other chips),
+how about drop hisi-, just "hisilicon,rng".
+
+Thanks
+
+> 
+>> +- reg : Offset and length of the register set of this block
+>> +
+>> +Example:
+>> +
+>> +rng@d1010000 {
+>> +	compatible = "hisilicon,hisi-rng";
+>> +	reg = <0xd1010000 0x100>;
+>> +};
+>> -- 
+>> 1.7.12.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
