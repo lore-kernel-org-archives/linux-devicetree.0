@@ -1,80 +1,43 @@
 From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v7 2/4] power: reset: add reboot mode driver
-Date: Wed, 06 Apr 2016 10:00:13 +0900
-Message-ID: <57045F9D.1000502@samsung.com>
-References: <1459304304-9713-1-git-send-email-andy.yan@rock-chips.com>
- <1459304443-9811-1-git-send-email-andy.yan@rock-chips.com>
- <56FB49B3.2040505@samsung.com> <57045D6B.2080907@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <57045D6B.2080907@rock-chips.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andy Yan <andy.yan@rock-chips.com>, robh+dt@kernel.org, sre@kernel.org, heiko@sntech.de, john.stultz@linaro.org, arnd@arndb.de
-Cc: mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, alexandre.belloni@free-electrons.com, f.fainelli@gmail.com, linux@arm.linux.org.uk, dbaryshkov@gmail.com, linux-pm@vger.kernel.org, linux-rockchip@lists.infradead.org, wxt@rock-chips.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, moritz.fischer@ettus.com, mbrugger@suse.com, linux-kernel@vger.kernel.org, galak@codeaurora.org, olof@lixom.net, jun.nie@linaro.org, dwmw2@infradead.org
+Subject: [PATCH v2 02/11] ARM: dts: exynos: Fix DTC unit name warnings in
+ Exynos3250
+Date: Wed, 06 Apr 2016 11:00:41 +0900
+Message-ID: <1459908050-16430-2-git-send-email-k.kozlowski@samsung.com>
+References: <1459908050-16430-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1459908050-16430-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06.04.2016 09:50, Andy Yan wrote:
+Fix following DTC warnings in Exynos3250 boards:
 
-(...)
+Warning (unit_address_vs_reg): Node /soc/video-phy@10020710 has a unit name, but no reg property
 
->>> +            return -ENOMEM;
->>> +
->>> +        info->mode = kstrdup_const(prop->name + len, GFP_KERNEL);
->>> +        if (of_property_read_u32(np, prop->name, &info->magic)) {
->>> +            dev_err(dev, "reboot mode %s without magic number\n",
->>> +                info->mode);
->>> +            devm_kfree(dev, info);
->>> +            continue;
->>> +        }
->>> +        list_add_tail(&info->list, &reboot->head);
->>> +    }
->>> +    of_node_put(np);
->> If you of_node_put() here, there is no sense in getting it before. I
->> mentioned of_node_get() only because I am not sure about life-cycle of
->> nodes in case of DT overlays and you are storing the pointer to string
->> from DT.
->>
->> The doubts I have are concerning only the case of freeing nodes from
->> overlay.
->>
->> I don't know if of_node_get() is needed but of_node_get()+of_node_put()
->> seems useless.
-> 
-> 
->  I am also not sure about it. Maybe just drop of_node_get/put ?
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-OK, let's drop both get() and put().
+---
 
-(...)
+Changes since v1:
+1. Add Javier's tag.
+---
+ arch/arm/boot/dts/exynos3250.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->>> +
->>> +static const struct of_device_id syscon_reboot_mode_of_match[] = {
->>> +    { .compatible = "syscon-reboot-mode" },
->>> +    {}
->>> +};
->>> +
->>> +static struct platform_driver syscon_reboot_mode_driver = {
->>> +    .probe = syscon_reboot_mode_probe,
->> Cleanup needed. What will happen after device unbind? Memory will be
->> released (devm-*()) but reboot notifier won't thus leading to OOPS on
->> reboot.
-> 
->     From the kernel_restart_prepare function, the reboot notifier will
-> be called before device_shutdown. Is there any other case the device
-> unbind before reboot notifier
-> called?
-
-This is a regular module platform driver so unbind can happen any time
-initiated by user, either by unbind command or by module removal. User
-can then re-bind device or not - probably does not matter. Anyway after
-such first unbind, the restart will kaboom instead of do a restart.
-
-Beside that, you always should clean up, regardless of restart or not.
-If you do not want unbind (thus no need of cleanup) then forbid it by
-making it a non-module with suppressed bind.
-
-Best regards,
-Krzysztof
-
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 137f9015d4e8..5225e953d2ed 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -153,7 +153,7 @@
+ 			interrupt-parent = <&gic>;
+ 		};
+ 
+-		mipi_phy: video-phy@10020710 {
++		mipi_phy: video-phy {
+ 			compatible = "samsung,s5pv210-mipi-video-phy";
+ 			#phy-cells = <1>;
+ 			syscon = <&pmu_system_controller>;
+-- 
+2.5.0
