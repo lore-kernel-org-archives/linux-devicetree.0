@@ -1,30 +1,28 @@
-From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v10 05/17] xen: memory : Add new XENMAPSPACE type
- XENMAPSPACE_dev_mmio
-Date: Wed, 6 Apr 2016 12:44:53 +0100
-Message-ID: <5704F6B5.5080000@arm.com>
-References: <1459525755-36968-1-git-send-email-shannon.zhao@linaro.org>
- <1459525755-36968-6-git-send-email-shannon.zhao@linaro.org>
+From: Alexander Stein <alexander.stein@systec-electronic.com>
+Subject: Re: [PATCH] ARM: dts: ls1021a: add SCFG MSI dts node
+Date: Wed, 06 Apr 2016 14:00:16 +0200
+Message-ID: <28653783.sxLdysvvje@ws-stein>
+References: <1459940527-26437-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459525755-36968-6-git-send-email-shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, stefano.stabellini-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org
-Cc: david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459940527-26437-1-git-send-email-Minghuan.Lian@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Minghuan Lian <Minghuan.Lian@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh@kernel.org>, Mingkai Hu <mingkai.hu@nxp.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shannon,
+On Wednesday 06 April 2016 19:02:07, Minghuan Lian wrote:
+> Add SCFG MSI dts node and add msi-parent property to PCIe dts node
+> that points to the corresponding MSI node.
+> 
+> Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> ---
+>  arch/arm/boot/dts/ls1021a.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 
-On 01/04/2016 16:49, Shannon Zhao wrote:
-> Add a new type of Xen map space for Dom0 to map device's MMIO region.
->
-> Signed-off-by: Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Tested-by: Alexander Stein <alexander.stein@systec-electronic.com>
 
-Reviewed-by: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-
-Regards,
-
--- 
-Julien Grall
+Best regards,
+Alexander
