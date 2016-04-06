@@ -1,104 +1,90 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional clocks
-Date: Wed, 6 Apr 2016 15:11:37 +0200
-Message-ID: <CAMuHMdUtPhBT0_+hSk_t5osHC8TssyGMFo+YOWetTGBkbpB4PQ@mail.gmail.com>
-References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-clk-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 6/6] ARM: DTS: da850: Add McBSP0 and McBSP1
+Date: Wed,  6 Apr 2016 15:21:33 +0200
+Message-ID: <1459948893-4206-7-git-send-email-petr@barix.com>
+References: <1459948893-4206-1-git-send-email-petr@barix.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459948893-4206-1-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC Mike, Stephen, linux-clk (this time with the new Mike)
+Add SoC nodes for McBSP0 and McBSP1 as well as the corresponding pinmux
+configurations.
 
-On Wed, Apr 6, 2016 at 2:52 PM, Sjoerd Simons
-<sjoerd.simons@collabora.co.uk> wrote:
-> clk_get on a disabled clock node will return EPROBE_DEFER, which can
-> cause drivers to be deferred forever if such clocks are referenced in
-> their clocks property.
+Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/da850.dtsi | 45 +++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 44 insertions(+), 1 deletion(-)
 
-Is this a side effect of commit 3e5dd6f6e690048d ("clk: Ignore disabled DT
-clock providers")?
-
-> Update the various disabled external clock nodes to default to a
-> frequency of 0, but don't disable them to prevent this.
->
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
->
-> ---
->
->  arch/arm/boot/dts/r8a7791-koelsch.dts | 1 +
->  arch/arm/boot/dts/r8a7791-porter.dts  | 1 +
->  arch/arm/boot/dts/r8a7791.dtsi        | 5 +----
->  3 files changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> index 1adf877..da59c28 100644
-> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> @@ -660,6 +660,7 @@
->  };
->
->  &pcie_bus_clk {
-> +       clock-frequency = <100000000>;
->         status = "okay";
->  };
->
-> diff --git a/arch/arm/boot/dts/r8a7791-porter.dts b/arch/arm/boot/dts/r8a7791-porter.dts
-> index 9554d13..19b257e 100644
-> --- a/arch/arm/boot/dts/r8a7791-porter.dts
-> +++ b/arch/arm/boot/dts/r8a7791-porter.dts
-> @@ -413,6 +413,7 @@
->  };
->
->  &pcie_bus_clk {
-> +       clock-frequency = <100000000>;
->         status = "okay";
->  };
->
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index 8693888..676df63 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -1104,8 +1104,7 @@
->                 pcie_bus_clk: pcie_bus {
->                         compatible = "fixed-clock";
->                         #clock-cells = <0>;
-> -                       clock-frequency = <100000000>;
-> -                       status = "disabled";
-> +                       clock-frequency = <0>;
->                 };
->
->                 /* External SCIF clock */
-> @@ -1114,7 +1113,6 @@
->                         #clock-cells = <0>;
->                         /* This value must be overridden by the board. */
->                         clock-frequency = <0>;
-> -                       status = "disabled";
->                 };
->
->                 /* External USB clock - can be overridden by the board */
-> @@ -1130,7 +1128,6 @@
->                         #clock-cells = <0>;
->                         /* This value must be overridden by the board. */
->                         clock-frequency = <0>;
-> -                       status = "disabled";
->                 };
->
->                 /* Special CPG clocks */
-> --
-> 2.8.0.rc3
-
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 5996e765e59c..9e2b1e97377c 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -148,7 +148,24 @@
+ 					0xc 0x88888888 0xffffffff
+ 				>;
+ 			};
+-
++			mcbsp0_pins: pinmux_mcbsp0_pins {
++				pinctrl-single,bits = <
++					/* PINMUX2:
++					* CLKS0, DX0, DR0, FSX0
++					* FSR0, CLKX0, CLKR0
++					*/
++					0x8 0x02222220 0xfffffff0
++				>;
++			};
++			mcbsp1_pins: pinmux_mcbsp1_pins {
++				pinctrl-single,bits = <
++					/* PINMUX1:
++					* CLKS1, DX1, DR1, FSX1,
++					* FSR1, CLKX1, CLKR1
++					*/
++					0x4 0x22222220 0xfffffff0
++				>;
++			};
+ 		};
+ 		edma0: edma@01c00000 {
+ 			compatible = "ti,edma3-tpcc";
+@@ -335,6 +352,32 @@
+ 				<&edma0 0 1>;
+ 			dma-names = "tx", "rx";
+ 		};
++
++		mcbsp0: mcbsp@1d10000 {
++			compatible = "ti,da850-mcbsp-audio";
++			reg =	<0x00110000 0x1000>,
++				<0x00310000 0x1000>;
++			reg-names = "mpu", "dat";
++			interrupts = <97 98>;
++			interrupts-names = "rx", "tx";
++			dmas = <&edma0 3
++				&edma0 2>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++		mcbsp1: mcbsp@1d11000 {
++			compatible = "ti,da850-mcbsp-audio";
++			reg =	<0x00111000 0x1000>,
++				<0x00311000 0x1000>;
++			reg-names = "mpu", "dat";
++			interrupts = <99 100>;
++			interrupts-names = "rx", "tx";
++			dmas = <&edma0 5
++				&edma0 4>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
+ 	};
+ 	nand_cs3@62000000 {
+ 		compatible = "ti,davinci-nand";
+-- 
+1.9.1
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
