@@ -1,95 +1,188 @@
-From: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [v7, 0/5] Fix eSDHC host version register bug
-Date: Wed, 6 Apr 2016 06:12:58 +0000
-Message-ID: <HE1PR04MB0889D75DC56E180D3508E7A1F89F0@HE1PR04MB0889.eurprd04.prod.outlook.com>
-References: <1459480051-3701-1-git-send-email-yangbo.lu@nxp.com>
-	<CAPDyKFqgMCvbqMYZ-uM-rTnVvfJkCYbhv2kucCRyNyc9FWoR=Q@mail.gmail.com>
+From: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] power: Add an axp20x-ac-power driver
+Date: Wed, 6 Apr 2016 08:26:20 +0200
+Message-ID: <5704AC0C.3040603@computerlinguist.org>
+References: <1459689307-8501-1-git-send-email-haas@computerlinguist.org>
+ <20160404213851.GQ4227@lukather> <570348E6.5060107@computerlinguist.org>
+ <CAGb2v66fsdSMCULLtuFC=YEkdOOQRLh2knjjFvatbJhaKu9KWg@mail.gmail.com>
+Reply-To: haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAPDyKFqgMCvbqMYZ-uM-rTnVvfJkCYbhv2kucCRyNyc9FWoR=Q@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCD4V7EG6QFRBFGYSK4AKGQEPXH7GWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66fsdSMCULLtuFC=YEkdOOQRLh2knjjFvatbJhaKu9KWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: wens-jdAy2FN1RRM@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Bruno_Pr=c3=a9mont?= <bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Ulf Hansson [mailto:ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org]
-> Sent: Tuesday, April 05, 2016 7:28 PM
-> To: Yangbo Lu
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-
-> clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs/ROKNJybVBZg@public.gmane.org
-> foundation.org; netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-mmc; Rob Herring; Scott
-> Wood; Russell King; Jochen Friedrich; Joerg Roedel; Claudiu Manoil;
-> Bhupesh Sharma; Zhao Qiang; Kumar Gala; Santosh Shilimkar; Yang-Leo Li;
-> Xiaobo Xie
-> Subject: Re: [v7, 0/5] Fix eSDHC host version register bug
+On 04/05/2016 08:05 AM, Chen-Yu Tsai wrote:
+> Hi,
 > 
-> On 1 April 2016 at 05:07, Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org> wrote:
-> > This patchset is used to fix a host version register bug in the
-> > T4240-R1.0-R2.0 eSDHC controller. To get the SoC version and revision,
-> > it's needed to add the GUTS driver to access the global utilities
-> registers.
-> >
-> > So, the first three patches are to add the GUTS driver.
-> > The following two patches are to enable GUTS driver support to get SVR
-> > in eSDHC driver and fix host version for T4240.
-> >
-> > Yangbo Lu (5):
-> >   ARM64: dts: ls2080a: add device configuration node
-> >   soc: fsl: add GUTS driver for QorIQ platforms
-> >   dt: move guts devicetree doc out of powerpc directory
-> >   powerpc/fsl: move mpc85xx.h to include/linux/fsl
-> >   mmc: sdhci-of-esdhc: fix host version for T4240-R1.0-R2.0
-> >
-> >  .../bindings/{powerpc => soc}/fsl/guts.txt         |   3 +
-> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     |   6 ++
-> >  arch/powerpc/kernel/cpu_setup_fsl_booke.S          |   2 +-
-> >  drivers/clk/clk-qoriq.c                            |   3 +-
-> >  drivers/i2c/busses/i2c-mpc.c                       |   2 +-
-> >  drivers/iommu/fsl_pamu.c                           |   3 +-
-> >  drivers/mmc/host/Kconfig                           |   1 +
-> >  drivers/mmc/host/sdhci-of-esdhc.c                  |  23 ++++
-> >  drivers/net/ethernet/freescale/gianfar.c           |   2 +-
-> >  drivers/soc/Kconfig                                |   2 +-
-> >  drivers/soc/fsl/Kconfig                            |   8 ++
-> >  drivers/soc/fsl/Makefile                           |   1 +
-> >  drivers/soc/fsl/guts.c                             | 119
-> +++++++++++++++++++++
-> >  include/linux/fsl/guts.h                           |  98 ++++++++-----
-> ----
-> >  .../asm/mpc85xx.h => include/linux/fsl/svr.h       |   4 +-
-> >  15 files changed, 219 insertions(+), 58 deletions(-)  rename
-> > Documentation/devicetree/bindings/{powerpc => soc}/fsl/guts.txt (91%)
-> > create mode 100644 drivers/soc/fsl/Kconfig  create mode 100644
-> > drivers/soc/fsl/guts.c  rename arch/powerpc/include/asm/mpc85xx.h =>
-> > include/linux/fsl/svr.h (97%)
-> >
-> > --
-> > 2.1.0.27.g96db324
-> >
+> On Mon, Apr 4, 2016 at 10:11 PM, Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org> wrote:
+>> Hi Maxime,
+>>
+>> thanks for taking the time to review this.
+>>
+>> On 04/04/2016 11:38 PM, Maxime Ripard wrote:
+>>> Hi,
+>>>>
+>>>> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+>>>> index a57d6e9..9351c0e 100644
+>>>> --- a/drivers/mfd/axp20x.c
+>>>> +++ b/drivers/mfd/axp20x.c
+>>>> @@ -178,6 +178,12 @@ static struct resource axp288_power_button_resources[] = {
+>>>>      },
+>>>>  };
+>>>>
+>>>> +static struct resource axp20x_ac_power_supply_resources[] = {
+>>>> +    DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_PLUGIN, "ACIN_PLUGIN"),
+>>>> +    DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_REMOVAL, "ACIN_REMOVAL"),
+>>>> +    DEFINE_RES_IRQ_NAMED(AXP20X_IRQ_ACIN_OVER_V, "ACIN_OVER_V"),
+>>>> +};
+>>>> +
+>>>>  static struct resource axp288_fuel_gauge_resources[] = {
+>>>>      {
+>>>>              .start = AXP288_IRQ_QWBTU,
+>>>> @@ -440,6 +446,11 @@ static struct mfd_cell axp20x_cells[] = {
+>>>>              .of_compatible  = "x-powers,axp202-usb-power-supply",
+>>>>              .num_resources  = ARRAY_SIZE(axp20x_usb_power_supply_resources),
+>>>>              .resources      = axp20x_usb_power_supply_resources,
+>>>> +    }, {
+>>>> +            .name           = "axp20x-ac-power-supply",
+>>>> +            .of_compatible  = "x-powers,axp202-ac-power-supply",
+>>>> +            .num_resources  = ARRAY_SIZE(axp20x_ac_power_supply_resources),
+>>>> +            .resources      = axp20x_ac_power_supply_resources,
+>>>>      },
+>>>>  };
+>>>>
+>>>
+>>> These changes should be in a separate patch.
+>>
+>> Will do!
+>>>
+>>
+>>>> +
+>>>> +static irqreturn_t axp20x_irq_ac_removal(int irq, void *devid)
+>>>> +{
+>>>> +    struct axp20x_ac_power *power = devid;
+>>>> +
+>>>> +    dev_info(&power->supply->dev, "IRQ#%d AC disconnected\n", irq);
+>>>> +    power_supply_changed(power->supply);
+>>>> +
+>>>> +    return IRQ_HANDLED;
+>>>> +}
+>>>
+>>> Logging in the interrupt handler is usually a bad idea, for several
+>>> reasons:
+>>>    - If you have a console, it's going to be output on the console,
+>>>      which might take quite some time. And you don't want to take
+>>>      quite some time in the interrupt handler.
+>>>    - printk might not even work in the interrupt context in some
+>>>      scenarios.
+>>>
+>>> Removing that handler, you can register the same interrupt handler on
+>>> all the interrupts.
+>>>
+>>
+>> Oops. Yes, I will fix that!
+>>
+>>>> +static int axp20x_ac_power_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +    struct axp20x_dev *axp20x = dev_get_drvdata(pdev->dev.parent);
+>>>> +    struct power_supply_config psy_cfg = {};
+>>>> +    struct axp20x_ac_power *power;
+>>>> +    static const char * const irq_names[] = { "ACIN_PLUGIN",
+>>>> +            "ACIN_REMOVAL", "ACIN_OVER_V" };
+>>>> +    irqreturn_t (*irq_funcs[])(int, void *) = { axp20x_irq_ac_plugin,
+>>>> +            axp20x_irq_ac_removal, axp20x_irq_ac_over_v };
+>>>> +    int i, irq, r, input;
+>>>> +
+>>>> +    if (!of_device_is_available(pdev->dev.of_node))
+>>>> +            return -ENODEV;
+>>>
+>>> That's useless. If the device is not available, you're not going to be
+>>> probed in the first place.
+>>
+>> Ok.
+>>
+>>>
+>>>> +    power = devm_kzalloc(&pdev->dev, sizeof(*power), GFP_KERNEL);
+>>>> +    if (!power)
+>>>> +            return -ENOMEM;
+>>>> +
+>>>> +    power->regmap = axp20x->regmap;
+>>>> +
+>>>> +    r = regmap_read(power->regmap, AXP20X_PWR_INPUT_STATUS, &input);
+>>>> +    if (r < 0)
+>>>> +            return r;
+>>>> +
+>>>> +    if (!!(input & AXP20X_PWR_STATUS_AC_VBUS_SHORT)) {
+>>>> +            dev_err(&pdev->dev, "AC is connected to VBUS. Use axp20x_usb_power-supply driver instead!");
+>>>> +            return -ENODEV;
+>>>> +    }
+>>>
+>>> Can't that change over time? Can't we support both drivers at the same time?
+>>
+>> Both drivers are supported at the same time. I did even try with both
+>> AC and USB connected and both return meaningful values, at least for
+>> voltage. The AXP20x can drawn power from both sources at the same time.
+>>
+>> The check above fires in a specific scenario where ACIN and VBUS are
+>> physically connected on the PCB. The Datasheet states for that
+>> particular register:
+>>
+>> "Indicates whether ACIN/VBUS short circuits on PCB or not"
+>>
+>> So, assuming the chip detects the condition correctly, this does not
+>> change over that. But you can switch from ACIN to VBUS and vice-versa
+>> just fine if they are not short-circuited. If they are connected
+>> together, I'd prefer the DTS to only enable the usb driver. The check
+>> above is a last resort there.
+>>
+>> Then again, with the quality of those data sheets, one never knows.
 > 
-> I was about to queue this for next, when I noticed that checkpatch is
-> complaining/warning lots about these patches. Can you please a round of
-> checkpatch and fix what makes sense.
+> If they are short circuited, does that mean the PMIC will only
+> draw power from one source? If both are still used, then the
+> current and voltage readings still make sense. Then it makes
+> sense to have both drivers enabled, no?
 > 
-> Kind regards
-> Uffe
+> Or would something bad happen?
+> 
+> ChenYu
+> 
+>>>
 
-[Lu Yangbo-B47093] Sorry about this, Uffe...
-Should I ignore the warnings that update MAINTAINERS?
-Regarding the 'undocumented' warning, I will added a patch updates doc before all the patches, Ok?
+Hi ChenYu,
 
-Thanks a lot :)
- 
+I can think of two possible cases here where ACIN/VBUS are
+short-circuited on the PCB.
+
+1) Only one of ACIN xor VBUS can be physically connected and the AXP209
+cannot distinguish between the two. Since there is only one input, it
+makes sense to only expose one power supply node. Here, we don't
+necessarily know which one.
+2) Both ACIN and VBUS are connected but the AXP209 cannot distinguish
+one from the other. The AXP209 may still choose to draw power over both
+its ACIN and VBUS pins so we may get two readings. The sum of both
+readings then yields the total power consumption of the system, even if
+we don't know the individual contribution of ACIN or VBUS.
+
+I just went over the data sheet again and I did not find a further
+clarification of the short-circuit register. But I get your point now:
+as I described above, we currently have no way of knowing if only one
+(which one?) or both inputs will be used on the chip even if the short
+circuit condition is detected.
+
+I guess I could take a look at the driver provided by Allwinner
+themselves in their old kernel drop. But for now, it may make sense to
+ignore the condition alltogether.
+
+Thanks for your input!
+
+Michael
