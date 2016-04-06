@@ -1,92 +1,307 @@
-From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-Subject: Re: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
- clocks
-Date: Wed, 06 Apr 2016 15:37:06 +0200
-Message-ID: <1459949826.23936.19.camel@collabora.co.uk>
-References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
-	 <CAMuHMdUtPhBT0_+hSk_t5osHC8TssyGMFo+YOWetTGBkbpB4PQ@mail.gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/9] ARM: dts: imx: add Boundary Devices Nitrogen7
+ board
+Date: Wed, 6 Apr 2016 22:15:57 +0800
+Message-ID: <20160406141555.GL18833@tiger>
+References: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1459614351-16731-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1459614351-16731-5-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUtPhBT0_+hSk_t5osHC8TssyGMFo+YOWetTGBkbpB4PQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459614351-16731-5-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE2LTA0LTA2IGF0IDE1OjExICswMjAwLCBHZWVydCBVeXR0ZXJob2V2ZW4gd3Jv
-dGU6Cj4gQ0MgTWlrZSwgU3RlcGhlbiwgbGludXgtY2xrICh0aGlzIHRpbWUgd2l0aCB0aGUgbmV3
-IE1pa2UpCj4gCj4gT24gV2VkLCBBcHIgNiwgMjAxNiBhdCAyOjUyIFBNLCBTam9lcmQgU2ltb25z
-Cj4gPHNqb2VyZC5zaW1vbnNAY29sbGFib3JhLmNvLnVrPiB3cm90ZToKPiA+IAo+ID4gY2xrX2dl
-dCBvbiBhIGRpc2FibGVkIGNsb2NrIG5vZGUgd2lsbCByZXR1cm4gRVBST0JFX0RFRkVSLCB3aGlj
-aAo+ID4gY2FuCj4gPiBjYXVzZSBkcml2ZXJzIHRvIGJlIGRlZmVycmVkIGZvcmV2ZXIgaWYgc3Vj
-aCBjbG9ja3MgYXJlIHJlZmVyZW5jZWQKPiA+IGluCj4gPiB0aGVpciBjbG9ja3MgcHJvcGVydHku
-Cj4gSXMgdGhpcyBhIHNpZGUgZWZmZWN0IG9mIGNvbW1pdCAzZTVkZDZmNmU2OTAwNDhkICgiY2xr
-OiBJZ25vcmUKPiBkaXNhYmxlZCBEVAo+IGNsb2NrIHByb3ZpZGVycyIpPwoKWWVzIGl0IHNlZW1z
-IHNvLiBSZXZlcnRpbmcgdGhhdCBwYXRjaCBtZWFucyB0aGF0IGkgY2FuIGRyb3AgdGhpcyBvbmUK
-YW5kIGdldCB0aGUgZXhwZWN0ZWQgYmVoYXZpb3VyIGFnYWluLgoKVGhvdWdoIGV2ZW4gc28gSSdt
-IG5vdCBzdXJlIHdoYXQgdGhlIGNvbnZlbnRpb24gaXMgZm9yIGNsb2NrcyBsaWtlCnRoZXNlLCB0
-aGUgcjhhNzc5MS5kdHNpIGlzIGluY29uc2lzdGVudCwgYXMgc29tZSBhcmUgZGlzYWJsZWQgd2hp
-bGUKb3RoZXJzIChlLmcuIHRoZSBhdWRpbyBjbG9ja3MpIGFyZSAwaHouIFdvdWxkIGJlIGdvb2Qg
-dG8gZ2V0IHNvbWUgaW5wdXQKb24gdGhhdCByZWdhcmRsZXNzLgoKPiA+IAo+ID4gVXBkYXRlIHRo
-ZSB2YXJpb3VzIGRpc2FibGVkIGV4dGVybmFsIGNsb2NrIG5vZGVzIHRvIGRlZmF1bHQgdG8gYQo+
-ID4gZnJlcXVlbmN5IG9mIDAsIGJ1dCBkb24ndCBkaXNhYmxlIHRoZW0gdG8gcHJldmVudMKgdGhp
-cy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogU2pvZXJkIFNpbW9ucyA8c2pvZXJkLnNpbW9uc0Bj
-b2xsYWJvcmEuY28udWs+Cj4gPiAKPiA+IC0tLQo+ID4gCj4gPiDCoGFyY2gvYXJtL2Jvb3QvZHRz
-L3I4YTc3OTEta29lbHNjaC5kdHMgfCAxICsKPiA+IMKgYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5
-MS1wb3J0ZXIuZHRzwqDCoHwgMSArCj4gPiDCoGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEuZHRz
-acKgwqDCoMKgwqDCoMKgwqB8IDUgKy0tLS0KPiA+IMKgMyBmaWxlcyBjaGFuZ2VkLCAzIGluc2Vy
-dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3
-OTEta29lbHNjaC5kdHMKPiA+IGluZGV4IDFhZGY4NzcuLmRhNTljMjggMTAwNjQ0Cj4gPiAtLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzCj4gPiArKysgYi9hcmNoL2Fy
-bS9ib290L2R0cy9yOGE3NzkxLWtvZWxzY2guZHRzCj4gPiBAQCAtNjYwLDYgKzY2MCw3IEBACj4g
-PiDCoH07Cj4gPiAKPiA+IMKgJnBjaWVfYnVzX2NsayB7Cj4gPiArwqDCoMKgwqDCoMKgwqBjbG9j
-ay1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwPjsKPiA+IMKgwqDCoMKgwqDCoMKgwqBzdGF0dXMgPSAi
-b2theSI7Cj4gPiDCoH07Cj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9y
-OGE3NzkxLXBvcnRlci5kdHMKPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc5MS1wb3J0ZXIu
-ZHRzCj4gPiBpbmRleCA5NTU0ZDEzLi4xOWIyNTdlIDEwMDY0NAo+ID4gLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvcjhhNzc5MS1wb3J0ZXIuZHRzCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9y
-OGE3NzkxLXBvcnRlci5kdHMKPiA+IEBAIC00MTMsNiArNDEzLDcgQEAKPiA+IMKgfTsKPiA+IAo+
-ID4gwqAmcGNpZV9idXNfY2xrIHsKPiA+ICvCoMKgwqDCoMKgwqDCoGNsb2NrLWZyZXF1ZW5jeSA9
-IDwxMDAwMDAwMDA+Owo+ID4gwqDCoMKgwqDCoMKgwqDCoHN0YXR1cyA9ICJva2F5IjsKPiA+IMKg
-fTsKPiA+IAo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEuZHRzaQo+
-ID4gYi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0c2kKPiA+IGluZGV4IDg2OTM4ODguLjY3
-NmRmNjMgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzkxLmR0c2kKPiA+
-ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3OTEuZHRzaQo+ID4gQEAgLTExMDQsOCArMTEw
-NCw3IEBACj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBjaWVfYnVzX2Nsazog
-cGNpZV9idXMgewo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjY2xvY2stY2VsbHMgPSA8MD47Cj4gPiAtwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrLWZyZXF1ZW5j
-eSA9IDwxMDAwMDAwMDA+Owo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbG9jay1mcmVxdWVuY3kgPSA8MD47Cj4gPiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07Cj4gPiAKPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgLyogRXh0ZXJuYWwgU0NJRiBjbG9jayAqLwo+ID4gQEAgLTExMTQsNyAr
-MTExMyw2IEBACj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAjY2xvY2stY2VsbHMgPSA8MD47Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBUaGlzIHZhbHVlIG11c3QgYmUgb3ZlcnJpZGRlbiBieSB0
-aGUKPiA+IGJvYXJkLiAqLwo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgY2xvY2stZnJlcXVlbmN5ID0gPDA+Owo+ID4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Owo+ID4gCj4gPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoC8qIEV4dGVybmFsIFVTQiBjbG9jayAtIGNhbiBiZSBvdmVycmlkZGVu
-IGJ5IHRoZQo+ID4gYm9hcmQgKi8KPiA+IEBAIC0xMTMwLDcgKzExMjgsNiBAQAo+ID4gwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Nsb2NrLWNlbGxzID0g
-PDA+Owo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-LyogVGhpcyB2YWx1ZSBtdXN0IGJlIG92ZXJyaWRkZW4gYnkgdGhlCj4gPiBib2FyZC4gKi8KPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrLWZy
-ZXF1ZW5jeSA9IDwwPjsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgc3RhdHVzID0gImRpc2FibGVkIjsKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgfTsKPiA+IAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBT
-cGVjaWFsIENQRyBjbG9ja3MgKi8KPiA+IC0tCj4gPiAyLjguMC5yYzMKPiBHcntvZXRqZSxlZXRp
-bmd9cywKPiAKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBHZWVydAo+IAo+IC0tCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBM
-aW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51Cj4geC1tNjhrLm9yZwo+IAo+IEluIHBlcnNv
-bmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEK
-PiBoYWNrZXIuIEJ1dAo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNh
-eSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nCj4gbGlrZSB0aGF0Lgo+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAtLSBMaW51
-cyBUb3J2YWxkcwoKLS0gClNqb2VyZCBTaW1vbnMKQ29sbGFib3JhIEx0ZC4K
+On Sat, Apr 02, 2016 at 06:25:46PM +0200, Gary Bisson wrote:
+> Based on i.MX7 Dual with 1GB of RAM.
+> 
+> https://boundarydevices.com/product/nitrogen7/
+> 
+> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> ---
+> 
+> Changes v1 -> v2:
+> - none
+> Changes v2 -> v3:
+> - Fix Nitrogen7 BT UART clock parent
+> - Fix Nitrogen7 lvdo2 node to be always-on
+> 
+> ---
+>  arch/arm/boot/dts/Makefile            |   1 +
+>  arch/arm/boot/dts/imx7d-nitrogen7.dts | 819 ++++++++++++++++++++++++++++++++++
+>  2 files changed, 820 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx7d-nitrogen7.dts
+
+<snip>
+
+> +/ {
+> +	model = "Boundary Devices i.MX7 Nitrogen7 Board";
+> +	compatible = "boundary,imx7d-nitrogen7", "fsl,imx7d";
+> +
+> +	aliases {
+> +		fb_lcd = &lcdif;
+> +		t_lcd = &t_lcd;
+> +	};
+> +
+> +	memory {
+> +		reg = <0x80000000 0x40000000>;
+> +	};
+> +
+> +	backlight_j9 {
+
+Use hyphen instead of underscore in node name.
+
+> +		compatible = "gpio-backlight";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_backlight_j9>;
+> +		gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
+> +		default-on;
+> +	};
+> +
+> +	backlight_j20 {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm1 0 5000000>;
+> +		brightness-levels = <0 4 8 16 32 64 128 255>;
+> +		default-brightness-level = <6>;
+> +		status = "okay";
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+DT maintainers do not like this fake "simple-bus".  Please put all these
+fixed regulators directly under root node in the naming schema below.
+
+	reg_xxx: regulator-xxx {
+		...
+	};
+
+> +
+> +		reg_usb_otg1_vbus: regulator@0 {
+> +			compatible = "regulator-fixed";
+> +			reg = <0>;
+> +			regulator-name = "usb_otg1_vbus";
+> +			regulator-min-microvolt = <5000000>;
+> +			regulator-max-microvolt = <5000000>;
+> +			gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+> +			enable-active-high;
+> +		};
+
+<snip>
+
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart3>;
+> +	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
+> +	control-gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
+> +	uart-has-rs485-half-duplex;
+> +	rs485-mode = <1>;
+
+The above 3 properties are undefined?
+
+> +	status = "okay";
+> +};
+> +
+> +&uart6 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart6>;
+> +	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
+> +	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
+> +	fsl,uart-has-rtscts;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg1 {
+> +	vbus-supply = <&reg_usb_otg1_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg1>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg2 {
+> +	vbus-supply = <&reg_usb_otg2_vbus>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usbotg2>;
+> +	dr_mode = "host";
+> +	status = "okay";
+> +};
+> +
+> +&usdhc1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+> +	vmmc-supply = <&vgen3_reg>;
+> +	bus-width = <4>;
+> +	fsl,tuning-step = <2>;
+> +	wakeup-source;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc2>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +	vmmc-supply = <&reg_wlan>;
+> +	vqmmc-1-8-v;
+
+Unsupported property?
+
+> +	cap-power-off-card;
+> +	keep-power-in-suspend;
+> +	status = "okay";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+Move these two up to the top of property list.
+
+> +	wlcore: wlcore@2 {
+> +		compatible = "ti,wl1271";
+> +		reg = <2>;
+> +		interrupt-parent = <&gpio4>;
+> +		interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+> +		ref-clock-frequency = <38400000>;
+> +	};
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_usdhc3>;
+> +	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
+> +	assigned-clock-rates = <400000000>;
+> +	bus-width = <8>;
+> +	fsl,tuning-step = <2>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&wdog1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_wdog1>;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog_1 &pinctrl_j2>;
+> +
+> +	imx7d-nitrogen7 {
+
+Since commit 5fcdf6a7ed95 (pinctrl: imx: Allow parsing DT without
+function nodes), we can drop this container code to save one level of
+indentation.
+
+> +		pinctrl_hog_1: hoggrp-1 {
+> +			fsl,pins = <
+> +				MX7D_PAD_SD3_RESET_B__GPIO6_IO11	0x5d
+> +				MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x7d
+> +				MX7D_PAD_ECSPI2_MISO__GPIO4_IO22	0x7d
+> +			>;
+> +		};
+> +
+> +		pinctrl_bt_rfkill: btrfkillgrp {
+> +			fsl,pins = <
+> +				MX7D_PAD_ECSPI2_SS0__GPIO4_IO23		0x7d
+> +			>;
+> +		};
+
+Drop unused pinctrl entries, and let's add it when needed.
+
+> +
+> +		pinctrl_enet1: enet1grp {
+> +			fsl,pins = <
+> +				MX7D_PAD_GPIO1_IO10__ENET1_MDIO			0x3
+> +				MX7D_PAD_GPIO1_IO11__ENET1_MDC			0x3
+> +				MX7D_PAD_GPIO1_IO12__CCM_ENET_REF_CLK1		0x3
+> +				MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC	0x71
+> +				MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0	0x71
+> +				MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1	0x71
+> +				MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2	0x71
+> +				MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3	0x71
+> +				MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL	0x71
+> +				MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC	0x71
+> +				MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x11
+> +				MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x11
+> +				MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x11
+> +				MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x71
+> +				MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x11
+> +				MX7D_PAD_SD3_STROBE__GPIO6_IO10			0x75 /* Reset */
+> +			>;
+> +		};
+> +
+> +		pinctrl_flash: flashgrp {
+
+Ditto
+
+> +			fsl,pins = <
+> +				MX7D_PAD_EPDC_DATA00__QSPI_A_DATA0	0x71
+> +				MX7D_PAD_EPDC_DATA01__QSPI_A_DATA1	0x71
+> +				MX7D_PAD_EPDC_DATA02__GPIO2_IO2		0x7d
+> +				MX7D_PAD_EPDC_DATA03__GPIO2_IO3		0x7d
+> +				MX7D_PAD_EPDC_DATA05__QSPI_A_SCLK	0x71
+> +				MX7D_PAD_EPDC_DATA06__GPIO2_IO6		0x71
+> +			>;
+> +		};
+
+<snip>
+
+> +&iomuxc_lpsr {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog_2>;
+> +
+> +	imx7d-nitrogen7 {
+
+Drop this container node.
+
+Shawn
+
+> +		pinctrl_hog_2: hoggrp-2 {
+> +			fsl,pins = <
+> +				MX7D_PAD_GPIO1_IO02__GPIO1_IO2		0x7d
+> +				MX7D_PAD_GPIO1_IO03__CCM_CLKO2		0x7d
+> +			>;
+> +		};
+> +
+> +		pinctrl_backlight_j9: backlightj9grp {
+> +			fsl,pins = <
+> +				MX7D_PAD_GPIO1_IO07__GPIO1_IO7		0x7d
+> +			>;
+> +		};
+> +
+> +		pinctrl_pwm1: pwm1grp {
+> +			fsl,pins = <
+> +				MX7D_PAD_GPIO1_IO01__PWM1_OUT		0x7d
+> +			>;
+> +		};
+> +
+> +		pinctrl_usbotg1: usbotg1grp {
+> +			fsl,pins = <
+> +				MX7D_PAD_GPIO1_IO04__USB_OTG1_OC	0x7d
+> +				MX7D_PAD_GPIO1_IO05__GPIO1_IO5		0x14
+> +			>;
+> +		};
+> +
+> +		pinctrl_wdog1: wdog1grp {
+> +			fsl,pins = <
+> +				MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B	0x75
+> +			>;
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.0
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
