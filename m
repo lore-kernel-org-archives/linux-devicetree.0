@@ -1,62 +1,152 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [v7, 0/5] Fix eSDHC host version register bug
-Date: Wed, 6 Apr 2016 10:14:36 +0200
-Message-ID: <CAPDyKFp8GDzSkpbTKoRL=rwiBrsWmsgN95zB-QJwfZTnq4M8BA@mail.gmail.com>
-References: <1459480051-3701-1-git-send-email-yangbo.lu@nxp.com>
-	<CAPDyKFqgMCvbqMYZ-uM-rTnVvfJkCYbhv2kucCRyNyc9FWoR=Q@mail.gmail.com>
-	<HE1PR04MB0889D75DC56E180D3508E7A1F89F0@HE1PR04MB0889.eurprd04.prod.outlook.com>
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Subject: [PATCH] ASoC: rockchip: i2s: configure the sdio pins'
+	iomux mode
+Date: Wed,  6 Apr 2016 16:38:22 +0800
+Message-ID: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <HE1PR04MB0889D75DC56E180D3508E7A1F89F0-6LN7OEpIatX1kPMWxTxe+c9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM1dQTEkxZZdg@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: heiko@sntech.de, broonie@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->>
->> I was about to queue this for next, when I noticed that checkpatch is
->> complaining/warning lots about these patches. Can you please a round of
->> checkpatch and fix what makes sense.
->>
->> Kind regards
->> Uffe
->
-> [Lu Yangbo-B47093] Sorry about this, Uffe...
+There are 3 i2s sdio pins, which iomux mode is as follows:
 
-No worries!
+ - sdi3_sdo1
+ - sdi2_sdo2
+ - sdi1_sdo3
 
-> Should I ignore the warnings that update MAINTAINERS?
+we need to configure these pins' iomux mode via the GRF register
+when use multi channel playback/capture.
 
-drivers/soc/fsl/guts.c isn't part of the MAINTAINERS file, it should be.
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+---
 
-I also realize that the FREESCALE QUICC ENGINE LIBRARY section
-drivers/soc/fsl/qe/* also need an active maintainer, as it's currently
-orphan.
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |  5 +++
+ sound/soc/rockchip/rockchip_i2s.c                  | 39 +++++++++++++++++++++-
+ sound/soc/rockchip/rockchip_i2s.h                  |  8 +++++
+ 3 files changed, 51 insertions(+), 1 deletion(-)
 
-Perhaps we should have create a new section for drivers/soc/fsl/*
-instead that covers all of the above? Maybe you or Scott are
-interested to pick it up?
-
-I also noted that, "include/linux/fsl/" isn't present in MAINTAINERS,
-please add that as well.
-
-> Regarding the 'undocumented' warning, I will added a patch updates doc before all the patches, Ok?
-
-Yes, good!
-
->
-> Thanks a lot :)
->
-
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+index 6e86d8a..ad72a7d 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+@@ -23,6 +23,11 @@ Required properties:
+ - rockchip,playback-channels: max playback channels, if not set, 8 channels default.
+ - rockchip,capture-channels: max capture channels, if not set, 2 channels default.
+ 
++Required properties for controller which support multi channels playback/capture:
++
++- rockchip,grf: Should be phandle/offset pair. the phandle of the syscon node for GRF register,
++  and the offset of the GRF for control register.
++
+ Example for rk3288 I2S controller:
+ 
+ i2s@ff890000 {
+diff --git a/sound/soc/rockchip/rockchip_i2s.c b/sound/soc/rockchip/rockchip_i2s.c
+index 2f8e204..bc72780 100644
+--- a/sound/soc/rockchip/rockchip_i2s.c
++++ b/sound/soc/rockchip/rockchip_i2s.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include <linux/module.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/delay.h>
+ #include <linux/of_gpio.h>
+ #include <linux/clk.h>
+@@ -33,6 +34,8 @@ struct rk_i2s_dev {
+ 	struct snd_dmaengine_dai_dma_data playback_dma_data;
+ 
+ 	struct regmap *regmap;
++	struct regmap *grf;
++	u32 iocfg_reg;
+ 
+ 	bool is_master_mode;
+ };
+@@ -277,6 +280,29 @@ static int rockchip_i2s_hw_params(struct snd_pcm_substream *substream,
+ 				   I2S_TXCR_VDW_MASK | I2S_TXCR_CSR_MASK,
+ 				   val);
+ 
++	if (!IS_ERR(i2s->grf)) {
++		regmap_read(i2s->regmap, I2S_TXCR, &val);
++		val &= I2S_TXCR_CSR_MASK;
++
++		switch (val) {
++		case I2S_CHN_4:
++			val = I2S_IO_4CH_OUT_6CH_IN;
++			break;
++		case I2S_CHN_6:
++			val = I2S_IO_6CH_OUT_4CH_IN;
++			break;
++		case I2S_CHN_8:
++			val = I2S_IO_8CH_OUT_2CH_IN;
++			break;
++		default:
++			val = I2S_IO_2CH_OUT_8CH_IN;
++			break;
++		}
++
++		regmap_write(i2s->grf, i2s->iocfg_reg,
++			     I2S_IO_DIRECTION_MASK << 16 | val);
++	}
++
+ 	regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_TDL_MASK,
+ 			   I2S_DMACR_TDL(16));
+ 	regmap_update_bits(i2s->regmap, I2S_DMACR, I2S_DMACR_RDL_MASK,
+@@ -478,6 +504,18 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
++	i2s->dev = &pdev->dev;
++
++	i2s->grf = syscon_regmap_lookup_by_phandle(node, "rockchip,grf");
++	if (!IS_ERR(i2s->grf)) {
++		ret = of_property_read_u32_index(node, "rockchip,grf",
++						 1, &i2s->iocfg_reg);
++		if (ret) {
++			dev_err(&pdev->dev, "Can't get iocfg_reg offset\n");
++			return ret;
++		}
++	}
++
+ 	/* try to prepare related clocks */
+ 	i2s->hclk = devm_clk_get(&pdev->dev, "i2s_hclk");
+ 	if (IS_ERR(i2s->hclk)) {
+@@ -517,7 +555,6 @@ static int rockchip_i2s_probe(struct platform_device *pdev)
+ 	i2s->capture_dma_data.addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+ 	i2s->capture_dma_data.maxburst = 4;
+ 
+-	i2s->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, i2s);
+ 
+ 	pm_runtime_enable(&pdev->dev);
+diff --git a/sound/soc/rockchip/rockchip_i2s.h b/sound/soc/rockchip/rockchip_i2s.h
+index dc6e2c7..9a6aabf 100644
+--- a/sound/soc/rockchip/rockchip_i2s.h
++++ b/sound/soc/rockchip/rockchip_i2s.h
+@@ -236,4 +236,12 @@ enum {
+ #define I2S_TXDR	(0x0024)
+ #define I2S_RXDR	(0x0028)
+ 
++/* io direction cfg register */
++#define I2S_IO_DIRECTION_SHIFT	11
++#define I2S_IO_DIRECTION_MASK	(7 << I2S_IO_DIRECTION_SHIFT)
++#define I2S_IO_8CH_OUT_2CH_IN	(0 << I2S_IO_DIRECTION_SHIFT)
++#define I2S_IO_6CH_OUT_4CH_IN	(1 << I2S_IO_DIRECTION_SHIFT)
++#define I2S_IO_4CH_OUT_6CH_IN	(3 << I2S_IO_DIRECTION_SHIFT)
++#define I2S_IO_2CH_OUT_8CH_IN	(7 << I2S_IO_DIRECTION_SHIFT)
++
+ #endif /* _ROCKCHIP_IIS_H */
+-- 
+1.9.1
