@@ -1,28 +1,43 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 7/9] ARM: imx_v6_v7_defconfig: add FT5x06 and TSC2004
- touch support
-Date: Wed, 6 Apr 2016 22:35:48 +0800
-Message-ID: <20160406143548.GN18833@tiger>
-References: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
- <1459614351-16731-1-git-send-email-gary.bisson@boundarydevices.com>
- <1459614351-16731-8-git-send-email-gary.bisson@boundarydevices.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v2 3/5] dmaengine: qcom: bam_dma: add controlled remotely
+ dt property
+Date: Wed, 6 Apr 2016 18:05:18 +0300
+Message-ID: <570525AE.7070700@linaro.org>
+References: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1459896982-30171-4-git-send-email-stanimir.varbanov@linaro.org>
+ <20160405234425.GD11586@vkoul-mobl.iind.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459614351-16731-8-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20160405234425.GD11586@vkoul-mobl.iind.intel.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, Pramod Gurav <gpramod@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 02, 2016 at 06:25:49PM +0200, Gary Bisson wrote:
-> Those two touch controllers are used by Boundary Devices platforms.
+On 04/06/2016 02:44 AM, Vinod Koul wrote:
+> On Wed, Apr 06, 2016 at 01:56:20AM +0300, Stanimir Varbanov wrote:
+>>  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 2 ++
+>>  drivers/dma/qcom/bam_dma.c                             | 7 +++++++
 > 
-> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+> The binding should be a separate patch..
 
-Applied 7 ~ 9, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm not sure, isn't this rule valid only when we introduce the binding
+document? But if you insist I can make a separate patch.
+
+> 
+>>  
+>> +	bdev->controlled_remotely = of_property_read_bool(pdev->dev.of_node,
+>> +						"qcom,controlled-remotely");
+>> +
+> 
+> we need some defaults here, how will this work with boards withe older DT.
+> 
+
+if the introduced property missing from DT node the driver behavior is
+preserved.
+
+-- 
+regards,
+Stan
