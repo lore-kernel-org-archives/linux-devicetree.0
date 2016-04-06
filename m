@@ -1,124 +1,59 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] PCI: imx6: Add reset-gpio-active-high boolean
- property to DT
-Date: Wed, 06 Apr 2016 11:48:20 +0200
-Message-ID: <1459936100.2256.30.camel@pengutronix.de>
-References: <CAOMZO5AnN4_RrA4bksWNmioAP1PCBT1Ax4of_OnoCvG+VXgDUQ@mail.gmail.com>
-	 <1459935244-10077-1-git-send-email-ynezz@true.cz>
+From: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 05/20] PM / devfreq: Add new passive governor
+Date: Wed, 06 Apr 2016 10:06:12 +0000 (GMT)
+Message-ID: <1156624937.169371459937164322.JavaMail.weblogic@ep2mlwas02a>
+Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459935244-10077-1-git-send-email-ynezz-knWk7/PSn+s@public.gmane.org>
+MIME-version: 1.0
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr =?UTF-8?Q?=C5=A0tetiar?= <ynezz-knWk7/PSn+s@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Richard Zhu <Richard.Zhu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Krzysztof =?UTF-8?Q?Ha=C5=82asa?= <khalasa-NlWvg49iv0c@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org
+To: =?utf-8?Q?=EC=B5=9C=EC=B0=AC=EC=9A=B0?= <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?=EB=B0=95=EA=B2=BD=EB=AF=BC?= <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?utf-8?Q?=ED=81=AC=EC=89=AC=EC=8B=9C=ED=86=A0=ED=94=84?= <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org" <m.reichl-SRyzfwRm/0rPTwkrwQOX7A@public.gmane.org>, "tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org" <tjakobi-o02PS0xoJP9W0yFyLvAVXMxlOr/tl8fh@public.gmane.org>, =?utf-8?Q?=EB=8C=80=EC=9D=B8=EA=B8=B0?= <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree@>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, den 06.04.2016, 11:34 +0200 schrieb Petr =C5=A0tetiar:
-> We need that property in order to make the Toradex Apalis SoMs workin=
-g
-> without breaking old DTBs. On Apalis SoMs the GPIO1_IO28 used to PCIe
-> reset is not connected directly to PERST# PCIe signal, but it's ORed
-> with RESETBMCU coming off the PMIC, and thus is inverted, active-high=
-=2E
->=20
-I don't think the commit message should contain references to the
-specific board, as the board implementation is unrelated to the PCIe
-change.
-
-Please just explain why the added property is necessary and why it is
-done this way.
-
-> Signed-off-by: Petr =C5=A0tetiar <ynezz-knWk7/PSn+s@public.gmane.org>
-> ---
->  Changes since v1:
->  =20
->   * Added documentation of reset-gpio and reset-gpio-active-high DT p=
-roperties
->   * Removed unnecessary double negation of GPIO value
->=20
->  Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt |  5 +++++
->  drivers/pci/host/pci-imx6.c                              | 14 ++++++=
-+++++---
->  2 files changed, 16 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt=
- b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 3be80c6..23ecb47 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -19,6 +19,11 @@ Optional properties:
->  - fsl,tx-deemph-gen2-6db: Gen2 (6db) De-emphasis value. Default: 20
->  - fsl,tx-swing-full: Gen2 TX SWING FULL value. Default: 127
->  - fsl,tx-swing-low: TX launch amplitude swing_low value. Default: 12=
-7
-> +- reset-gpio: Should specify the GPIO for PHY reset. Its not polarit=
-y aware
-> +  and defaults to active-low reset sequence (L=3Dreset state, H=3Dop=
-eration state).
-
-This is not a PHY reset GPIO. It's a GPIO controlling the PCI bus devic=
-e
-reset signal.
-
-> +- reset-gpio-active-high: If present then the reset sequence using t=
-he GPIO
-> +  specified in the "reset-gpio" property is reversed (H=3Dreset stat=
-e,
-> +  L=3Doperation state).
-> =20
->  Example:
-> =20
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.=
-c
-> index 2f817fa..17f4cc3 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-> @@ -33,6 +33,7 @@
-> =20
->  struct imx6_pcie {
->  	int			reset_gpio;
-> +	bool			gpio_active_high;
->  	struct clk		*pcie_bus;
->  	struct clk		*pcie_phy;
->  	struct clk		*pcie;
-> @@ -310,9 +311,11 @@ static int imx6_pcie_deassert_core_reset(struct =
-pcie_port *pp)
-> =20
->  	/* Some boards don't have PCIe reset GPIO. */
->  	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
-> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio, 0);
-> +		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> +					imx6_pcie->gpio_active_high);
->  		msleep(100);
-> -		gpio_set_value_cansleep(imx6_pcie->reset_gpio, 1);
-> +		gpio_set_value_cansleep(imx6_pcie->reset_gpio,
-> +					!imx6_pcie->gpio_active_high);
->  	}
->  	return 0;
-> =20
-> @@ -546,9 +549,14 @@ static int __init imx6_pcie_probe(struct platfor=
-m_device *pdev)
-> =20
->  	/* Fetch GPIOs */
->  	imx6_pcie->reset_gpio =3D of_get_named_gpio(np, "reset-gpio", 0);
-> +	imx6_pcie->gpio_active_high =3D of_property_read_bool(np,
-> +						"reset-gpio-active-high");
->  	if (gpio_is_valid(imx6_pcie->reset_gpio)) {
->  		ret =3D devm_gpio_request_one(&pdev->dev, imx6_pcie->reset_gpio,
-> -					    GPIOF_OUT_INIT_LOW, "PCIe reset");
-> +				imx6_pcie->gpio_active_high ?
-> +					GPIOF_OUT_INIT_HIGH :
-> +					GPIOF_OUT_INIT_LOW,
-> +				"PCIe reset");
->  		if (ret) {
->  			dev_err(&pdev->dev, "unable to get reset gpio\n");
->  			return ret;
+PiAgIA0KPiAgVGhpcyBwYXRjaCBhZGRzIHRoZSBuZXcgcGFzc2l2ZSBnb3Zlcm5vciBmb3IgREVW
+RlJFUSBmcmFtZXdvcmsuIFRoZSBmb2xsb3dpbmcNCj4gZ292ZXJub3JzIGFyZSBhbHJlYWR5IHBy
+ZXNlbnQgYW5kIHVzZWQgZm9yIERWRlMgKER5bmFtaWMgVm9sdGFnZSBhbmQgRnJlcXVlbmN5DQo+
+IFNjYWxpbmcpIGRyaXZlcnMuIFRoZSBmb2xsb3dpbmcgZ292ZXJub3JzIGFyZSBpbmRlcGVuZGVu
+dGx5IHVzZWQgZm9yIG9uZSBkZXZpY2UNCltdDQo+IFN1Z2dlc3RlZC1ieTogTXl1bmdqb28gSGFt
+IDxteXVuZ2pvby5oYW1Ac2Ftc3VuZy5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IENoYW53b28gQ2hv
+aSA8Y3cwMC5jaG9pQHNhbXN1bmcuY29tPg0KPiBbdGpha29iaTogUmVwb3J0ZWQgUkNVIGxvY2tp
+bmcgaXNzdWUgYW5kIGN3MDAuY2hvaSBmaXggaXQuXQ0KPiBSZXBvcnRlZC1ieTogVG9iaWFzIEph
+a29iaSA8dGpha29iaUBtYXRoLnVuaS1iaWVsZWZlbGQuZGU+DQoNClNpZ25lZC1vZmYtYnk6IE15
+dW5nSm9vIEhhbSA8bXl1bmdqb28uaGFtQHNhbXN1bmcuY29tPg0KDQpQbGVhc2UganVzdCBlZGl0
+IHRoZSBjb21tZW50IGJlbG93IGFuZCBwdXNoIHRvIHlvdXIgZ2l0IHJlcG8gc28gdGhhdA0KSSBj
+YW4gc2ltcGx5IHB1bGwgeW91ciByZXBvIGEgZGF5IG9yIHR3byBsYXRlci4NCg0KPiAtLS0NCj4g
+IGRyaXZlcnMvZGV2ZnJlcS9LY29uZmlnICAgICAgICAgICAgfCAgIDggKysNCj4gIGRyaXZlcnMv
+ZGV2ZnJlcS9NYWtlZmlsZSAgICAgICAgICAgfCAgIDEgKw0KPiAgZHJpdmVycy9kZXZmcmVxL2dv
+dmVybm9yX3Bhc3NpdmUuYyB8IDIwNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrDQo+ICBpbmNsdWRlL2xpbnV4L2RldmZyZXEuaCAgICAgICAgICAgIHwgIDMzICsrKysrKw0K
+PiAgNCBmaWxlcyBjaGFuZ2VkLCAyNDggaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZGV2ZnJlcS9nb3Zlcm5vcl9wYXNzaXZlLmMNCj4gDQo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2RldmZyZXEvS2NvbmZpZyBiL2RyaXZlcnMvZGV2ZnJlcS9LY29uZmlnDQo+IGlu
+ZGV4IGNlZGRhOGYxZTVlYi4uZDI2MGNkMDIxOWY2IDEwMDY0NA0KW10NCj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZGV2ZnJlcS9NYWtlZmlsZSBiL2RyaXZlcnMvZGV2ZnJlcS9NYWtlZmlsZQ0KPiBp
+bmRleCA4YWY4YWFmOTIyYTguLjI2MzMwODdkNWM2MyAxMDA2NDQNCltdDQo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL2RldmZyZXEvZ292ZXJub3JfcGFzc2l2ZS5jIGIvZHJpdmVycy9kZXZmcmVxL2dv
+dmVybm9yX3Bhc3NpdmUuYw0KPiArCS8qDQo+ICsJICogSWYgdGhlIHBhcmVudCBhbmQgcGFzc2l2
+ZSBkZXZmcmVxIGRldmljZSB1c2VzIHRoZSBPUFAgdGFibGUsDQo+ICsJICogZ2V0IHRoZSBuZXh0
+IGZyZXF1ZW5jeSBieSB1c2luZyB0aGUgT1BQIHRhYmxlLg0KDQpEb2Vzbid0IG5lZWQgY29tbWVu
+dHMgZnJvbSBoZXJlDQo+ICsJICogLSBwYXJlbnQgZGV2ZnJlcSBkZXZpY2UgdXNlcyB0aGUgZ292
+ZXJub3JzIGV4Y2VwdCBmb3IgcGFzc2l2ZS4NCj4gKwkgKiAtIHBhc3NpdmUgZGV2ZnJlcSBkZXZp
+Y2UgdXNlcyB0aGUgcGFzc2l2ZSBnb3Zlcm5vci4NCj4gKwkgKi8NCj4gKw0KPiArCS8qDQpUbyBo
+ZXJlLg0KDQo+ICsJICogRWFjaCBkZXZmcmVxIGhhcyB0aGUgT1BQIHRhYmxlLiBBZnRlciBkZWNp
+ZGluZyB0aGUgbmV3IGZyZXF1ZW5jeQ0KPiArCSAqIGZyb20gdGhlIGdvdmVybm9yIG9mIHBhcmVu
+dCBkZXZmcmVxIGRldmljZSwgdGhlIHBhc3NpdmUgZ292ZXJub3INCj4gKwkgKiBuZWVkIHRvIGdl
+dCB0aGUgaW5kZXggb2YgbmV3IGZyZXF1ZW5jeSBvbiBPUFAgdGFibGUgb2YgcGFyZW50DQo+ICsJ
+ICogZGV2aWNlLiBBbmQgdGhlbiB0aGUgaW5kZXggaXMgdXNlZCBmb3IgZ2V0dGluZyB0aGUgc3Vp
+dGFibGUNCj4gKwkgKiBuZXcgZnJlcXVlbmN5IGZvciBwYXNzaXZlIGRldmZyZXEgZGV2aWNlLg0K
+PiArCSAqLw0KDQpbXQ0KDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2RldmZyZXEuaCBi
+L2luY2x1ZGUvbGludXgvZGV2ZnJlcS5oDQo+IGluZGV4IDk4YzY5OTMwNGUxMi4uMmRlNGUyZWVh
+MTgwIDEwMDY0NA0KW10NCg==
 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
