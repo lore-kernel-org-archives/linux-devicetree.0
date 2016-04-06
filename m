@@ -1,46 +1,62 @@
-From: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
-Subject: Re: [PATCH 2/2] PCI: imx6: Add reset-gpio-active-high boolean
-	property to DT
-Date: Wed, 6 Apr 2016 10:11:40 +0200
-Message-ID: <20160406081140.GR20367@ibawizard.net>
-References: <1459514508-8557-1-git-send-email-ynezz@true.cz> <1459514508-8557-3-git-send-email-ynezz@true.cz> <CAOMZO5AnN4_RrA4bksWNmioAP1PCBT1Ax4of_OnoCvG+VXgDUQ@mail.gmail.com>
-Reply-To: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [v7, 0/5] Fix eSDHC host version register bug
+Date: Wed, 6 Apr 2016 10:14:36 +0200
+Message-ID: <CAPDyKFp8GDzSkpbTKoRL=rwiBrsWmsgN95zB-QJwfZTnq4M8BA@mail.gmail.com>
+References: <1459480051-3701-1-git-send-email-yangbo.lu@nxp.com>
+	<CAPDyKFqgMCvbqMYZ-uM-rTnVvfJkCYbhv2kucCRyNyc9FWoR=Q@mail.gmail.com>
+	<HE1PR04MB0889D75DC56E180D3508E7A1F89F0@HE1PR04MB0889.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOMZO5AnN4_RrA4bksWNmioAP1PCBT1Ax4of_OnoCvG+VXgDUQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Petr =?iso-8859-2?Q?=A9tetiar?= <ynezz@true.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Richard Zhu <Richard.Zhu@freescale.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Tim Harvey <tharvey@gateworks.com>, Krzysztof =?iso-8859-2?Q?Ha=B3asa?= <khalasa@piap.pl>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Stefan Agner <stefan@agner.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <HE1PR04MB0889D75DC56E180D3508E7A1F89F0-6LN7OEpIatX1kPMWxTxe+c9NdZoXdze2vxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yangbo Lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, Scott Wood <scott.wood-3arQi8VN3Tc@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Zhao Qiang <qiang.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Xiaobo Xie <xiaobo.xie-3arQi8VN3Tc@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Yang-Leo Li <leoyang.li-3arQi8VN3Tc@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM1dQTEkxZZdg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fabio Estevam <festevam@gmail.com> [2016-04-05 12:46:53]:
+>>
+>> I was about to queue this for next, when I noticed that checkpatch is
+>> complaining/warning lots about these patches. Can you please a round of
+>> checkpatch and fix what makes sense.
+>>
+>> Kind regards
+>> Uffe
+>
+> [Lu Yangbo-B47093] Sorry about this, Uffe...
 
-> > @@ -546,9 +549,14 @@ static int __init imx6_pcie_probe(struct platform_device *pdev)
-> >
-> >         /* Fetch GPIOs */
-> >         imx6_pcie->reset_gpio = of_get_named_gpio(np, "reset-gpio", 0);
-> > +       imx6_pcie->gpio_active_high = of_property_read_bool(np,
-> > +                                               "reset-gpio-active-high");
-> 
-> You need to document reset-gpio-active-high property in
-> Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt.
+No worries!
 
-Is something like this fine?
+> Should I ignore the warnings that update MAINTAINERS?
 
-diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-index 3be80c6..23ecb47 100644
---- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-@@ -19,6 +19,11 @@ Optional properties:
- - fsl,tx-deemph-gen2-6db: Gen2 (6db) De-emphasis value. Default: 20
- - fsl,tx-swing-full: Gen2 TX SWING FULL value. Default: 127
- - fsl,tx-swing-low: TX launch amplitude swing_low value. Default: 127
-+- reset-gpio: Should specify the GPIO for PHY reset. Its not polarity aware
-+  and defaults to active-low reset sequence (L=reset state, H=operation state).
-+- reset-gpio-active-high: If present then the reset sequence using the GPIO
-+  specified in the "reset-gpio" property is reversed (H=reset state,
-+  L=operation state).
+drivers/soc/fsl/guts.c isn't part of the MAINTAINERS file, it should be.
 
--- ynezz
+I also realize that the FREESCALE QUICC ENGINE LIBRARY section
+drivers/soc/fsl/qe/* also need an active maintainer, as it's currently
+orphan.
+
+Perhaps we should have create a new section for drivers/soc/fsl/*
+instead that covers all of the above? Maybe you or Scott are
+interested to pick it up?
+
+I also noted that, "include/linux/fsl/" isn't present in MAINTAINERS,
+please add that as well.
+
+> Regarding the 'undocumented' warning, I will added a patch updates doc before all the patches, Ok?
+
+Yes, good!
+
+>
+> Thanks a lot :)
+>
+
+Kind regards
+Uffe
