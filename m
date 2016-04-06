@@ -1,110 +1,62 @@
-From: "R, Vignesh" <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
- Flash Controller.
-Date: Wed, 6 Apr 2016 22:25:29 +0530
-Message-ID: <57053F81.70204@ti.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
- <1452486886-8049-2-git-send-email-marex@denx.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/2] thermal: generic-adc: Add DT binding for ADC based
+ thermal sensor driver
+Date: Wed, 6 Apr 2016 22:18:12 +0530
+Message-ID: <57053DCC.60708@nvidia.com>
+References: <1459936986-2839-1-git-send-email-ldewangan@nvidia.com> <20160406160126.GA638@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1452486886-8049-2-git-send-email-marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20160406160126.GA638@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: rui.zhang@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Hi Eduardo,
+Thanks for review.
 
-I encountered a issue with this driver while testing.
+On Wednesday 06 April 2016 09:31 PM, Eduardo Valentin wrote:
+> On Wed, Apr 06, 2016 at 03:33:05PM +0530, Laxman Dewangan wrote:
+>> +- step-temperature:	     The temperature steps for the reading ADC
+>> +			     value in millicelsius.
+> How about when you have a sensor that does not have a nice linear
+> stepping correlation ?
 
-On 1/11/2016 10:04 AM, Marek Vasut wrote:
-> From: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Add support for the Cadence QSPI controller. This controller is
-> present in the Altera SoCFPGA SoCs and this driver has been tested
-> on the Cyclone V SoC.
+Here just temp is stepping but ADC reading is not in linear. So temp vs 
+adc value is not linear.
+Just making the table that temp vs adc value where temp is in equally 
+stepped.
 
+if something is not possible for few steps than that can be intrapolate 
+here to get this.
 
-> +static void cqspi_switch_cs(struct spi_nor *nor)
-> +{
-> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
-> +	struct cqspi_st *cqspi = f_pdata->cqspi;
-> +	void __iomem *iobase = cqspi->iobase;
-> +	unsigned int reg;
-> +
-> +	cqspi_controller_enable(cqspi, 0);
-> +
-> +	/* configure page size and block size. */
-> +	reg = readl(iobase + CQSPI_REG_SIZE);
-> +	reg &= ~(CQSPI_REG_SIZE_PAGE_MASK << CQSPI_REG_SIZE_PAGE_LSB);
-> +	reg &= ~(CQSPI_REG_SIZE_BLOCK_MASK << CQSPI_REG_SIZE_BLOCK_LSB);
-> +	reg &= ~CQSPI_REG_SIZE_ADDRESS_MASK;
-> +	reg |= (nor->page_size << CQSPI_REG_SIZE_PAGE_LSB);
-> +	reg |= (ilog2(nor->mtd.erasesize) << CQSPI_REG_SIZE_BLOCK_LSB);
-> +	reg |= (nor->addr_width - 1);
-> +	writel(reg, iobase + CQSPI_REG_SIZE);
-> +
+Other way as you said: two dimensional. You mean <temp ADC-value> pair 
+for the table?
 
-Page size and block size are configured here...
+This is also possible and on this case, we will not need lower/upper and 
+step temperature.
+Table will provide all the information.
 
-> +	/* configure the chip select */
-> +	cqspi_chipselect(nor);
-> +
-> +	cqspi_controller_enable(cqspi, 1);
-> +}
-> +
-> +static int cqspi_prep(struct spi_nor *nor, enum spi_nor_ops ops)
-> +{
-> +	struct cqspi_flash_pdata *f_pdata = nor->priv;
-> +	struct cqspi_st *cqspi = f_pdata->cqspi;
-> +	const unsigned int sclk = f_pdata->clk_rate;
-> +
-> +	/* Switch chip select. */
-> +	if (cqspi->current_cs != f_pdata->cs) {
-> +		cqspi->current_cs = f_pdata->cs;
-> +		cqspi_switch_cs(nor);
+Also, I assume that sensor is negative coefficients. Temp increases->ADC 
+read value decreases.
 
-cqspi_switch_cs(nor) is called from cqspi_prep(). And is called only
-once for a given slave (assuming only one slave on the QSPI bus)
+Should we also support positive coefficient relation?
 
-> +	}
-> +
-> +	/* Setup baudrate divisor and delays */
-> +	if (cqspi->sclk != sclk) {
-> +		cqspi->sclk = sclk;
-> +		cqspi_controller_enable(cqspi, 0);
-> +		cqspi_config_baudrate_div(cqspi, sclk);
-> +		cqspi_delay(nor, sclk);
-> +		cqspi_readdata_capture(cqspi, 1, f_pdata->read_delay);
-> +		cqspi_controller_enable(cqspi, 1);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cqspi_read_reg(struct spi_nor *nor, u8 opcode, u8 *buf, int len)
-> +{
-> +	int ret;
-> +
-> +	ret = cqspi_set_protocol(nor, nor->reg_proto);
-> +	if (ret)
-> +		return ret;
-> +
-> +	cqspi_prep(nor, SPI_NOR_OPS_READ);
+> +			writable;
+> Not sure about writable property, where is it described?
+It is from my testing, not standard.  I will remove it.
+>> +		};
+>> +	};
+>> +
+>> +	cooling-maps {
+>> +		map0 {
+>> +			trip = <&therm_est_trip>;
+>> +			cooling-device = <&dummy_cool_dev THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> +			contribution = <100>;
+>> +			cdev-type = "therm_est_activ";
+>
+> Not sure about cdev-type property, where is it described?
+ From my testing only. Will remove it.
 
-cqspi_read_reg() is first called to read JEDEC ID, this calls
-cqspi_prep() for first time. But nor->page_size, nor->mtd.erasesize are
-not yet populated. Therefore cqspi_switch_cs() will not populate
-CQSPI_REG_SIZE with correct values.
-I think its better to configure this register each time during
-read/write ops.
-
-Regards
-Vignesh
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
