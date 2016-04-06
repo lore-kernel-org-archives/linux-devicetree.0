@@ -1,80 +1,96 @@
-From: Sreedhar Sambangi <ssambang@codeaurora.org>
-Subject: Re: [PATCH 1/2] qcom: ipq4019: Add regulator support to DK04 device
- tree
-Date: Tue, 05 Apr 2016 21:55:07 -0700
-Message-ID: <a15ae971ac4105d0f9e9e74a7cf0f50b@codeaurora.org>
-References: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
- <20160405055906.GB2639@hector>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [RESEND PATCH v3 2/2] dmaengine: vdma: Fix race condition in Non-SG mode
+Date: Wed, 6 Apr 2016 10:38:09 +0530
+Message-ID: <1459919289-5654-2-git-send-email-appanad@xilinx.com>
+References: <1459919289-5654-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20160405055906.GB2639@hector>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1459919289-5654-1-git-send-email-appanad@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, svemula@xilinx.com, anirudh@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2016-04-04 22:59, Andy Gross wrote:
-> On Mon, Apr 04, 2016 at 02:08:10PM -0700, Sreedhar Sambangi wrote:
->>     This adds the regulator nodes to DK04 device tree to support
->> 
->> Change-Id: I9c1df0e720a330bf6db1889fd2247f6a70ea6faa
->> Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
->> ---
->>  .../bindings/regulator/ipq4019-regulator.txt          | 19 
->> +++++++++++++++++++
->>  arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi         | 11 
->> +++++++++++
->>  2 files changed, 30 insertions(+)
->>  create mode 100644 
->> Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt 
->> b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
->> new file mode 100644
->> index 0000000..9d934a4
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
->> @@ -0,0 +1,19 @@
->> +* Qualcomm Technologies, Inc. IPQ4019 regulators
->> +
->> +Required properties:
->> +- compatible		: Must be "regulator-ipq4019".
->> +- states		: Selection of available voltages and corresponding values
->> +- reg			: Register address for controlling LDO
->> +- mask			: Mask value for switching voltages
->> +Example:
-> 
-> How many LDOs are there on the IPQ4019?  Can you document all of the 
-> supplies?
-> You can figure this out by looking for the vdd pins in the chip 
-> documentation
-> 
-In this Chip , We only have one Software programmable LDO used for SD 
-/eMMC. The other LDO's are with fixed voltage.
+When VDMA is configured in  Non-sg mode
+Users can queue descriptors greater than h/w configured frames.
 
->> +
->> +	vccq_sd0: regulator@0 {
->> +		compatible = "qcom,regulator-ipq4019";
->> +		regulator-name = "SD0 VccQ";
->> +		regulator-min-microvolt = <1800000>;
->> +		regulator-max-microvolt = <3000000>;
->> +		states = <3000000 0x3
->> +			1800000 0x1>;
-> 
-> So there are only 2 states?  No linear range from 1.8 to 3.3?
+Current driver allows the user to queue descriptors upto h/w configured.
+Which is wrong for non-sg mode configuration.
 
-Currently this LDO can support [1.5, 1.8, 2.5 and 3] but for the SD / 
-eMMC scenario, we use only two states.
+This patch fixes this issue.
 
-> 
->> +		reg = <0x01948000 0x4>;
->> +		mask = <0x3>;
->> +	};
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes for v3:
+---> New patch.
 
+ drivers/dma/xilinx/xilinx_vdma.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/dma/xilinx/xilinx_vdma.c b/drivers/dma/xilinx/xilinx_vdma.c
+index abe915c..b873d98 100644
+--- a/drivers/dma/xilinx/xilinx_vdma.c
++++ b/drivers/dma/xilinx/xilinx_vdma.c
+@@ -209,6 +209,7 @@ struct xilinx_vdma_tx_descriptor {
+  * @flush_on_fsync: Flush on Frame sync
+  * @desc_pendingcount: Descriptor pending count
+  * @ext_addr: Indicates 64 bit addressing is supported by dma channel
++ * @desc_submitcount: Descriptor h/w submitted count
+  */
+ struct xilinx_vdma_chan {
+ 	struct xilinx_vdma_device *xdev;
+@@ -233,6 +234,7 @@ struct xilinx_vdma_chan {
+ 	bool flush_on_fsync;
+ 	u32 desc_pendingcount;
+ 	bool ext_addr;
++	u32 desc_submitcount;
+ };
+ 
+ /**
+@@ -716,9 +718,10 @@ static void xilinx_vdma_start_transfer(struct xilinx_vdma_chan *chan)
+ 		struct xilinx_vdma_tx_segment *segment, *last = NULL;
+ 		int i = 0;
+ 
+-		list_for_each_entry(desc, &chan->pending_list, node) {
+-			segment = list_first_entry(&desc->segments,
+-					   struct xilinx_vdma_tx_segment, node);
++		if (chan->desc_submitcount < chan->num_frms)
++			i = chan->desc_submitcount;
++
++		list_for_each_entry(segment, &desc->segments, node) {
+ 			if (chan->ext_addr)
+ 				vdma_desc_write_64(chan,
+ 					XILINX_VDMA_REG_START_ADDRESS_64(i++),
+@@ -742,8 +745,17 @@ static void xilinx_vdma_start_transfer(struct xilinx_vdma_chan *chan)
+ 		vdma_desc_write(chan, XILINX_VDMA_REG_VSIZE, last->hw.vsize);
+ 	}
+ 
+-	list_splice_tail_init(&chan->pending_list, &chan->active_list);
+-	chan->desc_pendingcount = 0;
++	if (!chan->has_sg) {
++		list_del(&desc->node);
++		list_add_tail(&desc->node, &chan->active_list);
++		chan->desc_submitcount++;
++		chan->desc_pendingcount--;
++		if (chan->desc_submitcount == chan->num_frms)
++			chan->desc_submitcount = 0;
++	} else {
++		list_splice_tail_init(&chan->pending_list, &chan->active_list);
++		chan->desc_pendingcount = 0;
++	}
+ }
+ 
+ /**
+@@ -927,7 +939,8 @@ append:
+ 	list_add_tail(&desc->node, &chan->pending_list);
+ 	chan->desc_pendingcount++;
+ 
+-	if (unlikely(chan->desc_pendingcount > chan->num_frms)) {
++	if (chan->has_sg &&
++	    unlikely(chan->desc_pendingcount > chan->num_frms)) {
+ 		dev_dbg(chan->dev, "desc pendingcount is too high\n");
+ 		chan->desc_pendingcount = chan->num_frms;
+ 	}
 -- 
--Sree
+2.1.2
