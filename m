@@ -1,51 +1,90 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] phy: rockchip-dp: should be a child device of the GRF
-Date: Wed, 06 Apr 2016 13:38:37 -0700
-Message-ID: <3485892.5WC9EhQffY@phil>
-References: <1458854943-17388-1-git-send-email-heiko@sntech.de>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH v3 1/5] Documentation: DT: vdma: Rename vdma-chan prefix
+ to dma-chan
+Date: Wed, 6 Apr 2016 23:16:11 +0200
+Message-ID: <57057C9B.8040804@metafoo.de>
+References: <1459959335-24083-1-git-send-email-appanad@xilinx.com>
+ <1459959335-24083-2-git-send-email-appanad@xilinx.com>
+ <20160406162022.GS23198@xsjsorenbubuntu>
+ <C246CAC1457055469EF09E3A7AC4E11A4A57364B@XAP-PVEXMBX01.xlnx.xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458854943-17388-1-git-send-email-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A57364B@XAP-PVEXMBX01.xlnx.xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Srikanth Vemula <svemula@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengin>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-Am Donnerstag, 24. M=E4rz 2016, 22:29:01 schrieb Heiko Stuebner:
-> The displayport-phy is fully enclosed in the general register files (=
-GRF).
-> Therefore as seen from the device-tree it shouldn't be a separate
-> platform- device but instead a sub-device of the GRF - using the
-> simply-mfd mechanism.
+On 04/06/2016 06:25 PM, Appana Durga Kedareswara Rao wrote:
+> Hi Soren,
 >=20
-> The driver entered the kernel in the current merge-window, so we can =
-still
-> adapt the binding without needing a fallback, as the binding hasn't b=
-een
-> released with a full kernel yet.
 >=20
-> While the edp phy is fully part of the GRF, it doesn't have any separ=
-ate
-> register set there, so doesn't get any register-area assigned.
->=20
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-
-could you please look at taking these patches into the 4.6-rc kernel as=
- fixes=20
-please. I'd really like to not having to keep the old interface around =
-and=20
-currently we still can just convert without keeping backward compatibil=
-ity.
-
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+>> -----Original Message-----
+>> From: S=C3=B6ren Brinkmann [mailto:soren.brinkmann@xilinx.com]
+>> Sent: Wednesday, April 06, 2016 9:50 PM
+>> To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
+>> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
+>> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
+>> <michals@xilinx.com>; vinod.koul@intel.com; dan.j.williams@intel.com=
+;
+>> Appana Durga Kedareswara Rao <appanad@xilinx.com>;
+>> moritz.fischer@ettus.com; laurent.pinchart@ideasonboard.com;
+>> luis@debethencourt.com; Srikanth Vemula <svemula@xilinx.com>; Anirud=
+ha
+>> Sarangi <anirudh@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+>> dmaengine@vger.kernel.org
+>> Subject: Re: [PATCH v3 1/5] Documentation: DT: vdma: Rename vdma-cha=
 n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> prefix to dma-chan
+>>
+>> On Wed, 2016-04-06 at 21:45:31 +0530, Kedareswara rao Appana wrote:
+>>> This patch renames the vdma-mm2s-channel/vdma-s2mm-channel
+>>> property with dma-mm2s-channel/dma-s2mm-channel to sync with the
+>>> driver.
+>>>
+>>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+>>> ---
+>>> Changes for v3:
+>>> ---> New patch.
+>>>
+>>>  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 8
+>>> ++++----
+>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>>> b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>>> index a86737c..762938f 100644
+>>> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>>> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+>>> @@ -24,8 +24,8 @@ Optional properties:
+>>>  	{3}, flush s2mm channel
+>>>
+>>>  Required child node properties:
+>>> -- compatible: It should be either "xlnx,axi-vdma-mm2s-channel" or
+>>> -	"xlnx,axi-vdma-s2mm-channel".
+>>> +- compatible: It should be either "xlnx,axi-dma-mm2s-channel" or
+>>> +	"xlnx,axi-dma-s2mm-channel".
+>>
+>> This change is not backwards compatible and breaks every user of the=
+ current
+>> binding.
+>=20
+> This commit http://git.kernel.org/cgit/linux/kernel/git/vkoul/slave-d=
+ma.git/commit/?h=3Dnext&id=3D8e66e7d682b04f7141f8ae666908c8dcd7fc0bfa=20
+> Renames xilinx_vdma_ prefix to xilinx_dma which includes renaming of =
+the above properties.
+> The patch (dmaengine: vdma: Rename xilinx_vdma_ prefix to xilinx_dma)=
+ already got applied in the dma-next tree.
+> That's why sent this patch to sync with the current driver I mean lat=
+est driver.
+
+The correct solution for this is to revert that part of the change ASAP=
+,
+since, as Soeren pointed out, it breaks all existing users.
+
+Thanks,
+- Lars
