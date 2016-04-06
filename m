@@ -1,90 +1,64 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH v3 1/5] Documentation: DT: vdma: Rename vdma-chan prefix
- to dma-chan
-Date: Wed, 6 Apr 2016 23:16:11 +0200
-Message-ID: <57057C9B.8040804@metafoo.de>
-References: <1459959335-24083-1-git-send-email-appanad@xilinx.com>
- <1459959335-24083-2-git-send-email-appanad@xilinx.com>
- <20160406162022.GS23198@xsjsorenbubuntu>
- <C246CAC1457055469EF09E3A7AC4E11A4A57364B@XAP-PVEXMBX01.xlnx.xilinx.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ALSA: pcm: Allow 32 bit sample format in IEC958 channel
+ status helper" to the asoc tree
+Date: Wed, 06 Apr 2016 14:42:18 -0700
+Message-ID: <E1anvDO-0008I3-LI@finisterre>
+References: <44ee7ac5c0ddb4d25ac1bd4f189d328f8205e4a0.1459431292.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <C246CAC1457055469EF09E3A7AC4E11A4A57364B@XAP-PVEXMBX01.xlnx.xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>, Soren Brinkmann <sorenb@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, Michal Simek <michals@xilinx.com>, "vinod.koul@intel.com" <vinod.koul@intel.com>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, "moritz.fischer@ettus.com" <moritz.fischer@ettus.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "luis@debethencourt.com" <luis@debethencourt.com>, Srikanth Vemula <svemula@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengin>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <44ee7ac5c0ddb4d25ac1bd4f189d328f8205e4a0.1459431292.git.jsarha@ti.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jyri Sarha <jsarha@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, liam.r.girdwood@linux.intel.com, tomi.valkeinen@ti.com, arnaud.pouliquen@st.com, dri-devel@lists.freedesktop.org, peter.ujfalusi@ti.com, tony@atomide.com, broonie@kernel.org, bcousson@baylibre.com, rmk+kernel@arm.linux.org.uk, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/2016 06:25 PM, Appana Durga Kedareswara Rao wrote:
-> Hi Soren,
->=20
->=20
->> -----Original Message-----
->> From: S=C3=B6ren Brinkmann [mailto:soren.brinkmann@xilinx.com]
->> Sent: Wednesday, April 06, 2016 9:50 PM
->> To: Appana Durga Kedareswara Rao <appanad@xilinx.com>
->> Cc: robh+dt@kernel.org; pawel.moll@arm.com; mark.rutland@arm.com;
->> ijc+devicetree@hellion.org.uk; galak@codeaurora.org; Michal Simek
->> <michals@xilinx.com>; vinod.koul@intel.com; dan.j.williams@intel.com=
-;
->> Appana Durga Kedareswara Rao <appanad@xilinx.com>;
->> moritz.fischer@ettus.com; laurent.pinchart@ideasonboard.com;
->> luis@debethencourt.com; Srikanth Vemula <svemula@xilinx.com>; Anirud=
-ha
->> Sarangi <anirudh@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
->> dmaengine@vger.kernel.org
->> Subject: Re: [PATCH v3 1/5] Documentation: DT: vdma: Rename vdma-cha=
-n
->> prefix to dma-chan
->>
->> On Wed, 2016-04-06 at 21:45:31 +0530, Kedareswara rao Appana wrote:
->>> This patch renames the vdma-mm2s-channel/vdma-s2mm-channel
->>> property with dma-mm2s-channel/dma-s2mm-channel to sync with the
->>> driver.
->>>
->>> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
->>> ---
->>> Changes for v3:
->>> ---> New patch.
->>>
->>>  Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt | 8
->>> ++++----
->>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->>> b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->>> index a86737c..762938f 100644
->>> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->>> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
->>> @@ -24,8 +24,8 @@ Optional properties:
->>>  	{3}, flush s2mm channel
->>>
->>>  Required child node properties:
->>> -- compatible: It should be either "xlnx,axi-vdma-mm2s-channel" or
->>> -	"xlnx,axi-vdma-s2mm-channel".
->>> +- compatible: It should be either "xlnx,axi-dma-mm2s-channel" or
->>> +	"xlnx,axi-dma-s2mm-channel".
->>
->> This change is not backwards compatible and breaks every user of the=
- current
->> binding.
->=20
-> This commit http://git.kernel.org/cgit/linux/kernel/git/vkoul/slave-d=
-ma.git/commit/?h=3Dnext&id=3D8e66e7d682b04f7141f8ae666908c8dcd7fc0bfa=20
-> Renames xilinx_vdma_ prefix to xilinx_dma which includes renaming of =
-the above properties.
-> The patch (dmaengine: vdma: Rename xilinx_vdma_ prefix to xilinx_dma)=
- already got applied in the dma-next tree.
-> That's why sent this patch to sync with the current driver I mean lat=
-est driver.
-
-The correct solution for this is to revert that part of the change ASAP=
-,
-since, as Soeren pointed out, it breaks all existing users.
-
-Thanks,
-- Lars
+VGhlIHBhdGNoCgogICBBTFNBOiBwY206IEFsbG93IDMyIGJpdCBzYW1wbGUgZm9ybWF0IGluIElF
+Qzk1OCBjaGFubmVsIHN0YXR1cyBoZWxwZXIKCmhhcyBiZWVuIGFwcGxpZWQgdG8gdGhlIGFzb2Mg
+dHJlZSBhdAoKICAgZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
+L2Jyb29uaWUvc291bmQuZ2l0IAoKQWxsIGJlaW5nIHdlbGwgdGhpcyBtZWFucyB0aGF0IGl0IHdp
+bGwgYmUgaW50ZWdyYXRlZCBpbnRvIHRoZSBsaW51eC1uZXh0CnRyZWUgKHVzdWFsbHkgc29tZXRp
+bWUgaW4gdGhlIG5leHQgMjQgaG91cnMpIGFuZCBzZW50IHRvIExpbnVzIGR1cmluZwp0aGUgbmV4
+dCBtZXJnZSB3aW5kb3cgKG9yIHNvb25lciBpZiBpdCBpcyBhIGJ1ZyBmaXgpLCBob3dldmVyIGlm
+CnByb2JsZW1zIGFyZSBkaXNjb3ZlcmVkIHRoZW4gdGhlIHBhdGNoIG1heSBiZSBkcm9wcGVkIG9y
+IHJldmVydGVkLiAgCgpZb3UgbWF5IGdldCBmdXJ0aGVyIGUtbWFpbHMgcmVzdWx0aW5nIGZyb20g
+YXV0b21hdGVkIG9yIG1hbnVhbCB0ZXN0aW5nCmFuZCByZXZpZXcgb2YgdGhlIHRyZWUsIHBsZWFz
+ZSBlbmdhZ2Ugd2l0aCBwZW9wbGUgcmVwb3J0aW5nIHByb2JsZW1zIGFuZApzZW5kIGZvbGxvd3Vw
+IHBhdGNoZXMgYWRkcmVzc2luZyBhbnkgaXNzdWVzIHRoYXQgYXJlIHJlcG9ydGVkIGlmIG5lZWRl
+ZC4KCklmIGFueSB1cGRhdGVzIGFyZSByZXF1aXJlZCBvciB5b3UgYXJlIHN1Ym1pdHRpbmcgZnVy
+dGhlciBjaGFuZ2VzIHRoZXkKc2hvdWxkIGJlIHNlbnQgYXMgaW5jcmVtZW50YWwgdXBkYXRlcyBh
+Z2FpbnN0IGN1cnJlbnQgZ2l0LCBleGlzdGluZwpwYXRjaGVzIHdpbGwgbm90IGJlIHJlcGxhY2Vk
+LgoKUGxlYXNlIGFkZCBhbnkgcmVsZXZhbnQgbGlzdHMgYW5kIG1haW50YWluZXJzIHRvIHRoZSBD
+Q3Mgd2hlbiByZXBseWluZwp0byB0aGlzIG1haWwuCgpUaGFua3MsCk1hcmsKCkZyb20gNGE0NjJj
+ZTA4NGQ1YmViOTJjZmM2OGY1M2Y4OGMwMzVjODJlNmI1OSBNb24gU2VwIDE3IDAwOjAwOjAwIDIw
+MDEKRnJvbTogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNvbT4KRGF0ZTogVGh1LCAzMSBNYXIgMjAx
+NiAxNjozNTo1OSArMDMwMApTdWJqZWN0OiBbUEFUQ0hdIEFMU0E6IHBjbTogQWxsb3cgMzIgYml0
+IHNhbXBsZSBmb3JtYXQgaW4gSUVDOTU4IGNoYW5uZWwKIHN0YXR1cyBoZWxwZXIKClRyZWF0IDMy
+IGJpdCBzYW1wbGUgd2lkdGggYXMgaWYgaXQgd2FzIDI0IGJpdHMgd2hlbiBnZW5lcmF0aW5nIElF
+Qzk1OApjaGFubmVsIHN0YXR1cyBiaXRzLiBPbiBzb21lIHBsYXRmb3JtcyAyNCBzYW1wbGUgd2lk
+dGggaXMgcHJvYmxlbWF0aWMKYW5kIHRvIGdldCBmdWxsIDI0IGJpdCBwcmVjaXNpb24gYSAzMiBi
+aXQgZm9ybWF0LCB1c2luZyBvbmx5IHRoZSAyNAptb3N0IHNpZ25pZmljYW50IGJpdHMsIG1heSBo
+YXZlIHRvIGJlIHVzZWQuCgpTaWduZWQtb2ZmLWJ5OiBKeXJpIFNhcmhhIDxqc2FyaGFAdGkuY29t
+PgpSZXZpZXdlZC1ieTogVGFrYXNoaSBJd2FpIDx0aXdhaUBzdXNlLmRlPgpTaWduZWQtb2ZmLWJ5
+OiBNYXJrIEJyb3duIDxicm9vbmllQGtlcm5lbC5vcmc+Ci0tLQogc291bmQvY29yZS9wY21faWVj
+OTU4LmMgfCAxICsKIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQoKZGlmZiAtLWdpdCBh
+L3NvdW5kL2NvcmUvcGNtX2llYzk1OC5jIGIvc291bmQvY29yZS9wY21faWVjOTU4LmMKaW5kZXgg
+ZTAxNjg3MWE5NzhmLi41ZTZhZWQ2NGY0NTEgMTAwNjQ0Ci0tLSBhL3NvdW5kL2NvcmUvcGNtX2ll
+Yzk1OC5jCisrKyBiL3NvdW5kL2NvcmUvcGNtX2llYzk1OC5jCkBAIC01OSw2ICs1OSw3IEBAIHN0
+YXRpYyBpbnQgY3JlYXRlX2llYzk1OF9jb25zdW1lcih1aW50IHJhdGUsIHVpbnQgc2FtcGxlX3dp
+ZHRoLAogCQkJICAgICBJRUM5NThfQUVTNF9DT05fTUFYX1dPUkRMRU5fMjQ7CiAJCQlicmVhazsK
+IAkJY2FzZSAyNDoKKwkJY2FzZSAzMjogLyogQXNzdW1lIDI0LWJpdCB3aWR0aCBmb3IgMzItYml0
+IHNhbXBsZXMuICovCiAJCQl3cyA9IElFQzk1OF9BRVM0X0NPTl9XT1JETEVOXzI0XzIwIHwKIAkJ
+CSAgICAgSUVDOTU4X0FFUzRfQ09OX01BWF9XT1JETEVOXzI0OwogCQkJYnJlYWs7Ci0tIAoyLjgu
+MC5yYzMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
