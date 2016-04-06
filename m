@@ -1,35 +1,28 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: [PATCH V2 5/5] iommu/msm: Remove driver BROKEN
-Date: Wed,  6 Apr 2016 19:59:35 +0530
-Message-ID: <1459952975-1250-6-git-send-email-sricharan@codeaurora.org>
-References: <1459952975-1250-1-git-send-email-sricharan@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1459952975-1250-1-git-send-email-sricharan@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, robin.murphy@arm.com, robdclark@gmail.com, joro@8bytes.org, srinivas.kandagatla@linaro.org, laurent.pinchart@ideasonboard.com, Will.Deacon@arm.com, stepanm@codeaurora.org, treding@nvidia.com
-Cc: sricharan@codeaurora.org
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 7/9] ARM: imx_v6_v7_defconfig: add FT5x06 and TSC2004
+ touch support
+Date: Wed, 6 Apr 2016 22:35:48 +0800
+Message-ID: <20160406143548.GN18833@tiger>
+References: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1459614351-16731-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1459614351-16731-8-git-send-email-gary.bisson@boundarydevices.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1459614351-16731-8-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that the driver is DT adapted, bus_set_iommu gets called only
-when on compatible matching. So the driver should not break multiplatform
-builds now. So remove the BROKEN config.
+On Sat, Apr 02, 2016 at 06:25:49PM +0200, Gary Bisson wrote:
+> Those two touch controllers are used by Boundary Devices platforms.
+> 
+> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 
-Signed-off-by: Sricharan R <sricharan@codeaurora.org>
----
- drivers/iommu/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-index 1f5d496..b81a0bb 100644
---- a/drivers/iommu/Kconfig
-+++ b/drivers/iommu/Kconfig
-@@ -90,7 +90,6 @@ config MSM_IOMMU
- 	bool "MSM IOMMU Support"
- 	depends on ARM
- 	depends on ARCH_MSM8X60 || ARCH_MSM8960 || COMPILE_TEST
--	depends on BROKEN
- 	select IOMMU_API
- 	select IOMMU_IO_PGTABLE_ARMV7S
- 	help
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Applied 7 ~ 9, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
