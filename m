@@ -1,54 +1,27 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Wed, 6 Apr 2016 09:52:57 +0100
-Message-ID: <20160406085257.GA22341@red-moon>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
- <20160404225200.GA1615@svinekod>
- <CACRpkdb=Ef1-g-r9NW-4_xeKdke0FFhnN+JYPjVKog3L4At8Lg@mail.gmail.com>
- <20160405165935.GA5456@sirena.org.uk>
- <CAE1zot+-=JQkMqRPpNtCk1MksRf9kOQ1G216kSXszDjn2z4d=g@mail.gmail.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx7d: add lcdif support
+Date: Wed, 6 Apr 2016 17:06:16 +0800
+Message-ID: <20160406090615.GK18833@tiger>
+References: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1459614351-16731-1-git-send-email-gary.bisson@boundarydevices.com>
+ <1459614351-16731-2-git-send-email-gary.bisson@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAE1zot+-=JQkMqRPpNtCk1MksRf9kOQ1G216kSXszDjn2z4d=g@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>
+In-Reply-To: <1459614351-16731-2-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 05, 2016 at 10:37:14PM +0300, Octavian Purdila wrote:
-> On Tue, Apr 5, 2016 at 7:59 PM, Mark Brown <broonie@kernel.org> wrote:
-
-[...]
-
-> Lets look at this from a different perspective. The proposal is not
-> about importing the DT model into ACPI but importing the Linux pinctrl
-> model into ACPI. That will allow us to use the Linux pinctrl drivers
-> to their full potential.
-
-Yes we understood that, and in the process you are bypassing the eg ACPI
-power management model completely, but since all you are after is using
-the Linux pinctrl kernel driver with ACPI _today_ without going through
-the ASWG (and without booting with a device tree instead of ACPI) and
-define a specification that has a chance to co-exist with the ACPI power
-management model this proposal is the end result, it is a shortcut fraught
-with problems.
-
-> That doesn't stop the development of other, more OS independent, ACPI
-> models for pinmuxing. Which we can also support.
+On Sat, Apr 02, 2016 at 06:25:43PM +0200, Gary Bisson wrote:
+> Add the device node for the i.MX7 eLCDIF interface.
 > 
-> I know that there are some discussions for pinmux configuration in the
-> ASWG, but it does not match the Linux pinctrl model. So we will end up
-> with a pinctrl driver that offers groups, functions and pin names and
-> a totally different ACPI description that we can't map to the pinctrl
-> driver.
+> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 
-If you know that there are some discussions please take place in those
-discussions and work towards a solution that takes into account
-other parts of ACPI specifications that can be affected, it may
-take longer to get you there but that's true for everyone who
-wants to contribute to ACPI specifications I am afraid.
-
-Thank you,
-Lorenzo
+Applied 1 ~ 3, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
