@@ -1,80 +1,101 @@
-From: Octavian Purdila <octavian.purdila@intel.com>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Thu, 7 Apr 2016 15:11:53 +0300
-Message-ID: <CAE1zotJ4OiQ_tMvCDm-KoF8cTJ9Z-n09FX7KR75j0DyAcsznLA@mail.gmail.com>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
-	<20160404225200.GA1615@svinekod>
-	<1F3AC3675D538145B1661F571FE1805F2F2342A6@irsmsx105.ger.corp.intel.com>
-	<20160405181625.GA3064@svinekod>
-	<CAE1zot+kyANCTPHGmj2W26f4LbS9Nkgt_9DNon-=0nsqRpT3Rw@mail.gmail.com>
-	<20160406000130.GB8903@svinekod>
+From: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 6/6] ARM: DTS: da850: Add McBSP0 and McBSP1
+Date: Thu, 7 Apr 2016 14:16:11 +0200
+Message-ID: <57064F8B.3020501@barix.com>
+References: <1459948893-4206-1-git-send-email-petr@barix.com>
+ <1459948893-4206-7-git-send-email-petr@barix.com> <570645B4.6060606@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20160406000130.GB8903@svinekod>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "Tirdea, Irina" <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Ciocan, Cristina" <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "charles.garcia-tobin@arm.com" <charles.garcia-tobin@arm.com>
+Content-Type: text/plain; charset=iso-8859-2; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <570645B4.6060606-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 6, 2016 at 3:01 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Apr 05, 2016 at 11:09:34PM +0300, Octavian Purdila wrote:
->> On Tue, Apr 5, 2016 at 9:16 PM, Mark Rutland <mark.rutland@arm.com> wrote:
->> > * The firmware is to some extent expected to manage pinctrl today (for power
->> >   management of devices it does know about), and hence a pinctrl device is
->> >   potentially under shared management of ACPI and the OS.
->> >
->> > * The ACPI specification says nothing about this style of pinctrl management,
->> >   so it is unclear what the expectations are:
+
+On 07.04.2016 13:34, Peter Ujfalusi wrote:
+> On 04/06/16 16:21, Petr Kulhavy wrote:
+>> Add SoC nodes for McBSP0 and McBSP1 as well as the corresponding pinmux
+>> configurations.
 >>
->> Does it say anything at all about pinctrl management?
->
-> To the best of my knowledge the ACPI spec does not explicitly mention pinctrl.
-> In another reply it was mentioned that there is work in progress for pinmuxing,
-> so evidently it is on the ASWG radar and within the scope of ACPI.
->
-> I was trying to point out that it is _implicitly_ firmware's responsibility to
-> do any pinctrl today, due to the ACPI model for power management, and the lack
-> of an existing ACPI mechanisms to provide pinctrl data.
->
-> In practice, firmware configures pinctrl at boot, and may modify pinctrl as
-> part of the runtime power management firmware is put in charge of.
->
-
-AFAIK the firmware only uses the pinctrl at boot to set the initial
-values and the OS owns it after boot. The only interaction I know of
-after boot are GPIO signaled events, but those are executed under the
-control of the OS.
-
-I don't understand the part about firmware being put in charge of
-runtime power management. Do you mean that the firmware directly
-accesses the pinctrl registers? Doesn't this contradict the ACPI goal
-of having the OS control power management? Or do you mean accessing
-pinctrl registers via _PSx and PowerResource._On/_Off?
-
-> The lack of any statement about pinctrl would mean that there is effectively no
-> reasonable limitation on what firmware might do with pinctrl, and we cannot
-> assume specific behaviour from the firmware.
->
-
-There is noting specified in the spec about other controllers, why is
-pinctrl special in this regard?
-
-> [...]
->
->> Since our focus is for open-ended configurations and for hardware that
->> it is not know to firmware we only considered the case where the pins
->> are not touched after the system boots.
+>> Signed-off-by: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/da850.dtsi | 45 +++++++++++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 44 insertions(+), 1 deletion(-)
 >>
->> Now I wonder what are the cases were the firmware changes the pin
->> configuration after boot.
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>> index 5996e765e59c..9e2b1e97377c 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>> @@ -148,7 +148,24 @@
+>>   					0xc 0x88888888 0xffffffff
+>>   				>;
+>>   			};
+>> -
+>> +			mcbsp0_pins: pinmux_mcbsp0_pins {
+>> +				pinctrl-single,bits = <
+>> +					/* PINMUX2:
+>> +					* CLKS0, DX0, DR0, FSX0
+>> +					* FSR0, CLKX0, CLKR0
+>> +					*/
+>> +					0x8 0x02222220 0xfffffff0
+>> +				>;
+>> +			};
+>> +			mcbsp1_pins: pinmux_mcbsp1_pins {
+>> +				pinctrl-single,bits = <
+>> +					/* PINMUX1:
+>> +					* CLKS1, DX1, DR1, FSX1,
+>> +					* FSR1, CLKX1, CLKR1
+>> +					*/
+>> +					0x4 0x22222220 0xfffffff0
+> This will conflict with the mcasp0_pins in da850-evm as AXR11 and AXR12 is
+> used by the board for audio. When I say conflict, I mean that audio will be
+> completely broken on the board.
+
+I agree with you, the EVM uses the pins for other peripherals. However I 
+understand that the da850.dtsi is a generic description of the DA850 
+platform.
+Other DA850 based designs that use the McBSP will not have conflicts. 
+For instance my two AM1808 based boards don't use the McASP.
+Of course the board's DTS must enable only non-conflicting 
+peripherals/pinmux configurations.
+But having the pinmuxes defined does not break anything and actually 
+helps creating the DTS file.
+Or did I miss something?
+
 >
-> Device power management and suspend/resume seem like the obvious cases.
+>> +				>;
+>> +			};
+>>   		};
+>>   		edma0: edma@01c00000 {
+>>   			compatible = "ti,edma3-tpcc";
+>> @@ -335,6 +352,32 @@
+>>   				<&edma0 0 1>;
+>>   			dma-names = "tx", "rx";
+>>   		};
+>> +
+>> +		mcbsp0: mcbsp@1d10000 {
+>> +			compatible = "ti,da850-mcbsp-audio";
+>> +			reg =	<0x00110000 0x1000>,
+>> +				<0x00310000 0x1000>;
+>> +			reg-names = "mpu", "dat";
+>> +			interrupts = <97 98>;
+>> +			interrupts-names = "rx", "tx";
+>> +			dmas = <&edma0 3
+>> +				&edma0 2>;
+> This will not work since the eDMA now has the new binding in use, you need to
+> have:
+> 			dmas = <&edma0 3 1>,
+> 				<&edma0 2 1>;
+>
+> McBSP should also select the higher priority TPTC as the McASP does.
+Absolutely, you are right! I still use the old DMA phandles. I will 
+correct that.
 
-I assume you are suggesting something like the following: we have a
-device that is powered via a GPIO and associated ACPI _PS3/_PS0
-methods are poking the pinctrl register to drive 0 or 1 to power on or
-off the device.
-
-If that is the case, we can easily break that today, by changing that
-particular GPIO value via, e.g., sysfs.
+Petr
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
