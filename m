@@ -1,120 +1,76 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 12/13] ARM: dts: am335x: Provide NAND ready pin
-Date: Thu, 7 Apr 2016 13:25:39 +0300
-Message-ID: <1460024740-19716-13-git-send-email-rogerq@ti.com>
-References: <1460024740-19716-1-git-send-email-rogerq@ti.com>
+From: Julien Grall <julien.grall@arm.com>
+Subject: Re: [PATCH v10 06/17] Xen: ARM: Add support for mapping platform
+ device mmio
+Date: Thu, 7 Apr 2016 11:32:50 +0100
+Message-ID: <57063752.4020805@arm.com>
+References: <1459525755-36968-1-git-send-email-shannon.zhao@linaro.org>
+ <1459525755-36968-7-git-send-email-shannon.zhao@linaro.org>
+ <5704FE2C.5000902@arm.com> <5705B9BD.1020403@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460024740-19716-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enric Balletbo i Serra <eballetbo-VIneJrwqLopBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5705B9BD.1020403@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shannon Zhao <zhaoshenglong@huawei.com>, Shannon Zhao <shannon.zhao@linaro.org>, linux-arm-kernel@lists.infradead.org, sstabellini@kernel.org
+Cc: devicetree@vger.kernel.org, linux-efi@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, peter.huangpeng@huawei.com, david.vrabel@citrix.com, xen-devel@lists.xen.org
 List-Id: devicetree@vger.kernel.org
 
-On these boards NAND ready pin status is avilable over
-GPMC_WAIT0 pin.
+Hi Shannon,
 
-For NAND we don't use GPMC wait pin monitoring but
-get the NAND Ready/Busy# status using GPIOlib.
-GPMC driver provides the WAIT0 pin status over GPIOlib.
+On 07/04/16 02:37, Shannon Zhao wrote:
+>
+>
+> On 2016/4/6 20:16, Julien Grall wrote:
+>>> +            gpfns[j] = XEN_PFN_DOWN(r->start) + j;
+>>> +            idxs[j] = XEN_PFN_DOWN(r->start) + j;
+>>> +        }
+>>> +
+>>> +        xatp.domid = DOMID_SELF;
+>>> +        xatp.size = nr;
+>>> +        xatp.space = XENMAPSPACE_dev_mmio;
+>>> +
+>>> +        set_xen_guest_handle(xatp.gpfns, gpfns);
+>>> +        set_xen_guest_handle(xatp.idxs, idxs);
+>>> +        set_xen_guest_handle(xatp.errs, errs);
+>>> +
+>>> +        rc = HYPERVISOR_memory_op(XENMEM_add_to_physmap_range, &xatp);
+>>> +        kfree(gpfns);
+>>> +        kfree(idxs);
+>>> +        kfree(errs);
+>>> +        if (rc)
+>>> +            return rc;
+>>
+>> Shouldn't we redo the mapping if the hypercall fails?
+> Hmm, why? If it fails again when we redo the mapping, what should we do
+> then? Redo again?
 
-Read speed increases from 7869 KiB/ to 8875 KiB/s
-and write speed was unchanged at 5100 KiB/s.
+Because the device MMIO region is left half mapped in DOM0 address space.
 
-Measured using mtd_speedtest.ko on am335x-evm.
+After having another look to your patch, if an error occurs, the 
+notifier will still return NOTIFY_OK. This will lead to random data 
+abort when the driver is accessing the MMIO regions as the device will 
+be considered fully functional.
 
-Cc: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: Ilya Ledvich <ilya-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Rostislav Lisovy <lisovy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Enric Balletbo i Serra <eballetbo-VIneJrwqLopBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-baltos-ir5221.dts | 1 +
- arch/arm/boot/dts/am335x-chilisom.dtsi     | 1 +
- arch/arm/boot/dts/am335x-cm-t335.dts       | 1 +
- arch/arm/boot/dts/am335x-evm.dts           | 1 +
- arch/arm/boot/dts/am335x-igep0033.dtsi     | 1 +
- arch/arm/boot/dts/am335x-phycore-som.dtsi  | 1 +
- 6 files changed, 6 insertions(+)
+However, even if the notifier return NOTIFY_BAD, the function device_add 
+doesn't care about the return value of blocking_notifier_call_chain. I 
+think this need to be fixed.
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-index 6c667fb..17e92e8 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-@@ -241,6 +241,7 @@
- 		interrupt-parent = <&gpmc>;
- 		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
- 			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
- 		nand-bus-width = <8>;
- 		ti,nand-ecc-opt = "bch8";
- 		ti,nand-xfer-type = "polled";
-diff --git a/arch/arm/boot/dts/am335x-chilisom.dtsi b/arch/arm/boot/dts/am335x-chilisom.dtsi
-index 95461a2..e48c282 100644
---- a/arch/arm/boot/dts/am335x-chilisom.dtsi
-+++ b/arch/arm/boot/dts/am335x-chilisom.dtsi
-@@ -214,6 +214,7 @@
- 		interrupt-parent = <&gpmc>;
- 		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
- 			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
- 		ti,nand-ecc-opt = "bch8";
- 		ti,elm-id = <&elm>;
- 		nand-bus-width = <8>;
-diff --git a/arch/arm/boot/dts/am335x-cm-t335.dts b/arch/arm/boot/dts/am335x-cm-t335.dts
-index e835644..817b1de 100644
---- a/arch/arm/boot/dts/am335x-cm-t335.dts
-+++ b/arch/arm/boot/dts/am335x-cm-t335.dts
-@@ -411,6 +411,7 @@ status = "okay";
- 		interrupt-parent = <&gpmc>;
- 		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
- 			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
- 		ti,nand-ecc-opt = "bch8";
- 		ti,elm-id = <&elm>;
- 		nand-bus-width = <8>;
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 28b9162..516673b 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -524,6 +524,7 @@
- 		interrupt-parent = <&gpmc>;
- 		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
- 			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
- 		ti,nand-ecc-opt = "bch8";
- 		ti,elm-id = <&elm>;
- 		nand-bus-width = <8>;
-diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/dts/am335x-igep0033.dtsi
-index 6c3a9bf..df63484 100644
---- a/arch/arm/boot/dts/am335x-igep0033.dtsi
-+++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
-@@ -135,6 +135,7 @@
- 		interrupt-parent = <&gpmc>;
- 		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
- 			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
- 		nand-bus-width = <8>;
- 		ti,nand-ecc-opt = "bch8";
- 		gpmc,device-width = <1>;
-diff --git a/arch/arm/boot/dts/am335x-phycore-som.dtsi b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-index d4b7f3b..86f7731 100644
---- a/arch/arm/boot/dts/am335x-phycore-som.dtsi
-+++ b/arch/arm/boot/dts/am335x-phycore-som.dtsi
-@@ -171,6 +171,7 @@
- 		interrupt-parent = <&gpmc>;
- 		interrupts = <0 IRQ_TYPE_NONE>, /* fifoevent */
- 			     <1 IRQ_TYPE_NONE>;	/* termcount */
-+		rb-gpios = <&gpmc 0 GPIO_ACTIVE_HIGH>; /* gpmc_wait0 */
- 		nand-bus-width = <8>;
- 		ti,nand-ecc-opt = "bch8";
- 		gpmc,device-nand = "true";
+> I think if it fails at the first time it will always fail no matter how
+> many times we do.
+
+I was speaking about the mappings that succeeded. They will unlikely 
+fail during removal. If they ever fail you can just ignore the error.
+
+Regards,
+
 -- 
-2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Julien Grall
