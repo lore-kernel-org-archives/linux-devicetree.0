@@ -1,97 +1,35 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: Add reset control to dwc2
-Date: Wed, 6 Apr 2016 23:51:24 -0700
-Message-ID: <5706036C.7080409@synopsys.com>
-References: <1459229483-26167-1-git-send-email-dinguyen@opensource.altera.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] Revert "ARM: dts: porter: Enable SCIF_CLK frequency and pins"
+Date: Thu, 7 Apr 2016 09:00:00 +0200
+Message-ID: <CAMuHMdWnJn8-FybRrZH1+72GbyKa-kM_JG6PR01mZHn=4ZNuxQ@mail.gmail.com>
+References: <1459971126-26622-1-git-send-email-sjoerd.simons@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459229483-26167-1-git-send-email-dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org" <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1459971126-26622-1-git-send-email-sjoerd.simons@collabora.co.uk>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3/28/2016 10:38 PM, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org wrote:
-> From: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> 
-> Allow for platforms that have a reset controller driver in place to bring
-> the USB IP out of reset.
-> 
-> Signed-off-by: Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
-> Cc: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core.h     |    1 +
->  drivers/usb/dwc2/platform.c |   15 +++++++++++++++
->  2 files changed, 16 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index 3c58d63..f748132 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -837,6 +837,7 @@ struct dwc2_hsotg {
->  	void *priv;
->  	int     irq;
->  	struct clk *clk;
-> +	struct reset_control *reset;
->  
->  	unsigned int queuing_high_bandwidth:1;
->  	unsigned int srp_success:1;
-> diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> index 88629be..b1fa9dd 100644
-> --- a/drivers/usb/dwc2/platform.c
-> +++ b/drivers/usb/dwc2/platform.c
-> @@ -45,6 +45,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_data/s3c-hsotg.h>
-> +#include <linux/reset.h>
->  
->  #include <linux/usb/of.h>
->  
-> @@ -337,6 +338,9 @@ static int dwc2_lowlevel_hw_init(struct dwc2_hsotg *hsotg)
->  {
->  	int i, ret;
->  
-> +	if(hsotg->reset)
-> +		reset_control_deassert(hsotg->reset);
-> +
->  	/* Set default UTMI width */
->  	hsotg->phyif = GUSBCFG_PHYIF16;
->  
-> @@ -434,6 +438,9 @@ static int dwc2_driver_remove(struct platform_device *dev)
->  	if (hsotg->ll_hw_enabled)
->  		dwc2_lowlevel_hw_disable(hsotg);
->  
-> +	if (hsotg->reset)
-> +		reset_control_assert(hsotg->reset);
-> +
->  	return 0;
->  }
->  
-> @@ -529,6 +536,14 @@ static int dwc2_driver_probe(struct platform_device *dev)
->  	dev_dbg(&dev->dev, "mapped PA %08lx to VA %p\n",
->  		(unsigned long)res->start, hsotg->regs);
->  
-> +	hsotg->reset = devm_reset_control_get(&dev->dev, "dwc2");
-> +	if (IS_ERR(hsotg->reset)) {
-> +		dev_info(&dev->dev, "Could not get reset control!\n");
-> +		if (PTR_ERR(hsotg->reset) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		hsotg->reset = NULL;
-> +	}
-> +
+On Wed, Apr 6, 2016 at 9:32 PM, Sjoerd Simons
+<sjoerd.simons@collabora.co.uk> wrote:
+> This reverts commit 19417bd9c5112f58ea63e97ba72edabd5e1cc0fe as
+> according to
+> http://elinux.org/File:R-CarM2-KOELSCH_PORTER-B_PORTER_C_Comparison.pdf
+> the external oscilator for SCIF_CLK is not mounted on the porter boards.
+>
+> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 
-Hi Dinh,
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Can you move into the lowlevel_hw_init()? The probe is a bit bloated
-and we have these existing "lowlevel" functions where we consolidate
-stuff like this. Same with the assert/deassert if possible.
+Gr{oetje,eeting}s,
 
-Regards,
-John
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
