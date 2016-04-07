@@ -1,45 +1,54 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: Allow secondary compatible match in of_dev_lookup
-Date: Wed, 6 Apr 2016 23:52:24 -0500
-Message-ID: <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
-References: <1459546504-32668-1-git-send-email-tony@atomide.com> <20160401214053.GQ9329@atomide.com>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
+ Flash Controller.
+Date: Thu, 7 Apr 2016 10:25:52 +0530
+Message-ID: <5705E858.3050700@ti.com>
+References: <1452486886-8049-1-git-send-email-marex@denx.de>
+ <1452486886-8049-2-git-send-email-marex@denx.de> <57053F81.70204@ti.com>
+ <570563D3.9080704@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160401214053.GQ9329-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <570563D3.9080704-ynQEQJNshbs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 1, 2016 at 4:40 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [160401 14:37]:
->> We currently try to match of_dev_auxdata based on compatible,
->> IO address, and device name. But in some cases we have multiple
->> instances of drivers that can use the same auxdata.
->>
->> Let's add an additional secondary lookup for generic compatible
->> match for auxdata if no device specific match is found. This does
->> not change the existing matching, and still allows adding device
->> specific auxdata.
->>
->> This simplifies things as specifying the IO address and device
->> name is prone errors as it requires maintaining an in kernel
->> database for each SoC.
->
-> And here's what I can apply later on to get rid of some
-> ifdeffery.
->
-> I'm also planning to move some of the legacy omap hwmod
-> functionality into proper device drivers, so can generic
-> pdata for that too.
 
-Why can't the platform data be moved into the driver given that it
-appears to be only SoC family specific? Auxdata was somewhat intended
-to be temporary. It appears there is already some per compatible match
-data for these OMAP parts in the driver.
 
-Rob
+On 04/07/2016 01:00 AM, Marek Vasut wrote:
+> On 04/06/2016 06:55 PM, R, Vignesh wrote:
+>> Hi Marek,
+> 
+> Hi!
+> 
+>> I encountered a issue with this driver while testing.
+> 
+> Try with the attached patches, I am planning to use them for V11
+> submission. I think you're hitting the problem with missing buslock.
+> 
+
+Thanks for the patches.
+But I am pretty sure that's not the problem at my end, because I have
+only one flash device on QSPI bus.
+
+The problem is cqspi_switch_cs() is called only once ie when JEDEC ID is
+being read(during autodetect of chip), but at that instance,
+nor->page_size and nor->mtd.erasesize are not yet initialized (They are
+initialized only after JEDEC ID is looked up in the table and page_size
+and erasesize are known).
+Therefore if nor->page_size is printed during cqspi_switch_cs() then its
+zero. But nor->page_size reports 256 when printed in cqspi_flash_setup()
+after spi_nor_scan(). Therefore CQSPI_REG_SIZE register has to be
+configured only after spi_nor struct is fully populated (i.e after
+spi_nor_scan() has recognized the slave after JEDEC ID read).
+
+
+-- 
+Regards
+Vignesh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
