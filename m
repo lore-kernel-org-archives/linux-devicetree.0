@@ -1,123 +1,70 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 6/6] ARM: DTS: da850: Add McBSP0 and McBSP1
-Date: Thu, 7 Apr 2016 14:34:12 +0300
-Message-ID: <570645B4.6060606@ti.com>
-References: <1459948893-4206-1-git-send-email-petr@barix.com>
- <1459948893-4206-7-git-send-email-petr@barix.com>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v10 8/9] usb: xhci: Add NVIDIA Tegra XUSB controller driver
+Date: Thu, 07 Apr 2016 14:50:25 +0300
+Message-ID: <57064981.2030004@linux.intel.com>
+References: <1457108379-20794-1-git-send-email-thierry.reding@gmail.com> <1457108379-20794-8-git-send-email-thierry.reding@gmail.com> <57063E91.1070202@linux.intel.com> <20160407110501.GA10231@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1459948893-4206-7-git-send-email-petr@barix.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Petr Kulhavy <petr@barix.com>, nsekhar@ti.com, khilman@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160407110501.GA10231@ulmo.ba.sec>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Andrew Bresticker <abrestic@chromium.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/06/16 16:21, Petr Kulhavy wrote:
-> Add SoC nodes for McBSP0 and McBSP1 as well as the corresponding pinmux
-> configurations.
-> =
+On 07.04.2016 14:05, Thierry Reding wrote:
+> On Thu, Apr 07, 2016 at 02:03:45PM +0300, Mathias Nyman wrote:
+>> On 04.03.2016 18:19, Thierry Reding wrote:
+>>> From: Thierry Reding <treding@nvidia.com>
+>>>
+>>> Add support for the on-chip XUSB controller present on Tegra SoCs. This
+>>> controller, when loaded with external firmware, exposes an interface
+>>> compliant with xHCI. This driver loads the firmware, starts the
+>>> controller, and is able to service host-specific messages sent by the
+>>> controller's firmware.
+>>>
+>>> The controller also supports USB device mode as well as powergating
+>>> of the SuperSpeed and host-controller logic when not in use, but
+>>> support for these is not yet implemented.
+>>>
+>>> Based on work by:
+>>>     Ajay Gupta <ajayg@nvidia.com>
+>>>     Bharath Yadav <byadav@nvidia.com>
+>>>     Andrew Bresticker <abrestic@chromium.org>
+>>>
+>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>> Cc: Mathias Nyman <mathias.nyman@intel.com>
+>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>>> ---
+>>
+>> ...
+>>
+>>> +static int tegra_xusb_remove(struct platform_device *pdev)
+>>> +{
+>>> +	struct tegra_xusb *tegra = platform_get_drvdata(pdev);
+>>   > +	struct usb_hcd *hcd = tegra->hcd;
+>>> +	struct xhci_hcd *xhci;
+>>> +
+>>> +	if (tegra->fw_loaded) {
+>>> +		xhci = hcd_to_xhci(hcd);
+>>> +		usb_remove_hcd(xhci->shared_hcd);
+>>> +		usb_put_hcd(xhci->shared_hcd);
+>>> +		usb_remove_hcd(hcd);
+>>> +		tegra_xusb_padctl_put(tegra->padctl);
+>>> +		usb_put_hcd(hcd);
+>>> +		kfree(xhci);
+>>
+>> Don't free xhci here, xhci is a part of hcd (hcd_priv) and hcd is already freed in usb_put_hcd()
+>
+> Ah, this was indeed reported to me about two weeks ago and fixed since
+> then in my local tree.
+>
+>> Other than that I can't see any issues
+>
+> Thanks. Does this count as an Acked-by provided the kfree() is removed?
+>
 
-> Signed-off-by: Petr Kulhavy <petr@barix.com>
-> ---
->  arch/arm/boot/dts/da850.dtsi | 45 ++++++++++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 44 insertions(+), 1 deletion(-)
-> =
+yes,
 
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index 5996e765e59c..9e2b1e97377c 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -148,7 +148,24 @@
->  					0xc 0x88888888 0xffffffff
->  				>;
->  			};
-> -
-> +			mcbsp0_pins: pinmux_mcbsp0_pins {
-> +				pinctrl-single,bits =3D <
-> +					/* PINMUX2:
-> +					* CLKS0, DX0, DR0, FSX0
-> +					* FSR0, CLKX0, CLKR0
-> +					*/
-> +					0x8 0x02222220 0xfffffff0
-> +				>;
-> +			};
-> +			mcbsp1_pins: pinmux_mcbsp1_pins {
-> +				pinctrl-single,bits =3D <
-> +					/* PINMUX1:
-> +					* CLKS1, DX1, DR1, FSX1,
-> +					* FSR1, CLKX1, CLKR1
-> +					*/
-> +					0x4 0x22222220 0xfffffff0
-
-This will conflict with the mcasp0_pins in da850-evm as AXR11 and AXR12 is
-used by the board for audio. When I say conflict, I mean that audio will be
-completely broken on the board.
-
-> +				>;
-> +			};
->  		};
->  		edma0: edma@01c00000 {
->  			compatible =3D "ti,edma3-tpcc";
-> @@ -335,6 +352,32 @@
->  				<&edma0 0 1>;
->  			dma-names =3D "tx", "rx";
->  		};
-> +
-> +		mcbsp0: mcbsp@1d10000 {
-> +			compatible =3D "ti,da850-mcbsp-audio";
-> +			reg =3D	<0x00110000 0x1000>,
-> +				<0x00310000 0x1000>;
-> +			reg-names =3D "mpu", "dat";
-> +			interrupts =3D <97 98>;
-> +			interrupts-names =3D "rx", "tx";
-> +			dmas =3D <&edma0 3
-> +				&edma0 2>;
-
-This will not work since the eDMA now has the new binding in use, you need =
-to
-have:
-			dmas =3D <&edma0 3 1>,
-				<&edma0 2 1>;
-
-McBSP should also select the higher priority TPTC as the McASP does.
-
-> +			dma-names =3D "tx", "rx";
-> +			status =3D "disabled";
-> +		};
-> +		mcbsp1: mcbsp@1d11000 {
-> +			compatible =3D "ti,da850-mcbsp-audio";
-> +			reg =3D	<0x00111000 0x1000>,
-> +				<0x00311000 0x1000>;
-> +			reg-names =3D "mpu", "dat";
-> +			interrupts =3D <99 100>;
-> +			interrupts-names =3D "rx", "tx";
-> +			dmas =3D <&edma0 5
-> +				&edma0 4>;
-
-Same here.
-
-> +			dma-names =3D "tx", "rx";
-> +			status =3D "disabled";
-> +		};
-> +
->  	};
->  	nand_cs3@62000000 {
->  		compatible =3D "ti,davinci-nand";
-> =
-
-
-
--- =
-
-P=E9ter
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
