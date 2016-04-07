@@ -1,56 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] qcom: ipq4019: Add regulator support to DK04 device
- tree
-Date: Thu, 7 Apr 2016 12:57:36 -0500
-Message-ID: <20160407175736.GI32257@rob-hp-laptop>
-References: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
+Subject: Re: [PATCH v1] regulator: twl: Provide of_map_mode for twl4030
+Date: Thu, 7 Apr 2016 12:57:45 -0500
+Message-ID: <20160407175745.GK32257@rob-hp-laptop>
+References: <20160404222638.GM2350@sirena.org.uk>
+ <1459835974-31664-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459804090-31739-1-git-send-email-ssambang@codeaurora.org>
+In-Reply-To: <1459835974-31664-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sreedhar Sambangi <ssambang@codeaurora.org>
-Cc: devicetree@vger.kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, david.brown@linaro.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, qca-upstream.external@qca.qualcomm.com
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+Cc: broonie@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tony@atomide.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2016 at 02:08:10PM -0700, Sreedhar Sambangi wrote:
->     This adds the regulator nodes to DK04 device tree to support
+On Tue, Apr 05, 2016 at 08:59:34AM +0300, Ivaylo Dimitrov wrote:
+> of_map_mode is needed so to be possible to set initial regulators mode from
+> the board DTS. Otherwise, for DT boot, regulators are left in their default
+> state after reset/reboot. Document device specific modes as well.
 > 
-> Change-Id: I9c1df0e720a330bf6db1889fd2247f6a70ea6faa
-> Signed-off-by: Sreedhar Sambangi <ssambang@codeaurora.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
 > ---
->  .../bindings/regulator/ipq4019-regulator.txt          | 19 +++++++++++++++++++
->  arch/arm/boot/dts/qcom-ipq4019-ap.dk04.1.dtsi         | 11 +++++++++++
->  2 files changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
+>  .../bindings/regulator/twl-regulator.txt           |  6 ++++++
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/regulator/twl-regulator.c                  | 22 +++++++++++++++++++---
+>  2 files changed, 25 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-> new file mode 100644
-> index 0000000..9d934a4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/ipq4019-regulator.txt
-> @@ -0,0 +1,19 @@
-> +* Qualcomm Technologies, Inc. IPQ4019 regulators
-> +
-> +Required properties:
-> +- compatible		: Must be "regulator-ipq4019".
-
-Doesn't match your example which correctly has vendor prefix. Also, the 
-preferred form is <vendor>,<soc>-<block>.
-
-> +- states		: Selection of available voltages and corresponding values
-
-Too generic of a name.
-
-Is this not fixed by the h/w block?
-
-> +- reg			: Register address for controlling LDO
-> +- mask			: Mask value for switching voltages
-
-What else is in this register? If something unrelated, then this is all 
-wrong to the regulator. You can only define the register address in one 
-place in the DT. Otherwise, you should know the mask from the compatible 
-string.
-
-Rob
