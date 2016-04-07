@@ -1,70 +1,123 @@
-From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v10 06/17] Xen: ARM: Add support for mapping platform
- device mmio
-Date: Thu, 7 Apr 2016 19:25:40 +0800
-Message-ID: <570643B4.3070502@huawei.com>
-References: <1459525755-36968-1-git-send-email-shannon.zhao@linaro.org> <1459525755-36968-7-git-send-email-shannon.zhao@linaro.org> <5704FE2C.5000902@arm.com> <5705B9BD.1020403@huawei.com> <57063752.4020805@arm.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 6/6] ARM: DTS: da850: Add McBSP0 and McBSP1
+Date: Thu, 7 Apr 2016 14:34:12 +0300
+Message-ID: <570645B4.6060606@ti.com>
+References: <1459948893-4206-1-git-send-email-petr@barix.com>
+ <1459948893-4206-7-git-send-email-petr@barix.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <57063752.4020805-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1459948893-4206-7-git-send-email-petr@barix.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Petr Kulhavy <petr@barix.com>, nsekhar@ti.com, khilman@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/06/16 16:21, Petr Kulhavy wrote:
+> Add SoC nodes for McBSP0 and McBSP1 as well as the corresponding pinmux
+> configurations.
+> =
+
+> Signed-off-by: Petr Kulhavy <petr@barix.com>
+> ---
+>  arch/arm/boot/dts/da850.dtsi | 45 ++++++++++++++++++++++++++++++++++++++=
++++++-
+>  1 file changed, 44 insertions(+), 1 deletion(-)
+> =
+
+> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+> index 5996e765e59c..9e2b1e97377c 100644
+> --- a/arch/arm/boot/dts/da850.dtsi
+> +++ b/arch/arm/boot/dts/da850.dtsi
+> @@ -148,7 +148,24 @@
+>  					0xc 0x88888888 0xffffffff
+>  				>;
+>  			};
+> -
+> +			mcbsp0_pins: pinmux_mcbsp0_pins {
+> +				pinctrl-single,bits =3D <
+> +					/* PINMUX2:
+> +					* CLKS0, DX0, DR0, FSX0
+> +					* FSR0, CLKX0, CLKR0
+> +					*/
+> +					0x8 0x02222220 0xfffffff0
+> +				>;
+> +			};
+> +			mcbsp1_pins: pinmux_mcbsp1_pins {
+> +				pinctrl-single,bits =3D <
+> +					/* PINMUX1:
+> +					* CLKS1, DX1, DR1, FSX1,
+> +					* FSR1, CLKX1, CLKR1
+> +					*/
+> +					0x4 0x22222220 0xfffffff0
+
+This will conflict with the mcasp0_pins in da850-evm as AXR11 and AXR12 is
+used by the board for audio. When I say conflict, I mean that audio will be
+completely broken on the board.
+
+> +				>;
+> +			};
+>  		};
+>  		edma0: edma@01c00000 {
+>  			compatible =3D "ti,edma3-tpcc";
+> @@ -335,6 +352,32 @@
+>  				<&edma0 0 1>;
+>  			dma-names =3D "tx", "rx";
+>  		};
+> +
+> +		mcbsp0: mcbsp@1d10000 {
+> +			compatible =3D "ti,da850-mcbsp-audio";
+> +			reg =3D	<0x00110000 0x1000>,
+> +				<0x00310000 0x1000>;
+> +			reg-names =3D "mpu", "dat";
+> +			interrupts =3D <97 98>;
+> +			interrupts-names =3D "rx", "tx";
+> +			dmas =3D <&edma0 3
+> +				&edma0 2>;
+
+This will not work since the eDMA now has the new binding in use, you need =
+to
+have:
+			dmas =3D <&edma0 3 1>,
+				<&edma0 2 1>;
+
+McBSP should also select the higher priority TPTC as the McASP does.
+
+> +			dma-names =3D "tx", "rx";
+> +			status =3D "disabled";
+> +		};
+> +		mcbsp1: mcbsp@1d11000 {
+> +			compatible =3D "ti,da850-mcbsp-audio";
+> +			reg =3D	<0x00111000 0x1000>,
+> +				<0x00311000 0x1000>;
+> +			reg-names =3D "mpu", "dat";
+> +			interrupts =3D <99 100>;
+> +			interrupts-names =3D "rx", "tx";
+> +			dmas =3D <&edma0 5
+> +				&edma0 4>;
+
+Same here.
+
+> +			dma-names =3D "tx", "rx";
+> +			status =3D "disabled";
+> +		};
+> +
+>  	};
+>  	nand_cs3@62000000 {
+>  		compatible =3D "ti,davinci-nand";
+> =
 
 
-On 2016/4/7 18:32, Julien Grall wrote:
-> Hi Shannon,
-> 
-> On 07/04/16 02:37, Shannon Zhao wrote:
->>
->>
->> On 2016/4/6 20:16, Julien Grall wrote:
->>>> +            gpfns[j] = XEN_PFN_DOWN(r->start) + j;
->>>> +            idxs[j] = XEN_PFN_DOWN(r->start) + j;
->>>> +        }
->>>> +
->>>> +        xatp.domid = DOMID_SELF;
->>>> +        xatp.size = nr;
->>>> +        xatp.space = XENMAPSPACE_dev_mmio;
->>>> +
->>>> +        set_xen_guest_handle(xatp.gpfns, gpfns);
->>>> +        set_xen_guest_handle(xatp.idxs, idxs);
->>>> +        set_xen_guest_handle(xatp.errs, errs);
->>>> +
->>>> +        rc = HYPERVISOR_memory_op(XENMEM_add_to_physmap_range, &xatp);
->>>> +        kfree(gpfns);
->>>> +        kfree(idxs);
->>>> +        kfree(errs);
->>>> +        if (rc)
->>>> +            return rc;
->>>
->>> Shouldn't we redo the mapping if the hypercall fails?
->> Hmm, why? If it fails again when we redo the mapping, what should we do
->> then? Redo again?
-> 
-> Because the device MMIO region is left half mapped in DOM0 address space.
-> 
-> After having another look to your patch, if an error occurs, the
-> notifier will still return NOTIFY_OK. This will lead to random data
-> abort when the driver is accessing the MMIO regions as the device will
-> be considered fully functional.
-> 
-> However, even if the notifier return NOTIFY_BAD, the function device_add
-> doesn't care about the return value of blocking_notifier_call_chain. I
-> think this need to be fixed.
-> 
->> I think if it fails at the first time it will always fail no matter how
->> many times we do.
-> 
-> I was speaking about the mappings that succeeded. They will unlikely
-> fail during removal. If they ever fail you can just ignore the error.
-Ok, I see. I thought you mean that it needs to map the regions again.
-But what you really mean is undoing the mappings.
 
-Thanks,
--- 
-Shannon
+-- =
+
+P=E9ter
