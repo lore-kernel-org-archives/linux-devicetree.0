@@ -1,86 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] leds: pca9532: Add device tree binding
-Date: Thu, 7 Apr 2016 12:57:55 -0500
-Message-ID: <20160407175755.GN32257@rob-hp-laptop>
-References: <1459912250-50878-1-git-send-email-preid@electromag.com.au>
- <1459912250-50878-2-git-send-email-preid@electromag.com.au>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] PM / Domains: Define DT bindings for PM QoS device
+ latencies
+Date: Thu, 7 Apr 2016 12:57:04 -0500
+Message-ID: <20160407175704.GA32257@rob-hp-laptop>
+References: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
+ <20160401184429.GA18950@rob-hp-laptop>
+ <CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459912250-50878-2-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, riku.voipio-X3B1VOXEql0@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lina Iyer <lina.iyer@linaro.org>, Axel Haslam <ahaslam@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jon Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 06, 2016 at 11:10:50AM +0800, Phil Reid wrote:
-> This patch adds basic device tree support for the pca9532 LEDs.
+On Mon, Apr 04, 2016 at 11:42:04AM +0200, Ulf Hansson wrote:
+> On 1 April 2016 at 20:44, Rob Herring <robh@kernel.org> wrote:
+> > On Thu, Mar 31, 2016 at 03:50:25PM +0200, Ulf Hansson wrote:
+> >> PM QoS device latencies are properties of the hardware. Let's define some
+> >> DT bindings for them.
+> >>
+> >> Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
+> >>  1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+> >> index 025b5e7..b101a20 100644
+> >> --- a/Documentation/devicetree/bindings/power/power_domain.txt
+> >> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
+> >> @@ -65,12 +65,18 @@ Required properties:
+> >>   - power-domains : A phandle and PM domain specifier as defined by bindings of
+> >>                     the power controller specified by phandle.
+> >>
+> >> +Optional properties:
+> >> + - suspend-latency: Suspend latency of the device in ns.
+> >> + - resume-latency: Resume latency of the device in ns.
+> >
+> > The names are a bit Linux specific, but I don't have a better
+> > suggestion. Could be power-up/down, but then you may have other
+> > latencies such as link up times.
+> >
+> > Whatever we end up with, add a unit suffix (-ns).
 > 
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-> ---
->  .../devicetree/bindings/leds/leds-pca9532.txt      | 32 +++++++++++
->  drivers/leds/leds-pca9532.c                        | 63 ++++++++++++++++++++--
->  include/dt-bindings/leds/leds-pca9532.h            | 18 +++++++
->  include/linux/leds-pca9532.h                       |  8 ++-
->  4 files changed, 112 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
->  create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+> Okay.
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
-> new file mode 100644
-> index 0000000..b48c223
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> >
+> > Shouldn't this be split into latency of the domain (and in the domain's
+> > node) and latency of the device?
+> 
+> Yes! $Subject patch only takes device latencies into account.
+> 
+> Perhaps what you mean is that we should document device PM QoS
+> latencies in another place than
+> Documentation/devicetree/bindings/power/power_domain.txt as well?
 
-Would leds-pca953x.txt be more appropriate.
+Yes, the location is confusing that this is device latency which has 
+nothing to do with power domains other than the fact we've lost all 
+state (which a reset could cause too).
 
-> @@ -0,0 +1,32 @@
-> +*NXP - pca9532 PWM LED Driver
-> +
-> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
-> +The PWM support 256 steps.
+> Regarding bindings for the domain latencies, I will post that as a
+> separate patch soonish.
 
-supports
+It probably makes sense to look at latency bindings as a whole series.
 
-> +
-> +Required properties:
-> +	- compatible:
-> +		"nxp,pca9530"
-> +		"nxp,pca9531"
-> +		"nxp,pca9532"
-> +		"nxp,pca9533"
-> +	- reg -  I2C slave address
-> +
-> +Each led is represented as a sub-node of the nxp,pca9530.
-> +
-> +LED sub-node properties:
-
-What are sub-node names and how many?
-
-> +- type: Output configuration
-> +	0 = NONE, 1 = LED, 2 = N2100_BEEP, 3 = GPIO
-
-Add vendor prefix.
-
-> +
-> +Example:
-> +
-> +  ledBL: pca9530@60 {
-> +    compatible = "nxp,pca9530";
-> +    reg = <0x60>;
-> +
-> +    led0 {
-> +      type = <PCA9532_TYPE_LED>;
-> +    };
-> +  };
-> +
-> +For more product information please see the link below:
-> +http://nxp.com/documents/data_sheet/PCA9532.pdf
-
-Move this up to the top.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
