@@ -1,120 +1,80 @@
-From: Shannon Zhao <zhaoshenglong@huawei.com>
-Subject: [PATCH v11 02/17] xen/grant-table: Move
-	xlated_setup_gnttab_pages to common place
-Date: Thu, 7 Apr 2016 20:03:19 +0800
-Message-ID: <1460030614-16112-3-git-send-email-zhaoshenglong@huawei.com>
-References: <1460030614-16112-1-git-send-email-zhaoshenglong@huawei.com>
+From: Octavian Purdila <octavian.purdila@intel.com>
+Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
+Date: Thu, 7 Apr 2016 15:11:53 +0300
+Message-ID: <CAE1zotJ4OiQ_tMvCDm-KoF8cTJ9Z-n09FX7KR75j0DyAcsznLA@mail.gmail.com>
+References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
+	<20160404225200.GA1615@svinekod>
+	<1F3AC3675D538145B1661F571FE1805F2F2342A6@irsmsx105.ger.corp.intel.com>
+	<20160405181625.GA3064@svinekod>
+	<CAE1zot+kyANCTPHGmj2W26f4LbS9Nkgt_9DNon-=0nsqRpT3Rw@mail.gmail.com>
+	<20160406000130.GB8903@svinekod>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xen.org>
-In-Reply-To: <1460030614-16112-1-git-send-email-zhaoshenglong@huawei.com>
-List-Unsubscribe: <http://lists.xen.org/cgi-bin/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xen.org>
-List-Help: <mailto:xen-devel-request@lists.xen.org?subject=help>
-List-Subscribe: <http://lists.xen.org/cgi-bin/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xen.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xen.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xen.org>
-To: linux-arm-kernel@lists.infradead.org, sstabellini@kernel.org
-Cc: devicetree@vger.kernel.org, linux-efi@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, xen-devel@lists.xen.org, julien.grall@arm.com, david.vrabel@citrix.com, peter.huangpeng@huawei.com, shannon.zhao@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20160406000130.GB8903@svinekod>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "Tirdea, Irina" <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, "Ciocan, Cristina" <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "charles.garcia-tobin@arm.com" <charles.garcia-tobin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogU2hhbm5vbiBaaGFvIDxzaGFubm9uLnpoYW9AbGluYXJvLm9yZz4KCk1vdmUgeGxhdGVk
-X3NldHVwX2dudHRhYl9wYWdlcyB0byBjb21tb24gcGxhY2UsIHNvIGl0IGNhbiBiZSByZXVzZWQg
-YnkKQVJNIHRvIHNldHVwIGdyYW50IHRhYmxlLgoKUmVuYW1lIGl0IHRvIHhlbl94bGF0ZV9tYXBf
-YmFsbG9vbmVkX3BhZ2VzLgoKU2lnbmVkLW9mZi1ieTogU2hhbm5vbiBaaGFvIDxzaGFubm9uLnpo
-YW9AbGluYXJvLm9yZz4KUmV2aWV3ZWQtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFuby5z
-dGFiZWxsaW5pQGV1LmNpdHJpeC5jb20+ClJldmlld2VkLWJ5OiBKdWxpZW4gR3JhbGwgPGp1bGll
-bi5ncmFsbEBhcm0uY29tPgotLS0KIGFyY2gveDg2L3hlbi9ncmFudC10YWJsZS5jIHwgNTcgKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy94ZW4veGxh
-dGVfbW11LmMgICAgfCA2MSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCiBpbmNsdWRlL3hlbi94ZW4tb3BzLmggICAgICB8ICAyICsrCiAzIGZpbGVzIGNoYW5n
-ZWQsIDY5IGluc2VydGlvbnMoKyksIDUxIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gv
-eDg2L3hlbi9ncmFudC10YWJsZS5jIGIvYXJjaC94ODYveGVuL2dyYW50LXRhYmxlLmMKaW5kZXgg
-ZTA3OTUwMC4uZGU0MTQ0YyAxMDA2NDQKLS0tIGEvYXJjaC94ODYveGVuL2dyYW50LXRhYmxlLmMK
-KysrIGIvYXJjaC94ODYveGVuL2dyYW50LXRhYmxlLmMKQEAgLTExMSw2MyArMTExLDE4IEBAIGlu
-dCBhcmNoX2dudHRhYl9pbml0KHVuc2lnbmVkIGxvbmcgbnJfc2hhcmVkKQogfQogCiAjaWZkZWYg
-Q09ORklHX1hFTl9QVkgKLSNpbmNsdWRlIDx4ZW4vYmFsbG9vbi5oPgogI2luY2x1ZGUgPHhlbi9l
-dmVudHMuaD4KLSNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Ci1zdGF0aWMgaW50IF9faW5pdCB4bGF0
-ZWRfc2V0dXBfZ250dGFiX3BhZ2VzKHZvaWQpCi17Ci0Jc3RydWN0IHBhZ2UgKipwYWdlczsKLQl4
-ZW5fcGZuX3QgKnBmbnM7Ci0Jdm9pZCAqdmFkZHI7Ci0JaW50IHJjOwotCXVuc2lnbmVkIGludCBp
-OwotCXVuc2lnbmVkIGxvbmcgbnJfZ3JhbnRfZnJhbWVzID0gZ250dGFiX21heF9ncmFudF9mcmFt
-ZXMoKTsKLQotCUJVR19PTihucl9ncmFudF9mcmFtZXMgPT0gMCk7Ci0JcGFnZXMgPSBrY2FsbG9j
-KG5yX2dyYW50X2ZyYW1lcywgc2l6ZW9mKHBhZ2VzWzBdKSwgR0ZQX0tFUk5FTCk7Ci0JaWYgKCFw
-YWdlcykKLQkJcmV0dXJuIC1FTk9NRU07Ci0KLQlwZm5zID0ga2NhbGxvYyhucl9ncmFudF9mcmFt
-ZXMsIHNpemVvZihwZm5zWzBdKSwgR0ZQX0tFUk5FTCk7Ci0JaWYgKCFwZm5zKSB7Ci0JCWtmcmVl
-KHBhZ2VzKTsKLQkJcmV0dXJuIC1FTk9NRU07Ci0JfQotCXJjID0gYWxsb2NfeGVuYmFsbG9vbmVk
-X3BhZ2VzKG5yX2dyYW50X2ZyYW1lcywgcGFnZXMpOwotCWlmIChyYykgewotCQlwcl93YXJuKCIl
-cyBDb3VsZG4ndCBiYWxsb29uIGFsbG9jICVsZCBwZm5zIHJjOiVkXG4iLCBfX2Z1bmNfXywKLQkJ
-CW5yX2dyYW50X2ZyYW1lcywgcmMpOwotCQlrZnJlZShwYWdlcyk7Ci0JCWtmcmVlKHBmbnMpOwot
-CQlyZXR1cm4gcmM7Ci0JfQotCWZvciAoaSA9IDA7IGkgPCBucl9ncmFudF9mcmFtZXM7IGkrKykK
-LQkJcGZuc1tpXSA9IHBhZ2VfdG9fcGZuKHBhZ2VzW2ldKTsKLQotCXZhZGRyID0gdm1hcChwYWdl
-cywgbnJfZ3JhbnRfZnJhbWVzLCAwLCBQQUdFX0tFUk5FTCk7Ci0JaWYgKCF2YWRkcikgewotCQlw
-cl93YXJuKCIlcyBDb3VsZG4ndCBtYXAgJWxkIHBmbnMgcmM6JWRcbiIsIF9fZnVuY19fLAotCQkJ
-bnJfZ3JhbnRfZnJhbWVzLCByYyk7Ci0JCWZyZWVfeGVuYmFsbG9vbmVkX3BhZ2VzKG5yX2dyYW50
-X2ZyYW1lcywgcGFnZXMpOwotCQlrZnJlZShwYWdlcyk7Ci0JCWtmcmVlKHBmbnMpOwotCQlyZXR1
-cm4gLUVOT01FTTsKLQl9Ci0Ja2ZyZWUocGFnZXMpOwotCi0JeGVuX2F1dG9feGxhdF9ncmFudF9m
-cmFtZXMucGZuID0gcGZuczsKLQl4ZW5fYXV0b194bGF0X2dyYW50X2ZyYW1lcy5jb3VudCA9IG5y
-X2dyYW50X2ZyYW1lczsKLQl4ZW5fYXV0b194bGF0X2dyYW50X2ZyYW1lcy52YWRkciA9IHZhZGRy
-OwotCi0JcmV0dXJuIDA7Ci19Ci0KKyNpbmNsdWRlIDx4ZW4veGVuLW9wcy5oPgogc3RhdGljIGlu
-dCBfX2luaXQgeGVuX3B2aF9nbnR0YWJfc2V0dXAodm9pZCkKIHsKIAlpZiAoIXhlbl9wdmhfZG9t
-YWluKCkpCiAJCXJldHVybiAtRU5PREVWOwogCi0JcmV0dXJuIHhsYXRlZF9zZXR1cF9nbnR0YWJf
-cGFnZXMoKTsKKwl4ZW5fYXV0b194bGF0X2dyYW50X2ZyYW1lcy5jb3VudCA9IGdudHRhYl9tYXhf
-Z3JhbnRfZnJhbWVzKCk7CisKKwlyZXR1cm4geGVuX3hsYXRlX21hcF9iYWxsb29uZWRfcGFnZXMo
-Jnhlbl9hdXRvX3hsYXRfZ3JhbnRfZnJhbWVzLnBmbiwKKwkJCQkJICAgICAmeGVuX2F1dG9feGxh
-dF9ncmFudF9mcmFtZXMudmFkZHIsCisJCQkJCSAgICAgeGVuX2F1dG9feGxhdF9ncmFudF9mcmFt
-ZXMuY291bnQpOwogfQogLyogQ2FsbCBpdCBfYmVmb3JlXyBfX2dudHRhYl9pbml0IGFzIHdlIG5l
-ZWQgdG8gaW5pdGlhbGl6ZSB0aGUKICAqIHhlbl9hdXRvX3hsYXRfZ3JhbnRfZnJhbWVzIGZpcnN0
-LiAqLwpkaWZmIC0tZ2l0IGEvZHJpdmVycy94ZW4veGxhdGVfbW11LmMgYi9kcml2ZXJzL3hlbi94
-bGF0ZV9tbXUuYwppbmRleCA1MDYzYzVlLi45NjkyNjU2IDEwMDY0NAotLS0gYS9kcml2ZXJzL3hl
-bi94bGF0ZV9tbXUuYworKysgYi9kcml2ZXJzL3hlbi94bGF0ZV9tbXUuYwpAQCAtMjksNiArMjks
-OCBAQAogICovCiAjaW5jbHVkZSA8bGludXgva2VybmVsLmg+CiAjaW5jbHVkZSA8bGludXgvbW0u
-aD4KKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+CisjaW5jbHVkZSA8bGludXgvdm1hbGxvYy5oPgog
-CiAjaW5jbHVkZSA8YXNtL3hlbi9oeXBlcmNhbGwuaD4KICNpbmNsdWRlIDxhc20veGVuL2h5cGVy
-dmlzb3IuaD4KQEAgLTM3LDYgKzM5LDcgQEAKICNpbmNsdWRlIDx4ZW4vcGFnZS5oPgogI2luY2x1
-ZGUgPHhlbi9pbnRlcmZhY2UveGVuLmg+CiAjaW5jbHVkZSA8eGVuL2ludGVyZmFjZS9tZW1vcnku
-aD4KKyNpbmNsdWRlIDx4ZW4vYmFsbG9vbi5oPgogCiB0eXBlZGVmIHZvaWQgKCp4ZW5fZ2ZuX2Zu
-X3QpKHVuc2lnbmVkIGxvbmcgZ2ZuLCB2b2lkICpkYXRhKTsKIApAQCAtMTg1LDMgKzE4OCw2MSBA
-QCBpbnQgeGVuX3hsYXRlX3VubWFwX2dmbl9yYW5nZShzdHJ1Y3Qgdm1fYXJlYV9zdHJ1Y3QgKnZt
-YSwKIAlyZXR1cm4gMDsKIH0KIEVYUE9SVF9TWU1CT0xfR1BMKHhlbl94bGF0ZV91bm1hcF9nZm5f
-cmFuZ2UpOworCisvKioKKyAqIHhlbl94bGF0ZV9tYXBfYmFsbG9vbmVkX3BhZ2VzIC0gbWFwIGEg
-bmV3IHNldCBvZiBiYWxsb29uZWQgcGFnZXMKKyAqIEBnZm5zOiByZXR1cm5zIHRoZSBhcnJheSBv
-ZiBjb3JyZXNwb25kaW5nIEdGTnMKKyAqIEB2aXJ0OiByZXR1cm5zIHRoZSB2aXJ0dWFsIGFkZHJl
-c3Mgb2YgdGhlIG1hcHBlZCByZWdpb24KKyAqIEBucl9ncmFudF9mcmFtZXM6IG51bWJlciBvZiBH
-Rk5zCisgKiBAcmV0dXJuIDAgb24gc3VjY2VzcywgZXJyb3Igb3RoZXJ3aXNlCisgKgorICogVGhp
-cyBhbGxvY2F0ZXMgYSBzZXQgb2YgYmFsbG9vbmVkIHBhZ2VzIGFuZCBtYXBzIHRoZW0gaW50byB0
-aGUKKyAqIGtlcm5lbCdzIGFkZHJlc3Mgc3BhY2UuCisgKi8KK2ludCBfX2luaXQgeGVuX3hsYXRl
-X21hcF9iYWxsb29uZWRfcGFnZXMoeGVuX3Bmbl90ICoqZ2Zucywgdm9pZCAqKnZpcnQsCisJCQkJ
-CSB1bnNpZ25lZCBsb25nIG5yX2dyYW50X2ZyYW1lcykKK3sKKwlzdHJ1Y3QgcGFnZSAqKnBhZ2Vz
-OworCXhlbl9wZm5fdCAqcGZuczsKKwl2b2lkICp2YWRkcjsKKwlpbnQgcmM7CisJdW5zaWduZWQg
-aW50IGk7CisKKwlCVUdfT04obnJfZ3JhbnRfZnJhbWVzID09IDApOworCXBhZ2VzID0ga2NhbGxv
-Yyhucl9ncmFudF9mcmFtZXMsIHNpemVvZihwYWdlc1swXSksIEdGUF9LRVJORUwpOworCWlmICgh
-cGFnZXMpCisJCXJldHVybiAtRU5PTUVNOworCisJcGZucyA9IGtjYWxsb2MobnJfZ3JhbnRfZnJh
-bWVzLCBzaXplb2YocGZuc1swXSksIEdGUF9LRVJORUwpOworCWlmICghcGZucykgeworCQlrZnJl
-ZShwYWdlcyk7CisJCXJldHVybiAtRU5PTUVNOworCX0KKwlyYyA9IGFsbG9jX3hlbmJhbGxvb25l
-ZF9wYWdlcyhucl9ncmFudF9mcmFtZXMsIHBhZ2VzKTsKKwlpZiAocmMpIHsKKwkJcHJfd2Fybigi
-JXMgQ291bGRuJ3QgYmFsbG9vbiBhbGxvYyAlbGQgcGZucyByYzolZFxuIiwgX19mdW5jX18sCisJ
-CQlucl9ncmFudF9mcmFtZXMsIHJjKTsKKwkJa2ZyZWUocGFnZXMpOworCQlrZnJlZShwZm5zKTsK
-KwkJcmV0dXJuIHJjOworCX0KKwlmb3IgKGkgPSAwOyBpIDwgbnJfZ3JhbnRfZnJhbWVzOyBpKysp
-CisJCXBmbnNbaV0gPSBwYWdlX3RvX3BmbihwYWdlc1tpXSk7CisKKwl2YWRkciA9IHZtYXAocGFn
-ZXMsIG5yX2dyYW50X2ZyYW1lcywgMCwgUEFHRV9LRVJORUwpOworCWlmICghdmFkZHIpIHsKKwkJ
-cHJfd2FybigiJXMgQ291bGRuJ3QgbWFwICVsZCBwZm5zIHJjOiVkXG4iLCBfX2Z1bmNfXywKKwkJ
-CW5yX2dyYW50X2ZyYW1lcywgcmMpOworCQlmcmVlX3hlbmJhbGxvb25lZF9wYWdlcyhucl9ncmFu
-dF9mcmFtZXMsIHBhZ2VzKTsKKwkJa2ZyZWUocGFnZXMpOworCQlrZnJlZShwZm5zKTsKKwkJcmV0
-dXJuIC1FTk9NRU07CisJfQorCWtmcmVlKHBhZ2VzKTsKKworCSpnZm5zID0gcGZuczsKKwkqdmly
-dCA9IHZhZGRyOworCisJcmV0dXJuIDA7Cit9CitFWFBPUlRfU1lNQk9MX0dQTCh4ZW5feGxhdGVf
-bWFwX2JhbGxvb25lZF9wYWdlcyk7CmRpZmYgLS1naXQgYS9pbmNsdWRlL3hlbi94ZW4tb3BzLmgg
-Yi9pbmNsdWRlL3hlbi94ZW4tb3BzLmgKaW5kZXggODZhYmUwNy4uMDcyYmUxYyAxMDA2NDQKLS0t
-IGEvaW5jbHVkZS94ZW4veGVuLW9wcy5oCisrKyBiL2luY2x1ZGUveGVuL3hlbi1vcHMuaApAQCAt
-ODUsNiArODUsOCBAQCBpbnQgeGVuX3hsYXRlX3JlbWFwX2dmbl9hcnJheShzdHJ1Y3Qgdm1fYXJl
-YV9zdHJ1Y3QgKnZtYSwKIAkJCSAgICAgIHN0cnVjdCBwYWdlICoqcGFnZXMpOwogaW50IHhlbl94
-bGF0ZV91bm1hcF9nZm5fcmFuZ2Uoc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEsCiAJCQkgICAg
-ICBpbnQgbnIsIHN0cnVjdCBwYWdlICoqcGFnZXMpOworaW50IHhlbl94bGF0ZV9tYXBfYmFsbG9v
-bmVkX3BhZ2VzKHhlbl9wZm5fdCAqKnBmbnMsIHZvaWQgKip2YWRkciwKKwkJCQkgIHVuc2lnbmVk
-IGxvbmcgbnJfZ3JhbnRfZnJhbWVzKTsKIAogYm9vbCB4ZW5fcnVubmluZ19vbl92ZXJzaW9uX29y
-X2xhdGVyKHVuc2lnbmVkIGludCBtYWpvciwgdW5zaWduZWQgaW50IG1pbm9yKTsKIAotLSAKMi4w
-LjQKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVu
-LWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMueGVuLm9yZwpodHRwOi8vbGlzdHMu
-eGVuLm9yZy94ZW4tZGV2ZWwK
+On Wed, Apr 6, 2016 at 3:01 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, Apr 05, 2016 at 11:09:34PM +0300, Octavian Purdila wrote:
+>> On Tue, Apr 5, 2016 at 9:16 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> > * The firmware is to some extent expected to manage pinctrl today (for power
+>> >   management of devices it does know about), and hence a pinctrl device is
+>> >   potentially under shared management of ACPI and the OS.
+>> >
+>> > * The ACPI specification says nothing about this style of pinctrl management,
+>> >   so it is unclear what the expectations are:
+>>
+>> Does it say anything at all about pinctrl management?
+>
+> To the best of my knowledge the ACPI spec does not explicitly mention pinctrl.
+> In another reply it was mentioned that there is work in progress for pinmuxing,
+> so evidently it is on the ASWG radar and within the scope of ACPI.
+>
+> I was trying to point out that it is _implicitly_ firmware's responsibility to
+> do any pinctrl today, due to the ACPI model for power management, and the lack
+> of an existing ACPI mechanisms to provide pinctrl data.
+>
+> In practice, firmware configures pinctrl at boot, and may modify pinctrl as
+> part of the runtime power management firmware is put in charge of.
+>
+
+AFAIK the firmware only uses the pinctrl at boot to set the initial
+values and the OS owns it after boot. The only interaction I know of
+after boot are GPIO signaled events, but those are executed under the
+control of the OS.
+
+I don't understand the part about firmware being put in charge of
+runtime power management. Do you mean that the firmware directly
+accesses the pinctrl registers? Doesn't this contradict the ACPI goal
+of having the OS control power management? Or do you mean accessing
+pinctrl registers via _PSx and PowerResource._On/_Off?
+
+> The lack of any statement about pinctrl would mean that there is effectively no
+> reasonable limitation on what firmware might do with pinctrl, and we cannot
+> assume specific behaviour from the firmware.
+>
+
+There is noting specified in the spec about other controllers, why is
+pinctrl special in this regard?
+
+> [...]
+>
+>> Since our focus is for open-ended configurations and for hardware that
+>> it is not know to firmware we only considered the case where the pins
+>> are not touched after the system boots.
+>>
+>> Now I wonder what are the cases were the firmware changes the pin
+>> configuration after boot.
+>
+> Device power management and suspend/resume seem like the obvious cases.
+
+I assume you are suggesting something like the following: we have a
+device that is powered via a GPIO and associated ACPI _PS3/_PS0
+methods are poking the pinctrl register to drive 0 or 1 to power on or
+off the device.
+
+If that is the case, we can easily break that today, by changing that
+particular GPIO value via, e.g., sysfs.
