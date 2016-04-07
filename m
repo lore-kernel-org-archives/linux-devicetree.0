@@ -1,147 +1,37 @@
-From: Purna Chandra Mandal <purna.mandal@microchip.com>
-Subject: Re: [PATCH v1 1/2] dt/bindings/usb: Add bindings for PIC32 MUSB
- driver.
-Date: Thu, 7 Apr 2016 18:32:02 +0530
-Message-ID: <57065A4A.8090203@microchip.com>
-References: <1460027775-20729-1-git-send-email-purna.mandal@microchip.com>
- <57065841.9020105@cogentembedded.com>
+From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 04/10] serial: mps2-uart: add MPS2 UART driver
+Date: Thu, 7 Apr 2016 14:03:54 +0100
+Message-ID: <57065ABA.4080506@arm.com>
+References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+ <1459519381-34441-5-git-send-email-vladimir.murzin@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <57065841.9020105@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org, Joshua Henderson <digitalpeer@digitalpeer.com>, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459519381-34441-5-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/2016 06:23 PM, Sergei Shtylyov wrote:
+On 01/04/16 15:02, Vladimir Murzin wrote:
+> This driver adds support to the UART controller found on ARM MPS2
+> platform.
+> 
+> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/tty/serial/Kconfig       |   12 +
+>  drivers/tty/serial/Makefile      |    1 +
+>  drivers/tty/serial/mps2-uart.c   |  598 ++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/serial_core.h |    3 +
+>  4 files changed, 614 insertions(+)
+>  create mode 100644 drivers/tty/serial/mps2-uart.c
 
-> Hello.
->
-> On 4/7/2016 2:16 PM, Purna Chandra Mandal wrote:
->
->> Document devicetree binding for the USB controller
->
->    Device tree.
->
-ack.
+Greg, any comments from you?
 
->> and USB Phy found on Microchip PIC32 class devices.
->
->    PHY.
->
-ack.
-
->> Signed-off-by: Purna Chandra Mandal <purna.mandal@microchip.com>
->>
->> ---
->>
->>   .../bindings/usb/microchip,pic32-musb.txt          | 67 ++++++++++++++++++++++
->>   1 file changed, 67 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
->> new file mode 100644
->> index 0000000..e1cec9d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
->> @@ -0,0 +1,67 @@
->> +Microchip PIC32 MUSB DRC/OTG controller
->> +-------------------------------------------
->> +
->> +Required properties:
->> + - compatible       : should be "microchip,pic32mzda-usb".
->> + - reg              : offset and length of "MUSB Core Registers" and
->> +                      "USB Clock & Reset Registers".
->> + - reg-names        : should be "mc", and "usbcr" in order
->> + - clocks           : clock specifier for the musb controller clock
->> + - clock-names      : should be "usb_clk"
->> + - interrupts       : interrupt number for MUSB Core General interrupt
->> +                      and DMA interrupt
->> + - interrupt-names  : must be "mc" and "dma" in order.
->> + - phys             : phy specifier for the otg phy.
->> + - dr_mode          : should be one of "host", "peripheral" or "otg".
->> + - mentor,multipoint: Should be "1" indicating the musb controller supports
->> +                      multipoint. This is MUSB configuration-specific setting.
->> + - mentor,num-eps   : Specifies the number of endpoints. This is also a
->> +                      MUSB configuration-specific setting. Should be set to "8".
->> + - mentor,ram-bits  : Specifies the ram address size. Should be set to "11".
->> + - mentor,power     : Should be "500". This signifies the controller can supply
->> +                      up to 500mA when operating in host mode.
->
->    No, these "nentor" prefixed parameters must be determined from the "compatible" prop.
->
-Prefix "mentor" here is used to signify configuration of the MUSB controller IP, not
-specifics of the chip or glue logic.
-Please suggest if replacing with "microchip" makes it better.
-
->> + - phys             : phandle of the USB phy.
->> + - usb_overcurrent  : phandle to MUSB over-current note. It should have
->
->    s/note/node/? Also,
->    Also, hyphens are preferred to underscores in the device trees.
->
-ack. Will use hyphen.
-
->> +                      interrupt number for over-current detection logic.
->> +
->> +Optional properties:
->> + - microchip,fifo-mode: Specifies layout of internal SRAM for end-point fifos.
->> +                        Should be 0 (default) or 1.
->> +
->> +Example:
->> +    aliases {
->> +        usb1 = &usb1;
->> +        phy1 = &usb1_phy;
->> +    };
->> +
->> +    usb1: hsusb1_core@1f8e3000 {
->
->    The ePAPR standard tells us to use the generic names, not chip specific, the name standardized in this case is "usb@...".
->
-ack.
-
->> +        compatible = "microchip,pic32mzda-usb";
->> +        reg = <0x1f8e3000 0x1000>,
->> +              <0x1f884000 0x1000>;
->> +        reg-names = "mc", "usbcr";
->> +        interrupts = <132 IRQ_TYPE_EDGE_RISING>,
->> +                 <133 IRQ_TYPE_LEVEL_HIGH>;
->> +        interrupt-names = "mc", "dma";
->> +        dr_mode = "host";
->> +        mentor,multipoint = <1>;
->> +        mentor,num-eps = <8>;
->> +        mentor,ram-bits = <11>;
->> +        mentor,power = <500>;
->> +        phys = <&usb1_phy>;
->> +        clocks = <&rootclk PB5CLK>;
->> +        clock-names = "usb_clk";
->> +        usb_overcurrent = <&usb1_overcurrent>;
->> +    };
->> +
->> +    usb1_phy: hsusb1_phy@1f8e4000 {
->
->    "usb-phy@..."
->
-ack.
-
->> +        compatible = "usb-nop-xceiv";
->> +        reg = <0x1f8e4000 0x1000>;
->> +        clocks = <&rootclk UPLLCLK>;
->> +        clock-names = "main_clk";
->> +        clock-frequency = <24000000>;
->> +    };
->> +
->> +    usb1_overcurrent: hsusb1_oc@0 {
->
->    "usb-overcurrent@...", perhaps?
->
-ack.
-
->> +        interrupt-parent = <&gpio1>;
->> +        interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
->> +    };
->
-> MBR, Sergei
->
+Cheers
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
