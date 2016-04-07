@@ -1,40 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] bmips: add support for BCM63268
-Date: Thu, 7 Apr 2016 12:57:22 -0500
-Message-ID: <20160407175722.GF32257@rob-hp-laptop>
-References: <1459684846-11308-1-git-send-email-noltari@gmail.com>
- <1459757517-14897-1-git-send-email-noltari@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v12 8/9] add TC G210 platform driver
+Date: Thu, 7 Apr 2016 12:57:08 -0500
+Message-ID: <20160407175708.GB32257@rob-hp-laptop>
+References: <cover.1459448160.git.jpinto@synopsys.com>
+ <aa4c31ba977bc5c07f5706f12c4d9fbb1bb0ec36.1459448160.git.jpinto@synopsys.com>
+ <20160404051546.GE17806@rob-hp-laptop>
+ <57024677.2060009@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459757517-14897-1-git-send-email-noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?=C1lvaro_Fern=E1ndez?= Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, simon-A6De1vDTPLDsq35pWSNszA@public.gmane.org
+In-Reply-To: <57024677.2060009@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: tomas.winkler@intel.com, vinholikatti@gmail.com, julian.calaby@gmail.com, akinobu.mita@gmail.com, hch@infradead.org, gbroner@codeaurora.org, subhashj@codeaurora.org, CARLOS.PALMINHA@synopsys.com, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2016 at 10:11:57AM +0200, =C1lvaro Fern=E1ndez Rojas wr=
-ote:
-> This SoC is very similar to BCM63168 and Broadcom usually refers to t=
-hem as
-> BCM63268.
-> Use alphabetical order for bmips quirks.
-> Add BCM63268 and missing BCM63168 to device tree documentation.
->=20
-> Signed-off-by: =C1lvaro Fern=E1ndez Rojas <noltari-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  v2: keep support for BCM63168
->=20
->  Documentation/devicetree/bindings/mips/brcm/soc.txt | 3 ++-
->  arch/mips/bmips/setup.c                             | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
+On Mon, Apr 04, 2016 at 11:48:23AM +0100, Joao Pinto wrote:
+> 
+> Hi Rob,
+> 
+> On 4/4/2016 6:15 AM, Rob Herring wrote:
+> > On Thu, Mar 31, 2016 at 07:57:21PM +0100, Joao Pinto wrote:
+> >> This patch adds a glue platform driver for the Synopsys G210 Test Chip.
+> >>
+> >> Signed-off-by: Joao Pinto <jpinto@synopsys.com>
+> >> ---
+> 
+> [snip]
+> 
+> >> +
+> >> +Required properties:
+> >> +- compatible	: compatible list must contain the PHY type & version:
+> >> +			"snps, g210-tc-6.00-20bit"
+> >> +			"snps, g210-tc-6.00-40bit"
+> > Remove the space              ^
+> > 
+> >> +		  complemented with the Controller IP version:
+> >> +			"snps, dwc-ufshcd-1.40a"
+> > 
+> > ditto
+> 
+> Ok, will do that!
+> 
+> > 
+> > Combining the phy and controller compatible strings is a bit strange. 
+> > Generally, they would be separate nodes using the common phy binding.
+> > 
+> 
+> Correct, but in this case is just the compatibility string is just to tell the
+> dw ufs host that it has a 40-bit or a 20-bit test chip connected. The Test chip
+> is initialized by a unipro command sequence and there is no more ops related to it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Okay. In that case, I think it should be a separate property unless the 
+controller h/w is synthesized for one or the other.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
