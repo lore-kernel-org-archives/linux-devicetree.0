@@ -1,56 +1,52 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3] Input: rotary_encoder - support binary encoding of states
-Date: Thu, 7 Apr 2016 17:45:00 -0500
-Message-ID: <CAL_JsqLfQQu69LcsFuJkKmjppp047vW5Ga+y5XiDAAG-Weh6ug@mail.gmail.com>
-References: <1460055528-13814-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] ARM: dts: r8a7791: Don't disable referenced optional
+ clocks
+Date: Thu, 7 Apr 2016 16:21:55 -0700
+Message-ID: <20160407232155.GH18567@codeaurora.org>
+References: <1459947173-6664-1-git-send-email-sjoerd.simons@collabora.co.uk>
+ <CAMuHMdUtPhBT0_+hSk_t5osHC8TssyGMFo+YOWetTGBkbpB4PQ@mail.gmail.com>
+ <1459949826.23936.19.camel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1460055528-13814-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1459949826.23936.19.camel@collabora.co.uk>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 7, 2016 at 1:58 PM, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
-> It's not advisable to use this encoding, but to support existing devi=
-ces
-> add support for this to the driver.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
-> ---
+On 04/06, Sjoerd Simons wrote:
+> On Wed, 2016-04-06 at 15:11 +0200, Geert Uytterhoeven wrote:
+> > CC Mike, Stephen, linux-clk (this time with the new Mike)
+> > 
+> > On Wed, Apr 6, 2016 at 2:52 PM, Sjoerd Simons
+> > <sjoerd.simons@collabora.co.uk> wrote:
+> > > 
+> > > clk_get on a disabled clock node will return EPROBE_DEFER, which
+> > > can
+> > > cause drivers to be deferred forever if such clocks are referenced
+> > > in
+> > > their clocks property.
+> > Is this a side effect of commit 3e5dd6f6e690048d ("clk: Ignore
+> > disabled DT
+> > clock providers")?
+> 
+> Yes it seems so. Reverting that patch means that i can drop this one
+> and get the expected behaviour again.
 
-Ack for the binding, but...
+The DT is broken then? Is it possible to mark these status =
+"okay" so that things work again?
 
-> @@ -213,6 +222,17 @@ static int rotary_encoder_probe(struct platform_=
-device *pdev)
->         encoder->rollover =3D
->                 device_property_read_bool(dev, "rotary-encoder,rollov=
-er");
->
-> +       err =3D device_property_read_string(dev, "rotary-encoder,enco=
-ding",
-> +                                         &encoding);
-> +       if (!err && !strcmp(encoding, "binary")) {
-> +               encoder->encoding =3D ROTENC_BINARY;
-> +       } else if (err || !strcmp(encoding, "gray")) {
-> +               encoder->encoding =3D ROTENC_GRAY;
-> +       } else {
-> +               dev_err(dev, "unknown encoding setting");
-> +               return -EINVAL;
+> 
+> Though even so I'm not sure what the convention is for clocks like
+> these, the r8a7791.dtsi is inconsistent, as some are disabled while
+> others (e.g. the audio clocks) are 0hz. Would be good to get some input
+> on that regardless.
+> 
 
-device_property_match_string() here instead.
+What's the question here?
 
-> +       }
-> +
->         device_property_read_u32(dev, "linux,axis", &encoder->axis);
->         encoder->relative_axis =3D
->                 device_property_read_bool(dev, "rotary-encoder,relati=
-ve-axis");
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
