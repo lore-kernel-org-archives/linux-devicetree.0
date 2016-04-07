@@ -1,79 +1,275 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v4 2/5] Documentation: DT: vdma: update binding doc for AXI DMA
-Date: Thu, 7 Apr 2016 10:59:42 +0530
-Message-ID: <1460006985-14805-3-git-send-email-appanad@xilinx.com>
-References: <1460006985-14805-1-git-send-email-appanad@xilinx.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH 1/1] leds: pca9532: Add device tree binding
+Date: Thu, 7 Apr 2016 14:12:51 +0800
+Message-ID: <5705FA63.4090109@electromag.com.au>
+References: <1459912250-50878-1-git-send-email-preid@electromag.com.au>
+ <1459912250-50878-2-git-send-email-preid@electromag.com.au>
+ <5704C130.80001@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1460006985-14805-1-git-send-email-appanad@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, anirudh@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <5704C130.80001@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, j.anaszewski@samsung.com, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the device-tree binding doc for
-adding support for AXI DMA.
-Also this patch differentiates required properties b/w
-DMA and VDMA.
+G'day Jacek,
 
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes for v4:
----> None.
-Changes for v3:
----> Removed AXI DMA DT example from the patch as suggested by Rob.
----> Differentiated required/optional properties for each DMA's
-     as suggested by Rob.
-Changes for v2:
----> Modified commit message as suggested by Vinod.
----> Moved the patch to forward in the series as suggested by vinod.
+Thanks for the feedback.
 
- .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt          | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+On 6/04/2016 3:56 PM, Jacek Anaszewski wrote:
+> Hi Phil,
+>
+> Thanks for the patch. Please find my comments below.
+>
+> On 04/06/2016 05:10 AM, Phil Reid wrote:
+>> This patch adds basic device tree support for the pca9532 LEDs.
+>>
+>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>> ---
+>>   .../devicetree/bindings/leds/leds-pca9532.txt      | 32 +++++++++++
+>>   drivers/leds/leds-pca9532.c                        | 63 ++++++++++++++++++++--
+>>   include/dt-bindings/leds/leds-pca9532.h            | 18 +++++++
+>>   include/linux/leds-pca9532.h                       |  8 ++-
+>>   4 files changed, 112 insertions(+), 9 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>> new file mode 100644
+>> index 0000000..b48c223
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>> @@ -0,0 +1,32 @@
+>> +*NXP - pca9532 PWM LED Driver
+>> +
+>> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
+>> +The PWM support 256 steps.
+>> +
+>> +Required properties:
+>> +    - compatible:
+>> +        "nxp,pca9530"
+>> +        "nxp,pca9531"
+>> +        "nxp,pca9532"
+>> +        "nxp,pca9533"
+>> +    - reg -  I2C slave address
+>> +
+>> +Each led is represented as a sub-node of the nxp,pca9530.
+>> +
+>> +LED sub-node properties:
+>> +- type: Output configuration
+>> +    0 = NONE, 1 = LED, 2 = N2100_BEEP, 3 = GPIO
+>> +
+>> +Example:
+>> +
+>> +  ledBL: pca9530@60 {
+>
+> I think that ledBL label is here by mistake. It looks like this
+> label's purpose was to describe LED color (BL -> blue), but
+> this info should be conveyed by child node name, per which
+> LED class devices are created.
+I'll clean this up.
 
-diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-index a86737c..3fb23fe 100644
---- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-+++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
-@@ -3,20 +3,28 @@ It can be configured to have one channel or two channels. If configured
- as two channels, one is to transmit to the video device and another is
- to receive from the video device.
- 
-+Xilinx AXI DMA engine, it does transfers between memory and AXI4 stream
-+target devices. It can be configured to have one channel or two channels.
-+If configured as two channels, one is to transmit to the device and another
-+is to receive from the device.
-+
- Required properties:
--- compatible: Should be "xlnx,axi-vdma-1.00.a"
-+- compatible: Should be "xlnx,axi-vdma-1.00.a" or "xlnx,axi-dma-1.00.a"
- - #dma-cells: Should be <1>, see "dmas" property below
- - reg: Should contain VDMA registers location and length.
--- xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
- - xlnx,addrwidth: Should be the vdma addressing size in bits(ex: 32 bits).
- - dma-ranges: Should be as the following <dma_addr cpu_addr max_len>.
- - dma-channel child node: Should have at least one channel and can have up to
- 	two channels per device. This node specifies the properties of each
- 	DMA channel (see child node properties below).
- 
-+Required properties for VDMA:
-+- xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
-+
- Optional properties:
- - xlnx,include-sg: Tells configured for Scatter-mode in
- 	the hardware.
-+Optional properties for VDMA:
- - xlnx,flush-fsync: Tells which channel to Flush on Frame sync.
- 	It takes following values:
- 	{1}, flush both channels
-@@ -33,6 +41,7 @@ Required child node properties:
- Optional child node properties:
- - xlnx,include-dre: Tells hardware is configured for Data
- 	Realignment Engine.
-+Optional child node properties for VDMA:
- - xlnx,genlock-mode: Tells Genlock synchronization is
- 	enabled/disabled in hardware.
- 
+>
+>> +    compatible = "nxp,pca9530";
+>> +    reg = <0x60>;
+>> +
+>> +    led0 {
+>
+> i.e. here. Moreover there is established LED device naming
+> convention (see Documentation/leds/leds-class.txt):
+>
+> devicename:colour:function
+Ok.
+>
+>
+>> +      type = <PCA9532_TYPE_LED>;
+>
+> Please add "#include <dt-bindings/leds/leds-pca9532.h>" after
+> "Example:" above.
+Ok.
+>
+>> +    };
+>> +  };
+>> +
+>> +For more product information please see the link below:
+>> +http://nxp.com/documents/data_sheet/PCA9532.pdf
+>> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+>> index e3d3b1a..8694c83 100644
+>> --- a/drivers/leds/leds-pca9532.c
+>> +++ b/drivers/leds/leds-pca9532.c
+>> @@ -21,6 +21,8 @@
+>>   #include <linux/workqueue.h>
+>>   #include <linux/leds-pca9532.h>
+>>   #include <linux/gpio.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>
+>>   /* m =  num_leds*/
+>>   #define PCA9532_REG_INPUT(i)    ((i) >> 3)
+>> @@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
+>>       },
+>>   };
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id of_pca9532_leds_match[] = {
+>> +    { .compatible = "nxp,pca9530", .data = (void *)pca9530 },
+>> +    { .compatible = "nxp,pca9531", .data = (void *)pca9531 },
+>> +    { .compatible = "nxp,pca9532", .data = (void *)pca9532 },
+>> +    { .compatible = "nxp,pca9533", .data = (void *)pca9533 },
+>> +    {},
+>> +};
+>> +
+>> +MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
+>> +#endif
+>> +
+>>   static struct i2c_driver pca9532_driver = {
+>>       .driver = {
+>>           .name = "leds-pca953x",
+>> +        .of_match_table = of_match_ptr(of_pca9532_leds_match),
+>>       },
+>>       .probe = pca9532_probe,
+>>       .remove = pca9532_remove,
+>> @@ -432,15 +447,55 @@ exit:
+>>       return err;
+>>   }
+>>
+>> +struct pca9532_platform_data *pca9532_of_populate_pdata(struct device *dev,
+>> +                              struct device_node *np)
+>> +{
+>> +    struct pca9532_platform_data *pdata;
+>> +    struct device_node *child;
+>> +    int devid = (int)of_match_device(of_pca9532_leds_match, dev)->data;
+>> +    int maxleds = pca9532_chip_info_tbl[devid].num_leds;
+>> +    int i = 0;
+>> +
+>> +    pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>> +    if (!pdata)
+>> +        return ERR_PTR(-ENOMEM);
+>> +
+>> +    for_each_child_of_node(np, child) {
+>> +        of_property_read_string(child, "name", &pdata->leds[i].name);
+>
+> Please use "label" property (see Documentation/devicetree/binding
+> /leds/common.txt). If not present use child node name. You can refer
+> to other LED class devices.
+Ok.
+
+>
+>> +        of_property_read_u32(child, "type", &pdata->leds[i].type);
+>> +        if (!pdata->leds[i].name)
+>> +            pdata->leds[i].name = "?";
+>> +        if (i >= maxleds)
+>> +            break;
+>
+> You have to call of_node_put if breaking this loop.
+Ok. Also I forgot to increment i, my system only has one LED on the PCA9530.
+
+>
+>> +    }
+>> +
+>> +    return pdata;
+>> +}
+>> +
+>>   static int pca9532_probe(struct i2c_client *client,
+>>       const struct i2c_device_id *id)
+>>   {
+>> +    int devid;
+>>       struct pca9532_data *data = i2c_get_clientdata(client);
+>>       struct pca9532_platform_data *pca9532_pdata =
+>>               dev_get_platdata(&client->dev);
+>> -
+>> -    if (!pca9532_pdata)
+>> -        return -EIO;
+>> +    struct device_node *np = client->dev.of_node;
+>> +
+>> +    if (!pca9532_pdata) {
+>> +        if (np) {
+>> +            pca9532_pdata =
+>> +                pca9532_of_populate_pdata(&client->dev, np);
+>> +            if (IS_ERR(pca9532_pdata))
+>> +                return PTR_ERR(pca9532_pdata);
+>> +        } else {
+>> +            dev_err(&client->dev, "no platform data\n");
+>> +            return -EINVAL;
+>> +        }
+>> +        devid = (int)of_match_device(
+>> +            of_pca9532_leds_match, &client->dev)->data;
+>> +    } else {
+>> +        devid = id->driver_data;
+>> +    }
+>>
+>>       if (!i2c_check_functionality(client->adapter,
+>>           I2C_FUNC_SMBUS_BYTE_DATA))
+>> @@ -450,7 +505,7 @@ static int pca9532_probe(struct i2c_client *client,
+>>       if (!data)
+>>           return -ENOMEM;
+>>
+>> -    data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
+>> +    data->chip_info = &pca9532_chip_info_tbl[devid];
+>>
+>>       dev_info(&client->dev, "setting platform data\n");
+>>       i2c_set_clientdata(client, data);
+>> diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
+>> new file mode 100644
+>> index 0000000..4d917aa
+>> --- /dev/null
+>> +++ b/include/dt-bindings/leds/leds-pca9532.h
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + * This header provides constants for pca9532 LED bindings.
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_LEDS_PCA9532_H
+>> +#define _DT_BINDINGS_LEDS_PCA9532_H
+>> +
+>> +#define PCA9532_TYPE_NONE         0
+>> +#define PCA9532_TYPE_LED          1
+>> +#define PCA9532_TYPE_N2100_BEEP   2
+>> +#define PCA9532_TYPE_GPIO         3
+>> +#define PCA9532_LED_TIMER2        4
+>> +
+>> +#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
+>> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+>> index b8d6fff..4970f51 100644
+>> --- a/include/linux/leds-pca9532.h
+>> +++ b/include/linux/leds-pca9532.h
+>> @@ -16,6 +16,7 @@
+>>
+>>   #include <linux/leds.h>
+>>   #include <linux/workqueue.h>
+>> +#include <dt-bindings/leds/leds-pca9532.h>
+>>
+>>   enum pca9532_state {
+>>       PCA9532_OFF  = 0x0,
+>> @@ -24,16 +25,13 @@ enum pca9532_state {
+>>       PCA9532_PWM1 = 0x3
+>>   };
+>>
+>> -enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
+>> -    PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
+>> -
+>>   struct pca9532_led {
+>>       u8 id;
+>>       struct i2c_client *client;
+>> -    char *name;
+>> +    const char *name;
+>>       struct led_classdev ldev;
+>>       struct work_struct work;
+>> -    enum pca9532_type type;
+>> +    u32 type;
+>>       enum pca9532_state state;
+>>   };
+>>
+>>
+>
+
+
 -- 
-2.1.2
+Regards
+Phil Reid
