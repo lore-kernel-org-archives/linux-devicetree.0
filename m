@@ -1,48 +1,35 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH v2 0/3] Add ACPI support for pinctrl configuration
-Date: Thu, 7 Apr 2016 19:48:57 +0200
-Message-ID: <CACRpkdZu1MFZ+0m7VUq8hArpjiESzjqaLvFDZHOK-JUidFtwvg@mail.gmail.com>
-References: <1459870406-15219-1-git-send-email-irina.tirdea@intel.com>
-	<20160407125634.GO1727@lahna.fi.intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] ARM: dts: Add binding documentation for
+ AXP20x pmic ac power supply
+Date: Thu, 7 Apr 2016 12:57:15 -0500
+Message-ID: <20160407175715.GD32257@rob-hp-laptop>
+References: <1459689307-8501-1-git-send-email-haas@computerlinguist.org>
+ <1459689307-8501-3-git-send-email-haas@computerlinguist.org>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160407125634.GO1727@lahna.fi.intel.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Octavian Purdila <octavian.purdila@intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDJIP47K7MERBAF7TK4AKGQEQWIGYWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1459689307-8501-3-git-send-email-haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+Cc: pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bonbons-ud5FBsm0p/xEiooADzr8i9i2O/JbrIOy@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 7, 2016 at 2:56 PM, Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
-> On Tue, Apr 05, 2016 at 06:33:23PM +0300, Irina Tirdea wrote:
+On Sun, Apr 03, 2016 at 03:15:06PM +0200, Michael Haas wrote:
+> Add binding documentation for the ac power supply part of the AXP20x
+> pmic.
+> 
+> Signed-off-by: Michael Haas <haas-bdq14YP6qtSV9CzYT+GlPGD2FQJk+8+b@public.gmane.org>
+> ---
+>  .../bindings/power_supply/axp20x_ac_power.txt      | 34 ++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power_supply/axp20x_ac_power.txt
 
->> Changes from v1:
->>  - address code review comments regarding coding style, documentation
->> and fixes
->>  - rewrote patch 3 ("pinctrl: Parse GpioInt/GpioIo resources") to
->> avoid using triple pointers
->>  - define pinconf_generic_dt_node_to_map since it is used by pinctrl
->> sirf driver
->>  - add dependency on PINCONF_GENERIC to the entire ACPI parsing code
->>  - dropped first patch from the series since it got merged
->> ("pinctrl: Rename pinctrl_utils_dt_free_map to pinctrl_utils_free_map")
->>
->> Irina Tirdea (3):
->>   pinctrl: pinconf-generic: Add ACPI support
->>   pinctrl: Add ACPI support
->>   pinctrl: Parse GpioInt/GpioIo resources
->
-> The series looks good to me now,
->
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->
-> Of course this all depends on the decision whether this is the preferred
-> way of controlling and muxing pins in ACPI.
-
-I think the discussion is very interesting and intense right now so
-let us see. We need to form some rough consensus before we
-know how to proceed.
-
-Yours,
-Linus Walleij
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
