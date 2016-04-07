@@ -1,37 +1,34 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt: davinci: use proper address after @
-Date: Thu, 7 Apr 2016 20:03:43 +0530
-Message-ID: <57066FC7.1030706@ti.com>
-References: <1459525325-25470-1-git-send-email-petr@barix.com>
- <1459525325-25470-2-git-send-email-petr@barix.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v5 04/10] serial: mps2-uart: add MPS2 UART driver
+Date: Thu, 7 Apr 2016 07:43:11 -0700
+Message-ID: <20160407144311.GC10853@kroah.com>
+References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
+ <1459519381-34441-5-git-send-email-vladimir.murzin@arm.com>
+ <57065ABA.4080506@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459525325-25470-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <57065ABA.4080506-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+Cc: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 April 2016 09:12 PM, Petr Kulhavy wrote:
-> From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+On Thu, Apr 07, 2016 at 02:03:54PM +0100, Vladimir Murzin wrote:
+> On 01/04/16 15:02, Vladimir Murzin wrote:
+> > This driver adds support to the UART controller found on ARM MPS2
+> > platform.
+> > 
+> > Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  drivers/tty/serial/Kconfig       |   12 +
+> >  drivers/tty/serial/Makefile      |    1 +
+> >  drivers/tty/serial/mps2-uart.c   |  598 ++++++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/serial_core.h |    3 +
+> >  4 files changed, 614 insertions(+)
+> >  create mode 100644 drivers/tty/serial/mps2-uart.c
 > 
-> TI has been using the physical address in DT after the @ in device nodes.
-> The device tree convention is to use the same address that is used for
-> the reg property. This updates all davinci DT files to use the proper
-> convention.
-> 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Greg, any comments from you?
 
-Applied for v4.7. Fixed the subject prefix to "ARM: dts: davinci: " as
-is the convention for device tree updates.
-
-Regards,
-Sekhar
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No idea, first I've seen of this, and there's no patch here...
