@@ -1,142 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] thermal: generic-adc: Add DT binding for ADC based
- thermal sensor driver
-Date: Thu, 7 Apr 2016 12:58:17 -0500
-Message-ID: <20160407175817.GQ32257@rob-hp-laptop>
-References: <1459936986-2839-1-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH v2 3/5] dmaengine: qcom: bam_dma: add controlled remotely
+ dt property
+Date: Thu, 7 Apr 2016 12:57:52 -0500
+Message-ID: <20160407175752.GM32257@rob-hp-laptop>
+References: <1459896982-30171-1-git-send-email-stanimir.varbanov@linaro.org>
+ <1459896982-30171-4-git-send-email-stanimir.varbanov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1459936986-2839-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: edubezval@gmail.com, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1459896982-30171-4-git-send-email-stanimir.varbanov@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sinan Kaya <okaya@codeaurora.org>, dmaengine@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Pramod Gurav <gpramod@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 06, 2016 at 03:33:05PM +0530, Laxman Dewangan wrote:
-> Sometimes, thermal sensors like NCT thermistors are connected to
-> the ADC channel. The temperature is read by reading the voltage
-> across the sensor resistance via ADC and referring the lookup
-> table for ADC value to temperature. The ADC interface is provided
-> through the IIO framework.
-
-IIO framework is a detail not relevant to the binding.
-
+On Wed, Apr 06, 2016 at 01:56:20AM +0300, Stanimir Varbanov wrote:
+> Some of the peripherals has bam which is controlled by remote
+> processor, thus the bam dma driver must avoid register writes
+> which initialise bam hw block. Those registers are protected
+> from xPU block and any writes to them will lead to secure
+> violation and system reboot.
 > 
-> Add DT binding doc for the adc based thermal sensor driver to detail
-> the DT property and provide the example for how to use it.
+> Adding the contolled_remotely flag in bam driver to avoid
+> not permitted register writes in bam_init function.
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Reviewed-by: Andy Gross <andy.gross@linaro.org>
 > ---
->  .../bindings/thermal/thermal-generic-adc.txt       | 86 ++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
-> new file mode 100644
-> index 0000000..6b3e715
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
-> @@ -0,0 +1,86 @@
-> +General Purpose Analog To Digital Converter (ADC) based thermal sensor
-> +
-> +On some of platforms, thermal sensor like thermistors are connected to
-> +one of ADC channel and sensor resistance is read via voltage across the
-> +sensor. The voltage read across the sensor is mapped to temperature using
-> +voltage-temperature lookup table.
-> +
-> +This driver provides the interface to sensor-ADC interconnection and
-> +the relation ship between ADC read value and temperature.
+>  Documentation/devicetree/bindings/dma/qcom_bam_dma.txt | 2 ++
+>  drivers/dma/qcom/bam_dma.c                             | 7 +++++++
+>  2 files changed, 9 insertions(+)
 
-Bindings don't describe drivers.
+Acked-by: Rob Herring <robh@kernel.org>
 
-> +
-> +Required properties:
-> +===================
-> +- compatible:		     Must be "generic-adc-thermal".
-> +- lower-temperature:	     Lower temperature for the lookup table
-> +			     in millicelsius.
-> +- upper-temperature:	     Upper temperature for the lookup table
-> +			     in millicelsius.
-> +- step-temperature:	     The temperature steps for the reading ADC
-> +			     value in millicelsius.
-> +- temperature-lookup-table:  The ADC reading value on each step of the
-> +			     temperature starting from lower temperature
-> +			     to upper temperature.
-> +			     When ADC is read, the value is looked up on the
-> +			     table to get the equivalent temperature.
-> +- #thermal-sensor-cells:     Should be 1. See ./thermal.txt for a description
-> +			     of this property. 
-> +
-> +Example :
-> +#include <dt-bindings/thermal/thermal.h>
-> +
-> +i2c@7000c400 {
-> +	ads1015: ads1015@4a {
-> +		reg = <0x4a>;
-> +		compatible = "ads1015";
-> +		sampling-frequency = <3300>;
-> +		#io-channel-cells = <1>; 
-> +	};
-> +};
-> +
-> +thermal-sensor@1 {
-> +	compatible = "generic-adc-thermal";
-> +	#thermal-sensor-cells = <0>;
-> +	io-channels = <&ads1015 1>; 
-> +	io-channel-names = "sensor-channel";
-> +	lower-temperature = <(-40000)>;
-> +	upper-temperature = <125000>;
-> +	step-temperature = <1000>;
-> +	temperature-lookup-table = <2578 2577 2576 2575 2574
-> +				2573 2572 2571 2569 2568
-> +				2567 2565 2563 2561 2559
-> +				::::::::::
-> +				254 247 240 233 226 220 
-> +				214 208>;
-> +};
-> +
-> +dummy_cool_dev: dummy-cool-dev {
-> +	compatible = "dummy-cooling-dev";
-> +	#cooling-cells = <2>; /* min followed by max */
-> +};
-> +
-> +thermal-zones {
-> +	Tboard {
-> +		polling-delay = <15000>; /* milliseconds */
-> +		polling-delay-passive = <0>; /* milliseconds */
-> +		thermal-sensors = <&tboard_thermistor>;
+On being a separate patch, yes that is always the preference. However, 
+this change is so small it doesn't matter to me. But this is going in 
+thru Vinod's tree, so it is his call.
 
-Missing a label?
-
-> +
-> +		trips {
-> +			therm_est_trip: therm_est_trip {
-> +			temperature = <40000>;
-> +			type = "active";
-> +			hysteresis = <1000>;
-> +			writable;
-
-Missing indentation and closing brace.
-
-> +		};
-> +	};
-> +
-> +	cooling-maps {
-> +		map0 {
-> +			trip = <&therm_est_trip>;
-> +			cooling-device = <&dummy_cool_dev THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +			contribution = <100>;
-> +			cdev-type = "therm_est_activ";
-> +			};
-
-Here's your missing brace... 
-
-> +		};
-> +
-> +	};
-> +};
-> -- 
-> 2.1.4
-> 
+Rob
