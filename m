@@ -1,69 +1,142 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ASoC: rockchip: i2s: configure the sdio
-	pins' iomux mode
-Date: Thu, 7 Apr 2016 12:58:11 -0500
-Message-ID: <20160407175811.GP32257@rob-hp-laptop>
-References: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
+Subject: Re: [PATCH 1/2] thermal: generic-adc: Add DT binding for ADC based
+ thermal sensor driver
+Date: Thu, 7 Apr 2016 12:58:17 -0500
+Message-ID: <20160407175817.GQ32257@rob-hp-laptop>
+References: <1459936986-2839-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, broonie@kernel.org, Kumar Gala <galak@codeaurora.org>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1459936986-2839-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: edubezval@gmail.com, rui.zhang@intel.com, mark.rutland@arm.com, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 06, 2016 at 04:38:22PM +0800, Sugar Zhang wrote:
-> There are 3 i2s sdio pins, which iomux mode is as follows:
+On Wed, Apr 06, 2016 at 03:33:05PM +0530, Laxman Dewangan wrote:
+> Sometimes, thermal sensors like NCT thermistors are connected to
+> the ADC channel. The temperature is read by reading the voltage
+> across the sensor resistance via ADC and referring the lookup
+> table for ADC value to temperature. The ADC interface is provided
+> through the IIO framework.
 
-s/i2s sdio/I2S\/SDIO muxed/
-
-> 
->  - sdi3_sdo1
->  - sdi2_sdo2
->  - sdi1_sdo3
-> 
-> we need to configure these pins' iomux mode via the GRF register
-> when use multi channel playback/capture.
-
-Why not a pinctrl binding here? If you want SDIO mode, then you need 
-similar code in the SDIO driver (or just rely on default mode).
+IIO framework is a detail not relevant to the binding.
 
 > 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+> Add DT binding doc for the adc based thermal sensor driver to detail
+> the DT property and provide the example for how to use it.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 > ---
+>  .../bindings/thermal/thermal-generic-adc.txt       | 86 ++++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
 > 
->  .../devicetree/bindings/sound/rockchip-i2s.txt     |  5 +++
->  sound/soc/rockchip/rockchip_i2s.c                  | 39 +++++++++++++++++++++-
->  sound/soc/rockchip/rockchip_i2s.h                  |  8 +++++
->  3 files changed, 51 insertions(+), 1 deletion(-)
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
+> new file mode 100644
+> index 0000000..6b3e715
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-generic-adc.txt
+> @@ -0,0 +1,86 @@
+> +General Purpose Analog To Digital Converter (ADC) based thermal sensor
+> +
+> +On some of platforms, thermal sensor like thermistors are connected to
+> +one of ADC channel and sensor resistance is read via voltage across the
+> +sensor. The voltage read across the sensor is mapped to temperature using
+> +voltage-temperature lookup table.
+> +
+> +This driver provides the interface to sensor-ADC interconnection and
+> +the relation ship between ADC read value and temperature.
+
+Bindings don't describe drivers.
+
+> +
+> +Required properties:
+> +===================
+> +- compatible:		     Must be "generic-adc-thermal".
+> +- lower-temperature:	     Lower temperature for the lookup table
+> +			     in millicelsius.
+> +- upper-temperature:	     Upper temperature for the lookup table
+> +			     in millicelsius.
+> +- step-temperature:	     The temperature steps for the reading ADC
+> +			     value in millicelsius.
+> +- temperature-lookup-table:  The ADC reading value on each step of the
+> +			     temperature starting from lower temperature
+> +			     to upper temperature.
+> +			     When ADC is read, the value is looked up on the
+> +			     table to get the equivalent temperature.
+> +- #thermal-sensor-cells:     Should be 1. See ./thermal.txt for a description
+> +			     of this property. 
+> +
+> +Example :
+> +#include <dt-bindings/thermal/thermal.h>
+> +
+> +i2c@7000c400 {
+> +	ads1015: ads1015@4a {
+> +		reg = <0x4a>;
+> +		compatible = "ads1015";
+> +		sampling-frequency = <3300>;
+> +		#io-channel-cells = <1>; 
+> +	};
+> +};
+> +
+> +thermal-sensor@1 {
+> +	compatible = "generic-adc-thermal";
+> +	#thermal-sensor-cells = <0>;
+> +	io-channels = <&ads1015 1>; 
+> +	io-channel-names = "sensor-channel";
+> +	lower-temperature = <(-40000)>;
+> +	upper-temperature = <125000>;
+> +	step-temperature = <1000>;
+> +	temperature-lookup-table = <2578 2577 2576 2575 2574
+> +				2573 2572 2571 2569 2568
+> +				2567 2565 2563 2561 2559
+> +				::::::::::
+> +				254 247 240 233 226 220 
+> +				214 208>;
+> +};
+> +
+> +dummy_cool_dev: dummy-cool-dev {
+> +	compatible = "dummy-cooling-dev";
+> +	#cooling-cells = <2>; /* min followed by max */
+> +};
+> +
+> +thermal-zones {
+> +	Tboard {
+> +		polling-delay = <15000>; /* milliseconds */
+> +		polling-delay-passive = <0>; /* milliseconds */
+> +		thermal-sensors = <&tboard_thermistor>;
+
+Missing a label?
+
+> +
+> +		trips {
+> +			therm_est_trip: therm_est_trip {
+> +			temperature = <40000>;
+> +			type = "active";
+> +			hysteresis = <1000>;
+> +			writable;
+
+Missing indentation and closing brace.
+
+> +		};
+> +	};
+> +
+> +	cooling-maps {
+> +		map0 {
+> +			trip = <&therm_est_trip>;
+> +			cooling-device = <&dummy_cool_dev THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +			contribution = <100>;
+> +			cdev-type = "therm_est_activ";
+> +			};
+
+Here's your missing brace... 
+
+> +		};
+> +
+> +	};
+> +};
+> -- 
+> 2.1.4
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-> index 6e86d8a..ad72a7d 100644
-> --- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-> +++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
-> @@ -23,6 +23,11 @@ Required properties:
->  - rockchip,playback-channels: max playback channels, if not set, 8 channels default.
->  - rockchip,capture-channels: max capture channels, if not set, 2 channels default.
->  
-> +Required properties for controller which support multi channels playback/capture:
-> +
-> +- rockchip,grf: Should be phandle/offset pair. the phandle of the syscon node for GRF register,
-
-Wrap your lines at less than 80 chars.
-
-> +  and the offset of the GRF for control register.
-> +
->  Example for rk3288 I2S controller:
->  
->  i2s@ff890000 {
