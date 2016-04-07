@@ -1,62 +1,93 @@
-From: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH V2] net: mediatek: update the IRQ part of the binding document
-Date: Thu,  7 Apr 2016 21:28:33 +0200
-Message-ID: <1460057313-55885-1-git-send-email-blogic@openwrt.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH V3] net: emac: emac gigabit ethernet controller driver
+Date: Thu, 7 Apr 2016 22:10:09 +0200
+Message-ID: <20160407201009.GA16136@lunn.ch>
+References: <1451440135-25771-1-git-send-email-gavidov@codeaurora.org>
+ <20151231231039.GA8886@rob-hp-laptop>
+ <56ABADEA.40801@codeaurora.org>
+ <CAL_JsqLnJt+mdL==-qP-EJhMa2rA6i-AyDESj69wNVt7D5JJUQ@mail.gmail.com>
+ <5706B4EF.2050600@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felix Fietkau <nbd-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Sean=20Wang=20=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?= <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5706B4EF.2050600-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Timur Tabi <timur-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gilad Avidov <gavidov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sagar Dharia <sdharia-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, shankerd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, vikrams-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current binding document only describes a single interrupt. Update the
-document by adding the 2 other interrupts.
+> I'm back to working on this driver, and I need some more help with
+> how to handle the phy.  mdio-gpio.txt doesn't really tell me much.
+> I'm actually working on an ACPI system and not DT.
 
-The driver currently only uses a single interrupt. The HW is however able
-to using IRQ grouping to split TX and RX onto separate GIC irqs.
+I can help you with DT, but not ACPI.
 
-Signed-off-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-Changes in V2:
-* split this patch out of the series that fixes tx stalls in the driver
+The MDIO bus can be a separate Linux device. Since you have GPIO lines
+for the MDIO bus, it makes sense for this to be a mdio-gpio device. So
+in DT, you would have:
 
- Documentation/devicetree/bindings/net/mediatek-net.txt |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+mdio0: mdio {
+        compatible = "virtual,mdio-gpio";
+        #address-cells = <1>;
+        #size-cells = <0>;
+        gpios = <&qcomgpio 123 0
+                 &qcomgpio 124 0>;
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-index 5ca7929..2f142be 100644
---- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -9,7 +9,7 @@ have dual GMAC each represented by a child node..
- Required properties:
- - compatible: Should be "mediatek,mt7623-eth"
- - reg: Address and length of the register set for the device
--- interrupts: Should contain the frame engines interrupt
-+- interrupts: Should contain the three frame engines interrupts
- - clocks: the clock used by the core
- - clock-names: the names of the clock listed in the clocks property. These are
- 	"ethif", "esw", "gp2", "gp1"
-@@ -42,7 +42,9 @@ eth: ethernet@1b100000 {
- 		 <&ethsys CLK_ETHSYS_GP2>,
- 		 <&ethsys CLK_ETHSYS_GP1>;
- 	clock-names = "ethif", "esw", "gp2", "gp1";
--	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
-+	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW
-+		      GIC_SPI 199 IRQ_TYPE_LEVEL_LOW
-+		      GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
- 	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
- 	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
- 	reset-names = "eth";
--- 
-1.7.10.4
+	phy0: ethernet-phy@8 {
+        	reg = <9>;
+	};
+};
+
+Here i've assumed the PHY is using address 8 on the bus. Change as
+needed.
+
+In your MAC DT node, you then have phy-handle pointing to this phy:
+
+  emac0: qcom,emac@feb20000 {
+  	cell-index = <0>;
+	compatible = "qcom,emac";
+	reg-names = "base", "csr", "ptp", "sgmii";
+	reg =   <0xfeb20000 0x10000>,
+	    	<0xfeb36000 0x1000>,
+		<0xfeb3c000 0x4000>,
+		<0xfeb38000 0x400>;
+	#address-cells = <0>;
+	interrupt-parent = <&emac0>;
+	#interrupt-cells = <1>;
+	interrupts = <0 1>;
+	interrupt-map-mask = <0xffffffff>;
+	interrupt-map = <0 &intc 0 76 0
+	 	         1 &intc 0 80 0>;
+       	interrupt-names = "emac_core0", "sgmii_irq";
+  	qcom,emac-tstamp-en;
+	qcom,emac-ptp-frac-ns-adj = <125000000 1>;
+
+	phy-handle = <&phy0>
+}
+
+In the driver, you need to connect the PHY to the MAC. You do this
+using something like:
+
+         if (dev->of_node) {
+                 phy_np = of_parse_phandle(dev->of_node, "phy-handle", 0);
+                 if (!phy_np) {
+                         netdev_dbg(ndev, "No phy-handle found in DT\n");
+                         return -ENODEV;
+                 }
+ 
+                 phy_dev = of_phy_connect(ndev, phy_np, &xxxx_enet_adjust_link,
+                                          0, pdata->phy_mode);
+                 if (!phy_dev) {
+                         netdev_err(ndev, "Could not connect to PHY\n");
+                         return -ENODEV;
+                 }
+
+Do you have an ACPI table describing this hardware? What does it look
+like?
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
