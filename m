@@ -1,37 +1,118 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 04/10] serial: mps2-uart: add MPS2 UART driver
-Date: Thu, 7 Apr 2016 14:03:54 +0100
-Message-ID: <57065ABA.4080506@arm.com>
-References: <1459519381-34441-1-git-send-email-vladimir.murzin@arm.com>
- <1459519381-34441-5-git-send-email-vladimir.murzin@arm.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 6/6] ARM: DTS: da850: Add McBSP0 and McBSP1
+Date: Thu, 7 Apr 2016 16:04:47 +0300
+Message-ID: <57065AEF.9080002@ti.com>
+References: <1459948893-4206-1-git-send-email-petr@barix.com>
+ <1459948893-4206-7-git-send-email-petr@barix.com> <570645B4.6060606@ti.com>
+ <57064F8B.3020501@barix.com> <5706567B.5000501@ti.com>
+ <570658BF.9010802@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459519381-34441-5-git-send-email-vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <570658BF.9010802@barix.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Petr Kulhavy <petr@barix.com>, nsekhar@ti.com, khilman@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/16 15:02, Vladimir Murzin wrote:
-> This driver adds support to the UART controller found on ARM MPS2
-> platform.
-> 
-> Signed-off-by: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/tty/serial/Kconfig       |   12 +
->  drivers/tty/serial/Makefile      |    1 +
->  drivers/tty/serial/mps2-uart.c   |  598 ++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/serial_core.h |    3 +
->  4 files changed, 614 insertions(+)
->  create mode 100644 drivers/tty/serial/mps2-uart.c
+On 04/07/16 15:55, Petr Kulhavy wrote:
+> =
 
-Greg, any comments from you?
+> =
 
-Cheers
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 07.04.2016 14:45, Peter Ujfalusi wrote:
+>> On 04/07/16 15:16, Petr Kulhavy wrote:
+>>> On 07.04.2016 13:34, Peter Ujfalusi wrote:
+>>>> On 04/06/16 16:21, Petr Kulhavy wrote:
+>>>>> Add SoC nodes for McBSP0 and McBSP1 as well as the corresponding pinm=
+ux
+>>>>> configurations.
+>>>>>
+>>>>> Signed-off-by: Petr Kulhavy <petr@barix.com>
+>>>>> ---
+>>>>>    arch/arm/boot/dts/da850.dtsi | 45
+>>>>> +++++++++++++++++++++++++++++++++++++++++++-
+>>>>>    1 file changed, 44 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.d=
+tsi
+>>>>> index 5996e765e59c..9e2b1e97377c 100644
+>>>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>>>> @@ -148,7 +148,24 @@
+>>>>>                        0xc 0x88888888 0xffffffff
+>>>>>                    >;
+>>>>>                };
+>>>>> -
+>>>>> +            mcbsp0_pins: pinmux_mcbsp0_pins {
+>>>>> +                pinctrl-single,bits =3D <
+>>>>> +                    /* PINMUX2:
+>>>>> +                    * CLKS0, DX0, DR0, FSX0
+>>>>> +                    * FSR0, CLKX0, CLKR0
+>>>>> +                    */
+>>>>> +                    0x8 0x02222220 0xfffffff0
+>>>>> +                >;
+>>>>> +            };
+>>>>> +            mcbsp1_pins: pinmux_mcbsp1_pins {
+>>>>> +                pinctrl-single,bits =3D <
+>>>>> +                    /* PINMUX1:
+>>>>> +                    * CLKS1, DX1, DR1, FSX1,
+>>>>> +                    * FSR1, CLKX1, CLKR1
+>>>>> +                    */
+>>>>> +                    0x4 0x22222220 0xfffffff0
+>>>> This will conflict with the mcasp0_pins in da850-evm as AXR11 and AXR1=
+2 is
+>>>> used by the board for audio. When I say conflict, I mean that audio wi=
+ll be
+>>>> completely broken on the board.
+>>> I agree with you, the EVM uses the pins for other peripherals. However I
+>>> understand that the da850.dtsi is a generic description of the DA850 pl=
+atform.
+>>> Other DA850 based designs that use the McBSP will not have conflicts. F=
+or
+>>> instance my two AM1808 based boards don't use the McASP.
+>>> Of course the board's DTS must enable only non-conflicting peripherals/=
+pinmux
+>>> configurations.
+>>> But having the pinmuxes defined does not break anything and actually he=
+lps
+>>> creating the DTS file.
+>> I think what the da850.dtsi does is wrong. The dtsi file should not set =
+any
+>> pinmux, those need to be set by the board .dts files If one board uses M=
+cASP0,
+>> it will set up the pins for that and leave McBSP pins as they were, but =
+other
+>> board might use McBSP1 and not use McASP0, there you will have pincontro=
+l for
+>> McBSP1.
+> It does not set the pinmux, it just defines the configurations.
+> As far as I understand the pin configuration is applied when a node inclu=
+des
+> these two lines:
+> =
+
+>                         pinctrl-names =3D "default";
+>                         pinctrl-0 =3D <&mcbspc0_pins>;
+
+Yeah, true. just ignore my comment for the pinctrl part...
+
+> =
+
+> Petr
+> =
+
+
+
+-- =
+
+P=E9ter
