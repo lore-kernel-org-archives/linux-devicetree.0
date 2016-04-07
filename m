@@ -1,146 +1,62 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v3] Input: rotary_encoder - support binary encoding of states
-Date: Thu,  7 Apr 2016 20:58:48 +0200
-Message-ID: <1460055528-13814-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 1/4] arm64: dts: marvell: Clean up armada-3720-db
+Date: Thu, 07 Apr 2016 12:00:51 -0700
+Message-ID: <878u0pjlb0.fsf@free-electrons.com>
+References: <1458771861-12392-1-git-send-email-afaerber@suse.de>
+	<1458771861-12392-2-git-send-email-afaerber@suse.de>
+	<87zitnn9ds.fsf@free-electrons.com> <56F419CA.9010400@suse.de>
+	<87oaa3m0qj.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: kernel@pengutronix.de
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87oaa3m0qj.fsf@free-electrons.com> (Gregory CLEMENT's message of
+	"Fri, 25 Mar 2016 09:16:04 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-It's not advisable to use this encoding, but to support existing device=
-s
-add support for this to the driver.
+Hi Andreas,
+=20
+ On ven., mars 25 2016, Gregory CLEMENT <gregory.clement@free-electrons=
+=2Ecom> wrote:
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
+> Hi Andreas,
+> =20
+>  On jeu., mars 24 2016, Andreas F=C3=A4rber <afaerber@suse.de> wrote:
+>
+>> Hi Gregory,
+>>
+>> Am 24.03.2016 um 17:11 schrieb Gregory CLEMENT:
+>>>> +/*
+>>>> + * Exported on the micro USB connector CON32
+>>>> + * through an FTDI
+>>>> + */
+>>>=20
+>>> As the comment didn't start anymore from the middle of the line, we
+>>> could have it an a single line. We don't have to split in 2 lines.
+>>
+>> Sure. Should I change that along with 4/4 in a v2? It'll be after th=
+e
+>> Easter holidays.
+>
+> Yes please and no problem for wiating for after the Easter holidays I
+> won't apply the patch on the mvebu branches before the release of the
+> v4.6-rc1.
 
-Notes:
-    Changes since (implicit) v1, sent with
-    Message-Id: 1458680914-4533-1-git-send-email-u.kleine-koenig@pengut=
-ronix.de
-   =20
-     - switch format of dt properties to use strings
-   =20
-    Changes since v2, sent with
-    Message-Id: 1458806232-22403-1-git-send-email-u.kleine-koenig@pengu=
-tronix.de
-   =20
-     - be more strict about parsing the encoding string
+Do you think you could send a v2 of the serie soon?
 
- .../devicetree/bindings/input/rotary-encoder.txt   |  4 ++++
- drivers/input/misc/rotary_encoder.c                | 26 ++++++++++++++=
-+++++---
- 2 files changed, 27 insertions(+), 3 deletions(-)
+I would like to have it in the mvebu/dt64 tree as it will impact all th=
+e
+next patches aimed for these files.
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt=
- b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index 6c9f0c8a846c..e85ce3dea480 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -20,6 +20,8 @@ Optional properties:
-   2: Half-period mode
-   4: Quarter-period mode
- - wakeup-source: Boolean, rotary encoder can wake up the system.
-+- rotary-encoder,encoding: String, the method used to encode steps.
-+  Supported are "gray" (the default and more common) and "binary".
-=20
- Deprecated properties:
- - rotary-encoder,half-period: Makes the driver work on half-period mod=
-e.
-@@ -34,6 +36,7 @@ Example:
- 			compatible =3D "rotary-encoder";
- 			gpios =3D <&gpio 19 1>, <&gpio 20 0>; /* GPIO19 is inverted */
- 			linux,axis =3D <0>; /* REL_X */
-+			rotary-encoder,encoding =3D "gray";
- 			rotary-encoder,relative-axis;
- 		};
-=20
-@@ -42,5 +45,6 @@ Example:
- 			gpios =3D <&gpio 21 0>, <&gpio 22 0>;
- 			linux,axis =3D <1>; /* ABS_Y */
- 			rotary-encoder,steps =3D <24>;
-+			rotary-encoder,encoding =3D "binary";
- 			rotary-encoder,rollover;
- 		};
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/r=
-otary_encoder.c
-index 96c486de49e0..1e17e28188c6 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -28,6 +28,11 @@
-=20
- #define DRV_NAME "rotary-encoder"
-=20
-+enum rotary_encoder_encoding {
-+	ROTENC_GRAY,
-+	ROTENC_BINARY,
-+};
-+
- struct rotary_encoder {
- 	struct input_dev *input;
-=20
-@@ -37,6 +42,7 @@ struct rotary_encoder {
- 	u32 axis;
- 	bool relative_axis;
- 	bool rollover;
-+	enum rotary_encoder_encoding encoding;
-=20
- 	unsigned int pos;
-=20
-@@ -57,9 +63,11 @@ static unsigned rotary_encoder_get_state(struct rota=
-ry_encoder *encoder)
-=20
- 	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
- 		int val =3D gpiod_get_value_cansleep(encoder->gpios->desc[i]);
--		/* convert from gray encoding to normal */
--		if (ret & 1)
--			val =3D !val;
-+
-+		if (encoder->encoding =3D=3D ROTENC_GRAY)
-+			/* convert from gray encoding to binary */
-+			if (ret & 1)
-+				val =3D !val;
-=20
- 		ret =3D ret << 1 | val;
- 	}
-@@ -183,6 +191,7 @@ static int rotary_encoder_probe(struct platform_dev=
-ice *pdev)
- 	struct device *dev =3D &pdev->dev;
- 	struct rotary_encoder *encoder;
- 	struct input_dev *input;
-+	const char *encoding;
- 	irq_handler_t handler;
- 	u32 steps_per_period;
- 	unsigned int i;
-@@ -213,6 +222,17 @@ static int rotary_encoder_probe(struct platform_de=
-vice *pdev)
- 	encoder->rollover =3D
- 		device_property_read_bool(dev, "rotary-encoder,rollover");
-=20
-+	err =3D device_property_read_string(dev, "rotary-encoder,encoding",
-+					  &encoding);
-+	if (!err && !strcmp(encoding, "binary")) {
-+		encoder->encoding =3D ROTENC_BINARY;
-+	} else if (err || !strcmp(encoding, "gray")) {
-+		encoder->encoding =3D ROTENC_GRAY;
-+	} else {
-+		dev_err(dev, "unknown encoding setting");
-+		return -EINVAL;
-+	}
-+
- 	device_property_read_u32(dev, "linux,axis", &encoder->axis);
- 	encoder->relative_axis =3D
- 		device_property_read_bool(dev, "rotary-encoder,relative-axis");
+Thanks,
+
+Gregory
+
 --=20
-2.8.0.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
