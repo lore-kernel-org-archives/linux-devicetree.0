@@ -1,229 +1,70 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 07/12] ARM: dts: r8a7779: Use SYSC "always-on" PM Domain
-Date: Thu,  7 Apr 2016 14:20:30 +0200
-Message-ID: <1460031635-13452-8-git-send-email-geert+renesas@glider.be>
-References: <1460031635-13452-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1460031635-13452-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-pm-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v4 5/7] soc: renesas: Add r8a7793 SYSC PM Domain Binding Definitions
+Date: Thu,  7 Apr 2016 14:20:18 +0200
+Message-ID: <1460031620-13240-6-git-send-email-geert+renesas@glider.be>
+References: <1460031620-13240-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1460031620-13240-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hook up all devices that are part of the CPG/MSTP Clock Domain to the
-SYSC "always-on" PM Domain, for a more consistent device-power-area
-description in DT.
+R-Car M2-N is identical to R-Car M2-W w.r.t. power domains, so reuse the
+definitions from the latter.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
 v4:
+  - Rename R8A7793_PD_SH to R8A7793_PD_SH_4A,
+  - Use the numbers directly, to make the header file self-contained,
+  - Add always-on power area,
+
+v3:
   - New.
 ---
- arch/arm/boot/dts/r8a7779.dtsi | 44 +++++++++++++++++++++---------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ include/dt-bindings/power/r8a7793-sysc.h | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 include/dt-bindings/power/r8a7793-sysc.h
 
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 2679ab4629d5c2b2..dacef3f02b8b9a25 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -177,7 +177,7 @@
- 		reg = <0xffc70000 0x1000>;
- 		interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_I2C0>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -188,7 +188,7 @@
- 		reg = <0xffc71000 0x1000>;
- 		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_I2C1>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -199,7 +199,7 @@
- 		reg = <0xffc72000 0x1000>;
- 		interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_I2C2>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -210,7 +210,7 @@
- 		reg = <0xffc73000 0x1000>;
- 		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_I2C3>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -222,7 +222,7 @@
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF0>,
- 			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
- 		clock-names = "fck", "brg_int", "scif_clk";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -234,7 +234,7 @@
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF1>,
- 			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
- 		clock-names = "fck", "brg_int", "scif_clk";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -246,7 +246,7 @@
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF2>,
- 			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
- 		clock-names = "fck", "brg_int", "scif_clk";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -258,7 +258,7 @@
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF3>,
- 			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
- 		clock-names = "fck", "brg_int", "scif_clk";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -270,7 +270,7 @@
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF4>,
- 			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
- 		clock-names = "fck", "brg_int", "scif_clk";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -282,7 +282,7 @@
- 		clocks = <&mstp0_clks R8A7779_CLK_SCIF5>,
- 			 <&cpg_clocks R8A7779_CLK_S1>, <&scif_clk>;
- 		clock-names = "fck", "brg_int", "scif_clk";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -304,7 +304,7 @@
- 			     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
- 		clock-names = "fck";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 
- 		#renesas,channels = <3>;
- 
-@@ -319,7 +319,7 @@
- 			     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
- 		clock-names = "fck";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 
- 		#renesas,channels = <3>;
- 
-@@ -334,7 +334,7 @@
- 			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
- 		clock-names = "fck";
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 
- 		#renesas,channels = <3>;
- 
-@@ -346,7 +346,7 @@
- 		reg = <0xfc600000 0x2000>;
- 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7779_CLK_SATA>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 	};
- 
- 	sdhi0: sd@ffe4c000 {
-@@ -354,7 +354,7 @@
- 		reg = <0xffe4c000 0x100>;
- 		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A7779_CLK_SDHI0>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -363,7 +363,7 @@
- 		reg = <0xffe4d000 0x100>;
- 		interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A7779_CLK_SDHI1>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -372,7 +372,7 @@
- 		reg = <0xffe4e000 0x100>;
- 		interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A7779_CLK_SDHI2>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -381,7 +381,7 @@
- 		reg = <0xffe4f000 0x100>;
- 		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp3_clks R8A7779_CLK_SDHI3>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -392,7 +392,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		clocks = <&mstp0_clks R8A7779_CLK_HSPI>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -403,7 +403,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		clocks = <&mstp0_clks R8A7779_CLK_HSPI>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -414,7 +414,7 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		clocks = <&mstp0_clks R8A7779_CLK_HSPI>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 	};
- 
-@@ -423,7 +423,7 @@
- 		reg = <0 0xfff80000 0 0x40000>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&mstp1_clks R8A7779_CLK_DU>;
--		power-domains = <&cpg_clocks>;
-+		power-domains = <&sysc R8A7779_PD_ALWAYS_ON>;
- 		status = "disabled";
- 
- 		ports {
+diff --git a/include/dt-bindings/power/r8a7793-sysc.h b/include/dt-bindings/power/r8a7793-sysc.h
+new file mode 100644
+index 0000000000000000..b5693df3d830ed42
+--- /dev/null
++++ b/include/dt-bindings/power/r8a7793-sysc.h
+@@ -0,0 +1,28 @@
++/*
++ * Copyright (C) 2016 Glider bvba
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ */
++#ifndef __DT_BINDINGS_POWER_R8A7793_SYSC_H__
++#define __DT_BINDINGS_POWER_R8A7793_SYSC_H__
++
++/*
++ * These power domain indices match the numbers of the interrupt bits
++ * representing the power areas in the various Interrupt Registers
++ * (e.g. SYSCISR, Interrupt Status Register)
++ *
++ * Note that R-Car M2-N is identical to R-Car M2-W w.r.t. power domains.
++ */
++
++#define R8A7793_PD_CA15_CPU0		 0
++#define R8A7793_PD_CA15_CPU1		 1
++#define R8A7793_PD_CA15_SCU		12
++#define R8A7793_PD_SH_4A		16
++#define R8A7793_PD_SGX			20
++
++/* Always-on power area */
++#define R8A7793_PD_ALWAYS_ON		32
++
++#endif /* __DT_BINDINGS_POWER_R8A7793_SYSC_H__ */
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
