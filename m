@@ -1,67 +1,80 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] ARM: imx6: adopt DT to new GPC binding
-Date: Thu, 7 Apr 2016 10:50:42 +0800
-Message-ID: <20160407025042.GB3111@x250>
-References: <1458128514-9560-1-git-send-email-l.stach@pengutronix.de>
- <1458128514-9560-3-git-send-email-l.stach@pengutronix.de>
+From: Appana Durga Kedareswara Rao <appana.durga.rao-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v3 1/5] Documentation: DT: vdma: Rename vdma-chan prefix
+ to dma-chan
+Date: Thu, 7 Apr 2016 04:03:09 +0000
+Message-ID: <C246CAC1457055469EF09E3A7AC4E11A4A57384E@XAP-PVEXMBX01.xlnx.xilinx.com>
+References: <1459959335-24083-1-git-send-email-appanad@xilinx.com>
+	 <1459959335-24083-2-git-send-email-appanad@xilinx.com>
+	 <20160406162022.GS23198@xsjsorenbubuntu>
+	 <C246CAC1457055469EF09E3A7AC4E11A4A57364B@XAP-PVEXMBX01.xlnx.xilinx.com>
+	 <57057C9B.8040804@metafoo.de> <1459980839.3136.87.camel@intel.com>
+	 <20160406230014.GC16193@xsjsorenbubuntu>
+ <1459988606.3136.88.camel@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1458128514-9560-3-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1459988606.3136.88.camel-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org" <luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org>, "moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org" <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srikanth Vemula <svemula-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Anirudha Sarangi <anirudh-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "Williams, Dan J" <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 16, 2016 at 12:41:54PM +0100, Lucas Stach wrote:
-> @@ -786,14 +787,29 @@
->  				interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
->  					     <0 90 IRQ_TYPE_LEVEL_HIGH>;
->  				interrupt-parent = <&intc>;
-> -				pu-supply = <&reg_pu>;
-> -				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> -					 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> -					 <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> -					 <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> -					 <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> -					 <&clks IMX6QDL_CLK_VPU_AXI>;
-> -				#power-domain-cells = <1>;
-> +				clocks = <&clks IMX6QDL_CLK_IPG>;
-> +				clock-names = "ipg";
-> +
-> +				pgc {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					power-domain@0 {
-> +						reg = <0>;
-> +						#power-domain-cells = <0>;
-> +					};
-
-Have a new line between nodes please.
-
-Shawn
-
-> +					pd_pu: power-domain@1 {
-> +						reg = <1>;
-> +						#power-domain-cells = <0>;
-> +						domain-supply = <&reg_pu>;
-> +						clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
-> +						         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
-> +						         <&clks IMX6QDL_CLK_GPU2D_CORE>,
-> +						         <&clks IMX6QDL_CLK_GPU2D_AXI>,
-> +						         <&clks IMX6QDL_CLK_OPENVG_AXI>,
-> +						         <&clks IMX6QDL_CLK_VPU_AXI>;
-> +					};
-> +				};
->  			};
->  
->  			gpr: iomuxc-gpr@020e0000 {
-> -- 
-> 2.7.0
-> 
-> 
+SGkgVmlub2QsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS291bCwg
+Vmlub2QgW21haWx0bzp2aW5vZC5rb3VsQGludGVsLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIEFw
+cmlsIDA3LCAyMDE2IDU6NTMgQU0NCj4gVG86IFNvcmVuIEJyaW5rbWFubiA8c29yZW5iQHhpbGlu
+eC5jb20+DQo+IENjOiBsYXJzQG1ldGFmb28uZGU7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IHBhd2VsLm1vbGxAYXJtLmNvbTsNCj4gQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJhIFJhbyA8
+YXBwYW5hZEB4aWxpbnguY29tPjsNCj4gbHVpc0BkZWJldGhlbmNvdXJ0LmNvbTsgbW9yaXR6LmZp
+c2NoZXJAZXR0dXMuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+IFNyaWthbnRoIFZlbXVsYSA8
+c3ZlbXVsYUB4aWxpbnguY29tPjsgTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+Ow0K
+PiBBbmlydWRoYSBTYXJhbmdpIDxhbmlydWRoQHhpbGlueC5jb20+OyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgU29yZW4NCj4gQnJpbmttYW5uIDxzb3JlbmJAeGlsaW54LmNvbT47IFdpbGxp
+YW1zLCBEYW4gSiA8ZGFuLmoud2lsbGlhbXNAaW50ZWwuY29tPjsNCj4gbWFyay5ydXRsYW5kQGFy
+bS5jb207IGdhbGFrQGNvZGVhdXJvcmEub3JnOyBpamMrZGV2aWNldHJlZUBoZWxsaW9uLm9yZy51
+azsNCj4gZG1hZW5naW5lQHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
+bmZyYWRlYWQub3JnOw0KPiBsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20NCj4gU3Vi
+amVjdDogUmU6IFtQQVRDSCB2MyAxLzVdIERvY3VtZW50YXRpb246IERUOiB2ZG1hOiBSZW5hbWUg
+dmRtYS1jaGFuDQo+IHByZWZpeCB0byBkbWEtY2hhbg0KPiANCj4gT24gV2VkLCAyMDE2LTA0LTA2
+IGF0IDE2OjAwIC0wNzAwLCBTw7ZyZW4gQnJpbmttYW5uIHdyb3RlOg0KPiA+IE9uIFdlZCwgMjAx
+Ni0wNC0wNiBhdCAyMjoxMzo1OSArMDAwMCwgS291bCwgVmlub2Qgd3JvdGU6DQo+ID4gPiBPbiBX
+ZWQsIDIwMTYtMDQtMDYgYXQgMjM6MTYgKzAyMDAsIExhcnMtUGV0ZXIgQ2xhdXNlbiB3cm90ZToN
+Cj4gPiA+ID4gT24gMDQvMDYvMjAxNiAwNjoyNSBQTSwgQXBwYW5hIER1cmdhIEtlZGFyZXN3YXJh
+IFJhbyB3cm90ZToNCj4gPiA+ID4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kbWEveGlsaW54L3hpbGlueF92ZG1hLnR4dA0KPiA+ID4gPiA+ID4gPiArKysNCj4gPiA+ID4g
+PiA+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3hpbGlueC94aWxp
+bnhfdmRtYS50DQo+ID4gPiA+ID4gPiA+IHh0DQo+ID4gPiA+ID4gPiA+IEBAIC0yNCw4ICsyNCw4
+IEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6DQo+ID4gPiA+ID4gPiA+ICAJezN9LCBmbHVzaCBzMm1t
+IGNoYW5uZWwNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gIFJlcXVpcmVkIGNoaWxkIG5v
+ZGUgcHJvcGVydGllczoNCj4gPiA+ID4gPiA+ID4gLS0gY29tcGF0aWJsZTogSXQgc2hvdWxkIGJl
+IGVpdGhlciAieGxueCxheGktdmRtYS1tbTJzDQo+ID4gPiA+ID4gPiA+IC1jaGFubmVsIg0KPiA+
+ID4gPiA+ID4gPiBvcg0KPiA+ID4gPiA+ID4gPiAtCSJ4bG54LGF4aS12ZG1hLXMybW0tY2hhbm5l
+bCIuDQo+ID4gPiA+ID4gPiA+ICstIGNvbXBhdGlibGU6IEl0IHNob3VsZCBiZSBlaXRoZXIgInhs
+bngsYXhpLWRtYS1tbTJzDQo+ID4gPiA+ID4gPiA+IC1jaGFubmVsIg0KPiA+ID4gPiA+ID4gPiBv
+cg0KPiA+ID4gPiA+ID4gPiArCSJ4bG54LGF4aS1kbWEtczJtbS1jaGFubmVsIi4NCj4gPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiBUaGlzIGNoYW5nZSBpcyBub3QgYmFja3dhcmRzIGNvbXBhdGlibGUg
+YW5kIGJyZWFrcyBldmVyeSB1c2VyDQo+ID4gPiA+ID4gPiBvZiB0aGUgY3VycmVudCBiaW5kaW5n
+Lg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gVGhpcyBjb21taXQNCj4gPiA+ID4gPiBodHRwOi8vZ2l0
+Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0L3Zrb3VsL3NsYXZlLQ0KPiA+ID4gPiA+
+DQo+IGRtYS5naXQvY29tbWl0Lz9oPW5leHQmaWQ9OGU2NmU3ZDY4MmIwNGY3MTQxZjhhZTY2Njkw
+OGM4ZGNkN2ZjMGINCj4gPiA+ID4gPiBmYQ0KPiA+ID4gPiA+IFJlbmFtZXMgeGlsaW54X3ZkbWFf
+IHByZWZpeCB0byB4aWxpbnhfZG1hIHdoaWNoIGluY2x1ZGVzDQo+ID4gPiA+ID4gcmVuYW1pbmcg
+b2YgdGhlIGFib3ZlIHByb3BlcnRpZXMuDQo+ID4gPg0KPiA+ID4gVGhhdCBwYXRjaCBjaGFuZ2Vz
+IGRyaXZlciBmcm9tIHZkbWEgdG8gZG1hLiBJdCBkb2VzIG5vdCBjaGFuZ2UNCj4gPiA+IHByb3Bl
+cnR5IG5hbWUhDQo+ID4NCj4gPiBJdCBkb2VzLiBVbmZvcnR1bmF0ZWx5IHRoZXJlIGFyZSBubyBs
+aW5lIG51bWJlcnMgb24gdGhhdCB3ZWJzaXRlLA0KPiA+IGhlbmNlIGhlcmUgYW4gZXhjZXJwdCBm
+cm9tIHRoZSBjb21taXQgeW91IG1lbnRpb246DQo+ID4gQEAgLTEyMjAsMjYgKzEyMjAsMjYgQEAg
+c3RhdGljIGludCB4aWxpbnhfdmRtYV9jaGFuX3Byb2JlKHN0cnVjdA0KPiA+IHhpbGlueF92ZG1h
+X2RldmljZSAqeGRldiwNCj4gPiAgCWlmICghaGFzX2RyZSkNCj4gPiAgCQl4ZGV2LT5jb21tb24u
+Y29weV9hbGlnbiA9IGZscyh3aWR0aCAtIDEpOw0KPiA+DQo+ID4gLQlpZiAob2ZfZGV2aWNlX2lz
+X2NvbXBhdGlibGUobm9kZSwgInhsbngsYXhpLXZkbWEtbW0ycw0KPiA+IC1jaGFubmVsIikpIHsN
+Cj4gPiArCWlmIChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShub2RlLCAieGxueCxheGktZG1hLW1t
+MnMNCj4gPiAtY2hhbm5lbCIpKSB7DQo+ID4gIAkJY2hhbi0+ZGlyZWN0aW9uID0gRE1BX01FTV9U
+T19ERVY7DQo+ID4gIAkJY2hhbi0+aWQgPSAwOw0KPiANCj4gUmlnaHQsIG1pc3NlZCB0aGF0IHNv
+bWVob3cuDQo+IA0KPiBBbSBkcm9wcGluZyB0aGUgcGF0Y2gNCg0KV2lsbCBmaXggdGhpcyBwYXJ0
+IGFuZCB3aWxsIGluY2x1ZGUgdGhpcyBwYXRjaCBpbiB2NCBzZXJpZXMuLi4NCg0KUmVnYXJkcywN
+CktlZGFyLg0KDQo+IA0KPiAtLQ0KPiB+Vmlub2QNCg==
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
