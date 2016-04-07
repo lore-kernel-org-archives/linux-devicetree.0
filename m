@@ -1,55 +1,33 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V10 2/2] mtd: spi-nor: Add driver for Cadence Quad SPI
- Flash Controller.
-Date: Thu, 7 Apr 2016 10:25:52 +0530
-Message-ID: <5705E858.3050700@ti.com>
-References: <1452486886-8049-1-git-send-email-marex@denx.de>
- <1452486886-8049-2-git-send-email-marex@denx.de> <57053F81.70204@ti.com>
- <570563D3.9080704@denx.de>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v4 0/5] dmaengine: vdma: AXI DMA's enhancments
+Date: Thu, 7 Apr 2016 10:59:40 +0530
+Message-ID: <1460006985-14805-1-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <570563D3.9080704-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Yves Vandervennet <yvanderv-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, michal.simek@xilinx.com, soren.brinkmann@xilinx.com, vinod.koul@intel.com, dan.j.williams@intel.com, appanad@xilinx.com, moritz.fischer@ettus.com, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, anirudh@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patch series does some enhancments to the VDMA driver
+which includes
+--> Adding support for AXI DMA IP.
+--> Adding support for AXI CDMA IP.
 
+Kedareswara rao Appana (5):
+  dmaengine: vdma: Rename xilinx_vdma_ prefix to xilinx_dma
+  Documentation: DT: vdma: update binding doc for AXI DMA
+  dmaengine: vdma: Add Support for Xilinx AXI Direct Memory Access
+    Engine
+  Documentation: DT: vdma: update binding doc for AXI CDMA
+  dmaengine: vdma: Add Support for Xilinx AXI Central Direct Memory
+    Access Engine
 
-On 04/07/2016 01:00 AM, Marek Vasut wrote:
-> On 04/06/2016 06:55 PM, R, Vignesh wrote:
->> Hi Marek,
-> 
-> Hi!
-> 
->> I encountered a issue with this driver while testing.
-> 
-> Try with the attached patches, I am planning to use them for V11
-> submission. I think you're hitting the problem with missing buslock.
-> 
-
-Thanks for the patches.
-But I am pretty sure that's not the problem at my end, because I have
-only one flash device on QSPI bus.
-
-The problem is cqspi_switch_cs() is called only once ie when JEDEC ID is
-being read(during autodetect of chip), but at that instance,
-nor->page_size and nor->mtd.erasesize are not yet initialized (They are
-initialized only after JEDEC ID is looked up in the table and page_size
-and erasesize are known).
-Therefore if nor->page_size is printed during cqspi_switch_cs() then its
-zero. But nor->page_size reports 256 when printed in cqspi_flash_setup()
-after spi_nor_scan(). Therefore CQSPI_REG_SIZE register has to be
-configured only after spi_nor struct is fully populated (i.e after
-spi_nor_scan() has recognized the slave after JEDEC ID read).
-
+ .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |   17 +-
+ drivers/dma/xilinx/xilinx_vdma.c                   | 1326 ++++++++++++++------
+ include/linux/dma/xilinx_dma.h                     |   14 +
+ 3 files changed, 1003 insertions(+), 354 deletions(-)
 
 -- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.2
