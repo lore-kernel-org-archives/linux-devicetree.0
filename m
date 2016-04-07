@@ -1,289 +1,108 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: Re: [PATCH v3 4/9] ARM: dts: imx: add Boundary Devices Nitrogen7 board
-Date: Thu, 7 Apr 2016 12:07:23 +0200
-Message-ID: <CAAMH-yu+wKKV_K3qXQoS43T9uOzSWWNO-++055QZyLZpS8Pc2w@mail.gmail.com>
-References: <1458050668-26748-1-git-send-email-gary.bisson@boundarydevices.com>
-	<1459614351-16731-1-git-send-email-gary.bisson@boundarydevices.com>
-	<1459614351-16731-5-git-send-email-gary.bisson@boundarydevices.com>
-	<20160406141555.GL18833@tiger>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v6 00/17] memory: omap-gpmc: mtd: nand: Support GPMC NAND on non-OMAP platforms
+Date: Thu, 7 Apr 2016 13:08:18 +0300
+Message-ID: <1460023715-19332-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20160406141555.GL18833@tiger>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Troy Kisky <troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, computersforpeace@gmail.com, boris.brezillon@free-electrons.com
+Cc: dwmw2@infradead.org, ezequiel@vanguardiasur.com.ar, javier@dowhile0.org, fcooper@ti.com, nsekhar@ti.com, linux-mtd@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-HI Shawn,
+Hi,
 
-On Wed, Apr 6, 2016 at 4:15 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Sat, Apr 02, 2016 at 06:25:46PM +0200, Gary Bisson wrote:
->> Based on i.MX7 Dual with 1GB of RAM.
->>
->> https://boundarydevices.com/product/nitrogen7/
->>
->> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
->> ---
->>
->> Changes v1 -> v2:
->> - none
->> Changes v2 -> v3:
->> - Fix Nitrogen7 BT UART clock parent
->> - Fix Nitrogen7 lvdo2 node to be always-on
->>
->> ---
->>  arch/arm/boot/dts/Makefile            |   1 +
->>  arch/arm/boot/dts/imx7d-nitrogen7.dts | 819 ++++++++++++++++++++++++++++++++++
->>  2 files changed, 820 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/imx7d-nitrogen7.dts
->
-> <snip>
->
->> +/ {
->> +     model = "Boundary Devices i.MX7 Nitrogen7 Board";
->> +     compatible = "boundary,imx7d-nitrogen7", "fsl,imx7d";
->> +
->> +     aliases {
->> +             fb_lcd = &lcdif;
->> +             t_lcd = &t_lcd;
->> +     };
->> +
->> +     memory {
->> +             reg = <0x80000000 0x40000000>;
->> +     };
->> +
->> +     backlight_j9 {
->
-> Use hyphen instead of underscore in node name.
+As this series has cross dependency between omap and mtd subsystems,
+I'll set up a immutable branch which omap-soc and l2-mtd must
+merge in together to avoid any conflicts/breakage during integration.
 
-Sorry I forgot about that.
+Brian has acked all mtd patches. Tony needs to give his Ack for the
+gpmc driver part and then I can provide the immutable branch.
 
->> +             compatible = "gpio-backlight";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&pinctrl_backlight_j9>;
->> +             gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
->> +             default-on;
->> +     };
->> +
->> +     backlight_j20 {
->> +             compatible = "pwm-backlight";
->> +             pwms = <&pwm1 0 5000000>;
->> +             brightness-levels = <0 4 8 16 32 64 128 255>;
->> +             default-brightness-level = <6>;
->> +             status = "okay";
->> +     };
->> +
->> +     regulators {
->> +             compatible = "simple-bus";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->
-> DT maintainers do not like this fake "simple-bus".  Please put all these
-> fixed regulators directly under root node in the naming schema below.
->
->         reg_xxx: regulator-xxx {
->                 ...
->         };
+Patches based on v4.6-rc1 and tested on:
+dra-evm, am437x-gp-evm, beagleboard-c4, beagleboard-c4-legacyboot.
 
-Ok, good to know, will be fixed in v4.
+Summary:
 
->> +
->> +             reg_usb_otg1_vbus: regulator@0 {
->> +                     compatible = "regulator-fixed";
->> +                     reg = <0>;
->> +                     regulator-name = "usb_otg1_vbus";
->> +                     regulator-min-microvolt = <5000000>;
->> +                     regulator-max-microvolt = <5000000>;
->> +                     gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
->> +                     enable-active-high;
->> +             };
->
-> <snip>
->
->> +&uart3 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_uart3>;
->> +     assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
->> +     assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
->> +     control-gpios = <&gpio2 4 GPIO_ACTIVE_HIGH>;
->> +     uart-has-rs485-half-duplex;
->> +     rs485-mode = <1>;
->
-> The above 3 properties are undefined?
+We do a couple of things in this series which result in
+cleaner device tree implementation, faster perfomance and
+multi-platform support. As an added bonus we get to use the GPMC_WAIT
+pins as GPI/Interrupts.
 
-You're right, the mainline i.MX UART driver doesn't have those.
+- Establish a custom interface between NAND and GPMC driver. This is
+needed because all of the NAND registers sit in the GPMC register space.
 
->> +     status = "okay";
->> +};
->> +
->> +&uart6 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_uart6>;
->> +     assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
->> +     assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
->> +     fsl,uart-has-rtscts;
->> +     status = "okay";
->> +};
->> +
->> +&usbotg1 {
->> +     vbus-supply = <&reg_usb_otg1_vbus>;
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_usbotg1>;
->> +     status = "okay";
->> +};
->> +
->> +&usbotg2 {
->> +     vbus-supply = <&reg_usb_otg2_vbus>;
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_usbotg2>;
->> +     dr_mode = "host";
->> +     status = "okay";
->> +};
->> +
->> +&usdhc1 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_usdhc1>;
->> +     cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
->> +     vmmc-supply = <&vgen3_reg>;
->> +     bus-width = <4>;
->> +     fsl,tuning-step = <2>;
->> +     wakeup-source;
->> +     keep-power-in-suspend;
->> +     status = "okay";
->> +};
->> +
->> +&usdhc2 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_usdhc2>;
->> +     bus-width = <4>;
->> +     non-removable;
->> +     vmmc-supply = <&reg_wlan>;
->> +     vqmmc-1-8-v;
->
-> Unsupported property?
+- Clean up device tree support so that omap-gpmc IP and the omap2 NAND
+driver can be used on non-OMAP platforms. e.g. Keystone.
 
-Same here.
+- Implement GPIOCHIP for the GPMC WAITPINS. SoCs can contain
+2 to 4 of these and most of them would be unused otherwise. It also
+allows a cleaner implementation of NAND Ready pin status for the NAND driver.
 
->> +     cap-power-off-card;
->> +     keep-power-in-suspend;
->> +     status = "okay";
->> +
->> +     #address-cells = <1>;
->> +     #size-cells = <0>;
->
-> Move these two up to the top of property list.
+- Implement GPMC IRQ domain to proivde the 2 NAND events and
+GPMC WAITPIN edge interrupts.
 
-Ok.
+- Implement GPIOlib based NAND ready pin checking for OMAP NAND driver.
+On dra7-evm, Read speed increases from 13768 KiB/ to 17246 KiB/s.
+Write speed was unchanged at 7123 KiB/s.
 
->> +     wlcore: wlcore@2 {
->> +             compatible = "ti,wl1271";
->> +             reg = <2>;
->> +             interrupt-parent = <&gpio4>;
->> +             interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
->> +             ref-clock-frequency = <38400000>;
->> +     };
->> +};
->> +
->> +&usdhc3 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_usdhc3>;
->> +     assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
->> +     assigned-clock-rates = <400000000>;
->> +     bus-width = <8>;
->> +     fsl,tuning-step = <2>;
->> +     non-removable;
->> +     status = "okay";
->> +};
->> +
->> +&wdog1 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_wdog1>;
->> +     status = "okay";
->> +};
->> +
->> +&iomuxc {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_hog_1 &pinctrl_j2>;
->> +
->> +     imx7d-nitrogen7 {
->
-> Since commit 5fcdf6a7ed95 (pinctrl: imx: Allow parsing DT without
-> function nodes), we can drop this container code to save one level of
-> indentation.
+Changelog:
+v6:
+-addressed review comments.
+-re-orderd patches so that functionality isn't broken at any point.
+-rebased to v4.6-rc1.
 
-Great, that will remove all the over 80 lines with checkpatch.
+v5:
+-changed ready/busy# GPIO DT binding from "ready-gpio" to "rb-gpios".
+-use irqdomain for gpmc NAND interrupts: fifoevent and termcount.
 
->> +             pinctrl_hog_1: hoggrp-1 {
->> +                     fsl,pins = <
->> +                             MX7D_PAD_SD3_RESET_B__GPIO6_IO11        0x5d
->> +                             MX7D_PAD_GPIO1_IO13__GPIO1_IO13         0x7d
->> +                             MX7D_PAD_ECSPI2_MISO__GPIO4_IO22        0x7d
->> +                     >;
->> +             };
->> +
->> +             pinctrl_bt_rfkill: btrfkillgrp {
->> +                     fsl,pins = <
->> +                             MX7D_PAD_ECSPI2_SS0__GPIO4_IO23         0x7d
->> +                     >;
->> +             };
->
-> Drop unused pinctrl entries, and let's add it when needed.
+v4:
+-Warn if using older incompatible DT i.e. compatible property not present
+in nand node.
+-Applied Tony's patch to fix broken ethernet on torpedo.
 
-Ok, makes sense.
+v3:
+-Fixed and tested NAND using legacy boot on omap3-beagle.
+-Support rising and falling edge interrupts on WAITpins.
+-Update DT node of all gpmc users.
 
->> +
->> +             pinctrl_enet1: enet1grp {
->> +                     fsl,pins = <
->> +                             MX7D_PAD_GPIO1_IO10__ENET1_MDIO                 0x3
->> +                             MX7D_PAD_GPIO1_IO11__ENET1_MDC                  0x3
->> +                             MX7D_PAD_GPIO1_IO12__CCM_ENET_REF_CLK1          0x3
->> +                             MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC       0x71
->> +                             MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0       0x71
->> +                             MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1       0x71
->> +                             MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2       0x71
->> +                             MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3       0x71
->> +                             MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL 0x71
->> +                             MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC       0x71
->> +                             MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0       0x11
->> +                             MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1       0x11
->> +                             MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2       0x11
->> +                             MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3       0x71
->> +                             MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL 0x11
->> +                             MX7D_PAD_SD3_STROBE__GPIO6_IO10                 0x75 /* Reset */
->> +                     >;
->> +             };
->> +
->> +             pinctrl_flash: flashgrp {
->
-> Ditto
->
->> +                     fsl,pins = <
->> +                             MX7D_PAD_EPDC_DATA00__QSPI_A_DATA0      0x71
->> +                             MX7D_PAD_EPDC_DATA01__QSPI_A_DATA1      0x71
->> +                             MX7D_PAD_EPDC_DATA02__GPIO2_IO2         0x7d
->> +                             MX7D_PAD_EPDC_DATA03__GPIO2_IO3         0x7d
->> +                             MX7D_PAD_EPDC_DATA05__QSPI_A_SCLK       0x71
->> +                             MX7D_PAD_EPDC_DATA06__GPIO2_IO6         0x71
->> +                     >;
->> +             };
->
-> <snip>
->
->> +&iomuxc_lpsr {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&pinctrl_hog_2>;
->> +
->> +     imx7d-nitrogen7 {
->
-> Drop this container node.
-
-I'll submit a v4 shortly. I'll also make sure to do the same on the
-6SX device tree.
-
-Regards,
-Gary
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
+
+Roger Quadros (17):
+  ARM: OMAP2+: gpmc: Add platform data
+  ARM: OMAP2+: gpmc: Add gpmc timings and settings to platform data
+  memory: omap-gpmc: Introduce GPMC to NAND interface
+  memory: omap-gpmc: Add GPMC-NAND ops to get writebufferempty status
+  memory: omap-gpmc: Implement IRQ domain for NAND IRQs
+  mtd: nand: omap: Use gpmc_omap_get_nand_ops() to get NAND registers
+  mtd: nand: omap: Switch to using GPMC-NAND ops for writebuffer empty
+    check
+  mtd: nand: omap: Copy platform data parameters to omap_nand_info data
+  mtd: nand: omap: Clean up device tree support
+  mtd: nand: omap: Update DT binding documentation
+  memory: omap-gpmc: Prevent mapping into 1st 16MB
+  memory: omap-gpmc: Move device tree binding to correct location
+  memory: omap-gpmc: Support general purpose input for WAITPINs
+  memory: omap-gpmc: Reserve WAITPIN if needed for WAIT monitoring
+  memory: omap-gpmc: Support WAIT pin edge interrupts
+  memory: omap-gpmc: Prevent GPMC_STATUS from being accessed via
+    gpmc_regs
+  mtd: nand: omap2: Implement NAND ready using gpiolib
+
+ .../omap-gpmc.txt}                                 |  17 +
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |  19 +-
+ arch/arm/mach-omap2/gpmc-nand.c                    |   7 +-
+ drivers/memory/Kconfig                             |   1 +
+ drivers/memory/omap-gpmc.c                         | 655 +++++++++++++--------
+ drivers/mtd/nand/omap2.c                           | 194 ++++--
+ include/linux/omap-gpmc.h                          | 172 +-----
+ .../{omap-gpmc.h => platform_data/gpmc-omap.h}     | 101 ++--
+ include/linux/platform_data/mtd-nand-omap2.h       |  12 +-
+ 9 files changed, 679 insertions(+), 499 deletions(-)
+ rename Documentation/devicetree/bindings/{bus/ti-gpmc.txt => memory-controllers/omap-gpmc.txt} (89%)
+ copy include/linux/{omap-gpmc.h => platform_data/gpmc-omap.h} (71%)
+
+-- 
+2.5.0
