@@ -1,48 +1,69 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH 1/9] net: mediatek: update the IRQ part of the binding document
-Date: Thu,  7 Apr 2016 19:57:48 +0200
-Message-ID: <1460051876-53135-1-git-send-email-blogic@openwrt.org>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: Felix Fietkau <nbd@openwrt.org>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?q?Sean=20Wang=20=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?= <sean.wang@mediatek.com>, netdev@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] ASoC: rockchip: i2s: configure the sdio
+	pins' iomux mode
+Date: Thu, 7 Apr 2016 12:58:11 -0500
+Message-ID: <20160407175811.GP32257@rob-hp-laptop>
+References: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <1459931902-77324-1-git-send-email-sugar.zhang@rock-chips.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, broonie@kernel.org, Kumar Gala <galak@codeaurora.org>, Jianqun Xu <jay.xu@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The current binding document only describes a single interrupt. Update the
-document by adding the 2 other interrupts.
+On Wed, Apr 06, 2016 at 04:38:22PM +0800, Sugar Zhang wrote:
+> There are 3 i2s sdio pins, which iomux mode is as follows:
 
-The driver currently only uses a single interrupt. The HW is however able
-to using IRQ grouping to split TX and RX onto separate GIC irqs.
+s/i2s sdio/I2S\/SDIO muxed/
 
-Signed-off-by: John Crispin <blogic@openwrt.org>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/net/mediatek-net.txt |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+>  - sdi3_sdo1
+>  - sdi2_sdo2
+>  - sdi1_sdo3
+> 
+> we need to configure these pins' iomux mode via the GRF register
+> when use multi channel playback/capture.
 
-diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-index 5ca7929..2f142be 100644
---- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-+++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-@@ -9,7 +9,7 @@ have dual GMAC each represented by a child node..
- Required properties:
- - compatible: Should be "mediatek,mt7623-eth"
- - reg: Address and length of the register set for the device
--- interrupts: Should contain the frame engines interrupt
-+- interrupts: Should contain the three frame engines interrupts
- - clocks: the clock used by the core
- - clock-names: the names of the clock listed in the clocks property. These are
- 	"ethif", "esw", "gp2", "gp1"
-@@ -42,7 +42,9 @@ eth: ethernet@1b100000 {
- 		 <&ethsys CLK_ETHSYS_GP2>,
- 		 <&ethsys CLK_ETHSYS_GP1>;
- 	clock-names = "ethif", "esw", "gp2", "gp1";
--	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
-+	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW
-+		      GIC_SPI 199 IRQ_TYPE_LEVEL_LOW
-+		      GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
- 	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
- 	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
- 	reset-names = "eth";
--- 
-1.7.10.4
+Why not a pinctrl binding here? If you want SDIO mode, then you need 
+similar code in the SDIO driver (or just rely on default mode).
+
+> 
+> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+> ---
+> 
+>  .../devicetree/bindings/sound/rockchip-i2s.txt     |  5 +++
+>  sound/soc/rockchip/rockchip_i2s.c                  | 39 +++++++++++++++++++++-
+>  sound/soc/rockchip/rockchip_i2s.h                  |  8 +++++
+>  3 files changed, 51 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+> index 6e86d8a..ad72a7d 100644
+> --- a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+> +++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+> @@ -23,6 +23,11 @@ Required properties:
+>  - rockchip,playback-channels: max playback channels, if not set, 8 channels default.
+>  - rockchip,capture-channels: max capture channels, if not set, 2 channels default.
+>  
+> +Required properties for controller which support multi channels playback/capture:
+> +
+> +- rockchip,grf: Should be phandle/offset pair. the phandle of the syscon node for GRF register,
+
+Wrap your lines at less than 80 chars.
+
+> +  and the offset of the GRF for control register.
+> +
+>  Example for rk3288 I2S controller:
+>  
+>  i2s@ff890000 {
