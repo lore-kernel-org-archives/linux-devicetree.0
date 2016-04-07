@@ -1,73 +1,106 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] wlcore: spi: add wl18xx support
-Date: Thu, 07 Apr 2016 15:24:40 +0300
-Message-ID: <87shyx38tz.fsf@purkki.adurom.net>
-References: <1459343218-24536-1-git-send-email-eyalr@ti.com>
+From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 1/2] dt/bindings/usb: Add bindings for PIC32 MUSB driver.
+Date: Thu, 7 Apr 2016 18:02:59 +0530
+Message-ID: <1460032381-32677-1-git-send-email-purna.mandal@microchip.com>
+References: <460027775-20729-2-git-send-email-purna.mandal@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459343218-24536-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org> (Eyal Reizer's
-	message of "Wed, 30 Mar 2016 16:06:58 +0300")
+In-Reply-To: <460027775-20729-2-git-send-email-purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Document devicetree binding for the USB controller
+and USB Phy found on Microchip PIC32 class devices.
 
-> Add support for using with both wl12xx and wl18xx.
->
-> - all wilink family needs special init command for entering wspi mode.
->   extra clock cycles should be sent after the spi init command while the
->   cs pin is high.
-> - switch to controling the cs pin from the spi driver for achieveing the
->   above.
-> - the selected cs gpio is read from the spi device-tree node using the
->   cs-gpios field and setup as a gpio.
-> - See the example below for specifying the cs gpio using the cs-gpios entry
->
-> &spi0	{
->  	status = "okay";
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&spi0_pins>;
-> 	cs-gpios = <&gpio0 5 0>;
-> 	#address-cells = <1>;
-> 	#size-cells = <0>;
->  	wlcore: wlcore@0 {
-> 		compatible = "ti,wl1835";
-> 		vwlan-supply = <&wlan_en_reg>;
-> 		spi-max-frequency = <48000000>;
-> 		reg = <0>;      /* chip select 0 on spi0, ie spi0.0 */
-> 		interrupt-parent = <&gpio0>;
-> 		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
->  	};
-> };
->
-> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 
-[...]
+---
 
->  static const struct of_device_id wlcore_spi_of_match_table[] = {
-> -	{ .compatible = "ti,wl1271" },
-> +	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
-> +	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
-> +	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
-> +	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
-> +	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
-> +	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
-> +	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
-> +	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
-> +	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
-> +	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
->  	{ }
+Changes in v2: None
 
-Shouldn't you also update bindings/net/wireless/ti,wlcore,spi.txt? Now
-it only mentions about ti,wl1271 and not anything about the rest.
+ .../bindings/usb/microchip,pic32-musb.txt          | 67 ++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
 
-Adding devicetree list for further comments.
-
+diff --git a/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+new file mode 100644
+index 0000000..e1cec9d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
+@@ -0,0 +1,67 @@
++Microchip PIC32 MUSB DRC/OTG controller
++-------------------------------------------
++
++Required properties:
++ - compatible       : should be "microchip,pic32mzda-usb".
++ - reg              : offset and length of "MUSB Core Registers" and
++                      "USB Clock & Reset Registers".
++ - reg-names        : should be "mc", and "usbcr" in order
++ - clocks           : clock specifier for the musb controller clock
++ - clock-names      : should be "usb_clk"
++ - interrupts       : interrupt number for MUSB Core General interrupt
++                      and DMA interrupt
++ - interrupt-names  : must be "mc" and "dma" in order.
++ - phys             : phy specifier for the otg phy.
++ - dr_mode          : should be one of "host", "peripheral" or "otg".
++ - mentor,multipoint: Should be "1" indicating the musb controller supports
++                      multipoint. This is MUSB configuration-specific setting.
++ - mentor,num-eps   : Specifies the number of endpoints. This is also a
++                      MUSB configuration-specific setting. Should be set to "8".
++ - mentor,ram-bits  : Specifies the ram address size. Should be set to "11".
++ - mentor,power     : Should be "500". This signifies the controller can supply
++                      up to 500mA when operating in host mode.
++ - phys             : phandle of the USB phy.
++ - usb_overcurrent  : phandle to MUSB over-current note. It should have
++                      interrupt number for over-current detection logic.
++
++Optional properties:
++ - microchip,fifo-mode: Specifies layout of internal SRAM for end-point fifos.
++                        Should be 0 (default) or 1.
++
++Example:
++	aliases {
++		usb1 = &usb1;
++		phy1 = &usb1_phy;
++	};
++
++	usb1: hsusb1_core@1f8e3000 {
++		compatible = "microchip,pic32mzda-usb";
++		reg = <0x1f8e3000 0x1000>,
++		      <0x1f884000 0x1000>;
++		reg-names = "mc", "usbcr";
++		interrupts = <132 IRQ_TYPE_EDGE_RISING>,
++			     <133 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "mc", "dma";
++		dr_mode = "host";
++		mentor,multipoint = <1>;
++		mentor,num-eps = <8>;
++		mentor,ram-bits = <11>;
++		mentor,power = <500>;
++		phys = <&usb1_phy>;
++		clocks = <&rootclk PB5CLK>;
++		clock-names = "usb_clk";
++		usb_overcurrent = <&usb1_overcurrent>;
++	};
++
++	usb1_phy: hsusb1_phy@1f8e4000 {
++		compatible = "usb-nop-xceiv";
++		reg = <0x1f8e4000 0x1000>;
++		clocks = <&rootclk UPLLCLK>;
++		clock-names = "main_clk";
++		clock-frequency = <24000000>;
++	};
++
++	usb1_overcurrent: hsusb1_oc@0 {
++		interrupt-parent = <&gpio1>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++	};
 -- 
-Kalle Valo
+1.8.3.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
