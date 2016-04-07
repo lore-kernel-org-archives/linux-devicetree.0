@@ -1,61 +1,59 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v3 00/16] da8xx USB clocks
-Date: Thu, 7 Apr 2016 11:29:37 -0500
-Message-ID: <57068AF1.8050909@lechnology.com>
-References: <1458863503-31121-1-git-send-email-david@lechnology.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] of/platform: Allow secondary compatible match in
+ of_dev_lookup
+Date: Thu, 7 Apr 2016 09:58:43 -0700
+Message-ID: <20160407165842.GJ16484@atomide.com>
+References: <1459546504-32668-1-git-send-email-tony@atomide.com>
+ <20160401214053.GQ9329@atomide.com>
+ <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1458863503-31121-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/24/2016 06:51 PM, David Lechner wrote:
-> This is a reworking of the v2 series based of feedback and review. There were
-> very many suggestions, so hopefully I didn't miss any. Here are the highlights...
->
-> New stuff:
->
-> * Fixed the davinci device tree declarations to use the preferred DT address
->    convention so that the items I have added can be correct too.
-> * Moved that davinci clock init so that we don't have to call ioremap in the
->    clock mux functions.
-> * Added a new "syscon" device for the CFGCHIP registers. This is used by the
->    USB PHY driver and will be used in the future in common clock framework
->    drivers.
->
-> Changed:
->
-> * USB clocks are moved to a common file instead of having duplicated code.
-> * PHY driver uses syscon for CFGCHIP registers instead of using them directly.
->
-> David Lechner (16):
->    dt: davinci: use proper address after @
->    mfd: da8xx-cfgchip: New header file for CFGCHIP registers.
->    ARM: davinici: da8xx: move usb code to new file
->    ARM: davinci: Move clock init after ioremap.
->    ARM: davinci: add set_parent callback for mux clocks
->    ARM: davinci: da850: use clk->set_parent for async3
->    ARM: davinci: da8xx: add usb phy clocks
->    dt-bindings: Add bindings for phy-da8xx-usb
->    phy: da8xx-usb: new driver for DA8xx SoC USB PHY
->    ARM: davinci: da8xx: Add CFGCHIPn syscon platform declaration.
->    ARM: davinci: da8xx: Add USB PHY platform declaration
->    ARM: dt: da850: Add cfgchip syscon node
->    ARM: dt: da850: Add usb phy node
->    usb: ohci-da8xx: Remove code that references mach
->    usb: musb: da8xx: Use devm in probe
->    usb: musb: da8xx: Remove mach code
->
+* Rob Herring <robh+dt@kernel.org> [160406 21:53]:
+> On Fri, Apr 1, 2016 at 4:40 PM, Tony Lindgren <tony@atomide.com> wrote:
+> > * Tony Lindgren <tony@atomide.com> [160401 14:37]:
+> >> We currently try to match of_dev_auxdata based on compatible,
+> >> IO address, and device name. But in some cases we have multiple
+> >> instances of drivers that can use the same auxdata.
+> >>
+> >> Let's add an additional secondary lookup for generic compatible
+> >> match for auxdata if no device specific match is found. This does
+> >> not change the existing matching, and still allows adding device
+> >> specific auxdata.
+> >>
+> >> This simplifies things as specifying the IO address and device
+> >> name is prone errors as it requires maintaining an in kernel
+> >> database for each SoC.
+> >
+> > And here's what I can apply later on to get rid of some
+> > ifdeffery.
+> >
+> > I'm also planning to move some of the legacy omap hwmod
+> > functionality into proper device drivers, so can generic
+> > pdata for that too.
+> 
+> Why can't the platform data be moved into the driver given that it
+> appears to be only SoC family specific? Auxdata was somewhat intended
+> to be temporary. It appears there is already some per compatible match
+> data for these OMAP parts in the driver.
 
+There are just too many dependencies to move legacy code into drivers
+directly. Especially when moving the omap hwmod code into drivers,
+we still to use hwmod callbacks at least for clockdomain configuration,
+wake-up dependencies and clock autogating configuration.
 
-Any further comments before I submit a v4 patchset? Particularly on 
-patches 3 and 4 which are new in this v3 submission and have not been 
-commented on yet.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+When we have Linux generic frameworks available for all this we no longer
+need the auxdata. But meanwhile, removing the depenencies by using
+auxdata already allows moving big chunks of the hwmod code into regular
+device drivers.
+
+Regards,
+
+Tony
