@@ -1,45 +1,36 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] wlcore: spi: add wl18xx support
-Date: Thu, 07 Apr 2016 17:32:08 +0300
-Message-ID: <87wpo97amv.fsf@kamboji.qca.qualcomm.com>
-References: <1459343218-24536-1-git-send-email-eyalr@ti.com>
-	<87shyx38tz.fsf@purkki.adurom.net>
-	<8665E2433BC68541A24DFFCA87B70F5B360B5430@DFRE01.ent.ti.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt: davinci: use proper address after @
+Date: Thu, 7 Apr 2016 20:03:43 +0530
+Message-ID: <57066FC7.1030706@ti.com>
+References: <1459525325-25470-1-git-send-email-petr@barix.com>
+ <1459525325-25470-2-git-send-email-petr@barix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B360B5430-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-	(Eyal Reizer's message of "Thu, 7 Apr 2016 12:45:13 +0000")
+In-Reply-To: <1459525325-25470-2-git-send-email-petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
-Cc: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev@vger.kernel.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Petr Kulhavy <petr-Qh/3xLP0EvwAvxtiuMwx3w@public.gmane.org>, khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-"Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org> writes:
+On Friday 01 April 2016 09:12 PM, Petr Kulhavy wrote:
+> From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> 
+> TI has been using the physical address in DT after the @ in device nodes.
+> The device tree convention is to use the same address that is used for
+> the reg property. This updates all davinci DT files to use the proper
+> convention.
+> 
+> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->> >  static const struct of_device_id wlcore_spi_of_match_table[] = {
->> > -	{ .compatible = "ti,wl1271" },
->> > +	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
->> > +	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
->> > +	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
->> > +	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
->> > +	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
->> > +	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
->> > +	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
->> > +	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
->> > +	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
->> > +	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
->> >  	{ }
->> 
->> Shouldn't you also update bindings/net/wireless/ti,wlcore,spi.txt? Now it only
->> mentions about ti,wl1271 and not anything about the rest.
->
-> You are right! Will be fixed in v2
+Applied for v4.7. Fixed the subject prefix to "ARM: dts: davinci: " as
+is the convention for device tree updates.
 
-Thanks. Also remember to CC devicetree list.
+Regards,
+Sekhar
 
--- 
-Kalle Valo
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
