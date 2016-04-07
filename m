@@ -1,767 +1,290 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v4] ARM: dts: imx: add Boundary Devices Nitrogen6_SoloX board
-Date: Thu,  7 Apr 2016 15:52:48 +0200
-Message-ID: <1460037168-23292-1-git-send-email-gary.bisson@boundarydevices.com>
-References: <1459614351-16731-7-git-send-email-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459614351-16731-7-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH v2 1/1] leds: pca9532: Add device tree binding
+Date: Thu, 07 Apr 2016 16:02:23 +0200
+Message-ID: <5706686F.7070102@samsung.com>
+References: <1460013772-129968-1-git-send-email-preid@electromag.com.au>
+ <1460013772-129968-2-git-send-email-preid@electromag.com.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-reply-to: <1460013772-129968-2-git-send-email-preid@electromag.com.au>
+Sender: linux-leds-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, riku.voipio@iki.fi, rpurdie@rpsys.net, devicetree@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Based on i.MX6 SoloX with 1GB of RAM.
+Hi Phil,
 
-https://boundarydevices.com/product/nit6_solox-imx6/
+Thanks for the update. Few more remarks below.
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
----
+On 04/07/2016 09:22 AM, Phil Reid wrote:
+> This patch adds basic device tree support for the pca9532 LEDs.
+>
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>   .../devicetree/bindings/leds/leds-pca9532.txt      | 42 +++++++++++++
+>   drivers/leds/leds-pca9532.c                        | 69 ++++++++++++++++++++--
+>   include/dt-bindings/leds/leds-pca9532.h            | 23 ++++++++
+>   include/linux/leds-pca9532.h                       | 18 ++----
+>   4 files changed, 135 insertions(+), 17 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-pca9532.txt
+>   create mode 100644 include/dt-bindings/leds/leds-pca9532.h
+>
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pca9532.txt b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> new file mode 100644
+> index 0000000..284b96c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pca9532.txt
+> @@ -0,0 +1,42 @@
+> +*NXP - pca9532 PWM LED Driver
+> +
+> +The PCA9532 family is SMBus I/O expander optimized for dimming LEDs.
+> +The PWM support 256 steps.
+> +
+> +Required properties:
+> +	- compatible:
+> +		"nxp,pca9530"
+> +		"nxp,pca9531"
+> +		"nxp,pca9532"
+> +		"nxp,pca9533"
+> +	- reg -  I2C slave address
+> +
+> +Each led is represented as a sub-node of the nxp,pca9530.
+> +
+> +Optional sub-node properties:
+> +	- label: Name for this LED. If omitted, the label is taken from the node name.
 
-Changes v1 -> v2:
-- Remove lines commented out from nitrogen6sx dts as suggested by Vladimir
-Changes v2 -> v3:
-- none
-Changes v3 -> v4:
-- Use hyphen instead of underscore for backlight node name
-- Remove fake "simple-bus" for regulators declaration
-- Remove non existant vqmmc-1-8v property
-- Remove unused pinctrl entries (rfkill, lvds)
-- Remove pinctrl unnecessary container node
+Please also add a reference to common led bindings, as this property is
+documented there:
+"(see Documentation/devicetree/bindings/leds/common.txt):"
 
----
- arch/arm/boot/dts/Makefile               |   1 +
- arch/arm/boot/dts/imx6sx-nitrogen6sx.dts | 706 +++++++++++++++++++++++++++++++
- 2 files changed, 707 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
+> +	- type: Output configuration, see dt-bindings/leds/leds-pca9532.h (default NONE)
+> +	- state: Initial LED state (default OFF)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 54306aa..9eab5f5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -371,6 +371,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-evk.dtb \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
-+	imx6sx-nitrogen6sx.dtb \
- 	imx6sx-sabreauto.dtb \
- 	imx6sx-sdb-reva.dtb \
- 	imx6sx-sdb.dtb
-diff --git a/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-new file mode 100644
-index 0000000..ea3fa7e
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sx-nitrogen6sx.dts
-@@ -0,0 +1,706 @@
-+/*
-+ * Copyright (C) 2016 Boundary Devices, Inc.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6sx.dtsi"
-+
-+/ {
-+	model = "Boundary Devices i.MX6 SoloX Nitrogen6sx Board";
-+	compatible = "boundary,imx6sx-nitrogen6sx", "fsl,imx6sx";
-+
-+	aliases {
-+		fb_lcd = &lcdif1;
-+		t_lcd = &t_lcd;
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x40000000>;
-+	};
-+
-+	backlight-lvds {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm4 0 5000000>;
-+		brightness-levels = <0 4 8 16 32 64 128 255>;
-+		default-brightness-level = <6>;
-+		power-supply = <&reg_3p3v>;
-+	};
-+
-+	reg_1p8v: regulator-1p8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "1P8V";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_can1_3v3: regulator-can1-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "can1-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio4 27 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_can2_3v3: regulator-can2-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "can2-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&gpio4 24 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbotg1_vbus>;
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_otg1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_wlan: regulator-wlan {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_reg_wlan>;
-+		compatible = "regulator-fixed";
-+		clocks = <&clks IMX6SX_CLK_CKO>;
-+		clock-names = "slow";
-+		regulator-name = "wlan-en";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <70000>;
-+		gpio = <&gpio7 6 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	sound {
-+		compatible = "fsl,imx-audio-sgtl5000";
-+		model = "imx6sx-nitrogen6sx-sgtl5000";
-+		cpu-dai = <&ssi1>;
-+		audio-codec = <&codec>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <1>;
-+		mux-ext-port = <5>;
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	fsl,spi-num-chipselects = <1>;
-+	cs-gpios = <&gpio2 16 GPIO_ACTIVE_LOW>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	status = "okay";
-+
-+	flash: m25p80@0 {
-+		compatible = "microchip,sst25vf016b";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		partition@0 {
-+			label = "U-Boot";
-+			reg = <0x0 0xC0000>;
-+			read-only;
-+		};
-+		partition@C0000 {
-+			label = "env";
-+			reg = <0xC0000 0x2000>;
-+			read-only;
-+		};
-+		partition@C2000 {
-+			label = "Kernel";
-+			reg = <0xC2000 0x11e000>;
-+		};
-+		partition@1E0000 {
-+			label = "M4";
-+			reg = <0x1E0000 0x20000>;
-+		};
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy1>;
-+	phy-supply = <&reg_3p3v>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy1: ethernet-phy@4 {
-+			reg = <4>;
-+		};
-+
-+		ethphy2: ethernet-phy@5 {
-+			reg = <5>;
-+		};
-+	};
-+};
-+
-+&fec2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet2>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&ethphy2>;
-+	phy-supply = <&reg_3p3v>;
-+	fsl,magic-packet;
-+	status = "okay";
-+};
-+
-+&flexcan1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan1>;
-+	xceiver-supply = <&reg_can1_3v3>;
-+	status = "okay";
-+};
-+
-+&flexcan2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_flexcan2>;
-+	xceiver-supply = <&reg_can2_3v3>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	codec: sgtl5000@0a {
-+		compatible = "fsl,sgtl5000";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_sgtl5000>;
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6SX_CLK_CKO2>;
-+		VDDA-supply = <&reg_1p8v>;
-+		VDDIO-supply = <&reg_1p8v>;
-+		VDDD-supply = <&reg_1p8v>;
-+		assigned-clocks = <&clks IMX6SX_CLK_CKO2_SEL>,
-+				  <&clks IMX6SX_CLK_CKO2>;
-+		assigned-clock-parents = <&clks IMX6SX_CLK_OSC>;
-+		assigned-clock-rates = <0>, <24000000>;
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	status = "okay";
-+};
-+
-+&lcdif1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_lcdif1>;
-+	lcd-supply = <&reg_3p3v>;
-+	display = <&display0>;
-+	status = "okay";
-+
-+	display0: display0 {
-+		bits-per-pixel = <16>;
-+		bus-width = <24>;
-+
-+		display-timings {
-+			native-mode = <&t_lcd>;
-+			t_lcd: t_lcd_default {
-+				clock-frequency = <74160000>;
-+				hactive = <1280>;
-+				vactive = <720>;
-+				hback-porch = <220>;
-+				hfront-porch = <110>;
-+				vback-porch = <20>;
-+				vfront-porch = <5>;
-+				hsync-len = <40>;
-+				vsync-len = <5>;
-+				hsync-active = <0>;
-+				vsync-active = <0>;
-+				de-active = <1>;
-+				pixelclk-active = <0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pcie {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie>;
-+	reset-gpio = <&gpio4 10 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&pwm4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm4>;
-+	status = "okay";
-+};
-+
-+&ssi1 {
-+	fsl,mode = "i2s-master";
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg1 {
-+	vbus-supply = <&reg_usb_otg1_vbus>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg1>;
-+	status = "okay";
-+};
-+
-+&usbotg2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbotg2>;
-+	dr_mode = "host";
-+	disable-over-current;
-+	reset-gpios = <&gpio4 26 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-+	keep-power-in-suspend;
-+	enable-sdio-wakeup;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	bus-width = <4>;
-+	non-removable;
-+	keep-power-in-suspend;
-+	vmmc-supply = <&reg_wlan>;
-+	cap-power-off-card;
-+	cap-sdio-irq;
-+	vqmmc-1-8-v;
-+	status = "okay";
-+
-+	brcmf: bcrmf@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+	wlcore: wlcore@2 {
-+		compatible = "ti,wl1271";
-+		reg = <2>;
-+		interrupt-parent = <&gpio7>;
-+		interrupts = <7 IRQ_TYPE_LEVEL_LOW>;
-+		ref-clock-frequency = <38400000>;
-+	};
-+};
-+
-+&usdhc4 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc4_50mhz>;
-+	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	vmmc-supply = <&reg_1p8v>;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog>;
-+
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD1_DATA0__AUDMUX_AUD5_RXD	0x1b0b0
-+			MX6SX_PAD_SD1_DATA1__AUDMUX_AUD5_TXC	0x1b0b0
-+			MX6SX_PAD_SD1_DATA2__AUDMUX_AUD5_TXFS	0x1b0b0
-+			MX6SX_PAD_SD1_DATA3__AUDMUX_AUD5_TXD	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL1__ECSPI1_MISO		0x100b1
-+			MX6SX_PAD_KEY_ROW0__ECSPI1_MOSI		0x100b1
-+			MX6SX_PAD_KEY_COL0__ECSPI1_SCLK		0x100b1
-+			MX6SX_PAD_KEY_ROW1__GPIO2_IO_16		0x0b0b1
-+		>;
-+	};
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_ENET1_MDIO__ENET1_MDIO	0x1b0b0
-+			MX6SX_PAD_ENET1_MDC__ENET1_MDC		0x1b0b0
-+			MX6SX_PAD_RGMII1_TD0__ENET1_TX_DATA_0	0x30b1
-+			MX6SX_PAD_RGMII1_TD1__ENET1_TX_DATA_1	0x30b1
-+			MX6SX_PAD_RGMII1_TD2__ENET1_TX_DATA_2	0x30b1
-+			MX6SX_PAD_RGMII1_TD3__ENET1_TX_DATA_3	0x30b1
-+			MX6SX_PAD_RGMII1_TXC__ENET1_RGMII_TXC	0x30b1
-+			MX6SX_PAD_RGMII1_TX_CTL__ENET1_TX_EN	0x30b1
-+			MX6SX_PAD_RGMII1_RD0__ENET1_RX_DATA_0	0x3081
-+			MX6SX_PAD_RGMII1_RD1__ENET1_RX_DATA_1	0x3081
-+			MX6SX_PAD_RGMII1_RX_CTL__ENET1_RX_EN	0x3081
-+			MX6SX_PAD_RGMII1_RD2__ENET1_RX_DATA_2	0x3081
-+			MX6SX_PAD_RGMII1_RD3__ENET1_RX_DATA_3	0x3081
-+			MX6SX_PAD_RGMII1_RXC__ENET1_RX_CLK	0x3081
-+			MX6SX_PAD_ENET2_CRS__GPIO2_IO_7		0xb0b0
-+			MX6SX_PAD_ENET1_RX_CLK__GPIO2_IO_4	0xb0b0
-+			MX6SX_PAD_ENET1_TX_CLK__GPIO2_IO_5	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_enet2: enet2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_RGMII2_TD0__ENET2_TX_DATA_0	0x30b1
-+			MX6SX_PAD_RGMII2_TD1__ENET2_TX_DATA_1	0x30b1
-+			MX6SX_PAD_RGMII2_TD2__ENET2_TX_DATA_2	0x30b1
-+			MX6SX_PAD_RGMII2_TD3__ENET2_TX_DATA_3	0x30b1
-+			MX6SX_PAD_RGMII2_TXC__ENET2_RGMII_TXC	0x30b1
-+			MX6SX_PAD_RGMII2_TX_CTL__ENET2_TX_EN	0x30b1
-+			MX6SX_PAD_RGMII2_RD0__ENET2_RX_DATA_0	0x3081
-+			MX6SX_PAD_RGMII2_RD1__ENET2_RX_DATA_1	0x3081
-+			MX6SX_PAD_RGMII2_RX_CTL__ENET2_RX_EN	0x3081
-+			MX6SX_PAD_RGMII2_RD2__ENET2_RX_DATA_2	0x3081
-+			MX6SX_PAD_RGMII2_RD3__ENET2_RX_DATA_3	0x3081
-+			MX6SX_PAD_RGMII2_RXC__ENET2_RX_CLK	0x3081
-+			MX6SX_PAD_ENET2_COL__GPIO2_IO_6		0xb0b0
-+			MX6SX_PAD_ENET2_RX_CLK__GPIO2_IO_8	0xb0b0
-+			MX6SX_PAD_ENET2_TX_CLK__GPIO2_IO_9	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan1: flexcan1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_DQS__CAN1_TX		0x1b0b0
-+			MX6SX_PAD_QSPI1A_SS1_B__CAN1_RX		0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA3__GPIO4_IO_27	0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA3__GPIO4_IO_27	0x0b0b0
-+		>;
-+	};
-+
-+	pinctrl_flexcan2: flexcan2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1A_DQS__CAN2_TX		0x1b0b0
-+			MX6SX_PAD_QSPI1B_SS1_B__CAN2_RX		0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA0__GPIO4_IO_24	0x0b0b0
-+		>;
-+	};
-+
-+	pinctrl_hog: hoggrp {
-+		fsl,pins = <
-+			MX6SX_PAD_NAND_CE0_B__GPIO4_IO_1	0x1b0b0
-+			MX6SX_PAD_NAND_CLE__GPIO4_IO_3		0x1b0b0
-+			MX6SX_PAD_NAND_RE_B__GPIO4_IO_12	0x1b0b0
-+			MX6SX_PAD_NAND_WE_B__GPIO4_IO_14	0x1b0b0
-+			MX6SX_PAD_NAND_WP_B__GPIO4_IO_15	0x1b0b0
-+			MX6SX_PAD_NAND_READY_B__GPIO4_IO_13	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA0__GPIO4_IO_16	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA1__GPIO4_IO_17	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA2__GPIO4_IO_18	0x1b0b0
-+			MX6SX_PAD_QSPI1A_DATA3__GPIO4_IO_19	0x1b0b0
-+			MX6SX_PAD_SD1_CMD__CCM_CLKO1		0x000b0
-+			MX6SX_PAD_SD3_DATA5__GPIO7_IO_7		0x1b0b0
-+			/* Test points */
-+			MX6SX_PAD_NAND_DATA04__GPIO4_IO_8	0x1b0b0
-+			MX6SX_PAD_QSPI1B_DATA1__GPIO4_IO_25	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO00__I2C1_SCL		0x4001b8b1
-+			MX6SX_PAD_GPIO1_IO01__I2C1_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c2: i2c2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO02__I2C2_SCL		0x4001b8b1
-+			MX6SX_PAD_GPIO1_IO03__I2C2_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_i2c3: i2c3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL4__I2C3_SCL		0x4001b8b1
-+			MX6SX_PAD_KEY_ROW4__I2C3_SDA		0x4001b8b1
-+		>;
-+	};
-+
-+	pinctrl_lcdif1: lcdif1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_LCD1_CLK__LCDIF1_CLK		0x4001b0b0
-+			MX6SX_PAD_LCD1_ENABLE__LCDIF1_ENABLE	0x4001b0b0
-+			MX6SX_PAD_LCD1_HSYNC__LCDIF1_HSYNC	0x4001b0b0
-+			MX6SX_PAD_LCD1_VSYNC__LCDIF1_VSYNC	0x4001b0b0
-+			MX6SX_PAD_LCD1_RESET__GPIO3_IO_27	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA00__LCDIF1_DATA_0	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA01__LCDIF1_DATA_1	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA02__LCDIF1_DATA_2	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA03__LCDIF1_DATA_3	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA04__LCDIF1_DATA_4	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA05__LCDIF1_DATA_5	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA06__LCDIF1_DATA_6	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA07__LCDIF1_DATA_7	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA08__LCDIF1_DATA_8	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA09__LCDIF1_DATA_9	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA10__LCDIF1_DATA_10	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA11__LCDIF1_DATA_11	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA12__LCDIF1_DATA_12	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA13__LCDIF1_DATA_13	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA14__LCDIF1_DATA_14	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA15__LCDIF1_DATA_15	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA16__LCDIF1_DATA_16	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA17__LCDIF1_DATA_17	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA18__LCDIF1_DATA_18	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA19__LCDIF1_DATA_19	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA20__LCDIF1_DATA_20	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA21__LCDIF1_DATA_21	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA22__LCDIF1_DATA_22	0x4001b0b0
-+			MX6SX_PAD_LCD1_DATA23__LCDIF1_DATA_23	0x4001b0b0
-+		>;
-+	};
-+
-+	pinctrl_pcie: pciegrp {
-+		fsl,pins = <
-+			MX6SX_PAD_NAND_DATA05__GPIO4_IO_9	0xb0b0
-+			MX6SX_PAD_NAND_DATA06__GPIO4_IO_10	0xb0b0
-+			MX6SX_PAD_NAND_DATA07__GPIO4_IO_11	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_pwm4: pwm4grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO13__PWM4_OUT		0x110b0
-+		>;
-+	};
-+
-+	pinctrl_reg_wlan: reg-wlangrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_DATA4__GPIO7_IO_6		0x1b0b0
-+			MX6SX_PAD_GPIO1_IO11__CCM_CLKO1		0x000b0
-+		>;
-+	};
-+
-+	pinctrl_sgtl5000: sgtl5000grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO12__CCM_CLKO2		0x000b0
-+			MX6SX_PAD_ENET1_COL__GPIO2_IO_0		0x1b0b0
-+			MX6SX_PAD_ENET1_CRS__GPIO2_IO_1		0x1b0b0
-+			MX6SX_PAD_QSPI1A_SS0_B__GPIO4_IO_22	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_uart1: uart1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO04__UART1_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO05__UART1_RX		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO06__UART2_TX		0x1b0b1
-+			MX6SX_PAD_GPIO1_IO07__UART2_RX		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart3: uart3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_SS0_B__UART3_TX	0x1b0b1
-+			MX6SX_PAD_QSPI1B_SCLK__UART3_RX		0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_uart5: uart5grp {
-+		fsl,pins = <
-+			MX6SX_PAD_KEY_COL3__UART5_TX		0x1b0b1
-+			MX6SX_PAD_KEY_ROW3__UART5_RX		0x1b0b1
-+			MX6SX_PAD_SD3_DATA6__UART3_RTS_B	0x1b0b1
-+			MX6SX_PAD_SD3_DATA7__UART3_CTS_B	0x1b0b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1: usbotg1grp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO08__USB_OTG1_OC	0x1b0b0
-+			MX6SX_PAD_GPIO1_IO10__ANATOP_OTG1_ID	0x170b1
-+		>;
-+	};
-+
-+	pinctrl_usbotg1_vbus: usbotg1-vbusgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_GPIO1_IO09__GPIO1_IO_9	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_usbotg2: usbotg2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_QSPI1B_DATA2__GPIO4_IO_26	0xb0b0
-+		>;
-+	};
-+
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD2_CMD__USDHC2_CMD		0x17059
-+			MX6SX_PAD_SD2_CLK__USDHC2_CLK		0x10059
-+			MX6SX_PAD_SD2_DATA0__USDHC2_DATA0	0x17059
-+			MX6SX_PAD_SD2_DATA1__USDHC2_DATA1	0x17059
-+			MX6SX_PAD_SD2_DATA2__USDHC2_DATA2	0x17059
-+			MX6SX_PAD_SD2_DATA3__USDHC2_DATA3	0x17059
-+			MX6SX_PAD_KEY_COL2__GPIO2_IO_12		0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD3_CLK__USDHC3_CLK		0x10071
-+			MX6SX_PAD_SD3_CMD__USDHC3_CMD		0x17071
-+			MX6SX_PAD_SD3_DATA0__USDHC3_DATA0	0x17071
-+			MX6SX_PAD_SD3_DATA1__USDHC3_DATA1	0x17071
-+			MX6SX_PAD_SD3_DATA2__USDHC3_DATA2	0x17071
-+			MX6SX_PAD_SD3_DATA3__USDHC3_DATA3	0x17071
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_50mhz: usdhc4-50mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x10071
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x17071
-+			MX6SX_PAD_SD4_RESET_B__USDHC4_RESET_B	0x17071
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x17071
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x17071
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x17071
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x17071
-+			MX6SX_PAD_SD4_DATA4__USDHC4_DATA4	0x17071
-+			MX6SX_PAD_SD4_DATA5__USDHC4_DATA5	0x17071
-+			MX6SX_PAD_SD4_DATA6__USDHC4_DATA6	0x17071
-+			MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x17071
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_100mhz: usdhc4-100mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x100b9
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x170b9
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x170b9
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x170b9
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x170b9
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x170b9
-+			MX6SX_PAD_SD4_DATA4__USDHC4_DATA4	0x170b9
-+			MX6SX_PAD_SD4_DATA5__USDHC4_DATA5	0x170b9
-+			MX6SX_PAD_SD4_DATA6__USDHC4_DATA6	0x170b9
-+			MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x170b9
-+		>;
-+	};
-+
-+	pinctrl_usdhc4_200mhz: usdhc4-200mhzgrp {
-+		fsl,pins = <
-+			MX6SX_PAD_SD4_CLK__USDHC4_CLK		0x100f9
-+			MX6SX_PAD_SD4_CMD__USDHC4_CMD		0x170f9
-+			MX6SX_PAD_SD4_DATA0__USDHC4_DATA0	0x170f9
-+			MX6SX_PAD_SD4_DATA1__USDHC4_DATA1	0x170f9
-+			MX6SX_PAD_SD4_DATA2__USDHC4_DATA2	0x170f9
-+			MX6SX_PAD_SD4_DATA3__USDHC4_DATA3	0x170f9
-+			MX6SX_PAD_SD4_DATA4__USDHC4_DATA4	0x170f9
-+			MX6SX_PAD_SD4_DATA5__USDHC4_DATA5	0x170f9
-+			MX6SX_PAD_SD4_DATA6__USDHC4_DATA6	0x170f9
-+			MX6SX_PAD_SD4_DATA7__USDHC4_DATA7	0x170f9
-+		>;
-+	};
-+};
+We already have "default-on" trigger for this purpose.
+
+> +	- linux,default-trigger: Trigger assigned to the LED.
+
+Please also add a reference to common led bindings, as this property is
+documented there:
+"(see Documentation/devicetree/bindings/leds/common.txt):"
+
+default-on trigger is also mentioned there.
+
+> +
+> +Example:
+> +  #include <dt-bindings/leds/leds-pca9532.h>
+> +
+> +  leds: pca9530@60 {
+> +    compatible = "nxp,pca9530";
+> +    reg = <0x60>;
+> +
+> +    red-power {
+> +      label = "pca:red:power";
+> +      type = <PCA9532_TYPE_LED>;
+> +      state = <PCA9532_PWM0>;
+> +    };
+> +    green-power {
+> +      label = "pca:green:power";
+> +      type = <PCA9532_TYPE_LED>;
+> +      state = <PCA9532_PWM1>;
+> +    };
+> +  };
+> +
+> +For more product information please see the link below:
+> +http://nxp.com/documents/data_sheet/PCA9532.pdf
+> diff --git a/drivers/leds/leds-pca9532.c b/drivers/leds/leds-pca9532.c
+> index e3d3b1a..3bbaa39 100644
+> --- a/drivers/leds/leds-pca9532.c
+> +++ b/drivers/leds/leds-pca9532.c
+> @@ -21,6 +21,8 @@
+>   #include <linux/workqueue.h>
+>   #include <linux/leds-pca9532.h>
+>   #include <linux/gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+>
+>   /* m =  num_leds*/
+>   #define PCA9532_REG_INPUT(i)	((i) >> 3)
+> @@ -86,9 +88,22 @@ static const struct pca9532_chip_info pca9532_chip_info_tbl[] = {
+>   	},
+>   };
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id of_pca9532_leds_match[] = {
+> +	{ .compatible = "nxp,pca9530", .data = (void *)pca9530 },
+> +	{ .compatible = "nxp,pca9531", .data = (void *)pca9531 },
+> +	{ .compatible = "nxp,pca9532", .data = (void *)pca9532 },
+> +	{ .compatible = "nxp,pca9533", .data = (void *)pca9533 },
+> +	{},
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_pca9532_leds_match);
+> +#endif
+> +
+>   static struct i2c_driver pca9532_driver = {
+>   	.driver = {
+>   		.name = "leds-pca953x",
+> +		.of_match_table = of_match_ptr(of_pca9532_leds_match),
+>   	},
+>   	.probe = pca9532_probe,
+>   	.remove = pca9532_remove,
+> @@ -354,6 +369,7 @@ static int pca9532_configure(struct i2c_client *client,
+>   			led->state = pled->state;
+>   			led->name = pled->name;
+>   			led->ldev.name = led->name;
+> +			led->ldev.default_trigger = led->default_trigger;
+>   			led->ldev.brightness = LED_OFF;
+>   			led->ldev.brightness_set_blocking =
+>   						pca9532_set_brightness;
+> @@ -432,15 +448,60 @@ exit:
+>   	return err;
+>   }
+>
+> +struct pca9532_platform_data *pca9532_of_populate_pdata(struct device *dev,
+> +						      struct device_node *np)
+
+This function is local and therefore should be static.
+
+> +{
+> +	struct pca9532_platform_data *pdata;
+> +	struct device_node *child;
+> +	int devid = (int)of_match_device(of_pca9532_leds_match, dev)->data;
+> +	int maxleds = pca9532_chip_info_tbl[devid].num_leds;
+> +	int i = 0;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for_each_child_of_node(np, child) {
+> +		if (of_property_read_string(child, "label",
+> +					    &pdata->leds[i].name))
+> +			pdata->leds[i].name = child->name;
+> +		of_property_read_u32(child, "type", &pdata->leds[i].type);
+> +		of_property_read_u32(child, "state", &pdata->leds[i].state);
+> +		of_property_read_string(child, "linux,default-trigger",
+> +					&pdata->leds[i].default_trigger);
+> +		if (++i >= maxleds) {
+> +			of_node_put(child);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return pdata;
+> +}
+> +
+>   static int pca9532_probe(struct i2c_client *client,
+>   	const struct i2c_device_id *id)
+>   {
+> +	int devid;
+>   	struct pca9532_data *data = i2c_get_clientdata(client);
+>   	struct pca9532_platform_data *pca9532_pdata =
+>   			dev_get_platdata(&client->dev);
+> -
+> -	if (!pca9532_pdata)
+> -		return -EIO;
+> +	struct device_node *np = client->dev.of_node;
+> +
+> +	if (!pca9532_pdata) {
+> +		if (np) {
+> +			pca9532_pdata =
+> +				pca9532_of_populate_pdata(&client->dev, np);
+> +			if (IS_ERR(pca9532_pdata))
+> +				return PTR_ERR(pca9532_pdata);
+> +		} else {
+> +			dev_err(&client->dev, "no platform data\n");
+> +			return -EINVAL;
+> +		}
+> +		devid = (int)of_match_device(
+> +			of_pca9532_leds_match, &client->dev)->data;
+> +	} else {
+> +		devid = id->driver_data;
+> +	}
+>
+>   	if (!i2c_check_functionality(client->adapter,
+>   		I2C_FUNC_SMBUS_BYTE_DATA))
+> @@ -450,7 +511,7 @@ static int pca9532_probe(struct i2c_client *client,
+>   	if (!data)
+>   		return -ENOMEM;
+>
+> -	data->chip_info = &pca9532_chip_info_tbl[id->driver_data];
+> +	data->chip_info = &pca9532_chip_info_tbl[devid];
+>
+>   	dev_info(&client->dev, "setting platform data\n");
+>   	i2c_set_clientdata(client, data);
+> diff --git a/include/dt-bindings/leds/leds-pca9532.h b/include/dt-bindings/leds/leds-pca9532.h
+> new file mode 100644
+> index 0000000..4db6cb2
+> --- /dev/null
+> +++ b/include/dt-bindings/leds/leds-pca9532.h
+> @@ -0,0 +1,23 @@
+> +/*
+> + * This header provides constants for pca9532 LED bindings.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_LEDS_PCA9532_H
+> +#define _DT_BINDINGS_LEDS_PCA9532_H
+> +
+> +#define PCA9532_OFF               0x0
+> +#define PCA9532_ON                0x1
+> +#define PCA9532_PWM0              0x2
+> +#define PCA9532_PWM1              0x3
+> +
+> +#define PCA9532_TYPE_NONE         0
+> +#define PCA9532_TYPE_LED          1
+> +#define PCA9532_TYPE_N2100_BEEP   2
+> +#define PCA9532_TYPE_GPIO         3
+> +#define PCA9532_LED_TIMER2        4
+> +
+> +#endif /* _DT_BINDINGS_LEDS_PCA9532_H */
+> diff --git a/include/linux/leds-pca9532.h b/include/linux/leds-pca9532.h
+> index b8d6fff..562b320 100644
+> --- a/include/linux/leds-pca9532.h
+> +++ b/include/linux/leds-pca9532.h
+> @@ -16,25 +16,17 @@
+>
+>   #include <linux/leds.h>
+>   #include <linux/workqueue.h>
+> -
+> -enum pca9532_state {
+> -	PCA9532_OFF  = 0x0,
+> -	PCA9532_ON   = 0x1,
+> -	PCA9532_PWM0 = 0x2,
+> -	PCA9532_PWM1 = 0x3
+> -};
+> -
+> -enum pca9532_type { PCA9532_TYPE_NONE, PCA9532_TYPE_LED,
+> -	PCA9532_TYPE_N2100_BEEP, PCA9532_TYPE_GPIO };
+> +#include <dt-bindings/leds/leds-pca9532.h>
+
+Please move this include directive to leds-pca9532.c,
+on the top of existing directives, to keep alphabetical order.
+
+>
+>   struct pca9532_led {
+>   	u8 id;
+>   	struct i2c_client *client;
+> -	char *name;
+> +	const char *name;
+> +	const char *default_trigger;
+>   	struct led_classdev ldev;
+>   	struct work_struct work;
+> -	enum pca9532_type type;
+> -	enum pca9532_state state;
+> +	u32 type;
+> +	u32 state;
+>   };
+>
+>   struct pca9532_platform_data {
+>
+
+
 -- 
-2.7.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jacek Anaszewski
