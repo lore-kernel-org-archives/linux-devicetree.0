@@ -1,79 +1,48 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6] iio: dac: Add support for the AD5592R/AD5593R
- ADCs/DACs
-Date: Thu, 7 Apr 2016 12:57:48 -0500
-Message-ID: <20160407175748.GL32257@rob-hp-laptop>
-References: <1459842379-26275-1-git-send-email-michael.hennerich@analog.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1459842379-26275-1-git-send-email-michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: John Crispin <blogic@openwrt.org>
+Subject: [PATCH 1/9] net: mediatek: update the IRQ part of the binding document
+Date: Thu,  7 Apr 2016 19:57:48 +0200
+Message-ID: <1460051876-53135-1-git-send-email-blogic@openwrt.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Felix Fietkau <nbd@openwrt.org>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?q?Sean=20Wang=20=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?= <sean.wang@mediatek.com>, netdev@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, John Crispin <blogic@openwrt.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 05, 2016 at 09:46:19AM +0200, michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org wrote:
-> From: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> 
-> This patch adds support for the AD5592R (spi) and AD5593R (i2c)
-> ADC/DAC/GPIO devices.
-> 
-> Signed-off-by: Paul Cercueil <paul.cercueil-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Michael Hennerich <michael.hennerich-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> ---
-> 
-> Changes since v1:
-> 	* Fix mutex usage
-> 	* Remove unnecessary NULL pointer guards
-> 	* Add comment explaining the invalid data read
-> 	* AD5593R Remove surplus adc readback
-> 
-> Changes since v2:
-> 	* Use child nodes to describe channels
-> 	* Fix probe return and driver remove path
-> 	* Move locking closer to where its used
-> 	* Remove WARN_ON but return error
-> 	* Remove OPEN DRAIN configuration option
-> 
-> Changes since v3:
-> 	* Documentation: Add missing vendor prefixes in the examples
-> 	* Minor function reordering in remove() to match the reverse of probe()
-> 
-> Changes since v4:
-> 	* Documentation: Add missing gpio bindings
-> 	* Kconfig: Select GPIOLIB and remove ifdefs in code
-> 	* Remove surplus error check in ad5592r_gpio_request()
-> 	* Add comment about reset magic
-> 
-> Changes since v5:
-> 	* Remove surplus error check
-> 	* Remove additional ifdef CONFIG_GPIOLIB guards in the header
-> 	* Bindings: Add additional comments about CH_MODE_DAC_AND_ADC mode
-> ---
->  .../devicetree/bindings/iio/dac/ad5592r.txt        | 155 +++++
+The current binding document only describes a single interrupt. Update the
+document by adding the 2 other interrupts.
 
-I've acked this twice before, and the last change seems minor. 
-Please add acks unless it is more than minor changes and you need it 
-reviewed again.
+The driver currently only uses a single interrupt. The HW is however able
+to using IRQ grouping to split TX and RX onto separate GIC irqs.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: John Crispin <blogic@openwrt.org>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/net/mediatek-net.txt |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
->  drivers/iio/dac/Kconfig                            |  27 +
->  drivers/iio/dac/Makefile                           |   3 +
->  drivers/iio/dac/ad5592r-base.c                     | 691 +++++++++++++++++++++
->  drivers/iio/dac/ad5592r-base.h                     |  76 +++
->  drivers/iio/dac/ad5592r.c                          | 164 +++++
->  drivers/iio/dac/ad5593r.c                          | 131 ++++
->  include/dt-bindings/iio/adi,ad5592r.h              |  16 +
->  8 files changed, 1263 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/ad5592r.txt
->  create mode 100644 drivers/iio/dac/ad5592r-base.c
->  create mode 100644 drivers/iio/dac/ad5592r-base.h
->  create mode 100644 drivers/iio/dac/ad5592r.c
->  create mode 100644 drivers/iio/dac/ad5593r.c
->  create mode 100644 include/dt-bindings/iio/adi,ad5592r.h
-> 
+diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
+index 5ca7929..2f142be 100644
+--- a/Documentation/devicetree/bindings/net/mediatek-net.txt
++++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
+@@ -9,7 +9,7 @@ have dual GMAC each represented by a child node..
+ Required properties:
+ - compatible: Should be "mediatek,mt7623-eth"
+ - reg: Address and length of the register set for the device
+-- interrupts: Should contain the frame engines interrupt
++- interrupts: Should contain the three frame engines interrupts
+ - clocks: the clock used by the core
+ - clock-names: the names of the clock listed in the clocks property. These are
+ 	"ethif", "esw", "gp2", "gp1"
+@@ -42,7 +42,9 @@ eth: ethernet@1b100000 {
+ 		 <&ethsys CLK_ETHSYS_GP2>,
+ 		 <&ethsys CLK_ETHSYS_GP1>;
+ 	clock-names = "ethif", "esw", "gp2", "gp1";
+-	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>;
++	interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW
++		      GIC_SPI 199 IRQ_TYPE_LEVEL_LOW
++		      GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
+ 	power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+ 	resets = <&ethsys MT2701_ETHSYS_ETH_RST>;
+ 	reset-names = "eth";
+-- 
+1.7.10.4
