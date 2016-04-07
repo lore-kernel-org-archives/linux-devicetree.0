@@ -1,61 +1,74 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 4/7] soc: renesas: Add r8a7791 SYSC PM Domain Binding Definitions
-Date: Thu,  7 Apr 2016 14:20:17 +0200
-Message-ID: <1460031620-13240-5-git-send-email-geert+renesas@glider.be>
-References: <1460031620-13240-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1460031620-13240-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] wlcore: spi: add wl18xx support
+Date: Thu, 07 Apr 2016 15:24:40 +0300
+Message-ID: <87shyx38tz.fsf@purkki.adurom.net>
+References: <1459343218-24536-1-git-send-email-eyalr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459343218-24536-1-git-send-email-eyalr-l0cyMroinI0@public.gmane.org> (Eyal Reizer's
+	message of "Wed, 30 Mar 2016 16:06:58 +0300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
-v4:
-  - Add Reviewed-by,
-  - Rename R8A7791_PD_SH to R8A7791_PD_SH_4A,
-  - Add always-on power area,
+Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-v3:
-  - New.
----
- include/dt-bindings/power/r8a7791-sysc.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a7791-sysc.h
+> Add support for using with both wl12xx and wl18xx.
+>
+> - all wilink family needs special init command for entering wspi mode.
+>   extra clock cycles should be sent after the spi init command while the
+>   cs pin is high.
+> - switch to controling the cs pin from the spi driver for achieveing the
+>   above.
+> - the selected cs gpio is read from the spi device-tree node using the
+>   cs-gpios field and setup as a gpio.
+> - See the example below for specifying the cs gpio using the cs-gpios entry
+>
+> &spi0	{
+>  	status = "okay";
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&spi0_pins>;
+> 	cs-gpios = <&gpio0 5 0>;
+> 	#address-cells = <1>;
+> 	#size-cells = <0>;
+>  	wlcore: wlcore@0 {
+> 		compatible = "ti,wl1835";
+> 		vwlan-supply = <&wlan_en_reg>;
+> 		spi-max-frequency = <48000000>;
+> 		reg = <0>;      /* chip select 0 on spi0, ie spi0.0 */
+> 		interrupt-parent = <&gpio0>;
+> 		interrupts = <27 IRQ_TYPE_EDGE_RISING>;
+>  	};
+> };
+>
+> Signed-off-by: Eyal Reizer <eyalr-l0cyMroinI0@public.gmane.org>
 
-diff --git a/include/dt-bindings/power/r8a7791-sysc.h b/include/dt-bindings/power/r8a7791-sysc.h
-new file mode 100644
-index 0000000000000000..1403baa0514fb0fc
---- /dev/null
-+++ b/include/dt-bindings/power/r8a7791-sysc.h
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright (C) 2016 Glider bvba
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7791_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7791_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A7791_PD_CA15_CPU0		 0
-+#define R8A7791_PD_CA15_CPU1		 1
-+#define R8A7791_PD_CA15_SCU		12
-+#define R8A7791_PD_SH_4A		16
-+#define R8A7791_PD_SGX			20
-+
-+/* Always-on power area */
-+#define R8A7791_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A7791_SYSC_H__ */
+[...]
+
+>  static const struct of_device_id wlcore_spi_of_match_table[] = {
+> -	{ .compatible = "ti,wl1271" },
+> +	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
+> +	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
+> +	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
+> +	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
+> +	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
+> +	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
+> +	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
+> +	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
+> +	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
+> +	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
+>  	{ }
+
+Shouldn't you also update bindings/net/wireless/ti,wlcore,spi.txt? Now
+it only mentions about ti,wl1271 and not anything about the rest.
+
+Adding devicetree list for further comments.
+
 -- 
-1.9.1
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
