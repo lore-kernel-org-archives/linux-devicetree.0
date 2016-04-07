@@ -1,66 +1,113 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 6/7] soc: renesas: Add r8a7794 SYSC PM Domain Binding Definitions
-Date: Thu,  7 Apr 2016 14:20:19 +0200
-Message-ID: <1460031620-13240-7-git-send-email-geert+renesas@glider.be>
-References: <1460031620-13240-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1460031620-13240-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v4 06/12] arm64: dts: r8a7795: Add SYSC PM Domains
+Date: Thu,  7 Apr 2016 14:20:29 +0200
+Message-ID: <1460031635-13452-7-git-send-email-geert+renesas@glider.be>
+References: <1460031635-13452-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1460031635-13452-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Add a device node for the System Controller, and hook it up to the
+CPG/MSSR Clock Domain.
+Hook up the Cortex-A57 CPU cores and the Cortex-A57 and Cortex A53 L2
+caches/SCUs to their respective PM Domains.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v4:
-  - Add Reviewed-by,
-  - Rename R8A7794_PD_SH to R8A7794_PD_SH_4A,
-  - Add always-on power area,
+  - Add power-domains property to the sysc node, to refer to the SoC's
+    Clock Domain,
+  - Extract using "<&sysc R8A7795_PD_ALWAYS_ON>" for devices in the
+    always-on power area into a separate patch,
 
 v3:
+  - Drop power area hiearchy from DT,
+  - Switch to "#power-domain-cells = <1>",
+  - Use "<&sysc R8A7795_PD_ALWAYS_ON>" for devices in the always-on
+    power area,
+  - Drop fallback compatibility strings,
+
+v2:
   - New.
 ---
- include/dt-bindings/power/r8a7794-sysc.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a7794-sysc.h
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/include/dt-bindings/power/r8a7794-sysc.h b/include/dt-bindings/power/r8a7794-sysc.h
-new file mode 100644
-index 0000000000000000..862241c2d27b2fa3
---- /dev/null
-+++ b/include/dt-bindings/power/r8a7794-sysc.h
-@@ -0,0 +1,26 @@
-+/*
-+ * Copyright (C) 2016 Glider bvba
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7794_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7794_SYSC_H__
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 11f9971a85433b7f..89c72280f9a77403 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -10,6 +10,7 @@
+ 
+ #include <dt-bindings/clock/r8a7795-cpg-mssr.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/power/r8a7795-sysc.h>
+ 
+ / {
+ 	compatible = "renesas,r8a7795";
+@@ -39,6 +40,7 @@
+ 			compatible = "arm,cortex-a57", "arm,armv8";
+ 			reg = <0x0>;
+ 			device_type = "cpu";
++			power-domains = <&sysc R8A7795_PD_CA57_CPU0>;
+ 			next-level-cache = <&L2_CA57>;
+ 			enable-method = "psci";
+ 		};
+@@ -47,6 +49,7 @@
+ 			compatible = "arm,cortex-a57","arm,armv8";
+ 			reg = <0x1>;
+ 			device_type = "cpu";
++			power-domains = <&sysc R8A7795_PD_CA57_CPU1>;
+ 			next-level-cache = <&L2_CA57>;
+ 			enable-method = "psci";
+ 		};
+@@ -54,6 +57,7 @@
+ 			compatible = "arm,cortex-a57","arm,armv8";
+ 			reg = <0x2>;
+ 			device_type = "cpu";
++			power-domains = <&sysc R8A7795_PD_CA57_CPU2>;
+ 			next-level-cache = <&L2_CA57>;
+ 			enable-method = "psci";
+ 		};
+@@ -61,6 +65,7 @@
+ 			compatible = "arm,cortex-a57","arm,armv8";
+ 			reg = <0x3>;
+ 			device_type = "cpu";
++			power-domains = <&sysc R8A7795_PD_CA57_CPU3>;
+ 			next-level-cache = <&L2_CA57>;
+ 			enable-method = "psci";
+ 		};
+@@ -68,12 +73,14 @@
+ 
+ 	L2_CA57: cache-controller@0 {
+ 		compatible = "cache";
++		power-domains = <&sysc R8A7795_PD_CA57_SCU>;
+ 		cache-unified;
+ 		cache-level = <2>;
+ 	};
+ 
+ 	L2_CA53: cache-controller@1 {
+ 		compatible = "cache";
++		power-domains = <&sysc R8A7795_PD_CA53_SCU>;
+ 		cache-unified;
+ 		cache-level = <2>;
+ 	};
+@@ -305,6 +312,13 @@
+ 			#power-domain-cells = <0>;
+ 		};
+ 
++		sysc: system-controller@e6180000 {
++			compatible = "renesas,r8a7795-sysc";
++			reg = <0 0xe6180000 0 0x0400>;
++			power-domains = <&cpg>;
++			#power-domain-cells = <1>;
++		};
 +
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A7794_PD_CA7_CPU0		 5
-+#define R8A7794_PD_CA7_CPU1		 6
-+#define R8A7794_PD_SH_4A		16
-+#define R8A7794_PD_SGX			20
-+#define R8A7794_PD_CA7_SCU		21
-+
-+/* Always-on power area */
-+#define R8A7794_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A7794_SYSC_H__ */
+ 		audma0: dma-controller@ec700000 {
+ 			compatible = "renesas,rcar-dmac";
+ 			reg = <0 0xec700000 0 0x10000>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
