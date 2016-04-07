@@ -1,69 +1,46 @@
-From: Octavian Purdila <octavian.purdila@intel.com>
-Subject: Re: [RFC PATCH 0/4] Add ACPI support for pinctrl configuration
-Date: Thu, 7 Apr 2016 17:17:23 +0300
-Message-ID: <CAE1zot+C7asvCfs2m=wNCBAKTHLpjYsPnmxQx_+inh9o0sPLwg@mail.gmail.com>
-References: <1459424685-26965-1-git-send-email-irina.tirdea@intel.com>
-	<20160404225200.GA1615@svinekod>
-	<D3292CBB.662A8%charles.garcia-tobin@arm.com>
-	<5704519F.5030906@redhat.com>
-	<20160406104900.GA2820@xora-haswell.xora.org.uk>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] wlcore: spi: add wl18xx support
+Date: Thu, 07 Apr 2016 17:32:08 +0300
+Message-ID: <87wpo97amv.fsf@kamboji.qca.qualcomm.com>
+References: <1459343218-24536-1-git-send-email-eyalr@ti.com>
+	<87shyx38tz.fsf@purkki.adurom.net>
+	<8665E2433BC68541A24DFFCA87B70F5B360B5430@DFRE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20160406104900.GA2820@xora-haswell.xora.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Graeme Gregory <gg@slimlogic.co.uk>
-Cc: ahs3@redhat.com, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, Mark Rutland <mark.rutland@arm.com>, Irina Tirdea <irina.tirdea@intel.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <lenb@kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Cristina Ciocan <cristina.ciocan@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8665E2433BC68541A24DFFCA87B70F5B360B5430-1tpBd5JUCm6IQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+	(Eyal Reizer's message of "Thu, 7 Apr 2016 12:45:13 +0000")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org>
+Cc: Eyal Reizer <eyalreizer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-wireless@vger.kernel.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev@vger.kernel.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 6, 2016 at 1:49 PM, Graeme Gregory <gg@slimlogic.co.uk> wrote:
+"Reizer, Eyal" <eyalr-l0cyMroinI0@public.gmane.org> writes:
 
->>
->> I have to echo Mark's concern: wholesale importation of portions of current
->> DT bindings simply because it's expedient is one of the things I've been hoping
->> to avoid.  These patches seem to be just that.
->>
->> And while the latest version mentioned above describes a bit of a review
->> process to handle this case, I don't recall the kernel community at large
->> agreeing to it, nor to it having been implemented.  If I missed that part,
->> my apologies; please let me know where it was decided.  If I haven't, then
->> perhaps this needs to be the first test case of that process.
->>
+>> >  static const struct of_device_id wlcore_spi_of_match_table[] = {
+>> > -	{ .compatible = "ti,wl1271" },
+>> > +	{ .compatible = "ti,wl1271", .data = &wl12xx_data},
+>> > +	{ .compatible = "ti,wl1273", .data = &wl12xx_data},
+>> > +	{ .compatible = "ti,wl1281", .data = &wl12xx_data},
+>> > +	{ .compatible = "ti,wl1283", .data = &wl12xx_data},
+>> > +	{ .compatible = "ti,wl1801", .data = &wl18xx_data},
+>> > +	{ .compatible = "ti,wl1805", .data = &wl18xx_data},
+>> > +	{ .compatible = "ti,wl1807", .data = &wl18xx_data},
+>> > +	{ .compatible = "ti,wl1831", .data = &wl18xx_data},
+>> > +	{ .compatible = "ti,wl1835", .data = &wl18xx_data},
+>> > +	{ .compatible = "ti,wl1837", .data = &wl18xx_data},
+>> >  	{ }
+>> 
+>> Shouldn't you also update bindings/net/wireless/ti,wlcore,spi.txt? Now it only
+>> mentions about ti,wl1271 and not anything about the rest.
 >
-> My concern over this is similar to Mark/Als this looks like a quick hack
-> to "solve" an issue that has been worked on in Linux for at least 10
-> years now. And thats how to describe a non descoverable card that is
-> plugged into random busses on a SoC.
->
-> The issue I see with a quick hack of DT pinctrl into _DSD is that this
-> does not take into account the power model of ACPI. As far as I can see
-> the core code has no manner to tell a pin/function allocated through
-> _DSD actually has effects on the power of other devices. So the core
-> could end up powering down devices when it should not. This is very
-> relevent to your intended use of IoT devices where power control is key.
->
+> You are right! Will be fixed in v2
 
-It is not clear to me how this could happen - core powering down
-devices when it should not, unless pins are shared.  And if I am not
-missing something, pinctrl is designed to handle this case by only by
-switching to idle/suspend/default states from the controller drivers
-in the suspend/resume routine. ACPI _Sx calls also happens at the same
-time so there does not seem to be a contention point.
+Thanks. Also remember to CC devicetree list.
 
-Perhaps I am missing something and an example of such issue would make
-it more clear.
-
-And, as our primary use case is to set the initial muxing, we can
-easily remove the suspend/resume functionality if this turns out to be
-the issue.
-
-> Why has there been no attempt in ASWG to make these sort of features a
-> 1st class citizen of ACPI so they can interact correctly with the other
-> features?
->
-
-IMO having an ASWG pinctrl specification and using _DSD for Linux are
-orthogonal approaches. The latter is very specific to Linux and we
-want it so that we can support the Linux pinctrl model as best as
-possible and I doubt it is a common denominator for all OSes that ACPI
-supports.
+-- 
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
