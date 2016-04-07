@@ -1,149 +1,69 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] Input: rotary_encoder - support binary encoding of
- states
-Date: Thu, 7 Apr 2016 11:15:13 -0700
-Message-ID: <20160407181513.GA7283@dtor-ws>
-References: <1458806232-22403-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: k2*: Rename the k2* files to keystone-k2* files
+Date: Thu, 7 Apr 2016 11:39:58 -0700
+Message-ID: <5706A97E.7090002@oracle.com>
+References: <1458139150-30382-1-git-send-email-nm@ti.com>
+ <56E97F0E.6070309@oracle.com>
+ <CAGo_u6oMYZvzkvCsi8H3hvOBrPLZ-EL-T3RCA6E8BnmThrLYfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1458806232-22403-1-git-send-email-u.kleine-koenig@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rojhalat Ibrahim <imr@rtschenk.de>, Sylvain Rochet <sylvain.rochet@finsecur.com>, Johan Hovold <johan@kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, kernel@pengutronix.de, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGo_u6oMYZvzkvCsi8H3hvOBrPLZ-EL-T3RCA6E8BnmThrLYfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 24, 2016 at 08:57:12AM +0100, Uwe Kleine-K=F6nig wrote:
-> It's not advisable to use this encoding, but to support existing devi=
-ces
-> add support for this to the driver.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> ---
->=20
-> Notes:
->     Changes since (implicit) v1, sent with
->     Message-Id: 1458680914-4533-1-git-send-email-u.kleine-koenig@peng=
-utronix.de
->    =20
->      - switch format of dt properties to use strings
->=20
->  .../devicetree/bindings/input/rotary-encoder.txt   |  4 ++++
->  drivers/input/misc/rotary_encoder.c                | 22 ++++++++++++=
-+++++++---
->  2 files changed, 23 insertions(+), 3 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.t=
-xt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index 6c9f0c8a846c..e85ce3dea480 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -20,6 +20,8 @@ Optional properties:
->    2: Half-period mode
->    4: Quarter-period mode
->  - wakeup-source: Boolean, rotary encoder can wake up the system.
-> +- rotary-encoder,encoding: String, the method used to encode steps.
-> +  Supported are "gray" (the default and more common) and "binary".
-> =20
->  Deprecated properties:
->  - rotary-encoder,half-period: Makes the driver work on half-period m=
-ode.
-> @@ -34,6 +36,7 @@ Example:
->  			compatible =3D "rotary-encoder";
->  			gpios =3D <&gpio 19 1>, <&gpio 20 0>; /* GPIO19 is inverted */
->  			linux,axis =3D <0>; /* REL_X */
-> +			rotary-encoder,encoding =3D "gray";
->  			rotary-encoder,relative-axis;
->  		};
-> =20
-> @@ -42,5 +45,6 @@ Example:
->  			gpios =3D <&gpio 21 0>, <&gpio 22 0>;
->  			linux,axis =3D <1>; /* ABS_Y */
->  			rotary-encoder,steps =3D <24>;
-> +			rotary-encoder,encoding =3D "binary";
->  			rotary-encoder,rollover;
->  		};
-> diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc=
-/rotary_encoder.c
-> index 96c486de49e0..d226d69a174a 100644
-> --- a/drivers/input/misc/rotary_encoder.c
-> +++ b/drivers/input/misc/rotary_encoder.c
-> @@ -28,6 +28,11 @@
-> =20
->  #define DRV_NAME "rotary-encoder"
-> =20
-> +enum rotary_encoder_encoding {
-> +	ROTENC_GRAY,
-> +	ROTENC_BINARY,
-> +};
-> +
->  struct rotary_encoder {
->  	struct input_dev *input;
-> =20
-> @@ -37,6 +42,7 @@ struct rotary_encoder {
->  	u32 axis;
->  	bool relative_axis;
->  	bool rollover;
-> +	enum rotary_encoder_encoding encoding;
-> =20
->  	unsigned int pos;
-> =20
-> @@ -57,9 +63,11 @@ static unsigned rotary_encoder_get_state(struct ro=
-tary_encoder *encoder)
-> =20
->  	for (i =3D 0; i < encoder->gpios->ndescs; ++i) {
->  		int val =3D gpiod_get_value_cansleep(encoder->gpios->desc[i]);
-> -		/* convert from gray encoding to normal */
-> -		if (ret & 1)
-> -			val =3D !val;
-> +
-> +		if (encoder->encoding =3D=3D ROTENC_GRAY)
-> +			/* convert from gray encoding to binary */
-> +			if (ret & 1)
-> +				val =3D !val;
-> =20
->  		ret =3D ret << 1 | val;
->  	}
-> @@ -183,6 +191,7 @@ static int rotary_encoder_probe(struct platform_d=
-evice *pdev)
->  	struct device *dev =3D &pdev->dev;
->  	struct rotary_encoder *encoder;
->  	struct input_dev *input;
-> +	const char *encoding;
->  	irq_handler_t handler;
->  	u32 steps_per_period;
->  	unsigned int i;
-> @@ -213,6 +222,13 @@ static int rotary_encoder_probe(struct platform_=
-device *pdev)
->  	encoder->rollover =3D
->  		device_property_read_bool(dev, "rotary-encoder,rollover");
-> =20
-> +	err =3D device_property_read_string(dev, "rotary-encoder,encoding",
-> +					  &encoding);
-> +	if (!err && encoding[0] =3D=3D 'b')
+On 4/7/16 10:01 AM, Nishanth Menon wrote:
+> Hi Santosh,
+>
+> On Wed, Mar 16, 2016 at 10:43 AM, santosh shilimkar
+> <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+>> On 3/16/2016 7:39 AM, Nishanth Menon wrote:
+>>>
+>>> As reported in [1], rename the k2* dts files to keystone-* files
+>>> this will force consistency throughout.
+>>>
+>>> Script for the same (and hand modified for Makefile and MAINTAINERS
+>>> files):
+>>> for i in arch/arm/boot/dts/k2*
+>>> do
+>>>          b=`basename $i`;
+>>>          git mv $i arch/arm/boot/dts/keystone-$b;
+>>>          sed -i -e "s/$b/keystone-$b/g" arch/arm/boot/dts/*[si]
+>>> done
+>>>
+>>> NOTE: bootloaders that depend on older dtb names will need to be
+>>> updated as well.
+>>>
+>>> [1] http://marc.info/?l=linux-arm-kernel&m=145637407804754&w=2
+>>>
+>>> Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>
+>> Thanks Nishant for taking care of this. I will add this to the
+>> next soon.
+>>
+>
+> I dont see this in 4.6-rc2 yet.. did this slip our pull request? will
+> be good to get this in so that we can fix up u-boot consistently.
+>
+As discussed already, the 4.6 merge window contained the k2g renames
+as you can see from the pull request[1]. The other rename was suppose
+to be for 4.7 so that it lives in next for sometime for users to get
+the time to get to update the bootloaders etc.
 
-Why do we only match on first letter? I'd prefer we did better parsing
-(i.e. only accepted valid encodings or no encoding property.
+So it didn't slip pull request but just happen to go in 4.7 pull
+request. I added that to next early for testing. Hope it
+clarifies.
 
-> +		encoder->encoding =3D ROTENC_BINARY;
-> +	else
-> +		encoder->encoding =3D ROTENC_GRAY;
-> +
->  	device_property_read_u32(dev, "linux,axis", &encoder->axis);
->  	encoder->relative_axis =3D
->  		device_property_read_bool(dev, "rotary-encoder,relative-axis");
-> --=20
-> 2.7.0
->=20
+Regards,
+Santosh
 
-Thanks.
-
---=20
-Dmitry
+[1] https://patchwork.ozlabs.org/patch/588386/
 --
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
