@@ -1,103 +1,70 @@
-From: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v1 1/2] dt/bindings/usb: Add bindings for PIC32 MUSB driver.
-Date: Thu, 7 Apr 2016 16:46:14 +0530
-Message-ID: <1460027775-20729-1-git-send-email-purna.mandal@microchip.com>
+From: Shannon Zhao <zhaoshenglong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v10 06/17] Xen: ARM: Add support for mapping platform
+ device mmio
+Date: Thu, 7 Apr 2016 19:25:40 +0800
+Message-ID: <570643B4.3070502@huawei.com>
+References: <1459525755-36968-1-git-send-email-shannon.zhao@linaro.org> <1459525755-36968-7-git-send-email-shannon.zhao@linaro.org> <5704FE2C.5000902@arm.com> <5705B9BD.1020403@huawei.com> <57063752.4020805@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joshua Henderson <digitalpeer-icZdIMMiY0PM6KjX8ROVJw@public.gmane.org>, Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57063752.4020805-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-efi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, Shannon Zhao <shannon.zhao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-efi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peter.huangpeng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document devicetree binding for the USB controller
-and USB Phy found on Microchip PIC32 class devices.
 
-Signed-off-by: Purna Chandra Mandal <purna.mandal-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 
----
+On 2016/4/7 18:32, Julien Grall wrote:
+> Hi Shannon,
+> 
+> On 07/04/16 02:37, Shannon Zhao wrote:
+>>
+>>
+>> On 2016/4/6 20:16, Julien Grall wrote:
+>>>> +            gpfns[j] = XEN_PFN_DOWN(r->start) + j;
+>>>> +            idxs[j] = XEN_PFN_DOWN(r->start) + j;
+>>>> +        }
+>>>> +
+>>>> +        xatp.domid = DOMID_SELF;
+>>>> +        xatp.size = nr;
+>>>> +        xatp.space = XENMAPSPACE_dev_mmio;
+>>>> +
+>>>> +        set_xen_guest_handle(xatp.gpfns, gpfns);
+>>>> +        set_xen_guest_handle(xatp.idxs, idxs);
+>>>> +        set_xen_guest_handle(xatp.errs, errs);
+>>>> +
+>>>> +        rc = HYPERVISOR_memory_op(XENMEM_add_to_physmap_range, &xatp);
+>>>> +        kfree(gpfns);
+>>>> +        kfree(idxs);
+>>>> +        kfree(errs);
+>>>> +        if (rc)
+>>>> +            return rc;
+>>>
+>>> Shouldn't we redo the mapping if the hypercall fails?
+>> Hmm, why? If it fails again when we redo the mapping, what should we do
+>> then? Redo again?
+> 
+> Because the device MMIO region is left half mapped in DOM0 address space.
+> 
+> After having another look to your patch, if an error occurs, the
+> notifier will still return NOTIFY_OK. This will lead to random data
+> abort when the driver is accessing the MMIO regions as the device will
+> be considered fully functional.
+> 
+> However, even if the notifier return NOTIFY_BAD, the function device_add
+> doesn't care about the return value of blocking_notifier_call_chain. I
+> think this need to be fixed.
+> 
+>> I think if it fails at the first time it will always fail no matter how
+>> many times we do.
+> 
+> I was speaking about the mappings that succeeded. They will unlikely
+> fail during removal. If they ever fail you can just ignore the error.
+Ok, I see. I thought you mean that it needs to map the regions again.
+But what you really mean is undoing the mappings.
 
- .../bindings/usb/microchip,pic32-musb.txt          | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
-new file mode 100644
-index 0000000..e1cec9d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/microchip,pic32-musb.txt
-@@ -0,0 +1,67 @@
-+Microchip PIC32 MUSB DRC/OTG controller
-+-------------------------------------------
-+
-+Required properties:
-+ - compatible       : should be "microchip,pic32mzda-usb".
-+ - reg              : offset and length of "MUSB Core Registers" and
-+                      "USB Clock & Reset Registers".
-+ - reg-names        : should be "mc", and "usbcr" in order
-+ - clocks           : clock specifier for the musb controller clock
-+ - clock-names      : should be "usb_clk"
-+ - interrupts       : interrupt number for MUSB Core General interrupt
-+                      and DMA interrupt
-+ - interrupt-names  : must be "mc" and "dma" in order.
-+ - phys             : phy specifier for the otg phy.
-+ - dr_mode          : should be one of "host", "peripheral" or "otg".
-+ - mentor,multipoint: Should be "1" indicating the musb controller supports
-+                      multipoint. This is MUSB configuration-specific setting.
-+ - mentor,num-eps   : Specifies the number of endpoints. This is also a
-+                      MUSB configuration-specific setting. Should be set to "8".
-+ - mentor,ram-bits  : Specifies the ram address size. Should be set to "11".
-+ - mentor,power     : Should be "500". This signifies the controller can supply
-+                      up to 500mA when operating in host mode.
-+ - phys             : phandle of the USB phy.
-+ - usb_overcurrent  : phandle to MUSB over-current note. It should have
-+                      interrupt number for over-current detection logic.
-+
-+Optional properties:
-+ - microchip,fifo-mode: Specifies layout of internal SRAM for end-point fifos.
-+                        Should be 0 (default) or 1.
-+
-+Example:
-+	aliases {
-+		usb1 = &usb1;
-+		phy1 = &usb1_phy;
-+	};
-+
-+	usb1: hsusb1_core@1f8e3000 {
-+		compatible = "microchip,pic32mzda-usb";
-+		reg = <0x1f8e3000 0x1000>,
-+		      <0x1f884000 0x1000>;
-+		reg-names = "mc", "usbcr";
-+		interrupts = <132 IRQ_TYPE_EDGE_RISING>,
-+			     <133 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "mc", "dma";
-+		dr_mode = "host";
-+		mentor,multipoint = <1>;
-+		mentor,num-eps = <8>;
-+		mentor,ram-bits = <11>;
-+		mentor,power = <500>;
-+		phys = <&usb1_phy>;
-+		clocks = <&rootclk PB5CLK>;
-+		clock-names = "usb_clk";
-+		usb_overcurrent = <&usb1_overcurrent>;
-+	};
-+
-+	usb1_phy: hsusb1_phy@1f8e4000 {
-+		compatible = "usb-nop-xceiv";
-+		reg = <0x1f8e4000 0x1000>;
-+		clocks = <&rootclk UPLLCLK>;
-+		clock-names = "main_clk";
-+		clock-frequency = <24000000>;
-+	};
-+
-+	usb1_overcurrent: hsusb1_oc@0 {
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
-+	};
+Thanks,
 -- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shannon
