@@ -1,297 +1,808 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 2/6] ASoC: Davinci: McBSP: add device tree
- support for McBSP
-Date: Thu, 7 Apr 2016 16:45:56 +0300
-Message-ID: <57066494.2090808@ti.com>
-References: <1459948893-4206-1-git-send-email-petr@barix.com>
- <1459948893-4206-3-git-send-email-petr@barix.com> <570655BE.7030109@ti.com>
- <5706615A.1080805@barix.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <5706615A.1080805@barix.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Petr Kulhavy <petr@barix.com>, nsekhar@ti.com, khilman@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, galak@codeaurora.org
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v4] ARM: dts: imx: add Boundary Devices Nitrogen7 board
+Date: Thu,  7 Apr 2016 15:50:57 +0200
+Message-ID: <1460037057-23191-1-git-send-email-gary.bisson@boundarydevices.com>
+References: <1459614351-16731-5-git-send-email-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1459614351-16731-5-git-send-email-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/16 16:32, Petr Kulhavy wrote:
-> =
+Based on i.MX7 Dual with 1GB of RAM.
 
-> =
+https://boundarydevices.com/product/nitrogen7/
 
-> On 07.04.2016 14:42, Peter Ujfalusi wrote:
->> On 04/06/16 16:21, Petr Kulhavy wrote:
->>
->>>    */
->>>     #include <linux/init.h>
->>> @@ -648,15 +654,82 @@ static const struct snd_soc_component_driver
->>> davinci_i2s_component =3D {
->>>       .name        =3D "davinci-i2s",
->>>   };
->>>   +static struct snd_platform_data*
->>> +davinci_i2s_set_pdata_from_of(struct platform_device *pdev)
->>> +{
->>> +    struct snd_platform_data *pdata =3D NULL;
->>> +    struct device_node *np;
->>> +    struct of_phandle_args dma_spec;
->>> +    int ret;
->>> +
->>> +    if (!IS_ENABLED(CONFIG_OF) || !pdev->dev.of_node)
->>> +        return dev_get_platdata(&pdev->dev);
->>> +
->>> +    pdata =3D devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->>> +    if (!pdata)
->>> +        return ERR_PTR(-ENOMEM);
->>> +
->>> +    np =3D pdev->dev.of_node;
->>> +
->>> +    ret =3D of_property_match_string(np, "dma-names", "tx");
->>> +    if (ret >=3D 0) {
->>> +        ret =3D of_parse_phandle_with_args(np, "dmas", "#dma-cells", r=
-et,
->>> +                         &dma_spec);
->>> +        if (ret >=3D 0)
->>> +            pdata->tx_dma_channel =3D dma_spec.args[0];
->>> +    }
->>> +
->>> +    ret =3D of_property_match_string(np, "dma-names", "rx");
->>> +    if (ret >=3D 0) {
->>> +        ret =3D of_parse_phandle_with_args(np, "dmas", "#dma-cells", r=
-et,
->>> +                         &dma_spec);
->>> +        if (ret >=3D 0)
->>> +            pdata->rx_dma_channel =3D dma_spec.args[0];
->>> +    }
->> Why would you do this? If we booted with DT the only thing needed by the
->> edma-pcm (dmaengine) is the name of the DMA channel...
-> I don't like this code either. But I have tried just to set the dma_filte=
-r to
-> "rx" or "tx" and it didn't work.
-> Perhaps because the edma pcm filter function filters by channel number an=
-d not
-> by name?
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
 
-the filter_fn is only used in legacy boot case not in DT boot.
+Changes v1 -> v2:
+- none
+Changes v2 -> v3:
+- Fix Nitrogen7 BT UART clock parent
+- Fix Nitrogen7 lvdo2 node to be always-on
+Changes v3 -> v4:
+- Use hyphen instead of underscore for backlight node names
+- Remove fake "simple-bus" for regulators declaration
+- Remove non existant rs485 properties
+- Remove non existant vqmmc-1-8v property
+- Remove unused pinctrl entries (rfkill, flash, pcie, usdhc, sai)
+- Remove pinctrl unnecessary container node
 
-> Or do you see an easier way of getting the channel number from the name?
+---
+ arch/arm/boot/dts/Makefile            |   1 +
+ arch/arm/boot/dts/imx7d-nitrogen7.dts | 745 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 746 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx7d-nitrogen7.dts
 
-It was failing because you were using wrong dt bindings for the eDMA, if you
-update that it will work.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 84008a7..54306aa 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -381,6 +381,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-tx6ul-mainboard.dtb
+ dtb-$(CONFIG_SOC_IMX7D) += \
+ 	imx7d-cl-som-imx7.dtb \
++	imx7d-nitrogen7.dtb \
+ 	imx7d-sbc-imx7.dtb \
+ 	imx7d-sdb.dtb
+ dtb-$(CONFIG_SOC_LS1021A) += \
+diff --git a/arch/arm/boot/dts/imx7d-nitrogen7.dts b/arch/arm/boot/dts/imx7d-nitrogen7.dts
+new file mode 100644
+index 0000000..1ce9780
+--- /dev/null
++++ b/arch/arm/boot/dts/imx7d-nitrogen7.dts
+@@ -0,0 +1,745 @@
++/*
++ * Copyright 2016 Boundary Devices, Inc.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++#include "imx7d.dtsi"
++
++/ {
++	model = "Boundary Devices i.MX7 Nitrogen7 Board";
++	compatible = "boundary,imx7d-nitrogen7", "fsl,imx7d";
++
++	aliases {
++		fb_lcd = &lcdif;
++		t_lcd = &t_lcd;
++	};
++
++	memory {
++		reg = <0x80000000 0x40000000>;
++	};
++
++	backlight-j9 {
++		compatible = "gpio-backlight";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_backlight_j9>;
++		gpios = <&gpio1 7 GPIO_ACTIVE_HIGH>;
++		default-on;
++	};
++
++	backlight-j20 {
++		compatible = "pwm-backlight";
++		pwms = <&pwm1 0 5000000>;
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <6>;
++		status = "okay";
++	};
++
++	reg_usb_otg1_vbus: regulator-usb-otg1-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg1_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_usb_otg2_vbus: regulator-usb-otg2-vbus {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_otg2_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio4 7 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_can2_3v3: regulator-can2-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "can2-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio2 14 GPIO_ACTIVE_LOW>;
++	};
++
++	reg_vref_1v8: regulator-vref-1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	reg_vref_3v3: regulator-vref-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vref-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	reg_wlan: regulator-wlan {
++		compatible = "regulator-fixed";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		clocks = <&clks IMX7D_CLKO2_ROOT_DIV>;
++		clock-names = "slow";
++		regulator-name = "reg_wlan";
++		startup-delay-us = <70000>;
++		gpio = <&gpio4 21 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++};
++
++&adc1 {
++	vref-supply = <&reg_vref_1v8>;
++	status = "okay";
++};
++
++&adc2 {
++	vref-supply = <&reg_vref_1v8>;
++	status = "okay";
++};
++
++&clks {
++	assigned-clocks = <&clks IMX7D_CLKO2_ROOT_SRC>,
++			  <&clks IMX7D_CLKO2_ROOT_DIV>;
++	assigned-clock-parents = <&clks IMX7D_CKIL>;
++	assigned-clock-rates = <0>, <32768>;
++};
++
++&cpu0 {
++	arm-supply = <&sw1a_reg>;
++};
++
++&fec1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_enet1>;
++	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
++			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
++	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
++	assigned-clock-rates = <0>, <100000000>;
++	phy-mode = "rgmii";
++	phy-handle = <&ethphy0>;
++	fsl,magic-packet;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@4 {
++			reg = <4>;
++		};
++	};
++};
++
++&flexcan2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_flexcan2>;
++	xceiver-supply = <&reg_can2_3v3>;
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c1>;
++	status = "okay";
++
++	pmic: pfuze3000@08 {
++		compatible = "fsl,pfuze3000";
++		reg = <0x08>;
++
++		regulators {
++			sw1a_reg: sw1a {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1475000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			/* use sw1c_reg to align with pfuze100/pfuze200 */
++			sw1c_reg: sw1b {
++				regulator-min-microvolt = <700000>;
++				regulator-max-microvolt = <1475000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <6250>;
++			};
++
++			sw2_reg: sw2 {
++				regulator-min-microvolt = <1500000>;
++				regulator-max-microvolt = <1850000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			sw3a_reg: sw3 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1650000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			swbst_reg: swbst {
++				regulator-min-microvolt = <5000000>;
++				regulator-max-microvolt = <5150000>;
++			};
++
++			snvs_reg: vsnvs {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vref_reg: vrefddr {
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			vgen1_reg: vldo1 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen2_reg: vldo2 {
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <1550000>;
++				regulator-always-on;
++			};
++
++			vgen3_reg: vccsd {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen4_reg: v33 {
++				regulator-min-microvolt = <2850000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen5_reg: vldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++
++			vgen6_reg: vldo4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	rtc@68 {
++		compatible = "rv4162";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c2_rv4162>;
++		reg = <0x68>;
++		interrupts-extended = <&gpio2 15 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c3>;
++	status = "okay";
++
++	touch@48 {
++		compatible = "ti,tsc2004";
++		reg = <0x48>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c3_tsc2004>;
++		interrupts-extended = <&gpio3 4 IRQ_TYPE_EDGE_FALLING>;
++		wakeup-gpios = <&gpio3 4 GPIO_ACTIVE_LOW>;
++	};
++};
++
++&i2c4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c4>;
++	status = "okay";
++
++	codec: wm8960@1a {
++		compatible = "wlf,wm8960";
++		reg = <0x1a>;
++		clocks = <&clks IMX7D_AUDIO_MCLK_ROOT_CLK>;
++		clock-names = "mclk";
++		wlf,shared-lrclk;
++	};
++};
++
++&lcdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lcdif_dat
++		     &pinctrl_lcdif_ctrl>;
++	lcd-supply = <&reg_vref_3v3>;
++	display = <&display0>;
++	status = "okay";
++
++	display0: lcd-display {
++		bits-per-pixel = <16>;
++		bus-width = <18>;
++
++		display-timings {
++			native-mode = <&t_lcd>;
++			t_lcd: t_lcd_default {
++				/* default to Okaya display */
++				clock-frequency = <30000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hfront-porch = <40>;
++				hback-porch = <40>;
++				hsync-len = <48>;
++				vback-porch = <29>;
++				vfront-porch = <13>;
++				vsync-len = <3>;
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <0>;
++			};
++		};
++	};
++};
++
++&pwm1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm1>;
++	status = "okay";
++};
++
++&pwm2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm2>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	assigned-clocks = <&clks IMX7D_UART1_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	assigned-clocks = <&clks IMX7D_UART3_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
++	status = "okay";
++};
++
++&uart6 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart6>;
++	assigned-clocks = <&clks IMX7D_UART6_ROOT_SRC>;
++	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
++	fsl,uart-has-rtscts;
++	status = "okay";
++};
++
++&usbotg1 {
++	vbus-supply = <&reg_usb_otg1_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg1>;
++	status = "okay";
++};
++
++&usbotg2 {
++	vbus-supply = <&reg_usb_otg2_vbus>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usbotg2>;
++	dr_mode = "host";
++	status = "okay";
++};
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
++	vmmc-supply = <&vgen3_reg>;
++	bus-width = <4>;
++	fsl,tuning-step = <2>;
++	wakeup-source;
++	keep-power-in-suspend;
++	status = "okay";
++};
++
++&usdhc2 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	bus-width = <4>;
++	non-removable;
++	vmmc-supply = <&reg_wlan>;
++	cap-power-off-card;
++	keep-power-in-suspend;
++	status = "okay";
++
++	wlcore: wlcore@2 {
++		compatible = "ti,wl1271";
++		reg = <2>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
++		ref-clock-frequency = <38400000>;
++	};
++};
++
++&usdhc3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc3>;
++	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
++	assigned-clock-rates = <400000000>;
++	bus-width = <8>;
++	fsl,tuning-step = <2>;
++	non-removable;
++	status = "okay";
++};
++
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog1>;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog_1 &pinctrl_j2>;
++
++	pinctrl_hog_1: hoggrp-1 {
++		fsl,pins = <
++			MX7D_PAD_SD3_RESET_B__GPIO6_IO11	0x5d
++			MX7D_PAD_GPIO1_IO13__GPIO1_IO13		0x7d
++			MX7D_PAD_ECSPI2_MISO__GPIO4_IO22	0x7d
++		>;
++	};
++
++	pinctrl_enet1: enet1grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO10__ENET1_MDIO			0x3
++			MX7D_PAD_GPIO1_IO11__ENET1_MDC			0x3
++			MX7D_PAD_GPIO1_IO12__CCM_ENET_REF_CLK1		0x3
++			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC	0x71
++			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0	0x71
++			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1	0x71
++			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2	0x71
++			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3	0x71
++			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL	0x71
++			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC	0x71
++			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0	0x11
++			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1	0x11
++			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2	0x11
++			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3	0x71
++			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL	0x11
++			MX7D_PAD_SD3_STROBE__GPIO6_IO10			0x75
++		>;
++	};
++
++	pinctrl_flexcan2: flexcan2grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO14__FLEXCAN2_RX	0x7d
++			MX7D_PAD_GPIO1_IO15__FLEXCAN2_TX	0x7d
++			MX7D_PAD_EPDC_DATA14__GPIO2_IO14	0x7d
++		>;
++	};
++
++	pinctrl_i2c1: i2c1grp {
++		fsl,pins = <
++			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
++			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			MX7D_PAD_I2C2_SDA__I2C2_SDA		0x4000007f
++			MX7D_PAD_I2C2_SCL__I2C2_SCL		0x4000007f
++		>;
++	};
++
++	pinctrl_i2c2_rv4162: i2c2-rv4162grp {
++		fsl,pins = <
++			MX7D_PAD_EPDC_DATA15__GPIO2_IO15	0x7d
++		>;
++	};
++
++	pinctrl_i2c3: i2c3grp {
++		fsl,pins = <
++			MX7D_PAD_I2C3_SDA__I2C3_SDA		0x4000007f
++			MX7D_PAD_I2C3_SCL__I2C3_SCL		0x4000007f
++		>;
++	};
++
++	pinctrl_i2c3_tsc2004: i2c3tsc2004grp {
++		fsl,pins = <
++			MX7D_PAD_LCD_RESET__GPIO3_IO4		0x79
++			MX7D_PAD_SD2_WP__GPIO5_IO10		0x7d
++		>;
++	};
++
++	pinctrl_i2c4: i2c4grp {
++		fsl,pins = <
++			MX7D_PAD_I2C4_SDA__I2C4_SDA		0x4000007f
++			MX7D_PAD_I2C4_SCL__I2C4_SCL		0x4000007f
++		>;
++	};
++
++	pinctrl_j2: j2grp {
++		fsl,pins = <
++			MX7D_PAD_SAI1_TX_DATA__GPIO6_IO15	0x7d
++			MX7D_PAD_EPDC_BDR0__GPIO2_IO28		0x7d
++			MX7D_PAD_SAI1_RX_DATA__GPIO6_IO12	0x7d
++			MX7D_PAD_EPDC_BDR1__GPIO2_IO29		0x7d
++			MX7D_PAD_SD1_WP__GPIO5_IO1		0x7d
++			MX7D_PAD_EPDC_SDSHR__GPIO2_IO19		0x7d
++			MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x7d
++			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x7d
++			MX7D_PAD_EPDC_DATA07__GPIO2_IO7		0x7d
++			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x7d
++			MX7D_PAD_EPDC_DATA09__GPIO2_IO9		0x7d
++			MX7D_PAD_EPDC_DATA10__GPIO2_IO10	0x7d
++			MX7D_PAD_EPDC_DATA11__GPIO2_IO11	0x7d
++			MX7D_PAD_EPDC_DATA12__GPIO2_IO12	0x7d
++			MX7D_PAD_SAI1_TX_SYNC__GPIO6_IO14	0x7d
++			MX7D_PAD_EPDC_DATA13__GPIO2_IO13	0x7d
++			MX7D_PAD_SAI1_TX_BCLK__GPIO6_IO13	0x7d
++			MX7D_PAD_SD2_CD_B__GPIO5_IO9		0x7d
++			MX7D_PAD_EPDC_GDCLK__GPIO2_IO24		0x7d
++			MX7D_PAD_SAI2_RX_DATA__GPIO6_IO21	0x7d
++			MX7D_PAD_EPDC_GDOE__GPIO2_IO25		0x7d
++			MX7D_PAD_EPDC_GDRL__GPIO2_IO26		0x7d
++			MX7D_PAD_SAI2_TX_DATA__GPIO6_IO22	0x7d
++			MX7D_PAD_EPDC_SDCE0__GPIO2_IO20		0x7d
++			MX7D_PAD_SAI2_TX_BCLK__GPIO6_IO20	0x7d
++			MX7D_PAD_EPDC_SDCE1__GPIO2_IO21		0x7d
++			MX7D_PAD_SAI2_TX_SYNC__GPIO6_IO19	0x7d
++			MX7D_PAD_EPDC_SDCE2__GPIO2_IO22		0x7d
++			MX7D_PAD_EPDC_SDCE3__GPIO2_IO23		0x7d
++			MX7D_PAD_EPDC_GDSP__GPIO2_IO27		0x7d
++			MX7D_PAD_EPDC_SDCLK__GPIO2_IO16		0x7d
++			MX7D_PAD_EPDC_SDLE__GPIO2_IO17		0x7d
++			MX7D_PAD_EPDC_SDOE__GPIO2_IO18		0x7d
++			MX7D_PAD_EPDC_PWR_COM__GPIO2_IO30	0x7d
++			MX7D_PAD_EPDC_PWR_STAT__GPIO2_IO31	0x7d
++		>;
++	};
++
++	pinctrl_lcdif_dat: lcdifdatgrp {
++		fsl,pins = <
++			MX7D_PAD_LCD_DATA00__LCD_DATA0		0x79
++			MX7D_PAD_LCD_DATA01__LCD_DATA1		0x79
++			MX7D_PAD_LCD_DATA02__LCD_DATA2		0x79
++			MX7D_PAD_LCD_DATA03__LCD_DATA3		0x79
++			MX7D_PAD_LCD_DATA04__LCD_DATA4		0x79
++			MX7D_PAD_LCD_DATA05__LCD_DATA5		0x79
++			MX7D_PAD_LCD_DATA06__LCD_DATA6		0x79
++			MX7D_PAD_LCD_DATA07__LCD_DATA7		0x79
++			MX7D_PAD_LCD_DATA08__LCD_DATA8		0x79
++			MX7D_PAD_LCD_DATA09__LCD_DATA9		0x79
++			MX7D_PAD_LCD_DATA10__LCD_DATA10		0x79
++			MX7D_PAD_LCD_DATA11__LCD_DATA11		0x79
++			MX7D_PAD_LCD_DATA12__LCD_DATA12		0x79
++			MX7D_PAD_LCD_DATA13__LCD_DATA13		0x79
++			MX7D_PAD_LCD_DATA14__LCD_DATA14		0x79
++			MX7D_PAD_LCD_DATA15__LCD_DATA15		0x79
++			MX7D_PAD_LCD_DATA16__LCD_DATA16		0x79
++			MX7D_PAD_LCD_DATA17__LCD_DATA17		0x79
++			MX7D_PAD_LCD_DATA18__LCD_DATA18		0x79
++			MX7D_PAD_LCD_DATA19__LCD_DATA19		0x79
++			MX7D_PAD_LCD_DATA20__LCD_DATA20		0x79
++			MX7D_PAD_LCD_DATA21__LCD_DATA21		0x79
++			MX7D_PAD_LCD_DATA22__LCD_DATA22		0x79
++			MX7D_PAD_LCD_DATA23__LCD_DATA23		0x79
++		>;
++	};
++
++	pinctrl_lcdif_ctrl: lcdifctrlgrp {
++		fsl,pins = <
++			MX7D_PAD_LCD_CLK__LCD_CLK		0x79
++			MX7D_PAD_LCD_ENABLE__LCD_ENABLE		0x79
++			MX7D_PAD_LCD_VSYNC__LCD_VSYNC		0x79
++			MX7D_PAD_LCD_HSYNC__LCD_HSYNC		0x79
++		>;
++	};
++
++	pinctrl_pwm2: pwm2grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO09__PWM2_OUT		0x7d
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			MX7D_PAD_UART1_TX_DATA__UART1_DCE_TX	0x79
++			MX7D_PAD_UART1_RX_DATA__UART1_DCE_RX	0x79
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
++			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			MX7D_PAD_UART3_TX_DATA__UART3_DCE_TX	0x79
++			MX7D_PAD_UART3_RX_DATA__UART3_DCE_RX	0x79
++			MX7D_PAD_EPDC_DATA04__GPIO2_IO4		0x7d
++		>;
++	};
++
++	pinctrl_uart6: uart6grp {
++		fsl,pins = <
++			MX7D_PAD_ECSPI1_MOSI__UART6_DCE_TX	0x79
++			MX7D_PAD_ECSPI1_SCLK__UART6_DCE_RX	0x79
++			MX7D_PAD_ECSPI1_SS0__UART6_DCE_CTS	0x79
++			MX7D_PAD_ECSPI1_MISO__UART6_DCE_RTS	0x79
++		>;
++	};
++
++	pinctrl_usbotg2: usbotg2grp {
++		fsl,pins = <
++			MX7D_PAD_UART3_RTS_B__USB_OTG2_OC	0x7d
++			MX7D_PAD_UART3_CTS_B__GPIO4_IO7		0x14
++		>;
++	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
++			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
++			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
++			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
++			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
++			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
++			MX7D_PAD_GPIO1_IO08__SD1_VSELECT	0x75
++			MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x75
++		>;
++	};
++
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX7D_PAD_SD2_CMD__SD2_CMD		0x59
++			MX7D_PAD_SD2_CLK__SD2_CLK		0x19
++			MX7D_PAD_SD2_DATA0__SD2_DATA0		0x59
++			MX7D_PAD_SD2_DATA1__SD2_DATA1		0x59
++			MX7D_PAD_SD2_DATA2__SD2_DATA2		0x59
++			MX7D_PAD_SD2_DATA3__SD2_DATA3		0x59
++			MX7D_PAD_ECSPI2_SCLK__GPIO4_IO20	0x59
++			MX7D_PAD_ECSPI2_MOSI__GPIO4_IO21	0x59
++		>;
++	};
++
++	pinctrl_usdhc3: usdhc3grp {
++		fsl,pins = <
++			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
++			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
++			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
++			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
++			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
++			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
++			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
++			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
++			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
++			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
++		>;
++	};
++};
++
++&iomuxc_lpsr {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog_2>;
++
++	pinctrl_hog_2: hoggrp-2 {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO02__GPIO1_IO2		0x7d
++			MX7D_PAD_GPIO1_IO03__CCM_CLKO2		0x7d
++		>;
++	};
++
++	pinctrl_backlight_j9: backlightj9grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO07__GPIO1_IO7		0x7d
++		>;
++	};
++
++	pinctrl_pwm1: pwm1grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO01__PWM1_OUT		0x7d
++		>;
++	};
++
++	pinctrl_usbotg1: usbotg1grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO04__USB_OTG1_OC	0x7d
++			MX7D_PAD_GPIO1_IO05__GPIO1_IO5		0x14
++		>;
++	};
++
++	pinctrl_wdog1: wdog1grp {
++		fsl,pins = <
++			MX7D_PAD_GPIO1_IO00__WDOD1_WDOG_B	0x75
++		>;
++	};
++};
+-- 
+2.7.0
 
-> =
-
->>
->>> +
->>> +    /* optional parameters */
->>> +
->>> +    pdata->enable_channel_combine =3D
->>> +        of_property_read_bool(np, "channel-combine");
->> This can only be done when the McBSP is used in DSP_x mode since this wi=
-ll
->> make the McBSP to transmit the stereo audio as mono on the bus.
-> I have actually never used this option and don't see a benefit of it.
-> Is it just some workaround that should not be included in the binding?
-
-It is to have more time for the DMA to write, read the audio data as McBSP
-does not have FIFO.
-This is a SW parameter, so it does not belong to the DT if we take things by
-the letter. Probably it is better to leave it out for now and add it later =
-if
-there is a need?
-
->> After a quick look at the relevant parts in the driver, I think most of =
-the
->> things are pretty much broken or at least they are not totally correct. =
-McBSP
->> do support real I2S (SRGR:FWID), and the phase setup is wrong in the cod=
-e. IMO.
->> I don't have HW to test the daVinci-MCBSP or the ASP so I can not commen=
-t on
->> how well things are working.
-> The I2S worked for me if the frame size equalled the PCM data size. E.g.
-> 16-bit audio, 2 channels, 16 bit frame size -> 32 clock ticks per sample =
-in
-> total.
-> However with bigger frame sizes it didn't work because it cannot insert
-> "blanks" between the channels.
-> E.g. with 32-bit wide slots and 16-bit audio it sends both left and right=
- data
-> in the first 32 clock ticks (i.e. still the first channel) and then the d=
-uring
-> the other channel the data line goes to high impedance which results in
-> effectively playing only the left channel (and noise in the other channel=
-).
-
-Yeah, this is not working on OMAP-McBSP either.
-
-> That's probably what the comment about broken I2S is trying to say.
-> I couldn't find any help in the datasheet either.
-
-With exact bclk the I2S is working fine, with most codecs at least we are
-using that with OMAPs.
-
-> On some codecs the frame size is configurable and there it works, but cod=
-ecs
-> that require 32-bit frames don't work with 16-bit audio or need to use DS=
-P_x
-> format.
->>
->>> +
->>> +    return pdata;
->>> +}
->>> +
->>>   static int davinci_i2s_probe(struct platform_device *pdev)
->>>   {
->>> +    struct snd_platform_data *pdata;
->>>       struct davinci_mcbsp_dev *dev;
->>>       struct resource *mem, *res;
->>>       void __iomem *io_base;
->>>       int *dma;
->>>       int ret;
->>>   -    mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +    pdata =3D davinci_i2s_set_pdata_from_of(pdev);
->>> +    if (IS_ERR(pdata)) {
->>> +        dev_err(&pdev->dev, "Error populating platform data, err %ld\n=
-",
->>> +            PTR_ERR(pdata));
->>> +        return PTR_ERR(pdata);
->>> +    }
->>> +
->>> +    mem =3D platform_get_resource_byname(pdev, IORESOURCE_MEM, "mpu");
->>> +    if (!mem) {
->>> +        dev_warn(&pdev->dev,
->>> +             "\"mpu\" mem resource not found, using index 0\n");
->>> +        mem =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +        if (!mem) {
->>> +            dev_err(&pdev->dev, "no mem resource?\n");
->>> +            return -ENODEV;
->>> +        }
->>> +    }
->>> +
->>>       io_base =3D devm_ioremap_resource(&pdev->dev, mem);
->>>       if (IS_ERR(io_base))
->>>           return PTR_ERR(io_base);
->>> @@ -680,25 +753,21 @@ static int davinci_i2s_probe(struct platform_devi=
-ce
->>> *pdev)
->>>           (dma_addr_t)(mem->start + DAVINCI_MCBSP_DRR_REG);
->>>         /* first TX, then RX */
->>> -    res =3D platform_get_resource(pdev, IORESOURCE_DMA, 0);
->>> -    if (!res) {
->>> -        dev_err(&pdev->dev, "no DMA resource\n");
->>> -        ret =3D -ENXIO;
->>> -        goto err_release_clk;
->>> -    }
->>>       dma =3D &dev->dma_request[SNDRV_PCM_STREAM_PLAYBACK];
->>> -    *dma =3D res->start;
->>>       dev->dma_data[SNDRV_PCM_STREAM_PLAYBACK].filter_data =3D dma;
->>> +    res =3D platform_get_resource(pdev, IORESOURCE_DMA, 0);
->>> +    if (res)
->>> +        *dma =3D res->start;
->>> +    else
->>> +        *dma =3D pdata->tx_dma_channel;
->> Please follow the way davinci-mcasp does it right now:
->>     dma_data =3D &mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK];
->>     ...
->>     dma =3D &mcasp->dma_request[SNDRV_PCM_STREAM_PLAYBACK];
->>     res =3D platform_get_resource(pdev, IORESOURCE_DMA, 0);
->>     if (res)
->>         *dma =3D res->start;
->>     else
->>         *dma =3D pdata->tx_dma_channel;
->>
->>     /* dmaengine filter data for DT and non-DT boot */
->>     if (pdev->dev.of_node)
->>         dma_data->filter_data =3D "tx";
->>     else
->>         dma_data->filter_data =3D dma;
->>
->> while we are here, I think the tx/rx_dma_channel is something we should =
-just
->> get rid of. It is not used as far as I can tell.
->> Something like this would do I think:
->>     dma_data =3D &mcasp->dma_data[SNDRV_PCM_STREAM_PLAYBACK];
->>     ...
->>     res =3D platform_get_resource(pdev, IORESOURCE_DMA, 0);
->>     if (res) {
->>         dma =3D &mcasp->dma_request[SNDRV_PCM_STREAM_PLAYBACK];
->>         *dma =3D res->start;
->>         dma_data->filter_data =3D dma;
->>     } else if (pdev->dev.of_node) {
->>         dma_data->filter_data =3D "tx";
->>     } else {
->>         dev_err(&pdev->dev, "Missing DMA tx resource\n");
->>         return -ENODEV;
->>     }
-> Is the edma pcm filter function able to filter in once case by the dma nu=
-mber
-> and in the other case by the dma name?
-> See my above comment as well...
-
-The filter_fn is for the legacy boot, DT does not use filter, it looks up t=
-he
-channel.
-The reason for the failure in your case was that the dma bindings in mcbsps
-were not correct, if you update them they will work.
-
-> =
-
->>>         dev->dev =3D &pdev->dev;
->>>       dev_set_drvdata(&pdev->dev, dev);
->>> @@ -737,11 +806,18 @@ static int davinci_i2s_remove(struct platform_dev=
-ice
->>> *pdev)
->>>       return 0;
->>>   }
->>>   +static const struct of_device_id davinci_mcbsp_match[] =3D {
->>> +    { .compatible =3D "ti,da850-mcbsp-audio" },
->> I would drop the "-audio" for the binding...
-> I was trying to stay consistent with the mcasp. But I don't mind keeping =
-the
-> name shorter :-)
-
-Not just shorter, but the -audio postfix is just stupid. IMHO.
-
->>> +    {},
->>> +};
->>> +MODULE_DEVICE_TABLE(of, davinci_mcbsp_match);
->>> +
->>>   static struct platform_driver davinci_mcbsp_driver =3D {
->>>       .probe        =3D davinci_i2s_probe,
->>>       .remove        =3D davinci_i2s_remove,
->>>       .driver        =3D {
->>>           .name    =3D "davinci-mcbsp",
->>> +        .of_match_table =3D of_match_ptr(davinci_mcbsp_match),
->> The driver calls itself davinci-i2s.c and the prefixes internally used a=
-re
->> davinci_i2s_*.
->> The driver name is "davinci-mcbsp".
->> And it is basically a driver for daVinci ASP (the McBSP additions are not
->> configured at all).
->> I still think we should keep the davinci_i2s_* when adding new code, or =
-rename
->> the whole driver and it's prefixes to something more sensible?
-> Good point, thanks! I will rename the table to davinci_i2s_match to stay
-> consistent.
-> =
-
-> Petr
-> =
-
-> =
-
-
-
--- =
-
-P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
