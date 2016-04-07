@@ -1,59 +1,57 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] of/platform: Allow secondary compatible match in
- of_dev_lookup
-Date: Thu, 7 Apr 2016 09:58:43 -0700
-Message-ID: <20160407165842.GJ16484@atomide.com>
-References: <1459546504-32668-1-git-send-email-tony@atomide.com>
- <20160401214053.GQ9329@atomide.com>
- <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: k2*: Rename the k2* files to keystone-k2* files
+Date: Thu, 7 Apr 2016 12:01:34 -0500
+Message-ID: <CAGo_u6oMYZvzkvCsi8H3hvOBrPLZ-EL-T3RCA6E8BnmThrLYfA@mail.gmail.com>
+References: <1458139150-30382-1-git-send-email-nm@ti.com>
+	<56E97F0E.6070309@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+PcTD=duHmWgHyx_ywYbT10vEtcm=79x5o5wYSkgG63g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <56E97F0E.6070309-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: santosh shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, dt list <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh+dt@kernel.org> [160406 21:53]:
-> On Fri, Apr 1, 2016 at 4:40 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > * Tony Lindgren <tony@atomide.com> [160401 14:37]:
-> >> We currently try to match of_dev_auxdata based on compatible,
-> >> IO address, and device name. But in some cases we have multiple
-> >> instances of drivers that can use the same auxdata.
-> >>
-> >> Let's add an additional secondary lookup for generic compatible
-> >> match for auxdata if no device specific match is found. This does
-> >> not change the existing matching, and still allows adding device
-> >> specific auxdata.
-> >>
-> >> This simplifies things as specifying the IO address and device
-> >> name is prone errors as it requires maintaining an in kernel
-> >> database for each SoC.
-> >
-> > And here's what I can apply later on to get rid of some
-> > ifdeffery.
-> >
-> > I'm also planning to move some of the legacy omap hwmod
-> > functionality into proper device drivers, so can generic
-> > pdata for that too.
-> 
-> Why can't the platform data be moved into the driver given that it
-> appears to be only SoC family specific? Auxdata was somewhat intended
-> to be temporary. It appears there is already some per compatible match
-> data for these OMAP parts in the driver.
+Hi Santosh,
 
-There are just too many dependencies to move legacy code into drivers
-directly. Especially when moving the omap hwmod code into drivers,
-we still to use hwmod callbacks at least for clockdomain configuration,
-wake-up dependencies and clock autogating configuration.
+On Wed, Mar 16, 2016 at 10:43 AM, santosh shilimkar
+<santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org> wrote:
+> On 3/16/2016 7:39 AM, Nishanth Menon wrote:
+>>
+>> As reported in [1], rename the k2* dts files to keystone-* files
+>> this will force consistency throughout.
+>>
+>> Script for the same (and hand modified for Makefile and MAINTAINERS
+>> files):
+>> for i in arch/arm/boot/dts/k2*
+>> do
+>>         b=`basename $i`;
+>>         git mv $i arch/arm/boot/dts/keystone-$b;
+>>         sed -i -e "s/$b/keystone-$b/g" arch/arm/boot/dts/*[si]
+>> done
+>>
+>> NOTE: bootloaders that depend on older dtb names will need to be
+>> updated as well.
+>>
+>> [1] http://marc.info/?l=linux-arm-kernel&m=145637407804754&w=2
+>>
+>> Reported-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> ---
+>>
+> Thanks Nishant for taking care of this. I will add this to the
+> next soon.
+>
 
-When we have Linux generic frameworks available for all this we no longer
-need the auxdata. But meanwhile, removing the depenencies by using
-auxdata already allows moving big chunks of the hwmod code into regular
-device drivers.
+I dont see this in 4.6-rc2 yet.. did this slip our pull request? will
+be good to get this in so that we can fix up u-boot consistently.
 
+-- 
+---
 Regards,
-
-Tony
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
