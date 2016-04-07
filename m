@@ -1,70 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] PM / Domains: Define DT bindings for PM QoS device
- latencies
-Date: Thu, 7 Apr 2016 12:57:04 -0500
-Message-ID: <20160407175704.GA32257@rob-hp-laptop>
-References: <1459432226-22562-1-git-send-email-ulf.hansson@linaro.org>
- <20160401184429.GA18950@rob-hp-laptop>
- <CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH] i2c: designware-platdrv: get fast/std speed scl high/low
+ count from DT
+Date: Thu, 7 Apr 2016 21:05:35 +0300
+Message-ID: <CAHp75VcHNdAUeob2iR6U1HbUQzEccdjPy8ffuG4mB_=ZX7EokQ@mail.gmail.com>
+References: <1459927680-5480-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFombK0Kv-r40xbTm=Y3q07bM5woOPB63xzbrck37Vxrqw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Geert Uytterhoeven <geert+renesas@glider.be>, Lina Iyer <lina.iyer@linaro.org>, Axel Haslam <ahaslam@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Jon Hunter <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1459927680-5480-1-git-send-email-jszhang@marvell.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Jisheng Zhang <jszhang@marvell.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 04, 2016 at 11:42:04AM +0200, Ulf Hansson wrote:
-> On 1 April 2016 at 20:44, Rob Herring <robh@kernel.org> wrote:
-> > On Thu, Mar 31, 2016 at 03:50:25PM +0200, Ulf Hansson wrote:
-> >> PM QoS device latencies are properties of the hardware. Let's define some
-> >> DT bindings for them.
-> >>
-> >> Suggested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> >> ---
-> >>  Documentation/devicetree/bindings/power/power_domain.txt | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> >> index 025b5e7..b101a20 100644
-> >> --- a/Documentation/devicetree/bindings/power/power_domain.txt
-> >> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> >> @@ -65,12 +65,18 @@ Required properties:
-> >>   - power-domains : A phandle and PM domain specifier as defined by bindings of
-> >>                     the power controller specified by phandle.
-> >>
-> >> +Optional properties:
-> >> + - suspend-latency: Suspend latency of the device in ns.
-> >> + - resume-latency: Resume latency of the device in ns.
-> >
-> > The names are a bit Linux specific, but I don't have a better
-> > suggestion. Could be power-up/down, but then you may have other
-> > latencies such as link up times.
-> >
-> > Whatever we end up with, add a unit suffix (-ns).
-> 
-> Okay.
-> 
-> >
-> > Shouldn't this be split into latency of the domain (and in the domain's
-> > node) and latency of the device?
-> 
-> Yes! $Subject patch only takes device latencies into account.
-> 
-> Perhaps what you mean is that we should document device PM QoS
-> latencies in another place than
-> Documentation/devicetree/bindings/power/power_domain.txt as well?
+On Wed, Apr 6, 2016 at 10:28 AM, Jisheng Zhang <jszhang@marvell.com> wrote:
+> Sometimes, it's convenient to define the scl's high/low count directly,
+> e.g HW people would do some measurement then directly give out the
+> optimum counts. Previously, we solved the sda falling time and scl
+> falling time by i2c_dw_scl_hcnt() and i2c_dw_scl_lcnt(), then put them
+> into dt, but what we really care isn't the sda/scl falling time.
+>
+> From another side, the dw_i2c_acpi_configure() on ACPI platform also
+> get hcnt/lcnt values rather than the sda/scl falling time from ACPI
+> method, we want similar feature for DT platforms.
+>
 
-Yes, the location is confusing that this is device latency which has 
-nothing to do with power domains other than the fact we've lost all 
-state (which a reset could cause too).
+Instead of duplicating some words maybe better to explicitly define
+two groups of parameters and one which supersedes the other.
 
-> Regarding bindings for the domain latencies, I will post that as a
-> separate patch soonish.
+> Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-designware.txt | 16 ++++++++++++++++
+>  drivers/i2c/busses/i2c-designware-platdrv.c              |  8 ++++++++
+>  2 files changed, 24 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> index fee26dc..05176fbf 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+> @@ -20,6 +20,22 @@ Optional properties :
+>   - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
+>     This value which is by default 300ns is used to compute the tHIGH period.
+>
+> + - i2c-ss-scl-high-count : should contain the standard speed i2c clock SCL high
+> +   count. If defined, the i2c-scl-falling-time-ns and i2c-sda-falling-time-ns
+> +   will be ignored.
+> +
+> + - i2c-ss-scl-low-count : should contain the standard speed i2c clock SCL low
+> +   count. If defined, the i2c-scl-falling-time-ns and i2c-sda-falling-time-ns
+> +   will be ignored.
+> +
+> + - i2c-fs-scl-high-count : should contain the fast speed i2c clock SCL high
+> +   count. If defined, the i2c-scl-falling-time-ns and i2c-sda-falling-time-ns
+> +   will be ignored.
+> +
+> + - i2c-fs-scl-low-count : should contain the fast speed i2c clock SCL low
+> +   count. If defined, the i2c-scl-falling-time-ns and i2c-sda-falling-time-ns
+> +   will be ignored.
+> +
+>  Example :
+>
+>         i2c@f0000 {
+> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+> index d656657..8739a60 100644
+> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
+> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+> @@ -188,6 +188,14 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
+>                                          &dev->scl_falling_time);
+>                 device_property_read_u32(&pdev->dev, "clock-frequency",
+>                                          &clk_freq);
+> +               device_property_read_u16(&pdev->dev, "i2c-ss-scl-high-count",
+> +                                        &dev->ss_hcnt);
+> +               device_property_read_u16(&pdev->dev, "i2c-ss-scl-low-count",
+> +                                        &dev->ss_lcnt);
+> +               device_property_read_u16(&pdev->dev, "i2c-fs-scl-high-count",
+> +                                        &dev->fs_hcnt);
+> +               device_property_read_u16(&pdev->dev, "i2c-fs-scl-low-count",
+> +                                        &dev->fs_lcnt);
+>         }
+>
+>         if (has_acpi_companion(&pdev->dev))
+> --
+> 2.8.0.rc3
+>
 
-It probably makes sense to look at latency bindings as a whole series.
 
-Rob
+
+-- 
+With Best Regards,
+Andy Shevchenko
