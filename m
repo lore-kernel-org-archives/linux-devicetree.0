@@ -1,48 +1,79 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 04/16] arm64: dts: Add Hi6220 gpio configuration nodes
-Date: Fri, 8 Apr 2016 14:19:37 +0200
-Message-ID: <CACRpkdZNTJB_Jn01AwhwHf77yk-Cb_yzj4ty6N1b6wbHmfoevA@mail.gmail.com>
-References: <1459862860-9775-1-git-send-email-guodong.xu@linaro.org>
-	<1459862860-9775-5-git-send-email-guodong.xu@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1459862860-9775-5-git-send-email-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Xu Wei <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Arnd Bergmann <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, XinWei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v3 2/3] devicetree: Add ANX7814 SlimPort transmitter binding.
+Date: Fri,  8 Apr 2016 14:52:51 +0200
+Message-ID: <1460119972-8658-3-git-send-email-enric.balletbo@collabora.com>
+References: <1460119972-8658-1-git-send-email-enric.balletbo@collabora.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1460119972-8658-1-git-send-email-enric.balletbo@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: airlied@linux.ie, treding@nvidia.com, robh+dt@kernel.org, djkurtz@chromium.org, drinkcat@chromium.org, dan.carpenter@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 5, 2016 at 3:27 PM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
+designed for portable devices.
 
-> From: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->
-> Add Hi6220 gpio configuration nodes
->
-> Signed-off-by: Zhong Kaihua <zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Kong Xinwei <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+Changes since v2:
+ - Add Acked-by: Rob Herring <robh@kernel.org>
 
-I asked you to remove this blank line.
+Changes since v1:
+ - Rob Herring:
+   - Rename cable-det-gpios for hpd-gpios as is more standard
+   - Fix HDMI output for HDMI input
 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+ .../devicetree/bindings/video/bridge/anx7814.txt   | 41 ++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/bridge/anx7814.txt
 
-(...)
-> +++ b/arch/arm64/boot/dts/hisilicon/hikey-gpio.dtsi
-> @@ -0,0 +1,607 @@
-> +/ {
-> +       gpio_rstout_n:gpio_rstout_n {
-> +               gpios;
-> +       };
-
-I also asked about either explaining or removing this.
-
-Did my mail arrive?
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/video/bridge/anx7814.txt b/Documentation/devicetree/bindings/video/bridge/anx7814.txt
+new file mode 100644
+index 0000000..0ce4978
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/bridge/anx7814.txt
+@@ -0,0 +1,41 @@
++Analogix ANX7814 SlimPort (Full-HD Transmitter)
++-----------------------------------------------
++
++The ANX7814 is an ultra-low power Full-HD (1080p60) SlimPort transmitter
++designed for portable devices.
++
++Required properties:
++
++ - compatible		: "analogix,anx7814"
++ - reg			: I2C address of the device
++ - interrupt-parent	: Should be the phandle of the interrupt controller
++			  that services interrupts for this device
++ - interrupts		: Should contain the INTP interrupt
++ - hpd-gpios		: Which GPIO to use for hpd
++ - pd-gpios		: Which GPIO to use for power down
++ - reset-gpios		: Which GPIO to use for reset
++
++Optional properties:
++
++ - v10-gpios		: Which GPIO to use for V10 control.
++ - Video port for HDMI input, using the DT bindings defined in [1].
++
++[1]: Documentation/devicetree/bindings/media/video-interfaces.txt
++
++Example:
++
++	anx7814: anx7814@38 {
++		compatible = "analogix,anx7814";
++		reg = <0x38>;
++		interrupt-parent = <&gpio0>;
++		interrupts = <99 IRQ_TYPE_LEVEL_LOW>;   /* INTP */
++		hpd-gpios = <&pio 36 GPIO_ACTIVE_HIGH>;
++		pd-gpios = <&pio 33 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&pio 98 GPIO_ACTIVE_HIGH>;
++		v10-gpios = <&pio 35 GPIO_ACTIVE_HIGH>;
++		port {
++			anx7814_in: endpoint {
++				remote-endpoint = <&hdmi0_out>;
++			};
++		};
++	};
+-- 
+2.1.0
